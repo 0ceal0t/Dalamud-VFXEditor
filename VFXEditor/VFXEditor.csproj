@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AssemblyTitle>VFXEditor</AssemblyTitle>
+        <Company></Company>
+        <Product>VFXEditor</Product>
+        <Copyright>Copyright © 2020</Copyright>
+        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Dalamud">
+            <HintPath>$(DALAMUD_ROOT)\Dalamud.dll</HintPath>
+            <HintPath>..\libs\Dalamud.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Dalamud.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="ImGui.NET">
+            <HintPath>$(DALAMUD_ROOT)\ImGui.NET.dll</HintPath>
+            <HintPath>..\libs\ImGui.NET.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\ImGui.NET.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="ImGuiScene">
+            <HintPath>$(DALAMUD_ROOT)\ImGuiScene.dll</HintPath>
+            <HintPath>..\libs\ImGuiScene.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\ImGuiScene.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Lumina">
+            <HintPath>$(DALAMUD_ROOT)\Lumina.dll</HintPath>
+            <HintPath>..\libs\Lumina.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Lumina.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Lumina.Excel">
+            <HintPath>$(DALAMUD_ROOT)\Lumin.Excel.dll</HintPath>
+            <HintPath>..\libs\Lumina.Excel.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Lumina.Excel.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DotNetZip" Version="1.13.8" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Reloaded.Hooks" Version="2.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AVFXLib\AVFXLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="VFXEditor.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <NativeLibs Remove="DataManager.cs" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+{
+    "Author": "mkaminsky11",
+    "Name": "VFXEditor",
+    "Description": "VFX Editor for FFXIV",
+    "InternalName": "VFXEditor",
+    "AssemblyVersion": "1.0.0.0",
+    "RepoUrl": "https://github.com/xivdev/Penumbra",
+    "ApplicableVersion": "any",
+    "Tags": [ "modding" ],
+    "DalamudApiLevel": 69420
+}
