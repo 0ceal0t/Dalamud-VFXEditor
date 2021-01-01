@@ -12,6 +12,26 @@ using ImGuiNET;
 
 namespace VFXEditor.UI
 {
+    public enum VFXSelectType
+    {
+        Local,
+        GamePath,
+        GameItem
+    }
+    public struct VFXSelectResult
+    {
+        public VFXSelectType Type;
+        public string DisplayString;
+        public string Path;
+
+        public VFXSelectResult(VFXSelectType type, string displayString, string path)
+        {
+            Type = type;
+            DisplayString = displayString;
+            Path = path;
+        }
+    }
+
     public class VFXSelectDialog
     {
         public Plugin _plugin;
@@ -19,7 +39,9 @@ namespace VFXEditor.UI
         public bool ShowGamePath = true;
         public bool ShowGameItems = true;
         public string Id;
-        
+        public XivSelectedItem LoadedItem = null;
+        public event Action<VFXSelectResult> OnSelect;
+
         public bool Visible = false;
 
         public VFXSelectDialog(Plugin plugin, string id)
@@ -102,14 +124,9 @@ namespace VFXEditor.UI
                 } );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "LOAD##Select/Local/" + Id ) )
+            if( ImGui.Button( "SELECT##Select/Local/" + Id ) )
             {
-                bool result = _plugin.Manager.GetLocalFile( localPathInput, out var avfx );
-                if( result )
-                {
-                    _plugin.MainUI.sourceString = "[LOCAL] " + localPathInput;
-                    _plugin.LoadAVFX( avfx );
-                }
+                OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
             }
 
             ImGui.EndTabItem();
@@ -127,20 +144,17 @@ namespace VFXEditor.UI
             ImGui.SameLine();
             ImGui.InputText( "##Select/GamePath/" + Id, ref gamePathInput, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "LOAD##Select/GamePath/" + Id ) )
+            if( ImGui.Button( "SELECT##Select/GamePath/" + Id ) )
             {
-                bool result = _plugin.Manager.GetGameFile( gamePathInput, out var avfx );
-                if( result )
-                {
-                    _plugin.MainUI.sourceString = "[GAME] " + gamePathInput;
-                    _plugin.LoadAVFX( avfx );
-                }
+                OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GamePath, "[GAME] " + gamePathInput, gamePathInput ) );
             }
 
             ImGui.EndTabItem();
         }
 
         public string gameItemsSearchInput = "";
+        public string gameItemVfxPath = "";
+        public string gameItemImcPath = "";
         public XivItem SelectedItem = null;
         public void DrawGameItems()
         {
@@ -161,7 +175,16 @@ namespace VFXEditor.UI
 
                 if(ImGui.Selectable(item.Name, SelectedItem == item ) )
                 {
-                    SelectedItem = item;
+                    if(item != SelectedItem )
+                    {
+                        bool result =_plugin.Manager.SelectItem( item, out LoadedItem);
+                        if( result )
+                        {
+                            gameItemVfxPath = LoadedItem.GetVFXPath();
+                            gameItemImcPath = LoadedItem.ImcPath;
+                        }
+                        SelectedItem = item;
+                    }
                 }
             }
             ImGui.EndChild();
@@ -172,9 +195,27 @@ namespace VFXEditor.UI
             }
             else
             {
-                if( ImGui.Button( "LOAD##Select-GameItem/" + Id ) )
+                if(LoadedItem != null )
                 {
-                    // ....
+                    ImGui.Text( LoadedItem.Item.Name );
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                    ImGui.Text( "Variant: " + LoadedItem.Item.Variant);
+                    ImGui.Text( "IMC Count: " + LoadedItem.Count );
+                    ImGui.Text( "VFX Id: " + LoadedItem.VfxId );
+
+                    ImGui.InputText( "IMC Path##Select/GameItems/" + Id, ref gameItemImcPath, 255, ImGuiInputTextFlags.ReadOnly );
+                    ImGui.InputText( "VFX Path##Select/GameItems/" + Id, ref gameItemVfxPath, 255, ImGuiInputTextFlags.ReadOnly);
+                    if( LoadedItem.VfxExists )
+                    {
+                        if( ImGui.Button( "SELECT##Select-GameItem/" + Id ) )
+                        {
+                            OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[ITEM] " + LoadedItem.Item.Name, gameItemVfxPath ) );
+                        }
+                    }
+                }
+                else
+                {
+                    ImGui.Text( "No data found" );
                 }
             }
             ImGui.Columns( 1 );

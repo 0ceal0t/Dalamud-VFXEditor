@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -30,7 +31,6 @@ namespace VFXEditor.UI
         {
             VFXMain = new VFX.UIMain( _plugin.AVFX );
         }
-
         public void UnloadAVFX()
         {
             VFXMain = null;
@@ -85,7 +85,6 @@ namespace VFXEditor.UI
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            // VFX view here
 
             ImGui.BeginChild( "MainChild" );
             if(VFXMain == null )
@@ -94,6 +93,42 @@ namespace VFXEditor.UI
             }
             else
             {
+                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.8f, 0.25f, 0.25f, 1 ) );
+                if( ImGui.Button( "UPDATE" ) )
+                {
+                    _plugin.Manager.SaveTempFile( _plugin.AVFX );
+                    _plugin.ResourceLoader.ReRender();
+                }
+                ImGui.PopStyleColor();
+                ImGui.SameLine();
+                if( ImGui.Button( "Export" ) )
+                {
+                    Task.Run( async () =>
+                    {
+                        var picker = new SaveFileDialog
+                        {
+                            Filter = "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*",
+                            Title = "Select a Save Location."
+                        };
+                        var result = await picker.ShowDialogAsync();
+                        if( result == DialogResult.OK )
+                        {
+                            try
+                            {
+                                _plugin.Manager.SaveLocalFile( picker.FileName, _plugin.AVFX );
+                            }
+                            catch( Exception ex )
+                            {
+                                PluginLog.LogError( ex, "Could not select a save location file." );
+                            }
+                        }
+                    } );
+                }
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                ImGui.Separator();
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                //================================
                 VFXMain.Draw();
             }
             ImGui.EndChild();
@@ -115,7 +150,7 @@ namespace VFXEditor.UI
             ImGui.SetColumnWidth( 0, 80 );
             ImGui.Text( "Source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( "Preview" );
+            ImGui.Text( "Replace" );
             ImGui.NextColumn();
 
             ImGui.SetColumnWidth( 1, 500 );
@@ -132,12 +167,12 @@ namespace VFXEditor.UI
             }
             if( ImGui.Button( "Select##MainInterfaceFiles-PreviewSelect" ) )
             {
-                // ... 
+                _plugin.PreviewUI.Show( showLocal: false );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "Remove##MainInterfaceFiles-PreviewRemove" ) )
+            if( ImGui.Button( "Reset##MainInterfaceFiles-PreviewRemove" ) )
             {
-                // ...
+                _plugin.RemoveReplaceAVFX();
             }
 
             ImGui.Columns( 1 );

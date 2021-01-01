@@ -61,9 +61,7 @@ namespace VFXEditor
 
 
         public bool LogAllFiles = false;
-        public bool EnableHooks = false;
-
-        public bool swapAVFX = false;
+        public bool EnableHooks = true;
 
 
         public ResourceLoader( Plugin plugin )
@@ -159,11 +157,11 @@ namespace VFXEditor
                 PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
             }
 
-
+            // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
-            if(gameFsPath == "chara/weapon/w2101/obj/body/b0006/vfx/eff/vw0002.avfx" && swapAVFX)
+            if(gameFsPath == Plugin.ReplaceAVFXPath && !(Plugin.ReplaceAVFXPath == ""))
             {
-                replaceFile = new FileInfo( @"D:\FFXIV\TOOLS\py\avfx\vfx\BACKUP\SAM.avfx");
+                replaceFile = new FileInfo(Plugin.Manager.TempPath);
             }
             var fsPath = replaceFile?.FullName;
 
@@ -175,7 +173,6 @@ namespace VFXEditor
 
             var cleanPath = fsPath.Replace( '\\', '/' );
             var path = Encoding.ASCII.GetBytes( cleanPath );
-
             var bPath = stackalloc byte[path.Length + 1];
             Marshal.Copy( path, 0, new IntPtr( bPath ), path.Length );
             pPath = ( char* )bPath;
@@ -183,11 +180,9 @@ namespace VFXEditor
             Crc32.Init();
             Crc32.Update( path );
             *pResourceHash = Crc32.Checksum;
-
 #if DEBUG
             PluginLog.Log( "[GetResourceHandler] resolved {GamePath} to {NewPath}", gameFsPath, fsPath );
 #endif
-            
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
         }
 
@@ -205,12 +200,10 @@ namespace VFXEditor
 #if DEBUG
             PluginLog.Log( "loading modded file: {GameFsPath}", gameFsPath );
 #endif
-
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
             // note: must be utf16
             var utfPath = Encoding.Unicode.GetBytes( gameFsPath );
-
             Marshal.Copy( utfPath, 0, new IntPtr( &pFileDesc->UtfFileName ), utfPath.Length );
             var fd = stackalloc byte[0x20 + utfPath.Length + 0x16];
             Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
@@ -228,21 +221,24 @@ namespace VFXEditor
 
         public unsafe void ReRender()
         {
-            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
-            var charBaseAddr = player.Address;
-
-            Task.Run( () =>
+            if( EnableHooks )
             {
-                var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
-                var renderOffset = charBaseAddr + 0x104;
+                var player = Plugin.PluginInterface.ClientState.LocalPlayer;
+                var charBaseAddr = player.Address;
 
-                Marshal.WriteByte( entityOffset, 0x02 );
-                Marshal.WriteByte( renderOffset, 0x02 );
-                Thread.Sleep( 100 );
-                Marshal.WriteByte( renderOffset, 0x00 );
-                Thread.Sleep( 100 );
-                Marshal.WriteByte( entityOffset, 0x01 );
-            } );
+                Task.Run( () =>
+                {
+                    var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
+                    var renderOffset = charBaseAddr + 0x104;
+
+                    Marshal.WriteByte( entityOffset, 0x02 );
+                    Marshal.WriteByte( renderOffset, 0x02 );
+                    Thread.Sleep( 100 );
+                    Marshal.WriteByte( renderOffset, 0x00 );
+                    Thread.Sleep( 100 );
+                    Marshal.WriteByte( entityOffset, 0x01 );
+                } );
+            }
         }
 
         public void Enable()
@@ -279,9 +275,6 @@ namespace VFXEditor
         {
             if( IsEnabled )
                 Disable();
-            // ReadSqpackHook.Disable();
-            // GetResourceSyncHook.Disable();
-            // GetResourceAsyncHook.Disable();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Lumina.Excel.GeneratedSheets;
+using System.IO;
 
 namespace VFXEditor
 {
@@ -15,36 +16,22 @@ namespace VFXEditor
     {
         public List<XivItem> Items;
         public Plugin _plugin;
+        public string TempPath;
 
         public DataManager(Plugin plugin )
         {
             _plugin = plugin;
             // =======================
+            TempPath = Path.Combine( Directory.GetCurrentDirectory(), "VFXTempFile.avfx" );
+            PluginLog.Log( "Temp file location: " + TempPath );
 
-            /*
-            Task.Run( async () => {
-                try
-                {
-                    return _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().ToList();
-                }
-                catch( Exception e)
-                {
-                    PluginLog.LogError( e.ToString() );
-                    return new List<Lumina.Excel.GeneratedSheets.VFX>();
-                }
-            } ).ContinueWith( t => {
-                foreach(var vfx in t.Result )
-                {
-                    PluginLog.Log( vfx.Location );
-                }
-            } );
-            */
+            //_plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().ToList();
 
             Items = new List<XivItem>();
             Task.Run( async () => {
                 try
                 {
-                    return _plugin.PluginInterface.Data.GetExcelSheet<Item>().Where( i => !string.IsNullOrEmpty( i.Name ) ).ToList();
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1).ToList();
                 }
                 catch( Exception e )
                 {
@@ -59,20 +46,62 @@ namespace VFXEditor
                     if( i.HasModel )
                     {
                         Items.Add( i );
-                        /*if( i.HasSub )
+                        if( i.HasSub )
                         {
                             Items.Add( i.SubItem );
-                        }*/
+                        }
                     }
                 }
             } );
         }
 
-        // Export avfx
+        // ======= Select item =======
+        public bool SelectItem(XivItem item, out XivSelectedItem selectedItem)
+        {
+            selectedItem = null;
+            string imcPath = item.GetImcPath();
+            bool result = _plugin.PluginInterface.Data.FileExists( imcPath );
+            if( result )
+            {
+                try
+                {
+                    var file = _plugin.PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    selectedItem = new XivSelectedItem(file, item);
+                }
+                catch( Exception e )
+                {
+                    PluginLog.LogError( e.ToString() );
+                    return false;
+                }
+            }
+            return result;
+        }
 
-        // Temp avfx for update
+        // ======  Export avfx  ======
+        public bool SaveLocalFile(string path, AVFXBase avfx )
+        {
+            try
+            {
+                var node = avfx.toAVFX();
+                var bytes = node.toBytes();
+                File.WriteAllBytes( path, bytes );
+            }
+            catch(Exception ex )
+            {
+                PluginLog.LogError( "Could not write to file: " + path );
+                PluginLog.LogError( ex.ToString() );
+                return false;
+            }
+            return true;
+        }
 
-        // Get AVFX from local
+        // ====== Temp avfx for update ====
+        public bool SaveTempFile(AVFXBase avfx )
+        {
+            return SaveLocalFile( TempPath, avfx );
+        }
+
+        // ====== Get AVFX from local =====
         public bool GetLocalFile(string path, out AVFXBase avfx)
         {
             avfx = null;
@@ -97,11 +126,11 @@ namespace VFXEditor
             return true;
         }
 
-        // Get AVFX from game
+        // ===== Get AVFX from game ======
         public bool GetGameFile(string path, out AVFXBase avfx)
         {
             avfx = null;
-            bool result = !_plugin.PluginInterface.Data.FileExists( path );
+            bool result = _plugin.PluginInterface.Data.FileExists( path );
             if( result )
             {
                 try

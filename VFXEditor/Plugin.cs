@@ -21,6 +21,7 @@ namespace VFXEditor
 
         public MainInterface MainUI { get; set; }
         public VFXSelectDialog SelectUI { get; set; }
+        public VFXSelectDialog PreviewUI { get; set; }
 
         public AVFXBase AVFX = null;
         public DataManager Manager;
@@ -45,14 +46,70 @@ namespace VFXEditor
 
             ResourceLoader.Init();
             ResourceLoader.Enable();
-
             MainUI = new MainInterface( this );
-            SelectUI = new VFXSelectDialog( this, "LoadDialog");
             Manager = new DataManager( this );
+            SelectUI = new VFXSelectDialog( this, "Load File" );
+            PreviewUI = new VFXSelectDialog( this, "Replace File" );
+            SelectUI.OnSelect += SelectAVFX;
+            PreviewUI.OnSelect += ReplaceAVFX;
+
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
-
+            PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
+        }
+
+        public void SelectAVFX(VFXSelectResult selectResult )
+        {
+            switch( selectResult.Type )
+            {
+                case VFXSelectType.Local:
+                    bool localResult = Manager.GetLocalFile( selectResult.Path, out var localAvfx );
+                    if( localResult )
+                    {
+                        LoadAVFX( localAvfx );
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    break;
+                case VFXSelectType.GameItem:
+                case VFXSelectType.GamePath:
+                    bool gameResult = Manager.GetGameFile( selectResult.Path, out var gameAvfx );
+                    if( gameResult )
+                    {
+                        LoadAVFX( gameAvfx );
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            MainUI.sourceString = selectResult.DisplayString;
+        }
+
+        public string ReplaceAVFXPath = "";
+        public void ReplaceAVFX(VFXSelectResult replaceResult )
+        {
+            switch( replaceResult.Type )
+            {
+                case VFXSelectType.GameItem:
+                case VFXSelectType.GamePath:
+                    ReplaceAVFXPath = replaceResult.Path;
+                    break;
+                default:
+                    return;
+            }
+            MainUI.previewString = replaceResult.DisplayString;
+        }
+        public void RemoveReplaceAVFX()
+        {
+            ReplaceAVFXPath = "";
+            MainUI.previewString = "[NONE]";
         }
 
         public void LoadAVFX(AVFXBase avfx )
