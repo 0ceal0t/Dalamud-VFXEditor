@@ -14,7 +14,6 @@ namespace VFXEditor
 {
     public class DataManager
     {
-        public List<XivItem> Items;
         public Plugin _plugin;
         public string TempPath;
 
@@ -24,14 +23,21 @@ namespace VFXEditor
             // =======================
             TempPath = Path.Combine( Directory.GetCurrentDirectory(), "VFXTempFile.avfx" );
             PluginLog.Log( "Temp file location: " + TempPath );
+        }
 
-            //_plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().ToList();
-
-            Items = new List<XivItem>();
+        // ========= LOAD ITEMS ===========
+        public List<XivItem> Items = new List<XivItem>();
+        public bool ItemsLoaded = false;
+        public void LoadItems()
+        {
+            if( ItemsLoaded )
+                return;
+            ItemsLoaded = true;
+            PluginLog.Log( "Loading Items" );
             Task.Run( async () => {
                 try
                 {
-                    return _plugin.PluginInterface.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1).ToList();
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 ).ToList();
                 }
                 catch( Exception e )
                 {
@@ -46,16 +52,89 @@ namespace VFXEditor
                     if( i.HasModel )
                     {
                         Items.Add( i );
-                        if( i.HasSub )
-                        {
-                            Items.Add( i.SubItem );
-                        }
+                    }
+                    if( i.HasSub )
+                    {
+                        Items.Add( i.SubItem );
                     }
                 }
             } );
         }
 
-        // ======= Select item =======
+        // =========== LOAD STATUS =========
+        public List<XivStatus> Status = new List<XivStatus>();
+        public bool StatusLoaded = false;
+        public void LoadStatus()
+        {
+            if( StatusLoaded )
+                return;
+            StatusLoaded = true;
+            PluginLog.Log( "Loading Status" );
+            Task.Run( async () => {
+                try
+                {
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
+                }
+                catch( Exception e )
+                {
+                    PluginLog.LogError( e.ToString() );
+                    return new List<Status>();
+                }
+            } ).ContinueWith( t =>
+            {
+                foreach( var item in t.Result )
+                {
+                    var i = new XivStatus( item );
+                    if( i.VfxExists )
+                    {
+                        Status.Add( i );
+                    }
+                }
+            } );
+
+        }
+
+        // =========== LOAD ACTION =========
+        public List<XivAction> Actions = new List<XivAction>();
+        public bool ActionsLoaded = false;
+        public void LoadActions()
+        {
+            if( ActionsLoaded )
+                return;
+            ActionsLoaded = true;
+            PluginLog.Log( "Loading Actions" );
+            Task.Run( async () => {
+                try
+                {
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
+                }
+                catch( Exception e )
+                {
+                    PluginLog.LogError( e.ToString() );
+                    return new List<Lumina.Excel.GeneratedSheets.Action>();
+                }
+            } ).ContinueWith( t =>
+            {
+                foreach( var item in t.Result )
+                {
+                    var i = new XivAction( item );
+                    if( i.PlayerAction )
+                    {
+                        if( i.VfxExists )
+                        {
+                            Actions.Add( i );
+                        }
+                        if( i.HitVFXExists )
+                        {
+                            Actions.Add( i.HitAction );
+                        }
+                    }
+                }
+            } );
+
+        }
+
+        // ======= SELECT ITEM =======
         public bool SelectItem(XivItem item, out XivSelectedItem selectedItem)
         {
             selectedItem = null;
@@ -67,6 +146,33 @@ namespace VFXEditor
                 {
                     var file = _plugin.PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivSelectedItem(file, item);
+                }
+                catch( Exception e )
+                {
+                    PluginLog.LogError( e.ToString() );
+                    return false;
+                }
+            }
+            return result;
+        }
+
+        // ======= SELECT ACTION =======
+        public bool SelectAction( XivAction action, out XivSelectedAction selectedAction )
+        {
+            selectedAction = null;
+            if( !action.SelfVFXExists ) // no need to get a file
+            {
+                selectedAction = new XivSelectedAction( null, action );
+                return true;
+            }
+            string tmbPath = action.GetTmbPath();
+            bool result = _plugin.PluginInterface.Data.FileExists( tmbPath );
+            if( result )
+            {
+                try
+                {
+                    var file = _plugin.PluginInterface.Data.GetFile( tmbPath );
+                    selectedAction = new XivSelectedAction( file, action );
                 }
                 catch( Exception e )
                 {
@@ -101,6 +207,7 @@ namespace VFXEditor
             return SaveLocalFile( TempPath, avfx );
         }
 
+        public AVFXNode LastImportNode = null;
         // ====== Get AVFX from local =====
         public bool GetLocalFile(string path, out AVFXBase avfx)
         {
@@ -114,6 +221,7 @@ namespace VFXEditor
                 }
                 if( node == null )
                     return false;
+                LastImportNode = node;
                 AVFXBase _avfx = new AVFXBase();
                 _avfx.read( node );
                 avfx = _avfx;
@@ -141,6 +249,9 @@ namespace VFXEditor
                     {
                         PluginLog.Log( message );
                     }
+                    if( node == null )
+                        return false;
+                    LastImportNode = node;
                     AVFXBase _avfx = new AVFXBase();
                     _avfx.read( node );
                     avfx = _avfx;

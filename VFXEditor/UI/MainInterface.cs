@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -93,7 +94,7 @@ namespace VFXEditor.UI
             }
             else
             {
-                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.8f, 0.25f, 0.25f, 1 ) );
+                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.25f, 0.8f, 0.25f, 1 ) );
                 if( ImGui.Button( "UPDATE" ) )
                 {
                     _plugin.Manager.SaveTempFile( _plugin.AVFX );
@@ -123,6 +124,17 @@ namespace VFXEditor.UI
                             }
                         }
                     } );
+                }
+                ImGui.SameLine();
+                if(ImGui.Button("[DEBUG] Verify" ) )
+                {
+                    var node = _plugin.AVFX.toAVFX();
+                    bool verifyResult = _plugin.Manager.LastImportNode.CheckEquals( node, out List<string> messages );
+                    PluginLog.Log( "[VERIFY RESULT]: " + verifyResult );
+                    foreach(var m in messages )
+                    {
+                        PluginLog.Log( m );
+                    }
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -196,6 +208,15 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             // ==========================
+            if( ImGui.Button( "Github" ) )
+            {
+                Process.Start( "https://github.com/mkaminsky11/Dalamud-VFXEditor/issues" );
+            }
+            ImGui.TextWrapped( @"This plugin works by replacing an existing VFX with another one. It does not, however, actually modify any of the game's internal files.
+If you want to make the modification permanent, you will need to create a mod using your platform of choice.
+
+If you are having issues loading a VFX, please open a Github issue. Make sure to specify either the in-game path of the VFX file or attach the file directly."
+        );
 
             ImGui.EndTabItem();
         }

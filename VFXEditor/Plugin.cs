@@ -76,6 +76,8 @@ namespace VFXEditor
                     break;
                 case VFXSelectType.GameItem:
                 case VFXSelectType.GamePath:
+                case VFXSelectType.GameStatus:
+                case VFXSelectType.GameAction:
                     bool gameResult = Manager.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult )
                     {
@@ -83,6 +85,7 @@ namespace VFXEditor
                     }
                     else
                     {
+                        PluginLog.Log( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;
@@ -99,6 +102,8 @@ namespace VFXEditor
             {
                 case VFXSelectType.GameItem:
                 case VFXSelectType.GamePath:
+                case VFXSelectType.GameStatus:
+                case VFXSelectType.GameAction:
                     ReplaceAVFXPath = replaceResult.Path;
                     break;
                 default:

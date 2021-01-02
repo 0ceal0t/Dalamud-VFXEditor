@@ -61,7 +61,7 @@ namespace VFXEditor
 
 
         public bool LogAllFiles = false;
-        public bool EnableHooks = true;
+        public bool EnableHooks = false;
 
 
         public ResourceLoader( Plugin plugin )
