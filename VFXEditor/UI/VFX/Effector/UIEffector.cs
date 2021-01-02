@@ -46,6 +46,9 @@ namespace VFXEditor.UI.VFX
                 case EffectorType.CameraQuake:
                     Data = new UIEffectorDataCameraQuake((AVFXEffectorDataCameraQuake)Effector.Data);
                     break;
+                case EffectorType.DirectionalLight:
+                    Data = new UIEffectorDataDirectionalLight( ( AVFXEffectorDataDirectionalLight )Effector.Data );
+                    break;
                 default:
                     Data = null;
                     break;

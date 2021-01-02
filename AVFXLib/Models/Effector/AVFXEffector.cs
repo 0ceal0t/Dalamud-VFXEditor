@@ -95,8 +95,7 @@ namespace AVFXLib.Models
                     Data = new AVFXEffectorDataPointLight("data");
                     break;
                 case EffectorType.DirectionalLight:
-                    AVFXNode.LogMessages.Add( "DirLight Effector Data!" );
-                    Data = null;
+                    Data = new AVFXEffectorDataDirectionalLight( "data" );
                     break;
                 case EffectorType.RadialBlur:
                     Data = new AVFXEffectorDataRadialBlur("data");

@@ -68,7 +68,7 @@ namespace VFXEditor
         {
             if( !CastVFXExists )
                 return "--";
-            return castPrefix + CastVFXExists + ".avfx";
+            return castPrefix + CastVFX + ".avfx";
         }
 
         public string GetTmbPath()

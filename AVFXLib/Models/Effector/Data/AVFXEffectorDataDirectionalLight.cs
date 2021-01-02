@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,20 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataDirectionalLight : AVFXEffectorData
     {
-        // TODO: DON'T HAVE COMPLETE DATA
+        public AVFXCurveColor Ambient = new AVFXCurveColor( "ambient", "Amb" );
+        public AVFXCurveColor Color = new AVFXCurveColor( "color", "Col" );
+        public AVFXCurve Power = new AVFXCurve( "power", "Pow" );
+        public AVFXCurve Rotation = new AVFXCurve( "rotation", "Rot" );
 
         List<Base> Attributes;
 
         public AVFXEffectorDataDirectionalLight(string jsonPath) : base(jsonPath, "Data")
         {
             Attributes = new List<Base>(new Base[]{
+                Ambient,
+                Color,
+                Power,
+                Rotation
             });
         }
 

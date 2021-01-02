@@ -72,7 +72,7 @@ namespace VFXEditor.UI
                 return;
             if( !DrawOnce )
             {
-                ImGui.SetNextWindowSize( new Vector2( 600, 500 ) );
+                ImGui.SetNextWindowSize( new Vector2( 800, 500 ) );
                 DrawOnce = true;
             }
             // ================
@@ -230,6 +230,8 @@ namespace VFXEditor.UI
                         {
                             OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[ITEM] " + LoadedItem.Item.Name, LoadedItem.GetVFXPath() ) );
                         }
+                        ImGui.SameLine();
+                        Copy( LoadedItem.GetVFXPath(), id:"Select-GameItem/Copy/" + Id );
                     }
                 }
                 else
@@ -298,6 +300,8 @@ namespace VFXEditor.UI
                     {
                         OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX1Path() ) );
                     }
+                    ImGui.SameLine();
+                    Copy( SelectedStatus.GetLoopVFX1Path(), id: "Select-GameStatus-Loop1/Copy/" + Id );
                 }
                 // ==== LOOP 2 =====
                 ImGui.Text( "Loop VFX2: " );
@@ -309,6 +313,8 @@ namespace VFXEditor.UI
                     {
                         OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX2Path() ) );
                     }
+                    ImGui.SameLine();
+                    Copy( SelectedStatus.GetLoopVFX2Path(), id: "Select-GameStatus-Loop2/Copy/" + Id );
                 }
                 // ==== LOOP 3 =====
                 ImGui.Text( "Loop VFX3: " );
@@ -320,6 +326,8 @@ namespace VFXEditor.UI
                     {
                         OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX3Path() ) );
                     }
+                    ImGui.SameLine();
+                    Copy( SelectedStatus.GetLoopVFX3Path(), id: "Select-GameStatus-Loop3/Copy/" + Id );
                 }
             }
             ImGui.Columns( 1 );
@@ -388,6 +396,8 @@ namespace VFXEditor.UI
                         {
                             OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + LoadedAction.Action.Name, LoadedAction.CastVfxPath ) );
                         }
+                        ImGui.SameLine();
+                        Copy( LoadedAction.CastVfxPath, id: "Select-GameAction-Cast/Copy/" + Id );
                     }
 
                     if( LoadedAction.SelfVfxExists )
@@ -405,6 +415,8 @@ namespace VFXEditor.UI
                             {
                                 OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + LoadedAction.Action.Name, _vfx ) );
                             }
+                            ImGui.SameLine();
+                            Copy( _vfx, id: "Select-GameAction-" + idx + "/Copy/" + Id );
                             idx++;
                         }
                     }
@@ -419,12 +431,21 @@ namespace VFXEditor.UI
             ImGui.EndTabItem();
         }
 
+        // ======== UTIL ==========
         public void DisplayPath(string path )
         {
             ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
             ImGui.TextWrapped( path );
             ImGui.PopStyleColor();
-
+        }
+        public void Copy(string copyPath, string id = "" )
+        {
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
+            if(ImGui.Button("Copy##" + id ) )
+            {
+                ImGui.SetClipboardText( copyPath );
+            }
+            ImGui.PopStyleColor();
         }
     }
 }

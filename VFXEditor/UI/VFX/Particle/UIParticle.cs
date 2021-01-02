@@ -116,6 +116,9 @@ namespace VFXEditor.UI.VFX
                 case ParticleType.Windmill:
                     Data = new UIParticleDataWindmill((AVFXParticleDataWindmill)Particle.Data);
                     break;
+                case ParticleType.Line:
+                    Data = new UIParticleDataLine( ( AVFXParticleDataLine )Particle.Data );
+                    break;
                 default:
                     Data = null;
                     break;

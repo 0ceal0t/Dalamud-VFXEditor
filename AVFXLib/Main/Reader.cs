@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -77,6 +77,7 @@ namespace AVFXLib.Main
             "SjI",
             "Scr",
             "RotR",
+            "Pow",
             "NPow",
             "RPow",
             "DPow",
@@ -161,7 +162,8 @@ namespace AVFXLib.Main
             "Moph",
             "COF",
             "COFR",
-            "WID"
+            "WID",
+            "Amb"
         });
 
         static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{
