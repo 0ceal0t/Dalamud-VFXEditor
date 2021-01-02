@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -95,12 +95,16 @@ namespace AVFXLib.Models
                     Data = new AVFXEffectorDataPointLight("data");
                     break;
                 case EffectorType.DirectionalLight:
-                    throw new System.InvalidOperationException("Directional Light Effector!");
+                    AVFXNode.LogMessages.Add( "DirLight Effector Data!" );
+                    Data = null;
+                    break;
                 case EffectorType.RadialBlur:
                     Data = new AVFXEffectorDataRadialBlur("data");
                     break;
                 case EffectorType.BlackHole:
-                    throw new System.InvalidOperationException("Black Hole Effector!");
+                    AVFXNode.LogMessages.Add( "ClearHole Effector Data!" );
+                    Data = null;
+                    break;
                 case EffectorType.CameraQuake:
                     Data = new AVFXEffectorDataCameraQuake("data");
                     break;

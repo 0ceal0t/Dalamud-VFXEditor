@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX
         public UIScheduleView ScheduleView;
         public UIBinderView BinderView;
 
-        public UIMain(AVFXBase avfx)
+        public UIMain(AVFXBase avfx, Plugin plugin)
         {
             AVFX = avfx;
             // =========================
@@ -33,7 +33,7 @@ namespace VFXEditor.UI.VFX
             EmitterView = new UIEmitterView(avfx);
             EffectorView = new UIEffectorView(avfx);
             TimelineView = new UITimelineView(avfx);
-            TextureView = new UITextureView(avfx);
+            TextureView = new UITextureView(avfx, plugin);
             ModelView = new UIModelView(avfx);
             ScheduleView = new UIScheduleView(avfx);
         }

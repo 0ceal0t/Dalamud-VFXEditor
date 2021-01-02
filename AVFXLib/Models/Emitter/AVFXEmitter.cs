@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -244,9 +244,13 @@ namespace AVFXLib.Models
                     Data = null;
                     break;
                 case EmitterType.Cone:
-                    throw new System.InvalidOperationException("Cone Emitter!");
+                    AVFXNode.LogMessages.Add( "Cone Emitter Data!" );
+                    Data = null;
+                    break;
                 case EmitterType.ConeModel:
-                    throw new System.InvalidOperationException("Cone Model Emitter!");
+                    AVFXNode.LogMessages.Add( "Cone Model Data!" );
+                    Data = null;
+                    break;
                 case EmitterType.SphereModel:
                     Data = new AVFXEmitterDataSphereModel("data");
                     break;

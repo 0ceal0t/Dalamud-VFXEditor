@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,12 +10,20 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLine : AVFXParticleData
     {
+        public LiteralInt LineCount = new LiteralInt( "lineCount", "LnCT" );
+        public AVFXCurve Length = new AVFXCurve( "length", "Len" );
+        public AVFXCurveColor ColorBegin = new AVFXCurveColor( "colorBegin", name: "ColB" );
+        public AVFXCurveColor ColorEnd = new AVFXCurveColor( "colorEnd", name: "ColE" );
 
         List<Base> Attributes;
 
         public AVFXParticleDataLine(string jsonPath) : base(jsonPath, "Data")
         {
             Attributes = new List<Base>(new Base[]{
+                LineCount,
+                Length,
+                ColorBegin,
+                ColorEnd
             });
         }
 

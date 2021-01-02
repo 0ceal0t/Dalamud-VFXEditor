@@ -10,7 +10,14 @@
 - copy
 
 - settings?
-- github link + help
+- log all resources
+
 - Penumbra.json?
-- remove options which cause it to crash (Cone emitter, etc.)
+- fix options which cause it to crash (Cone emitter, etc.)
 - error modals
+- log
+
+- open recent
+- open from equipped
+
+- penumbra warning

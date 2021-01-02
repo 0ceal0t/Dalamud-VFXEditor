@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 
 namespace VFXEditor.UI
 {
@@ -30,7 +32,7 @@ namespace VFXEditor.UI
 
         public void RefreshAVFX()
         {
-            VFXMain = new VFX.UIMain( _plugin.AVFX );
+            VFXMain = new VFX.UIMain( _plugin.AVFX, _plugin );
         }
         public void UnloadAVFX()
         {
@@ -104,27 +106,16 @@ namespace VFXEditor.UI
                 ImGui.SameLine();
                 if( ImGui.Button( "Export" ) )
                 {
-                    Task.Run( async () =>
-                    {
-                        var picker = new SaveFileDialog
-                        {
-                            Filter = "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*",
-                            Title = "Select a Save Location."
-                        };
-                        var result = await picker.ShowDialogAsync();
-                        if( result == DialogResult.OK )
-                        {
-                            try
-                            {
-                                _plugin.Manager.SaveLocalFile( picker.FileName, _plugin.AVFX );
-                            }
-                            catch( Exception ex )
-                            {
-                                PluginLog.LogError( ex, "Could not select a save location file." );
-                            }
-                        }
-                    } );
+                    var node = _plugin.AVFX.toAVFX();
+                    SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes() );
                 }
+                ImGui.SameLine();
+                if( ImGui.Button( "Export JSON" ) )
+                {
+                    JObject json = ( JObject )_plugin.AVFX.toJSON();
+                    SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString() );
+                }
+#if DEBUG
                 ImGui.SameLine();
                 if(ImGui.Button("[DEBUG] Verify" ) )
                 {
@@ -136,7 +127,12 @@ namespace VFXEditor.UI
                         PluginLog.Log( m );
                     }
                 }
-
+                ImGui.SameLine();
+                if( ImGui.Button( "[DEBUG] Export Raw" ) )
+                {
+                    SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ) );
+                }
+#endif
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 ImGui.Separator();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -219,6 +215,34 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         );
 
             ImGui.EndTabItem();
+        }
+
+        public void SaveDialog( string filter, string data )
+        {
+            SaveDialog( filter, Encoding.ASCII.GetBytes(data) );
+        }
+        public void SaveDialog(string filter, byte[] data )
+        {
+            Task.Run( async () =>
+            {
+                var picker = new SaveFileDialog
+                {
+                    Filter = filter,
+                    Title = "Select a Save Location."
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK )
+                {
+                    try
+                    {
+                        File.WriteAllBytes( picker.FileName, data );
+                    }
+                    catch( Exception ex )
+                    {
+                        PluginLog.LogError( ex, "Could not save to: " + picker.FileName );
+                    }
+                }
+            } );
         }
     }
 }

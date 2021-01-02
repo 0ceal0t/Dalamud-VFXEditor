@@ -105,6 +105,7 @@ namespace VFXEditor.UI
                 return;
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Text( ".avfx file located on your computer, eg: C:/Users/me/Downloads/awesome.avfx" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText( "##Select/Local/" + Id, ref localPathInput, 255 );
@@ -151,6 +152,7 @@ namespace VFXEditor.UI
                 return;
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Text( "In-game .avfx file, eg: vfx/common/eff/wp_astro1h.avfx" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText( "##Select/GamePath/" + Id, ref gamePathInput, 255 );
@@ -173,6 +175,11 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             _plugin.Manager.LoadItems();
+            if( !_plugin.Manager.ItemsLoaded )
+            {
+                ImGui.EndTabItem();
+                return;
+            }
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.InputText( "Search##Select/GameItemSearch/" + Id, ref gameItemsSearchInput, 255 );
@@ -244,6 +251,11 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             _plugin.Manager.LoadStatus();
+            if( !_plugin.Manager.StatusLoaded )
+            {
+                ImGui.EndTabItem();
+                return;
+            }
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.InputText( "Search##Select/GameStatusSearch/" + Id, ref gameStatussSearchInput, 255 );
@@ -327,6 +339,11 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             _plugin.Manager.LoadActions();
+            if( !_plugin.Manager.ActionsLoaded )
+            {
+                ImGui.EndTabItem();
+                return;
+            }
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.InputText( "Search##Select/GameActionSearch/" + Id, ref gameActionsSearchInput, 255 );

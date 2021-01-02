@@ -12,10 +12,12 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UITexture> Textures;
+        public Plugin _plugin;
 
-        public UITextureView(AVFXBase avfx)
+        public UITextureView(AVFXBase avfx, Plugin plugin)
         {
             AVFX = avfx;
+            _plugin = plugin;
             Init();
         }
         public override void Init()
@@ -24,7 +26,7 @@ namespace VFXEditor.UI.VFX
             Textures = new List<UITexture>();
             foreach (var texture in AVFX.Textures)
             {
-                Textures.Add(new UITexture(texture, this));
+                Textures.Add(new UITexture(texture, this, _plugin));
             }
         }
 

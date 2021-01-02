@@ -16,12 +16,15 @@ namespace VFXEditor.UI.VFX
         public int Idx;
         public string lastValue;
         public UIString Path;
+
+        public Plugin _plugin;
         // =======================
 
-        public UITexture(AVFXTexture texture, UITextureView view)
+        public UITexture(AVFXTexture texture, UITextureView view, Plugin plugin)
         {
             Texture = texture;
             View = view;
+            _plugin = plugin;
             Init();
         }
         public override void Init()
@@ -31,6 +34,7 @@ namespace VFXEditor.UI.VFX
             UIString.Change bytesToPath = BytesToPath;
             Path = new UIString("Path", Texture.Path, changeFunction: bytesToPath);
             lastValue = Texture.Path.Value;
+            _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
         }
 
         public override void Draw(string parentId)
@@ -51,6 +55,13 @@ namespace VFXEditor.UI.VFX
                 if(newValue != lastValue)
                 {
                     lastValue = newValue;
+                    _plugin.Manager.TexManager.LoadTexture( newValue );
+                }
+
+                if( _plugin.Manager.TexManager.PathToTex.ContainsKey( newValue ) )
+                {
+                    var a = _plugin.Manager.TexManager.PathToTex[newValue];
+                    ImGui.Image(a.ImGuiHandle, new Vector2(a.Width, a.Height));
                 }
             }
         }

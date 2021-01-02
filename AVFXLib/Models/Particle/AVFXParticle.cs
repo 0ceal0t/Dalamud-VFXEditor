@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -250,7 +250,9 @@ namespace AVFXLib.Models
             switch (type)
             {
                 case ParticleType.Parameter:
-                    throw new System.InvalidOperationException("Parameter Particle Data!");
+                    AVFXNode.LogMessages.Add( "Parameter Particle Data!" );
+                    Data = null;
+                    break;
                 case ParticleType.Powder:
                     Data = new AVFXParticleDataPowder("data");
                     break;
@@ -258,7 +260,8 @@ namespace AVFXLib.Models
                     Data = new AVFXParticleDataWindmill("data");
                     break;
                 case ParticleType.Line:
-                    throw new System.InvalidOperationException("Line Particle Data!");
+                    Data = new AVFXParticleDataLine( "data" );
+                    break;
                 case ParticleType.Model:
                     Data = new AVFXParticleDataModel("data");
                     break;

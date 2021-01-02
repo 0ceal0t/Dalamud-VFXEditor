@@ -15,11 +15,13 @@ namespace VFXEditor
     public class DataManager
     {
         public Plugin _plugin;
+        public TextureManager TexManager;
         public string TempPath;
 
         public DataManager(Plugin plugin )
         {
             _plugin = plugin;
+            TexManager = new TextureManager( _plugin );
             // =======================
             TempPath = Path.Combine( Directory.GetCurrentDirectory(), "VFXTempFile.avfx" );
             PluginLog.Log( "Temp file location: " + TempPath );
@@ -28,11 +30,12 @@ namespace VFXEditor
         // ========= LOAD ITEMS ===========
         public List<XivItem> Items = new List<XivItem>();
         public bool ItemsLoaded = false;
+        public bool ItemsWaiting = false;
         public void LoadItems()
         {
-            if( ItemsLoaded )
+            if( ItemsWaiting )
                 return;
-            ItemsLoaded = true;
+            ItemsWaiting = true; // start waiting
             PluginLog.Log( "Loading Items" );
             Task.Run( async () => {
                 try
@@ -58,17 +61,19 @@ namespace VFXEditor
                         Items.Add( i.SubItem );
                     }
                 }
+                ItemsLoaded = true;
             } );
         }
 
         // =========== LOAD STATUS =========
         public List<XivStatus> Status = new List<XivStatus>();
         public bool StatusLoaded = false;
+        public bool StatusWaiting = false;
         public void LoadStatus()
         {
-            if( StatusLoaded )
+            if( StatusWaiting )
                 return;
-            StatusLoaded = true;
+            StatusWaiting = true; // start waiting
             PluginLog.Log( "Loading Status" );
             Task.Run( async () => {
                 try
@@ -90,6 +95,7 @@ namespace VFXEditor
                         Status.Add( i );
                     }
                 }
+                StatusLoaded = true;
             } );
 
         }
@@ -97,11 +103,12 @@ namespace VFXEditor
         // =========== LOAD ACTION =========
         public List<XivAction> Actions = new List<XivAction>();
         public bool ActionsLoaded = false;
+        public bool ActionsWaiting = false;
         public void LoadActions()
         {
-            if( ActionsLoaded )
+            if( ActionsWaiting )
                 return;
-            ActionsLoaded = true;
+            ActionsWaiting = true; // start waiting
             PluginLog.Log( "Loading Actions" );
             Task.Run( async () => {
                 try
@@ -130,6 +137,7 @@ namespace VFXEditor
                         }
                     }
                 }
+                ActionsLoaded = true;
             } );
 
         }
@@ -183,7 +191,7 @@ namespace VFXEditor
             return result;
         }
 
-        // ======  Export avfx  ======
+        // ======  EXPORT AVFX  ======
         public bool SaveLocalFile(string path, AVFXBase avfx )
         {
             try
@@ -201,14 +209,14 @@ namespace VFXEditor
             return true;
         }
 
-        // ====== Temp avfx for update ====
+        // ====== TEMP AVFX ====
         public bool SaveTempFile(AVFXBase avfx )
         {
             return SaveLocalFile( TempPath, avfx );
         }
 
+        // ====== LOCAL AVFX =====
         public AVFXNode LastImportNode = null;
-        // ====== Get AVFX from local =====
         public bool GetLocalFile(string path, out AVFXBase avfx)
         {
             avfx = null;
@@ -234,7 +242,7 @@ namespace VFXEditor
             return true;
         }
 
-        // ===== Get AVFX from game ======
+        // ===== GAME AVFX ======
         public bool GetGameFile(string path, out AVFXBase avfx)
         {
             avfx = null;
