@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace AVFXLib.Models
         public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
         public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("textureCalculateColor", "TCCT");
         public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
+        public AVFXCurve Rate = new AVFXCurve( "rate", "Rate" );
         public AVFXCurve RPow = new AVFXCurve("reflectionPower", "RPow");
 
         List<Base> Attributes;
@@ -27,6 +28,7 @@ namespace AVFXLib.Models
                 TextureFilter,
                 TextureCalculateColor,
                 TextureIdx,
+                Rate,
                 RPow
             });
         }

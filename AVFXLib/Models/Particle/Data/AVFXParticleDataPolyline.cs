@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ namespace AVFXLib.Models
         public LiteralBool IsSpline = new LiteralBool("isSpline", "bSpl");
         public LiteralBool IsLocal = new LiteralBool("isLocal", "bLcl");
 
+        public AVFXCurve CF = new AVFXCurve( "CF_unknown", "CF" );
         public AVFXCurve Width = new AVFXCurve("width", "Wd");
         public AVFXCurve WidthRandom = new AVFXCurve("widthRandom", "WdR");
         public AVFXCurve WidthBegin = new AVFXCurve("widthBegin", "WdB");
@@ -58,6 +59,7 @@ namespace AVFXLib.Models
                 TagNumber,
                 IsSpline,
                 IsLocal,
+                CF,
                 Width,
                 WidthRandom,
                 WidthBegin,

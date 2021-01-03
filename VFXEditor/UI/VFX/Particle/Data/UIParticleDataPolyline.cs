@@ -36,6 +36,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Tag Number", Data.TagNumber));
             Attributes.Add(new UICheckbox("Is Spline", Data.IsSpline));
             Attributes.Add(new UICheckbox("Is Local", Data.IsLocal));
+            Attributes.Add( new UICurve( Data.CF, "CF (Unknown)" ) );
             Attributes.Add(new UICurve(Data.Width, "Width"));
             Attributes.Add(new UICurve(Data.WidthBegin, "Width Begin"));
             Attributes.Add(new UICurve(Data.WidthCenter, "Width Center"));

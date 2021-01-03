@@ -10,7 +10,7 @@ namespace VFXEditor
 {
     public class XivSelectedAction
     {
-        public XivAction Action;
+        public XivActionBase Action;
         public bool CastVfxExists = false;
         public string CastVfxPath;
 
@@ -20,7 +20,7 @@ namespace VFXEditor
 
         public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled ); // scuffed file parsing, because I literally don't give a shit about anything else in this file...probably
 
-        public XivSelectedAction( Lumina.Data.FileResource file, XivAction action )
+        public XivSelectedAction( Lumina.Data.FileResource file, XivActionBase action )
         {
             Action = action;
             CastVfxExists = action.CastVFXExists;

@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,29 +10,29 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataRadialBlur : AVFXEffectorData
     {
-        public LiteralFloat FadeStartDistance = new LiteralFloat("fadeStartDistance", "FSDc");
-        public LiteralFloat FadeEndDistance = new LiteralFloat("fadeEndDistance", "FEDc");
-        public LiteralEnum<ClipBasePoint> FadeBasePointType = new LiteralEnum<ClipBasePoint>("fadeBasePoint", "FaBP");
         public AVFXCurve Length = new AVFXCurve("length", "Len");
         public AVFXCurve Strength = new AVFXCurve("strength", "Str");
         public AVFXCurve Gradation = new AVFXCurve("gradation", "Gra");
         public AVFXCurve InnerRadius = new AVFXCurve("innerRadius", "IRad");
         public AVFXCurve OuterRadius = new AVFXCurve("outerRadius", "ORad");
+        public LiteralFloat FadeStartDistance = new LiteralFloat( "fadeStartDistance", "FSDc" );
+        public LiteralFloat FadeEndDistance = new LiteralFloat( "fadeEndDistance", "FEDc" );
+        public LiteralEnum<ClipBasePoint> FadeBasePointType = new LiteralEnum<ClipBasePoint>( "fadeBasePoint", "FaBP" );
 
         List<Base> Attributes;
 
         public AVFXEffectorDataRadialBlur(string jsonPath) : base(jsonPath, "Data")
         {
             Attributes = new List<Base>(new Base[]{
-                FadeStartDistance,
-                FadeEndDistance,
-                FadeBasePointType,
                 Length,
                 Strength,
                 Gradation,
                 InnerRadius,
-                OuterRadius
-            });
+                OuterRadius,
+                FadeStartDistance,
+                FadeEndDistance,
+                FadeBasePointType
+            } );
         }
 
         public override void read(AVFXNode node)

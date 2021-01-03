@@ -42,25 +42,36 @@ namespace VFXEditor.UI
         public bool ShowGameItems = true;
         public bool ShowGameStatus = true;
         public bool ShowGameActions = true;
+        public bool ShowGameNonPlayerActions = true;
 
         public string Id;
         public event Action<VFXSelectResult> OnSelect;
-
         public bool Visible = false;
+
+        public VFXActionSelect NonPlayerActionSelect;
+        public VFXActionSelect ActionSelect;
+        public VFXStatusSelect StatusSelect;
+        public VFXItemSelect ItemSelect;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
             _plugin = plugin;
             Id = id;
             // ===========================
+            NonPlayerActionSelect = new VFXActionSelect( id, "GameNPAction", _plugin.Manager.NonPlayerActions, _plugin, this );
+            ActionSelect = new VFXActionSelect( id, "GameAction", _plugin.Manager.Actions, _plugin, this );
+            StatusSelect = new VFXStatusSelect( id, "GameStatus", _plugin.Manager.Status, _plugin, this );
+            ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
         }
 
-        public void Show(bool showLocal = true, bool showGamePath = true, bool showGameItems = true, bool showGameStatus = true, bool ShowGameActions = true)
+        public void Show(bool showLocal = true, bool showGamePath = true, bool showGameItems = true, bool showGameStatus = true, bool showGameActions = true, bool showGameNonPlayerActions = true)
         {
             ShowLocal = showLocal;
             ShowGamePath = showGamePath;
             ShowGameItems = showGameItems;
             ShowGameStatus = showGameStatus;
+            ShowGameActions = showGameActions;
+            ShowGameNonPlayerActions = showGameNonPlayerActions;
             // ======================
             Visible = true;
         }
@@ -91,6 +102,8 @@ namespace VFXEditor.UI
                 DrawGameStatus();
             if( ShowGameActions )
                 DrawGameActions();
+            if( ShowGameNonPlayerActions )
+                DrawGameNonPlayerActions();
             ImGui.EndTabBar();
 
             ImGui.End();
@@ -104,13 +117,14 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             // ==========================
+            var id = "##Select/Local/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( ".avfx file located on your computer, eg: C:/Users/me/Downloads/awesome.avfx" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( "##Select/Local/" + Id, ref localPathInput, 255 );
+            ImGui.InputText( id + "Input", ref localPathInput, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( ( "Browse##Select/Local/" + Id ) ) )
+            if( ImGui.Button( ( "Browse" + id ) ) )
             {
                 Task.Run( async () =>
                 {
@@ -135,7 +149,7 @@ namespace VFXEditor.UI
                 } );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT##Select/Local/" + Id ) )
+            if( ImGui.Button( "SELECT" + id ) )
             {
                 OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
             }
@@ -151,13 +165,14 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             // ==========================
+            var id = "##Select/GamePath/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "In-game .avfx file, eg: vfx/common/eff/wp_astro1h.avfx" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( "##Select/GamePath/" + Id, ref gamePathInput, 255 );
+            ImGui.InputText( id + "Input", ref gamePathInput, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT##Select/GamePath/" + Id ) )
+            if( ImGui.Button( "SELECT" + id ) )
             {
                 OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GamePath, "[GAME] " + gamePathInput, gamePathInput ) );
             }
@@ -180,73 +195,11 @@ namespace VFXEditor.UI
                 ImGui.EndTabItem();
                 return;
             }
-            // ==========================
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search##Select/GameItemSearch/" + Id, ref gameItemsSearchInput, 255 );
-            ImGui.Columns( 2, "##Select/GameItemColumns/" + Id, true );
-
-            //
-            ImGui.BeginChild("##Select/GameItemsTree/" + Id);
-            foreach(var item in _plugin.Manager.Items )
-            {
-                if( !item.Name.Contains( gameItemsSearchInput ) )
-                    continue;
-
-                if(ImGui.Selectable(item.Name, SelectedItem == item ) )
-                {
-                    if(item != SelectedItem )
-                    {
-                        bool result =_plugin.Manager.SelectItem( item, out LoadedItem);
-                        SelectedItem = item;
-                    }
-                }
-            }
-            ImGui.EndChild();
-            ImGui.NextColumn();
-
-            if( SelectedItem == null ) {
-                ImGui.Text( "Select an item..." );
-            }
-            else
-            {
-                if(LoadedItem != null )
-                {
-                    ImGui.Text( LoadedItem.Item.Name );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                    ImGui.Text( "Variant: " + LoadedItem.Item.Variant);
-                    ImGui.Text( "IMC Count: " + LoadedItem.Count );
-                    ImGui.Text( "VFX Id: " + LoadedItem.VfxId );
-
-                    ImGui.Text( "IMC Path: " );
-                    ImGui.SameLine();
-                    DisplayPath( LoadedItem.ImcPath );
-
-                    ImGui.Text( "VFX Path: " );
-                    ImGui.SameLine();
-                    DisplayPath( LoadedItem.GetVFXPath() );
-                    if( LoadedItem.VfxExists )
-                    {
-                        if( ImGui.Button( "SELECT##Select-GameItem/" + Id ) )
-                        {
-                            OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[ITEM] " + LoadedItem.Item.Name, LoadedItem.GetVFXPath() ) );
-                        }
-                        ImGui.SameLine();
-                        Copy( LoadedItem.GetVFXPath(), id:"Select-GameItem/Copy/" + Id );
-                    }
-                }
-                else
-                {
-                    ImGui.Text( "No data found" );
-                }
-            }
-            ImGui.Columns( 1 );
-
+            ItemSelect.Draw();
             ImGui.EndTabItem();
         }
 
         // =========== GAME STATUS ================
-        public string gameStatussSearchInput = "";
-        public XivStatus SelectedStatus = null;
         public void DrawGameStatus()
         {
             var ret = ImGui.BeginTabItem( "Game Status##Select/" + Id );
@@ -258,89 +211,11 @@ namespace VFXEditor.UI
                 ImGui.EndTabItem();
                 return;
             }
-            // ==========================
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search##Select/GameStatusSearch/" + Id, ref gameStatussSearchInput, 255 );
-            ImGui.Columns( 2, "##Select/GameStatusColumns/" + Id, true );
-
-            //
-            ImGui.BeginChild( "##Select/GameStatussTree/" + Id );
-            foreach( var status in _plugin.Manager.Status )
-            {
-                if( !status.Name.Contains( gameStatussSearchInput ) )
-                    continue;
-
-                if( ImGui.Selectable( status.Name + "##" + status.RowId, SelectedStatus == status ) )
-                {
-                    if( status != SelectedStatus )
-                    {
-                        SelectedStatus = status;
-                    }
-                }
-            }
-            ImGui.EndChild();
-            ImGui.NextColumn();
-
-            if( SelectedStatus == null )
-            {
-                ImGui.Text( "Select a status..." );
-            }
-            else
-            {
-                ImGui.Text( SelectedStatus.Name );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-                // ==== LOOP 1 =====
-                ImGui.Text( "Loop VFX1: " );
-                ImGui.SameLine();
-                DisplayPath(SelectedStatus.GetLoopVFX1Path() );
-                if( SelectedStatus.LoopVFX1Exists )
-                {
-                    if( ImGui.Button( "SELECT##Select-GameStatus-Loop1/" + Id ) )
-                    {
-                        OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX1Path() ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( SelectedStatus.GetLoopVFX1Path(), id: "Select-GameStatus-Loop1/Copy/" + Id );
-                }
-                // ==== LOOP 2 =====
-                ImGui.Text( "Loop VFX2: " );
-                ImGui.SameLine();
-                DisplayPath( SelectedStatus.GetLoopVFX2Path() );
-                if( SelectedStatus.LoopVFX2Exists )
-                {
-                    if( ImGui.Button( "SELECT##Select-GameStatus-Loop2/" + Id ) )
-                    {
-                        OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX2Path() ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( SelectedStatus.GetLoopVFX2Path(), id: "Select-GameStatus-Loop2/Copy/" + Id );
-                }
-                // ==== LOOP 3 =====
-                ImGui.Text( "Loop VFX3: " );
-                ImGui.SameLine();
-                DisplayPath( SelectedStatus.GetLoopVFX3Path() );
-                if( SelectedStatus.LoopVFX3Exists )
-                {
-                    if( ImGui.Button( "SELECT##Select-GameStatus-Loop3/" + Id ) )
-                    {
-                        OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + SelectedStatus.Name, SelectedStatus.GetLoopVFX3Path() ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( SelectedStatus.GetLoopVFX3Path(), id: "Select-GameStatus-Loop3/Copy/" + Id );
-                }
-            }
-            ImGui.Columns( 1 );
-
+            StatusSelect.Draw();
             ImGui.EndTabItem();
         }
 
         // =========== GAME ACTIONS =============
-        public string gameActionsSearchInput = "";
-        public string gameActionVfxPath = "";
-        public string gameActionImcPath = "";
-        public XivAction SelectedAction = null;
-        public XivSelectedAction LoadedAction = null;
         public void DrawGameActions()
         {
             var ret = ImGui.BeginTabItem( "Game Action##Select/" + Id );
@@ -352,83 +227,29 @@ namespace VFXEditor.UI
                 ImGui.EndTabItem();
                 return;
             }
-            // ==========================
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search##Select/GameActionSearch/" + Id, ref gameActionsSearchInput, 255 );
-            ImGui.Columns( 2, "##Select/GameActionColumns/" + Id, true );
-
-            //
-            ImGui.BeginChild( "##Select/GameActionsTree/" + Id );
-            foreach( var action in _plugin.Manager.Actions )
-            {
-                if( !action.Name.Contains( gameActionsSearchInput ) )
-                    continue;
-
-                if( ImGui.Selectable( action.Name + "##" + action.RowId, SelectedAction == action ) )
-                {
-                    if( action != SelectedAction )
-                    {
-                        bool result = _plugin.Manager.SelectAction( action, out LoadedAction );
-                        SelectedAction = action;
-                    }
-                }
-            }
-            ImGui.EndChild();
-            ImGui.NextColumn();
-
-            if( SelectedAction == null )
-            {
-                ImGui.Text( "Select an action..." );
-            }
-            else
-            {
-                if( LoadedAction != null )
-                {
-                    ImGui.Text( LoadedAction.Action.Name );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-                    ImGui.Text( "Cast VFX Path: " );
-                    ImGui.SameLine();
-                    DisplayPath( LoadedAction.CastVfxPath);
-                    if( LoadedAction.CastVfxExists )
-                    {
-                        if( ImGui.Button( "SELECT##Select-GameAction-Cast/" + Id ) )
-                        {
-                            OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + LoadedAction.Action.Name, LoadedAction.CastVfxPath ) );
-                        }
-                        ImGui.SameLine();
-                        Copy( LoadedAction.CastVfxPath, id: "Select-GameAction-Cast/Copy/" + Id );
-                    }
-
-                    if( LoadedAction.SelfVfxExists )
-                    {
-                        ImGui.Text( "TMB Path: " );
-                        ImGui.SameLine();
-                        DisplayPath( LoadedAction.SelfTmbPath );
-                        int idx = 0;
-                        foreach(var _vfx in LoadedAction.SelfVfxPaths )
-                        {
-                            ImGui.Text( "VFX #" + idx + ": " );
-                            ImGui.SameLine();
-                            DisplayPath( _vfx );
-                            if( ImGui.Button( "SELECT##Select-GameAction-" + idx + "/" + Id ) )
-                            {
-                                OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + LoadedAction.Action.Name, _vfx ) );
-                            }
-                            ImGui.SameLine();
-                            Copy( _vfx, id: "Select-GameAction-" + idx + "/Copy/" + Id );
-                            idx++;
-                        }
-                    }
-                }
-                else
-                {
-                    ImGui.Text( "No data found" );
-                }
-            }
-            ImGui.Columns( 1 );
-
+            ActionSelect.Draw();
             ImGui.EndTabItem();
+        }
+
+        // =========== GAME NON PLAYER ACTIONS =============
+        public void DrawGameNonPlayerActions()
+        {
+            var ret = ImGui.BeginTabItem( "Game Non-Player Action##Select/" + Id );
+            if( !ret )
+                return;
+            _plugin.Manager.LoadNonPlayerActions();
+            if( !_plugin.Manager.NonPlayerActionsLoaded )
+            {
+                ImGui.EndTabItem();
+                return;
+            }
+            NonPlayerActionSelect.Draw();
+            ImGui.EndTabItem();
+        }
+
+        public void Invoke( VFXSelectResult result)
+        {
+            OnSelect?.Invoke( result );
         }
 
         // ======== UTIL ==========

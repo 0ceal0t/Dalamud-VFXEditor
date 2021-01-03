@@ -25,7 +25,100 @@ namespace VFXEditor
             // =======================
             TempPath = Path.Combine( Directory.GetCurrentDirectory(), "VFXTempFile.avfx" );
             PluginLog.Log( "Temp file location: " + TempPath );
+
+            // need a way to map SKL_ID -> Name?
         }
+
+        // ========= LOAD NON-PLAYER ACTIONS =======
+        public bool NonPlayerActionsLoaded = false;
+        public bool NonPlayerActionsWaiting = false;
+        public List<XivActionBase> NonPlayerActions = new List<XivActionBase>();
+        public Dictionary<string, List<string>> ActionIdToSkelId = new Dictionary<string, List<string>>();
+        private struct NonPlayerActionRes
+        {
+            public List<Lumina.Excel.GeneratedSheets.Action> Actions;
+            public List<Lumina.Excel.GeneratedSheets.ActionTimeline> Timelines;
+            public NonPlayerActionRes( List<Lumina.Excel.GeneratedSheets.Action> a, List<Lumina.Excel.GeneratedSheets.ActionTimeline> t )
+            {
+                Actions = a;
+                Timelines = t;
+            }
+        }
+        public void LoadNonPlayerActions()
+        {
+            if( NonPlayerActionsWaiting )
+                return;
+            NonPlayerActionsWaiting = true; // start waiting
+            PluginLog.Log( "Loading Non-Player Actions" );
+            Task.Run( async () => {
+                try
+                {
+                    return new NonPlayerActionRes(
+                        _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && !x.IsPlayerAction ).ToList(),
+                        _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.ActionTimeline>().Where( x => !string.IsNullOrEmpty( x.Key )).ToList()
+                    );
+                }
+                catch( Exception e )
+                {
+                    PluginLog.LogError( e.ToString() );
+                    return new NonPlayerActionRes(
+                        new List<Lumina.Excel.GeneratedSheets.Action>(),
+                        new List<Lumina.Excel.GeneratedSheets.ActionTimeline>()
+                    );
+                }
+            } ).ContinueWith( t =>
+            {
+                foreach( var tl in t.Result.Timelines ) // SET UP ACTIONS WITH VARIABLE SKELETON
+                {
+                    string key = tl.Key.ToString();
+                    MonsterKey mKey = new MonsterKey( key );
+                    if(mKey.isMonster && mKey.skeletonKey == "[SKL_ID]" )
+                    {
+                        ActionIdToSkelId.Add( mKey.actionId, new List<string>() );
+                    }
+                }
+                foreach( var tl in t.Result.Timelines ) // GET THE POSSIBLE SKELETON ID VALUES
+                {
+                    string key = tl.Key.ToString();
+                    MonsterKey mKey = new MonsterKey( key );
+                    if( mKey.isMonster && mKey.skeletonKey != "[SKL_ID]" && ActionIdToSkelId.ContainsKey(mKey.actionId))
+                    {
+                        if( ActionIdToSkelId[mKey.actionId].Count == 0 ) // TEMP: keep the size of the array small for now, just use 1
+                        {
+                            ActionIdToSkelId[mKey.actionId].Add( mKey.skeletonKey );
+                        }
+                    }
+                }
+
+                // finally, set up the actions
+                foreach( var item in t.Result.Actions )
+                {
+                    var i = new XivNonPlayerAction( item, ActionIdToSkelId );
+                    AddNonPlayerAction( i );
+                }
+
+                NonPlayerActionsLoaded = true;
+            } );
+        }
+        private void AddNonPlayerAction(XivNonPlayerAction action)
+        {
+            if( action.IsPlaceholder )
+            {
+                foreach( var _i in action.PlaceholderActions )
+                {
+                    NonPlayerActions.Add( _i );
+                }
+            }
+            if( action.HitVFXExists )
+            {
+                AddNonPlayerAction( ( XivNonPlayerAction) action.HitAction );
+            }
+            if( action.VfxExists )
+            {
+                NonPlayerActions.Add( action );
+            }
+        }
+
 
         // ========= LOAD ITEMS ===========
         public List<XivItem> Items = new List<XivItem>();
@@ -101,7 +194,7 @@ namespace VFXEditor
         }
 
         // =========== LOAD ACTION =========
-        public List<XivAction> Actions = new List<XivAction>();
+        public List<XivActionBase> Actions = new List<XivActionBase>();
         public bool ActionsLoaded = false;
         public bool ActionsWaiting = false;
         public void LoadActions()
@@ -113,7 +206,7 @@ namespace VFXEditor
             Task.Run( async () => {
                 try
                 {
-                    return _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.IsPlayerAction ).ToList();
                 }
                 catch( Exception e )
                 {
@@ -125,16 +218,13 @@ namespace VFXEditor
                 foreach( var item in t.Result )
                 {
                     var i = new XivAction( item );
-                    if( i.PlayerAction )
+                    if( i.VfxExists )
                     {
-                        if( i.VfxExists )
-                        {
-                            Actions.Add( i );
-                        }
-                        if( i.HitVFXExists )
-                        {
-                            Actions.Add( i.HitAction );
-                        }
+                        Actions.Add( i );
+                    }
+                    if( i.HitVFXExists )
+                    {
+                        Actions.Add( i.HitAction );
                     }
                 }
                 ActionsLoaded = true;
@@ -165,14 +255,16 @@ namespace VFXEditor
         }
 
         // ======= SELECT ACTION =======
-        public bool SelectAction( XivAction action, out XivSelectedAction selectedAction )
+        public bool SelectAction( XivActionBase action, out XivSelectedAction selectedAction )
         {
             selectedAction = null;
             if( !action.SelfVFXExists ) // no need to get a file
             {
                 selectedAction = new XivSelectedAction( null, action );
+                PluginLog.Log( "no need" );
                 return true;
             }
+
             string tmbPath = action.GetTmbPath();
             bool result = _plugin.PluginInterface.Data.FileExists( tmbPath );
             if( result )
@@ -187,6 +279,10 @@ namespace VFXEditor
                     PluginLog.LogError( e.ToString() );
                     return false;
                 }
+            }
+            else
+            {
+                PluginLog.Log( tmbPath + " does not exist" );
             }
             return result;
         }

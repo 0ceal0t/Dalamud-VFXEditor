@@ -28,6 +28,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Texture Index", Tex.TextureIdx));
             Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Attributes.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
+            Attributes.Add( new UICurve( Tex.Rate, "Rate" ) );
             Attributes.Add(new UICurve(Tex.RPow, "Power"));
         }
 
