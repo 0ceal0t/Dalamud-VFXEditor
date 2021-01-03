@@ -104,6 +104,7 @@ namespace AVFXLib.Models
                     AVFXNode.LogMessages.Add( "ClearHole Effector Data!" );
                     Data = null;
                     break;
+                case EffectorType.CameraQuake2_Unknown:
                 case EffectorType.CameraQuake:
                     Data = new AVFXEffectorDataCameraQuake("data");
                     break;

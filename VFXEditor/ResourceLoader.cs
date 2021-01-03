@@ -70,6 +70,8 @@ namespace VFXEditor
             Crc32 = new Crc32();
         }
 
+
+        // https://github.com/Reloaded-Project/Reloaded.Assembler/blob/415733eeb279d48890f143825fd1a3820b8be391/Source/Reloaded.Assembler/Assembler.cs#L178
         public unsafe void Init()
         {
             if( EnableHooks )

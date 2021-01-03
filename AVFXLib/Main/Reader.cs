@@ -164,7 +164,13 @@ namespace AVFXLib.Main
             "COFR",
             "WID",
             "Amb",
-            "Rate"
+            "Rate",
+            "VRX",
+            "VRY",
+            "VRZ",
+            "VRXR",
+            "VRYR",
+            "VRZR"
         });
 
         static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{

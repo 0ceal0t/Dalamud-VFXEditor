@@ -7,6 +7,7 @@ A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
 2. Build `VFXEditor`
 3. Place the files inside of `AppData\Roaming\XIVLauncher\devPlugins`, or wherever the `devPlugins` folder of your QuickLauncher installation is located
+4. Once in-game, open with `/vfxedit`
 
 ### Notes
 * This plugin does not currently work with `LivePluginLoader`
@@ -19,8 +20,10 @@ A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game
 * Add, remove, and edit particles, emitters, etc.
 
 ## TODO
+- [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] Export/Import Textools Modpack
 - [ ] Export/Import  Penumbra Mod
+- [ ] Raw extract
 - [ ] Cutscene VFX selector
 - [ ] Zone VFX selector
 - [ ] Emote VFX selector
@@ -31,6 +34,8 @@ A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game
 - [ ] Penumbra integration(??)
 - [ ] More settings
 - [ ] Model replacement
+- [ ] Better TBM parsing
+- [x] ~~Verify on each load + show output with icon~~
 
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/mkaminsky11/Dalamud-VFXEditor/issues).

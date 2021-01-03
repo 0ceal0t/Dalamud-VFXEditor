@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -281,7 +281,7 @@ public enum EffectorType
     Reserve2 = 3,
     Reserve3 = 4,
     Reserve4 = 5,
-    Reserve5 = 6,
+    CameraQuake2_Unknown = 6, // NOTE: seen in Akh Rai
     RadialBlur = 7,
     BlackHole = 8,
     CameraQuake = 9
@@ -298,7 +298,8 @@ public enum CurveBehavior
 {
     Const = 0,
     Repeat = 1,
-    Add = 2
+    Add = 2,
+    None = 255 // NOTE: so far only seen with CrC
 }
 public enum KeyType
 {

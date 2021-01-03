@@ -151,7 +151,7 @@ namespace VFXEditor.UI
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) )
             {
-                OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
+                Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
             }
 
             ImGui.EndTabItem();
@@ -174,7 +174,7 @@ namespace VFXEditor.UI
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) )
             {
-                OnSelect?.Invoke( new VFXSelectResult( VFXSelectType.GamePath, "[GAME] " + gamePathInput, gamePathInput ) );
+                Invoke( new VFXSelectResult( VFXSelectType.GamePath, "[GAME] " + gamePathInput, gamePathInput ) );
             }
 
             ImGui.EndTabItem();

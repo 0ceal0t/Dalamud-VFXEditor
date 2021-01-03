@@ -77,6 +77,12 @@ namespace VFXEditor.UI.VFX
             Animation.Add(new UICurve3Axis(Particle.Scale, "Scale"));
             Animation.Add(new UICurve3Axis(Particle.Rotation, "Rotation"));
             Animation.Add(new UICurve3Axis(Particle.Position, "Position"));
+            Animation.Add( new UICurve( Particle.RotVelX, "Rotation Velocity X" ) );
+            Animation.Add( new UICurve( Particle.RotVelY, "Rotation Velocity Y" ) );
+            Animation.Add( new UICurve( Particle.RotVelZ, "Rotation Velocity Z" ) );
+            Animation.Add( new UICurve( Particle.RotVelXRandom, "Rotation Velocity X Random" ) );
+            Animation.Add( new UICurve( Particle.RotVelYRandom, "Rotation Velocity Y Random" ) );
+            Animation.Add( new UICurve( Particle.RotVelZRandom, "Rotation Velocity Z Random" ) );
             Animation.Add(new UICurveColor(Particle.Color, "Color"));
             //===============================
             foreach(var uvSet in Particle.UVSets)

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using AVFXLib.Models;
 using Dalamud.Game.Command;
@@ -122,6 +124,17 @@ namespace VFXEditor
             if( avfx == null )
                 return;
             AVFX = avfx;
+            // ===============
+            var node = AVFX.toAVFX();
+            bool verifyResult = Manager.LastImportNode.CheckEquals( node, out List<string> messages );
+            MainUI.SetStatus( verifyResult );
+
+            PluginLog.Log( "[VERIFY RESULT]: " + verifyResult );
+            foreach( var m in messages )
+            {
+                PluginLog.Log( m );
+            }
+
             MainUI.RefreshAVFX();
         }
 

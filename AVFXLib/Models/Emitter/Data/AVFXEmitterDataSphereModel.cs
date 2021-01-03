@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace AVFXLib.Models
         public LiteralInt DivideY = new LiteralInt("divideY", "DivY");
         public AVFXCurve Radius = new AVFXCurve("radius", "Rads");
         public AVFXCurve InjectionSpeed = new AVFXCurve("injectionSpeed", "IjS");
+        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "injectionSpeedRandom", "IjSR" );
 
         List<Base> Attributes;
 
@@ -27,7 +28,8 @@ namespace AVFXLib.Models
                 DivideX,
                 DivideY,
                 Radius,
-                InjectionSpeed
+                InjectionSpeed,
+                InjectionSpeedRandom
             });
         }
 

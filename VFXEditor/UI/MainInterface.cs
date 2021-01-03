@@ -29,7 +29,6 @@ namespace VFXEditor.UI
             ShowDebugBar = true;
 #endif
         }
-
         public void RefreshAVFX()
         {
             VFXMain = new VFX.UIMain( _plugin.AVFX, _plugin );
@@ -82,6 +81,7 @@ namespace VFXEditor.UI
             // ==================
             ImGui.BeginTabBar( "MainInterfaceTabs" );
             DrawFiles();
+            DrawRaw();
             DrawSettings();
             DrawHelp();
             ImGui.EndTabBar();
@@ -96,7 +96,7 @@ namespace VFXEditor.UI
             }
             else
             {
-                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.25f, 0.8f, 0.25f, 1 ) );
+                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) )
                 {
                     _plugin.Manager.SaveTempFile( _plugin.AVFX );
@@ -106,33 +106,38 @@ namespace VFXEditor.UI
                 ImGui.SameLine();
                 if( ImGui.Button( "Export" ) )
                 {
-                    var node = _plugin.AVFX.toAVFX();
-                    SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes() );
+                    ImGui.OpenPopup( "Export_Popup" );
                 }
-                ImGui.SameLine();
-                if( ImGui.Button( "Export JSON" ) )
+
+                if( ImGui.BeginPopup( "Export_Popup" ) )
                 {
-                    JObject json = ( JObject )_plugin.AVFX.toJSON();
-                    SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString() );
+                    if( ImGui.Selectable( ".AVFX" ) )
+                    {
+                        var node = _plugin.AVFX.toAVFX();
+                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes() );
+                    }
+                    if( ImGui.Selectable( ".JSON" ) )
+                    {
+                        JObject json = ( JObject )_plugin.AVFX.toJSON();
+                        SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString() );
+                    }
+                    ImGui.EndPopup();
                 }
 #if DEBUG
-                ImGui.SameLine();
-                if(ImGui.Button("[DEBUG] Verify" ) )
-                {
-                    var node = _plugin.AVFX.toAVFX();
-                    bool verifyResult = _plugin.Manager.LastImportNode.CheckEquals( node, out List<string> messages );
-                    PluginLog.Log( "[VERIFY RESULT]: " + verifyResult );
-                    foreach(var m in messages )
-                    {
-                        PluginLog.Log( m );
-                    }
-                }
                 ImGui.SameLine();
                 if( ImGui.Button( "[DEBUG] Export Raw" ) )
                 {
                     SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ) );
                 }
 #endif
+                ImGui.SameLine();
+
+                ImGui.PushFont( UiBuilder.IconFont );
+                ImGui.TextColored( StatusColor, IconText );
+                ImGui.PopFont();
+                ImGui.SameLine();
+                ImGui.TextColored( StatusColor, StatusText );
+
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 ImGui.Separator();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -142,6 +147,27 @@ namespace VFXEditor.UI
             ImGui.EndChild();
 
             ImGui.End();
+        }
+
+        public bool Status = false;
+        public string IconText = "";
+        public string StatusText = "";
+        public Vector4 StatusColor = new Vector4();
+        public void SetStatus(bool status )
+        {
+            Status = status;
+            if( Status )
+            {
+                IconText = $"{( char )FontAwesomeIcon.Check}";
+                StatusText = "Verified";
+                StatusColor = new Vector4( 0.15f, 0.90f, 0.15f, 1.0f );
+            }
+            else
+            {
+                IconText = $"{( char )FontAwesomeIcon.Times}";
+                StatusText = "Parsing Issue";
+                StatusColor = new Vector4( 0.90f, 0.15f, 0.15f, 1.0f );
+            }
         }
 
         public string sourceString = "[NONE]";
@@ -188,12 +214,50 @@ namespace VFXEditor.UI
             ImGui.EndTabItem();
         }
 
+        public string RawInputValue = "";
+        public void DrawRaw()
+        {
+            var ret = ImGui.BeginTabItem( "Raw##MainInterfaceTabs" );
+            if( !ret )
+                return;
+            // =================
+            ImGui.Text( "Extract a raw .avfx file from the game and save it locally" );
+            ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
+            ImGui.SameLine();
+            if( ImGui.Button( "Extract##RawExtract" ) )
+            {
+                bool result = _plugin.PluginInterface.Data.FileExists( RawInputValue );
+                if( result )
+                {
+                    try
+                    {
+                        var file = _plugin.PluginInterface.Data.GetFile( RawInputValue );
+                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data );
+                    }
+                    catch(Exception e )
+                    {
+                        PluginLog.LogError( "Could not read file" );
+                        PluginLog.LogError( e.ToString() );
+                    }
+                }
+            }
+            ImGui.EndTabItem();
+        }
+
         public void DrawSettings()
         {
             var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
             if( !ret )
                 return;
             // ==========================
+            // Verify on load
+            // Load textures
+
+            if( ImGui.Button( "Save##Settings" ) )
+            {
+                _plugin.Configuration.Save();
+            }
+
 
             ImGui.EndTabItem();
         }
@@ -217,6 +281,7 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             ImGui.EndTabItem();
         }
 
+        // ======= HELPERS ============
         public void SaveDialog( string filter, string data )
         {
             SaveDialog( filter, Encoding.ASCII.GetBytes(data) );

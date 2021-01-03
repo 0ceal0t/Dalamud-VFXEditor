@@ -23,6 +23,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Divide Y", Data.DivideY));
             Attributes.Add(new UICurve(Data.Radius, "Radius"));
             Attributes.Add(new UICurve(Data.InjectionSpeed, "Injection Speed"));
+            Attributes.Add( new UICurve( Data.InjectionSpeedRandom, "Injection Speed Random" ) );
         }
 
         public override void Draw(string parentId)

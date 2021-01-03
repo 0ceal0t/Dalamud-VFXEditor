@@ -9,10 +9,11 @@ namespace VFXEditor
     public class Configuration : IPluginConfiguration
     {
         public int Version { get; set; } = 0;
-
         public bool IsEnabled { get; set; } = true;
 
-        // the below exist just to make saving less cumbersome
+        // ==================
+        public bool PreviewTextures { get; set; } = true;
+        public bool VerifyOnLoad { get; set; } = true;
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;

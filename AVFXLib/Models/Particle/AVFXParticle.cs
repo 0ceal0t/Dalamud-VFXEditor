@@ -56,6 +56,13 @@ namespace AVFXLib.Models
         public AVFXCurve3Axis Scale = new AVFXCurve3Axis("scale", "Scl");
         public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("rotation", "Rot");
         public AVFXCurve3Axis Position = new AVFXCurve3Axis("position", "Pos");
+        public AVFXCurve RotVelX = new AVFXCurve( "rotationVelocityX", "VRX" );
+        public AVFXCurve RotVelY = new AVFXCurve( "rotationVelocityY", "VRY" );
+        public AVFXCurve RotVelZ = new AVFXCurve( "rotationVelocityZ", "VRZ" );
+        public AVFXCurve RotVelXRandom = new AVFXCurve( "rotationVelocityXRandom", "VRXR" );
+        public AVFXCurve RotVelYRandom = new AVFXCurve( "rotationVelocityYRandom", "VRYR" );
+        public AVFXCurve RotVelZRandom = new AVFXCurve( "rotationVelocityZRandom", "VRZR" );
+
         public AVFXCurveColor Color = new AVFXCurveColor("color");
 
         // UVSets
@@ -126,6 +133,12 @@ namespace AVFXLib.Models
                 Scale,
                 Rotation,
                 Position,
+                RotVelX,
+                RotVelY,
+                RotVelZ,
+                RotVelXRandom,
+                RotVelYRandom,
+                RotVelZRandom,
                 Color
             });
 
