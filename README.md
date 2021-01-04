@@ -49,5 +49,5 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Bind Prp1/Prp2 (see `Thunder 2` VFX)
 - [x] ~~Rework texture and model views~~
 - [ ] Emitter sound
-- [ ] Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`
+- [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~
 - [x] ~~Binder properties view~~

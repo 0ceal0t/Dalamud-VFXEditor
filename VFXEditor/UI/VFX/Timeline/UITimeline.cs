@@ -66,12 +66,12 @@ namespace VFXEditor.UI.VFX
                     DrawParameters( id + "/Params" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Items (" + Items.Count() + ")" + id ) )
+                if( ImGui.BeginTabItem( "Items" + id ) )
                 {
                     DrawItems( id + "/Items" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Clips (" + Clips.Count() + ")" + id ) )
+                if( ImGui.BeginTabItem( "Clips" + id ) )
                 {
                     DrawClips( id + "/Clips" );
                     ImGui.EndTabItem();

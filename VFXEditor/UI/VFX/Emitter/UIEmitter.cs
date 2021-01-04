@@ -133,12 +133,12 @@ namespace VFXEditor.UI.VFX
                     DrawAnimation( id + "/Anim" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Particles (" + Particles.Count + ")" + id ) )
+                if( ImGui.BeginTabItem( "Particles" + id ) )
                 {
                     DrawParticles( id + "/ItPr" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Emitters (" + Emitters.Count + ")" + id ) )
+                if( ImGui.BeginTabItem( "Emitters" + id ) )
                 {
                     DrawEmitters( id + "/ItEm" );
                     ImGui.EndTabItem();

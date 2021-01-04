@@ -13,7 +13,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXCurve2Axis Curve;
         public string Name;
-        //=========================
+        //=======================
+        public List<UICurve> Curves;
 
         public UICurve2Axis(AVFXCurve2Axis curve, string name)
         {
@@ -24,14 +25,15 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
+            Curves = new List<UICurve>();
             if (!Curve.Assigned) { Assigned = false; return; }
             // ======================
             Attributes.Add(new UICombo<AxisConnect>("Axis Connect", Curve.AxisConnectType));
             Attributes.Add(new UICombo<RandomType>("Axis Connect Random", Curve.AxisConnectRandomType));
-            Attributes.Add(new UICurve(Curve.X, "X"));
-            Attributes.Add(new UICurve(Curve.Y, "Y"));
-            Attributes.Add(new UICurve(Curve.RX, "RX"));
-            Attributes.Add(new UICurve(Curve.RY, "RY"));
+            Curves.Add(new UICurve(Curve.X, "X"));
+            Curves.Add(new UICurve(Curve.Y, "Y"));
+            Curves.Add(new UICurve(Curve.RX, "RX"));
+            Curves.Add(new UICurve(Curve.RY, "RY"));
         }
         // =========== DRAW =====================
         public override void Draw( string parentId )
@@ -70,13 +72,38 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/" + Name;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            // =================
+            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 Curve.Assigned = false;
                 Init();
             }
+            foreach( var c in Curves )
+            {
+                if( !c.Assigned )
+                {
+                    ImGui.SameLine();
+                    c.Draw( id );
+                }
+            }
             DrawAttrs( id );
-            ImGui.TreePop();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            // ==================
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
+            {
+                foreach( var c in Curves )
+                {
+                    if( c.Assigned )
+                    {
+                        if( ImGui.BeginTabItem( c.Name + id ) )
+                        {
+                            c.DrawBody( id );
+                            ImGui.EndTabItem();
+                        }
+                    }
+                }
+                ImGui.EndTabBar();
+            }
         }
     }
 }

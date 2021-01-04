@@ -57,12 +57,12 @@ namespace VFXEditor.UI.VFX
             //=====================
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                if( ImGui.BeginTabItem( "Items (" + Items.Count() + ")" + id ) )
+                if( ImGui.BeginTabItem( "Items" + id ) )
                 {
                     DrawItems( id + "/Item" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Triggers (" + Triggers.Count() + ")" + id ) )
+                if( ImGui.BeginTabItem( "Triggers" + id ) )
                 {
                     DrawTriggers( id + "/Trigger" );
                     ImGui.EndTabItem();

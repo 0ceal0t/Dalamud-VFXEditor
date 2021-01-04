@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,9 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId = "")
         {
             string id = "##AVFX";
+            ImGui.BeginChild( id + "/Child" );
             DrawAttrs(id);
+            ImGui.EndChild();
         }
     }
 }

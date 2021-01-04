@@ -79,7 +79,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/" + Name;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
                 Curve.Assigned = false;
                 Init();
@@ -103,7 +103,6 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.TreePop();
             }
-            ImGui.TreePop();
         }
     }
 
@@ -132,8 +131,7 @@ namespace VFXEditor.UI.VFX
         public void Draw(string parentId)
         {
             string id = parentId + "/Key" + Idx;
-
-            if (UIUtils.RemoveButton("Delete Key" + id))
+            if (UIUtils.RemoveButton("Delete Key" + id, small: true ) )
             {
                 Curve.Curve.removeKey(Idx);
                 Curve.Init();
@@ -166,6 +164,8 @@ namespace VFXEditor.UI.VFX
                     Key.Z = Data.Z;
                 }
             }
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
     }
 }

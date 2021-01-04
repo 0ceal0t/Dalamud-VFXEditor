@@ -57,13 +57,23 @@ namespace VFXEditor.UI.VFX
             return ret;
         }
         // ================================
-        public static bool RemoveButton(string label)
+        public static bool RemoveButton(string label, bool small = false)
         {
             bool ret = false;
             ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.8f, 0.25f, 0.25f, 1));
-            if (ImGui.Button(label))
+            if( small )
             {
-                ret = true;
+                if( ImGui.SmallButton( label ) )
+                {
+                    ret = true;
+                }
+            }
+            else
+            {
+                if( ImGui.Button( label ) )
+                {
+                    ret = true;
+                }
             }
             ImGui.PopStyleColor();
             return ret;
