@@ -46,6 +46,8 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<BinderRotation>("Binder Rotation Type", Binder.BinderRotationType));
             //=============================
             Properties.Add(new UIBinderProperties("Properties Start", Binder.PropStart));
+            Properties.Add( new UIBinderProperties( "Properties 1", Binder.Prop1 ) );
+            Properties.Add( new UIBinderProperties( "Properties 2", Binder.Prop2 ) );
             Properties.Add(new UIBinderProperties("Properties Goal", Binder.PropGoal));
             //======================
             switch (Binder.BinderVariety.Value)

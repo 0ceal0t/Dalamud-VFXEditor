@@ -118,6 +118,8 @@ namespace AVFXLib.Main
             "TD",
             "TP",
             "PrpS",
+            "Prp1",
+            "Prp2",
             "PrpG",
             "DstS",
             "Len",

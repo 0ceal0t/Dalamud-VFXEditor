@@ -299,7 +299,7 @@ public enum CurveBehavior
     Const = 0,
     Repeat = 1,
     Add = 2,
-    None = 255 // NOTE: so far only seen with CrC
+    None = -1 // NOTE: so far only seen with CrC
 }
 public enum KeyType
 {

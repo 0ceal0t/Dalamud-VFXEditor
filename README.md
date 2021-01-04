@@ -29,9 +29,10 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Export/Import Textools Modpack
 - [ ] Export/Import  Penumbra Mod
 - [x] ~~Raw extract~~
-- [ ] Cutscene VFX selector
-- [ ] Zone VFX selector
-- [ ] Emote VFX selector
+- [ ] Cutscene VFX select
+- [ ] Zone VFX select
+- [ ] Emote VFX select
+- [ ] Better search (doesn't have to be exact match)
 - [ ] Equipment (not weapons) VFX selector
 - [ ] Better error / log display
 - [ ] Open recent
@@ -39,14 +40,15 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Penumbra integration(??)
 - [ ] More settings
 - [ ] Model replacement
-- [ ] Better TBM parsing
+- [ ] Better TMB parsing
 - [x] ~~Verify on each load + show output with icon~~
 - [x] ~~UI Cleanup (fewer trees)~~
 - [ ] Better key UI
 - [ ] GOTO button
 - [ ] Better placed "DELETE" button
 - [x] ~~Fix `ItPr` / `ItEm` (emitter comes after particle, all counted as part of the same block? see `Flash` VFX)~~
-- [ ] Bind Prp1/Prp2 (see `Thunder 2` VFX)
+- [ ] Fix `BvPr = 255` issue (see `Rolling Thunder / Target` VFX)
+- [x] ~~Bind Prp1/Prp2 (see `Thunder 2` VFX)~~
 - [x] ~~Rework texture and model views~~
 - [ ] Emitter sound
 - [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~

@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,8 @@ namespace AVFXLib.Models
         public LiteralEnum<BinderRotation> BinderRotationType = new LiteralEnum<BinderRotation>("rotationtype", "RoTp");
         public LiteralEnum<BinderType> BinderVariety = new LiteralEnum<BinderType>("binderType", "BnVr");
         public AVFXBinderProperty PropStart = new AVFXBinderProperty("propertiesStart", "PrpS");
+        public AVFXBinderProperty Prop1 = new AVFXBinderProperty( "properties1", "Prp1" );
+        public AVFXBinderProperty Prop2 = new AVFXBinderProperty( "properties2", "Prp1" );
         public AVFXBinderProperty PropGoal = new AVFXBinderProperty("propertiesGoal", "PrpG");
 
         public BinderType Type;
@@ -52,6 +54,8 @@ namespace AVFXLib.Models
                 BinderRotationType,
                 BinderVariety,
                 PropStart,
+                Prop1,
+                Prop2,
                 PropGoal
             });
         }
