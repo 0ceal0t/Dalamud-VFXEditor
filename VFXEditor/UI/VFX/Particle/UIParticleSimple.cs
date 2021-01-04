@@ -83,45 +83,64 @@ namespace VFXEditor.UI.VFX
                 Frames[i] = Simple.Frames.frames[i];
             }
         }
-
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/Simple";
-            // ==== UNASSIGNED ====
-            if (!Assigned)
+            if( !Assigned )
             {
-                if (ImGui.Button("+ Simple Animation" + id))
-                {
-                    Simple.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            // ==== ASSIGNED ===
-            if (ImGui.TreeNode("Simple Animation" + id))
+            if( ImGui.TreeNode( "Simple Animation" + parentId ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Simple.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
-                //====================
-                for(int i = 0; i < 4; i++)
-                {
-                    if(ImGui.InputInt("Frame#" + i + id, ref Frames[i]))
-                    {
-                        Simple.Frames.frames[i] = Frames[i];
-                    }
-                    if(ImGui.ColorEdit4("Color#" + i + id, ref Colors[i], ImGuiColorEditFlags.Float))
-                    {
-                        Simple.Colors.colors[i * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes((int)(Colors[i].X * 255f))[0];
-                        Simple.Colors.colors[i * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes((int)(Colors[i].Y * 255f))[0];
-                        Simple.Colors.colors[i * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes((int)(Colors[i].Z * 255f))[0];
-                        Simple.Colors.colors[i * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes((int)(Colors[i].W * 255f))[0];
-                    }
-                }
+                DrawBody( parentId );
                 ImGui.TreePop();
+            }
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            string id = parentId + "/Simple";
+            if( !Assigned )
+            {
+                DrawUnAssigned( id );
+                return;
+            }
+            if( ImGui.Selectable( "Simple Animation" + id, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ Simple Animation" + parentId ) )
+            {
+                Simple.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/Simple";
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Simple.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
+            //====================
+            for( int i = 0; i < 4; i++ )
+            {
+                if( ImGui.InputInt( "Frame#" + i + id, ref Frames[i] ) )
+                {
+                    Simple.Frames.frames[i] = Frames[i];
+                }
+                if( ImGui.ColorEdit4( "Color#" + i + id, ref Colors[i], ImGuiColorEditFlags.Float ) )
+                {
+                    Simple.Colors.colors[i * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].X * 255f ) )[0];
+                    Simple.Colors.colors[i * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Y * 255f ) )[0];
+                    Simple.Colors.colors[i * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Z * 255f ) )[0];
+                    Simple.Colors.colors[i * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].W * 255f ) )[0];
+                }
             }
         }
     }

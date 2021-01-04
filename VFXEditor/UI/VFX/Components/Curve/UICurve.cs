@@ -42,48 +42,68 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public override void Draw(string parentId)
+        // ======= DRAW ================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/" + Name;
-            // === UNASSIGNED ===
-            if (!Assigned)
+            if( !Assigned )
             {
-                if (ImGui.Button("+ " + Name + id))
-                {
-                    Curve.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            // ==== ASSIGNED ===
-            if (ImGui.TreeNode(Name + id))
+            if( ImGui.TreeNode( Name + parentId ) )
             {
-                if(UIUtils.RemoveButton("Delete" + id))
+                DrawBody( parentId );
+                ImGui.TreePop();
+            }
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                DrawUnAssigned( parentId );
+                return;
+            }
+            if( ImGui.Selectable( Name + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ " + Name + parentId ) )
+            {
+                Curve.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/" + Name;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Curve.Assigned = false;
+                Init();
+            }
+            // =====================
+            DrawAttrs( id );
+            if( ImGui.TreeNode( "Keys" + id ) )
+            {
+                int keyIdx = 0;
+                foreach( var key in Keys )
                 {
-                    Curve.Assigned = false;
-                    Init();
+                    key.Idx = keyIdx;
+                    key.Draw( id );
+                    keyIdx++;
                 }
-                DrawAttrs(id);
-                //==============
-                if(ImGui.TreeNode("Keys" + id))
-                {
-                    int keyIdx = 0;
-                    foreach(var key in Keys)
-                    {
-                        key.Idx = keyIdx;
-                        key.Draw(id);
-                        keyIdx++;
-                    }
 
-                    if (ImGui.Button("+ Key" + id))
-                    {
-                        Curve.addKey();
-                        Init();
-                    }
-                    ImGui.TreePop();
+                if( ImGui.Button( "+ Key" + id ) )
+                {
+                    Curve.addKey();
+                    Init();
                 }
                 ImGui.TreePop();
             }
+            ImGui.TreePop();
         }
     }
 

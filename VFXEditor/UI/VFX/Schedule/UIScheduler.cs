@@ -12,10 +12,12 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXSchedule Scheduler;
         public UIScheduleView View;
-        public int Idx;
         // =================
-        public List<UISchedulerItem> Items;
-        public List<UISchedulerItem> Triggers;
+        public List<UIBase> Items;
+        public List<UIBase> Triggers;
+        // ================
+        public UIScheduleItemSplitView ItemSplit;
+        public UISplitView TriggerSplit;
 
         public UIScheduler(AVFXSchedule scheduler, UIScheduleView view)
         {
@@ -27,8 +29,8 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             // ===================
-            Items = new List<UISchedulerItem>();
-            Triggers = new List<UISchedulerItem>();
+            Items = new List<UIBase>();
+            Triggers = new List<UIBase>();
             // =====================
             foreach (var Item in Scheduler.Items)
             {
@@ -39,43 +41,43 @@ namespace VFXEditor.UI.VFX
             {
                 Triggers.Add(new UISchedulerItem(Trigger, "Trigger", this));
             }
+            // ======================
+            ItemSplit = new UIScheduleItemSplitView( Items, this );
+            TriggerSplit = new UISplitView( Triggers );
+        }
+
+        public string GetDescText()
+        {
+            return "Scheduler " + Idx;
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Scheduler" + Idx;
-            if (ImGui.CollapsingHeader("Scheduler " + Idx + id))
+            //=====================
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                //=====================
-                if (ImGui.TreeNode("Items (" + Items.Count() + ")" + id))
+                if( ImGui.BeginTabItem( "Items (" + Items.Count() + ")" + id ) )
                 {
-                    int iIdx = 0;
-                    foreach (var item in Items)
-                    {
-                        item.Idx = iIdx;
-                        item.Draw(id);
-                        iIdx++;
-                    }
-                    if (ImGui.Button("+ Item" + id))
-                    {
-                        Scheduler.addItem();
-                        Init();
-                    }
-                    ImGui.TreePop();
+                    DrawItems( id + "/Item" );
+                    ImGui.EndTabItem();
                 }
-                //=====================
-                if (ImGui.TreeNode("Triggers (" + Triggers.Count() + ")" + id))
+                if( ImGui.BeginTabItem( "Triggers (" + Triggers.Count() + ")" + id ) )
                 {
-                    int tIdx = 0;
-                    foreach (var trigger in Triggers)
-                    {
-                        trigger.Idx = tIdx;
-                        trigger.Draw(id);
-                        tIdx++;
-                    }
-                    ImGui.TreePop();
+                    DrawTriggers( id + "/Trigger" );
+                    ImGui.EndTabItem();
                 }
+                ImGui.EndTabBar();
             }
+        }
+
+        private void DrawItems(string id )
+        {
+            ItemSplit.Draw( id );
+        }
+        private void DrawTriggers(string id )
+        {
+            TriggerSplit.Draw( id );
         }
     }
 }

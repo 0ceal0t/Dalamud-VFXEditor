@@ -12,6 +12,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UIEmitter> Emitters;
+        public int Selected = -1;
+        public string[] Options;
 
         public UIEmitterView(AVFXBase avfx)
         {
@@ -22,26 +24,46 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             Emitters = new List<UIEmitter>();
-            foreach (var emitter in AVFX.Emitters)
+            Options = new string[AVFX.Emitters.Count];
+            int idx = 0;
+            foreach( var emitter in AVFX.Emitters )
             {
-                Emitters.Add(new UIEmitter(emitter, this));
+                var item = new UIEmitter( emitter, this );
+                item.Idx = idx;
+                Options[idx] = item.GetDescText();
+                Emitters.Add( item );
+                idx++;
             }
         }
-
+        public void RefreshDesc( int idx )
+        {
+            Options[idx] = Emitters[idx].GetDescText();
+        }
         public override void Draw(string parentId = "")
         {
             string id = "##EMIT";
-            int eIdx = 0;
-            foreach (var emitter in Emitters)
-            {
-                emitter.Idx = eIdx;
-                emitter.Draw(id);
-                eIdx++;
-            }
-            if (ImGui.Button("+ Emitter" + id))
+            bool validSelect = UIUtils.ViewSelect( id, "Select an Emitter", ref Selected, Options );
+            ImGui.SameLine();
+            if( ImGui.Button( "+ NEW" + id ) )
             {
                 AVFX.addEmitter();
                 Init();
+            }
+            if( validSelect )
+            {
+                ImGui.SameLine();
+                if( UIUtils.RemoveButton( "DELETE" + id ) )
+                {
+                    AVFX.removeEmitter( Selected );
+                    Init();
+                    validSelect = false;
+                }
+            }
+            ImGui.Separator();
+            // ====================
+            if( validSelect )
+            {
+                Emitters[Selected].Draw( id );
             }
         }
     }

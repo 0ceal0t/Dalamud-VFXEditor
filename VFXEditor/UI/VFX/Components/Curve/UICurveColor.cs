@@ -39,31 +39,50 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve(Curve.RanA, "Random Alpha"));
             Attributes.Add(new UICurve(Curve.RBri, "Random Brightness"));
         }
-
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/" + Name;
-            // === UNASSIGNED ===
-            if (!Assigned)
+            if( !Assigned )
             {
-                if (ImGui.Button("+ " + Name + id))
-                {
-                    Curve.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            // ==== ASSIGNED ===
-            if (ImGui.TreeNode(Name + id))
+            if( ImGui.TreeNode( Name + parentId ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Curve.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
+                DrawBody( parentId );
                 ImGui.TreePop();
             }
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                DrawUnAssigned( parentId );
+                return;
+            }
+            if( ImGui.Selectable( Name + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ " + Name + parentId ) )
+            {
+                Curve.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/" + Name;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Curve.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
+            ImGui.TreePop();
         }
     }
 }

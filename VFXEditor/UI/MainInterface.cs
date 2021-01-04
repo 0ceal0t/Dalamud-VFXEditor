@@ -89,7 +89,6 @@ namespace VFXEditor.UI
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            ImGui.BeginChild( "MainChild" );
             if(VFXMain == null )
             {
                 ImGui.Text( "Load a file..." );
@@ -144,7 +143,6 @@ namespace VFXEditor.UI
                 //================================
                 VFXMain.Draw();
             }
-            ImGui.EndChild();
 
             ImGui.End();
         }

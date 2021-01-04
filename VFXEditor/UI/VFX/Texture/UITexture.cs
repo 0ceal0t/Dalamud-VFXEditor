@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXTexture Texture;
         public UITextureView View;
-        public int Idx;
         public string lastValue;
         public UIString Path;
 
@@ -37,32 +36,43 @@ namespace VFXEditor.UI.VFX
             _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
         }
 
-        public override void Draw(string parentId)
+        public override void Draw( string parentId )
+        {
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                return;
+            }
+            if( ImGui.Selectable( "Texture " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
         {
             string id = parentId + "/Texture" + Idx;
-            if (ImGui.CollapsingHeader("Texture " + Idx + id))
+            if( UIUtils.RemoveButton( "Delete" + id ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    View.AVFX.removeTexture(Idx);
-                    View.Init();
-                    return;
-                }
-                Path.Draw(id);
+                View.AVFX.removeTexture( Idx );
+                View.Init();
+                return;
+            }
+            Path.Draw( id );
 
-                // jank change detection
-                var newValue = Path.Literal.Value;
-                if(newValue != lastValue)
-                {
-                    lastValue = newValue;
-                    _plugin.Manager.TexManager.LoadTexture( newValue );
-                }
+            // jank change detection
+            var newValue = Path.Literal.Value;
+            if( newValue != lastValue )
+            {
+                lastValue = newValue;
+                _plugin.Manager.TexManager.LoadTexture( newValue );
+            }
 
-                if( _plugin.Manager.TexManager.PathToTex.ContainsKey( newValue ) )
-                {
-                    var a = _plugin.Manager.TexManager.PathToTex[newValue];
-                    ImGui.Image(a.ImGuiHandle, new Vector2(a.Width, a.Height));
-                }
+            if( _plugin.Manager.TexManager.PathToTex.ContainsKey( newValue ) )
+            {
+                var a = _plugin.Manager.TexManager.PathToTex[newValue];
+                ImGui.Image( a.ImGuiHandle, new Vector2( a.Width, a.Height ) );
             }
         }
 

@@ -11,7 +11,8 @@ namespace VFXEditor.UI.VFX
     public class UITextureView : UIBase
     {
         public AVFXBase AVFX;
-        List<UITexture> Textures;
+        public List<UIBase> Textures;
+        public UITextureSplitView TexSplit;
         public Plugin _plugin;
 
         public UITextureView(AVFXBase avfx, Plugin plugin)
@@ -23,28 +24,18 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Textures = new List<UITexture>();
+            Textures = new List<UIBase>();
             foreach (var texture in AVFX.Textures)
             {
                 Textures.Add(new UITexture(texture, this, _plugin));
             }
+            TexSplit = new UITextureSplitView( Textures, this );
         }
 
         public override void Draw(string parentId = "")
         {
             string id = "##TEX";
-            int tIdx = 0;
-            foreach (var texture in Textures)
-            {
-                texture.Idx = tIdx;
-                texture.Draw(id);
-                tIdx++;
-            }
-            if (ImGui.Button("+ Texture" + id))
-            {
-                AVFX.addTexture();
-                Init();
-            }
+            TexSplit.Draw( id );
         }
     }
 }

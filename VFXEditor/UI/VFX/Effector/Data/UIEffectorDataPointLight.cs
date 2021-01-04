@@ -33,11 +33,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            if (ImGui.TreeNode("Data" + id))
-            {
-                DrawAttrs(id);
-                ImGui.TreePop();
-            }
+            DrawAttrs( id );
         }
     }
 }

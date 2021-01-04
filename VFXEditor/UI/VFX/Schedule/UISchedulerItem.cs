@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXScheduleSubItem Item;
         public UIScheduler Sched;
-        public int Idx;
         public string Name;
         // ====================
 
@@ -33,22 +32,32 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Timeline Index", Item.TimelineIdx));
         }
 
-        public override void Draw(string parentId)
+        public override void Draw( string parentId )
+        {
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                return;
+            }
+            if( ImGui.Selectable( Name + " " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
         {
             string id = parentId + "/" + Name + Idx;
-            if (ImGui.TreeNode(Name + " " + Idx + id))
+            if(Name != "Trigger" )
             {
-                if(Name == "Item")
+                if( UIUtils.RemoveButton( "Delete" + id ) )
                 {
-                    if (UIUtils.RemoveButton("Delete" + id))
-                    {
-                        Sched.Scheduler.removeItem(Idx);
-                        Sched.Init();
-                    }
+                    Sched.Scheduler.removeItem( Idx );
+                    Sched.Init();
                 }
-                DrawAttrs(id);
-                ImGui.TreePop();
             }
+            DrawAttrs( id );
         }
     }
 }

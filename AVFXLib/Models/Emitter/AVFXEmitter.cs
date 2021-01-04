@@ -96,16 +96,16 @@ namespace AVFXLib.Models
             foreach (AVFXNode item in node.Children)
             {
                 switch (item.Name){
-                    // ItEm =================
-                    case AVFXEmitterCreateEmitter.NAME:
-                        lastEmitter = new AVFXEmitterCreateEmitter();
-                        lastEmitter.read(item);
-                        break;
-
                     // ITPR ==================
                     case AVFXEmitterCreateParticle.NAME:
                         lastParticle = new AVFXEmitterCreateParticle();
                         lastParticle.read(item);
+                        break;
+
+                    // ItEm =================
+                    case AVFXEmitterCreateEmitter.NAME:
+                        lastEmitter = new AVFXEmitterCreateEmitter();
+                        lastEmitter.read( item );
                         break;
 
                     // DATA ================
@@ -122,7 +122,9 @@ namespace AVFXLib.Models
             }
             if(lastEmitter != null)
             {
-                Emitters.AddRange(lastEmitter.Items);
+                int startIndex = Particles.Count();
+                int emitterCount = lastEmitter.Items.Count() - Particles.Count();
+                Emitters.AddRange(lastEmitter.Items.GetRange(startIndex, emitterCount)); // remove particles
             }
         }
 
@@ -205,15 +207,6 @@ namespace AVFXLib.Models
 
             PutAVFX(emitAvfx, Attributes);
 
-            // ITEM
-            //=======================//
-            for (int i = 0; i < Emitters.Count; i++)
-            {
-                AVFXEmitterCreateEmitter ItEM = new AVFXEmitterCreateEmitter();
-                ItEM.Items = Emitters.GetRange(0, i + 1); // get 1, then 2, etc.
-                emitAvfx.Children.Add(ItEM.toAVFX());
-            }
-
             // ITPR
             //=======================//
             for (int i = 0; i < Particles.Count; i++)
@@ -221,6 +214,16 @@ namespace AVFXLib.Models
                 AVFXEmitterCreateParticle ItPr = new AVFXEmitterCreateParticle();
                 ItPr.Items = Particles.GetRange(0, i + 1);
                 emitAvfx.Children.Add(ItPr.toAVFX());
+            }
+
+            // ITEM
+            //=======================//
+            for( int i = 0; i < Emitters.Count; i++ )
+            {
+                AVFXEmitterCreateEmitter ItEM = new AVFXEmitterCreateEmitter();
+                ItEM.Items.AddRange(Particles);
+                ItEM.Items.AddRange(Emitters.GetRange( 0, i + 1 )); // get 1, then 2, etc.
+                emitAvfx.Children.Add( ItEM.toAVFX() );
             }
 
             PutAVFX(emitAvfx, Data);

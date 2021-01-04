@@ -11,10 +11,12 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBinder Binder;
         public UIBinderView View;
-        public int Idx;
         //====================
         public UICombo<BinderType> Type;
         public UIBase Data;
+        public List<UIBase> Properties;
+        //====================
+        public UISplitView PropSplit;
 
         public UIBinder(AVFXBinder binder, UIBinderView view)
         {
@@ -26,6 +28,8 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             //=====================
+            Properties = new List<UIBase>();
+            //====================
             Type = new UICombo<BinderType>("Type", Binder.BinderVariety, changeFunction:ChangeType);
             Attributes.Add(new UICheckbox("Start to Global Direction", Binder.StartToGlobalDirection));
             Attributes.Add(new UICheckbox("VFX Scale", Binder.VfxScaleEnabled));
@@ -40,8 +44,9 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICheckbox("Adjust to Screen", Binder.AdjustToScreenEnabled));
             Attributes.Add(new UIInt("Life", Binder.Life));
             Attributes.Add(new UICombo<BinderRotation>("Binder Rotation Type", Binder.BinderRotationType));
-            Attributes.Add(new UIBinderProperties("Properties Start", Binder.PropStart));
-            Attributes.Add(new UIBinderProperties("Properties Goal", Binder.PropGoal));
+            //=============================
+            Properties.Add(new UIBinderProperties("Properties Start", Binder.PropStart));
+            Properties.Add(new UIBinderProperties("Properties Goal", Binder.PropGoal));
             //======================
             switch (Binder.BinderVariety.Value)
             {
@@ -61,31 +66,62 @@ namespace VFXEditor.UI.VFX
                     Data = null;
                     break;
             }
+            //======================
+            PropSplit = new UISplitView( Properties );
         }
         public void ChangeType(LiteralEnum<BinderType> literal)
         {
             Binder.SetVariety(literal.Value);
             Init();
+            View.RefreshDesc( Idx );
+        }
+
+        public string GetDescText()
+        {
+            return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Binder" + Idx;
-            if (ImGui.CollapsingHeader("Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")" + id))
+            Type.Draw(id);
+            // =====================
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
+                if( ImGui.BeginTabItem( "Parameters" + id + "/Tab" ) )
                 {
-                    View.AVFX.removeBinder(Idx);
-                    View.Init();
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
                 }
-                Type.Draw(id);
-                DrawAttrs(id);
-                //====================
-                if (Data != null)
+                if( Data != null && ImGui.BeginTabItem( "Data" + id + "/Tab" ) )
                 {
-                    Data.Draw(id);
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
                 }
+                if( ImGui.BeginTabItem( "Properties" + id + "/Tab" ) )
+                {
+                    DrawProperties( id + "/Prop" );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
             }
+        }
+
+        private void DrawParameters( string id )
+        {
+            ImGui.BeginChild( id );
+            DrawAttrs( id );
+            ImGui.EndChild();
+        }
+        private void DrawData( string id )
+        {
+            ImGui.BeginChild( id );
+            Data.Draw( id );
+            ImGui.EndChild();
+        }
+        public void DrawProperties(string id )
+        {
+            PropSplit.Draw( id );
         }
     }
 }

@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModelView : UIBase
     {
-        List<UIModel> Models = new List<UIModel>();
+        List<UIBase> Models = new List<UIBase>();
+        UISplitView ModelSplit;
 
         public UIModelView(AVFXBase avfx)
         {
@@ -17,18 +19,13 @@ namespace VFXEditor.UI.VFX
             {
                 Models.Add(new UIModel(model));
             }
+            ModelSplit = new UISplitView( Models );
         }
 
         public override void Draw(string parentId = "")
         {
             string id = "##MDL";
-            int mIdx = 0;
-            foreach (var model in Models)
-            {
-                model.Idx = mIdx;
-                model.Draw(id);
-                mIdx++;
-            }
+            ModelSplit.Draw( id );
         }
     }
 }

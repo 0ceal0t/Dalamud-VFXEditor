@@ -12,6 +12,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UIBinder> Binders;
+        public int Selected = -1;
+        public string[] Options;
 
         public UIBinderView(AVFXBase avfx)
         {
@@ -22,26 +24,46 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             Binders = new List<UIBinder>();
-            foreach (var binder in AVFX.Binders)
+            Options = new string[AVFX.Binders.Count];
+            int idx = 0;
+            foreach( var binder in AVFX.Binders )
             {
-                Binders.Add(new UIBinder(binder, this));
+                var item = new UIBinder( binder, this );
+                item.Idx = idx;
+                Options[idx] = item.GetDescText();
+                Binders.Add( item );
+                idx++;
             }
         }
-
+        public void RefreshDesc( int idx )
+        {
+            Options[idx] = Binders[idx].GetDescText();
+        }
         public override void Draw(string parentId = "")
         {
             string id = "##BIND";
-            int bIdx = 0;
-            foreach (var binder in Binders)
-            {
-                binder.Idx = bIdx;
-                binder.Draw(id);
-                bIdx++;
-            }
-            if (ImGui.Button("+ Binder" + id))
+            bool validSelect = UIUtils.ViewSelect( id, "Select a Binder", ref Selected, Options );
+            ImGui.SameLine();
+            if( ImGui.Button( "+ NEW" + id ) )
             {
                 AVFX.addBinder();
                 Init();
+            }
+            if( validSelect )
+            {
+                ImGui.SameLine();
+                if( UIUtils.RemoveButton( "DELETE" + id ) )
+                {
+                    AVFX.removeBinder( Selected );
+                    Init();
+                    validSelect = false;
+                }
+            }
+            ImGui.Separator();
+            // ====================
+            if( validSelect )
+            {
+                Binders[Selected].Draw( id );
             }
         }
     }

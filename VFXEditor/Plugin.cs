@@ -160,9 +160,9 @@ namespace VFXEditor
             var args = rawArgs.Split( ' ' );
             if( args.Length > 0 )
             {
-                switch( args[ 0 ] )
-                {
-                }
+                //switch( args[ 0 ] )
+                //{
+                //}
 
                 return;
             }

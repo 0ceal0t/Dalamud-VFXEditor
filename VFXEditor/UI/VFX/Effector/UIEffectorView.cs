@@ -12,6 +12,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UIEffector> Effectors;
+        public int Selected = -1;
+        public string[] Options;
 
         public UIEffectorView(AVFXBase avfx)
         {
@@ -22,26 +24,46 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             Effectors = new List<UIEffector>();
-            foreach (var effector in AVFX.Effectors)
+            Options = new string[AVFX.Effectors.Count];
+            int idx = 0;
+            foreach( var effector in AVFX.Effectors )
             {
-                Effectors.Add(new UIEffector(effector, this));
+                var item = new UIEffector( effector, this );
+                item.Idx = idx;
+                Options[idx] = item.GetDescText();
+                Effectors.Add( item );
+                idx++;
             }
         }
-
+        public void RefreshDesc( int idx )
+        {
+            Options[idx] = Effectors[idx].GetDescText();
+        }
         public override void Draw(string parentId = "")
         {
             string id = "##EFFECT";
-            int eIdx = 0;
-            foreach (var effector in Effectors)
-            {
-                effector.Idx = eIdx;
-                effector.Draw(id);
-                eIdx++;
-            }
-            if (ImGui.Button("+ Effector" + id))
+            bool validSelect = UIUtils.ViewSelect( id, "Select an Effector", ref Selected, Options );
+            ImGui.SameLine();
+            if( ImGui.Button( "+ NEW" + id ) )
             {
                 AVFX.addEffector();
                 Init();
+            }
+            if( validSelect )
+            {
+                ImGui.SameLine();
+                if( UIUtils.RemoveButton( "DELETE" + id ) )
+                {
+                    AVFX.removeEffector( Selected );
+                    Init();
+                    validSelect = false;
+                }
+            }
+            ImGui.Separator();
+            // ====================
+            if( validSelect )
+            {
+                Effectors[Selected].Draw( id );
             }
         }
     }

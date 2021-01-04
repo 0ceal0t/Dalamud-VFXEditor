@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UIScheduler> Schedulers;
+        public int Selected = -1;
+        public string[] Options;
 
         public UIScheduleView(AVFXBase avfx)
         {
@@ -21,21 +24,30 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             Schedulers = new List<UIScheduler>();
-            foreach (var sched in AVFX.Schedulers)
+            Options = new string[AVFX.Schedulers.Count];
+            int idx = 0;
+            foreach( var sched in AVFX.Schedulers )
             {
-                Schedulers.Add(new UIScheduler(sched, this));
+                var item = new UIScheduler( sched, this );
+                item.Idx = idx;
+                Options[idx] = item.GetDescText();
+                Schedulers.Add( item );
+                idx++;
             }
         }
-
+        public void RefreshDesc( int idx )
+        {
+            Options[idx] = Schedulers[idx].GetDescText();
+        }
         public override void Draw(string parentId = "")
         {
             string id = "##SCHED";
-            int sIdx = 0;
-            foreach (var sched in Schedulers)
+            bool validSelect = UIUtils.ViewSelect( id, "Select a Scheduler", ref Selected, Options );
+            ImGui.Separator();
+            // ====================
+            if( validSelect )
             {
-                sched.Idx = sIdx;
-                sched.Draw(id);
-                sIdx++;
+                Schedulers[Selected].Draw( id );
             }
         }
     }

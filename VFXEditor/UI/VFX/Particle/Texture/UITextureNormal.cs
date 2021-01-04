@@ -33,29 +33,39 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve(Tex.NPow, "Power"));
         }
 
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/TN";
-            // === UNASSIGNED ===
-            if (!Assigned)
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (ImGui.Button("+ Texture Normal" + id))
-                {
-                    Tex.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            if (ImGui.TreeNode("Normal" + id))
+            if( ImGui.Selectable( "Texture Normal" + parentId, selected == this ) )
             {
-                if (UIUtils.RemoveButton("Delete " + id))
-                {
-                    Tex.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                selected = this;
             }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ Texture Normal" + parentId ) )
+            {
+                Tex.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            string id = parentId + "/TN";
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Tex.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
         }
     }
 }

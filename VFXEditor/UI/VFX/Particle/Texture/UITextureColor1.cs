@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITextureColor2 : UIBase
+    public class UITextureColor1 : UIBase
     {
-        public AVFXTextureColor2 Tex;
-        public string Name;
+        public AVFXTextureColor1 Tex;
         //============================
 
-        public UITextureColor2(AVFXTextureColor2 tex, string name)
+        public UITextureColor1(AVFXTextureColor1 tex)
         {
             Tex = tex;
-            Name = name;
             Init();
         }
         public override void Init()
@@ -30,7 +28,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
             Attributes.Add(new UICheckbox("Previous Frame Copy", Tex.PreviousFrameCopy));
             Attributes.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
-            Attributes.Add(new UIInt("Texture Index", Tex.TextureIdx));
+            Attributes.Add(new UIInt("Mask Texture Index", Tex.MaskTextureIdx));
             Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
@@ -38,29 +36,39 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<TextureCalculateAlpha>("Calculate Alpha", Tex.TextureCalculateAlpha));
         }
 
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/" + Name;
-            // === UNASSIGNED ===
-            if (!Assigned)
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (ImGui.Button("+ " + Name + id))
-                {
-                    Tex.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            if (ImGui.TreeNode(Name + id))
+            if( ImGui.Selectable( "Texture Color 1" + parentId, selected == this ) )
             {
-                if (UIUtils.RemoveButton("Delete " + id))
-                {
-                    Tex.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                selected = this;
             }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) )
+            {
+                Tex.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/TC1";
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Tex.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
         }
     }
 }

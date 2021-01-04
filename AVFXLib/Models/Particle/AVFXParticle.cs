@@ -195,6 +195,12 @@ namespace AVFXLib.Models
             SetUnAssigned(Rotation);
             SetUnAssigned(Position);
             SetUnAssigned(Color);
+            SetUnAssigned( RotVelX );
+            SetUnAssigned( RotVelY );
+            SetUnAssigned( RotVelZ );
+            SetUnAssigned( RotVelXRandom );
+            SetUnAssigned( RotVelYRandom );
+            SetUnAssigned( RotVelZRandom );
             UVSets = new List<AVFXParticleUVSet>();
 
             SetVariety(ParticleVariety.Value);

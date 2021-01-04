@@ -12,7 +12,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXEffector Effector;
         public UIEffectorView View;
-        public int Idx;
         //========================
         public UICombo<EffectorType> Type;
         public UIBase Data;
@@ -58,31 +57,46 @@ namespace VFXEditor.UI.VFX
         {
             Effector.SetVariety(literal.Value);
             Init();
+            View.RefreshDesc( Idx );
+        }
+
+        public string GetDescText()
+        {
+            return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Effector" + Idx;
-            if (ImGui.CollapsingHeader("Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")" + id))
+            Type.Draw(id);
+            //==========================
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
+                if( ImGui.BeginTabItem( "Parameters" + id ) )
                 {
-                    View.AVFX.removeEffector(Idx);
-                    View.Init();
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
                 }
-                Type.Draw(id);
-                //==========================
-                if (ImGui.TreeNode("Parameters" + id))
+                if( Data != null && ImGui.BeginTabItem( "Data" + id ) )
                 {
-                    DrawAttrs(id);
-                    ImGui.TreePop();
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
                 }
-                //=============================
-                if (Data != null)
-                {
-                    Data.Draw(id);
-                }
+                ImGui.EndTabBar();
             }
+        }
+
+        private void DrawParameters( string id )
+        {
+            ImGui.BeginChild( id );
+            DrawAttrs( id );
+            ImGui.EndChild();
+        }
+        private void DrawData( string id )
+        {
+            ImGui.BeginChild( id );
+            Data.Draw( id );
+            ImGui.EndChild();
         }
     }
 }

@@ -11,7 +11,6 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UIBase
     {
         public AVFXModel Model;
-        public int Idx;
         //=======================
 
         public UIModel(AVFXModel model)
@@ -20,16 +19,27 @@ namespace VFXEditor.UI.VFX
             //=======================
         }
 
-        public override void Draw(string parentId)
+        // ============== DRAW ===============
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/Model" + Idx;
-            if (ImGui.CollapsingHeader("Model " + Idx + id))
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                ImGui.Text("Vertices: " + Model.Vertices.Count);
-                ImGui.Text("Indexes: " + Model.Indexes.Count);
-                ImGui.Text("Emitter Vertices: " + Model.EmitVertices.Count);
-                ImGui.Text("Emitter Vertex Order: " + Model.VNums.Count);
+                return;
             }
+            if( ImGui.Selectable( "Model " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            ImGui.Text( "Vertices: " + Model.Vertices.Count );
+            ImGui.Text( "Indexes: " + Model.Indexes.Count );
+            ImGui.Text( "Emitter Vertices: " + Model.EmitVertices.Count );
+            ImGui.Text( "Emitter Vertex Order: " + Model.VNums.Count );
         }
     }
 }

@@ -39,30 +39,39 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve3Axis(Prop.Position, "Position"));
         }
 
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/" + Name;
-            // === UNASSIGNED ===
-            if (!Assigned)
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (ImGui.Button("+ " + Name + id))
-                {
-                    Prop.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            // ==== ASSIGNED ===
-            if (ImGui.TreeNode(Name + id))
+            if( ImGui.Selectable( Name + parentId, selected == this ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Prop.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                selected = this;
             }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ " + Name + parentId ) )
+            {
+                Prop.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/" + Name;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Prop.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
         }
     }
 }

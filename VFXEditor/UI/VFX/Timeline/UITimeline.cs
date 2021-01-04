@@ -12,11 +12,13 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXTimeline Timeline;
         public UITimelineView View;
-        public int Idx;
         //=====================
-        public List<UITimelineItem> Items;
+        public List<UIBase> Items;
         //=====================
-        public List<UITimelineClip> Clips;
+        public List<UIBase> Clips;
+        //=====================
+        public UITimelineClipSplitView ClipSplit;
+        public UITimelineItemSplitView ItemSplit;
 
         public UITimeline(AVFXTimeline timeline, UITimelineView view)
         {
@@ -27,8 +29,8 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Items = new List<UITimelineItem>();
-            Clips = new List<UITimelineClip>();
+            Items = new List<UIBase>();
+            Clips = new List<UIBase>();
             //========================
             Attributes.Add(new UIInt("Loop Start", Timeline.LoopStart));
             Attributes.Add(new UIInt("Loop End", Timeline.LoopEnd));
@@ -43,58 +45,54 @@ namespace VFXEditor.UI.VFX
             {
                 Clips.Add(new UITimelineClip(clip, this));
             }
+            //==========================
+            ClipSplit = new UITimelineClipSplitView( Clips, this );
+            ItemSplit = new UITimelineItemSplitView( Items, this );
+        }
+
+        public string GetDescText()
+        {
+            return "Timeline " + Idx;
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Timeline" + Idx;
-            if (ImGui.CollapsingHeader("Timeline " + Idx + id))
+            //=====================
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
+                if( ImGui.BeginTabItem( "Parameters" + id ) )
                 {
-                    View.AVFX.removeTimeline(Idx);
-                    View.Init();
+                    DrawParameters( id + "/Params" );
+                    ImGui.EndTabItem();
                 }
-                if (ImGui.TreeNode("Parameters" + id))
+                if( ImGui.BeginTabItem( "Items (" + Items.Count() + ")" + id ) )
                 {
-                    DrawAttrs(id);
-                    ImGui.TreePop();
+                    DrawItems( id + "/Items" );
+                    ImGui.EndTabItem();
                 }
-                //=====================
-                if (ImGui.TreeNode("Items (" + Items.Count() + ")" + id))
+                if( ImGui.BeginTabItem( "Clips (" + Clips.Count() + ")" + id ) )
                 {
-                    int iIdx = 0;
-                    foreach (var item in Items)
-                    {
-                        item.Idx = iIdx;
-                        item.Draw(id);
-                        iIdx++;
-                    }
-                    if (ImGui.Button("+ Item" + id))
-                    {
-                        Timeline.addItem();
-                        Init();
-                    }
-                    ImGui.TreePop();
+                    DrawClips( id + "/Clips" );
+                    ImGui.EndTabItem();
                 }
-                //=====================
-                if (ImGui.TreeNode("Clips (" + Clips.Count() + ")" + id))
-                {
-                    int cIdx = 0;
-                    foreach (var clip in Clips)
-                    {
-                        clip.Idx = cIdx;
-                        clip.Draw(id);
-                        cIdx++;
-                    }
-                    if (ImGui.Button("+ Clip" + id))
-                    {
-                        Timeline.addClip();
-                        Init();
-                    }
-                    ImGui.TreePop();
-                }
+                ImGui.EndTabBar();
             }
+        }
+
+        private void DrawParameters( string id )
+        {
+            ImGui.BeginChild( id );
+            DrawAttrs( id );
+            ImGui.EndChild();
+        }
+        private void DrawItems( string id )
+        {
+            ItemSplit.Draw( id );
+        }
+        private void DrawClips( string id )
+        {
+            ClipSplit.Draw( id );
         }
     }
 }

@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;
-        public int Idx;
         //===============================
         public string UniqueId;
 
@@ -35,35 +34,45 @@ namespace VFXEditor.UI.VFX
             UnknownFloats = new Vector4(Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3]);
         }
 
-        public override void Draw(string parentId)
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/TLClip" + Idx;
-            if (ImGui.TreeNode("Clip " + Idx + id))
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Timeline.Timeline.removeClip(Idx);
-                    Timeline.Init();
-                }
-                if (ImGui.InputFloat4("Unknown Ints" + id, ref UnknownInts))
-                {
-                    Clip.UnknownInts[0] = (int)UnknownInts.X;
-                    Clip.UnknownInts[1] = (int)UnknownInts.Y;
-                    Clip.UnknownInts[2] = (int)UnknownInts.Z;
-                    Clip.UnknownInts[3] = (int)UnknownInts.W;
-                }
-                if (ImGui.InputFloat4("Unknown Floats" + id, ref UnknownFloats))
-                {
-                    Clip.UnknownFloats[0] = UnknownFloats.X;
-                    Clip.UnknownFloats[1] = UnknownFloats.Y;
-                    Clip.UnknownFloats[2] = UnknownFloats.Z;
-                    Clip.UnknownFloats[3] = UnknownFloats.W;
-                }
-                if (ImGui.InputText("Unique Id", ref UniqueId, 256))
-                {
-                    Clip.UniqueId = UniqueId.Trim('\0');
-                }
-                ImGui.TreePop();
+                return;
+            }
+            if( ImGui.Selectable( "Clip " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            string id = parentId + "/Clip" + Idx;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Timeline.Timeline.removeClip( Idx );
+                Timeline.Init();
+            }
+            if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
+            {
+                Clip.UnknownInts[0] = ( int )UnknownInts.X;
+                Clip.UnknownInts[1] = ( int )UnknownInts.Y;
+                Clip.UnknownInts[2] = ( int )UnknownInts.Z;
+                Clip.UnknownInts[3] = ( int )UnknownInts.W;
+            }
+            if( ImGui.InputFloat4( "Unknown Floats" + id, ref UnknownFloats ) )
+            {
+                Clip.UnknownFloats[0] = UnknownFloats.X;
+                Clip.UnknownFloats[1] = UnknownFloats.Y;
+                Clip.UnknownFloats[2] = UnknownFloats.Z;
+                Clip.UnknownFloats[3] = UnknownFloats.W;
+            }
+            if( ImGui.InputText( "Unique Id", ref UniqueId, 256 ) )
+            {
+                Clip.UniqueId = UniqueId.Trim( '\0' );
             }
         }
     }

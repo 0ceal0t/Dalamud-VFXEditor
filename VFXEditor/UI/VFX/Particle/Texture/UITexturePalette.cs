@@ -30,30 +30,39 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border", Tex.TextureBorder));
         }
 
-        public override void Draw(string parentId)
+        // =========== DRAW =====================
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/TP";
-            // === UNASSIGNED ===
-            if (!Assigned)
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (ImGui.Button("+ Texture Palette" + id))
-                {
-                    Tex.toDefault();
-                    Init();
-                }
+                DrawUnAssigned( parentId );
                 return;
             }
-            // ==== ASSIGNED ===
-            if (ImGui.TreeNode("Palette" + id))
+            if( ImGui.Selectable( "Texture Palette" + parentId, selected == this ) )
             {
-                if (UIUtils.RemoveButton("Delete " + id))
-                {
-                    Tex.Assigned = false;
-                    Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                selected = this;
             }
+        }
+        private void DrawUnAssigned( string parentId )
+        {
+            if( ImGui.SmallButton( "+ Texture Palette" + parentId ) )
+            {
+                Tex.toDefault();
+                Init();
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            string id = parentId + "/TP";
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Tex.Assigned = false;
+                Init();
+            }
+            DrawAttrs( id );
         }
     }
 }

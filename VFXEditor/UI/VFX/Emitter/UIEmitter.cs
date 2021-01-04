@@ -12,17 +12,20 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXEmitter Emitter;
         public UIEmitterView View;
-        public int Idx;
         //========================
         // TODO: sound
         //=======================
         public UICombo<EmitterType> Type;
         List<UIBase> Animation;
+        UISplitView AnimationSplit;
         //========================
-        public List<UIEmitterItem> Particles;
-        public List<UIEmitterItem> Emitters;
+        public List<UIBase> Particles;
+        public List<UIBase> Emitters;
         //========================
         public UIBase Data;
+        //========================
+        public UIEmitterSplitView EmitterSplit;
+        public UIEmitterSplitView ParticleSplit;
 
         public UIEmitter(AVFXEmitter emitter, UIEmitterView view)
         {
@@ -35,8 +38,8 @@ namespace VFXEditor.UI.VFX
             base.Init();
             // =====================
             Animation = new List<UIBase>();
-            Particles = new List<UIEmitterItem>();
-            Emitters = new List<UIEmitterItem>();
+            Particles = new List<UIBase>();
+            Emitters = new List<UIBase>();
             //======================
             Type = new UICombo<EmitterType>("Type", Emitter.EmitterVariety, changeFunction: ChangeType);
             Attributes.Add(new UIInt("Sound Index", Emitter.SoundNumber));
@@ -90,76 +93,83 @@ namespace VFXEditor.UI.VFX
                     Data = null;
                     break;
             }
+            //=============================
+            AnimationSplit = new UISplitView( Animation );
+            EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
+            ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }
         public void ChangeType(LiteralEnum<EmitterType> literal)
         {
             Emitter.SetVariety(literal.Value);
             Init();
+            View.RefreshDesc( Idx );
+        }
+
+        public string GetDescText()
+        {
+            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Emitter" + Idx;
-            if (ImGui.CollapsingHeader("Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")" + id))
+            Type.Draw(id);
+            //==========================
+
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
+                if( ImGui.BeginTabItem( "Parameters" + id ) )
                 {
-                    View.AVFX.removeEmitter(Idx);
-                    View.Init();
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
                 }
-                Type.Draw(id);
-                //==========================
-                if (ImGui.TreeNode("Parameters" + id))
+                if( Data != null && ImGui.BeginTabItem( "Data" + id ) )
                 {
-                    DrawAttrs(id);
-                    ImGui.TreePop();
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
                 }
-                //======================
-                if (ImGui.TreeNode("Animation" + id))
+                if( ImGui.BeginTabItem( "Animation" + id ) )
                 {
-                    DrawList(Animation, id);
-                    ImGui.TreePop();
+                    DrawAnimation( id + "/Anim" );
+                    ImGui.EndTabItem();
                 }
-                //=======================
-                if (ImGui.TreeNode("Particles (" + Particles.Count + ")" + id))
+                if( ImGui.BeginTabItem( "Particles (" + Particles.Count + ")" + id ) )
                 {
-                    int pIdx = 0;
-                    foreach (var particle in Particles)
-                    {
-                        particle.Idx = pIdx;
-                        particle.Draw(id);
-                        pIdx++;
-                    }
-                    if (ImGui.Button("+ Particle" + id))
-                    {
-                        Emitter.addParticle();
-                        Init();
-                    }
-                    ImGui.TreePop();
+                    DrawParticles( id + "/ItPr" );
+                    ImGui.EndTabItem();
                 }
-                //=======================
-                if (ImGui.TreeNode("Emitters (" + Emitters.Count + ")" + id))
+                if( ImGui.BeginTabItem( "Emitters (" + Emitters.Count + ")" + id ) )
                 {
-                    int eIdx = 0;
-                    foreach (var emitter in Emitters)
-                    {
-                        emitter.Idx = eIdx;
-                        emitter.Draw(id);
-                        eIdx++;
-                    }
-                    if (ImGui.Button("+ Emitter" + id))
-                    {
-                        Emitter.addEmitter();
-                        Init();
-                    }
-                    ImGui.TreePop();
+                    DrawEmitters( id + "/ItEm" );
+                    ImGui.EndTabItem();
                 }
-                //=============================
-                if (Data != null)
-                {
-                    Data.Draw(id);
-                }
+                ImGui.EndTabBar();
             }
+        }
+
+        private void DrawParameters( string id )
+        {
+            ImGui.BeginChild( id );
+            DrawAttrs( id );
+            ImGui.EndChild();
+        }
+        private void DrawData( string id )
+        {
+            ImGui.BeginChild( id );
+            Data.Draw( id );
+            ImGui.EndChild();
+        }
+        private void DrawAnimation( string id )
+        {
+            AnimationSplit.Draw( id );
+        }
+        private void DrawParticles( string id )
+        {
+            ParticleSplit.Draw( id );
+        }
+        private void DrawEmitters( string id )
+        {
+            EmitterSplit.Draw( id );
         }
     }
 }

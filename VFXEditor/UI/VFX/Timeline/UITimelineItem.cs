@@ -12,7 +12,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;
-        public int Idx;
         //===========================
 
         public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline)
@@ -35,19 +34,29 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("ClipNumber", Item.ClipNumber));
         }
 
-        public override void Draw(string parentId)
+        public override void Draw( string parentId )
         {
-            string id = parentId + "/TLItem" + Idx;
-            if (ImGui.TreeNode("Item " + Idx + id))
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Timeline.Timeline.removeItem(Idx);
-                    Timeline.Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                return;
             }
+            if( ImGui.Selectable( "Item " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            string id = parentId + "/Item" + Idx;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                Timeline.Timeline.removeItem( Idx );
+                Timeline.Init();
+            }
+            DrawAttrs( id );
         }
     }
 }

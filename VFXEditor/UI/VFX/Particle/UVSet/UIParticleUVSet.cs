@@ -12,7 +12,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXParticleUVSet UVSet;
         public UIParticle Particle;
-        public int Idx;
         //=======================
 
         public UIParticleUVSet(AVFXParticleUVSet uvSet, UIParticle particle)
@@ -32,19 +31,29 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve(UVSet.RotRandom, "Rotation Random"));
         }
 
-        public override void Draw(string parentId)
+        public override void Draw( string parentId )
+        {
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                return;
+            }
+            if( ImGui.Selectable( "UV " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
         {
             string id = parentId + "/UV" + Idx;
-            if (ImGui.TreeNode("UV " + Idx + id))
+            if( UIUtils.RemoveButton( "Delete" + id ) )
             {
-                if (UIUtils.RemoveButton("Delete" + id))
-                {
-                    Particle.Particle.removeUvSet(Idx);
-                    Particle.Init();
-                }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                Particle.Particle.removeUvSet( Idx );
+                Particle.Init();
             }
+            DrawAttrs( id );
         }
     }
 }

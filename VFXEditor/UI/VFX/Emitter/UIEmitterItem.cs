@@ -14,7 +14,6 @@ namespace VFXEditor.UI.VFX
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
         public bool IsParticle;
-        public int Idx;
         //=============================
 
         public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter)
@@ -53,28 +52,40 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Generate Delay", Iteration.GenerateDelay));
             Attributes.Add(new UICheckbox("Generate Delay By One", Iteration.GenerateDelayByOne));
         }
-
-        public override void Draw(string parentId)
+        
+        // =========== DRAW ==============
+        public override void Draw( string parentId )
+        {
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            string Type = IsParticle ? "Particle" : "Emitter";
+            if( !Assigned )
+            {
+                return;
+            }
+            if( ImGui.Selectable( Type + " " + Idx + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
         {
             string Type = IsParticle ? "Particle" : "Emitter";
             string id = parentId + "/Item" + Type + Idx;
-            if (ImGui.TreeNode(Type + " " + Idx + id))
+            if( UIUtils.RemoveButton( "Delete" + id ) )
             {
-                if (UIUtils.RemoveButton("Delete " + Type + id))
+                if( IsParticle )
                 {
-                    if (IsParticle)
-                    {
-                        Emitter.Emitter.removeParticle(Idx);
-                    }
-                    else
-                    {
-                        Emitter.Emitter.removeEmitter(Idx);
-                    }
-                    Emitter.Init();
+                    Emitter.Emitter.removeParticle( Idx );
                 }
-                DrawAttrs(id);
-                ImGui.TreePop();
+                else
+                {
+                    Emitter.Emitter.removeEmitter( Idx );
+                }
+                Emitter.Init();
             }
+            DrawAttrs( id );
         }
     }
 }

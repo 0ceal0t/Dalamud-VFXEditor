@@ -12,6 +12,8 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXBase AVFX;
         List<UITimeline> Timelines;
+        public int Selected = -1;
+        public string[] Options;
 
         public UITimelineView(AVFXBase avfx)
         {
@@ -22,26 +24,46 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             Timelines = new List<UITimeline>();
-            foreach (var timeline in AVFX.Timelines)
+            Options = new string[AVFX.Timelines.Count];
+            int idx = 0;
+            foreach( var timeline in AVFX.Timelines )
             {
-                Timelines.Add(new UITimeline(timeline, this));
+                var item = new UITimeline( timeline, this );
+                item.Idx = idx;
+                Options[idx] = item.GetDescText();
+                Timelines.Add( item );
+                idx++;
             }
         }
-
+        public void RefreshDesc( int idx )
+        {
+            Options[idx] = Timelines[idx].GetDescText();
+        }
         public override void Draw(string parentId = "")
         {
             string id = "##TIME";
-            int tIdx = 0;
-            foreach (var timeline in Timelines)
-            {
-                timeline.Idx = tIdx;
-                timeline.Draw(id);
-                tIdx++;
-            }
-            if (ImGui.Button("+ Timeline" + id))
+            bool validSelect = UIUtils.ViewSelect( id, "Select a Timeline", ref Selected, Options );
+            ImGui.SameLine();
+            if( ImGui.Button( "+ NEW" + id ) )
             {
                 AVFX.addTimeline();
                 Init();
+            }
+            if( validSelect )
+            {
+                ImGui.SameLine();
+                if( UIUtils.RemoveButton( "DELETE" + id ) )
+                {
+                    AVFX.removeTimeline( Selected );
+                    Init();
+                    validSelect = false;
+                }
+            }
+            ImGui.Separator();
+            // ====================
+            if( validSelect )
+            {
+                Timelines[Selected].Draw( id );
             }
         }
     }

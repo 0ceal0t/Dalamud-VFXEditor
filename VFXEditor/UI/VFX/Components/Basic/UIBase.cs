@@ -11,7 +11,12 @@ namespace VFXEditor.UI.VFX
     {
         public bool Assigned = true;
         public List<UIBase> Attributes = new List<UIBase>();
+        public int Idx;
+
         public abstract void Draw(string parentId);
+        public virtual void DrawBody( string parentId ) { }
+        public virtual void DrawSelect(string parentId, ref UIBase selected  ) { }
+
         public void DrawAttrs(string parentId)
         {
             DrawList(Attributes, parentId);
@@ -25,18 +30,19 @@ namespace VFXEditor.UI.VFX
 
         public void DrawList(List<UIBase> items, string parentId)
         {
-            int sameLine = 0;
-            for(int i = 0; i < items.Count; i++)
+            foreach(var item in items )
             {
-                if(i > 0 && !items[i].Assigned && !items[i - 1].Assigned && sameLine < 3){
-                    ImGui.SameLine();
-                    sameLine++;
-                }
-                else
+                if( item.Assigned )
                 {
-                    sameLine = 0;
+                    item.Draw( parentId );
                 }
-                items[i].Draw(parentId);
+            }
+            foreach( var item in items )
+            {
+                if( !item.Assigned )
+                {
+                    item.Draw( parentId );
+                }
             }
         }
     }
