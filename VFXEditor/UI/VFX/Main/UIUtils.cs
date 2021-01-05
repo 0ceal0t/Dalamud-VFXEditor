@@ -78,5 +78,16 @@ namespace VFXEditor.UI.VFX
             ImGui.PopStyleColor();
             return ret;
         }
+        // =================================
+        public static int ColorToInt(Vector4 Color )
+        {
+            byte[] data = new byte[] { ( byte )Color.X, (byte)Color.Y, (byte)Color.Z, (byte)Color.W };
+            return AVFXLib.Main.Util.Bytes4ToInt( data );
+        }
+        public static Vector4 IntToColor(int Color )
+        {
+            byte[] colors = AVFXLib.Main.Util.IntTo4Bytes( Color );
+            return new Vector4( colors[0], colors[1], colors[2], colors[3] );
+        }
     }
 }

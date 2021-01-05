@@ -51,7 +51,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item" + Idx;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 Timeline.Timeline.removeItem( Idx );
                 Timeline.Init();

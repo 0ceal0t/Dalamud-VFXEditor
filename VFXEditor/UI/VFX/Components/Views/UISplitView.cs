@@ -13,13 +13,16 @@ namespace VFXEditor.UI.VFX
         public List<UIBase> Items;
         public bool NewButton;
         public UIBase SelectedItem = null;
+        public int LeftSize;
 
-        public UISplitView(List<UIBase> items, bool newButton = false)
+        public UISplitView(List<UIBase> items, bool newButton = false, int leftSize = 200)
         {
             Items = items;
             NewButton = newButton;
+            LeftSize = leftSize;
         }
 
+        bool DrawOnce = false;
         public override void Draw( string parentId )
         {
             ImGui.Columns( 2, parentId + "/Cols", true );
@@ -44,7 +47,10 @@ namespace VFXEditor.UI.VFX
                     item.DrawSelect( parentId, ref SelectedItem );
             }
             ImGui.EndChild();
-            ImGui.SetColumnWidth( 0, 200 );
+            if( !DrawOnce ) {
+                ImGui.SetColumnWidth( 0, LeftSize );
+                DrawOnce = true;
+            }
             // ===== C2 ============
             ImGui.NextColumn();
             ImGui.BeginChild( parentId + "/Split" );

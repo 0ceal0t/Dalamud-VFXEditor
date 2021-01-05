@@ -11,11 +11,18 @@ using System.IO;
 
 namespace VFXEditor
 {
+    public struct TexData
+    {
+        public ImGuiScene.TextureWrap Wrap;
+        public byte[] Data;
+        public int Height;
+        public int Width;
+    }
 
     public class TextureManager
     {
         public Plugin _plugin;
-        public Dictionary<string, ImGuiScene.TextureWrap> PathToTex = new Dictionary<string, ImGuiScene.TextureWrap>();
+        public Dictionary<string, TexData> PathToTex = new Dictionary<string, TexData>();
 
         public TextureManager(Plugin plugin )
         {
@@ -30,14 +37,14 @@ namespace VFXEditor
 
             Task.Run( () => {
                 var tex = CreateTexture( _path );
-                if(tex != null )
+                if(tex.Wrap != null )
                 {
                     PathToTex.Add( path, tex );
                 }
             } );
         }
 
-        public ImGuiScene.TextureWrap CreateTexture(string path )
+        public TexData CreateTexture(string path )
         {
             var result = _plugin.PluginInterface.Data.FileExists( path );
             if( result )
@@ -45,20 +52,26 @@ namespace VFXEditor
                 try
                 {
                     var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
-                    var texBind = _plugin.PluginInterface.UiBuilder.LoadImageRaw( Cleanup( texFile.ImageData), texFile.Header.Width, texFile.Header.Height, 4 );
-                    return texBind;
+                    var data = Cleanup( texFile.ImageData );
+                    var texBind = _plugin.PluginInterface.UiBuilder.LoadImageRaw( data, texFile.Header.Width, texFile.Header.Height, 4 );
+                    var ret = new TexData();
+                    ret.Data = data;
+                    ret.Wrap = texBind;
+                    ret.Width = texFile.Header.Width;
+                    ret.Height = texFile.Header.Height;
+                    return ret;
                 }
                 catch( Exception e )
                 {
                     PluginLog.LogError( e.ToString() );
                     PluginLog.LogError( "Could not find tex:" + path );
-                    return null;
+                    return new TexData();
                 }
             }
             else
             {
                 PluginLog.LogError( "Could not find tex:" + path );
-                return null;
+                return new TexData();
             }
         }
 

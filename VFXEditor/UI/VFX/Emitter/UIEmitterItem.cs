@@ -73,7 +73,7 @@ namespace VFXEditor.UI.VFX
         {
             string Type = IsParticle ? "Particle" : "Emitter";
             string id = parentId + "/Item" + Type + Idx;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 if( IsParticle )
                 {

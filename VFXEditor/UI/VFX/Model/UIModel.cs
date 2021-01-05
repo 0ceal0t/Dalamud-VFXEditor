@@ -13,12 +13,25 @@ namespace VFXEditor.UI.VFX
         public AVFXModel Model;
         public UIModelView View;
         //=======================
+        public List<UIBase> EmitterVerts;
+        public UIModelEmitSplitView EmitSplit;
 
         public UIModel(AVFXModel model, UIModelView view)
         {
             Model = model;
             View = view;
-            //=======================
+            //===============
+            Init();
+        }
+        public override void Init()
+        {
+            base.Init();
+            EmitterVerts = new List<UIBase>();
+            for(int i = 0; i < Math.Min(Model.VNums.Count, Model.EmitVertices.Count); i++ )
+            {
+                EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
+            }
+            EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
         }
 
         // ============== DRAW ===============
@@ -39,25 +52,28 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Model" + Idx;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
                 View.AVFX.removeModel( Idx );
                 View.Init();
                 return;
             }
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Import" + id ) )
+            {
+
+            }
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Export" + id ) )
+            {
+
+            }
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
-            ImGui.SameLine();
-            if(ImGui.Button("Import" + id ) )
+
+            if(ImGui.CollapsingHeader("Emitter Vertices" + id ) )
             {
-
+                EmitSplit.Draw( id );
             }
-            ImGui.SameLine();
-            if(ImGui.Button("Export" + id ) )
-            {
-
-            }
-
-            ImGui.Separator();
             // [Delete]
             // Vertices + Indexes #
             // IMPORT | EXPORT
