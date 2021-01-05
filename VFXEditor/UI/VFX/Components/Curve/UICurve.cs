@@ -83,6 +83,7 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Assigned = false;
                 Init();
+                return;
             }
             // =====================
             DrawAttrs( id );
@@ -98,8 +99,7 @@ namespace VFXEditor.UI.VFX
 
                 if( ImGui.Button( "+ Key" + id ) )
                 {
-                    Curve.addKey();
-                    Init();
+                    Keys.Add( new UIKey( Curve.addKey(), this, Color ) );
                 }
                 ImGui.TreePop();
             }
@@ -135,6 +135,7 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Curve.removeKey(Idx);
                 Curve.Init();
+                return;
             }
             if (ImGui.InputInt("Time" + id, ref Time))
             {

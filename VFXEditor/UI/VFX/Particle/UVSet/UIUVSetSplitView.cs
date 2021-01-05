@@ -22,8 +22,11 @@ namespace VFXEditor.UI.VFX
             {
                 if( ImGui.Button( "+ UVSet" + id ) )
                 {
-                    Particle.Particle.addUvSet();
-                    Particle.Init();
+                    var p = Particle.Particle.addUvSet();
+                    if(p != null )
+                    {
+                        Particle.UVSets.Add( new UIParticleUVSet( p, Particle ) );
+                    }
                 }
             }
         }

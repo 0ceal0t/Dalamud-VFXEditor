@@ -125,6 +125,7 @@ namespace VFXEditor.UI.VFX
             {
                 Simple.Assigned = false;
                 Init();
+                return;
             }
             DrawAttrs( id );
             //====================

@@ -55,6 +55,7 @@ namespace VFXEditor.UI.VFX
                 {
                     Sched.Scheduler.removeItem( Idx );
                     Sched.Init();
+                    return;
                 }
             }
             DrawAttrs( id );

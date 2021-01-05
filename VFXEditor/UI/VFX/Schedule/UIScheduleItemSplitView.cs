@@ -20,8 +20,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.Button( "+ Item" + id ) )
             {
-                Sched.Scheduler.addItem();
-                Sched.Init();
+                Sched.Items.Add( new UISchedulerItem( Sched.Scheduler.addItem(), "Item", Sched ) );
             }
         }
     }

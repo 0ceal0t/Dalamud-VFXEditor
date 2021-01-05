@@ -151,24 +151,26 @@ namespace AVFXLib.Models
             SetVariety(EmitterVariety.Value);
         }
 
-        public void addParticle()
+        public AVFXEmitterIterationItem addParticle()
         {
             AVFXEmitterIterationItem ItPr = new AVFXEmitterIterationItem();
             ItPr.toDefault();
             Particles.Add(ItPr);
             ParticleCount.GiveValue(Particles.Count());
+            return ItPr;
         }
         public void removeParticle(int idx)
         {
             Particles.RemoveAt(idx);
             ParticleCount.GiveValue(Particles.Count());
         }
-        public void addEmitter()
+        public AVFXEmitterIterationItem addEmitter()
         {
             AVFXEmitterIterationItem ItEm = new AVFXEmitterIterationItem();
             ItEm.toDefault();
             Emitters.Add(ItEm);
             EmitterCount.GiveValue(Emitters.Count());
+            return ItEm;
         }
         public void removeEmitter(int idx)
         {

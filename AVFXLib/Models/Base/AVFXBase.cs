@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -179,75 +179,93 @@ namespace AVFXLib.Models
         }
 
         // ==== ADD/REMOVE ======
-        public void addScheduler()
+        public AVFXSchedule addScheduler()
         {
             AVFXSchedule sched = new AVFXSchedule();
             sched.toDefault();
             Schedulers.Add(sched);
+            return sched;
         }
         public void removeScheduler(int idx)
         {
             Schedulers.RemoveAt(idx);
         }
-        public void addTimeline()
+        public AVFXTimeline addTimeline()
         {
             AVFXTimeline timeline = new AVFXTimeline();
             timeline.toDefault();
             Timelines.Add(timeline);
+            return timeline;
         }
         public void removeTimeline(int idx)
         {
             Timelines.RemoveAt(idx);
         }
-        public void addEffector()
+        public AVFXEffector addEffector()
         {
             AVFXEffector effector = new AVFXEffector();
             effector.toDefault();
             Effectors.Add(effector);
+            return effector;
         }
         public void removeEffector(int idx)
         {
             Effectors.RemoveAt(idx);
         }
-        public void addEmitter()
+        public AVFXEmitter addEmitter()
         {
             AVFXEmitter emitter = new AVFXEmitter();
             emitter.toDefault();
             Emitters.Add(emitter);
+            return emitter;
         }
         public void removeEmitter(int idx)
         {
             Emitters.RemoveAt(idx);
         }
-        public void addParticle()
+        public AVFXParticle addParticle()
         {
             AVFXParticle particle = new AVFXParticle();
             particle.toDefault();
             Particles.Add(particle);
+            return particle;
         }
         public void removeParticle(int idx)
         {
             Particles.RemoveAt(idx);
         }
-        public void addBinder()
+        public AVFXBinder addBinder()
         {
             AVFXBinder binder = new AVFXBinder();
             binder.toDefault();
             Binders.Add(binder);
+            return binder;
         }
         public void removeBinder(int idx)
         {
             Binders.RemoveAt(idx);
         }
-        public void addTexture()
+        public AVFXTexture addTexture()
         {
             AVFXTexture texture = new AVFXTexture();
             texture.toDefault();
             Textures.Add(texture);
+            return texture;
         }
         public void removeTexture(int idx)
         {
             Textures.RemoveAt(idx);
+        }
+        public AVFXModel addModel()
+        {
+            AVFXModel model = new AVFXModel();
+            model.toDefault();
+            Models.Add( model );
+            return model;
+        }
+        public void removeModel(int idx )
+        {
+            Models.RemoveAt( idx );
         }
 
         // ======= EXPORT =======

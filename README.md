@@ -25,30 +25,36 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Penumbra export
+- [ ] Model import
+- [ ] Model export
+- [ ] Model modification (order / adding / deleting)
+- [ ] Model view(??)
+- [ ] Default VFX (from-scratch)
+- [ ] Export texture
+- [ ] GOTO button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
-- [x] ~~TexTools export~~
 - [ ] Penumbra import
-- [ ] Penumbra export
-- [x] ~~Raw extract~~
+- [ ] Monster list(??)
 - [ ] Cutscene VFX select
 - [ ] Zone VFX select
 - [ ] Emote VFX select
 - [ ] Limit break VFX
-- [x] ~~Better search (doesn't have to be exact match)~~
 - [ ] Equipment (not weapons) VFX selector
 - [ ] Better error / log display
-- [x] ~~Open recent~~
 - [ ] Open from equipped gear
 - [ ] Penumbra integration(??)
-- [x] ~~More settings~~
-- [ ] Model replacement
 - [ ] Better TMB parsing
+- [ ] Better key UI
+- [ ] Better placed "DELETE" button
+- [x] ~~Better search (doesn't have to be exact match)~~
+- [x] ~~Raw extract~~
+- [x] ~~Open recent~~
+- [x] ~~More settings~~
 - [x] ~~Verify on each load + show output with icon~~
 - [x] ~~UI Cleanup (fewer trees)~~
-- [ ] Better key UI
-- [ ] GOTO button
-- [ ] Better placed "DELETE" button
+- [x] ~~TexTools export~~
 - [x] ~~Fix `ItPr` / `ItEm` (emitter comes after particle, all counted as part of the same block? see `Flash` VFX)~~
 - [x] ~~Fix `BvPr = 255` issue (see `Rolling Thunder / Target` VFX)~~
 - [x] ~~Bind Prp1/Prp2 (see `Thunder 2` VFX)~~
@@ -56,4 +62,3 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Emitter sound~~
 - [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~
 - [x] ~~Binder properties view~~
-- [ ] Monster list(??)

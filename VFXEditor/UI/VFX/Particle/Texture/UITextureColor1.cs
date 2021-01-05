@@ -67,6 +67,7 @@ namespace VFXEditor.UI.VFX
             {
                 Tex.Assigned = false;
                 Init();
+                return;
             }
             DrawAttrs( id );
         }

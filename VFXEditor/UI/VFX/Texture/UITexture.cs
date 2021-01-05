@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using Dalamud.Plugin;
 
 namespace VFXEditor.UI.VFX
 {
@@ -58,6 +59,8 @@ namespace VFXEditor.UI.VFX
             string id = parentId + "/Texture" + Idx;
             if( UIUtils.RemoveButton( "Delete" + id ) )
             {
+                PluginLog.Log( View.AVFX.Textures.Count().ToString() );
+                PluginLog.Log( Idx.ToString() );
                 View.AVFX.removeTexture( Idx );
                 View.Init();
                 return;

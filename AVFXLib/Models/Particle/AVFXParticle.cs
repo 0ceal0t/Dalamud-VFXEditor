@@ -206,13 +206,14 @@ namespace AVFXLib.Models
             SetVariety(ParticleVariety.Value);
         }
 
-        public void addUvSet()
+        public AVFXParticleUVSet addUvSet()
         {
-            if (UVSets.Count >= 4) return;
+            if (UVSets.Count >= 4) return null;
             AVFXParticleUVSet UvSet = new AVFXParticleUVSet();
             UvSet.toDefault();
             UVSets.Add(UvSet);
             UvSetCount.GiveValue(UVSets.Count());
+            return UvSet;
         }
         public void removeUvSet(int idx)
         {

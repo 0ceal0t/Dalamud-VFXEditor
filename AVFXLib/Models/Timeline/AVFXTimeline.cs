@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -76,24 +76,26 @@ namespace AVFXLib.Models
             Clips = new List<AVFXTimelineClip>();
         }
 
-        public void addItem()
+        public AVFXTimelineSubItem addItem()
         {
             AVFXTimelineSubItem Item = new AVFXTimelineSubItem();
             Item.toDefault();
             Items.Add(Item);
             TimelineCount.GiveValue(Items.Count());
+            return Item;
         }
         public void removeItem(int idx)
         {
             Items.RemoveAt(idx);
             TimelineCount.GiveValue(Items.Count());
         }
-        public void addClip()
+        public AVFXTimelineClip addClip()
         {
             AVFXTimelineClip Clip = new AVFXTimelineClip();
             Clip.toDefault();
             Clips.Add(Clip);
             ClipCount.GiveValue(Clips.Count());
+            return Clip;
         }
         public void removeClip(int idx)
         {

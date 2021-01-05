@@ -77,6 +77,7 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Assigned = false;
                 Init();
+                return;
             }
             foreach( var c in Curves )
             {

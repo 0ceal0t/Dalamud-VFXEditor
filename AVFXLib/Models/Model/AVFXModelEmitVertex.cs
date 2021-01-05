@@ -1,4 +1,4 @@
-﻿using AVFXLib.Main;
+using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace AVFXLib.Models
                 Position[idx] = Util.Bytes4ToFloat(pBytes);
                 Normal[idx] = Util.Bytes4ToFloat(nBytes);
             }
-            byte[] cBytes = new byte[8];
+            byte[] cBytes = new byte[4];
             Buffer.BlockCopy(bytes, 24, cBytes, 0, 4);
             C = Util.Bytes4ToInt(cBytes);
         }

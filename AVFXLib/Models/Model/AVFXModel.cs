@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,9 +13,9 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Modl";
 
-        public List<VNum> VNums = new List<VNum>();
         public List<Vertex> Vertices = new List<Vertex>();
         public List<Index> Indexes = new List<Index>();
+        public List<VNum> VNums = new List<VNum>();
         public List<EmitVertex> EmitVertices = new List<EmitVertex>();
 
         public AVFXModel() : base("model", NAME)
@@ -63,6 +63,27 @@ namespace AVFXLib.Models
                         break;
                 }
             }
+        }
+
+        public VNum addVNum()
+        {
+            VNum vnum = new VNum(new byte[VNum.SIZE]);
+            VNums.Add( vnum );
+            return vnum;
+        }
+        public void removeVNum(int idx )
+        {
+            VNums.RemoveAt( idx );
+        }
+        public EmitVertex addEmitVertex()
+        {
+            EmitVertex eVert = new EmitVertex( new byte[EmitVertex.SIZE] );
+            EmitVertices.Add( eVert );
+            return eVert;
+        }
+        public void removeEmitVertex(int idx )
+        {
+            EmitVertices.RemoveAt( idx );
         }
 
         public override JToken toJSON()

@@ -11,11 +11,13 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UIBase
     {
         public AVFXModel Model;
+        public UIModelView View;
         //=======================
 
-        public UIModel(AVFXModel model)
+        public UIModel(AVFXModel model, UIModelView view)
         {
             Model = model;
+            View = view;
             //=======================
         }
 
@@ -36,10 +38,35 @@ namespace VFXEditor.UI.VFX
         }
         public override void DrawBody( string parentId )
         {
-            ImGui.Text( "Vertices: " + Model.Vertices.Count );
-            ImGui.Text( "Indexes: " + Model.Indexes.Count );
-            ImGui.Text( "Emitter Vertices: " + Model.EmitVertices.Count );
-            ImGui.Text( "Emitter Vertex Order: " + Model.VNums.Count );
+            string id = parentId + "/Model" + Idx;
+            if( UIUtils.RemoveButton( "Delete" + id ) )
+            {
+                View.AVFX.removeModel( Idx );
+                View.Init();
+                return;
+            }
+            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
+            ImGui.SameLine();
+            if(ImGui.Button("Import" + id ) )
+            {
+
+            }
+            ImGui.SameLine();
+            if(ImGui.Button("Export" + id ) )
+            {
+
+            }
+
+            ImGui.Separator();
+            // [Delete]
+            // Vertices + Indexes #
+            // IMPORT | EXPORT
+            // Emitter Vertices:
+            //      Position
+            //      Normal
+            //      Color
+            //      Order
+            //      [+ New]
         }
     }
 }

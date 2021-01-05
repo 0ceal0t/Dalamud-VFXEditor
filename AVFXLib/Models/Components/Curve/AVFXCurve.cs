@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -58,10 +58,11 @@ namespace AVFXLib.Models
             Keys = new List<AVFXKey>();
         }
 
-        public void addKey()
+        public AVFXKey addKey()
         {
             AVFXKey key = new AVFXKey(KeyType.Linear, 0, 1, 1, 1);
             Keys.Add(key);
+            return key;
         }
 
         public void removeKey(int idx)

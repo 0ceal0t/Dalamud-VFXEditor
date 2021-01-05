@@ -55,6 +55,7 @@ namespace VFXEditor.UI.VFX
             {
                 Timeline.Timeline.removeClip( Idx );
                 Timeline.Init();
+                return;
             }
             if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
             {

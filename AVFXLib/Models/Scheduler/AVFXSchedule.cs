@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -78,24 +78,26 @@ namespace AVFXLib.Models
             }
         }
 
-        public void addItem()
+        public AVFXScheduleSubItem addItem()
         {
             AVFXScheduleSubItem Item = new AVFXScheduleSubItem();
             Item.toDefault();
             Items.Add(Item);
             ItemCount.GiveValue(Items.Count());
+            return Item;
         }
         public void removeItem(int idx)
         {
             Items.RemoveAt(idx);
             ItemCount.GiveValue(Items.Count());
         }
-        public void addTrigger()
+        public AVFXScheduleSubItem addTrigger()
         {
             AVFXScheduleSubItem Trigger = new AVFXScheduleSubItem();
             Trigger.toDefault();
             Triggers.Add(Trigger);
             TriggerCount.GiveValue(Triggers.Count());
+            return Trigger;
         }
         public void removeTrigger(int idx)
         {

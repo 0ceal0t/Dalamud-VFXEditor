@@ -78,12 +78,15 @@ namespace VFXEditor.UI.VFX
                 if( IsParticle )
                 {
                     Emitter.Emitter.removeParticle( Idx );
+                    Emitter.Init();
+                    return;
                 }
                 else
                 {
                     Emitter.Emitter.removeEmitter( Idx );
+                    Emitter.Init();
+                    return;
                 }
-                Emitter.Init();
             }
             DrawAttrs( id );
         }

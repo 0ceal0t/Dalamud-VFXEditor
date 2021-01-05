@@ -83,6 +83,7 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Assigned = false;
                 Init();
+                return;
             }
             int idx = 0;
             foreach( var c in Curves )

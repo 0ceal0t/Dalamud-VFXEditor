@@ -10,16 +10,24 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModelView : UIBase
     {
-        List<UIBase> Models = new List<UIBase>();
-        UISplitView ModelSplit;
+        public AVFXBase AVFX;
+        public List<UIBase> Models;
+        public UIModelSplitView ModelSplit;
 
         public UIModelView(AVFXBase avfx)
         {
-            foreach (var model in avfx.Models)
+            AVFX = avfx;
+            Init();
+        }
+        public override void Init()
+        {
+            base.Init();
+            Models = new List<UIBase>();
+            foreach( var model in AVFX.Models )
             {
-                Models.Add(new UIModel(model));
+                Models.Add( new UIModel( model, this ) );
             }
-            ModelSplit = new UISplitView( Models );
+            ModelSplit = new UIModelSplitView( Models, this );
         }
 
         public override void Draw(string parentId = "")

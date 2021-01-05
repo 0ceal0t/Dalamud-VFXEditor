@@ -52,6 +52,7 @@ namespace VFXEditor.UI.VFX
             {
                 Particle.Particle.removeUvSet( Idx );
                 Particle.Init();
+                return;
             }
             DrawAttrs( id );
         }

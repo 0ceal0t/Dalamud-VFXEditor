@@ -55,6 +55,7 @@ namespace VFXEditor.UI.VFX
             {
                 Timeline.Timeline.removeItem( Idx );
                 Timeline.Init();
+                return;
             }
             DrawAttrs( id );
         }
