@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lumina.Excel.GeneratedSheets;
 using System.IO;
+using System.Collections.Concurrent;
 
 namespace VFXEditor
 {
@@ -22,7 +23,7 @@ namespace VFXEditor
     public class TextureManager
     {
         public Plugin _plugin;
-        public Dictionary<string, TexData> PathToTex = new Dictionary<string, TexData>();
+        public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>();
 
         public TextureManager(Plugin plugin )
         {
@@ -39,7 +40,7 @@ namespace VFXEditor
                 var tex = CreateTexture( _path );
                 if(tex.Wrap != null )
                 {
-                    PathToTex.Add( path, tex );
+                    PathToTex.TryAdd( path, tex );
                 }
             } );
         }

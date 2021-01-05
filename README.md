@@ -26,10 +26,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Penumbra export
-- [ ] Model import
-- [ ] Model export
-- [ ] Model view(??)
 - [ ] Default VFX (from-scratch)
+- [ ] Documentation (relationship between particles and stuff, model import format)
+- [ ] Model view(??)
 - [ ] GOTO button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
@@ -46,6 +45,8 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better TMB parsing
 - [ ] Better key UI
 - [ ] Better placed "DELETE" button
+- [x] ~~Model import~~
+- [x] ~~Model export~~
 - [x] ~~Export texture~~
 - [x] ~~Model modification (order / adding / deleting)~~
 - [x] ~~Better search (doesn't have to be exact match)~~

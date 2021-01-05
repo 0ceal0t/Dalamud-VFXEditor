@@ -1,4 +1,4 @@
-﻿using AVFXLib.Main;
+using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,8 @@ namespace AVFXLib.Models
         public int I1; // 2 bytes
         public int I2; // 2 bytes
         public int I3; // 2 bytes
+
+        public Index() { }
 
         public Index(byte[] bytes)
         {

@@ -1,10 +1,12 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
@@ -61,12 +63,12 @@ namespace VFXEditor.UI.VFX
             ImGui.SameLine();
             if( ImGui.SmallButton( "Import" + id ) )
             {
-
+                ImportDialog();
             }
             ImGui.SameLine();
             if( ImGui.SmallButton( "Export" + id ) )
             {
-
+                ExportDialog();
             }
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
 
@@ -74,15 +76,61 @@ namespace VFXEditor.UI.VFX
             {
                 EmitSplit.Draw( id );
             }
-            // [Delete]
-            // Vertices + Indexes #
-            // IMPORT | EXPORT
-            // Emitter Vertices:
-            //      Position
-            //      Normal
-            //      Color
-            //      Order
-            //      [+ New]
+        }
+
+        public void ImportDialog()
+        {
+            Task.Run( async () =>
+            {
+                var picker = new OpenFileDialog
+                {
+                    Filter = "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*",
+                    CheckFileExists = true,
+                    Title = "Select GLTF File."
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK )
+                {
+                    try
+                    {
+                        if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) )
+                        {
+                            Model.Vertices = v_s;
+                            Model.Indexes = i_s;
+                        }
+                    }
+                    catch( Exception ex )
+                    {
+                        PluginLog.LogError( ex, "Could not select the GLTF file." );
+                    }
+                }
+            } );
+        }
+
+        public void ExportDialog()
+        {
+            Task.Run( async () =>
+            {
+                var picker = new SaveFileDialog
+                {
+                    Filter = "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*",
+                    Title = "Select a Save Location.",
+                    DefaultExt = "gltf",
+                    AddExtension = true
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK )
+                {
+                    try
+                    {
+                        GLTFManager.ExportModel( Model, picker.FileName);
+                    }
+                    catch( Exception ex )
+                    {
+                        PluginLog.LogError( ex, "Could not select a save location" );
+                    }
+                }
+            } );
         }
     }
 }
