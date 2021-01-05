@@ -27,8 +27,10 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 ## TODO
 - [ ] Penumbra export
 - [ ] Default VFX (from-scratch)
-- [ ] Documentation (relationship between particles and stuff, model import format)
-- [ ] Model view(??)
+- [ ] Flesh out Wiki
+- [ ] Model 3D preview (is this even possible?)
+- [ ] Better key UI
+- [ ] Penumbra integration(??)
 - [ ] GOTO button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
@@ -41,10 +43,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Equipment (not weapons) VFX selector
 - [ ] Better error / log display
 - [ ] Open from equipped gear
-- [ ] Penumbra integration(??)
 - [ ] Better TMB parsing
-- [ ] Better key UI
 - [ ] Better placed "DELETE" button
+- [x] ~~Better clips UI~~
 - [x] ~~Model import~~
 - [x] ~~Model export~~
 - [x] ~~Export texture~~

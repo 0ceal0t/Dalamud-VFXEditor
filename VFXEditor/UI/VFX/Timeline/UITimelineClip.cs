@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,17 @@ namespace VFXEditor.UI.VFX
                 selected = this;
             }
         }
+
+        public static Dictionary<string, string> IdOptions = new Dictionary<string, string>()
+        {
+            { "LLIK", "Kill" },
+            { "TSER", "Rest" },
+            { " DNE", "End" },
+            { "IDAF", "Fade In" },
+            { "PLLU", "Unlock Loop Point" },
+            { " GRT", "Trigger" },
+            { "GRTR", "Random Trigger" }
+        };
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Clip" + Idx;
@@ -71,9 +83,22 @@ namespace VFXEditor.UI.VFX
                 Clip.UnknownFloats[2] = UnknownFloats.Z;
                 Clip.UnknownFloats[3] = UnknownFloats.W;
             }
-            if( ImGui.InputText( "Unique Id", ref UniqueId, 256 ) )
+            //if( ImGui.InputText( "Unique Id", ref UniqueId, 256 ) )
+            //{
+            //    Clip.UniqueId = UniqueId.Trim( '\0' );
+            //}
+
+            if( ImGui.BeginCombo( "Unique Id" + id, IdOptions[UniqueId] ) )
             {
-                Clip.UniqueId = UniqueId.Trim( '\0' );
+                foreach( var key in IdOptions.Keys )
+                {
+                    if( ImGui.Selectable( IdOptions[key], UniqueId == key ) )
+                    {
+                        UniqueId = key;
+                        Clip.UniqueId = key;
+                    }
+                }
+                ImGui.EndCombo();
             }
         }
     }
