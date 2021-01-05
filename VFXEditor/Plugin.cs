@@ -20,10 +20,12 @@ namespace VFXEditor
         public DalamudPluginInterface PluginInterface { get; set; }
         public Configuration Configuration { get; set; }
         public ResourceLoader ResourceLoader { get; set; }
+        public TexTools TexToolsManager { get; set; }
 
         public MainInterface MainUI { get; set; }
         public VFXSelectDialog SelectUI { get; set; }
         public VFXSelectDialog PreviewUI { get; set; }
+        public TexToolsDialog TexToolsUI { get; set; }
 
         public AVFXBase AVFX = null;
         public DataManager Manager;
@@ -50,14 +52,18 @@ namespace VFXEditor
             ResourceLoader.Enable();
             MainUI = new MainInterface( this );
             Manager = new DataManager( this );
+            TexToolsManager = new TexTools( this );
+
             SelectUI = new VFXSelectDialog( this, "Load File" );
             PreviewUI = new VFXSelectDialog( this, "Replace File" );
+            TexToolsUI = new TexToolsDialog( this );
             SelectUI.OnSelect += SelectAVFX;
             PreviewUI.OnSelect += ReplaceAVFX;
 
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
         }
 
@@ -137,7 +143,6 @@ namespace VFXEditor
                     PluginLog.Log( m );
                 }
             }
-
             MainUI.RefreshAVFX();
         }
 
@@ -151,6 +156,8 @@ namespace VFXEditor
         {
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= SelectUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= PreviewUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= TexToolsUI.Draw;
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();

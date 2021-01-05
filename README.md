@@ -26,12 +26,15 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Get it to work with LPL (FASM is being annoying)
-- [ ] Export/Import Textools Modpack
-- [ ] Export/Import  Penumbra Mod
+- [ ] TexTools import
+- [x] ~~TexTools export~~
+- [ ] Penumbra import
+- [ ] Penumbra export
 - [x] ~~Raw extract~~
 - [ ] Cutscene VFX select
 - [ ] Zone VFX select
 - [ ] Emote VFX select
+- [ ] Limit break VFX
 - [x] ~~Better search (doesn't have to be exact match)~~
 - [ ] Equipment (not weapons) VFX selector
 - [ ] Better error / log display
@@ -53,3 +56,4 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Emitter sound~~
 - [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~
 - [x] ~~Binder properties view~~
+- [ ] Monster list(??)

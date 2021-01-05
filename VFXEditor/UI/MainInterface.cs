@@ -107,18 +107,22 @@ namespace VFXEditor.UI
                 {
                     ImGui.OpenPopup( "Export_Popup" );
                 }
-
+                // ======= EXPORT ==========
                 if( ImGui.BeginPopup( "Export_Popup" ) )
                 {
                     if( ImGui.Selectable( ".AVFX" ) )
                     {
                         var node = _plugin.AVFX.toAVFX();
-                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes() );
+                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( ".JSON" ) )
                     {
                         JObject json = ( JObject )_plugin.AVFX.toJSON();
-                        SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString() );
+                        SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString(), "json" );
+                    }
+                    if(ImGui.Selectable("TexTools Mod" ) )
+                    {
+                        _plugin.TexToolsUI.Show();
                     }
                     ImGui.EndPopup();
                 }
@@ -126,7 +130,7 @@ namespace VFXEditor.UI
                 ImGui.SameLine();
                 if( ImGui.Button( "[DEBUG] Export Raw" ) )
                 {
-                    SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ) );
+                    SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
                 }
 #endif
                 if( _plugin.Configuration.VerifyOnLoad )
@@ -232,7 +236,7 @@ namespace VFXEditor.UI
                     try
                     {
                         var file = _plugin.PluginInterface.Data.GetFile( RawInputValue );
-                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data );
+                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data, "avfx" );
                     }
                     catch(Exception e )
                     {
@@ -255,18 +259,16 @@ namespace VFXEditor.UI
             {
                 _plugin.Configuration.VerifyOnLoad = verifyOnLoad;
             }
+            ImGui.SameLine();
             bool loadTextures = _plugin.Configuration.PreviewTextures;
             if( ImGui.Checkbox( "Load textures##Settings", ref loadTextures ) )
             {
                 _plugin.Configuration.PreviewTextures = loadTextures;
             }
-
             if( ImGui.Button( "Save##Settings" ) )
             {
                 _plugin.Configuration.Save();
             }
-
-
             ImGui.EndTabItem();
         }
 
@@ -285,23 +287,24 @@ If you want to make the modification permanent, you will need to create a mod us
 
 If you are having issues loading a VFX, please open a Github issue. Make sure to specify either the in-game path of the VFX file or attach the file directly."
         );
-
             ImGui.EndTabItem();
         }
 
         // ======= HELPERS ============
-        public void SaveDialog( string filter, string data )
+        public void SaveDialog( string filter, string data, string ext )
         {
-            SaveDialog( filter, Encoding.ASCII.GetBytes(data) );
+            SaveDialog( filter, Encoding.ASCII.GetBytes(data), ext );
         }
-        public void SaveDialog(string filter, byte[] data )
+        public void SaveDialog(string filter, byte[] data, string ext )
         {
             Task.Run( async () =>
             {
                 var picker = new SaveFileDialog
                 {
                     Filter = filter,
-                    Title = "Select a Save Location."
+                    Title = "Select a Save Location.",
+                    DefaultExt = ext,
+                    AddExtension = true
                 };
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK )

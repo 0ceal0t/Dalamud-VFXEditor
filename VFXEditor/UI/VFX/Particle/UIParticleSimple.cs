@@ -121,7 +121,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/Simple";
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
                 Simple.Assigned = false;
                 Init();
