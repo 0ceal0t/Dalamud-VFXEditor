@@ -12,8 +12,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXEmitter Emitter;
         public UIEmitterView View;
-        //========================
-        // TODO: sound
         //=======================
         public UICombo<EmitterType> Type;
         List<UIBase> Animation;
@@ -42,6 +40,7 @@ namespace VFXEditor.UI.VFX
             Emitters = new List<UIBase>();
             //======================
             Type = new UICombo<EmitterType>("Type", Emitter.EmitterVariety, changeFunction: ChangeType);
+            Attributes.Add( new UIString( "Sound", Emitter.Sound ) );
             Attributes.Add(new UIInt("Sound Index", Emitter.SoundNumber));
             Attributes.Add(new UIInt("Loop Start", Emitter.LoopStart));
             Attributes.Add(new UIInt("Loop End", Emitter.LoopEnd));

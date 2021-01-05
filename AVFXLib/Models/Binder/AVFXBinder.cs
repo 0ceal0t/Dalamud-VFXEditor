@@ -84,6 +84,8 @@ namespace AVFXLib.Models
             Assigned = true;
             SetDefault(Attributes);
             SetUnAssigned(PropStart);
+            SetUnAssigned( Prop1 );
+            SetUnAssigned( Prop2 );
             SetUnAssigned(PropGoal);
             Life.GiveValue(-1);
 

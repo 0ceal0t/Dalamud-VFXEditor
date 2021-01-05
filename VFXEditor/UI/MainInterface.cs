@@ -89,7 +89,7 @@ namespace VFXEditor.UI
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if(VFXMain == null )
+            if( VFXMain == null )
             {
                 ImGui.Text( "Load a file..." );
             }
@@ -129,13 +129,15 @@ namespace VFXEditor.UI
                     SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ) );
                 }
 #endif
-                ImGui.SameLine();
-
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.TextColored( StatusColor, IconText );
-                ImGui.PopFont();
-                ImGui.SameLine();
-                ImGui.TextColored( StatusColor, StatusText );
+                if( _plugin.Configuration.VerifyOnLoad )
+                {
+                    ImGui.SameLine();
+                    ImGui.PushFont( UiBuilder.IconFont );
+                    ImGui.TextColored( StatusColor, IconText );
+                    ImGui.PopFont();
+                    ImGui.SameLine();
+                    ImGui.TextColored( StatusColor, StatusText );
+                }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 ImGui.Separator();
@@ -248,8 +250,16 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             // ==========================
-            // Verify on load
-            // Load textures
+            bool verifyOnLoad = _plugin.Configuration.VerifyOnLoad;
+            if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
+            {
+                _plugin.Configuration.VerifyOnLoad = verifyOnLoad;
+            }
+            bool loadTextures = _plugin.Configuration.PreviewTextures;
+            if( ImGui.Checkbox( "Load textures##Settings", ref loadTextures ) )
+            {
+                _plugin.Configuration.PreviewTextures = loadTextures;
+            }
 
             if( ImGui.Button( "Save##Settings" ) )
             {

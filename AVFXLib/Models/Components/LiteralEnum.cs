@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -25,10 +25,10 @@ namespace AVFXLib.Models
         public override void read(AVFXLeaf leaf)
         {
             int intValue = Util.Bytes4ToInt(leaf.Contents);
-            if (intValue != -1) // means none
-            {
+            //if (intValue != -1) // means none
+            //{
                 Value = (T)(object)intValue;
-            }
+            //}
 
             Size = leaf.Size;
             Assigned = true;

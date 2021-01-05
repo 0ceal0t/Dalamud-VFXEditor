@@ -12,7 +12,7 @@ namespace VFXEditor.UI.VFX
     public class UICombo<T> : UIBase
     {
         public string Id;
-        public int Value;
+        public int ValueIdx;
         public LiteralEnum<T> Literal;
 
         public delegate void Change(LiteralEnum<T> literal);
@@ -27,20 +27,22 @@ namespace VFXEditor.UI.VFX
             else
                 ChangeFunction = DoNothing;
             // =====================
-            Value = (int)(object)Literal.Value;
+            var stringValue = Literal.Value.ToString();
+            //ValueIdx = (int)(object)Literal.Value;
+            ValueIdx = Array.IndexOf( Literal.Options, stringValue );
         }
 
         public override void Draw(string id)
         {
-            if (ImGui.BeginCombo(Id + id, Literal.Options[Value]))
+            if (ImGui.BeginCombo(Id + id, Literal.Options[ValueIdx] ))
             {
                 for (int i = 0; i < Literal.Options.Length; i++)
                 {
-                    bool isSelected = (Value == i);
+                    bool isSelected = ( ValueIdx == i);
                     if (ImGui.Selectable(Literal.Options[i], isSelected))
                     {
-                        Value = i;
-                        Literal.GiveValue(Literal.Options[Value]);
+                        ValueIdx = i;
+                        Literal.GiveValue(Literal.Options[ValueIdx] );
                         ChangeFunction(Literal);
                     }
                     if (isSelected)

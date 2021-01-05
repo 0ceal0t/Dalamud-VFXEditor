@@ -40,7 +40,7 @@ namespace VFXEditor.UI.VFX
 
         public void Draw()
         {
-            if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.TabListPopupButton))
+            if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton))
             {
                 if (ImGui.BeginTabItem("Parameters##Main"))
                 {

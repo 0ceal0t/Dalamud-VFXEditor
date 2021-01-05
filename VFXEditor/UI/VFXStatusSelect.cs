@@ -42,7 +42,7 @@ namespace VFXEditor.UI
             ImGui.BeginChild( Id + "Tree" );
             foreach( var status in _plugin.Manager.Status )
             {
-                if( !status.Name.Contains( SearchInput ) )
+                if( !VFXSelectDialog.Matches( status.Name, SearchInput ) )
                     continue;
 
                 if( ImGui.Selectable( status.Name + "##" + status.RowId, SelectedStatus == status ) )

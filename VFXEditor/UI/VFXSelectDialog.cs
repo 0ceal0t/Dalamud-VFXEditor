@@ -43,6 +43,7 @@ namespace VFXEditor.UI
         public bool ShowGameStatus = true;
         public bool ShowGameActions = true;
         public bool ShowGameNonPlayerActions = true;
+        public bool ShowRecent = true;
 
         public string Id;
         public event Action<VFXSelectResult> OnSelect;
@@ -64,7 +65,15 @@ namespace VFXEditor.UI
             ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
         }
 
-        public void Show(bool showLocal = true, bool showGamePath = true, bool showGameItems = true, bool showGameStatus = true, bool showGameActions = true, bool showGameNonPlayerActions = true)
+        public void Show(
+            bool showLocal = true,
+            bool showGamePath = true,
+            bool showGameItems = true,
+            bool showGameStatus = true,
+            bool showGameActions = true,
+            bool showGameNonPlayerActions = true,
+            bool showRecent = true
+        )
         {
             ShowLocal = showLocal;
             ShowGamePath = showGamePath;
@@ -72,6 +81,7 @@ namespace VFXEditor.UI
             ShowGameStatus = showGameStatus;
             ShowGameActions = showGameActions;
             ShowGameNonPlayerActions = showGameNonPlayerActions;
+            ShowRecent = showRecent;
             // ======================
             Visible = true;
         }
@@ -104,6 +114,8 @@ namespace VFXEditor.UI
                 DrawGameActions();
             if( ShowGameNonPlayerActions )
                 DrawGameNonPlayerActions();
+            if( ShowRecent )
+                DrawRecent();
             ImGui.EndTabBar();
 
             ImGui.End();
@@ -247,12 +259,56 @@ namespace VFXEditor.UI
             ImGui.EndTabItem();
         }
 
-        public void Invoke( VFXSelectResult result)
+        // ======== RECENT ========
+        public VFXSelectResult RecentSelected;
+        public bool IsRecentSelected = false;
+        public void DrawRecent()
         {
-            OnSelect?.Invoke( result );
+            var ret = ImGui.BeginTabItem( "Recent##Select/" + Id );
+            if( !ret )
+                return;
+            var id = "##Recent/" + Id;
+
+            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), false );
+
+            int idx = 0;
+            foreach(var item in _plugin.Configuration.RecentSelects )
+            {
+                // skip local
+                if( item.Type == VFXSelectType.Local && !ShowLocal )
+                    continue;
+
+                if( ImGui.Selectable(item.DisplayString + id + idx, RecentSelected.Equals(item)) ) {
+                    IsRecentSelected = true;
+                    RecentSelected = item;
+                }
+                idx++;
+            }
+
+            ImGui.EndChild();
+            if( IsRecentSelected )
+            {
+                ImGui.Separator();
+                if( ImGui.Button( "SELECT" + id ) )
+                {
+                    OnSelect?.Invoke( RecentSelected );
+                }
+            }
+
+            ImGui.EndTabItem();
         }
 
         // ======== UTIL ==========
+        public static bool Matches(string item, string query )
+        {
+            return item.ToLower().Contains( query.ToLower() );
+        }
+        public void Invoke( VFXSelectResult result )
+        {
+            OnSelect?.Invoke( result );
+            _plugin.Configuration.AddRecent( result );
+        }
         public void DisplayPath(string path )
         {
             ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );

@@ -25,6 +25,10 @@ namespace VFXEditor.UI.VFX
             Id = id;
             Literal = literal;
             Value = Literal.Value;
+            if(Value == null )
+            {
+                Value = "";
+            }
             MaxSize = (uint)maxSizeBytes;
             if (changeFunction != null)
                 ChangeFunction = changeFunction;
