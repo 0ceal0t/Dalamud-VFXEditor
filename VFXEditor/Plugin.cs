@@ -30,7 +30,7 @@ namespace VFXEditor
         public AVFXBase AVFX = null;
         public DataManager Manager;
 
-        public DirectoryInfo Location;
+        public string Location;
 
         public string PluginDebugTitleStr { get; private set; }
 
@@ -47,7 +47,7 @@ namespace VFXEditor
 
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand )
             {
-                HelpMessage = "/VFXEditor - toggle ui\n/VFXEditor reload - reload mod file lists & discover any new mods"
+                HelpMessage = "/vfxedit - toggle ui\n/VFXEditor reload - reload mod file lists & discover any new mods"
             } );
 
             ResourceLoader.Init();
@@ -68,7 +68,7 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
 
-            Location = new DirectoryInfo( System.Reflection.Assembly.GetCallingAssembly().Location );
+            Location = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ); ;
         }
 
         public void SelectAVFX(VFXSelectResult selectResult )
@@ -177,9 +177,10 @@ namespace VFXEditor
             {
                 //switch( args[ 0 ] )
                 //{
+
                 //}
 
-                return;
+                //return;
             }
 
             MainUI.Visible = !MainUI.Visible;

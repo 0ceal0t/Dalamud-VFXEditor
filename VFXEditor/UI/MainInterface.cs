@@ -207,8 +207,11 @@ namespace VFXEditor.UI
                 VFXSelectResult newResult = new VFXSelectResult();
                 newResult.DisplayString = "[NEW]";
                 newResult.Type = VFXSelectType.Local;
-                newResult.Path = Path.Combine( _plugin.Location.ToString(), @"Templates\default_vfx.avfx" );
-                //newResult.Path = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472\Templates\default_vfx.avfx";
+#if !DEBUG
+                newResult.Path = Path.Combine( _plugin.Location, @"Templates\default_vfx.avfx" );
+#else
+                newResult.Path = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472\Templates\default_vfx.avfx";
+#endif
                 _plugin.SelectAVFX( newResult );
             }
 
