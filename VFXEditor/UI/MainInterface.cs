@@ -289,7 +289,7 @@ namespace VFXEditor.UI
             // ==========================
             if( ImGui.Button( "Github" ) )
             {
-                Process.Start( "https://github.com/mkaminsky11/Dalamud-VFXEditor/issues" );
+                Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }
             ImGui.TextWrapped( @"This plugin works by replacing an existing VFX with another one. It does not, however, actually modify any of the game's internal files.
 If you want to make the modification permanent, you will need to create a mod using your platform of choice.

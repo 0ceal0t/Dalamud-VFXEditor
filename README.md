@@ -1,5 +1,5 @@
 # VFXEditor
-A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](https://github.com/mkaminsky11/Dalamud-VFXEditor/wiki))
+A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki))
 
 <img align="center" src="docs/aspbene_akhrai.png" width="500px">
 
@@ -22,7 +22,7 @@ A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](
 * Export as `.avfx` or Textools Modpack
 
 ## Contributing
-If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/mkaminsky11/Dalamud-VFXEditor/issues).
+If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
