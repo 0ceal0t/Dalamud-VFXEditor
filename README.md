@@ -1,7 +1,7 @@
 # VFXEditor
 A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki))
 
-<img align="center" src="docs/aspbene_akhrai.png" width="500px">
+<img align="center" src="docs/preview.png" width="700px">
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
@@ -27,6 +27,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Test in GPose(!!)
 - [ ] Penumbra export
 - [ ] Default VFX (implemented, need to test properly)
 - [ ] Flesh out Wiki

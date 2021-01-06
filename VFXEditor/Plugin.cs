@@ -47,7 +47,7 @@ namespace VFXEditor
 
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand )
             {
-                HelpMessage = "/vfxedit - toggle ui\n/VFXEditor reload - reload mod file lists & discover any new mods"
+                HelpMessage = "/vfxedit - toggle ui"
             } );
 
             ResourceLoader.Init();

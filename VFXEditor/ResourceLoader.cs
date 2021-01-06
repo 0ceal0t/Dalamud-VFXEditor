@@ -74,8 +74,7 @@ namespace VFXEditor
             Crc32 = new Crc32();
         }
 
-
-        // https://github.com/Reloaded-Project/Reloaded.Assembler/blob/415733eeb279d48890f143825fd1a3820b8be391/Source/Reloaded.Assembler/Assembler.cs#L178
+        // https://github.com/xivdev/Penumbra/blob/master/Penumbra/ResourceLoader.cs#L61
         public unsafe void Init()
         {
             if( EnableHooks )
@@ -225,6 +224,10 @@ namespace VFXEditor
             //LoadPlayerResources( PlayerResourceManagerPtr );
         }
 
+
+        // https://github.com/imchillin/Anamnesis/blob/0ba09fcd7fb1ec1ed13b22ab9e5b2cea6926f113/Anamnesis/Core/Memory/AddressService.cs
+        // https://github.com/imchillin/CMTool/blob/a1af42ceab86700d4d1b21b5ba61079ad79fd2f2/ConceptMatrix/OffsetSettings.json#L69
+        // https://git.ava.dev/ava/OopsAllLalafells/src/branch/master/Plugin.cs#L145
         public unsafe void ReRender()
         {
             if( EnableHooks )

@@ -90,7 +90,7 @@ namespace VFXEditor.UI
 
             if( VFXMain == null )
             {
-                ImGui.Text( "Load a file..." );
+                ImGui.Text( "Select a source file to begin..." );
             }
             else
             {
