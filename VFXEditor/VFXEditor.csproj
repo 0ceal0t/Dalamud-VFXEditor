@@ -74,7 +74,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Templates\default_vfx.avfx">
+      <None Update="default_vfx.avfx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="VFXEditor.json">

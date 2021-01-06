@@ -4,7 +4,7 @@
     "Description": "VFX editor, open with /vfxedit",
     "InternalName": "VFXEditor",
     "AssemblyVersion": "1.0.0.0",
-    "RepoUrl": "https://github.com/mkaminsky11/Dalamud-VFXEditor",
+    "RepoUrl": "https://github.com/0ceal0t/Dalamud-VFXEditor",
     "ApplicableVersion": "any",
     "Tags": [ "VFX", "AVFX" ],
     "DalamudApiLevel": 2
