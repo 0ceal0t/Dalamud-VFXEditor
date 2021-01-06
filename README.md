@@ -1,5 +1,5 @@
 # VFXEditor
-A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game
+A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](https://github.com/mkaminsky11/Dalamud-VFXEditor/wiki))
 
 <img align="center" src="docs/aspbene_akhrai.png" width="500px">
 
@@ -18,6 +18,8 @@ A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game
 * Edit and export
 * Preview textures
 * Add, remove, and edit particles, emitters, etc.
+* Import and export models
+* Export as `.avfx` or Textools Modpack
 
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/mkaminsky11/Dalamud-VFXEditor/issues).
@@ -26,10 +28,11 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Penumbra export
-- [ ] Default VFX (from-scratch)
+- [ ] Default VFX (implemented, need to test properly)
 - [ ] Flesh out Wiki
 - [ ] Model 3D preview (is this even possible?)
 - [ ] Better key UI
+- [ ] Help text
 - [ ] Penumbra integration(??)
 - [ ] GOTO button
 - [ ] Get it to work with LPL (FASM is being annoying)
@@ -40,6 +43,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Zone VFX select
 - [ ] Emote VFX select
 - [ ] Limit break VFX
+- [ ] Mount VFX select
 - [ ] Equipment (not weapons) VFX selector
 - [ ] Better error / log display
 - [ ] Open from equipped gear

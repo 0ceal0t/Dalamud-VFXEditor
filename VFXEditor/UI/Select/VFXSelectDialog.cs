@@ -67,20 +67,10 @@ namespace VFXEditor.UI
 
         public void Show(
             bool showLocal = true,
-            bool showGamePath = true,
-            bool showGameItems = true,
-            bool showGameStatus = true,
-            bool showGameActions = true,
-            bool showGameNonPlayerActions = true,
             bool showRecent = true
         )
         {
             ShowLocal = showLocal;
-            ShowGamePath = showGamePath;
-            ShowGameItems = showGameItems;
-            ShowGameStatus = showGameStatus;
-            ShowGameActions = showGameActions;
-            ShowGameNonPlayerActions = showGameNonPlayerActions;
             ShowRecent = showRecent;
             // ======================
             Visible = true;
@@ -104,20 +94,10 @@ namespace VFXEditor.UI
             ImGui.BeginTabBar( "VFXSelectDialogTabs##" + Id );
             if( ShowLocal )
                 DrawLocal();
-            if( ShowGamePath )
-                DrawGamePath();
-            if( ShowGameItems )
-                DrawGameItems();
-            if( ShowGameStatus )
-                DrawGameStatus();
-            if( ShowGameActions )
-                DrawGameActions();
-            if( ShowGameNonPlayerActions )
-                DrawGameNonPlayerActions();
+            DrawGame();
             if( ShowRecent )
                 DrawRecent();
             ImGui.EndTabBar();
-
             ImGui.End();
         }
 
@@ -166,6 +146,23 @@ namespace VFXEditor.UI
                 Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
             }
 
+            ImGui.EndTabItem();
+        }
+
+        // ============= GAME =================
+        public void DrawGame()
+        {
+            var ret = ImGui.BeginTabItem( "Game##Select/" + Id );
+            if( !ret )
+                return;
+            // ==========================
+            ImGui.BeginTabBar( "GameSelectTabs##" + Id );
+            DrawGamePath();
+            DrawGameItems();
+            DrawGameStatus();
+            DrawGameActions();
+            DrawGameNonPlayerActions();
+            ImGui.EndTabBar();
             ImGui.EndTabItem();
         }
 

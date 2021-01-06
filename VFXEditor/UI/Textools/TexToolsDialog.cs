@@ -41,7 +41,7 @@ namespace VFXEditor.UI
                 return;
             if( !DrawOnce )
             {
-                ImGui.SetNextWindowSize( new Vector2( 500, 300 ) );
+                ImGui.SetNextWindowSize( new Vector2( 500, 190 ) );
                 DrawOnce = true;
             }
             // ================
@@ -50,7 +50,9 @@ namespace VFXEditor.UI
                 return;
 
             var id = "##Textools";
+            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
+            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), false );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
             ImGui.InputText( "Mod Author" + id, ref Author, 255 );
             ImGui.InputText( "Save Location" + id, ref SaveLocation, 255 );
@@ -65,6 +67,8 @@ namespace VFXEditor.UI
             {
                 VFXPath = _plugin.ReplaceAVFXPath;
             }
+            ImGui.EndChild();
+
             ImGui.Separator();
             if(ImGui.Button("EXPORT" + id ) )
             {

@@ -28,7 +28,10 @@ namespace VFXEditor
 
         public void AddRecent(VFXSelectResult result )
         {
-            RecentSelects.Add( result );
+            if( !RecentSelects.Contains( result ) )
+            {
+                RecentSelects.Add( result );
+            }
             if(RecentSelects.Count > 10 )
             {
                 // cut it back down to 10

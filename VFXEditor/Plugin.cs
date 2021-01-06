@@ -30,6 +30,8 @@ namespace VFXEditor
         public AVFXBase AVFX = null;
         public DataManager Manager;
 
+        public DirectoryInfo Location;
+
         public string PluginDebugTitleStr { get; private set; }
 
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
@@ -65,6 +67,8 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
+
+            Location = new DirectoryInfo( System.Reflection.Assembly.GetCallingAssembly().Location );
         }
 
         public void SelectAVFX(VFXSelectResult selectResult )
@@ -79,6 +83,7 @@ namespace VFXEditor
                     }
                     else
                     {
+                        PluginLog.Log( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;

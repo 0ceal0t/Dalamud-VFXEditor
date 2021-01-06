@@ -85,7 +85,6 @@ namespace VFXEditor.UI
             DrawSettings();
             DrawHelp();
             ImGui.EndTabBar();
-
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -149,7 +148,6 @@ namespace VFXEditor.UI
                 //================================
                 VFXMain.Draw();
             }
-
             ImGui.End();
         }
 
@@ -203,6 +201,17 @@ namespace VFXEditor.UI
             {
                 _plugin.SelectUI.Show();
             }
+            ImGui.SameLine();
+            if( ImGui.Button( "New##MainInterfaceFiles-New" ) )
+            {
+                VFXSelectResult newResult = new VFXSelectResult();
+                newResult.DisplayString = "[NEW]";
+                newResult.Type = VFXSelectType.Local;
+                newResult.Path = Path.Combine( _plugin.Location.ToString(), @"Templates\default_vfx.avfx" );
+                //newResult.Path = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472\Templates\default_vfx.avfx";
+                _plugin.SelectAVFX( newResult );
+            }
+
             if( ImGui.Button( "Select##MainInterfaceFiles-PreviewSelect" ) )
             {
                 _plugin.PreviewUI.Show( showLocal: false );
