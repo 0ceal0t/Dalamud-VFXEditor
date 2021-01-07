@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,14 +10,16 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataCamera : AVFXBinderData
     {
-        public AVFXCurve Distance = new AVFXCurve("distance", "DstR");
+        public AVFXCurve Distance = new AVFXCurve("distance", "Dst");
+        public AVFXCurve DistanceRandom = new AVFXCurve( "distance", "DstR" );
 
         List<Base> Attributes;
 
         public AVFXBinderDataCamera(string jsonPath) : base(jsonPath, "Data")
         {
             Attributes = new List<Base>(new Base[]{
-                Distance
+                Distance,
+                DistanceRandom
             });
         }
 

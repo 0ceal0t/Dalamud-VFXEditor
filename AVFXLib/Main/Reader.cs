@@ -122,6 +122,8 @@ namespace AVFXLib.Main
             "Prp2",
             "PrpG",
             "DstS",
+            "Dst",
+            "DstR",
             "Len",
             "Str",
             "Smpl",
@@ -172,7 +174,9 @@ namespace AVFXLib.Main
             "VRZ",
             "VRXR",
             "VRYR",
-            "VRZR"
+            "VRZR",
+            "AnX",
+            "AnY"
         });
 
         static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{

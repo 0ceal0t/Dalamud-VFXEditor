@@ -64,6 +64,7 @@ namespace VFXEditor.UI
         }
 
         public bool DrawOnce = false;
+        public DateTime LastUpdate = DateTime.Now;
         public void DrawStartInterface()
         {
             if( !DrawOnce )
@@ -97,8 +98,12 @@ namespace VFXEditor.UI
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) )
                 {
-                    _plugin.Manager.SaveTempFile( _plugin.AVFX );
-                    _plugin.ResourceLoader.ReRender();
+                    if((DateTime.Now - LastUpdate).TotalSeconds > 2  )
+                    {
+                        _plugin.Manager.SaveTempFile( _plugin.AVFX );
+                        _plugin.ResourceLoader.ReRender();
+                        LastUpdate = DateTime.Now;
+                    }
                 }
                 ImGui.PopStyleColor();
                 ImGui.SameLine();

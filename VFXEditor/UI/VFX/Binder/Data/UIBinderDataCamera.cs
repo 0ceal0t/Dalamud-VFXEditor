@@ -18,6 +18,7 @@ namespace VFXEditor.UI.VFX
             Data = data;
             //==================
             Attributes.Add(new UICurve(data.Distance, "Distance"));
+            Attributes.Add( new UICurve( data.DistanceRandom, "Distance Random" ) );
         }
 
         public override void Draw(string parentId)

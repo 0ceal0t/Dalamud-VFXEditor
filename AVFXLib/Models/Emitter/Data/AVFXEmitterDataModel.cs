@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,9 @@ namespace AVFXLib.Models
         public LiteralInt ModelIdx = new LiteralInt("modelIdx", "MdNo");
         public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("rotationOrder", "ROT");
         public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>("generateMethod", "GeMT");
-        public AVFXCurve AX = new AVFXCurve("angleX", "AX");
-        public AVFXCurve AY = new AVFXCurve("angleY", "AY");
-        public AVFXCurve AZ = new AVFXCurve("angleZ", "AZ");
+        public AVFXCurve AX = new AVFXCurve("angleX", "AnX");
+        public AVFXCurve AY = new AVFXCurve("angleY", "AnY");
+        public AVFXCurve AZ = new AVFXCurve("angleZ", "AnZ");
         public AVFXCurve InjectionSpeed = new AVFXCurve("injectionSpeed", "IjS");
         public AVFXCurve InjectionSpeedRandom = new AVFXCurve("injectionSpeedRandom", "IjSR");
 
