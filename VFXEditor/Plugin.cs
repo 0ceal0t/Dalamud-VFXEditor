@@ -21,11 +21,13 @@ namespace VFXEditor
         public Configuration Configuration { get; set; }
         public ResourceLoader ResourceLoader { get; set; }
         public TexTools TexToolsManager { get; set; }
+        public Penumbra PenumbraManager { get; set; }
 
         public MainInterface MainUI { get; set; }
         public VFXSelectDialog SelectUI { get; set; }
         public VFXSelectDialog PreviewUI { get; set; }
         public TexToolsDialog TexToolsUI { get; set; }
+        public PenumbraDialog PenumbraUI { get; set; }
 
         public AVFXBase AVFX = null;
         public DataManager Manager;
@@ -69,10 +71,12 @@ namespace VFXEditor
             MainUI = new MainInterface( this );
             Manager = new DataManager( this );
             TexToolsManager = new TexTools( this );
+            PenumbraManager = new Penumbra( this );
 
             SelectUI = new VFXSelectDialog( this, "Load File" );
             PreviewUI = new VFXSelectDialog( this, "Replace File" );
             TexToolsUI = new TexToolsDialog( this );
+            PenumbraUI = new PenumbraDialog( this );
             SelectUI.OnSelect += SelectAVFX;
             PreviewUI.OnSelect += ReplaceAVFX;
 
@@ -80,6 +84,7 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += PenumbraUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
         }
 
@@ -182,6 +187,7 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= SelectUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= TexToolsUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= PenumbraUI.Draw;
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();

@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace AVFXLib.Models
         public LiteralEnum<PointLightType> PointLightType = new LiteralEnum<PointLightType>("pointLightType", "PLT");
         public LiteralBool IsLightning = new LiteralBool("isLightning", "bLgt");
         public LiteralBool IsMorph = new LiteralBool("isMorph", "bShp");
-        public LiteralInt ModelIdx = new LiteralInt("modelIdx", "MdNo", size: 1);
+        public LiteralIntList ModelIdx = new LiteralIntList( "modelIdx", "MdNo");
 
         public AVFXCurve Morph = new AVFXCurve("morph", "Moph");
         public AVFXCurve FresnelCurve = new AVFXCurve("fresnelCurve", "FrC");

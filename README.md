@@ -27,12 +27,9 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] !!!-Don't write to the game folder lmao
-- [ ] !!-Penumbra export
-- [ ] !!-Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)
-- [ ] !!-Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)
-- [ ] !!-Fix selectable lag
-- [ ] !-Save replacements
+- [ ] Properly fix literal int list(!!)
+- [ ] Fix Penumbra folder select
+- [ ] Save replacements(!)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Model 3D preview (is this even possible?)
@@ -40,8 +37,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Help text
 - [ ] Penumbra integration(??)
 - [ ] GOTO button
-- [ ] Get it to work with LPL (FASM is being annoying
-- [ ] Fix textools export
+- [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
 - [ ] Monster list(??)
@@ -50,13 +46,19 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Emote VFX select
 - [ ] Limit break VFX
 - [ ] Mount VFX select
-- [ ] Equipment (not weapons) VFX selector
+- [ ] Equipment (not weapons) VFX select
 - [ ] Better error / log display
 - [ ] Open from equipped gear
 - [ ] Better TMB parsing
 - [ ] Better placed "DELETE" button
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
+- [x] ~~Penumbra export~~
+- [x] ~~Fix textools export~~
+- [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
+- [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~
+- [x] ~~-Don't write to the game folder lmao~~
+- [x] ~~Fix selectable lag~~
 - [x] ~~Default VFX~~
 - [x] ~~Test in GPose~~
 - [x] ~~Better clips UI~~

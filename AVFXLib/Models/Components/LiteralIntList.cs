@@ -15,6 +15,7 @@ namespace AVFXLib.Models
         public LiteralIntList( string jsonPath, string avfxName, int size = 1 ) : base( jsonPath, avfxName, size )
         {
             Value = new List<int>();
+            Value.Add( 0 );
         }
 
         public override void read( AVFXNode node )
@@ -61,9 +62,7 @@ namespace AVFXLib.Models
 
         public override void toDefault()
         {
-            var v = new List<int>();
-            v.Add( 0 );
-            GiveValue( v ) ;
+            GiveValue( 0 );
         }
 
         public override JToken toJSON()

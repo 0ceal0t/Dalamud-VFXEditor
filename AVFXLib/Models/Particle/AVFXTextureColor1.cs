@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace AVFXLib.Models
         public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("textureCalculateColor", "TCCT");
         public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new LiteralEnum<TextureCalculateAlpha>("textureCalculateAlpha", "TCAT");
         public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
-        public LiteralInt MaskTextureIdx = new LiteralInt("maskTextureIdx", "TLst");
+        public LiteralIntList MaskTextureIdx = new LiteralIntList( "maskTextureIdx", "TLst");
 
         List<Base> Attributes;
 

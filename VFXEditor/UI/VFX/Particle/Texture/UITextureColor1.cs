@@ -28,7 +28,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
             Attributes.Add(new UICheckbox("Previous Frame Copy", Tex.PreviousFrameCopy));
             Attributes.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
-            Attributes.Add(new UIInt("Mask Texture Index", Tex.MaskTextureIdx));
+            Attributes.Add(new UIIntList("Mask Texture Index", Tex.MaskTextureIdx));
             Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));

@@ -104,10 +104,10 @@ namespace VFXEditor
                 mod.SimpleModsList = simples;
 
                 string saveDir = Path.GetDirectoryName( saveLocation );
-                string tempDir = Path.Combine( new string[] { saveDir, "VFXEDITOR_TEXTOOLS_TEMP" } );
+                string tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
                 Directory.CreateDirectory( tempDir );
-                string mdpPath = Path.Combine( new string[] { tempDir, "TTMPD.mpd" } );
-                string mplPath = Path.Combine( new string[] { tempDir, "TTMPL.mpl" } );
+                string mdpPath = Path.Combine( tempDir, "TTMPD.mpd" );
+                string mplPath = Path.Combine(  tempDir, "TTMPL.mpl" );
                 string mplString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( mplPath, mplString );
                 File.WriteAllBytes( mdpPath, data );

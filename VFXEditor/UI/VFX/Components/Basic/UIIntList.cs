@@ -12,13 +12,13 @@ namespace VFXEditor.UI.VFX
     public class UIIntList : UIBase
     {
         public string Id;
-        public int Value;
-        public LiteralInt Literal;
+        public List<int> Value;
+        public LiteralIntList Literal;
 
-        public delegate void Change( LiteralInt literal );
+        public delegate void Change( LiteralIntList literal );
         public Change ChangeFunction;
 
-        public UIIntList( string id, LiteralInt literal, Change changeFunction = null )
+        public UIIntList( string id, LiteralIntList literal, Change changeFunction = null )
         {
             Id = id;
             Literal = literal;
@@ -32,13 +32,15 @@ namespace VFXEditor.UI.VFX
 
         public override void Draw( string id )
         {
-            if( ImGui.InputInt( Id + id, ref Value ) )
+            int v0 = Value[0];
+            if( ImGui.InputInt( Id + id, ref v0 ) )
             {
-                Literal.GiveValue( Value );
+                Literal.Value[0] = v0;
+                Value[0] = v0;
                 ChangeFunction( Literal );
             }
         }
 
-        public static void DoNothing( LiteralInt literal ) { }
+        public static void DoNothing( LiteralIntList literal ) { }
     }
 }

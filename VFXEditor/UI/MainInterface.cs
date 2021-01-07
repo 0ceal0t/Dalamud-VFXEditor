@@ -128,6 +128,10 @@ namespace VFXEditor.UI
                     {
                         _plugin.TexToolsUI.Show();
                     }
+                    if(ImGui.Selectable("Penumbra Mod" ) )
+                    {
+                        _plugin.PenumbraUI.Show();
+                    }
                     ImGui.EndPopup();
                 }
 #if DEBUG
