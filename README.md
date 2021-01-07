@@ -30,6 +30,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Properly fix literal int list(!!)
 - [ ] Fix Penumbra folder select
 - [ ] Save replacements(!)
+- [ ] Save individual parts (particles, emitters, etc.)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Model 3D preview (is this even possible?)
