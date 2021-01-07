@@ -33,6 +33,8 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Save individual parts (particles, emitters, etc.)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
+- [ ] Clean up "troubleshooting"
+- [ ] File loaded indication
 - [ ] Model 3D preview (is this even possible?)
 - [ ] Better key UI
 - [ ] Help text

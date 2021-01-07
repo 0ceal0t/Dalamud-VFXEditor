@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -37,6 +37,7 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
+            TextureIdx.GiveValue( -1 );
         }
 
         public override JToken toJSON()

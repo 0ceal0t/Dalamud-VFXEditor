@@ -15,14 +15,14 @@ namespace AVFXLib.Models
         public LiteralInt LoopStart = new LiteralInt("loopStart", "LpSt");
         public LiteralInt LoopEnd = new LiteralInt("loopEnd", "LpEd");
         public LiteralEnum<ParticleType> ParticleVariety = new LiteralEnum<ParticleType>("particleType", "PrVT");
-        public LiteralEnum<RotationDirectionBase> RotationDirectionBase = new LiteralEnum<RotationDirectionBase>("rotationDirectionBase", "RBDT");
-        public LiteralEnum<RotationOrder> RotationOrder = new LiteralEnum<RotationOrder>("rotationOrder", "RoOT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrder = new LiteralEnum<CoordComputeOrder>("coordComputeOrder", "CCOT");
-        public LiteralEnum<DrawMode> DrawMode = new LiteralEnum<DrawMode>("drawMode", "RMT");
-        public LiteralEnum<CullingType> CullingType = new LiteralEnum<CullingType>("cullingType", "CulT");
-        public LiteralEnum<EnvLight> EnvLight = new LiteralEnum<EnvLight>("envLight", "EnvT");
-        public LiteralEnum<DirLight> DirLight = new LiteralEnum<DirLight>("dirLight", "DirT");
-        public LiteralEnum<UVPrecision> UvPrecision = new LiteralEnum<UVPrecision>("uvPrecision", "UVPT");
+        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new LiteralEnum<RotationDirectionBase>("rotationDirectionBase", "RBDT");
+        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("rotationOrder", "RoOT");
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new LiteralEnum<CoordComputeOrder>("coordComputeOrder", "CCOT");
+        public LiteralEnum<DrawMode> DrawModeType = new LiteralEnum<DrawMode>("drawMode", "RMT");
+        public LiteralEnum<CullingType> CullingTypeType = new LiteralEnum<CullingType>("cullingType", "CulT");
+        public LiteralEnum<EnvLight> EnvLightType = new LiteralEnum<EnvLight>("envLight", "EnvT");
+        public LiteralEnum<DirLight> DirLightType = new LiteralEnum<DirLight>("dirLight", "DirT");
+        public LiteralEnum<UVPrecision> UvPrecisionType = new LiteralEnum<UVPrecision>("uvPrecision", "UVPT");
         public LiteralInt DrawPriority = new LiteralInt("drawPriority", "DwPr");
         public LiteralBool IsDepthTest = new LiteralBool("isDepthTest", "DsDt");
         public LiteralBool IsDepthWrite = new LiteralBool("isDepthWrite", "DsDw");
@@ -37,7 +37,7 @@ namespace AVFXLib.Models
         public LiteralFloat ClipNearEnd = new LiteralFloat("clipNearEnd", "NeEd");
         public LiteralFloat ClipFarStart = new LiteralFloat("clipFarStart", "FaSt");
         public LiteralFloat ClipFarEnd = new LiteralFloat("clipFarEnd", "FaEd");
-        public LiteralEnum<ClipBasePoint> ClipBasePoint = new LiteralEnum<ClipBasePoint>("clipBasePoint", "FaBP");
+        public LiteralEnum<ClipBasePoint> ClipBasePointType = new LiteralEnum<ClipBasePoint>("clipBasePoint", "FaBP");
         public LiteralInt UvSetCount = new LiteralInt("uvSetCount", "UvSN");
         public LiteralInt ApplyRateEnvironment = new LiteralInt("applyRateEnvironment", "EvAR");
         public LiteralInt ApplyRateDirectional = new LiteralInt("applyRateDirectional", "DlAR");
@@ -94,14 +94,14 @@ namespace AVFXLib.Models
                 LoopStart,
                 LoopEnd,
                 ParticleVariety,
-                RotationDirectionBase,
-                RotationOrder,
-                CoordComputeOrder,
-                DrawMode,
-                CullingType,
-                EnvLight,
-                DirLight,
-                UvPrecision,
+                RotationDirectionBaseType,
+                RotationOrderType,
+                CoordComputeOrderType,
+                DrawModeType,
+                CullingTypeType,
+                EnvLightType,
+                DirLightType,
+                UvPrecisionType,
                 DrawPriority,
                 IsDepthTest,
                 IsDepthWrite,
@@ -116,7 +116,7 @@ namespace AVFXLib.Models
                 ClipNearEnd,
                 ClipFarStart,
                 ClipFarEnd,
-                ClipBasePoint,
+                ClipBasePointType,
                 UvSetCount,
                 ApplyRateEnvironment,
                 ApplyRateDirectional,
@@ -202,8 +202,32 @@ namespace AVFXLib.Models
             SetUnAssigned( RotVelYRandom );
             SetUnAssigned( RotVelZRandom );
             UVSets = new List<AVFXParticleUVSet>();
-
             SetVariety(ParticleVariety.Value);
+
+            // here we go...
+            RotationDirectionBaseType.GiveValue( RotationDirectionBase.Z );
+            RotationOrderType.GiveValue( RotationOrder.ZYX );
+            DrawPriority.GiveValue( 1 );
+            IsSoftParticle.GiveValue( true );
+            CollisionType.GiveValue( -1 );
+            IsApplyToneMap.GiveValue( true );
+            ClipNearEnd.GiveValue( 1.0f );
+            ClipFarStart.GiveValue( 50.0f );
+            ClipFarEnd.GiveValue( 60.0f );
+            DepthOffset.GiveValue( 0.1f );
+            //
+            Data.toDefault();
+            //
+            AVFXParticleUVSet uv = new AVFXParticleUVSet();
+            uv.toDefault();
+            UVSets.Add( uv );
+            //
+            TC1.toDefault();
+            TC2.toDefault();
+            TN.toDefault();
+            TR.toDefault();
+            TD.toDefault();
+            TP.toDefault();
         }
 
         public AVFXParticleUVSet addUvSet()

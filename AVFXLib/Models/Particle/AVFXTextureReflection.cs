@@ -44,6 +44,8 @@ namespace AVFXLib.Models
             Assigned = true;
             SetDefault(Attributes);
             SetUnAssigned(RPow);
+            SetUnAssigned( Rate );
+            TextureIdx.GiveValue( -1 );
         }
 
         public override JToken toJSON()

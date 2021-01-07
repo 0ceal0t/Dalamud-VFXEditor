@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,9 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
-            SetUnAssigned(DPow);
+            DPow.toDefault();
+            DPow.addKey();
+
         }
 
         public override JToken toJSON()
