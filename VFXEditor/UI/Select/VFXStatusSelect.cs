@@ -32,19 +32,26 @@ namespace VFXEditor.UI
             // =====================
         }
 
+        public List<XivStatus> SearchedStatus;
         public void Draw()
         {
+            if( SearchedStatus == null ) { SearchedStatus = new List<XivStatus>(); SearchedStatus.AddRange( Data ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search" + Id, ref SearchInput, 255 );
-            ImGui.Columns( 2, Id + "Columns", true );
-
-            //
-            ImGui.BeginChild( Id + "Tree" );
-            foreach( var status in _plugin.Manager.Status )
+            bool ResetScroll = false;
+            if( ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) )
             {
-                if( !VFXSelectDialog.Matches( status.Name, SearchInput ) )
-                    continue;
-
+                SearchedStatus = Data.Where( x => VFXSelectDialog.Matches( x.Name, SearchInput ) ).ToList();
+                ResetScroll = true;
+            }
+            ImGui.Columns( 2, Id + "Columns", true );
+            ImGui.BeginChild( Id + "Tree" );
+            VFXSelectDialog.DisplayVisible( SearchedStatus.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
+            if( ResetScroll ) { ImGui.SetScrollHereY(); };
+            int idx = 0;
+            foreach( var status in SearchedStatus )
+            {
+                if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( status.Name + "##" + status.RowId, SelectedStatus == status ) )
                 {
                     if( status != SelectedStatus )
@@ -52,10 +59,12 @@ namespace VFXEditor.UI
                         SelectedStatus = status;
                     }
                 }
+                idx++;
             }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             ImGui.EndChild();
             ImGui.NextColumn();
-
+            // =======================
             if( SelectedStatus == null )
             {
                 ImGui.Text( "Select a status..." );

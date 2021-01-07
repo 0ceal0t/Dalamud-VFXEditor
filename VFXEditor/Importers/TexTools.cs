@@ -79,8 +79,18 @@ namespace VFXEditor
                 simple.IsDefault = false;
                 simple.ModOffset = 0;
                 simple.ModSize = data.Length;
-                // TODO: check this
-                simple.DatFile = "080000";
+                switch( split[0] )
+                {
+                    case "vfx":
+                        simple.DatFile = "080000";
+                        break;
+                    case "chara":
+                        simple.DatFile = "040000";
+                        break;
+                    default:
+                        PluginLog.Log( "Invalid VFX path! Could not find DatFile" );
+                        return;
+                }
                 simple.ModPackEntry = null;
 
                 TTMPL mod = new TTMPL();

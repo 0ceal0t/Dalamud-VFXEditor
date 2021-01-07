@@ -249,8 +249,7 @@ namespace AVFXLib.Models
                     Data = null;
                     break;
                 case EmitterType.Cone:
-                    AVFXNode.LogMessages.Add( "Cone Emitter Data!" );
-                    Data = null;
+                    Data = new AVFXEmitterDataCone( "data" );
                     break;
                 case EmitterType.ConeModel:
                     AVFXNode.LogMessages.Add( "Cone Model Data!" );

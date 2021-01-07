@@ -23,10 +23,8 @@ namespace VFXEditor
             _plugin = plugin;
             TexManager = new TextureManager( _plugin );
             // =======================
-            TempPath = Path.Combine( Directory.GetCurrentDirectory(), "VFXTempFile.avfx" );
+            TempPath = Path.Combine( _plugin.WriteLocation, "VFXTempFile.avfx" );
             PluginLog.Log( "Temp file location: " + TempPath );
-
-            // need a way to map SKL_ID -> Name?
         }
 
         // ========= LOAD NON-PLAYER ACTIONS =======

@@ -42,7 +42,10 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve(Data.WidthCenter, "Width Center"));
             Attributes.Add(new UICurve(Data.WidthEnd, "Width End"));
             Attributes.Add(new UICurve(Data.Softness, "Softness"));
+            Attributes.Add( new UICurve( Data.SoftRandom, "Softness Random" ) );
+            Attributes.Add( new UICurve( Data.PnDs, "PnDs (Unknown)" ) );
             Attributes.Add(new UICurve(Data.Length, "Length"));
+            Attributes.Add( new UICurve( Data.LengthRandom, "Length Random" ) );
             Attributes.Add(new UICurveColor(Data.ColorBegin, "Color Begin"));
             Attributes.Add(new UICurveColor(Data.ColorCenter, "Color Center"));
             Attributes.Add(new UICurveColor(Data.ColorEnd, "Color End"));

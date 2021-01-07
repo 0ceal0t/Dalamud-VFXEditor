@@ -30,7 +30,8 @@ namespace VFXEditor
         public AVFXBase AVFX = null;
         public DataManager Manager;
 
-        public string Location;
+        public string TemplateLocation;
+        public string WriteLocation;
 
         public string PluginDebugTitleStr { get; private set; }
 
@@ -50,6 +51,19 @@ namespace VFXEditor
                 HelpMessage = "/vfxedit - toggle ui"
             } );
 
+#if !DEBUG
+            TemplateLocation = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location );
+#else
+            TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
+#endif
+            WriteLocation = Path.Combine( new[] {
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "XIVLauncher",
+                "pluginConfigs",
+                Name,
+            } );
+            Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
+
             ResourceLoader.Init();
             ResourceLoader.Enable();
             MainUI = new MainInterface( this );
@@ -67,12 +81,17 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
-
-            Location = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ); ;
         }
 
+        public DateTime LastSelect = DateTime.Now;
         public void SelectAVFX(VFXSelectResult selectResult )
         {
+            if( ( DateTime.Now - LastSelect ).TotalSeconds < 2 )
+            {
+                return;
+            }
+            LastSelect = DateTime.Now;
+
             switch( selectResult.Type )
             {
                 case VFXSelectType.Local:

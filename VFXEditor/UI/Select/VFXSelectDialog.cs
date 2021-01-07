@@ -321,5 +321,16 @@ namespace VFXEditor.UI
             }
             ImGui.PopStyleColor();
         }
+        public static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight)
+        {
+            float childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
+            var scrollY = ImGui.GetScrollY();
+            var style = ImGui.GetStyle();
+            itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;
+            preItems = ( int )Math.Floor( scrollY / itemHeight );
+            showItems = ( int )Math.Ceiling( childHeight / itemHeight );
+            postItems = count - showItems - preItems;
+
+        }
     }
 }

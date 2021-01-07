@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Dalamud.Plugin;
 using ImGuiNET;
 
 namespace VFXEditor.UI
@@ -33,18 +34,26 @@ namespace VFXEditor.UI
             // =====================
         }
 
+        public List<XivItem> SearchedItems;
         public void Draw()
         {
+            if(SearchedItems == null ) { SearchedItems = new List<XivItem>(); SearchedItems.AddRange( Data ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search" + Id, ref SearchInput, 255 );
-            ImGui.Columns( 2, Id + "Columns", true );
-            //
-            ImGui.BeginChild( Id + "Tree" );
-            foreach( var item in _plugin.Manager.Items )
+            bool ResetScroll = false;
+            if(ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) )
             {
-                if( !VFXSelectDialog.Matches( item.Name, SearchInput ) )
-                    continue;
-
+                SearchedItems = Data.Where( x => VFXSelectDialog.Matches( x.Name, SearchInput ) ).ToList();
+                ResetScroll = true;
+            }
+            ImGui.Columns( 2, Id + "Columns", true );
+            ImGui.BeginChild( Id + "Tree" );
+            VFXSelectDialog.DisplayVisible(SearchedItems.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
+            if( ResetScroll ) { ImGui.SetScrollHereY(); };
+            int idx = 0;
+            foreach( var item in SearchedItems )
+            {
+                if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( item.Name + Id, SelectedItem == item ) )
                 {
                     if( item != SelectedItem )
@@ -53,10 +62,12 @@ namespace VFXEditor.UI
                         SelectedItem = item;
                     }
                 }
+                idx++;
             }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             ImGui.EndChild();
             ImGui.NextColumn();
-
+            // ========================
             if( SelectedItem == null )
             {
                 ImGui.Text( "Select an item..." );

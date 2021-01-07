@@ -84,6 +84,8 @@ namespace AVFXLib.Main
             "Doff",
             "Wd",
             "Len",
+            "LenR",
+            "PnDs",
             "FrC",
             "FrRt",
             "Sft",
@@ -176,7 +178,8 @@ namespace AVFXLib.Main
             "VRYR",
             "VRZR",
             "AnX",
-            "AnY"
+            "AnY",
+            "CF"
         });
 
         static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{

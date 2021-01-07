@@ -33,18 +33,26 @@ namespace VFXEditor.UI
             // =====================
         }
 
+        public List<XivActionBase> SearchedActions;
         public void Draw()
         {
+            if( SearchedActions == null ) { SearchedActions = new List<XivActionBase>(); SearchedActions.AddRange( Data ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.InputText( "Search" + Id, ref SearchInput, 255 );
-            ImGui.Columns( 2, Id + "Columns", true );
-
-            ImGui.BeginChild( Id + "Tree" );
-            foreach( var action in Data )
+            bool ResetScroll = false;
+            if( ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) )
             {
-                if( !VFXSelectDialog.Matches(action.Name, SearchInput) )
-                    continue;
-
+                SearchedActions = Data.Where( x => VFXSelectDialog.Matches( x.Name, SearchInput ) ).ToList();
+                ResetScroll = true;
+            }
+            ImGui.Columns( 2, Id + "Columns", true );
+            ImGui.BeginChild( Id + "Tree" );
+            VFXSelectDialog.DisplayVisible( SearchedActions.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
+            if( ResetScroll ) { ImGui.SetScrollHereY(); };
+            int idx = 0;
+            foreach( var action in SearchedActions )
+            {
+                if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( action.Name + "##" + action.RowId, SelectedAction == action ) )
                 {
                     if( action != SelectedAction )
@@ -53,10 +61,12 @@ namespace VFXEditor.UI
                         SelectedAction = action;
                     }
                 }
+                idx++;
             }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             ImGui.EndChild();
             ImGui.NextColumn();
-
+            // ========================================
             if( SelectedAction == null )
             {
                 ImGui.Text( "Select an action..." );
@@ -86,19 +96,19 @@ namespace VFXEditor.UI
                         ImGui.Text( "TMB Path: " );
                         ImGui.SameLine();
                         _dialog.DisplayPath( LoadedAction.SelfTmbPath );
-                        int idx = 0;
+                        int vfxIdx = 0;
                         foreach( var _vfx in LoadedAction.SelfVfxPaths )
                         {
-                            ImGui.Text( "VFX #" + idx + ": " );
+                            ImGui.Text( "VFX #" + vfxIdx + ": " );
                             ImGui.SameLine();
                             _dialog.DisplayPath( _vfx );
-                            if( ImGui.Button( "SELECT" + Id + idx ) )
+                            if( ImGui.Button( "SELECT" + Id + vfxIdx ) )
                             {
                                 _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + LoadedAction.Action.Name, _vfx ) );
                             }
                             ImGui.SameLine();
-                            _dialog.Copy( _vfx, id: Id + "Copy" + idx );
-                            idx++;
+                            _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                            vfxIdx++;
                         }
                     }
                 }

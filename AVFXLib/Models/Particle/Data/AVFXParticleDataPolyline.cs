@@ -32,7 +32,10 @@ namespace AVFXLib.Models
         public AVFXCurve WidthCenter = new AVFXCurve("widthCenter", "WdC");
         public AVFXCurve WidthEnd = new AVFXCurve("widthEnd", "WdE");
         public AVFXCurve Length = new AVFXCurve("length", "Len");
+        public AVFXCurve LengthRandom = new AVFXCurve( "lengthRandom", "LenR" );
         public AVFXCurve Softness = new AVFXCurve("softness", "Sft");
+        public AVFXCurve SoftRandom = new AVFXCurve( "softness", "SftR" );
+        public AVFXCurve PnDs = new AVFXCurve( "PnDs_unkown", "PnDs" );
         public AVFXCurveColor ColorBegin = new AVFXCurveColor("colorBegin", name: "ColB");
         public AVFXCurveColor ColorCenter = new AVFXCurveColor("colorCenter", name: "ColC");
         public AVFXCurveColor ColorEnd = new AVFXCurveColor("colorEnd", name: "ColE");
@@ -66,7 +69,10 @@ namespace AVFXLib.Models
                 WidthCenter,
                 WidthEnd,
                 Length,
+                LengthRandom,
                 Softness,
+                SoftRandom,
+                PnDs,
                 ColorBegin,
                 ColorCenter,
                 ColorEnd,

@@ -88,6 +88,9 @@ namespace VFXEditor.UI.VFX
                 case EmitterType.Model:
                     Data = new UIEmitterDataModel((AVFXEmitterDataModel)Emitter.Data);
                     break;
+                case EmitterType.Cone:
+                    Data = new UIEmitterDataCone( ( AVFXEmitterDataCone )Emitter.Data );
+                    break;
                 default:
                     Data = null;
                     break;

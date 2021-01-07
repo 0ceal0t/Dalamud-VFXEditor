@@ -28,7 +28,7 @@ namespace AVFXLib.Models
         public LiteralEnum<BinderType> BinderVariety = new LiteralEnum<BinderType>("binderType", "BnVr");
         public AVFXBinderProperty PropStart = new AVFXBinderProperty("propertiesStart", "PrpS");
         public AVFXBinderProperty Prop1 = new AVFXBinderProperty( "properties1", "Prp1" );
-        public AVFXBinderProperty Prop2 = new AVFXBinderProperty( "properties2", "Prp1" );
+        public AVFXBinderProperty Prop2 = new AVFXBinderProperty( "properties2", "Prp2" );
         public AVFXBinderProperty PropGoal = new AVFXBinderProperty("propertiesGoal", "PrpG");
 
         public BinderType Type;
