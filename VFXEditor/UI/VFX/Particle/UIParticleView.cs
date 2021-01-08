@@ -46,6 +46,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void OnDraw( int idx )
         {
+            if( idx >= Particles.Count ) return;
             Particles[idx].Draw( id );
         }
         public override byte[] OnExport( int idx )

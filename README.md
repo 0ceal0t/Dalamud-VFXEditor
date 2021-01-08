@@ -27,8 +27,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Fix model export (lots of broken shit)
-- [ ] New weapon vfx
 - [ ] Properly fix literal int list
 - [ ] Save all particles, etc.
 - [ ] Fix Penumbra folder select
@@ -58,6 +56,8 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better placed "DELETE" button
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
+- [x] ~~Fix model export (lots of broken shit)~~
+- [x] ~~New weapon vfx~~
 - [x] ~~Save individual parts (particles, emitters, etc.)~~
 - [x] ~~Penumbra export~~
 - [x] ~~Fix textools export~~

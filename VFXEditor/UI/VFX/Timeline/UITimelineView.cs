@@ -45,6 +45,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void OnDraw( int idx )
         {
+            if( idx >= Timelines.Count ) return;
             Timelines[idx].Draw( id );
         }
         public override byte[] OnExport( int idx )

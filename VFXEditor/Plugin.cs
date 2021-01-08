@@ -149,7 +149,6 @@ namespace VFXEditor
             if( avfx == null )
                 return;
             AVFX = avfx;
-            PluginLog.Log( "" + AVFX.Models.Count );
             // ===============
             if( Configuration.VerifyOnLoad ) {
                 var node = AVFX.toAVFX();

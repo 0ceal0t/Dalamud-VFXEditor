@@ -39,8 +39,8 @@ namespace VFXEditor
         }
         public static GLTFVert GetVert(Vertex vert ) {
             Vector3 Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
-            Vector3 Normal = new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] );
-            Vector4 Tangent = new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], vert.Tangent[3] );
+            Vector3 Normal = Vector3.Normalize(new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] ));
+            Vector4 Tangent = Vector4.Normalize(new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], 1 ));
             VertexPositionNormalTangent _Pos = new VertexPositionNormalTangent(Pos, Normal, Tangent);
 
             Vector4 Color = new Vector4(vert.Color[0], vert.Color[1], vert.Color[2], vert.Color[3]); // 255
@@ -55,7 +55,9 @@ namespace VFXEditor
         }
         public static Vertex GetAVFXVert(Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2) {
             var ret = new Vertex();
-
+            color = color * 255;
+            normal = normal * 128;
+            tangent = tangent * 128;
             ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
             ret.Normal = new int[] { (int)normal.X, (int)normal.Y, (int)normal.Z, -1 };
             ret.Tangent = new int[] { (int)tangent.X, (int)tangent.Y, (int)tangent.Z, -1 };
@@ -96,6 +98,7 @@ namespace VFXEditor
                         i_.I3 = t.C;
                         I.Add( i_ );
                     }
+
                     return true;
                 }
             }

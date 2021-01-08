@@ -213,11 +213,16 @@ namespace VFXEditor.UI
             ImGui.SameLine();
             if( ImGui.Button( "New##MainInterfaceFiles-New" ) )
             {
-                VFXSelectResult newResult = new VFXSelectResult();
-                newResult.DisplayString = "[NEW]";
-                newResult.Type = VFXSelectType.Local;
-                newResult.Path = Path.Combine( _plugin.TemplateLocation, @"default_vfx.avfx" );
-                _plugin.SelectAVFX( newResult );
+                ImGui.OpenPopup( "New_Popup1");
+            }
+            if( ImGui.BeginPopup( "New_Popup1") ) {
+                if( ImGui.Selectable( "Blank") ) {
+                    OpenTemplate( @"default_vfx.avfx" );
+                }
+                if( ImGui.Selectable( "Weapon") ) {
+                    OpenTemplate( @"default_weapon.avfx" );
+                }
+                ImGui.EndPopup();
             }
 
             if( ImGui.Button( "Select##MainInterfaceFiles-PreviewSelect" ) )
@@ -308,6 +313,13 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         }
 
         // ======= HELPERS ============
+        public void OpenTemplate(string path ) {
+            VFXSelectResult newResult = new VFXSelectResult();
+            newResult.DisplayString = "[NEW]";
+            newResult.Type = VFXSelectType.Local;
+            newResult.Path = Path.Combine( _plugin.TemplateLocation, path );
+            _plugin.SelectAVFX( newResult );
+        }
         public void SaveDialog( string filter, string data, string ext )
         {
             SaveDialog( filter, Encoding.ASCII.GetBytes(data), ext );

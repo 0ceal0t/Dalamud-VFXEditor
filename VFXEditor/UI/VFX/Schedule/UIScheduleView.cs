@@ -39,6 +39,7 @@ namespace VFXEditor.UI.VFX
         public override void OnDelete( int idx ) { }
         public override void OnDraw( int idx )
         {
+            if( idx >= Schedulers.Count ) return;
             Schedulers[idx].Draw( id );
         }
         public override byte[] OnExport( int idx ){ return new byte[0]; }

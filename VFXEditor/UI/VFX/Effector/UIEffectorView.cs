@@ -45,6 +45,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void OnDraw( int idx )
         {
+            if( idx >= Effectors.Count ) return;
             Effectors[idx].Draw( id );
         }
         public override byte[] OnExport( int idx )
