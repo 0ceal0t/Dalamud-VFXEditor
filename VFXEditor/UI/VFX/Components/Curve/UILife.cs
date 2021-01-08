@@ -26,13 +26,36 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<RandomType>("Random Type", Life.ValRandomType));
         }
 
-        public override void Draw(string id)
+
+        // ======= DRAW ================
+        public override void Draw( string parentId )
         {
-            if (ImGui.TreeNode("Life" + id))
+            if( !Assigned )
             {
-                DrawAttrs(id);
+                return;
+            }
+            if( ImGui.TreeNode( "Life" + parentId ) )
+            {
+                DrawBody( parentId );
                 ImGui.TreePop();
             }
+        }
+        public override void DrawSelect( string parentId, ref UIBase selected )
+        {
+            if( !Assigned )
+            {
+                return;
+            }
+            if( ImGui.Selectable( "Life" + parentId, selected == this ) )
+            {
+                selected = this;
+            }
+        }
+        public override void DrawBody( string parentId )
+        {
+            var id = parentId + "/Life";
+            // =====================
+            DrawAttrs( id );
         }
     }
 }

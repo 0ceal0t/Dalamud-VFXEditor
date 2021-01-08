@@ -5,17 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineView : UIBase
+    public class UITimelineView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UITimeline> Timelines;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UITimelineView(AVFXBase avfx)
+        public UITimelineView(AVFXBase avfx) : base( "##TIME", "Select a Timeline" )
         {
             AVFX = avfx;
             Init();
@@ -35,36 +34,31 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc( int idx )
+
+        public override void OnNew()
+        {
+            AVFX.addTimeline();
+        }
+        public override void OnDelete( int idx )
+        {
+            AVFX.removeTimeline( idx );
+        }
+        public override void OnDraw( int idx )
+        {
+            Timelines[idx].Draw( id );
+        }
+        public override byte[] OnExport( int idx )
+        {
+            return Timelines[idx].Timeline.toAVFX().toBytes();
+        }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Timelines[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##TIME";
-            bool validSelect = UIUtils.ViewSelect( id, "Select a Timeline", ref Selected, Options );
-            ImGui.SameLine();
-            if( ImGui.Button( "+ NEW" + id ) )
-            {
-                AVFX.addTimeline();
-                Init();
-            }
-            if( validSelect )
-            {
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( "DELETE" + id ) )
-                {
-                    AVFX.removeTimeline( Selected );
-                    Init();
-                    validSelect = false;
-                }
-            }
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Timelines[Selected].Draw( id );
-            }
+        public override void OnImport( AVFXNode node ) {
+            AVFXTimeline item = new AVFXTimeline();
+            item.read( node );
+            AVFX.addTimeline( item );
         }
     }
 }

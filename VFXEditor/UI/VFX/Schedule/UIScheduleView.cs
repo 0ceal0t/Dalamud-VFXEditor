@@ -1,3 +1,4 @@
+using AVFXLib.AVFX;
 using AVFXLib.Models;
 using ImGuiNET;
 using System;
@@ -8,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIScheduleView : UIBase
+    public class UIScheduleView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UIScheduler> Schedulers;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UIScheduleView(AVFXBase avfx)
+        public UIScheduleView(AVFXBase avfx) : base( "##SCHED", "Select a Scheduler", allowNew:false, allowDelete:false )
         {
             AVFX = avfx;
             Init();
@@ -35,20 +34,18 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc( int idx )
+
+        public override void OnNew() { }
+        public override void OnDelete( int idx ) { }
+        public override void OnDraw( int idx )
+        {
+            Schedulers[idx].Draw( id );
+        }
+        public override byte[] OnExport( int idx ){ return new byte[0]; }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Schedulers[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##SCHED";
-            bool validSelect = UIUtils.ViewSelect( id, "Select a Scheduler", ref Selected, Options );
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Schedulers[Selected].Draw( id );
-            }
-        }
+        public override void OnImport( AVFXNode node ) {}
     }
 }

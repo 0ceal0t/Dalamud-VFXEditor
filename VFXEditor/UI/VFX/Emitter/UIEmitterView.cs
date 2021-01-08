@@ -5,17 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterView : UIBase
+    public class UIEmitterView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UIEmitter> Emitters;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UIEmitterView(AVFXBase avfx)
+        public UIEmitterView(AVFXBase avfx) : base( "##EMIT", "Select an Emitter" )
         {
             AVFX = avfx;
             Init();
@@ -35,36 +34,30 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc( int idx )
+        public override void OnNew()
+        {
+            AVFX.addEmitter();
+        }
+        public override void OnDelete( int idx )
+        {
+            AVFX.removeEmitter( idx );
+        }
+        public override void OnDraw( int idx )
+        {
+            Emitters[idx].Draw( id );
+        }
+        public override byte[] OnExport( int idx )
+        {
+            return Emitters[idx].Emitter.toAVFX().toBytes();
+        }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Emitters[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##EMIT";
-            bool validSelect = UIUtils.ViewSelect( id, "Select an Emitter", ref Selected, Options );
-            ImGui.SameLine();
-            if( ImGui.Button( "+ NEW" + id ) )
-            {
-                AVFX.addEmitter();
-                Init();
-            }
-            if( validSelect )
-            {
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( "DELETE" + id ) )
-                {
-                    AVFX.removeEmitter( Selected );
-                    Init();
-                    validSelect = false;
-                }
-            }
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Emitters[Selected].Draw( id );
-            }
+        public override void OnImport( AVFXNode node ) {
+            AVFXEmitter item = new AVFXEmitter();
+            item.read( node );
+            AVFX.addEmitter( item );
         }
     }
 }

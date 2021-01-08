@@ -87,10 +87,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Publish\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <NativeLibs Remove="VFXEditor.json" />
     </ItemGroup>
 </Project>

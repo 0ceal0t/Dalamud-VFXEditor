@@ -5,21 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIBinderView : UIBase
+    public class UIBinderView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UIBinder> Binders;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UIBinderView(AVFXBase avfx)
+        public UIBinderView(AVFXBase avfx) : base( "##BIND", "Select a Binder" )
         {
             AVFX = avfx;
             Init();
         }
+
         public override void Init()
         {
             base.Init();
@@ -35,36 +35,31 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc( int idx )
+
+        public override void OnNew()
+        {
+            AVFX.addBinder();
+        }
+        public override void OnDelete( int idx )
+        {
+            AVFX.removeBinder( idx );
+        }
+        public override void OnDraw( int idx )
+        {
+            Binders[idx].Draw( id );
+        }
+        public override byte[] OnExport(int idx )
+        {
+            return Binders[idx].Binder.toAVFX().toBytes();
+        }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Binders[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##BIND";
-            bool validSelect = UIUtils.ViewSelect( id, "Select a Binder", ref Selected, Options );
-            ImGui.SameLine();
-            if( ImGui.Button( "+ NEW" + id ) )
-            {
-                AVFX.addBinder();
-                Init();
-            }
-            if( validSelect )
-            {
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( "DELETE" + id ) )
-                {
-                    AVFX.removeBinder( Selected );
-                    Init();
-                    validSelect = false;
-                }
-            }
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Binders[Selected].Draw( id );
-            }
+        public override void OnImport( AVFXNode node ) {
+            AVFXBinder item = new AVFXBinder();
+            item.read( node );
+            AVFX.addBinder( item );
         }
     }
 }

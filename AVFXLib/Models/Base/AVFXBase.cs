@@ -179,6 +179,10 @@ namespace AVFXLib.Models
         }
 
         // ==== ADD/REMOVE ======
+        public void addScheduler( AVFXSchedule item )
+        {
+            Schedulers.Add( item );
+        }
         public AVFXSchedule addScheduler()
         {
             AVFXSchedule sched = new AVFXSchedule();
@@ -189,6 +193,11 @@ namespace AVFXLib.Models
         public void removeScheduler(int idx)
         {
             Schedulers.RemoveAt(idx);
+        }
+        //
+        public void addTimeline( AVFXTimeline item )
+        {
+            Timelines.Add( item );
         }
         public AVFXTimeline addTimeline()
         {
@@ -201,6 +210,11 @@ namespace AVFXLib.Models
         {
             Timelines.RemoveAt(idx);
         }
+        //
+        public void addEffector( AVFXEffector item )
+        {
+            Effectors.Add( item );
+        }
         public AVFXEffector addEffector()
         {
             AVFXEffector effector = new AVFXEffector();
@@ -211,6 +225,11 @@ namespace AVFXLib.Models
         public void removeEffector(int idx)
         {
             Effectors.RemoveAt(idx);
+        }
+        //
+        public void addEmitter( AVFXEmitter item )
+        {
+            Emitters.Add( item );
         }
         public AVFXEmitter addEmitter()
         {
@@ -223,6 +242,11 @@ namespace AVFXLib.Models
         {
             Emitters.RemoveAt(idx);
         }
+        //
+        public void addParticle( AVFXParticle item )
+        {
+            Particles.Add( item );
+        }
         public AVFXParticle addParticle()
         {
             AVFXParticle particle = new AVFXParticle();
@@ -233,6 +257,11 @@ namespace AVFXLib.Models
         public void removeParticle(int idx)
         {
             Particles.RemoveAt(idx);
+        }
+        //
+        public void addBinder( AVFXBinder item )
+        {
+            Binders.Add( item );
         }
         public AVFXBinder addBinder()
         {
@@ -245,6 +274,11 @@ namespace AVFXLib.Models
         {
             Binders.RemoveAt(idx);
         }
+        //
+        public void addTexture( AVFXTexture item )
+        {
+            Textures.Add( item );
+        }
         public AVFXTexture addTexture()
         {
             AVFXTexture texture = new AVFXTexture();
@@ -255,6 +289,11 @@ namespace AVFXLib.Models
         public void removeTexture(int idx)
         {
             Textures.RemoveAt(idx);
+        }
+        //
+        public void addModel( AVFXModel item )
+        {
+            Models.Add( item );
         }
         public AVFXModel addModel()
         {
@@ -391,7 +430,7 @@ namespace AVFXLib.Models
             // MODELS
             foreach (AVFXModel modelElem in Models)
             {
-                baseAVFX.Children.Add(GetAVFX(modelElem));
+                baseAVFX.Children.Add(modelElem.toAVFX());
             }
             return baseAVFX;
         }

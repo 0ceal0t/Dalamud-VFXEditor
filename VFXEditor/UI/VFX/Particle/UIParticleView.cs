@@ -5,21 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleView : UIBase
+    public class UIParticleView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UIParticle> Particles;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UIParticleView(AVFXBase avfx)
+        public UIParticleView( AVFXBase avfx ) : base( "##PTCL", "Select a Particle" )
         {
             AVFX = avfx;
             Init();
         }
+
         public override void Init()
         {
             base.Init();
@@ -35,36 +35,31 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc(int idx)
+
+        public override void OnNew()
+        {
+            AVFX.addParticle();
+        }
+        public override void OnDelete( int idx )
+        {
+            AVFX.removeParticle( idx );
+        }
+        public override void OnDraw( int idx )
+        {
+            Particles[idx].Draw( id );
+        }
+        public override byte[] OnExport( int idx )
+        {
+            return Particles[idx].Particle.toAVFX().toBytes();
+        }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Particles[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##PTCL";
-            bool validSelect = UIUtils.ViewSelect( id, "Select a Particle", ref Selected, Options );
-            ImGui.SameLine();
-            if( ImGui.Button( "+ NEW" + id ) )
-            {
-                AVFX.addParticle();
-                Init();
-            }
-            if( validSelect )
-            {
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( "DELETE" + id ) )
-                {
-                    AVFX.removeParticle( Selected );
-                    Init();
-                    validSelect = false;
-                }
-            }
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Particles[Selected].Draw( id );
-            }
+        public override void OnImport( AVFXNode node ) {
+            AVFXParticle item = new AVFXParticle();
+            item.read( node );
+            AVFX.addParticle( item );
         }
     }
 }

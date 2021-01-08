@@ -5,17 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffectorView : UIBase
+    public class UIEffectorView : UIDropdownView
     {
         public AVFXBase AVFX;
         List<UIEffector> Effectors;
-        public int Selected = -1;
-        public string[] Options;
 
-        public UIEffectorView(AVFXBase avfx)
+        public UIEffectorView(AVFXBase avfx) : base( "##EFFCT", "Select an Effector" )
         {
             AVFX = avfx;
             Init();
@@ -35,36 +34,31 @@ namespace VFXEditor.UI.VFX
                 idx++;
             }
         }
-        public void RefreshDesc( int idx )
+
+        public override void OnNew()
+        {
+            AVFX.addEffector();
+        }
+        public override void OnDelete( int idx )
+        {
+            AVFX.removeEffector( idx );
+        }
+        public override void OnDraw( int idx )
+        {
+            Effectors[idx].Draw( id );
+        }
+        public override byte[] OnExport( int idx )
+        {
+            return Effectors[idx].Effector.toAVFX().toBytes();
+        }
+        public override void RefreshDesc( int idx )
         {
             Options[idx] = Effectors[idx].GetDescText();
         }
-        public override void Draw(string parentId = "")
-        {
-            string id = "##EFFECT";
-            bool validSelect = UIUtils.ViewSelect( id, "Select an Effector", ref Selected, Options );
-            ImGui.SameLine();
-            if( ImGui.Button( "+ NEW" + id ) )
-            {
-                AVFX.addEffector();
-                Init();
-            }
-            if( validSelect )
-            {
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( "DELETE" + id ) )
-                {
-                    AVFX.removeEffector( Selected );
-                    Init();
-                    validSelect = false;
-                }
-            }
-            ImGui.Separator();
-            // ====================
-            if( validSelect )
-            {
-                Effectors[Selected].Draw( id );
-            }
+        public override void OnImport( AVFXNode node ) {
+            AVFXEffector item = new AVFXEffector();
+            item.read( node );
+            AVFX.addEffector( item );
         }
     }
 }

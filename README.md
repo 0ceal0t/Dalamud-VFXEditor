@@ -27,10 +27,12 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Properly fix literal int list(!!)
+- [ ] Fix model export (lots of broken shit)
+- [ ] New weapon vfx
+- [ ] Properly fix literal int list
+- [ ] Save all particles, etc.
 - [ ] Fix Penumbra folder select
 - [ ] Save replacements(!)
-- [ ] Save individual parts (particles, emitters, etc.)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
@@ -56,6 +58,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better placed "DELETE" button
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
+- [x] ~~Save individual parts (particles, emitters, etc.)~~
 - [x] ~~Penumbra export~~
 - [x] ~~Fix textools export~~
 - [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~

@@ -18,14 +18,10 @@ namespace VFXEditor.UI
         public Plugin _plugin;
         public bool Visible = false;
 
-        public PenumbraDialog( Plugin plugin )
-        {
+        public PenumbraDialog( Plugin plugin ) {
             _plugin = plugin;
         }
-
-        public void Show(
-        )
-        {
+        public void Show() {
             Visible = true;
         }
 
@@ -35,8 +31,7 @@ namespace VFXEditor.UI
         public string VFXPath = "";
 
         public bool DrawOnce = false;
-        public void Draw()
-        {
+        public void Draw() {
             if( !Visible )
                 return;
             if( !DrawOnce )
@@ -68,34 +63,28 @@ namespace VFXEditor.UI
                 VFXPath = _plugin.ReplaceAVFXPath;
             }
             ImGui.EndChild();
-
             ImGui.Separator();
             if( ImGui.Button( "EXPORT" + id ) )
             {
                 _plugin.PenumbraManager.Export( Name, Author, VFXPath, SaveLocation, _plugin.AVFX );
                 Visible = false;
             }
-
             ImGui.End();
         }
 
         public void SaveDialog() // TODO: this is broken
         {
-            Task.Run( async () =>
-            {
+            Task.Run( async () => {
                 var picker = new FolderBrowserDialog
                 {
                     Description = "Select folder output"
                 };
                 var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK )
-                {
-                    try
-                    {
+                if( result == DialogResult.OK ) {
+                    try {
                         SaveLocation = picker.SelectedPath;
                     }
-                    catch( Exception ex )
-                    {
+                    catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a mod location" );
                     }
                 }

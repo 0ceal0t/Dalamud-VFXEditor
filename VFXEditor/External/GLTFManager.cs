@@ -13,26 +13,19 @@ using System.Threading.Tasks;
 
 namespace VFXEditor
 {
-    public class GLTFManager
-    {
-        public static void ExportModel(AVFXModel model, string path)
-        {
-            //model.Vertices;
-            //model.Indexes;
-
+    public class GLTFManager {
+        public static void ExportModel(AVFXModel model, string path) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
 
             GLTFVert[] Verts = new GLTFVert[model.Vertices.Count];
             int idx = 0;
-            foreach(var v in model.Vertices )
-            {
+            foreach(var v in model.Vertices ) {
                 Verts[idx] = GetVert( v );
                 idx++;
             }
 
-            foreach(var tri in model.Indexes )
-            {
+            foreach(var tri in model.Indexes ) {
                 var v1 = Verts[tri.I1];
                 var v2 = Verts[tri.I2];
                 var v3 = Verts[tri.I3];
@@ -44,9 +37,7 @@ namespace VFXEditor
             scene.ToGltf2().SaveGLTF(path);
             PluginLog.Log( "Saved GLTF to: " + path );
         }
-
-        public static GLTFVert GetVert(AVFXLib.Models.Vertex vert )
-        {
+        public static GLTFVert GetVert(Vertex vert ) {
             Vector3 Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
             Vector3 Normal = new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] );
             Vector4 Tangent = new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], vert.Tangent[3] );
@@ -62,9 +53,7 @@ namespace VFXEditor
             ret.Tex = _Tex;
             return ret;
         }
-
-        public static Vertex GetAVFXVert(Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2)
-        {
+        public static Vertex GetAVFXVert(Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2) {
             var ret = new Vertex();
 
             ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
@@ -77,19 +66,15 @@ namespace VFXEditor
 
             return ret;
         }
-
-        public static bool ImportModel(string path, out List<Vertex> V, out List<Index> I )
-        {
+        public static bool ImportModel(string path, out List<Vertex> V, out List<Index> I ) {
             V = new List<Vertex>();
             I = new List<Index>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( path );
             PluginLog.Log( "Imported GLTF from: " + path );
 
-            if(model.LogicalMeshes.Count > 0 )
-            {
+            if(model.LogicalMeshes.Count > 0 ) {
                 var mesh = model.LogicalMeshes[0];
-                if(mesh.Primitives.Count > 0 )
-                {
+                if(mesh.Primitives.Count > 0 ) {
                     var primitive = mesh.Primitives[0];
 
                     var positions = primitive.GetVertices( "POSITION" ).AsVector3Array();
@@ -104,8 +89,7 @@ namespace VFXEditor
                     for(int i = 0; i < positions.Count; i++ ) {
                         V.Add( GetAVFXVert( positions[i], normals[i], tangents[i], colors[i], tex1s[i], tex2s[i] ) );
                     }
-                    foreach(var t in triangles )
-                    {
+                    foreach(var t in triangles ) {
                         var i_ = new Index();
                         i_.I1 = t.A;
                         i_.I2 = t.B;
@@ -118,9 +102,7 @@ namespace VFXEditor
             return false;
         }
     }
-
-    public struct GLTFVert
-    {
+    public struct GLTFVert {
         public VertexPositionNormalTangent Pos;
         public VertexColor1Texture2 Tex;
     }

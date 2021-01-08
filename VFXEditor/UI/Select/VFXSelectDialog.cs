@@ -38,11 +38,6 @@ namespace VFXEditor.UI
     {
         public Plugin _plugin;
         public bool ShowLocal = true;
-        public bool ShowGamePath = true;
-        public bool ShowGameItems = true;
-        public bool ShowGameStatus = true;
-        public bool ShowGameActions = true;
-        public bool ShowGameNonPlayerActions = true;
         public bool ShowRecent = true;
 
         public string Id;
@@ -65,11 +60,7 @@ namespace VFXEditor.UI
             ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
         }
 
-        public void Show(
-            bool showLocal = true,
-            bool showRecent = true
-        )
-        {
+        public void Show(bool showLocal = true, bool showRecent = true) {
             ShowLocal = showLocal;
             ShowRecent = showRecent;
             // ======================
@@ -190,9 +181,6 @@ namespace VFXEditor.UI
         }
 
         // =========== GAME ITEM =============
-        public string gameItemsSearchInput = "";
-        public XivItem SelectedItem = null;
-        public XivSelectedItem LoadedItem = null;
         public void DrawGameItems()
         {
             var ret = ImGui.BeginTabItem( "Game Item##Select/" + Id );
