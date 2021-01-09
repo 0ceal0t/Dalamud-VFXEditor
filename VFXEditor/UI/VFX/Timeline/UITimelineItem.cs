@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace VFXEditor.UI.VFX
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;
         //===========================
+        public UIInt ClipNumber;
+        public bool ClipAssigned;
 
         public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline)
         {
@@ -31,7 +34,8 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Effector Index", Item.EffectorIdx));
             Attributes.Add(new UIInt("Emitter Index", Item.EmitterIdx));
             Attributes.Add(new UIInt("Platform", Item.Platform));
-            Attributes.Add(new UIInt("ClipNumber", Item.ClipNumber));
+            ClipNumber = new UIInt("ClipNumber", Item.ClipNumber);
+            ClipAssigned = Item.ClipNumber.Assigned;
         }
 
         public override void Draw( string parentId )
@@ -58,6 +62,11 @@ namespace VFXEditor.UI.VFX
                 return;
             }
             DrawAttrs( id );
+
+            if(ImGui.Checkbox("Clip Enabled" + id, ref ClipAssigned ) ) {
+                Item.ClipNumber.Assigned = ClipAssigned;
+            }
+            ClipNumber.Draw( id );
         }
     }
 }

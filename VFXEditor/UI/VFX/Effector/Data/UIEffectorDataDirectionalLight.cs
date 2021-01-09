@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UICurveColor( Data.Ambient, "Ambient" ) );
             Attributes.Add( new UICurveColor( Data.Color, "Color" ) );
             Attributes.Add( new UICurve( Data.Power, "Power" ) );
-            Attributes.Add( new UICurve( Data.Rotation, "Rotation" ) );
+            Attributes.Add( new UICurve3Axis( Data.Rotation, "Rotation" ) );
         }
 
         public override void Draw( string parentId )

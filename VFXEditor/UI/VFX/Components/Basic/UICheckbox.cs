@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using ImGuiNET;
 using AVFXLib.Models;
+using Dalamud.Plugin;
 
 namespace VFXEditor.UI.VFX
 {
@@ -30,6 +31,9 @@ namespace VFXEditor.UI.VFX
             else
                 ChangeFunction = DoNothing;
             // =====================
+            //if( !Literal.Value.HasValue ) {
+            //    PluginLog.Log( "null bool? -> " + id );
+            //}
             Value = (Literal.Value == true);
         }
 

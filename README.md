@@ -56,6 +56,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better placed "DELETE" button
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
+- [ ] Maybe find a way to add custom names
 - [x] ~~Fix model export (lots of broken shit)~~
 - [x] ~~New weapon vfx~~
 - [x] ~~Save individual parts (particles, emitters, etc.)~~

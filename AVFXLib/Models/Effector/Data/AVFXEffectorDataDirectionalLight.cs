@@ -13,7 +13,7 @@ namespace AVFXLib.Models
         public AVFXCurveColor Ambient = new AVFXCurveColor( "ambient", "Amb" );
         public AVFXCurveColor Color = new AVFXCurveColor( "color", "Col" );
         public AVFXCurve Power = new AVFXCurve( "power", "Pow" );
-        public AVFXCurve Rotation = new AVFXCurve( "rotation", "Rot" );
+        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis( "rotation", "Rot" );
 
         List<Base> Attributes;
 

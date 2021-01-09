@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using ImGuiNET;
 using AVFXLib.Models;
+using Dalamud.Plugin;
 
 namespace VFXEditor.UI.VFX
 {
@@ -27,6 +28,7 @@ namespace VFXEditor.UI.VFX
             else
                 ChangeFunction = DoNothing;
             // =====================
+
             Value = Literal.Value;
         }
 
