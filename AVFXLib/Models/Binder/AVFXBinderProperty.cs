@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -58,8 +58,13 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
-            SetUnAssigned(Position);
             BinderName.GiveValue("null");
+
+            BindTargetPointType.GiveValue( BindTargetPoint.ByName );
+            BindPointId.GiveValue( 3 );
+            CoordUpdateFrame.GiveValue( -1 );
+            RingProgressTime.GiveValue( 1 );
+            Position.toDefault();
         }
 
         public override JToken toJSON()

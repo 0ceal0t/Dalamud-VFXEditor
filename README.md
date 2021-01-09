@@ -1,17 +1,30 @@
 # VFXEditor
-A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game ([WIKI](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki))
+A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game 
+
+[Wiki](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki) | [Troubleshooting](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting)
 
 <img align="center" src="docs/preview.png" width="700px">
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
-2. Build `VFXEditor`
-3. Place the files inside of `AppData\Roaming\XIVLauncher\devPlugins`, or wherever the `devPlugins` folder of your QuickLauncher installation is located
-4. Once in-game, open with `/vfxedit`
+2. Enabled the plugins from the `/xlplugins` menu
+3. Once installed, open the window with `/vfxedit`
+
+## Usage
+1. Select a "source" VFX (the effect you want to edit)
+2. Select a "replace" VFX (the effect to temporarily overwrite, can be the same as the source)
+3. Make any modifications you want, then press "Update"
+
+Having problems, 
+
+## Building
+1. Build the solution
+2. Place the files inside of `AppData\Roaming\XIVLauncher\devPlugins`, or wherever the `devPlugins` folder of your QuickLauncher installation is located
+3. Run QuickLauncher
 
 ### Notes
 * This plugin does not currently work with `LivePluginLoader`
-* It **probably** gets broken by Penumbra for now, since they use the same hooks
+* It might break Penumbra
 
 ## Features
 * Load and preview in-game VFXs (weapons, actions, status effects)
@@ -28,7 +41,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Properly fix literal int list
+- [ ] Auto fix bg vfx
 - [ ] Save all particles, etc.
+- [ ] Better sidebar names to reflect target index
 - [ ] Fix Penumbra folder select
 - [ ] Save replacements(!)
 - [ ] Test with Penumbra

@@ -106,12 +106,12 @@ namespace VFXEditor.UI
                     }
                 }
                 ImGui.PopStyleColor();
+                // ===== EXPORT ======
                 ImGui.SameLine();
                 if( ImGui.Button( "Export" ) )
                 {
                     ImGui.OpenPopup( "Export_Popup" );
                 }
-                // ======= EXPORT ==========
                 if( ImGui.BeginPopup( "Export_Popup" ) )
                 {
                     if( ImGui.Selectable( ".AVFX" ) )
@@ -134,13 +134,22 @@ namespace VFXEditor.UI
                     }
                     ImGui.EndPopup();
                 }
-#if DEBUG
+                // ====== UTILS =====
                 ImGui.SameLine();
-                if( ImGui.Button( "[DEBUG] Export Raw" ) )
-                {
-                    SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
+                if( ImGui.Button( "Utility" ) ) {
+                    ImGui.OpenPopup( "Utility_Popup" );
                 }
-#endif
+                if( ImGui.BeginPopup( "Utility_Popup" ) ) {
+                    if( ImGui.Selectable( "Export last import (raw)" ) ) {
+                        var node = _plugin.AVFX.toAVFX();
+                        SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
+                    }
+                    if( ImGui.Selectable( "Convert background VFX to player VFX" ) ) {
+                        BGtoPlayerVFX();
+                    }
+                    ImGui.EndPopup();
+                }
+                // ======== VERIFY ============
                 if( _plugin.Configuration.VerifyOnLoad )
                 {
                     ImGui.SameLine();
@@ -313,6 +322,41 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         }
 
         // ======= HELPERS ============
+        public void BGtoPlayerVFX() {
+            // add new binder
+            VFXMain.AVFX.addBinder();
+            VFXMain.BinderView.Init();
+            var binderIdx = VFXMain.AVFX.Binders.Count - 1;
+            // turn all timeline item binders -> last binder idx
+            List<int> okTls = new List<int>();
+            int tlIdx = 0;
+            foreach( var tl in VFXMain.AVFX.Timelines ) {
+                var ok = false;
+                foreach( var item in tl.Items ) {
+                    if(item.EmitterIdx.Value >= 0 ) {
+                        item.BinderIdx.GiveValue( binderIdx );
+                        ok = true;
+                    }
+                }
+                if( ok ) {
+                    okTls.Add( tlIdx );
+                }
+                tlIdx++;
+            }
+            VFXMain.TimelineView.Init();
+            // add all timelines to scheduler as items, disable all scheduler triggers
+            foreach(var trigger in VFXMain.AVFX.Schedulers[0].Triggers ) {
+                trigger.TimelineIdx.GiveValue( -1 );
+            }
+            VFXMain.AVFX.Schedulers[0].Items.Clear();
+            foreach(int tl in okTls ) {
+                VFXMain.AVFX.Schedulers[0].addItem();
+                var i = VFXMain.AVFX.Schedulers[0].Items.Last();
+                i.Enabled.GiveValue( true );
+                i.TimelineIdx.GiveValue( tl );
+            }
+            VFXMain.ScheduleView.Init();
+        }
         public void OpenTemplate(string path ) {
             VFXSelectResult newResult = new VFXSelectResult();
             newResult.DisplayString = "[NEW]";

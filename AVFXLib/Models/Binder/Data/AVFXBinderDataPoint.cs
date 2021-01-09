@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,8 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             Assigned = true;
-            SetUnAssigned(Attributes);
+            SpringStrength.toDefault();
+            SpringStrength.addKey();
         }
 
         public override JToken toJSON()
