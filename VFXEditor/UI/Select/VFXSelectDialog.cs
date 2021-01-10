@@ -18,7 +18,11 @@ namespace VFXEditor.UI
         GamePath,
         GameItem,
         GameStatus,
-        GameAction
+        GameAction,
+        GameZone,
+        GameEmote,
+        GameCutscene,
+        GameNpc
     }
     public struct VFXSelectResult
     {
@@ -48,22 +52,24 @@ namespace VFXEditor.UI
         public VFXActionSelect ActionSelect;
         public VFXStatusSelect StatusSelect;
         public VFXItemSelect ItemSelect;
+        public VFXZoneSelect ZoneSelect;
+        public VFXNpcSelect NpcSelect;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
             _plugin = plugin;
             Id = id;
-            // ===========================
             NonPlayerActionSelect = new VFXActionSelect( id, "GameNPAction", _plugin.Manager.NonPlayerActions, _plugin, this );
             ActionSelect = new VFXActionSelect( id, "GameAction", _plugin.Manager.Actions, _plugin, this );
             StatusSelect = new VFXStatusSelect( id, "GameStatus", _plugin.Manager.Status, _plugin, this );
             ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
+            ZoneSelect = new VFXZoneSelect( id, "GameZone", _plugin.Manager.Zones, _plugin, this );
+            NpcSelect = new VFXNpcSelect( id, "GameNpc", _plugin.Manager.Npcs, _plugin, this );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
             ShowLocal = showLocal;
             ShowRecent = showRecent;
-            // ======================
             Visible = true;
         }
 
@@ -153,6 +159,8 @@ namespace VFXEditor.UI
             DrawGameStatus();
             DrawGameActions();
             DrawGameNonPlayerActions();
+            DrawGameZones();
+            DrawGameNpc();
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }
@@ -183,7 +191,7 @@ namespace VFXEditor.UI
         // =========== GAME ITEM =============
         public void DrawGameItems()
         {
-            var ret = ImGui.BeginTabItem( "Game Item##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Item##Select/" + Id );
             if( !ret )
                 return;
             _plugin.Manager.LoadItems();
@@ -199,7 +207,7 @@ namespace VFXEditor.UI
         // =========== GAME STATUS ================
         public void DrawGameStatus()
         {
-            var ret = ImGui.BeginTabItem( "Game Status##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Status##Select/" + Id );
             if( !ret )
                 return;
             _plugin.Manager.LoadStatus();
@@ -215,7 +223,7 @@ namespace VFXEditor.UI
         // =========== GAME ACTIONS =============
         public void DrawGameActions()
         {
-            var ret = ImGui.BeginTabItem( "Game Action##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Action##Select/" + Id );
             if( !ret )
                 return;
             _plugin.Manager.LoadActions();
@@ -231,7 +239,7 @@ namespace VFXEditor.UI
         // =========== GAME NON PLAYER ACTIONS =============
         public void DrawGameNonPlayerActions()
         {
-            var ret = ImGui.BeginTabItem( "Game Non-Player Action##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Non-Player Action##Select/" + Id );
             if( !ret )
                 return;
             _plugin.Manager.LoadNonPlayerActions();
@@ -241,6 +249,34 @@ namespace VFXEditor.UI
                 return;
             }
             NonPlayerActionSelect.Draw();
+            ImGui.EndTabItem();
+        }
+
+        // =========== GAME ZONES =============
+        public void DrawGameZones() {
+            var ret = ImGui.BeginTabItem( "Zone##Select/" + Id );
+            if( !ret )
+                return;
+            _plugin.Manager.LoadZones();
+            if( !_plugin.Manager.ZonesLoaded ) {
+                ImGui.EndTabItem();
+                return;
+            }
+            ZoneSelect.Draw();
+            ImGui.EndTabItem();
+        }
+
+        // =========== GAME NPC =============
+        public void DrawGameNpc() {
+            var ret = ImGui.BeginTabItem( "NPC##Select/" + Id );
+            if( !ret )
+                return;
+            _plugin.Manager.LoadNpc();
+            if( !_plugin.Manager.NpcLoaded ) {
+                ImGui.EndTabItem();
+                return;
+            }
+            NpcSelect.Draw();
             ImGui.EndTabItem();
         }
 

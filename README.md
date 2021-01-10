@@ -41,7 +41,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Properly fix literal int list
-- [ ] Auto fix bg vfx
+- [ ] Fix expac textools export
 - [ ] Save all particles, etc.
 - [ ] Better sidebar names to reflect target index
 - [ ] Fix Penumbra folder select
@@ -58,9 +58,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
-- [ ] Monster list(??)
 - [ ] Cutscene VFX select
-- [ ] Zone VFX select
 - [ ] Emote VFX select
 - [ ] Limit break VFX
 - [ ] Mount VFX select
@@ -72,6 +70,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
 - [ ] Maybe find a way to add custom names
+- [x] ~~Monster list(??)~~
+- [x] ~~Zone VFX select~~
+- [x] ~~Auto fix bg vfx~~
 - [x] ~~Fix model export (lots of broken shit)~~
 - [x] ~~New weapon vfx~~
 - [x] ~~Save individual parts (particles, emitters, etc.)~~

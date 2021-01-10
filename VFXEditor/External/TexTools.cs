@@ -89,6 +89,9 @@ namespace VFXEditor
                     case "chara":
                         simple.DatFile = "040000";
                         break;
+                    case "bg":
+                        simple.DatFile = "020000";
+                        break;
                     default:
                         PluginLog.Log( "Invalid VFX path! Could not find DatFile" );
                         return;

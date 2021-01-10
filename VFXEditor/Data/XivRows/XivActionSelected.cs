@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor
 {
-    public class XivSelectedAction
+    public class XivActionSelected
     {
         public XivActionBase Action;
         public bool CastVfxExists = false;
@@ -18,9 +18,9 @@ namespace VFXEditor
         public string SelfTmbPath;
         public List<string> SelfVfxPaths = new List<string>();
 
-        public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled ); // scuffed file parsing, because I literally don't give a shit about anything else in this file...probably
+        public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
-        public XivSelectedAction( Lumina.Data.FileResource file, XivActionBase action )
+        public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action )
         {
             Action = action;
             CastVfxExists = action.CastVFXExists;

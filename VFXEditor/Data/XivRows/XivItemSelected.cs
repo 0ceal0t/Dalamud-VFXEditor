@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor
 {
-    public class XivSelectedItem
+    public class XivItemSelected
     {
         public XivItem Item;
         public int Count;
@@ -16,7 +16,7 @@ namespace VFXEditor
         public int VfxId;
         public string ImcPath;
 
-        public XivSelectedItem( Lumina.Data.Files.ImcFile file, XivItem item)
+        public XivItemSelected( Lumina.Data.Files.ImcFile file, XivItem item)
         {
             Item = item;
             Count = file.Count;

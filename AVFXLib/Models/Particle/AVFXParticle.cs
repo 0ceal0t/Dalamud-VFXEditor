@@ -330,6 +330,9 @@ namespace AVFXLib.Models
                 case ParticleType.LightModel:
                     Data = new AVFXParticleDataLightModel("data");
                     break;
+                case ParticleType.Laser:
+                    Data = new AVFXParticleDataLaser( "data" );
+                    break;
                 default:
                     Data = null;
                     break;

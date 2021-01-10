@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace VFXEditor
 {
-    public class XivNonPlayerAction : XivActionBase
+    public class XivActionNonPlayer : XivActionBase
     {
         public bool IsPlaceholder = false;
-        public List<XivNonPlayerAction> PlaceholderActions;
+        public List<XivActionNonPlayer> PlaceholderActions;
 
-        public XivNonPlayerAction( Lumina.Excel.GeneratedSheets.Action action, Dictionary<string, List<string>> dict, bool justSelf = false, string forceSelfKey = "" )
+        public XivActionNonPlayer( Lumina.Excel.GeneratedSheets.Action action, bool justSelf = false, string forceSelfKey = "" )
         {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
@@ -22,31 +22,11 @@ namespace VFXEditor
             {
                 SelfVFXKey = action.AnimationEnd?.Value?.Key.ToString();
                 SelfVFXExists = !string.IsNullOrEmpty( SelfVFXKey );
-                if( SelfVFXExists )
-                {
+                if( SelfVFXExists ) {
                     var selfMKey = new MonsterKey( SelfVFXKey );
-                    if( selfMKey.isMonster && selfMKey.skeletonKey == "[SKL_ID]" ) // this is a placeholder, need to get all of the actual values
-                    {
-
-                        SelfVFXExists = false;
+                    if( selfMKey.isMonster && selfMKey.skeletonKey == "[SKL_ID]" ) {
                         IsPlaceholder = true;
-                        PlaceholderActions = new List<XivNonPlayerAction>();
-
-                        if( dict.ContainsKey( selfMKey.actionId ) )
-                        {
-                            foreach(var sklId in dict[selfMKey.actionId] )
-                            {
-                                var sAction = new Lumina.Excel.GeneratedSheets.Action();
-                                sAction.Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " - " + sklId ) );
-                                sAction.IsPlayerAction = action.IsPlayerAction;
-                                sAction.RowId = action.RowId;
-                                sAction.VFX = action.VFX; // preserve cast vfx
-
-                                string actualKey = "mon_sp/" + sklId + "/" + selfMKey.actionId;
-
-                                PlaceholderActions.Add( new XivNonPlayerAction( sAction, dict, forceSelfKey: actualKey, justSelf: justSelf) );
-                            }
-                        }
+                        return;
                     }
                 }
             }
@@ -71,7 +51,7 @@ namespace VFXEditor
                     sAction.IsPlayerAction = action.IsPlayerAction;
                     sAction.RowId = action.RowId;
                     sAction.AnimationEnd = action.ActionTimelineHit;
-                    HitAction = new XivNonPlayerAction( sAction, dict, justSelf: true);
+                    HitAction = new XivActionNonPlayer( sAction, justSelf: true);
                 }
             }
 

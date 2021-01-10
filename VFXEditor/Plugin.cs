@@ -111,6 +111,10 @@ namespace VFXEditor
                 case VFXSelectType.GamePath:
                 case VFXSelectType.GameStatus:
                 case VFXSelectType.GameAction:
+                case VFXSelectType.GameZone:
+                case VFXSelectType.GameEmote:
+                case VFXSelectType.GameCutscene:
+                case VFXSelectType.GameNpc:
                     bool gameResult = Manager.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
                         LoadAVFX( gameAvfx );
@@ -133,6 +137,10 @@ namespace VFXEditor
                 case VFXSelectType.GamePath:
                 case VFXSelectType.GameStatus:
                 case VFXSelectType.GameAction:
+                case VFXSelectType.GameZone:
+                case VFXSelectType.GameEmote:
+                case VFXSelectType.GameCutscene:
+                case VFXSelectType.GameNpc:
                     ReplaceAVFXPath = replaceResult.Path;
                     break;
                 default:
