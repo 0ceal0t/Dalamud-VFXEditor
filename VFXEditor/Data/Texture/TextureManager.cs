@@ -64,8 +64,7 @@ namespace VFXEditor
                 }
                 catch( Exception e )
                 {
-                    PluginLog.LogError( e.ToString() );
-                    PluginLog.LogError( "Could not find tex:" + path );
+                    PluginLog.LogError( e, "Could not find tex:" + path );
                     return new TexData();
                 }
             }

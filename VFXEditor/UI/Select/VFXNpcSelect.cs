@@ -27,6 +27,7 @@ namespace VFXEditor.UI {
         }
 
         public override void DrawSelected( XivNpcSelected loadedItem ) {
+            if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Npc.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "Variant: " + loadedItem.Npc.Variant );

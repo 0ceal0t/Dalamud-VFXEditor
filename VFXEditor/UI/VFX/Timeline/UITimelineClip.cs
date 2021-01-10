@@ -44,7 +44,8 @@ namespace VFXEditor.UI.VFX
             {
                 return;
             }
-            if( ImGui.Selectable( "Clip " + Idx + parentId, selected == this ) )
+            string text = Idx + ": " + IdOptions[Clip.UniqueId];
+            if( ImGui.Selectable( text + parentId, selected == this ) )
             {
                 selected = this;
             }

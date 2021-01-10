@@ -35,31 +35,25 @@ namespace VFXEditor
         public bool ItemsWaiting = false;
         public void LoadItems()
         {
-            if( ItemsWaiting )
-                return;
+            if( ItemsWaiting ) { return; }
             ItemsWaiting = true; // start waiting
             PluginLog.Log( "Loading Items" );
             Task.Run( async () => {
-                try
-                {
+                try {
                     return _plugin.PluginInterface.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 ).ToList();
                 }
-                catch( Exception e )
-                {
+                catch( Exception e ) {
                     PluginLog.LogError( e.ToString() );
                     return new List<Item>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 foreach( var item in t.Result )
                 {
                     var i = new XivItem( item );
-                    if( i.HasModel )
-                    {
+                    if( i.HasModel ) {
                         Items.Add( i );
                     }
-                    if( i.HasSub )
-                    {
+                    if( i.HasSub ) {
                         Items.Add( i.SubItem );
                     }
                 }
@@ -89,27 +83,22 @@ namespace VFXEditor
         public bool StatusWaiting = false;
         public void LoadStatus()
         {
-            if( StatusWaiting )
-                return;
-            StatusWaiting = true; // start waiting
+            if( StatusWaiting ) { return; }
+            StatusWaiting = true;
             PluginLog.Log( "Loading Status" );
             Task.Run( async () => {
-                try
-                {
+                try {
                     return _plugin.PluginInterface.Data.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
                 }
-                catch( Exception e )
-                {
+                catch( Exception e ) {
                     PluginLog.LogError( e.ToString() );
                     return new List<Status>();
                 }
             } ).ContinueWith( t =>
             {
-                foreach( var item in t.Result )
-                {
+                foreach( var item in t.Result ) {
                     var i = new XivStatus( item );
-                    if( i.VfxExists )
-                    {
+                    if( i.VfxExists ) {
                         Status.Add( i );
                     }
                 }
@@ -124,9 +113,8 @@ namespace VFXEditor
         public List<XivActionBase> NonPlayerActions = new List<XivActionBase>();
 
         public void LoadNonPlayerActions() {
-            if( NonPlayerActionsWaiting )
-                return;
-            NonPlayerActionsWaiting = true; // start waiting
+            if( NonPlayerActionsWaiting ) { return; }
+            NonPlayerActionsWaiting = true;
             PluginLog.Log( "Loading Non-Player Actions" );
             Task.Run( async () => {
                 try {
@@ -159,17 +147,14 @@ namespace VFXEditor
         public bool ActionsWaiting = false;
         public void LoadActions()
         {
-            if( ActionsWaiting )
-                return;
-            ActionsWaiting = true; // start waiting
+            if( ActionsWaiting ) { return; }
+            ActionsWaiting = true;
             PluginLog.Log( "Loading Actions" );
             Task.Run( async () => {
-                try
-                {
+                try {
                     return _plugin.PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.IsPlayerAction ).ToList();
                 }
-                catch( Exception e )
-                {
+                catch( Exception e ) {
                     PluginLog.LogError( e.ToString() );
                     return new List<Lumina.Excel.GeneratedSheets.Action>();
                 }
@@ -178,12 +163,10 @@ namespace VFXEditor
                 foreach( var item in t.Result )
                 {
                     var i = new XivAction( item );
-                    if( i.VfxExists )
-                    {
+                    if( i.VfxExists ) {
                         Actions.Add( i );
                     }
-                    if( i.HitVFXExists )
-                    {
+                    if( i.HitVFXExists ) {
                         Actions.Add( i.HitAction );
                     }
                 }
@@ -222,9 +205,8 @@ namespace VFXEditor
         public bool ZonesLoaded = false;
         public bool ZonesWaiting = false;
         public void LoadZones() {
-            if( ZonesWaiting )
-                return;
-            ZonesWaiting = true; // start waiting
+            if( ZonesWaiting ) { return; }
+            ZonesWaiting = true;
             PluginLog.Log( "Loading Zones" );
             Task.Run( async () => {
                 try {
@@ -265,11 +247,9 @@ namespace VFXEditor
         public bool NpcLoaded = false;
         public bool NpcWaiting = false;
         public void LoadNpc() {
-            if( NpcWaiting )
-                return;
-            NpcWaiting = true; // start waiting
+            if( NpcWaiting ) { return; }
+            NpcWaiting = true;
             PluginLog.Log( "Loading Npc" );
-
             Task.Run( async () => {
                 try {
                     var npcList = fastCSV.ReadFile<NpcCsvRow>( NpcCsv, true, ',', ( o, c ) =>
@@ -329,6 +309,52 @@ namespace VFXEditor
                 }
             }
             return result;
+        }
+
+        // ========= LOAD NPC ===========
+        public List<XivEmote> Emotes = new List<XivEmote>();
+        public bool EmoteLoaded = false;
+        public bool EmoteWaiting = false;
+        public void LoadEmote() {
+            if( EmoteWaiting ) { return; }
+            EmoteWaiting = true;
+            PluginLog.Log( "Loading Emote" );
+            Task.Run( async () => {
+                try {
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty(x.Name) ).ToList();
+                }
+                catch( Exception e ) {
+                    PluginLog.LogError( e, "Could not load emote" );
+                    return new List<Emote>();
+                }
+            } ).ContinueWith( t =>
+            {
+                foreach( var item in t.Result ) {
+                    var i = new XivEmote( item );
+                    if( i.PapFiles.Count > 0 ) {
+                        Emotes.Add( i );
+                    }
+                }
+                EmoteLoaded = true;
+            } );
+        }
+        public bool SelectEmote( XivEmote emote, out XivEmoteSelected selectedEmote ) {
+            selectedEmote = null;
+            List<Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
+            try {
+                foreach( string path in emote.PapFiles ) {
+                    var result = _plugin.PluginInterface.Data.FileExists( path );
+                    if( result ) {
+                        files.Add( _plugin.PluginInterface.Data.GetFile( path ) );
+                    }
+                }
+                selectedEmote = new XivEmoteSelected( emote, files );
+            }
+            catch(Exception e ) {
+                PluginLog.LogError( e.ToString() );
+                return false;
+            }
+            return true;
         }
 
         // ======  EXPORT AVFX  ======

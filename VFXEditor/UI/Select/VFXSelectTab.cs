@@ -71,7 +71,7 @@ namespace VFXEditor.UI {
             ImGui.NextColumn();
             // ========================
             if( SelectedZone == null ) {
-                ImGui.Text( "Select a zone..." );
+                ImGui.Text( "Select an item..." );
             }
             else {
                 if( LoadedZone != null ) {

@@ -43,7 +43,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Properly fix literal int list
 - [ ] Save all particles, etc.
 - [ ] Better sidebar names to reflect target index
-- [ ] Fix Penumbra folder select
 - [ ] Save replacements(!)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
@@ -63,10 +62,15 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better error / log display
 - [ ] Open from equipped gear
 - [ ] Better TMB parsing
-- [ ] Better placed "DELETE" button
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
 - [ ] Maybe find a way to add custom names
+
+---
+
+- [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
+- [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~
+- [x] ~~Fix Penumbra folder select~~
 - [x] ~~Fix expac textools export~~
 - [x] ~~Monster list(??)~~
 - [x] ~~Zone VFX select~~
@@ -76,8 +80,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Save individual parts (particles, emitters, etc.)~~
 - [x] ~~Penumbra export~~
 - [x] ~~Fix textools export~~
-- [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
-- [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~
 - [x] ~~-Don't write to the game folder lmao~~
 - [x] ~~Fix selectable lag~~
 - [x] ~~Default VFX~~

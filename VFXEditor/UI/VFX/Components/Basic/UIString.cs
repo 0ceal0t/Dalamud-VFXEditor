@@ -40,7 +40,7 @@ namespace VFXEditor.UI.VFX
         {
             ImGui.InputText(Id + id, ref Value, MaxSize);
             ImGui.SameLine();
-            if (ImGui.Button("Update" + id))
+            if (ImGui.SmallButton("Update" + id))
             {
                 Literal.GiveValue(Value.Trim('\0'));
                 ChangeFunction(Literal);

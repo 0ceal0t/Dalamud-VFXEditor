@@ -18,6 +18,7 @@ namespace VFXEditor.UI {
         }
 
         public override void DrawSelected( XivZoneSelected loadedItem ) {
+            if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Zone.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

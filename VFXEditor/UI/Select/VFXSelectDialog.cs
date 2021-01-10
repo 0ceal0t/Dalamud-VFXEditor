@@ -54,6 +54,7 @@ namespace VFXEditor.UI
         public VFXItemSelect ItemSelect;
         public VFXZoneSelect ZoneSelect;
         public VFXNpcSelect NpcSelect;
+        public VFXEmoteSelect EmoteSelect;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
@@ -65,6 +66,7 @@ namespace VFXEditor.UI
             ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
             ZoneSelect = new VFXZoneSelect( id, "GameZone", _plugin.Manager.Zones, _plugin, this );
             NpcSelect = new VFXNpcSelect( id, "GameNpc", _plugin.Manager.Npcs, _plugin, this );
+            EmoteSelect = new VFXEmoteSelect( id, "GameEmote", _plugin.Manager.Emotes, _plugin, this );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
@@ -161,6 +163,7 @@ namespace VFXEditor.UI
             DrawGameNonPlayerActions();
             DrawGameZones();
             DrawGameNpc();
+            DrawGameEmote();
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }
@@ -203,7 +206,6 @@ namespace VFXEditor.UI
             ItemSelect.Draw();
             ImGui.EndTabItem();
         }
-
         // =========== GAME STATUS ================
         public void DrawGameStatus()
         {
@@ -219,7 +221,6 @@ namespace VFXEditor.UI
             StatusSelect.Draw();
             ImGui.EndTabItem();
         }
-
         // =========== GAME ACTIONS =============
         public void DrawGameActions()
         {
@@ -235,7 +236,6 @@ namespace VFXEditor.UI
             ActionSelect.Draw();
             ImGui.EndTabItem();
         }
-
         // =========== GAME NON PLAYER ACTIONS =============
         public void DrawGameNonPlayerActions()
         {
@@ -251,7 +251,6 @@ namespace VFXEditor.UI
             NonPlayerActionSelect.Draw();
             ImGui.EndTabItem();
         }
-
         // =========== GAME ZONES =============
         public void DrawGameZones() {
             var ret = ImGui.BeginTabItem( "Zone##Select/" + Id );
@@ -265,7 +264,6 @@ namespace VFXEditor.UI
             ZoneSelect.Draw();
             ImGui.EndTabItem();
         }
-
         // =========== GAME NPC =============
         public void DrawGameNpc() {
             var ret = ImGui.BeginTabItem( "NPC##Select/" + Id );
@@ -277,6 +275,19 @@ namespace VFXEditor.UI
                 return;
             }
             NpcSelect.Draw();
+            ImGui.EndTabItem();
+        }
+        // =========== GAME EMOTE =============
+        public void DrawGameEmote() {
+            var ret = ImGui.BeginTabItem( "Emote##Select/" + Id );
+            if( !ret )
+                return;
+            _plugin.Manager.LoadEmote();
+            if( !_plugin.Manager.EmoteLoaded ) {
+                ImGui.EndTabItem();
+                return;
+            }
+            EmoteSelect.Draw();
             ImGui.EndTabItem();
         }
 

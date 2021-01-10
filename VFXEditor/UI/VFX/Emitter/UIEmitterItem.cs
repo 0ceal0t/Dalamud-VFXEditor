@@ -64,7 +64,8 @@ namespace VFXEditor.UI.VFX
             {
                 return;
             }
-            if( ImGui.Selectable( Type + " " + Idx + parentId, selected == this ) )
+            string text = Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
+            if( ImGui.Selectable( text + parentId, selected == this ) )
             {
                 selected = this;
             }

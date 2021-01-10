@@ -47,7 +47,8 @@ namespace VFXEditor.UI.VFX
             {
                 return;
             }
-            if( ImGui.Selectable( "Item " + Idx + parentId, selected == this ) )
+            string text = Idx + ": Emitter " + Item.EmitterIdx.Value;
+            if( ImGui.Selectable( text + parentId, selected == this ) )
             {
                 selected = this;
             }

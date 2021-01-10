@@ -51,11 +51,11 @@ namespace VFXEditor.UI
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
             ImGui.InputText( "Mod Author" + id, ref Author, 255 );
             ImGui.InputText( "Save Location" + id, ref SaveLocation, 255 );
-            //ImGui.SameLine();
-            //if( ImGui.Button( "BROWSE" + id ) )
-            //{
-            //    SaveDialog();
-            //}
+            ImGui.SameLine();
+            if( ImGui.Button( "BROWSE" + id ) )
+            {
+                SaveDialog();
+            }
             ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Use Replace" + id ) )
@@ -72,17 +72,18 @@ namespace VFXEditor.UI
             ImGui.End();
         }
 
-        public void SaveDialog() // TODO: this is broken
+        public void SaveDialog() // idk why the folderselectdialog doesn't work, so this will do for now
         {
             Task.Run( async () => {
-                var picker = new FolderBrowserDialog
+                var picker = new SaveFileDialog
                 {
-                    Description = "Select folder output"
+                    Filter = "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*",
+                    Title = "Select a File Location."
                 };
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        SaveLocation = picker.SelectedPath;
+                        SaveLocation = Path.GetDirectoryName( picker.FileName );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a mod location" );
