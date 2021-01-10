@@ -138,23 +138,19 @@ namespace VFXEditor
                 }
             } ).ContinueWith( t =>
             {
-                // finally, set up the actions
                 foreach( var item in t.Result ) {
-                    var i = new XivActionNonPlayer( item );
-                    if( !i.IsPlaceholder ) {
-                        AddNonPlayerAction( i );
+                    var action = new XivActionNonPlayer( item );
+                    if( !action.IsPlaceholder ) {
+                        if( action.HitVFXExists ) {
+                            NonPlayerActions.Add( (XivActionNonPlayer) action.HitAction );
+                        }
+                        if( action.VfxExists ) {
+                            NonPlayerActions.Add( action );
+                        }
                     }
                 }
                 NonPlayerActionsLoaded = true;
             } );
-        }
-        private void AddNonPlayerAction( XivActionNonPlayer action ) {
-            if( action.HitVFXExists ) {
-                AddNonPlayerAction( ( XivActionNonPlayer )action.HitAction );
-            }
-            if( action.VfxExists ) {
-                NonPlayerActions.Add( action );
-            }
         }
 
         // =========== LOAD ACTION =========

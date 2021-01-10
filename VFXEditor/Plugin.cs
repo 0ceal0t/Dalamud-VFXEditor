@@ -27,8 +27,6 @@ namespace VFXEditor
         public VFXSelectDialog PreviewUI { get; set; }
         public TexToolsDialog TexToolsUI { get; set; }
         public PenumbraDialog PenumbraUI { get; set; }
-        //public UISavedDialog SavedLoadUI { get; set; }
-        //public UISavedDialog SavedExportUI { get; set; }
 
         public AVFXBase AVFX = null;
         public DataManager Manager;
@@ -77,16 +75,12 @@ namespace VFXEditor
             PreviewUI.OnSelect += ReplaceAVFX;
             TexToolsUI = new TexToolsDialog( this );
             PenumbraUI = new PenumbraDialog( this );
-            //SavedLoadUI = new UISavedDialog( this, "Load Saved", load:true);
-            //SavedExportUI = new UISavedDialog( this, "Export Saved" );
 
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PenumbraUI.Draw;
-            //PluginInterface.UiBuilder.OnBuildUi += SavedLoadUI.Draw;
-            //PluginInterface.UiBuilder.OnBuildUi += SavedExportUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
         }
 
@@ -182,8 +176,6 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= TexToolsUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= PenumbraUI.Draw;
-            //PluginInterface.UiBuilder.OnBuildUi -= SavedLoadUI.Draw;
-            //PluginInterface.UiBuilder.OnBuildUi -= SavedExportUI.Draw;
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();

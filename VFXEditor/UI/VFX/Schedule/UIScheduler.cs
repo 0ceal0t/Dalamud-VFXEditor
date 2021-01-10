@@ -13,11 +13,11 @@ namespace VFXEditor.UI.VFX
         public AVFXSchedule Scheduler;
         public UIScheduleView View;
         // =================
-        public List<UIBase> Items;
-        public List<UIBase> Triggers;
+        public List<UISchedulerItem> Items;
+        public List<UISchedulerItem> Triggers;
         // ================
         public UIScheduleItemSplitView ItemSplit;
-        public UISplitView TriggerSplit;
+        public UISplitView<UISchedulerItem> TriggerSplit;
 
         public UIScheduler(AVFXSchedule scheduler, UIScheduleView view)
         {
@@ -29,8 +29,8 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             // ===================
-            Items = new List<UIBase>();
-            Triggers = new List<UIBase>();
+            Items = new List<UISchedulerItem>();
+            Triggers = new List<UISchedulerItem>();
             // =====================
             foreach (var Item in Scheduler.Items)
             {
@@ -43,7 +43,7 @@ namespace VFXEditor.UI.VFX
             }
             // ======================
             ItemSplit = new UIScheduleItemSplitView( Items, this );
-            TriggerSplit = new UISplitView( Triggers );
+            TriggerSplit = new UISplitView<UISchedulerItem>( Triggers );
         }
 
         public string GetDescText()

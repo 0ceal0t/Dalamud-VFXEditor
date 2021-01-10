@@ -81,6 +81,8 @@ namespace VFXEditor
                 simple.IsDefault = false;
                 simple.ModOffset = 0;
                 simple.ModSize = newData.Length;
+
+                var v = _plugin.PluginInterface.Data.GetFile( path );
                 switch( split[0] )
                 {
                     case "vfx":
@@ -89,8 +91,21 @@ namespace VFXEditor
                     case "chara":
                         simple.DatFile = "040000";
                         break;
+                    case "bgcommon":
+                        simple.DatFile = "010000";
+                        break;
                     case "bg":
-                        simple.DatFile = "020000";
+                        simple.DatFile = "02";
+                        if(split[1] == "ffxiv" ) {
+                            simple.DatFile += "0000"; // ok, good to go
+                        }
+                        else { // like ex1
+                            // bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
+                            string exNumber = split[1].Replace( "ex", "" ).PadLeft(2, '0');
+                            string zoneNumber = split[2].Split( '_' )[0].PadLeft(2, '0');
+                            simple.DatFile += exNumber;
+                            simple.DatFile += zoneNumber;
+                        }
                         break;
                     default:
                         PluginLog.Log( "Invalid VFX path! Could not find DatFile" );

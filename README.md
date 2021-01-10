@@ -41,7 +41,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Properly fix literal int list
-- [ ] Fix expac textools export
 - [ ] Save all particles, etc.
 - [ ] Better sidebar names to reflect target index
 - [ ] Fix Penumbra folder select
@@ -60,8 +59,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Penumbra import
 - [ ] Cutscene VFX select
 - [ ] Emote VFX select
-- [ ] Limit break VFX
-- [ ] Mount VFX select
 - [ ] Equipment (not weapons) VFX select
 - [ ] Better error / log display
 - [ ] Open from equipped gear
@@ -70,6 +67,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
 - [ ] Maybe find a way to add custom names
+- [x] ~~Fix expac textools export~~
 - [x] ~~Monster list(??)~~
 - [x] ~~Zone VFX select~~
 - [x] ~~Auto fix bg vfx~~

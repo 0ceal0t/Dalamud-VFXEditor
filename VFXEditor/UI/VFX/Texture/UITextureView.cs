@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UITextureView : UIBase
     {
         public AVFXBase AVFX;
-        public List<UIBase> Textures;
+        public List<UITexture> Textures;
         public UITextureSplitView TexSplit;
         public Plugin _plugin;
 
@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Textures = new List<UIBase>();
+            Textures = new List<UITexture>();
             foreach (var texture in AVFX.Textures)
             {
                 Textures.Add(new UITexture(texture, this, _plugin));

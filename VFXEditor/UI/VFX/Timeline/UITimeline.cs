@@ -13,9 +13,9 @@ namespace VFXEditor.UI.VFX
         public AVFXTimeline Timeline;
         public UITimelineView View;
         //=====================
-        public List<UIBase> Items;
+        public List<UITimelineItem> Items;
         //=====================
-        public List<UIBase> Clips;
+        public List<UITimelineClip> Clips;
         //=====================
         public UITimelineClipSplitView ClipSplit;
         public UITimelineItemSplitView ItemSplit;
@@ -29,8 +29,8 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Items = new List<UIBase>();
-            Clips = new List<UIBase>();
+            Items = new List<UITimelineItem>();
+            Clips = new List<UITimelineClip>();
             //========================
             Attributes.Add(new UIInt("Loop Start", Timeline.LoopStart));
             Attributes.Add(new UIInt("Loop End", Timeline.LoopEnd));

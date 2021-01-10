@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIUVSetSplitView : UISplitView
+    public class UIUVSetSplitView : UISplitView<UIParticleUVSet>
     {
         public UIParticle Particle;
-        public UIUVSetSplitView(List<UIBase> items, UIParticle particle) : base(items, true )
+        public UIUVSetSplitView(List<UIParticleUVSet> items, UIParticle particle) : base(items, true )
         {
             Particle = particle;
         }

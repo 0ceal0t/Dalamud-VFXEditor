@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIScheduleItemSplitView : UISplitView
+    public class UIScheduleItemSplitView : UISplitView<UISchedulerItem>
     {
         public UIScheduler Sched;
-        public UIScheduleItemSplitView( List<UIBase> items, UIScheduler sched ) : base( items, true )
+        public UIScheduleItemSplitView( List<UISchedulerItem> items, UIScheduler sched ) : base( items, true )
         {
             Sched = sched;
         }

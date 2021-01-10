@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIModelView : UIBase
     {
         public AVFXBase AVFX;
-        public List<UIBase> Models;
+        public List<UIModel> Models;
         public UIModelSplitView ModelSplit;
 
         public UIModelView(AVFXBase avfx)
@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Models = new List<UIBase>();
+            Models = new List<UIModel>();
             foreach( var model in AVFX.Models )
             {
                 Models.Add( new UIModel( model, this ) );

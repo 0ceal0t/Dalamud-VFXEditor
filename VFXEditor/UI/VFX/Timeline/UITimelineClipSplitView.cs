@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineClipSplitView : UISplitView
+    public class UITimelineClipSplitView : UISplitView<UITimelineClip>
     {
         public UITimeline Timeline;
-        public UITimelineClipSplitView( List<UIBase> items, UITimeline timeline ) : base( items, true )
+        public UITimelineClipSplitView( List<UITimelineClip> items, UITimeline timeline ) : base( items, true )
         {
             Timeline = timeline;
         }

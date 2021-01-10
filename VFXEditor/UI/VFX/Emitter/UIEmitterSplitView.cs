@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterSplitView : UISplitView
+    public class UIEmitterSplitView : UISplitView<UIEmitterItem>
     {
         public UIEmitter Emitter;
         public bool IsParticle;
 
-        public UIEmitterSplitView( List<UIBase> items, UIEmitter emitter, bool isParticle ) : base( items, true )
+        public UIEmitterSplitView( List<UIEmitterItem> items, UIEmitter emitter, bool isParticle ) : base( items, true )
         {
             Emitter = emitter;
             IsParticle = isParticle;

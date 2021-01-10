@@ -15,7 +15,7 @@ namespace VFXEditor.UI.VFX
         public AVFXModel Model;
         public UIModelView View;
         //=======================
-        public List<UIBase> EmitterVerts;
+        public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
 
         public UIModel(AVFXModel model, UIModelView view)
@@ -28,7 +28,7 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            EmitterVerts = new List<UIBase>();
+            EmitterVerts = new List<UIModelEmitterVertex>();
             for(int i = 0; i < Math.Min(Model.VNums.Count, Model.EmitVertices.Count); i++ )
             {
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );

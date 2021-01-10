@@ -16,14 +16,14 @@ namespace VFXEditor.UI.VFX
         List<UIBase> Animation;
         //==========================
         public UICombo<ParticleType> Type;
-        public List<UIBase> UVSets;
+        public List<UIParticleUVSet> UVSets;
         //==========================
         public UIBase Data;
         //========================
         List<UIBase> Tex;
         // ==================
-        UISplitView AnimationSplit;
-        UISplitView TexSplit;
+        UISplitView<UIBase> AnimationSplit;
+        UISplitView<UIBase> TexSplit;
         UIUVSetSplitView UVSplit;
 
         public UIParticle(AVFXParticle particle, UIParticleView view)
@@ -38,7 +38,7 @@ namespace VFXEditor.UI.VFX
             // =======================
             Animation = new List<UIBase>();
             Tex = new List<UIBase>();
-            UVSets = new List<UIBase>();
+            UVSets = new List<UIParticleUVSet>();
             //==========================
             Type = new UICombo<ParticleType>("Type", Particle.ParticleVariety, changeFunction: ChangeType);
             Attributes.Add(new UIInt("Loop Start", Particle.LoopStart));
@@ -142,8 +142,8 @@ namespace VFXEditor.UI.VFX
             Tex.Add(new UITextureDistortion(Particle.TD));
             Tex.Add(new UITexturePalette(Particle.TP));
             //=============================
-            AnimationSplit = new UISplitView( Animation );
-            TexSplit = new UISplitView( Tex );
+            AnimationSplit = new UISplitView<UIBase>( Animation );
+            TexSplit = new UISplitView<UIBase>( Tex );
             UVSplit = new UIUVSetSplitView( UVSets, this );
         }
         public void ChangeType(LiteralEnum<ParticleType> literal)

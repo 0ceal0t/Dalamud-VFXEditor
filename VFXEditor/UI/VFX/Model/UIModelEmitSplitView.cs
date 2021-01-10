@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModelEmitSplitView : UISplitView
+    public class UIModelEmitSplitView : UISplitView<UIModelEmitterVertex>
     {
         public UIModel Model;
-        public UIModelEmitSplitView( List<UIBase> items, UIModel model ) : base( items, true, leftSize:120 )
+        public UIModelEmitSplitView( List<UIModelEmitterVertex> items, UIModel model ) : base( items, true, leftSize:120 )
         {
             Model = model;
         }

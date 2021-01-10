@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UISplitView : UIBase
+    public class UISplitView<T> : UIBase where T : UIBase
     {
-        public List<UIBase> Items;
+        public List<T> Items;
         public bool NewButton;
         public UIBase SelectedItem = null;
         public int LeftSize;
 
-        public UISplitView(List<UIBase> items, bool newButton = false, int leftSize = 200)
+        public UISplitView(List<T> items, bool newButton = false, int leftSize = 200)
         {
             Items = items;
             NewButton = newButton;

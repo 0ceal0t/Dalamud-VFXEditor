@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITextureSplitView : UISplitView
+    public class UITextureSplitView : UISplitView<UITexture>
     {
         public UITextureView TextureView;
-        public UITextureSplitView( List<UIBase> items, UITextureView texView ) : base( items, true )
+        public UITextureSplitView( List<UITexture> items, UITextureView texView ) : base( items, true )
         {
             TextureView = texView;
         }

@@ -38,30 +38,11 @@ namespace VFXEditor
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
 
         [NonSerialized]
-        public string SavedLocation;
-        [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
 
         public void Initialize( DalamudPluginInterface pluginInterface, string writeLocation )
         {
             _pluginInterface = pluginInterface;
-            SavedLocation = Path.Combine(writeLocation, "saved");
-            Directory.CreateDirectory( SavedLocation );
-        }
-
-        public void AddSavedItem(string name, SavedItemType type, byte[] data ) {
-            var id = Guid.NewGuid().ToString( "N" );
-            AddSavedItem( id, name, type, data );
-        }
-        public void AddSavedItem(string id, string name, SavedItemType type, byte[] data ) {
-            string path = Path.Combine( SavedLocation, id + ".part.avfx" );
-            SavedItem item = new SavedItem();
-            item.Name = name;
-            item.Path = path;
-            item.Type = type;
-            File.WriteAllBytes( path, data );
-            SavedItems[id] = item;
-            Save();
         }
 
         public void AddRecent(VFXSelectResult result ) {

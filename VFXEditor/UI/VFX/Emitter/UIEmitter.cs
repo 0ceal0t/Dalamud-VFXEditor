@@ -15,10 +15,10 @@ namespace VFXEditor.UI.VFX
         //=======================
         public UICombo<EmitterType> Type;
         List<UIBase> Animation;
-        UISplitView AnimationSplit;
+        UISplitView<UIBase> AnimationSplit;
         //========================
-        public List<UIBase> Particles;
-        public List<UIBase> Emitters;
+        public List<UIEmitterItem> Particles;
+        public List<UIEmitterItem> Emitters;
         //========================
         public UIBase Data;
         //========================
@@ -36,8 +36,8 @@ namespace VFXEditor.UI.VFX
             base.Init();
             // =====================
             Animation = new List<UIBase>();
-            Particles = new List<UIBase>();
-            Emitters = new List<UIBase>();
+            Particles = new List<UIEmitterItem>();
+            Emitters = new List<UIEmitterItem>();
             //======================
             Type = new UICombo<EmitterType>("Type", Emitter.EmitterVariety, changeFunction: ChangeType);
             Attributes.Add( new UIString( "Sound", Emitter.Sound ) );
@@ -99,7 +99,7 @@ namespace VFXEditor.UI.VFX
                     break;
             }
             //=============================
-            AnimationSplit = new UISplitView( Animation );
+            AnimationSplit = new UISplitView<UIBase>( Animation );
             EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
             ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }

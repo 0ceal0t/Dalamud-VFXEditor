@@ -14,9 +14,9 @@ namespace VFXEditor.UI.VFX
         //====================
         public UICombo<BinderType> Type;
         public UIBase Data;
-        public List<UIBase> Properties;
+        public List<UIBinderProperties> Properties;
         //====================
-        public UISplitView PropSplit;
+        public UISplitView<UIBinderProperties> PropSplit;
 
         public UIBinder(AVFXBinder binder, UIBinderView view)
         {
@@ -28,7 +28,7 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             //=====================
-            Properties = new List<UIBase>();
+            Properties = new List<UIBinderProperties>();
             //====================
             Type = new UICombo<BinderType>("Type", Binder.BinderVariety, changeFunction:ChangeType);
             Attributes.Add(new UICheckbox("Start to Global Direction", Binder.StartToGlobalDirection));
@@ -69,7 +69,7 @@ namespace VFXEditor.UI.VFX
                     break;
             }
             //======================
-            PropSplit = new UISplitView( Properties );
+            PropSplit = new UISplitView<UIBinderProperties>( Properties );
         }
         public void ChangeType(LiteralEnum<BinderType> literal)
         {
