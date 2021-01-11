@@ -39,6 +39,14 @@ namespace VFXEditor.UI {
             }
         }
 
+        public override void Load() {
+            _plugin.Manager.LoadZones();
+        }
+
+        public override bool ReadyCheck() {
+            return _plugin.Manager.ZonesLoaded;
+        }
+
         public override bool SelectItem( XivZone item, out XivZoneSelected loadedItem ) {
             return _plugin.Manager.SelectZone( item, out loadedItem );
         }

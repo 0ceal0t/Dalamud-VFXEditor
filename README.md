@@ -42,35 +42,35 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 ## TODO
 - [ ] Properly fix literal int list
 - [ ] Save all particles, etc.
-- [ ] Better sidebar names to reflect target index
 - [ ] Save replacements(!)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
 - [ ] File loaded indication
-- [ ] Model 3D preview (is this even possible?)
+- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] Better key UI
 - [ ] Help text
-- [ ] Penumbra integration(??)
+- [ ] Penumbra webserver integration
 - [ ] GOTO button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
 - [ ] Cutscene VFX select
-- [ ] Emote VFX select
-- [ ] Equipment (not weapons) VFX select
 - [ ] Better error / log display
-- [ ] Open from equipped gear
+- [ ] Open from equipped weapon
 - [ ] Better TMB parsing
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Try on menu / equipment gpose
 - [ ] Maybe find a way to add custom names
+- [ ] Update README preview image
 
 ---
-
+- [x] ~~Better sidebar names to reflect target index~~
 - [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
 - [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~
-- [x] ~~Fix Penumbra folder select~~
+- [x] ~~Emote VFX select~~
+- [x] ~~Fix Penumbra folder select (kinda)~~
 - [x] ~~Fix expac textools export~~
 - [x] ~~Monster list(??)~~
 - [x] ~~Zone VFX select~~

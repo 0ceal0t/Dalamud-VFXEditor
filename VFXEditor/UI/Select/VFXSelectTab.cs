@@ -12,10 +12,11 @@ namespace VFXEditor.UI {
     public abstract class VFXSelectTab<T, S> {
         public Plugin _plugin;
         public VFXSelectDialog _dialog;
-        public string ParentId;
-        public string TabId;
         public List<T> Data;
         public string Id;
+
+        public string Name;
+        public string ParentId;
 
         public string SearchInput = "";
         public T SelectedZone = default(T);
@@ -24,9 +25,9 @@ namespace VFXEditor.UI {
         public VFXSelectTab( string parentId, string tabId, List<T> data, Plugin plugin, VFXSelectDialog dialog ) {
             _plugin = plugin;
             _dialog = dialog;
-            ParentId = parentId;
-            TabId = tabId;
             Data = data;
+            Name = tabId;
+            ParentId = parentId;
             Id = "##Select/" + tabId + "/" + parentId;
             // =====================
         }
@@ -35,11 +36,22 @@ namespace VFXEditor.UI {
         public abstract string UniqueRowTitle( T item );
         public abstract bool SelectItem( T item, out S loadedItem );
         public abstract void DrawSelected( S loadedItem );
+        public abstract void Load();
+        public abstract bool ReadyCheck();
 
         public virtual void DrawExtra() { }
 
         public List<T> SearchedZones;
         public void Draw() {
+            var ret = ImGui.BeginTabItem( Name + "##Select/" + ParentId );
+            if( !ret )
+                return;
+            Load();
+            if( !ReadyCheck() ) {
+                ImGui.EndTabItem();
+                return;
+            }
+            //
             if( SearchedZones == null ) { SearchedZones = new List<T>(); SearchedZones.AddRange( Data ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             bool ResetScroll = false;
@@ -86,6 +98,8 @@ namespace VFXEditor.UI {
                 }
             }
             ImGui.Columns( 1 );
+            //
+            ImGui.EndTabItem();
         }
     }
 }

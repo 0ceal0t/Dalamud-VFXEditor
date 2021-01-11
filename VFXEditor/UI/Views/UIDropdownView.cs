@@ -38,7 +38,7 @@ namespace VFXEditor.UI.VFX
 
         public override void Draw( string parentId = "" )
         {
-            bool validSelect = UIUtils.ViewSelect( id, defaultText, ref Selected, Options );
+            bool validSelect = ViewSelect( id, defaultText, ref Selected, Options );
             if( AllowNew )
             {
                 ImGui.SameLine();
@@ -82,14 +82,31 @@ namespace VFXEditor.UI.VFX
                 OnDraw( Selected );
             }
         }
-
+        // ========================
+        public static bool ViewSelect( string id, string defaultText, ref int Selected, string[] Options ) {
+            bool validSelect = ( Selected >= 0 && Selected < Options.Length );
+            var selectedString = validSelect ? Options[Selected] : defaultText;
+            if( ImGui.BeginCombo( "Select" + id, selectedString ) ) {
+                for( int i = 0; i < Options.Length; i++ ) {
+                    bool isSelected = ( Selected == i );
+                    if( ImGui.Selectable( Options[i] + id, isSelected ) ) {
+                        Selected = i;
+                    }
+                    if( isSelected ) {
+                        ImGui.SetItemDefaultFocus();
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            return validSelect;
+        }
         // ========= DIALOGS ==================
         public void Load()
         {
             Task.Run( async () => {
                 var picker = new OpenFileDialog
                 {
-                    Filter = "Partial AVFX (*.partvfx)|*.partvfx*|All files (*.*)|*.*",
+                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
                     Title = "Select a File Location.",
                     CheckFileExists = true
                 };
@@ -115,9 +132,9 @@ namespace VFXEditor.UI.VFX
             Task.Run( async () => {
                 var picker = new SaveFileDialog
                 {
-                    Filter = "Partial AVFX (*.partvfx)|*.partvfx*|All files (*.*)|*.*",
+                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
                     Title = "Select a Save Location.",
-                    DefaultExt = "partvfx",
+                    DefaultExt = "vfxedit",
                     AddExtension = true
                 };
                 var result = await picker.ShowDialogAsync();

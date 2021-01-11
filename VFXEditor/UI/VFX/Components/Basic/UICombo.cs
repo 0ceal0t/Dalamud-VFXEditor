@@ -18,7 +18,7 @@ namespace VFXEditor.UI.VFX
         public delegate void Change(LiteralEnum<T> literal);
         public Change ChangeFunction;
 
-        public UICombo(string id, LiteralEnum<T> literal, Change changeFunction = null)
+        public UICombo(string id, LiteralEnum<T> literal, Change changeFunction = null, string help = "" )
         {
             Id = id;
             Literal = literal;
@@ -28,8 +28,8 @@ namespace VFXEditor.UI.VFX
                 ChangeFunction = DoNothing;
             // =====================
             var stringValue = Literal.Value.ToString();
-            //ValueIdx = (int)(object)Literal.Value;
             ValueIdx = Array.IndexOf( Literal.Options, stringValue );
+            SetHelp( help );
         }
 
         public override void Draw(string id)
@@ -52,6 +52,7 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndCombo();
             }
+            DrawHelp();
         }
 
         public static void DoNothing(LiteralEnum<T> literal) { }

@@ -13,6 +13,9 @@ namespace VFXEditor.UI.VFX
         public List<UIBase> Attributes = new List<UIBase>();
         public int Idx;
 
+        public bool HasHelpText = false;
+        public string HelpText;
+
         public abstract void Draw(string parentId);
         public virtual void DrawBody( string parentId ) { }
         public virtual void DrawSelect(string parentId, ref UIBase selected  ) { }
@@ -43,6 +46,27 @@ namespace VFXEditor.UI.VFX
                 {
                     item.Draw( parentId );
                 }
+            }
+        }
+
+        public void SetHelp(string helpText ) {
+            if(helpText.Length > 0 ) {
+                HelpText = helpText;
+                HasHelpText = true;
+            }
+        }
+        public void DrawHelp() {
+            if( !HasHelpText ) return;
+            DrawHelpToolTip( HelpText );
+        }
+        // generic utility method
+        public static void DrawHelpToolTip(string text ) {
+            ImGui.SameLine();
+            ImGui.TextDisabled( "(?)" );
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+                ImGui.Text( text );
+                ImGui.EndTooltip();
             }
         }
     }

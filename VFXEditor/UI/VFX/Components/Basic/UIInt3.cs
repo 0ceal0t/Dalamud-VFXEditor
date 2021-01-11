@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
         public delegate void Change(LiteralInt literal1, LiteralInt literal2, LiteralInt literal3);
         public Change ChangeFunction;
 
-        public UIInt3(string id, LiteralInt literal1, LiteralInt literal2, LiteralInt literal3, Change changeFunction = null)
+        public UIInt3(string id, LiteralInt literal1, LiteralInt literal2, LiteralInt literal3, Change changeFunction = null, string help = "" )
         {
             Id = id;
             Literal1 = literal1;
@@ -34,6 +34,7 @@ namespace VFXEditor.UI.VFX
                 ChangeFunction = DoNothing;
             // =====================
             Value = new Vector3(Literal1.Value, Literal2.Value, Literal3.Value);
+            SetHelp( help );
         }
 
         public override void Draw(string id)
@@ -45,6 +46,7 @@ namespace VFXEditor.UI.VFX
                 Literal3.GiveValue((int)Value.Z);
                 ChangeFunction(Literal1, Literal2, Literal3);
             }
+            DrawHelp();
         }
 
         public static void DoNothing(LiteralInt literal1, LiteralInt literal2, LiteralInt literal3) { }

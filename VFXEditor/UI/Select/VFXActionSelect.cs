@@ -52,6 +52,24 @@ namespace VFXEditor.UI
             }
         }
 
+        public override void Load() {
+            if(Name == "Action" ) {
+                _plugin.Manager.LoadActions();
+            }
+            else {
+                _plugin.Manager.LoadNonPlayerActions();
+            }
+        }
+
+        public override bool ReadyCheck() {
+            if( Name == "Action" ) {
+                return _plugin.Manager.ActionsLoaded;
+            }
+            else {
+                return _plugin.Manager.NonPlayerActionsLoaded;
+            }
+        }
+
         public override bool SelectItem( XivActionBase item, out XivActionSelected loadedItem ) {
             return _plugin.Manager.SelectAction( item, out loadedItem );
         }

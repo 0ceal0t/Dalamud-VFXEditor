@@ -51,6 +51,14 @@ namespace VFXEditor.UI {
             }
         }
 
+        public override void Load() {
+            _plugin.Manager.LoadNpc();
+        }
+
+        public override bool ReadyCheck() {
+            return _plugin.Manager.NpcLoaded;
+        }
+
         public override bool SelectItem( XivNpc item, out XivNpcSelected loadedItem ) {
             return _plugin.Manager.SelectNpc( item, out loadedItem );
         }

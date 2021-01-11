@@ -36,6 +36,14 @@ namespace VFXEditor.UI {
             }
         }
 
+        public override void Load() {
+            _plugin.Manager.LoadEmote();
+        }
+
+        public override bool ReadyCheck() {
+            return _plugin.Manager.EmoteLoaded;
+        }
+
         public override bool SelectItem( XivEmote item, out XivEmoteSelected loadedItem ) {
             return _plugin.Manager.SelectEmote( item, out loadedItem );
         }

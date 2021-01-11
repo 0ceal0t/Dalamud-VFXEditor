@@ -93,6 +93,7 @@ namespace AVFXLib.Main
             "ColB",
             "ColE",
             "Wd",
+            "Wdt",
             "WdR",
             "WdB",
             "WdC",

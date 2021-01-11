@@ -57,6 +57,14 @@ namespace VFXEditor.UI
             }
         }
 
+        public override void Load() {
+            _plugin.Manager.LoadStatus();
+        }
+
+        public override bool ReadyCheck() {
+            return _plugin.Manager.StatusLoaded;
+        }
+
         public override bool SelectItem( XivStatus item, out XivStatus loadedItem ) {
             loadedItem = item;
             return true;

@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLaser : AVFXParticleData
     {
-        public AVFXCurve Width = new AVFXCurve("width", "Wd");
+        public AVFXCurve Width = new AVFXCurve("width", "Wdt");
         public AVFXCurve Length = new AVFXCurve("length", "Len");
 
 

@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
         public delegate void Change(LiteralString literal);
         public Change ChangeFunction;
 
-        public UIString(string id, LiteralString literal, Change changeFunction = null, int maxSizeBytes = 256)
+        public UIString(string id, LiteralString literal, Change changeFunction = null, int maxSizeBytes = 256, string help = "" )
         {
             Id = id;
             Literal = literal;
@@ -34,6 +34,7 @@ namespace VFXEditor.UI.VFX
                 ChangeFunction = changeFunction;
             else
                 ChangeFunction = DoNothing;
+            SetHelp( help );
         }
 
         public override void Draw(string id)
@@ -45,6 +46,7 @@ namespace VFXEditor.UI.VFX
                 Literal.GiveValue(Value.Trim('\0'));
                 ChangeFunction(Literal);
             }
+            DrawHelp();
         }
 
         public static void DoNothing(LiteralString literal) { }

@@ -10,28 +10,6 @@ namespace VFXEditor.UI.VFX
 {
     public class UIUtils
     {
-        public static bool ViewSelect(string id, string defaultText, ref int Selected, string[] Options)
-        {
-            bool validSelect = ( Selected >= 0 && Selected < Options.Length );
-            var selectedString = validSelect ? Options[Selected] : defaultText;
-            if( ImGui.BeginCombo( "Select" + id, selectedString ) )
-            {
-                for( int i = 0; i < Options.Length; i++ )
-                {
-                    bool isSelected = ( Selected == i );
-                    if( ImGui.Selectable( Options[i] + id, isSelected ) )
-                    {
-                        Selected = i;
-                    }
-                    if( isSelected )
-                    {
-                        ImGui.SetItemDefaultFocus();
-                    }
-                }
-                ImGui.EndCombo();
-            }
-            return validSelect;
-        }
         // =======================
         public static bool EnumComboBox(string label, string[] options, ref int choiceIdx)
         {

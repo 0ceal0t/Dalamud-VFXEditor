@@ -60,13 +60,13 @@ namespace VFXEditor.UI
         {
             _plugin = plugin;
             Id = id;
-            NonPlayerActionSelect = new VFXActionSelect( id, "GameNPAction", _plugin.Manager.NonPlayerActions, _plugin, this );
-            ActionSelect = new VFXActionSelect( id, "GameAction", _plugin.Manager.Actions, _plugin, this );
-            StatusSelect = new VFXStatusSelect( id, "GameStatus", _plugin.Manager.Status, _plugin, this );
-            ItemSelect = new VFXItemSelect( id, "GameItem", _plugin.Manager.Items, _plugin, this );
-            ZoneSelect = new VFXZoneSelect( id, "GameZone", _plugin.Manager.Zones, _plugin, this );
-            NpcSelect = new VFXNpcSelect( id, "GameNpc", _plugin.Manager.Npcs, _plugin, this );
-            EmoteSelect = new VFXEmoteSelect( id, "GameEmote", _plugin.Manager.Emotes, _plugin, this );
+            NonPlayerActionSelect = new VFXActionSelect( id, "Non-Player Action", _plugin.Manager.NonPlayerActions, _plugin, this );
+            ActionSelect = new VFXActionSelect( id, "Action", _plugin.Manager.Actions, _plugin, this );
+            StatusSelect = new VFXStatusSelect( id, "Status", _plugin.Manager.Status, _plugin, this );
+            ItemSelect = new VFXItemSelect( id, "Item", _plugin.Manager.Items, _plugin, this );
+            ZoneSelect = new VFXZoneSelect( id, "Zone", _plugin.Manager.Zones, _plugin, this );
+            NpcSelect = new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this );
+            EmoteSelect = new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
@@ -157,13 +157,13 @@ namespace VFXEditor.UI
             // ==========================
             ImGui.BeginTabBar( "GameSelectTabs##" + Id );
             DrawGamePath();
-            DrawGameItems();
-            DrawGameStatus();
-            DrawGameActions();
-            DrawGameNonPlayerActions();
-            DrawGameZones();
-            DrawGameNpc();
-            DrawGameEmote();
+            ItemSelect.Draw();
+            StatusSelect.Draw();
+            ActionSelect.Draw();
+            NonPlayerActionSelect.Draw();
+            ZoneSelect.Draw();
+            NpcSelect.Draw();
+            EmoteSelect.Draw();
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }
@@ -190,107 +190,6 @@ namespace VFXEditor.UI
 
             ImGui.EndTabItem();
         }
-
-        // =========== GAME ITEM =============
-        public void DrawGameItems()
-        {
-            var ret = ImGui.BeginTabItem( "Item##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadItems();
-            if( !_plugin.Manager.ItemsLoaded )
-            {
-                ImGui.EndTabItem();
-                return;
-            }
-            ItemSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME STATUS ================
-        public void DrawGameStatus()
-        {
-            var ret = ImGui.BeginTabItem( "Status##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadStatus();
-            if( !_plugin.Manager.StatusLoaded )
-            {
-                ImGui.EndTabItem();
-                return;
-            }
-            StatusSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME ACTIONS =============
-        public void DrawGameActions()
-        {
-            var ret = ImGui.BeginTabItem( "Action##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadActions();
-            if( !_plugin.Manager.ActionsLoaded )
-            {
-                ImGui.EndTabItem();
-                return;
-            }
-            ActionSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME NON PLAYER ACTIONS =============
-        public void DrawGameNonPlayerActions()
-        {
-            var ret = ImGui.BeginTabItem( "Non-Player Action##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadNonPlayerActions();
-            if( !_plugin.Manager.NonPlayerActionsLoaded )
-            {
-                ImGui.EndTabItem();
-                return;
-            }
-            NonPlayerActionSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME ZONES =============
-        public void DrawGameZones() {
-            var ret = ImGui.BeginTabItem( "Zone##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadZones();
-            if( !_plugin.Manager.ZonesLoaded ) {
-                ImGui.EndTabItem();
-                return;
-            }
-            ZoneSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME NPC =============
-        public void DrawGameNpc() {
-            var ret = ImGui.BeginTabItem( "NPC##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadNpc();
-            if( !_plugin.Manager.NpcLoaded ) {
-                ImGui.EndTabItem();
-                return;
-            }
-            NpcSelect.Draw();
-            ImGui.EndTabItem();
-        }
-        // =========== GAME EMOTE =============
-        public void DrawGameEmote() {
-            var ret = ImGui.BeginTabItem( "Emote##Select/" + Id );
-            if( !ret )
-                return;
-            _plugin.Manager.LoadEmote();
-            if( !_plugin.Manager.EmoteLoaded ) {
-                ImGui.EndTabItem();
-                return;
-            }
-            EmoteSelect.Draw();
-            ImGui.EndTabItem();
-        }
-
         // ======== RECENT ========
         public VFXSelectResult RecentSelected;
         public bool IsRecentSelected = false;
@@ -303,11 +202,9 @@ namespace VFXEditor.UI
 
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), false );
-
             int idx = 0;
             foreach(var item in _plugin.Configuration.RecentSelects )
             {
-                // skip local
                 if( item.Type == VFXSelectType.Local && !ShowLocal )
                     continue;
 
@@ -317,7 +214,6 @@ namespace VFXEditor.UI
                 }
                 idx++;
             }
-
             ImGui.EndChild();
             if( IsRecentSelected )
             {
