@@ -1,21 +1,19 @@
 # VFXEditor
-A VFX editor plugin for FINAL FANTASY XIV which runs inside of the game 
-
-[Wiki](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki) | [Troubleshooting](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting)
+A VFX editing plugin for Dalamud  ([Wiki](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki))
 
 <img align="center" src="docs/preview.png" width="700px">
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
-2. Enabled the plugins from the `/xlplugins` menu
-3. Once installed, open the window with `/vfxedit`
+2. Enable the plugins from the `/xlplugins` menu
+3. Once installed, open with `/vfxedit`
 
 ## Usage
 1. Select a "source" VFX (the effect you want to edit)
 2. Select a "replace" VFX (the effect to temporarily overwrite, can be the same as the source)
 3. Make any modifications you want, then press "Update"
 
-Having problems, 
+Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting)
 
 ## Building
 1. Build the solution
@@ -41,18 +39,18 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Properly fix literal int list
-- [ ] Save all particles, etc.
+- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] Save all particles at once, etc.
 - [ ] Save replacements(!)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
 - [ ] File loaded indication
-- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
-- [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
-- [ ] Better key UI
+- [ ] Better key UI (curve editor?)
 - [ ] Help text
 - [ ] Penumbra webserver integration
-- [ ] GOTO button
+- [ ] "Go To" button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
@@ -61,9 +59,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Open from equipped weapon
 - [ ] Better TMB parsing
 - [ ] Texture replacement with Penumbra/Textools
-- [ ] Try on menu / equipment gpose
-- [ ] Maybe find a way to add custom names
+- [ ] Update "try on" preview
 - [ ] Update README preview image
+- [ ] Auto-update npc csv file
 
 ---
 - [x] ~~Better sidebar names to reflect target index~~
