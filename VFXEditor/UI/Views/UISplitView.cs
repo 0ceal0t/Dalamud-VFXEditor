@@ -20,6 +20,12 @@ namespace VFXEditor.UI.VFX
             Items = items;
             NewButton = newButton;
             LeftSize = leftSize;
+            SetupIdx();
+        }
+        public void SetupIdx() {
+            for( int i = 0; i < Items.Count; i++ ) {
+                Items[i].Idx = i;
+            }
         }
 
         bool DrawOnce = false;
@@ -35,14 +41,14 @@ namespace VFXEditor.UI.VFX
             for(int idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 if( item.Assigned ) {
-                    item.DrawSelect( idx, parentId, ref SelectedItem );
+                    item.DrawSelect(parentId, ref SelectedItem );
                 }
             }
             // not assigned, can be added
             for( int idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 if( !item.Assigned )
-                    item.DrawSelect( idx, parentId, ref SelectedItem );
+                    item.DrawSelect(parentId, ref SelectedItem );
             }
             ImGui.EndChild();
             if( !DrawOnce ) {
@@ -61,13 +67,13 @@ namespace VFXEditor.UI.VFX
         }
 
         public void OnNew(T item ) {
+            item.Idx = Items.Count;
             Items.Add( item );
-            // TODO: fix IDX
         }
         public void OnDelete(T item ) {
             Items.Remove( item );
+            SetupIdx();
             SelectedItem = null;
-            // TODO: fix IDX
         }
 
         public virtual void DrawNewButton(string parentId ) { }

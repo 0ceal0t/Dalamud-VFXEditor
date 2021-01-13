@@ -54,11 +54,11 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+        public override void DrawSelect(string parentId, ref UIItem selected ) {
         }
 
-        public override string GetText( int idx ) {
-            return "Scheduler " + idx;
+        public override string GetText() {
+            return "Scheduler " + Idx;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace VFXEditor.UI.VFX
                 var item = new UIEffector( effector, this );
                 Items.Add( item );
             }
+            SetupIdx();
         }
 
         public override UIEffector OnNew() {

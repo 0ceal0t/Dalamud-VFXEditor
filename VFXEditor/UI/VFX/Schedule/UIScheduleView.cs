@@ -21,6 +21,7 @@ namespace VFXEditor.UI.VFX
                 var item = new UIScheduler( sched, this );
                 Items.Add( item );
             }
+            SetupIdx();
         }
 
         public override UIScheduler OnNew() { return null; }

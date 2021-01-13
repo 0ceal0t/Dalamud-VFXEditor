@@ -31,6 +31,11 @@ namespace VFXEditor.UI.VFX
             Selected = null;
             Items = new List<T>();
         }
+        public void SetupIdx() {
+            for(int i = 0; i < Items.Count; i++ ) {
+                Items[i].Idx = i;
+            }
+        }
 
         public abstract T OnNew();
         public abstract void OnDelete( T item );
@@ -72,7 +77,7 @@ namespace VFXEditor.UI.VFX
                 {
                     OnDelete( Selected );
                     Items.Remove( Selected );
-                    // TODO: fix IDX
+                    SetupIdx();
                     Selected = null;
                 }
             }
@@ -84,16 +89,16 @@ namespace VFXEditor.UI.VFX
             }
         }
         public void AddItem(T item ) {
+            item.Idx = Items.Count;
             Items.Add( item );
-            // TODO: fix IDX
         }
         // ========================
         public void ViewSelect() {
-            var selectedString = (Selected != null) ? Selected.GetText(Items.IndexOf(Selected)) : defaultText;
+            var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
             if( ImGui.BeginCombo( "Select" + id, selectedString ) ) {
                 for( int idx = 0; idx < Items.Count; idx++ ) {
                     var item = Items[idx];
-                    if( ImGui.Selectable( item.GetText(idx) + id, Selected == item ) ) {
+                    if( ImGui.Selectable( item.GetText() + id, Selected == item ) ) {
                         Selected = item;
                     }
                 }

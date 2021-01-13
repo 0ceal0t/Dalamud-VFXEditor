@@ -18,9 +18,9 @@ namespace VFXEditor.UI.VFX
             AVFX = avfx;
             //===============
             foreach( var particle in AVFX.Particles ) {
-                var item = new UIParticle( particle, this );
-                Items.Add( item );
+                Items.Add( new UIParticle( particle, this ) );
             }
+            SetupIdx();
         }
 
         public override UIParticle OnNew() {

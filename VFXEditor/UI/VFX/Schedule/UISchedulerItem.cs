@@ -27,9 +27,9 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIInt( "Timeline Index", Item.TimelineIdx ) );
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
-            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
             {
                 selected = this;
             }
@@ -49,8 +49,8 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText( int idx ) {
-            return idx + ": Timeline " + Item.TimelineIdx.Value;
+        public override string GetText() {
+            return Idx + ": Timeline " + Item.TimelineIdx.Value;
         }
     }
 }

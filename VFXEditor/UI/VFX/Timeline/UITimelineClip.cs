@@ -78,14 +78,14 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
-            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) ) {
+        public override void DrawSelect( string parentId, ref UIItem selected ) {
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
                 selected = this;
             }
         }
 
-        public override string GetText(int idx) {
-            return idx + ": " + IdOptions[Clip.UniqueId];
+        public override string GetText() {
+            return Idx + ": " + IdOptions[Clip.UniqueId];
         }
     }
 }

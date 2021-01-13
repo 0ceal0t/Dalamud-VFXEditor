@@ -16,13 +16,8 @@ namespace VFXEditor.UI.VFX
         public UIParticleDataPolygon(AVFXParticleDataPolygon data)
         {
             Data = data;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=======================
-            Attributes.Add(new UICurve(Data.Count, "count"));
+            Attributes.Add( new UICurve( Data.Count, "count" ) );
         }
 
         public override void Draw(string parentId)

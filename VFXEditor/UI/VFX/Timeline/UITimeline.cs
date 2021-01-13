@@ -70,11 +70,11 @@ namespace VFXEditor.UI.VFX
             ImGui.EndChild();
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+        public override void DrawSelect( string parentId, ref UIItem selected ) {
         }
 
-        public override string GetText(int idx) {
-            return "Timeline " + idx;
+        public override string GetText() {
+            return "Timeline " + Idx;
         }
     }
 }

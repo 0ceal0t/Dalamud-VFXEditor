@@ -112,11 +112,11 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+        public override void DrawSelect(string parentId, ref UIItem selected ) {
         }
 
-        public override string GetText( int idx ) {
-            return "Binder " + idx + "(" + Binder.BinderVariety.stringValue() + ")";
+        public override string GetText() {
+            return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
         }
     }
 }

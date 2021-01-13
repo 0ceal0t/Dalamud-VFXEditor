@@ -21,6 +21,7 @@ namespace VFXEditor.UI.VFX
                 var item = new UIEmitter( emitter, this );
                 Items.Add( item );
             }
+            SetupIdx();
         }
 
         public override UIEmitter OnNew() {

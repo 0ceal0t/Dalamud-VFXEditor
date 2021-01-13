@@ -49,9 +49,9 @@ namespace VFXEditor.UI.VFX
         }
         
         // =========== DRAW ==============
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
-            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
             {
                 selected = this;
             }
@@ -77,9 +77,9 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText( int idx ) {
+        public override string GetText() {
             string Type = IsParticle ? "Particle" : "Emitter";
-            return idx + ": " + Type + " " + Iteration.TargetIdx.Value;
+            return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }
     }
 }

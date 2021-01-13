@@ -16,15 +16,10 @@ namespace VFXEditor.UI.VFX
         public UIParticleDataPowder(AVFXParticleDataPowder data)
         {
             Data = data;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=======================
-            Attributes.Add(new UICombo<DirectionalLightType>("Directional Light Type", Data.DirectionalLightType));
-            Attributes.Add(new UICheckbox("Is Lightning", Data.IsLightning));
-            Attributes.Add(new UIFloat("Model Index", Data.CenterOffset));
+            Attributes.Add( new UICombo<DirectionalLightType>( "Directional Light Type", Data.DirectionalLightType ) );
+            Attributes.Add( new UICheckbox( "Is Lightning", Data.IsLightning ) );
+            Attributes.Add( new UIFloat( "Model Index", Data.CenterOffset ) );
         }
 
         public override void Draw(string parentId)

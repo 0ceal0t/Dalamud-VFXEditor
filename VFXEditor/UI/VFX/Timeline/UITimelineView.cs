@@ -18,9 +18,9 @@ namespace VFXEditor.UI.VFX
             AVFX = avfx;
             // ==============
             foreach( var timeline in AVFX.Timelines ) {
-                var item = new UITimeline( timeline, this );
-                Items.Add( item );
+                Items.Add( new UITimeline( timeline, this ) );
             }
+            SetupIdx();
         }
 
         public override UITimeline OnNew()

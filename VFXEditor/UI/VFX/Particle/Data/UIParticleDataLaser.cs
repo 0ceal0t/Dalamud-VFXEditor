@@ -16,14 +16,9 @@ namespace VFXEditor.UI.VFX
         public UIParticleDataLaser(AVFXParticleDataLaser data)
         {
             Data = data;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=======================
-            Attributes.Add(new UICurve(Data.Width, "Width"));
-            Attributes.Add(new UICurve(Data.Length, "Length"));
+            Attributes.Add( new UICurve( Data.Width, "Width" ) );
+            Attributes.Add( new UICurve( Data.Length, "Length" ) );
         }
 
         public override void Draw(string parentId)

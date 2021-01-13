@@ -35,9 +35,9 @@ namespace VFXEditor.UI.VFX
                 _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
             }
         }
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
-            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
             {
                 selected = this;
             }
@@ -120,8 +120,8 @@ namespace VFXEditor.UI.VFX
             literal.GiveValue(literal.Value + "\u0000");
         }
 
-        public override string GetText( int idx ) {
-            return "Texture " + idx;
+        public override string GetText() {
+            return "Texture " + Idx;
         }
     }
 }

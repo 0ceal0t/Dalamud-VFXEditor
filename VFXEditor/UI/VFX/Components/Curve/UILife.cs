@@ -35,7 +35,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
             if( ImGui.Selectable( "Life" + parentId, selected == this ) )
             {
@@ -49,7 +49,7 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText( int idx ) {
+        public override string GetText() {
             return "Life";
         }
     }

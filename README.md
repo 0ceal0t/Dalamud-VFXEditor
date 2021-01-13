@@ -32,10 +32,6 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 * Import and export models
 * Export as `.avfx` or Textools Modpack
 
-```
-idx
-```
-
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 

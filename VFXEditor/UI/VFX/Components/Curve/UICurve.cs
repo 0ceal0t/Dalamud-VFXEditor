@@ -57,7 +57,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
             if( !Assigned )
             {
@@ -100,13 +100,12 @@ namespace VFXEditor.UI.VFX
                 if( ImGui.Button( "+ Key" + id ) )
                 {
                     Keys.Add( new UIKey( Curve.addKey(), this, Color ) );
-                    // TODO: fix idx
                 }
                 ImGui.TreePop();
             }
         }
 
-        public override string GetText( int idx ) {
+        public override string GetText() {
             return Name;
         }
     }
@@ -139,7 +138,6 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Curve.removeKey(Key);
                 Curve.Keys.Remove( this );
-                // TODO: fix IDX
                 return;
             }
             if (ImGui.InputInt("Time" + id, ref Time))

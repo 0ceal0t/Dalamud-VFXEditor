@@ -16,16 +16,11 @@ namespace VFXEditor.UI.VFX
         public UIParticleDataLine( AVFXParticleDataLine data )
         {
             Data = data;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=======================
             Attributes.Add( new UIInt( "Line Count", Data.LineCount ) );
-            Attributes.Add( new UICurve( Data.Length, "Length") );
-            Attributes.Add( new UICurveColor( Data.ColorBegin, "Color Begin") );
-            Attributes.Add( new UICurveColor( Data.ColorEnd, "Color End") );
+            Attributes.Add( new UICurve( Data.Length, "Length" ) );
+            Attributes.Add( new UICurveColor( Data.ColorBegin, "Color Begin" ) );
+            Attributes.Add( new UICurveColor( Data.ColorEnd, "Color End" ) );
         }
 
         public override void Draw( string parentId )

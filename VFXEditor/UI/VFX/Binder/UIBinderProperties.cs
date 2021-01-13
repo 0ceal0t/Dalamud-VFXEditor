@@ -40,7 +40,7 @@ namespace VFXEditor.UI.VFX
         }
 
         // =========== DRAW =====================
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
             if( !Assigned )
             {
@@ -71,7 +71,7 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText( int idx ) {
+        public override string GetText() {
             return Name;
         }
     }

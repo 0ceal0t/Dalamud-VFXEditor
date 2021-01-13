@@ -25,9 +25,9 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UICurve( UVSet.RotRandom, "Rotation Random" ) );
         }
 
-        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
+        public override void DrawSelect(string parentId, ref UIItem selected )
         {
-            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
             {
                 selected = this;
             }
@@ -44,8 +44,8 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText( int idx ) {
-            return "UV " + idx;
+        public override string GetText() {
+            return "UV " + Idx;
         }
     }
 }

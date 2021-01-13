@@ -21,6 +21,7 @@ namespace VFXEditor.UI.VFX
                 var item = new UIBinder( binder, this );
                 Items.Add( item );
             }
+            SetupIdx();
         }
         public override UIBinder OnNew() {
             return new UIBinder(AVFX.addBinder(), this);
