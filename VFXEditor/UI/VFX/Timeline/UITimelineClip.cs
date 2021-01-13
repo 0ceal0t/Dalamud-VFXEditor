@@ -24,15 +24,10 @@ namespace VFXEditor.UI.VFX
         {
             Clip = clip;
             Timeline = timeline;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=====================
             UniqueId = Clip.UniqueId;
-            UnknownInts = new Vector4(Clip.UnknownInts[0], Clip.UnknownFloats[1], Clip.UnknownInts[2], Clip.UnknownInts[3]);
-            UnknownFloats = new Vector4(Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3]);
+            UnknownInts = new Vector4( Clip.UnknownInts[0], Clip.UnknownFloats[1], Clip.UnknownInts[2], Clip.UnknownInts[3] );
+            UnknownFloats = new Vector4( Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3] );
         }
 
         public static Dictionary<string, string> IdOptions = new Dictionary<string, string>()

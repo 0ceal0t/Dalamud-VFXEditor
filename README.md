@@ -34,7 +34,6 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 
 ```
 idx
-add + delete without init
 ```
 
 ## Contributing

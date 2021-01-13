@@ -24,26 +24,20 @@ namespace VFXEditor.UI.VFX
         {
             Timeline = timeline;
             View = view;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
+            //===============
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
             //========================
-            Attributes.Add(new UIInt("Loop Start", Timeline.LoopStart));
-            Attributes.Add(new UIInt("Loop End", Timeline.LoopEnd));
-            Attributes.Add(new UIInt("Binder Index", Timeline.BinderIdx));
+            Attributes.Add( new UIInt( "Loop Start", Timeline.LoopStart ) );
+            Attributes.Add( new UIInt( "Loop End", Timeline.LoopEnd ) );
+            Attributes.Add( new UIInt( "Binder Index", Timeline.BinderIdx ) );
             //========================
-            foreach (var item in Timeline.Items)
-            {
-                Items.Add(new UITimelineItem(item, this));
+            foreach( var item in Timeline.Items ) {
+                Items.Add( new UITimelineItem( item, this ) );
             }
             //==========================
-            foreach (var clip in Timeline.Clips)
-            {
-                Clips.Add(new UITimelineClip(clip, this));
+            foreach( var clip in Timeline.Clips ) {
+                Clips.Add( new UITimelineClip( clip, this ) );
             }
             //==========================
             ClipSplit = new UITimelineClipSplitView( Clips, this );

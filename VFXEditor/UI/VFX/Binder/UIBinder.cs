@@ -22,59 +22,56 @@ namespace VFXEditor.UI.VFX
         {
             Binder = binder;
             View = view;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //=====================
             Properties = new List<UIBinderProperties>();
             //====================
-            Type = new UICombo<BinderType>("Type", Binder.BinderVariety, changeFunction:ChangeType);
-            Attributes.Add(new UICheckbox("Start to Global Direction", Binder.StartToGlobalDirection));
-            Attributes.Add(new UICheckbox("VFX Scale", Binder.VfxScaleEnabled));
-            Attributes.Add(new UIFloat("VFX Scale Bias", Binder.VfxScaleBias));
-            Attributes.Add(new UICheckbox("VFX Scale Depth Offset", Binder.VfxScaleDepthOffset));
-            Attributes.Add(new UICheckbox("VFX Scale Interpolation", Binder.VfxScaleInterpolation));
-            Attributes.Add(new UICheckbox("Transform Scale", Binder.TransformScale));
-            Attributes.Add(new UICheckbox("Transform Scale Depth Offset", Binder.TransformScaleDepthOffset));
-            Attributes.Add(new UICheckbox("Transform Scale Interpolation", Binder.TransformScaleInterpolation));
-            Attributes.Add(new UICheckbox("Following Target Orientation", Binder.FollowingTargetOrientation));
-            Attributes.Add(new UICheckbox("Document Scale Enabled", Binder.DocumentScaleEnabled));
-            Attributes.Add(new UICheckbox("Adjust to Screen", Binder.AdjustToScreenEnabled));
-            Attributes.Add(new UIInt("Life", Binder.Life));
-            Attributes.Add(new UICombo<BinderRotation>("Binder Rotation Type", Binder.BinderRotationType));
+            Type = new UICombo<BinderType>( "Type", Binder.BinderVariety, changeFunction: ChangeType );
+            Attributes.Add( new UICheckbox( "Start to Global Direction", Binder.StartToGlobalDirection ) );
+            Attributes.Add( new UICheckbox( "VFX Scale", Binder.VfxScaleEnabled ) );
+            Attributes.Add( new UIFloat( "VFX Scale Bias", Binder.VfxScaleBias ) );
+            Attributes.Add( new UICheckbox( "VFX Scale Depth Offset", Binder.VfxScaleDepthOffset ) );
+            Attributes.Add( new UICheckbox( "VFX Scale Interpolation", Binder.VfxScaleInterpolation ) );
+            Attributes.Add( new UICheckbox( "Transform Scale", Binder.TransformScale ) );
+            Attributes.Add( new UICheckbox( "Transform Scale Depth Offset", Binder.TransformScaleDepthOffset ) );
+            Attributes.Add( new UICheckbox( "Transform Scale Interpolation", Binder.TransformScaleInterpolation ) );
+            Attributes.Add( new UICheckbox( "Following Target Orientation", Binder.FollowingTargetOrientation ) );
+            Attributes.Add( new UICheckbox( "Document Scale Enabled", Binder.DocumentScaleEnabled ) );
+            Attributes.Add( new UICheckbox( "Adjust to Screen", Binder.AdjustToScreenEnabled ) );
+            Attributes.Add( new UIInt( "Life", Binder.Life ) );
+            Attributes.Add( new UICombo<BinderRotation>( "Binder Rotation Type", Binder.BinderRotationType ) );
             //=============================
-            Properties.Add(new UIBinderProperties("Properties Start", Binder.PropStart));
+            Properties.Add( new UIBinderProperties( "Properties Start", Binder.PropStart ) );
             Properties.Add( new UIBinderProperties( "Properties 1", Binder.Prop1 ) );
             Properties.Add( new UIBinderProperties( "Properties 2", Binder.Prop2 ) );
-            Properties.Add(new UIBinderProperties("Properties Goal", Binder.PropGoal));
+            Properties.Add( new UIBinderProperties( "Properties Goal", Binder.PropGoal ) );
             //======================
-            switch (Binder.BinderVariety.Value)
-            {
+            SetType();
+            //======================
+            PropSplit = new UISplitView<UIBinderProperties>( Properties );
+        }
+        public void SetType() {
+            switch( Binder.BinderVariety.Value ) {
                 case BinderType.Point:
-                    Data = new UIBinderDataPoint((AVFXBinderDataPoint)Binder.Data);
+                    Data = new UIBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data );
                     break;
                 case BinderType.Linear:
-                    Data = new UIBinderDataLinear((AVFXBinderDataLinear)Binder.Data);
+                    Data = new UIBinderDataLinear( ( AVFXBinderDataLinear )Binder.Data );
                     break;
                 case BinderType.Spline:
-                    Data = new UIBinderDataSpline((AVFXBinderDataSpline)Binder.Data);
+                    Data = new UIBinderDataSpline( ( AVFXBinderDataSpline )Binder.Data );
                     break;
                 case BinderType.Camera:
-                    Data = new UIBinderDataCamera((AVFXBinderDataCamera)Binder.Data);
+                    Data = new UIBinderDataCamera( ( AVFXBinderDataCamera )Binder.Data );
                     break;
                 default:
                     Data = null;
                     break;
             }
-            //======================
-            PropSplit = new UISplitView<UIBinderProperties>( Properties );
         }
         public void ChangeType(LiteralEnum<BinderType> literal)
         {
             Binder.SetVariety(literal.Value);
-            Init();
+            SetType();
         }
 
         private void DrawParameters( string id )

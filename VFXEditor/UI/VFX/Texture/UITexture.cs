@@ -21,24 +21,17 @@ namespace VFXEditor.UI.VFX
         public UIString Path;
 
         public Plugin _plugin;
-        // =======================
 
         public UITexture(AVFXTexture texture, UITextureView view, Plugin plugin)
         {
             Texture = texture;
             View = view;
             _plugin = plugin;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             // ================
             UIString.Change bytesToPath = BytesToPath;
-            Path = new UIString("Path", Texture.Path, changeFunction: bytesToPath);
+            Path = new UIString( "Path", Texture.Path, changeFunction: bytesToPath );
             lastValue = Texture.Path.Value;
-            if( _plugin.Configuration.PreviewTextures )
-            {
+            if( _plugin.Configuration.PreviewTextures ) {
                 _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
             }
         }

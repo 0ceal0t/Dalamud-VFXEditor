@@ -27,8 +27,7 @@ namespace VFXEditor.UI.VFX
             defaultText = _defaultText;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
-        }
-        public override void Init() {
+            // ===============
             Selected = null;
             Items = new List<T>();
         }

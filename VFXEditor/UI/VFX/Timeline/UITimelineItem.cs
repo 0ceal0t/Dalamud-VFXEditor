@@ -21,20 +21,15 @@ namespace VFXEditor.UI.VFX
         {
             Item = item;
             Timeline = timeline;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             //==================
-            Attributes.Add(new UICheckbox("Enabled", Item.Enabled));
-            Attributes.Add(new UIInt("Start Time", Item.StartTime));
-            Attributes.Add(new UIInt("End Time", Item.EndTime));
-            Attributes.Add(new UIInt("Binder Index", Item.BinderIdx));
-            Attributes.Add(new UIInt("Effector Index", Item.EffectorIdx));
-            Attributes.Add(new UIInt("Emitter Index", Item.EmitterIdx));
-            Attributes.Add(new UIInt("Platform", Item.Platform));
-            ClipNumber = new UIInt("ClipNumber", Item.ClipNumber);
+            Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
+            Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );
+            Attributes.Add( new UIInt( "End Time", Item.EndTime ) );
+            Attributes.Add( new UIInt( "Binder Index", Item.BinderIdx ) );
+            Attributes.Add( new UIInt( "Effector Index", Item.EffectorIdx ) );
+            Attributes.Add( new UIInt( "Emitter Index", Item.EmitterIdx ) );
+            Attributes.Add( new UIInt( "Platform", Item.Platform ) );
+            ClipNumber = new UIInt( "ClipNumber", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.Assigned;
         }
 

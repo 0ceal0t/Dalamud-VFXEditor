@@ -16,12 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIBinderView(AVFXBase avfx) : base( "##BIND", "Select a Binder" )
         {
             AVFX = avfx;
-            Init();
-        }
-
-        public override void Init()
-        {
-            base.Init();
+            //==================
             foreach( var binder in AVFX.Binders ) {
                 var item = new UIBinder( binder, this );
                 Items.Add( item );

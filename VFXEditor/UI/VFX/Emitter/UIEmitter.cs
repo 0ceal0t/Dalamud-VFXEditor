@@ -29,64 +29,63 @@ namespace VFXEditor.UI.VFX
         {
             Emitter = emitter;
             View = view;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             // =====================
             Animation = new List<UIItem>();
             Particles = new List<UIEmitterItem>();
             Emitters = new List<UIEmitterItem>();
             //======================
-            Type = new UICombo<EmitterType>("Type", Emitter.EmitterVariety, changeFunction: ChangeType);
+            Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, changeFunction: ChangeType );
             Attributes.Add( new UIString( "Sound", Emitter.Sound ) );
-            Attributes.Add(new UIInt("Sound Index", Emitter.SoundNumber));
-            Attributes.Add(new UIInt("Loop Start", Emitter.LoopStart));
-            Attributes.Add(new UIInt("Loop End", Emitter.LoopEnd));
-            Attributes.Add(new UIInt("Child Limit", Emitter.ChildLimit));
-            Attributes.Add(new UIInt("Effector Index", Emitter.EffectorIdx));
-            Attributes.Add(new UICheckbox("Any Direction", Emitter.AnyDirection));
-            Attributes.Add(new UICombo<RotationDirectionBase>("Rotation Direction Base", Emitter.RotationDirectionBaseType));
-            Attributes.Add(new UICombo<CoordComputeOrder>("Coordinate Compute Order", Emitter.CoordComputeOrderType));
-            Attributes.Add(new UICombo<RotationOrder>("Rotation Order", Emitter.RotationOrderType));
+            Attributes.Add( new UIInt( "Sound Index", Emitter.SoundNumber ) );
+            Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
+            Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
+            Attributes.Add( new UIInt( "Child Limit", Emitter.ChildLimit ) );
+            Attributes.Add( new UIInt( "Effector Index", Emitter.EffectorIdx ) );
+            Attributes.Add( new UICheckbox( "Any Direction", Emitter.AnyDirection ) );
+            Attributes.Add( new UICombo<RotationDirectionBase>( "Rotation Direction Base", Emitter.RotationDirectionBaseType ) );
+            Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ) );
+            Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType ) );
             // ==========================
-            Animation.Add(new UILife(Emitter.Life));
-            Animation.Add(new UICurve(Emitter.CreateCount, "Create Count"));
-            Animation.Add(new UICurve(Emitter.CreateInterval, "Create Interval"));
-            Animation.Add(new UICurve(Emitter.CreateIntervalRandom, "Create Interval Random"));
-            Animation.Add(new UICurve(Emitter.Gravity, "Gravity"));
-            Animation.Add(new UICurve(Emitter.GravityRandom, "Gravity Random"));
-            Animation.Add(new UICurve(Emitter.AirResistance, "Air Resistance"));
-            Animation.Add(new UICurve(Emitter.AirResistanceRandom, "Air Resistance Random"));
-            Animation.Add(new UICurveColor(Emitter.Color, "Color"));
-            Animation.Add(new UICurve3Axis(Emitter.Position, "Position"));
-            Animation.Add(new UICurve3Axis(Emitter.Rotation, "Rotation"));
-            Animation.Add(new UICurve3Axis(Emitter.Scale, "Scale"));
+            Animation.Add( new UILife( Emitter.Life ) );
+            Animation.Add( new UICurve( Emitter.CreateCount, "Create Count" ) );
+            Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval" ) );
+            Animation.Add( new UICurve( Emitter.CreateIntervalRandom, "Create Interval Random" ) );
+            Animation.Add( new UICurve( Emitter.Gravity, "Gravity" ) );
+            Animation.Add( new UICurve( Emitter.GravityRandom, "Gravity Random" ) );
+            Animation.Add( new UICurve( Emitter.AirResistance, "Air Resistance" ) );
+            Animation.Add( new UICurve( Emitter.AirResistanceRandom, "Air Resistance Random" ) );
+            Animation.Add( new UICurveColor( Emitter.Color, "Color" ) );
+            Animation.Add( new UICurve3Axis( Emitter.Position, "Position" ) );
+            Animation.Add( new UICurve3Axis( Emitter.Rotation, "Rotation" ) );
+            Animation.Add( new UICurve3Axis( Emitter.Scale, "Scale" ) );
             //========================
-            foreach(var particle in Emitter.Particles)
-            {
-                Particles.Add(new UIEmitterItem(particle, true, this));
+            foreach( var particle in Emitter.Particles ) {
+                Particles.Add( new UIEmitterItem( particle, true, this ) );
             }
             //============================
-            foreach (var emitter in Emitter.Emitters)
-            {
-                Emitters.Add(new UIEmitterItem(emitter, false, this));
+            foreach( var e in Emitter.Emitters ) {
+                Emitters.Add( new UIEmitterItem( e, false, this ) );
             }
             //=======================
-            switch (Emitter.EmitterVariety.Value)
-            {
+            SetType();
+            //=============================
+            AnimationSplit = new UISplitView<UIItem>( Animation );
+            EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
+            ParticleSplit = new UIEmitterSplitView( Particles, this, true );
+        }
+        public void SetType() {
+            switch( Emitter.EmitterVariety.Value ) {
                 case EmitterType.Point:
                     Data = null;
                     break;
                 case EmitterType.SphereModel:
-                    Data = new UIEmitterDataSphereModel((AVFXEmitterDataSphereModel)Emitter.Data);
+                    Data = new UIEmitterDataSphereModel( ( AVFXEmitterDataSphereModel )Emitter.Data );
                     break;
                 case EmitterType.CylinderModel:
-                    Data = new UIEmitterDataCylinderModel((AVFXEmitterDataCylinderModel)Emitter.Data);
+                    Data = new UIEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data );
                     break;
                 case EmitterType.Model:
-                    Data = new UIEmitterDataModel((AVFXEmitterDataModel)Emitter.Data);
+                    Data = new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data );
                     break;
                 case EmitterType.Cone:
                     Data = new UIEmitterDataCone( ( AVFXEmitterDataCone )Emitter.Data );
@@ -98,15 +97,11 @@ namespace VFXEditor.UI.VFX
                     Data = null;
                     break;
             }
-            //=============================
-            AnimationSplit = new UISplitView<UIItem>( Animation );
-            EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
-            ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }
         public void ChangeType(LiteralEnum<EmitterType> literal)
         {
             Emitter.SetVariety(literal.Value);
-            Init();
+            SetType();
         }
 
         private void DrawParameters( string id )

@@ -19,15 +19,10 @@ namespace VFXEditor.UI.VFX
         {
             AVFX = avfx;
             _plugin = plugin;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
+            // ==========
             Textures = new List<UITexture>();
-            foreach (var texture in AVFX.Textures)
-            {
-                Textures.Add(new UITexture(texture, this, _plugin));
+            foreach( var texture in AVFX.Textures ) {
+                Textures.Add( new UITexture( texture, this, _plugin ) );
             }
             TexSplit = new UITextureSplitView( Textures, this );
         }

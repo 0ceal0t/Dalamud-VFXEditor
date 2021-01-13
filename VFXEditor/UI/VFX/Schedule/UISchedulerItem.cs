@@ -21,20 +21,12 @@ namespace VFXEditor.UI.VFX
             Item = item;
             Sched = sched;
             Name = name;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             // ============================
-            Attributes.Add(new UICheckbox("Enabled", Item.Enabled));
-            Attributes.Add(new UIInt("Start Time", Item.StartTime));
-            Attributes.Add(new UIInt("Timeline Index", Item.TimelineIdx));
+            Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
+            Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );
+            Attributes.Add( new UIInt( "Timeline Index", Item.TimelineIdx ) );
         }
 
-        public override void Draw( string parentId )
-        {
-        }
         public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )

@@ -23,20 +23,13 @@ namespace VFXEditor.UI.VFX
             Model = model;
             View = view;
             //===============
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             EmitterVerts = new List<UIModelEmitterVertex>();
-            for(int i = 0; i < Math.Min(Model.VNums.Count, Model.EmitVertices.Count); i++ )
-            {
+            for( int i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
         }
 
-        // ============== DRAW ===============
         public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )

@@ -34,16 +34,18 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("Loop Start", Effector.LoopPointStart));
             Attributes.Add(new UIInt("Loop End", Effector.LoopPointEnd));
             //=======================
-            switch (Effector.EffectorVariety.Value)
-            {
+            SetType();
+        }
+        public void SetType() {
+            switch( Effector.EffectorVariety.Value ) {
                 case EffectorType.PointLight:
-                    Data = new UIEffectorDataPointLight((AVFXEffectorDataPointLight)Effector.Data);
+                    Data = new UIEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data );
                     break;
                 case EffectorType.RadialBlur:
-                    Data = new UIEffectorDataRadialBlur((AVFXEffectorDataRadialBlur)Effector.Data);
+                    Data = new UIEffectorDataRadialBlur( ( AVFXEffectorDataRadialBlur )Effector.Data );
                     break;
                 case EffectorType.CameraQuake:
-                    Data = new UIEffectorDataCameraQuake((AVFXEffectorDataCameraQuake)Effector.Data);
+                    Data = new UIEffectorDataCameraQuake( ( AVFXEffectorDataCameraQuake )Effector.Data );
                     break;
                 case EffectorType.DirectionalLight:
                     Data = new UIEffectorDataDirectionalLight( ( AVFXEffectorDataDirectionalLight )Effector.Data );
@@ -56,7 +58,7 @@ namespace VFXEditor.UI.VFX
         public void ChangeType(LiteralEnum<EffectorType> literal)
         {
             Effector.SetVariety(literal.Value);
-            Init();
+            SetType();
         }
 
         private void DrawParameters( string id )

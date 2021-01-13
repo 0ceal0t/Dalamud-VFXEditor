@@ -16,13 +16,8 @@ namespace VFXEditor.UI.VFX
         public UITimelineView(AVFXBase avfx) : base( "##TIME", "Select a Timeline" )
         {
             AVFX = avfx;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
-            foreach( var timeline in AVFX.Timelines )
-            {
+            // ==============
+            foreach( var timeline in AVFX.Timelines ) {
                 var item = new UITimeline( timeline, this );
                 Items.Add( item );
             }

@@ -16,11 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIEmitterView(AVFXBase avfx) : base( "##EMIT", "Select an Emitter" )
         {
             AVFX = avfx;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
+            //=============
             foreach( var emitter in AVFX.Emitters ) {
                 var item = new UIEmitter( emitter, this );
                 Items.Add( item );

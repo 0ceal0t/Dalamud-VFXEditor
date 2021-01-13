@@ -22,23 +22,16 @@ namespace VFXEditor.UI.VFX
         {
             Scheduler = scheduler;
             View = view;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
             // ===================
             Items = new List<UISchedulerItem>();
             Triggers = new List<UISchedulerItem>();
             // =====================
-            foreach (var Item in Scheduler.Items)
-            {
-                Items.Add(new UISchedulerItem(Item, "Item", this));
+            foreach( var Item in Scheduler.Items ) {
+                Items.Add( new UISchedulerItem( Item, "Item", this ) );
             }
             // =====================
-            foreach (var Trigger in Scheduler.Triggers)
-            {
-                Triggers.Add(new UISchedulerItem(Trigger, "Trigger", this));
+            foreach( var Trigger in Scheduler.Triggers ) {
+                Triggers.Add( new UISchedulerItem( Trigger, "Trigger", this ) );
             }
             // ======================
             ItemSplit = new UIScheduleItemSplitView( Items, this );

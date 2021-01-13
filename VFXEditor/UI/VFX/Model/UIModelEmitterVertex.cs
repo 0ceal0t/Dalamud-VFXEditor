@@ -31,10 +31,6 @@ namespace VFXEditor.UI.VFX
             Color = UIUtils.IntToColor( Vertex.C ) / 255;
         }
 
-        // ============== DRAW ===============
-        public override void Draw( string parentId )
-        {
-        }
         public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )

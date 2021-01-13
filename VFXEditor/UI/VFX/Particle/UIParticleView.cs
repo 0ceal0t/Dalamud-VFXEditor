@@ -16,12 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIParticleView( AVFXBase avfx ) : base( "##PTCL", "Select a Particle" )
         {
             AVFX = avfx;
-            Init();
-        }
-
-        public override void Init()
-        {
-            base.Init();
+            //===============
             foreach( var particle in AVFX.Particles ) {
                 var item = new UIParticle( particle, this );
                 Items.Add( item );

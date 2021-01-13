@@ -16,11 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIEffectorView(AVFXBase avfx) : base( "##EFFCT", "Select an Effector" )
         {
             AVFX = avfx;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
+            //===================
             foreach( var effector in AVFX.Effectors ) {
                 var item = new UIEffector( effector, this );
                 Items.Add( item );
