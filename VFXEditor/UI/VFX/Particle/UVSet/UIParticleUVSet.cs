@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleUVSet : UIBase
+    public class UIParticleUVSet : UIItem
     {
         public AVFXParticleUVSet UVSet;
         public UIParticle Particle;
@@ -31,30 +31,27 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICurve(UVSet.RotRandom, "Rotation Random"));
         }
 
-        public override void Draw( string parentId )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            if( !Assigned )
-            {
-                return;
-            }
-            if( ImGui.Selectable( "UV " + Idx + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
         }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/UV" + Idx;
+            string id = parentId + "/UV";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
-                Particle.Particle.removeUvSet( Idx );
-                Particle.Init();
+                Particle.Particle.removeUvSet( UVSet );
+                Particle.UVSplit.OnDelete( this );
                 return;
             }
             DrawAttrs( id );
+        }
+
+        public override string GetText( int idx ) {
+            return "UV " + idx;
         }
     }
 }

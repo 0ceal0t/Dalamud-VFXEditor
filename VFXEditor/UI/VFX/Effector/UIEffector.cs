@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffector : UIBase
+    public class UIEffector : UIItem
     {
         public AVFXEffector Effector;
         public UIEffectorView View;
@@ -57,33 +57,6 @@ namespace VFXEditor.UI.VFX
         {
             Effector.SetVariety(literal.Value);
             Init();
-            View.RefreshDesc( Idx );
-        }
-
-        public string GetDescText()
-        {
-            return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Effector" + Idx;
-            Type.Draw(id);
-            //==========================
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Parameters" + id ) )
-                {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id ) )
-                {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
         }
 
         private void DrawParameters( string id )
@@ -97,6 +70,30 @@ namespace VFXEditor.UI.VFX
             ImGui.BeginChild( id );
             Data.Draw( id );
             ImGui.EndChild();
+        }
+
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Effector";
+            Type.Draw( id );
+            //==========================
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
+                }
+                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+        }
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+        }
+
+        public override string GetText( int idx ) {
+            return "Effector " + idx + "(" + Effector.EffectorVariety.stringValue() + ")";
         }
     }
 }

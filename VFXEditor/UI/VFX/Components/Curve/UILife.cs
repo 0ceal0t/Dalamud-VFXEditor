@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UILife : UIBase
-    {
+    public class UILife : UIItem {
         public AVFXLife Life;
 
         public UILife(AVFXLife life)
@@ -30,22 +29,14 @@ namespace VFXEditor.UI.VFX
         // ======= DRAW ================
         public override void Draw( string parentId )
         {
-            if( !Assigned )
-            {
-                return;
-            }
             if( ImGui.TreeNode( "Life" + parentId ) )
             {
                 DrawBody( parentId );
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-            if( !Assigned )
-            {
-                return;
-            }
             if( ImGui.Selectable( "Life" + parentId, selected == this ) )
             {
                 selected = this;
@@ -56,6 +47,10 @@ namespace VFXEditor.UI.VFX
             var id = parentId + "/Life";
             // =====================
             DrawAttrs( id );
+        }
+
+        public override string GetText( int idx ) {
+            return "Life";
         }
     }
 }

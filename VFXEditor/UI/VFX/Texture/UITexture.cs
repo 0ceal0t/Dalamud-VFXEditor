@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITexture : UIBase
+    public class UITexture : UIItem
     {
         public AVFXTexture Texture;
         public UITextureView View;
@@ -42,35 +42,24 @@ namespace VFXEditor.UI.VFX
                 _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
             }
         }
-
-        public override void Draw( string parentId )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            if( !Assigned )
-            {
-                return;
-            }
-            if( ImGui.Selectable( "Texture " + Idx + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
         }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/Texture" + Idx;
+            string id = parentId + "/Texture";
             if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
-                PluginLog.Log( View.AVFX.Textures.Count().ToString() );
-                PluginLog.Log( Idx.ToString() );
-                View.AVFX.removeTexture( Idx );
-                View.Init();
+                View.AVFX.removeTexture( Texture );
+                View.TexSplit.OnDelete( this );
                 return;
             }
             Path.Draw( id );
 
-            // jank change detection
             var newValue = Path.Literal.Value;
             if( newValue != lastValue )
             {
@@ -136,6 +125,10 @@ namespace VFXEditor.UI.VFX
         public static void BytesToPath(LiteralString literal)
         {
             literal.GiveValue(literal.Value + "\u0000");
+        }
+
+        public override string GetText( int idx ) {
+            return "Texture " + idx;
         }
     }
 }

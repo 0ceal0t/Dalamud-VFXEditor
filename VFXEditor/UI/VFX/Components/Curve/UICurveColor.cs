@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UICurveColor : UIBase
+    public class UICurveColor : UIItem
     {
         public AVFXCurveColor Curve;
         public string Name;
@@ -55,7 +55,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             if( !Assigned )
             {
@@ -117,6 +117,10 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndTabBar();
             }
+        }
+
+        public override string GetText( int idx ) {
+            return Name;
         }
     }
 }

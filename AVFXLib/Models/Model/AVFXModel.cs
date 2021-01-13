@@ -71,19 +71,32 @@ namespace AVFXLib.Models
             VNums.Add( vnum );
             return vnum;
         }
+        public void addVNum( VNum item) {
+            VNums.Add( item );
+        }
         public void removeVNum(int idx )
         {
             VNums.RemoveAt( idx );
         }
+        public void removeVNum(VNum item ) {
+            VNums.Remove( item );
+        }
+        //
         public EmitVertex addEmitVertex()
         {
             EmitVertex eVert = new EmitVertex( new byte[EmitVertex.SIZE] );
             EmitVertices.Add( eVert );
             return eVert;
         }
+        public void addEmitVertex( EmitVertex item ) {
+            EmitVertices.Add( item );
+        }
         public void removeEmitVertex(int idx )
         {
             EmitVertices.RemoveAt( idx );
+        }
+        public void removeEmitVertex( EmitVertex item ) {
+            EmitVertices.Remove( item );
         }
 
         public override JToken toJSON()

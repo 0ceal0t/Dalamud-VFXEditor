@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleSimple : UIBase
+    public class UIParticleSimple : UIItem
     {
         public AVFXParticleSimple Simple;
         //=============
@@ -97,7 +97,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             string id = parentId + "/Simple";
             if( !Assigned )
@@ -143,6 +143,10 @@ namespace VFXEditor.UI.VFX
                     Simple.Colors.colors[i * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].W * 255f ) )[0];
                 }
             }
+        }
+
+        public override string GetText( int idx ) {
+            return "Simple Animation";
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineClip : UIBase
+    public class UITimelineClip : UIItem
     {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;
@@ -35,22 +35,6 @@ namespace VFXEditor.UI.VFX
             UnknownFloats = new Vector4(Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3]);
         }
 
-        public override void Draw( string parentId )
-        {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            if( !Assigned )
-            {
-                return;
-            }
-            string text = Idx + ": " + IdOptions[Clip.UniqueId];
-            if( ImGui.Selectable( text + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
-
         public static Dictionary<string, string> IdOptions = new Dictionary<string, string>()
         {
             { "LLIK", "Kill" },
@@ -63,11 +47,11 @@ namespace VFXEditor.UI.VFX
         };
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/Clip" + Idx;
+            string id = parentId + "/Clip";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
-                Timeline.Timeline.removeClip( Idx );
-                Timeline.Init();
+                Timeline.Timeline.removeClip( Clip );
+                Timeline.ClipSplit.OnDelete( this );
                 return;
             }
             if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
@@ -84,10 +68,6 @@ namespace VFXEditor.UI.VFX
                 Clip.UnknownFloats[2] = UnknownFloats.Z;
                 Clip.UnknownFloats[3] = UnknownFloats.W;
             }
-            //if( ImGui.InputText( "Unique Id", ref UniqueId, 256 ) )
-            //{
-            //    Clip.UniqueId = UniqueId.Trim( '\0' );
-            //}
 
             if( ImGui.BeginCombo( "Unique Id" + id, IdOptions[UniqueId] ) )
             {
@@ -101,6 +81,16 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndCombo();
             }
+        }
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) ) {
+                selected = this;
+            }
+        }
+
+        public override string GetText(int idx) {
+            return idx + ": " + IdOptions[Clip.UniqueId];
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX
 {
-    public class UIBinder : UIBase
+    public class UIBinder : UIItem
     {
         public AVFXBinder Binder;
         public UIBinderView View;
@@ -75,38 +75,6 @@ namespace VFXEditor.UI.VFX
         {
             Binder.SetVariety(literal.Value);
             Init();
-            View.RefreshDesc( Idx );
-        }
-
-        public string GetDescText()
-        {
-            return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Binder" + Idx;
-            Type.Draw(id);
-            // =====================
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Parameters" + id + "/Tab" ) )
-                {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id + "/Tab" ) )
-                {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Properties" + id + "/Tab" ) )
-                {
-                    DrawProperties( id + "/Prop" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
         }
 
         private void DrawParameters( string id )
@@ -124,6 +92,34 @@ namespace VFXEditor.UI.VFX
         public void DrawProperties(string id )
         {
             PropSplit.Draw( id );
+        }
+
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Binder";
+            Type.Draw( id );
+            // =====================
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters" + id + "/Tab" ) ) {
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
+                }
+                if( Data != null && ImGui.BeginTabItem( "Data" + id + "/Tab" ) ) {
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Properties" + id + "/Tab" ) ) {
+                    DrawProperties( id + "/Prop" );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+        }
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+        }
+
+        public override string GetText( int idx ) {
+            return "Binder " + idx + "(" + Binder.BinderVariety.stringValue() + ")";
         }
     }
 }

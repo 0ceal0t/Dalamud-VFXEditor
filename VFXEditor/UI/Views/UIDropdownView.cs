@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public abstract class UIDropdownView : UIBase
-    {
-        public int Selected = -1;
-        public string[] Options;
+    public abstract class UIDropdownView<T> : UIBase where T : UIItem {
         public string id;
         public string defaultText;
+
+        public List<T> Items;
+        public T Selected;
 
         public bool AllowNew;
         public bool AllowDelete;
@@ -28,17 +28,19 @@ namespace VFXEditor.UI.VFX
             AllowNew = allowNew;
             AllowDelete = allowDelete;
         }
+        public override void Init() {
+            Selected = null;
+            Items = new List<T>();
+        }
 
-        public abstract void RefreshDesc( int idx );
-        public abstract void OnNew();
-        public abstract void OnDelete( int idx );
-        public abstract void OnDraw( int idx );
-        public abstract byte[] OnExport( int idx );
-        public abstract void OnImport( AVFXLib.AVFX.AVFXNode node );
+        public abstract T OnNew();
+        public abstract void OnDelete( T item );
+        public abstract byte[] OnExport( T item );
+        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node );
 
         public override void Draw( string parentId = "" )
         {
-            bool validSelect = ViewSelect( id, defaultText, ref Selected, Options );
+            ViewSelect();
             if( AllowNew )
             {
                 ImGui.SameLine();
@@ -50,8 +52,7 @@ namespace VFXEditor.UI.VFX
                 {
                     if( ImGui.Selectable( "Create" + id ) )
                     {
-                        OnNew();
-                        Init();
+                        AddItem( OnNew() );
                     }
                     if( ImGui.Selectable("Load" + id ) )
                     {
@@ -60,7 +61,7 @@ namespace VFXEditor.UI.VFX
                     ImGui.EndPopup();
                 }
             }
-            if( validSelect && AllowDelete )
+            if( Selected != null && AllowDelete )
             {
                 ImGui.SameLine();
                 if( ImGui.SmallButton( "Save" + id ) )
@@ -71,34 +72,34 @@ namespace VFXEditor.UI.VFX
                 if( UIUtils.RemoveButton( "Delete" + id, small:true) )
                 {
                     OnDelete( Selected );
-                    Init();
-                    validSelect = false;
+                    Items.Remove( Selected );
+                    // TODO: fix IDX
+                    Selected = null;
                 }
             }
             ImGui.Separator();
             // ====================
-            if( validSelect )
+            if( Selected != null )
             {
-                OnDraw( Selected );
+                Selected.DrawBody( id );
             }
         }
+        public void AddItem(T item ) {
+            Items.Add( item );
+            // TODO: fix IDX
+        }
         // ========================
-        public static bool ViewSelect( string id, string defaultText, ref int Selected, string[] Options ) {
-            bool validSelect = ( Selected >= 0 && Selected < Options.Length );
-            var selectedString = validSelect ? Options[Selected] : defaultText;
+        public void ViewSelect() {
+            var selectedString = (Selected != null) ? Selected.GetText(Items.IndexOf(Selected)) : defaultText;
             if( ImGui.BeginCombo( "Select" + id, selectedString ) ) {
-                for( int i = 0; i < Options.Length; i++ ) {
-                    bool isSelected = ( Selected == i );
-                    if( ImGui.Selectable( Options[i] + id, isSelected ) ) {
-                        Selected = i;
-                    }
-                    if( isSelected ) {
-                        ImGui.SetItemDefaultFocus();
+                for( int idx = 0; idx < Items.Count; idx++ ) {
+                    var item = Items[idx];
+                    if( ImGui.Selectable( item.GetText(idx) + id, Selected == item ) ) {
+                        Selected = item;
                     }
                 }
                 ImGui.EndCombo();
             }
-            return validSelect;
         }
         // ========= DIALOGS ==================
         public void Load()
@@ -117,8 +118,7 @@ namespace VFXEditor.UI.VFX
                         foreach( string message in messages ) {
                             PluginLog.Log( message );
                         }
-                        OnImport( node );
-                        Init();
+                        AddItem(OnImport( node ));
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );
@@ -127,7 +127,7 @@ namespace VFXEditor.UI.VFX
             } );
         }
 
-        public void Save( int idx)
+        public void Save( T item)
         {
             Task.Run( async () => {
                 var picker = new SaveFileDialog
@@ -140,7 +140,7 @@ namespace VFXEditor.UI.VFX
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        var data = OnExport( idx );
+                        var data = OnExport( item );
                         File.WriteAllBytes( picker.FileName, data );
                     }
                     catch( Exception ex ) {

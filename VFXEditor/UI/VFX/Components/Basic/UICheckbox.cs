@@ -21,7 +21,7 @@ namespace VFXEditor.UI.VFX
 
         public int SL;
 
-        public UICheckbox(string id, LiteralBool literal, Change changeFunction = null, int sl = 0, string help = "")
+        public UICheckbox(string id, LiteralBool literal, Change changeFunction = null, int sl = 0)
         {
             Id = id;
             Literal = literal;
@@ -32,7 +32,6 @@ namespace VFXEditor.UI.VFX
                 ChangeFunction = DoNothing;
             // =====================
             Value = (Literal.Value == true);
-            SetHelp( help );
         }
 
         public override void Draw(string id)
@@ -43,7 +42,6 @@ namespace VFXEditor.UI.VFX
                 Literal.GiveValue(Value);
                 ChangeFunction(Literal);
             }
-            DrawHelp();
         }
 
         public static void DoNothing(LiteralBool literal) {}

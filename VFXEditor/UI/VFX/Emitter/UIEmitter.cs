@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitter : UIBase
+    public class UIEmitter : UIItem
     {
         public AVFXEmitter Emitter;
         public UIEmitterView View;
         //=======================
         public UICombo<EmitterType> Type;
-        List<UIBase> Animation;
-        UISplitView<UIBase> AnimationSplit;
+        List<UIItem> Animation;
+        UISplitView<UIItem> AnimationSplit;
         //========================
         public List<UIEmitterItem> Particles;
         public List<UIEmitterItem> Emitters;
@@ -35,7 +35,7 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             // =====================
-            Animation = new List<UIBase>();
+            Animation = new List<UIItem>();
             Particles = new List<UIEmitterItem>();
             Emitters = new List<UIEmitterItem>();
             //======================
@@ -99,7 +99,7 @@ namespace VFXEditor.UI.VFX
                     break;
             }
             //=============================
-            AnimationSplit = new UISplitView<UIBase>( Animation );
+            AnimationSplit = new UISplitView<UIItem>( Animation );
             EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
             ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }
@@ -107,49 +107,6 @@ namespace VFXEditor.UI.VFX
         {
             Emitter.SetVariety(literal.Value);
             Init();
-            View.RefreshDesc( Idx );
-        }
-
-        public string GetDescText()
-        {
-            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Emitter" + Idx;
-            Type.Draw(id);
-            //==========================
-
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Parameters" + id ) )
-                {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id ) )
-                {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Animation" + id ) )
-                {
-                    DrawAnimation( id + "/Anim" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Particles" + id ) )
-                {
-                    DrawParticles( id + "/ItPr" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Emitters" + id ) )
-                {
-                    DrawEmitters( id + "/ItEm" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
         }
 
         private void DrawParameters( string id )
@@ -164,17 +121,42 @@ namespace VFXEditor.UI.VFX
             Data.Draw( id );
             ImGui.EndChild();
         }
-        private void DrawAnimation( string id )
-        {
-            AnimationSplit.Draw( id );
+
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Emitter";
+            Type.Draw( id );
+            //==========================
+
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
+                }
+                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Animation" + id ) ) {
+                    AnimationSplit.Draw( id + "/Anim" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Particles" + id ) ) {
+                    ParticleSplit.Draw( id + "/ItPr" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Emitters" + id ) ) {
+                    EmitterSplit.Draw( id + "/ItEm" );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
         }
-        private void DrawParticles( string id )
-        {
-            ParticleSplit.Draw( id );
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
         }
-        private void DrawEmitters( string id )
-        {
-            EmitterSplit.Draw( id );
+
+        public override string GetText( int idx ) {
+            return "Emitter " + idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
         }
     }
 }

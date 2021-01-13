@@ -74,8 +74,11 @@ namespace AVFXLib.Models
             addItem();
             for(int i = 0; i < 12; i++)
             {
-                addTrigger();
+                AVFXScheduleSubItem Trigger = new AVFXScheduleSubItem();
+                Trigger.toDefault();
+                Triggers.Add( Trigger );
             }
+            TriggerCount.GiveValue( Triggers.Count() );
         }
 
         public AVFXScheduleSubItem addItem()
@@ -86,23 +89,18 @@ namespace AVFXLib.Models
             ItemCount.GiveValue(Items.Count());
             return Item;
         }
+        public void addItem(AVFXScheduleSubItem item ) {
+            Items.Add( item );
+            ItemCount.GiveValue( Items.Count() );
+        }
         public void removeItem(int idx)
         {
             Items.RemoveAt(idx);
             ItemCount.GiveValue(Items.Count());
         }
-        public AVFXScheduleSubItem addTrigger()
-        {
-            AVFXScheduleSubItem Trigger = new AVFXScheduleSubItem();
-            Trigger.toDefault();
-            Triggers.Add(Trigger);
-            TriggerCount.GiveValue(Triggers.Count());
-            return Trigger;
-        }
-        public void removeTrigger(int idx)
-        {
-            Triggers.RemoveAt(idx);
-            TriggerCount.GiveValue(Triggers.Count());
+        public void removeItem(AVFXScheduleSubItem item ) {
+            Items.Remove( item );
+            ItemCount.GiveValue( Items.Count() );
         }
 
         public override JToken toJSON()

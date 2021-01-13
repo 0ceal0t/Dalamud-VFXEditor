@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineItem : UIBase
+    public class UITimelineItem : UIItem
     {
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;
@@ -38,28 +38,13 @@ namespace VFXEditor.UI.VFX
             ClipAssigned = Item.ClipNumber.Assigned;
         }
 
-        public override void Draw( string parentId )
-        {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            if( !Assigned )
-            {
-                return;
-            }
-            string text = Idx + ": Emitter " + Item.EmitterIdx.Value;
-            if( ImGui.Selectable( text + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/Item" + Idx;
+            string id = parentId + "/Item";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
-                Timeline.Timeline.removeItem( Idx );
-                Timeline.Init();
+                Timeline.Timeline.removeItem( Item );
+                Timeline.ItemSplit.OnDelete( this );
                 return;
             }
             DrawAttrs( id );
@@ -68,6 +53,16 @@ namespace VFXEditor.UI.VFX
                 Item.ClipNumber.Assigned = ClipAssigned;
             }
             ClipNumber.Draw( id );
+        }
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) ) {
+                selected = this;
+            }
+        }
+
+        public override string GetText(int idx) {
+            return idx + ": Emitter " + Item.EmitterIdx.Value;
         }
     }
 }

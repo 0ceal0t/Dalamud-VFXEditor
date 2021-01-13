@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.Button( "+ Texture" + id ) )
             {
-                TextureView.Textures.Add( new UITexture( TextureView.AVFX.addTexture(), TextureView, TextureView._plugin ) );
+                OnNew( new UITexture( TextureView.AVFX.addTexture(), TextureView, TextureView._plugin ) );
             }
         }
     }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimeline : UIBase
+    public class UITimeline : UIItem
     {
         public AVFXTimeline Timeline;
         public UITimelineView View;
@@ -50,49 +50,37 @@ namespace VFXEditor.UI.VFX
             ItemSplit = new UITimelineItemSplitView( Items, this );
         }
 
-        public string GetDescText()
-        {
-            return "Timeline " + Idx;
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Timeline" + Idx;
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Timeline";
             //=====================
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Parameters" + id ) )
-                {
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Params" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Items" + id ) )
-                {
-                    DrawItems( id + "/Items" );
+                if( ImGui.BeginTabItem( "Items" + id ) ) {
+                    ItemSplit.Draw( id + "/Items" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Clips" + id ) )
-                {
-                    DrawClips( id + "/Clips" );
+                if( ImGui.BeginTabItem( "Clips" + id ) ) {
+                    ClipSplit.Draw( id + "/Clips" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
             }
         }
 
-        private void DrawParameters( string id )
-        {
+        private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }
-        private void DrawItems( string id )
-        {
-            ItemSplit.Draw( id );
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
         }
-        private void DrawClips( string id )
-        {
-            ClipSplit.Draw( id );
+
+        public override string GetText(int idx) {
+            return "Timeline " + idx;
         }
     }
 }

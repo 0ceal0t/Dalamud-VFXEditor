@@ -32,17 +32,24 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 * Import and export models
 * Export as `.avfx` or Textools Modpack
 
+```
+idx
+add + delete without init
+```
+
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Clean up adding + deleting items (get rid of extra `Init()`). Be careful of `foreach`, like items in `UISplitView`
+- [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
 - [ ] Properly fix literal int list
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] Save all particles at once, etc.
-- [ ] Save replacements(!)
+- [ ] Multiple vfxs (-_-)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
@@ -60,7 +67,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better TMB parsing
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Update "try on" preview
-- [ ] Update README preview image
 - [ ] Auto-update npc csv file
 
 ---
@@ -101,3 +107,4 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Emitter sound~~
 - [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~
 - [x] ~~Binder properties view~~
+- [x] ~~Update README preview image~~

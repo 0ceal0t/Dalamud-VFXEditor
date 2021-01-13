@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIScheduler : UIBase
-    {
+    public class UIScheduler : UIItem {
         public AVFXSchedule Scheduler;
         public UIScheduleView View;
         // =================
@@ -46,38 +45,27 @@ namespace VFXEditor.UI.VFX
             TriggerSplit = new UISplitView<UISchedulerItem>( Triggers );
         }
 
-        public string GetDescText()
-        {
-            return "Scheduler " + Idx;
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Scheduler" + Idx;
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Scheduler";
             //=====================
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Items" + id ) )
-                {
-                    DrawItems( id + "/Item" );
+            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Items" + id ) ) {
+                    ItemSplit.Draw( id + "/Item" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Triggers" + id ) )
-                {
-                    DrawTriggers( id + "/Trigger" );
+                if( ImGui.BeginTabItem( "Triggers" + id ) ) {
+                    TriggerSplit.Draw( id + "/Trigger" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
             }
         }
 
-        private void DrawItems(string id )
-        {
-            ItemSplit.Draw( id );
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
         }
-        private void DrawTriggers(string id )
-        {
-            TriggerSplit.Draw( id );
+
+        public override string GetText( int idx ) {
+            return "Scheduler " + idx;
         }
     }
 }

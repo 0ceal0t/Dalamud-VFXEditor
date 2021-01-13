@@ -159,11 +159,20 @@ namespace AVFXLib.Models
             ParticleCount.GiveValue(Particles.Count());
             return ItPr;
         }
+        public void addParticle(AVFXEmitterIterationItem item ) {
+            Particles.Add( item );
+            ParticleCount.GiveValue( Particles.Count() );
+        }
         public void removeParticle(int idx)
         {
             Particles.RemoveAt(idx);
             ParticleCount.GiveValue(Particles.Count());
         }
+        public void removeParticle(AVFXEmitterIterationItem item ) {
+            Particles.Remove( item );
+            ParticleCount.GiveValue( Particles.Count() );
+        }
+        //
         public AVFXEmitterIterationItem addEmitter()
         {
             AVFXEmitterIterationItem ItEm = new AVFXEmitterIterationItem();
@@ -172,10 +181,18 @@ namespace AVFXLib.Models
             EmitterCount.GiveValue(Emitters.Count());
             return ItEm;
         }
+        public void addEmitter( AVFXEmitterIterationItem item ) {
+            Emitters.Add( item );
+            EmitterCount.GiveValue( Emitters.Count() );
+        }
         public void removeEmitter(int idx)
         {
             Emitters.RemoveAt(idx);
             EmitterCount.GiveValue(Emitters.Count());
+        }
+        public void removeEmitter( AVFXEmitterIterationItem item ) {
+            Emitters.Remove( item );
+            EmitterCount.GiveValue( Emitters.Count() );
         }
 
         public override JToken toJSON()

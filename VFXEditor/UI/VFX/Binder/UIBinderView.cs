@@ -9,10 +9,9 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIBinderView : UIDropdownView
+    public class UIBinderView : UIDropdownView<UIBinder>
     {
         public AVFXBase AVFX;
-        List<UIBinder> Binders;
 
         public UIBinderView(AVFXBase avfx) : base( "##BIND", "Select a Binder" )
         {
@@ -23,44 +22,25 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Binders = new List<UIBinder>();
-            Options = new string[AVFX.Binders.Count];
-            int idx = 0;
-            foreach( var binder in AVFX.Binders )
-            {
+            foreach( var binder in AVFX.Binders ) {
                 var item = new UIBinder( binder, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Binders.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
-
-        public override void OnNew()
-        {
-            AVFX.addBinder();
+        public override UIBinder OnNew() {
+            return new UIBinder(AVFX.addBinder(), this);
         }
-        public override void OnDelete( int idx )
-        {
-            AVFX.removeBinder( idx );
+        public override void OnDelete( UIBinder item ) {
+            AVFX.removeBinder( item.Binder );
         }
-        public override void OnDraw( int idx )
-        {
-            if( idx >= Binders.Count ) return;
-            Binders[idx].Draw( id );
+        public override byte[] OnExport( UIBinder item ) {
+            return item.Binder.toAVFX().toBytes();
         }
-        public override byte[] OnExport(int idx )
-        {
-            return Binders[idx].Binder.toAVFX().toBytes();
-        }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Binders[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {
+        public override UIBinder OnImport( AVFXNode node ) {
             AVFXBinder item = new AVFXBinder();
             item.read( node );
             AVFX.addBinder( item );
+            return new UIBinder( item, this );
         }
     }
 }

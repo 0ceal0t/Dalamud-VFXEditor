@@ -9,10 +9,9 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleView : UIDropdownView
+    public class UIParticleView : UIDropdownView<UIParticle>
     {
         public AVFXBase AVFX;
-        List<UIParticle> Particles;
 
         public UIParticleView( AVFXBase avfx ) : base( "##PTCL", "Select a Particle" )
         {
@@ -23,44 +22,26 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Particles = new List<UIParticle>();
-            Options = new string[AVFX.Particles.Count];
-            int idx = 0;
-            foreach (var particle in AVFX.Particles)
-            {
+            foreach( var particle in AVFX.Particles ) {
                 var item = new UIParticle( particle, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Particles.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
 
-        public override void OnNew()
-        {
-            AVFX.addParticle();
+        public override UIParticle OnNew() {
+            return new UIParticle( AVFX.addParticle(), this );
         }
-        public override void OnDelete( int idx )
-        {
-            AVFX.removeParticle( idx );
+        public override void OnDelete( UIParticle item ) {
+            AVFX.removeParticle( item.Particle );
         }
-        public override void OnDraw( int idx )
-        {
-            if( idx >= Particles.Count ) return;
-            Particles[idx].Draw( id );
+        public override byte[] OnExport( UIParticle item ) {
+            return item.Particle.toAVFX().toBytes();
         }
-        public override byte[] OnExport( int idx )
-        {
-            return Particles[idx].Particle.toAVFX().toBytes();
-        }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Particles[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {
+        public override UIParticle OnImport( AVFXNode node ) {
             AVFXParticle item = new AVFXParticle();
             item.read( node );
             AVFX.addParticle( item );
+            return new UIParticle( item, this );
         }
     }
 }

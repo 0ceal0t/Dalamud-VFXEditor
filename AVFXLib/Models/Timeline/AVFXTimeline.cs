@@ -84,10 +84,18 @@ namespace AVFXLib.Models
             TimelineCount.GiveValue(Items.Count());
             return Item;
         }
+        public void addItem(AVFXTimelineSubItem item ) {
+            Items.Add( item );
+            TimelineCount.GiveValue( Items.Count() );
+        }
         public void removeItem(int idx)
         {
             Items.RemoveAt(idx);
             TimelineCount.GiveValue(Items.Count());
+        }
+        public void removeItem(AVFXTimelineSubItem item ) {
+            Items.Remove( item );
+            TimelineCount.GiveValue( Items.Count() );
         }
         public AVFXTimelineClip addClip()
         {
@@ -97,10 +105,18 @@ namespace AVFXLib.Models
             ClipCount.GiveValue(Clips.Count());
             return Clip;
         }
+        public void addClip(AVFXTimelineClip item ) {
+            Clips.Add( item );
+            ClipCount.GiveValue( Clips.Count() );
+        }
         public void removeClip(int idx)
         {
             Clips.RemoveAt(idx);
             ClipCount.GiveValue(Clips.Count());
+        }
+        public void removeClip(AVFXTimelineClip item ) {
+            Clips.Remove( item );
+            ClipCount.GiveValue( Clips.Count() );
         }
 
         public override JToken toJSON()

@@ -26,11 +26,11 @@ namespace VFXEditor.UI.VFX
             {
                 if( IsParticle )
                 {
-                    Emitter.Particles.Add( new UIEmitterItem( Emitter.Emitter.addParticle(), true, Emitter ) );
+                    OnNew( new UIEmitterItem( Emitter.Emitter.addParticle(), true, Emitter ) );
                 }
                 else
                 {
-                    Emitter.Emitters.Add( new UIEmitterItem( Emitter.Emitter.addEmitter(), false, Emitter ) );
+                    OnNew( new UIEmitterItem( Emitter.Emitter.addEmitter(), false, Emitter ) );
                 }
             }
         }

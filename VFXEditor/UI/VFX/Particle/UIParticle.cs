@@ -8,23 +8,21 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticle : UIBase
-    {
+    public class UIParticle : UIItem {
         public AVFXParticle Particle;
         public UIParticleView View;
         // =======================
-        List<UIBase> Animation;
-        //==========================
         public UICombo<ParticleType> Type;
         public List<UIParticleUVSet> UVSets;
         //==========================
         public UIBase Data;
         //========================
-        List<UIBase> Tex;
+        List<UIItem> Animation;
+        List<UIItem> Tex;
         // ==================
-        UISplitView<UIBase> AnimationSplit;
-        UISplitView<UIBase> TexSplit;
-        UIUVSetSplitView UVSplit;
+        UISplitView<UIItem> AnimationSplit;
+        UISplitView<UIItem> TexSplit;
+        public UIUVSetSplitView UVSplit;
 
         public UIParticle(AVFXParticle particle, UIParticleView view)
         {
@@ -36,8 +34,8 @@ namespace VFXEditor.UI.VFX
         {
             base.Init();
             // =======================
-            Animation = new List<UIBase>();
-            Tex = new List<UIBase>();
+            Animation = new List<UIItem>();
+            Tex = new List<UIItem>();
             UVSets = new List<UIParticleUVSet>();
             //==========================
             Type = new UICombo<ParticleType>("Type", Particle.ParticleVariety, changeFunction: ChangeType);
@@ -142,56 +140,14 @@ namespace VFXEditor.UI.VFX
             Tex.Add(new UITextureDistortion(Particle.TD));
             Tex.Add(new UITexturePalette(Particle.TP));
             //=============================
-            AnimationSplit = new UISplitView<UIBase>( Animation );
-            TexSplit = new UISplitView<UIBase>( Tex );
+            AnimationSplit = new UISplitView<UIItem>( Animation );
+            TexSplit = new UISplitView<UIItem>( Tex );
             UVSplit = new UIUVSetSplitView( UVSets, this );
         }
         public void ChangeType(LiteralEnum<ParticleType> literal)
         {
             Particle.SetVariety(literal.Value);
             Init();
-            View.RefreshDesc( Idx );
-        }
-
-        public string GetDescText()
-        {
-            return "Particle " + Idx + "(" + Particle.ParticleVariety.stringValue() + ")";
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Ptcl" + Idx;
-            Type.Draw(id);
-            //=====================
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                if( ImGui.BeginTabItem( "Parameters" + id ) )
-                {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if(Data != null && ImGui.BeginTabItem( "Data" + id) )
-                {
-                    DrawData( id + "/Data");
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Animation" + id ) )
-                {
-                    DrawAnimation( id + "/Animation" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "UV Sets" + id ) )
-                {
-                    DrawUVSets( id + "/UVSets");
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Textures" + id ) )
-                {
-                    DrawTextures( id + "/Tex" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
         }
 
         private void DrawParameters(string id)
@@ -206,17 +162,41 @@ namespace VFXEditor.UI.VFX
             Data.Draw( id );
             ImGui.EndChild();
         }
-        private void DrawAnimation(string id)
-        {
-            AnimationSplit.Draw( id );
+
+        public override void DrawBody( string parentId ) {
+            string id = parentId + "/Ptcl";
+            Type.Draw( id );
+            //=====================
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
+                    DrawParameters( id + "/Param" );
+                    ImGui.EndTabItem();
+                }
+                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
+                    DrawData( id + "/Data" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Animation" + id ) ) {
+                    AnimationSplit.Draw( id + "/Animation");
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "UV Sets" + id ) ) {
+                    UVSplit.Draw( id + "/UVSets");
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( "Textures" + id ) ) {
+                    TexSplit.Draw( id + "/Tex");
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
         }
-        private void DrawUVSets(string id)
-        {
-            UVSplit.Draw( id );
+
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected ) {
         }
-        private void DrawTextures(string id)
-        {
-            TexSplit.Draw( id );
+
+        public override string GetText( int idx ) {
+            return "Particle " + idx + "(" + Particle.ParticleVariety.stringValue() + ")";
         }
     }
 }

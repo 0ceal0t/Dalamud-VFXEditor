@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModel : UIBase
+    public class UIModel : UIItem
     {
         public AVFXModel Model;
         public UIModelView View;
@@ -37,27 +37,20 @@ namespace VFXEditor.UI.VFX
         }
 
         // ============== DRAW ===============
-        public override void Draw( string parentId )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            if( !Assigned )
-            {
-                return;
-            }
-            if( ImGui.Selectable( "Model " + Idx + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
         }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/Model" + Idx;
+            string id = parentId + "/Model";
             if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
-                View.AVFX.removeModel( Idx );
-                View.Init();
+                View.AVFX.removeModel( Model );
+                View.ModelSplit.OnDelete( this );
                 return;
             }
             ImGui.SameLine();
@@ -131,6 +124,10 @@ namespace VFXEditor.UI.VFX
                     }
                 }
             } );
+        }
+
+        public override string GetText( int idx ) {
+            return "Model " + idx;
         }
     }
 }

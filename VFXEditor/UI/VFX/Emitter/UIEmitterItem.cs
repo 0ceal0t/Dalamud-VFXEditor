@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterItem : UIBase
+    public class UIEmitterItem : UIItem
     {
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
@@ -54,42 +54,37 @@ namespace VFXEditor.UI.VFX
         }
         
         // =========== DRAW ==============
-        public override void Draw( string parentId )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-        }
-        public override void DrawSelect( string parentId, ref UIBase selected )
-        {
-            string Type = IsParticle ? "Particle" : "Emitter";
-            if( !Assigned )
-            {
-                return;
-            }
-            string text = Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
-            if( ImGui.Selectable( text + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
         }
         public override void DrawBody( string parentId )
         {
-            string Type = IsParticle ? "Particle" : "Emitter";
-            string id = parentId + "/Item" + Type + Idx;
+            string id = parentId + "/Item";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 if( IsParticle )
                 {
-                    Emitter.Emitter.removeParticle( Idx );
-                    Emitter.Init();
+                    Emitter.Emitter.removeParticle( Iteration );
+                    Emitter.EmitterSplit.OnDelete( this );
                     return;
                 }
                 else
                 {
-                    Emitter.Emitter.removeEmitter( Idx );
-                    Emitter.Init();
+                    Emitter.Emitter.removeEmitter( Iteration );
+                    Emitter.ParticleSplit.OnDelete( this );
                     return;
                 }
             }
             DrawAttrs( id );
+        }
+
+        public override string GetText( int idx ) {
+            string Type = IsParticle ? "Particle" : "Emitter";
+            return idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }
     }
 }

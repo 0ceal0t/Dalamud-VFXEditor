@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.Button( "+ Item" + id ) )
             {
-                Timeline.Items.Add( new UITimelineItem( Timeline.Timeline.addItem(), Timeline ) );
+                OnNew( new UITimelineItem( Timeline.Timeline.addItem(), Timeline ) );
             }
         }
     }

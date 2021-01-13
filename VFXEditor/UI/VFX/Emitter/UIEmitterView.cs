@@ -9,10 +9,9 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterView : UIDropdownView
+    public class UIEmitterView : UIDropdownView<UIEmitter>
     {
         public AVFXBase AVFX;
-        List<UIEmitter> Emitters;
 
         public UIEmitterView(AVFXBase avfx) : base( "##EMIT", "Select an Emitter" )
         {
@@ -22,43 +21,26 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Emitters = new List<UIEmitter>();
-            Options = new string[AVFX.Emitters.Count];
-            int idx = 0;
-            foreach( var emitter in AVFX.Emitters )
-            {
+            foreach( var emitter in AVFX.Emitters ) {
                 var item = new UIEmitter( emitter, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Emitters.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
-        public override void OnNew()
-        {
-            AVFX.addEmitter();
+
+        public override UIEmitter OnNew() {
+            return new UIEmitter(AVFX.addEmitter(), this);
         }
-        public override void OnDelete( int idx )
-        {
-            AVFX.removeEmitter( idx );
+        public override void OnDelete( UIEmitter item ) {
+            AVFX.removeEmitter( item.Emitter );
         }
-        public override void OnDraw( int idx )
-        {
-            if( idx >= Emitters.Count ) return;
-            Emitters[idx].Draw( id );
+        public override byte[] OnExport( UIEmitter item ) {
+            return item.Emitter.toAVFX().toBytes();
         }
-        public override byte[] OnExport( int idx )
-        {
-            return Emitters[idx].Emitter.toAVFX().toBytes();
-        }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Emitters[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {
+        public override UIEmitter OnImport( AVFXNode node ) {
             AVFXEmitter item = new AVFXEmitter();
             item.read( node );
             AVFX.addEmitter( item );
+            return new UIEmitter( item, this );
         }
     }
 }

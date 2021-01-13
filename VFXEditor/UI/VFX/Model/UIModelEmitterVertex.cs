@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModelEmitterVertex : UIBase
+    public class UIModelEmitterVertex : UIItem
     {
         public UIModel Model;
         public VNum VertNumber;
@@ -35,13 +35,9 @@ namespace VFXEditor.UI.VFX
         public override void Draw( string parentId )
         {
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-            if( !Assigned )
-            {
-                return;
-            }
-            if( ImGui.Selectable( "" + Idx + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
@@ -49,12 +45,12 @@ namespace VFXEditor.UI.VFX
 
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/VNum" + Idx;
+            string id = parentId + "/VNum";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
-                Model.Model.removeEmitVertex( Idx );
-                Model.Model.removeVNum( Idx );
-                Model.Init();
+                Model.Model.removeEmitVertex( Vertex );
+                Model.Model.removeVNum( VertNumber );
+                Model.EmitSplit.OnDelete( this );
                 return;
             }
 
@@ -74,6 +70,10 @@ namespace VFXEditor.UI.VFX
             {
                 Vertex.C = UIUtils.ColorToInt( Color * 255 );
             }
+        }
+
+        public override string GetText( int idx ) {
+            return "" + idx;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace VFXEditor.UI.VFX
         public delegate void Change( LiteralIntList literal );
         public Change ChangeFunction;
 
-        public UIIntList( string id, LiteralIntList literal, Change changeFunction = null, string help = "")
+        public UIIntList( string id, LiteralIntList literal, Change changeFunction = null)
         {
             Id = id;
             Literal = literal;
@@ -28,7 +28,6 @@ namespace VFXEditor.UI.VFX
                 ChangeFunction = DoNothing;
             // =====================
             Value = Literal.Value;
-            SetHelp( help );
         }
 
         public override void Draw( string id )
@@ -40,7 +39,6 @@ namespace VFXEditor.UI.VFX
                 Value[0] = v0;
                 ChangeFunction( Literal );
             }
-            DrawHelp();
         }
 
         public static void DoNothing( LiteralIntList literal ) { }

@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UICurve : UIBase
+    public class UICurve : UIItem
     {
         public AVFXCurve Curve;
         public string Name;
@@ -56,7 +57,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
             if( !Assigned )
             {
@@ -92,17 +93,21 @@ namespace VFXEditor.UI.VFX
                 int keyIdx = 0;
                 foreach( var key in Keys )
                 {
-                    key.Idx = keyIdx;
-                    key.Draw( id );
+                    key.Draw( keyIdx, id );
                     keyIdx++;
                 }
 
                 if( ImGui.Button( "+ Key" + id ) )
                 {
                     Keys.Add( new UIKey( Curve.addKey(), this, Color ) );
+                    // TODO: fix idx
                 }
                 ImGui.TreePop();
             }
+        }
+
+        public override string GetText( int idx ) {
+            return Name;
         }
     }
 
@@ -110,7 +115,6 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXKey Key;
         public UICurve Curve;
-        public int Idx;
         // ====================
         public int Time;
         public Vector3 Data;
@@ -128,13 +132,14 @@ namespace VFXEditor.UI.VFX
             TypeIdx = Array.IndexOf(TypeOptions, Key.Type.ToString());
         }
 
-        public void Draw(string parentId)
+        public void Draw(int idx, string parentId)
         {
-            string id = parentId + "/Key" + Idx;
+            string id = parentId + "/Key" + idx;
             if (UIUtils.RemoveButton("Delete Key" + id, small: true ) )
             {
-                Curve.Curve.removeKey(Idx);
-                Curve.Init();
+                Curve.Curve.removeKey(Key);
+                Curve.Keys.Remove( this );
+                // TODO: fix IDX
                 return;
             }
             if (ImGui.InputInt("Time" + id, ref Time))

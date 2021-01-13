@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace VFXEditor.UI.VFX
                     var p = Particle.Particle.addUvSet();
                     if(p != null )
                     {
-                        Particle.UVSets.Add( new UIParticleUVSet( p, Particle ) );
+                        OnNew( new UIParticleUVSet( p, Particle ) );
                     }
                 }
             }

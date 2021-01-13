@@ -239,10 +239,19 @@ namespace AVFXLib.Models
             UvSetCount.GiveValue(UVSets.Count());
             return UvSet;
         }
+        public void addUvSet(AVFXParticleUVSet item ) {
+            if( UVSets.Count >= 4 ) return;
+            UVSets.Add( item );
+            UvSetCount.GiveValue( UVSets.Count() );
+        }
         public void removeUvSet(int idx)
         {
             UVSets.RemoveAt(idx);
             UvSetCount.GiveValue(UVSets.Count());
+        }
+        public void removeUvSet(AVFXParticleUVSet item ) {
+            UVSets.Remove( item );
+            UvSetCount.GiveValue( UVSets.Count() );
         }
 
         public override JToken toJSON()

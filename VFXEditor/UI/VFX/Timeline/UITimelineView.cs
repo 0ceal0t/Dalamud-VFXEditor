@@ -9,10 +9,9 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineView : UIDropdownView
+    public class UITimelineView : UIDropdownView<UITimeline>
     {
         public AVFXBase AVFX;
-        List<UITimeline> Timelines;
 
         public UITimelineView(AVFXBase avfx) : base( "##TIME", "Select a Timeline" )
         {
@@ -22,44 +21,30 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Timelines = new List<UITimeline>();
-            Options = new string[AVFX.Timelines.Count];
-            int idx = 0;
             foreach( var timeline in AVFX.Timelines )
             {
                 var item = new UITimeline( timeline, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Timelines.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
 
-        public override void OnNew()
+        public override UITimeline OnNew()
         {
-            AVFX.addTimeline();
+            return new UITimeline(AVFX.addTimeline(), this);
         }
-        public override void OnDelete( int idx )
+        public override void OnDelete( UITimeline item )
         {
-            AVFX.removeTimeline( idx );
+            AVFX.removeTimeline( item.Timeline );
         }
-        public override void OnDraw( int idx )
+        public override byte[] OnExport( UITimeline item )
         {
-            if( idx >= Timelines.Count ) return;
-            Timelines[idx].Draw( id );
+            return item.Timeline.toAVFX().toBytes();
         }
-        public override byte[] OnExport( int idx )
-        {
-            return Timelines[idx].Timeline.toAVFX().toBytes();
-        }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Timelines[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {
+        public override UITimeline OnImport( AVFXNode node ) {
             AVFXTimeline item = new AVFXTimeline();
             item.read( node );
             AVFX.addTimeline( item );
+            return new UITimeline( item, this );
         }
     }
 }

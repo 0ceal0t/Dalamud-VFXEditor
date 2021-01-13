@@ -9,10 +9,9 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffectorView : UIDropdownView
+    public class UIEffectorView : UIDropdownView<UIEffector>
     {
         public AVFXBase AVFX;
-        List<UIEffector> Effectors;
 
         public UIEffectorView(AVFXBase avfx) : base( "##EFFCT", "Select an Effector" )
         {
@@ -22,44 +21,26 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Effectors = new List<UIEffector>();
-            Options = new string[AVFX.Effectors.Count];
-            int idx = 0;
-            foreach( var effector in AVFX.Effectors )
-            {
+            foreach( var effector in AVFX.Effectors ) {
                 var item = new UIEffector( effector, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Effectors.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
 
-        public override void OnNew()
-        {
-            AVFX.addEffector();
+        public override UIEffector OnNew() {
+            return new UIEffector(AVFX.addEffector(), this);
         }
-        public override void OnDelete( int idx )
-        {
-            AVFX.removeEffector( idx );
+        public override void OnDelete( UIEffector item ) {
+            AVFX.removeEffector( item.Effector );
         }
-        public override void OnDraw( int idx )
-        {
-            if( idx >= Effectors.Count ) return;
-            Effectors[idx].Draw( id );
+        public override byte[] OnExport( UIEffector item ) {
+            return item.Effector.toAVFX().toBytes();
         }
-        public override byte[] OnExport( int idx )
-        {
-            return Effectors[idx].Effector.toAVFX().toBytes();
-        }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Effectors[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {
+        public override UIEffector OnImport( AVFXNode node ) {
             AVFXEffector item = new AVFXEffector();
             item.read( node );
             AVFX.addEffector( item );
+            return new UIEffector( item, this );
         }
     }
 }

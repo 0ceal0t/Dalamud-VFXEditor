@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UISchedulerItem : UIBase
+    public class UISchedulerItem : UIItem
     {
         public AVFXScheduleSubItem Item;
         public UIScheduler Sched;
@@ -35,31 +35,30 @@ namespace VFXEditor.UI.VFX
         public override void Draw( string parentId )
         {
         }
-        public override void DrawSelect( string parentId, ref UIBase selected )
+        public override void DrawSelect( int idx, string parentId, ref UIItem selected )
         {
-            if( !Assigned )
-            {
-                return;
-            }
-            string text = Idx + ": Timeline " + Item.TimelineIdx.Value;
-            if( ImGui.Selectable( text + parentId, selected == this ) )
+            if( ImGui.Selectable( GetText(idx) + parentId, selected == this ) )
             {
                 selected = this;
             }
         }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/" + Name + Idx;
+            string id = parentId + "/" + Name;
             if(Name != "Trigger" )
             {
                 if( UIUtils.RemoveButton( "Delete" + id ) )
                 {
-                    Sched.Scheduler.removeItem( Idx );
-                    Sched.Init();
+                    Sched.Scheduler.removeItem( Item );
+                    Sched.ItemSplit.OnDelete( this );
                     return;
                 }
             }
             DrawAttrs( id );
+        }
+
+        public override string GetText( int idx ) {
+            return idx + ": Timeline " + Item.TimelineIdx.Value;
         }
     }
 }

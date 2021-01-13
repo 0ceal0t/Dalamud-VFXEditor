@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
             {
                 var vnum = Model.Model.addVNum();
                 var emit = Model.Model.addEmitVertex();
-                Model.EmitterVerts.Add( new UIModelEmitterVertex( vnum, emit, Model ) );
+                OnNew( new UIModelEmitterVertex( vnum, emit, Model ) );
             }
         }
     }

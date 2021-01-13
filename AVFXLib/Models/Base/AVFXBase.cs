@@ -194,6 +194,9 @@ namespace AVFXLib.Models
         {
             Schedulers.RemoveAt(idx);
         }
+        public void removeScheduler(AVFXSchedule item ) {
+            Schedulers.Remove( item );
+        }
         //
         public void addTimeline( AVFXTimeline item )
         {
@@ -209,6 +212,9 @@ namespace AVFXLib.Models
         public void removeTimeline(int idx)
         {
             Timelines.RemoveAt(idx);
+        }
+        public void removeTimeline( AVFXTimeline item ) {
+            Timelines.Remove( item );
         }
         //
         public void addEffector( AVFXEffector item )
@@ -226,6 +232,9 @@ namespace AVFXLib.Models
         {
             Effectors.RemoveAt(idx);
         }
+        public void removeEffector( AVFXEffector item ) {
+            Effectors.Remove( item );
+        }
         //
         public void addEmitter( AVFXEmitter item )
         {
@@ -241,6 +250,9 @@ namespace AVFXLib.Models
         public void removeEmitter(int idx)
         {
             Emitters.RemoveAt(idx);
+        }
+        public void removeEmitter( AVFXEmitter item ) {
+            Emitters.Remove( item );
         }
         //
         public void addParticle( AVFXParticle item )
@@ -258,6 +270,9 @@ namespace AVFXLib.Models
         {
             Particles.RemoveAt(idx);
         }
+        public void removeParticle( AVFXParticle item ) {
+            Particles.Remove( item );
+        }
         //
         public void addBinder( AVFXBinder item )
         {
@@ -273,6 +288,9 @@ namespace AVFXLib.Models
         public void removeBinder(int idx)
         {
             Binders.RemoveAt(idx);
+        }
+        public void removeBinder( AVFXBinder item ) {
+            Binders.Remove( item );
         }
         //
         public void addTexture( AVFXTexture item )
@@ -290,6 +308,9 @@ namespace AVFXLib.Models
         {
             Textures.RemoveAt(idx);
         }
+        public void removeTexture( AVFXTexture item ) {
+            Textures.Remove( item );
+        }
         //
         public void addModel( AVFXModel item )
         {
@@ -306,7 +327,9 @@ namespace AVFXLib.Models
         {
             Models.RemoveAt( idx );
         }
-
+        public void removeModel( AVFXModel item ) {
+            Models.Remove( item );
+        }
         // ======= EXPORT =======
         public override JToken toJSON()
         {

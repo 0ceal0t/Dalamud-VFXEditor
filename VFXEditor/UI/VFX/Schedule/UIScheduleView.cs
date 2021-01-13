@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIScheduleView : UIDropdownView
+    public class UIScheduleView : UIDropdownView<UIScheduler>
     {
         public AVFXBase AVFX;
         List<UIScheduler> Schedulers;
@@ -22,31 +22,17 @@ namespace VFXEditor.UI.VFX
         public override void Init()
         {
             base.Init();
-            Schedulers = new List<UIScheduler>();
-            Options = new string[AVFX.Schedulers.Count];
-            int idx = 0;
-            foreach( var sched in AVFX.Schedulers )
-            {
+            foreach( var sched in AVFX.Schedulers ) {
                 var item = new UIScheduler( sched, this );
-                item.Idx = idx;
-                Options[idx] = item.GetDescText();
-                Schedulers.Add( item );
-                idx++;
+                Items.Add( item );
             }
         }
 
-        public override void OnNew() { }
-        public override void OnDelete( int idx ) { }
-        public override void OnDraw( int idx )
-        {
-            if( idx >= Schedulers.Count ) return;
-            Schedulers[idx].Draw( id );
+        public override UIScheduler OnNew() { return null; }
+        public override void OnDelete( UIScheduler item ) {}
+        public override byte[] OnExport( UIScheduler item ) {
+            return new byte[0];
         }
-        public override byte[] OnExport( int idx ){ return new byte[0]; }
-        public override void RefreshDesc( int idx )
-        {
-            Options[idx] = Schedulers[idx].GetDescText();
-        }
-        public override void OnImport( AVFXNode node ) {}
+        public override UIScheduler OnImport( AVFXNode node ) { return null; }
     }
 }

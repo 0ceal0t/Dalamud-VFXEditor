@@ -64,10 +64,15 @@ namespace AVFXLib.Models
             Keys.Add(key);
             return key;
         }
-
+        public void AddKey(AVFXKey item ) {
+            Keys.Add( item );
+        }
         public void removeKey(int idx)
         {
             Keys.RemoveAt(idx);
+        }
+        public void removeKey(AVFXKey item ) {
+            Keys.Remove( item );
         }
 
         public override JToken toJSON()
