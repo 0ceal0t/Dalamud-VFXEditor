@@ -13,36 +13,17 @@ using ImGuiNET;
 namespace VFXEditor.UI
 {
 
-    public class TexToolsDialog
+    public class TexToolsDialog : GenericDialog
     {
-        public Plugin _plugin;
-        public bool Visible = false;
-
-        public TexToolsDialog( Plugin plugin ) {
-            _plugin = plugin;
-        }
-        public void Show() {
-            Visible = true;
+        public TexToolsDialog( Plugin plugin ) : base(plugin, "TexTools") {
         }
 
         public string Name = "";
         public string Author = "";
         public string SaveLocation = "";
         public string VFXPath = "";
-        public bool DrawOnce = false;
-        public void Draw()
-        {
-            if( !Visible )
-                return;
-            if( !DrawOnce )
-            {
-                ImGui.SetNextWindowSize( new Vector2( 500, 190 ) );
-                DrawOnce = true;
-            }
-            // ================
-            var ret = ImGui.Begin( "TexTools", ref Visible );
-            if( !ret )
-                return;
+
+        public override void OnDraw() {
             var id = "##Textools";
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
@@ -56,16 +37,15 @@ namespace VFXEditor.UI
             }
             ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
             ImGui.SameLine();
-            if(ImGui.Button("Use Replace" + id ) ) {
+            if( ImGui.Button( "Use Replace" + id ) ) {
                 VFXPath = _plugin.ReplaceAVFXPath;
             }
             ImGui.EndChild();
             ImGui.Separator();
-            if(ImGui.Button("EXPORT" + id ) ) {
+            if( ImGui.Button( "EXPORT" + id ) ) {
                 _plugin.TexToolsManager.Export( Name, Author, VFXPath, SaveLocation, _plugin.AVFX );
                 Visible = false;
             }
-            ImGui.End();
         }
 
         public void SaveDialog()

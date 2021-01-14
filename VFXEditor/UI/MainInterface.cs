@@ -43,7 +43,6 @@ namespace VFXEditor.UI
             DrawDebugBar();
             if( !Visible )
                 return;
-            // =====================
             DrawStartInterface();
         }
 
@@ -100,7 +99,7 @@ namespace VFXEditor.UI
                 {
                     if((DateTime.Now - LastUpdate).TotalSeconds > 2  )
                     {
-                        _plugin.Manager.SaveTempFile( _plugin.AVFX );
+                        _plugin.Doc.Save();
                         _plugin.ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
@@ -190,8 +189,6 @@ namespace VFXEditor.UI
             }
         }
 
-        public string sourceString = "[NONE]";
-        public string previewString = "[NONE]";
         public void DrawFiles()
         {
             var ret = ImGui.BeginTabItem( "Files##MainInterfaceTabs" );
@@ -199,14 +196,16 @@ namespace VFXEditor.UI
                 return;
             // ==========================
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Columns( 3, "MainInterfaceFileColumns", false );
+            ImGui.Columns( 4, "MainInterfaceFileColumns", false );
 
             ImGui.SetColumnWidth( 0, 80 );
-            ImGui.Text( "Source" );
+            ImGui.Text( "Data Source:" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( "Replace" );
+            ImGui.Text( "Preview On:" );
             ImGui.NextColumn();
 
+            string sourceString = _plugin.SourceString;
+            string previewString = _plugin.ReplaceString;
             ImGui.SetColumnWidth( 1, 500 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() );
             ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
@@ -214,13 +213,13 @@ namespace VFXEditor.UI
             ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
             ImGui.NextColumn();
 
-            ImGui.SetColumnWidth( 2, 200 );
+            ImGui.SetColumnWidth( 2, 100 );
             if( ImGui.Button( "Select##MainInterfaceFiles-SourceSelect" ) )
             {
                 _plugin.SelectUI.Show();
             }
             ImGui.SameLine();
-            if( ImGui.Button( "New##MainInterfaceFiles-New" ) )
+            if( ImGui.Button( "New##MainInterfaceFiles-New", new Vector2(40, 23) ) )
             {
                 ImGui.OpenPopup( "New_Popup1");
             }
@@ -243,6 +242,14 @@ namespace VFXEditor.UI
             {
                 _plugin.RemoveReplaceAVFX();
             }
+            ImGui.NextColumn();
+
+            ImGui.SetColumnWidth( 3, 200 );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.90f, 0.70f, 0.05f, 1.0f ) );
+            if(ImGui.Button( "Manage" ) ) {
+                _plugin.DocUI.Show();
+            }
+            ImGui.PopStyleColor();
 
             ImGui.Columns( 1 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

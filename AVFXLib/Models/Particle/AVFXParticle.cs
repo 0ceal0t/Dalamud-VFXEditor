@@ -186,6 +186,7 @@ namespace AVFXLib.Models
             SetDefault(Attributes);
             ParticleVariety.GiveValue(ParticleType.Model);
             SimpleAnimEnable.GiveValue(false);
+            SetUnAssigned( Bs11 );
             SetUnAssigned(Simple);
             SetUnAssigned(Gravity);
             SetUnAssigned(GravityRandom);
@@ -218,9 +219,7 @@ namespace AVFXLib.Models
             //
             Data.toDefault();
             //
-            AVFXParticleUVSet uv = new AVFXParticleUVSet();
-            uv.toDefault();
-            UVSets.Add( uv );
+            addUvSet();
             //
             TC1.toDefault();
             TC2.toDefault();

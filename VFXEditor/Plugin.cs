@@ -16,25 +16,39 @@ namespace VFXEditor
         public string Name => "VFXEditor";
         private const string CommandName = "/vfxedit";
 
-        public DalamudPluginInterface PluginInterface { get; set; }
-        public Configuration Configuration { get; set; }
-        public ResourceLoader ResourceLoader { get; set; }
-        public TexTools TexToolsManager { get; set; }
-        public Penumbra PenumbraManager { get; set; }
+        public DalamudPluginInterface PluginInterface;
+        public Configuration Configuration;
+        public ResourceLoader ResourceLoader;
+        public TexTools TexToolsManager;
+        public Penumbra PenumbraManager;
 
-        public MainInterface MainUI { get; set; }
-        public VFXSelectDialog SelectUI { get; set; }
-        public VFXSelectDialog PreviewUI { get; set; }
-        public TexToolsDialog TexToolsUI { get; set; }
-        public PenumbraDialog PenumbraUI { get; set; }
+        public MainInterface MainUI;
+        public VFXSelectDialog SelectUI;
+        public VFXSelectDialog PreviewUI;
+        public TexToolsDialog TexToolsUI;
+        public PenumbraDialog PenumbraUI;
+        public DocDialog DocUI;
 
-        public AVFXBase AVFX = null;
+        public AVFXBase AVFX {
+            get { return Doc.ActiveDoc.AVFX; }
+            set { Doc.ActiveDoc.AVFX = value; }
+        }
+        public string ReplaceAVFXPath {
+            get { return Doc.ActiveDoc.Replace.Path; }
+        }
+        public string SourceString {
+            get { return Doc.ActiveDoc.Source.DisplayString; }
+        }
+        public string ReplaceString {
+            get { return Doc.ActiveDoc.Replace.DisplayString; }
+        }
+        public DocManager Doc;
         public DataManager Manager;
 
         public string TemplateLocation;
         public string WriteLocation;
 
-        public string PluginDebugTitleStr { get; private set; }
+        public string PluginDebugTitleStr;
 
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
 
@@ -48,6 +62,7 @@ namespace VFXEditor
                 Name,
             } );
             Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
+            PluginLog.Log( "Write location: " + WriteLocation );
 
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize( PluginInterface, WriteLocation );
@@ -64,6 +79,7 @@ namespace VFXEditor
 #endif
             ResourceLoader.Init();
             ResourceLoader.Enable();
+            Doc = new DocManager( this );
             MainUI = new MainInterface( this );
             Manager = new DataManager( this );
             TexToolsManager = new TexTools( this );
@@ -75,12 +91,14 @@ namespace VFXEditor
             PreviewUI.OnSelect += ReplaceAVFX;
             TexToolsUI = new TexToolsDialog( this );
             PenumbraUI = new PenumbraDialog( this );
+            DocUI = new DocDialog( this );
 
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += PenumbraUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += DocUI.Draw;
             PluginDebugTitleStr = $"{Name} - Debug Build";
         }
 
@@ -121,30 +139,22 @@ namespace VFXEditor
                 default:
                     return;
             }
-            MainUI.sourceString = selectResult.DisplayString;
+            Doc.UpdateSource( selectResult );
         }
 
-        public string ReplaceAVFXPath = "";
         public void ReplaceAVFX(VFXSelectResult replaceResult ) {
-            switch( replaceResult.Type ) {
-                case VFXSelectType.GameItem:
-                case VFXSelectType.GamePath:
-                case VFXSelectType.GameStatus:
-                case VFXSelectType.GameAction:
-                case VFXSelectType.GameZone:
-                case VFXSelectType.GameEmote:
-                case VFXSelectType.GameCutscene:
-                case VFXSelectType.GameNpc:
-                    ReplaceAVFXPath = replaceResult.Path;
-                    break;
-                default:
-                    return;
-            }
-            MainUI.previewString = replaceResult.DisplayString;
+            Doc.UpdateReplace( replaceResult );
         }
         public void RemoveReplaceAVFX() {
-            ReplaceAVFXPath = "";
-            MainUI.previewString = "[NONE]";
+            Doc.UpdateReplace( VFXSelectResult.None() );
+        }
+        public void RefreshDoc() {
+            if( Doc.HasVFX() ) {
+                MainUI.RefreshAVFX();
+            }
+            else {
+                UnloadAVFX();
+            }
         }
 
         public void LoadAVFX(AVFXBase avfx ) {
@@ -176,10 +186,12 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= PreviewUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= TexToolsUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= PenumbraUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= DocUI.Draw;
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();
             ResourceLoader.Dispose();
+            Doc.Cleanup();
         }
 
         private void OnCommand( string command, string rawArgs ) {

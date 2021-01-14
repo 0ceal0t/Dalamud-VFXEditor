@@ -77,8 +77,11 @@ namespace VFXEditor.UI.VFX
                 Init();
             }
         }
+
+        public bool IsDelete = false; // lmaooooo
         public override void DrawBody( string parentId )
         {
+            IsDelete = false;
             var id = parentId + "/" + Name;
             if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
             {
@@ -94,6 +97,7 @@ namespace VFXEditor.UI.VFX
                 foreach( var key in Keys )
                 {
                     key.Draw( keyIdx, id );
+                    if( IsDelete ) return;
                     keyIdx++;
                 }
 
@@ -138,6 +142,7 @@ namespace VFXEditor.UI.VFX
             {
                 Curve.Curve.removeKey(Key);
                 Curve.Keys.Remove( this );
+                Curve.IsDelete = true;
                 return;
             }
             if (ImGui.InputInt("Time" + id, ref Time))

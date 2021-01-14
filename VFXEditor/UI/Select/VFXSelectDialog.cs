@@ -36,6 +36,13 @@ namespace VFXEditor.UI
             DisplayString = displayString;
             Path = path;
         }
+
+        public static VFXSelectResult None() {
+            var s = new VFXSelectResult();
+            s.DisplayString = "[NONE]";
+            s.Path = "";
+            return s;
+        }
     }
 
     public class VFXSelectDialog

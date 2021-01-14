@@ -52,7 +52,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better key UI (curve editor?)
 - [ ] Help text
 - [ ] Penumbra webserver integration
-- [ ] "Go To" button
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import

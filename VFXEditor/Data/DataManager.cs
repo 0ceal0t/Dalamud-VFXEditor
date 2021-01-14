@@ -23,9 +23,6 @@ namespace VFXEditor
         {
             _plugin = plugin;
             TexManager = new TextureManager( _plugin );
-            // =======================
-            TempPath = Path.Combine( _plugin.WriteLocation, "VFXTempFile.avfx" );
-            PluginLog.Log( "Temp file location: " + TempPath );
             NpcCsv = Path.Combine( _plugin.TemplateLocation, "npc.csv" );
         }
 
@@ -181,7 +178,6 @@ namespace VFXEditor
                 selectedAction = new XivActionSelected( null, action );
                 return true;
             }
-
             string tmbPath = action.GetTmbPath();
             bool result = _plugin.PluginInterface.Data.FileExists( tmbPath );
             if( result ) {

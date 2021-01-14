@@ -164,9 +164,10 @@ namespace VFXEditor
 
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
-            if(gameFsPath == Plugin.ReplaceAVFXPath && !(Plugin.ReplaceAVFXPath == ""))
+            var lp = Plugin.Doc.GetLocalPath( gameFsPath );
+            if(lp != "")
             {
-                replaceFile = new FileInfo(Plugin.Manager.TempPath);
+                replaceFile = new FileInfo(lp);
             }
             var fsPath = replaceFile?.FullName;
 
