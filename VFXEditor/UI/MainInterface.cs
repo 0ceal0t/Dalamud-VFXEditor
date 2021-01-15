@@ -245,7 +245,7 @@ namespace VFXEditor.UI
             ImGui.NextColumn();
 
             ImGui.SetColumnWidth( 3, 200 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.90f, 0.70f, 0.05f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.20f, 0.90f, 0.80f, 1.0f ) );
             if(ImGui.Button( "Manage" ) ) {
                 _plugin.DocUI.Show();
             }

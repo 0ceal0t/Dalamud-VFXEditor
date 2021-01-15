@@ -37,12 +37,8 @@ namespace VFXEditor {
         public ReplaceDoc NewDoc() {
             ReplaceDoc doc = new ReplaceDoc();
             doc.WriteLocation = Path.Combine( WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
-
-            doc.Source = new VFXSelectResult();
-            doc.Source.DisplayString = "[NONE]";
-            doc.Replace = new VFXSelectResult();
-            doc.Replace.DisplayString = "[NONE]";
-            doc.Replace.Path = "";
+            doc.Source = VFXSelectResult.None();
+            doc.Replace = VFXSelectResult.None();
 
             Docs.Add( doc );
             ActiveDoc = doc;
@@ -50,8 +46,6 @@ namespace VFXEditor {
         }
 
         public void UpdateSource( VFXSelectResult select ) {
-            if( select.Path == "" )
-                select.DisplayString = "[NONE]";
             ActiveDoc.Source = select;
         }
         public void UpdateReplace(VFXSelectResult select ) {

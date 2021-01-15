@@ -50,7 +50,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Clean up "troubleshooting"
 - [ ] File loaded indication
 - [ ] Better key UI (curve editor?)
-- [ ] Help text
+- [ ] Help text / hover text
 - [ ] Penumbra webserver integration
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import

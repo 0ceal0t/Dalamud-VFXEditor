@@ -371,12 +371,6 @@ namespace VFXEditor
             return true;
         }
 
-        // ====== TEMP AVFX ====
-        public bool SaveTempFile(AVFXBase avfx )
-        {
-            return SaveLocalFile( TempPath, avfx );
-        }
-
         // ====== LOCAL AVFX =====
         public AVFXNode LastImportNode = null;
         public bool GetLocalFile(string path, out AVFXBase avfx)

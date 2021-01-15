@@ -27,21 +27,22 @@ namespace VFXEditor.UI
             var id = "##Textools";
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
-            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), false );
+            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
             ImGui.InputText( "Mod Author" + id, ref Author, 255 );
             ImGui.InputText( "Save Location" + id, ref SaveLocation, 255 );
-            ImGui.SameLine();
-            if( ImGui.Button( "BROWSE" + id ) ) {
+            ImGui.SameLine( ImGui.GetWindowWidth() - 58 );
+            if( ImGui.Button( "Browse" + id ) ) {
                 SaveDialog();
             }
             ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
-            ImGui.SameLine();
+            ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
             if( ImGui.Button( "Use Replace" + id ) ) {
                 VFXPath = _plugin.ReplaceAVFXPath;
             }
             ImGui.EndChild();
-            ImGui.Separator();
+
+
             if( ImGui.Button( "EXPORT" + id ) ) {
                 _plugin.TexToolsManager.Export( Name, Author, VFXPath, SaveLocation, _plugin.AVFX );
                 Visible = false;

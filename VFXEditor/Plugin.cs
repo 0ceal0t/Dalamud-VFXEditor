@@ -109,7 +109,7 @@ namespace VFXEditor
             }
             LastSelect = DateTime.Now;
             switch( selectResult.Type ) {
-                case VFXSelectType.Local:
+                case VFXSelectType.Local: // LOCAL
                     bool localResult = Manager.GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
                         LoadAVFX( localAvfx );
@@ -119,14 +119,7 @@ namespace VFXEditor
                         return;
                     }
                     break;
-                case VFXSelectType.GameItem:
-                case VFXSelectType.GamePath:
-                case VFXSelectType.GameStatus:
-                case VFXSelectType.GameAction:
-                case VFXSelectType.GameZone:
-                case VFXSelectType.GameEmote:
-                case VFXSelectType.GameCutscene:
-                case VFXSelectType.GameNpc:
+                default: // EVERYTHING ELSE: GAME FILES
                     bool gameResult = Manager.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
                         LoadAVFX( gameAvfx );
@@ -136,8 +129,6 @@ namespace VFXEditor
                         return;
                     }
                     break;
-                default:
-                    return;
             }
             Doc.UpdateSource( selectResult );
         }
@@ -195,10 +186,6 @@ namespace VFXEditor
         }
 
         private void OnCommand( string command, string rawArgs ) {
-            var args = rawArgs.Split( ' ' );
-            if( args.Length > 0 ) {
-                //switch( args[ 0 ] ) {} return;
-            }
             MainUI.Visible = !MainUI.Visible;
         }
     }
