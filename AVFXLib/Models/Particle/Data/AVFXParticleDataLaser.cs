@@ -10,17 +10,16 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLaser : AVFXParticleData
     {
-        public AVFXCurve Width = new AVFXCurve("width", "Wdt");
         public AVFXCurve Length = new AVFXCurve("length", "Len");
-
+        public AVFXCurve Width = new AVFXCurve( "width", "Wdt" );
 
         List<Base> Attributes;
 
         public AVFXParticleDataLaser(string jsonPath) : base(jsonPath, "Data")
         {
             Attributes = new List<Base>(new Base[]{
-                Width,
-                Length
+                Length,
+                Width
             });
         }
 

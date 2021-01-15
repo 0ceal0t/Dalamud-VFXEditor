@@ -22,7 +22,7 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 
 ### Notes
 * This plugin does not currently work with `LivePluginLoader`
-* It might break Penumbra
+* It might interact strangely with Penumbra
 
 ## Features
 * Load and preview in-game VFXs (weapons, actions, status effects)
@@ -38,13 +38,13 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Clean up adding + deleting items (get rid of extra `Init()`). Be careful of `foreach`, like items in `UISplitView`
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
+- [ ] When browsing for local file, just select it
 - [ ] Properly fix literal int list
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] Package all documents into 1 Textools mod
 - [ ] Save all particles at once, etc.
-- [ ] Multiple vfxs (-_-)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
@@ -64,6 +64,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~Multiple vfxs~~
 - [x] ~~Better sidebar names to reflect target index~~
 - [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
 - [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~

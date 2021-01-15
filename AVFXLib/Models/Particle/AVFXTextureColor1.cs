@@ -22,6 +22,7 @@ namespace AVFXLib.Models
         public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new LiteralEnum<TextureCalculateAlpha>("textureCalculateAlpha", "TCAT");
         public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
         public LiteralIntList MaskTextureIdx = new LiteralIntList( "maskTextureIdx", "TLst");
+        public AVFXCurve TexN = new AVFXCurve( "texN", "TxN" );
 
         List<Base> Attributes;
 
@@ -39,7 +40,8 @@ namespace AVFXLib.Models
                 TextureCalculateColor,
                 TextureCalculateAlpha,
                 TextureIdx,
-                MaskTextureIdx
+                MaskTextureIdx,
+                TexN
             });
         }
 
@@ -53,6 +55,7 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
+            SetUnAssigned( TexN );
         }
 
         public override JToken toJSON()

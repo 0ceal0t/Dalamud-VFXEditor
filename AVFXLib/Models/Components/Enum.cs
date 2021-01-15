@@ -43,8 +43,8 @@ public enum PointLightSouce
     CreateTimeBG = 1,
     AlwaysBG = 2,
     LocalVFX = 3,
-    GlobalVFX = 3,
-    Max = 3
+    GlobalVFX = 4,
+    Max = 5
 }
 /*
  * PARTICLE

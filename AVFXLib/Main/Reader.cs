@@ -114,6 +114,7 @@ namespace AVFXLib.Main
             "CEI",
             "CEO",
             "TC1",
+            "TxN",
             "TC2",
             "TC3",
             "TC4",

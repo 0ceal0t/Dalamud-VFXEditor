@@ -34,6 +34,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
             Attributes.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
             Attributes.Add(new UICombo<TextureCalculateAlpha>("Calculate Alpha", Tex.TextureCalculateAlpha));
+            Attributes.Add( new UICurve( Tex.TexN, "TexN" ) );
         }
 
         // =========== DRAW =====================
