@@ -28,7 +28,7 @@ namespace VFXEditor.UI
             _dialog.DisplayPath( loadedItem.GetLoopVFX1Path() );
             if( loadedItem.LoopVFX1Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop1" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name, loadedItem.GetLoopVFX1Path() ) );
+                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop1", loadedItem.GetLoopVFX1Path() ) );
                 }
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.GetLoopVFX1Path(), id: Id + "Loop1Copy" );
@@ -39,7 +39,7 @@ namespace VFXEditor.UI
             _dialog.DisplayPath( loadedItem.GetLoopVFX2Path() );
             if( loadedItem.LoopVFX2Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop2" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name, loadedItem.GetLoopVFX2Path() ) );
+                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop2", loadedItem.GetLoopVFX2Path() ) );
                 }
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.GetLoopVFX2Path(), id: Id + "Loop2Copy" );
@@ -50,7 +50,7 @@ namespace VFXEditor.UI
             _dialog.DisplayPath( loadedItem.GetLoopVFX3Path() );
             if( loadedItem.LoopVFX3Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop3" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name, loadedItem.GetLoopVFX3Path() ) );
+                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop3", loadedItem.GetLoopVFX3Path() ) );
                 }
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Copy" );

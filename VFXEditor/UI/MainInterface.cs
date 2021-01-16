@@ -331,38 +331,17 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         // ======= HELPERS ============
         public void BGtoPlayerVFX() {
             // add new binder
-            VFXMain.AVFX.addBinder();
-            VFXMain.BinderView.Init();
-            var binderIdx = VFXMain.AVFX.Binders.Count - 1;
+            VFXMain.BinderView.AddItem( VFXMain.BinderView.OnNew() );
+            var binderIdx = VFXMain.BinderView.Items.Count - 1;
             // turn all timeline item binders -> last binder idx
-            List<int> okTls = new List<int>();
-            int tlIdx = 0;
-            foreach( var tl in VFXMain.AVFX.Timelines ) {
-                var ok = false;
+            foreach( var tl in VFXMain.TimelineView.Items ) {
                 foreach( var item in tl.Items ) {
-                    if(item.EmitterIdx.Value >= 0 ) {
-                        item.BinderIdx.GiveValue( binderIdx );
-                        ok = true;
+                    if(item.Item.EmitterIdx.Value >= 0 ) {
+                        item.BinderIndex.Value = binderIdx;
+                        item.Item.BinderIdx.GiveValue( binderIdx );
                     }
                 }
-                if( ok ) {
-                    okTls.Add( tlIdx );
-                }
-                tlIdx++;
             }
-            VFXMain.TimelineView.Init();
-            // add all timelines to scheduler as items, disable all scheduler triggers
-            foreach(var trigger in VFXMain.AVFX.Schedulers[0].Triggers ) {
-                trigger.TimelineIdx.GiveValue( -1 );
-            }
-            VFXMain.AVFX.Schedulers[0].Items.Clear();
-            foreach(int tl in okTls ) {
-                VFXMain.AVFX.Schedulers[0].addItem();
-                var i = VFXMain.AVFX.Schedulers[0].Items.Last();
-                i.Enabled.GiveValue( true );
-                i.TimelineIdx.GiveValue( tl );
-            }
-            VFXMain.ScheduleView.Init();
         }
         public void OpenTemplate(string path ) {
             VFXSelectResult newResult = new VFXSelectResult();

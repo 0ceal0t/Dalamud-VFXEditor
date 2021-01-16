@@ -138,6 +138,7 @@ namespace VFXEditor.UI
                         try
                         {
                             localPathInput = picker.FileName;
+                            Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
                         }
                         catch( Exception ex )
                         {
@@ -208,7 +209,7 @@ namespace VFXEditor.UI
             var id = "##Recent/" + Id;
 
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
-            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), false );
+            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             int idx = 0;
             foreach(var item in _plugin.Configuration.RecentSelects )
             {
@@ -224,7 +225,6 @@ namespace VFXEditor.UI
             ImGui.EndChild();
             if( IsRecentSelected )
             {
-                ImGui.Separator();
                 if( ImGui.Button( "SELECT" + id ) )
                 {
                     OnSelect?.Invoke( RecentSelected );

@@ -28,7 +28,7 @@ namespace VFXEditor.UI {
                 ImGui.SameLine();
                 _dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[EMOTE] " + loadedItem.Emote.Name, _vfx ) );
+                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[EMOTE] " + loadedItem.Emote.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
                 _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );

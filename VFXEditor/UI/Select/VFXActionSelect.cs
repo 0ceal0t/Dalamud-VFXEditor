@@ -27,7 +27,7 @@ namespace VFXEditor.UI
             _dialog.DisplayPath( loadedItem.CastVfxPath );
             if( loadedItem.CastVfxExists ) {
                 if( ImGui.Button( "SELECT" + Id + "Cast" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name, loadedItem.CastVfxPath ) );
+                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " Cast", loadedItem.CastVfxPath ) );
                 }
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.CastVfxPath, id: Id + "CastCopy" );
@@ -43,7 +43,7 @@ namespace VFXEditor.UI
                     ImGui.SameLine();
                     _dialog.DisplayPath( _vfx );
                     if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name, _vfx ) );
+                        _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, _vfx ) );
                     }
                     ImGui.SameLine();
                     _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );

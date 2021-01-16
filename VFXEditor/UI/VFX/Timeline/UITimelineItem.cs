@@ -14,23 +14,25 @@ namespace VFXEditor.UI.VFX
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;
         //===========================
-        public UIInt ClipNumber;
+        public UIInt BinderIndex;
         public bool ClipAssigned;
+        public UIInt ClipNumber;
 
         public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline)
         {
             Item = item;
             Timeline = timeline;
+            BinderIndex = new UIInt( "Binder Index", Item.BinderIdx );
+            ClipNumber = new UIInt( "ClipNumber", Item.ClipNumber );
+            ClipAssigned = Item.ClipNumber.Assigned;
             //==================
             Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
             Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );
             Attributes.Add( new UIInt( "End Time", Item.EndTime ) );
-            Attributes.Add( new UIInt( "Binder Index", Item.BinderIdx ) );
+            Attributes.Add( BinderIndex );
             Attributes.Add( new UIInt( "Effector Index", Item.EffectorIdx ) );
             Attributes.Add( new UIInt( "Emitter Index", Item.EmitterIdx ) );
             Attributes.Add( new UIInt( "Platform", Item.Platform ) );
-            ClipNumber = new UIInt( "ClipNumber", Item.ClipNumber );
-            ClipAssigned = Item.ClipNumber.Assigned;
         }
 
         public override void DrawBody( string parentId )

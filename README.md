@@ -38,8 +38,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
-- [ ] When browsing for local file, just select it
 - [ ] Properly fix literal int list
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
@@ -65,6 +65,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ---
 - [x] ~~Multiple vfxs~~
+- [x] ~~Fix BG to player conversion~~
+- [x] ~~Specific vfx# in name~~
+- [x] ~~When browsing for local file, just select it~~
 - [x] ~~Better sidebar names to reflect target index~~
 - [x] ~~Multiple model indexes (see `vfx/action/ab_virus1/eff/abi_virus1t1h.avfx` model particles)~~
 - [x] ~~Multiple masks (see `vfx/action/mgc_siles1/eff/mgc_sile1t0c.avfx` TC1)~~
