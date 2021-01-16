@@ -39,31 +39,44 @@ namespace VFXEditor
              */
         }
 
-        public void Export( string name, string author, string path, string saveLocation, AVFXBase avfx )
+        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll )
         {
             try
             {
-                var data = avfx.toAVFX().toBytes();
-
                 PenumbraMod mod = new PenumbraMod();
                 mod.Name = name;
                 mod.Author = author;
                 mod.Description = "Exported from VFXEditor";
-                mod.Version = null;
+                mod.Version = version;
                 mod.Website = null;
                 mod.FileSwaps = new Dictionary<string, string>();
 
                 string modFolder = Path.Combine( saveLocation, name );
-                string modConfig = Path.Combine( modFolder, "meta.json" );
-                string modFile = Path.Combine( modFolder, path );
-                string modFileFolder = Path.GetDirectoryName( modFile );
-
                 Directory.CreateDirectory( modFolder );
+                string modConfig = Path.Combine( modFolder, "meta.json" );
                 string configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
-                Directory.CreateDirectory( modFileFolder );
-                File.WriteAllBytes( modFile, data );
+                void AddMod( AVFXBase _avfx, string _path ) {
+                    if( !string.IsNullOrEmpty( _path ) && _avfx != null ) {
+                        var data = _avfx.toAVFX().toBytes();
+                        string modFile = Path.Combine( modFolder, _path );
+                        string modFileFolder = Path.GetDirectoryName( modFile );
+                        Directory.CreateDirectory( modFileFolder );
+                        File.WriteAllBytes( modFile, data );
+                    }
+                }
+
+                if( exportAll ) {
+                    foreach( var doc in _plugin.Doc.Docs ) {
+                        var _path = doc.Replace.Path;
+                        var _avfx = doc.AVFX;
+                        AddMod( _avfx, _path );
+                    }
+                }
+                else {
+                    AddMod( _plugin.AVFX, path );
+                }
 
                 PluginLog.Log( "Exported To: " + saveLocation );
             }

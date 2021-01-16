@@ -17,8 +17,10 @@ namespace VFXEditor.UI {
 
         public string Name = "";
         public string Author = "";
+        public string Version = "1.0.0";
         public string SaveLocation = "";
         public string VFXPath = "";
+        public bool ExportAll = false;
 
         public override void OnDraw() {
             var id = "##Penumbra";
@@ -26,21 +28,25 @@ namespace VFXEditor.UI {
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
-            ImGui.InputText( "Mod Author" + id, ref Author, 255 );
+            ImGui.InputText( "Author" + id, ref Author, 255 );
+            ImGui.InputText( "Version" + id, ref Version, 255 );
             ImGui.InputText( "Save Location" + id, ref SaveLocation, 255 );
             ImGui.SameLine( ImGui.GetWindowWidth() - 58 );
             if( ImGui.Button( "Browse" + id ) ) {
                 SaveDialog();
             }
-            ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
-            ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
-            if( ImGui.Button( "Use Replace" + id ) ) {
-                VFXPath = _plugin.ReplaceAVFXPath;
+            ImGui.Checkbox( "Export all", ref ExportAll );
+            if( !ExportAll ) {
+                ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
+                ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
+                if( ImGui.Button( "Use Replace" + id ) ) {
+                    VFXPath = _plugin.ReplaceAVFXPath;
+                }
             }
             ImGui.EndChild();
 
             if( ImGui.Button( "EXPORT" + id ) ) {
-                _plugin.PenumbraManager.Export( Name, Author, VFXPath, SaveLocation, _plugin.AVFX );
+                _plugin.PenumbraManager.Export( Name, Author, Version, VFXPath, SaveLocation, ExportAll );
                 Visible = false;
             }
         }

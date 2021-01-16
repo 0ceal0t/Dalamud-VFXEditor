@@ -66,62 +66,48 @@ namespace VFXEditor
              */
         }
 
-        public async void Export(string name, string author, string path, string saveLocation, AVFXBase avfx )
+        public async void Export(string name, string author, string version, string path, string saveLocation, bool exportAll )
         {
             try
             {
-                var data = avfx.toAVFX().toBytes();
-                var newData = await CreateType2Data( data );
+                List<TTMPL_Simple> simpleParts = new List<TTMPL_Simple>();
+                byte[] newData;
+                int ModOffset = 0;
 
-                TTMPL_Simple simple = new TTMPL_Simple();
-                string[] split = path.Split( '/' );
-                simple.Name = split[split.Length - 1];
-                simple.Category = "Raw File Copy";
-                simple.FullPath = path;
-                simple.IsDefault = false;
-                simple.ModOffset = 0;
-                simple.ModSize = newData.Length;
+                using( MemoryStream ms = new MemoryStream() ) {
+                    using( BinaryWriter writer = new BinaryWriter( ms ) ) {
 
-                var v = _plugin.PluginInterface.Data.GetFile( path );
-                switch( split[0] )
-                {
-                    case "vfx":
-                        simple.DatFile = "080000";
-                        break;
-                    case "chara":
-                        simple.DatFile = "040000";
-                        break;
-                    case "bgcommon":
-                        simple.DatFile = "010000";
-                        break;
-                    case "bg":
-                        simple.DatFile = "02";
-                        if(split[1] == "ffxiv" ) {
-                            simple.DatFile += "0000"; // ok, good to go
+                        async Task AddMod(AVFXBase avfx, string _p) {
+                            if( !string.IsNullOrEmpty( _p ) && avfx != null ) {
+                                var modData = await SquishAVFX( avfx );
+                                simpleParts.Add( CreateModResource( _p, ModOffset, modData.Length ) );
+                                writer.Write( modData );
+                                ModOffset += modData.Length;
+                            }
                         }
-                        else { // like ex1
-                            // bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
-                            string exNumber = split[1].Replace( "ex", "" ).PadLeft(2, '0');
-                            string zoneNumber = split[2].Split( '_' )[0].PadLeft(2, '0');
-                            simple.DatFile += exNumber;
-                            simple.DatFile += zoneNumber;
+
+                        if( exportAll ) {
+                            foreach(var doc in _plugin.Doc.Docs ) {
+                                var _path = doc.Replace.Path;
+                                var _avfx = doc.AVFX;
+                                await AddMod( _avfx, _path );
+                            }
                         }
-                        break;
-                    default:
-                        PluginLog.Log( "Invalid VFX path! Could not find DatFile" );
-                        return;
+                        else {
+                            await AddMod( _plugin.AVFX, path);
+                        }
+                        newData = ms.ToArray();
+                    }
                 }
-                simple.ModPackEntry = null;
 
                 TTMPL mod = new TTMPL();
                 mod.TTMPVersion = "1.0s";
                 mod.Name = name;
                 mod.Author = author;
-                mod.Version = "1.0.0";
+                mod.Version = version;
                 mod.Description = null;
                 mod.ModPackPages = null;
-                TTMPL_Simple[] simples = { simple };
-                mod.SimpleModsList = simples;
+                mod.SimpleModsList = simpleParts.ToArray();
 
                 string saveDir = Path.GetDirectoryName( saveLocation );
                 string tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
@@ -135,15 +121,58 @@ namespace VFXEditor
                 FastZip zip = new FastZip();
                 zip.CreateEmptyDirectories = true;
                 zip.CreateZip( saveLocation, tempDir, false, "" );
-
                 Directory.Delete( tempDir, true);
-
                 PluginLog.Log( "Exported To: " + saveLocation );
             }
             catch(Exception e )
             {
                 PluginLog.LogError( e, "Could not export to TexTools" );
             }
+        }
+
+        public TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
+            TTMPL_Simple simple = new TTMPL_Simple();
+            string[] split = path.Split( '/' );
+            simple.Name = split[split.Length - 1];
+            simple.Category = "Raw File Copy";
+            simple.FullPath = path;
+            simple.IsDefault = false;
+            simple.ModOffset = modOffset;
+            simple.ModSize = modSize;
+
+            switch( split[0] ) {
+                case "vfx":
+                    simple.DatFile = "080000";
+                    break;
+                case "chara":
+                    simple.DatFile = "040000";
+                    break;
+                case "bgcommon":
+                    simple.DatFile = "010000";
+                    break;
+                case "bg":
+                    simple.DatFile = "02";
+                    if( split[1] == "ffxiv" ) {
+                        simple.DatFile += "0000"; // ok, good to go
+                    }
+                    else { // like ex1
+                           // bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
+                        string exNumber = split[1].Replace( "ex", "" ).PadLeft( 2, '0' );
+                        string zoneNumber = split[2].Split( '_' )[0].PadLeft( 2, '0' );
+                        simple.DatFile += exNumber;
+                        simple.DatFile += zoneNumber;
+                    }
+                    break;
+                default:
+                    PluginLog.Log( "Invalid VFX path! Could not find DatFile" );
+                    break;
+            }
+            simple.ModPackEntry = null;
+            return simple;
+        }
+
+        public async Task<byte[]> SquishAVFX( AVFXBase avfx ) {
+            return await CreateType2Data( avfx.toAVFX().toBytes() );
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
