@@ -23,6 +23,7 @@ namespace VFXEditor
         public Penumbra PenumbraManager;
         public DocManager Doc;
         public DataManager Manager;
+        public DirectXManager DXManager;
 
         public MainInterface MainUI;
 
@@ -74,11 +75,14 @@ namespace VFXEditor
 
             ResourceLoader.Init();
             ResourceLoader.Enable();
+            Manager = new DataManager( this );
             Doc = new DocManager( this );
             MainUI = new MainInterface( this );
-            Manager = new DataManager( this );
             TexToolsManager = new TexTools( this );
             PenumbraManager = new Penumbra( this );
+            DXManager = new DirectXManager( this );
+
+            PluginInterface.UiBuilder.OnBuildUi += DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
         }
 
@@ -148,10 +152,13 @@ namespace VFXEditor
             MainUI.UnloadAVFX();
         }
         public void Dispose() {
+            PluginInterface.UiBuilder.OnBuildUi -= DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
+
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();
             ResourceLoader.Dispose();
+            DXManager.Dispose();
             Doc.Cleanup();
         }
         private void OnCommand( string command, string rawArgs ) {

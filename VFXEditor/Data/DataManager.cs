@@ -23,7 +23,7 @@ namespace VFXEditor
         {
             _plugin = plugin;
             TexManager = new TextureManager( _plugin );
-            NpcCsv = Path.Combine( _plugin.TemplateLocation, "npc.csv" );
+            NpcCsv = Path.Combine( _plugin.TemplateLocation, "Files", "npc.csv" );
         }
 
         // ========= LOAD ITEMS ===========

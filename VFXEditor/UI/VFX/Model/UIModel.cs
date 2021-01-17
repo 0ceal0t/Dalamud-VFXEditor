@@ -36,6 +36,7 @@ namespace VFXEditor.UI.VFX
             if( ImGui.Selectable( GetText() + parentId, selected == this ) )
             {
                 selected = this;
+                View._plugin.DXManager.LoadModel( Model );
             }
         }
 
@@ -61,7 +62,7 @@ namespace VFXEditor.UI.VFX
             }
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
 
-            //ImGui.Image( View._plugin.DXManager.RenderShad.NativePointer, new Vector2( 300, 300 ) );
+            ImGui.Image( View._plugin.DXManager.RenderShad.NativePointer, new Vector2( 300, 300 ) );
 
             if(ImGui.CollapsingHeader("Emitter Vertices" + id, ref Open) )
             {

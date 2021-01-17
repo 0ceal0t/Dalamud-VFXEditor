@@ -365,7 +365,7 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             VFXSelectResult newResult = new VFXSelectResult();
             newResult.DisplayString = "[NEW]";
             newResult.Type = VFXSelectType.Local;
-            newResult.Path = Path.Combine( _plugin.TemplateLocation, path );
+            newResult.Path = Path.Combine( _plugin.TemplateLocation, "Files", path );
             _plugin.SelectAVFX( newResult );
         }
         public void SaveDialog( string filter, string data, string ext )

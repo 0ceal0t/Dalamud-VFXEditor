@@ -100,13 +100,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="default_vfx.avfx">
+      <None Update="Files\default_vfx.avfx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="default_weapon.avfx">
+      <None Update="Files\default_weapon.avfx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="npc.csv">
+      <None Update="Files\npc.csv">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Shaders\ModelPreview.fx">
