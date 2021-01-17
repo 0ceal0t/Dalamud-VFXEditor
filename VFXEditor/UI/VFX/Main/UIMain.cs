@@ -34,7 +34,7 @@ namespace VFXEditor.UI.VFX
             EffectorView = new UIEffectorView(avfx);
             TimelineView = new UITimelineView(avfx);
             TextureView = new UITextureView(avfx, plugin);
-            ModelView = new UIModelView(avfx);
+            ModelView = new UIModelView(avfx, plugin);
             ScheduleView = new UIScheduleView(avfx);
         }
 

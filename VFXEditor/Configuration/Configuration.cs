@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.UI;
 
-namespace VFXEditor
-{
-    public enum SavedItemType
-    {
+namespace VFXEditor{
+    public enum SavedItemType {
         None,
         Binder,
         Emitter,
@@ -17,16 +15,14 @@ namespace VFXEditor
         Timeline
     }
 
-    public struct SavedItem
-    {
+    public struct SavedItem {
         public string Name;
         public SavedItemType Type;
         public string Path;
     }
 
     [Serializable]
-    public class Configuration : IPluginConfiguration
-    {
+    public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 

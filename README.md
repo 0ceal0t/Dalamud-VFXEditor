@@ -38,12 +38,12 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] UV view (here we go again...)
 - [ ] Add VFX to weapons without it
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
 - [ ] Properly fix literal int list
-- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
-- [ ] 3D model view (waiting on [ImGuizmo](https://github.com/mellinoe/ImGui.NET/pull/218))
-- [ ] Package all documents into 1 Textools mod
 - [ ] Save all particles at once, etc.
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki

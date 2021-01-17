@@ -13,10 +13,12 @@ namespace VFXEditor.UI.VFX
         public AVFXBase AVFX;
         public List<UIModel> Models;
         public UIModelSplitView ModelSplit;
+        public Plugin _plugin;
 
-        public UIModelView(AVFXBase avfx)
+        public UIModelView(AVFXBase avfx, Plugin plugin)
         {
             AVFX = avfx;
+            _plugin = plugin;
             //=================
             Models = new List<UIModel>();
             foreach( var model in AVFX.Models ) {

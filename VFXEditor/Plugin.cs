@@ -21,13 +21,10 @@ namespace VFXEditor
         public ResourceLoader ResourceLoader;
         public TexTools TexToolsManager;
         public Penumbra PenumbraManager;
+        public DocManager Doc;
+        public DataManager Manager;
 
         public MainInterface MainUI;
-        public VFXSelectDialog SelectUI;
-        public VFXSelectDialog PreviewUI;
-        public TexToolsDialog TexToolsUI;
-        public PenumbraDialog PenumbraUI;
-        public DocDialog DocUI;
 
         public AVFXBase AVFX {
             get { return Doc.ActiveDoc.AVFX; }
@@ -42,16 +39,12 @@ namespace VFXEditor
         public string ReplaceString {
             get { return Doc.ActiveDoc.Replace.DisplayString; }
         }
-        public DocManager Doc;
-        public DataManager Manager;
 
         public string TemplateLocation;
         public string WriteLocation;
-
         public string PluginDebugTitleStr;
 
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
-
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
 
@@ -77,6 +70,8 @@ namespace VFXEditor
 #else
             TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
 #endif
+            PluginDebugTitleStr = $"{Name} - Debug Build";
+
             ResourceLoader.Init();
             ResourceLoader.Enable();
             Doc = new DocManager( this );
@@ -84,22 +79,7 @@ namespace VFXEditor
             Manager = new DataManager( this );
             TexToolsManager = new TexTools( this );
             PenumbraManager = new Penumbra( this );
-
-            SelectUI = new VFXSelectDialog( this, "Load File" );
-            PreviewUI = new VFXSelectDialog( this, "Replace File" );
-            SelectUI.OnSelect += SelectAVFX;
-            PreviewUI.OnSelect += ReplaceAVFX;
-            TexToolsUI = new TexToolsDialog( this );
-            PenumbraUI = new PenumbraDialog( this );
-            DocUI = new DocDialog( this );
-
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += SelectUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += PreviewUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += TexToolsUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += PenumbraUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += DocUI.Draw;
-            PluginDebugTitleStr = $"{Name} - Debug Build";
         }
 
         public DateTime LastSelect = DateTime.Now;
@@ -147,7 +127,6 @@ namespace VFXEditor
                 UnloadAVFX();
             }
         }
-
         public void LoadAVFX(AVFXBase avfx ) {
             if( avfx == null )
                 return;
@@ -157,7 +136,6 @@ namespace VFXEditor
                 var node = AVFX.toAVFX();
                 bool verifyResult = Manager.LastImportNode.CheckEquals( node, out List<string> messages );
                 MainUI.SetStatus( verifyResult );
-
                 PluginLog.Log( "[VERIFY RESULT]: " + verifyResult );
                 foreach( var m in messages ) {
                     PluginLog.Log( m );
@@ -165,26 +143,17 @@ namespace VFXEditor
             }
             MainUI.RefreshAVFX();
         }
-
         public void UnloadAVFX() {
             AVFX = null;
             MainUI.UnloadAVFX();
         }
-
         public void Dispose() {
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= SelectUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= PreviewUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= TexToolsUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= PenumbraUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= DocUI.Draw;
-
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();
             ResourceLoader.Dispose();
             Doc.Cleanup();
         }
-
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;
         }

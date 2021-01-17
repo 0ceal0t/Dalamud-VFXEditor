@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,6 +38,8 @@ namespace VFXEditor.UI.VFX
                 selected = this;
             }
         }
+
+        public bool Open = true;
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Model";
@@ -58,7 +61,9 @@ namespace VFXEditor.UI.VFX
             }
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
 
-            if(ImGui.CollapsingHeader("Emitter Vertices" + id ) )
+            //ImGui.Image( View._plugin.DXManager.RenderShad.NativePointer, new Vector2( 300, 300 ) );
+
+            if(ImGui.CollapsingHeader("Emitter Vertices" + id, ref Open) )
             {
                 EmitSplit.Draw( id );
             }

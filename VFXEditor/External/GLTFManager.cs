@@ -98,7 +98,6 @@ namespace VFXEditor
                         i_.I3 = t.C;
                         I.Add( i_ );
                     }
-
                     return true;
                 }
             }

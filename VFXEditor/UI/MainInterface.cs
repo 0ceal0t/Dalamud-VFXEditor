@@ -21,9 +21,23 @@ namespace VFXEditor.UI
         public bool ShowDebugBar = false;
         public VFX.UIMain VFXMain = null;
 
+        public MainInterface MainUI;
+        public VFXSelectDialog SelectUI;
+        public VFXSelectDialog PreviewUI;
+        public TexToolsDialog TexToolsUI;
+        public PenumbraDialog PenumbraUI;
+        public DocDialog DocUI;
+
         public MainInterface( Plugin plugin )
         {
             _plugin = plugin;
+            SelectUI = new VFXSelectDialog( _plugin, "File Select [SOURCE]" );
+            PreviewUI = new VFXSelectDialog( _plugin, "File Select [TARGET]" );
+            SelectUI.OnSelect += _plugin.SelectAVFX;
+            PreviewUI.OnSelect += _plugin.ReplaceAVFX;
+            TexToolsUI = new TexToolsDialog( _plugin );
+            PenumbraUI = new PenumbraDialog( _plugin );
+            DocUI = new DocDialog( _plugin );
 #if DEBUG
             Visible = true;
             ShowDebugBar = true;
@@ -41,9 +55,13 @@ namespace VFXEditor.UI
         public void Draw()
         {
             DrawDebugBar();
-            if( !Visible )
-                return;
-            DrawStartInterface();
+            if( Visible )
+                DrawMainInterface();
+            SelectUI.Draw();
+            PreviewUI.Draw();
+            TexToolsUI.Draw();
+            PenumbraUI.Draw();
+            DocUI.Draw();
         }
 
         public void DrawDebugBar()
@@ -64,7 +82,7 @@ namespace VFXEditor.UI
 
         public bool DrawOnce = false;
         public DateTime LastUpdate = DateTime.Now;
-        public void DrawStartInterface()
+        public void DrawMainInterface()
         {
             if( !DrawOnce )
             {
@@ -94,7 +112,7 @@ namespace VFXEditor.UI
             }
             else
             {
-                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ) );
+                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) )
                 {
                     if((DateTime.Now - LastUpdate).TotalSeconds > 2  )
@@ -125,11 +143,11 @@ namespace VFXEditor.UI
                     }
                     if(ImGui.Selectable("TexTools Mod" ) )
                     {
-                        _plugin.TexToolsUI.Show();
+                        TexToolsUI.Show();
                     }
                     if(ImGui.Selectable("Penumbra Mod" ) )
                     {
-                        _plugin.PenumbraUI.Show();
+                        PenumbraUI.Show();
                     }
                     ImGui.EndPopup();
                 }
@@ -216,7 +234,7 @@ namespace VFXEditor.UI
             ImGui.SetColumnWidth( 2, 100 );
             if( ImGui.Button( "Select##MainInterfaceFiles-SourceSelect" ) )
             {
-                _plugin.SelectUI.Show();
+                SelectUI.Show();
             }
             ImGui.SameLine();
             if( ImGui.Button( "New##MainInterfaceFiles-New", new Vector2(40, 23) ) )
@@ -235,7 +253,7 @@ namespace VFXEditor.UI
 
             if( ImGui.Button( "Select##MainInterfaceFiles-PreviewSelect" ) )
             {
-                _plugin.PreviewUI.Show( showLocal: false );
+                PreviewUI.Show( showLocal: false );
             }
             ImGui.SameLine();
             if( ImGui.Button( "Reset##MainInterfaceFiles-PreviewRemove" ) )
@@ -245,9 +263,9 @@ namespace VFXEditor.UI
             ImGui.NextColumn();
 
             ImGui.SetColumnWidth( 3, 200 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.20f, 0.90f, 0.80f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.20f, 0.40f, 1.0f ) );
             if(ImGui.Button( "Manage" ) ) {
-                _plugin.DocUI.Show();
+                DocUI.Show();
             }
             ImGui.PopStyleColor();
 
