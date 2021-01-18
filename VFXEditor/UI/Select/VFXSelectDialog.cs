@@ -93,7 +93,7 @@ namespace VFXEditor.UI
                 DrawOnce = true;
             }
             // ================
-            var ret = ImGui.Begin("File Select##" + Id, ref Visible );
+            var ret = ImGui.Begin(Id + "##" + Id, ref Visible );
             if( !ret )
                 return;
 

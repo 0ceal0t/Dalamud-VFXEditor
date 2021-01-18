@@ -18,12 +18,16 @@ namespace VFXEditor.UI.VFX
         //=======================
         public List<UIKey> Keys;
 
+        UICurveEditor edit;
+
         public UICurve(AVFXCurve curve, string name, bool color=false)
         {
             Curve = curve;
             Name = name;
             Color = color;
             Init();
+
+            edit = new UICurveEditor( curve, color );
         }
         public override void Init()
         {
@@ -91,7 +95,10 @@ namespace VFXEditor.UI.VFX
             }
             // =====================
             DrawAttrs( id );
-            if( ImGui.TreeNode( "Keys" + id ) )
+
+            edit.Draw(id);
+
+            /*if( ImGui.TreeNode( "Keys" + id ) )
             {
                 int keyIdx = 0;
                 foreach( var key in Keys )
@@ -106,7 +113,7 @@ namespace VFXEditor.UI.VFX
                     Keys.Add( new UIKey( Curve.addKey(), this, Color ) );
                 }
                 ImGui.TreePop();
-            }
+            }*/
         }
 
         public override string GetText() {
