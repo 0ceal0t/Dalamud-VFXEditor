@@ -102,7 +102,7 @@ namespace VFXEditor.UI.VFX
                                 int g = t.Data[_idx + 1];
                                 int b = t.Data[_idx + 2];
                                 int a = t.Data[_idx + 3];
-                                bmp.SetPixel( j, i, Color.FromArgb( r, g, b, a ) );
+                                bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
                             }
                         }
                         bmp.Save( picker.FileName, System.Drawing.Imaging.ImageFormat.Png );

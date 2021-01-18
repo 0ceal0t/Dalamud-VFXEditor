@@ -11,16 +11,15 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModel : UIItem
-    {
+    public class UIModel : UIItem {
         public AVFXModel Model;
         public UIModelView View;
+        public Model3D Mdl3D;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
 
-        public UIModel(AVFXModel model, UIModelView view)
-        {
+        public UIModel( AVFXModel model, UIModelView view ) {
             Model = model;
             View = view;
             //===============
@@ -29,45 +28,69 @@ namespace VFXEditor.UI.VFX
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
+            Mdl3D = View._plugin.DXManager.Model;
         }
 
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
-            {
+        public override void DrawSelect( string parentId, ref UIItem selected ) {
+            if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
                 selected = this;
-                View._plugin.DXManager.LoadModel( Model );
+                Mdl3D.LoadModel( Model );
             }
         }
 
         public bool Open = true;
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             string id = parentId + "/Model";
-            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
-            {
+            if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
                 View.AVFX.removeModel( Model );
                 View.ModelSplit.OnDelete( this );
                 return;
             }
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Import" + id ) )
-            {
+            if( ImGui.SmallButton( "Import" + id ) ) {
                 ImportDialog();
             }
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Export" + id ) )
-            {
+            if( ImGui.SmallButton( "Export" + id ) ) {
                 ExportDialog();
             }
-            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count);
+            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
 
-            ImGui.Image( View._plugin.DXManager.RenderShad.NativePointer, new Vector2( 300, 300 ) );
+            ImGui.BeginTabBar( "ModelTabs" );
+            DrawModel3D(id);
+            DrawEmitterVerts(id);
+            ImGui.EndTabBar();
+        }
 
-            if(ImGui.CollapsingHeader("Emitter Vertices" + id, ref Open) )
-            {
-                EmitSplit.Draw( id );
+        public void DrawModel3D( string parentId ) {
+            var ret = ImGui.BeginTabItem( "3D View" + parentId);
+            if( !ret )
+                return;
+            // ===============
+            ImGui.BeginChild( "3DViewChild" );
+            var space = ImGui.GetContentRegionAvail();
+            Mdl3D.Resize( space );
+
+            ImGui.ImageButton( Mdl3D.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+            if(ImGui.IsItemActive() && ImGui.IsMouseDragging() ) {
+                var delta = ImGui.GetMouseDragDelta();
+                Mdl3D.Drag( delta );
             }
+            else {
+                Mdl3D.IsDragging = false;
+            }
+
+            ImGui.EndChild();
+            // ===============
+            ImGui.EndTabItem();
+        }
+
+        public void DrawEmitterVerts( string parentId ) {
+            var ret = ImGui.BeginTabItem( "Emitter Vertices" + parentId );
+            if( !ret )
+                return;
+            EmitSplit.Draw( parentId );
+            ImGui.EndTabItem();
         }
 
         public void ImportDialog()
@@ -89,6 +112,7 @@ namespace VFXEditor.UI.VFX
                         {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
+                            Mdl3D.LoadModel( Model );
                         }
                     }
                     catch( Exception ex )
