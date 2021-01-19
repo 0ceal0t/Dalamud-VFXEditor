@@ -46,9 +46,11 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] More texture export options
 - [ ] Merge A8 into Lumina
 - [ ] UV view (here we go again...)
-- [ ] Better key UI (curve editor?)
-- [ ] Only re-render model on drag
-- [ ] 3D model zoom
+- [ ] Figure out splines
+- [ ] Only render model on tab open
+- [ ] Add pre and post behavior to curve editor
+- [ ] Small grid in curve editor, better handling for large curves
+
 
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
 - [ ] Add VFX to weapons without it
@@ -73,8 +75,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~3D model zoom~~
 - [x] ~~Phong shader~~
-- [x] ~~Drag move~~
+- [x] ~~Drag rotate~~
 - [x] ~~3D model view~~
 - [x] ~~Reset on import~~
 - [x] ~~Viewport resizing~~

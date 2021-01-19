@@ -80,6 +80,10 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.IsDragging = false;
             }
 
+            if( ImGui.IsItemHovered() ) {
+                Mdl3D.Zoom( ImGui.GetIO().MouseWheel );
+            }
+
             ImGui.EndChild();
             // ===============
             ImGui.EndTabItem();

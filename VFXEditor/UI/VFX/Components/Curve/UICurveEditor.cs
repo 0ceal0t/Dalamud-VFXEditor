@@ -17,14 +17,11 @@ namespace VFXEditor.UI.VFX {
         Vector2 ValVisible;
         Vector2 DataTopLeft;
 
-        static uint TextColor = ImGui.GetColorU32( new Vector4( 1,1,1,1 ) );
         static uint BGColor = ImGui.GetColorU32( new Vector4( 0.2f, 0.2f, 0.2f, 1 ) );
         static uint GridColor = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
         static uint CircleColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
         static uint SelectedCircleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
         static uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.2f, 0.2f, 1 ) );
-        static int GridX = 10;
-        static int GridY = 1;
         static float GrabDistance = 15;
 
         public List<CurveEditorPoint> Points = new List<CurveEditorPoint>();
@@ -41,7 +38,6 @@ namespace VFXEditor.UI.VFX {
                 Points.Add( new CurveEditorPoint( this, k, color:color ) );
             }
             Fit();
-            DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
         }
         public void Fit() {
             if(Points.Count == 0 ) {
@@ -58,16 +54,31 @@ namespace VFXEditor.UI.VFX {
                 ValVisible.X = Math.Min( point.canvasData.Y, ValVisible.X );
                 ValVisible.Y = Math.Max( point.canvasData.Y, ValVisible.Y );
             }
-            TimeVisible += new Vector2(-10, 10);
-            ValVisible += new Vector2( -1, 1 );
+            TimeVisible += new Vector2(-2, 2);
+            TimeVisible.X = Math.Max(TimeVisible.X, -1);
+            ValVisible += new Vector2( -0.1f, 0.1f );
+            DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
         }
 
         public override void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.SmallButton( "Fit##curveEditor" ) ) {
+            if( ImGui.Button( "Fit to contents##curveEditor" ) ) {
                 Fit();
             }
+            ImGui.SameLine();
+            ImGui.BeginChild( "##CurveTime", new Vector2( 150, 25 ));
+            if(ImGui.InputFloat2( "Time", ref TimeVisible ) ) {
+                DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
+            }
+            ImGui.EndChild();
+            ImGui.SameLine();
+            ImGui.BeginChild( "##CurveValue", new Vector2( 150, 25 ) );
+            if( ImGui.InputFloat2( "Value", ref ValVisible ) ) {
+                DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
+            }
+            ImGui.EndChild();
+
 
             var space = ImGui.GetContentRegionAvail();
             Vector2 Size = new Vector2( space.X, 200 );
@@ -75,7 +86,7 @@ namespace VFXEditor.UI.VFX {
 
             ImGui.BeginGroup();
 
-            ImGui.InvisibleButton( "##empty", Size );
+            ImGui.InvisibleButton( "##CurveEmpty", Size );
             var CanvasTopLeft = ImGui.GetItemRectMin();
             var CanvasBottomRight = ImGui.GetItemRectMax();
             DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
@@ -87,11 +98,14 @@ namespace VFXEditor.UI.VFX {
             );
 
             //============= GRID ============
-            int leftGrid = GridX * ( int )Math.Floor( TimeVisible.X / GridX );
-            int rightGrid = GridX * ( int )Math.Ceiling( TimeVisible.Y / GridX );
-            int bottomGrid = GridY * ( int )Math.Floor( ValVisible.X / GridY );
-            int topGrid = GridY * ( int )Math.Ceiling( ValVisible.Y / GridY );
-            for( int i = leftGrid; i < rightGrid; i += GridX ) {
+            float GridX = (float) Math.Pow(10, Math.Floor( Math.Log10( TimeVisible.Y - TimeVisible.X ) ) ); // yeah, we're big brain now
+            float GridY = ( float )Math.Pow(10, Math.Floor( Math.Log10( ValVisible.Y - ValVisible.X ) ) );
+
+            float leftGrid = GridX * (float)Math.Floor( TimeVisible.X / GridX );
+            float rightGrid = GridX * ( float )Math.Ceiling( TimeVisible.Y / GridX );
+            float bottomGrid = GridY * ( float )Math.Floor( ValVisible.X / GridY );
+            float topGrid = GridY * ( float )Math.Ceiling( ValVisible.Y / GridY );
+            for( float i = leftGrid; i < rightGrid; i += GridX ) {
                 float gridPos = RealPosToCanvas( new Vector2( i, 0 ), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft ).X;
                 DrawList.AddLine(
                     new Vector2( gridPos, CanvasTopLeft.Y ),
@@ -100,10 +114,10 @@ namespace VFXEditor.UI.VFX {
                 );
                 DrawList.AddText(
                     new Vector2( gridPos + 5, CanvasTopLeft.Y ),
-                    GridColor, i.ToString()
+                    GridColor, i.ToString("F")
                 );
             }
-            for( int i = bottomGrid; i < topGrid; i += GridY ) {
+            for( float i = bottomGrid; i < topGrid; i += GridY ) {
                 float gridPos = RealPosToCanvas( new Vector2( 0, i ), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft ).Y;
                 DrawList.AddLine(
                     new Vector2( CanvasTopLeft.X, gridPos ),
@@ -112,10 +126,9 @@ namespace VFXEditor.UI.VFX {
                 );
                 DrawList.AddText(
                     new Vector2( CanvasTopLeft.X, gridPos + 5 ),
-                    GridColor, i.ToString()
+                    GridColor, i.ToString("F")
                 );
             }
-            DrawList.AddText( CanvasTopLeft + new Vector2( 2, 2 ), TextColor, "Right-Click to add a new keyframe" );
 
             //============ POINTS ==============
             foreach(var point in Points ) {
@@ -157,20 +170,26 @@ namespace VFXEditor.UI.VFX {
                 else {
                     DrawList.AddCircleFilled( point.canvasPos, 7, point.ColorData );
                 }
-                // SELECT
-                if(ImGui.IsAnyItemActive() && ImGui.IsMouseClicked( 0 ) ) {
-                    float distance = ( point.canvasPos - ImGui.GetMousePos() ).Length();
-                    if( distance < GrabDistance ) {
-                        SelectedPoint = point;
+                // HOVER
+                float distance = ( point.canvasPos - ImGui.GetMousePos() ).Length();
+                bool closeEnough = ( distance < GrabDistance );
+                if(closeEnough && DraggingPoint == null ) { // don't want to display this when dragging stuff. it's annoying
+                    ImGui.BeginTooltip();
+                    ImGui.Text( "Time: " + point.canvasData.X.ToString("F") );
+                    if( !point.Color ) {
+                        ImGui.Text( "Value: " + point.canvasData.Y.ToString("F") );
                     }
+                    ImGui.TextColored( new Vector4( 0, 1, 0, 1 ), point.Key.Type.ToString() );
+                    ImGui.EndTooltip();
+                }
+                // SELECT
+                if(ImGui.IsAnyItemActive() && ImGui.IsMouseClicked( 0 ) && closeEnough ) {
+                    SelectedPoint = point;
                 }
                 // DRAG SELECT
-                if( ImGui.IsItemActive() && ImGui.IsMouseDragging() ) {
-                    float distance = ( point.canvasPos - ImGui.GetMousePos() ).Length();
-                    if(distance < GrabDistance && DraggingPoint == null ) {
-                        DraggingPoint = point;
-                        LastDragPos = ImGui.GetMouseDragDelta();
-                    }
+                if( ImGui.IsItemActive() && ImGui.IsMouseDragging() && closeEnough && DraggingPoint == null ) {
+                    DraggingPoint = point;
+                    LastDragPos = ImGui.GetMouseDragDelta();
                 }
                 idx++;
             }
@@ -183,7 +202,7 @@ namespace VFXEditor.UI.VFX {
             else {
                 DraggingPoint = null;
             }
-            // HOW ABOUT MOVING THE VIEW?
+            // HOW ABOUT DRAGGING THE VIEW?
             if( ImGui.IsItemActive() && ImGui.IsMouseDragging() && DraggingPoint == null ) {
                 var d = ImGui.GetMouseDragDelta();
                 DragView( d, SizePerUnit );
@@ -191,7 +210,7 @@ namespace VFXEditor.UI.VFX {
             else {
                 ViewDrag = false;
             }
-            // ADD A NEW ONE
+            // ADD A NEW KEYFRAME
             if(ImGui.IsItemHovered() && ImGui.IsMouseClicked(1) ) {
                 var pos = CanvasPosToReal( ImGui.GetMousePos(), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
                 int insertIdx = 0;
@@ -209,6 +228,7 @@ namespace VFXEditor.UI.VFX {
 
             DrawList.PopClipRect();
             ImGui.EndGroup();
+            ImGui.Text( "Right-Click to add a new keyframe" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if(SelectedPoint != null ) {
@@ -229,9 +249,14 @@ namespace VFXEditor.UI.VFX {
                 var d = delta - LastDragPos;
                 var dataMove = CanvasDeltaToRealDelta( d, scaling );
                 dataMove.X *= -1;
-                DataTopLeft += dataMove;
+
+                // don't want to move past -1 frames
+                float distToLeftEdge = ( -1 ) - TimeVisible.X;
+                dataMove.X = Math.Max(dataMove.X, distToLeftEdge);
+
                 TimeVisible += new Vector2(dataMove.X);
                 ValVisible += new Vector2( dataMove.Y );
+                DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
             }
             ViewDrag = true;
             LastDragPos = delta;
@@ -271,6 +296,7 @@ namespace VFXEditor.UI.VFX {
             Curve = curve;
             Key = key;
             Color = color;
+            TypeIdx = Array.IndexOf( TypeOptions, Key.Type.ToString() );
             Data = new Vector3( key.X, key.Y, key.Z );
             if( !Color ) {
                 canvasData = new Vector2( key.Time, key.Z );

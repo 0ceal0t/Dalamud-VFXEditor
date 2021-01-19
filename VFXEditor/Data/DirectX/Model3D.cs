@@ -49,6 +49,7 @@ namespace VFXEditor {
         private float Yaw;
         private float Pitch;
         private Vector3 Position = new Vector3( 0, 0, 0 );
+        private float Distance = 5;
 
         public Model3D(DirectXManager manager) {
             Manager = manager;
@@ -73,7 +74,7 @@ namespace VFXEditor {
 
             // WORLD MATRIX BUFFER
             WorldBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -5), Position, Vector3.UnitY );
+            ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
 
             RState = new RasterizerState( _Device, new RasterizerStateDescription
             {
@@ -150,16 +151,24 @@ namespace VFXEditor {
         }
         public void Drag(Vec2 newPos ) {
             if( IsDragging ) {
-                Yaw += -( newPos.X - LastMousePos.X ) * 0.01f;
+                Yaw += ( newPos.X - LastMousePos.X ) * 0.01f;
                 Pitch += -( newPos.Y - LastMousePos.Y ) * 0.01f;
                 Pitch = Clamp( Pitch, -1.55f, 1.55f );
-
-                var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
-                Vector3 lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
-                ViewMatrix = Matrix.LookAtLH( Position -5 * lookDirection, Position, Vector3.UnitY );
+                UpdateViewMatrix();
             }
             IsDragging = true;
             LastMousePos = new Vector2( newPos.X, newPos.Y );
+        }
+        public void Zoom(float mouseWheel ) {
+            if(mouseWheel != 0 ) {
+                Distance += mouseWheel * 0.2f;
+                UpdateViewMatrix();
+            }
+        }
+        public void UpdateViewMatrix() {
+            var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
+            Vector3 lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
+            ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
         }
 
         public static int SPAN = 3; // position, color, normal
