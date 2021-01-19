@@ -1,5 +1,5 @@
 # VFXEditor
-A VFX editing plugin for Dalamud  ([Wiki](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki))
+A VFX editing plugin for Dalamud  ([Wiki](https://xiv.dev/game-data/visual-effects))
 
 <img align="center" src="docs/preview.png" width="700px">
 
@@ -38,6 +38,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+
 - [ ] Better bg texture
 - [ ] Option to not load 3D model
 - [ ] Model scaling?
@@ -50,8 +51,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
 - [ ] Wireframe view
-
-
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
