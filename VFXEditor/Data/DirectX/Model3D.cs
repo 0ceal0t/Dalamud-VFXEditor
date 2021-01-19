@@ -51,6 +51,8 @@ namespace VFXEditor {
         private Vector3 Position = new Vector3( 0, 0, 0 );
         private float Distance = 5;
 
+        public bool IsWireframe = false;
+
         public Model3D(DirectXManager manager) {
             Manager = manager;
             _Device = Manager._Device;
@@ -76,12 +78,19 @@ namespace VFXEditor {
             WorldBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
 
+            RefreshRasterizeState();
+
+            ResizeResources();
+        }
+
+        public void RefreshRasterizeState() {
+            RState?.Dispose();
             RState = new RasterizerState( _Device, new RasterizerStateDescription
             {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
-                FillMode = FillMode.Solid,
+                FillMode = IsWireframe ? FillMode.Wireframe : FillMode.Solid,
                 IsAntialiasedLineEnabled = false,
                 IsDepthClipEnabled = true,
                 IsFrontCounterClockwise = false,
@@ -89,8 +98,6 @@ namespace VFXEditor {
                 IsScissorEnabled = false,
                 SlopeScaledDepthBias = 0
             } );
-
-            ResizeResources();
         }
 
         public void Resize( Vec2 size ) {

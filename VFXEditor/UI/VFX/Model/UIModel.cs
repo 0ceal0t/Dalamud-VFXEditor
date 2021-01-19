@@ -67,6 +67,11 @@ namespace VFXEditor.UI.VFX
             if( !ret )
                 return;
             // ===============
+            bool wireframe = Mdl3D.IsWireframe;
+            if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
+                Mdl3D.IsWireframe = wireframe;
+                Mdl3D.RefreshRasterizeState();
+            }
             ImGui.BeginChild( "3DViewChild" );
             var space = ImGui.GetContentRegionAvail();
             Mdl3D.Resize( space );

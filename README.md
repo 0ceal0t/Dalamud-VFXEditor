@@ -49,8 +49,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] UV view (here we go again...)
 - [ ] Figure out splines
 - [ ] Only render model on tab open
+- [ ] AVFX version
+- [ ] Drag point snapping
 - [ ] Add pre and post behavior to curve editor
-- [ ] Wireframe view
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
@@ -74,6 +75,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~Wireframe view~~
 - [x] ~~Curve editor bounding~~
 - [x] ~~Curve key change order~~
 - [x] ~~Curve editor zooming~~

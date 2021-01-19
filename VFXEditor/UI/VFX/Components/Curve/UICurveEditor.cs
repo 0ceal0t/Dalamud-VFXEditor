@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX {
         static uint SelectedCircleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
         static uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.2f, 0.2f, 1 ) );
         static uint AltLineColor = ImGui.GetColorU32( new Vector4( 0.2f, 0.2f, 0.7f, 1 ) );
-        static float GrabDistance = 15;
+        static float GrabDistance = 25;
 
         public List<CurveEditorPoint> Points = new List<CurveEditorPoint>();
 
@@ -154,6 +154,16 @@ namespace VFXEditor.UI.VFX {
                             nextPoint,
                             LineColor, 4.0f
                         );
+                    }
+                    else if(point.Key.Type == KeyType.Spline && !Color ) {
+                        Vector2 startPoint = point.canvasPos;
+                        Vector2 endPoint = Points[idx + 1].canvasPos;
+
+                        float midX = (endPoint.X - startPoint.X)/ 2;
+                        Vector2 handle1 = new Vector2( startPoint.X + point.Data.X * midX, startPoint.Y );
+                        Vector2 handle2 = new Vector2( endPoint.X - point.Data.Y - midX, endPoint.Y );
+
+                        DrawList.AddBezierCurve( startPoint, handle1, handle2, endPoint, LineColor, 4.0f );
                     }
                     else {
                         DrawList.AddLine(
@@ -330,6 +340,38 @@ namespace VFXEditor.UI.VFX {
             }
         }
 
+        /*public void CalcCurvePoints( CurveEditorPoint nextPoint ) {
+            if( Key.Type != KeyType.Spline || Color )
+                return;
+            if( curvePoints == null ) {
+                curvePoints = new Vector2[256];
+            }
+
+            //
+            // https://en.wikipedia.org/wiki/Cubic_Hermite_spline
+            // for spline, X and Y are tangents T1 and T2
+            // 
+            // t = (x - x_start) / (x_goal - x_start)
+            // p(x) = h_00(t)*y_start          +    h_10(t)(x_goal - x_start)*T1           +         h_01(t)*y_goal     +            h_11(t)(x_goal - x_start)*T2
+            // 
+            Vector2 startPoint = new Vector2( 0, 0 );
+            Vector2 endPoint = nextPoint.canvasData - canvasData;
+            float xDiff = endPoint.X - startPoint.X;
+            float T1 = 0; //Data.X;
+            float T2 = 0; //Data.Y;
+            for(int i = 0; i < 256; i++ ) {
+                float t = i / 256.0f;
+
+                float h00 = ( 2 * t * t * t - 3 * t * t + 1 );
+                float h10 = ( t * t * t - 2 * t * t + t );
+                float h01 = ( -2 * t * t * t + 3 * t * t );
+                float h11 = ( t * t * t - t * t );
+
+                float p = h00 * startPoint.Y + h10 * xDiff * T1 + h01 * endPoint.Y + h11 * xDiff * T2;
+                curvePoints[i] = new Vector2(startPoint.X + xDiff * t, -p);
+            }
+        }*/
+
         public void SetCanvasData( Vector2 data ) {
             Key.Time = ( int )Math.Round( data.X );
             if( !Color ) {
@@ -383,6 +425,8 @@ namespace VFXEditor.UI.VFX {
             if( UIUtils.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
                 Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
                 Key.Type = newKeyType;
+                if( newKeyType == KeyType.Spline ) {
+                }
             }
             //=====================
             if( Color ) {

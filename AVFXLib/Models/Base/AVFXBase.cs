@@ -12,6 +12,8 @@ namespace AVFXLib.Models
 {
     public class AVFXBase : Base
     {
+        public LiteralInt Version = new LiteralInt( "version", "Ver" );
+
         public LiteralBool IsDelayFastParticle = new LiteralBool("isDelayFastParticle", "bDFP");
         public LiteralBool IsFitGround = new LiteralBool("isFitGround", "bFG");
         public LiteralBool IsTranformSkip = new LiteralBool("isTranformSkip", "bTS");
@@ -128,6 +130,7 @@ namespace AVFXLib.Models
 
         public override void read(AVFXNode node) {
             Assigned = true;
+            ReadAVFX( Version, node );
             ReadAVFX(Attributes, node);
 
             foreach (AVFXNode item in node.Children)
