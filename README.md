@@ -49,10 +49,10 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Figure out splines
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
-- [ ] Small grid in curve editor, better handling for large curves
+- [ ] Wireframe view
 
 
-- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218))
+- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
 - [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
 - [ ] Properly fix literal int list
@@ -75,6 +75,10 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~Curve editor bounding~~
+- [x] ~~Curve key change order~~
+- [x] ~~Curve editor zooming~~
+- [x] ~~Small grid in curve editor, better handling for large curves~~
 - [x] ~~3D model zoom~~
 - [x] ~~Phong shader~~
 - [x] ~~Drag rotate~~

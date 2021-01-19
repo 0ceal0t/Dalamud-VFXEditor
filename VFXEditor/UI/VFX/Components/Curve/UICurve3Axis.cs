@@ -33,9 +33,9 @@ namespace VFXEditor.UI.VFX
             Curves.Add(new UICurve(Curve.X, "X"));
             Curves.Add(new UICurve(Curve.Y, "Y"));
             Curves.Add(new UICurve(Curve.Z, "Z"));
-            Curves.Add(new UICurve(Curve.RX, "RX"));
-            Curves.Add(new UICurve(Curve.RY, "RY"));
-            Curves.Add(new UICurve(Curve.RZ, "RZ"));
+            Curves.Add(new UICurve(Curve.RX, "Random X"));
+            Curves.Add(new UICurve(Curve.RY, "Random Y"));
+            Curves.Add(new UICurve(Curve.RZ, "Random Z"));
         }
         // =========== DRAW =====================
         public override void Draw( string parentId )

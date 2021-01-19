@@ -22,6 +22,7 @@ namespace VFXEditor.UI.VFX {
         static uint CircleColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
         static uint SelectedCircleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
         static uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.2f, 0.2f, 1 ) );
+        static uint AltLineColor = ImGui.GetColorU32( new Vector4( 0.2f, 0.2f, 0.7f, 1 ) );
         static float GrabDistance = 15;
 
         public List<CurveEditorPoint> Points = new List<CurveEditorPoint>();
@@ -67,13 +68,13 @@ namespace VFXEditor.UI.VFX {
                 Fit();
             }
             ImGui.SameLine();
-            ImGui.BeginChild( "##CurveTime", new Vector2( 150, 25 ));
+            ImGui.BeginChild( "##CurveTime", new Vector2( 170, 25 ));
             if(ImGui.InputFloat2( "Time", ref TimeVisible ) ) {
                 DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
             }
             ImGui.EndChild();
             ImGui.SameLine();
-            ImGui.BeginChild( "##CurveValue", new Vector2( 150, 25 ) );
+            ImGui.BeginChild( "##CurveValue", new Vector2( 170, 25 ) );
             if( ImGui.InputFloat2( "Value", ref ValVisible ) ) {
                 DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
             }
@@ -105,6 +106,7 @@ namespace VFXEditor.UI.VFX {
             float rightGrid = GridX * ( float )Math.Ceiling( TimeVisible.Y / GridX );
             float bottomGrid = GridY * ( float )Math.Floor( ValVisible.X / GridY );
             float topGrid = GridY * ( float )Math.Ceiling( ValVisible.Y / GridY );
+
             for( float i = leftGrid; i < rightGrid; i += GridX ) {
                 float gridPos = RealPosToCanvas( new Vector2( i, 0 ), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft ).X;
                 DrawList.AddLine(
@@ -134,6 +136,7 @@ namespace VFXEditor.UI.VFX {
             foreach(var point in Points ) {
                 point.canvasPos = RealPosToCanvas( point.canvasData, SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
             }
+            // ===== MAIN ======
             int idx = 0;
             foreach( var point in Points ) {
                 // LINES
@@ -175,6 +178,7 @@ namespace VFXEditor.UI.VFX {
                 bool closeEnough = ( distance < GrabDistance );
                 if(closeEnough && DraggingPoint == null ) { // don't want to display this when dragging stuff. it's annoying
                     ImGui.BeginTooltip();
+                    ImGui.Text( "#" + idx );
                     ImGui.Text( "Time: " + point.canvasData.X.ToString("F") );
                     if( !point.Color ) {
                         ImGui.Text( "Value: " + point.canvasData.Y.ToString("F") );
@@ -215,15 +219,19 @@ namespace VFXEditor.UI.VFX {
                 var pos = CanvasPosToReal( ImGui.GetMousePos(), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
                 int insertIdx = 0;
                 foreach(var p in Points ) {
-                    if((int)p.canvasData.X > (int)pos.X ) {
+                    if(p.canvasData.X > Math.Round(pos.X) ) {
                         break;
                     }
                     insertIdx++;
                 }
                 float z = Color ? 1.0f : pos.Y;
-                AVFXKey newKey = new AVFXKey( KeyType.Linear, (int)pos.X, 1, 1, z );
+                AVFXKey newKey = new AVFXKey( KeyType.Linear, (int)Math.Round(pos.X), 1, 1, z );
                 Curve.Keys.Insert( insertIdx, newKey );
                 Points.Insert( insertIdx, new CurveEditorPoint( this, newKey, color: Color ) );
+            }
+            // ZOOM
+            if( ImGui.IsItemHovered() ) {
+                Zoom( ImGui.GetIO().MouseWheel );
             }
 
             DrawList.PopClipRect();
@@ -249,17 +257,32 @@ namespace VFXEditor.UI.VFX {
                 var d = delta - LastDragPos;
                 var dataMove = CanvasDeltaToRealDelta( d, scaling );
                 dataMove.X *= -1;
-
-                // don't want to move past -1 frames
-                float distToLeftEdge = ( -1 ) - TimeVisible.X;
-                dataMove.X = Math.Max(dataMove.X, distToLeftEdge);
-
                 TimeVisible += new Vector2(dataMove.X);
+                FixMinimumTime();
                 ValVisible += new Vector2( dataMove.Y );
                 DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
             }
             ViewDrag = true;
             LastDragPos = delta;
+        }
+
+        public void Zoom(float mouseWheel ) {
+            if(mouseWheel != 0 ) {
+                float factor = 1 + 0.1f * mouseWheel;
+                TimeVisible = ScaleVector( TimeVisible, factor );
+                FixMinimumTime();
+                ValVisible = ScaleVector( ValVisible, factor );
+                DataTopLeft = new Vector2( TimeVisible.X, ValVisible.X );
+            }
+        }
+        public Vector2 ScaleVector(Vector2 vec, float factor ) {
+            float diff = (vec.Y - vec.X) / 2;
+            float mid = vec.X + diff;
+            return new Vector2( mid - factor * diff, mid + factor * diff );
+        }
+        public void FixMinimumTime() {
+            float leftOverhang = -1 - TimeVisible.X;
+            TimeVisible += new Vector2( Math.Max( 0, leftOverhang ) );
         }
 
         public Vector2 RealPosToCanvas( Vector2 pos, Vector2 scaling, Vector2 canvasTopLeft, Vector2 canvasBottomRight, Vector2 dataTopLeft ) {
@@ -328,11 +351,30 @@ namespace VFXEditor.UI.VFX {
             if( UIUtils.RemoveButton( "Delete Key" + id, small: true ) ) {
                 Curve.Curve.removeKey( Key );
                 Curve.Points.Remove( this );
-                if(Curve.SelectedPoint == this ) {
+                if( Curve.SelectedPoint == this ) {
                     Curve.SelectedPoint = null;
                 }
                 return;
             }
+            if( Curve.Points[0] != this ) {
+                ImGui.SameLine();
+                if(ImGui.SmallButton("<< Move Left" + id ) ) {
+                    var idx = Curve.Points.IndexOf( this );
+                    var t = Curve.Points[idx - 1];
+                    Curve.Points[idx - 1] = this;
+                    Curve.Points[idx] = t;
+                }
+            }
+            if( Curve.Points[Curve.Points.Count - 1] != this ) {
+                ImGui.SameLine();
+                if( ImGui.SmallButton( "Move Right >>" + id ) ) {
+                    var idx = Curve.Points.IndexOf( this );
+                    var t = Curve.Points[idx + 1];
+                    Curve.Points[idx + 1] = this;
+                    Curve.Points[idx] = t;
+                }
+            }
+
             int Time = Key.Time;
             if( ImGui.InputInt( "Time" + id, ref Time ) ) {
                 Key.Time = Time;
