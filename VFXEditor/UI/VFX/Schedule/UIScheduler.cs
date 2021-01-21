@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIScheduler : UIItem {
+    public class UIScheduler : UINode {
         public AVFXSchedule Scheduler;
         public UIScheduleView View;
         // =================
@@ -53,10 +53,6 @@ namespace VFXEditor.UI.VFX
                 ImGui.EndTabBar();
             }
         }
-
-        public override void DrawSelect(string parentId, ref UIItem selected ) {
-        }
-
         public override string GetText() {
             return "Scheduler " + Idx;
         }

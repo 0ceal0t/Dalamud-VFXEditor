@@ -9,23 +9,15 @@ using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterView : UIDropdownView<UIEmitter>
-    {
-        public AVFXBase AVFX;
-
-        public UIEmitterView(AVFXBase avfx) : base( "##EMIT", "Select an Emitter" )
-        {
-            AVFX = avfx;
-            //=============
-            foreach( var emitter in AVFX.Emitters ) {
-                var item = new UIEmitter( emitter, this );
-                Items.Add( item );
-            }
-            SetupIdx();
+    public class UIEmitterView : UIDropdownView<UIEmitter> {
+        public UIEmitterView( AVFXBase avfx) : base(avfx, "##EMIT", "Select an Emitter" ) {
+            List<UIEmitter> items = AVFX.Emitters.Select( item => new UIEmitter( item, this ) ).ToList();
+            UINode._Emitters = new UINodeGroup<UIEmitter>( items );
+            Group = UINode._Emitters;
         }
 
         public override UIEmitter OnNew() {
-            return new UIEmitter(AVFX.addEmitter(), this);
+            return new UIEmitter( AVFX.addEmitter(), this );
         }
         public override void OnDelete( UIEmitter item ) {
             AVFX.removeEmitter( item.Emitter );

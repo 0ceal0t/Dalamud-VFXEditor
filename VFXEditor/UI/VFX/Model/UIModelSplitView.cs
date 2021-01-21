@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.Button( "+ Model" + id ) )
             {
-                ModelView.Models.Add( new UIModel( ModelView.AVFX.addModel(), ModelView ) );
+                OnNew( new UIModel( ModelView.AVFX.addModel(), ModelView ) );
             }
         }
     }

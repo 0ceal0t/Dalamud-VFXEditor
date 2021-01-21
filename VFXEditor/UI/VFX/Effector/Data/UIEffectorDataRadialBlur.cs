@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIEffectorDataRadialBlur : UIBase
     {
         public AVFXEffectorDataRadialBlur Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIEffectorDataRadialBlur(AVFXEffectorDataRadialBlur data)
@@ -30,7 +31,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

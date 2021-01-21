@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimeline : UIItem
-    {
+    public class UITimeline : UINode {
         public AVFXTimeline Timeline;
         public UITimelineView View;
         //=====================
@@ -68,9 +67,6 @@ namespace VFXEditor.UI.VFX
             ImGui.BeginChild( id );
             DrawAttrs( id );
             ImGui.EndChild();
-        }
-
-        public override void DrawSelect( string parentId, ref UIItem selected ) {
         }
 
         public override string GetText() {

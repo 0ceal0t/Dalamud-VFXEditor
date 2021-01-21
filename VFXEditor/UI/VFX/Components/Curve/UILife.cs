@@ -35,13 +35,6 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( "Life" + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/Life";

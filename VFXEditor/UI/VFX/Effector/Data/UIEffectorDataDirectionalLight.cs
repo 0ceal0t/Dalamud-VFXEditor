@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIEffectorDataDirectionalLight : UIBase
     {
         public AVFXEffectorDataDirectionalLight Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIEffectorDataDirectionalLight( AVFXEffectorDataDirectionalLight data )
@@ -26,7 +27,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw( string parentId )
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

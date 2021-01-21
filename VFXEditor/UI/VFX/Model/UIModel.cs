@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModel : UIItem {
+    public class UIModel : UINode {
         public AVFXModel Model;
         public UIModelView View;
         public Model3D Mdl3D;
@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             Mdl3D = View._plugin.DXManager.Model;
         }
 
-        public override void DrawSelect( string parentId, ref UIItem selected ) {
+        public override void DrawSidebar( string parentId, ref UIItem selected ) {
             if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
                 selected = this;
                 Mdl3D.LoadModel( Model );

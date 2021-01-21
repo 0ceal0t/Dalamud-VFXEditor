@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitter : UIItem
-    {
+    public class UIEmitter : UINode {
         public AVFXEmitter Emitter;
         public UIEmitterView View;
         //=======================
@@ -145,9 +144,6 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndTabBar();
             }
-        }
-
-        public override void DrawSelect(string parentId, ref UIItem selected ) {
         }
 
         public override string GetText() {

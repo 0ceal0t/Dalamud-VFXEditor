@@ -11,17 +11,11 @@ namespace VFXEditor.UI.VFX
 {
     public class UIScheduleView : UIDropdownView<UIScheduler>
     {
-        public AVFXBase AVFX;
-
-        public UIScheduleView(AVFXBase avfx) : base( "##SCHED", "Select a Scheduler", allowNew:false, allowDelete:false )
+        public UIScheduleView(AVFXBase avfx) : base(avfx, "##SCHED", "Select a Scheduler", allowNew:false, allowDelete:false )
         {
-            AVFX = avfx;
-            //=============
-            foreach( var sched in AVFX.Schedulers ) {
-                var item = new UIScheduler( sched, this );
-                Items.Add( item );
-            }
-            SetupIdx();
+            List<UIScheduler> items = AVFX.Schedulers.Select( item => new UIScheduler( item, this ) ).ToList();
+            UINode._Schedulers = new UINodeGroup<UIScheduler>( items );
+            Group = UINode._Schedulers;
         }
 
         public override UIScheduler OnNew() { return null; }

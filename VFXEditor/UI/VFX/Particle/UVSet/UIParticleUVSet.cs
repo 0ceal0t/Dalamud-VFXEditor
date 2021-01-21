@@ -25,13 +25,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UICurve( UVSet.RotRandom, "Rotation Random" ) );
         }
 
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/UV";

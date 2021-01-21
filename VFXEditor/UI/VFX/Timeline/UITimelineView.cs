@@ -11,16 +11,11 @@ namespace VFXEditor.UI.VFX
 {
     public class UITimelineView : UIDropdownView<UITimeline>
     {
-        public AVFXBase AVFX;
-
-        public UITimelineView(AVFXBase avfx) : base( "##TIME", "Select a Timeline" )
+        public UITimelineView(AVFXBase avfx) : base(avfx, "##TIME", "Select a Timeline" )
         {
-            AVFX = avfx;
-            // ==============
-            foreach( var timeline in AVFX.Timelines ) {
-                Items.Add( new UITimeline( timeline, this ) );
-            }
-            SetupIdx();
+            List<UITimeline> items = AVFX.Timelines.Select( item => new UITimeline( item, this ) ).ToList();
+            UINode._Timelines = new UINodeGroup<UITimeline>( items );
+            Group = UINode._Timelines;
         }
 
         public override UITimeline OnNew()

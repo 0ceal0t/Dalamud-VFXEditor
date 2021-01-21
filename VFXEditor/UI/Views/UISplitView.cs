@@ -38,17 +38,12 @@ namespace VFXEditor.UI.VFX
             }
             ImGui.BeginChild( parentId + "/Tree" );
             // assigned, good to go
-            for(int idx = 0; idx < Items.Count; idx++ ) {
-                var item = Items[idx];
-                if( item.Assigned ) {
-                    item.DrawSelect(parentId, ref SelectedItem );
-                }
+            foreach(var item in Items.Where(x => x.Assigned) ) {
+                item.DrawSidebar( parentId, ref SelectedItem );
             }
             // not assigned, can be added
-            for( int idx = 0; idx < Items.Count; idx++ ) {
-                var item = Items[idx];
-                if( !item.Assigned )
-                    item.DrawSelect(parentId, ref SelectedItem );
+            foreach( var item in Items.Where(x => !x.Assigned) ) {
+                item.DrawSidebar( parentId, ref SelectedItem );
             }
             ImGui.EndChild();
             if( !DrawOnce ) {
@@ -71,9 +66,9 @@ namespace VFXEditor.UI.VFX
             Items.Add( item );
         }
         public void OnDelete(T item ) {
+            SelectedItem = null;
             Items.Remove( item );
             SetupIdx();
-            SelectedItem = null;
         }
 
         public virtual void DrawNewButton(string parentId ) { }

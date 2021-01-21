@@ -26,6 +26,7 @@ namespace VFXEditor.UI.VFX
         public UIMain(AVFXBase avfx, Plugin plugin)
         {
             AVFX = avfx;
+
             // =========================
             ParticleView = new UIParticleView(avfx);
             ParameterView = new UIParameterView(avfx);
@@ -36,6 +37,8 @@ namespace VFXEditor.UI.VFX
             TextureView = new UITextureView(avfx, plugin);
             ModelView = new UIModelView(avfx, plugin);
             ScheduleView = new UIScheduleView(avfx);
+
+            UINode.InitGroups();
         }
 
         public void Draw()

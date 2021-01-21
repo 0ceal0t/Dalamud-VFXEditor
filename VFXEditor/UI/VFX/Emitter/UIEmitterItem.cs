@@ -14,7 +14,9 @@ namespace VFXEditor.UI.VFX
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
         public bool IsParticle;
-        //=============================
+        //=====================
+        public UIEmitter SelectedEmitter = null;
+        public UIParticle SelectedParticle = null;
 
         public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter)
         {
@@ -49,28 +51,22 @@ namespace VFXEditor.UI.VFX
         }
         
         // =========== DRAW ==============
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item";
+            // ================
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 if( IsParticle )
                 {
                     Emitter.Emitter.removeParticle( Iteration );
-                    Emitter.EmitterSplit.OnDelete( this );
+                    Emitter.ParticleSplit.OnDelete( this );
                     return;
                 }
                 else
                 {
                     Emitter.Emitter.removeEmitter( Iteration );
-                    Emitter.ParticleSplit.OnDelete( this );
+                    Emitter.EmitterSplit.OnDelete( this );
                     return;
                 }
             }

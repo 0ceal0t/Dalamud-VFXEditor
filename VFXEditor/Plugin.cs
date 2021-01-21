@@ -88,7 +88,7 @@ namespace VFXEditor
 
         public DateTime LastSelect = DateTime.Now;
         public void SelectAVFX(VFXSelectResult selectResult ) {
-            if( ( DateTime.Now - LastSelect ).TotalSeconds < 2 ) {
+            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) {
                 return;
             }
             LastSelect = DateTime.Now;

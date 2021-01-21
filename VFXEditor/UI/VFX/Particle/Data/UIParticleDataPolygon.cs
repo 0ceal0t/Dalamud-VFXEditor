@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIParticleDataPolygon : UIBase
     {
         public AVFXParticleDataPolygon Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIParticleDataPolygon(AVFXParticleDataPolygon data)
@@ -23,7 +24,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

@@ -214,6 +214,8 @@ namespace VFXEditor.UI.VFX {
                 DragPoint( d, SizePerUnit );
             }
             else {
+                if(DraggingPoint != null) // snap to integer time
+                    DraggingPoint.canvasData.X = DraggingPoint.Key.Time;
                 DraggingPoint = null;
             }
             // HOW ABOUT DRAGGING THE VIEW?

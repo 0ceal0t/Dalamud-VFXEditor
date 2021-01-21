@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIEmitterDataSphereModel : UIBase
     {
         public AVFXEmitterDataSphereModel Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIEmitterDataSphereModel(AVFXEmitterDataSphereModel data)
@@ -29,7 +30,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

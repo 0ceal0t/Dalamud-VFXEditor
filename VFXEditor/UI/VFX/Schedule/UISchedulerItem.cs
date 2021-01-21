@@ -26,14 +26,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );
             Attributes.Add( new UIInt( "Timeline Index", Item.TimelineIdx ) );
         }
-
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/" + Name;

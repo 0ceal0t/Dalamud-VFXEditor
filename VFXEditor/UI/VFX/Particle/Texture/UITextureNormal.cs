@@ -33,19 +33,7 @@ namespace VFXEditor.UI.VFX
         }
 
         // =========== DRAW =====================
-        public override void DrawSelect( string parentId, ref UIItem selected )
-        {
-            if( !Assigned )
-            {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.Selectable( "Texture Normal" + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
-        private void DrawUnAssigned( string parentId )
+        public override void DrawUnAssigned( string parentId )
         {
             if( ImGui.SmallButton( "+ Texture Normal" + parentId ) )
             {

@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIBinderDataPoint : UIBase
     {
         public AVFXBinderDataPoint Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //=======================
 
         public UIBinderDataPoint(AVFXBinderDataPoint data)
@@ -23,7 +24,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

@@ -115,7 +115,7 @@ namespace VFXEditor.UI
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) )
                 {
-                    if((DateTime.Now - LastUpdate).TotalSeconds > 2  )
+                    if((DateTime.Now - LastUpdate).TotalSeconds > 0.5  )
                     {
                         _plugin.Doc.Save();
                         _plugin.ResourceLoader.ReRender();
@@ -350,9 +350,9 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         public void BGtoPlayerVFX() {
             // add new binder
             VFXMain.BinderView.AddItem( VFXMain.BinderView.OnNew() );
-            var binderIdx = VFXMain.BinderView.Items.Count - 1;
+            var binderIdx = VFXMain.BinderView.Group.Items.Count - 1;
             // turn all timeline item binders -> last binder idx
-            foreach( var tl in VFXMain.TimelineView.Items ) {
+            foreach( var tl in VFXMain.TimelineView.Group.Items ) {
                 foreach( var item in tl.Items ) {
                     if(item.Item.EmitterIdx.Value >= 0 ) {
                         item.BinderIndex.Value = binderIdx;

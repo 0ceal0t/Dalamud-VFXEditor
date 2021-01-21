@@ -97,20 +97,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            string id = parentId + "/Simple";
-            if( !Assigned )
-            {
-                DrawUnAssigned( id );
-                return;
-            }
-            if( ImGui.Selectable( "Simple Animation" + id, selected == this ) )
-            {
-                selected = this;
-            }
-        }
-        private void DrawUnAssigned( string parentId )
+        public override void DrawUnAssigned( string parentId )
         {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) )
             {

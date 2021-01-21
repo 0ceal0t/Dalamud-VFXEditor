@@ -55,19 +55,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( !Assigned )
-            {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.Selectable( Name + parentId, selected == this ) )
-            {
-                selected = this;
-            }
-        }
-        private void DrawUnAssigned( string parentId )
+        public override void DrawUnAssigned( string parentId )
         {
             if( ImGui.SmallButton( "+ " + Name + parentId ) )
             {

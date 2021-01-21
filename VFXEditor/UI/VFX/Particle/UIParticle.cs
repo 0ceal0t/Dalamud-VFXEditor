@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticle : UIItem {
+    public class UIParticle : UINode {
         public AVFXParticle Particle;
         public UIParticleView View;
         // =======================
@@ -185,9 +185,6 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndTabBar();
             }
-        }
-
-        public override void DrawSelect(string parentId, ref UIItem selected ) {
         }
 
         public override string GetText() {

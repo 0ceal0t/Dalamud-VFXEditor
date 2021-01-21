@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITexture : UIItem
+    public class UITexture : UINode
     {
         public AVFXTexture Texture;
         public UITextureView View;
@@ -33,13 +33,6 @@ namespace VFXEditor.UI.VFX
             lastValue = Texture.Path.Value;
             if( _plugin.Configuration.PreviewTextures ) {
                 _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
-            }
-        }
-        public override void DrawSelect(string parentId, ref UIItem selected )
-        {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) )
-            {
-                selected = this;
             }
         }
         public override void DrawBody( string parentId )

@@ -39,7 +39,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 
-- [ ] Better bg texture
+- [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
 - [ ] Model scaling?
 - [ ] Model editing?
@@ -47,10 +47,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] More texture export options
 - [ ] Merge A8 into Lumina
 - [ ] UV view (here we go again...)
-- [ ] Figure out splines
+- [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
 - [ ] AVFX version
-- [ ] Drag point snapping
 - [ ] Add pre and post behavior to curve editor
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
@@ -75,6 +74,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~Drag point snapping~~
 - [x] ~~Wireframe view~~
 - [x] ~~Curve editor bounding~~
 - [x] ~~Curve key change order~~

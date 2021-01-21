@@ -11,17 +11,11 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEffectorView : UIDropdownView<UIEffector>
     {
-        public AVFXBase AVFX;
-
-        public UIEffectorView(AVFXBase avfx) : base( "##EFFCT", "Select an Effector" )
+        public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector" )
         {
-            AVFX = avfx;
-            //===================
-            foreach( var effector in AVFX.Effectors ) {
-                var item = new UIEffector( effector, this );
-                Items.Add( item );
-            }
-            SetupIdx();
+            List<UIEffector> items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
+            UINode._Effectors = new UINodeGroup<UIEffector>( items );
+            Group = UINode._Effectors;
         }
 
         public override UIEffector OnNew() {

@@ -11,30 +11,24 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public abstract class UIDropdownView<T> : UIBase where T : UIItem {
-        public string id;
+    public abstract class UIDropdownView<T> : UIBase where T : UINode {
+        public string Id;
         public string defaultText;
 
-        public List<T> Items;
-        public T Selected;
+        public AVFXBase AVFX;
+        public UINodeGroup<T> Group;
+        public T Selected = null;
 
         public bool AllowNew;
         public bool AllowDelete;
 
-        public UIDropdownView(string _id, string _defaultText, bool allowNew = true, bool allowDelete = true )
+        public UIDropdownView( AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true )
         {
-            id = _id;
+            AVFX = avfx;
+            Id = _id;
             defaultText = _defaultText;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
-            // ===============
-            Selected = null;
-            Items = new List<T>();
-        }
-        public void SetupIdx() {
-            for(int i = 0; i < Items.Count; i++ ) {
-                Items[i].Idx = i;
-            }
         }
 
         public abstract T OnNew();
@@ -48,17 +42,17 @@ namespace VFXEditor.UI.VFX
             if( AllowNew )
             {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "+ New" + id ) )
+                if( ImGui.SmallButton( "+ New" + Id ) )
                 {
-                    ImGui.OpenPopup( "New_Popup" + id );
+                    ImGui.OpenPopup( "New_Popup" + Id );
                 }
-                if( ImGui.BeginPopup( "New_Popup" + id ) )
+                if( ImGui.BeginPopup( "New_Popup" + Id ) )
                 {
-                    if( ImGui.Selectable( "Create" + id ) )
+                    if( ImGui.Selectable( "Create" + Id ) )
                     {
                         AddItem( OnNew() );
                     }
-                    if( ImGui.Selectable("Load" + id ) )
+                    if( ImGui.Selectable("Load" + Id ) )
                     {
                         Load();
                     }
@@ -68,16 +62,15 @@ namespace VFXEditor.UI.VFX
             if( Selected != null && AllowDelete )
             {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Save" + id ) )
+                if( ImGui.SmallButton( "Save" + Id ) )
                 {
                     Save( Selected );
                 }
                 ImGui.SameLine();
-                if( UIUtils.RemoveButton( "Delete" + id, small:true) )
+                if( UIUtils.RemoveButton( "Delete" + Id, small:true) )
                 {
+                    Group.Remove( Selected );
                     OnDelete( Selected );
-                    Items.Remove( Selected );
-                    SetupIdx();
                     Selected = null;
                 }
             }
@@ -85,20 +78,19 @@ namespace VFXEditor.UI.VFX
             // ====================
             if( Selected != null )
             {
-                Selected.DrawBody( id );
+                Selected.DrawBody( Id );
             }
         }
         public void AddItem(T item ) {
-            item.Idx = Items.Count;
-            Items.Add( item );
+            Group.Add( item );
         }
         // ========================
         public void ViewSelect() {
             var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
-            if( ImGui.BeginCombo( "Select" + id, selectedString ) ) {
-                for( int idx = 0; idx < Items.Count; idx++ ) {
-                    var item = Items[idx];
-                    if( ImGui.Selectable( item.GetText() + id, Selected == item ) ) {
+            if( ImGui.BeginCombo( "Select" + Id, selectedString ) ) {
+                for( int idx = 0; idx < Group.Items.Count; idx++ ) {
+                    var item = Group.Items[idx];
+                    if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                         Selected = item;
                     }
                 }

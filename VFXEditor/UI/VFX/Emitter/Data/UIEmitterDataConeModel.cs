@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX {
     public class UIEmitterDataConeModel : UIBase {
         public AVFXEmitterDataConeModel Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIEmitterDataConeModel( AVFXEmitterDataConeModel data ) {
@@ -26,7 +27,7 @@ namespace VFXEditor.UI.VFX {
 
         public override void Draw( string parentId ) {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

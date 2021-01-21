@@ -52,12 +52,6 @@ namespace VFXEditor.UI.VFX
             ClipNumber.Draw( id );
         }
 
-        public override void DrawSelect(string parentId, ref UIItem selected ) {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
-                selected = this;
-            }
-        }
-
         public override string GetText() {
             return Idx + ": Emitter " + Item.EmitterIdx.Value;
         }

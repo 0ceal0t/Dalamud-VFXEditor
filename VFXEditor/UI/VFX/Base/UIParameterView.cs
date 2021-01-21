@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIParameterView : UIBase
     {
         public AVFXBase AVFX;
+        public List<UIBase> Attributes = new List<UIBase>();
         // ======================
 
         public UIParameterView(AVFXBase avfx)
@@ -55,7 +56,7 @@ namespace VFXEditor.UI.VFX
         {
             string id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
-            DrawAttrs(id);
+            DrawList(Attributes, id);
             ImGui.EndChild();
         }
     }

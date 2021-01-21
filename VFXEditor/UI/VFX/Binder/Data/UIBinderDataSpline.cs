@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIBinderDataSpline : UIBase
     {
         public AVFXBinderDataSpline Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //=======================
 
         public UIBinderDataSpline(AVFXBinderDataSpline data)
@@ -24,7 +25,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX
 {
-    public class UIBinder : UIItem
+    public class UIBinder : UINode
     {
         public AVFXBinder Binder;
         public UIBinderView View;
@@ -110,9 +110,6 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndTabBar();
             }
-        }
-
-        public override void DrawSelect(string parentId, ref UIItem selected ) {
         }
 
         public override string GetText() {

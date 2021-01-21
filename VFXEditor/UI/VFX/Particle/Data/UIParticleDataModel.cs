@@ -11,6 +11,7 @@ namespace VFXEditor.UI.VFX
     public class UIParticleDataModel : UIBase
     {
         public AVFXParticleDataModel Data;
+        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
         public UIParticleDataModel(AVFXParticleDataModel data)
@@ -36,7 +37,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawAttrs( id );
+            DrawList( Attributes, id );
         }
     }
 }
