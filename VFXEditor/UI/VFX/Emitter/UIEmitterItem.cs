@@ -54,22 +54,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item";
-            // ================
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                if( IsParticle )
-                {
-                    Emitter.Emitter.removeParticle( Iteration );
-                    Emitter.ParticleSplit.OnDelete( this );
-                    return;
-                }
-                else
-                {
-                    Emitter.Emitter.removeEmitter( Iteration );
-                    Emitter.EmitterSplit.OnDelete( this );
-                    return;
-                }
-            }
             DrawAttrs( id );
         }
 

@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModel : UINode {
         public AVFXModel Model;
-        public UIModelView View;
         public Model3D Mdl3D;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
@@ -21,31 +20,18 @@ namespace VFXEditor.UI.VFX
 
         public UIModel( AVFXModel model, UIModelView view ) {
             Model = model;
-            View = view;
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
             for( int i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
-            Mdl3D = View._plugin.DXManager.Model;
-        }
-
-        public override void DrawSidebar( string parentId, ref UIItem selected ) {
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
-                selected = this;
-                Mdl3D.LoadModel( Model );
-            }
+            Mdl3D = view.Mdl3D;
         }
 
         public bool Open = true;
         public override void DrawBody( string parentId ) {
             string id = parentId + "/Model";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
-                View.AVFX.removeModel( Model );
-                View.ModelSplit.OnDelete( this );
-                return;
-            }
             ImGui.SameLine();
             if( ImGui.SmallButton( "Import" + id ) ) {
                 ImportDialog();

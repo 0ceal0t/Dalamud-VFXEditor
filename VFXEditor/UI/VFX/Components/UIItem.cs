@@ -13,15 +13,6 @@ namespace VFXEditor.UI.VFX {
 
         public abstract string GetText();
         public abstract void DrawBody( string parentId );
-        public virtual void DrawSidebar(string parentId, ref UIItem selected ) {
-            if( !Assigned ) {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.Selectable( GetText() + parentId, selected == this ) ) {
-                selected = this;
-            }
-        }
         public virtual void DrawUnAssigned( string parentId ) { }
         public override void Draw( string parentId ) { }
 

@@ -349,7 +349,7 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
         // ======= HELPERS ============
         public void BGtoPlayerVFX() {
             // add new binder
-            VFXMain.BinderView.AddItem( VFXMain.BinderView.OnNew() );
+            VFXMain.BinderView.Group.Add( VFXMain.BinderView.OnNew() );
             var binderIdx = VFXMain.BinderView.Group.Items.Count - 1;
             // turn all timeline item binders -> last binder idx
             foreach( var tl in VFXMain.TimelineView.Group.Items ) {

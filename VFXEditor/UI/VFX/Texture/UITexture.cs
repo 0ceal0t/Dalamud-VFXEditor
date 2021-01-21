@@ -15,51 +15,44 @@ namespace VFXEditor.UI.VFX
 {
     public class UITexture : UINode
     {
-        public AVFXTexture Texture;
+        public TextureManager Manager;
         public UITextureView View;
+        public AVFXTexture Texture;
         public string lastValue;
         public UIString Path;
 
-        public Plugin _plugin;
-
-        public UITexture(AVFXTexture texture, UITextureView view, Plugin plugin)
+        public UITexture(AVFXTexture texture, UITextureView view)
         {
-            Texture = texture;
             View = view;
-            _plugin = plugin;
+            Texture = texture;
+            Manager = view.Manager;
             // ================
             UIString.Change bytesToPath = BytesToPath;
             Path = new UIString( "Path", Texture.Path, changeFunction: bytesToPath );
             lastValue = Texture.Path.Value;
-            if( _plugin.Configuration.PreviewTextures ) {
-                _plugin.Manager.TexManager.LoadTexture( Texture.Path.Value );
+            if( view.GetPreviewTexture() ) {
+                Manager.LoadTexture( Texture.Path.Value );
             }
         }
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Texture";
-            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
-            {
-                View.AVFX.removeTexture( Texture );
-                View.TexSplit.OnDelete( this );
-                return;
-            }
             Path.Draw( id );
 
             var newValue = Path.Literal.Value;
             if( newValue != lastValue )
             {
                 lastValue = newValue;
-                if( _plugin.Configuration.PreviewTextures )
+                if( View.GetPreviewTexture() )
                 {
-                    _plugin.Manager.TexManager.LoadTexture( newValue );
+                    Manager.LoadTexture( newValue );
                 }
             }
-            if( _plugin.Configuration.PreviewTextures )
+            if( View.GetPreviewTexture() )
             {
-                if( _plugin.Manager.TexManager.PathToTex.ContainsKey( newValue ) )
+                if( Manager.PathToTex.ContainsKey( newValue ) )
                 {
-                    var t = _plugin.Manager.TexManager.PathToTex[newValue];
+                    var t = Manager.PathToTex[newValue];
                     ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                     if(ImGui.Button("Export" + id ) )
                     {

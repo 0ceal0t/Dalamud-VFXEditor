@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX
         public List<UISchedulerItem> Triggers;
         // ================
         public UIScheduleItemSplitView ItemSplit;
-        public UISplitView<UISchedulerItem> TriggerSplit;
+        public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
         public UIScheduler(AVFXSchedule scheduler, UIScheduleView view)
         {
@@ -35,7 +35,7 @@ namespace VFXEditor.UI.VFX
             }
             // ======================
             ItemSplit = new UIScheduleItemSplitView( Items, this );
-            TriggerSplit = new UISplitView<UISchedulerItem>( Triggers );
+            TriggerSplit = new UIItemSplitView<UISchedulerItem>( Triggers );
         }
 
         public override void DrawBody( string parentId ) {

@@ -14,7 +14,6 @@ namespace VFXEditor.UI.VFX
     public abstract class UIDropdownView<T> : UIBase where T : UINode {
         public string Id;
         public string defaultText;
-
         public AVFXBase AVFX;
         public UINodeGroup<T> Group;
         public T Selected = null;
@@ -34,6 +33,7 @@ namespace VFXEditor.UI.VFX
         public abstract T OnNew();
         public abstract void OnDelete( T item );
         public abstract byte[] OnExport( T item );
+        public virtual void OnSelect( T item ) { }
         public abstract T OnImport( AVFXLib.AVFX.AVFXNode node );
 
         public override void Draw( string parentId = "" )
@@ -50,7 +50,7 @@ namespace VFXEditor.UI.VFX
                 {
                     if( ImGui.Selectable( "Create" + Id ) )
                     {
-                        AddItem( OnNew() );
+                        Group.Add( OnNew() );
                     }
                     if( ImGui.Selectable("Load" + Id ) )
                     {
@@ -70,6 +70,7 @@ namespace VFXEditor.UI.VFX
                 if( UIUtils.RemoveButton( "Delete" + Id, small:true) )
                 {
                     Group.Remove( Selected );
+                    Selected.DeleteNode();
                     OnDelete( Selected );
                     Selected = null;
                 }
@@ -81,9 +82,6 @@ namespace VFXEditor.UI.VFX
                 Selected.DrawBody( Id );
             }
         }
-        public void AddItem(T item ) {
-            Group.Add( item );
-        }
         // ========================
         public void ViewSelect() {
             var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
@@ -92,6 +90,7 @@ namespace VFXEditor.UI.VFX
                     var item = Group.Items[idx];
                     if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                         Selected = item;
+                        OnSelect( item );
                     }
                 }
                 ImGui.EndCombo();
@@ -114,7 +113,7 @@ namespace VFXEditor.UI.VFX
                         foreach( string message in messages ) {
                             PluginLog.Log( message );
                         }
-                        AddItem(OnImport( node ));
+                        Group.Add( OnImport( node ));
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );

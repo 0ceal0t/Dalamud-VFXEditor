@@ -39,8 +39,6 @@ namespace VFXEditor.UI.VFX {
                 node.Node.Children.RemoveAll( x => x == this );
             }
         }
-
-        public virtual void OnDelete() { } // use this to clean up any selectors and stuff
     }
 
     public class UINodeGroup<T> where T : UINode {
@@ -101,7 +99,7 @@ namespace VFXEditor.UI.VFX {
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
         public abstract void DeleteNode();
-        public abstract void UpdateNode(); // call when updates happen to nodes. Ex: model deleted -> all particles > data > modelIdx
+        public abstract void UpdateNode();
         public abstract void SetupNode();
         public abstract void Draw( string parentId );
     }

@@ -28,12 +28,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/UV";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                Particle.Particle.removeUvSet( UVSet );
-                Particle.UVSplit.OnDelete( this );
-                return;
-            }
             DrawAttrs( id );
         }
 

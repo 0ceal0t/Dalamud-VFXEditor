@@ -14,7 +14,7 @@ namespace VFXEditor.UI.VFX
         //=======================
         public UICombo<EmitterType> Type;
         List<UIItem> Animation;
-        UISplitView<UIItem> AnimationSplit;
+        UIItemSplitView<UIItem> AnimationSplit;
         //========================
         public List<UIEmitterItem> Particles;
         public List<UIEmitterItem> Emitters;
@@ -68,7 +68,7 @@ namespace VFXEditor.UI.VFX
             //=======================
             SetType();
             //=============================
-            AnimationSplit = new UISplitView<UIItem>( Animation );
+            AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
             ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }

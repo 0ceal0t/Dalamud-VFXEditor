@@ -38,12 +38,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                Timeline.Timeline.removeItem( Item );
-                Timeline.ItemSplit.OnDelete( this );
-                return;
-            }
             DrawAttrs( id );
 
             if(ImGui.Checkbox("Clip Enabled" + id, ref ClipAssigned ) ) {

@@ -21,8 +21,8 @@ namespace VFXEditor.UI.VFX
         List<UIItem> Animation;
         List<UIItem> Tex;
         // ==================
-        UISplitView<UIItem> AnimationSplit;
-        UISplitView<UIItem> TexSplit;
+        UIItemSplitView<UIItem> AnimationSplit;
+        UIItemSplitView<UIItem> TexSplit;
         public UIUVSetSplitView UVSplit;
 
         public UIParticle( AVFXParticle particle, UIParticleView view ) {
@@ -96,8 +96,8 @@ namespace VFXEditor.UI.VFX
             Tex.Add( new UITextureDistortion( Particle.TD ) );
             Tex.Add( new UITexturePalette( Particle.TP ) );
             //=============================
-            AnimationSplit = new UISplitView<UIItem>( Animation );
-            TexSplit = new UISplitView<UIItem>( Tex );
+            AnimationSplit = new UIItemSplitView<UIItem>( Animation );
+            TexSplit = new UIItemSplitView<UIItem>( Tex );
             UVSplit = new UIUVSetSplitView( UVSets, this );
         }
         public void SetType() {

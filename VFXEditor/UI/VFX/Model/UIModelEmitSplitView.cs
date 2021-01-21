@@ -6,24 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIModelEmitSplitView : UISplitView<UIModelEmitterVertex>
-    {
+namespace VFXEditor.UI.VFX {
+    public class UIModelEmitSplitView : UIItemSplitView<UIModelEmitterVertex> {
         public UIModel Model;
-        public UIModelEmitSplitView( List<UIModelEmitterVertex> items, UIModel model ) : base( items, true, leftSize:120 )
-        {
+
+        public UIModelEmitSplitView( List<UIModelEmitterVertex> items, UIModel model) : base( items, true, true ) {
             Model = model;
         }
 
-        public override void DrawNewButton( string id )
-        {
-            if( ImGui.Button( "+ Emitter Vertex" + id ) )
-            {
-                var vnum = Model.Model.addVNum();
-                var emit = Model.Model.addEmitVertex();
-                OnNew( new UIModelEmitterVertex( vnum, emit, Model ) );
-            }
+        public override UIModelEmitterVertex OnNew() {
+            var vnum = Model.Model.addVNum();
+            var emit = Model.Model.addEmitVertex();
+            return new UIModelEmitterVertex( vnum, emit, Model );
+        }
+
+        public override void OnDelete( UIModelEmitterVertex item ) {
+            Model.Model.removeEmitVertex( item.Vertex );
+            Model.Model.removeVNum( item.VertNumber );
         }
     }
 }

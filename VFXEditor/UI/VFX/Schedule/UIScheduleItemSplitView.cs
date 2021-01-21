@@ -6,22 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIScheduleItemSplitView : UISplitView<UISchedulerItem>
-    {
+namespace VFXEditor.UI.VFX {
+    public class UIScheduleItemSplitView : UIItemSplitView<UISchedulerItem> {
         public UIScheduler Sched;
-        public UIScheduleItemSplitView( List<UISchedulerItem> items, UIScheduler sched ) : base( items, true )
-        {
+
+        public UIScheduleItemSplitView( List<UISchedulerItem> items, UIScheduler sched ) : base( items, true, true ) {
             Sched = sched;
         }
 
-        public override void DrawNewButton( string id )
-        {
-            if( ImGui.Button( "+ Item" + id ) )
-            {
-                OnNew( new UISchedulerItem( Sched.Scheduler.addItem(), "Item", Sched ) );
-            }
+        public override UISchedulerItem OnNew() {
+            return new UISchedulerItem( Sched.Scheduler.addItem(), "Item", Sched );
+        }
+
+        public override void OnDelete( UISchedulerItem item ) {
+            Sched.Scheduler.removeItem( item.Item );
         }
     }
 }

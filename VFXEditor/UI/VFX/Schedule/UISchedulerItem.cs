@@ -29,15 +29,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/" + Name;
-            if(Name != "Trigger" )
-            {
-                if( UIUtils.RemoveButton( "Delete" + id ) )
-                {
-                    Sched.Scheduler.removeItem( Item );
-                    Sched.ItemSplit.OnDelete( this );
-                    return;
-                }
-            }
             DrawAttrs( id );
         }
 

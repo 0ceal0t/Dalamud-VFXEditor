@@ -8,29 +8,29 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIModelView : UIBase
+    public class UIModelView : UINodeSplitView<UIModel>
     {
-        public AVFXBase AVFX;
-        public List<UIModel> Models;
-        public UIModelSplitView ModelSplit;
-        public Plugin _plugin;
+        public Model3D Mdl3D;
 
-        public UIModelView(AVFXBase avfx, Plugin plugin)
+        public UIModelView(AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
         {
-            AVFX = avfx;
-            _plugin = plugin;
-            //=================
-            Models = new List<UIModel>();
-            foreach( var model in AVFX.Models ) {
-                Models.Add( new UIModel( model, this ) );
-            }
-            ModelSplit = new UIModelSplitView( Models, this );
+            Mdl3D = plugin.DXManager.Model;
+            // ================
+            List<UIModel> items = AVFX.Models.Select( item => new UIModel( item, this ) ).ToList();
+            UINode._Models = new UINodeGroup<UIModel>( items );
+            Group = UINode._Models;
         }
 
-        public override void Draw(string parentId = "")
-        {
-            string id = "##MDL";
-            ModelSplit.Draw( id );
+        public override void OnSelect( UIModel item ) {
+            Mdl3D.LoadModel( item.Model );
+        }
+
+        public override void OnDelete( UIModel item ) {
+            AVFX.removeModel( item.Model );
+        }
+
+        public override UIModel OnNew() {
+            return new UIModel( AVFX.addModel(), this );
         }
     }
 }

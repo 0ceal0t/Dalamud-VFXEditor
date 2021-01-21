@@ -6,31 +6,30 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UITextureView : UIBase
-    {
-        public AVFXBase AVFX;
-        public List<UITexture> Textures;
-        public UITextureSplitView TexSplit;
+namespace VFXEditor.UI.VFX {
+    public class UITextureView : UINodeSplitView<UITexture> {
         public Plugin _plugin;
+        public TextureManager Manager;
 
-        public UITextureView(AVFXBase avfx, Plugin plugin)
-        {
-            AVFX = avfx;
+        public UITextureView( AVFXBase avfx, Plugin plugin ) : base( avfx, "##TEX" ) {
             _plugin = plugin;
+            Manager = plugin.Manager.TexManager;
             // ==========
-            Textures = new List<UITexture>();
-            foreach( var texture in AVFX.Textures ) {
-                Textures.Add( new UITexture( texture, this, _plugin ) );
-            }
-            TexSplit = new UITextureSplitView( Textures, this );
+            List<UITexture> items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();
+            UINode._Textures = new UINodeGroup<UITexture>( items );
+            Group = UINode._Textures;
         }
 
-        public override void Draw(string parentId = "")
-        {
-            string id = "##TEX";
-            TexSplit.Draw( id );
+        public bool GetPreviewTexture() {
+            return _plugin.Configuration.PreviewTextures;
+        }
+
+        public override void OnDelete( UITexture item ) {
+            AVFX.removeTexture( item.Texture );
+        }
+
+        public override UITexture OnNew() {
+            return new UITexture( AVFX.addTexture(),this );
         }
     }
 }

@@ -43,12 +43,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Clip";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                Timeline.Timeline.removeClip( Clip );
-                Timeline.ClipSplit.OnDelete( this );
-                return;
-            }
             if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
             {
                 Clip.UnknownInts[0] = ( int )UnknownInts.X;

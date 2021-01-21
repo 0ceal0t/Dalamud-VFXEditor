@@ -34,14 +34,6 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/VNum";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                Model.Model.removeEmitVertex( Vertex );
-                Model.Model.removeVNum( VertNumber );
-                Model.EmitSplit.OnDelete( this );
-                return;
-            }
-
             if(ImGui.InputInt("Order" + id, ref Order ) )
             {
                 VertNumber.Num = Order;

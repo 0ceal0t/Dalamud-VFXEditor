@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIBase Data;
         public List<UIBinderProperties> Properties;
         //====================
-        public UISplitView<UIBinderProperties> PropSplit;
+        public UIItemSplitView<UIBinderProperties> PropSplit;
 
         public UIBinder(AVFXBinder binder, UIBinderView view)
         {
@@ -47,7 +47,7 @@ namespace VFXEditor.UI.VFX
             //======================
             SetType();
             //======================
-            PropSplit = new UISplitView<UIBinderProperties>( Properties );
+            PropSplit = new UIItemSplitView<UIBinderProperties>( Properties );
         }
         public void SetType() {
             switch( Binder.BinderVariety.Value ) {

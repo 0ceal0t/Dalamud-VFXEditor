@@ -6,22 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UITimelineItemSplitView : UISplitView<UITimelineItem>
-    {
+namespace VFXEditor.UI.VFX {
+    public class UITimelineItemSplitView : UIItemSplitView<UITimelineItem> {
         public UITimeline Timeline;
-        public UITimelineItemSplitView( List<UITimelineItem> items, UITimeline timeline ) : base( items, true )
-        {
+
+        public UITimelineItemSplitView( List<UITimelineItem> items, UITimeline timeline ) : base( items, true, true ) {
             Timeline = timeline;
         }
 
-        public override void DrawNewButton( string id )
-        {
-            if( ImGui.Button( "+ Item" + id ) )
-            {
-                OnNew( new UITimelineItem( Timeline.Timeline.addItem(), Timeline ) );
-            }
+        public override UITimelineItem OnNew() {
+            return new UITimelineItem( Timeline.Timeline.addItem(), Timeline );
+        }
+
+        public override void OnDelete( UITimelineItem item ) {
+            Timeline.Timeline.removeItem( item.Item );
         }
     }
 }
