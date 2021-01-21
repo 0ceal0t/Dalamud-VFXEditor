@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITextureColor1 : UIItem
-    {
+    public class UITextureColor1 : UIItem {
         public AVFXTextureColor1 Tex;
+        public UIParticle Particle;
         //============================
 
-        public UITextureColor1(AVFXTextureColor1 tex)
+        public UITextureColor1(AVFXTextureColor1 tex, UIParticle particle )
         {
             Tex = tex;
+            Particle = particle;
             Init();
         }
         public override void Init()

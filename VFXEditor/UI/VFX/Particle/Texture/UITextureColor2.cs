@@ -10,13 +10,15 @@ namespace VFXEditor.UI.VFX
 {
     public class UITextureColor2 : UIItem {
         public AVFXTextureColor2 Tex;
+        public UIParticle Particle;
         public string Name;
         //============================
 
-        public UITextureColor2(AVFXTextureColor2 tex, string name)
+        public UITextureColor2(AVFXTextureColor2 tex, string name, UIParticle particle )
         {
             Tex = tex;
             Name = name;
+            Particle = particle;
             Init();
         }
         public override void Init()

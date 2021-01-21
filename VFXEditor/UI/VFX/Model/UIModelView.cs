@@ -15,10 +15,9 @@ namespace VFXEditor.UI.VFX
         public UIModelView(AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
         {
             Mdl3D = plugin.DXManager.Model;
-            // ================
-            List<UIModel> items = AVFX.Models.Select( item => new UIModel( item, this ) ).ToList();
-            UINode._Models = new UINodeGroup<UIModel>( items );
+            UINode._Models = new UINodeGroup<UIModel>();
             Group = UINode._Models;
+            Group.Items = AVFX.Models.Select( item => new UIModel( item, this ) ).ToList();
         }
 
         public override void OnSelect( UIModel item ) {

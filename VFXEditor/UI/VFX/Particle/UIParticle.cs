@@ -87,14 +87,14 @@ namespace VFXEditor.UI.VFX
             //===============================
             SetType();
             //============================
-            Tex.Add( new UITextureColor1( Particle.TC1 ) );
-            Tex.Add( new UITextureColor2( Particle.TC2, "Texture Color 2" ) );
-            Tex.Add( new UITextureColor2( Particle.TC3, "Texture Color 3" ) );
-            Tex.Add( new UITextureColor2( Particle.TC4, "Texture Color 4" ) );
-            Tex.Add( new UITextureNormal( Particle.TN ) );
-            Tex.Add( new UITextureReflection( Particle.TR ) );
-            Tex.Add( new UITextureDistortion( Particle.TD ) );
-            Tex.Add( new UITexturePalette( Particle.TP ) );
+            Tex.Add( new UITextureColor1( Particle.TC1, this ) );
+            Tex.Add( new UITextureColor2( Particle.TC2, "Texture Color 2", this ) );
+            Tex.Add( new UITextureColor2( Particle.TC3, "Texture Color 3", this ) );
+            Tex.Add( new UITextureColor2( Particle.TC4, "Texture Color 4", this ) );
+            Tex.Add( new UITextureNormal( Particle.TN, this ) );
+            Tex.Add( new UITextureReflection( Particle.TR, this ) );
+            Tex.Add( new UITextureDistortion( Particle.TD, this ) );
+            Tex.Add( new UITexturePalette( Particle.TP, this ) );
             //=============================
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             TexSplit = new UIItemSplitView<UIItem>( Tex );

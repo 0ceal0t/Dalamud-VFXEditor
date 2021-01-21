@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using Dalamud.Plugin;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UINode : UIItem {
@@ -29,6 +30,7 @@ namespace VFXEditor.UI.VFX {
 
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
+        public List<UINodeSelect> Selectors = new List<UINodeSelect>();
 
         public void DeleteNode() { // NODE DELETED, DON'T NEED ANY FURTHER LOGIC FOR SELECTORS
             foreach( var node in Children ) {
@@ -38,31 +40,32 @@ namespace VFXEditor.UI.VFX {
                 node.DeleteNode(); // NOTIFY ANY SELECTORS WHICH WERE TARGETING THIS NODE
                 node.Node.Children.RemoveAll( x => x == this );
             }
+
+            foreach(var s in Selectors ) {
+                s.UnlinkChange();
+            }
         }
     }
 
     public class UINodeGroup<T> where T : UINode {
-        public List<T> Items;
+        public List<T> Items = new List<T>();
         public Action OnInit;
         public Action OnChange;
         public bool isInit = false;
 
-        public UINodeGroup( List<T> items ) {
-            Items = items;
-            UpdateIdx();
+        public UINodeGroup() {
         }
 
         public void Remove( T item ) {
             item.Idx = -1;
             Items.Remove( item );
             UpdateIdx();
-            //Update();
+            Update();
         }
 
         public void Add( T item ) {
             item.Idx = Items.Count;
             Items.Add( item );
-            //Update();
         }
 
         public void Update() {
@@ -70,6 +73,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void Init() {
+            UpdateIdx();
             isInit = true;
             OnInit?.Invoke();
             OnInit = null;
@@ -89,15 +93,20 @@ namespace VFXEditor.UI.VFX {
             if( node == null ) return;
             Node.Children.Remove( node );
             node.Parents.Remove( this );
+
+            PluginLog.Log( "Unlinking " + Node.GetText() + " from " + node.GetText() );
         }
 
         public void LinkTo(UINode node ) {
             if( node == null ) return;
             Node.Children.Add( node );
             node.Parents.Add( this );
+
+            PluginLog.Log( "Linking " + Node.GetText() + " to " + node.GetText() );
         }
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
+        public abstract void UnlinkChange();
         public abstract void DeleteNode();
         public abstract void UpdateNode();
         public abstract void SetupNode();
@@ -114,18 +123,19 @@ namespace VFXEditor.UI.VFX {
             Name = name;
             Group = group;
             Literal = literal;
-            //Group.OnChange += UpdateNode;
+            Group.OnChange += UpdateNode;
             if( Group.isInit ) {
                 SetupNode();
             }
             else {
                 Group.OnInit += SetupNode;
             }
+            node.Selectors.Add( this );
         }
 
         public override void Draw(string parentId) {
             string id = parentId + "/Node";
-            if(ImGui.BeginCombo("Select " + Name + id, Selected == null ? "None" : Selected.GetText() ) ) {
+            if(ImGui.BeginCombo(Name + id, Selected == null ? "None" : Selected.GetText() ) ) {
                 if(ImGui.Selectable("None", Selected == null ) ) {
                     // 
                     UnlinkFrom( Selected );
@@ -147,10 +157,13 @@ namespace VFXEditor.UI.VFX {
 
         // CALL THIS WHEN THE SELECTOR IS DELETED
         public override void DeleteSelect() {
-            //Group.OnChange -= UpdateNode;
+            UnlinkChange();
             if(Selected != null ) {
                 UnlinkFrom( Selected );
             }
+        }
+        public override void UnlinkChange() {
+            Group.OnChange -= UpdateNode;
         }
 
         public override void UpdateNode() {

@@ -24,10 +24,14 @@ namespace VFXEditor.UI.VFX
         public UIEmitterSplitView EmitterSplit;
         public UIEmitterSplitView ParticleSplit;
 
+        public UINodeSelect<UIEffector> EffectorSelect;
+
         public UIEmitter(AVFXEmitter emitter, UIEmitterView view)
         {
             Emitter = emitter;
             View = view;
+
+            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINode._Effectors, Emitter.EffectorIdx );
             // =====================
             Animation = new List<UIItem>();
             Particles = new List<UIEmitterItem>();
@@ -39,7 +43,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
             Attributes.Add( new UIInt( "Child Limit", Emitter.ChildLimit ) );
-            Attributes.Add( new UIInt( "Effector Index", Emitter.EffectorIdx ) );
             Attributes.Add( new UICheckbox( "Any Direction", Emitter.AnyDirection ) );
             Attributes.Add( new UICombo<RotationDirectionBase>( "Rotation Direction Base", Emitter.RotationDirectionBaseType ) );
             Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ) );
@@ -106,6 +109,7 @@ namespace VFXEditor.UI.VFX
         private void DrawParameters( string id )
         {
             ImGui.BeginChild( id );
+            EffectorSelect.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }

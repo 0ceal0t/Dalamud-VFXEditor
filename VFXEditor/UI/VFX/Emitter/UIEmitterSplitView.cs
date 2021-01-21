@@ -31,9 +31,11 @@ namespace VFXEditor.UI.VFX
         public override void OnDelete( UIEmitterItem item ) {
             if( IsParticle ) {
                 Emitter.Emitter.removeParticle( item.Iteration );
+                item.ParticleSelect.DeleteSelect();
             }
             else {
                 Emitter.Emitter.removeEmitter( item.Iteration );
+                item.EmitterSelect.DeleteSelect();
             }
         }
     }

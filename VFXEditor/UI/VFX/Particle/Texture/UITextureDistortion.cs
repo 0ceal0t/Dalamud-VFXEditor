@@ -10,12 +10,14 @@ namespace VFXEditor.UI.VFX
 {
     public class UITextureDistortion : UIItem {
         public AVFXTextureDistortion Tex;
+        public UIParticle Particle;
         public string Name;
         //============================
 
-        public UITextureDistortion(AVFXTextureDistortion tex)
+        public UITextureDistortion(AVFXTextureDistortion tex, UIParticle particle )
         {
             Tex = tex;
+            Particle = particle;
             Init();
         }
         public override void Init()

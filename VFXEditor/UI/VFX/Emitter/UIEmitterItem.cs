@@ -14,18 +14,24 @@ namespace VFXEditor.UI.VFX
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
         public bool IsParticle;
-        //=====================
-        public UIEmitter SelectedEmitter = null;
-        public UIParticle SelectedParticle = null;
+
+        public UINodeSelect<UIParticle> ParticleSelect;
+        public UINodeSelect<UIEmitter> EmitterSelect;
 
         public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter)
         {
             Iteration = iteration;
             Emitter = emitter;
             IsParticle = isParticle;
+
+            if( IsParticle ) {
+                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", UINode._Particles, Iteration.TargetIdx );
+            }
+            else {
+                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", UINode._Emitters, Iteration.TargetIdx );
+            }
             //=========================
             Attributes.Add( new UICheckbox( "Enabled", Iteration.Enabled ) );
-            Attributes.Add( new UIInt( "Target Index", Iteration.TargetIdx ) );
             Attributes.Add( new UIInt( "Local Direction", Iteration.LocalDirection ) );
             Attributes.Add( new UIInt( "Create Time", Iteration.CreateTime ) );
             Attributes.Add( new UIInt( "Create Count", Iteration.CreateCount ) );
@@ -54,6 +60,12 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item";
+            if( IsParticle ) {
+                ParticleSelect.Draw( id );
+            }
+            else {
+                EmitterSelect.Draw( id );
+            }
             DrawAttrs( id );
         }
 

@@ -10,11 +10,12 @@ namespace VFXEditor.UI.VFX
 {
     public class UITextureReflection : UIItem {
         public AVFXTextureReflection Tex;
+        public UIParticle Particle;
         //============================
 
-        public UITextureReflection(AVFXTextureReflection tex)
-        {
+        public UITextureReflection(AVFXTextureReflection tex, UIParticle particle) {
             Tex = tex;
+            Particle = particle;
             Init();
         }
         public override void Init()

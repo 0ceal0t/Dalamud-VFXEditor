@@ -11,15 +11,16 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
         public UIEmitterView( AVFXBase avfx) : base(avfx, "##EMIT", "Select an Emitter" ) {
-            List<UIEmitter> items = AVFX.Emitters.Select( item => new UIEmitter( item, this ) ).ToList();
-            UINode._Emitters = new UINodeGroup<UIEmitter>( items );
+            UINode._Emitters = new UINodeGroup<UIEmitter>();
             Group = UINode._Emitters;
+            Group.Items = AVFX.Emitters.Select( item => new UIEmitter( item, this ) ).ToList();
         }
 
         public override UIEmitter OnNew() {
             return new UIEmitter( AVFX.addEmitter(), this );
         }
         public override void OnDelete( UIEmitter item ) {
+            item.EffectorSelect.DeleteSelect();
             AVFX.removeEmitter( item.Emitter );
         }
         public override byte[] OnExport( UIEmitter item ) {

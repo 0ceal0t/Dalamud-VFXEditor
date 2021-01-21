@@ -19,17 +19,20 @@ namespace VFXEditor.UI.VFX
         public UITimelineClipSplitView ClipSplit;
         public UITimelineItemSplitView ItemSplit;
 
+        public UINodeSelect<UIBinder> BinderSelect;
+
         public UITimeline(AVFXTimeline timeline, UITimelineView view)
         {
             Timeline = timeline;
             View = view;
+
+            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINode._Binders, Timeline.BinderIdx );
             //===============
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
             //========================
             Attributes.Add( new UIInt( "Loop Start", Timeline.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Timeline.LoopEnd ) );
-            Attributes.Add( new UIInt( "Binder Index", Timeline.BinderIdx ) );
             //========================
             foreach( var item in Timeline.Items ) {
                 Items.Add( new UITimelineItem( item, this ) );
@@ -65,6 +68,7 @@ namespace VFXEditor.UI.VFX
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
+            BinderSelect.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }

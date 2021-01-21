@@ -13,9 +13,9 @@ namespace VFXEditor.UI.VFX
     {
         public UITimelineView(AVFXBase avfx) : base(avfx, "##TIME", "Select a Timeline" )
         {
-            List<UITimeline> items = AVFX.Timelines.Select( item => new UITimeline( item, this ) ).ToList();
-            UINode._Timelines = new UINodeGroup<UITimeline>( items );
+            UINode._Timelines = new UINodeGroup<UITimeline>();
             Group = UINode._Timelines;
+            Group.Items = AVFX.Timelines.Select( item => new UITimeline( item, this ) ).ToList();
         }
 
         public override UITimeline OnNew()
@@ -24,6 +24,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void OnDelete( UITimeline item )
         {
+            item.BinderSelect.DeleteSelect();
             AVFX.removeTimeline( item.Timeline );
         }
         public override byte[] OnExport( UITimeline item )

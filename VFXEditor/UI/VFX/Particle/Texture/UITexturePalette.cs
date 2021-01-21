@@ -10,12 +10,14 @@ namespace VFXEditor.UI.VFX
 {
     public class UITexturePalette : UIItem {
         public AVFXTexturePalette Tex;
+        public UIParticle Particle;
         public string Name;
         //============================
 
-        public UITexturePalette(AVFXTexturePalette tex)
+        public UITexturePalette(AVFXTexturePalette tex, UIParticle particle )
         {
             Tex = tex;
+            Particle = particle;
             Init();
         }
         public override void Init()

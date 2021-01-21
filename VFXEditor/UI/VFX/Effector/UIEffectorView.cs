@@ -13,9 +13,9 @@ namespace VFXEditor.UI.VFX
     {
         public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector" )
         {
-            List<UIEffector> items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
-            UINode._Effectors = new UINodeGroup<UIEffector>( items );
+            UINode._Effectors = new UINodeGroup<UIEffector>();
             Group = UINode._Effectors;
+            Group.Items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
         }
 
         public override UIEffector OnNew() {

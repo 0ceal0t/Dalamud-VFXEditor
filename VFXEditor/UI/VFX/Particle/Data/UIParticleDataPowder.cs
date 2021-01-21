@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
             //=======================
             Attributes.Add( new UICombo<DirectionalLightType>( "Directional Light Type", Data.DirectionalLightType ) );
             Attributes.Add( new UICheckbox( "Is Lightning", Data.IsLightning ) );
-            Attributes.Add( new UIFloat( "Model Index", Data.CenterOffset ) );
+            Attributes.Add( new UIFloat( "Center Offset", Data.CenterOffset ) );
         }
 
         public override void Draw(string parentId)

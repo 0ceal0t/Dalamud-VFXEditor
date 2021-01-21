@@ -19,6 +19,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnDelete( UISchedulerItem item ) {
+            item.TimelineSelect.DeleteSelect();
             Sched.Scheduler.removeItem( item.Item );
         }
     }

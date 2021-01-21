@@ -19,6 +19,9 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnDelete( UITimelineItem item ) {
+            item.BinderSelect.DeleteSelect();
+            item.EmitterSelect.DeleteSelect();
+            item.EffectorSelect.DeleteSelect();
             Timeline.Timeline.removeItem( item.Item );
         }
     }
