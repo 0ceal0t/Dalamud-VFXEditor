@@ -15,7 +15,6 @@ namespace VFXEditor.UI.VFX {
             _plugin = plugin;
             Manager = plugin.Manager.TexManager;
             // ==========
-            UINode._Textures = new UINodeGroup<UITexture>();
             Group = UINode._Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();
         }

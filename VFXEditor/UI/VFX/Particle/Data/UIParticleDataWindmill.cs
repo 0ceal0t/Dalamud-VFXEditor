@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleDataWindmill : UIBase
-    {
+    public class UIParticleDataWindmill : UIData {
         public AVFXParticleDataWindmill Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

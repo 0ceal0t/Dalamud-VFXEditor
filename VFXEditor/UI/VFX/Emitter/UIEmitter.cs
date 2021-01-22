@@ -19,7 +19,7 @@ namespace VFXEditor.UI.VFX
         public List<UIEmitterItem> Particles;
         public List<UIEmitterItem> Emitters;
         //========================
-        public UIBase Data;
+        public UIData Data;
         //========================
         public UIEmitterSplitView EmitterSplit;
         public UIEmitterSplitView ParticleSplit;
@@ -76,6 +76,8 @@ namespace VFXEditor.UI.VFX
             ParticleSplit = new UIEmitterSplitView( Particles, this, true );
         }
         public void SetType() {
+            Data?.Cleanup();
+
             switch( Emitter.EmitterVariety.Value ) {
                 case EmitterType.Point:
                     Data = null;
@@ -87,7 +89,7 @@ namespace VFXEditor.UI.VFX
                     Data = new UIEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data );
                     break;
                 case EmitterType.Model:
-                    Data = new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data );
+                    Data = new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data, this );
                     break;
                 case EmitterType.Cone:
                     Data = new UIEmitterDataCone( ( AVFXEmitterDataCone )Emitter.Data );

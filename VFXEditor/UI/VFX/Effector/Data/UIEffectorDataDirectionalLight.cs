@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffectorDataDirectionalLight : UIBase
-    {
+    public class UIEffectorDataDirectionalLight : UIData {
         public AVFXEffectorDataDirectionalLight Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

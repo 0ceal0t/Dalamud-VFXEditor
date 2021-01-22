@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleDataPolygon : UIBase
-    {
+    public class UIParticleDataPolygon : UIData {
         public AVFXParticleDataPolygon Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

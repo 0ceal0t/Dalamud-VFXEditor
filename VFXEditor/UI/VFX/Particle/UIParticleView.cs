@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public UIParticleView( AVFXBase avfx ) : base( avfx, "##PTCL", "Select a Particle" )
         {
-            UINode._Particles = new UINodeGroup<UIParticle>();
             Group = UINode._Particles;
             Group.Items = AVFX.Particles.Select( item => new UIParticle( item, this ) ).ToList();
         }

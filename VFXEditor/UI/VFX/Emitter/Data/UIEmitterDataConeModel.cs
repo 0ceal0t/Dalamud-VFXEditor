@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
-    public class UIEmitterDataConeModel : UIBase {
+    public class UIEmitterDataConeModel : UIData {
         public AVFXEmitterDataConeModel Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

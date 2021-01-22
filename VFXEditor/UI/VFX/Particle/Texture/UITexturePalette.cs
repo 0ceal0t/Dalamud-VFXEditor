@@ -13,6 +13,7 @@ namespace VFXEditor.UI.VFX
         public UIParticle Particle;
         public string Name;
         //============================
+        public UINodeSelect<UITexture> TextureSelect;
 
         public UITexturePalette(AVFXTexturePalette tex, UIParticle particle )
         {
@@ -25,8 +26,9 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
+            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+
             Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
-            Attributes.Add(new UIInt("Texture Index", Tex.TextureIdx));
             Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Attributes.Add(new UICombo<TextureBorderType>("Texture Border", Tex.TextureBorder));
         }
@@ -46,9 +48,11 @@ namespace VFXEditor.UI.VFX
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 Tex.Assigned = false;
+                TextureSelect.DeleteSelect();
                 Init();
                 return;
             }
+            TextureSelect.Draw( id );
             DrawAttrs( id );
         }
 

@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterDataSphereModel : UIBase
-    {
+    public class UIEmitterDataSphereModel : UIData {
         public AVFXEmitterDataSphereModel Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

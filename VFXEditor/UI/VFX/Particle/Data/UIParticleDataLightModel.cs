@@ -8,23 +8,26 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIParticleDataLightModel : UIBase
-    {
+    public class UIParticleDataLightModel : UIData {
         public AVFXParticleDataLightModel Data;
-        public List<UIBase> Attributes = new List<UIBase>();
         //==========================
+        public UINodeSelect<UIModel> ModelSelect;
 
-        public UIParticleDataLightModel(AVFXParticleDataLightModel data)
+        public UIParticleDataLightModel(AVFXParticleDataLightModel data, UIParticle particle)
         {
             Data = data;
             //=======================
-            Attributes.Add( new UIInt( "Model Index", Data.ModelIdx ) );
+            ModelSelect = new UINodeSelect<UIModel>( particle, "Model", UINode._Models, Data.ModelIdx );
         }
 
         public override void Draw(string parentId)
         {
             string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            ModelSelect.Draw( id );
+        }
+
+        public override void Cleanup() {
+            ModelSelect.DeleteSelect();
         }
     }
 }

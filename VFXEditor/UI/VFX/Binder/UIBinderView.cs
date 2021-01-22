@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public UIBinderView(AVFXBase avfx) : base(avfx, "##BIND", "Select a Binder" )
         {
-            UINode._Binders = new UINodeGroup<UIBinder>();
             Group = UINode._Binders;
             Group.Items = AVFX.Binders.Select( item => new UIBinder( item, this ) ).ToList();
         }

@@ -17,6 +17,17 @@ namespace VFXEditor.UI.VFX {
         public static UINodeGroup<UITexture> _Textures;
         public static UINodeGroup<UITimeline> _Timelines;
         public static UINodeGroup<UIEffector> _Effectors;
+
+        public static void SetupGroups() {
+            _Binders = new UINodeGroup<UIBinder>();
+            _Emitters = new UINodeGroup<UIEmitter>();
+            _Models = new UINodeGroup<UIModel>();
+            _Particles = new UINodeGroup<UIParticle>();
+            _Schedulers = new UINodeGroup<UIScheduler>();
+            _Textures = new UINodeGroup<UITexture>();
+            _Timelines = new UINodeGroup<UITimeline>();
+            _Effectors = new UINodeGroup<UIEffector>();
+        }
         public static void InitGroups() {
             _Binders?.Init();
             _Emitters?.Init();
@@ -37,11 +48,11 @@ namespace VFXEditor.UI.VFX {
                 node.Parents.RemoveAll( x => x.Node == this );
             }
             foreach( var node in Parents ) {
-                node.DeleteNode(); // NOTIFY ANY SELECTORS WHICH WERE TARGETING THIS NODE
+                node.DeleteNode(this); // NOTIFY ANY SELECTORS WHICH WERE TARGETING THIS NODE
                 node.Node.Children.RemoveAll( x => x == this );
             }
 
-            foreach(var s in Selectors ) {
+            foreach( var s in Selectors ) {
                 s.UnlinkChange();
             }
         }
@@ -89,36 +100,35 @@ namespace VFXEditor.UI.VFX {
     public abstract class UINodeSelect {
         public UINode Node;
 
-        public void UnlinkFrom(UINode node ) {
+        public void UnlinkFrom( UINode node ) {
             if( node == null ) return;
             Node.Children.Remove( node );
             node.Parents.Remove( this );
-
-            PluginLog.Log( "Unlinking " + Node.GetText() + " from " + node.GetText() );
+            //PluginLog.Log( "Unlinking " + Node.GetText() + " from " + node.GetText() );
         }
 
-        public void LinkTo(UINode node ) {
+        public void LinkTo( UINode node ) {
             if( node == null ) return;
             Node.Children.Add( node );
             node.Parents.Add( this );
-
-            PluginLog.Log( "Linking " + Node.GetText() + " to " + node.GetText() );
+            //PluginLog.Log( "Linking " + Node.GetText() + " to " + node.GetText() );
         }
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
         public abstract void UnlinkChange();
-        public abstract void DeleteNode();
+        public abstract void DeleteNode(UINode node);
         public abstract void UpdateNode();
         public abstract void SetupNode();
         public abstract void Draw( string parentId );
     }
+
     public class UINodeSelect<T> : UINodeSelect where T : UINode {
         public T Selected = null;
         LiteralInt Literal;
         UINodeGroup<T> Group;
         string Name;
 
-        public UINodeSelect(UINode node, string name, UINodeGroup<T> group, LiteralInt literal){
+        public UINodeSelect( UINode node, string name, UINodeGroup<T> group, LiteralInt literal ) {
             Node = node;
             Name = name;
             Group = group;
@@ -133,17 +143,17 @@ namespace VFXEditor.UI.VFX {
             node.Selectors.Add( this );
         }
 
-        public override void Draw(string parentId) {
+        public override void Draw( string parentId ) {
             string id = parentId + "/Node";
-            if(ImGui.BeginCombo(Name + id, Selected == null ? "None" : Selected.GetText() ) ) {
-                if(ImGui.Selectable("None", Selected == null ) ) {
+            if( ImGui.BeginCombo( Name + id, Selected == null ? "None" : Selected.GetText() ) ) {
+                if( ImGui.Selectable( "None", Selected == null ) ) {
                     // 
                     UnlinkFrom( Selected );
                     Selected = null;
                     UpdateNode();
                 }
-                foreach(var item in Group.Items ) {
-                    if(ImGui.Selectable(item.GetText(), Selected == item ) ) {
+                foreach( var item in Group.Items ) {
+                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
                         //
                         UnlinkFrom( Selected );
                         LinkTo( item );
@@ -155,10 +165,9 @@ namespace VFXEditor.UI.VFX {
             }
         }
 
-        // CALL THIS WHEN THE SELECTOR IS DELETED
         public override void DeleteSelect() {
             UnlinkChange();
-            if(Selected != null ) {
+            if( Selected != null ) {
                 UnlinkFrom( Selected );
             }
         }
@@ -167,7 +176,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void UpdateNode() {
-            if(Selected != null ) {
+            if( Selected != null ) {
                 Literal.GiveValue( Selected.Idx );
             }
             else {
@@ -177,14 +186,106 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
-            if(val >= 0 && val < Group.Items.Count ) {
+            if( val >= 0 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
         }
 
-        public override void DeleteNode() { // THE SELECTED NODE WAS DELETED
+        public override void DeleteNode( UINode node ) { // THE SELECTED NODE WAS DELETED
             Selected = null;
+            UpdateNode();
+        }
+    }
+
+    public class UINodeSelectList<T> : UINodeSelect where T : UINode {
+        public List<T> Selected = new List<T>();
+        LiteralIntList Literal;
+        UINodeGroup<T> Group;
+        string Name;
+
+        public UINodeSelectList( UINode node, string name, UINodeGroup<T> group, LiteralIntList literal ) {
+            Node = node;
+            Name = name;
+            Group = group;
+            Literal = literal;
+            Group.OnChange += UpdateNode;
+            if( Group.isInit ) {
+                SetupNode();
+            }
+            else {
+                Group.OnInit += SetupNode;
+            }
+            node.Selectors.Add( this );
+        }
+
+        public override void Draw( string parentId ) {
+            string id = parentId + "/Node";
+            for(int i = 0; i < Selected.Count; i++ ) {
+                string _id = id + i;
+                var text = ( i == 0 ) ? Name : "";
+                if(ImGui.BeginCombo(text + _id, Selected[i].GetText() ) ) {
+                    foreach(var item in Group.Items ) {
+                        if(ImGui.Selectable(item.GetText(), Selected[i] == item ) ) {
+                            UnlinkFrom( Selected[i] );
+                            LinkTo( item );
+                            Selected[i] = item;
+                            UpdateNode();
+                        }
+                    }
+                    ImGui.EndCombo();
+                }
+                if(i > 0 ) {
+                    ImGui.SameLine();
+                    if(UIUtils.RemoveButton("- Remove" + _id, small: true ) ) {
+                        UnlinkFrom( Selected[i] );
+                        Selected.RemoveAt( i );
+                        return;
+                    }
+                }
+            }
+            if(Selected.Count == 0 ) {
+                ImGui.Text( Name );
+            }
+            if(Group.Items.Count == 0 ) {
+                ImGui.TextColored(new System.Numerics.Vector4(1,0,0,1), "Add a selectable item first" );
+            }
+            if( Selected.Count < 4 ) {
+                if( ImGui.SmallButton( "+ " + Name + id ) ) {
+                    Selected.Add( Group.Items[0] );
+                    LinkTo( Group.Items[0] );
+                }
+            }
+        }
+
+        public override void DeleteSelect() {
+            UnlinkChange();
+            foreach(var item in Selected ) {
+                UnlinkFrom( item );
+            }
+        }
+        public override void UnlinkChange() {
+            Group.OnChange -= UpdateNode;
+        }
+
+        public override void UpdateNode() {
+            List<int> idxs = new List<int>();
+            foreach(var item in Selected ) {
+                idxs.Add( item.Idx );
+            }
+            Literal.GiveValue( idxs );
+        }
+
+        public override void SetupNode() {
+            foreach(var idx in Literal.Value ) {
+                var item = Group.Items[idx];
+                Selected.Add( item );
+                LinkTo( item );
+            }
+        }
+
+        public override void DeleteNode( UINode node ) {
+            Selected.RemoveAll( x => x == node );
             UpdateNode();
         }
     }

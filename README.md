@@ -53,8 +53,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Add pre and post behavior to curve editor
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
-- [ ] Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)
-- [ ] Properly fix literal int list
 - [ ] Save all particles at once, etc.
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
@@ -74,6 +72,8 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] ~~Properly fix literal int list~~
+- [x] ~~Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)~~
 - [x] ~~Drag point snapping~~
 - [x] ~~Wireframe view~~
 - [x] ~~Curve editor bounding~~

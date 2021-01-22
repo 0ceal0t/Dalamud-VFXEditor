@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffectorDataCameraQuake : UIBase
-    {
+    public class UIEffectorDataCameraQuake : UIData {
         public AVFXEffectorDataCameraQuake Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================

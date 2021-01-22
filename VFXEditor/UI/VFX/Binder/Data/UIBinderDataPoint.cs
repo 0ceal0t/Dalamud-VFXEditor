@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIBinderDataPoint : UIBase
-    {
+    public class UIBinderDataPoint : UIData {
         public AVFXBinderDataPoint Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //=======================

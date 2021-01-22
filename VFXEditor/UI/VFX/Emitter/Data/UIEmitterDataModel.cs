@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterDataModel : UIBase
-    {
+    public class UIEmitterDataModel : UIData {
         public AVFXEmitterDataModel Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================
 
-        public UIEmitterDataModel(AVFXEmitterDataModel data)
+        public UINodeSelect<UIModel> ModelSelect;
+
+        public UIEmitterDataModel(AVFXEmitterDataModel data, UIEmitter emitter)
         {
             Data = data;
             //=======================
-            Attributes.Add(new UIInt("Model Index", Data.ModelIdx));
+            ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINode._Models, Data.ModelIdx );
+
             Attributes.Add(new UICombo<RotationOrder>("Rotation Order", Data.RotationOrderType));
             Attributes.Add(new UICombo<GenerateMethod>("Generate Method", Data.GenerateMethodType));
             Attributes.Add(new UICurve(Data.AX, "Angle X"));
@@ -32,6 +34,10 @@ namespace VFXEditor.UI.VFX
         {
             string id = parentId + "/Data";
             DrawList( Attributes, id );
+        }
+
+        public override void Cleanup() {
+            ModelSelect.DeleteSelect();
         }
     }
 }

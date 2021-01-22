@@ -12,6 +12,7 @@ namespace VFXEditor.UI.VFX
         public AVFXTextureReflection Tex;
         public UIParticle Particle;
         //============================
+        public UINodeSelect<UITexture> TextureSelect;
 
         public UITextureReflection(AVFXTextureReflection tex, UIParticle particle) {
             Tex = tex;
@@ -23,9 +24,10 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
+            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+
             Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
             Attributes.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
-            Attributes.Add(new UIInt("Texture Index", Tex.TextureIdx));
             Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Attributes.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
             Attributes.Add( new UICurve( Tex.Rate, "Rate" ) );
@@ -47,9 +49,11 @@ namespace VFXEditor.UI.VFX
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {
                 Tex.Assigned = false;
+                TextureSelect.DeleteSelect();
                 Init();
                 return;
             }
+            TextureSelect.Draw( id );
             DrawAttrs( id );
         }
 

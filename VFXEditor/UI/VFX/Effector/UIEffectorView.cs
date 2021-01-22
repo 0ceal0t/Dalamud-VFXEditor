@@ -13,7 +13,6 @@ namespace VFXEditor.UI.VFX
     {
         public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector" )
         {
-            UINode._Effectors = new UINodeGroup<UIEffector>();
             Group = UINode._Effectors;
             Group.Items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
         }

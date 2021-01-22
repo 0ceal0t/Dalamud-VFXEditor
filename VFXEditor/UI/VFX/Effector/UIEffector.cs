@@ -13,7 +13,7 @@ namespace VFXEditor.UI.VFX
         public UIEffectorView View;
         //========================
         public UICombo<EffectorType> Type;
-        public UIBase Data;
+        public UIData Data;
 
         public UIEffector(AVFXEffector effector, UIEffectorView view)
         {
@@ -36,6 +36,8 @@ namespace VFXEditor.UI.VFX
             SetType();
         }
         public void SetType() {
+            Data?.Cleanup();
+
             switch( Effector.EffectorVariety.Value ) {
                 case EffectorType.PointLight:
                     Data = new UIEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data );

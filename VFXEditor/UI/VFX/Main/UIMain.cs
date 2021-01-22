@@ -26,7 +26,7 @@ namespace VFXEditor.UI.VFX
         public UIMain(AVFXBase avfx, Plugin plugin)
         {
             AVFX = avfx;
-
+            UINode.SetupGroups();
             // =========================
             ParticleView = new UIParticleView(avfx);
             ParameterView = new UIParameterView(avfx);

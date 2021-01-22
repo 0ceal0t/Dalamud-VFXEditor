@@ -13,7 +13,7 @@ namespace VFXEditor.UI.VFX
         public UIBinderView View;
         //====================
         public UICombo<BinderType> Type;
-        public UIBase Data;
+        public UIData Data;
         public List<UIBinderProperties> Properties;
         //====================
         public UIItemSplitView<UIBinderProperties> PropSplit;
@@ -50,6 +50,8 @@ namespace VFXEditor.UI.VFX
             PropSplit = new UIItemSplitView<UIBinderProperties>( Properties );
         }
         public void SetType() {
+            Data?.Cleanup();
+
             switch( Binder.BinderVariety.Value ) {
                 case BinderType.Point:
                     Data = new UIBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data );

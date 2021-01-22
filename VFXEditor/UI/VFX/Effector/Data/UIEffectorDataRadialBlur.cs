@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEffectorDataRadialBlur : UIBase
-    {
+    public class UIEffectorDataRadialBlur : UIData {
         public AVFXEffectorDataRadialBlur Data;
         public List<UIBase> Attributes = new List<UIBase>();
         //==========================
