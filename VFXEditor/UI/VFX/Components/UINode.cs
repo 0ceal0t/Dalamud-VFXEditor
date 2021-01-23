@@ -175,7 +175,6 @@ namespace VFXEditor.UI.VFX {
             node.Parents.Remove( this );
 
             node.Graph?.NowOutdated(); // <---------
-            //PluginLog.Log( "Unlinking " + Node.GetText() + " from " + node.GetText() );
         }
 
         public void LinkTo( UINode node ) {
@@ -184,12 +183,11 @@ namespace VFXEditor.UI.VFX {
             node.Parents.Add( this );
 
             node.Graph?.NowOutdated(); // <-------------
-            //PluginLog.Log( "Linking " + Node.GetText() + " to " + node.GetText() );
         }
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
         public abstract void UnlinkChange();
-        public abstract void DeleteNode(UINode node);
+        public abstract void DeleteNode(UINode node); // when the selected node is deleted
         public abstract void UpdateNode();
         public abstract void SetupNode();
         public abstract void Draw( string parentId );
@@ -218,8 +216,8 @@ namespace VFXEditor.UI.VFX {
 
         public override void Draw( string parentId ) {
             string id = parentId + "/Node";
-            if( ImGui.BeginCombo( Name + id, Selected == null ? "None" : Selected.GetText() ) ) {
-                if( ImGui.Selectable( "None", Selected == null ) ) {
+            if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
+                if( ImGui.Selectable( "[NONE]", Selected == null ) ) {
                     // 
                     UnlinkFrom( Selected );
                     Selected = null;
@@ -265,7 +263,7 @@ namespace VFXEditor.UI.VFX {
             }
         }
 
-        public override void DeleteNode( UINode node ) { // THE SELECTED NODE WAS DELETED
+        public override void DeleteNode( UINode node ) {
             Selected = null;
             UpdateNode();
         }

@@ -179,7 +179,7 @@ namespace VFXEditor {
         }
 
         public static int SPAN = 3; // position, color, normal
-        public void LoadModel( AVFXModel model ) {
+        public void LoadModel( AVFXModel model, int mode = 1 ) {
             if( model.Indexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
@@ -194,7 +194,15 @@ namespace VFXEditor {
                     var v = model.Vertices[_indexes[j]];
 
                     data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
-                    data[idx + 1] = new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f );
+                    if(mode == 1 ) { // COLOR
+                        data[idx + 1] = new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f );
+                    }
+                    else if(mode == 2 ) { // UV1
+                        data[idx + 1] = new Vector4( v.UV1[0] + 0.5f, 0, v.UV1[2] + 0.5f, 1.0f );
+                    }
+                    else if( mode == 3 ) { // UV2
+                        data[idx + 1] = new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f );
+                    }
                     data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
                 }
             }

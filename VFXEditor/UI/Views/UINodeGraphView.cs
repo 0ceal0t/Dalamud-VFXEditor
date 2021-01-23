@@ -25,7 +25,7 @@ namespace VFXEditor.UI.VFX {
 
         bool ViewDrag = false;
         Vector2 LastDragPos;
-        Vector2 OFFSET = new Vector2( 0, 0 );
+        Vector2 OFFSET = new Vector2( -30, -50 );
 
         public UINodeGraphView(UINode node ) {
             Node = node;
@@ -42,7 +42,7 @@ namespace VFXEditor.UI.VFX {
             // now the fun (tm) begins
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var space = ImGui.GetContentRegionAvail();
-            Vector2 Size = new Vector2( space.X, 200 );
+            Vector2 Size = new Vector2( space.X, 150 );
             var DrawList = ImGui.GetWindowDrawList();
 
             ImGui.BeginGroup();
@@ -76,7 +76,7 @@ namespace VFXEditor.UI.VFX {
                         Mid2 = new Vector2( Mid.X, Pos2.Y );
                     }
 
-                    DrawList.AddBezierCurve( Pos, Mid1, Mid2, Pos2, LineColor, 4.0f );
+                    DrawList.AddBezierCurve( Pos, Mid1, Mid2, Pos2, LineColor, 6.0f );
                 }
             }
             foreach(var node in Node.Graph.Graph.Keys ) {

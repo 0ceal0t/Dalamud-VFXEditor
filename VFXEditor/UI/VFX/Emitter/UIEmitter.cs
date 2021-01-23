@@ -143,11 +143,11 @@ namespace VFXEditor.UI.VFX
                     AnimationSplit.Draw( id + "/Anim" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Particles" + id ) ) {
+                if( ImGui.BeginTabItem( "Create Particles" + id ) ) {
                     ParticleSplit.Draw( id + "/ItPr" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( "Emitters" + id ) ) {
+                if( ImGui.BeginTabItem( "Create Emitters" + id ) ) {
                     EmitterSplit.Draw( id + "/ItEm" );
                     ImGui.EndTabItem();
                 }

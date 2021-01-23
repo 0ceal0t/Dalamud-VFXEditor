@@ -14,6 +14,7 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UINode {
         public AVFXModel Model;
         public Model3D Mdl3D;
+        int Mode = 1;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
@@ -58,6 +59,18 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.IsWireframe = wireframe;
                 Mdl3D.RefreshRasterizeState();
             }
+            if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
+                Mdl3D.LoadModel( Model, mode:1);
+            }
+            ImGui.SameLine();
+            if(ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
+                Mdl3D.LoadModel( Model, mode: 2 );
+            }
+            ImGui.SameLine();
+            if(ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
+                Mdl3D.LoadModel( Model, mode: 3 );
+            }
+
             ImGui.BeginChild( "3DViewChild" );
             var space = ImGui.GetContentRegionAvail();
             Mdl3D.Resize( space );

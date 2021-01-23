@@ -42,16 +42,16 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
+- [ ] Game structs
 - [ ] Model scaling?
 - [ ] Model editing?
 - [ ] Show emitter vertices
 - [ ] More texture export options
 - [ ] Merge A8 into Lumina
-- [ ] UV view (here we go again...)
+- [ ] UV view
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
-- [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
 - [ ] Save all particles at once, etc.
 - [ ] Test with Penumbra
