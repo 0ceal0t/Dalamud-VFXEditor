@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,17 @@ namespace VFXEditor.UI.VFX
         public AVFXBase AVFX;
         public List<UIBase> Attributes = new List<UIBase>();
         // ======================
+        public int[] Version = new int[4];
 
         public UIParameterView(AVFXBase avfx)
         {
             AVFX = avfx;
             // =====================
+            var versionBytes = AVFXLib.Main.Util.IntTo4Bytes( AVFX.Version.Value );
+            for(int i = 0; i < versionBytes.Length; i++ ) {
+                Version[i] = versionBytes[i];
+            }
+
             Attributes.Add(new UICheckbox("Delay Fast Particle", AVFX.IsDelayFastParticle));
             Attributes.Add(new UICheckbox("Fit Ground", AVFX.IsFitGround));
             Attributes.Add(new UICheckbox("Transform Skip", AVFX.IsTranformSkip));
@@ -56,6 +63,7 @@ namespace VFXEditor.UI.VFX
         {
             string id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
+            ImGui.Text( "Version: " + Version[0] + "." + Version[1] + "." + Version[2] + "." + Version[3] );
             DrawList(Attributes, id);
             ImGui.EndChild();
         }

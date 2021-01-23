@@ -43,18 +43,87 @@ namespace VFXEditor.UI.VFX {
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
 
-        public void DeleteNode() { // NODE DELETED, DON'T NEED ANY FURTHER LOGIC FOR SELECTORS
+        public UINodeGraph Graph = null;
+
+        public void DeleteNode() {
             foreach( var node in Children ) {
                 node.Parents.RemoveAll( x => x.Node == this );
+
+                node.Graph?.NowOutdated(); // <-------------------
             }
             foreach( var node in Parents ) {
-                node.DeleteNode(this); // NOTIFY ANY SELECTORS WHICH WERE TARGETING THIS NODE
+                node.DeleteNode(this);
                 node.Node.Children.RemoveAll( x => x == this );
             }
 
             foreach( var s in Selectors ) {
                 s.UnlinkChange();
             }
+        }
+
+        public void RefreshGraph() {
+            Graph = new UINodeGraph( this );
+        }
+    }
+
+    public class UINodeGraphItem {
+        public int Level;
+        public int Level2;
+        public List<UINode> Next;
+    }
+    public class UINodeGraph {
+        public Dictionary<UINode, UINodeGraphItem> Graph = new Dictionary<UINode, UINodeGraphItem>();
+        public bool Outdated = false;
+        public bool Cycle = false;
+
+        public UINodeGraph( UINode node) {
+            ParseGraph( 0, node, new HashSet<UINode>() );
+            Dictionary<int, int> L2Dict = new Dictionary<int, int>();
+            foreach(var val in Graph.Values ) {
+                if( L2Dict.ContainsKey( val.Level ) ) {
+                    L2Dict[val.Level] += 1;
+                    val.Level2 = L2Dict[val.Level];
+                }
+                else {
+                    L2Dict[val.Level] = 0;
+                    val.Level2 = 0;
+                }
+            }
+        }
+
+        public void ParseGraph(int level, UINode node, HashSet<UINode> visited ) {
+            if(visited.Contains(node) || Cycle ) {
+                Cycle = true;
+                return;
+            }
+            if( Graph.ContainsKey( node ) ) { // already defined
+                if(level > Graph[node].Level ) {
+                    PushBack( node, level - Graph[node].Level );
+                }
+                Graph[node].Level = Math.Max( level, Graph[node].Level );
+            }
+            else {
+                visited.Add( node );
+                UINodeGraphItem item = new UINodeGraphItem();
+                item.Level = level;
+                item.Next = new List<UINode>();
+                foreach(var n in node.Parents ) {
+                    item.Next.Add( n.Node );
+                    ParseGraph( level + 1, n.Node, new HashSet<UINode>( visited ) );
+                }
+                Graph[node] = item;
+            }
+        }
+
+        public void PushBack(UINode node, int amount ) {
+            Graph[node].Level += amount;
+            foreach(var item in Graph[node].Next ) {
+                PushBack( item, amount );
+            }
+        }
+
+        public void NowOutdated() {
+            Outdated = true;
         }
     }
 
@@ -104,6 +173,8 @@ namespace VFXEditor.UI.VFX {
             if( node == null ) return;
             Node.Children.Remove( node );
             node.Parents.Remove( this );
+
+            node.Graph?.NowOutdated(); // <---------
             //PluginLog.Log( "Unlinking " + Node.GetText() + " from " + node.GetText() );
         }
 
@@ -111,6 +182,8 @@ namespace VFXEditor.UI.VFX {
             if( node == null ) return;
             Node.Children.Add( node );
             node.Parents.Add( this );
+
+            node.Graph?.NowOutdated(); // <-------------
             //PluginLog.Log( "Linking " + Node.GetText() + " to " + node.GetText() );
         }
 

@@ -25,6 +25,7 @@ namespace VFXEditor.UI.VFX
         public UIEmitterSplitView ParticleSplit;
 
         public UINodeSelect<UIEffector> EffectorSelect;
+        public UINodeGraphView NodeView;
 
         public UIEmitter(AVFXEmitter emitter, UIEmitterView view)
         {
@@ -32,6 +33,7 @@ namespace VFXEditor.UI.VFX
             View = view;
 
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINode._Effectors, Emitter.EffectorIdx );
+            NodeView = new UINodeGraphView( this );
             // =====================
             Animation = new List<UIItem>();
             Particles = new List<UIEmitterItem>();
@@ -111,6 +113,7 @@ namespace VFXEditor.UI.VFX
         private void DrawParameters( string id )
         {
             ImGui.BeginChild( id );
+            NodeView.Draw( id );
             EffectorSelect.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();

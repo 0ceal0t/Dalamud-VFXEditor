@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public bool GetPreviewTexture() {
-            return _plugin.Configuration.PreviewTextures;
+            return Configuration.Config.PreviewTextures;
         }
 
         public override void OnDelete( UITexture item ) {

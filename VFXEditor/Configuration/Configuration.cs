@@ -35,10 +35,13 @@ namespace VFXEditor{
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
+        [NonSerialized]
+        public static Configuration Config;
 
         public void Initialize( DalamudPluginInterface pluginInterface, string writeLocation )
         {
             _pluginInterface = pluginInterface;
+            Config = this;
         }
 
         public void AddRecent(VFXSelectResult result ) {

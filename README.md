@@ -39,6 +39,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 
+- [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
 - [ ] Model scaling?
@@ -49,7 +50,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] UV view (here we go again...)
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
-- [ ] AVFX version
 - [ ] Add pre and post behavior to curve editor
 - [ ] Node view (waiting on [ImNode](https://github.com/mellinoe/ImGui.NET/pull/218), or implement this myself -_-)
 - [ ] Add VFX to weapons without it
@@ -72,6 +72,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Auto-update npc csv file
 
 ---
+- [x] AVFX version
 - [x] ~~Properly fix literal int list~~
 - [x] ~~Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)~~
 - [x] ~~Drag point snapping~~

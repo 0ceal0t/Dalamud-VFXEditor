@@ -167,7 +167,7 @@ namespace VFXEditor.UI
                     ImGui.EndPopup();
                 }
                 // ======== VERIFY ============
-                if( _plugin.Configuration.VerifyOnLoad )
+                if( Configuration.Config.VerifyOnLoad )
                 {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
