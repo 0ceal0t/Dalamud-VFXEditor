@@ -6,17 +6,34 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 using Dalamud.Plugin;
+using System.Numerics;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UINode : UIItem {
         public static UINodeGroup<UIBinder> _Binders;
+        public static uint BinderColor = ImGui.GetColorU32( new Vector4( 0.17f, 0.54f, 0.36f, 1 ) );
+
         public static UINodeGroup<UIEmitter> _Emitters;
+        public static uint EmitterColor = ImGui.GetColorU32( new Vector4( 0.62f, 0.37f, 0.20f, 1 ) );
+
         public static UINodeGroup<UIModel> _Models;
+        public static uint ModelColor = ImGui.GetColorU32( new Vector4( 0.49f, 0.17f, 0.19f, 1 ) );
+
         public static UINodeGroup<UIParticle> _Particles;
+        public static uint ParticleColor = ImGui.GetColorU32( new Vector4( 0.42f, 0.34f, 0.68f, 1 ) );
+
         public static UINodeGroup<UIScheduler> _Schedulers;
+        public static uint SchedColor = ImGui.GetColorU32( new Vector4( 0.69f, 0.12f, 0.36f, 1 ) );
+
         public static UINodeGroup<UITexture> _Textures;
+        public static uint TextureColor = ImGui.GetColorU32( new Vector4( 0.40f, 0.69f, 0.12f, 1 ) );
+
         public static UINodeGroup<UITimeline> _Timelines;
+        public static uint TimelineColor = ImGui.GetColorU32( new Vector4( 0.29f, 0.53f, 0.69f, 1 ) );
+
         public static UINodeGroup<UIEffector> _Effectors;
+        public static uint EffectorColor = ImGui.GetColorU32( new Vector4( 0.26f, 0.24f, 0.82f, 1 ) );
+
 
         public static void SetupGroups() {
             _Binders = new UINodeGroup<UIBinder>();
@@ -39,6 +56,7 @@ namespace VFXEditor.UI.VFX {
             _Effectors?.Init();
         }
 
+        public uint _Color;
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
@@ -64,6 +82,9 @@ namespace VFXEditor.UI.VFX {
         public void RefreshGraph() {
             Graph = new UINodeGraph( this );
         }
+
+        public bool HasToolTip = false;
+        public virtual void DrawToolTip() { }
     }
 
     public class UINodeGraphItem {
@@ -231,6 +252,11 @@ namespace VFXEditor.UI.VFX {
                         Selected = item;
                         UpdateNode();
                     }
+                    if(item.HasToolTip && ImGui.IsItemHovered() ) {
+                        ImGui.BeginTooltip();
+                        item.DrawToolTip();
+                        ImGui.EndTooltip();
+                    }
                 }
                 ImGui.EndCombo();
             }
@@ -303,6 +329,11 @@ namespace VFXEditor.UI.VFX {
                             Selected[i] = item;
                             UpdateNode();
                         }
+                        if( item.HasToolTip && ImGui.IsItemHovered() ) {
+                            ImGui.BeginTooltip();
+                            item.DrawToolTip();
+                            ImGui.EndTooltip();
+                        }
                     }
                     ImGui.EndCombo();
                 }
@@ -319,7 +350,7 @@ namespace VFXEditor.UI.VFX {
                 ImGui.Text( Name );
             }
             if(Group.Items.Count == 0 ) {
-                ImGui.TextColored(new System.Numerics.Vector4(1,0,0,1), "Add a selectable item first" );
+                ImGui.TextColored(new Vector4(1,0,0,1), "Add a selectable item first" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {

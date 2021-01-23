@@ -19,7 +19,6 @@ namespace VFXEditor.UI.VFX
         public UIData Data;
         //========================
         List<UIItem> Animation;
-
         public UITextureColor1 TC1;
         public UITextureColor2 TC2;
         public UITextureColor2 TC3;
@@ -33,10 +32,13 @@ namespace VFXEditor.UI.VFX
         UIItemSplitView<UIItem> AnimationSplit;
         UIItemSplitView<UIItem> TexSplit;
         public UIUVSetSplitView UVSplit;
+        public UINodeGraphView NodeView;
 
         public UIParticle( AVFXParticle particle, UIParticleView view ) {
             Particle = particle;
             View = view;
+            _Color = ParticleColor;
+            NodeView = new UINodeGraphView( this );
             // =======================
             Animation = new List<UIItem>();
             Tex = new List<UIItem>();
@@ -167,6 +169,7 @@ namespace VFXEditor.UI.VFX
         private void DrawParameters(string id)
         {
             ImGui.BeginChild( id);
+            NodeView.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }

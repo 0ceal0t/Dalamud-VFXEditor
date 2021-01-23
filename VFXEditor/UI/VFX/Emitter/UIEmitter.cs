@@ -23,7 +23,6 @@ namespace VFXEditor.UI.VFX
         //========================
         public UIEmitterSplitView EmitterSplit;
         public UIEmitterSplitView ParticleSplit;
-
         public UINodeSelect<UIEffector> EffectorSelect;
         public UINodeGraphView NodeView;
 
@@ -31,7 +30,7 @@ namespace VFXEditor.UI.VFX
         {
             Emitter = emitter;
             View = view;
-
+            _Color = EmitterColor;
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINode._Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
             // =====================
@@ -40,7 +39,7 @@ namespace VFXEditor.UI.VFX
             Emitters = new List<UIEmitterItem>();
             //======================
             Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, changeFunction: ChangeType );
-            Attributes.Add( new UIString( "Sound", Emitter.Sound ) );
+            Attributes.Add( new UIString( "Sound", Emitter.Sound, changeFunction: SetSound ) );
             Attributes.Add( new UIInt( "Sound Index", Emitter.SoundNumber ) );
             Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
@@ -152,6 +151,12 @@ namespace VFXEditor.UI.VFX
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
+            }
+        }
+
+        public void SetSound(LiteralString literal ) {
+            if(literal.Value == "" ) {
+                literal.Assigned = false;
             }
         }
 

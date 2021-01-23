@@ -3,25 +3,35 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace VFXEditor.UI.VFX {
     public class UINodeGraphView : UIBase {
         public UINode Node;
 
-        static uint BGColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
+        static uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
         static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
-        static uint TextColor = ImGui.GetColorU32( new Vector4( 0.0f, 0.0f, 0.0f, 1 ) );
-        static uint CircleColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
-        static uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.2f, 0.2f, 1 ) );
-
+        static uint BorderColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
+        static uint TextColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
+        static uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );
+        static uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
+        static Vector2 HeaderSize = new Vector2( 160, 20 );
         static Vector2 BoxSize = new Vector2( 160, 40 );
         static Vector2 Spacing = new Vector2( 200, 100);
-        static Vector2 TextOffset = new Vector2( 10, 10 );
-        static Vector2 LineOffset = new Vector2( 0, 20 );
+        static Vector2 TextOffset = new Vector2( 5, 2 );
+        static Vector2 LineOffset = new Vector2( 0, 25 );
+
+        static ImGuiScene.TextureWrap GridPtr;
+
+        public static void InitTex(Plugin plugin) {
+            var gridPath = Path.Combine( plugin.TemplateLocation, "Files", "grid.png" );
+            GridPtr = plugin.PluginInterface.UiBuilder.LoadImage( gridPath );
+        }
 
         bool ViewDrag = false;
         Vector2 LastDragPos;
@@ -39,6 +49,7 @@ namespace VFXEditor.UI.VFX {
                 ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "WARNING: CYCLICAL" );
                 return;
             }
+
             // now the fun (tm) begins
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var space = ImGui.GetContentRegionAvail();
@@ -52,15 +63,16 @@ namespace VFXEditor.UI.VFX {
             var CanvasBottomRight = ImGui.GetItemRectMax();
             DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
 
-            DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BGColor );
+            float ratio = Size.X / Size.Y;
+            DrawList.AddImage( GridPtr.ImGuiHandle, CanvasTopLeft, CanvasBottomRight, new Vector2( 0, 0 ), new Vector2( 5 * ratio, 5 ) );
             DrawList.AddRect( CanvasTopLeft, CanvasBottomRight, BGColor2 );
 
             foreach( var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
-                Vector2 Pos = CanvasBottomRight - GetPos( item ) + LineOffset;
+                Vector2 Pos = CanvasBottomRight - GetPos( item ) + LineOffset; // left node
                 foreach(var n in item.Next ) {
                     var item2 = Node.Graph.Graph[n];
-                    Vector2 Pos2 = CanvasBottomRight - GetPos( item2 ) + BoxSize - LineOffset;
+                    Vector2 Pos2 = CanvasBottomRight - GetPos( item2 ) + BoxSize - LineOffset; // right node
 
                     Vector2 Mid;
                     Vector2 Mid1;
@@ -76,14 +88,26 @@ namespace VFXEditor.UI.VFX {
                         Mid2 = new Vector2( Mid.X, Pos2.Y );
                     }
 
-                    DrawList.AddBezierCurve( Pos, Mid1, Mid2, Pos2, LineColor, 6.0f );
+                    DrawList.AddBezierCurve( Pos, Mid1, Mid2, Pos2, LineColor, 3.0f );
                 }
             }
             foreach(var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
                 Vector2 Pos = CanvasBottomRight - GetPos(item);
-                DrawList.AddRectFilled( Pos, Pos + BoxSize, CircleColor, 5 );
+                DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
+                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node._Color, 5, ImDrawCornerFlags.Top ); // header
                 DrawList.AddText( Pos + TextOffset, TextColor, node.GetText() );
+
+                if(item.Level > 0 ) { // right node
+                    Vector2 Pos2 = CanvasBottomRight - GetPos( item ) + BoxSize - LineOffset;
+                    DrawList.AddCircleFilled( Pos2, 4, LineColor );
+                    DrawList.AddCircle( Pos2, 5, BorderColor );
+                }
+                if(item.Next.Count > 0 ) { // left node
+                    Vector2 Pos2 = CanvasBottomRight - GetPos( item ) + LineOffset;
+                    DrawList.AddCircleFilled( Pos2, 4, LineColor );
+                    DrawList.AddCircle( Pos2, 5, BorderColor );
+                }
             }
 
             // HOW ABOUT DRAGGING THE VIEW?

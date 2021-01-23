@@ -20,11 +20,14 @@ namespace VFXEditor.UI.VFX
         public AVFXTexture Texture;
         public string lastValue;
         public UIString Path;
+        public UINodeGraphView NodeView;
 
         public UITexture(AVFXTexture texture, UITextureView view)
         {
             View = view;
             Texture = texture;
+            _Color = TextureColor;
+            NodeView = new UINodeGraphView( this );
             Manager = view.Manager;
             // ================
             UIString.Change bytesToPath = BytesToPath;
@@ -37,6 +40,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Texture";
+            NodeView.Draw( id );
             Path.Draw( id );
 
             var newValue = Path.Literal.Value;

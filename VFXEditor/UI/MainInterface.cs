@@ -38,6 +38,7 @@ namespace VFXEditor.UI
             TexToolsUI = new TexToolsDialog( _plugin );
             PenumbraUI = new PenumbraDialog( _plugin );
             DocUI = new DocDialog( _plugin );
+            VFX.UINodeGraphView.InitTex( _plugin );
 #if DEBUG
             Visible = true;
             ShowDebugBar = true;

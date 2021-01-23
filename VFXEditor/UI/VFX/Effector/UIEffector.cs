@@ -14,27 +14,26 @@ namespace VFXEditor.UI.VFX
         //========================
         public UICombo<EffectorType> Type;
         public UIData Data;
+        public UINodeGraphView NodeView;
 
         public UIEffector(AVFXEffector effector, UIEffectorView view)
         {
             Effector = effector;
             View = view;
-            Init();
-        }
-        public override void Init()
-        {
-            base.Init();
+            _Color = EffectorColor;
+            NodeView = new UINodeGraphView( this );
             //======================
-            Type = new UICombo<EffectorType>("Type", Effector.EffectorVariety, changeFunction: ChangeType);
-            Attributes.Add(new UICombo<RotationOrder>("Rotation Order", Effector.RotationOrder));
-            Attributes.Add(new UICombo<CoordComputeOrder>("Coordinate Compute Order", Effector.CoordComputeOrder));
-            Attributes.Add(new UICheckbox("Affect Other VFX", Effector.AffectOtherVfx));
-            Attributes.Add(new UICheckbox("Affect Game", Effector.AffectGame));
-            Attributes.Add(new UIInt("Loop Start", Effector.LoopPointStart));
-            Attributes.Add(new UIInt("Loop End", Effector.LoopPointEnd));
+            Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, changeFunction: ChangeType );
+            Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Effector.RotationOrder ) );
+            Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Effector.CoordComputeOrder ) );
+            Attributes.Add( new UICheckbox( "Affect Other VFX", Effector.AffectOtherVfx ) );
+            Attributes.Add( new UICheckbox( "Affect Game", Effector.AffectGame ) );
+            Attributes.Add( new UIInt( "Loop Start", Effector.LoopPointStart ) );
+            Attributes.Add( new UIInt( "Loop End", Effector.LoopPointEnd ) );
             //=======================
             SetType();
         }
+        
         public void SetType() {
             Data?.Cleanup();
 
@@ -65,6 +64,7 @@ namespace VFXEditor.UI.VFX
         private void DrawParameters( string id )
         {
             ImGui.BeginChild( id );
+            NodeView.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }

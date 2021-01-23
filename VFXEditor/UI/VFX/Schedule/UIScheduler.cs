@@ -22,6 +22,8 @@ namespace VFXEditor.UI.VFX
         {
             Scheduler = scheduler;
             View = view;
+            _Color = TextureColor;
+
             // ===================
             Items = new List<UISchedulerItem>();
             Triggers = new List<UISchedulerItem>();

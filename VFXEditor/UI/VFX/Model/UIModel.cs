@@ -18,9 +18,12 @@ namespace VFXEditor.UI.VFX
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
+        public UINodeGraphView NodeView;
 
         public UIModel( AVFXModel model, UIModelView view ) {
             Model = model;
+            _Color = ModelColor;
+            NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
             for( int i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
@@ -41,6 +44,7 @@ namespace VFXEditor.UI.VFX
             if( ImGui.SmallButton( "Export" + id ) ) {
                 ExportDialog();
             }
+            NodeView.Draw( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
 
             ImGui.BeginTabBar( "ModelTabs" );

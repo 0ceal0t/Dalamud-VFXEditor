@@ -25,6 +25,7 @@ namespace VFXEditor.UI.VFX
         {
             Timeline = timeline;
             View = view;
+            _Color = TimelineColor;
 
             BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINode._Binders, Timeline.BinderIdx );
             //===============

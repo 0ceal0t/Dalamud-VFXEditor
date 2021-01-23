@@ -17,11 +17,14 @@ namespace VFXEditor.UI.VFX
         public List<UIBinderProperties> Properties;
         //====================
         public UIItemSplitView<UIBinderProperties> PropSplit;
+        public UINodeGraphView NodeView;
 
         public UIBinder(AVFXBinder binder, UIBinderView view)
         {
             Binder = binder;
             View = view;
+            _Color = BinderColor;
+            NodeView = new UINodeGraphView( this );
             //=====================
             Properties = new List<UIBinderProperties>();
             //====================
@@ -79,6 +82,7 @@ namespace VFXEditor.UI.VFX
         private void DrawParameters( string id )
         {
             ImGui.BeginChild( id );
+            NodeView.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }
