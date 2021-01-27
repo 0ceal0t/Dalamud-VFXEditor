@@ -6,6 +6,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace VFXEditor {
     public class DirectXManager {

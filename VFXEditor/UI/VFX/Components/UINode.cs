@@ -252,11 +252,6 @@ namespace VFXEditor.UI.VFX {
                         Selected = item;
                         UpdateNode();
                     }
-                    if(item.HasToolTip && ImGui.IsItemHovered() ) {
-                        ImGui.BeginTooltip();
-                        item.DrawToolTip();
-                        ImGui.EndTooltip();
-                    }
                 }
                 ImGui.EndCombo();
             }
@@ -283,7 +278,7 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
-            if( val >= 0 && val < Group.Items.Count ) {
+            if( val != -1 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
@@ -321,18 +316,18 @@ namespace VFXEditor.UI.VFX {
             for(int i = 0; i < Selected.Count; i++ ) {
                 string _id = id + i;
                 var text = ( i == 0 ) ? Name : "";
-                if(ImGui.BeginCombo(text + _id, Selected[i].GetText() ) ) {
+                if(ImGui.BeginCombo(text + _id, Selected[i] == null ? "[NONE]" : Selected[i].GetText() ) ) {
+                    if( ImGui.Selectable( "[NONE]", Selected[i] == null ) ) {
+                        UnlinkFrom( Selected[i] );
+                        Selected[i] = null;
+                        UpdateNode();
+                    }
                     foreach(var item in Group.Items ) {
                         if(ImGui.Selectable(item.GetText(), Selected[i] == item ) ) {
                             UnlinkFrom( Selected[i] );
                             LinkTo( item );
                             Selected[i] = item;
                             UpdateNode();
-                        }
-                        if( item.HasToolTip && ImGui.IsItemHovered() ) {
-                            ImGui.BeginTooltip();
-                            item.DrawToolTip();
-                            ImGui.EndTooltip();
                         }
                     }
                     ImGui.EndCombo();
@@ -348,9 +343,10 @@ namespace VFXEditor.UI.VFX {
             }
             if(Selected.Count == 0 ) {
                 ImGui.Text( Name );
+                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "WARNING: Add an item!" );
             }
             if(Group.Items.Count == 0 ) {
-                ImGui.TextColored(new Vector4(1,0,0,1), "Add a selectable item first" );
+                ImGui.TextColored(new Vector4(1,0,0,1), "WARNING: Add a selectable item first!" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {
@@ -373,16 +369,26 @@ namespace VFXEditor.UI.VFX {
         public override void UpdateNode() {
             List<int> idxs = new List<int>();
             foreach(var item in Selected ) {
-                idxs.Add( item.Idx );
+                if( item == null ) {
+                    idxs.Add( 255 );
+                }
+                else {
+                    idxs.Add( item.Idx );
+                }
             }
             Literal.GiveValue( idxs );
         }
 
         public override void SetupNode() {
             foreach(var idx in Literal.Value ) {
-                var item = Group.Items[idx];
-                Selected.Add( item );
-                LinkTo( item );
+                if( idx != 255 ) {
+                    var item = Group.Items[idx];
+                    Selected.Add( item );
+                    LinkTo( item );
+                }
+                else {
+                    Selected.Add( null );
+                }
             }
         }
 
