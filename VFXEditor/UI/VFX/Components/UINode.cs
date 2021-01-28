@@ -278,10 +278,14 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
-            if( val != -1 && val < Group.Items.Count ) {
+            if( val >= 0 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
+
+            //if(val < -1 || val >= Group.Items.Count ) {
+            //    PluginLog.Log( "Single " + Name + " " + val );
+            //}
         }
 
         public override void DeleteNode( UINode node ) {
@@ -381,7 +385,7 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             foreach(var idx in Literal.Value ) {
-                if( idx != 255 ) {
+                if( idx != 255 && idx >= 0 && idx < Group.Items.Count ) {
                     var item = Group.Items[idx];
                     Selected.Add( item );
                     LinkTo( item );
@@ -389,6 +393,10 @@ namespace VFXEditor.UI.VFX {
                 else {
                     Selected.Add( null );
                 }
+
+                //if( idx < -1 || idx >= Group.Items.Count ) {
+                //    PluginLog.Log( "Multi " + Name + " " + idx );
+                //}
             }
         }
 
