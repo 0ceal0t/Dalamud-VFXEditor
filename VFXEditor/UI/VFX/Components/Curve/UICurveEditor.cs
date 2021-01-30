@@ -228,18 +228,26 @@ namespace VFXEditor.UI.VFX {
             }
             // ADD A NEW KEYFRAME
             if(ImGui.IsItemHovered() && ImGui.IsMouseClicked(1) ) {
-                var pos = CanvasPosToReal( ImGui.GetMousePos(), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
-                int insertIdx = 0;
-                foreach(var p in Points ) {
-                    if(p.canvasData.X > Math.Round(pos.X) ) {
-                        break;
+                if( Points.Count > 0 ) {
+                    var pos = CanvasPosToReal( ImGui.GetMousePos(), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
+                    int insertIdx = 0;
+                    foreach( var p in Points ) {
+                        if( p.canvasData.X > Math.Round( pos.X ) ) {
+                            break;
+                        }
+                        insertIdx++;
                     }
-                    insertIdx++;
+                    float z = Color ? 1.0f : pos.Y;
+                    AVFXKey newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.X ), 1, 1, z );
+                    Curve.Keys.Insert( insertIdx, newKey );
+                    Points.Insert( insertIdx, new CurveEditorPoint( this, newKey, color: Color ) );
                 }
-                float z = Color ? 1.0f : pos.Y;
-                AVFXKey newKey = new AVFXKey( KeyType.Linear, (int)Math.Round(pos.X), 1, 1, z );
-                Curve.Keys.Insert( insertIdx, newKey );
-                Points.Insert( insertIdx, new CurveEditorPoint( this, newKey, color: Color ) );
+                else { // THE FIRST POINT
+                    AVFXKey newKey = new AVFXKey( KeyType.Linear, 1, 1, 1, 1 );
+                    Curve.Keys.Add( newKey );
+                    Points.Add( new CurveEditorPoint( this, newKey, color: Color ) );
+                    Fit();
+                }
             }
             // ZOOM
             if( ImGui.IsItemHovered() ) {

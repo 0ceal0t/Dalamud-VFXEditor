@@ -21,6 +21,7 @@ namespace VFXEditor.UI
         GameAction,
         GameZone,
         GameEmote,
+        GameGimmick,
         GameCutscene,
         GameNpc
     }
@@ -62,6 +63,7 @@ namespace VFXEditor.UI
         public VFXZoneSelect ZoneSelect;
         public VFXNpcSelect NpcSelect;
         public VFXEmoteSelect EmoteSelect;
+        public VFXGimmickSelect GimmickSelect;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
@@ -74,6 +76,7 @@ namespace VFXEditor.UI
             ZoneSelect = new VFXZoneSelect( id, "Zone", _plugin.Manager.Zones, _plugin, this );
             NpcSelect = new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this );
             EmoteSelect = new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this );
+            GimmickSelect = new VFXGimmickSelect( id, "Gimmick", _plugin.Manager.Gimmicks, _plugin, this );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
@@ -172,6 +175,7 @@ namespace VFXEditor.UI
             ZoneSelect.Draw();
             NpcSelect.Draw();
             EmoteSelect.Draw();
+            GimmickSelect.Draw();
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }

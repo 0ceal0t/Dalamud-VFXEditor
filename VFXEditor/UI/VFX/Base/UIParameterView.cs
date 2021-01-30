@@ -15,6 +15,8 @@ namespace VFXEditor.UI.VFX
         public List<UIBase> Attributes = new List<UIBase>();
         // ======================
         public int[] Version = new int[4];
+        public UIFloat3 RevisedScale;
+        public float ScaleCombined = 1.0f;
 
         public UIParameterView(AVFXBase avfx)
         {
@@ -24,6 +26,8 @@ namespace VFXEditor.UI.VFX
             for(int i = 0; i < versionBytes.Length; i++ ) {
                 Version[i] = versionBytes[i];
             }
+            RevisedScale = new UIFloat3( "Revised Scale", AVFX.RevisedValuesScaleX, AVFX.RevisedValuesScaleY, AVFX.RevisedValuesScaleZ );
+            ScaleCombined = Math.Max( AVFX.RevisedValuesScaleX.Value, Math.Max( AVFX.RevisedValuesScaleY.Value, AVFX.RevisedValuesScaleZ.Value ) );
 
             Attributes.Add(new UICheckbox("Delay Fast Particle", AVFX.IsDelayFastParticle));
             Attributes.Add(new UICheckbox("Fit Ground", AVFX.IsFitGround));
@@ -47,7 +51,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<PointLightSouce>("Point Light 2", AVFX.PointLightsType2));
             Attributes.Add(new UIFloat3("Revised Position", AVFX.RevisedValuesPosX, AVFX.RevisedValuesPosY, AVFX.RevisedValuesPosZ));
             Attributes.Add(new UIFloat3("Revised Rotation", AVFX.RevisedValuesRotX, AVFX.RevisedValuesRotY, AVFX.RevisedValuesRotZ));
-            Attributes.Add(new UIFloat3("Revised Scale", AVFX.RevisedValuesScaleX, AVFX.RevisedValuesScaleY, AVFX.RevisedValuesScaleZ));
             Attributes.Add(new UIFloat3("Revised Color", AVFX.RevisedValuesR, AVFX.RevisedValuesG, AVFX.RevisedValuesB));
             Attributes.Add(new UICheckbox("Fade X", AVFX.FadeXenabled));
             Attributes.Add(new UICheckbox("Fade Y", AVFX.FadeYenabled, sl:100));
@@ -64,6 +67,12 @@ namespace VFXEditor.UI.VFX
             string id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
             ImGui.Text( "Version: " + Version[0] + "." + Version[1] + "." + Version[2] + "." + Version[3] );
+            if(ImGui.InputFloat("Revised Scale (Combined)", ref ScaleCombined ) ) {
+                RevisedScale.Value = new System.Numerics.Vector3( ScaleCombined, ScaleCombined, ScaleCombined );
+            }
+            RevisedScale.Draw( id );
+            ImGui.Separator();
+
             DrawList(Attributes, id);
             ImGui.EndChild();
         }

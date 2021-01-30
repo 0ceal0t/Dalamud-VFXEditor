@@ -67,7 +67,7 @@ namespace VFXEditor.UI.VFX {
             foreach( var node in Children ) {
                 node.Parents.RemoveAll( x => x.Node == this );
 
-                node.Graph?.NowOutdated(); // <-------------------
+                node.Graph?.NowOutdated();
             }
             foreach( var node in Parents ) {
                 node.DeleteNode(this);
@@ -195,7 +195,7 @@ namespace VFXEditor.UI.VFX {
             Node.Children.Remove( node );
             node.Parents.Remove( this );
 
-            node.Graph?.NowOutdated(); // <---------
+            node.Graph?.NowOutdated();
         }
 
         public void LinkTo( UINode node ) {
@@ -203,7 +203,7 @@ namespace VFXEditor.UI.VFX {
             Node.Children.Add( node );
             node.Parents.Add( this );
 
-            node.Graph?.NowOutdated(); // <-------------
+            node.Graph?.NowOutdated();
         }
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
@@ -282,10 +282,6 @@ namespace VFXEditor.UI.VFX {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
-
-            //if(val < -1 || val >= Group.Items.Count ) {
-            //    PluginLog.Log( "Single " + Name + " " + val );
-            //}
         }
 
         public override void DeleteNode( UINode node ) {
@@ -393,10 +389,6 @@ namespace VFXEditor.UI.VFX {
                 else {
                     Selected.Add( null );
                 }
-
-                //if( idx < -1 || idx >= Group.Items.Count ) {
-                //    PluginLog.Log( "Multi " + Name + " " + idx );
-                //}
             }
         }
 

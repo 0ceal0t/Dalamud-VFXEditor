@@ -279,23 +279,17 @@ namespace VFXEditor
             if( result ) {
                 try {
                     var file = _plugin.PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
-                    var spIdx = 1;
                     var tmbPath = npc.GetTmbPath();
-                    var mainFound = true;
-                    var hitFound = true;
                     List< Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
-                    while(mainFound || hitFound ) {
+                    for(int spIdx = 1; spIdx < 35; spIdx++ ) {
                         var mainTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + ".tmb";
                         var hitTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + "_hit.tmb";
-                        mainFound = _plugin.PluginInterface.Data.FileExists( mainTmb );
-                        hitFound = _plugin.PluginInterface.Data.FileExists( hitTmb );
-                        if( mainFound ) {
+                        if( _plugin.PluginInterface.Data.FileExists( mainTmb ) ) {
                             files.Add( _plugin.PluginInterface.Data.GetFile( mainTmb ) );
                         }
-                        if( hitFound ) {
+                        if( _plugin.PluginInterface.Data.FileExists( hitTmb ) ) {
                             files.Add( _plugin.PluginInterface.Data.GetFile( hitTmb ) );
                         }
-                        spIdx++;
                     }
                     selectedNpc = new XivNpcSelected( file, npc, files );
                 }
@@ -307,7 +301,7 @@ namespace VFXEditor
             return result;
         }
 
-        // ========= LOAD NPC ===========
+        // ========= LOAD EMOTE ===========
         public List<XivEmote> Emotes = new List<XivEmote>();
         public bool EmoteLoaded = false;
         public bool EmoteWaiting = false;
@@ -352,6 +346,59 @@ namespace VFXEditor
             }
             return true;
         }
+
+        // ============ LOAD GIMMICKS ===========
+        public List<XivGimmick> Gimmicks = new List<XivGimmick>();
+        public bool GimmickLoaded = false;
+        public bool GimmickWaiting = false;
+        public void LoadGimmicks() {
+            if( GimmickWaiting ) { return; }
+            GimmickWaiting = true;
+            PluginLog.Log( "Loading Gimmicks" );
+            Task.Run( async () => {
+                try {
+                    return _plugin.PluginInterface.Data.GetExcelSheet<ActionTimeline>().Where( x => x.Key.ToString().Contains("gimmick") ).ToList();
+                }
+                catch( Exception e ) {
+                    PluginLog.LogError( e.ToString() );
+                    return new List<ActionTimeline>();
+                }
+            } ).ContinueWith( t =>
+            {
+                var territories = _plugin.PluginInterface.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty(x.Name) ).ToList();
+                Dictionary<string, string> suffixToName = new Dictionary<string, string>();
+                foreach(var _zone in territories ) {
+                    suffixToName[_zone.Name.ToString()] = _zone.PlaceName.Value?.Name.ToString();
+                }
+
+                foreach( var item in t.Result ) {
+                    var i = new XivGimmick( item, suffixToName );
+                    Gimmicks.Add( i );
+                }
+                GimmickLoaded = true;
+            } );
+
+        }
+        public bool SelectGimmick( XivGimmick gimmick, out XivGimmickSelected selectedGimmick ) {
+            selectedGimmick = null;
+            string tmbPath = gimmick.GetTmbPath();
+            bool result = _plugin.PluginInterface.Data.FileExists( tmbPath );
+            if( result ) {
+                try {
+                    var file = _plugin.PluginInterface.Data.GetFile( tmbPath );
+                    selectedGimmick = new XivGimmickSelected( file, gimmick );
+                }
+                catch( Exception e ) {
+                    PluginLog.LogError( e.ToString() );
+                    return false;
+                }
+            }
+            else {
+                PluginLog.Log( tmbPath + " does not exist" );
+            }
+            return result;
+        }
+
 
         // ======  EXPORT AVFX  ======
         public bool SaveLocalFile(string path, AVFXBase avfx )
