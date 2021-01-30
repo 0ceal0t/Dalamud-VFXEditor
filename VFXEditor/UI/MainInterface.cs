@@ -162,7 +162,7 @@ namespace VFXEditor.UI
                         var node = _plugin.AVFX.toAVFX();
                         SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
                     }
-                    if( ImGui.Selectable( "Convert background VFX to player VFX" ) ) {
+                    if( ImGui.Selectable( "Convert background VFX to player VFX [BETA]" ) ) {
                         BGtoPlayerVFX();
                     }
                     ImGui.EndPopup();

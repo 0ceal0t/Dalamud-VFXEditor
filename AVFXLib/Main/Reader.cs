@@ -184,10 +184,12 @@ namespace AVFXLib.Main
             "VRZR",
             "AnX",
             "AnY",
-            "CF"
+            "CF",
+            "TexN",
+            "TexNR"
         });
 
-        static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{
+        static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{ // not nested, larget than 8 bytes
             "Clip",
             "Keys",
             "Tex",
@@ -219,7 +221,7 @@ namespace AVFXLib.Main
                 int Size = reader.ReadInt32();
 
                 byte[] Contents = reader.ReadBytes(Size);
-                if (NESTED.Contains(DefName) && Size > 8)
+                if (NESTED.Contains(DefName) && (Size > 8 || DefName == "Data"))
                 {
                     BinaryReader nestedReader = new BinaryReader(new MemoryStream(Contents));
                     AVFXNode nestedNode = new AVFXNode(DefName);

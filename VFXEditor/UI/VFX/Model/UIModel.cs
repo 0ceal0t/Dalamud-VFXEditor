@@ -63,6 +63,7 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.IsWireframe = wireframe;
                 Mdl3D.RefreshRasterizeState();
             }
+            ImGui.SameLine();
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
                 Mdl3D.LoadModel( Model, mode:1);
             }
@@ -105,8 +106,7 @@ namespace VFXEditor.UI.VFX
             ImGui.EndTabItem();
         }
 
-        public void ImportDialog()
-        {
+        public void ImportDialog() {
             Task.Run( async () =>
             {
                 var picker = new OpenFileDialog
@@ -116,19 +116,15 @@ namespace VFXEditor.UI.VFX
                     Title = "Select GLTF File."
                 };
                 var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK )
-                {
-                    try
-                    {
-                        if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) )
-                        {
+                if( result == DialogResult.OK ) {
+                    try {
+                        if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
                             Mdl3D.LoadModel( Model );
                         }
                     }
-                    catch( Exception ex )
-                    {
+                    catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select the GLTF file." );
                     }
                 }
@@ -147,14 +143,11 @@ namespace VFXEditor.UI.VFX
                     AddExtension = true
                 };
                 var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK )
-                {
-                    try
-                    {
+                if( result == DialogResult.OK ) {
+                    try {
                         GLTFManager.ExportModel( Model, picker.FileName);
                     }
-                    catch( Exception ex )
-                    {
+                    catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a save location" );
                     }
                 }

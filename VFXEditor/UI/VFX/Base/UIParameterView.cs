@@ -66,7 +66,7 @@ namespace VFXEditor.UI.VFX
         {
             string id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
-            ImGui.Text( "Version: " + Version[0] + "." + Version[1] + "." + Version[2] + "." + Version[3] );
+            ImGui.Text( "VFX Version: " + Version[0] + "." + Version[1] + "." + Version[2] + "." + Version[3] );
             if(ImGui.InputFloat("Revised Scale (Combined)", ref ScaleCombined ) ) {
                 RevisedScale.Value = new System.Numerics.Vector3( ScaleCombined, ScaleCombined, ScaleCombined );
             }

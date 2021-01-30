@@ -39,7 +39,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 
-- [ ] Change all 3 revised scale at the same time
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
@@ -71,8 +70,11 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Texture replacement with Penumbra/Textools
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
+- [ ] Better readability (colored  text)
+- [ ] Export raw texture
 
 ---
+- [x] ~~Change all 3 revised scale at the same time~~
 - [x] AVFX version
 - [x] ~~Properly fix literal int list~~
 - [x] ~~Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)~~

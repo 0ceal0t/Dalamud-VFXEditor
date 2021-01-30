@@ -23,6 +23,7 @@ namespace AVFXLib.Models
         public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
         public LiteralIntList MaskTextureIdx = new LiteralIntList( "maskTextureIdx", "TLst");
         public AVFXCurve TexN = new AVFXCurve( "texN", "TxN" );
+        public AVFXCurve TexNRandom = new AVFXCurve( "texNRandom", "TxNR" );
 
         List<Base> Attributes;
 
@@ -41,7 +42,8 @@ namespace AVFXLib.Models
                 TextureCalculateAlpha,
                 TextureIdx,
                 MaskTextureIdx,
-                TexN
+                TexN,
+                TexNRandom
             });
         }
 
