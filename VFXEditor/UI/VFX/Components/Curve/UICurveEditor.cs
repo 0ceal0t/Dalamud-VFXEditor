@@ -197,11 +197,11 @@ namespace VFXEditor.UI.VFX {
                     ImGui.EndTooltip();
                 }
                 // SELECT
-                if(ImGui.IsAnyItemActive() && ImGui.IsMouseClicked( 0 ) && closeEnough ) {
+                if(ImGui.IsAnyItemActive() && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && closeEnough ) {
                     SelectedPoint = point;
                 }
                 // DRAG SELECT
-                if( ImGui.IsItemActive() && ImGui.IsMouseDragging() && closeEnough && DraggingPoint == null ) {
+                if( ImGui.IsItemActive() && ImGui.IsMouseDragging(ImGuiMouseButton.Left) && closeEnough && DraggingPoint == null ) {
                     DraggingPoint = point;
                     LastDragPos = ImGui.GetMouseDragDelta();
                 }
@@ -209,7 +209,7 @@ namespace VFXEditor.UI.VFX {
             }
 
             // OK, NOW WE'RE READY TO HANDLE THE DRAG
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging() && DraggingPoint != null ) {
+            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) && DraggingPoint != null ) {
                 var d = ImGui.GetMouseDragDelta();
                 DragPoint( d, SizePerUnit );
             }
@@ -219,7 +219,7 @@ namespace VFXEditor.UI.VFX {
                 DraggingPoint = null;
             }
             // HOW ABOUT DRAGGING THE VIEW?
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging() && DraggingPoint == null ) {
+            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) && DraggingPoint == null ) {
                 var d = ImGui.GetMouseDragDelta();
                 DragView( d, SizePerUnit );
             }

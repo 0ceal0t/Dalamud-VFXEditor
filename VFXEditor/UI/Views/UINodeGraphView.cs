@@ -117,7 +117,7 @@ namespace VFXEditor.UI.VFX {
             }
 
             // HOW ABOUT DRAGGING THE VIEW?
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging()) {
+            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var d = ImGui.GetMouseDragDelta();
                 if( ViewDrag ) {
                     var delta = d - LastDragPos;

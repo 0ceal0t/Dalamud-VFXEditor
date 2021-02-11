@@ -81,7 +81,7 @@ namespace VFXEditor.UI.VFX
             Mdl3D.Resize( space );
 
             ImGui.ImageButton( Mdl3D.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
-            if(ImGui.IsItemActive() && ImGui.IsMouseDragging() ) {
+            if(ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
                 Mdl3D.Drag( delta );
             }

@@ -6,8 +6,8 @@
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.1.1.2</FileVersion>
-        <AssemblyVersion>1.1.1.2</AssemblyVersion>
+        <FileVersion>1.1.2.0</FileVersion>
+        <AssemblyVersion>1.1.2.0</AssemblyVersion>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
@@ -25,55 +25,55 @@
         <Reference Include="Dalamud">
             <HintPath>$(DALAMUD_ROOT)\Dalamud.dll</HintPath>
             <HintPath>..\libs\Dalamud.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Dalamud.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="ImGui.NET">
             <HintPath>$(DALAMUD_ROOT)\ImGui.NET.dll</HintPath>
             <HintPath>..\libs\ImGui.NET.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\ImGui.NET.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGui.NET.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="ImGuiScene">
             <HintPath>$(DALAMUD_ROOT)\ImGuiScene.dll</HintPath>
             <HintPath>..\libs\ImGuiScene.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\ImGuiScene.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGuiScene.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Lumina">
             <HintPath>$(DALAMUD_ROOT)\Lumina.dll</HintPath>
             <HintPath>..\libs\Lumina.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Lumina.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Lumina.Excel">
             <HintPath>$(DALAMUD_ROOT)\Lumin.Excel.dll</HintPath>
             <HintPath>..\libs\Lumina.Excel.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\Lumina.Excel.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX">
             <HintPath>$(DALAMUD_ROOT)\SharpDX.dll</HintPath>
             <HintPath>..\libs\SharpDX.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\SharpDX.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.DXGI">
             <HintPath>$(DALAMUD_ROOT)\SharpDX.DXGI.dll</HintPath>
             <HintPath>..\libs\SharpDX.DXGI.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\SharpDX.DXGI.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.DXGI.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Mathematics">
             <HintPath>$(DALAMUD_ROOT)\SharpDX.Mathematics.dll</HintPath>
             <HintPath>..\libs\SharpDX.Mathematics.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\SharpDX.Mathematics.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.Mathematics.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Direct3D11">
             <HintPath>$(DALAMUD_ROOT)\SharpDX.Direct3D11.dll</HintPath>
             <HintPath>..\libs\SharpDX.Direct3D11.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\SharpDX.Direct3D11.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.Direct3D11.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>

@@ -25,12 +25,7 @@ namespace VFXEditor {
             ShaderPath = Path.Combine( plugin.TemplateLocation, "Shaders" );
 
             //=== USE REFLECTION FOR NOW =========
-            var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-            var dalamud = typeof( DalamudPluginInterface ).GetField( "dalamud", bindingFlags ).GetValue( _plugin.PluginInterface );
-            var interfaceManager = dalamud.GetType().GetProperty( "InterfaceManager", bindingFlags ).GetValue( dalamud );
-            var scene = interfaceManager.GetType().GetField( "scene", bindingFlags ).GetValue( interfaceManager );
-            var sceneType = scene.GetType();
-            _Device = ( Device )sceneType.GetField( "device", bindingFlags ).GetValue( scene );
+            _Device = plugin.PluginInterface.UiBuilder.Device;
             _Ctx = _Device.ImmediateContext;
 
             Model = new Model3D( this );
