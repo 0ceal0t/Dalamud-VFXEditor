@@ -182,35 +182,9 @@ namespace AVFXLib.Models
         }
 
         // ==== ADD/REMOVE ======
-        public void addScheduler( AVFXSchedule item )
-        {
-            Schedulers.Add( item );
-        }
-        public AVFXSchedule addScheduler()
-        {
-            AVFXSchedule sched = new AVFXSchedule();
-            sched.toDefault();
-            Schedulers.Add(sched);
-            return sched;
-        }
-        public void removeScheduler(int idx)
-        {
-            Schedulers.RemoveAt(idx);
-        }
-        public void removeScheduler(AVFXSchedule item ) {
-            Schedulers.Remove( item );
-        }
-        //
         public void addTimeline( AVFXTimeline item )
         {
             Timelines.Add( item );
-        }
-        public AVFXTimeline addTimeline()
-        {
-            AVFXTimeline timeline = new AVFXTimeline();
-            timeline.toDefault();
-            Timelines.Add(timeline);
-            return timeline;
         }
         public void removeTimeline(int idx)
         {
@@ -224,13 +198,6 @@ namespace AVFXLib.Models
         {
             Effectors.Add( item );
         }
-        public AVFXEffector addEffector()
-        {
-            AVFXEffector effector = new AVFXEffector();
-            effector.toDefault();
-            Effectors.Add(effector);
-            return effector;
-        }
         public void removeEffector(int idx)
         {
             Effectors.RemoveAt(idx);
@@ -242,13 +209,6 @@ namespace AVFXLib.Models
         public void addEmitter( AVFXEmitter item )
         {
             Emitters.Add( item );
-        }
-        public AVFXEmitter addEmitter()
-        {
-            AVFXEmitter emitter = new AVFXEmitter();
-            emitter.toDefault();
-            Emitters.Add(emitter);
-            return emitter;
         }
         public void removeEmitter(int idx)
         {
@@ -262,13 +222,6 @@ namespace AVFXLib.Models
         {
             Particles.Add( item );
         }
-        public AVFXParticle addParticle()
-        {
-            AVFXParticle particle = new AVFXParticle();
-            particle.toDefault();
-            Particles.Add(particle);
-            return particle;
-        }
         public void removeParticle(int idx)
         {
             Particles.RemoveAt(idx);
@@ -280,13 +233,6 @@ namespace AVFXLib.Models
         public void addBinder( AVFXBinder item )
         {
             Binders.Add( item );
-        }
-        public AVFXBinder addBinder()
-        {
-            AVFXBinder binder = new AVFXBinder();
-            binder.toDefault();
-            Binders.Add(binder);
-            return binder;
         }
         public void removeBinder(int idx)
         {

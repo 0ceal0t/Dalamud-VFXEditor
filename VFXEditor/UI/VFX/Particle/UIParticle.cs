@@ -79,18 +79,18 @@ namespace VFXEditor.UI.VFX
             Animation.Add( new UIParticleSimple( Particle.Simple ) );
             Animation.Add( new UICurve( Particle.Gravity, "Gravity" ) );
             Animation.Add( new UICurve( Particle.GravityRandom, "Gravity Random" ) );
-            Animation.Add( new UICurve( Particle.AirResistance, "Air Resistance" ) );
+            Animation.Add( new UICurve( Particle.AirResistance, "Air Resistance", locked: true ) );
             Animation.Add( new UICurve( Particle.AirResistanceRandom, "Air Resistance Random" ) );
-            Animation.Add( new UICurve3Axis( Particle.Scale, "Scale" ) );
-            Animation.Add( new UICurve3Axis( Particle.Rotation, "Rotation" ) );
-            Animation.Add( new UICurve3Axis( Particle.Position, "Position" ) );
+            Animation.Add( new UICurve3Axis( Particle.Scale, "Scale", locked: true ) );
+            Animation.Add( new UICurve3Axis( Particle.Rotation, "Rotation", locked: true ) );
+            Animation.Add( new UICurve3Axis( Particle.Position, "Position", locked: true ) );
             Animation.Add( new UICurve( Particle.RotVelX, "Rotation Velocity X" ) );
             Animation.Add( new UICurve( Particle.RotVelY, "Rotation Velocity Y" ) );
             Animation.Add( new UICurve( Particle.RotVelZ, "Rotation Velocity Z" ) );
             Animation.Add( new UICurve( Particle.RotVelXRandom, "Rotation Velocity X Random" ) );
             Animation.Add( new UICurve( Particle.RotVelYRandom, "Rotation Velocity Y Random" ) );
             Animation.Add( new UICurve( Particle.RotVelZRandom, "Rotation Velocity Z Random" ) );
-            Animation.Add( new UICurveColor( Particle.Color, "Color" ) );
+            Animation.Add( new UICurveColor( Particle.Color, "Color", locked: true ) );
             //===============================
             foreach( var uvSet in Particle.UVSets ) {
                 UVSets.Add( new UIParticleUVSet( uvSet, this ) );

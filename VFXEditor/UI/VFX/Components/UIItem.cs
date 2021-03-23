@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UIItem : UIBase {
-        public int Idx; // TEMP
+        public int Idx;
         public List<UIBase> Attributes = new List<UIBase>();
 
         public override void Init() {

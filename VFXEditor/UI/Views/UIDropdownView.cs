@@ -17,20 +17,21 @@ namespace VFXEditor.UI.VFX
         public AVFXBase AVFX;
         public UINodeGroup<T> Group;
         public T Selected = null;
+        public string DefaultPath;
 
         public bool AllowNew;
         public bool AllowDelete;
 
-        public UIDropdownView( AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true )
+        public UIDropdownView( AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" )
         {
             AVFX = avfx;
             Id = _id;
             defaultText = _defaultText;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
+            DefaultPath = Path.Combine( Plugin.TemplateLocation, "Files", defaultPath );
         }
 
-        public abstract T OnNew();
         public abstract void OnDelete( T item );
         public abstract byte[] OnExport( T item );
         public virtual void OnSelect( T item ) { }
@@ -50,11 +51,11 @@ namespace VFXEditor.UI.VFX
                 {
                     if( ImGui.Selectable( "Create" + Id ) )
                     {
-                        Group.Add( OnNew() );
+                        Load( DefaultPath );
                     }
-                    if( ImGui.Selectable("Load" + Id ) )
+                    if( ImGui.Selectable("Import" + Id ) )
                     {
-                        Load();
+                        LoadDialog();
                     }
                     ImGui.EndPopup();
                 }
@@ -64,7 +65,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.SameLine();
                 if( ImGui.SmallButton( "Save" + Id ) )
                 {
-                    Save( Selected );
+                    SaveDialog( Selected );
                 }
                 ImGui.SameLine();
                 if( UIUtils.RemoveButton( "Delete" + Id, small:true) )
@@ -97,7 +98,7 @@ namespace VFXEditor.UI.VFX
             }
         }
         // ========= DIALOGS ==================
-        public void Load()
+        public void LoadDialog()
         {
             Task.Run( async () => {
                 var picker = new OpenFileDialog
@@ -108,21 +109,19 @@ namespace VFXEditor.UI.VFX
                 };
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
-                    try {
-                        var node = AVFXLib.Main.Reader.readAVFX( picker.FileName, out List<string> messages );
-                        foreach( string message in messages ) {
-                            PluginLog.Log( message );
-                        }
-                        Group.Add( OnImport( node ));
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a file" );
-                    }
+                    Load( picker.FileName );
                 }
             } );
         }
+        public void Load(string path ) {
+            var node = AVFXLib.Main.Reader.readAVFX( path, out List<string> messages );
+            foreach( string message in messages ) {
+                PluginLog.Log( message );
+            }
+            Group.Add( OnImport( node ) );
+        }
 
-        public void Save( T item)
+        public void SaveDialog( T item)
         {
             Task.Run( async () => {
                 var picker = new SaveFileDialog

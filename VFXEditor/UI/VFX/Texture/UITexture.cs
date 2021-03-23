@@ -66,7 +66,7 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public void SaveDialog(TexData t)
+        public static void SaveDialog(TexData t)
         {
             Task.Run( async () =>
             {

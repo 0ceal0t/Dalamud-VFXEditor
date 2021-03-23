@@ -65,17 +65,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            SetDefault(Attributes);
-            BinderIdx.GiveValue(-1);
-            TimelineCount.GiveValue(0);
-            ClipCount.GiveValue(0);
-            Items = new List<AVFXTimelineSubItem>();
-            Clips = new List<AVFXTimelineClip>();
-        }
-
         public AVFXTimelineSubItem addItem()
         {
             AVFXTimelineSubItem Item = new AVFXTimelineSubItem();

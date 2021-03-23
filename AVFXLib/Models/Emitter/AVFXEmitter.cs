@@ -128,29 +128,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            SetUnAssigned(Attributes);
-            SoundNumber.GiveValue(-1);
-            LoopStart.GiveValue(0);
-            LoopEnd.GiveValue(0);
-            ChildLimit.GiveValue(30);
-            EffectorIdx.GiveValue(-1);
-            AnyDirection.GiveValue(false);
-            EmitterVariety.GiveValue(EmitterType.Point);
-            RotationDirectionBaseType.GiveValue(RotationDirectionBase.Z);
-            CoordComputeOrderType.GiveValue(CoordComputeOrder.Scale_Rot_Translate);
-            RotationOrderType.GiveValue(RotationOrder.ZXY);
-            ParticleCount.GiveValue(0);
-            EmitterCount.GiveValue(0);
-            Particles = new List<AVFXEmitterIterationItem>();
-            Emitters = new List<AVFXEmitterIterationItem>();
-            SetDefault(Life);
-
-            SetVariety(EmitterVariety.Value);
-        }
-
         public AVFXEmitterIterationItem addParticle()
         {
             AVFXEmitterIterationItem ItPr = new AVFXEmitterIterationItem();

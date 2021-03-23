@@ -180,55 +180,6 @@ namespace AVFXLib.Models
             ReadAVFX(Attributes2, node);
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            SetDefault(Attributes);
-            ParticleVariety.GiveValue(ParticleType.Model);
-            SimpleAnimEnable.GiveValue(false);
-            SetUnAssigned( Bs11 );
-            SetUnAssigned(Simple);
-            SetUnAssigned(Gravity);
-            SetUnAssigned(GravityRandom);
-            SetUnAssigned(AirResistance);
-            SetUnAssigned(AirResistanceRandom);
-            SetUnAssigned(Scale);
-            SetUnAssigned(Rotation);
-            SetUnAssigned(Position);
-            SetUnAssigned(Color);
-            SetUnAssigned( RotVelX );
-            SetUnAssigned( RotVelY );
-            SetUnAssigned( RotVelZ );
-            SetUnAssigned( RotVelXRandom );
-            SetUnAssigned( RotVelYRandom );
-            SetUnAssigned( RotVelZRandom );
-            UVSets = new List<AVFXParticleUVSet>();
-            SetVariety(ParticleVariety.Value);
-
-            // here we go...
-            RotationDirectionBaseType.GiveValue( RotationDirectionBase.Z );
-            RotationOrderType.GiveValue( RotationOrder.ZYX );
-            DrawPriority.GiveValue( 1 );
-            IsSoftParticle.GiveValue( true );
-            CollisionType.GiveValue( -1 );
-            IsApplyToneMap.GiveValue( true );
-            ClipNearEnd.GiveValue( 1.0f );
-            ClipFarStart.GiveValue( 50.0f );
-            ClipFarEnd.GiveValue( 60.0f );
-            DepthOffset.GiveValue( 0.1f );
-            //
-            Data.toDefault();
-            //
-            addUvSet();
-            //
-            TC1.toDefault();
-            TC2.toDefault();
-            TN.toDefault();
-            TR.toDefault();
-            TD.toDefault();
-            TP.toDefault();
-        }
-
         public AVFXParticleUVSet addUvSet()
         {
             if (UVSets.Count >= 4) return null;

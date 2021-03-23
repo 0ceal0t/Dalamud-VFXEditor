@@ -13,13 +13,15 @@ namespace VFXEditor.UI.VFX
     {
         public AVFXCurveColor Curve;
         public string Name;
+        public bool Locked;
         //=========================
         public List<UICurve> Curves;
 
-        public UICurveColor(AVFXCurveColor curve, string name)
+        public UICurveColor(AVFXCurveColor curve, string name, bool locked = false )
         {
             Curve = curve;
             Name = name;
+            Locked = locked;
             Init();
         }
         public override void Init()
@@ -67,11 +69,12 @@ namespace VFXEditor.UI.VFX
         {
             var id = parentId + "/" + Name;
             //====================
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
-                Curve.Assigned = false;
-                Init();
-                return;
+            if( !Locked ) {
+                if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
+                    Curve.Assigned = false;
+                    Init();
+                    return;
+                }
             }
             int idx = 0;
             foreach( var c in Curves )

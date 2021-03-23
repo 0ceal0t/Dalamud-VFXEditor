@@ -38,7 +38,7 @@ namespace VFXEditor.UI.VFX
         public static bool RemoveButton(string label, bool small = false)
         {
             bool ret = false;
-            ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.8f, 0.25f, 0.25f, 1));
+            ImGui.PushStyleColor(ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
             if( small )
             {
                 if( ImGui.SmallButton( label ) )

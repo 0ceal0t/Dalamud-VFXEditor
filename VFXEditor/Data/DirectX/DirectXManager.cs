@@ -22,7 +22,7 @@ namespace VFXEditor {
 
         public DirectXManager(Plugin plugin) {
             _plugin = plugin;
-            ShaderPath = Path.Combine( plugin.TemplateLocation, "Shaders" );
+            ShaderPath = Path.Combine( Plugin.TemplateLocation, "Shaders" );
 
             //=== USE REFLECTION FOR NOW =========
             _Device = plugin.PluginInterface.UiBuilder.Device;

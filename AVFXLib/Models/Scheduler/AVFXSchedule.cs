@@ -63,24 +63,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            ItemCount.GiveValue(0);
-            TriggerCount.GiveValue(0);
-            Items = new List<AVFXScheduleSubItem>();
-            Triggers = new List<AVFXScheduleSubItem>();
-
-            addItem();
-            for(int i = 0; i < 12; i++)
-            {
-                AVFXScheduleSubItem Trigger = new AVFXScheduleSubItem();
-                Trigger.toDefault();
-                Triggers.Add( Trigger );
-            }
-            TriggerCount.GiveValue( Triggers.Count() );
-        }
-
         public AVFXScheduleSubItem addItem()
         {
             AVFXScheduleSubItem Item = new AVFXScheduleSubItem();

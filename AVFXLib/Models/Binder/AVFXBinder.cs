@@ -79,22 +79,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            SetDefault(Attributes);
-            SetUnAssigned(PropStart);
-            SetUnAssigned( Prop1 );
-            SetUnAssigned( Prop2 );
-            SetUnAssigned(PropGoal);
-            SetVariety(BinderVariety.Value);
-
-            VfxScaleBias.GiveValue( 1 );
-            Life.GiveValue( -1 );
-            Data.toDefault();
-            PropStart.toDefault();
-        }
-
         public override JToken toJSON()
         {
             JObject elem = new JObject();

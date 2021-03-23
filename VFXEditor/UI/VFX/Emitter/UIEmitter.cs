@@ -50,17 +50,17 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType ) );
             // ==========================
             Animation.Add( new UILife( Emitter.Life ) );
-            Animation.Add( new UICurve( Emitter.CreateCount, "Create Count" ) );
-            Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval" ) );
+            Animation.Add( new UICurve( Emitter.CreateCount, "Create Count", locked:true ) );
+            Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval", locked: true ) );
             Animation.Add( new UICurve( Emitter.CreateIntervalRandom, "Create Interval Random" ) );
             Animation.Add( new UICurve( Emitter.Gravity, "Gravity" ) );
             Animation.Add( new UICurve( Emitter.GravityRandom, "Gravity Random" ) );
-            Animation.Add( new UICurve( Emitter.AirResistance, "Air Resistance" ) );
+            Animation.Add( new UICurve( Emitter.AirResistance, "Air Resistance", locked: true ) );
             Animation.Add( new UICurve( Emitter.AirResistanceRandom, "Air Resistance Random" ) );
-            Animation.Add( new UICurveColor( Emitter.Color, "Color" ) );
-            Animation.Add( new UICurve3Axis( Emitter.Position, "Position" ) );
-            Animation.Add( new UICurve3Axis( Emitter.Rotation, "Rotation" ) );
-            Animation.Add( new UICurve3Axis( Emitter.Scale, "Scale" ) );
+            Animation.Add( new UICurveColor( Emitter.Color, "Color", locked: true ) );
+            Animation.Add( new UICurve3Axis( Emitter.Position, "Position", locked: true ) );
+            Animation.Add( new UICurve3Axis( Emitter.Rotation, "Rotation", locked: true ) );
+            Animation.Add( new UICurve3Axis( Emitter.Scale, "Scale", locked: true ) );
             //========================
             foreach( var particle in Emitter.Particles ) {
                 Particles.Add( new UIEmitterItem( particle, true, this ) );

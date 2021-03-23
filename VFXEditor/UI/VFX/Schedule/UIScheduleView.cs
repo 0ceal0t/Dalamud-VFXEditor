@@ -17,7 +17,6 @@ namespace VFXEditor.UI.VFX
             Group.Items = AVFX.Schedulers.Select( item => new UIScheduler( item, this ) ).ToList();
         }
 
-        public override UIScheduler OnNew() { return null; }
         public override void OnDelete( UIScheduler item ) {}
         public override byte[] OnExport( UIScheduler item ) {
             return new byte[0];

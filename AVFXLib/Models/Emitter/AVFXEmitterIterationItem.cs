@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -81,9 +81,32 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             Assigned = true;
-            SetDefault(Attributes);
-            Enabled.GiveValue(true);
-            TargetIdx.GiveValue(-1);
+            TargetIdx.GiveValue( -1 );
+            Enabled.GiveValue( false );
+            LocalDirection.GiveValue( 0 );
+            CreateTime.GiveValue( 1 );
+            CreateCount.GiveValue( 1 );
+            CreateProbability.GiveValue( 100 );
+            ParentInfluenceCoord.GiveValue( 1 );
+            ParentInfluenceColor.GiveValue( 0 );
+            InfluenceCoordScale.GiveValue( 0 );
+            InfluenceCoordRot.GiveValue( 0 );
+            InfluenceCoordPos.GiveValue( 1 );
+            InfluenceCoordBinderPosition.GiveValue( 0 );
+            InfluenceCoordUnstickiness.GiveValue( 0 );
+            InheritParentVelocity.GiveValue( 0 );
+            InheritParentLife.GiveValue( 0 );
+            OverrideLife.GiveValue( false );
+            OverrideLifeValue.GiveValue( 60 );
+            OverrideLifeRandom.GiveValue( 0 );
+            ParameterLink.GiveValue( -1 );
+            StartFrame.GiveValue( 0 );
+            StartFrameNullUpdate.GiveValue( false );
+            ByInjectionAngleX.GiveValue( 0 );
+            ByInjectionAngleY.GiveValue( 0 );
+            ByInjectionAngleZ.GiveValue( 0 );
+            GenerateDelay.GiveValue( 0 );
+            GenerateDelayByOne.GiveValue( false );
         }
 
         public override JToken toJSON()

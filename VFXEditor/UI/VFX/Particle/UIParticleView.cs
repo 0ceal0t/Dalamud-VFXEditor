@@ -11,14 +11,10 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleView : UIDropdownView<UIParticle>
     {
-        public UIParticleView( AVFXBase avfx ) : base( avfx, "##PTCL", "Select a Particle" )
+        public UIParticleView( AVFXBase avfx ) : base( avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" )
         {
             Group = UINode._Particles;
             Group.Items = AVFX.Particles.Select( item => new UIParticle( item, this ) ).ToList();
-        }
-
-        public override UIParticle OnNew() {
-            return new UIParticle( AVFX.addParticle(), this );
         }
         public override void OnDelete( UIParticle item ) {
             AVFX.removeParticle( item.Particle );

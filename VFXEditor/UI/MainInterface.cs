@@ -11,6 +11,7 @@ using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
+using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor.UI
 {
@@ -20,6 +21,7 @@ namespace VFXEditor.UI
         public bool Visible = false;
         public bool ShowDebugBar = false;
         public VFX.UIMain VFXMain = null;
+        public BaseVfx SpawnVfx = null;
 
         public MainInterface MainUI;
         public VFXSelectDialog SelectUI;
@@ -67,12 +69,9 @@ namespace VFXEditor.UI
 
         public void DrawDebugBar()
         {
-            if( ShowDebugBar && ImGui.BeginMainMenuBar() )
-            {
-                if( ImGui.BeginMenu( "VFXEditor" ) )
-                {
-                    if( ImGui.MenuItem( "Toggle UI", "/VFXEditor", Visible ) )
-                    {
+            if( ShowDebugBar && ImGui.BeginMainMenuBar() ) {
+                if( ImGui.BeginMenu( "VFXEditor" ) ) {
+                    if( ImGui.MenuItem( "Toggle UI", "/VFXEditor", Visible ) ) {
                         Visible = !Visible;
                     }
                     ImGui.EndMenu();
@@ -85,8 +84,7 @@ namespace VFXEditor.UI
         public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface()
         {
-            if( !DrawOnce )
-            {
+            if( !DrawOnce ) {
                 ImGui.SetNextWindowSize( new Vector2( 800, 1000 ) );
                 DrawOnce = true;
             }
@@ -126,10 +124,13 @@ namespace VFXEditor.UI
                 ImGui.PopStyleColor();
                 // ===== EXPORT ======
                 ImGui.SameLine();
-                if( ImGui.Button( "Export" ) )
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" ) )
                 {
                     ImGui.OpenPopup( "Export_Popup" );
                 }
+                ImGui.PopFont();
+
                 if( ImGui.BeginPopup( "Export_Popup" ) )
                 {
                     if( ImGui.Selectable( ".AVFX" ) )
@@ -150,20 +151,9 @@ namespace VFXEditor.UI
                     {
                         PenumbraUI.Show();
                     }
-                    ImGui.EndPopup();
-                }
-                // ====== UTILS =====
-                ImGui.SameLine();
-                if( ImGui.Button( "Utility" ) ) {
-                    ImGui.OpenPopup( "Utility_Popup" );
-                }
-                if( ImGui.BeginPopup( "Utility_Popup" ) ) {
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
                         var node = _plugin.AVFX.toAVFX();
                         SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
-                    }
-                    if( ImGui.Selectable( "Convert background VFX to player VFX [BETA]" ) ) {
-                        BGtoPlayerVFX();
                     }
                     ImGui.EndPopup();
                 }
@@ -232,16 +222,20 @@ namespace VFXEditor.UI
             ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
             ImGui.NextColumn();
 
-            ImGui.SetColumnWidth( 2, 100 );
-            if( ImGui.Button( "Select##MainInterfaceFiles-SourceSelect" ) )
-            {
+            ImGui.SetColumnWidth( 2, 70 );
+
+
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) {
                 SelectUI.Show();
             }
             ImGui.SameLine();
-            if( ImGui.Button( "New##MainInterfaceFiles-New", new Vector2(40, 23) ) )
-            {
-                ImGui.OpenPopup( "New_Popup1");
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.FileMedical}", new Vector2( 25, 23 ) ) ) {
+                ImGui.OpenPopup( "New_Popup1" );
             }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
             if( ImGui.BeginPopup( "New_Popup1") ) {
                 if( ImGui.Selectable( "Blank") ) {
                     OpenTemplate( @"default_vfx.avfx" );
@@ -252,15 +246,18 @@ namespace VFXEditor.UI
                 ImGui.EndPopup();
             }
 
-            if( ImGui.Button( "Select##MainInterfaceFiles-PreviewSelect" ) )
-            {
+
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect" ) ) {
                 PreviewUI.Show( showLocal: false );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "Reset##MainInterfaceFiles-PreviewRemove" ) )
-            {
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Unlink}##MainInterfaceFiles-PreviewRemove" ) ) {
                 _plugin.RemoveReplaceAVFX();
             }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
             ImGui.NextColumn();
 
             ImGui.SetColumnWidth( 3, 200 );
@@ -270,19 +267,48 @@ namespace VFXEditor.UI
             }
             ImGui.PopStyleColor();
 
+            string previewSpawn = _plugin.Doc.ActiveDoc.Replace.Path;
+            bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
+            if(SpawnVfx == null ) {
+                if( spawnDisabled ) {
+                    ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+                }
+                if(ImGui.Button( "Spawn", new Vector2(52, 23) ) && !spawnDisabled ) {
+                    ImGui.OpenPopup( "Spawn_Popup" );
+                }
+                if( spawnDisabled ) {
+                    ImGui.PopStyleVar();
+                }
+            }
+            else {
+                if( ImGui.Button( "Remove" ) ) {
+                    SpawnVfx?.Remove();
+                    SpawnVfx = null;
+                }
+            }
+            if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
+                if( ImGui.Selectable( "On Ground" ) ) {
+                    SpawnVfx = new StaticVfx( _plugin, previewSpawn, _plugin.PluginInterface.ClientState.LocalPlayer.Position);
+                }
+                if( ImGui.Selectable( "On Self" ) ) {
+                    SpawnVfx = new ActorVfx( _plugin, _plugin.PluginInterface.ClientState.LocalPlayer, _plugin.PluginInterface.ClientState.LocalPlayer, previewSpawn );
+                }
+                ImGui.EndPopup();
+            }
+
             ImGui.Columns( 1 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.EndTabItem();
         }
 
         public string RawInputValue = "";
-        public void DrawRaw()
-        {
-            var ret = ImGui.BeginTabItem( "Raw##MainInterfaceTabs" );
+        public string RawTexInputValue = "";
+        public void DrawRaw() {
+            var ret = ImGui.BeginTabItem( "Extract##MainInterfaceTabs" );
             if( !ret )
                 return;
-            // =================
-            ImGui.Text( "Extract a raw .avfx file from the game and save it locally" );
+            // ======= AVFX =========
+            ImGui.Text( "Extract a raw .avfx file" );
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) )
@@ -302,15 +328,32 @@ namespace VFXEditor.UI
                     }
                 }
             }
+            // ===== ATEX ==========
+            ImGui.Text( "Extract an .atex file" );
+            ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
+            ImGui.SameLine();
+            if( ImGui.Button( "Extract##RawTexExtract" ) ) {
+                bool result = _plugin.PluginInterface.Data.FileExists( RawTexInputValue );
+                if( result ) {
+                    try {
+                        var texData = _plugin.Manager.TexManager.CreateTexture( RawTexInputValue, loadImage: false );
+                        if(texData.Data.Length > 0 ) {
+                            VFX.UITexture.SaveDialog( texData );
+                        }
+                    }
+                    catch( Exception e ) {
+                        PluginLog.LogError( "Could not read file" );
+                        PluginLog.LogError( e.ToString() );
+                    }
+                }
+            }
             ImGui.EndTabItem();
         }
 
-        public void DrawSettings()
-        {
+        public void DrawSettings() {
             var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
             if( !ret )
                 return;
-            // ==========================
             bool verifyOnLoad = _plugin.Configuration.VerifyOnLoad;
             if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
             {
@@ -322,6 +365,7 @@ namespace VFXEditor.UI
             {
                 _plugin.Configuration.PreviewTextures = loadTextures;
             }
+
             if( ImGui.Button( "Save##Settings" ) )
             {
                 _plugin.Configuration.Save();
@@ -329,12 +373,10 @@ namespace VFXEditor.UI
             ImGui.EndTabItem();
         }
 
-        public void DrawHelp()
-        {
+        public void DrawHelp() {
             var ret = ImGui.BeginTabItem( "Help##MainInterfaceTabs" );
             if( !ret )
                 return;
-            // ==========================
             if( ImGui.Button( "Github" ) )
             {
                 Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
@@ -347,28 +389,16 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             ImGui.EndTabItem();
         }
 
-        // ======= HELPERS ============
-        public void BGtoPlayerVFX() {
-            // add new binder
-            VFXMain.BinderView.Group.Add( VFXMain.BinderView.OnNew() );
-            var _bd = VFXMain.BinderView.Group.Items[VFXMain.BinderView.Group.Items.Count - 1];
-
-            // turn all timeline item binders -> last binder idx
-            foreach( var tl in VFXMain.TimelineView.Group.Items ) {
-                foreach( var item in tl.Items ) {
-                    if(item.Item.EmitterIdx.Value >= 0 ) {
-                        item.BinderSelect.UnlinkFrom( item.BinderSelect.Selected );
-                        item.BinderSelect.LinkTo( _bd );
-                        item.BinderSelect.UpdateNode();
-                    }
-                }
-            }
+        public void Cleanup() {
+            SpawnVfx?.Remove();
         }
+
+        // ======= HELPERS ============
         public void OpenTemplate(string path ) {
             VFXSelectResult newResult = new VFXSelectResult();
             newResult.DisplayString = "[NEW]";
             newResult.Type = VFXSelectType.Local;
-            newResult.Path = Path.Combine( _plugin.TemplateLocation, "Files", path );
+            newResult.Path = Path.Combine( Plugin.TemplateLocation, "Files", path );
             _plugin.SelectAVFX( newResult );
         }
         public void SaveDialog( string filter, string data, string ext )

@@ -11,15 +11,12 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEffectorView : UIDropdownView<UIEffector>
     {
-        public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector" )
+        public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector", defaultPath: "effector_default.vfxedit" )
         {
             Group = UINode._Effectors;
             Group.Items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
         }
 
-        public override UIEffector OnNew() {
-            return new UIEffector(AVFX.addEffector(), this);
-        }
         public override void OnDelete( UIEffector item ) {
             AVFX.removeEffector( item.Effector );
         }

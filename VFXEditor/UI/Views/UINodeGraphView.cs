@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX {
         static ImGuiScene.TextureWrap GridPtr;
 
         public static void InitTex(Plugin plugin) {
-            var gridPath = Path.Combine( plugin.TemplateLocation, "Files", "grid.png" );
+            var gridPath = Path.Combine( Plugin.TemplateLocation, "Files", "grid.png" );
             GridPtr = plugin.PluginInterface.UiBuilder.LoadImage( gridPath );
         }
 

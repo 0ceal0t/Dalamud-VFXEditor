@@ -55,13 +55,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
-        {
-            Assigned = true;
-            SetDefault(Attributes);
-            SetVariety(EffectorVariety.Value);
-        }
-
         public override JToken toJSON()
         {
             JObject elem = new JObject();

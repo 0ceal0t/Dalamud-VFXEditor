@@ -17,50 +17,52 @@ namespace VFXEditor
     public class ResourceLoader : IDisposable
     {
         public Plugin Plugin { get; set; }
-
         public bool IsEnabled { get; set; }
-
         public Crc32 Crc32 { get; }
 
-        // Delegate prototypes
+        // ===== BASIC SETUP ======
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
-
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
-
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceSyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown );
-
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
-
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* LoadPlayerResourcesPrototype( IntPtr pResourceManager );
-
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* UnloadPlayerResourcesPrototype( IntPtr pResourceManager );
 
-        // Hooks
         public IHook< GetResourceSyncPrototype > GetResourceSyncHook { get; private set; }
         public IHook< GetResourceAsyncPrototype > GetResourceAsyncHook { get; private set; }
         public IHook< ReadSqpackPrototype > ReadSqpackHook { get; private set; }
-
-        // Unmanaged functions
         public ReadFilePrototype ReadFile { get; private set; }
 
+        //====== STATIC ===========
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr VfxCreateDelegate( string path, string pool );
+        public VfxCreateDelegate VfxCreate;
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr VfxRunDelegate( IntPtr vfx, float a1, uint a2 );
+        public VfxRunDelegate VfxRun;
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr VfxRemoveDelegate( IntPtr vfx );
+        public VfxRemoveDelegate VfxRemove;
 
-        public LoadPlayerResourcesPrototype LoadPlayerResources { get; private set; }
-        public UnloadPlayerResourcesPrototype UnloadPlayerResources { get; private set; }
+        // ======== ACTOR =============
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr StatusAddDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
+        public StatusAddDelegate StatusAdd;
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr StatusRemoveDelegate( IntPtr a1 );
+        public StatusRemoveDelegate StatusRemove;
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
+        public delegate IntPtr StatusDeallocDelegate( IntPtr a1, UInt64 a2 );
+        public StatusDeallocDelegate StatusDealloc;
 
-        // Object addresses
-        private IntPtr _playerResourceManagerAddress;
-        public IntPtr PlayerResourceManagerPtr => Marshal.ReadIntPtr( _playerResourceManagerAddress );
-
-
-        public bool LogAllFiles = false;
 #if !DEBUG
         public bool EnableHooks = true;
 #else
@@ -68,49 +70,40 @@ namespace VFXEditor
 #endif
 
 
-        public ResourceLoader( Plugin plugin )
-        {
+        public ResourceLoader( Plugin plugin ) {
             Plugin = plugin;
             Crc32 = new Crc32();
         }
 
-        // https://github.com/xivdev/Penumbra/blob/master/Penumbra/ResourceLoader.cs#L61
+        // https://github.com/xivdev/Penumbra/blob/master/Penumbra/ResourceLoader.cs
         public unsafe void Init()
         {
-            if( EnableHooks )
-            {
-                var scanner = Plugin.PluginInterface.TargetModuleScanner;
+            var scanner = Plugin.PluginInterface.TargetModuleScanner;
 
-                var readFileAddress =
-                    scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
-                var readSqpackAddress =
-                    scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
-                var getResourceSyncAddress =
-                    scanner.ScanText( "E8 ?? ?? 00 00 48 8D 4F ?? 48 89 87 ?? ?? 00 00" );
-                var getResourceAsyncAddress =
-                    scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
-
+            var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
+            var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
+            var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 4F ?? 48 89 87 ?? ?? 00 00" );
+            var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
+            if( EnableHooks ) {
                 ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress );
                 GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress );
                 GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress );
-
-                ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
-
-                /////
-
-                var loadPlayerResourcesAddress =
-                    scanner.ScanText(
-                        "E8 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? BA ?? ?? ?? ?? 41 B8 ?? ?? ?? ?? 48 8B 48 30 48 8B 01 FF 50 10 48 85 C0 74 0A " );
-                var unloadPlayerResourcesAddress =
-                    scanner.ScanText( "41 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4C 8B E9 48 83 C1 08" );
-                _playerResourceManagerAddress = scanner.GetStaticAddressFromSig( "0F 44 FE 48 8B 0D ?? ?? ?? ?? 48 85 C9 74 05" );
-
-                LoadPlayerResources = Marshal.GetDelegateForFunctionPointer<LoadPlayerResourcesPrototype>( loadPlayerResourcesAddress );
-                UnloadPlayerResources = Marshal.GetDelegateForFunctionPointer<UnloadPlayerResourcesPrototype>( unloadPlayerResourcesAddress );
                 ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
             }
-        }
 
+            var vfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
+            var vfxRunAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 0F 28 B4 24 ?? ?? ?? ?? 48 8B 8C 24 ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 5F" );
+            var vfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
+            var statusAddAddr = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
+            var statusRemoveAddr = scanner.ScanText( "40 53 48 83 EC 20 48 8D 05 ?? ?? ?? ?? 48 8B D9 48 89 01 48 8D 05 ?? ?? ?? ?? 48 89 81 ?? ?? ?? ?? 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 09 48 8B 01 48 8B D3" );
+            var statusDeallocAddr = scanner.ScanText( "48 85 C9 74 63 53 48 83 EC 20 48 83 3D ?? ?? ?? ?? ?? 48 8B D9 75 0A 48 83 C4 20 5B" );
+            StatusRemove = Marshal.GetDelegateForFunctionPointer<StatusRemoveDelegate>( statusRemoveAddr );
+            StatusAdd = Marshal.GetDelegateForFunctionPointer<StatusAddDelegate>( statusAddAddr );
+            VfxRemove = Marshal.GetDelegateForFunctionPointer<VfxRemoveDelegate>( vfxRemoveAddress );
+            VfxRun = Marshal.GetDelegateForFunctionPointer<VfxRunDelegate>( vfxRunAddress );
+            VfxCreate = Marshal.GetDelegateForFunctionPointer<VfxCreateDelegate>( vfxCreateAddress );
+            StatusDealloc = Marshal.GetDelegateForFunctionPointer<StatusDeallocDelegate>( statusDeallocAddr );
+        }
 
         private unsafe void* GetResourceSyncHandler(
             IntPtr pFileManager,
@@ -157,11 +150,6 @@ namespace VFXEditor
         {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
-            if( LogAllFiles )
-            {
-                PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
-            }
-
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
             var lp = Plugin.Doc.GetLocalPath( gameFsPath );
@@ -171,24 +159,18 @@ namespace VFXEditor
             }
             var fsPath = replaceFile?.FullName;
 
-            // path must be < 260 because statically defined array length :(
             if( fsPath == null || fsPath.Length >= 260 )
             {
                 return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
             }
-
             var cleanPath = fsPath.Replace( '\\', '/' );
             var path = Encoding.ASCII.GetBytes( cleanPath );
             var bPath = stackalloc byte[path.Length + 1];
             Marshal.Copy( path, 0, new IntPtr( bPath ), path.Length );
             pPath = ( char* )bPath;
-
             Crc32.Init();
             Crc32.Update( path );
             *pResourceHash = Crc32.Checksum;
-#if DEBUG
-            PluginLog.Log( "[GetResourceHandler] resolved {GamePath} to {NewPath}", gameFsPath, fsPath );
-#endif
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
         }
 
@@ -196,16 +178,11 @@ namespace VFXEditor
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync )
         {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pFileDesc->ResourceHandle->FileName ) );
-
             var isRooted = Path.IsPathRooted( gameFsPath );
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted )
             {
                 return ReadSqpackHook.OriginalFunction( pFileHandler, pFileDesc, priority, isSync );
             }
-
-#if DEBUG
-            PluginLog.Log( "loading modded file: {GameFsPath}", gameFsPath );
-#endif
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
             // note: must be utf16
@@ -214,41 +191,29 @@ namespace VFXEditor
             var fd = stackalloc byte[0x20 + utfPath.Length + 0x16];
             Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
             pFileDesc->FileDescriptor = fd;
-
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
         }
-
-        public unsafe void ReloadPlayerResource()
-        {
-            ReRender();
-            //UnloadPlayerResources( PlayerResourceManagerPtr );
-            //LoadPlayerResources( PlayerResourceManagerPtr );
-        }
-
 
         // https://github.com/imchillin/Anamnesis/blob/0ba09fcd7fb1ec1ed13b22ab9e5b2cea6926f113/Anamnesis/Core/Memory/AddressService.cs
         // https://github.com/imchillin/CMTool/blob/a1af42ceab86700d4d1b21b5ba61079ad79fd2f2/ConceptMatrix/OffsetSettings.json#L69
         // https://git.ava.dev/ava/OopsAllLalafells/src/branch/master/Plugin.cs#L145
         public unsafe void ReRender()
         {
-            if( EnableHooks )
+            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
+            var charBaseAddr = player.Address;
+
+            Task.Run( () =>
             {
-                var player = Plugin.PluginInterface.ClientState.LocalPlayer;
-                var charBaseAddr = player.Address;
+                var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
+                var renderOffset = charBaseAddr + 0x104;
 
-                Task.Run( () =>
-                {
-                    var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
-                    var renderOffset = charBaseAddr + 0x104;
-
-                    Marshal.WriteByte( entityOffset, 0x02 );
-                    Marshal.WriteByte( renderOffset, 0x02 );
-                    Thread.Sleep( 100 );
-                    Marshal.WriteByte( renderOffset, 0x00 );
-                    Thread.Sleep( 100 );
-                    Marshal.WriteByte( entityOffset, 0x01 );
-                } );
-            }
+                Marshal.WriteByte( entityOffset, 0x02 );
+                Marshal.WriteByte( renderOffset, 0x02 );
+                Thread.Sleep( 100 );
+                Marshal.WriteByte( renderOffset, 0x00 );
+                Thread.Sleep( 100 );
+                Marshal.WriteByte( entityOffset, 0x01 );
+            } );
         }
 
         public void Enable()
@@ -260,6 +225,7 @@ namespace VFXEditor
                 ReadSqpackHook.Activate();
                 GetResourceSyncHook.Activate();
                 GetResourceAsyncHook.Activate();
+
 
                 ReadSqpackHook.Enable();
                 GetResourceSyncHook.Enable();

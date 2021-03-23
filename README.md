@@ -38,6 +38,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Export dependencies
+- [ ] Highlight important
 
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
@@ -48,7 +50,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show emitter vertices
 - [ ] More texture export options
 - [ ] Merge A8 into Lumina
-- [ ] UV view
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
@@ -71,9 +72,13 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
 - [ ] Better readability (colored  text)
-- [ ] Export raw texture
 
 ---
+- [x] ~~Spawn vfx (on ground + on self)~~
+- [x] ~~Lock required fields from being deleted~~
+- [x] ~~Better "NEW" particles/binders/etc.~~
+- [x] ~~Export raw texture~~
+- [x] ~~UV view~~
 - [x] ~~Change all 3 revised scale at the same time~~
 - [x] AVFX version
 - [x] ~~Properly fix literal int list~~

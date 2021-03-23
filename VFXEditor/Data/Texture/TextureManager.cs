@@ -45,19 +45,22 @@ namespace VFXEditor
             } );
         }
 
-        public TexData CreateTexture(string path )
+        public TexData CreateTexture(string path, bool loadImage = true )
         {
             var result = _plugin.PluginInterface.Data.FileExists( path );
             if( result )
             {
                 try
                 {
+                    var ret = new TexData();
+
                     var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
                     var data = Cleanup( texFile.ImageData );
-                    var texBind = _plugin.PluginInterface.UiBuilder.LoadImageRaw( data, texFile.Header.Width, texFile.Header.Height, 4 );
-                    var ret = new TexData();
                     ret.Data = data;
-                    ret.Wrap = texBind;
+                    if( loadImage ) {
+                        var texBind = _plugin.PluginInterface.UiBuilder.LoadImageRaw( data, texFile.Header.Width, texFile.Header.Height, 4 );
+                        ret.Wrap = texBind;
+                    }
                     ret.Width = texFile.Header.Width;
                     ret.Height = texFile.Header.Height;
                     return ret;

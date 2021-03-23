@@ -27,6 +27,8 @@ namespace VFXEditor
 
         public MainInterface MainUI;
 
+        public static string TemplateLocation;
+
         public AVFXBase AVFX {
             get { return Doc.ActiveDoc.AVFX; }
             set { Doc.ActiveDoc.AVFX = value; }
@@ -41,9 +43,10 @@ namespace VFXEditor
             get { return Doc.ActiveDoc.Replace.DisplayString; }
         }
 
-        public string TemplateLocation;
         public string WriteLocation;
         public string PluginDebugTitleStr;
+
+        public bool hookStuff = false;
 
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
         public void Initialize( DalamudPluginInterface pluginInterface ) {
@@ -66,12 +69,13 @@ namespace VFXEditor
                 HelpMessage = "/vfxedit - toggle ui"
             } );
 
-#if !DEBUG
-            TemplateLocation = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location );
-#else
-            TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
-#endif
             PluginDebugTitleStr = $"{Name} - Debug Build";
+
+            #if !DEBUG
+                    TemplateLocation = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location );
+            #else
+                    TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
+            #endif
 
             ResourceLoader.Init();
             ResourceLoader.Enable();
@@ -157,12 +161,15 @@ namespace VFXEditor
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();
+            MainUI?.Cleanup();
             ResourceLoader.Dispose();
             DXManager.Dispose();
             Doc.Cleanup();
         }
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;
+
+            hookStuff = true;
         }
     }
 }
