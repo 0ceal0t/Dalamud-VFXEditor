@@ -38,9 +38,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Export dependencies
+- [ ] Export/Import dependencies
+- [ ] Cutscene VFX select
 - [ ] Highlight important
-
+- [ ] Statuses show icon
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
@@ -64,7 +65,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
-- [ ] Cutscene VFX select
 - [ ] Better error / log display
 - [ ] Open from equipped weapon
 - [ ] Better TMB parsing

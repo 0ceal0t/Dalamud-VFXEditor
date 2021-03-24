@@ -1,10 +1,12 @@
 using AVFXLib.Models;
+using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,36 +41,31 @@ namespace VFXEditor.UI.VFX
 
         public override void Draw( string parentId = "" )
         {
+            ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
+            ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
+            ImGui.BeginChild( "Child" + Id, new Vector2( ImGui.GetWindowWidth() - 0, 33 ) );
+            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 5, 5 ) );
+            ImGui.PopStyleColor();
             ViewSelect();
+
+            ImGui.PushFont( UiBuilder.IconFont );
             if( AllowNew )
             {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "+ New" + Id ) )
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) )
                 {
                     ImGui.OpenPopup( "New_Popup" + Id );
-                }
-                if( ImGui.BeginPopup( "New_Popup" + Id ) )
-                {
-                    if( ImGui.Selectable( "Create" + Id ) )
-                    {
-                        Load( DefaultPath );
-                    }
-                    if( ImGui.Selectable("Import" + Id ) )
-                    {
-                        LoadDialog();
-                    }
-                    ImGui.EndPopup();
                 }
             }
             if( Selected != null && AllowDelete )
             {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Save" + Id ) )
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) )
                 {
                     SaveDialog( Selected );
                 }
                 ImGui.SameLine();
-                if( UIUtils.RemoveButton( "Delete" + Id, small:true) )
+                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id) )
                 {
                     Group.Remove( Selected );
                     Selected.DeleteNode();
@@ -76,7 +73,22 @@ namespace VFXEditor.UI.VFX
                     Selected = null;
                 }
             }
+            ImGui.PopFont();
+
+            if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
+                if( ImGui.Selectable( "Create" + Id ) ) {
+                    Load( DefaultPath );
+                }
+                if( ImGui.Selectable( "Import" + Id ) ) {
+                    LoadDialog();
+                }
+                ImGui.EndPopup();
+            }
+
             ImGui.Separator();
+            ImGui.EndChild();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             // ====================
             if( Selected != null )
             {

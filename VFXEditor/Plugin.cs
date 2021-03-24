@@ -71,6 +71,7 @@ namespace VFXEditor
 
             PluginDebugTitleStr = $"{Name} - Debug Build";
 
+
             #if !DEBUG
                     TemplateLocation = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location );
             #else

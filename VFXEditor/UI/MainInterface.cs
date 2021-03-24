@@ -102,7 +102,7 @@ namespace VFXEditor.UI
             DrawSettings();
             DrawHelp();
             ImGui.EndTabBar();
-            ImGui.Separator();
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( VFXMain == null )
@@ -169,9 +169,6 @@ namespace VFXEditor.UI
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                ImGui.Separator();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                //================================
                 VFXMain.Draw();
             }
             ImGui.End();
@@ -204,7 +201,12 @@ namespace VFXEditor.UI
             if( !ret )
                 return;
             // ==========================
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
+            ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
+            ImGui.BeginChild( "Child##MainInterface", new Vector2( ImGui.GetWindowWidth() - 0, 60 ) );
+            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 5, 5 ) );
+            ImGui.PopStyleColor();
+
             ImGui.Columns( 4, "MainInterfaceFileColumns", false );
 
             ImGui.SetColumnWidth( 0, 80 );
@@ -215,14 +217,14 @@ namespace VFXEditor.UI
 
             string sourceString = _plugin.SourceString;
             string previewString = _plugin.ReplaceString;
-            ImGui.SetColumnWidth( 1, 500 );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 250 );
+            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 10 );
             ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() );
             ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+            ImGui.PopItemWidth();
             ImGui.NextColumn();
 
-            ImGui.SetColumnWidth( 2, 70 );
+            ImGui.SetColumnWidth( 2, 67 );
 
 
             ImGui.PushFont( UiBuilder.IconFont );
@@ -297,7 +299,9 @@ namespace VFXEditor.UI
             }
 
             ImGui.Columns( 1 );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
+            ImGui.EndChild();
+
             ImGui.EndTabItem();
         }
 
@@ -347,6 +351,9 @@ namespace VFXEditor.UI
                     }
                 }
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
             ImGui.EndTabItem();
         }
 
@@ -370,6 +377,9 @@ namespace VFXEditor.UI
             {
                 _plugin.Configuration.Save();
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
             ImGui.EndTabItem();
         }
 
@@ -386,6 +396,9 @@ If you want to make the modification permanent, you will need to create a mod us
 
 If you are having issues loading a VFX, please open a Github issue. Make sure to specify either the in-game path of the VFX file or attach the file directly."
         );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
             ImGui.EndTabItem();
         }
 
