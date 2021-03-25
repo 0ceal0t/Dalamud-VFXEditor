@@ -1,6 +1,7 @@
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,8 +23,8 @@ namespace VFXEditor {
         }
 
         public Plugin _plugin;
-        public Dictionary<IntPtr, ActorData> ActorVfxs;
-        public Dictionary<IntPtr, StaticData> StaticVfxs;
+        public ConcurrentDictionary<IntPtr, ActorData> ActorVfxs;
+        public ConcurrentDictionary<IntPtr, StaticData> StaticVfxs;
 
         public VfxTracker(Plugin plugin ) {
             _plugin = plugin;
@@ -36,12 +37,12 @@ namespace VFXEditor {
                 actor = actor,
                 path = path
             };
-            ActorVfxs.Add( vfx, data );
+            ActorVfxs.TryAdd( vfx, data );
         }
         public void RemoveActor(IntPtr vfx) {
             if( !Enabled ) return;
             if( ActorVfxs.ContainsKey( vfx ) ) {
-                ActorVfxs.Remove( vfx );
+                ActorVfxs.TryRemove( vfx, out var value );
             }
         }
 
@@ -51,12 +52,12 @@ namespace VFXEditor {
             StaticData data = new StaticData() {
                 path = path
             };
-            StaticVfxs.Add( vfx, data );
+            StaticVfxs.TryAdd( vfx, data );
         }
         public void RemoveStatic(IntPtr vfx ) {
             if( !Enabled ) return;
             if( StaticVfxs.ContainsKey( vfx ) ) {
-                StaticVfxs.Remove( vfx );
+                StaticVfxs.TryRemove( vfx, out var value );
             }
         }
 
@@ -162,8 +163,8 @@ namespace VFXEditor {
         }
 
         public void Reset() {
-            ActorVfxs = new Dictionary<IntPtr, ActorData>();
-            StaticVfxs = new Dictionary<IntPtr, StaticData>();
+            ActorVfxs = new ConcurrentDictionary<IntPtr, ActorData>();
+            StaticVfxs = new ConcurrentDictionary<IntPtr, StaticData>();
         }
 
         public static float Distance(Vector3 p1, SharpDX.Vector3 p2 ) {

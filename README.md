@@ -9,8 +9,8 @@ A VFX editing plugin for Dalamud  ([Wiki](https://xiv.dev/game-data/visual-effec
 3. Once installed, open with `/vfxedit`
 
 ## Usage
-1. Select a "source" VFX (the effect you want to edit)
-2. Select a "replace" VFX (the effect to temporarily overwrite, can be the same as the source)
+1. Select a "Data Source" VFX (the effect you want to edit)
+2. Select a "Preview On" VFX (the effect to temporarily overwrite, can be the same as the source)
 3. Make any modifications you want, then press "Update"
 
 Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting)
@@ -38,6 +38,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Live view in cutscenes
 - [ ] Export/Import dependencies
 - [ ] Cutscene VFX select
 - [ ] Highlight important
@@ -81,7 +82,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Export raw texture~~
 - [x] ~~UV view~~
 - [x] ~~Change all 3 revised scale at the same time~~
-- [x] AVFX version
+- [x] ~~AVFX version~~
 - [x] ~~Properly fix literal int list~~
 - [x] ~~Linking between objects (`emitterIdx = 1` links to `Emitters[1]`, if it exists)~~
 - [x] ~~Drag point snapping~~

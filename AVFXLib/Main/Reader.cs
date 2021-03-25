@@ -189,7 +189,7 @@ namespace AVFXLib.Main
             "TexNR"
         });
 
-        static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{ // not nested, larget than 8 bytes
+        static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{ // not nested, larger than 8 bytes
             "Clip",
             "Keys",
             "Tex",
