@@ -269,6 +269,13 @@ namespace VFXEditor.UI
             }
             ImGui.PopStyleColor();
 
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{(!_plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash)}##MainInterfaceFiles-MarkVfx" ) ) {
+                _plugin.Tracker.Enabled = !_plugin.Tracker.Enabled;
+            }
+            ImGui.PopFont();
+
             string previewSpawn = _plugin.Doc.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if(SpawnVfx == null ) {

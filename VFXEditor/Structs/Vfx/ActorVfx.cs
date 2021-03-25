@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Plugin;
 
 namespace VFXEditor.Structs.Vfx {
     public class ActorVfx : BaseVfx {
@@ -12,8 +13,7 @@ namespace VFXEditor.Structs.Vfx {
         }
 
         public override void Remove() {
-            _Plugin.ResourceLoader.StatusRemove( Vfx );
-            _Plugin.ResourceLoader.StatusDealloc( Vfx, 0x1d0 );
+             _Plugin.ResourceLoader.StatusRemove( Vfx, (char)1 );
         }
     }
 }

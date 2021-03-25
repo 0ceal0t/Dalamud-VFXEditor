@@ -79,8 +79,14 @@ namespace VFXEditor {
         }
 
         public string GetLocalPath(string gamePath ) {
-            if( GamePathToLocalPath.ContainsKey( gamePath ) )
+            if( GamePathToLocalPath.ContainsKey( gamePath ) ) {
+                foreach(var doc in Docs) {
+                    if(doc.WriteLocation == GamePathToLocalPath[gamePath] && doc.Source.DisplayString == "[NONE]" ) { // if it's not being replaced by anything, don't bother
+                        return "";
+                    }
+                }
                 return GamePathToLocalPath[gamePath];
+            }
             return "";
         }
 

@@ -24,6 +24,7 @@ namespace VFXEditor
         public DocManager Doc;
         public DataManager Manager;
         public DirectXManager DXManager;
+        public VfxTracker Tracker;
 
         public MainInterface MainUI;
 
@@ -45,8 +46,6 @@ namespace VFXEditor
 
         public string WriteLocation;
         public string PluginDebugTitleStr;
-
-        public bool hookStuff = false;
 
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
         public void Initialize( DalamudPluginInterface pluginInterface ) {
@@ -78,6 +77,7 @@ namespace VFXEditor
                     TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
             #endif
 
+            Tracker = new VfxTracker( this );
             ResourceLoader.Init();
             ResourceLoader.Enable();
             Manager = new DataManager( this );
@@ -89,6 +89,7 @@ namespace VFXEditor
 
             PluginInterface.UiBuilder.OnBuildUi += DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += Tracker.Draw;
         }
 
         public DateTime LastSelect = DateTime.Now;
@@ -159,6 +160,7 @@ namespace VFXEditor
         public void Dispose() {
             PluginInterface.UiBuilder.OnBuildUi -= DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= Tracker.Draw;
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface.Dispose();
@@ -169,8 +171,6 @@ namespace VFXEditor
         }
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;
-
-            hookStuff = true;
         }
     }
 }

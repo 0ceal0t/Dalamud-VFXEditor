@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Plugin;
 
 namespace VFXEditor.Structs.Vfx {
     public class StaticVfx : BaseVfx {
