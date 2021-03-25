@@ -15,7 +15,7 @@ namespace VFXEditor.Structs.Vfx {
             _Plugin.ResourceLoader.VfxRun( Vfx, 0.0f, 0xFFFFFFFF );
             UpdatePosition( position );
         }
-
+        
         public override void Remove() {
             _Plugin.ResourceLoader.VfxRemove( Vfx );
         }

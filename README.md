@@ -74,6 +74,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Vfx live viewer~~
 - [x] ~~Spawn vfx (on ground + on self)~~
 - [x] ~~Lock required fields from being deleted~~
 - [x] ~~Better "NEW" particles/binders/etc.~~
