@@ -25,11 +25,11 @@ namespace VFXEditor.UI.VFX
         {
             return item.Timeline.toAVFX().toBytes();
         }
-        public override UITimeline OnImport( AVFXNode node, bool imported = false ) {
+        public override UITimeline OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXTimeline item = new AVFXTimeline();
             item.read( node );
             AVFX.addTimeline( item );
-            return new UITimeline( item, this, imported );
+            return new UITimeline( item, this, has_dependencies );
         }
     }
 }

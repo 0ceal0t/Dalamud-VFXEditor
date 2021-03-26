@@ -22,11 +22,11 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIParticle item ) {
             return item.Particle.toAVFX().toBytes();
         }
-        public override UIParticle OnImport( AVFXNode node, bool imported = false ) {
+        public override UIParticle OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXParticle item = new AVFXParticle();
             item.read( node );
             AVFX.addParticle( item );
-            return new UIParticle( item, this, imported );
+            return new UIParticle( item, this, has_dependencies );
         }
     }
 }

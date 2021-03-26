@@ -18,11 +18,9 @@ namespace VFXEditor.UI.VFX
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler(AVFXSchedule scheduler, UIScheduleView view)
-        {
+        public UIScheduler(AVFXSchedule scheduler, UIScheduleView view ) : base( SchedColor, false ) {
             Scheduler = scheduler;
             View = view;
-            _Color = TextureColor;
 
             // ===================
             Items = new List<UISchedulerItem>();

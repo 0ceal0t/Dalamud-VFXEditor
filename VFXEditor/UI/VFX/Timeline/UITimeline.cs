@@ -21,12 +21,9 @@ namespace VFXEditor.UI.VFX
 
         public UINodeSelect<UIBinder> BinderSelect;
 
-        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool imported = false )
-        {
+        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool has_dependencies = false ) : base( TimelineColor, has_dependencies ) {
             Timeline = timeline;
             View = view;
-            _Color = TimelineColor;
-            Imported = imported;
             BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINode._Binders, Timeline.BinderIdx );
             //===============
             Items = new List<UITimelineItem>();

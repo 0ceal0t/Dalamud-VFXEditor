@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
@@ -98,7 +100,7 @@ namespace VFXEditor.UI.VFX
         // ===================
         // export the current node, along with all of its dependencies. this is tricky, since when imported, the indexes are going to be different
         // so when exporting, normalize all of the indexes first
-        public byte[] ExportDeps(UINode startNode) {
+        public void ExportDeps(UINode startNode, BinaryWriter bw) {
             List<UINode> nodes = new List<UINode>();
             RecurseChild( startNode, nodes );
             Dictionary<UINode, int> IdxSave = new Dictionary<UINode, int>(); // save these to restore afterwards, since we don't want to modify the current document
@@ -115,28 +117,19 @@ namespace VFXEditor.UI.VFX
             FilterByType<UIModel>( nodes );
 
             UpdateAllNodes( nodes );
-
-            byte[] data;
-            using( MemoryStream ms = new MemoryStream() ) {
-                using( BinaryWriter bw = new BinaryWriter( ms ) ) {
-                    foreach( var n in nodes ) {
-                        bw.Write( n.toBytes() );
-                    }
-                    data = ms.ToArray();
-                }
+            foreach( var n in nodes ) {
+                bw.Write( n.toBytes() );
             }
-
             foreach( var n in nodes ) {
                 n.Idx = IdxSave[n];
             }
             UpdateAllNodes( nodes );
-            return data;
         }
         public void RecurseChild( UINode node, List<UINode> output ) {
             foreach( var n in node.Children ) {
                 RecurseChild( n, output );
             }
-            if( output.Contains( node ) ) return;
+            if( output.Contains( node ) ) return; // make sure elements get added AFTER their children
             output.Add( node );
         }
 
@@ -156,31 +149,70 @@ namespace VFXEditor.UI.VFX
                 }
             }
         }
-        public void ImportData( byte[] data ) {
-            var nodes = AVFXLib.Main.Reader.readDef( new BinaryReader( new MemoryStream( data ) ) );
-            var has_dependencies = nodes.Count >= 2;
-            
-        }
-        public void ProcessNode( AVFXLib.AVFX.AVFXNode node ) {
-            switch( node.Name ) {
-                case "Tmln":
-                    break;
-                case "Emit":
-                    break;
-                case "Efct":
-                    break;
-                case "Bind":
-                    break;
-                case "Ptcl":
-                    break;
-                case "Tex":
-                    break;
-                case "Modl":
-                    AVFXModel model = new AVFXModel();
-                    model.read( node );
-                    AVFX.addModel( model );
-                    break;
+        public void ImportData(string path ) {
+            using( BinaryReader reader = new BinaryReader( File.Open( path, FileMode.Open ) ) ) {
+                ImportData( reader );
             }
+        }
+        public void ImportData(byte[] data ) {
+            ImportData( new BinaryReader( new MemoryStream( data ) ) );
+        }
+        public void ImportData( BinaryReader br ) {
+            var nodes = AVFXLib.Main.Reader.readDef( br );
+            var has_dependencies = nodes.Count >= 2;
+            nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add(ModelView.OnImport( node )) );
+            nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add(TextureView.OnImport( node )) );
+            nodes.Where( x => x.Name == "Bind" ).ToList().ForEach( node => BinderView.Group.Add(BinderView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "Efct" ).ToList().ForEach( node => EffectorView.Group.Add(EffectorView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add(ParticleView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "Tmln" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
+        }
+
+        public void ExportDialog(UINode node, bool with_dependencies = false ) {
+            Task.Run( async () => {
+                var picker = new SaveFileDialog {
+                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
+                    Title = "Select a Save Location.",
+                    DefaultExt = "vfxedit",
+                    AddExtension = true
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK ) {
+                    try {
+                        if( with_dependencies ) {
+                            using( BinaryWriter writer = new BinaryWriter( File.Open( picker.FileName, FileMode.Create ) ) ) {
+                                ExportDeps( node, writer );
+                            }
+                        }
+                        else {
+                            File.WriteAllBytes( picker.FileName, node.toBytes() );
+                        }
+                    }
+                    catch( Exception ex ) {
+                        PluginLog.LogError( ex, "Could not select a file" );
+                    }
+                }
+            } );
+        }
+
+        public void ImportDialog() {
+            Task.Run( async () => {
+                var picker = new OpenFileDialog {
+                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
+                    Title = "Select a File Location.",
+                    CheckFileExists = true
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK ) {
+                    try {
+                        ImportData( picker.FileName );
+                    }
+                    catch( Exception ex ) {
+                        PluginLog.LogError( ex, "Could not select a file" );
+                    }
+                }
+            } );
         }
     }
 }

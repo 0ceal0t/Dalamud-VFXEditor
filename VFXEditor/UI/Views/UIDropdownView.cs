@@ -38,7 +38,7 @@ namespace VFXEditor.UI.VFX
         public abstract void OnDelete( T item );
         public abstract byte[] OnExport( T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node, bool imported = false );
+        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node, bool has_dependencies = false );
 
         public override void Draw( string parentId = "" ) {
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
@@ -58,7 +58,7 @@ namespace VFXEditor.UI.VFX
             if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) ) {
-                    SaveDialog( Selected );
+                    ImGui.OpenPopup( "Save_Popup" + Id );
                 }
                 ImGui.SameLine();
                 if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
@@ -69,13 +69,23 @@ namespace VFXEditor.UI.VFX
                 }
             }
             ImGui.PopFont();
-
+            // ===== NEW =====
             if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
                 if( ImGui.Selectable( "Create" + Id ) ) {
-                    Load( DefaultPath );
+                    Main.ImportData( DefaultPath );
                 }
                 if( ImGui.Selectable( "Import" + Id ) ) {
-                    LoadDialog();
+                    Main.ImportDialog();
+                }
+                ImGui.EndPopup();
+            }
+            // ==== SAVE =====
+            if( ImGui.BeginPopup( "Save_Popup" + Id ) ) {
+                if( ImGui.Selectable( "Selected" + Id ) ) {
+                    Main.ExportDialog( Selected, with_dependencies: false);
+                }
+                if( ImGui.Selectable( "Selected + Dependencies" + Id ) ) {
+                    Main.ExportDialog( Selected, with_dependencies: true );
                 }
                 ImGui.EndPopup();
             }
@@ -102,53 +112,6 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndCombo();
             }
-        }
-        // ========= DIALOGS ==================
-        public void LoadDialog()
-        {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog
-                {
-                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
-                    Title = "Select a File Location.",
-                    CheckFileExists = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    Load( picker.FileName );
-                }
-            } );
-        }
-
-        public void Load(string path ) {
-            var node = AVFXLib.Main.Reader.readAVFX( path, out List<string> messages );
-            foreach( string message in messages ) {
-                PluginLog.Log( message );
-            }
-            Group.Add( OnImport( node ) );
-        }
-
-        public void SaveDialog( T item)
-        {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "vfxedit",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    try {
-                        var data = OnExport( item );
-                        File.WriteAllBytes( picker.FileName, data );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a file" );
-                    }
-                }
-            } );
         }
     }
 }

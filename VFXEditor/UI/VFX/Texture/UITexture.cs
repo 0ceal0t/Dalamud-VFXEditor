@@ -22,11 +22,9 @@ namespace VFXEditor.UI.VFX
         public UIString Path;
         public UINodeGraphView NodeView;
 
-        public UITexture(AVFXTexture texture, UITextureView view)
-        {
+        public UITexture(AVFXTexture texture, UITextureView view ) : base( TextureColor, false ) {
             View = view;
             Texture = texture;
-            _Color = TextureColor;
             NodeView = new UINodeGraphView( this );
             Manager = view.Manager;
             // ================

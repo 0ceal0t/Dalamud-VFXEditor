@@ -34,11 +34,9 @@ namespace VFXEditor.UI.VFX
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
 
-        public UIParticle( AVFXParticle particle, UIParticleView view, bool imported = false ) {
+        public UIParticle( AVFXParticle particle, UIParticleView view, bool has_dependencies = false ) : base( ParticleColor, has_dependencies ) {
             Particle = particle;
             View = view;
-            _Color = ParticleColor;
-            Imported = imported;
             NodeView = new UINodeGraphView( this );
             // =======================
             Animation = new List<UIItem>();

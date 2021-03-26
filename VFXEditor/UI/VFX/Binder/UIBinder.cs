@@ -19,12 +19,9 @@ namespace VFXEditor.UI.VFX
         public UIItemSplitView<UIBinderProperties> PropSplit;
         public UINodeGraphView NodeView;
 
-        public UIBinder(AVFXBinder binder, UIBinderView view, bool imported = false)
-        {
+        public UIBinder(AVFXBinder binder, UIBinderView view, bool has_dependencies = false) : base(BinderColor, has_dependencies) {
             Binder = binder;
             View = view;
-            _Color = BinderColor;
-            Imported = imported;
             NodeView = new UINodeGraphView( this );
             //=====================
             Properties = new List<UIBinderProperties>();

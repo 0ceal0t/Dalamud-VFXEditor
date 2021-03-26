@@ -21,11 +21,11 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIEmitter item ) {
             return item.Emitter.toAVFX().toBytes();
         }
-        public override UIEmitter OnImport( AVFXNode node, bool imported = false ) {
+        public override UIEmitter OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXEmitter item = new AVFXEmitter();
             item.read( node );
             AVFX.addEmitter( item );
-            return new UIEmitter( item, this, imported );
+            return new UIEmitter( item, this, has_dependencies );
         }
     }
 }

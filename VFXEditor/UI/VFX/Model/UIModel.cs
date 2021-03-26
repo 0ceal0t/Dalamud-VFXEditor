@@ -20,9 +20,8 @@ namespace VFXEditor.UI.VFX
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
 
-        public UIModel( AVFXModel model, UIModelView view ) {
+        public UIModel( AVFXModel model, UIModelView view ) : base( ModelColor, false ) {
             Model = model;
-            _Color = ModelColor;
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();

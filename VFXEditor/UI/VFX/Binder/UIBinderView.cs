@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIBinder item ) {
             return item.Binder.toAVFX().toBytes();
         }
-        public override UIBinder OnImport( AVFXNode node, bool imported = false ) {
+        public override UIBinder OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXBinder item = new AVFXBinder();
             item.read( node );
             AVFX.addBinder( item );

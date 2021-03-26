@@ -16,12 +16,9 @@ namespace VFXEditor.UI.VFX
         public UIData Data;
         public UINodeGraphView NodeView;
 
-        public UIEffector(AVFXEffector effector, UIEffectorView view, bool imported = false )
-        {
+        public UIEffector(AVFXEffector effector, UIEffectorView view, bool has_dependencies = false ) : base( EffectorColor, has_dependencies ) {
             Effector = effector;
             View = view;
-            _Color = EffectorColor;
-            Imported = imported;
             NodeView = new UINodeGraphView( this );
             //======================
             Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, changeFunction: ChangeType );

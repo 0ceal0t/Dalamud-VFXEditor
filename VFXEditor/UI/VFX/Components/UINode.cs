@@ -60,9 +60,14 @@ namespace VFXEditor.UI.VFX {
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
-        public bool Imported;
+        public bool HasDependencies;
 
         public UINodeGraph Graph = null;
+
+        public UINode(uint color, bool has_dependencies) {
+            _Color = color;
+            HasDependencies = has_dependencies;
+        }
 
         public void DeleteNode() {
             foreach( var node in Children ) {
@@ -280,7 +285,7 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
-            if( Node.Imported && val > 0 ) {
+            if( Node.HasDependencies && val > 0 ) {
                 val += Group.Items.Count;
                 Literal.GiveValue( val );
                 PluginLog.Log( $"Imported node {val}" );
@@ -289,7 +294,7 @@ namespace VFXEditor.UI.VFX {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
-            Node.Imported = false;
+            Node.HasDependencies = false;
         }
 
         public override void DeleteNode( UINode node ) {
@@ -390,7 +395,7 @@ namespace VFXEditor.UI.VFX {
         public override void SetupNode() {
             for(int i = 0; i < Literal.Value.Count; i++ ) {
                 var val = Literal.Value[i];
-                if( Node.Imported && val != 255 ) {
+                if( Node.HasDependencies && val != 255 ) {
                     val += Group.Items.Count;
                     Literal.GiveValue( val, i );
                     PluginLog.Log( $"Imported list {val}" );
@@ -404,7 +409,7 @@ namespace VFXEditor.UI.VFX {
                     Selected.Add( null );
                 }
             }
-            Node.Imported = false;
+            Node.HasDependencies = false;
         }
 
         public override void DeleteNode( UINode node ) {
