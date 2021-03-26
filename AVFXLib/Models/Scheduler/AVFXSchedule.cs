@@ -12,15 +12,15 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Schd";
 
-        public LiteralInt ItemCount = new LiteralInt("itemCount", "ItCn");
-        public LiteralInt TriggerCount = new LiteralInt("triggerCount", "TrCn");
+        public LiteralInt ItemCount = new LiteralInt("ItCn");
+        public LiteralInt TriggerCount = new LiteralInt("TrCn");
 
         public List<AVFXScheduleSubItem> Items = new List<AVFXScheduleSubItem>();
         public List<AVFXScheduleSubItem> Triggers = new List<AVFXScheduleSubItem>();
 
         List<Base> Attributes;
 
-        public AVFXSchedule() : base("schedules", NAME)
+        public AVFXSchedule() : base(NAME)
         {
             Attributes = new List<Base>(new Base[] {
                 ItemCount,
@@ -83,28 +83,6 @@ namespace AVFXLib.Models
         public void removeItem(AVFXScheduleSubItem item ) {
             Items.Remove( item );
             ItemCount.GiveValue( Items.Count() );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-
-            JArray itemArray = new JArray();
-            foreach (AVFXScheduleSubItem item in Items)
-            {
-                itemArray.Add(item.toJSON());
-            }
-            elem["items"] = itemArray;
-
-            JArray triggerArray = new JArray();
-            foreach (AVFXScheduleSubItem trigger in Triggers)
-            {
-                triggerArray.Add(trigger.toJSON());
-            }
-            elem["triggers"] = triggerArray;
-
-            return elem;
         }
 
         public override AVFXNode toAVFX()

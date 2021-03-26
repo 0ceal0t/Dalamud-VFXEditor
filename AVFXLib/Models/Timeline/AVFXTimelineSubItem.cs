@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,18 +10,18 @@ namespace AVFXLib.Models
 {
     public class AVFXTimelineSubItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralInt StartTime = new LiteralInt("startTime", "StTm");
-        public LiteralInt EndTime = new LiteralInt("endTime", "EdTm");
-        public LiteralInt BinderIdx = new LiteralInt("binderIdx", "BdNo");
-        public LiteralInt EffectorIdx = new LiteralInt("effectorIdx", "EfNo");
-        public LiteralInt EmitterIdx = new LiteralInt("emitterIdx", "EmNo");
-        public LiteralInt Platform = new LiteralInt("platform", "Plfm");
-        public LiteralInt ClipNumber = new LiteralInt("clipIdx", "ClNo");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralInt StartTime = new LiteralInt("StTm");
+        public LiteralInt EndTime = new LiteralInt("EdTm");
+        public LiteralInt BinderIdx = new LiteralInt("BdNo");
+        public LiteralInt EffectorIdx = new LiteralInt("EfNo");
+        public LiteralInt EmitterIdx = new LiteralInt("EmNo");
+        public LiteralInt Platform = new LiteralInt("Plfm");
+        public LiteralInt ClipNumber = new LiteralInt("ClNo");
 
         List<Base> Attributes;
 
-        public AVFXTimelineSubItem() : base("subItem", "SubItem")
+        public AVFXTimelineSubItem() : base("SubItem")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -48,13 +48,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

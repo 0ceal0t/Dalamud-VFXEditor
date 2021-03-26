@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,15 +15,15 @@ namespace AVFXLib.Models
 
         public bool Enabled;
 
-        public LiteralFloat Value = new LiteralFloat("value", "Val");
-        public LiteralFloat ValRandom = new LiteralFloat("random", "ValR");
-        public LiteralEnum<RandomType> ValRandomType = new LiteralEnum<RandomType>("randomType", "Type");
+        public LiteralFloat Value = new LiteralFloat("Val");
+        public LiteralFloat ValRandom = new LiteralFloat("ValR");
+        public LiteralEnum<RandomType> ValRandomType = new LiteralEnum<RandomType>("Type");
 
         List<Base> Attributes;
 
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT
 
-        public AVFXLife(string jsonPath) : base(jsonPath, NAME)
+        public AVFXLife() : base(NAME)
         {
             Attributes = new List<Base>(new Base[]{
                 Value,
@@ -48,17 +48,6 @@ namespace AVFXLib.Models
             Enabled = true;
             SetDefault(Attributes);
             Value.GiveValue(-1f);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            if (Enabled)
-            {
-                PutJSON(elem, Attributes);
-            }
-            elem["enabled"] = new JValue(Enabled);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

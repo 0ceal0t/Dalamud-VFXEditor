@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace AVFXLib.Models
 
         public List<AVFXTimelineSubItem> SubItems = new List<AVFXTimelineSubItem>();
 
-        public AVFXTimelineItem() : base("item",NAME)
+        public AVFXTimelineItem() : base(NAME)
         {
             Attributes = new List<Base>(new Base[]{
             });
@@ -46,18 +46,6 @@ namespace AVFXLib.Models
 
                 idx++;
             }
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            JArray itemArray = new JArray();
-            foreach (AVFXTimelineSubItem item in SubItems)
-            {
-                itemArray.Add(item.toJSON());
-            }
-            elem["items"] = itemArray;
-            return elem;
         }
 
         public override AVFXNode toAVFX()

@@ -12,23 +12,23 @@ namespace AVFXLib.Models
     {
         public string Name = "PrpS";
 
-        public LiteralEnum<BindPoint> BindPointType = new LiteralEnum<BindPoint>("bindPointType", "BPT");
-        public LiteralEnum<BindTargetPoint> BindTargetPointType = new LiteralEnum<BindTargetPoint>("bindTargetPointType", "BPTP");
-        public LiteralString BinderName = new LiteralString("name", "Name", fixedSize:8);
-        public LiteralInt BindPointId = new LiteralInt("bindPointId", "BPID");
-        public LiteralInt GenerateDelay = new LiteralInt("generateDelay", "GenD");
-        public LiteralInt CoordUpdateFrame = new LiteralInt("coordUpdateFrame", "CoUF");
-        public LiteralBool RingEnable = new LiteralBool("ringEnable", "bRng");
-        public LiteralInt RingProgressTime = new LiteralInt("ringProgressTime", "RnPT");
-        public LiteralFloat RingPositionX = new LiteralFloat("ringPositionX", "RnPX");
-        public LiteralFloat RingPositionY = new LiteralFloat("ringPositionY", "RnPY");
-        public LiteralFloat RingPositionZ = new LiteralFloat("ringPositionZ", "RnPZ");
-        public LiteralFloat RingRadius = new LiteralFloat("ringRadius", "RnRd");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("position", "Pos");
+        public LiteralEnum<BindPoint> BindPointType = new LiteralEnum<BindPoint>("BPT");
+        public LiteralEnum<BindTargetPoint> BindTargetPointType = new LiteralEnum<BindTargetPoint>("BPTP");
+        public LiteralString BinderName = new LiteralString("Name", fixedSize:8);
+        public LiteralInt BindPointId = new LiteralInt("BPID");
+        public LiteralInt GenerateDelay = new LiteralInt("GenD");
+        public LiteralInt CoordUpdateFrame = new LiteralInt("CoUF");
+        public LiteralBool RingEnable = new LiteralBool("bRng");
+        public LiteralInt RingProgressTime = new LiteralInt("RnPT");
+        public LiteralFloat RingPositionX = new LiteralFloat("RnPX");
+        public LiteralFloat RingPositionY = new LiteralFloat("RnPY");
+        public LiteralFloat RingPositionZ = new LiteralFloat("RnPZ");
+        public LiteralFloat RingRadius = new LiteralFloat("RnRd");
+        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
 
         List<Base> Attributes;
 
-        public AVFXBinderProperty(string jsonPath, string name) : base(jsonPath, name)
+        public AVFXBinderProperty(string name) : base(name)
         {
             Name = name;
             Attributes = new List<Base>(new Base[]{
@@ -65,13 +65,6 @@ namespace AVFXLib.Models
             CoordUpdateFrame.GiveValue( -1 );
             RingProgressTime.GiveValue( 1 );
             Position.toDefault();
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

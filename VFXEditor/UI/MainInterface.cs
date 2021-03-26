@@ -138,11 +138,6 @@ namespace VFXEditor.UI
                         var node = _plugin.AVFX.toAVFX();
                         SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes(), "avfx" );
                     }
-                    if( ImGui.Selectable( ".JSON" ) )
-                    {
-                        JObject json = ( JObject )_plugin.AVFX.toJSON();
-                        SaveDialog( "JSON files (*.json)|*.json|All files (*.*)|*.*", json.ToString(), "json" );
-                    }
                     if(ImGui.Selectable("TexTools Mod" ) )
                     {
                         TexToolsUI.Show();
@@ -311,7 +306,6 @@ namespace VFXEditor.UI
             ImGui.Columns( 1 );
             ImGui.Separator();
             ImGui.EndChild();
-
             ImGui.EndTabItem();
         }
 
@@ -401,11 +395,12 @@ namespace VFXEditor.UI
             {
                 Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }
-            ImGui.TextWrapped( @"This plugin works by replacing an existing VFX with another one. It does not, however, actually modify any of the game's internal files.
+            ImGui.TextWrapped( 
+@"This plugin works by replacing an existing VFX with another one. It does not, however, actually modify any of the game's internal files.
 If you want to make the modification permanent, you will need to create a mod using your platform of choice.
 
 If you are having issues loading a VFX, please open a Github issue. Make sure to specify either the in-game path of the VFX file or attach the file directly."
-        );
+            );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();

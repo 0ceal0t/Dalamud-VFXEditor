@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,22 +10,22 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDisc : AVFXParticleData
     {
-        public LiteralInt PartsCount = new LiteralInt("partsCount", "PrtC");
-        public LiteralInt PartsCountU = new LiteralInt("partsCountU", "PCnU");
-        public LiteralInt PartsCountV = new LiteralInt("partsCountV", "PCnV");
-        public LiteralFloat PointIntervalFactoryV = new LiteralFloat("pointIntervalFactorV", "PIFU");
+        public LiteralInt PartsCount = new LiteralInt("PrtC");
+        public LiteralInt PartsCountU = new LiteralInt("PCnU");
+        public LiteralInt PartsCountV = new LiteralInt("PCnV");
+        public LiteralFloat PointIntervalFactoryV = new LiteralFloat("PIFU");
 
-        public AVFXCurve Angle = new AVFXCurve("angle", "Ang");
-        public AVFXCurve WidthBegin = new AVFXCurve("widthAngle", "WB");
-        public AVFXCurve WidthEnd = new AVFXCurve("widthEnd", "WE");
-        public AVFXCurve RadiusBegin = new AVFXCurve("radiusBegin", "RB");
-        public AVFXCurve RadiusEnd = new AVFXCurve("radiusEnd", "RE");
-        public AVFXCurveColor ColorEdgeInner = new AVFXCurveColor("colorEdgeInner", name:"CEI");
-        public AVFXCurveColor ColorEdgeOuter = new AVFXCurveColor("colorEdgeOuter", name: "CEO");
+        public AVFXCurve Angle = new AVFXCurve("Ang");
+        public AVFXCurve WidthBegin = new AVFXCurve("WB");
+        public AVFXCurve WidthEnd = new AVFXCurve("WE");
+        public AVFXCurve RadiusBegin = new AVFXCurve("RB");
+        public AVFXCurve RadiusEnd = new AVFXCurve( "RE");
+        public AVFXCurveColor ColorEdgeInner = new AVFXCurveColor(name:"CEI");
+        public AVFXCurveColor ColorEdgeOuter = new AVFXCurveColor(name: "CEO");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataDisc(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataDisc() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 PartsCount,
@@ -59,13 +59,6 @@ namespace AVFXLib.Models
             SetUnAssigned(RadiusEnd);
             SetUnAssigned(ColorEdgeInner);
             SetUnAssigned(ColorEdgeOuter);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

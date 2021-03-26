@@ -26,11 +26,12 @@ namespace VFXEditor.UI.VFX
         public UINodeSelect<UIEffector> EffectorSelect;
         public UINodeGraphView NodeView;
 
-        public UIEmitter(AVFXEmitter emitter, UIEmitterView view)
+        public UIEmitter(AVFXEmitter emitter, UIEmitterView view, bool imported = false )
         {
             Emitter = emitter;
             View = view;
             _Color = EmitterColor;
+            Imported = imported;
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINode._Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
             // =====================
@@ -162,6 +163,10 @@ namespace VFXEditor.UI.VFX
 
         public override string GetText() {
             return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
+        }
+
+        public override byte[] toBytes() {
+            return Emitter.toAVFX().toBytes();
         }
     }
 }

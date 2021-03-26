@@ -12,18 +12,18 @@ namespace AVFXLib.Models
     {
         public const string NAME = "TmLn";
 
-        public LiteralInt LoopStart = new LiteralInt("loopStart", "LpSt");
-        public LiteralInt LoopEnd = new LiteralInt("loopEnd", "LpEd");
-        public LiteralInt BinderIdx = new LiteralInt("binderIdx", "BnNo");
-        public LiteralInt TimelineCount = new LiteralInt("timelineCount", "TICn");
-        public LiteralInt ClipCount = new LiteralInt("clipCount", "CpCn");
+        public LiteralInt LoopStart = new LiteralInt("LpSt");
+        public LiteralInt LoopEnd = new LiteralInt("LpEd");
+        public LiteralInt BinderIdx = new LiteralInt("BnNo");
+        public LiteralInt TimelineCount = new LiteralInt("TICn");
+        public LiteralInt ClipCount = new LiteralInt("CpCn");
 
         List<Base> Attributes;
 
         public List<AVFXTimelineSubItem> Items = new List<AVFXTimelineSubItem>();
         public List<AVFXTimelineClip> Clips = new List<AVFXTimelineClip>();
 
-        public AVFXTimeline() : base("timelines", NAME)
+        public AVFXTimeline() : base(NAME)
         {
             Attributes = new List<Base>(new Base[] {
                 LoopStart,
@@ -106,28 +106,6 @@ namespace AVFXLib.Models
         public void removeClip(AVFXTimelineClip item ) {
             Clips.Remove( item );
             ClipCount.GiveValue( Clips.Count() );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-
-            JArray itemArray = new JArray();
-            foreach(AVFXTimelineSubItem item in Items)
-            {
-                itemArray.Add(item.toJSON());
-            }
-            elem["items"] = itemArray;
-
-            JArray clipArray = new JArray();
-            foreach (AVFXTimelineClip clip in Clips)
-            {
-                clipArray.Add(clip.toJSON());
-            }
-            elem["clips"] = clipArray;
-
-            return elem;
         }
 
         public override AVFXNode toAVFX()

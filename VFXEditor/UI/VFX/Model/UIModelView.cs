@@ -1,3 +1,4 @@
+using AVFXLib.AVFX;
 using AVFXLib.Models;
 using ImGuiNET;
 using System;
@@ -29,6 +30,13 @@ namespace VFXEditor.UI.VFX
 
         public override UIModel OnNew() {
             return new UIModel( AVFX.addModel(), this );
+        }
+
+        public override UIModel OnImport( AVFXNode node ) {
+            AVFXModel mdl = new AVFXModel();
+            mdl.read( node );
+            AVFX.addModel( mdl );
+            return new UIModel( mdl, this );
         }
     }
 }

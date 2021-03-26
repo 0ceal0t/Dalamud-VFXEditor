@@ -10,14 +10,14 @@ namespace AVFXLib.Models
 {
     public class AVFXTexturePalette : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
-        public LiteralEnum<TextureBorderType> TextureBorder = new LiteralEnum<TextureBorderType>("textureBorder", "TBT");
-        public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorder = new LiteralEnum<TextureBorderType>("TBT");
+        public LiteralInt TextureIdx = new LiteralInt("TxNo");
 
         List<Base> Attributes;
 
-        public AVFXTexturePalette(string jsonPath) : base(jsonPath, "TP")
+        public AVFXTexturePalette() : base("TP")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -38,13 +38,6 @@ namespace AVFXLib.Models
             Assigned = true;
             SetDefault(Attributes);
             TextureIdx.GiveValue( -1 );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

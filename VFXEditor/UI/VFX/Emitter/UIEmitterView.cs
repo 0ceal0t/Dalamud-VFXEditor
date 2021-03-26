@@ -10,7 +10,7 @@ using AVFXLib.AVFX;
 namespace VFXEditor.UI.VFX
 {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
-        public UIEmitterView( AVFXBase avfx) : base(avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
+        public UIEmitterView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
             Group = UINode._Emitters;
             Group.Items = AVFX.Emitters.Select( item => new UIEmitter( item, this ) ).ToList();
         }
@@ -21,11 +21,11 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIEmitter item ) {
             return item.Emitter.toAVFX().toBytes();
         }
-        public override UIEmitter OnImport( AVFXNode node ) {
+        public override UIEmitter OnImport( AVFXNode node, bool imported = false ) {
             AVFXEmitter item = new AVFXEmitter();
             item.read( node );
             AVFX.addEmitter( item );
-            return new UIEmitter( item, this );
+            return new UIEmitter( item, this, imported );
         }
     }
 }

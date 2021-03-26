@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,11 +11,11 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDecal : AVFXParticleData
     {
-        public LiteralFloat ScalingScale = new LiteralFloat("scalingScale", "SS");
+        public LiteralFloat ScalingScale = new LiteralFloat("SS");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataDecal(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataDecal() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 ScalingScale
@@ -32,13 +32,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

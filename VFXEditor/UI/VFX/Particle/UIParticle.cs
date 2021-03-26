@@ -34,10 +34,11 @@ namespace VFXEditor.UI.VFX
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
 
-        public UIParticle( AVFXParticle particle, UIParticleView view ) {
+        public UIParticle( AVFXParticle particle, UIParticleView view, bool imported = false ) {
             Particle = particle;
             View = view;
             _Color = ParticleColor;
+            Imported = imported;
             NodeView = new UINodeGraphView( this );
             // =======================
             Animation = new List<UIItem>();
@@ -211,6 +212,10 @@ namespace VFXEditor.UI.VFX
 
         public override string GetText() {
             return "Particle " + Idx + "(" + Particle.ParticleVariety.stringValue() + ")";
+        }
+
+        public override byte[] toBytes() {
+            return Particle.toAVFX().toBytes();
         }
     }
 }

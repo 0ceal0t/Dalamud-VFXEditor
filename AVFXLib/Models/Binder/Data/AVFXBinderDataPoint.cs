@@ -10,11 +10,11 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataPoint : AVFXBinderData
     {
-        public AVFXCurve SpringStrength = new AVFXCurve("springStrength", "SpS");
+        public AVFXCurve SpringStrength = new AVFXCurve("SpS");
 
         List<Base> Attributes;
 
-        public AVFXBinderDataPoint(string jsonPath) : base(jsonPath, "Data")
+        public AVFXBinderDataPoint() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 SpringStrength
@@ -32,13 +32,6 @@ namespace AVFXLib.Models
             Assigned = true;
             SpringStrength.toDefault();
             SpringStrength.addKey();
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

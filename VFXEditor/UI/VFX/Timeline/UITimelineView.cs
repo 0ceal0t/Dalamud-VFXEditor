@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UITimelineView : UIDropdownView<UITimeline>
     {
-        public UITimelineView(AVFXBase avfx) : base(avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" )
+        public UITimelineView(UIMain main, AVFXBase avfx) : base(main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" )
         {
             Group = UINode._Timelines;
             Group.Items = AVFX.Timelines.Select( item => new UITimeline( item, this ) ).ToList();
@@ -25,11 +25,11 @@ namespace VFXEditor.UI.VFX
         {
             return item.Timeline.toAVFX().toBytes();
         }
-        public override UITimeline OnImport( AVFXNode node ) {
+        public override UITimeline OnImport( AVFXNode node, bool imported = false ) {
             AVFXTimeline item = new AVFXTimeline();
             item.read( node );
             AVFX.addTimeline( item );
-            return new UITimeline( item, this );
+            return new UITimeline( item, this, imported );
         }
     }
 }

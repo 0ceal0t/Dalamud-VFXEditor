@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,22 +11,18 @@ namespace AVFXLib.Models
     public abstract class Base
     {
         public bool Assigned { get; set; } = false;
-        public string JSONPath { get; set; }
         public string AVFXName { get; set; }
 
         public Base()
         {
-            JSONPath = "";
             AVFXName = "";
         }
-        public Base(string jsonPath, string avfxName)
+        public Base(string avfxName)
         {
-            JSONPath = jsonPath;
             AVFXName = avfxName;
         }
 
         public abstract AVFXNode toAVFX();
-        public abstract JToken toJSON();
         public abstract void read(AVFXNode node);
 
         // ====== DEFAULT =======
@@ -83,21 +79,6 @@ namespace AVFXLib.Models
                     break;
                 }
             }
-        }
-        // ===== EXPORT JSON =======
-        public static void PutJSON(JObject obj, List<Base> sources)
-        {
-            if (obj == null || sources == null) return;
-            foreach (Base b in sources)
-            {
-                PutJSON(obj, b);
-            }
-        }
-        public static void PutJSON(JObject obj, Base source)
-        {
-            if (obj == null || source == null) return;
-            if (!source.Assigned) return;
-            obj[source.JSONPath] = source.toJSON();
         }
         // ======= EXPORT AVFX ========
         public static void PutAVFX(AVFXNode destination, List<Base> sources)

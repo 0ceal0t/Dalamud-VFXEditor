@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using AVFXLib.AVFX;
 
 namespace VFXEditor.UI.VFX {
     public class UITextureView : UINodeSplitView<UITexture> {
@@ -25,6 +26,13 @@ namespace VFXEditor.UI.VFX {
 
         public override void OnDelete( UITexture item ) {
             AVFX.removeTexture( item.Texture );
+        }
+
+        public override UITexture OnImport( AVFXNode node ) {
+            AVFXTexture tex = new AVFXTexture();
+            tex.read( node );
+            AVFX.addTexture( tex );
+            return new UITexture( tex, this );
         }
 
         public override UITexture OnNew() {

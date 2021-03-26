@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,11 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataWindmill : AVFXParticleData
     {
-        public LiteralEnum<WindmillUVType> WindmillUVType = new LiteralEnum<WindmillUVType>("windmillUVType", "WUvT");
+        public LiteralEnum<WindmillUVType> WindmillUVType = new LiteralEnum<WindmillUVType>("WUvT");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataWindmill(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataWindmill() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 WindmillUVType
@@ -31,13 +31,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

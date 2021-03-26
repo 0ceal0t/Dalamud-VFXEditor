@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,15 +12,15 @@ namespace AVFXLib.Models
     {
         public const string NAME = "UvSt";
 
-        public LiteralEnum<TextureCalculateUV> CalculateUVType = new LiteralEnum<TextureCalculateUV>("calculateUV", "CUvT");
-        public AVFXCurve2Axis Scale = new AVFXCurve2Axis("scale", "Scl");
-        public AVFXCurve2Axis Scroll = new AVFXCurve2Axis("scroll", "Scr");
-        public AVFXCurve Rot = new AVFXCurve("rotation", "Rot");
-        public AVFXCurve RotRandom = new AVFXCurve("rotationRandom", "RotR");
+        public LiteralEnum<TextureCalculateUV> CalculateUVType = new LiteralEnum<TextureCalculateUV>("CUvT");
+        public AVFXCurve2Axis Scale = new AVFXCurve2Axis("Scl");
+        public AVFXCurve2Axis Scroll = new AVFXCurve2Axis("Scr");
+        public AVFXCurve Rot = new AVFXCurve("Rot");
+        public AVFXCurve RotRandom = new AVFXCurve("RotR");
 
         List<Base> Attributes;
 
-        public AVFXParticleUVSet() : base("uvSet", NAME)
+        public AVFXParticleUVSet() : base(NAME)
         {
             Attributes = new List<Base>(new Base[] {
                 CalculateUVType,
@@ -42,13 +42,6 @@ namespace AVFXLib.Models
             Assigned = true;
             SetUnAssigned(Attributes);
             SetDefault(CalculateUVType);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

@@ -21,6 +21,7 @@ namespace VFXEditor.UI.VFX {
         public abstract T OnNew();
         public abstract void OnDelete( T item );
         public virtual void OnSelect( T item ) { }
+        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node );
 
         public override void DrawDeleteButton( string parentId ) {
             if( Selected != null && AllowDelete ) {

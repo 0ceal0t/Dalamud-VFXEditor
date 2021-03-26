@@ -12,56 +12,56 @@ namespace AVFXLib.Models
 {
     public class AVFXBase : Base
     {
-        public LiteralInt Version = new LiteralInt( "version", "Ver" );
+        public LiteralInt Version = new LiteralInt( "Ver" );
 
-        public LiteralBool IsDelayFastParticle = new LiteralBool("isDelayFastParticle", "bDFP");
-        public LiteralBool IsFitGround = new LiteralBool("isFitGround", "bFG");
-        public LiteralBool IsTranformSkip = new LiteralBool("isTranformSkip", "bTS");
-        public LiteralBool IsAllStopOnHide = new LiteralBool("isAllStopOnHide", "bASH");
-        public LiteralBool CanBeClippedOut = new LiteralBool("canBeClippedOut", "bCBC");
-        public LiteralBool ClipBoxenabled = new LiteralBool("clipBoxenabled", "bCul");
-        public LiteralFloat ClipBoxX = new LiteralFloat("clipBoxX", "CBPx");
-        public LiteralFloat ClipBoxY = new LiteralFloat("clipBoxY", "CBPy");
-        public LiteralFloat ClipBoxZ = new LiteralFloat("clipBoxZ", "CBPz");
-        public LiteralFloat ClipBoxsizeX = new LiteralFloat("clipBoxsizeX", "CBSx");
-        public LiteralFloat ClipBoxsizeY = new LiteralFloat("clipBoxsizeY", "CBSy");
-        public LiteralFloat ClipBoxsizeZ = new LiteralFloat("clipBoxsizeZ", "CBSz");
-        public LiteralFloat BiasZmaxScale = new LiteralFloat("biasZmaxScale", "ZBMs");
-        public LiteralFloat BiasZmaxDistance = new LiteralFloat("biasZmaxDistance", "ZBMd");
-        public LiteralBool IsCameraSpace = new LiteralBool("isCameraSpace", "bCmS");
-        public LiteralBool IsFullEnvLight = new LiteralBool("isFullEnvLight", "bFEL");
-        public LiteralBool IsClipOwnSetting = new LiteralBool("isClipOwnSetting", "bOSt");
-        public LiteralFloat SoftParticleFadeRange = new LiteralFloat("softParticleFadeRange", "SPFR");
-        public LiteralFloat SoftKeyOffset = new LiteralFloat("sortKeyOffset", "SKO");
-        public LiteralEnum<DrawLayer> DrawLayerType = new LiteralEnum<DrawLayer>("drawLayerType", "DwLy");
-        public LiteralEnum<DrawOrder> DrawOrderType = new LiteralEnum<DrawOrder>("drawOrderType", "DwOT");
-        public LiteralEnum<DirectionalLightSource> DirectionalLightSourceType = new LiteralEnum<DirectionalLightSource>("directionalLightSourceType", "DLST");
-        public LiteralEnum<PointLightSouce> PointLightsType1 = new LiteralEnum<PointLightSouce>("pointLightsType1", "PL1S");
-        public LiteralEnum<PointLightSouce> PointLightsType2 = new LiteralEnum<PointLightSouce>("pointLightsType2", "PL2S");
-        public LiteralFloat RevisedValuesPosX = new LiteralFloat("revisedValuesPosX", "RvPx");
-        public LiteralFloat RevisedValuesPosY = new LiteralFloat("revisedValuesPosY", "RvPy");
-        public LiteralFloat RevisedValuesPosZ = new LiteralFloat("revisedValuesPosZ", "RvPz");
-        public LiteralFloat RevisedValuesRotX = new LiteralFloat("revisedValuesRotX", "RvRx");
-        public LiteralFloat RevisedValuesRotY = new LiteralFloat("revisedValuesRotY", "RvRy");
-        public LiteralFloat RevisedValuesRotZ = new LiteralFloat("revisedValuesRotZ", "RvRz");
-        public LiteralFloat RevisedValuesScaleX = new LiteralFloat("revisedValuesScaleX", "RvSx");
-        public LiteralFloat RevisedValuesScaleY = new LiteralFloat("revisedValuesScaleY", "RvSy");
-        public LiteralFloat RevisedValuesScaleZ = new LiteralFloat("revisedValuesScaleZ", "RvSz");
-        public LiteralFloat RevisedValuesR = new LiteralFloat("revisedValuesR", "RvR");
-        public LiteralFloat RevisedValuesG = new LiteralFloat("revisedValuesG", "RvG");
-        public LiteralFloat RevisedValuesB = new LiteralFloat("revisedValuesB", "RvB");
-        public LiteralBool FadeXenabled = new LiteralBool("fadeXenabled", "AFXe");
-        public LiteralFloat FadeXinner = new LiteralFloat("fadeXinner", "AFXi");
-        public LiteralFloat FadeXouter = new LiteralFloat("fadeXouter", "AFXo");
-        public LiteralBool FadeYenabled = new LiteralBool("fadeYenabled", "AFYe");
-        public LiteralFloat FadeYinner = new LiteralFloat("fadeYinner", "AFYi");
-        public LiteralFloat FadeYouter = new LiteralFloat("fadeYouter", "AFYo");
-        public LiteralBool FadeZenabled = new LiteralBool("fadeZenabled", "AFZe");
-        public LiteralFloat FadeZinner = new LiteralFloat("fadeZinner", "AFZi");
-        public LiteralFloat FadeZouter = new LiteralFloat("fadeZouter", "AFZo");
-        public LiteralBool GlobalFogEnabled = new LiteralBool("globalFogEnabled", "bGFE");
-        public LiteralFloat GlobalFogInfluence = new LiteralFloat("globalFogInfluence", "GFIM");
-        public LiteralBool LTSEnabled = new LiteralBool("globalFogEnabled", "bLTS");
+        public LiteralBool IsDelayFastParticle = new LiteralBool("bDFP");
+        public LiteralBool IsFitGround = new LiteralBool("bFG");
+        public LiteralBool IsTranformSkip = new LiteralBool("bTS");
+        public LiteralBool IsAllStopOnHide = new LiteralBool("bASH");
+        public LiteralBool CanBeClippedOut = new LiteralBool("bCBC");
+        public LiteralBool ClipBoxenabled = new LiteralBool("bCul");
+        public LiteralFloat ClipBoxX = new LiteralFloat("CBPx");
+        public LiteralFloat ClipBoxY = new LiteralFloat("CBPy");
+        public LiteralFloat ClipBoxZ = new LiteralFloat("CBPz");
+        public LiteralFloat ClipBoxsizeX = new LiteralFloat("CBSx");
+        public LiteralFloat ClipBoxsizeY = new LiteralFloat("CBSy");
+        public LiteralFloat ClipBoxsizeZ = new LiteralFloat("CBSz");
+        public LiteralFloat BiasZmaxScale = new LiteralFloat("ZBMs");
+        public LiteralFloat BiasZmaxDistance = new LiteralFloat("ZBMd");
+        public LiteralBool IsCameraSpace = new LiteralBool("bCmS");
+        public LiteralBool IsFullEnvLight = new LiteralBool("bFEL");
+        public LiteralBool IsClipOwnSetting = new LiteralBool("bOSt");
+        public LiteralFloat SoftParticleFadeRange = new LiteralFloat("SPFR");
+        public LiteralFloat SoftKeyOffset = new LiteralFloat("SKO");
+        public LiteralEnum<DrawLayer> DrawLayerType = new LiteralEnum<DrawLayer>("DwLy");
+        public LiteralEnum<DrawOrder> DrawOrderType = new LiteralEnum<DrawOrder>("DwOT");
+        public LiteralEnum<DirectionalLightSource> DirectionalLightSourceType = new LiteralEnum<DirectionalLightSource>("DLST");
+        public LiteralEnum<PointLightSouce> PointLightsType1 = new LiteralEnum<PointLightSouce>("PL1S");
+        public LiteralEnum<PointLightSouce> PointLightsType2 = new LiteralEnum<PointLightSouce>("PL2S");
+        public LiteralFloat RevisedValuesPosX = new LiteralFloat("RvPx");
+        public LiteralFloat RevisedValuesPosY = new LiteralFloat("RvPy");
+        public LiteralFloat RevisedValuesPosZ = new LiteralFloat("RvPz");
+        public LiteralFloat RevisedValuesRotX = new LiteralFloat("RvRx");
+        public LiteralFloat RevisedValuesRotY = new LiteralFloat("RvRy");
+        public LiteralFloat RevisedValuesRotZ = new LiteralFloat("RvRz");
+        public LiteralFloat RevisedValuesScaleX = new LiteralFloat("RvSx");
+        public LiteralFloat RevisedValuesScaleY = new LiteralFloat("RvSy");
+        public LiteralFloat RevisedValuesScaleZ = new LiteralFloat("RvSz");
+        public LiteralFloat RevisedValuesR = new LiteralFloat("RvR");
+        public LiteralFloat RevisedValuesG = new LiteralFloat("RvG");
+        public LiteralFloat RevisedValuesB = new LiteralFloat("RvB");
+        public LiteralBool FadeXenabled = new LiteralBool("AFXe");
+        public LiteralFloat FadeXinner = new LiteralFloat("AFXi");
+        public LiteralFloat FadeXouter = new LiteralFloat("AFXo");
+        public LiteralBool FadeYenabled = new LiteralBool("AFYe");
+        public LiteralFloat FadeYinner = new LiteralFloat("AFYi");
+        public LiteralFloat FadeYouter = new LiteralFloat("AFYo");
+        public LiteralBool FadeZenabled = new LiteralBool("AFZe");
+        public LiteralFloat FadeZinner = new LiteralFloat("AFZi");
+        public LiteralFloat FadeZouter = new LiteralFloat("AFZo");
+        public LiteralBool GlobalFogEnabled = new LiteralBool("bGFE");
+        public LiteralFloat GlobalFogInfluence = new LiteralFloat("GFIM");
+        public LiteralBool LTSEnabled = new LiteralBool("bLTS");
 
         public List<AVFXSchedule> Schedulers = new List<AVFXSchedule>();
         public List<AVFXTimeline> Timelines = new List<AVFXTimeline>();
@@ -74,7 +74,7 @@ namespace AVFXLib.Models
 
         List<Base> Attributes;
 
-        public AVFXBase() : base("", "AVFX")
+        public AVFXBase() : base("AVFX")
         {
             Attributes = new List<Base>(new Base[]{
                 IsDelayFastParticle,
@@ -280,74 +280,6 @@ namespace AVFXLib.Models
             Models.Remove( item );
         }
         // ======= EXPORT =======
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-
-            JObject paramElem = new JObject();
-            PutJSON(paramElem, Attributes);
-            elem["params"] = paramElem;
-
-            // SCHEDULE
-            JArray schedArray = new JArray();
-            foreach (AVFXSchedule schedElem in Schedulers)
-            {
-                schedArray.Add(schedElem.toJSON());
-            }
-            elem["schedulers"] = schedArray;
-            // TIMELINES
-            JArray timeArray = new JArray();
-            foreach (AVFXTimeline tmlnElem in Timelines)
-            {
-                timeArray.Add(tmlnElem.toJSON());
-            }
-            elem["timelines"] = timeArray;
-            // EMITTERS
-            JArray emitArray = new JArray();
-            foreach (AVFXEmitter emitterElem in Emitters)
-            {
-                emitArray.Add(emitterElem.toJSON());
-            }
-            elem["emitters"] = emitArray;
-            // PARTICLES
-            JArray particleArray = new JArray();
-            foreach (AVFXParticle particleElement in Particles)
-            {
-                particleArray.Add(particleElement.toJSON());
-            }
-            elem["particles"] = particleArray;
-            // EFFECTORS
-            JArray effectArray = new JArray();
-            foreach (AVFXEffector effectorElem in Effectors)
-            {
-                effectArray.Add(effectorElem.toJSON());
-            }
-            elem["effectors"] = effectArray;
-            // BINDERS
-            JArray bindArray = new JArray();
-            foreach (AVFXBinder bindElem in Binders)
-            {
-                bindArray.Add(bindElem.toJSON());
-            }
-            elem["binders"] = bindArray;
-            // TEXTURES
-            JArray texArray = new JArray();
-            foreach (AVFXTexture texElem in Textures)
-            {
-                texArray.Add(texElem.toJSON());
-            }
-            elem["textures"] = texArray;
-            // MODELS
-            JArray modelArray = new JArray();
-            foreach (AVFXModel modelElem in Models)
-            {
-                modelArray.Add(modelElem.toJSON());
-            }
-            elem["models"] = modelArray;
-
-            return elem;
-        }
-
         public override AVFXNode toAVFX()
         {
             AVFXNode baseAVFX = new AVFXNode("AVFX");

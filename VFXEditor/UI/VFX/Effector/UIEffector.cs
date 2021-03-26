@@ -16,11 +16,12 @@ namespace VFXEditor.UI.VFX
         public UIData Data;
         public UINodeGraphView NodeView;
 
-        public UIEffector(AVFXEffector effector, UIEffectorView view)
+        public UIEffector(AVFXEffector effector, UIEffectorView view, bool imported = false )
         {
             Effector = effector;
             View = view;
             _Color = EffectorColor;
+            Imported = imported;
             NodeView = new UINodeGraphView( this );
             //======================
             Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, changeFunction: ChangeType );
@@ -94,6 +95,10 @@ namespace VFXEditor.UI.VFX
 
         public override string GetText() {
             return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
+        }
+
+        public override byte[] toBytes() {
+            return Effector.toAVFX().toBytes();
         }
     }
 }

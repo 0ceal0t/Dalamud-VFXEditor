@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,15 +10,15 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataCameraQuake : AVFXEffectorData
     {
-        public AVFXCurve Attenuation = new AVFXCurve("attenuation", "Att");
-        public AVFXCurve RadiusOut = new AVFXCurve("radiusOuter", "RdO");
-        public AVFXCurve RadiusIn = new AVFXCurve("radiusInner", "RdI");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("rotation", "Rot");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("position", "Pos");
+        public AVFXCurve Attenuation = new AVFXCurve("Att");
+        public AVFXCurve RadiusOut = new AVFXCurve("RdO");
+        public AVFXCurve RadiusIn = new AVFXCurve("RdI");
+        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
+        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
 
         List<Base> Attributes;
 
-        public AVFXEffectorDataCameraQuake(string jsonPath) : base(jsonPath, "Data")
+        public AVFXEffectorDataCameraQuake() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Attenuation,
@@ -39,13 +39,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

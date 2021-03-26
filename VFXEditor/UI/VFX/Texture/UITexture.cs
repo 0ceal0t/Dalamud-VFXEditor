@@ -113,5 +113,9 @@ namespace VFXEditor.UI.VFX
         public override string GetText() {
             return "Texture " + Idx;
         }
+
+        public override byte[] toBytes() {
+            return Texture.toAVFX().toBytes();
+        }
     }
 }

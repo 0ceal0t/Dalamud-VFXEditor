@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace AVFXLib.Models {
     public class AVFXEmitterDataConeModel : AVFXEmitterData {
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "rotationOrder", "ROT" );
-        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>( "generateMethod", "GeMT" );
-        public LiteralInt DivideX = new LiteralInt( "divideX", "DivX" );
-        public LiteralInt DivideY = new LiteralInt( "divideY", "DivY" );
-        public AVFXCurve Radius = new AVFXCurve( "radius", "Rad" );
-        public AVFXCurve InjectionSpeed = new AVFXCurve( "injectionSpeed", "IjS" );
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "injectionSpeedRandom", "IjSR" );
-        public AVFXCurve InjectionAngle = new AVFXCurve( "injectionAngle", "IjA" );
+        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "ROT" );
+        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>( "GeMT" );
+        public LiteralInt DivideX = new LiteralInt( "DivX" );
+        public LiteralInt DivideY = new LiteralInt( "DivY" );
+        public AVFXCurve Radius = new AVFXCurve( "Rad" );
+        public AVFXCurve InjectionSpeed = new AVFXCurve( "IjS" );
+        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
+        public AVFXCurve InjectionAngle = new AVFXCurve( "IjA" );
 
         List<Base> Attributes;
 
-        public AVFXEmitterDataConeModel( string jsonPath ) : base( jsonPath, "Data" ) {
+        public AVFXEmitterDataConeModel() : base( "Data" ) {
             Attributes = new List<Base>( new Base[] {
                 RotationOrderType,
                 GenerateMethodType,
@@ -40,12 +40,6 @@ namespace AVFXLib.Models {
         public override void toDefault() {
             Assigned = true;
             SetUnAssigned( Attributes );
-        }
-
-        public override JToken toJSON() {
-            JObject elem = new JObject();
-            PutJSON( elem, Attributes );
-            return elem;
         }
 
         public override AVFXNode toAVFX() {

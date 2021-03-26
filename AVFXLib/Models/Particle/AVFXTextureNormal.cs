@@ -11,17 +11,17 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureNormal : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralInt UvSetIdx = new LiteralInt("uvSetIdx", "UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("textureBorderU", "TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("textureBorderV", "TBVT");
-        public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
-        public AVFXCurve NPow = new AVFXCurve("normalPower", "NPow");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
+        public LiteralInt TextureIdx = new LiteralInt("TxNo");
+        public AVFXCurve NPow = new AVFXCurve("NPow");
 
         List<Base> Attributes;
 
-        public AVFXTextureNormal(string jsonPath) : base(jsonPath, "TN")
+        public AVFXTextureNormal() : base("TN")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -47,13 +47,6 @@ namespace AVFXLib.Models
             SetDefault( NPow );
             NPow.addKey();
             TextureIdx.GiveValue( -1 );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

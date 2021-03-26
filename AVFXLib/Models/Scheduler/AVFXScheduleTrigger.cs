@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace AVFXLib.Models
 
         public List<AVFXScheduleSubItem> SubItems = new List<AVFXScheduleSubItem>();
 
-        public AVFXScheduleTrigger() : base("trigger", NAME)
+        public AVFXScheduleTrigger() : base(NAME)
         {
         }
 
@@ -34,20 +34,6 @@ namespace AVFXLib.Models
                 Item.read(dummyNode);
                 SubItems.Add(Item);
             }
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-
-            JArray partArray = new JArray();
-            foreach (AVFXScheduleSubItem subItem in SubItems)
-            {
-                partArray.Add(subItem.toJSON());
-            }
-            elem["parts"] = partArray;
-
-            return elem;
         }
 
         public override AVFXNode toAVFX()

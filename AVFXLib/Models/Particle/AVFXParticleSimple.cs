@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,75 +13,75 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Smpl";
 
-        public LiteralInt InjectionPositionType = new LiteralInt("injectionPositionType", "SIPT");
-        public LiteralInt InjectionDirectionType = new LiteralInt("injectionDirectionType", "SIDT");
-        public LiteralInt BaseDirectionType = new LiteralInt("baseDirectionType", "SBDT");
-        public LiteralInt CreateCount = new LiteralInt("createCount", "CCnt");
-        public LiteralFloat CreateAreaX = new LiteralFloat("createAreaX", "CrAX");
-        public LiteralFloat CreateAreaY = new LiteralFloat("createAreaY", "CrAY");
-        public LiteralFloat CreateAreaZ = new LiteralFloat("createAreaZ", "CrAZ");
-        public LiteralFloat CoordAccuracyX = new LiteralFloat("coordAccuracyX", "CAX");
-        public LiteralFloat CoordAccuracyY = new LiteralFloat("coordAccuracyY", "CAY");
-        public LiteralFloat CoordAccuracyZ = new LiteralFloat("coordAccuracyZ", "CAZ");
-        public LiteralFloat CoordGraX = new LiteralFloat("coordGraX", "CGX");
-        public LiteralFloat CoordGraY = new LiteralFloat("coordGraY", "CGY");
-        public LiteralFloat CoordGraZ = new LiteralFloat("coordGraZ", "CGZ");
-        public LiteralFloat ScaleXStart = new LiteralFloat("scaleXStart", "SBX");
-        public LiteralFloat ScaleYStart = new LiteralFloat("scaleYStart", "SBY");
-        public LiteralFloat ScaleXEnd = new LiteralFloat("scaleXEnd", "SEX");
-        public LiteralFloat ScaleYEnd = new LiteralFloat("scaleYEnd", "SEY");
-        public LiteralFloat ScaleCurve = new LiteralFloat("scaleCurve", "SC");
-        public LiteralFloat ScaleRandX0 = new LiteralFloat("scaleRandX0", "SRX0");
-        public LiteralFloat ScaleRandX1 = new LiteralFloat("scaleRandX1", "SRX1");
-        public LiteralFloat ScaleRandY0 = new LiteralFloat("scaleRandY0", "SRY0");
-        public LiteralFloat ScaleRandY1 = new LiteralFloat("scaleRandY1", "SRY1");
-        public LiteralFloat RotXStart = new LiteralFloat("rotXStart", "RIX");
-        public LiteralFloat RotYStart = new LiteralFloat("rotYStart", "RIY");
-        public LiteralFloat RotZStart = new LiteralFloat("rotZStart", "RIZ");
-        public LiteralFloat RotXAdd = new LiteralFloat("rotXAdd", "RAX");
-        public LiteralFloat RotYAdd = new LiteralFloat("rotYAdd", "RAY");
-        public LiteralFloat RotZAdd = new LiteralFloat("rotZAdd", "RAZ");
-        public LiteralFloat RotXBase = new LiteralFloat("rotXBase", "RBX");
-        public LiteralFloat RotYBase = new LiteralFloat("rotYBase", "RBY");
-        public LiteralFloat RotZBase = new LiteralFloat("rotZBase", "RBZ");
-        public LiteralFloat RotXVel = new LiteralFloat("rotXVel", "RVX");
-        public LiteralFloat RotYVel = new LiteralFloat("rotYVel", "RVY");
-        public LiteralFloat RotZVel = new LiteralFloat("rotZVel", "RVZ");
-        public LiteralFloat VelMin = new LiteralFloat("velMin", "VMin");
-        public LiteralFloat VelMax = new LiteralFloat("velMax", "VMax");
-        public LiteralFloat VelFlatteryRate = new LiteralFloat("velFlatteryRate", "FltR");
-        public LiteralFloat VelFlatterySpeed = new LiteralFloat("velFlatterySpeed", "FltS");
-        public LiteralInt UvCellU = new LiteralInt("uvCellU", "UvCU");
-        public LiteralInt UvCellV = new LiteralInt("uvCellV", "UvCV");
-        public LiteralInt UvInterval = new LiteralInt("uvInterval", "UvIv");
-        public LiteralInt UvNoRandom = new LiteralInt("uvNoRandom", "UvNR");
-        public LiteralInt UvNoLoopCount = new LiteralInt("uvNoLoopCount", "UvLC");
-        public LiteralInt InjectionModelIdx = new LiteralInt("injectionModelIdx", "IJMN");
-        public LiteralInt InjectionVertexBindModelIdx = new LiteralInt("injectionVertexBindModelIdx", "VBMN");
-        public LiteralInt InjectionRadialDir0 = new LiteralInt("injectionRadialDir0", "IRD0");
-        public LiteralInt InjectionRadialDir1 = new LiteralInt("injectionRadialDir1", "IRD1");
-        public LiteralFloat PivotX = new LiteralFloat("pivotX", "PvtX");
-        public LiteralFloat PivotY = new LiteralFloat("pivotY", "PvtY");
-        public LiteralInt BlockNum = new LiteralInt("blockNum", "BlkN");
-        public LiteralFloat LineLengthMin = new LiteralFloat("lineLengthMin", "LLin");
-        public LiteralFloat LineLengthMax = new LiteralFloat("lineLengthMax", "LLax");
-        public LiteralInt CreateIntervalVal = new LiteralInt("createIntervalVal", "CrI");
-        public LiteralInt CreateIntervalRandom = new LiteralInt("createIntervalRandom", "CrIR");
-        public LiteralInt CreateIntervalCount = new LiteralInt("createIntervalCount", "CrIC");
-        public LiteralInt CreateIntervalLife = new LiteralInt("createIntervalLife", "CrIL");
-        public LiteralInt CreateNewAfterDelete = new LiteralInt("createNewAfterDelete", "bCrN", size: 1);
-        public LiteralInt UvReverse = new LiteralInt("uvReverse", "bRUV", size: 1);
-        public LiteralInt ScaleRandomLink = new LiteralInt("scaleRandomLink", "bSRL", size: 1);
-        public LiteralInt BindParent = new LiteralInt("bindParent", "bBnP", size: 1);
-        public LiteralInt ScaleByParent = new LiteralInt("scaleByParent", "bSnP", size: 1);
-        public LiteralInt PolyLineTag = new LiteralInt("polyLineTag", "PolT");
+        public LiteralInt InjectionPositionType = new LiteralInt("SIPT");
+        public LiteralInt InjectionDirectionType = new LiteralInt("SIDT");
+        public LiteralInt BaseDirectionType = new LiteralInt("SBDT");
+        public LiteralInt CreateCount = new LiteralInt("CCnt");
+        public LiteralFloat CreateAreaX = new LiteralFloat("CrAX");
+        public LiteralFloat CreateAreaY = new LiteralFloat("CrAY");
+        public LiteralFloat CreateAreaZ = new LiteralFloat("CrAZ");
+        public LiteralFloat CoordAccuracyX = new LiteralFloat("CAX");
+        public LiteralFloat CoordAccuracyY = new LiteralFloat("CAY");
+        public LiteralFloat CoordAccuracyZ = new LiteralFloat("CAZ");
+        public LiteralFloat CoordGraX = new LiteralFloat("CGX");
+        public LiteralFloat CoordGraY = new LiteralFloat("CGY");
+        public LiteralFloat CoordGraZ = new LiteralFloat("CGZ");
+        public LiteralFloat ScaleXStart = new LiteralFloat("SBX");
+        public LiteralFloat ScaleYStart = new LiteralFloat("SBY");
+        public LiteralFloat ScaleXEnd = new LiteralFloat("SEX");
+        public LiteralFloat ScaleYEnd = new LiteralFloat("SEY");
+        public LiteralFloat ScaleCurve = new LiteralFloat("SC");
+        public LiteralFloat ScaleRandX0 = new LiteralFloat("SRX0");
+        public LiteralFloat ScaleRandX1 = new LiteralFloat("SRX1");
+        public LiteralFloat ScaleRandY0 = new LiteralFloat("SRY0");
+        public LiteralFloat ScaleRandY1 = new LiteralFloat("SRY1");
+        public LiteralFloat RotXStart = new LiteralFloat("RIX");
+        public LiteralFloat RotYStart = new LiteralFloat("RIY");
+        public LiteralFloat RotZStart = new LiteralFloat("RIZ");
+        public LiteralFloat RotXAdd = new LiteralFloat("RAX");
+        public LiteralFloat RotYAdd = new LiteralFloat("RAY");
+        public LiteralFloat RotZAdd = new LiteralFloat("RAZ");
+        public LiteralFloat RotXBase = new LiteralFloat("RBX");
+        public LiteralFloat RotYBase = new LiteralFloat("RBY");
+        public LiteralFloat RotZBase = new LiteralFloat("RBZ");
+        public LiteralFloat RotXVel = new LiteralFloat("RVX");
+        public LiteralFloat RotYVel = new LiteralFloat("RVY");
+        public LiteralFloat RotZVel = new LiteralFloat("RVZ");
+        public LiteralFloat VelMin = new LiteralFloat("VMin");
+        public LiteralFloat VelMax = new LiteralFloat("VMax");
+        public LiteralFloat VelFlatteryRate = new LiteralFloat("FltR");
+        public LiteralFloat VelFlatterySpeed = new LiteralFloat("FltS");
+        public LiteralInt UvCellU = new LiteralInt("UvCU");
+        public LiteralInt UvCellV = new LiteralInt("UvCV");
+        public LiteralInt UvInterval = new LiteralInt("UvIv");
+        public LiteralInt UvNoRandom = new LiteralInt("UvNR");
+        public LiteralInt UvNoLoopCount = new LiteralInt("UvLC");
+        public LiteralInt InjectionModelIdx = new LiteralInt("IJMN");
+        public LiteralInt InjectionVertexBindModelIdx = new LiteralInt("VBMN");
+        public LiteralInt InjectionRadialDir0 = new LiteralInt("IRD0");
+        public LiteralInt InjectionRadialDir1 = new LiteralInt("IRD1");
+        public LiteralFloat PivotX = new LiteralFloat("PvtX");
+        public LiteralFloat PivotY = new LiteralFloat("PvtY");
+        public LiteralInt BlockNum = new LiteralInt("BlkN");
+        public LiteralFloat LineLengthMin = new LiteralFloat("LLin");
+        public LiteralFloat LineLengthMax = new LiteralFloat("LLax");
+        public LiteralInt CreateIntervalVal = new LiteralInt("CrI");
+        public LiteralInt CreateIntervalRandom = new LiteralInt("CrIR");
+        public LiteralInt CreateIntervalCount = new LiteralInt("CrIC");
+        public LiteralInt CreateIntervalLife = new LiteralInt("CrIL");
+        public LiteralInt CreateNewAfterDelete = new LiteralInt("bCrN", size: 1);
+        public LiteralInt UvReverse = new LiteralInt("bRUV", size: 1);
+        public LiteralInt ScaleRandomLink = new LiteralInt("bSRL", size: 1);
+        public LiteralInt BindParent = new LiteralInt("bBnP", size: 1);
+        public LiteralInt ScaleByParent = new LiteralInt("bSnP", size: 1);
+        public LiteralInt PolyLineTag = new LiteralInt("PolT");
 
         List<Base> Attributes;
 
         public ColorStruct Colors;
         public ColorFrames Frames;
 
-        public AVFXParticleSimple(string jsonPath) : base(jsonPath, NAME)
+        public AVFXParticleSimple() : base(NAME)
         {
             Attributes = new List<Base>(new Base[]{
                 InjectionPositionType,
@@ -170,15 +170,6 @@ namespace AVFXLib.Models
             SetDefault(Attributes);
             Colors = new ColorStruct(new byte[16]);
             Frames = new ColorFrames(new byte[8]);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            elem["colors"] = Colors.GetJSON();
-            elem["colorFrames"] = Frames.GetJSON();
-            return elem;
         }
 
         public override AVFXNode toAVFX()

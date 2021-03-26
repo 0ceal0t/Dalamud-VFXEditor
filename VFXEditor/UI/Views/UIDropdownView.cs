@@ -16,6 +16,7 @@ namespace VFXEditor.UI.VFX
     public abstract class UIDropdownView<T> : UIBase where T : UINode {
         public string Id;
         public string defaultText;
+        public UIMain Main;
         public AVFXBase AVFX;
         public UINodeGroup<T> Group;
         public T Selected = null;
@@ -24,8 +25,8 @@ namespace VFXEditor.UI.VFX
         public bool AllowNew;
         public bool AllowDelete;
 
-        public UIDropdownView( AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" )
-        {
+        public UIDropdownView( UIMain main, AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
+            Main = main;
             AVFX = avfx;
             Id = _id;
             defaultText = _defaultText;
@@ -37,10 +38,9 @@ namespace VFXEditor.UI.VFX
         public abstract void OnDelete( T item );
         public abstract byte[] OnExport( T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node );
+        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node, bool imported = false );
 
-        public override void Draw( string parentId = "" )
-        {
+        public override void Draw( string parentId = "" ) {
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
             ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
             ImGui.BeginChild( "Child" + Id, new Vector2( ImGui.GetWindowWidth() - 0, 33 ) );
@@ -49,24 +49,19 @@ namespace VFXEditor.UI.VFX
             ViewSelect();
 
             ImGui.PushFont( UiBuilder.IconFont );
-            if( AllowNew )
-            {
+            if( AllowNew ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) )
-                {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) ) {
                     ImGui.OpenPopup( "New_Popup" + Id );
                 }
             }
-            if( Selected != null && AllowDelete )
-            {
+            if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) )
-                {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) ) {
                     SaveDialog( Selected );
                 }
                 ImGui.SameLine();
-                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id) )
-                {
+                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
                     Group.Remove( Selected );
                     Selected.DeleteNode();
                     OnDelete( Selected );
@@ -90,8 +85,7 @@ namespace VFXEditor.UI.VFX
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             // ====================
-            if( Selected != null )
-            {
+            if( Selected != null ) {
                 Selected.DrawBody( Id );
             }
         }
@@ -125,6 +119,7 @@ namespace VFXEditor.UI.VFX
                 }
             } );
         }
+
         public void Load(string path ) {
             var node = AVFXLib.Main.Reader.readAVFX( path, out List<string> messages );
             foreach( string message in messages ) {

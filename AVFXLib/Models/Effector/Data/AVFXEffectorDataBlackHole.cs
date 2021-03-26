@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace AVFXLib.Models
 
         List<Base> Attributes;
 
-        public AVFXEffectorDataBlackHole(string jsonPath) : base(jsonPath, "Data")
+        public AVFXEffectorDataBlackHole() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
             });
@@ -30,13 +30,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

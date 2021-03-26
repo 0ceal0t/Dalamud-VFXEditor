@@ -10,12 +10,12 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLaser : AVFXParticleData
     {
-        public AVFXCurve Length = new AVFXCurve("length", "Len");
-        public AVFXCurve Width = new AVFXCurve( "width", "Wdt" );
+        public AVFXCurve Length = new AVFXCurve("Len");
+        public AVFXCurve Width = new AVFXCurve("Wdt");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataLaser(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataLaser() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Length,
@@ -33,13 +33,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

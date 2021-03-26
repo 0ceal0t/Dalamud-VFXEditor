@@ -38,6 +38,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Render distance settings for overlay
+- [ ] Weapons / footsteps / etc. in live view
 - [ ] Live view in cutscenes
 - [ ] Export/Import dependencies
 - [ ] Cutscene VFX select

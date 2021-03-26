@@ -10,14 +10,14 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLine : AVFXParticleData
     {
-        public LiteralInt LineCount = new LiteralInt( "lineCount", "LnCT" );
-        public AVFXCurve Length = new AVFXCurve( "length", "Len" );
-        public AVFXCurveColor ColorBegin = new AVFXCurveColor( "colorBegin", name: "ColB" );
-        public AVFXCurveColor ColorEnd = new AVFXCurveColor( "colorEnd", name: "ColE" );
+        public LiteralInt LineCount = new LiteralInt( "LnCT" );
+        public AVFXCurve Length = new AVFXCurve( "Len" );
+        public AVFXCurveColor ColorBegin = new AVFXCurveColor(name: "ColB" );
+        public AVFXCurveColor ColorEnd = new AVFXCurveColor(name: "ColE" );
 
         List<Base> Attributes;
 
-        public AVFXParticleDataLine(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataLine() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 LineCount,
@@ -36,13 +36,6 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             Assigned = true;
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

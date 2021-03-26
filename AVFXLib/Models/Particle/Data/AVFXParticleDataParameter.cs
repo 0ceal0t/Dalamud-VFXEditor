@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace AVFXLib.Models
     {
         List<Base> Attributes;
 
-        public AVFXParticleDataParameter(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataParameter() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
             });
@@ -27,13 +27,6 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             Assigned = true;
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

@@ -10,16 +10,16 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterDataCone : AVFXEmitterData
     {
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "rotationOrder", "ROT" );
-        public AVFXCurve AngleY = new AVFXCurve( "angleY", "AnY" );
-        public AVFXCurve OuterSize = new AVFXCurve( "outerSize", "OuS" );
-        public AVFXCurve InjectionSpeed = new AVFXCurve( "injectionSpeed", "IjS" );
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "injectionSpeedRandom", "IjSR" );
-        public AVFXCurve InjectionAngle = new AVFXCurve( "injectionAngle", "IjA" );
+        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "ROT" );
+        public AVFXCurve AngleY = new AVFXCurve( "AnY" );
+        public AVFXCurve OuterSize = new AVFXCurve( "OuS" );
+        public AVFXCurve InjectionSpeed = new AVFXCurve( "IjS" );
+        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
+        public AVFXCurve InjectionAngle = new AVFXCurve( "IjA" );
 
         List<Base> Attributes;
 
-        public AVFXEmitterDataCone( string jsonPath ) : base( jsonPath, "Data" )
+        public AVFXEmitterDataCone() : base( "Data" )
         {
             Attributes = new List<Base>( new Base[] {
                 RotationOrderType,
@@ -41,13 +41,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned( Attributes );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON( elem, Attributes );
-            return elem;
         }
 
         public override AVFXNode toAVFX()

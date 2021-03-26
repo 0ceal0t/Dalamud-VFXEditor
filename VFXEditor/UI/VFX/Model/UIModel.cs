@@ -157,5 +157,9 @@ namespace VFXEditor.UI.VFX
         public override string GetText() {
             return "Model " + Idx;
         }
+
+        public override byte[] toBytes() {
+            return Model.toAVFX().toBytes();
+        }
     }
 }

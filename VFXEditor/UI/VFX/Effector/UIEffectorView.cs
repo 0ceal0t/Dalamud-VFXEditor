@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEffectorView : UIDropdownView<UIEffector>
     {
-        public UIEffectorView(AVFXBase avfx) : base(avfx, "##EFFCT", "Select an Effector", defaultPath: "effector_default.vfxedit" )
+        public UIEffectorView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##EFFCT", "Select an Effector", defaultPath: "effector_default.vfxedit" )
         {
             Group = UINode._Effectors;
             Group.Items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
@@ -23,11 +23,11 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIEffector item ) {
             return item.Effector.toAVFX().toBytes();
         }
-        public override UIEffector OnImport( AVFXNode node ) {
+        public override UIEffector OnImport( AVFXNode node, bool imported = false ) {
             AVFXEffector item = new AVFXEffector();
             item.read( node );
             AVFX.addEffector( item );
-            return new UIEffector( item, this );
+            return new UIEffector( item, this, imported );
         }
     }
 }

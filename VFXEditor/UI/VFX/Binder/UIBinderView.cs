@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIBinderView : UIDropdownView<UIBinder>
     {
-        public UIBinderView(AVFXBase avfx) : base(avfx, "##BIND", "Select a Binder", defaultPath:"binder_default.vfxedit" )
+        public UIBinderView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath:"binder_default.vfxedit" )
         {
             Group = UINode._Binders;
             Group.Items = AVFX.Binders.Select( item => new UIBinder( item, this ) ).ToList();
@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIBinder item ) {
             return item.Binder.toAVFX().toBytes();
         }
-        public override UIBinder OnImport( AVFXNode node ) {
+        public override UIBinder OnImport( AVFXNode node, bool imported = false ) {
             AVFXBinder item = new AVFXBinder();
             item.read( node );
             AVFX.addBinder( item );

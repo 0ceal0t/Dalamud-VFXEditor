@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,13 +11,13 @@ namespace AVFXLib.Models
 
     public class AVFXScheduleSubItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralInt StartTime = new LiteralInt("startTime", "StTm");
-        public LiteralInt TimelineIdx = new LiteralInt("timelineIdx", "TlNo");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralInt StartTime = new LiteralInt("StTm");
+        public LiteralInt TimelineIdx = new LiteralInt("TlNo");
 
         public List<Base> Attributes;
 
-        public AVFXScheduleSubItem() : base("subItem", "SubItem")
+        public AVFXScheduleSubItem() : base("SubItem")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -37,13 +37,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

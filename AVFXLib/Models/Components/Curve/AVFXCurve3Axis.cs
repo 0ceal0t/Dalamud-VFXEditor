@@ -10,18 +10,18 @@ namespace AVFXLib.Models
 {
     public class AVFXCurve3Axis : Base
     {
-        public LiteralEnum<AxisConnect> AxisConnectType = new LiteralEnum<AxisConnect>("axisConnectType", "ACT");
-        public LiteralEnum<RandomType> AxisConnectRandomType = new LiteralEnum<RandomType>("axisConnectRandomType", "ACTR");
-        public AVFXCurve X = new AVFXCurve("X", "X");
-        public AVFXCurve Y = new AVFXCurve("Y", "Y");
-        public AVFXCurve Z = new AVFXCurve("Z", "Z");
-        public AVFXCurve RX = new AVFXCurve("RandomX", "XR");
-        public AVFXCurve RY = new AVFXCurve("RandomY", "YR");
-        public AVFXCurve RZ = new AVFXCurve("RandomZ", "ZR");
+        public LiteralEnum<AxisConnect> AxisConnectType = new LiteralEnum<AxisConnect>("ACT");
+        public LiteralEnum<RandomType> AxisConnectRandomType = new LiteralEnum<RandomType>("ACTR");
+        public AVFXCurve X = new AVFXCurve("X");
+        public AVFXCurve Y = new AVFXCurve("Y");
+        public AVFXCurve Z = new AVFXCurve("Z");
+        public AVFXCurve RX = new AVFXCurve("XR");
+        public AVFXCurve RY = new AVFXCurve("YR");
+        public AVFXCurve RZ = new AVFXCurve("ZR");
 
         List<Base> Attributes;
 
-        public AVFXCurve3Axis(string jsonPath, string avfxName) : base(jsonPath, avfxName)
+        public AVFXCurve3Axis(string avfxName) : base(avfxName)
         {
             Attributes = new List<Base>(new Base[]{
                 AxisConnectType,
@@ -47,13 +47,6 @@ namespace AVFXLib.Models
             SetUnAssigned(Attributes);
             SetDefault(AxisConnectType);
             SetDefault(AxisConnectRandomType);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

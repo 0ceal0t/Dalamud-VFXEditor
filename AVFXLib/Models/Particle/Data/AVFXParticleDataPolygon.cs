@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,11 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataPolygon : AVFXParticleData
     {
-        public AVFXCurve Count = new AVFXCurve("count", "Cnt");
+        public AVFXCurve Count = new AVFXCurve("Cnt");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataPolygon(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataPolygon() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Count
@@ -31,13 +31,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

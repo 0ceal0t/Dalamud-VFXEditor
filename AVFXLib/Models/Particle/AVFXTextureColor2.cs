@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,21 +10,21 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureColor2 : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralBool ColorToAlpha = new LiteralBool("colorToAlpha", "bC2A");
-        public LiteralBool UseScreenCopy = new LiteralBool("useScreenCopy", "bUSC");
-        public LiteralBool PreviousFrameCopy = new LiteralBool("previousFrameCopy", "bPFC");
-        public LiteralInt UvSetIdx = new LiteralInt("uvSetIdx", "UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("textureBorderU", "TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("textureBorderV", "TBVT");
-        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("textureCalculateColor", "TCCT");
-        public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new LiteralEnum<TextureCalculateAlpha>("textureCalculateAlpha", "TCAT");
-        public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralBool ColorToAlpha = new LiteralBool("bC2A");
+        public LiteralBool UseScreenCopy = new LiteralBool("bUSC");
+        public LiteralBool PreviousFrameCopy = new LiteralBool("bPFC");
+        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
+        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("TCCT");
+        public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new LiteralEnum<TextureCalculateAlpha>("TCAT");
+        public LiteralInt TextureIdx = new LiteralInt("TxNo");
 
         List<Base> Attributes;
 
-        public AVFXTextureColor2(string jsonPath, string avfxName) : base(jsonPath, avfxName)
+        public AVFXTextureColor2(string avfxName) : base(avfxName)
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -51,13 +51,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetDefault(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

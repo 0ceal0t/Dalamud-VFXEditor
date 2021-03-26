@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,7 +14,7 @@ namespace AVFXLib.Models
         // remember to pad out avfx name to 4
         public int Size { get; set; }
 
-        public LiteralBase(string jsonPath, string avfxName, int size) : base(jsonPath, avfxName)
+        public LiteralBase(string avfxName, int size) : base(avfxName)
         {
             Size = size;
         }

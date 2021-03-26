@@ -18,7 +18,7 @@ namespace AVFXLib.Models
         public List<VNum> VNums = new List<VNum>();
         public List<EmitVertex> EmitVertices = new List<EmitVertex>();
 
-        public AVFXModel() : base("model", NAME)
+        public AVFXModel() : base(NAME)
         {
         }
 
@@ -97,11 +97,6 @@ namespace AVFXLib.Models
         }
         public void removeEmitVertex( EmitVertex item ) {
             EmitVertices.Remove( item );
-        }
-
-        public override JToken toJSON()
-        {
-            return new JValue("");
         }
 
         public override AVFXNode toAVFX()

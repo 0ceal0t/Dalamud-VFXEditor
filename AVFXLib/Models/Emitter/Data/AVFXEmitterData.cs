@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace AVFXLib.Models
     public abstract class AVFXEmitterData : Base
     {
         public const string NAME = "Data";
-        public AVFXEmitterData(string jsonPath, string avfxName) : base(jsonPath, avfxName)
+        public AVFXEmitterData(string avfxName) : base(avfxName)
         {
 
         }

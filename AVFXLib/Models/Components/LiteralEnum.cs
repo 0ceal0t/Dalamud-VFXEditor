@@ -14,7 +14,7 @@ namespace AVFXLib.Models
         public T Value { get; set; }
         public string[] Options = Enum.GetNames(typeof(T));
 
-        public LiteralEnum(string jsonPath, string avfxName, int size = 4) : base(jsonPath, avfxName, size)
+        public LiteralEnum(string avfxName, int size = 4) : base(avfxName, size)
         {
         }
 
@@ -50,10 +50,6 @@ namespace AVFXLib.Models
             GiveValue((T)(object)0);
         }
 
-        public override JToken toJSON()
-        {
-            return new JValue(stringValue());
-        }
 
         public override AVFXNode toAVFX()
         {

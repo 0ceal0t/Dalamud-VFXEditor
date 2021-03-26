@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Tex";
 
-        public LiteralString Path = new LiteralString("path", NAME);
+        public LiteralString Path = new LiteralString(NAME);
 
-        public AVFXTexture() : base("path", NAME)
+        public AVFXTexture() : base(NAME)
         {
         }
 
@@ -30,11 +30,6 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             Path.GiveValue("");
-        }
-
-        public override JToken toJSON()
-        {
-            return Path.toJSON();
         }
 
         public override AVFXNode toAVFX()

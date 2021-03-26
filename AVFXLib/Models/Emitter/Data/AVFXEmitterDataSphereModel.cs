@@ -10,17 +10,17 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterDataSphereModel : AVFXEmitterData
     {
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("rotationOrder", "ROT");
-        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>("generateMethod", "GeMT");
-        public LiteralInt DivideX = new LiteralInt("divideX", "DivX");
-        public LiteralInt DivideY = new LiteralInt("divideY", "DivY");
-        public AVFXCurve Radius = new AVFXCurve("radius", "Rads");
-        public AVFXCurve InjectionSpeed = new AVFXCurve("injectionSpeed", "IjS");
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "injectionSpeedRandom", "IjSR" );
+        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("ROT");
+        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>("GeMT");
+        public LiteralInt DivideX = new LiteralInt("DivX");
+        public LiteralInt DivideY = new LiteralInt("DivY");
+        public AVFXCurve Radius = new AVFXCurve("Rads");
+        public AVFXCurve InjectionSpeed = new AVFXCurve("IjS");
+        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
 
         List<Base> Attributes;
 
-        public AVFXEmitterDataSphereModel(string jsonPath) : base(jsonPath, "Data")
+        public AVFXEmitterDataSphereModel() : base("Data")
         {
             Attributes = new List<Base>(new Base[] {
                 RotationOrderType,
@@ -47,13 +47,6 @@ namespace AVFXLib.Models
             SetDefault(GenerateMethodType);
             DivideX.GiveValue(1);
             DivideY.GiveValue(1);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

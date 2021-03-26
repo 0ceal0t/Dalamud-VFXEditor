@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace AVFXLib.Models
 
         public List<AVFXEmitterIterationItem> Items;
 
-        public AVFXEmitterCreateParticle() : base("itpr", NAME)
+        public AVFXEmitterCreateParticle() : base(NAME)
         {
             Items = new List<AVFXEmitterIterationItem>();
         }
@@ -34,18 +34,6 @@ namespace AVFXLib.Models
                 Item.read(dummyNode);
                 Items.Add(Item);
             }
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            JArray itemArray = new JArray();
-            foreach (AVFXEmitterIterationItem item in Items)
-            {
-                itemArray.Add(item.toJSON());
-            }
-            elem["items"] = itemArray;
-            return elem;
         }
 
         public override AVFXNode toAVFX()

@@ -12,14 +12,14 @@ namespace AVFXLib.Models
 {
     public class AVFXCurve : Base
     {
-        public LiteralEnum<CurveBehavior> PreBehavior = new LiteralEnum<CurveBehavior>("preBehavior", "BvPr");
-        public LiteralEnum<CurveBehavior> PostBehavior = new LiteralEnum<CurveBehavior>("postBehavior", "BvPo");
-        public LiteralEnum<RandomType> Random = new LiteralEnum<RandomType>("randomType", "RanT");
+        public LiteralEnum<CurveBehavior> PreBehavior = new LiteralEnum<CurveBehavior>("BvPr");
+        public LiteralEnum<CurveBehavior> PostBehavior = new LiteralEnum<CurveBehavior>("BvPo");
+        public LiteralEnum<RandomType> Random = new LiteralEnum<RandomType>("RanT");
 
         public List<AVFXKey> Keys = new List<AVFXKey>();
         List<Base> Attributes;
 
-        public AVFXCurve(string jsonPath, string avfxName) : base(jsonPath, avfxName)
+        public AVFXCurve(string avfxName) : base(avfxName)
         {
             Attributes = new List<Base>(new Base[]{
                 PreBehavior,
@@ -73,21 +73,6 @@ namespace AVFXLib.Models
         }
         public void removeKey(AVFXKey item ) {
             Keys.Remove( item );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-
-            PutJSON(elem, Attributes);
-            JArray keyArray = new JArray();
-            foreach(AVFXKey key in Keys)
-            {
-                keyArray.Add(key.GetJSON());
-            }
-            elem["keys"] = keyArray;
-
-            return elem;
         }
 
         public override AVFXNode toAVFX()

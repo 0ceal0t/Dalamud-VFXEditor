@@ -21,12 +21,12 @@ namespace VFXEditor.UI.VFX
 
         public UINodeSelect<UIBinder> BinderSelect;
 
-        public UITimeline(AVFXTimeline timeline, UITimelineView view)
+        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool imported = false )
         {
             Timeline = timeline;
             View = view;
             _Color = TimelineColor;
-
+            Imported = imported;
             BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINode._Binders, Timeline.BinderIdx );
             //===============
             Items = new List<UITimelineItem>();
@@ -76,6 +76,10 @@ namespace VFXEditor.UI.VFX
 
         public override string GetText() {
             return "Timeline " + Idx;
+        }
+
+        public override byte[] toBytes() {
+            return Timeline.toAVFX().toBytes();
         }
     }
 }

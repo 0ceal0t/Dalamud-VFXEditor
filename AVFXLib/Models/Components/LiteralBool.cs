@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,7 +13,7 @@ namespace AVFXLib.Models
     {
         public bool? Value { get; set; }
 
-        public LiteralBool(string jsonPath, string avfxName, int size = 4) : base(jsonPath, avfxName, size)
+        public LiteralBool(string avfxName, int size = 4) : base(avfxName, size)
         {
         }
 
@@ -45,15 +45,6 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             GiveValue(false);
-        }
-
-        public override JToken toJSON()
-        {
-            if(Value == null)
-            {
-                return new JValue(-1);
-            }
-            return new JValue(Value);
         }
 
         public override AVFXNode toAVFX()

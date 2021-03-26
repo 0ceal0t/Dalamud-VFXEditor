@@ -10,25 +10,25 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataModel : AVFXParticleData
     {
-        public LiteralInt ModelNumberRandomValue = new LiteralInt("modelNumberRandomValue", "MNRv");
-        public LiteralEnum<RandomType> ModelNumberRandomType = new LiteralEnum<RandomType>("modelNumberRandomType", "MNRt");
-        public LiteralInt ModelNumberRandomInterval = new LiteralInt("modelNumberRandomInterval", "MNRi");
-        public LiteralEnum<FresnelType> FresnelType = new LiteralEnum<FresnelType>("fresnelType", "FrsT");
-        public LiteralEnum<DirectionalLightType> DirectionalLightType = new LiteralEnum<DirectionalLightType>("directionalLightType", "DLT");
-        public LiteralEnum<PointLightType> PointLightType = new LiteralEnum<PointLightType>("pointLightType", "PLT");
-        public LiteralBool IsLightning = new LiteralBool("isLightning", "bLgt");
-        public LiteralBool IsMorph = new LiteralBool("isMorph", "bShp");
-        public LiteralIntList ModelIdx = new LiteralIntList( "modelIdx", "MdNo");
+        public LiteralInt ModelNumberRandomValue = new LiteralInt("MNRv");
+        public LiteralEnum<RandomType> ModelNumberRandomType = new LiteralEnum<RandomType>("MNRt");
+        public LiteralInt ModelNumberRandomInterval = new LiteralInt("MNRi");
+        public LiteralEnum<FresnelType> FresnelType = new LiteralEnum<FresnelType>("FrsT");
+        public LiteralEnum<DirectionalLightType> DirectionalLightType = new LiteralEnum<DirectionalLightType>("DLT");
+        public LiteralEnum<PointLightType> PointLightType = new LiteralEnum<PointLightType>("PLT");
+        public LiteralBool IsLightning = new LiteralBool("bLgt");
+        public LiteralBool IsMorph = new LiteralBool("bShp");
+        public LiteralIntList ModelIdx = new LiteralIntList( "MdNo");
 
-        public AVFXCurve Morph = new AVFXCurve("morph", "Moph");
-        public AVFXCurve FresnelCurve = new AVFXCurve("fresnelCurve", "FrC");
-        public AVFXCurve3Axis FresnelRotation = new AVFXCurve3Axis("fresnelRotation", "FrRt");
-        public AVFXCurveColor ColorBegin = new AVFXCurveColor("colorBegin", name: "ColB");
-        public AVFXCurveColor ColorEnd = new AVFXCurveColor("colorEnd", name: "ColE");
+        public AVFXCurve Morph = new AVFXCurve("Moph");
+        public AVFXCurve FresnelCurve = new AVFXCurve("FrC");
+        public AVFXCurve3Axis FresnelRotation = new AVFXCurve3Axis("FrRt");
+        public AVFXCurveColor ColorBegin = new AVFXCurveColor(name: "ColB");
+        public AVFXCurveColor ColorEnd = new AVFXCurveColor(name: "ColE");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataModel(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataModel() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 ModelNumberRandomValue,
@@ -63,13 +63,6 @@ namespace AVFXLib.Models
             SetUnAssigned(FresnelRotation);
             SetUnAssigned(ColorBegin);
             SetUnAssigned(ColorEnd);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

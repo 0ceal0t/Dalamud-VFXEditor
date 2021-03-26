@@ -12,20 +12,20 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Efct";
 
-        public LiteralEnum<EffectorType> EffectorVariety = new LiteralEnum<EffectorType>("effectorType", "EfVT");
-        public LiteralEnum<RotationOrder> RotationOrder = new LiteralEnum<RotationOrder>("rotationOrder", "RoOT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrder = new LiteralEnum<CoordComputeOrder>("coordComputeOrder", "CCOT");
-        public LiteralBool AffectOtherVfx = new LiteralBool("affectOtherVfx", "bAOV");
-        public LiteralBool AffectGame = new LiteralBool("affectGame", "bAGm");
-        public LiteralInt LoopPointStart = new LiteralInt("loopPointStart", "LpSt");
-        public LiteralInt LoopPointEnd = new LiteralInt("loopPointEnd", "LpEd");
+        public LiteralEnum<EffectorType> EffectorVariety = new LiteralEnum<EffectorType>("EfVT");
+        public LiteralEnum<RotationOrder> RotationOrder = new LiteralEnum<RotationOrder>("RoOT");
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrder = new LiteralEnum<CoordComputeOrder>("CCOT");
+        public LiteralBool AffectOtherVfx = new LiteralBool("bAOV");
+        public LiteralBool AffectGame = new LiteralBool("bAGm");
+        public LiteralInt LoopPointStart = new LiteralInt("LpSt");
+        public LiteralInt LoopPointEnd = new LiteralInt("LpEd");
 
         public EffectorType Type;
         public AVFXEffectorData Data;
 
         List<Base> Attributes;
 
-        public AVFXEffector() : base("effectors", NAME)
+        public AVFXEffector() : base(NAME)
         {
             Attributes = new List<Base>(new Base[]{
                 EffectorVariety,
@@ -55,14 +55,6 @@ namespace AVFXLib.Models
             }
         }
 
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            PutJSON(elem, Data);
-            return elem;
-        }
-
         public override AVFXNode toAVFX()
         {
             AVFXNode effectorAvfx = new AVFXNode("Efct");
@@ -85,13 +77,13 @@ namespace AVFXLib.Models
             switch (type)
             {
                 case EffectorType.PointLight:
-                    Data = new AVFXEffectorDataPointLight("data");
+                    Data = new AVFXEffectorDataPointLight();
                     break;
                 case EffectorType.DirectionalLight:
-                    Data = new AVFXEffectorDataDirectionalLight( "data" );
+                    Data = new AVFXEffectorDataDirectionalLight();
                     break;
                 case EffectorType.RadialBlur:
-                    Data = new AVFXEffectorDataRadialBlur("data");
+                    Data = new AVFXEffectorDataRadialBlur();
                     break;
                 case EffectorType.BlackHole:
                     AVFXNode.LogMessages.Add( "ClearHole Effector Data!" );
@@ -99,7 +91,7 @@ namespace AVFXLib.Models
                     break;
                 case EffectorType.CameraQuake2_Unknown:
                 case EffectorType.CameraQuake:
-                    Data = new AVFXEffectorDataCameraQuake("data");
+                    Data = new AVFXEffectorDataCameraQuake();
                     break;
                 default:
                     Data = null;

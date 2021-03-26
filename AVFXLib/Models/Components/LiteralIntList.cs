@@ -12,7 +12,7 @@ namespace AVFXLib.Models
     {
         public List<int> Value { get; set; }
 
-        public LiteralIntList( string jsonPath, string avfxName, int size = 1 ) : base( jsonPath, avfxName, size )
+        public LiteralIntList(string avfxName, int size = 1 ) : base(avfxName, size )
         {
             Value = new List<int>();
             Value.Add( 0 );
@@ -41,6 +41,9 @@ namespace AVFXLib.Models
         {
             GiveValue( new List<int>( value ) );
         }
+        public void GiveValue(int value, int idx ) {
+            Value[idx] = value;
+        }
         public void GiveValue( List<int> value )
         {
             Value.Clear();
@@ -63,16 +66,6 @@ namespace AVFXLib.Models
         public override void toDefault()
         {
             GiveValue( 0 );
-        }
-
-        public override JToken toJSON()
-        {
-            JArray val = new JArray();
-            foreach(int i in Value )
-            {
-                val.Add( i );
-            }
-            return val;
         }
 
         public override AVFXNode toAVFX()

@@ -10,42 +10,42 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataPolyline : AVFXParticleData
     {
-        public LiteralEnum<LineCreateType> CreateLineType = new LiteralEnum<LineCreateType>("createLineType", "LnCT");
-        public LiteralEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new LiteralEnum<NotBillboardBaseAxisType>("notBillBoardBaseAxisType", "NBBA");
-        public LiteralInt BindWeaponType = new LiteralInt("bindWeaponType", "BWpT");
-        public LiteralInt PointCount = new LiteralInt("pointCount", "PnC");
-        public LiteralInt PointCountCenter = new LiteralInt("pointCountCenter", "PnCC");
-        public LiteralInt PointCountEndDistortion = new LiteralInt("pointCountEndDistortion", "PnED");
-        public LiteralBool UseEdge = new LiteralBool("useEdge", "bEdg");
-        public LiteralBool NotBillboard = new LiteralBool("notBillboard", "bNtB");
-        public LiteralBool BindWeapon = new LiteralBool("bindWeapon", "BdWp");
-        public LiteralBool ConnectTarget = new LiteralBool("connectTarget", "bCtg");
-        public LiteralBool ConnectTargetReverse = new LiteralBool("connectTargetReverse", "bCtr");
-        public LiteralInt TagNumber = new LiteralInt("tagNumber", "TagN");
-        public LiteralBool IsSpline = new LiteralBool("isSpline", "bSpl");
-        public LiteralBool IsLocal = new LiteralBool("isLocal", "bLcl");
+        public LiteralEnum<LineCreateType> CreateLineType = new LiteralEnum<LineCreateType>("LnCT");
+        public LiteralEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new LiteralEnum<NotBillboardBaseAxisType>("NBBA");
+        public LiteralInt BindWeaponType = new LiteralInt("BWpT");
+        public LiteralInt PointCount = new LiteralInt("PnC");
+        public LiteralInt PointCountCenter = new LiteralInt("PnCC");
+        public LiteralInt PointCountEndDistortion = new LiteralInt("PnED");
+        public LiteralBool UseEdge = new LiteralBool("bEdg");
+        public LiteralBool NotBillboard = new LiteralBool("bNtB");
+        public LiteralBool BindWeapon = new LiteralBool("BdWp");
+        public LiteralBool ConnectTarget = new LiteralBool("bCtg");
+        public LiteralBool ConnectTargetReverse = new LiteralBool("bCtr");
+        public LiteralInt TagNumber = new LiteralInt("TagN");
+        public LiteralBool IsSpline = new LiteralBool("bSpl");
+        public LiteralBool IsLocal = new LiteralBool("bLcl");
 
-        public AVFXCurve CF = new AVFXCurve( "CF_unknown", "CF" );
-        public AVFXCurve Width = new AVFXCurve("width", "Wd");
-        public AVFXCurve WidthRandom = new AVFXCurve("widthRandom", "WdR");
-        public AVFXCurve WidthBegin = new AVFXCurve("widthBegin", "WdB");
-        public AVFXCurve WidthCenter = new AVFXCurve("widthCenter", "WdC");
-        public AVFXCurve WidthEnd = new AVFXCurve("widthEnd", "WdE");
-        public AVFXCurve Length = new AVFXCurve("length", "Len");
-        public AVFXCurve LengthRandom = new AVFXCurve( "lengthRandom", "LenR" );
-        public AVFXCurve Softness = new AVFXCurve("softness", "Sft");
-        public AVFXCurve SoftRandom = new AVFXCurve( "softness", "SftR" );
-        public AVFXCurve PnDs = new AVFXCurve( "PnDs_unkown", "PnDs" );
-        public AVFXCurveColor ColorBegin = new AVFXCurveColor("colorBegin", name: "ColB");
-        public AVFXCurveColor ColorCenter = new AVFXCurveColor("colorCenter", name: "ColC");
-        public AVFXCurveColor ColorEnd = new AVFXCurveColor("colorEnd", name: "ColE");
-        public AVFXCurveColor ColorEdgeBegin = new AVFXCurveColor("colorEdgeBegin", name: "CoEB");
-        public AVFXCurveColor ColorEdgeCenter = new AVFXCurveColor("colorEdgeCenter", name: "CoEC");
-        public AVFXCurveColor ColorEdgeEnd = new AVFXCurveColor("colorEdgeEnd", name: "CoEE");
+        public AVFXCurve CF = new AVFXCurve( "CF" );
+        public AVFXCurve Width = new AVFXCurve("Wd");
+        public AVFXCurve WidthRandom = new AVFXCurve("WdR");
+        public AVFXCurve WidthBegin = new AVFXCurve("WdB");
+        public AVFXCurve WidthCenter = new AVFXCurve("WdC");
+        public AVFXCurve WidthEnd = new AVFXCurve("WdE");
+        public AVFXCurve Length = new AVFXCurve("Len");
+        public AVFXCurve LengthRandom = new AVFXCurve( "LenR" );
+        public AVFXCurve Softness = new AVFXCurve("Sft");
+        public AVFXCurve SoftRandom = new AVFXCurve( "SftR" );
+        public AVFXCurve PnDs = new AVFXCurve( "PnDs" );
+        public AVFXCurveColor ColorBegin = new AVFXCurveColor(name: "ColB");
+        public AVFXCurveColor ColorCenter = new AVFXCurveColor(name: "ColC");
+        public AVFXCurveColor ColorEnd = new AVFXCurveColor(name: "ColE");
+        public AVFXCurveColor ColorEdgeBegin = new AVFXCurveColor(name: "CoEB");
+        public AVFXCurveColor ColorEdgeCenter = new AVFXCurveColor(name: "CoEC");
+        public AVFXCurveColor ColorEdgeEnd = new AVFXCurveColor(name: "CoEE");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataPolyline(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataPolyline() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 CreateLineType,
@@ -105,13 +105,6 @@ namespace AVFXLib.Models
             SetUnAssigned(ColorEdgeBegin);
             SetUnAssigned(ColorEdgeCenter);
             SetUnAssigned(ColorEdgeEnd);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

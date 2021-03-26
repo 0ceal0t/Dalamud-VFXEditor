@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,20 +11,20 @@ namespace AVFXLib.Models
     public class AVFXEffectorDataPointLight : AVFXEffectorData
     {
         public AVFXCurveColor Color = new AVFXCurveColor("color");
-        public AVFXCurve DistanceScale = new AVFXCurve("distanceScale", "DstS");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("rotation", "Rot");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("position", "Pos");
-        public LiteralEnum<PointLightAttenuation> PointLightAttenuationType = new LiteralEnum<PointLightAttenuation>("pointLightAttenuationType", "Attn");
-        public LiteralBool EnableShadow = new LiteralBool("enableShadow", "bSdw");
-        public LiteralBool EnableCharShadow = new LiteralBool("enableCharShadow", "bChS");
-        public LiteralBool EnableMapShadow = new LiteralBool("enableMapShadow", "bMpS");
-        public LiteralBool EnableMoveShadow = new LiteralBool("enableMoveShadow", "bMvS");
-        public LiteralFloat ShadowCreateDistanceNear = new LiteralFloat("shadowCreateDistanceNear", "SCDN");
-        public LiteralFloat ShadowCreateDistanceFar = new LiteralFloat("shadowCreateDistanceFar", "SCDF");
+        public AVFXCurve DistanceScale = new AVFXCurve("DstS");
+        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
+        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
+        public LiteralEnum<PointLightAttenuation> PointLightAttenuationType = new LiteralEnum<PointLightAttenuation>("Attn");
+        public LiteralBool EnableShadow = new LiteralBool("bSdw");
+        public LiteralBool EnableCharShadow = new LiteralBool("bChS");
+        public LiteralBool EnableMapShadow = new LiteralBool("bMpS");
+        public LiteralBool EnableMoveShadow = new LiteralBool("bMvS");
+        public LiteralFloat ShadowCreateDistanceNear = new LiteralFloat("SCDN");
+        public LiteralFloat ShadowCreateDistanceFar = new LiteralFloat("SCDF");
 
         List<Base> Attributes;
 
-        public AVFXEffectorDataPointLight(string jsonPath) : base(jsonPath, "Data")
+        public AVFXEffectorDataPointLight() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Color,
@@ -55,13 +55,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

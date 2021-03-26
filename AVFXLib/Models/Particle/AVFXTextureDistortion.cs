@@ -10,21 +10,21 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureDistortion : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralBool TargetUV1 = new LiteralBool("targetUV1", "bT1");
-        public LiteralBool TargetUV2 = new LiteralBool("targetUV2", "bT2");
-        public LiteralBool TargetUV3 = new LiteralBool("targetUV3", "bT3");
-        public LiteralBool TargetUV4 = new LiteralBool("targetUV4", "bT4");
-        public LiteralInt UvSetIdx = new LiteralInt("uvSetIdx", "UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("textureBorderU", "TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("textureBorderV", "TBVT");
-        public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
-        public AVFXCurve DPow = new AVFXCurve("distortPower", "DPow");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralBool TargetUV1 = new LiteralBool("bT1");
+        public LiteralBool TargetUV2 = new LiteralBool("bT2");
+        public LiteralBool TargetUV3 = new LiteralBool("bT3");
+        public LiteralBool TargetUV4 = new LiteralBool("bT4");
+        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
+        public LiteralInt TextureIdx = new LiteralInt("TxNo");
+        public AVFXCurve DPow = new AVFXCurve("DPow");
 
         List<Base> Attributes;
 
-        public AVFXTextureDistortion(string jsonPath) : base(jsonPath, "TD")
+        public AVFXTextureDistortion() : base("TD")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -54,13 +54,6 @@ namespace AVFXLib.Models
             DPow.toDefault();
             DPow.addKey();
 
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

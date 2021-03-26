@@ -10,12 +10,12 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataCamera : AVFXBinderData
     {
-        public AVFXCurve Distance = new AVFXCurve("distance", "Dst");
-        public AVFXCurve DistanceRandom = new AVFXCurve( "distance", "DstR" );
+        public AVFXCurve Distance = new AVFXCurve("Dst");
+        public AVFXCurve DistanceRandom = new AVFXCurve( "DstR" );
 
         List<Base> Attributes;
 
-        public AVFXBinderDataCamera(string jsonPath) : base(jsonPath, "Data")
+        public AVFXBinderDataCamera() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Distance,
@@ -33,13 +33,6 @@ namespace AVFXLib.Models
         {
             Assigned = true;
             SetUnAssigned(Attributes);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

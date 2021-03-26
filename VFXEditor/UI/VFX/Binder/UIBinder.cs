@@ -19,11 +19,12 @@ namespace VFXEditor.UI.VFX
         public UIItemSplitView<UIBinderProperties> PropSplit;
         public UINodeGraphView NodeView;
 
-        public UIBinder(AVFXBinder binder, UIBinderView view)
+        public UIBinder(AVFXBinder binder, UIBinderView view, bool imported = false)
         {
             Binder = binder;
             View = view;
             _Color = BinderColor;
+            Imported = imported;
             NodeView = new UINodeGraphView( this );
             //=====================
             Properties = new List<UIBinderProperties>();
@@ -120,6 +121,10 @@ namespace VFXEditor.UI.VFX
 
         public override string GetText() {
             return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
+        }
+
+        public override byte[] toBytes() {
+            return Binder.toAVFX().toBytes();
         }
     }
 }

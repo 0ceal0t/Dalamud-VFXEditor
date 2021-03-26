@@ -58,5 +58,9 @@ namespace VFXEditor.UI.VFX
         public override string GetText() {
             return "Scheduler " + Idx;
         }
+
+        public override byte[] toBytes() {
+            return Scheduler.toAVFX().toBytes();
+        }
     }
 }

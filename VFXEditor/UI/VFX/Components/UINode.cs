@@ -60,6 +60,7 @@ namespace VFXEditor.UI.VFX {
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
+        public bool Imported;
 
         public UINodeGraph Graph = null;
 
@@ -85,6 +86,7 @@ namespace VFXEditor.UI.VFX {
 
         public bool HasToolTip = false;
         public virtual void DrawToolTip() { }
+        public abstract byte[] toBytes();
     }
 
     public class UINodeGraphItem {
@@ -278,10 +280,16 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
+            if( Node.Imported && val > 0 ) {
+                val += Group.Items.Count;
+                Literal.GiveValue( val );
+                PluginLog.Log( $"Imported node {val}" );
+            }
             if( val >= 0 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
+            Node.Imported = false;
         }
 
         public override void DeleteNode( UINode node ) {
@@ -380,9 +388,15 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void SetupNode() {
-            foreach(var idx in Literal.Value ) {
-                if( idx != 255 && idx >= 0 && idx < Group.Items.Count ) {
-                    var item = Group.Items[idx];
+            for(int i = 0; i < Literal.Value.Count; i++ ) {
+                var val = Literal.Value[i];
+                if( Node.Imported && val != 255 ) {
+                    val += Group.Items.Count;
+                    Literal.GiveValue( val, i );
+                    PluginLog.Log( $"Imported list {val}" );
+                }
+                if( val != 255 && val >= 0 && val < Group.Items.Count ) {
+                    var item = Group.Items[val];
                     Selected.Add( item );
                     LinkTo( item );
                 }
@@ -390,6 +404,7 @@ namespace VFXEditor.UI.VFX {
                     Selected.Add( null );
                 }
             }
+            Node.Imported = false;
         }
 
         public override void DeleteNode( UINode node ) {

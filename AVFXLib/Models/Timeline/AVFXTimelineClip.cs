@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Main;
 using Newtonsoft.Json.Linq;
 using System;
@@ -26,7 +26,7 @@ namespace AVFXLib.Models
         public int[] UnknownInts;
         public float[] UnknownFloats;
 
-        public AVFXTimelineClip() : base("clip", NAME)
+        public AVFXTimelineClip() : base(NAME)
         {
             UnknownInts = new int[4];
             UnknownFloats = new float[4];
@@ -65,29 +65,6 @@ namespace AVFXLib.Models
             UniqueId = "LLIK";
             UnknownInts = new int[] { 0, 0, 0, 0 };
             UnknownFloats = new float[] { -1, 0, 0, 0 };
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-
-            elem["uniqueId"] = new JValue(UniqueId);
-
-            JArray intArray = new JArray();
-            foreach (int i in UnknownInts)
-            {
-                intArray.Add(new JValue(i));
-            }
-            elem["intVals"] = intArray;
-
-            JArray floatArray = new JArray();
-            foreach (int f in UnknownFloats)
-            {
-                floatArray.Add(new JValue(f));
-            }
-            elem["floatVals"] = floatArray;
-
-            return elem;
         }
 
         public override AVFXNode toAVFX()

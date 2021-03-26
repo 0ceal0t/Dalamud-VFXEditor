@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,13 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDecalRing : AVFXParticleData
     {
-        public AVFXCurve Width = new AVFXCurve("width", "WID");
-        public LiteralFloat ScalingScale = new LiteralFloat("scalingScale", "SS");
-        public LiteralFloat RingFan = new LiteralFloat("ringFan", "RF");
+        public AVFXCurve Width = new AVFXCurve("WID");
+        public LiteralFloat ScalingScale = new LiteralFloat("SS");
+        public LiteralFloat RingFan = new LiteralFloat("RF");
 
         List<Base> Attributes;
 
-        public AVFXParticleDataDecalRing(string jsonPath) : base(jsonPath, "Data")
+        public AVFXParticleDataDecalRing() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Width,
@@ -37,13 +37,6 @@ namespace AVFXLib.Models
             SetDefault(Attributes);
             SetUnAssigned(ScalingScale);
             SetUnAssigned(RingFan);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

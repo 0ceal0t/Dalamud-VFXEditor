@@ -12,56 +12,56 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Ptcl";
 
-        public LiteralInt LoopStart = new LiteralInt("loopStart", "LpSt");
-        public LiteralInt LoopEnd = new LiteralInt("loopEnd", "LpEd");
-        public LiteralEnum<ParticleType> ParticleVariety = new LiteralEnum<ParticleType>("particleType", "PrVT");
-        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new LiteralEnum<RotationDirectionBase>("rotationDirectionBase", "RBDT");
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("rotationOrder", "RoOT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new LiteralEnum<CoordComputeOrder>("coordComputeOrder", "CCOT");
-        public LiteralEnum<DrawMode> DrawModeType = new LiteralEnum<DrawMode>("drawMode", "RMT");
-        public LiteralEnum<CullingType> CullingTypeType = new LiteralEnum<CullingType>("cullingType", "CulT");
-        public LiteralEnum<EnvLight> EnvLightType = new LiteralEnum<EnvLight>("envLight", "EnvT");
-        public LiteralEnum<DirLight> DirLightType = new LiteralEnum<DirLight>("dirLight", "DirT");
-        public LiteralEnum<UVPrecision> UvPrecisionType = new LiteralEnum<UVPrecision>("uvPrecision", "UVPT");
-        public LiteralInt DrawPriority = new LiteralInt("drawPriority", "DwPr");
-        public LiteralBool IsDepthTest = new LiteralBool("isDepthTest", "DsDt");
-        public LiteralBool IsDepthWrite = new LiteralBool("isDepthWrite", "DsDw");
-        public LiteralBool IsSoftParticle = new LiteralBool("isSoftParticle", "DsSp");
-        public LiteralInt CollisionType = new LiteralInt("collisionType", "Coll");
-        public LiteralBool Bs11 = new LiteralBool("bs11", "bS11");
-        public LiteralBool IsApplyToneMap = new LiteralBool("isApplyToneMap", "bATM");
-        public LiteralBool IsApplyFog = new LiteralBool("isApplyFog", "bAFg");
-        public LiteralBool ClipNearEnable = new LiteralBool("clipNearEnable", "bNea");
-        public LiteralBool ClipFarEnable = new LiteralBool("clipFarEnable", "bFar");
-        public LiteralFloat ClipNearStart = new LiteralFloat("clipNearStart", "NeSt");
-        public LiteralFloat ClipNearEnd = new LiteralFloat("clipNearEnd", "NeEd");
-        public LiteralFloat ClipFarStart = new LiteralFloat("clipFarStart", "FaSt");
-        public LiteralFloat ClipFarEnd = new LiteralFloat("clipFarEnd", "FaEd");
-        public LiteralEnum<ClipBasePoint> ClipBasePointType = new LiteralEnum<ClipBasePoint>("clipBasePoint", "FaBP");
-        public LiteralInt UvSetCount = new LiteralInt("uvSetCount", "UvSN");
-        public LiteralInt ApplyRateEnvironment = new LiteralInt("applyRateEnvironment", "EvAR");
-        public LiteralInt ApplyRateDirectional = new LiteralInt("applyRateDirectional", "DlAR");
-        public LiteralInt ApplyRateLightBuffer = new LiteralInt("applyRateLightBuffer", "LBAR");
-        public LiteralBool DOTy = new LiteralBool("DOTy", "DOTy");
-        public LiteralFloat DepthOffset = new LiteralFloat("depthOffset", "DpOf");
-        public LiteralBool SimpleAnimEnable = new LiteralBool("simpleAnimEnabled", "bSCt");
-        public AVFXLife Life = new AVFXLife("life");
-        public AVFXParticleSimple Simple = new AVFXParticleSimple("simpleAnimations");
+        public LiteralInt LoopStart = new LiteralInt("LpSt");
+        public LiteralInt LoopEnd = new LiteralInt("LpEd");
+        public LiteralEnum<ParticleType> ParticleVariety = new LiteralEnum<ParticleType>("PrVT");
+        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new LiteralEnum<RotationDirectionBase>("RBDT");
+        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("RoOT");
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new LiteralEnum<CoordComputeOrder>("CCOT");
+        public LiteralEnum<DrawMode> DrawModeType = new LiteralEnum<DrawMode>("RMT");
+        public LiteralEnum<CullingType> CullingTypeType = new LiteralEnum<CullingType>("CulT");
+        public LiteralEnum<EnvLight> EnvLightType = new LiteralEnum<EnvLight>("EnvT");
+        public LiteralEnum<DirLight> DirLightType = new LiteralEnum<DirLight>("DirT");
+        public LiteralEnum<UVPrecision> UvPrecisionType = new LiteralEnum<UVPrecision>("UVPT");
+        public LiteralInt DrawPriority = new LiteralInt("DwPr");
+        public LiteralBool IsDepthTest = new LiteralBool("DsDt");
+        public LiteralBool IsDepthWrite = new LiteralBool("DsDw");
+        public LiteralBool IsSoftParticle = new LiteralBool("DsSp");
+        public LiteralInt CollisionType = new LiteralInt("Coll");
+        public LiteralBool Bs11 = new LiteralBool("bS11");
+        public LiteralBool IsApplyToneMap = new LiteralBool("bATM");
+        public LiteralBool IsApplyFog = new LiteralBool("bAFg");
+        public LiteralBool ClipNearEnable = new LiteralBool("bNea");
+        public LiteralBool ClipFarEnable = new LiteralBool("bFar");
+        public LiteralFloat ClipNearStart = new LiteralFloat("NeSt");
+        public LiteralFloat ClipNearEnd = new LiteralFloat("NeEd");
+        public LiteralFloat ClipFarStart = new LiteralFloat("FaSt");
+        public LiteralFloat ClipFarEnd = new LiteralFloat("FaEd");
+        public LiteralEnum<ClipBasePoint> ClipBasePointType = new LiteralEnum<ClipBasePoint>("FaBP");
+        public LiteralInt UvSetCount = new LiteralInt("UvSN");
+        public LiteralInt ApplyRateEnvironment = new LiteralInt("EvAR");
+        public LiteralInt ApplyRateDirectional = new LiteralInt("DlAR");
+        public LiteralInt ApplyRateLightBuffer = new LiteralInt("LBAR");
+        public LiteralBool DOTy = new LiteralBool("DOTy");
+        public LiteralFloat DepthOffset = new LiteralFloat("DpOf");
+        public LiteralBool SimpleAnimEnable = new LiteralBool("bSCt");
+        public AVFXLife Life = new AVFXLife();
+        public AVFXParticleSimple Simple = new AVFXParticleSimple();
 
-        public AVFXCurve Gravity = new AVFXCurve("gravity", "Gra");
-        public AVFXCurve GravityRandom = new AVFXCurve("gravityRandom", "GraR");
-        public AVFXCurve AirResistance = new AVFXCurve("airResistance", "ARs");
-        public AVFXCurve AirResistanceRandom = new AVFXCurve("airResistanceRandom", "ARsR");
+        public AVFXCurve Gravity = new AVFXCurve("Gra");
+        public AVFXCurve GravityRandom = new AVFXCurve("GraR");
+        public AVFXCurve AirResistance = new AVFXCurve("ARs");
+        public AVFXCurve AirResistanceRandom = new AVFXCurve("ARsR");
 
-        public AVFXCurve3Axis Scale = new AVFXCurve3Axis("scale", "Scl");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("rotation", "Rot");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("position", "Pos");
-        public AVFXCurve RotVelX = new AVFXCurve( "rotationVelocityX", "VRX" );
-        public AVFXCurve RotVelY = new AVFXCurve( "rotationVelocityY", "VRY" );
-        public AVFXCurve RotVelZ = new AVFXCurve( "rotationVelocityZ", "VRZ" );
-        public AVFXCurve RotVelXRandom = new AVFXCurve( "rotationVelocityXRandom", "VRXR" );
-        public AVFXCurve RotVelYRandom = new AVFXCurve( "rotationVelocityYRandom", "VRYR" );
-        public AVFXCurve RotVelZRandom = new AVFXCurve( "rotationVelocityZRandom", "VRZR" );
+        public AVFXCurve3Axis Scale = new AVFXCurve3Axis("Scl");
+        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
+        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
+        public AVFXCurve RotVelX = new AVFXCurve( "VRX" );
+        public AVFXCurve RotVelY = new AVFXCurve( "VRY" );
+        public AVFXCurve RotVelZ = new AVFXCurve( "VRZ" );
+        public AVFXCurve RotVelXRandom = new AVFXCurve( "VRXR" );
+        public AVFXCurve RotVelYRandom = new AVFXCurve( "VRYR" );
+        public AVFXCurve RotVelZRandom = new AVFXCurve( "VRZR" );
 
         public AVFXCurveColor Color = new AVFXCurveColor("color");
 
@@ -76,19 +76,19 @@ namespace AVFXLib.Models
 
         // Texture Properties
         //====================//
-        public AVFXTextureColor1 TC1 = new AVFXTextureColor1("textureColor1");
-        public AVFXTextureColor2 TC2 = new AVFXTextureColor2("textureColor2", "TC2");
-        public AVFXTextureColor2 TC3 = new AVFXTextureColor2("textureColor3", "TC3");
-        public AVFXTextureColor2 TC4 = new AVFXTextureColor2("textureColor4", "TC4");
-        public AVFXTextureNormal TN = new AVFXTextureNormal("textureNormal");
-        public AVFXTextureReflection TR = new AVFXTextureReflection("textureReflection");
-        public AVFXTextureDistortion TD = new AVFXTextureDistortion("textureDistortion");
-        public AVFXTexturePalette TP = new AVFXTexturePalette("texturePalette");
+        public AVFXTextureColor1 TC1 = new AVFXTextureColor1();
+        public AVFXTextureColor2 TC2 = new AVFXTextureColor2("TC2");
+        public AVFXTextureColor2 TC3 = new AVFXTextureColor2("TC3");
+        public AVFXTextureColor2 TC4 = new AVFXTextureColor2("TC4");
+        public AVFXTextureNormal TN = new AVFXTextureNormal();
+        public AVFXTextureReflection TR = new AVFXTextureReflection();
+        public AVFXTextureDistortion TD = new AVFXTextureDistortion();
+        public AVFXTexturePalette TP = new AVFXTexturePalette();
 
         List<Base> Attributes;
         List<Base> Attributes2;
 
-        public AVFXParticle() : base("particles", NAME)
+        public AVFXParticle() : base(NAME)
         {
             Attributes = new List<Base>(new Base[]{
                 LoopStart,
@@ -204,23 +204,6 @@ namespace AVFXLib.Models
             UvSetCount.GiveValue( UVSets.Count() );
         }
 
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-
-            JArray uvArray = new JArray();
-            foreach(AVFXParticleUVSet uvSet in UVSets)
-            {
-                uvArray.Add(uvSet.toJSON());
-            }
-
-            elem["uvSets"] = uvArray;
-            PutJSON(elem, Data);
-            PutJSON(elem, Attributes2);
-            return elem;
-        }
-
         public override AVFXNode toAVFX()
         {
             AVFXNode ptclAvfx = new AVFXNode("Ptcl");
@@ -257,40 +240,40 @@ namespace AVFXLib.Models
                     Data = null;
                     break;
                 case ParticleType.Powder:
-                    Data = new AVFXParticleDataPowder("data");
+                    Data = new AVFXParticleDataPowder();
                     break;
                 case ParticleType.Windmill:
-                    Data = new AVFXParticleDataWindmill("data");
+                    Data = new AVFXParticleDataWindmill();
                     break;
                 case ParticleType.Line:
-                    Data = new AVFXParticleDataLine( "data" );
+                    Data = new AVFXParticleDataLine();
                     break;
                 case ParticleType.Model:
-                    Data = new AVFXParticleDataModel("data");
+                    Data = new AVFXParticleDataModel();
                     break;
                 case ParticleType.Polyline:
-                    Data = new AVFXParticleDataPolyline("data");
+                    Data = new AVFXParticleDataPolyline();
                     break;
                 case ParticleType.Quad:
                     Data = null;
                     break;
                 case ParticleType.Polygon:
-                    Data = new AVFXParticleDataPolygon("data");
+                    Data = new AVFXParticleDataPolygon();
                     break;
                 case ParticleType.Decal:
-                    Data = new AVFXParticleDataDecal("data");
+                    Data = new AVFXParticleDataDecal();
                     break;
                 case ParticleType.DecalRing:
-                    Data = new AVFXParticleDataDecalRing("data");
+                    Data = new AVFXParticleDataDecalRing();
                     break;
                 case ParticleType.Disc:
-                    Data = new AVFXParticleDataDisc("data");
+                    Data = new AVFXParticleDataDisc();
                     break;
                 case ParticleType.LightModel:
-                    Data = new AVFXParticleDataLightModel("data");
+                    Data = new AVFXParticleDataLightModel();
                     break;
                 case ParticleType.Laser:
-                    Data = new AVFXParticleDataLaser( "data" );
+                    Data = new AVFXParticleDataLaser();
                     break;
                 default:
                     Data = null;

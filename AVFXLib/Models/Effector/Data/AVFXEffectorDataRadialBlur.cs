@@ -10,18 +10,18 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataRadialBlur : AVFXEffectorData
     {
-        public AVFXCurve Length = new AVFXCurve("length", "Len");
-        public AVFXCurve Strength = new AVFXCurve("strength", "Str");
-        public AVFXCurve Gradation = new AVFXCurve("gradation", "Gra");
-        public AVFXCurve InnerRadius = new AVFXCurve("innerRadius", "IRad");
-        public AVFXCurve OuterRadius = new AVFXCurve("outerRadius", "ORad");
-        public LiteralFloat FadeStartDistance = new LiteralFloat( "fadeStartDistance", "FSDc" );
-        public LiteralFloat FadeEndDistance = new LiteralFloat( "fadeEndDistance", "FEDc" );
-        public LiteralEnum<ClipBasePoint> FadeBasePointType = new LiteralEnum<ClipBasePoint>( "fadeBasePoint", "FaBP" );
+        public AVFXCurve Length = new AVFXCurve("Len");
+        public AVFXCurve Strength = new AVFXCurve("Str");
+        public AVFXCurve Gradation = new AVFXCurve("Gra");
+        public AVFXCurve InnerRadius = new AVFXCurve("IRad");
+        public AVFXCurve OuterRadius = new AVFXCurve("ORad");
+        public LiteralFloat FadeStartDistance = new LiteralFloat( "FSDc" );
+        public LiteralFloat FadeEndDistance = new LiteralFloat( "FEDc" );
+        public LiteralEnum<ClipBasePoint> FadeBasePointType = new LiteralEnum<ClipBasePoint>( "FaBP" );
 
         List<Base> Attributes;
 
-        public AVFXEffectorDataRadialBlur(string jsonPath) : base(jsonPath, "Data")
+        public AVFXEffectorDataRadialBlur() : base("Data")
         {
             Attributes = new List<Base>(new Base[]{
                 Length,
@@ -50,13 +50,6 @@ namespace AVFXLib.Models
             SetUnAssigned(Gradation);
             SetUnAssigned(InnerRadius);
             SetUnAssigned(OuterRadius);
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

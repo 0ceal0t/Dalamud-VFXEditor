@@ -10,37 +10,37 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterIterationItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEnb");
-        public LiteralInt TargetIdx = new LiteralInt("targetIdx", "TgtB");
-        public LiteralInt LocalDirection = new LiteralInt("localDirection", "LoDr");
-        public LiteralInt CreateTime = new LiteralInt("createTime", "CrTm");
-        public LiteralInt CreateCount = new LiteralInt("createCount", "CrCn");
-        public LiteralInt CreateProbability = new LiteralInt("createProbability", "CrPr");
-        public LiteralInt ParentInfluenceCoord = new LiteralInt("parentInfluenceCoord", "PICd");
-        public LiteralInt ParentInfluenceColor = new LiteralInt("parentInfluenceColor", "PICo");
-        public LiteralInt InfluenceCoordScale = new LiteralInt("influenceCoordScale", "ICbS");
-        public LiteralInt InfluenceCoordRot = new LiteralInt("influenceCoordRot", "ICbR");
-        public LiteralInt InfluenceCoordPos = new LiteralInt("influenceCoordPos", "ICbP");
-        public LiteralInt InfluenceCoordBinderPosition = new LiteralInt("influenceCoordBinderPosition", "ICbB");
-        public LiteralInt InfluenceCoordUnstickiness = new LiteralInt("influenceCoordUnstickiness", "ICSK");
-        public LiteralInt InheritParentVelocity = new LiteralInt("inheritParentVelocity", "IPbV");
-        public LiteralInt InheritParentLife = new LiteralInt("inheritParentLife", "IPbL");
-        public LiteralBool OverrideLife = new LiteralBool("overrideLife", "bOvr");
-        public LiteralInt OverrideLifeValue = new LiteralInt("overrideLifeValue", "OvrV");
-        public LiteralInt OverrideLifeRandom = new LiteralInt("overrideLifeRandom", "OvrR");
-        public LiteralInt ParameterLink = new LiteralInt("parameterLink", "PrLk");
-        public LiteralInt StartFrame = new LiteralInt("startFrame", "StFr");
-        public LiteralBool StartFrameNullUpdate = new LiteralBool("startFrameNullUpdate", "bStN");
-        public LiteralFloat ByInjectionAngleX = new LiteralFloat("byInjectionAngleX", "BIAX");
-        public LiteralFloat ByInjectionAngleY = new LiteralFloat("byInjectionAngleY", "BIAY");
-        public LiteralFloat ByInjectionAngleZ = new LiteralFloat("byInjectionAngleZ", "BIAZ");
-        public LiteralInt GenerateDelay = new LiteralInt("generateDelay", "GenD");
-        public LiteralBool GenerateDelayByOne = new LiteralBool("generateDelayByOne", "bGD");
+        public LiteralBool Enabled = new LiteralBool("bEnb");
+        public LiteralInt TargetIdx = new LiteralInt("TgtB");
+        public LiteralInt LocalDirection = new LiteralInt("LoDr");
+        public LiteralInt CreateTime = new LiteralInt("CrTm");
+        public LiteralInt CreateCount = new LiteralInt("CrCn");
+        public LiteralInt CreateProbability = new LiteralInt("CrPr");
+        public LiteralInt ParentInfluenceCoord = new LiteralInt("PICd");
+        public LiteralInt ParentInfluenceColor = new LiteralInt("PICo");
+        public LiteralInt InfluenceCoordScale = new LiteralInt("ICbS");
+        public LiteralInt InfluenceCoordRot = new LiteralInt("ICbR");
+        public LiteralInt InfluenceCoordPos = new LiteralInt("ICbP");
+        public LiteralInt InfluenceCoordBinderPosition = new LiteralInt("ICbB");
+        public LiteralInt InfluenceCoordUnstickiness = new LiteralInt("ICSK");
+        public LiteralInt InheritParentVelocity = new LiteralInt("IPbV");
+        public LiteralInt InheritParentLife = new LiteralInt("IPbL");
+        public LiteralBool OverrideLife = new LiteralBool("bOvr");
+        public LiteralInt OverrideLifeValue = new LiteralInt("OvrV");
+        public LiteralInt OverrideLifeRandom = new LiteralInt("OvrR");
+        public LiteralInt ParameterLink = new LiteralInt("PrLk");
+        public LiteralInt StartFrame = new LiteralInt("StFr");
+        public LiteralBool StartFrameNullUpdate = new LiteralBool("bStN");
+        public LiteralFloat ByInjectionAngleX = new LiteralFloat("BIAX");
+        public LiteralFloat ByInjectionAngleY = new LiteralFloat("BIAY");
+        public LiteralFloat ByInjectionAngleZ = new LiteralFloat("BIAZ");
+        public LiteralInt GenerateDelay = new LiteralInt("GenD");
+        public LiteralBool GenerateDelayByOne = new LiteralBool("bGD");
 
         List<Base> Attributes;
 
 
-        public AVFXEmitterIterationItem() : base("items", "ItPr_Item")
+        public AVFXEmitterIterationItem() : base("ItPr_Item")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -107,13 +107,6 @@ namespace AVFXLib.Models
             ByInjectionAngleZ.GiveValue( 0 );
             GenerateDelay.GiveValue( 0 );
             GenerateDelayByOne.GiveValue( false );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()

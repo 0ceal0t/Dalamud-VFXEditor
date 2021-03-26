@@ -10,17 +10,17 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureReflection : Base
     {
-        public LiteralBool Enabled = new LiteralBool("enabled", "bEna");
-        public LiteralBool UseScreenCopy = new LiteralBool("useScreenCopy", "bUSC");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("textureFilter", "TFT");
-        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("textureCalculateColor", "TCCT");
-        public LiteralInt TextureIdx = new LiteralInt("textureIdx", "TxNo");
-        public AVFXCurve Rate = new AVFXCurve( "rate", "Rate" );
-        public AVFXCurve RPow = new AVFXCurve("reflectionPower", "RPow");
+        public LiteralBool Enabled = new LiteralBool("bEna");
+        public LiteralBool UseScreenCopy = new LiteralBool("bUSC");
+        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
+        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("TCCT");
+        public LiteralInt TextureIdx = new LiteralInt("TxNo");
+        public AVFXCurve Rate = new AVFXCurve( "Rate" );
+        public AVFXCurve RPow = new AVFXCurve("RPow");
 
         List<Base> Attributes;
 
-        public AVFXTextureReflection(string jsonPath) : base(jsonPath, "TR")
+        public AVFXTextureReflection() : base("TR")
         {
             Attributes = new List<Base>(new Base[]{
                 Enabled,
@@ -46,13 +46,6 @@ namespace AVFXLib.Models
             SetUnAssigned(RPow);
             SetUnAssigned( Rate );
             TextureIdx.GiveValue( -1 );
-        }
-
-        public override JToken toJSON()
-        {
-            JObject elem = new JObject();
-            PutJSON(elem, Attributes);
-            return elem;
         }
 
         public override AVFXNode toAVFX()
