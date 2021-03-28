@@ -18,6 +18,7 @@ namespace VFXEditor
         public byte[] Data;
         public int Height;
         public int Width;
+        public TextureFormat Format;
     }
 
     public class TextureManager
@@ -55,6 +56,7 @@ namespace VFXEditor
                     var ret = new TexData();
 
                     var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
+                    ret.Format = texFile.Header.Format;
                     var data = Cleanup( texFile.ImageData );
                     ret.Data = data;
                     if( loadImage ) {

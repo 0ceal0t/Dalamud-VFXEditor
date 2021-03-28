@@ -11,10 +11,50 @@ using Lumina.Extensions;
 
 namespace VFXEditor
 {
+
+    public enum TextureFormat {
+        Unknown = 0x0,
+        TypeShift = 0xC,
+        TypeMask = 0xF000,
+        ComponentShift = 0x8,
+        ComponentMask = 0xF00,
+        BppShift = 0x4,
+        BppMask = 0xF0,
+        EnumShift = 0x0,
+        EnumMask = 0xF,
+        TypeInteger = 0x1,
+        TypeFloat = 0x2,
+        TypeDxt = 0x3,
+        TypeDepthStencil = 0x4,
+        TypeSpecial = 0x5,
+        A8R8G8B8 = 0x1450,
+        // todo:
+        R8G8B8X8 = 0x1451,
+        A8R8G8B82 = 0x1452,
+        R4G4B4A4 = 0x1440,
+        R5G5B5A1 = 0x1441,
+        L8 = 0x1130,
+        // todo:
+        A8 = 0x1131,
+        // todo:
+        R32F = 0x2150,
+        R32G32B32A32F = 0x2470,
+        R16G16F = 0x2250,
+        R16G16B16A16F = 0x2460,
+        DXT1 = 0x3420,
+        DXT3 = 0x3430,
+        DXT5 = 0x3431,
+        D16 = 0x4140,
+        D24S8 = 0x4250,
+        //todo: RGBA8 0x4401
+        Null = 0x5100,
+        Shadow16 = 0x5140,
+        Shadow24 = 0x5150,
+    }
+
     public class VFXTexture : Lumina.Data.FileResource
     {
-        public enum Attribute : uint
-        {
+        public enum Attribute : uint {
             DiscardPerFrame = 0x1,
             DiscardPerMap = 0x2,
             Managed = 0x4,
@@ -37,47 +77,6 @@ namespace VFXEditor
             TextureSwizzle = 0x4000000,
             TextureNoTiled = 0x8000000,
             TextureNoSwizzle = 0x80000000,
-        }
-
-        public enum TextureFormat
-        {
-            Unknown = 0x0,
-            TypeShift = 0xC,
-            TypeMask = 0xF000,
-            ComponentShift = 0x8,
-            ComponentMask = 0xF00,
-            BppShift = 0x4,
-            BppMask = 0xF0,
-            EnumShift = 0x0,
-            EnumMask = 0xF,
-            TypeInteger = 0x1,
-            TypeFloat = 0x2,
-            TypeDxt = 0x3,
-            TypeDepthStencil = 0x4,
-            TypeSpecial = 0x5,
-            A8R8G8B8 = 0x1450,
-            // todo:
-            R8G8B8X8 = 0x1451,
-            A8R8G8B82 = 0x1452,
-            R4G4B4A4 = 0x1440,
-            R5G5B5A1 = 0x1441,
-            L8 = 0x1130,
-            // todo:
-            A8 = 0x1131,
-            // todo:
-            R32F = 0x2150,
-            R32G32B32A32F = 0x2470,
-            R16G16F = 0x2250,
-            R16G16B16A16F = 0x2460,
-            DXT1 = 0x3420,
-            DXT3 = 0x3430,
-            DXT5 = 0x3431,
-            D16 = 0x4140,
-            D24S8 = 0x4250,
-            //todo: RGBA8 0x4401
-            Null = 0x5100,
-            Shadow16 = 0x5140,
-            Shadow24 = 0x5150,
         }
 
         [StructLayout( LayoutKind.Sequential )]

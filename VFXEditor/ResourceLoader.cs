@@ -71,9 +71,9 @@ namespace VFXEditor
         public IHook<VfxStatusRemoveHook> ActorVfxRemoveHook { get; private set; }
 
         // ======== WEAPON HOOKS ==============
-        [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr VfxWeaponAddHook( IntPtr a1, Int32 a2, IntPtr a3, char a4, char a5, char a6, char a7 );
-        public IHook<VfxWeaponAddHook> WeaponAddHook { get; private set; }
+        //[Function( CallingConventions.Microsoft )]
+        //public unsafe delegate IntPtr VfxWeaponAddHook( IntPtr a1, Int32 a2, IntPtr a3, char a4, char a5, char a6, char a7 );
+        //public IHook<VfxWeaponAddHook> WeaponAddHook { get; private set; }
 
 #if !DEBUG
         public bool EnableHooks = true;
@@ -110,7 +110,7 @@ namespace VFXEditor
             var statusRemoveAddr2 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
             var statusRemove2 = Marshal.ReadIntPtr( statusRemoveAddr2 + Marshal.ReadInt32( statusRemoveAddr2 ) + 4 );
 
-            var weaponCreate = scanner.ScanText( "83 FA 03 0F 8D ?? ?? ?? ?? 4C 89 44 24 ?? 55 57 48 83 EC 68 8B EA 48 8B F9 48 63 C5" );
+            //var weaponCreate = scanner.ScanText( "83 FA 03 0F 8D ?? ?? ?? ?? 4C 89 44 24 ?? 55 57 48 83 EC 68 8B EA 48 8B F9 48 63 C5" );
 
 
             StatusAdd = Marshal.GetDelegateForFunctionPointer<StatusAddDelegate>( statusAddAddr );
@@ -124,7 +124,7 @@ namespace VFXEditor
                 ActorVfxNewHook = new Hook<VfxStatusAddHook>( ActorVfxNewHandler, ( long )statusAddAddr );
                 ActorVfxRemoveHook = new Hook<VfxStatusRemoveHook>( ActorVfxRemoveHandler, ( long )statusRemove2 );
 
-                WeaponAddHook = new Hook<VfxWeaponAddHook>( WeaponVfxNewHandler, ( long )weaponCreate );
+                //WeaponAddHook = new Hook<VfxWeaponAddHook>( WeaponVfxNewHandler, ( long )weaponCreate );
             }
         }
         // ============
@@ -156,11 +156,10 @@ namespace VFXEditor
             return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
         }
         // ===========
-        private unsafe IntPtr WeaponVfxNewHandler( IntPtr a1, Int32 a2, IntPtr a3, char a4, char a5, char a6, char a7 ) {
-            var v = WeaponAddHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
-            PluginLog.Log( $"{a1} {a2} {a3} {a4} {a5} {a6} {a7}" );
-            return v;
-        }
+        //private unsafe IntPtr WeaponVfxNewHandler( IntPtr a1, Int32 a2, IntPtr a3, char a4, char a5, char a6, char a7 ) {
+        //    var v = WeaponAddHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
+        //    return v;
+        //}
 
         public void Enable() {
             if( IsEnabled )
@@ -175,7 +174,7 @@ namespace VFXEditor
                 ActorVfxNewHook.Activate();
                 ActorVfxRemoveHook.Activate();
 
-                WeaponAddHook.Activate();
+                //WeaponAddHook.Activate();
                 // ==============
                 ReadSqpackHook.Enable();
                 GetResourceSyncHook.Enable();
@@ -186,7 +185,7 @@ namespace VFXEditor
                 ActorVfxNewHook.Enable();
                 ActorVfxRemoveHook.Enable();
 
-                WeaponAddHook.Enable();
+                //WeaponAddHook.Enable();
             }
             IsEnabled = true;
         }
@@ -204,7 +203,7 @@ namespace VFXEditor
                 ActorVfxNewHook.Disable();
                 ActorVfxRemoveHook.Disable();
 
-                WeaponAddHook.Disable();
+                //WeaponAddHook.Disable();
             }
             IsEnabled = false;
         }
@@ -272,6 +271,9 @@ namespace VFXEditor
             bool isUnknown
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
+            if( Configuration.Config?.LogAllFiles == true ) {
+                PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
+            }
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
             var lp = Plugin.Doc.GetLocalPath( gameFsPath );

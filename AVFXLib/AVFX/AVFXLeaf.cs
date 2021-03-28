@@ -1,4 +1,4 @@
-﻿using AVFXLib.Main;
+using AVFXLib.Main;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,34 +32,34 @@ namespace AVFXLib.AVFX
             return bytes;
         }
 
-        public override bool EqualsNode(AVFXNode node)
+        public override bool EqualsNode(AVFXNode node, List<string> messages )
         {
             if(!(node is AVFXLeaf))
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
+                messages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
                 return false;
             }
             AVFXLeaf leaf = (AVFXLeaf)node;
             if (Name != leaf.Name)
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Name {0} / {1}", Name, node.Name));
+                messages.Add(string.Format("Wrong Name {0} / {1}", Name, node.Name));
                 return false;
             }
             if(Size != leaf.Size)
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Leaf Size {0} : {1} / {2} : {3}", Name, Size, leaf.Name, leaf.Size));
+                messages.Add(string.Format("Wrong Leaf Size {0} : {1} / {2} : {3}", Name, Size, leaf.Name, leaf.Size));
                 return false;
             }
             if(Contents.Length != leaf.Contents.Length)
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Contents Size {0} : {1} / {2} : {3}", Name, Contents.Length.ToString(), leaf.Name, leaf.Contents.Length.ToString()));
+                messages.Add(string.Format("Wrong Contents Size {0} : {1} / {2} : {3}", Name, Contents.Length.ToString(), leaf.Name, leaf.Contents.Length.ToString()));
                 return false;
             }
             for(int idx = 0; idx < Contents.Length; idx++)
             {
                 if(Contents[idx] != leaf.Contents[idx])
                 {
-                    AVFXNode.LogMessages.Add(string.Format("Wrong Contents in {0} byte {1} : {2} / {3}", Name, idx, Contents[idx].ToString(), leaf.Contents[idx].ToString()));
+                    messages.Add(string.Format("Wrong Contents in {0} byte {1} : {2} / {3}", Name, idx, Contents[idx].ToString(), leaf.Contents[idx].ToString()));
                     return false;
                 }
             }

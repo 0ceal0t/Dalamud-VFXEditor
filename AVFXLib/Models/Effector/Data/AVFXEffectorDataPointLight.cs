@@ -10,7 +10,7 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataPointLight : AVFXEffectorData
     {
-        public AVFXCurveColor Color = new AVFXCurveColor("color");
+        public AVFXCurveColor Color = new AVFXCurveColor();
         public AVFXCurve DistanceScale = new AVFXCurve("DstS");
         public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
         public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");

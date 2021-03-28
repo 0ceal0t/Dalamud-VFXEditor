@@ -86,7 +86,6 @@ namespace AVFXLib.Models
                     Data = new AVFXEffectorDataRadialBlur();
                     break;
                 case EffectorType.BlackHole:
-                    AVFXNode.LogMessages.Add( "ClearHole Effector Data!" );
                     Data = null;
                     break;
                 case EffectorType.CameraQuake2_Unknown:

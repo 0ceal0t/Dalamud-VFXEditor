@@ -158,15 +158,19 @@ namespace VFXEditor.UI.VFX
             ImportData( new BinaryReader( new MemoryStream( data ) ) );
         }
         public void ImportData( BinaryReader br ) {
-            var nodes = AVFXLib.Main.Reader.readDef( br );
+            var messages = new List<string>();
+            var nodes = AVFXLib.Main.Reader.readDef( br, messages);
             var has_dependencies = nodes.Count >= 2;
+            if( has_dependencies ) {
+                UINode.PreImportGroups();
+            }
             nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add(ModelView.OnImport( node )) );
             nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add(TextureView.OnImport( node )) );
             nodes.Where( x => x.Name == "Bind" ).ToList().ForEach( node => BinderView.Group.Add(BinderView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "Efct" ).ToList().ForEach( node => EffectorView.Group.Add(EffectorView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add(ParticleView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
-            nodes.Where( x => x.Name == "Tmln" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
         }
 
         public void ExportDialog(UINode node, bool with_dependencies = false ) {

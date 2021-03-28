@@ -74,6 +74,7 @@ namespace VFXEditor.UI.VFX
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
             ParticleSplit = new UIEmitterSplitView( Particles, this, true );
+            HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
             Data?.Cleanup();

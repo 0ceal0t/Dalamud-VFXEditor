@@ -270,6 +270,10 @@ namespace VFXEditor.UI
                 _plugin.Tracker.Enabled = !_plugin.Tracker.Enabled;
                 if( !_plugin.Tracker.Enabled ) {
                     _plugin.Tracker.Reset();
+                    _plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
+                }
+                else {
+                    _plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
                 }
             }
             ImGui.PopFont();
@@ -299,6 +303,12 @@ namespace VFXEditor.UI
                 }
                 if( ImGui.Selectable( "On Self" ) ) {
                     SpawnVfx = new ActorVfx( _plugin, _plugin.PluginInterface.ClientState.LocalPlayer, _plugin.PluginInterface.ClientState.LocalPlayer, previewSpawn );
+                }
+                if (ImGui.Selectable("On Taget" ) ) {
+                    var t = _plugin.PluginInterface.ClientState.Targets.CurrentTarget;
+                    if(t != null ) {
+                        SpawnVfx = new ActorVfx( _plugin, t, t, previewSpawn );
+                    }
                 }
                 ImGui.EndPopup();
             }
@@ -365,21 +375,31 @@ namespace VFXEditor.UI
             var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
             if( !ret )
                 return;
-            bool verifyOnLoad = _plugin.Configuration.VerifyOnLoad;
+            bool verifyOnLoad = Configuration.Config.VerifyOnLoad;
             if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
             {
-                _plugin.Configuration.VerifyOnLoad = verifyOnLoad;
+                Configuration.Config.VerifyOnLoad = verifyOnLoad;
             }
             ImGui.SameLine();
-            bool loadTextures = _plugin.Configuration.PreviewTextures;
+            bool loadTextures = Configuration.Config.PreviewTextures;
             if( ImGui.Checkbox( "Load textures##Settings", ref loadTextures ) )
             {
-                _plugin.Configuration.PreviewTextures = loadTextures;
+                Configuration.Config.PreviewTextures = loadTextures;
+            }
+            ImGui.SameLine();
+            bool logAllFiles = Configuration.Config.LogAllFiles;
+            if( ImGui.Checkbox( "Log all files##Settings", ref logAllFiles ) ) {
+                Configuration.Config.LogAllFiles = logAllFiles;
+            }
+            ImGui.SameLine();
+            bool hideWithUI = Configuration.Config.HideWithUI;
+            if( ImGui.Checkbox( "Hide with UI##Settings", ref hideWithUI ) ) {
+                Configuration.Config.HideWithUI = hideWithUI;
             }
 
             if( ImGui.Button( "Save##Settings" ) )
             {
-                _plugin.Configuration.Save();
+                Configuration.Config.Save();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -391,9 +411,12 @@ namespace VFXEditor.UI
             var ret = ImGui.BeginTabItem( "Help##MainInterfaceTabs" );
             if( !ret )
                 return;
-            if( ImGui.Button( "Github" ) )
-            {
+            if( ImGui.Button( "Report an Issue" ) ) {
                 Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+            }
+            ImGui.SameLine();
+            if( ImGui.Button( "Guide" ) ) {
+                Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
             }
             ImGui.TextWrapped( 
 @"This plugin works by replacing an existing VFX with another one. It does not, however, actually modify any of the game's internal files.

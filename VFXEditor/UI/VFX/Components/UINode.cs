@@ -55,6 +55,16 @@ namespace VFXEditor.UI.VFX {
             _Timelines?.Init();
             _Effectors?.Init();
         }
+        public static void PreImportGroups() {
+            _Binders.PreImport();
+            _Emitters.PreImport();
+            _Models.PreImport();
+            _Particles.PreImport();
+            _Schedulers.PreImport();
+            _Textures.PreImport();
+            _Timelines.PreImport();
+            _Effectors.PreImport();
+        }
 
         public uint _Color;
         public List<UINode> Children = new List<UINode>();
@@ -92,6 +102,50 @@ namespace VFXEditor.UI.VFX {
         public bool HasToolTip = false;
         public virtual void DrawToolTip() { }
         public abstract byte[] toBytes();
+    }
+
+    public class UINodeGroup<T> where T : UINode {
+        public List<T> Items = new List<T>();
+        public Action OnInit;
+        public Action OnChange;
+        public bool isInit = false;
+        public int PreImportSize = 0;
+
+        public UINodeGroup() {
+        }
+
+        public void Remove( T item ) {
+            item.Idx = -1;
+            Items.Remove( item );
+            UpdateIdx();
+            Update();
+        }
+
+        public void Add( T item ) {
+            item.Idx = Items.Count;
+            Items.Add( item );
+        }
+
+        public void Update() {
+            OnChange?.Invoke();
+        }
+
+        public void Init() {
+            UpdateIdx();
+            isInit = true;
+            OnInit?.Invoke();
+            OnInit = null;
+        }
+
+        public void UpdateIdx() {
+            for( int i = 0; i < Items.Count; i++ ) {
+                Items[i].Idx = i;
+            }
+        }
+
+        public void PreImport() {
+            PreImportSize = Items.Count;
+        }
     }
 
     public class UINodeGraphItem {
@@ -152,45 +206,6 @@ namespace VFXEditor.UI.VFX {
 
         public void NowOutdated() {
             Outdated = true;
-        }
-    }
-
-    public class UINodeGroup<T> where T : UINode {
-        public List<T> Items = new List<T>();
-        public Action OnInit;
-        public Action OnChange;
-        public bool isInit = false;
-
-        public UINodeGroup() {
-        }
-
-        public void Remove( T item ) {
-            item.Idx = -1;
-            Items.Remove( item );
-            UpdateIdx();
-            Update();
-        }
-
-        public void Add( T item ) {
-            item.Idx = Items.Count;
-            Items.Add( item );
-        }
-
-        public void Update() {
-            OnChange?.Invoke();
-        }
-
-        public void Init() {
-            UpdateIdx();
-            isInit = true;
-            OnInit?.Invoke();
-            OnInit = null;
-        }
-
-        public void UpdateIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
-                Items[i].Idx = i;
-            }
         }
     }
 
@@ -285,8 +300,8 @@ namespace VFXEditor.UI.VFX {
 
         public override void SetupNode() {
             int val = Literal.Value;
-            if( Node.HasDependencies && val > 0 ) {
-                val += Group.Items.Count;
+            if( Node.HasDependencies && val >= 0 ) {
+                val += Group.PreImportSize;
                 Literal.GiveValue( val );
                 PluginLog.Log( $"Imported node {val}" );
             }
@@ -294,7 +309,6 @@ namespace VFXEditor.UI.VFX {
                 Selected = Group.Items[val];
                 LinkTo( Selected );
             }
-            Node.HasDependencies = false;
         }
 
         public override void DeleteNode( UINode node ) {
@@ -395,9 +409,9 @@ namespace VFXEditor.UI.VFX {
         public override void SetupNode() {
             for(int i = 0; i < Literal.Value.Count; i++ ) {
                 var val = Literal.Value[i];
-                if( Node.HasDependencies && val != 255 ) {
-                    val += Group.Items.Count;
-                    Literal.GiveValue( val, i );
+                if( Node.HasDependencies && val != 255 && val >= 0 ) {
+                    val += Group.PreImportSize;
+                    Literal.GiveValue( val, i ); 
                     PluginLog.Log( $"Imported list {val}" );
                 }
                 if( val != 255 && val >= 0 && val < Group.Items.Count ) {
@@ -409,7 +423,6 @@ namespace VFXEditor.UI.VFX {
                     Selected.Add( null );
                 }
             }
-            Node.HasDependencies = false;
         }
 
         public override void DeleteNode( UINode node ) {

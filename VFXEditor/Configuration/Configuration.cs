@@ -29,6 +29,8 @@ namespace VFXEditor{
         // ==================
         public bool PreviewTextures { get; set; } = true;
         public bool VerifyOnLoad { get; set; } = true;
+        public bool LogAllFiles { get; set; } = false;
+        public bool HideWithUI { get; set; } = true;
 
         public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
@@ -42,6 +44,7 @@ namespace VFXEditor{
         {
             _pluginInterface = pluginInterface;
             Config = this;
+            _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
 
         public void AddRecent(VFXSelectResult result ) {
@@ -57,6 +60,7 @@ namespace VFXEditor{
         public void Save()
         {
             _pluginInterface.SavePluginConfig( this );
+            _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
     }
 }

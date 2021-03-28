@@ -30,6 +30,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIInt( "Loop End", Effector.LoopPointEnd ) );
             //=======================
             SetType();
+            HasDependencies = false; // if imported, all set now
         }
         
         public void SetType() {

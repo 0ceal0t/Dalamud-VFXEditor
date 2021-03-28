@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,11 +19,11 @@ namespace AVFXLib.AVFX
             return new byte[] { };
         }
 
-        public override bool EqualsNode(AVFXNode node)
+        public override bool EqualsNode(AVFXNode node, List<string> messages )
         {
             if(!(node is AVFXBlank))
             {
-                AVFXNode.LogMessages.Add(string.Format("Not Blank"));
+                messages.Add(string.Format("Not Blank"));
                 return false;
             }
             return true;

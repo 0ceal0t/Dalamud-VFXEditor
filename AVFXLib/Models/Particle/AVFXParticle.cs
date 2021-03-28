@@ -63,7 +63,7 @@ namespace AVFXLib.Models
         public AVFXCurve RotVelYRandom = new AVFXCurve( "VRYR" );
         public AVFXCurve RotVelZRandom = new AVFXCurve( "VRZR" );
 
-        public AVFXCurveColor Color = new AVFXCurveColor("color");
+        public AVFXCurveColor Color = new AVFXCurveColor();
 
         // UVSets
         //=====================//
@@ -236,7 +236,6 @@ namespace AVFXLib.Models
             switch (type)
             {
                 case ParticleType.Parameter:
-                    AVFXNode.LogMessages.Add( "Parameter Particle Data!" );
                     Data = null;
                     break;
                 case ParticleType.Powder:

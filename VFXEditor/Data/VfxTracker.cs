@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState;
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
@@ -59,6 +60,10 @@ namespace VFXEditor {
             if( StaticVfxs.ContainsKey( vfx ) ) {
                 StaticVfxs.TryRemove( vfx, out var value );
             }
+        }
+
+        public bool WatchingCutscene() {
+            return ( _plugin.PluginInterface.ClientState != null && _plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
         }
 
         public void Draw() {

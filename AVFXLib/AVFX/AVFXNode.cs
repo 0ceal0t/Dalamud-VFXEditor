@@ -1,4 +1,4 @@
-﻿using AVFXLib.Main;
+using AVFXLib.Main;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +11,6 @@ namespace AVFXLib.AVFX
 {
     public class AVFXNode
     {
-        // jank logging shit
-        public static List<string> LogMessages = new List<string>();
-        public static void ResetLog() { LogMessages = new List<string>(); }
 
         public string Name { get; set; }
         // calculate size on the fly
@@ -52,54 +49,41 @@ namespace AVFXLib.AVFX
         // =====================
         public bool CheckEquals(AVFXNode node, out List<string> messages)
         {
-            ResetLog();
-            bool result = EqualsNode(node);
-            messages = new List<string>(AVFXNode.LogMessages);
-            return result;
+            messages = new List<string>();
+            return EqualsNode(node, messages);
         }
 
-        public virtual bool EqualsNode(AVFXNode node)
+        public virtual bool EqualsNode(AVFXNode node, List<string> messages)
         {
             if((node is AVFXLeaf) || (node is AVFXBlank))
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
+                messages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
                 return false;
             }
             if (Name != node.Name)
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Name {0} / {1}", Name, node.Name));
+                messages.Add(string.Format("Wrong Name {0} / {1}", Name, node.Name));
                 return false;
             }
 
-            List<AVFXNode> notBlank = new List<AVFXNode>();
-            List<AVFXNode> notBlank2 = new List<AVFXNode>();
-            foreach (AVFXNode n in Children)
-            {
-
-                if(!(n is AVFXBlank))
-                    notBlank.Add(n);
-            }
-            foreach (AVFXNode n in node.Children)
-            {
-                if (!(n is AVFXBlank))
-                    notBlank2.Add(n);
-            }
+            List<AVFXNode> notBlank = Children.Where( x => !( x is AVFXBlank ) ).ToList();
+            List<AVFXNode> notBlank2 = node.Children.Where( x => !( x is AVFXBlank ) ).ToList();
 
             if(notBlank.Count != notBlank2.Count)
             {
-                AVFXNode.LogMessages.Add(string.Format("Wrong Node Size {0} : {1} / {2} : {3}", Name, notBlank.Count, node.Name, notBlank2.Count));
+                messages.Add(string.Format("Wrong Node Size {0} : {1} / {2} : {3}", Name, notBlank.Count, node.Name, notBlank2.Count));
+
                 return false;
             }
             for(int idx = 0; idx < notBlank.Count; idx++)
             {
-                bool e = notBlank[idx].EqualsNode(notBlank2[idx]);
+                bool e = notBlank[idx].EqualsNode(notBlank2[idx], messages);
                 if (!e)
                 {
-                    AVFXNode.LogMessages.Add(string.Format("Not Equal {0} index: {1}", Name, idx));
+                    messages.Add(string.Format("Not Equal {0} index: {1}", Name, idx));
                     return false;
                 }
             }
-
             return true;
         }
 

@@ -23,29 +23,24 @@ namespace AVFXLib.Main
 
         public static AVFXNode readAVFX(BinaryReader reader, out List<string> messages)
         {
-            AVFXNode.ResetLog();
-            var result = readDef(reader)[0];
-            messages = new List<string>(AVFXNode.LogMessages);
-            return result;
+            messages = new List<string>();
+            return readDef(reader, messages)[0];
         }
 
         public static AVFXNode readAVFX(string AVFX_PATH, out List<string> messages)
         {
-            AVFXNode.ResetLog();
+            messages = new List<string>();
             if (File.Exists(AVFX_PATH))
             {
                 using (BinaryReader reader = new BinaryReader(File.Open(AVFX_PATH, FileMode.Open)))
                 {
-                    var result = readDef(reader)[0];
-                    messages = new List<string>(AVFXNode.LogMessages);
-                    return result;
+                    return readDef(reader, messages)[0];
                 }
             }
             else
             {
-                AVFXNode.LogMessages.Add("File does not exist");
+                messages.Add("File does not exist");
             }
-            messages = new List<string>(AVFXNode.LogMessages);
             return null;
         }
 
@@ -201,7 +196,7 @@ namespace AVFXLib.Main
             "SdNm"
         });
 
-        public static List<AVFXNode> readDef(BinaryReader reader)
+        public static List<AVFXNode> readDef(BinaryReader reader, List<string> messages)
         {
             List<AVFXNode> r = new List<AVFXNode>();
             if (reader.BaseStream.Position < reader.BaseStream.Length)
@@ -225,14 +220,14 @@ namespace AVFXLib.Main
                 {
                     BinaryReader nestedReader = new BinaryReader(new MemoryStream(Contents));
                     AVFXNode nestedNode = new AVFXNode(DefName);
-                    nestedNode.Children = readDef(nestedReader);
+                    nestedNode.Children = readDef(nestedReader, messages);
                     r.Add(nestedNode);
                 }
                 else
                 {
                     if (Size > 8 && !(ALLOW.Contains(DefName)))
                     {
-                        AVFXNode.LogMessages.Add(string.Format("LARGE BLOCK: {0} {1}", DefName, Size));
+                        messages.Add(string.Format("LARGE BLOCK: {0} {1}", DefName, Size));
                     }
 
                     AVFXLeaf leafNode = new AVFXLeaf(DefName, Size, Contents);
@@ -243,7 +238,7 @@ namespace AVFXLib.Main
                 reader.ReadBytes(pad);
 
                 // KEEP READING
-                return r.Concat(readDef(reader)).ToList();
+                return r.Concat(readDef(reader, messages)).ToList();
             }
             return r;
         }

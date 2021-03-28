@@ -215,7 +215,7 @@ namespace VFXEditor.UI
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             int idx = 0;
-            foreach(var item in _plugin.Configuration.RecentSelects )
+            foreach(var item in Configuration.Config.RecentSelects )
             {
                 if( item.Type == VFXSelectType.Local && !ShowLocal )
                     continue;
@@ -246,7 +246,7 @@ namespace VFXEditor.UI
         public void Invoke( VFXSelectResult result )
         {
             OnSelect?.Invoke( result );
-            _plugin.Configuration.AddRecent( result );
+            Configuration.Config.AddRecent( result );
         }
         public void DisplayPath(string path )
         {

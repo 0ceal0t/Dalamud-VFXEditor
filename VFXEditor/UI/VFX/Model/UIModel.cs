@@ -30,6 +30,7 @@ namespace VFXEditor.UI.VFX
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
             Mdl3D = view.Mdl3D;
+            HasDependencies = false; // if imported, all set now
         }
 
         public bool Open = true;

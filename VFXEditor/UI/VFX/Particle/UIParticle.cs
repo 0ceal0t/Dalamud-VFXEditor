@@ -117,6 +117,7 @@ namespace VFXEditor.UI.VFX
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             TexSplit = new UIItemSplitView<UIItem>( Tex );
             UVSplit = new UIUVSetSplitView( UVSets, this );
+            HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
             Data?.Cleanup();

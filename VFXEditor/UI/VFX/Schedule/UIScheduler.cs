@@ -36,6 +36,7 @@ namespace VFXEditor.UI.VFX
             // ======================
             ItemSplit = new UIScheduleItemSplitView( Items, this );
             TriggerSplit = new UIItemSplitView<UISchedulerItem>( Triggers );
+            HasDependencies = false; // if imported, all set now
         }
 
         public override void DrawBody( string parentId ) {

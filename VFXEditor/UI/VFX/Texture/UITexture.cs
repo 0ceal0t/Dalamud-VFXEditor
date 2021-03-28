@@ -34,6 +34,7 @@ namespace VFXEditor.UI.VFX
             if( view.GetPreviewTexture() ) {
                 Manager.LoadTexture( Texture.Path.Value );
             }
+            HasDependencies = false; // if imported, all set now
         }
         public override void DrawBody( string parentId )
         {
@@ -56,6 +57,8 @@ namespace VFXEditor.UI.VFX
                 {
                     var t = Manager.PathToTex[newValue];
                     ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
+                    ImGui.Text( $"Format: {t.Format}" );
+                    ImGui.SameLine();
                     if(ImGui.Button("Export" + id ) )
                     {
                         SaveDialog( t );

@@ -49,6 +49,7 @@ namespace VFXEditor.UI.VFX
             SetType();
             //======================
             PropSplit = new UIItemSplitView<UIBinderProperties>( Properties );
+            HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
             Data?.Cleanup();

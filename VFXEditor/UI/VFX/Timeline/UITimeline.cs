@@ -42,6 +42,7 @@ namespace VFXEditor.UI.VFX
             //==========================
             ClipSplit = new UITimelineClipSplitView( Clips, this );
             ItemSplit = new UITimelineItemSplitView( Items, this );
+            HasDependencies = false; // if imported, all set now
         }
 
         public override void DrawBody( string parentId ) {
