@@ -19,18 +19,12 @@ namespace VFXEditor {
         public Model3D Model;
 
         // https://github.com/ackwell/BrowserHost/blob/32104cedd10715ca44710be1e57a36b6aa8c43c3/BrowserHost.Plugin/DxHandler.cs
-
         public DirectXManager(Plugin plugin) {
             _plugin = plugin;
             ShaderPath = Path.Combine( Plugin.TemplateLocation, "Shaders" );
-
-            //=== USE REFLECTION FOR NOW =========
             _Device = plugin.PluginInterface.UiBuilder.Device;
             _Ctx = _Device.ImmediateContext;
-
             Model = new Model3D( this );
-
-            PluginLog.Log( "Set up DirectX" );
         }
 
         public void Draw() {

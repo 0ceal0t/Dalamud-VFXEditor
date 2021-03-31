@@ -14,7 +14,6 @@ using VFXEditor.UI.VFX;
 namespace VFXEditor.UI {
     public class DocDialog : GenericDialog {
         public DocDialog(Plugin plugin) : base(plugin, "Documents" ) {
-            Size = new Vector2( 500, 400 );
         }
 
         public ReplaceDoc SelectedDoc = null;

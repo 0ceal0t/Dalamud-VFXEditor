@@ -50,7 +50,6 @@ namespace VFXEditor
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
-
             WriteLocation = Path.Combine( new[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "XIVLauncher",
@@ -61,7 +60,7 @@ namespace VFXEditor
             PluginLog.Log( "Write location: " + WriteLocation );
 
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Configuration.Initialize( PluginInterface, WriteLocation );
+            Configuration.Initialize( PluginInterface );
             ResourceLoader = new ResourceLoader( this );
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand )
             {

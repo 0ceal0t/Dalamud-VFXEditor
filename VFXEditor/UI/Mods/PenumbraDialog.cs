@@ -36,12 +36,13 @@ namespace VFXEditor.UI {
             if( ImGui.Button( "Browse" + id ) ) {
                 SaveDialog();
             }
-            ImGui.Checkbox( "Export All", ref ExportAll );
             ImGui.Checkbox( "Export Textures", ref ExportTex );
+            ImGui.Separator();
+            ImGui.Checkbox( "Export All", ref ExportAll );
             if( !ExportAll ) {
-                ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
+                ImGui.InputText( "VFX to Replace" + id, ref VFXPath, 255 );
                 ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
-                if( ImGui.Button( "Use Replace" + id ) ) {
+                if( ImGui.Button( "Use Preview" + id ) ) {
                     VFXPath = _plugin.ReplaceAVFXPath;
                 }
             }

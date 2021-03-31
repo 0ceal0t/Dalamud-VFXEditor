@@ -14,16 +14,21 @@ using VFXEditor.UI.VFX;
 namespace VFXEditor.UI {
     public class TextureDialog : GenericDialog {
         public TextureDialog( Plugin plugin ) : base( plugin, "Imported Textures" ) {
-            Size = new Vector2( 500, 400 );
         }
 
         public override void OnDraw() {
             var id = "##ImportTex";
 
+            if( _plugin.Manager.TexManager.GamePathReplace.Count == 0 ) {
+                ImGui.Text( "No Textures Have Been Imported..." );
+                return;
+            }
+
             ImGui.BeginChild( id + "/Child", new Vector2( 0, 0 ), true );
-            ImGui.Columns( 3, id + "/Columns", true );
-            ImGui.SetColumnWidth( 1, 100 );
-            ImGui.SetColumnWidth( 2, 100 );
+            ImGui.Columns( 3, id + "/Columns" );
+            ImGui.SetColumnWidth( 0, ImGui.GetWindowContentRegionWidth() - 150 );
+            ImGui.SetColumnWidth( 1, 75 );
+            ImGui.SetColumnWidth( 2, 75 );
 
             foreach(var path in _plugin.Manager.TexManager.GamePathReplace.Keys ) {
                 ImGui.Text( path );

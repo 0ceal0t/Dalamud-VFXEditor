@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor
 {
-    public struct PenumbraMod
-    {
+    public struct PenumbraMod {
         public string Name;
         public string Author;
         public string Description;
@@ -24,8 +23,7 @@ namespace VFXEditor
     {
         public Plugin _plugin;
 
-        public Penumbra(Plugin plugin )
-        {
+        public Penumbra(Plugin plugin ) {
             _plugin = plugin;
             /*
              * {
@@ -39,10 +37,8 @@ namespace VFXEditor
              */
         }
 
-        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex )
-        {
-            try
-            {
+        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex ) {
+            try {
                 PenumbraMod mod = new PenumbraMod();
                 mod.Name = name;
                 mod.Author = author;

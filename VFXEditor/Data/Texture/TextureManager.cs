@@ -1,12 +1,9 @@
-using AVFXLib.AVFX;
-using AVFXLib.Models;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lumina.Excel.GeneratedSheets;
 using System.IO;
 using System.Collections.Concurrent;
 using TeximpNet;
@@ -68,13 +65,6 @@ namespace VFXEditor
             return true;
         }
 
-        /*
-         * UI
-         * reset button next to preview
-         * textools export
-         * penumbra export
-         */
-
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportTexture(string fileLocation, string replacePath ) {
             if( !_plugin.PluginInterface.Data.FileExists( replacePath ) ) {
@@ -83,8 +73,8 @@ namespace VFXEditor
             }
 
             try {
-                string path = Path.Combine( WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
                 TexReplace replaceData;
+                var path = Path.Combine( WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 bool isDDS = Path.GetExtension( fileLocation ).ToLower() == ".dds";
                 if( isDDS ) {
@@ -104,20 +94,19 @@ namespace VFXEditor
 
                     using( var surface = Surface.LoadFromFile( fileLocation ) ) {
                         surface.FlipVertically();
-                        var maxMipCount = -1;
 
                         using( var compressor = new Compressor() ) {
                             CompressionFormat compFormat = VFXTexture.TextureToCompressionFormat( texFile.Header.Format );
-                            if( compFormat == CompressionFormat.ETC1 ) {
+                            if( compFormat == CompressionFormat.ETC1 ) { // use ETC1 to signify "NULL" because I'm not going to be using it
                                 return false;
                             }
 
-                            compressor.Input.SetMipmapGeneration( true, maxMipCount );
+                            compressor.Input.SetMipmapGeneration( true, -1 ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
                             compressor.Input.SetData( surface );
                             compressor.Compression.Format = compFormat;
                             compressor.Compression.SetBGRAPixelFormat();
-
                             compressor.Process( out var ddsContainer );
+
                             using( BinaryWriter writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
                                 replaceData = CreateAtex( texFile.Header.Format, ddsContainer, writer, convertToA8: ( texFile.Header.Format == TextureFormat.A8 ) );
                             }
@@ -125,10 +114,9 @@ namespace VFXEditor
                         }
                     }
                 }
-                replaceData.localPath = path;
                 // if there is already a replacement for the same file, delete the old file
+                replaceData.localPath = path;
                 RemoveReplace( replacePath );
-                // add/update dictionary
                 if( !GamePathReplace.TryAdd( replacePath, replaceData ) ) {
                     return false;
                 }
@@ -176,22 +164,16 @@ namespace VFXEditor
                     br.BaseStream.Seek( 12, SeekOrigin.Begin );
                     replaceData.Height = br.ReadInt32();
                     replaceData.Width = br.ReadInt32();
+                    int pitch = br.ReadInt32();
                     replaceData.Depth = br.ReadInt32();
                     replaceData.MipLevels = br.ReadInt32();
 
-                    //br.BaseStream.Seek( 80, SeekOrigin.Begin );
-                    //var textureFlags = br.ReadInt32();
-                    //var texType = br.ReadInt32();
-                    //var DDSInfo = IOUtil.GetDDSInfo( br, format, newWidth, newHeight, newMipCount );
-                    //bw.Write( IOUtil.MakeType4DatHeader( format, DDSInfo.mipPartOffsets, DDSInfo.mipPartCounts, ( int )uncompressedLength, newMipCount, newWidth, newHeight ) );
-                    //bw.Write( DDSInfo.compressedDDS.ToArray() );
-
-                    bw.Write( IOUtil.MakeTextureInfoHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() ); // header is 80
+                    bw.Write( IOUtil.MakeTextureInfoHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
                     br.BaseStream.Seek( 128, SeekOrigin.Begin );
                     var uncompressedLength = ms.Length - 128;
                     byte[] data = new byte[uncompressedLength];
                     br.Read( data, 0, ( int )uncompressedLength );
-                    if( convertToA8 ) {
+                    if( convertToA8 ) { // scuffed way to handle png -> A8. Just load is as BGRA, then only keep the A channel
                         data = VFXTexture.CompressA8( data );
                     }
                     bw.Write( data );

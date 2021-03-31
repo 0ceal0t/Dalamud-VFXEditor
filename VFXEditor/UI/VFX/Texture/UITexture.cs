@@ -87,17 +87,15 @@ namespace VFXEditor.UI.VFX
 
         public static void ImportDialog(TextureManager manager, string path) {
             Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
+                var picker = new OpenFileDialog {
                     Filter = "DDS or PNG File (*.png;*.dds)|*.png*;*.dds*|All files (*.*)|*.*",
-                    Title = "Select a File Location.",
-                    OverwritePrompt = false,
-                    CheckFileExists = true
+                    CheckFileExists = true,
+                    Title = "Select Image File."
                 };
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        if(!manager.ImportTexture( picker.FileName, path ) ) {
+                        if( !manager.ImportTexture( picker.FileName, path ) ) {
                             PluginLog.Log( $"Could not import" );
                         }
                     }

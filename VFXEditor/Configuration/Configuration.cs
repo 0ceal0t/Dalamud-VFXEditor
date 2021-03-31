@@ -40,8 +40,7 @@ namespace VFXEditor{
         [NonSerialized]
         public static Configuration Config;
 
-        public void Initialize( DalamudPluginInterface pluginInterface, string writeLocation )
-        {
+        public void Initialize( DalamudPluginInterface pluginInterface ) {
             _pluginInterface = pluginInterface;
             Config = this;
             _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
@@ -57,8 +56,7 @@ namespace VFXEditor{
             Save();
         }
 
-        public void Save()
-        {
+        public void Save() {
             _pluginInterface.SavePluginConfig( this );
             _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }

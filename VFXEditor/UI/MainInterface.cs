@@ -312,8 +312,7 @@ namespace VFXEditor.UI
         public string RawTexInputValue = "";
         public void DrawRaw() {
             var ret = ImGui.BeginTabItem( "Extract##MainInterfaceTabs" );
-            if( !ret )
-                return;
+            if( !ret ) return;
             // ======= AVFX =========
             ImGui.Text( "Extract a raw .avfx file" );
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
@@ -357,8 +356,7 @@ namespace VFXEditor.UI
 
         public void DrawSettings() {
             var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
-            if( !ret )
-                return;
+            if( !ret ) return;
             bool verifyOnLoad = Configuration.Config.VerifyOnLoad;
             if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
             {
@@ -393,8 +391,7 @@ namespace VFXEditor.UI
 
         public void DrawHelp() {
             var ret = ImGui.BeginTabItem( "Help##MainInterfaceTabs" );
-            if( !ret )
-                return;
+            if( !ret ) return;
             if( ImGui.Button( "Report an Issue" ) ) {
                 Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }
@@ -426,30 +423,23 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             newResult.Path = Path.Combine( Plugin.TemplateLocation, "Files", path );
             _plugin.SelectAVFX( newResult );
         }
-        public void SaveDialog( string filter, string data, string ext )
-        {
+        public void SaveDialog( string filter, string data, string ext ) {
             SaveDialog( filter, Encoding.ASCII.GetBytes(data), ext );
         }
-        public void SaveDialog(string filter, byte[] data, string ext )
-        {
-            Task.Run( async () =>
-            {
-                var picker = new SaveFileDialog
-                {
+        public void SaveDialog(string filter, byte[] data, string ext ) {
+            Task.Run( async () => {
+                var picker = new SaveFileDialog {
                     Filter = filter,
                     Title = "Select a Save Location.",
                     DefaultExt = ext,
                     AddExtension = true
                 };
                 var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK )
-                {
-                    try
-                    {
+                if( result == DialogResult.OK ) {
+                    try {
                         File.WriteAllBytes( picker.FileName, data );
                     }
-                    catch( Exception ex )
-                    {
+                    catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not save to: " + picker.FileName );
                     }
                 }

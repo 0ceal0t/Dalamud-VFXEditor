@@ -11,7 +11,6 @@ namespace VFXEditor.UI {
     public abstract class GenericDialog {
         public Plugin _plugin;
         public bool Visible = false;
-        public Vector2 Size = new Vector2( 500, 190 );
         public string DialogName;
 
         public GenericDialog( Plugin plugin, string name ) {
@@ -26,7 +25,7 @@ namespace VFXEditor.UI {
             if( !Visible )
                 return;
             if( !DrawOnce ) {
-                ImGui.SetNextWindowSize( new Vector2( 500, 190 ) );
+                ImGui.SetNextWindowSize( new Vector2( 600, 400 ) );
                 DrawOnce = true;
             }
             // ================

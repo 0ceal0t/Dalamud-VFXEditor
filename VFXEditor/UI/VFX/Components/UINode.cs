@@ -303,7 +303,6 @@ namespace VFXEditor.UI.VFX {
             if( Node.HasDependencies && val >= 0 ) {
                 val += Group.PreImportSize;
                 Literal.GiveValue( val );
-                PluginLog.Log( $"Imported node {val}" );
             }
             if( val >= 0 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
@@ -412,7 +411,6 @@ namespace VFXEditor.UI.VFX {
                 if( Node.HasDependencies && val != 255 && val >= 0 ) {
                     val += Group.PreImportSize;
                     Literal.GiveValue( val, i ); 
-                    PluginLog.Log( $"Imported list {val}" );
                 }
                 if( val != 255 && val >= 0 && val < Group.Items.Count ) {
                     var item = Group.Items[val];

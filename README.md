@@ -27,7 +27,7 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 ## Features
 * Load and preview in-game VFXs (weapons, actions, status effects)
 * Edit and export
-* Preview textures
+* Preview, import, and export textures
 * Add, remove, and edit particles, emitters, etc.
 * Import and export models
 * Export as `.avfx` or Textools Modpack
@@ -48,11 +48,9 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
-- [ ] Game structs
 - [ ] Model scaling?
 - [ ] Model editing?
 - [ ] Show emitter vertices
-- [ ] More texture export options
 - [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
@@ -77,6 +75,8 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Texture replacement (+ Textools/Penumbra export)~~
+- [x] ~~More texture export options~~
 - [x] ~~Vfx live viewer~~
 - [x] ~~Spawn vfx (on ground + on self)~~
 - [x] ~~Lock required fields from being deleted~~

@@ -12,8 +12,7 @@ using System.IO.Compression;
 
 namespace VFXEditor
 {
-    public struct TTMPL
-    {
+    public struct TTMPL {
         public string TTMPVersion;
         public string Name;
         public string Author;
@@ -22,8 +21,7 @@ namespace VFXEditor
         public string? ModPackPages;
         public TTMPL_Simple[] SimpleModsList; 
     }
-    public struct TTMPL_Simple
-    {
+    public struct TTMPL_Simple {
         public string Name;
         public string Category;
         public string FullPath;
@@ -34,12 +32,10 @@ namespace VFXEditor
         public string? ModPackEntry;
     }
 
-    public class TexTools
-    {
+    public class TexTools {
         public Plugin _plugin;
 
-        public TexTools(Plugin plugin)
-        {
+        public TexTools(Plugin plugin) {
             _plugin = plugin;
             /*
              * TTMPL.mpl ->
@@ -66,10 +62,8 @@ namespace VFXEditor
              */
         }
 
-        public async void Export(string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex )
-        {
-            try
-            {
+        public void Export(string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex ) {
+            try {
                 List<TTMPL_Simple> simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
                 int ModOffset = 0;
@@ -347,7 +341,7 @@ namespace VFXEditor
                     break;
             }
 
-            br.BaseStream.Seek( 80, SeekOrigin.Begin ); // <------------------------
+            br.BaseStream.Seek( 80, SeekOrigin.Begin ); // skip the ATEX header
 
             for( var i = 0; i < newMipCount; i++ ) {
                 var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
