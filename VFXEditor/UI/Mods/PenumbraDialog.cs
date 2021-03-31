@@ -21,6 +21,7 @@ namespace VFXEditor.UI {
         public string SaveLocation = "";
         public string VFXPath = "";
         public bool ExportAll = false;
+        public bool ExportTex = true;
 
         public override void OnDraw() {
             var id = "##Penumbra";
@@ -35,7 +36,8 @@ namespace VFXEditor.UI {
             if( ImGui.Button( "Browse" + id ) ) {
                 SaveDialog();
             }
-            ImGui.Checkbox( "Export all", ref ExportAll );
+            ImGui.Checkbox( "Export All", ref ExportAll );
+            ImGui.Checkbox( "Export Textures", ref ExportTex );
             if( !ExportAll ) {
                 ImGui.InputText( "VFX Path" + id, ref VFXPath, 255 );
                 ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
@@ -46,7 +48,7 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
 
             if( ImGui.Button( "EXPORT" + id ) ) {
-                _plugin.PenumbraManager.Export( Name, Author, Version, VFXPath, SaveLocation, ExportAll );
+                _plugin.PenumbraManager.Export( Name, Author, Version, VFXPath, SaveLocation, ExportAll, ExportTex );
                 Visible = false;
             }
         }

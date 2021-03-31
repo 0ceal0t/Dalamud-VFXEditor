@@ -39,7 +39,7 @@ namespace VFXEditor
              */
         }
 
-        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll )
+        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex )
         {
             try
             {
@@ -67,15 +67,28 @@ namespace VFXEditor
                     }
                 }
 
+                void AddTex(string localPath, string _path ) {
+                    if(!string.IsNullOrEmpty(localPath) && !string.IsNullOrEmpty( _path ) ) {
+                        string modFile = Path.Combine( modFolder, _path );
+                        string modFileFolder = Path.GetDirectoryName( modFile );
+                        Directory.CreateDirectory( modFileFolder );
+                        File.Copy( localPath, modFile, true );
+                    }
+                }
+
                 if( exportAll ) {
                     foreach( var doc in _plugin.Doc.Docs ) {
-                        var _path = doc.Replace.Path;
-                        var _avfx = doc.AVFX;
-                        AddMod( _avfx, _path );
+                        AddMod( doc.AVFX, doc.Replace.Path );
                     }
                 }
                 else {
                     AddMod( _plugin.AVFX, path );
+                }
+
+                if( exportTex ) {
+                    foreach(KeyValuePair<string, TexReplace> entry in _plugin.Manager.TexManager.GamePathReplace ) {
+                        AddTex( entry.Value.localPath, entry.Key );
+                    }
                 }
 
                 PluginLog.Log( "Exported To: " + saveLocation );

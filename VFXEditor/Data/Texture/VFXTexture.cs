@@ -8,10 +8,11 @@ using System.Text;
 using System.Drawing;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
+using TeximpNet;
+using TeximpNet.Compression;
+using TeximpNet.DDS;
 
-namespace VFXEditor
-{
-
+namespace VFXEditor {  
     public enum TextureFormat {
         Unknown = 0x0,
         TypeShift = 0xC,
@@ -95,117 +96,97 @@ namespace VFXEditor
         public TexHeader Header;
 
         public int HeaderLength => Unsafe.SizeOf<TexHeader>();
+        public bool ValidFormat = false;
+        public bool Local = false;
 
+        public byte[] RawData;
         public byte[] ImageData { get; private set; }
 
-        public override void LoadFile()
-        {
+        public override void LoadFile() {
             Reader.BaseStream.Position = 0;
             Header = Reader.ReadStructure<TexHeader>();
+            ImageData = BGRA_to_RGBA( Convert( DataSpan.Slice( HeaderLength ), Header.Width, Header.Height ) );
+        }
 
-            // todo: this isn't correct and reads out the whole data portion as 1 image instead of accounting for lod levels
-            // probably a breaking change to fix this
-            ImageData = Convert( DataSpan.Slice( HeaderLength ), Header.Width, Header.Height );
+        public void LoadFileLocal(BinaryReader br, int size) {
+            Local = true;
+            br.BaseStream.Position = 0;
+            Header = br.ReadStructure<TexHeader>();
+            RawData = br.ReadBytes( size - HeaderLength );
+            ImageData = BGRA_to_RGBA( Convert( new Span<byte>(RawData), Header.Width, Header.Height ) );
+        }
+        public byte[] GetDDSData() {
+            if( !Local ) {
+                return DataSpan.Slice( HeaderLength ).ToArray();
+            }
+            else {
+                return RawData;
+            }
         }
 
         // converts various formats to A8R8G8B8
-        // https://github.com/mkaminsky11/AVFXTools/blob/b5a3bcd1b831ab94c898c13c27463a8a9f5c1670/AVFXTools/Main/Texture/Textures.cs
-        private byte[] Convert( Span<byte> src, int width, int height )
-        {
+        private byte[] Convert( Span<byte> src, int width, int height ) {
             byte[] dst = new byte[width * height * 4];
-
-            switch( Header.Format )
-            {
+            switch( Header.Format ) {
                 case TextureFormat.DXT1:
-                    ProcessDxt1( src, dst, width, height );
-                    break;
-                case TextureFormat.DXT3:
-                    ProcessDxt3( src, dst, width, height );
+                    DecompressDxt1( src, dst, width, height );
                     break;
                 case TextureFormat.DXT5:
-                    ProcessDxt5( src, dst, width, height );
-                    break;
-                case TextureFormat.R16G16B16A16F:
-                    ProcessA16R16G16B16_Float( src, dst, width, height );
-                    break;
-                case TextureFormat.R5G5B5A1:
-                    ProcessA1R5G5B5( src, dst, width, height );
-                    break;
-                case TextureFormat.R4G4B4A4:
-                    ProcessA4R4G4B4( src, dst, width, height );
-                    break;
-                case TextureFormat.L8:
-                    ProcessR3G3B2( src, dst, width, height );
+                    DecompressDxt5( src, dst, width, height );
                     break;
                 case TextureFormat.A8R8G8B8:
+                    if(dst.Length != src.Length ) { // ???
+                        return new byte[0];
+                    }
                     src.CopyTo( dst );
                     break;
                 case TextureFormat.A8:
-                    ProcessA8( src, dst, width, height );
+                    DecompressA8( src, dst, width, height );
                     break;
                 default:
-                    throw new NotImplementedException( $"TextureFormat {Header.Format.ToString()} is not supported for image conversion." );
+                    return new byte[0]; // ???
             }
-
+            ValidFormat = true;
             return dst;
         }
 
-        // #region shamelessly copied from coinach
-        // might be slowed down by src copying when calling squish
-        private static void ProcessA16R16G16B16_Float( Span<byte> src, byte[] dst, int width, int height )
-        {
-            // Clipping can, and will occur since values go outside 0..1
-            for( var i = 0; i < width * height; ++i )
-            {
-                var srcOff = i * 4 * 2;
-                var dstOff = i * 4;
-
-                for( var j = 0; j < 4; ++j )
-                    dst[dstOff + j] = ( byte )( src.Unpack( srcOff + j * 2 ) * byte.MaxValue );
+        public static TextureFormat DXGItoTextureFormat(DXGIFormat format ) {
+            switch( format ) {
+                case DXGIFormat.A8_UNorm:
+                    return TextureFormat.A8;
+                case DXGIFormat.BC1_UNorm:
+                    return TextureFormat.DXT1;
+                case DXGIFormat.BC3_UNorm:
+                    return TextureFormat.DXT5;
+                case DXGIFormat.B8G8R8A8_UNorm:
+                    return TextureFormat.A8R8G8B8;
+                default:
+                    return TextureFormat.Null;
+            }
+        }
+        public static CompressionFormat TextureToCompressionFormat( TextureFormat format ) {
+            switch( format ) {
+                case TextureFormat.DXT1:
+                    return CompressionFormat.BC1a;
+                case TextureFormat.DXT5:
+                    return CompressionFormat.BC3;
+                case TextureFormat.A8R8G8B8:
+                case TextureFormat.A8:
+                    return CompressionFormat.BGRA;
+                default:
+                    return CompressionFormat.ETC1;
             }
         }
 
-        private static void ProcessA1R5G5B5( Span<byte> src, byte[] dst, int width, int height )
-        {
-            for( var i = 0; ( i + 2 ) <= 2 * width * height; i += 2 )
-            {
-                var v = BitConverter.ToUInt16( src.Slice( i, sizeof( UInt16 ) ).ToArray(), 0 );
-
-                var a = ( uint )( v & 0x8000 );
-                var r = ( uint )( v & 0x7C00 );
-                var g = ( uint )( v & 0x03E0 );
-                var b = ( uint )( v & 0x001F );
-
-                var rgb = ( ( r << 9 ) | ( g << 6 ) | ( b << 3 ) );
-                var argbValue = ( a * 0x1FE00 | rgb | ( ( rgb >> 5 ) & 0x070707 ) );
-
-                for( var j = 0; j < 4; ++j )
-                    dst[i * 2 + j] = ( byte )( argbValue >> ( 8 * j ) );
+        public static byte[] CompressA8(byte[] data) {
+            byte[] ret = new byte[data.Length / 4];
+            for(int i = 0; i < ret.Length; i++ ) {
+                ret[i] = data[i * 4 + 3];
             }
+            return ret;
         }
-
-        private static void ProcessA4R4G4B4( Span<byte> src, byte[] dst, int width, int height )
-        {
-            for( var i = 0; ( i + 2 ) <= 2 * width * height; i += 2 )
-            {
-                var v = BitConverter.ToUInt16( src.Slice( i, sizeof( UInt16 ) ).ToArray(), 0 );
-
-                for( var j = 0; j < 4; ++j )
-                    dst[i * 2 + j] = ( byte )( ( ( v >> ( 4 * j ) ) & 0x0F ) << 4 );
-            }
-        }
-
-        private static void ProcessA8R8G8B8( Span<byte> src, byte[] dst, int width, int height )
-        {
-            // Some transparent images have larger dst lengths than their src.
-            var length = Math.Min( src.Length, dst.Length );
-            src.Slice( 0, length ).CopyTo( dst.AsSpan() );
-        }
-
-        private static void ProcessA8( Span<byte> src, byte[] dst, int width, int height )
-        {
-            for( var i = 0; i < width * height; i += 1 )
-            {
+        private static void DecompressA8( Span<byte> src, byte[] dst, int width, int height ) {
+            for( var i = 0; i < width * height; i += 1 ) {
                 int idx = i * 4;
                 dst[idx + 0] = 0xFF;
                 dst[idx + 1] = 0xFF;
@@ -213,38 +194,35 @@ namespace VFXEditor
                 dst[idx + 3] = src[i];
             }
         }
-
-        private static void ProcessDxt1( Span<byte> src, byte[] dst, int width, int height )
-        {
+        private static void DecompressDxt1( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT1 );
             Array.Copy( dec, dst, dst.Length );
         }
-
-        private static void ProcessDxt3( Span<byte> src, byte[] dst, int width, int height )
-        {
-            var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT3 );
-            Array.Copy( dec, dst, dst.Length );
-        }
-
-        private static void ProcessDxt5( Span<byte> src, byte[] dst, int width, int height )
-        {
+        private static void DecompressDxt5( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT5 );
             Array.Copy( dec, dst, dst.Length );
         }
 
-        private static void ProcessR3G3B2( Span<byte> src, byte[] dst, int width, int height )
-        {
-            for( var i = 0; i < width * height; ++i )
-            {
-                var r = ( uint )( src[i] & 0xE0 );
-                var g = ( uint )( src[i] & 0x1C );
-                var b = ( uint )( src[i] & 0x03 );
-
-                dst[i * 4 + 0] = ( byte )( b | ( b << 2 ) | ( b << 4 ) | ( b << 6 ) );
-                dst[i * 4 + 1] = ( byte )( g | ( g << 3 ) | ( g << 6 ) );
-                dst[i * 4 + 2] = ( byte )( r | ( r << 3 ) | ( r << 6 ) );
-                dst[i * 4 + 3] = 0xFF;
+        public static byte[] BGRA_to_RGBA( byte[] data ) {
+            byte[] ret = new byte[data.Length];
+            for( int i = 0; i < data.Length / 4; i++ ) {
+                var idx = i * 4;
+                ret[idx + 0] = data[idx + 2];
+                ret[idx + 1] = data[idx + 1];
+                ret[idx + 2] = data[idx + 0];
+                ret[idx + 3] = data[idx + 3];
             }
+            return ret;
+        }
+
+        public static VFXTexture LoadFromLocal(string path ) {
+            VFXTexture tex = new VFXTexture();
+            var file = File.Open( path, FileMode.Open );
+            using( BinaryReader reader = new BinaryReader( file ) ) {
+                tex.LoadFileLocal( reader, (int) file.Length );
+            }
+            file.Close();
+            return tex;
         }
     }
 }

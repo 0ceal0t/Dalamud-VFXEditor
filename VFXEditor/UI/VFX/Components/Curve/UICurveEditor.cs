@@ -227,7 +227,7 @@ namespace VFXEditor.UI.VFX {
                 ViewDrag = false;
             }
             // ADD A NEW KEYFRAME
-            if(ImGui.IsItemHovered() && ImGui.IsMouseClicked(1) ) {
+            if(ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Right) ) {
                 if( Points.Count > 0 ) {
                     var pos = CanvasPosToReal( ImGui.GetMousePos(), SizePerUnit, CanvasTopLeft, CanvasBottomRight, DataTopLeft );
                     int insertIdx = 0;

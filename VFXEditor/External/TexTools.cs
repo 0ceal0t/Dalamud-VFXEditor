@@ -66,7 +66,7 @@ namespace VFXEditor
              */
         }
 
-        public async void Export(string name, string author, string version, string path, string saveLocation, bool exportAll )
+        public async void Export(string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex )
         {
             try
             {
@@ -76,26 +76,53 @@ namespace VFXEditor
 
                 using( MemoryStream ms = new MemoryStream() ) {
                     using( BinaryWriter writer = new BinaryWriter( ms ) ) {
-
-                        async Task AddMod(AVFXBase avfx, string _p) {
-                            if( !string.IsNullOrEmpty( _p ) && avfx != null ) {
-                                var modData = await SquishAVFX( avfx );
-                                simpleParts.Add( CreateModResource( _p, ModOffset, modData.Length ) );
+                        void AddMod(AVFXBase avfx, string _path) {
+                            if( !string.IsNullOrEmpty( _path ) && avfx != null ) {
+                                var modData = SquishAVFX( avfx );
+                                simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
                                 writer.Write( modData );
                                 ModOffset += modData.Length;
                             }
                         }
 
+                        void AddTex(TexReplace tex, string _path ) {
+                            if(!string.IsNullOrEmpty(_path) && !string.IsNullOrEmpty( tex.localPath ) ) {
+                                var file = File.Open( tex.localPath, FileMode.Open );
+                                long uncompressedLength = file.Length - 80; // .ATEX header is 80 bytes long
+                                using( MemoryStream texMs = new MemoryStream()) {
+                                    using(BinaryWriter texWriter = new BinaryWriter( texMs ) ) {
+                                        using( BinaryReader texReader = new BinaryReader( file ) ) {
+                                            var DDSInfo = GetDDSInfo( texReader, tex.Format, tex.Width, tex.Height, tex.MipLevels );
+                                            texWriter.Write( MakeType4DatHeader( tex.Format, DDSInfo.mipPartOffsets, DDSInfo.mipPartCounts, ( int )uncompressedLength, tex.MipLevels, tex.Width, tex.Height ) );
+                                            texReader.BaseStream.Seek( 0, SeekOrigin.Begin ); // already have the header, no need to do that again
+                                            texWriter.Write( texReader.ReadBytes( 80 ) );
+                                            texWriter.Write( DDSInfo.compressedDDS.ToArray() );
+                                            var modData = texMs.ToArray();
+                                            simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
+                                            writer.Write( modData );
+                                            ModOffset += modData.Length;
+                                        }
+                                    }
+                                }
+                                file.Close();
+                            }
+                        }
+
                         if( exportAll ) {
                             foreach(var doc in _plugin.Doc.Docs ) {
-                                var _path = doc.Replace.Path;
-                                var _avfx = doc.AVFX;
-                                await AddMod( _avfx, _path );
+                                AddMod( doc.AVFX, doc.Replace.Path );
                             }
                         }
                         else {
-                            await AddMod( _plugin.AVFX, path);
+                            AddMod( _plugin.AVFX, path);
                         }
+
+                        if( exportTex ) {
+                            foreach( KeyValuePair<string, TexReplace> entry in _plugin.Manager.TexManager.GamePathReplace ) {
+                                AddTex( entry.Value, entry.Key );
+                            }
+                        }
+
                         newData = ms.ToArray();
                     }
                 }
@@ -163,18 +190,18 @@ namespace VFXEditor
                     }
                     break;
                 default:
-                    PluginLog.Log( "Invalid VFX path! Could not find DatFile" );
+                    PluginLog.Log( "Invalid path! Could not find DatFile" );
                     break;
             }
             simple.ModPackEntry = null;
             return simple;
         }
 
-        public async Task<byte[]> SquishAVFX( AVFXBase avfx ) {
-            return await CreateType2Data( avfx.toAVFX().toBytes() );
+        public byte[] SquishAVFX( AVFXBase avfx ) {
+            return CreateType2Data( avfx.toAVFX().toBytes() );
         }
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
-        public async Task<byte[]> CreateType2Data( byte[] dataToCreate ) {
+        public byte[] CreateType2Data( byte[] dataToCreate ) {
             var newData = new List<byte>();
             var headerData = new List<byte>();
             var dataBlocks = new List<byte>();
@@ -192,7 +219,7 @@ namespace VFXEditor
                 binaryReader.BaseStream.Seek( 0, SeekOrigin.Begin );
                 for( var i = 1; i <= partCount; i++ ) {
                     if( i == partCount ) {
-                        var compressedData = await Compressor( binaryReader.ReadBytes( remainder ) );
+                        var compressedData = Compressor( binaryReader.ReadBytes( remainder ) );
                         var padding = 128 - ( ( compressedData.Length + 16 ) % 128 );
                         dataBlocks.AddRange( BitConverter.GetBytes( 16 ) );
                         dataBlocks.AddRange( BitConverter.GetBytes( 0 ) );
@@ -206,7 +233,7 @@ namespace VFXEditor
                         totalCompSize = dataOffset + ( ( compressedData.Length + 16 ) + padding );
                     }
                     else {
-                        var compressedData = await Compressor( binaryReader.ReadBytes( 16000 ) );
+                        var compressedData = Compressor( binaryReader.ReadBytes( 16000 ) );
                         var padding = 128 - ( ( compressedData.Length + 16 ) % 128 );
                         dataBlocks.AddRange( BitConverter.GetBytes( 16 ) );
                         dataBlocks.AddRange( BitConverter.GetBytes( 0 ) );
@@ -238,18 +265,155 @@ namespace VFXEditor
             return newData.ToArray();
         }
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/Helpers/IOUtil.cs#L40
-        public static async Task<byte[]> Compressor( byte[] uncompressedBytes ) {
+        public static byte[] Compressor( byte[] uncompressedBytes ) {
             using( var uMemoryStream = new MemoryStream( uncompressedBytes ) ) {
                 byte[] compbytes = null;
                 using( var cMemoryStream = new MemoryStream() ) {
                     using( var deflateStream = new DeflateStream( cMemoryStream, CompressionMode.Compress ) ) {
-                        await uMemoryStream.CopyToAsync( deflateStream );
+                        uMemoryStream.CopyTo( deflateStream );
                         deflateStream.Close();
                         compbytes = cMemoryStream.ToArray();
                     }
                 }
                 return compbytes;
             }
+        }
+
+        public static byte[] MakeType4DatHeader( TextureFormat format, List<short> mipPartOffsets, List<short> mipPartCount, int uncompressedLength, int newMipCount, int newWidth, int newHeight ) {
+            var headerData = new List<byte>();
+            var headerSize = 24 + ( newMipCount * 20 ) + ( mipPartOffsets.Count * 2 );
+            var headerPadding = 128 - ( headerSize % 128 );
+            headerData.AddRange( BitConverter.GetBytes( headerSize + headerPadding ) );
+            headerData.AddRange( BitConverter.GetBytes( 4 ) );
+            headerData.AddRange( BitConverter.GetBytes( uncompressedLength ) );
+            headerData.AddRange( BitConverter.GetBytes( 0 ) );
+            headerData.AddRange( BitConverter.GetBytes( 0 ) );
+            headerData.AddRange( BitConverter.GetBytes( newMipCount ) );
+            var partIndex = 0;
+            var mipOffsetIndex = 80;
+            var uncompMipSize = newHeight * newWidth;
+            switch( format ) {
+                case TextureFormat.DXT1:
+                    uncompMipSize = ( newWidth * newHeight ) / 2;
+                    break;
+                case TextureFormat.DXT5:
+                case TextureFormat.A8:
+                    uncompMipSize = newWidth * newHeight;
+                    break;
+                case TextureFormat.A8R8G8B8:
+                default:
+                    uncompMipSize = ( newWidth * newHeight ) * 4;
+                    break;
+            }
+            for( var i = 0; i < newMipCount; i++ ) {
+                headerData.AddRange( BitConverter.GetBytes( mipOffsetIndex ) );
+                var paddedSize = 0;
+                for( var j = 0; j < mipPartCount[i]; j++ ) {
+                    paddedSize = paddedSize + mipPartOffsets[j + partIndex];
+                }
+                headerData.AddRange( BitConverter.GetBytes( paddedSize ) );
+                headerData.AddRange( uncompMipSize > 16
+                    ? BitConverter.GetBytes( uncompMipSize )
+                    : BitConverter.GetBytes( 16 ) );
+                uncompMipSize = uncompMipSize / 4;
+                headerData.AddRange( BitConverter.GetBytes( partIndex ) );
+                headerData.AddRange( BitConverter.GetBytes( ( int )mipPartCount[i] ) );
+                partIndex = partIndex + mipPartCount[i];
+                mipOffsetIndex = mipOffsetIndex + paddedSize;
+            }
+            foreach( var part in mipPartOffsets ) {
+                headerData.AddRange( BitConverter.GetBytes( part ) );
+            }
+            headerData.AddRange( new byte[headerPadding] );
+            return headerData.ToArray();
+        }
+
+        public static (List<byte> compressedDDS, List<short> mipPartOffsets, List<short> mipPartCounts) GetDDSInfo( BinaryReader br, TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
+            var compressedDDS = new List<byte>();
+            var mipPartOffsets = new List<short>();
+            var mipPartCount = new List<short>();
+            int mipLength;
+            switch( format ) {
+                case TextureFormat.DXT1:
+                    mipLength = ( newWidth * newHeight ) / 2;
+                    break;
+                case TextureFormat.DXT5:
+                case TextureFormat.A8:
+                    mipLength = newWidth * newHeight;
+                    break;
+                case TextureFormat.A8R8G8B8:
+                default:
+                    mipLength = ( newWidth * newHeight ) * 4;
+                    break;
+            }
+
+            br.BaseStream.Seek( 80, SeekOrigin.Begin ); // <------------------------
+
+            for( var i = 0; i < newMipCount; i++ ) {
+                var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
+                mipPartCount.Add( ( short )mipParts );
+                if( mipParts > 1 ) {
+                    for( var j = 0; j < mipParts; j++ ) {
+                        int uncompLength;
+                        var comp = true;
+                        if( j == mipParts - 1 ) {
+                            uncompLength = mipLength % 16000;
+                        }
+                        else {
+                            uncompLength = 16000;
+                        }
+                        var uncompBytes = br.ReadBytes( uncompLength );
+                        var compressed = Compressor( uncompBytes );
+                        if( compressed.Length > uncompLength ) {
+                            compressed = uncompBytes;
+                            comp = false;
+                        }
+                        compressedDDS.AddRange( BitConverter.GetBytes( 16 ) );
+                        compressedDDS.AddRange( BitConverter.GetBytes( 0 ) );
+                        compressedDDS.AddRange( !comp
+                            ? BitConverter.GetBytes( 32000 )
+                            : BitConverter.GetBytes( compressed.Length ) );
+                        compressedDDS.AddRange( BitConverter.GetBytes( uncompLength ) );
+                        compressedDDS.AddRange( compressed );
+                        var padding = 128 - ( compressed.Length % 128 );
+                        compressedDDS.AddRange( new byte[padding] );
+                        mipPartOffsets.Add( ( short )( compressed.Length + padding + 16 ) );
+                    }
+                }
+                else {
+                    int uncompLength;
+                    var comp = true;
+                    if( mipLength != 16000 ) {
+                        uncompLength = mipLength % 16000;
+                    }
+                    else {
+                        uncompLength = 16000;
+                    }
+                    var uncompBytes = br.ReadBytes( uncompLength );
+                    var compressed = Compressor( uncompBytes );
+                    if( compressed.Length > uncompLength ) {
+                        compressed = uncompBytes;
+                        comp = false;
+                    }
+                    compressedDDS.AddRange( BitConverter.GetBytes( 16 ) );
+                    compressedDDS.AddRange( BitConverter.GetBytes( 0 ) );
+                    compressedDDS.AddRange( !comp
+                        ? BitConverter.GetBytes( 32000 )
+                        : BitConverter.GetBytes( compressed.Length ) );
+                    compressedDDS.AddRange( BitConverter.GetBytes( uncompLength ) );
+                    compressedDDS.AddRange( compressed );
+                    var padding = 128 - ( compressed.Length % 128 );
+                    compressedDDS.AddRange( new byte[padding] );
+                    mipPartOffsets.Add( ( short )( compressed.Length + padding + 16 ) );
+                }
+                if( mipLength > 32 ) {
+                    mipLength = mipLength / 4;
+                }
+                else {
+                    mipLength = 8;
+                }
+            }
+            return (compressedDDS, mipPartOffsets, mipPartCount);
         }
     }
 }

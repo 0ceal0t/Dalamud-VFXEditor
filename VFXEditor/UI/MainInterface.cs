@@ -29,6 +29,7 @@ namespace VFXEditor.UI
         public TexToolsDialog TexToolsUI;
         public PenumbraDialog PenumbraUI;
         public DocDialog DocUI;
+        public TextureDialog TextureUI;
 
         public MainInterface( Plugin plugin )
         {
@@ -40,35 +41,21 @@ namespace VFXEditor.UI
             TexToolsUI = new TexToolsDialog( _plugin );
             PenumbraUI = new PenumbraDialog( _plugin );
             DocUI = new DocDialog( _plugin );
+            TextureUI = new TextureDialog( _plugin );
             VFX.UINodeGraphView.InitTex( _plugin );
 #if DEBUG
             Visible = true;
             ShowDebugBar = true;
 #endif
         }
-        public void RefreshAVFX()
-        {
+        public void RefreshAVFX() {
             VFXMain = new VFX.UIMain( _plugin.AVFX, _plugin );
         }
-        public void UnloadAVFX()
-        {
+        public void UnloadAVFX() {
             VFXMain = null;
         }
 
-        public void Draw()
-        {
-            DrawDebugBar();
-            if( Visible )
-                DrawMainInterface();
-            SelectUI.Draw();
-            PreviewUI.Draw();
-            TexToolsUI.Draw();
-            PenumbraUI.Draw();
-            DocUI.Draw();
-        }
-
-        public void DrawDebugBar()
-        {
+        public void Draw() {
             if( ShowDebugBar && ImGui.BeginMainMenuBar() ) {
                 if( ImGui.BeginMenu( "VFXEditor" ) ) {
                     if( ImGui.MenuItem( "Toggle UI", "/VFXEditor", Visible ) ) {
@@ -78,12 +65,20 @@ namespace VFXEditor.UI
                 }
                 ImGui.EndMainMenuBar();
             }
+            if( Visible ) {
+                DrawMainInterface();
+            }
+            SelectUI.Draw();
+            PreviewUI.Draw();
+            TexToolsUI.Draw();
+            PenumbraUI.Draw();
+            DocUI.Draw();
+            TextureUI.Draw();
         }
 
         public bool DrawOnce = false;
         public DateTime LastUpdate = DateTime.Now;
-        public void DrawMainInterface()
-        {
+        public void DrawMainInterface() {
             if( !DrawOnce ) {
                 ImGui.SetNextWindowSize( new Vector2( 800, 1000 ) );
                 DrawOnce = true;
@@ -93,8 +88,7 @@ namespace VFXEditor.UI
 #else
             var ret = ImGui.Begin( _plugin.Name, ref Visible );
 #endif
-            if( !ret )
-                return;
+            if( !ret ) return;
             // ==================
             ImGui.BeginTabBar( "MainInterfaceTabs" );
             DrawFiles();
@@ -105,17 +99,13 @@ namespace VFXEditor.UI
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( VFXMain == null )
-            {
+            if( VFXMain == null ) {
                 ImGui.Text( "Select a source file to begin..." );
             }
-            else
-            {
+            else {
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
-                if( ImGui.Button( "UPDATE" ) )
-                {
-                    if((DateTime.Now - LastUpdate).TotalSeconds > 0.5  )
-                    {
+                if( ImGui.Button( "UPDATE" ) ) {
+                    if((DateTime.Now - LastUpdate).TotalSeconds > 0.5  ) { // only allow updates every 1/2 second
                         _plugin.Doc.Save();
                         _plugin.ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
@@ -125,25 +115,20 @@ namespace VFXEditor.UI
                 // ===== EXPORT ======
                 ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" ) )
-                {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" ) ) {
                     ImGui.OpenPopup( "Export_Popup" );
                 }
                 ImGui.PopFont();
 
-                if( ImGui.BeginPopup( "Export_Popup" ) )
-                {
-                    if( ImGui.Selectable( ".AVFX" ) )
-                    {
+                if( ImGui.BeginPopup( "Export_Popup" ) ) {
+                    if( ImGui.Selectable( ".AVFX" ) ) {
                         var node = _plugin.AVFX.toAVFX();
                         SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes(), "avfx" );
                     }
-                    if(ImGui.Selectable("TexTools Mod" ) )
-                    {
+                    if(ImGui.Selectable("TexTools Mod" ) ) {
                         TexToolsUI.Show();
                     }
-                    if(ImGui.Selectable("Penumbra Mod" ) )
-                    {
+                    if(ImGui.Selectable("Penumbra Mod" ) ) {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
@@ -152,9 +137,18 @@ namespace VFXEditor.UI
                     }
                     ImGui.EndPopup();
                 }
+                // ======= TEXTURES ==========
+                ImGui.SameLine();
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Image}" ) ) {
+                    TextureUI.Show();
+                }
+                ImGui.PopFont();
+                ImGui.SameLine();
+                ImGui.Text( $"{_plugin.Manager.TexManager.GamePathReplace.Count} Texture(s)" );
+                ImGui.SameLine();
                 // ======== VERIFY ============
-                if( Configuration.Config.VerifyOnLoad )
-                {
+                if( Configuration.Config.VerifyOnLoad ) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
                     ImGui.TextColored( StatusColor, IconText );
@@ -173,28 +167,23 @@ namespace VFXEditor.UI
         public string IconText = "";
         public string StatusText = "";
         public Vector4 StatusColor = new Vector4();
-        public void SetStatus(bool status )
-        {
+        public void SetStatus(bool status ) {
             Status = status;
-            if( Status )
-            {
+            if( Status ) {
                 IconText = $"{( char )FontAwesomeIcon.Check}";
                 StatusText = "Verified";
                 StatusColor = new Vector4( 0.15f, 0.90f, 0.15f, 1.0f );
             }
-            else
-            {
+            else {
                 IconText = $"{( char )FontAwesomeIcon.Times}";
                 StatusText = "Parsing Issue";
                 StatusColor = new Vector4( 0.90f, 0.15f, 0.15f, 1.0f );
             }
         }
 
-        public void DrawFiles()
-        {
+        public void DrawFiles() {
             var ret = ImGui.BeginTabItem( "Files##MainInterfaceTabs" );
-            if( !ret )
-                return;
+            if( !ret ) return;
             // ==========================
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
             ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
@@ -332,15 +321,12 @@ namespace VFXEditor.UI
             if( ImGui.Button( "Extract##RawExtract" ) )
             {
                 bool result = _plugin.PluginInterface.Data.FileExists( RawInputValue );
-                if( result )
-                {
-                    try
-                    {
+                if( result ) {
+                    try {
                         var file = _plugin.PluginInterface.Data.GetFile( RawInputValue );
                         SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data, "avfx" );
                     }
-                    catch(Exception e )
-                    {
+                    catch(Exception e ) {
                         PluginLog.LogError( "Could not read file" );
                         PluginLog.LogError( e.ToString() );
                     }
@@ -354,10 +340,8 @@ namespace VFXEditor.UI
                 bool result = _plugin.PluginInterface.Data.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
-                        var texData = _plugin.Manager.TexManager.CreateTexture( RawTexInputValue, loadImage: false );
-                        if(texData.Data.Length > 0 ) {
-                            VFX.UITexture.SaveDialog( texData );
-                        }
+                        var file = _plugin.PluginInterface.Data.GetFile( RawTexInputValue );
+                        SaveDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", file.Data, "atex" );
                     }
                     catch( Exception e ) {
                         PluginLog.LogError( "Could not read file" );

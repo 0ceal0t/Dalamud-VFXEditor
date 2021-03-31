@@ -151,6 +151,7 @@ namespace VFXEditor
                     PluginLog.Log( m );
                 }
             }
+            Manager.TexManager.Reset();
             MainUI.RefreshAVFX();
         }
         public void UnloadAVFX() {
@@ -168,6 +169,7 @@ namespace VFXEditor
             ResourceLoader.Dispose();
             DXManager.Dispose();
             Doc.Cleanup();
+            Manager.TexManager.Cleanup();
         }
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;

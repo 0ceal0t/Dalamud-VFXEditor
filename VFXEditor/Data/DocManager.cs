@@ -29,7 +29,7 @@ namespace VFXEditor {
 
         public DocManager( Plugin plugin ) {
             _plugin = plugin;
-            WriteLocation = Path.Combine( plugin.WriteLocation, "documents" );
+            WriteLocation = Path.Combine( plugin.WriteLocation, "documents/vfx" );
             Directory.CreateDirectory( WriteLocation );
             NewDoc();
         }
@@ -64,6 +64,7 @@ namespace VFXEditor {
             if( GamePathToLocalPath.ContainsKey( doc.Replace.Path ) )
                 GamePathToLocalPath.Remove( doc.Replace.Path );
             Docs.Remove( doc );
+            File.Delete( doc.WriteLocation );
             if( switchDoc ) {
                 ActiveDoc = Docs[0];
                 return true;
@@ -79,16 +80,18 @@ namespace VFXEditor {
             _plugin.Manager.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.AVFX );
         }
 
-        public string GetLocalPath(string gamePath ) {
+        public bool GetLocalPath(string gamePath, out FileInfo file ) {
+            file = null;
             if( GamePathToLocalPath.ContainsKey( gamePath ) ) {
                 foreach(var doc in Docs) {
                     if(doc.WriteLocation == GamePathToLocalPath[gamePath] && !doc.Written ) { // if it's not being replaced by anything, don't bother
-                        return "";
+                        return false;
                     }
                 }
-                return GamePathToLocalPath[gamePath];
+                file = new FileInfo( GamePathToLocalPath[gamePath] );
+                return true;
             }
-            return "";
+            return false;
         }
 
         public void Cleanup() {
