@@ -262,6 +262,7 @@ namespace VFXEditor.UI.VFX {
                         var t = Editor.Points[idx - 1];
                         Editor.Points[idx - 1] = this;
                         Editor.Points[idx] = t;
+                        Editor.UpdateColor();
                     }
                 }
                 if( Editor.Points[Editor.Points.Count - 1] != this ) {
@@ -271,6 +272,7 @@ namespace VFXEditor.UI.VFX {
                         var t = Editor.Points[idx + 1];
                         Editor.Points[idx + 1] = this;
                         Editor.Points[idx] = t;
+                        Editor.UpdateColor();
                     }
                 }
 
@@ -278,6 +280,7 @@ namespace VFXEditor.UI.VFX {
                 if( ImGui.InputInt( "Time" + id, ref Time ) ) {
                     Key.Time = Time;
                     X = Time;
+                    Editor.UpdateColor();
                 }
                 if( UIUtils.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
                     Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );

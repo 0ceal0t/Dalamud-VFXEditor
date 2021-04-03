@@ -63,6 +63,10 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.IsWireframe = wireframe;
                 Mdl3D.RefreshRasterizeState();
             }
+            bool showLines = Mdl3D.ShowLines;
+            if( ImGui.Checkbox( "Show Lines##3DModel", ref showLines ) ) {
+                Mdl3D.ShowLines = showLines;
+            }
             ImGui.SameLine();
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
                 Mdl3D.LoadModel( Model, mode:1);

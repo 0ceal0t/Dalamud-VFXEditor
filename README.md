@@ -38,14 +38,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Better nodegraph view
-- [x] ~~Better chart view for curves~~
-- [ ] Better Viewer for 3d model
-- [ ] Tables for documents, texture view
-- [x] ~~Clip overlay when outside of main viewport~~
+- [ ] Better nodegraph view? might not really be necessary yet
+- [ ] Better Viewer for 3d model? (added lines, but is using ImGuizmo for scaling, etc. really necessary?)
+- [ ] Tables for documents, texture view?
 - [ ] mask texture not technically required
-- [x] ~~Gradient view?~~
-
 - [ ] Texture painter?
 - [ ] Workspaces
 - [ ] Render distance settings for overlay
@@ -58,8 +54,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
-- [ ] Model scaling?
-- [ ] Model editing?
 - [ ] Show emitter vertices
 - [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
@@ -79,12 +73,14 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better error / log display
 - [ ] Open from equipped weapon
 - [ ] Better TMB parsing
-- [ ] Texture replacement with Penumbra/Textools
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Gradient view?~~
+- [x] ~~Clip overlay when outside of main viewport~~
+- [x] ~~Better chart view for curves~~
 - [x] ~~Texture replacement (+ Textools/Penumbra export)~~
 - [x] ~~More texture export options~~
 - [x] ~~Vfx live viewer~~

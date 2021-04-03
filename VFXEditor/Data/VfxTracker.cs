@@ -66,6 +66,7 @@ namespace VFXEditor {
             return ( _plugin.PluginInterface.ClientState != null && _plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
         }
 
+        // ===== SCUFFED STUFF TO GROUP STATIC VFXS =========
         public struct StaticVfxGroup {
             public string path;
             public SharpDX.Vector3 position;
@@ -113,7 +114,6 @@ namespace VFXEditor {
                     position = pos
                 } );
             }
-
             int i = 0;
             foreach(var group in Groups.GroupBy( i => i.position, i => i.path, CloseComp ) ) {
                 HashSet<string> paths = new HashSet<string>( group );

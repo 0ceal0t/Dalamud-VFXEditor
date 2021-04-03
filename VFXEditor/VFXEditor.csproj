@@ -128,6 +128,9 @@
       <None Update="Files\timeline_default.vfxedit">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Shaders\ModelEdge.fx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Shaders\ModelPreview.fx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
