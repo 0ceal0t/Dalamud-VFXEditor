@@ -66,13 +66,31 @@ namespace VFXEditor {
             return ( _plugin.PluginInterface.ClientState != null && _plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
         }
 
+        public struct StaticVfxGroup {
+            public string path;
+            public SharpDX.Vector3 position;
+        }
+
+        public class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
+            public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
+                return ( x - y ).Length() < 2;
+            }
+
+            public int GetHashCode( SharpDX.Vector3 obj ) {
+                return 0;
+            }
+        }
+        public static ClosenessComp CloseComp = new ClosenessComp();
+
         public void Draw() {
             if( !Enabled ) return;
 
             var playPos = _plugin.PluginInterface.ClientState?.LocalPlayer?.Position;
+            var screenPos = ImGui.GetMainViewport().Pos;
+            var screenSize = ImGui.GetMainViewport().Size;
 
-            int i = 0;
             // ====== STATIC ==========
+            List<StaticVfxGroup> Groups = new List<StaticVfxGroup>();
             foreach( KeyValuePair<IntPtr, StaticData> entry in StaticVfxs ) {
                 IntPtr addr = IntPtr.Add( entry.Key, 0x50 );
 
@@ -89,14 +107,38 @@ namespace VFXEditor {
                     Y = BitConverter.ToSingle( y, 0 ),
                     Z = BitConverter.ToSingle( z, 0 )
                 };
-                if( !playPos.HasValue || !_plugin.PluginInterface.Framework.Gui.WorldToScreen( pos, out var screenCoords ) ) continue;
-                var d = Distance( playPos.Value, pos );
+                Groups.Add( new StaticVfxGroup
+                {
+                    path = entry.Value.path,
+                    position = pos
+                } );
+            }
+
+            int i = 0;
+            foreach(var group in Groups.GroupBy( i => i.position, i => i.path, CloseComp ) ) {
+                HashSet<string> paths = new HashSet<string>( group );
+                // ==== CHECK WINDOW POSITION ======
+                if( !playPos.HasValue || !_plugin.PluginInterface.Framework.Gui.WorldToScreen( group.Key, out var screenCoords ) ) continue;
+                string longestPath = "";
+                foreach( var item in paths ) {
+                    if( item.Length > longestPath.Length ) {
+                        longestPath = item;
+                    }
+                }
+                var windowSize = GetWindowSize( longestPath );
+                if( screenCoords.X + windowSize.X > screenPos.X + screenSize.X || screenCoords.Y + windowSize.Y > screenPos.Y + screenSize.Y ) continue;
+                // ======== CHECK DISTANCE ============
+                var d = Distance( playPos.Value, group.Key );
                 if(d > 100f ) {
                     continue;
                 }
 
+
                 StartDraw( new Vector2( screenCoords.X, screenCoords.Y ), i );
-                Draw( entry.Value.path, i );
+                foreach( var item in paths ) {
+                    Draw( item, i );
+                    i++;
+                }
                 EndDraw();
 
                 i++;
@@ -106,7 +148,6 @@ namespace VFXEditor {
             if( actorTable == null || ActorVfxs.Count == 0 ) {
                 return;
             }
-
             Dictionary<IntPtr, List<string>> ActorToVfxs = new Dictionary<IntPtr, List<string>>();
             foreach( KeyValuePair<IntPtr, ActorData> entry in ActorVfxs ) {
                 if( !ActorToVfxs.ContainsKey( entry.Value.actor ) ) {
@@ -114,7 +155,6 @@ namespace VFXEditor {
                 }
                 ActorToVfxs[entry.Value.actor].Add( entry.Value.path );
             }
-
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
                 if( _plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
@@ -129,7 +169,17 @@ namespace VFXEditor {
                     Z = actor.Position.Y
                 };
 
+                // ===== CHECK WINDOW POSITION =========
                 if( !playPos.HasValue || !_plugin.PluginInterface.Framework.Gui.WorldToScreen( pos, out var screenCoords ) ) continue;
+                string longestPath = "";
+                foreach(var path in paths ) {
+                    if(path.Length > longestPath.Length ) {
+                        longestPath = path;
+                    }
+                }
+                var windowSize = GetWindowSize( longestPath );
+                if( screenCoords.X + windowSize.X > screenPos.X + screenSize.X || screenCoords.Y + windowSize.Y > screenPos.Y + screenSize.Y ) continue; // (https://github.com/goatcorp/Dalamud/pull/277/files)
+                // ======== CHECK DISTANCE ============
                 var d = Distance( playPos.Value, pos );
                 if( d > 100f ) {
                     continue;
@@ -153,6 +203,7 @@ namespace VFXEditor {
                 ImGuiWindowFlags.AlwaysAutoResize |
                 ImGuiWindowFlags.NoSavedSettings |
                 ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoDocking |
                 ImGuiWindowFlags.NoFocusOnAppearing |
                 ImGuiWindowFlags.NoNav );
         }
@@ -163,6 +214,11 @@ namespace VFXEditor {
                 ImGui.SetClipboardText( path );
             }
         }
+
+        public Vector2 GetWindowSize(string text) {
+            return ImGui.CalcTextSize( text ) + ImGui.GetStyle().WindowPadding + new Vector2( 150, 10 ); // to account of "COPY" button, plus some extra padding
+        }
+
         public void EndDraw() {
             ImGui.End();
         }

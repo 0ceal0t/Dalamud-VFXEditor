@@ -411,7 +411,7 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             ImGui.EndTabItem();
         }
 
-        public void Cleanup() {
+        public void Dispose() {
             SpawnVfx?.Remove();
         }
 

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using AVFXLib.Models;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
+using ImGuiNET;
+using ImPlotNET;
 using VFXEditor.UI;
 
 namespace VFXEditor
@@ -47,6 +45,10 @@ namespace VFXEditor
         public string WriteLocation;
         public string PluginDebugTitleStr;
 
+        // ====== IMGUI ======
+        public IntPtr ImPlotContext;
+        public IntPtr ImNodesContext;
+
         //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
@@ -75,6 +77,11 @@ namespace VFXEditor
             #else
                     TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
             #endif
+
+            // ==== IMGUI ====
+            ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
+            ImPlotContext = ImPlot.CreateContext();
+            ImPlot.SetCurrentContext( ImPlotContext );
 
             Tracker = new VfxTracker( this );
             ResourceLoader.Init();
@@ -162,13 +169,16 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Tracker.Draw;
 
+            // ====== IMGUI =======
+            ImPlot.DestroyContext();
+
             PluginInterface.CommandManager.RemoveHandler( CommandName );
-            PluginInterface.Dispose();
-            MainUI?.Cleanup();
-            ResourceLoader.Dispose();
-            DXManager.Dispose();
-            Doc.Cleanup();
-            Manager.TexManager.Cleanup();
+            PluginInterface?.Dispose();
+            MainUI?.Dispose();
+            ResourceLoader?.Dispose();
+            DXManager?.Dispose();
+            Doc?.Dispose();
+            Manager.TexManager.Dispose();
         }
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;

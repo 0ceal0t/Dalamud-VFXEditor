@@ -11,6 +11,10 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VFXEditor.Data.Texture;
 
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+
 namespace VFXEditor
 {
     public struct TexData { // used for the texture previews
@@ -38,12 +42,14 @@ namespace VFXEditor
         public Plugin _plugin;
         public string WriteLocation;
         public int TEX_ID = 0;
+        public GradientManager GradManager;
 
         public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // for previewing textures
         public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>();
 
         public TextureManager(Plugin plugin ) {
             _plugin = plugin;
+            GradManager = new GradientManager( plugin, this );
             WriteLocation = Path.Combine( plugin.WriteLocation, "documents/textures" );
             Directory.CreateDirectory( WriteLocation );
         }
@@ -148,7 +154,8 @@ namespace VFXEditor
             }
         }
 
-        public void Cleanup() {
+        public void Dispose() {
+            GradManager.Dispose();
             foreach(KeyValuePair<string, TexReplace> entry in GamePathReplace) {
                 File.Delete( entry.Value.localPath );
             }

@@ -38,6 +38,16 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Better nodegraph view
+- [x] ~~Better chart view for curves~~
+- [ ] Better Viewer for 3d model
+- [ ] Tables for documents, texture view
+- [x] ~~Clip overlay when outside of main viewport~~
+- [ ] mask texture not technically required
+- [x] ~~Gradient view?~~
+
+- [ ] Texture painter?
+- [ ] Workspaces
 - [ ] Render distance settings for overlay
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Live view in cutscenes

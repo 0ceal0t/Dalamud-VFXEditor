@@ -94,7 +94,7 @@ namespace VFXEditor {
             return false;
         }
 
-        public void Cleanup() {
+        public void Dispose() {
             foreach(var doc in Docs ) {
                 File.Delete( doc.WriteLocation );
             }

@@ -13,6 +13,7 @@ namespace VFXEditor {
         public Plugin _plugin;
         public Device _Device;
         public DeviceContext _Ctx;
+
         public string ShaderPath;
         public bool DoRender = true;
 

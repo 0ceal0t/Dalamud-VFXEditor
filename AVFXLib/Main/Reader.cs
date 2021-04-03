@@ -85,8 +85,6 @@ namespace AVFXLib.Main
             "FrRt",
             "Sft",
             "SftR",
-            "ColB",
-            "ColE",
             "Wd",
             "Wdt",
             "WdR",
@@ -184,7 +182,7 @@ namespace AVFXLib.Main
             "TexNR"
         });
 
-        static readonly HashSet<string> ALLOW = new HashSet<string>(new string[]{ // not nested, larger than 8 bytes
+        static readonly HashSet<string> NOT_NESTED_LARGE = new HashSet<string>(new string[]{ // not nested, larger than 8 bytes
             "Clip",
             "Keys",
             "Tex",
@@ -195,6 +193,14 @@ namespace AVFXLib.Main
             "Cols",
             "SdNm"
         });
+
+        static readonly HashSet<string> NESTED_SMALL = new HashSet<string>( new string[]{ // smaller than 8 bytes, still nested
+            "Data",
+            "Col",
+            "ColB",
+            "ColC",
+            "ColE"
+        } );
 
         public static List<AVFXNode> readDef(BinaryReader reader, List<string> messages)
         {
@@ -216,7 +222,7 @@ namespace AVFXLib.Main
                 int Size = reader.ReadInt32();
 
                 byte[] Contents = reader.ReadBytes(Size);
-                if (NESTED.Contains(DefName) && (Size > 8 || DefName == "Data"))
+                if (NESTED.Contains(DefName) && (Size > 8 || NESTED_SMALL.Contains(DefName)))
                 {
                     BinaryReader nestedReader = new BinaryReader(new MemoryStream(Contents));
                     AVFXNode nestedNode = new AVFXNode(DefName);
@@ -225,7 +231,7 @@ namespace AVFXLib.Main
                 }
                 else
                 {
-                    if (Size > 8 && !(ALLOW.Contains(DefName)))
+                    if (Size > 8 && !( NOT_NESTED_LARGE.Contains(DefName)))
                     {
                         messages.Add(string.Format("LARGE BLOCK: {0} {1}", DefName, Size));
                     }

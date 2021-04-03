@@ -32,10 +32,6 @@ namespace VFXEditor.UI {
 
             foreach(var path in _plugin.Manager.TexManager.GamePathReplace.Keys ) {
                 ImGui.Text( path );
-                if(ImGui.IsItemHovered() && Configuration.Config.PreviewTextures && _plugin.Manager.TexManager.PathToTex.ContainsKey( path ) ) {
-                    var t = _plugin.Manager.TexManager.PathToTex[path];
-                    ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
-                }
             }
 
             ImGui.NextColumn();

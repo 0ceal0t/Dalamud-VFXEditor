@@ -17,7 +17,7 @@ namespace VFXEditor.UI.VFX
         public bool Color = false;
         public bool Locked;
 
-        UICurveEditor CurveEdit;
+        UICurveEditor2 CurveEdit;
 
         public UICurve(AVFXCurve curve, string name, bool color = false, bool locked = false)
         {
@@ -32,7 +32,7 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Curve.Assigned) { Assigned = false; return; }
             //=====================
-            CurveEdit = new UICurveEditor( Curve, Color );
+            CurveEdit = new UICurveEditor2( Curve, Color );
             Attributes.Add(new UICombo<CurveBehavior>("Pre Behavior", Curve.PreBehavior));
             Attributes.Add(new UICombo<CurveBehavior>("Post Behavior", Curve.PostBehavior));
             if (!Color)

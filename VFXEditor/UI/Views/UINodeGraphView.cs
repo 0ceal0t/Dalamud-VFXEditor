@@ -1,14 +1,7 @@
-using AVFXLib.Models;
-using Dalamud.Plugin;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+using imnodesNET;
 
 namespace VFXEditor.UI.VFX {
     public class UINodeGraphView : UIBase {
@@ -94,14 +87,14 @@ namespace VFXEditor.UI.VFX {
                         Mid2 = new Vector2( Mid.X, Pos2.Y );
                     }
 
-                    DrawList.AddBezierCurve( Pos, Mid1, Mid2, Pos2, LineColor, 3.0f );
+                    DrawList.AddBezierCubic( Pos, Mid1, Mid2, Pos2, LineColor, 3.0f );
                 }
             }
             foreach(var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
                 Vector2 Pos = CanvasBottomRight - GetPos(item);
                 DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
-                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node._Color, 5, ImDrawCornerFlags.Top ); // header
+                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node._Color, 5, ImDrawFlags.RoundCornersTop ); // header
                 DrawList.AddText( Pos + TextOffset, TextColor, node.GetText() );
 
                 if(item.Level > 0 ) { // right node
