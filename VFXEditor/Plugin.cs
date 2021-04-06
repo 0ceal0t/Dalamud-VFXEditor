@@ -12,6 +12,7 @@ using VFXEditor.Data.DirectX;
 using VFXEditor.External;
 using VFXEditor.UI;
 using VFXEditor.Data.Vfx;
+using System.Reflection;
 
 namespace VFXEditor
 {
@@ -49,12 +50,12 @@ namespace VFXEditor
 
         public string WriteLocation;
         public string PluginDebugTitleStr;
+        public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
         // ====== IMGUI ======
         public IntPtr ImPlotContext;
         public IntPtr ImNodesContext;
 
-        //https://git.sr.ht/~jkcclemens/NoSoliciting/tree/master/item/NoSoliciting/Plugin.cs#L53
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
             WriteLocation = Path.Combine( new[] {
@@ -69,19 +70,13 @@ namespace VFXEditor
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize( PluginInterface );
             ResourceLoader = new ResourceLoader( this );
-            PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand )
-            {
+            PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
                 HelpMessage = "/vfxedit - toggle ui"
             } );
 
             PluginDebugTitleStr = $"{Name} - Debug Build";
 
-
-            #if !DEBUG
-                    TemplateLocation = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location );
-            #else
-                    TemplateLocation = @"D:\FFXIV\TOOLS\Dalamud-VFXEditor\VFXEditor\bin\Debug\net472";
-            #endif
+            TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
 
             // ==== IMGUI ====
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );

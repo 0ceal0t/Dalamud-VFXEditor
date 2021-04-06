@@ -27,10 +27,10 @@ namespace VFXEditor {
         public bool IsEnabled { get; set; } = true;
 
         // ==================
-        public bool PreviewTextures { get; set; } = true;
-        public bool VerifyOnLoad { get; set; } = true;
-        public bool LogAllFiles { get; set; } = false;
-        public bool HideWithUI { get; set; } = true;
+        public bool PreviewTextures = true;
+        public bool VerifyOnLoad = true;
+        public bool LogAllFiles = false;
+        public bool HideWithUI = true;
 
         public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();

@@ -64,6 +64,7 @@ namespace VFXEditor.UI
         public VFXNpcSelect NpcSelect;
         public VFXEmoteSelect EmoteSelect;
         public VFXGimmickSelect GimmickSelect;
+        public VFXCutsceneSelect CutsceneSelect;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
@@ -77,6 +78,7 @@ namespace VFXEditor.UI
             NpcSelect = new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this );
             EmoteSelect = new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this );
             GimmickSelect = new VFXGimmickSelect( id, "Gimmick", _plugin.Manager.Gimmicks, _plugin, this );
+            CutsceneSelect = new VFXCutsceneSelect( id, "Cutscene", _plugin.Manager.Cutscenes, _plugin, this );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
@@ -171,6 +173,7 @@ namespace VFXEditor.UI
             NpcSelect.Draw();
             EmoteSelect.Draw();
             GimmickSelect.Draw();
+            CutsceneSelect.Draw();
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }

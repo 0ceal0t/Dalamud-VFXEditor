@@ -29,8 +29,7 @@ namespace VFXEditor.Data.DirectX {
         }
 
         public void Draw() {
-            if( !_plugin.MainUI.Visible ) // no need to render
-                return;
+            if( !_plugin.MainUI.Visible ) return;
             var oldState = _Ctx.Rasterizer.State;
             var oldRenderViews = _Ctx.OutputMerger.GetRenderTargets( OutputMergerStage.SimultaneousRenderTargetCount, out var oldDepthStencilView );
 

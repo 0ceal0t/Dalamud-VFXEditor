@@ -30,8 +30,7 @@ namespace VFXEditor.Data
         public List<XivItem> Items = new List<XivItem>();
         public bool ItemsLoaded = false;
         public bool ItemsWaiting = false;
-        public void LoadItems()
-        {
+        public void LoadItems() {
             if( ItemsWaiting ) { return; }
             ItemsWaiting = true; // start waiting
             PluginLog.Log( "Loading Items" );
@@ -44,8 +43,7 @@ namespace VFXEditor.Data
                     return new List<Item>();
                 }
             } ).ContinueWith( t => {
-                foreach( var item in t.Result )
-                {
+                foreach( var item in t.Result ) {
                     var i = new XivItem( item );
                     if( i.HasModel ) {
                         Items.Add( i );
@@ -78,8 +76,7 @@ namespace VFXEditor.Data
         public List<XivStatus> Status = new List<XivStatus>();
         public bool StatusLoaded = false;
         public bool StatusWaiting = false;
-        public void LoadStatus()
-        {
+        public void LoadStatus() {
             if( StatusWaiting ) { return; }
             StatusWaiting = true;
             PluginLog.Log( "Loading Status" );
@@ -91,8 +88,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e.ToString() );
                     return new List<Status>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 foreach( var item in t.Result ) {
                     var i = new XivStatus( item );
                     if( i.VfxExists ) {
@@ -108,7 +104,6 @@ namespace VFXEditor.Data
         public bool NonPlayerActionsLoaded = false;
         public bool NonPlayerActionsWaiting = false;
         public List<XivActionBase> NonPlayerActions = new List<XivActionBase>();
-
         public void LoadNonPlayerActions() {
             if( NonPlayerActionsWaiting ) { return; }
             NonPlayerActionsWaiting = true;
@@ -142,8 +137,7 @@ namespace VFXEditor.Data
         public List<XivActionBase> Actions = new List<XivActionBase>();
         public bool ActionsLoaded = false;
         public bool ActionsWaiting = false;
-        public void LoadActions()
-        {
+        public void LoadActions() {
             if( ActionsWaiting ) { return; }
             ActionsWaiting = true;
             PluginLog.Log( "Loading Actions" );
@@ -155,8 +149,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e.ToString() );
                     return new List<Lumina.Excel.GeneratedSheets.Action>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 foreach( var item in t.Result )
                 {
                     var i = new XivAction( item );
@@ -212,8 +205,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e, "Could not load zones" );
                     return new List<TerritoryType>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 foreach( var item in t.Result ) {
                     Zones.Add( new XivZone( item ) );
                 }
@@ -248,8 +240,7 @@ namespace VFXEditor.Data
             PluginLog.Log( "Loading Npc" );
             Task.Run( async () => {
                 try {
-                    var npcList = fastCSV.ReadFile<NpcCsvRow>( NpcCsv, true, ',', ( o, c ) =>
-                     {
+                    var npcList = fastCSV.ReadFile<NpcCsvRow>( NpcCsv, true, ',', ( o, c ) => {
                          o.Id = Int32.Parse(c[0]);
                          o.Name = c[1];
                          NpcIdToName[o.Id] = o.Name;
@@ -261,8 +252,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e, "Could not load npc" );
                     return new List<ModelChara>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t =>  {
                 foreach( var item in t.Result ) {
                     var i = new XivNpc( item, NpcIdToName );
                     if(i.CSV_Defined ) {
@@ -317,8 +307,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e, "Could not load emote" );
                     return new List<Emote>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 foreach( var item in t.Result ) {
                     var i = new XivEmote( item );
                     if( i.PapFiles.Count > 0 ) {
@@ -363,8 +352,7 @@ namespace VFXEditor.Data
                     PluginLog.LogError( e.ToString() );
                     return new List<ActionTimeline>();
                 }
-            } ).ContinueWith( t =>
-            {
+            } ).ContinueWith( t => {
                 var territories = _plugin.PluginInterface.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty(x.Name) ).ToList();
                 Dictionary<string, string> suffixToName = new Dictionary<string, string>();
                 foreach(var _zone in territories ) {
@@ -399,18 +387,58 @@ namespace VFXEditor.Data
             return result;
         }
 
+        // ============ LOAD CUTSCENES ===========
+        public List<XivCutscene> Cutscenes = new List<XivCutscene>();
+        public bool CutsceneLoaded = false;
+        public bool CutsceneWaiting = false;
+        public void LoadCutscenes() {
+            if( CutsceneWaiting ) { return; }
+            CutsceneWaiting = true;
+            PluginLog.Log( "Loading Cutscenes" );
+            Task.Run( async () => {
+                try {
+                    return _plugin.PluginInterface.Data.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty(x.Path) ).ToList();
+                }
+                catch( Exception e ) {
+                    PluginLog.LogError( e.ToString() );
+                    return new List<Cutscene>();
+                }
+            } ).ContinueWith( t => {
+                foreach( var item in t.Result ) {
+                    Cutscenes.Add( new XivCutscene( item ) );
+                }
+                CutsceneLoaded = true;
+            } );
+
+        }
+        public bool SelectCutscene( XivCutscene cutscene, out XivCutsceneSelected selectedCutscene ) {
+            selectedCutscene = null;
+            bool result = _plugin.PluginInterface.Data.FileExists( cutscene.Path );
+            if( result ) {
+                try {
+                    var file = _plugin.PluginInterface.Data.GetFile( cutscene.Path );
+                    selectedCutscene = new XivCutsceneSelected( cutscene, file );
+                }
+                catch( Exception e ) {
+                    PluginLog.LogError( e.ToString() );
+                    return false;
+                }
+            }
+            else {
+                PluginLog.Log( cutscene.Path + " does not exist" );
+            }
+            return result;
+        }
+
 
         // ======  EXPORT AVFX  ======
-        public bool SaveLocalFile(string path, AVFXBase avfx )
-        {
-            try
-            {
+        public bool SaveLocalFile(string path, AVFXBase avfx ) {
+            try {
                 var node = avfx.toAVFX();
                 var bytes = node.toBytes();
                 File.WriteAllBytes( path, bytes );
             }
-            catch(Exception ex )
-            {
+            catch(Exception ex ) {
                 PluginLog.LogError( "Could not write to file: " + path );
                 PluginLog.LogError( ex.ToString() );
                 return false;
@@ -420,14 +448,11 @@ namespace VFXEditor.Data
 
         // ====== LOCAL AVFX =====
         public AVFXNode LastImportNode = null;
-        public bool GetLocalFile(string path, out AVFXBase avfx)
-        {
+        public bool GetLocalFile(string path, out AVFXBase avfx) {
             avfx = null;
-            try
-            {
+            try {
                 AVFXNode node = AVFXLib.Main.Reader.readAVFX( path, out List<string> messages );
-                foreach( string message in messages )
-                {
+                foreach( string message in messages ) {
                     PluginLog.Log( message );
                 }
                 if( node == null )
@@ -437,8 +462,7 @@ namespace VFXEditor.Data
                 _avfx.read( node );
                 avfx = _avfx;
             }
-            catch(Exception e )
-            {
+            catch(Exception e ) {
                 PluginLog.LogError( e.ToString() );
                 return false;
             }
@@ -446,18 +470,14 @@ namespace VFXEditor.Data
         }
 
         // ===== GAME AVFX ======
-        public bool GetGameFile(string path, out AVFXBase avfx)
-        {
+        public bool GetGameFile(string path, out AVFXBase avfx) {
             avfx = null;
             bool result = _plugin.PluginInterface.Data.FileExists( path );
-            if( result )
-            {
-                try
-                {
+            if( result )  {
+                try {
                     var file = _plugin.PluginInterface.Data.GetFile( path );
                     AVFXNode node = AVFXLib.Main.Reader.readAVFX( file.Data, out List<string> messages );
-                    foreach(string message in messages )
-                    {
+                    foreach(string message in messages ) {
                         PluginLog.Log( message );
                     }
                     if( node == null )
@@ -467,8 +487,7 @@ namespace VFXEditor.Data
                     _avfx.read( node );
                     avfx = _avfx;
                 }
-                catch(Exception e)
-                {
+                catch(Exception e) {
                     PluginLog.LogError( e.ToString() );
                     result = false;
                 }

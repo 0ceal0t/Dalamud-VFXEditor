@@ -36,12 +36,12 @@ namespace VFXEditor.UI.VFX {
         public bool DrawOnce = false;
         public override void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
                 ImPlot.FitNextPlotAxes( true, true );
                 DrawOnce = true;
             }
 
+            bool wrongOrder = false;
             if( Color ) {
                 ImPlot.SetNextPlotLimitsY( -1, 1, ImGuiCond.Always );
             }
@@ -56,13 +56,11 @@ namespace VFXEditor.UI.VFX {
                         ColorGrad = GradientManager._Manager.AddGradient( Curve );
                     }
                     if( Color && Curve.Keys.Count > 1 ) {
-                        var topLeft = new ImPlotPoint
-                        {
+                        var topLeft = new ImPlotPoint {
                             x = Points[0].X,
                             y = 1
                         };
-                        var bottomRight = new ImPlotPoint
-                        {
+                        var bottomRight = new ImPlotPoint {
                             x = Points[Points.Count - 1].X,
                             y = -1
                         };
@@ -80,6 +78,10 @@ namespace VFXEditor.UI.VFX {
                             Selected = p;
                             p.UpdatePosition();
                             dragging = true;
+                        }
+                        // ==== CHECK ORDER ======
+                        if(idx > 0 && p.X < Points[idx - 1].X ) {
+                            wrongOrder = true;
                         }
                         idx++;
                     }
@@ -116,6 +118,9 @@ namespace VFXEditor.UI.VFX {
                 ImPlot.EndPlot();
             }
             ImGui.Text( "Right-Click to add a new keyframe" );
+            if( wrongOrder ) {
+                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINT ARE IN THE WRONG ORDER" );
+            }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {
                 Selected.Draw();

@@ -1,17 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
-using System.Numerics;
-using VFXEditor.UI.VFX;
-using System.IO;
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using System.Runtime.InteropServices;
 
 namespace VFXEditor.Data.Texture {
@@ -41,10 +32,6 @@ namespace VFXEditor.Data.Texture {
                 CurveToGradient[curve].Wrap.Dispose();
             }
             return AddGradient( curve );
-        }
-
-        public Color c(Color cc ) {
-            return Color.FromArgb( cc.A, cc.B, cc.G, cc.R );
         }
 
         public GradData AddGradient( AVFXCurve curve ) {

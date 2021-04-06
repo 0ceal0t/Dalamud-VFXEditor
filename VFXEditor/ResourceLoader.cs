@@ -200,21 +200,20 @@ namespace VFXEditor
 
         // https://github.com/imchillin/Anamnesis/blob/0ba09fcd7fb1ec1ed13b22ab9e5b2cea6926f113/Anamnesis/Core/Memory/AddressService.cs
         // https://github.com/imchillin/CMTool/blob/a1af42ceab86700d4d1b21b5ba61079ad79fd2f2/ConceptMatrix/OffsetSettings.json#L69
-        // https://git.ava.dev/ava/OopsAllLalafells/src/branch/master/Plugin.cs#L145
-        public unsafe void ReRender() {
+        public void ReRender() {
             var player = Plugin.PluginInterface.ClientState.LocalPlayer;
             var charBaseAddr = player.Address;
 
-            Task.Run( () =>
+            Task.Run( async () =>
             {
                 var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
                 var renderOffset = charBaseAddr + 0x104;
 
                 Marshal.WriteByte( entityOffset, 0x02 );
                 Marshal.WriteByte( renderOffset, 0x02 );
-                Thread.Sleep( 100 );
+                await Task.Delay( 100 );
                 Marshal.WriteByte( renderOffset, 0x00 );
-                Thread.Sleep( 100 );
+                await Task.Delay( 100 );
                 Marshal.WriteByte( entityOffset, 0x01 );
             } );
         }
