@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.UI;
 
-namespace VFXEditor {
+namespace VFXEditor.Data {
     public class ReplaceDoc {
         public AVFXBase AVFX = null;
         public bool Written = false;

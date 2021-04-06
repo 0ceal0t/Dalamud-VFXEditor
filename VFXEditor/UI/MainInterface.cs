@@ -12,6 +12,7 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using VFXEditor.Structs.Vfx;
+using VFXEditor.UI.Graphics;
 
 namespace VFXEditor.UI
 {
@@ -21,7 +22,6 @@ namespace VFXEditor.UI
         public bool Visible = false;
         public bool ShowDebugBar = false;
         public VFX.UIMain VFXMain = null;
-        public BaseVfx SpawnVfx = null;
 
         public MainInterface MainUI;
         public VFXSelectDialog SelectUI;
@@ -31,6 +31,9 @@ namespace VFXEditor.UI
         public DocDialog DocUI;
         public TextureDialog TextureUI;
 
+        public VFXManipulator VFXManip = null;
+        public BaseVfx SpawnVfx = null;
+
         public MainInterface( Plugin plugin )
         {
             _plugin = plugin;
@@ -38,11 +41,14 @@ namespace VFXEditor.UI
             PreviewUI = new VFXSelectDialog( _plugin, "File Select [TARGET]" );
             SelectUI.OnSelect += _plugin.SelectAVFX;
             PreviewUI.OnSelect += _plugin.ReplaceAVFX;
+
             TexToolsUI = new TexToolsDialog( _plugin );
             PenumbraUI = new PenumbraDialog( _plugin );
             DocUI = new DocDialog( _plugin );
             TextureUI = new TextureDialog( _plugin );
-            VFX.UINodeGraphView.InitTex( _plugin );
+            VFXManip = new VFXManipulator( _plugin );
+
+            VFX.UINodeGraphView.InitTex( _plugin ); // load grid texture
 #if DEBUG
             Visible = true;
             ShowDebugBar = true;
@@ -74,15 +80,12 @@ namespace VFXEditor.UI
             PenumbraUI.Draw();
             DocUI.Draw();
             TextureUI.Draw();
+            VFXManip.Draw();
         }
 
-        public bool DrawOnce = false;
         public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface() {
-            if( !DrawOnce ) {
-                ImGui.SetNextWindowSize( new Vector2( 800, 1000 ) );
-                DrawOnce = true;
-            }
+            ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
 #if DEBUG
             var ret = ImGui.Begin( _plugin.PluginDebugTitleStr, ref Visible );
 #else
@@ -206,11 +209,10 @@ namespace VFXEditor.UI
             ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
             ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
             ImGui.PopItemWidth();
+
+            // ====== SEARCH + NEW ========
             ImGui.NextColumn();
-
             ImGui.SetColumnWidth( 2, 67 );
-
-
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) {
                 SelectUI.Show();
@@ -231,8 +233,7 @@ namespace VFXEditor.UI
                 }
                 ImGui.EndPopup();
             }
-
-
+            // ======= SEARCH + UNLINK ========
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect" ) ) {
                 PreviewUI.Show( showLocal: false );
@@ -244,15 +245,14 @@ namespace VFXEditor.UI
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
+            // ======= MANAGE + OVERLAY =========
             ImGui.NextColumn();
-
             ImGui.SetColumnWidth( 3, 200 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.20f, 0.20f, 0.20f, 1.0f ) );
             if(ImGui.Button( "Manage" ) ) {
                 DocUI.Show();
             }
             ImGui.PopStyleColor();
-
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{(!_plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash)}##MainInterfaceFiles-MarkVfx" ) ) {
@@ -266,7 +266,7 @@ namespace VFXEditor.UI
                 }
             }
             ImGui.PopFont();
-
+            // =======SPAWN + MANIP =========
             string previewSpawn = _plugin.Doc.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if(SpawnVfx == null ) {
@@ -301,6 +301,20 @@ namespace VFXEditor.UI
                 }
                 ImGui.EndPopup();
             }
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( !VFXManip.CanBeEnabled ) {
+                ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+                ImGui.Button( $"{( char )FontAwesomeIcon.Cube}##MainInterfaceFiles-VfxManip" );
+                ImGui.PopStyleVar();
+            }
+            else {
+                if(ImGui.Button( $"{( char )FontAwesomeIcon.Cube}##MainInterfaceFiles-VfxManip" ) ) {
+                    VFXManip.Enabled = !VFXManip.Enabled;
+                }
+            }
+            ImGui.PopFont();
+
 
             ImGui.Columns( 1 );
             ImGui.Separator();

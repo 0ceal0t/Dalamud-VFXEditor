@@ -13,7 +13,7 @@ A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effe
 2. Select a "Preview On" VFX (the effect to temporarily overwrite, can be the same as the source)
 3. Make any modifications you want, then press "Update"
 
-Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting)
+Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting) or a [basic guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide)
 
 ## Building
 1. Build the solution
@@ -26,10 +26,11 @@ Having problems? Check [here](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/
 
 ## Features
 * Load and preview in-game VFXs (weapons, actions, status effects)
+* Live VFX overlay
 * Edit and export
-* Preview, import, and export textures
+* Preview, export, and replace textures
 * Add, remove, and edit particles, emitters, etc.
-* Import and export models
+* Export and replace models
 * Export as `.avfx` or Textools Modpack
 
 ## Contributing
@@ -38,15 +39,14 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Better Viewer for 3d model? (added lines, but is using ImGuizmo for scaling, etc. really necessary?)
 - [ ] Tables for documents, texture view?
-- [ ] mask texture not technically required
-- [ ] Texture painter?
 - [ ] Workspaces
 - [ ] Render distance settings for overlay
 - [ ] Weapons / footsteps / etc. in live view
-- [ ] Live view in cutscenes
+- [ ] Fix live overlay view in cutscenes
 - [ ] Export/Import dependencies
 - [ ] Cutscene VFX select
 - [ ] Highlight important
@@ -60,13 +60,12 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it
-- [ ] Save all particles at once, etc.
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
 - [ ] File loaded indication
 - [ ] Help text / hover text
-- [ ] Penumbra webserver integration
+- [ ] Better Penumbra integration
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] TexTools import
 - [ ] Penumbra import
@@ -78,6 +77,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Basic VFX manipulator using ImGuizmo~~
 - [x] ~~Gradient view?~~
 - [x] ~~Clip overlay when outside of main viewport~~
 - [x] ~~Better chart view for curves~~

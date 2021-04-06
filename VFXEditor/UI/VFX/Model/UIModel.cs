@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VFXEditor.Data.DirectX;
+using VFXEditor.External;
 
 namespace VFXEditor.UI.VFX
 {
@@ -36,7 +38,8 @@ namespace VFXEditor.UI.VFX
         public bool Open = true;
         public override void DrawBody( string parentId ) {
             string id = parentId + "/Model";
-            ImGui.SameLine();
+            NodeView.Draw( id );
+            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
             if( ImGui.SmallButton( "Import" + id ) ) {
                 ImportDialog();
             }
@@ -44,8 +47,6 @@ namespace VFXEditor.UI.VFX
             if( ImGui.SmallButton( "Export" + id ) ) {
                 ExportDialog();
             }
-            NodeView.Draw( id );
-            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
 
             ImGui.BeginTabBar( "ModelTabs" );
             DrawModel3D(id);
@@ -63,11 +64,11 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.IsWireframe = wireframe;
                 Mdl3D.RefreshRasterizeState();
             }
-            bool showLines = Mdl3D.ShowLines;
-            if( ImGui.Checkbox( "Show Lines##3DModel", ref showLines ) ) {
-                Mdl3D.ShowLines = showLines;
-            }
             ImGui.SameLine();
+            bool showEdges = Mdl3D.ShowEdges;
+            if( ImGui.Checkbox( "Show Edges##3DModel", ref showEdges ) ) {
+                Mdl3D.ShowEdges = showEdges;
+            }
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
                 Mdl3D.LoadModel( Model, mode:1);
             }

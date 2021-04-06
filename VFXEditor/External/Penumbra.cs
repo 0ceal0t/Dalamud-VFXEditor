@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Data.Texture;
 
-namespace VFXEditor
-{
+namespace VFXEditor.External {
     public struct PenumbraMod {
         public string Name;
         public string Author;

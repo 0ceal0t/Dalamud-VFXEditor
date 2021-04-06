@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.UI;
 
-namespace VFXEditor{
+namespace VFXEditor {
     public enum SavedItemType {
         None,
         Binder,

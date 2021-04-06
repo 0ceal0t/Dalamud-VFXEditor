@@ -1,16 +1,13 @@
 using AVFXLib.Models;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using Dalamud.Plugin;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using TeximpNet;
+using VFXEditor.Data.Texture;
 
 namespace VFXEditor.UI.VFX
 {
@@ -56,11 +53,11 @@ namespace VFXEditor.UI.VFX
                     var t = Manager.PathToTex[currentPathValue];
                     ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                     ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
-                    if(ImGui.Button("Export" + id ) ) {
+                    if(ImGui.SmallButton("Export" + id ) ) {
                         ImGui.OpenPopup( "Tex_Export" + id );
                     }
                     ImGui.SameLine();
-                    if( ImGui.Button( "Import" + id ) ) {
+                    if( ImGui.SmallButton( "Import" + id ) ) {
                         ImportDialog(Manager, currentPathValue.Trim('\0') );
                     }
                     if( ImGui.BeginPopup( "Tex_Export" + id ) ) {

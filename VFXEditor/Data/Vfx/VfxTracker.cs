@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState;
+using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
@@ -11,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor {
+namespace VFXEditor.Data.Vfx {
     public class VfxTracker {
         public bool Enabled = false;
 
@@ -87,8 +88,6 @@ namespace VFXEditor {
             if( !Enabled ) return;
 
             var playPos = _plugin.PluginInterface.ClientState?.LocalPlayer?.Position;
-            var screenPos = ImGui.GetMainViewport().Pos;
-            var screenSize = ImGui.GetMainViewport().Size;
 
             // ====== STATIC ==========
             List<StaticVfxGroup> Groups = new List<StaticVfxGroup>();
@@ -119,28 +118,13 @@ namespace VFXEditor {
                 HashSet<string> paths = new HashSet<string>( group );
                 // ==== CHECK WINDOW POSITION ======
                 if( !playPos.HasValue || !_plugin.PluginInterface.Framework.Gui.WorldToScreen( group.Key, out var screenCoords ) ) continue;
-                string longestPath = "";
-                foreach( var item in paths ) {
-                    if( item.Length > longestPath.Length ) {
-                        longestPath = item;
-                    }
-                }
-                var windowSize = GetWindowSize( longestPath );
-                if( screenCoords.X + windowSize.X > screenPos.X + screenSize.X || screenCoords.Y + windowSize.Y > screenPos.Y + screenSize.Y ) continue;
                 // ======== CHECK DISTANCE ============
                 var d = Distance( playPos.Value, group.Key );
                 if(d > 100f ) {
                     continue;
                 }
 
-
-                StartDraw( new Vector2( screenCoords.X, screenCoords.Y ), i );
-                foreach( var item in paths ) {
-                    Draw( item, i );
-                    i++;
-                }
-                EndDraw();
-
+                DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, i );
                 i++;
             }
             // ====== ACTOR =======
@@ -148,10 +132,11 @@ namespace VFXEditor {
             if( actorTable == null || ActorVfxs.Count == 0 ) {
                 return;
             }
-            Dictionary<IntPtr, List<string>> ActorToVfxs = new Dictionary<IntPtr, List<string>>();
+            Dictionary<IntPtr, HashSet<string>> ActorToVfxs = new Dictionary<IntPtr, HashSet<string>>();
             foreach( KeyValuePair<IntPtr, ActorData> entry in ActorVfxs ) {
+                if( entry.Key == IntPtr.Zero ) continue;
                 if( !ActorToVfxs.ContainsKey( entry.Value.actor ) ) {
-                    ActorToVfxs[entry.Value.actor] = new List<string>();
+                    ActorToVfxs[entry.Value.actor] = new HashSet<string>();
                 }
                 ActorToVfxs[entry.Value.actor].Add( entry.Value.path );
             }
@@ -171,32 +156,21 @@ namespace VFXEditor {
 
                 // ===== CHECK WINDOW POSITION =========
                 if( !playPos.HasValue || !_plugin.PluginInterface.Framework.Gui.WorldToScreen( pos, out var screenCoords ) ) continue;
-                string longestPath = "";
-                foreach(var path in paths ) {
-                    if(path.Length > longestPath.Length ) {
-                        longestPath = path;
-                    }
-                }
-                var windowSize = GetWindowSize( longestPath );
-                if( screenCoords.X + windowSize.X > screenPos.X + screenSize.X || screenCoords.Y + windowSize.Y > screenPos.Y + screenSize.Y ) continue; // (https://github.com/goatcorp/Dalamud/pull/277/files)
                 // ======== CHECK DISTANCE ============
                 var d = Distance( playPos.Value, pos );
                 if( d > 100f ) {
                     continue;
                 }
 
-                StartDraw( new Vector2( screenCoords.X, screenCoords.Y ), i );
-                foreach(string path in paths ) {
-                    Draw( path, i );
-                    i++;
-                }
-                EndDraw();
+                DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, i );
+                i++;
             }
         }
 
-        public void StartDraw(Vector2 pos, int idx ) {
+        public void DrawOverlayItems(Vector2 pos, HashSet<string> items, int idx ) {
             ImGui.SetNextWindowPos( new Vector2( pos.X, pos.Y ) );
             ImGui.SetNextWindowBgAlpha( 0.5f );
+            ImGuiHelpers.ForceMainViewport();
 
             ImGui.Begin( $"vfx-{idx}",
                 ImGuiWindowFlags.NoDecoration |
@@ -206,20 +180,17 @@ namespace VFXEditor {
                 ImGuiWindowFlags.NoDocking |
                 ImGuiWindowFlags.NoFocusOnAppearing |
                 ImGuiWindowFlags.NoNav );
-        }
-        public void Draw(string path, int idx ) {
-            ImGui.Text( $"{path}" );
-            ImGui.SameLine();
-            if( ImGui.Button( $"COPY##vfx-{idx}" ) ) {
-                ImGui.SetClipboardText( path );
+
+            int i = 0;
+            foreach(var path in items ) {
+                ImGui.Text( $"{path}" );
+                ImGui.SameLine();
+                if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) {
+                    ImGui.SetClipboardText( path );
+                }
+                i++;
             }
-        }
 
-        public Vector2 GetWindowSize(string text) {
-            return ImGui.CalcTextSize( text ) + ImGui.GetStyle().WindowPadding + new Vector2( 150, 10 ); // to account of "COPY" button, plus some extra padding
-        }
-
-        public void EndDraw() {
             ImGui.End();
         }
 

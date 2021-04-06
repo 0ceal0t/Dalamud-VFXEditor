@@ -85,16 +85,11 @@ namespace VFXEditor.UI
             Visible = true;
         }
 
-        public bool DrawOnce = false;
         public void Draw()
         {
             if( !Visible )
                 return;
-            if( !DrawOnce )
-            {
-                ImGui.SetNextWindowSize( new Vector2( 800, 500 ) );
-                DrawOnce = true;
-            }
+            ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
             // ================
             var ret = ImGui.Begin(Id + "##" + Id, ref Visible );
             if( !ret )

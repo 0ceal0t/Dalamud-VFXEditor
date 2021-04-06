@@ -11,7 +11,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor
+namespace VFXEditor.External
 {
     public class GLTFManager {
         public static void ExportModel(AVFXModel model, string path) {

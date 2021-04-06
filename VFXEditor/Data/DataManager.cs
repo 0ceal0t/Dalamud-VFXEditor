@@ -4,13 +4,13 @@ using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Lumina.Excel.GeneratedSheets;
 using System.IO;
+using VFXEditor.Data.Texture;
 
-namespace VFXEditor
+namespace VFXEditor.Data
 {
     public class DataManager
     {

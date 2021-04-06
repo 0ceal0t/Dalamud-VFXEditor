@@ -15,7 +15,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 
-namespace VFXEditor
+namespace VFXEditor.Data.Texture
 {
     public struct TexData { // used for the texture previews
         public byte[] Data;

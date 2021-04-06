@@ -17,7 +17,7 @@ using System.Reflection;
 using AVFXLib.Models;
 using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor {
+namespace VFXEditor.Data.DirectX {
     public class Model3D {
         public DirectXManager Manager;
         public Device _Device;
@@ -64,7 +64,7 @@ namespace VFXEditor {
         private float Distance = 5;
 
         public bool IsWireframe = false;
-        public bool ShowLines = true;
+        public bool ShowEdges = true;
 
         public Model3D(DirectXManager manager) {
             Manager = manager;
@@ -283,20 +283,20 @@ namespace VFXEditor {
             _Ctx.VertexShader.Set( VShader );
             _Ctx.InputAssembler.InputLayout = Layout;
             _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer ); // set world buffer
+            _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
             if( NumVerts > 0 ) {
                 _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) ); // set vertex buffer
                 _Ctx.Draw( NumVerts, 0 );
             }
 
             // ====== DRAW LINE =========
-            if( ShowLines ) {
+            if( ShowEdges ) {
                 _Ctx.PixelShader.Set( EDGE_PShader );
                 _Ctx.VertexShader.Set( EDGE_VShader );
                 _Ctx.InputAssembler.InputLayout = EDGE_Layout;
                 _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
-                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer ); // set world buffer
-                if( NumVerts > 0 ) {
+                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+                if( EDGE_NumVerts > 0 ) {
                     _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EDGE_Vertices, Utilities.SizeOf<Vector4>() * EDGE_SPAN, 0 ) ); // set vertex buffer
                     for( int i = 0; i < EDGE_NumVerts / 4; i++ ) {
                         _Ctx.Draw( 4, i * 4 );

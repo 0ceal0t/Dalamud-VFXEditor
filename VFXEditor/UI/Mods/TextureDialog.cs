@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
+using VFXEditor.Data.Texture;
 using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {

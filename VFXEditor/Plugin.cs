@@ -6,7 +6,12 @@ using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using ImGuiNET;
 using ImPlotNET;
+using ImGuizmoNET;
+using VFXEditor.Data;
+using VFXEditor.Data.DirectX;
+using VFXEditor.External;
 using VFXEditor.UI;
+using VFXEditor.Data.Vfx;
 
 namespace VFXEditor
 {
@@ -82,6 +87,7 @@ namespace VFXEditor
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlotContext = ImPlot.CreateContext();
             ImPlot.SetCurrentContext( ImPlotContext );
+            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
 
             Tracker = new VfxTracker( this );
             ResourceLoader.Init();
@@ -100,7 +106,7 @@ namespace VFXEditor
 
         public DateTime LastSelect = DateTime.Now;
         public void SelectAVFX(VFXSelectResult selectResult ) {
-            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) {
+            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) { // only allow new selects every 1/2 second
                 return;
             }
             LastSelect = DateTime.Now;

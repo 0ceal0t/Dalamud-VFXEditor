@@ -12,7 +12,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 
-namespace VFXEditor {  
+namespace VFXEditor.Data.Texture {  
 
     public class VFXTexture : Lumina.Data.FileResource
     {

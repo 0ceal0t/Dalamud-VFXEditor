@@ -70,10 +70,10 @@ namespace VFXEditor
         public unsafe delegate IntPtr VfxStatusRemoveHook( IntPtr vfx, char a2 );
         public IHook<VfxStatusRemoveHook> ActorVfxRemoveHook { get; private set; }
 
-        // ======== WEAPON HOOKS ==============
-        //[Function( CallingConventions.Microsoft )]
-        //public unsafe delegate IntPtr VfxWeaponAddHook( IntPtr a1, Int32 a2, IntPtr a3, char a4, char a5, char a6, char a7 );
-        //public IHook<VfxWeaponAddHook> WeaponAddHook { get; private set; }
+        // ========= MISC ==============
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
+        internal delegate IntPtr GetMatrixSingletonDelegate();
+        internal GetMatrixSingletonDelegate GetMatrixSingleton;
 
 #if !DEBUG
         public bool EnableHooks = true;
@@ -121,6 +121,11 @@ namespace VFXEditor
                 ActorVfxNewHook = new Hook<VfxStatusAddHook>( ActorVfxNewHandler, ( long )statusAddAddr );
                 ActorVfxRemoveHook = new Hook<VfxStatusRemoveHook>( ActorVfxRemoveHandler, ( long )statusRemove2 );
             }
+
+            // ====== MISC ==========
+            var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
+            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
+
         }
         // ============
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {

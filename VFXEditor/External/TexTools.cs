@@ -9,9 +9,9 @@ using System.IO;
 using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System.IO.Compression;
+using VFXEditor.Data.Texture;
 
-namespace VFXEditor
-{
+namespace VFXEditor.External {
     public struct TTMPL {
         public string TTMPVersion;
         public string Name;

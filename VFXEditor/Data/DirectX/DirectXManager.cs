@@ -8,7 +8,7 @@ using Device = SharpDX.Direct3D11.Device;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace VFXEditor {
+namespace VFXEditor.Data.DirectX {
     public class DirectXManager {
         public Plugin _plugin;
         public Device _Device;

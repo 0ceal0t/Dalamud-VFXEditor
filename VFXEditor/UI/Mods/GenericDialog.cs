@@ -20,14 +20,10 @@ namespace VFXEditor.UI {
         public void Show() {
             Visible = true;
         }
-        public bool DrawOnce = false;
         public void Draw() {
             if( !Visible )
                 return;
-            if( !DrawOnce ) {
-                ImGui.SetNextWindowSize( new Vector2( 600, 400 ) );
-                DrawOnce = true;
-            }
+            ImGui.SetNextWindowSize( new Vector2( 600, 400 ), ImGuiCond.FirstUseEver );
             // ================
             var ret = ImGui.Begin( DialogName, ref Visible );
             if( !ret )

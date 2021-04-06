@@ -12,7 +12,7 @@ using ImGuizmoNET;
 using VFXEditor.Data.Texture;
 
 namespace VFXEditor.UI.VFX {
-    public class UICurveEditor2 : UIBase {
+    public class UICurveEditor : UIBase {
 
         public CurvePoint Selected = null;
         public AVFXCurve Curve;
@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX {
         public static readonly Vector4 LINE_COLOR = new Vector4( 0, 0.1f, 1, 1 );
         public static readonly float GRABBING_DISTANCE = 25;
 
-        public UICurveEditor2( AVFXCurve curve, bool color ) {
+        public UICurveEditor( AVFXCurve curve, bool color ) {
             Curve = curve;
             Color = color;
             Points = new List<CurvePoint>();
@@ -95,23 +95,24 @@ namespace VFXEditor.UI.VFX {
                             }
                         }
                     }
-                    // ========== ADD NEW KEYFRAMES =======
-                    if( ImPlot.IsPlotHovered() && ImGui.IsMouseClicked( ImGuiMouseButton.Right ) ) {
-                        var pos = ImPlot.GetPlotMousePos();
-                        int insertIdx = 0;
-                        foreach( var p in Points ) {
-                            if( p.X > Math.Round( pos.x ) ) {
-                                break;
-                            }
-                            insertIdx++;
-                        }
-                        float z = Color ? 1.0f : ( float )pos.y;
-                        AVFXKey newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.x ), 1, 1, z );
-                        Curve.Keys.Insert( insertIdx, newKey );
-                        Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
-                        UpdateColor();
-                    }
                 }
+                // ========== ADD NEW KEYFRAMES =======
+                if( ImPlot.IsPlotHovered() && ImGui.IsMouseClicked( ImGuiMouseButton.Right ) ) {
+                    var pos = ImPlot.GetPlotMousePos();
+                    int insertIdx = 0;
+                    foreach( var p in Points ) {
+                        if( p.X > Math.Round( pos.x ) ) {
+                            break;
+                        }
+                        insertIdx++;
+                    }
+                    float z = Color ? 1.0f : ( float )pos.y;
+                    AVFXKey newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.x ), 1, 1, z );
+                    Curve.Keys.Insert( insertIdx, newKey );
+                    Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
+                    UpdateColor();
+                }
+
                 ImPlot.EndPlot();
             }
             ImGui.Text( "Right-Click to add a new keyframe" );
@@ -195,9 +196,9 @@ namespace VFXEditor.UI.VFX {
             public Vector3 ColorData;
 
             public AVFXKey Key;
-            public UICurveEditor2 Editor;
+            public UICurveEditor Editor;
 
-            public CurvePoint( UICurveEditor2 editor, AVFXKey key, bool color = false ) {
+            public CurvePoint( UICurveEditor editor, AVFXKey key, bool color = false ) {
                 Editor = editor;
                 Key = key;
                 Color = color;
