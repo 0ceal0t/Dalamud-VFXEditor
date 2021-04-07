@@ -48,7 +48,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Fix live overlay view in cutscenes
 - [ ] Export/Import dependencies
-- [ ] Cutscene VFX select
 - [ ] Highlight important
 - [ ] Statuses show icon
 - [ ] Preview on select hover
@@ -77,6 +76,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Cutscene VFX select~~
 - [x] ~~Basic VFX manipulator using ImGuizmo~~
 - [x] ~~Gradient view?~~
 - [x] ~~Clip overlay when outside of main viewport~~

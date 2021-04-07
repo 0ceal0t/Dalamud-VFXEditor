@@ -21,17 +21,16 @@ namespace VFXEditor.UI
         private readonly Plugin _plugin;
         public bool Visible = false;
         public bool ShowDebugBar = false;
-        public VFX.UIMain VFXMain = null;
 
-        public MainInterface MainUI;
+        public VFX.UIMain VFXMain = null;
         public VFXSelectDialog SelectUI;
         public VFXSelectDialog PreviewUI;
         public TexToolsDialog TexToolsUI;
         public PenumbraDialog PenumbraUI;
         public DocDialog DocUI;
         public TextureDialog TextureUI;
+        public VFXManipulator VFXManip;
 
-        public VFXManipulator VFXManip = null;
         public BaseVfx SpawnVfx = null;
 
         public MainInterface( Plugin plugin )
@@ -95,7 +94,7 @@ namespace VFXEditor.UI
             // ==================
             ImGui.BeginTabBar( "MainInterfaceTabs" );
             DrawFiles();
-            DrawRaw();
+            DrawExtract();
             DrawSettings();
             DrawHelp();
             ImGui.EndTabBar();
@@ -324,7 +323,7 @@ namespace VFXEditor.UI
 
         public string RawInputValue = "";
         public string RawTexInputValue = "";
-        public void DrawRaw() {
+        public void DrawExtract() {
             var ret = ImGui.BeginTabItem( "Extract##MainInterfaceTabs" );
             if( !ret ) return;
             // ======= AVFX =========

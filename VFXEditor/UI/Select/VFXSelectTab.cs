@@ -9,7 +9,11 @@ using Dalamud.Plugin;
 using ImGuiNET;
 
 namespace VFXEditor.UI {
-    public abstract class VFXSelectTab<T, S> {
+    public abstract class VFXSelectTab {
+        public abstract void Draw();
+    }
+
+    public abstract class VFXSelectTab<T, S> : VFXSelectTab {
         public Plugin _plugin;
         public VFXSelectDialog _dialog;
         public List<T> Data;
@@ -42,7 +46,7 @@ namespace VFXEditor.UI {
         public virtual void DrawExtra() { }
 
         public List<T> SearchedZones;
-        public void Draw() {
+        public override void Draw() {
             var ret = ImGui.BeginTabItem( Name + "##Select/" + ParentId );
             if( !ret )
                 return;

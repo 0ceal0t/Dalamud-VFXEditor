@@ -153,7 +153,7 @@ namespace VFXEditor
                 var node = AVFX.toAVFX();
                 bool verifyResult = Manager.LastImportNode.CheckEquals( node, out List<string> messages );
                 MainUI.SetStatus( verifyResult );
-                PluginLog.Log( "[VERIFY RESULT]: " + verifyResult );
+                PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
                     PluginLog.Log( m );
                 }

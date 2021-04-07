@@ -56,29 +56,24 @@ namespace VFXEditor.UI
         public event Action<VFXSelectResult> OnSelect;
         public bool Visible = false;
 
-        public VFXActionSelect NonPlayerActionSelect;
-        public VFXActionSelect ActionSelect;
-        public VFXStatusSelect StatusSelect;
-        public VFXItemSelect ItemSelect;
-        public VFXZoneSelect ZoneSelect;
-        public VFXNpcSelect NpcSelect;
-        public VFXEmoteSelect EmoteSelect;
-        public VFXGimmickSelect GimmickSelect;
-        public VFXCutsceneSelect CutsceneSelect;
+        public List<VFXSelectTab> GameTabs;
 
         public VFXSelectDialog(Plugin plugin, string id)
         {
             _plugin = plugin;
             Id = id;
-            NonPlayerActionSelect = new VFXActionSelect( id, "Non-Player Action", _plugin.Manager.NonPlayerActions, _plugin, this );
-            ActionSelect = new VFXActionSelect( id, "Action", _plugin.Manager.Actions, _plugin, this );
-            StatusSelect = new VFXStatusSelect( id, "Status", _plugin.Manager.Status, _plugin, this );
-            ItemSelect = new VFXItemSelect( id, "Item", _plugin.Manager.Items, _plugin, this );
-            ZoneSelect = new VFXZoneSelect( id, "Zone", _plugin.Manager.Zones, _plugin, this );
-            NpcSelect = new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this );
-            EmoteSelect = new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this );
-            GimmickSelect = new VFXGimmickSelect( id, "Gimmick", _plugin.Manager.Gimmicks, _plugin, this );
-            CutsceneSelect = new VFXCutsceneSelect( id, "Cutscene", _plugin.Manager.Cutscenes, _plugin, this );
+
+            GameTabs = new List<VFXSelectTab>(new VFXSelectTab[]{
+                new VFXItemSelect( id, "Item", _plugin.Manager.Items, _plugin, this ),
+                new VFXStatusSelect( id, "Status", _plugin.Manager.Status, _plugin, this ),
+                new VFXActionSelect( id, "Action", _plugin.Manager.Actions, _plugin, this ),
+                new VFXActionSelect( id, "Non-Player Action", _plugin.Manager.NonPlayerActions, _plugin, this ),
+                new VFXZoneSelect( id, "Zone", _plugin.Manager.Zones, _plugin, this ),
+                new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this ),
+                new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this ),
+                new VFXGimmickSelect( id, "Gimmick", _plugin.Manager.Gimmicks, _plugin, this ),
+                new VFXCutsceneSelect( id, "Cutscene", _plugin.Manager.Cutscenes, _plugin, this )
+            } );
         }
 
         public void Show(bool showLocal = true, bool showRecent = true) {
@@ -165,15 +160,9 @@ namespace VFXEditor.UI
             // ==========================
             ImGui.BeginTabBar( "GameSelectTabs##" + Id );
             DrawGamePath();
-            ItemSelect.Draw();
-            StatusSelect.Draw();
-            ActionSelect.Draw();
-            NonPlayerActionSelect.Draw();
-            ZoneSelect.Draw();
-            NpcSelect.Draw();
-            EmoteSelect.Draw();
-            GimmickSelect.Draw();
-            CutsceneSelect.Draw();
+            foreach(var tab in GameTabs ) {
+                tab.Draw();
+            }
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }

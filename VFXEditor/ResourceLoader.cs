@@ -16,7 +16,7 @@ namespace VFXEditor
 {
     public class ResourceLoader : IDisposable
     {
-        public Plugin Plugin { get; set; }
+        public Plugin _plugin { get; set; }
         public bool IsEnabled { get; set; }
         public Crc32 Crc32 { get; }
 
@@ -83,14 +83,14 @@ namespace VFXEditor
 
 
         public ResourceLoader( Plugin plugin ) {
-            Plugin = plugin;
+            _plugin = plugin;
             Crc32 = new Crc32();
         }
 
         // https://github.com/xivdev/Penumbra/blob/master/Penumbra/ResourceLoader.cs
         public unsafe void Init()
         {
-            var scanner = Plugin.PluginInterface.TargetModuleScanner;
+            var scanner = _plugin.PluginInterface.TargetModuleScanner;
 
             var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
             var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
@@ -131,28 +131,28 @@ namespace VFXEditor
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var v = StaticVfxNewHook.OriginalFunction( path, pool );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( path ) );
-            Plugin.Tracker.AddStatic( v, p1 );
+            _plugin.Tracker.AddStatic( v, p1 );
             return v;
         }
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.MainUI?.SpawnVfx != null && vfx == Plugin.MainUI.SpawnVfx.Vfx ) {
-                Plugin.MainUI.SpawnVfx = null;
+            if( _plugin.MainUI?.SpawnVfx != null && vfx == _plugin.MainUI.SpawnVfx.Vfx ) {
+                _plugin.MainUI.SpawnVfx = null;
             }
-            Plugin.Tracker.RemoveStatic( vfx );
+            _plugin.Tracker.RemoveStatic( vfx );
             return StaticVfxRemoveHook.OriginalFunction( vfx );
         }
         // ============
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 ) {
             var v = ActorVfxNewHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( a1 ) );
-            Plugin.Tracker.AddActor( a2, v, p1 );
+            _plugin.Tracker.AddActor( a2, v, p1 );
             return v;
         }
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.MainUI?.SpawnVfx != null && vfx == Plugin.MainUI.SpawnVfx.Vfx ) {
-                Plugin.MainUI.SpawnVfx = null;
+            if( _plugin.MainUI?.SpawnVfx != null && vfx == _plugin.MainUI.SpawnVfx.Vfx ) {
+                _plugin.MainUI.SpawnVfx = null;
             }
-            Plugin.Tracker.RemoveActor( vfx );
+            _plugin.Tracker.RemoveActor( vfx );
             return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
         }
 
@@ -201,7 +201,7 @@ namespace VFXEditor
         // https://github.com/imchillin/Anamnesis/blob/0ba09fcd7fb1ec1ed13b22ab9e5b2cea6926f113/Anamnesis/Core/Memory/AddressService.cs
         // https://github.com/imchillin/CMTool/blob/a1af42ceab86700d4d1b21b5ba61079ad79fd2f2/ConceptMatrix/OffsetSettings.json#L69
         public void ReRender() {
-            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
+            var player = _plugin.PluginInterface.ClientState.LocalPlayer;
             var charBaseAddr = player.Address;
 
             Task.Run( async () =>
@@ -265,10 +265,10 @@ namespace VFXEditor
             }
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
-            if(Plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
+            if( _plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
             }
-            else if(Plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
+            else if( _plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;
             }
 
