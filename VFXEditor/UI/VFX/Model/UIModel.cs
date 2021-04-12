@@ -16,14 +16,16 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UINode {
         public AVFXModel Model;
         public Model3D Mdl3D;
+        public UIMain Main;
         int Mode = 1;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
 
-        public UIModel( AVFXModel model, UIModelView view ) : base( ModelColor, false ) {
+        public UIModel( UIMain main, AVFXModel model, UIModelView view ) : base( ModelColor, false ) {
             Model = model;
+            Main = main;
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
@@ -41,11 +43,31 @@ namespace VFXEditor.UI.VFX
             NodeView.Draw( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
             if( ImGui.SmallButton( "Import" + id ) ) {
-                ImportDialog();
+                ImGui.OpenPopup( "New_Popup" + id );
             }
             ImGui.SameLine();
             if( ImGui.SmallButton( "Export" + id ) ) {
-                ExportDialog();
+                ImGui.OpenPopup( "Save_Popup" + id );
+            }
+            // ==================
+            if( ImGui.BeginPopup( "Save_Popup" + id ) ) {
+                if( ImGui.Selectable( "GLTF" + id ) ) {
+                    ExportDialog();
+                }
+                if( ImGui.Selectable( "AVFX" + id ) ) {
+                    Main.ExportDialog( this, with_dependencies: false );
+                }
+                ImGui.EndPopup();
+            }
+            // =================
+            if( ImGui.BeginPopup( "New_Popup" + id ) ) {
+                if( ImGui.Selectable( "GLTF" + id ) ) {
+                    ImportDialog();
+                }
+                if( ImGui.Selectable( "AVFX" + id ) ) {
+                    Main.ImportDialog();
+                }
+                ImGui.EndPopup();
             }
 
             ImGui.BeginTabBar( "ModelTabs" );

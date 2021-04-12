@@ -170,7 +170,7 @@ namespace VFXEditor.Data.Vfx {
         public void DrawOverlayItems(Vector2 pos, HashSet<string> items, int idx ) {
             ImGui.SetNextWindowPos( new Vector2( pos.X, pos.Y ) );
             ImGui.SetNextWindowBgAlpha( 0.5f );
-            ImGuiHelpers.ForceMainViewport();
+            ImGuiHelpers.ForceNextWindowMainViewport();
 
             ImGui.Begin( $"vfx-{idx}",
                 ImGuiWindowFlags.NoDecoration |

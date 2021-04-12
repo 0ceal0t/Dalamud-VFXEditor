@@ -22,6 +22,9 @@ namespace VFXEditor.UI {
             ImGui.Text( loadedItem.Cutscene.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
+            ImGui.Text( "CUTB Path: " );
+            ImGui.SameLine();
+            _dialog.DisplayPath( loadedItem.Cutscene.Path );
             int vfxIdx = 0;
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );

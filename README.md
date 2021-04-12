@@ -76,6 +76,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Better model import/export options~~
 - [x] ~~Cutscene VFX select~~
 - [x] ~~Basic VFX manipulator using ImGuizmo~~
 - [x] ~~Gradient view?~~

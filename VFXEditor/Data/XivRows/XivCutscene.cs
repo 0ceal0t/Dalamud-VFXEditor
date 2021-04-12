@@ -13,8 +13,10 @@ namespace VFXEditor {
         
         public XivCutscene( Lumina.Excel.GeneratedSheets.Cutscene cutscene ) {
             RowId = ( int )cutscene.RowId;
-            Name = cutscene.Path.ToString();
-            Path = "cut/" + Name + ".cutb";
+            var _path = cutscene.Path.ToString();
+            var splitPath = _path.Split( '/' );
+            Name = splitPath[0] + "/" + splitPath[splitPath.Length - 1]; // ffxiv/anvwil/anvwil00500/anvwil00500 -> ffxiv/anvwil00500
+            Path = "cut/" + _path + ".cutb";
         }
     }
 }

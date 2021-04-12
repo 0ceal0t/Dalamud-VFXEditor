@@ -13,12 +13,14 @@ namespace VFXEditor.UI.VFX
     public class UIModelView : UINodeSplitView<UIModel>
     {
         public Model3D Mdl3D;
+        public UIMain Main;
 
-        public UIModelView(AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
+        public UIModelView(UIMain main, AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
         {
+            Main = main;
             Mdl3D = plugin.DXManager.Model;
             Group = UINode._Models;
-            Group.Items = AVFX.Models.Select( item => new UIModel( item, this ) ).ToList();
+            Group.Items = AVFX.Models.Select( item => new UIModel( main, item, this ) ).ToList();
         }
 
         public override void OnSelect( UIModel item ) {
@@ -30,14 +32,14 @@ namespace VFXEditor.UI.VFX
         }
 
         public override UIModel OnNew() {
-            return new UIModel( AVFX.addModel(), this );
+            return new UIModel( Main, AVFX.addModel(), this );
         }
 
         public override UIModel OnImport( AVFXNode node ) {
             AVFXModel mdl = new AVFXModel();
             mdl.read( node );
             AVFX.addModel( mdl );
-            return new UIModel( mdl, this );
+            return new UIModel( Main, mdl, this );
         }
     }
 }
