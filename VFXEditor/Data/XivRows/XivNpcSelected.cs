@@ -14,7 +14,7 @@ namespace VFXEditor {
 
         public HashSet<string> VfxPaths = new HashSet<string>();
 
-        public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static Regex rx = new Regex( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivNpcSelected( Lumina.Data.Files.ImcFile file, XivNpc npc, List<Lumina.Data.FileResource> files ) {
             Npc = npc;
@@ -33,7 +33,7 @@ namespace VFXEditor {
                 string stringData = Encoding.UTF8.GetString( data );
                 MatchCollection matches = rx.Matches( stringData );
                 foreach( Match m in matches ) {
-                    VfxPaths.Add( m.Value );
+                    VfxPaths.Add( m.Value.Trim( '\u0000') );
                 }
             }
         }

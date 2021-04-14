@@ -13,7 +13,7 @@ namespace VFXEditor {
         public string SelfTmbPath;
         public bool SelfVfxExists = false;
 
-        public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static Regex rx = new Regex( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivGimmickSelected( Lumina.Data.FileResource file, XivGimmick gimmick ) {
             Gimmick = gimmick;
@@ -26,7 +26,7 @@ namespace VFXEditor {
                 string stringData = Encoding.UTF8.GetString( data );
                 MatchCollection matches = rx.Matches( stringData );
                 foreach( Match m in matches ) {
-                    SelfVfxPaths.Add( m.Value );
+                    SelfVfxPaths.Add( m.Value.Trim( '\u0000') );
                 }
             }
         }

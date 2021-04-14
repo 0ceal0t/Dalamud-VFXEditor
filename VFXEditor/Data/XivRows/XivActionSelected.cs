@@ -18,7 +18,7 @@ namespace VFXEditor
         public string SelfTmbPath;
         public List<string> SelfVfxPaths = new List<string>();
 
-        public static Regex rx = new Regex( @"vfx([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static Regex rx = new Regex( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action )
         {
@@ -36,7 +36,7 @@ namespace VFXEditor
                 MatchCollection matches = rx.Matches( stringData );
                 foreach(Match m in matches )
                 {
-                    SelfVfxPaths.Add( m.Value );
+                    SelfVfxPaths.Add( m.Value.Trim( '\u0000') );
                 }
             }
         }

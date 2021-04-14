@@ -12,7 +12,7 @@ namespace VFXEditor {
         public XivZone Zone;
         public List<string> VfxPaths = new List<string>();
 
-        public static Regex rx = new Regex( @"bg([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static Regex rx = new Regex( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivZoneSelected( Lumina.Data.Files.LgbFile file, XivZone zone ) {
             Zone = zone;
@@ -23,7 +23,7 @@ namespace VFXEditor {
                 string stringData = Encoding.UTF8.GetString( data );
                 MatchCollection matches = rx.Matches( stringData );
                 foreach( Match m in matches ) {
-                    VfxPaths.Add( m.Value );
+                    VfxPaths.Add( m.Value.Trim( '\u0000') );
                 }
             }
         }
