@@ -168,30 +168,43 @@ namespace VFXEditor.Data.Vfx {
         }
 
         public void DrawOverlayItems(Vector2 pos, HashSet<string> items, int idx ) {
+            string longestString = "";
+            foreach(var item in items ) {
+                if(item.Length > longestString.Length ) {
+                    longestString = item;
+                }
+            }
+            var screenPos = ImGui.GetMainViewport().Pos;
+            var screenSize = ImGui.GetMainViewport().Size;
+            var windowSize = ImGui.CalcTextSize( longestString );
+            windowSize.X += ImGui.GetStyle().WindowPadding.X + 100; // account for "COPY" button
+            windowSize.Y += ImGui.GetStyle().WindowPadding.Y + 10;
+            if( pos.X + windowSize.X > screenPos.X + screenSize.X || pos.Y + windowSize.Y > screenPos.Y + screenSize.Y ) return;
+
             ImGui.SetNextWindowPos( new Vector2( pos.X, pos.Y ) );
             ImGui.SetNextWindowBgAlpha( 0.5f );
             ImGuiHelpers.ForceNextWindowMainViewport();
 
-            ImGui.Begin( $"vfx-{idx}",
+            if( ImGui.Begin( $"vfx-{idx}",
                 ImGuiWindowFlags.NoDecoration |
                 ImGuiWindowFlags.AlwaysAutoResize |
                 ImGuiWindowFlags.NoSavedSettings |
                 ImGuiWindowFlags.NoMove |
                 ImGuiWindowFlags.NoDocking |
                 ImGuiWindowFlags.NoFocusOnAppearing |
-                ImGuiWindowFlags.NoNav );
-
-            int i = 0;
-            foreach(var path in items ) {
-                ImGui.Text( $"{path}" );
-                ImGui.SameLine();
-                if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) {
-                    ImGui.SetClipboardText( path );
+                ImGuiWindowFlags.NoNav ) ) {
+                int i = 0;
+                foreach( var path in items ) {
+                    ImGui.Text( $"{path}" );
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) {
+                        ImGui.SetClipboardText( path );
+                    }
+                    i++;
                 }
-                i++;
-            }
 
-            ImGui.End();
+                ImGui.End();
+            }
         }
 
         public void Reset() {
