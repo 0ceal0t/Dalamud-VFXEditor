@@ -86,7 +86,7 @@ namespace VFXEditor.UI.VFX {
                         idx++;
                     }
                     // ====== CLICKING TO SELECT ======
-                    if( !dragging && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && IsHovering() ) {
+                    if( !dragging && ImGui.IsMouseDown( ImGuiMouseButton.Left ) && IsHovering() ) {
                         var mousePos = ImGui.GetMousePos();
                         foreach( var p in Points ) {
                             var pointPos = ImPlot.PlotToPixels( p.GetImPlotPoint() );
@@ -99,7 +99,7 @@ namespace VFXEditor.UI.VFX {
                     }
                 }
                 // ========== ADD NEW KEYFRAMES =======
-                if( ImPlot.IsPlotHovered() && ImGui.IsMouseClicked( ImGuiMouseButton.Right ) ) {
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Right ) && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
                     int insertIdx = 0;
                     foreach( var p in Points ) {
@@ -135,7 +135,7 @@ namespace VFXEditor.UI.VFX {
             var mousePos = ImGui.GetMousePos();
             var topLeft = ImPlot.GetPlotPos();
             var plotSize = ImPlot.GetPlotSize();
-            if( mousePos.X >= topLeft.X && mousePos.Y < topLeft.X + plotSize.X && mousePos.Y >= topLeft.Y && mousePos.Y < topLeft.Y + plotSize.Y ) return true;
+            if( mousePos.X >= topLeft.X && mousePos.X < topLeft.X + plotSize.X && mousePos.Y >= topLeft.Y && mousePos.Y < topLeft.Y + plotSize.Y ) return true;
             return false;
         }
 

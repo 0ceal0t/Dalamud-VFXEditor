@@ -22,7 +22,6 @@ namespace VFXEditor.UI
         public string Author = "";
         public string Version = "1.0.0";
         public string SaveLocation = "";
-        public string VFXPath = "";
         public bool ExportAll = false;
         public bool ExportTex = true;
 
@@ -42,18 +41,10 @@ namespace VFXEditor.UI
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Separator();
             ImGui.Checkbox( "Export All", ref ExportAll );
-            if( !ExportAll ) {
-                ImGui.InputText( "VFX to Replace" + id, ref VFXPath, 255 );
-                ImGui.SameLine( ImGui.GetWindowWidth() - 85 );
-                if( ImGui.Button( "Use Preview" + id ) ) {
-                    VFXPath = _plugin.ReplaceAVFXPath;
-                }
-            }
             ImGui.EndChild();
 
-            if( ImGui.Button( "EXPORT" + id ) ) {
-                _plugin.TexToolsManager.Export( Name, Author, Version, VFXPath, SaveLocation, ExportAll, ExportTex );
-                Visible = false;
+            if( ImGui.Button( "Export" + id ) ) {
+                SaveDialog();
             }
         }
 
@@ -69,7 +60,8 @@ namespace VFXEditor.UI
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        SaveLocation = picker.FileName;
+                        _plugin.TexToolsManager.Export( Name, Author, Version, picker.FileName, ExportAll, ExportTex );
+                        Visible = false;
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a mod location");

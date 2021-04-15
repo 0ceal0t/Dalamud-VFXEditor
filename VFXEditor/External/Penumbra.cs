@@ -37,7 +37,7 @@ namespace VFXEditor.External {
              */
         }
 
-        public void Export( string name, string author, string version, string path, string saveLocation, bool exportAll, bool exportTex ) {
+        public void Export( string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
                 PenumbraMod mod = new PenumbraMod();
                 mod.Name = name;
@@ -78,7 +78,7 @@ namespace VFXEditor.External {
                     }
                 }
                 else {
-                    AddMod( _plugin.AVFX, path );
+                    AddMod( _plugin.AVFX, _plugin.Doc.ActiveDoc.Replace.Path );
                 }
 
                 if( exportTex ) {

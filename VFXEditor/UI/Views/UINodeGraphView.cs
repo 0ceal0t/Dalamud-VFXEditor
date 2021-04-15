@@ -45,7 +45,7 @@ namespace VFXEditor.UI.VFX {
                 return;
             }
 
-            if(!ImGui.CollapsingHeader("Node Graph", ref Visible, ImGuiTreeNodeFlags.DefaultOpen) ) {
+            if(!ImGui.CollapsingHeader("Node Graph", ref Visible) ) {
                 return;
             }
 

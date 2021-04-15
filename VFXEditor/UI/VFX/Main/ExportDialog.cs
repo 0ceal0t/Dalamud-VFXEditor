@@ -1,0 +1,166 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Dalamud.Plugin;
+using ImGuiNET;
+
+namespace VFXEditor.UI.VFX.Main {
+    public class ExportDialog {
+        public UIMain Main;
+
+        List<ExportDialogCategory> Categories;
+
+        public bool Visible = true; // false
+        public bool ExportDeps = true;
+
+        public ExportDialog(UIMain main ) {
+            Main = main;
+            Categories = new List<ExportDialogCategory>();
+            Categories.Add( new ExportDialogCategory<UITimeline>( UINode._Timelines, "Timelines" ) );
+            Categories.Add( new ExportDialogCategory<UIEmitter>( UINode._Emitters, "Emitters" ) );
+            Categories.Add( new ExportDialogCategory<UIParticle>( UINode._Particles, "Particles" ) );
+            Categories.Add( new ExportDialogCategory<UIEffector>( UINode._Effectors, "Effectors" ) );
+            Categories.Add( new ExportDialogCategory<UIBinder>( UINode._Binders, "Binders" ) );
+            Categories.Add( new ExportDialogCategory<UITexture>( UINode._Textures, "Textures" ) );
+            Categories.Add( new ExportDialogCategory<UIModel>( UINode._Models, "Models" ) );
+        }
+
+        public void Show() { // show and reset
+            Visible = true;
+        }
+
+        public void Reset() {
+            Categories.ForEach( cat => cat.Reset() );
+        }
+
+        public void Draw() {
+            if( !Visible ) return;
+            ImGui.SetNextWindowSize( new Vector2( 500, 500 ), ImGuiCond.FirstUseEver );
+            if( ImGui.Begin("Export", ref Visible )) {
+                ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
+                ImGui.SameLine();
+                if( ImGui.Button( "Reset##ExportDialog" ) ) {
+                    Reset();
+                }
+                ImGui.SameLine();
+                if( ImGui.Button( "Export##ExportDialog" ) ) {
+                    SaveDialog();
+                }
+
+                var maxSize = ImGui.GetContentRegionAvail();
+                ImGui.BeginChild( "##ExportRegion", maxSize, true );
+
+                Categories.ForEach( cat => cat.Draw() );
+                ImGui.EndChild();
+
+                ImGui.End();
+            }
+        }
+
+        public void Export(UINode node ) {
+            Show();
+            Reset();
+            foreach(var cat in Categories ) {
+                if( cat.Belongs( node ) ) {
+                    cat.Select( node );
+                    break;
+                }
+            }
+        }
+
+        public List<UINode> GetSelected() {
+            var result = new List<UINode>();
+            foreach(var cat in Categories ) {
+                result.AddRange( cat.Selected );
+            }
+            return result;
+        }
+
+        public void SaveDialog() {
+            Task.Run( async () => {
+                var picker = new SaveFileDialog {
+                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
+                    Title = "Select a Save Location.",
+                    DefaultExt = "vfxedit",
+                    AddExtension = true
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK ) {
+                    try {
+                        using( BinaryWriter writer = new BinaryWriter( File.Open( picker.FileName, FileMode.Create ) ) ) {
+                            var selected = GetSelected();
+                            if( ExportDeps ) {
+                                Main.ExportDeps( selected, writer );
+                            }
+                            else {
+                                selected.ForEach( node => writer.Write( node.toBytes() ) );
+                            }
+                        }
+                    }
+                    catch( Exception ex ) {
+                        PluginLog.LogError( ex, "Could not select a file" );
+                    }
+                }
+            } );
+        }
+    }
+
+    // ======================
+
+    abstract class ExportDialogCategory {
+        public HashSet<UINode> Selected;
+        public abstract void Reset();
+        public abstract void Draw();
+        public abstract bool Belongs( UINode node );
+        public abstract void Select( UINode node );
+    }
+
+    class ExportDialogCategory<T> : ExportDialogCategory where T : UINode {
+        public UINodeGroup<T> Group;
+        public string HeaderText;
+        public string Id;
+        public bool Visible = false;
+
+        public ExportDialogCategory( UINodeGroup<T> group, string text ) {
+            Group = group;
+            Reset();
+            Group.OnChange += Reset;
+            HeaderText = text;
+            Id = "##" + HeaderText;
+        }
+
+        public override void Reset() {
+            Selected = new HashSet<UINode>();
+        }
+
+        public override bool Belongs( UINode node ) {
+            return node is T;
+        }
+
+        public override void Select( UINode node ) {
+            Selected.Add( node );
+            Visible = true;
+        }
+
+        public override void Draw() {
+            if(ImGui.CollapsingHeader($"{HeaderText} ({Selected.Count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}", ref Visible) ) {
+                foreach(var item in Group.Items ) {
+                    var _selected = Selected.Contains( item );
+                    if(ImGui.Checkbox(item.GetText() + Id, ref _selected ) ) {
+                        if( _selected ) {
+                            Selected.Add( item );
+                        }
+                        else {
+                            Selected.Remove( item );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

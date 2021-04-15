@@ -75,7 +75,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIFloat( "Depth Offset", Particle.DepthOffset ) );
             //==============================
             Animation.Add( new UILife( Particle.Life ) );
-            Animation.Add( new UIParticleSimple( Particle.Simple ) );
+            Animation.Add( new UIParticleSimple( Particle.Simple, this ) );
             Animation.Add( new UICurve( Particle.Gravity, "Gravity" ) );
             Animation.Add( new UICurve( Particle.GravityRandom, "Gravity Random" ) );
             Animation.Add( new UICurve( Particle.AirResistance, "Air Resistance", locked: true ) );

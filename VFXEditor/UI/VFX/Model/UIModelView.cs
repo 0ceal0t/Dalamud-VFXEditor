@@ -23,6 +23,16 @@ namespace VFXEditor.UI.VFX
             Group.Items = AVFX.Models.Select( item => new UIModel( main, item, this ) ).ToList();
         }
 
+        public override void DrawNewButton( string parentId ) {
+            if( ImGui.SmallButton( "+ New" + Id ) ) {
+                Group.Add( OnNew() );
+            }
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Import" + Id ) ) {
+                Main.ImportDialog();
+            }
+        }
+
         public override void OnSelect( UIModel item ) {
             Mdl3D.LoadModel( item.Model );
         }

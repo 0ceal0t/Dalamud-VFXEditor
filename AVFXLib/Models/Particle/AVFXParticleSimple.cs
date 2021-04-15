@@ -58,8 +58,8 @@ namespace AVFXLib.Models
         public LiteralInt UvNoLoopCount = new LiteralInt("UvLC");
         public LiteralInt InjectionModelIdx = new LiteralInt("IJMN");
         public LiteralInt InjectionVertexBindModelIdx = new LiteralInt("VBMN");
-        public LiteralInt InjectionRadialDir0 = new LiteralInt("IRD0");
-        public LiteralInt InjectionRadialDir1 = new LiteralInt("IRD1");
+        public LiteralFloat InjectionRadialDir0 = new LiteralFloat( "IRD0");
+        public LiteralFloat InjectionRadialDir1 = new LiteralFloat( "IRD1");
         public LiteralFloat PivotX = new LiteralFloat("PvtX");
         public LiteralFloat PivotY = new LiteralFloat("PvtY");
         public LiteralInt BlockNum = new LiteralInt("BlkN");

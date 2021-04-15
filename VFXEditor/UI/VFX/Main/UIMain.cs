@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VFXEditor.UI.VFX.Main;
 
 namespace VFXEditor.UI.VFX
 {
@@ -26,11 +27,12 @@ namespace VFXEditor.UI.VFX
         public UIScheduleView ScheduleView;
         public UIBinderView BinderView;
 
-        public UIMain(AVFXBase avfx, Plugin plugin)
-        {
+        public ExportDialog ExportUI;
+
+        public UIMain(AVFXBase avfx, Plugin plugin) {
             AVFX = avfx;
+            // ================
             UINode.SetupGroups();
-            // =========================
             ParticleView = new UIParticleView(this, avfx);
             ParameterView = new UIParameterView(avfx);
             BinderView = new UIBinderView( this, avfx );
@@ -40,69 +42,65 @@ namespace VFXEditor.UI.VFX
             TextureView = new UITextureView(avfx, plugin);
             ModelView = new UIModelView(this, avfx, plugin);
             ScheduleView = new UIScheduleView( this, avfx );
-
             UINode.InitGroups();
+            // =================
+            ExportUI = new ExportDialog( this );
         }
 
-        public void Draw()
-        {
+        public void Draw() {
             if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton))
             {
-                if (ImGui.BeginTabItem("Parameters##Main"))
-                {
+                if (ImGui.BeginTabItem("Parameters##Main")) {
                     ParameterView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Scheduler##Main"))
-                {
+                if (ImGui.BeginTabItem("Scheduler##Main")) {
                     ScheduleView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Timelines##Main"))
-                {
+                if (ImGui.BeginTabItem("Timelines##Main")) {
                     TimelineView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Emitters##Main"))
-                {
+                if (ImGui.BeginTabItem("Emitters##Main")) {
                     EmitterView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Particles##Main"))
-                {
+                if (ImGui.BeginTabItem("Particles##Main")) {
                     ParticleView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Effectors##Main"))
-                {
+                if (ImGui.BeginTabItem("Effectors##Main")) {
                     EffectorView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Binders##Main"))
-                {
+                if (ImGui.BeginTabItem("Binders##Main")) {
                     BinderView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Textures##Main"))
-                {
+                if (ImGui.BeginTabItem("Textures##Main")) {
                     TextureView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Models##Main"))
-                {
+                if (ImGui.BeginTabItem("Models##Main")) {
                     ModelView.Draw();
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
             }
+            // =========
+            ExportUI.Draw();
         }
 
-        // ===================
-        // export the current node, along with all of its dependencies. this is tricky, since when imported, the indexes are going to be different
-        // so when exporting, normalize all of the indexes first
-        public void ExportDeps(UINode startNode, BinaryWriter bw) {
+        // ========= EXPORT ==============
+        public void ExportDeps(UINode startNode, BinaryWriter bw ) {
+            ExportDeps(new List<UINode>(new []{ startNode } ), bw);
+        }
+        public void ExportDeps(List<UINode> startNodes, BinaryWriter bw) {
             List<UINode> nodes = new List<UINode>();
-            RecurseChild( startNode, nodes );
+            foreach(var startNode in startNodes ) {
+                RecurseChild( startNode, nodes );
+            }
             Dictionary<UINode, int> IdxSave = new Dictionary<UINode, int>(); // save these to restore afterwards, since we don't want to modify the current document
             foreach( var n in nodes ) {
                 IdxSave[n] = n.Idx;
@@ -149,6 +147,8 @@ namespace VFXEditor.UI.VFX
                 }
             }
         }
+
+        // ========= IMPORT ==============
         public void ImportData(string path ) {
             using( BinaryReader reader = new BinaryReader( File.Open( path, FileMode.Open ) ) ) {
                 ImportData( reader );
@@ -173,7 +173,13 @@ namespace VFXEditor.UI.VFX
             nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
         }
 
-        public void ExportDialog(UINode node, bool with_dependencies = false ) {
+        // =========== DIALOG =================
+
+        public void ExportMultiple(UINode node ) {
+            ExportUI.Export( node );
+        }
+
+        public void ExportDialog(UINode node ) {
             Task.Run( async () => {
                 var picker = new SaveFileDialog {
                     Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
@@ -184,14 +190,7 @@ namespace VFXEditor.UI.VFX
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        if( with_dependencies ) {
-                            using( BinaryWriter writer = new BinaryWriter( File.Open( picker.FileName, FileMode.Create ) ) ) {
-                                ExportDeps( node, writer );
-                            }
-                        }
-                        else {
-                            File.WriteAllBytes( picker.FileName, node.toBytes() );
-                        }
+                        File.WriteAllBytes( picker.FileName, node.toBytes() );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );

@@ -39,6 +39,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Update wiki (again...sigh)
+- [ ] Better model import dialog
+- [ ] Export multiple + dependencies. Maybe a nice dialog selecting what you want?
+
 - [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Better Viewer for 3d model? (added lines, but is using ImGuizmo for scaling, etc. really necessary?)
@@ -70,12 +74,13 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Penumbra import
 - [ ] Better error / log display
 - [ ] Open from equipped weapon
-- [ ] Better TMB parsing
+- [ ] Better TMB parsing (regexes, lel)
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Fix simple animation model indexes, make them dropdowns~~
 - [x] ~~Better model import/export options~~
 - [x] ~~Cutscene VFX select~~
 - [x] ~~Basic VFX manipulator using ImGuizmo~~
@@ -87,7 +92,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Vfx live viewer~~
 - [x] ~~Spawn vfx (on ground + on self)~~
 - [x] ~~Lock required fields from being deleted~~
-- [x] ~~Better "NEW" particles/binders/etc.~~
+- [x] ~~Better default particles/binders/etc.~~
 - [x] ~~Export raw texture~~
 - [x] ~~UV view~~
 - [x] ~~Change all 3 revised scale at the same time~~
@@ -147,6 +152,5 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [x] ~~Bind Prp1/Prp2 (see `Thunder 2` VFX)~~
 - [x] ~~Rework texture and model views~~
 - [x] ~~Emitter sound~~
-- [x] ~~Fix issue when adding / removing an item switches tabs. This is because the id of the tab changes, like `Particles (3) -> Particles (2)`~~
 - [x] ~~Binder properties view~~
 - [x] ~~Update README preview image~~

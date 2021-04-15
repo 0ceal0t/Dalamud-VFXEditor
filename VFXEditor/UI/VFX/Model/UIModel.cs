@@ -42,8 +42,8 @@ namespace VFXEditor.UI.VFX
             string id = parentId + "/Model";
             NodeView.Draw( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
-            if( ImGui.SmallButton( "Import" + id ) ) {
-                ImGui.OpenPopup( "New_Popup" + id );
+            if( ImGui.SmallButton( "Replace" + id ) ) {
+                ImportDialog();
             }
             ImGui.SameLine();
             if( ImGui.SmallButton( "Export" + id ) ) {
@@ -55,17 +55,7 @@ namespace VFXEditor.UI.VFX
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    Main.ExportDialog( this, with_dependencies: false );
-                }
-                ImGui.EndPopup();
-            }
-            // =================
-            if( ImGui.BeginPopup( "New_Popup" + id ) ) {
-                if( ImGui.Selectable( "GLTF" + id ) ) {
-                    ImportDialog();
-                }
-                if( ImGui.Selectable( "AVFX" + id ) ) {
-                    Main.ImportDialog();
+                    Main.ExportDialog( this );
                 }
                 ImGui.EndPopup();
             }

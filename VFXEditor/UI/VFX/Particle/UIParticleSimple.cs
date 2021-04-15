@@ -7,22 +7,24 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIParticleSimple : UIItem
-    {
+namespace VFXEditor.UI.VFX {
+    public class UIParticleSimple : UIItem {
         public AVFXParticleSimple Simple;
         //=============
         public Vector4[] Colors;
         public int[] Frames;
 
-        public UIParticleSimple(AVFXParticleSimple simple)
-        {
+        public UINodeSelect<UIModel> InjectionModelSelect;
+        public UINodeSelect<UIModel> InjectionVertexModelSelect;
+
+        public UIParticleSimple(AVFXParticleSimple simple, UIParticle particle) {
             Simple = simple;
             Init();
+            //=======================
+            InjectionModelSelect = new UINodeSelect<UIModel>( particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx );
+            InjectionVertexModelSelect = new UINodeSelect<UIModel>( particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx );
         }
-        public override void Init()
-        {
+        public override void Init() {
             base.Init();
             if (!Simple.Assigned) { Assigned = false; return; }
             //=======================
@@ -50,10 +52,10 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UIInt("UV Interval", Simple.UvInterval));
             Attributes.Add(new UIInt("UV Number Random", Simple.UvNoRandom));
             Attributes.Add(new UIInt("UV Number Loop Count", Simple.UvNoLoopCount));
-            Attributes.Add(new UIInt("Injection Model Index", Simple.InjectionModelIdx));
-            Attributes.Add(new UIInt("Injection Vertex Bind Model Index", Simple.InjectionVertexBindModelIdx));
-            Attributes.Add(new UIInt("Injection Radial Direction 0", Simple.InjectionRadialDir0));
-            Attributes.Add(new UIInt("Injection Radial Direction 1", Simple.InjectionRadialDir1));
+            //Attributes.Add(new UIInt("Injection Model Index", Simple.InjectionModelIdx));
+            //Attributes.Add(new UIInt("Injection Vertex Bind Model Index", Simple.InjectionVertexBindModelIdx));
+            Attributes.Add(new UIFloat("Injection Radial Direction 0", Simple.InjectionRadialDir0));
+            Attributes.Add(new UIFloat( "Injection Radial Direction 1", Simple.InjectionRadialDir1));
             Attributes.Add(new UIFloat("Pivot X", Simple.PivotX));
             Attributes.Add(new UIFloat("Pivot Y", Simple.PivotY));
             Attributes.Add(new UIInt("Block Number", Simple.BlockNum));
@@ -72,8 +74,7 @@ namespace VFXEditor.UI.VFX
             //=================
             Colors = new Vector4[4];
             Frames = new int[4];
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 Colors[i] = new Vector4(
                     (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 0] }) / 255,
                     (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 1] }) / 255,
@@ -84,46 +85,41 @@ namespace VFXEditor.UI.VFX
             }
         }
         // =========== DRAW =====================
-        public override void Draw( string parentId )
-        {
-            if( !Assigned )
-            {
+        public override void Draw( string parentId ) {
+            if( !Assigned ) {
                 DrawUnAssigned( parentId );
                 return;
             }
-            if( ImGui.TreeNode( "Simple Animation" + parentId ) )
-            {
+            if( ImGui.TreeNode( "Simple Animation" + parentId ) ) {
                 DrawBody( parentId );
                 ImGui.TreePop();
             }
         }
-        public override void DrawUnAssigned( string parentId )
-        {
-            if( ImGui.SmallButton( "+ Simple Animation" + parentId ) )
-            {
+        public override void DrawUnAssigned( string parentId ) {
+            if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
                 Simple.toDefault();
                 Init();
             }
         }
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             var id = parentId + "/Simple";
-            if( UIUtils.RemoveButton( "Delete" + id, small:true ) )
-            {
+            if( UIUtils.RemoveButton( "Delete" + id, small:true ) ) {
+                InjectionModelSelect.DeleteSelect();
+                InjectionVertexModelSelect.DeleteSelect();
+                //===============
                 Simple.Assigned = false;
                 Init();
                 return;
             }
+            InjectionModelSelect.Draw( id );
+            InjectionVertexModelSelect.Draw( id );
             DrawAttrs( id );
             //====================
-            for( int i = 0; i < 4; i++ )
-            {
-                if( ImGui.InputInt( "Frame#" + i + id, ref Frames[i] ) )
-                {
+            for( int i = 0; i < 4; i++ ) {
+                if( ImGui.InputInt( "Frame#" + i + id, ref Frames[i] ) ) {
                     Simple.Frames.frames[i] = Frames[i];
                 }
-                if( ImGui.ColorEdit4( "Color#" + i + id, ref Colors[i], ImGuiColorEditFlags.Float ) )
-                {
+                if( ImGui.ColorEdit4( "Color#" + i + id, ref Colors[i], ImGuiColorEditFlags.Float ) ) {
                     Simple.Colors.colors[i * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].X * 255f ) )[0];
                     Simple.Colors.colors[i * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Y * 255f ) )[0];
                     Simple.Colors.colors[i * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Z * 255f ) )[0];
