@@ -15,7 +15,7 @@ namespace VFXEditor.UI.VFX.Main {
 
         List<ExportDialogCategory> Categories;
 
-        public bool Visible = true; // false
+        public bool Visible = false;
         public bool ExportDeps = true;
 
         public ExportDialog(UIMain main ) {
@@ -41,7 +41,7 @@ namespace VFXEditor.UI.VFX.Main {
         public void Draw() {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( new Vector2( 500, 500 ), ImGuiCond.FirstUseEver );
-            if( ImGui.Begin("Export", ref Visible )) {
+            if( ImGui.Begin("Advanced Export", ref Visible )) {
                 ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
                 ImGui.SameLine();
                 if( ImGui.Button( "Reset##ExportDialog" ) ) {
@@ -53,7 +53,7 @@ namespace VFXEditor.UI.VFX.Main {
                 }
 
                 var maxSize = ImGui.GetContentRegionAvail();
-                ImGui.BeginChild( "##ExportRegion", maxSize, true );
+                ImGui.BeginChild( "##ExportRegion", maxSize, false );
 
                 Categories.ForEach( cat => cat.Draw() );
                 ImGui.EndChild();
@@ -100,6 +100,7 @@ namespace VFXEditor.UI.VFX.Main {
                             else {
                                 selected.ForEach( node => writer.Write( node.toBytes() ) );
                             }
+                            Visible = false;
                         }
                     }
                     catch( Exception ex ) {
@@ -124,7 +125,6 @@ namespace VFXEditor.UI.VFX.Main {
         public UINodeGroup<T> Group;
         public string HeaderText;
         public string Id;
-        public bool Visible = false;
 
         public ExportDialogCategory( UINodeGroup<T> group, string text ) {
             Group = group;
@@ -144,11 +144,22 @@ namespace VFXEditor.UI.VFX.Main {
 
         public override void Select( UINode node ) {
             Selected.Add( node );
-            Visible = true;
         }
 
         public override void Draw() {
-            if(ImGui.CollapsingHeader($"{HeaderText} ({Selected.Count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}", ref Visible) ) {
+            ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
+
+            var count = Selected.Count;
+            var _visible = false;
+            if(count > 0) {
+                ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
+            }
+            if(ImGui.CollapsingHeader($"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}") ) {
+                if(count > 0 ) {
+                    _visible = true;
+                    ImGui.PopStyleColor();
+                }
+
                 foreach(var item in Group.Items ) {
                     var _selected = Selected.Contains( item );
                     if(ImGui.Checkbox(item.GetText() + Id, ref _selected ) ) {
@@ -160,6 +171,9 @@ namespace VFXEditor.UI.VFX.Main {
                         }
                     }
                 }
+            }
+            if( count > 0 && !_visible ) {
+                ImGui.PopStyleColor();
             }
         }
     }

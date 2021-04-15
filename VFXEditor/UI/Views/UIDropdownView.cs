@@ -84,7 +84,7 @@ namespace VFXEditor.UI.VFX
                 if( ImGui.Selectable( "Simple" + Id ) ) {
                     Main.ExportDialog( Selected );
                 }
-                if( ImGui.Selectable("Advanced" + Id ) ) {
+                if( ImGui.Selectable("Advanced Export" + Id ) ) {
                     Main.ExportMultiple( Selected );
                 }
                 ImGui.EndPopup();

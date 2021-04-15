@@ -40,9 +40,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Update wiki (again...sigh)
-- [ ] Better model import dialog
-- [ ] Export multiple + dependencies. Maybe a nice dialog selecting what you want?
-
 - [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Better Viewer for 3d model? (added lines, but is using ImGuizmo for scaling, etc. really necessary?)
@@ -80,6 +77,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Export multiple + dependencies~~
 - [x] ~~Fix simple animation model indexes, make them dropdowns~~
 - [x] ~~Better model import/export options~~
 - [x] ~~Cutscene VFX select~~

@@ -94,6 +94,17 @@ namespace VFXEditor.Data {
             return false;
         }
 
+        public bool HasReplacePath(bool allDocuments ) {
+            if( allDocuments ) {
+                foreach(var _doc in Docs ) {
+                    if( _doc.Replace.Path == "" )
+                        return false;
+                }
+                return true;
+            }
+            return ActiveDoc.Replace.Path != "";
+        }
+
         public void Dispose() {
             foreach(var doc in Docs ) {
                 File.Delete( doc.WriteLocation );

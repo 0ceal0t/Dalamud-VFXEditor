@@ -57,7 +57,7 @@ namespace VFXEditor.UI.VFX
                         ImGui.OpenPopup( "Tex_Export" + id );
                     }
                     ImGui.SameLine();
-                    if( ImGui.SmallButton( "Import" + id ) ) {
+                    if( ImGui.SmallButton( "Replace" + id ) ) {
                         ImportDialog(Manager, currentPathValue.Trim('\0') );
                     }
                     if( ImGui.BeginPopup( "Tex_Export" + id ) ) {

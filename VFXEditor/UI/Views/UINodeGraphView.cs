@@ -19,8 +19,6 @@ namespace VFXEditor.UI.VFX {
         static Vector2 TextOffset = new Vector2( 5, 2 );
         static Vector2 LineOffset = new Vector2( 0, 25 );
 
-        public bool Visible = true;
-
         static ImGuiScene.TextureWrap GridPtr;
 
         public static void InitTex(Plugin plugin) {
@@ -45,7 +43,7 @@ namespace VFXEditor.UI.VFX {
                 return;
             }
 
-            if(!ImGui.CollapsingHeader("Node Graph", ref Visible) ) {
+            if(!ImGui.CollapsingHeader("Node Graph", ImGuiTreeNodeFlags.DefaultOpen) ) {
                 return;
             }
 

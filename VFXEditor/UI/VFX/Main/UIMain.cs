@@ -97,22 +97,24 @@ namespace VFXEditor.UI.VFX
             ExportDeps(new List<UINode>(new []{ startNode } ), bw);
         }
         public void ExportDeps(List<UINode> startNodes, BinaryWriter bw) {
+            HashSet<UINode> visited = new HashSet<UINode>();
             List<UINode> nodes = new List<UINode>();
             foreach(var startNode in startNodes ) {
-                RecurseChild( startNode, nodes );
+                RecurseChild( startNode, nodes, visited );
             }
+
             Dictionary<UINode, int> IdxSave = new Dictionary<UINode, int>(); // save these to restore afterwards, since we don't want to modify the current document
             foreach( var n in nodes ) {
                 IdxSave[n] = n.Idx;
             }
 
-            FilterByType<UITimeline>( nodes );
-            FilterByType<UIEmitter>( nodes );
-            FilterByType<UIEffector>( nodes );
-            FilterByType<UIBinder>( nodes );
-            FilterByType<UIParticle>( nodes );
-            FilterByType<UITexture>( nodes );
-            FilterByType<UIModel>( nodes );
+            OrderByType<UITimeline>( nodes );
+            OrderByType<UIEmitter>( nodes );
+            OrderByType<UIEffector>( nodes );
+            OrderByType<UIBinder>( nodes );
+            OrderByType<UIParticle>( nodes );
+            OrderByType<UITexture>( nodes );
+            OrderByType<UIModel>( nodes );
 
             UpdateAllNodes( nodes );
             foreach( var n in nodes ) {
@@ -123,15 +125,17 @@ namespace VFXEditor.UI.VFX
             }
             UpdateAllNodes( nodes );
         }
-        public void RecurseChild( UINode node, List<UINode> output ) {
+        public void RecurseChild( UINode node, List<UINode> output, HashSet<UINode> visited ) {
+            if( visited.Contains( node ) ) return; // prevents infinite loop
+            visited.Add( node );
+
             foreach( var n in node.Children ) {
-                RecurseChild( n, output );
+                RecurseChild( n, output, visited );
             }
-            if( output.Contains( node ) ) return; // make sure elements get added AFTER their children
+            if( output.Contains( node ) ) return; // make sure elements get added AFTER their children. This doesn't work otherwise, since we want each node to be AFTER its dependencies
             output.Add( node );
         }
-
-        public void FilterByType<T>(List<UINode> items) where T : UINode {
+        public void OrderByType<T>(List<UINode> items) where T : UINode {
             int i = 0;
             foreach(UINode node in items ) {
                 if (node is T ) {

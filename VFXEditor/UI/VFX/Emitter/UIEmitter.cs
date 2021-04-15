@@ -25,6 +25,9 @@ namespace VFXEditor.UI.VFX
         public UIEmitterSplitView ParticleSplit;
         public UINodeSelect<UIEffector> EffectorSelect;
         public UINodeGraphView NodeView;
+        //========================
+        public UIString SoundInput;
+        public UIInt SoundIndex;
 
         public UIEmitter(AVFXEmitter emitter, UIEmitterView view, bool has_dependencies = false ) : base(EmitterColor, has_dependencies)
         {
@@ -38,8 +41,9 @@ namespace VFXEditor.UI.VFX
             Emitters = new List<UIEmitterItem>();
             //======================
             Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, changeFunction: ChangeType );
-            Attributes.Add( new UIString( "Sound", Emitter.Sound, changeFunction: SetSound ) );
-            Attributes.Add( new UIInt( "Sound Index", Emitter.SoundNumber ) );
+            SoundInput = new UIString( "Sound", Emitter.Sound, changeFunction: SoundCheck );
+            SoundIndex = new UIInt( "Sound Index", Emitter.SoundNumber );
+            //======================
             Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
             Attributes.Add( new UIInt( "Child Limit", Emitter.ChildLimit ) );
@@ -47,7 +51,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UICombo<RotationDirectionBase>( "Rotation Direction Base", Emitter.RotationDirectionBaseType ) );
             Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ) );
             Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType ) );
-            // ==========================
             Animation.Add( new UILife( Emitter.Life ) );
             Animation.Add( new UICurve( Emitter.CreateCount, "Create Count", locked:true ) );
             Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval", locked: true ) );
@@ -114,6 +117,16 @@ namespace VFXEditor.UI.VFX
             ImGui.BeginChild( id );
             NodeView.Draw( id );
             EffectorSelect.Draw( id );
+            if(UIUtils.RemoveButton("Remove Sound" + id, small: true ) ) {
+                SoundInput.Value = "";
+                SoundInput.Literal.GiveValue( "" );
+                SoundInput.Literal.Assigned = false;
+
+                SoundIndex.Value = -1;
+                SoundIndex.Literal.GiveValue( -1 );
+            }
+            SoundInput.Draw( id );
+            SoundIndex.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }
@@ -154,7 +167,7 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public void SetSound(LiteralString literal ) {
+        public void SoundCheck(LiteralString literal ) {
             if(literal.Value == "" ) {
                 literal.Assigned = false;
             }

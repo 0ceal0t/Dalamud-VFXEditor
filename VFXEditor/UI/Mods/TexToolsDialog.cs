@@ -16,12 +16,12 @@ namespace VFXEditor.UI
     public class TexToolsDialog : GenericDialog
     {
         public TexToolsDialog( Plugin plugin ) : base(plugin, "TexTools") {
+            Size = new Vector2( 400, 200 );
         }
 
         public string Name = "";
         public string Author = "";
         public string Version = "1.0.0";
-        public string SaveLocation = "";
         public bool ExportAll = false;
         public bool ExportTex = true;
 
@@ -33,14 +33,12 @@ namespace VFXEditor.UI
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
-            ImGui.InputText( "Save Location" + id, ref SaveLocation, 255 );
-            ImGui.SameLine( ImGui.GetWindowWidth() - 58 );
-            if( ImGui.Button( "Browse" + id ) ) {
-                SaveDialog();
-            }
             ImGui.Checkbox( "Export Textures", ref ExportTex );
-            ImGui.Separator();
-            ImGui.Checkbox( "Export All", ref ExportAll );
+            ImGui.SameLine();
+            ImGui.Checkbox( "Export All Documents", ref ExportAll );
+            if( !_plugin.Doc.HasReplacePath( ExportAll ) ) {
+                ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
+            }
             ImGui.EndChild();
 
             if( ImGui.Button( "Export" + id ) ) {
