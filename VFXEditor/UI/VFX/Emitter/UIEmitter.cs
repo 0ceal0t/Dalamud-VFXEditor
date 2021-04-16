@@ -167,7 +167,7 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public void SoundCheck(LiteralString literal ) {
+        public void SoundCheck(LiteralString literal ) { // not enough to just set the value to "", need to also unassign it
             if(literal.Value == "" ) {
                 literal.Assigned = false;
             }

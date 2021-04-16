@@ -20,7 +20,6 @@ namespace VFXEditor.UI
     {
         private readonly Plugin _plugin;
         public bool Visible = false;
-        public bool ShowDebugBar = false;
 
         public VFX.UIMain VFXMain = null;
         public VFXSelectDialog SelectUI;
@@ -50,7 +49,6 @@ namespace VFXEditor.UI
             VFX.UINodeGraphView.InitTex( _plugin ); // load grid texture
 #if DEBUG
             Visible = true;
-            ShowDebugBar = true;
 #endif
         }
         public void RefreshAVFX() {
@@ -61,15 +59,6 @@ namespace VFXEditor.UI
         }
 
         public void Draw() {
-            if( ShowDebugBar && ImGui.BeginMainMenuBar() ) {
-                if( ImGui.BeginMenu( "VFXEditor" ) ) {
-                    if( ImGui.MenuItem( "Toggle UI", "/VFXEditor", Visible ) ) {
-                        Visible = !Visible;
-                    }
-                    ImGui.EndMenu();
-                }
-                ImGui.EndMainMenuBar();
-            }
             if( Visible ) {
                 DrawMainInterface();
             }
@@ -85,11 +74,7 @@ namespace VFXEditor.UI
         public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-#if DEBUG
-            var ret = ImGui.Begin( _plugin.PluginDebugTitleStr, ref Visible );
-#else
             var ret = ImGui.Begin( _plugin.Name, ref Visible );
-#endif
             if( !ret ) return;
             // ==================
             ImGui.BeginTabBar( "MainInterfaceTabs" );

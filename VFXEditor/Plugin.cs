@@ -71,10 +71,8 @@ namespace VFXEditor
             Configuration.Initialize( PluginInterface );
             ResourceLoader = new ResourceLoader( this );
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
-                HelpMessage = "/vfxedit - toggle ui"
+                HelpMessage = "toggle ui"
             } );
-
-            PluginDebugTitleStr = $"{Name} - Debug Build";
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
 

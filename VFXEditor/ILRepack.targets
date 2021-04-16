@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+
+    <ItemGroup>
+        <InputAssemblies Include="$(OutputPath)Reloaded*.dll" />
+        <InputAssemblies Include="$(OutputPath)fastCSV.dll" />
+        <InputAssemblies Include="$(OutputPath)SharpGLTF.*.dll" />
+        <InputAssemblies Include="$(OutputPath)Iced.dll" />
+        <InputAssemblies Include="$(OutputPath)SharpDisasm.dll" />
+        <InputAssemblies Include="$(OutputPath)TeximpNet.dll" />
+        <InputAssemblies Include="$(OutputPath)AVFXLib.dll" />
+        <InputAssemblies Include="$(OutputPath)ICSharpCode.SharpZipLib.dll" />
+        <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll" />
+        <InputAssemblies Include="$(OutputPath)VFXEditor.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <LibraryAssemblies Include="$(OutputPath)" />
+        <LibraryAssemblies Include="$(APPDATA)\XIVLauncher\addon\Hooks\dev" />
+    </ItemGroup>
+
+    <ILRepack
+        Parallel="true"
+        Internalize="true"
+        InternalizeExclude="@(DoNotInternalizeAssemblies)"
+        InputAssemblies="@(InputAssemblies)"
+        LibraryPath="@(LibraryAssemblies)"
+        TargetKind="Dll"
+        OutputFile="$(OutputPath)\Output\VFXEditor.dll"
+    />
+
+    </Target>
+</Project>
