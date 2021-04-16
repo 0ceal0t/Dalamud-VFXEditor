@@ -1,7 +1,7 @@
 # VFXEditor
 A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide)**)
 
-![](https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/docs/preview-4.png?raw=true)
+![](https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/docs/preview5.png)
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run

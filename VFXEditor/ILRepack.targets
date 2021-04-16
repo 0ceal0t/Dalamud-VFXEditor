@@ -8,7 +8,8 @@
         <InputAssemblies Include="$(OutputPath)SharpGLTF.*.dll" />
         <InputAssemblies Include="$(OutputPath)Iced.dll" />
         <InputAssemblies Include="$(OutputPath)SharpDisasm.dll" />
-        <InputAssemblies Include="$(OutputPath)TeximpNet.dll" />
+        <InputAssemblies Include="$(OutputPath)System.Text.Json.dll" />
+        <InputAssemblies Include="$(OutputPath)System.Text.Encodings.Web.dll" />
         <InputAssemblies Include="$(OutputPath)AVFXLib.dll" />
         <InputAssemblies Include="$(OutputPath)ICSharpCode.SharpZipLib.dll" />
         <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll" />

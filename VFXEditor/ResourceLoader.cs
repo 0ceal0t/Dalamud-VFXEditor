@@ -204,8 +204,7 @@ namespace VFXEditor
             var player = _plugin.PluginInterface.ClientState.LocalPlayer;
             var charBaseAddr = player.Address;
 
-            Task.Run( async () =>
-            {
+            Task.Run( async () => {
                 var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Structs.ActorOffsets.ObjectKind;
                 var renderOffset = charBaseAddr + 0x104;
 
