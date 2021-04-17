@@ -12,13 +12,13 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModelView : UINodeSplitView<UIModel>
     {
-        public Model3D Mdl3D;
+        public ModelPreview Mdl3D;
         public UIMain Main;
 
         public UIModelView(UIMain main, AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
         {
             Main = main;
-            Mdl3D = plugin.DXManager.Model;
+            Mdl3D = plugin.DXManager._ModelPreview;
             Group = UINode._Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( main, item, this ) ).ToList();
         }

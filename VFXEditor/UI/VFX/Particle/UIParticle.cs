@@ -97,22 +97,14 @@ namespace VFXEditor.UI.VFX
             //===============================
             SetType();
             //============================
-            TC1 = new UITextureColor1( Particle.TC1, this );
-            TC2 = new UITextureColor2( Particle.TC2, "Texture Color 2", this );
-            TC3 = new UITextureColor2( Particle.TC3, "Texture Color 3", this );
-            TC4 = new UITextureColor2( Particle.TC4, "Texture Color 4", this );
-            TN = new UITextureNormal( Particle.TN, this );
-            TR = new UITextureReflection( Particle.TR, this );
-            TD = new UITextureDistortion( Particle.TD, this );
-            TP = new UITexturePalette( Particle.TP, this );
-            Tex.Add( TC1 );
-            Tex.Add( TC2 );
-            Tex.Add( TC3 );
-            Tex.Add( TC4 );
-            Tex.Add( TN );
-            Tex.Add( TR );
-            Tex.Add( TD );
-            Tex.Add( TP );
+            Tex.Add( TC1 = new UITextureColor1( Particle.TC1, this ) );
+            Tex.Add( TC2 = new UITextureColor2( Particle.TC2, "Texture Color 2", this ) );
+            Tex.Add( TC3 = new UITextureColor2( Particle.TC3, "Texture Color 3", this ) );
+            Tex.Add( TC4 = new UITextureColor2( Particle.TC4, "Texture Color 4", this ) );
+            Tex.Add( TN = new UITextureNormal( Particle.TN, this ) );
+            Tex.Add( TR = new UITextureReflection( Particle.TR, this ) );
+            Tex.Add( TD = new UITextureDistortion( Particle.TD, this ) );
+            Tex.Add( TP = new UITexturePalette( Particle.TP, this ) );
             //=============================
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             TexSplit = new UIItemSplitView<UIItem>( Tex );

@@ -15,7 +15,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModel : UINode {
         public AVFXModel Model;
-        public Model3D Mdl3D;
+        public ModelPreview Mdl3D;
         public UIMain Main;
         int Mode = 1;
         //=======================

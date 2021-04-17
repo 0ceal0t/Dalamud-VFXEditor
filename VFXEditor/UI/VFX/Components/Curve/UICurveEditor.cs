@@ -162,20 +162,10 @@ namespace VFXEditor.UI.VFX {
                     var p2_ = p2.GetPosition();
                     float midX = ( p2_.X - p1_.X ) / 2;
                     Vector2 handle1 = new Vector2( p1_.X + p1.Key.X * midX, p1_.Y );
-                    Vector2 handle2 = new Vector2( p2_.X - p1.Key.Y - midX, p2_.Y );
-
+                    Vector2 handle2 = new Vector2( p2_.X - p1.Key.Y * midX, p2_.Y );
                     for( int i = 0; i < 100; i++ ) {
                         float t = i / 99.0f;
-                        float u = 1 - t;
-                        float w1 = u * u * u;
-                        float w2 = 3 * u * u * t;
-                        float w3 = 3 * u * t * t;
-                        float w4 = t * t * t;
-
-                        ret.Add( new Vector2(
-                            w1 * p1_.X + w2 * handle1.X + w3 * handle2.X + w4 * p2_.X,
-                            w1 * p1_.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2_.Y
-                        ) );
+                        ret.Add( Bezier( p1_, p2_, handle1, handle2, t ) );
                     }
                     ret.Add( p2_ );
                 }
@@ -183,23 +173,67 @@ namespace VFXEditor.UI.VFX {
             return ret.ToArray();
         }
 
+        public static Vector2 Bezier(Vector2 p1_, Vector2 p2_, Vector2 handle1, Vector2 handle2, float t ) {
+            float u = 1 - t;
+            float w1 = u * u * u;
+            float w2 = 3 * u * u * t;
+            float w3 = 3 * u * t * t;
+            float w4 = t * t * t;
+            return new Vector2(
+                w1 * p1_.X + w2 * handle1.X + w3 * handle2.X + w4 * p2_.X,
+                w1 * p1_.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2_.Y
+            );
+        }
+
         public void UpdateColor() {
             if(Color && Curve.Keys.Count > 1 ) {
                 ColorGrad = GradientManager._Manager.AddGradient( Curve );
             }
         }
+        // USED FOR OTHER FUNCTIONS....
+        public float GetAtTime(int frame ) {
+            int idx = 0;
+            if(Curve.Keys.Count > 0 && frame <= Curve.Keys[0].Time ) { // before the first point
+                return Curve.Keys[0].Z;
+            }
+            if(Curve.Keys.Count > 0 && frame >= Curve.Keys[Curve.Keys.Count - 1].Time) { // after the last one
+                return Curve.Keys[Curve.Keys.Count - 1].Z;
+            }
+
+            foreach(var nextPoint in Curve.Keys ) {
+                if(frame < nextPoint.Time && idx != 0 ) {
+                    // .........
+                    var item = Curve.Keys[idx - 1];
+                    if( item.Type == KeyType.Step ) {
+                        return item.Z;
+                    }
+                    else {
+                        float t = ((float)( frame - item.Time )) / ( nextPoint.Time - item.Time );
+                        if(item.Type == KeyType.Linear ) {
+                            return item.Z + t * ( nextPoint.Z - item.Z );
+                        }
+                        else if(item.Type == KeyType.Spline ) {
+                            float midX = ((float)( nextPoint.X - item.X )) / 2.0f;
+                            Vector2 handle1 = new Vector2( item.Time + item.X * midX, item.Z );
+                            Vector2 handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
+                            var b = Bezier( new Vector2( item.Time, item.Z ), new Vector2( nextPoint.Time, nextPoint.Z ), handle1, handle2, t );
+                            return b.Y;
+                        }
+                    }
+
+                }
+                idx++;
+            }
+            return 0.0f;
+        }
 
         public class CurvePoint {
-
             public static readonly string[] TypeOptions = Enum.GetNames( typeof( KeyType ) );
             public int TypeIdx;
-
             public double X;
             public double Y;
-
             public bool Color;
             public Vector3 ColorData;
-
             public AVFXKey Key;
             public UICurveEditor Editor;
 

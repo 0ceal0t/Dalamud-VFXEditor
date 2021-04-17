@@ -18,7 +18,7 @@ using AVFXLib.Models;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VFXEditor.Data.DirectX {
-    public class Model3D {
+    public abstract class Model3D {
         public DirectXManager Manager;
         public Device _Device;
         public DeviceContext _Ctx;
@@ -26,35 +26,15 @@ namespace VFXEditor.Data.DirectX {
         public int Width = 300;
         public int Height = 300;
 
-        RasterizerState RState;
-        Buffer WorldBuffer;
-        Matrix ViewMatrix;
-        Matrix ProjMatrix;
-        Texture2D DepthTex;
-        DepthStencilView DepthView;
+        public RasterizerState RState;
+        public Buffer WorldBuffer;
+        public Matrix ViewMatrix;
+        public Matrix ProjMatrix;
+        public Texture2D DepthTex;
+        public DepthStencilView DepthView;
         public Texture2D RenderTex;
         public ShaderResourceView RenderShad;
         public RenderTargetView RenderView;
-
-        // ====== BASE MODEL ========
-        int NumVerts;
-        Buffer Vertices;
-        CompilationResult vertexShaderByteCode;
-        CompilationResult pixelShaderByteCode;
-        PixelShader PShader;
-        VertexShader VShader;
-        ShaderSignature Signature;
-        InputLayout Layout;
-
-        // ======= MODEL EDGE ========
-        int EDGE_NumVerts;
-        Buffer EDGE_Vertices;
-        CompilationResult EDGE_VertexShaderByteCode;
-        CompilationResult EDGE_PixelShaderByteCode;
-        PixelShader EDGE_PShader;
-        VertexShader EDGE_VShader;
-        ShaderSignature EDGE_Signature;
-        InputLayout EDGE_Layout;
 
         public bool IsDragging = false;
         private Vector2 LastMousePos;
@@ -66,41 +46,12 @@ namespace VFXEditor.Data.DirectX {
         public bool IsWireframe = false;
         public bool ShowEdges = true;
 
+        public Matrix LocalMatrix = Matrix.Identity;
+
         public Model3D(DirectXManager manager) {
             Manager = manager;
             _Device = Manager._Device;
             _Ctx = Manager._Ctx;
-
-            // ======= BASE MODEL =========
-            var shaderFile = Path.Combine( Manager.ShaderPath, "ModelPreview.fx" );
-            vertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-            pixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-            VShader = new VertexShader( _Device, vertexShaderByteCode );
-            PShader = new PixelShader( _Device, pixelShaderByteCode );
-            Signature = ShaderSignature.GetInputSignature( vertexShaderByteCode );
-            Layout = new InputLayout( _Device, Signature, new[]
-            {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
-            } );
-            NumVerts = 0;
-            Vertices = null;
-
-            // ======= MODEL EDGES ========
-            var EDGE_shaderFile = Path.Combine( Manager.ShaderPath, "ModelEdge.fx" );
-            EDGE_VertexShaderByteCode = ShaderBytecode.CompileFromFile( EDGE_shaderFile, "VS", "vs_4_0" );
-            EDGE_PixelShaderByteCode = ShaderBytecode.CompileFromFile( EDGE_shaderFile, "PS", "ps_4_0" );
-            EDGE_VShader = new VertexShader( _Device, EDGE_VertexShaderByteCode );
-            EDGE_PShader = new PixelShader( _Device, EDGE_PixelShaderByteCode );
-            EDGE_Signature = ShaderSignature.GetInputSignature( EDGE_VertexShaderByteCode );
-            EDGE_Layout = new InputLayout( _Device, EDGE_Signature, new[]
-            {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-            } );
-            EDGE_NumVerts = 0;
-            EDGE_Vertices = null;
 
             // WORLD MATRIX BUFFER
             WorldBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
@@ -205,69 +156,10 @@ namespace VFXEditor.Data.DirectX {
             ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
         }
 
-        public static int MODEL_SPAN = 3; // position, color, normal
-        public static int EDGE_SPAN = 2;
-        public static Vector4 LINE_COLOR = new Vector4( 1, 0, 0, 1 );
-
-        public void LoadModel( AVFXModel model, int mode = 1 ) {
-            if( model.Indexes.Count == 0 ) {
-                NumVerts = 0;
-                Vertices?.Dispose();
-
-                EDGE_NumVerts = 0;
-                EDGE_Vertices?.Dispose();
-                return;
-            }
-
-            Vector4[] data = new Vector4[model.Indexes.Count * 3 * MODEL_SPAN]; // 3 vertices per face
-            Vector4[] EDGE_data = new Vector4[model.Indexes.Count * 4 * EDGE_SPAN]; // 4 points per loop
-
-            for( int index = 0; index < model.Indexes.Count; index++ ) { // each face
-                int[] _indexes = new int[] { model.Indexes[index].I1, model.Indexes[index].I2, model.Indexes[index].I3 };
-                for(int j = 0; j < _indexes.Length; j++ ) { // push all 3 vertices per face
-                    var idx = GetIdx( index, j, MODEL_SPAN, 3 );
-                    var v = model.Vertices[_indexes[j]];
-
-                    data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
-                    if(mode == 1 ) { // COLOR
-                        data[idx + 1] = new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f );
-                    }
-                    else if(mode == 2 ) { // UV1
-                        data[idx + 1] = new Vector4( v.UV1[0] + 0.5f, 0, v.UV1[2] + 0.5f, 1.0f );
-                    }
-                    else if( mode == 3 ) { // UV2
-                        data[idx + 1] = new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f );
-                    }
-                    data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
-
-                    // ========= COPY OVER EDGE DATA ==========
-                    int edgeIdx = GetIdx( index, j, EDGE_SPAN, 4 );
-                    EDGE_data[edgeIdx + 0] = data[idx + 0];
-                    EDGE_data[edgeIdx + 1] = LINE_COLOR;
-                    if(j == 0 ) { // loop back around
-                        int lastEdgeIdx = GetIdx( index, 3, EDGE_SPAN, 4 );
-                        EDGE_data[lastEdgeIdx + 0] = data[idx + 0];
-                        EDGE_data[lastEdgeIdx + 1] = LINE_COLOR;
-                    }
-                }
-            }
-
-            Vertices?.Dispose();
-            Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
-            NumVerts = model.Indexes.Count * 3;
-
-            EDGE_Vertices?.Dispose();
-            EDGE_Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, EDGE_data );
-            EDGE_NumVerts = model.Indexes.Count * 4;
-        }
-
-        public static int GetIdx(int faceIdx, int pointIdx, int span, int pointsPer ) {
-            return span * ( faceIdx * pointsPer + pointIdx );
-        }
-
+        public abstract void OnDraw();
         public void Draw() {
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
-            var worldViewProj = Matrix.Identity * viewProj;
+            var worldViewProj = LocalMatrix * viewProj;
             worldViewProj.Transpose();
             _Ctx.UpdateSubresource( ref worldViewProj, WorldBuffer );
 
@@ -278,39 +170,13 @@ namespace VFXEditor.Data.DirectX {
             _Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             _Ctx.Rasterizer.State = RState;
 
-            // ====== DRAW BASE =========
-            _Ctx.PixelShader.Set( PShader );
-            _Ctx.VertexShader.Set( VShader );
-            _Ctx.InputAssembler.InputLayout = Layout;
-            _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-            if( NumVerts > 0 ) {
-                _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) ); // set vertex buffer
-                _Ctx.Draw( NumVerts, 0 );
-            }
-
-            // ====== DRAW LINE =========
-            if( ShowEdges ) {
-                _Ctx.PixelShader.Set( EDGE_PShader );
-                _Ctx.VertexShader.Set( EDGE_VShader );
-                _Ctx.InputAssembler.InputLayout = EDGE_Layout;
-                _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
-                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-                if( EDGE_NumVerts > 0 ) {
-                    _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EDGE_Vertices, Utilities.SizeOf<Vector4>() * EDGE_SPAN, 0 ) ); // set vertex buffer
-                    for( int i = 0; i < EDGE_NumVerts / 4; i++ ) {
-                        _Ctx.Draw( 4, i * 4 );
-                    }
-                }
-            }
+            OnDraw();
 
             _Ctx.Flush();
         }
 
+        public abstract void OnDispose();
         public void Dispose() {
-            Vertices?.Dispose();
-            EDGE_Vertices?.Dispose();
-
             RState?.Dispose();
             RenderTex?.Dispose();
             RenderShad?.Dispose();
@@ -318,12 +184,8 @@ namespace VFXEditor.Data.DirectX {
             DepthTex?.Dispose();
             DepthView?.Dispose();
             WorldBuffer?.Dispose();
-            Layout?.Dispose();
-            Signature?.Dispose();
-            PShader?.Dispose();
-            VShader?.Dispose();
-            vertexShaderByteCode?.Dispose();
-            pixelShaderByteCode?.Dispose();
+
+            OnDispose();
         }
     }
 }

@@ -52,8 +52,6 @@ namespace VFXEditor.UI.VFX {
             Attributes.Add(new UIInt("UV Interval", Simple.UvInterval));
             Attributes.Add(new UIInt("UV Number Random", Simple.UvNoRandom));
             Attributes.Add(new UIInt("UV Number Loop Count", Simple.UvNoLoopCount));
-            //Attributes.Add(new UIInt("Injection Model Index", Simple.InjectionModelIdx));
-            //Attributes.Add(new UIInt("Injection Vertex Bind Model Index", Simple.InjectionVertexBindModelIdx));
             Attributes.Add(new UIFloat("Injection Radial Direction 0", Simple.InjectionRadialDir0));
             Attributes.Add(new UIFloat( "Injection Radial Direction 1", Simple.InjectionRadialDir1));
             Attributes.Add(new UIFloat("Pivot X", Simple.PivotX));

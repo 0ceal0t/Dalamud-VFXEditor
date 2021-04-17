@@ -15,7 +15,12 @@ namespace VFXEditor.UI.VFX
         public string Name;
         public bool Locked;
         //=======================
-        public List<UICurve> Curves;
+        public UICombo<AxisConnect> _AxisConnect;
+        public UICombo<RandomType> _AxisConnectRandom;
+        public UICurve _X;
+        public UICurve _Y;
+
+        List<UICurve> Curves;
 
         public UICurve2Axis(AVFXCurve2Axis curve, string name, bool locked = false )
         {
@@ -30,37 +35,32 @@ namespace VFXEditor.UI.VFX
             Curves = new List<UICurve>();
             if (!Curve.Assigned) { Assigned = false; return; }
             // ======================
-            Attributes.Add(new UICombo<AxisConnect>("Axis Connect", Curve.AxisConnectType));
-            Attributes.Add(new UICombo<RandomType>("Axis Connect Random", Curve.AxisConnectRandomType));
-            Curves.Add(new UICurve(Curve.X, "X"));
-            Curves.Add(new UICurve(Curve.Y, "Y"));
+            _AxisConnect = new UICombo<AxisConnect>( "Axis Connect", Curve.AxisConnectType );
+            _AxisConnectRandom = new UICombo<RandomType>("Axis Connect Random", Curve.AxisConnectRandomType);
+
+            Curves.Add( _X = new UICurve( Curve.X, "X" ) );
+            Curves.Add( _Y = new UICurve( Curve.Y, "Y" ) );
             Curves.Add(new UICurve(Curve.RX, "Random X"));
             Curves.Add(new UICurve(Curve.RY, "Random Y"));
         }
         // =========== DRAW =====================
-        public override void Draw( string parentId )
-        {
-            if( !Assigned )
-            {
+        public override void Draw( string parentId ) {
+            if( !Assigned )  {
                 DrawUnAssigned( parentId );
                 return;
             }
-            if( ImGui.TreeNode( Name + parentId ) )
-            {
+            if( ImGui.TreeNode( Name + parentId ) ) {
                 DrawBody( parentId );
                 ImGui.TreePop();
             }
         }
-        public override void DrawUnAssigned( string parentId )
-        {
-            if( ImGui.SmallButton( "+ " + Name + parentId ) )
-            {
+        public override void DrawUnAssigned( string parentId ) {
+            if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 Curve.toDefault();
                 Init();
             }
         }
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             // =================
             if( !Locked ) {
@@ -70,15 +70,14 @@ namespace VFXEditor.UI.VFX
                     return;
                 }
             }
-            foreach( var c in Curves )
-            {
-                if( !c.Assigned )
-                {
+            foreach( var c in Curves ) {
+                if( !c.Assigned ) {
                     ImGui.SameLine();
                     c.Draw( id );
                 }
             }
-            DrawAttrs( id );
+            _AxisConnect.Draw( id );
+            _AxisConnectRandom.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             // ==================
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )

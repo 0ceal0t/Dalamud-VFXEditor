@@ -79,7 +79,9 @@ namespace VFXEditor.UI.VFX {
             HasDependencies = has_dependencies;
         }
 
+        public bool IsDeleted = false;
         public void DeleteNode() {
+            IsDeleted = true;
             foreach( var node in Children ) {
                 node.Parents.RemoveAll( x => x.Node == this );
 
@@ -99,8 +101,6 @@ namespace VFXEditor.UI.VFX {
             Graph = new UINodeGraph( this );
         }
 
-        public bool HasToolTip = false;
-        public virtual void DrawToolTip() { }
         public abstract byte[] toBytes();
     }
 

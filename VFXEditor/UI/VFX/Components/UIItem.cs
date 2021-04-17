@@ -22,5 +22,28 @@ namespace VFXEditor.UI.VFX {
         public void DrawAttrs( string parentId ) {
             DrawList( Attributes, parentId );
         }
+
+        public static void DrawListTabs( List<UIItem> items, string parentId ) {
+            var idx = 0;
+            foreach( var item in items ) {
+                if( !item.Assigned ) {
+                    if(idx > 0 ) {
+                        ImGui.SameLine();
+                    }
+                    item.Draw( parentId );
+                    idx++;
+                }
+            }
+
+            ImGui.BeginTabBar( parentId + "-Tabs" );
+            foreach( var item in items ) {
+                if( !item.Assigned ) continue;
+                if(ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
+                    item.DrawBody( parentId );
+                    ImGui.EndTabItem();
+                }
+            }
+            ImGui.EndTabBar();
+        }
     }
 }

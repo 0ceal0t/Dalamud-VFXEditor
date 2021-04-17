@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.Data.DirectX {
     public class DirectXManager {
+        public static DirectXManager Manager;
+
         public Plugin _plugin;
         public Device _Device;
         public DeviceContext _Ctx;
@@ -17,15 +19,19 @@ namespace VFXEditor.Data.DirectX {
         public string ShaderPath;
         public bool DoRender = true;
 
-        public Model3D Model;
+        public ModelPreview _ModelPreview;
+        public UVPreview _UVPreview;
 
         // https://github.com/ackwell/BrowserHost/blob/32104cedd10715ca44710be1e57a36b6aa8c43c3/BrowserHost.Plugin/DxHandler.cs
         public DirectXManager(Plugin plugin) {
+            Manager = this;
+
             _plugin = plugin;
             ShaderPath = Path.Combine( Plugin.TemplateLocation, "Shaders" );
             _Device = plugin.PluginInterface.UiBuilder.Device;
             _Ctx = _Device.ImmediateContext;
-            Model = new Model3D( this );
+            _ModelPreview = new ModelPreview( this );
+            _UVPreview = new UVPreview( this );
         }
 
         public void Draw() {
@@ -33,7 +39,8 @@ namespace VFXEditor.Data.DirectX {
             var oldState = _Ctx.Rasterizer.State;
             var oldRenderViews = _Ctx.OutputMerger.GetRenderTargets( OutputMergerStage.SimultaneousRenderTargetCount, out var oldDepthStencilView );
 
-            Model.Draw();
+            _ModelPreview.Draw();
+            _UVPreview.Draw();
 
             _Ctx.Rasterizer.State = oldState;
             _Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
@@ -76,7 +83,8 @@ namespace VFXEditor.Data.DirectX {
         public void Dispose() {
             DoRender = false;
 
-            Model.Dispose();
+            _ModelPreview.Dispose();
+            _UVPreview.Dispose();
 
             _Device = null;
             _Ctx = null;

@@ -135,6 +135,12 @@
       <None Update="Shaders\ModelPreview.fx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Shaders\UVPreview_VS.fx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\UVPreview_PS.fx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="VFXEditor.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

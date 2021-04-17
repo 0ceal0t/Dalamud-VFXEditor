@@ -30,7 +30,7 @@ namespace VFXEditor.UI.VFX.Main {
             Categories.Add( new ExportDialogCategory<UIModel>( UINode._Models, "Models" ) );
         }
 
-        public void Show() { // show and reset
+        public void Show() {
             Visible = true;
         }
 

@@ -46,7 +46,8 @@ namespace VFXEditor.UI
             TextureUI = new TextureDialog( _plugin );
             VFXManip = new VFXManipulator( _plugin );
 
-            VFX.UINodeGraphView.InitTex( _plugin ); // load grid texture
+            // ======== LOAD STATIC TEXTURES ============
+            VFX.UINodeGraphView.InitTex( _plugin );
 #if DEBUG
             Visible = true;
 #endif
