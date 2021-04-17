@@ -1,20 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using SharpDX;
-using SharpDX.D3DCompiler;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using System.Reflection;
-using AVFXLib.Models;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VFXEditor.Data.DirectX {
@@ -27,6 +16,7 @@ namespace VFXEditor.Data.DirectX {
         public int Height = 300;
 
         public RasterizerState RState;
+        public Buffer RendersizeBuffer;
         public Buffer WorldBuffer;
         public Matrix ViewMatrix;
         public Matrix ProjMatrix;
@@ -44,7 +34,6 @@ namespace VFXEditor.Data.DirectX {
         private float Distance = 5;
 
         public bool IsWireframe = false;
-        public bool ShowEdges = true;
 
         public Matrix LocalMatrix = Matrix.Identity;
 
@@ -53,9 +42,11 @@ namespace VFXEditor.Data.DirectX {
             _Device = Manager._Device;
             _Ctx = Manager._Ctx;
 
-            // WORLD MATRIX BUFFER
+            //  ====== CONSTANT BUFFERS =======
             WorldBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
+
+            RendersizeBuffer = new Buffer( _Device, Utilities.SizeOf<Vector4>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             RefreshRasterizeState();
             ResizeResources();
@@ -69,7 +60,7 @@ namespace VFXEditor.Data.DirectX {
                 DepthBias = 0,
                 DepthBiasClamp = 0,
                 FillMode = IsWireframe ? FillMode.Wireframe : FillMode.Solid,
-                IsAntialiasedLineEnabled = true,
+                IsAntialiasedLineEnabled = false,
                 IsDepthClipEnabled = true,
                 IsFrontCounterClockwise = false,
                 IsMultisampleEnabled = true,
@@ -163,6 +154,9 @@ namespace VFXEditor.Data.DirectX {
             worldViewProj.Transpose();
             _Ctx.UpdateSubresource( ref worldViewProj, WorldBuffer );
 
+            var renderSize = new Vector4( Width, Height, 0, 0 );
+            _Ctx.UpdateSubresource( ref renderSize, RendersizeBuffer );
+
             _Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             _Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
             _Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
@@ -184,6 +178,7 @@ namespace VFXEditor.Data.DirectX {
             DepthTex?.Dispose();
             DepthView?.Dispose();
             WorldBuffer?.Dispose();
+            RendersizeBuffer?.Dispose();
 
             OnDispose();
         }

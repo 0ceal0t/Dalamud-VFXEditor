@@ -54,7 +54,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Preview on select hover
 - [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
-- [ ] Show emitter vertices
 - [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
@@ -77,6 +76,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Show emitter vertices~~
 - [x] ~~Export multiple + dependencies~~
 - [x] ~~Fix simple animation model indexes, make them dropdowns~~
 - [x] ~~Better model import/export options~~

@@ -27,8 +27,8 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
         public UVAnimation(UIParticleUVSet uvSet ) {
             UVSet = uvSet;
             Assigned = true;
-                        _UVPreview = DirectXManager.Manager._UVPreview;
-            SetFrame( 0 );
+            _UVPreview = DirectXManager.Manager._UVPreview;
+            SetFrame();
             timer = new Stopwatch();
             timer.Stop();
         }
@@ -45,6 +45,8 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
 
             if( SelectedModel != null && SelectedModel.IsDeleted ) SelectedModel = null;
             if( SelectedTexture != null && SelectedTexture.IsDeleted ) SelectedTexture = null;
+
+            ImGui.TextColored( new Vector4( 0.9f, 0.1f, 0.1f, 1.0f ), "This is just a preview, and does not change any data" );
 
             // ======== MODEL SELECT ========
             var modelText = SelectedModel == null ? "[NONE]" : SelectedModel.GetText();
@@ -80,27 +82,31 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
 
             if(ImGui.InputInt("Frame" + parentId, ref Frame ) ) {
                 if( Frame < 0 ) Frame = 0;
-                SetFrame( Frame );
+                SetFrame();
             }
 
-            if(ImGui.Button("Play" + parentId ) ) {
-                timer.Start();
+            if( timer.IsRunning ) {
+                if( ImGui.Button( "Stop" + parentId ) ) {
+                    timer.Stop();
+                }
             }
-            ImGui.SameLine();
-            if( ImGui.Button( "Stop" + parentId ) ) {
-                timer.Stop();
+            else {
+                if( ImGui.Button( "Play" + parentId ) ) {
+                    timer.Start();
+                }
             }
             ImGui.SameLine();
             if( ImGui.Button( "Reset" + parentId ) ) {
                 timer.Reset();
-                SetFrame( 0 );
+                Frame = 0;
+                SetFrame();
             }
 
             if( timer.IsRunning ) {
                 int _frame = ( int )( 15.0f * timer.ElapsedMilliseconds / 1000.0f );
                 if( _frame != Frame ) {
                     Frame = _frame;
-                    SetFrame( Frame );
+                    SetFrame();
                 }
             }
 
@@ -142,20 +148,20 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             if( SelectedModel != null && SelectedTexture != null ) {
                 _UVPreview.LoadModel( SelectedModel.Model );
                 _UVPreview.LoadTexture( _bitmap );
-                SetFrame( Frame );
+                SetFrame();
             }
             else {
                 _UVPreview.LoadModel( null );
             }
         }
 
-        public void SetFrame(int frame ) {
-            CurrentRotation = GetCurveValue( UVSet._Rotation, frame, 0 );
-            CurrentScale = Get2AxisValue( UVSet._Scale, frame, new Vector2( 1, 1 ) );
-            CurrentScroll = Get2AxisValue( UVSet._Scroll, frame, new Vector2( 0, 0 ) );
+        public void SetFrame( ) {
+            CurrentRotation = GetCurveValue( UVSet._Rotation, Frame, 0 );
+            CurrentScale = Get2AxisValue( UVSet._Scale, Frame, new Vector2( 1, 1 ) );
+            CurrentScroll = Get2AxisValue( UVSet._Scroll, Frame, new Vector2( 0, 0 ) );
 
             if(_UVPreview._CurrentUV == this ) {
-                _UVPreview.AnimData[0] = CurrentScale.X;
+                _UVPreview.AnimData[0] = CurrentScale.X; // kind of scuffed, but whatever
                 _UVPreview.AnimData[1] = CurrentScale.Y;
                 _UVPreview.AnimData[2] = CurrentScroll.X;
                 _UVPreview.AnimData[3] = CurrentScroll.Y;
@@ -180,15 +186,6 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
         }
         public static float GetCurveValue(UICurve curve, int frame, float defaultValue ) {
             return curve.Assigned && curve.Curve.Keys.Count > 0 ? curve.CurveEdit.GetAtTime( frame ) : defaultValue;
-        }
-        public static Vector2 MoveUV(Vector2 coord, Vector2 scale, Vector2 scroll, float rotate ) {
-            return RotateUV(new Vector2(0.5f) + (coord - scroll - new Vector2(0.5f, 0.5f)) / scale, -rotate );
-        }
-        public static Vector2 RotateUV(Vector2 coord, float rotation ) {
-            return new Vector2(
-                (float)(Math.Cos(rotation) * (coord.X - 0.5) + Math.Sin(rotation) * (coord.Y - 0.5) + 0.5),
-                (float)(Math.Cos(rotation) * (coord.Y - 0.5) - Math.Sin(rotation) * (coord.X - 0.5) + 0.5)
-            );
         }
 
         public override string GetText() {

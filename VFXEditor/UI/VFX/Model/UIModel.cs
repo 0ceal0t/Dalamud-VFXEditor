@@ -77,10 +77,9 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.RefreshRasterizeState();
             }
             ImGui.SameLine();
-            bool showEdges = Mdl3D.ShowEdges;
-            if( ImGui.Checkbox( "Show Edges##3DModel", ref showEdges ) ) {
-                Mdl3D.ShowEdges = showEdges;
-            }
+            ImGui.Checkbox( "Show Edges##3DModel", ref Mdl3D.ShowEdges );
+            ImGui.SameLine();
+            ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Mdl3D.ShowEmitter );
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
                 Mdl3D.LoadModel( Model, mode:1);
             }

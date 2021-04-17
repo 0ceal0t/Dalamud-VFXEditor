@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX
             UVSet = uvSet;
             Particle = particle;
             //=================
-            Attributes.Add( new UICombo<TextureCalculateUV>( "Rotation Direction Base", UVSet.CalculateUVType ) );
+            Attributes.Add( new UICombo<TextureCalculateUV>( "Calculate UV", UVSet.CalculateUVType ) );
 
             Curves.Add( _Scale = new UICurve2Axis( UVSet.Scale, "Scale" ) );
             Curves.Add( _Scroll = new UICurve2Axis( UVSet.Scroll, "Scroll" ) );
