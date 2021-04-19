@@ -110,13 +110,19 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
                 }
             }
 
+            var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "UVViewChild" );
+
             var space = ImGui.GetContentRegionAvail();
             _UVPreview.Resize( space );
+
             ImGui.ImageButton( _UVPreview.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
             if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                _UVPreview.Drag( delta );
+                _UVPreview.Drag( delta, true );
+            }
+            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
+                _UVPreview.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
                 _UVPreview.IsDragging = false;

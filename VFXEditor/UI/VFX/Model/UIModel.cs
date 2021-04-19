@@ -92,14 +92,20 @@ namespace VFXEditor.UI.VFX
                 Mdl3D.LoadModel( Model, mode: 3 );
             }
 
+            var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "3DViewChild" );
+
             var space = ImGui.GetContentRegionAvail();
             Mdl3D.Resize( space );
 
             ImGui.ImageButton( Mdl3D.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+
             if(ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                Mdl3D.Drag( delta );
+                Mdl3D.Drag( delta, true );
+            }
+            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
+                Mdl3D.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
                 Mdl3D.IsDragging = false;

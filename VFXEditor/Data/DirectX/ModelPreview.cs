@@ -35,10 +35,8 @@ namespace VFXEditor.Data.DirectX {
         int EDGE_NumVerts;
         Buffer EDGE_Vertices;
         CompilationResult EDGE_VertexShaderByteCode;
-        CompilationResult EDGE_GeoShaderByteCode;
         CompilationResult EDGE_PixelShaderByteCode;
         PixelShader EDGE_PShader;
-        GeometryShader EDGE_GShader;
         VertexShader EDGE_VShader;
         ShaderSignature EDGE_Signature;
         InputLayout EDGE_Layout;
@@ -77,10 +75,8 @@ namespace VFXEditor.Data.DirectX {
             EDGE_NumVerts = 0;
             EDGE_Vertices = null;
             EDGE_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
-            EDGE_GeoShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_GS.fx" ), "GS", "gs_4_0" );
             EDGE_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
             EDGE_VShader = new VertexShader( _Device, EDGE_VertexShaderByteCode );
-            EDGE_GShader = new GeometryShader( _Device, EDGE_GeoShaderByteCode );
             EDGE_PShader = new PixelShader( _Device, EDGE_PixelShaderByteCode );
             EDGE_Signature = ShaderSignature.GetInputSignature( EDGE_VertexShaderByteCode );
             EDGE_Layout = new InputLayout( _Device, EDGE_Signature, new[] {
@@ -246,7 +242,6 @@ namespace VFXEditor.Data.DirectX {
             // ====== DRAW LINE =========
             if( ShowEdges ) {
                 _Ctx.PixelShader.Set( EDGE_PShader );
-                _Ctx.GeometryShader.Set( EDGE_GShader );
                 _Ctx.VertexShader.Set( EDGE_VShader );
                 _Ctx.InputAssembler.InputLayout = EDGE_Layout;
                 _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
@@ -258,7 +253,6 @@ namespace VFXEditor.Data.DirectX {
                         _Ctx.Draw( 4, i * 4 );
                     }
                 }
-                _Ctx.GeometryShader.Set( null );
             }
 
             // ======= EMITTER ==========
@@ -290,10 +284,8 @@ namespace VFXEditor.Data.DirectX {
             EDGE_Layout?.Dispose();
             EDGE_Signature?.Dispose();
             EDGE_PShader?.Dispose();
-            EDGE_GShader?.Dispose();
             EDGE_VShader?.Dispose();
             EDGE_VertexShaderByteCode?.Dispose();
-            EDGE_GeoShaderByteCode?.Dispose();
             EDGE_PixelShaderByteCode?.Dispose();
 
             Vertices?.Dispose();

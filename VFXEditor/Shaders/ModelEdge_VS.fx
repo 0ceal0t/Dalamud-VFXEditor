@@ -4,19 +4,19 @@ struct VS_IN
     float4 col : COLOR;
 };
 
-struct GEO_IN
+struct PS_IN
 {
-    float4 Position : SV_POSITION;
+    float4 pos : SV_POSITION;
     float4 col : COLOR;
 };
 
 float4x4 worldViewProj;
 
-GEO_IN VS(VS_IN input)
+PS_IN VS(VS_IN input)
 {
-    GEO_IN output = (GEO_IN)0;
+    PS_IN output = (PS_IN)0;
 
-    output.Position = mul(input.pos, worldViewProj);
+    output.pos = mul(input.pos, worldViewProj);
     output.col = input.col;
 
     return output;

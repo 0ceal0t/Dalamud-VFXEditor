@@ -21,6 +21,9 @@ namespace VFXEditor.UI.VFX
         public UINodeSelect<UIEmitter> EmitterSelect;
         public UINodeSelect<UIEffector> EffectorSelect;
 
+        public UIInt StartTime;
+        public UIInt EndTime;
+
         public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline)
         {
             Item = item;
@@ -34,8 +37,8 @@ namespace VFXEditor.UI.VFX
             ClipAssigned = Item.ClipNumber.Assigned;
             //==================
             Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
-            Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );
-            Attributes.Add( new UIInt( "End Time", Item.EndTime ) );
+            Attributes.Add( StartTime = new UIInt( "Start Time", Item.StartTime ) );
+            Attributes.Add( EndTime = new UIInt( "End Time", Item.EndTime ) );
             Attributes.Add( new UIInt( "Platform", Item.Platform ) );
         }
 

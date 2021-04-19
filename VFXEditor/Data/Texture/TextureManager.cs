@@ -212,8 +212,7 @@ namespace VFXEditor.Data.Texture
             } );
         }
 
-        public bool CreateTexture(string path, out TexData ret, bool loadImage = true )
-        {
+        public bool CreateTexture(string path, out TexData ret, bool loadImage = true ) {
             var result = _plugin.PluginInterface.Data.FileExists( path );
             ret = new TexData();
             if( result ) {

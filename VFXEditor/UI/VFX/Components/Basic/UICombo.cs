@@ -34,7 +34,8 @@ namespace VFXEditor.UI.VFX
 
         public override void Draw(string id)
         {
-            if (ImGui.BeginCombo(Id + id, Literal.Options[ValueIdx] ))
+            var text = ValueIdx == -1 ? "[NONE]" : Literal.Options[ValueIdx];
+            if (ImGui.BeginCombo(Id + id, text ))
             {
                 for (int i = 0; i < Literal.Options.Length; i++)
                 {

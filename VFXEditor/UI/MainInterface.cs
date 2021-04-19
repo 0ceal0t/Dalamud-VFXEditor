@@ -46,8 +46,6 @@ namespace VFXEditor.UI
             TextureUI = new TextureDialog( _plugin );
             VFXManip = new VFXManipulator( _plugin );
 
-            // ======== LOAD STATIC TEXTURES ============
-            VFX.UINodeGraphView.InitTex( _plugin );
 #if DEBUG
             Visible = true;
 #endif

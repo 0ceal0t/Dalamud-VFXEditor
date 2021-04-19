@@ -1,4 +1,5 @@
 using System;
+using Dalamud.Plugin;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -125,11 +126,16 @@ namespace VFXEditor.Data.DirectX {
                     ? min
                     : value;
         }
-        public void Drag(Vec2 newPos ) {
+        public void Drag(Vec2 newPos, bool rotate ) {
             if( IsDragging ) {
-                Yaw += ( newPos.X - LastMousePos.X ) * 0.01f;
-                Pitch += -( newPos.Y - LastMousePos.Y ) * 0.01f;
-                Pitch = Clamp( Pitch, -1.55f, 1.55f );
+                if( rotate ) {
+                    Yaw += ( newPos.X - LastMousePos.X ) * 0.01f;
+                    Pitch += -( newPos.Y - LastMousePos.Y ) * 0.01f;
+                    Pitch = Clamp( Pitch, -1.55f, 1.55f );
+                }
+                else {
+                    Position.Y += ( newPos.Y - LastMousePos.Y ) * 0.01f;
+                }
                 UpdateViewMatrix();
             }
             IsDragging = true;

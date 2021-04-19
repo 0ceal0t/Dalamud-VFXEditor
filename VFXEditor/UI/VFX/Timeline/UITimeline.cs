@@ -17,7 +17,8 @@ namespace VFXEditor.UI.VFX
         public List<UITimelineClip> Clips;
         //=====================
         public UITimelineClipSplitView ClipSplit;
-        public UITimelineItemSplitView ItemSplit;
+        //public UITimelineItemSplitView ItemSplit;
+        public UITimelineItemSequencer ItemSplit;
 
         public UINodeSelect<UIBinder> BinderSelect;
 
@@ -41,7 +42,9 @@ namespace VFXEditor.UI.VFX
             }
             //==========================
             ClipSplit = new UITimelineClipSplitView( Clips, this );
-            ItemSplit = new UITimelineItemSplitView( Items, this );
+            //ItemSplit = new UITimelineItemSplitView( Items, this );
+            ItemSplit = new UITimelineItemSequencer( Items, this );
+
             HasDependencies = false; // if imported, all set now
         }
 

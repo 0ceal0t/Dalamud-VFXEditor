@@ -19,12 +19,9 @@ namespace VFXEditor.UI.VFX {
         static Vector2 TextOffset = new Vector2( 5, 2 );
         static Vector2 LineOffset = new Vector2( 0, 25 );
 
-        static ImGuiScene.TextureWrap GridPtr;
-
-        public static void InitTex(Plugin plugin) {
-            var gridPath = Path.Combine( Plugin.TemplateLocation, "Files", "grid.png" );
-            GridPtr = plugin.PluginInterface.UiBuilder.LoadImage( gridPath );
-        }
+        static uint GridColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
+        static int GridSmall = 10;
+        static int GridLarge = 50;
 
         bool ViewDrag = false;
         Vector2 LastDragPos;
@@ -61,7 +58,21 @@ namespace VFXEditor.UI.VFX {
             DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
 
             float ratio = Size.X / Size.Y;
-            DrawList.AddImage( GridPtr.ImGuiHandle, CanvasTopLeft, CanvasBottomRight, new Vector2( 0, 0 ), new Vector2( 5 * ratio, 5 ) );
+            DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BGColor );
+            // ========= GRID =========
+            for(int i = 0; i < Size.X / GridSmall; i++ ) {
+                DrawList.AddLine( new Vector2(CanvasTopLeft.X + i * GridSmall, CanvasTopLeft.Y), new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasBottomRight.Y ), GridColor, 1.0f );
+            }
+            for( int i = 0; i < Size.Y / GridSmall; i++ ) {
+                DrawList.AddLine( new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + i * GridSmall ), new Vector2( CanvasBottomRight.X, CanvasTopLeft.Y + i * GridSmall ), GridColor, 1.0f );
+            }
+            for( int i = 0; i < Size.X / GridLarge; i++ ) {
+                DrawList.AddLine( new Vector2( CanvasTopLeft.X + i * GridLarge, CanvasTopLeft.Y ), new Vector2( CanvasTopLeft.X + i * GridLarge, CanvasBottomRight.Y ), GridColor, 2.0f );
+            }
+            for( int i = 0; i < Size.Y / GridLarge; i++ ) {
+                DrawList.AddLine( new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + i * GridLarge ), new Vector2( CanvasBottomRight.X, CanvasTopLeft.Y + i * GridLarge ), GridColor, 2.0f );
+            }
+
             DrawList.AddRect( CanvasTopLeft, CanvasBottomRight, BGColor2 );
 
             foreach( var node in Node.Graph.Graph.Keys ) {
