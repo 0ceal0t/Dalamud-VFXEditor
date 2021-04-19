@@ -54,13 +54,13 @@ namespace VFXEditor.UI.Views {
         static uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.67f, 1 ) );
         static uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
         static uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.239f, 1 ) );
-        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
         static uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
         static uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
         static uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
         static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
         static uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
-        static uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.5f, 0.3f, 1 ) );
+        static uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
         static uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
         static uint TickColor = ImGui.GetColorU32( new Vector4( 0.376f, 0.376f, 0.376f, 1 ) );
 
@@ -81,6 +81,7 @@ namespace VFXEditor.UI.Views {
         DragState Content_Dragging = DragState.None;
         Vector2 Content_LastDrag;
 
+        bool DrawOnce = false;
         public override void Draw( string parentId ) {
             var Id = parentId + "-Sequence";
             // ====== FIX UP BOUNDS ==========
@@ -104,6 +105,11 @@ namespace VFXEditor.UI.Views {
             }
             if(MinVisible < Min ) {
                 MinVisible = Min;
+            }
+
+            if(!DrawOnce) {
+                DrawOnce = true;
+                MaxVisible = Max * 0.9f;
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -140,25 +146,25 @@ namespace VFXEditor.UI.Views {
 
             // ===== NEW / DELETE
             if( AllowNewDelete ) {
-                DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 5, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.PlusSquare}" );
+                DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 10, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.PlusSquare}" );
+                if( Selected != null ) {
+                    DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 40, 5 ), ContentColor_HandleColor, $"{( char )FontAwesomeIcon.Trash}" );
+                }
                 if(ImGui.IsItemClicked(ImGuiMouseButton.Left) ) {
                     var pos = ImGui.GetMousePos() - CanvasTopLeft;
-                    if(pos.X >= 5 && pos.X <= 20 && pos.Y >= 5 && pos.Y <= 20 ) { // gross, but regular buttons dont' work for some reason
+                    if(pos.X >= 10 && pos.X <= 25 && pos.Y >= 5 && pos.Y <= 20 ) { // gross, but regular buttons dont' work for some reason
                         var item = OnNew();
                         if( item != null ) {
                             item.Idx = Items.Count;
                             Items.Add( item );
                         }
                     }
-                    if( pos.X >= 35 && pos.X <= 50 && pos.Y >= 5 && pos.Y <= 20 ) {
+                    if( pos.X >= 40 && pos.X <= 55 && pos.Y >= 5 && pos.Y <= 20 ) {
                         Items.Remove( Selected );
                         OnDelete( Selected );
                         SetupIdx();
                         Selected = null;
                     }
-                }
-                if(Selected != null ) {
-                    DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 35, 5 ), ContentColor_HandleColor, $"{( char )FontAwesomeIcon.Trash}" );
                 }
             }
 
@@ -242,9 +248,7 @@ namespace VFXEditor.UI.Views {
                 }
 
                 if(_isInfinite) {
-                    ImGui.PushFont( Plugin.IconFont );
-                    DrawList.AddText( _position + new Vector2( _endOffset - 25, 2 ), LeftTextColor, $"{( char )FontAwesomeIcon.Infinity}" );
-                    ImGui.PopFont();
+                    DrawList.AddText( Plugin.IconFont, 12, _position + new Vector2( _endOffset - 25, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.Infinity}" );
                 }
 
             }
@@ -424,6 +428,7 @@ namespace VFXEditor.UI.Views {
 
             // ==== DRAW THE ITEM ======
             if(Selected != null) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 Selected.DrawBody( parentId );
             }
         }

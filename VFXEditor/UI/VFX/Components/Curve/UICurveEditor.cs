@@ -187,6 +187,17 @@ namespace VFXEditor.UI.VFX {
 
         public void UpdateColor() {
             if(Color && Curve.Keys.Count > 1 ) {
+                var sameTime = true;
+                foreach(var _key in Curve.Keys ) {
+                    if(_key.Time != Curve.Keys[0].Time ) {
+                        sameTime = false;
+                        break;
+                    }
+                }
+                if( sameTime ) {
+                    Curve.Keys[Curve.Keys.Count - 1].Time++;
+                    Points[Points.Count - 1].X++;
+                }
                 ColorGrad = GradientManager._Manager.AddGradient( Curve );
             }
         }

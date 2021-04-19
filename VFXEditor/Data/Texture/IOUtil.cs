@@ -8,6 +8,9 @@ using System.IO.Compression;
 
 namespace VFXEditor.Data.Texture {
     public class IOUtil {
+        // ======== MAKE ATEX HEADER ============
+        // when replacing an .atex, need to write this to file in order to load using Penumbra hook
+        // ATEX Header = 80 bytes
         public static List<byte> MakeTextureInfoHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
             short texFormatCode = 0;
@@ -67,6 +70,7 @@ namespace VFXEditor.Data.Texture {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/DDS.cs
+        // ========= USED FOR DDS EXPORT ==========
         public static byte[] CreateDDSHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
             uint dwPitchOrLinearSize, pfFlags, dwFourCC;
             var header = new List<byte>();
@@ -95,7 +99,6 @@ namespace VFXEditor.Data.Texture {
                 dwPitchOrLinearSize = dwHeight * dwWidth;
             }
             header.AddRange( BitConverter.GetBytes( dwPitchOrLinearSize ) );
-
 
             header.AddRange( BitConverter.GetBytes( ( uint )0 ) );
             header.AddRange( BitConverter.GetBytes( ( uint )mipLevels ) );

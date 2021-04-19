@@ -273,6 +273,8 @@ namespace VFXEditor.External {
             }
         }
 
+
+        // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/SqPack/FileTypes/Dat.cs#L1260
         public static byte[] MakeType4DatHeader( TextureFormat format, List<short> mipPartOffsets, List<short> mipPartCount, int uncompressedLength, int newMipCount, int newWidth, int newHeight ) {
             var headerData = new List<byte>();
             var headerSize = 24 + ( newMipCount * 20 ) + ( mipPartOffsets.Count * 2 );
