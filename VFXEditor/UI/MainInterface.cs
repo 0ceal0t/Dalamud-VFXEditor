@@ -13,6 +13,7 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI.Graphics;
+using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI
 {
@@ -21,7 +22,7 @@ namespace VFXEditor.UI
         private readonly Plugin _plugin;
         public bool Visible = false;
 
-        public VFX.UIMain VFXMain = null;
+        public UIMain VFXMain = null;
         public VFXSelectDialog SelectUI;
         public VFXSelectDialog PreviewUI;
         public TexToolsDialog TexToolsUI;
@@ -407,7 +408,6 @@ If you want to make the modification permanent, you will need to create a mod us
 
 If you are having issues loading a VFX, please open a Github issue. Make sure to specify either the in-game path of the VFX file or attach the file directly."
             );
-
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();
             ImGui.EndTabItem();

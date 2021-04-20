@@ -34,7 +34,6 @@ namespace VFXEditor.UI.VFX {
         public static UINodeGroup<UIEffector> _Effectors;
         public static uint EffectorColor = ImGui.GetColorU32( new Vector4( 0.26f, 0.24f, 0.82f, 1 ) );
 
-
         public static void SetupGroups() {
             _Binders = new UINodeGroup<UIBinder>();
             _Emitters = new UINodeGroup<UIEmitter>();
@@ -66,20 +65,20 @@ namespace VFXEditor.UI.VFX {
             _Effectors.PreImport();
         }
 
+
+        // ================
         public uint _Color;
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
         public bool HasDependencies;
-
+        public bool IsDeleted = false;
         public UINodeGraph Graph = null;
 
         public UINode(uint color, bool has_dependencies) {
             _Color = color;
             HasDependencies = has_dependencies;
         }
-
-        public bool IsDeleted = false;
         public void DeleteNode() {
             IsDeleted = true;
             foreach( var node in Children ) {

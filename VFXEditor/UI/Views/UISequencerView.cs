@@ -430,9 +430,12 @@ namespace VFXEditor.UI.Views {
             ImGui.SetCursorPos( cursor );
 
             // ==== DRAW THE ITEM ======
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if(Selected != null) {
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 Selected.DrawBody( parentId );
+            }
+            else {
+                ImGui.Text( "Select an item..." );
             }
         }
 

@@ -43,7 +43,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
-- [ ] Better Viewer for 3d model? (added lines, but is using ImGuizmo for scaling, etc. really necessary?)
 - [ ] Tables for documents, texture view?
 - [ ] Workspaces
 - [ ] Render distance settings for overlay
@@ -77,6 +76,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better readability (colored  text)
 
 ---
+- [x] ~~Timeline sequencer view~~
 - [x] ~~Show emitter vertices~~
 - [x] ~~Export multiple + dependencies~~
 - [x] ~~Fix simple animation model indexes, make them dropdowns~~

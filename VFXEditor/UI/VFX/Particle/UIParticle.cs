@@ -94,7 +94,7 @@ namespace VFXEditor.UI.VFX
             foreach( var uvSet in Particle.UVSets ) {
                 UVSets.Add( new UIParticleUVSet( uvSet, this ) );
             }
-            //===============================
+            //============================
             SetType();
             //============================
             Tex.Add( TC1 = new UITextureColor1( Particle.TC1, this ) );
