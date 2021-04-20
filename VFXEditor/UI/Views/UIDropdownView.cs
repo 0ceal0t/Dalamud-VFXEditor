@@ -103,8 +103,7 @@ namespace VFXEditor.UI.VFX
         public void ViewSelect() {
             var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
             if( ImGui.BeginCombo( "Select" + Id, selectedString ) ) {
-                for( int idx = 0; idx < Group.Items.Count; idx++ ) {
-                    var item = Group.Items[idx];
+                foreach(var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                         Selected = item;
                         OnSelect( item );

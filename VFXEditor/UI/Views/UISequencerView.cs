@@ -144,11 +144,11 @@ namespace VFXEditor.UI.Views {
             DrawList.AddRectFilled( LeftPosition, LeftPosition + LeftSize, LeftColor );
             DrawList.AddRectFilled( FooterPosition, FooterPosition + FooterSize, FooterColor );
 
-            // ===== NEW / DELETE
+            // ===== NEW / DELETE =======
             if( AllowNewDelete ) {
-                DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 10, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.PlusSquare}" );
+                DrawList.AddText( UiBuilder.IconFont, 15, CanvasTopLeft + new Vector2( 10, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.PlusSquare}" );
                 if( Selected != null ) {
-                    DrawList.AddText( Plugin.IconFont, 15, CanvasTopLeft + new Vector2( 40, 5 ), ContentColor_HandleColor, $"{( char )FontAwesomeIcon.Trash}" );
+                    DrawList.AddText( UiBuilder.IconFont, 15, CanvasTopLeft + new Vector2( 40, 5 ), ContentColor_HandleColor, $"{( char )FontAwesomeIcon.Trash}" );
                 }
                 if(ImGui.IsItemClicked(ImGuiMouseButton.Left) ) {
                     var pos = ImGui.GetMousePos() - CanvasTopLeft;
@@ -212,6 +212,10 @@ namespace VFXEditor.UI.Views {
             var content_hovering = Contained( ImGui.GetMousePos(), ContentPosition, ContentSize );
 
             DrawList.PushClipRect( ContentPosition, ContentPosition + ContentSize, true );
+            for(int idx = 0; idx < Math.Ceiling(Math.Max(Items.Count, ContentSize.Y / RowHeight)); idx++ ) {
+                var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
+                DrawList.AddRectFilled( _position, _position + new Vector2( ContentSize.X, RowHeight ), idx % 2 == 0 ? ContentColor_Even : ContentColor_Odd ); // STRIPE
+            }
             for( int idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 float _start = GetStart( item );
@@ -223,7 +227,6 @@ namespace VFXEditor.UI.Views {
                 float _startOffset = PixelsPerFrame * ( _start - MinVisible );
                 float _endOffset = PixelsPerFrame * ( _end - MinVisible );
                 var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
-                DrawList.AddRectFilled( _position, _position + new Vector2( ContentSize.X, RowHeight ), idx % 2 == 0 ? ContentColor_Even : ContentColor_Odd ); // STRIPE
                 DrawList.AddLine( _position, _position + new Vector2( ContentSize.X, 0 ), BlackLine_Color_Soft );
                 if( item == Selected ) {
                     DrawList.AddRectFilled( _position, _position + new Vector2( ContentSize.X, RowHeight ), BarColor_SelectedColor ); // selected bar
@@ -248,7 +251,7 @@ namespace VFXEditor.UI.Views {
                 }
 
                 if(_isInfinite) {
-                    DrawList.AddText( Plugin.IconFont, 12, _position + new Vector2( _endOffset - 25, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.Infinity}" );
+                    DrawList.AddText( UiBuilder.IconFont, 12, _position + new Vector2( _endOffset - 25, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.Infinity}" );
                 }
 
             }

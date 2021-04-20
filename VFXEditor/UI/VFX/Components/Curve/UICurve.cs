@@ -40,8 +40,7 @@ namespace VFXEditor.UI.VFX
         }
 
         // ======= DRAW ================
-        public override void Draw( string parentId )
-        {
+        public override void Draw( string parentId ) {
             if( !Assigned )
             {
                 DrawUnAssigned( parentId );
@@ -53,8 +52,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.TreePop();
             }
         }
-        public override void DrawUnAssigned( string parentId )
-        {
+        public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) )
             {
                 Curve.toDefault();
@@ -62,10 +60,7 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public bool IsDelete = false; // lmaooooo
-        public override void DrawBody( string parentId )
-        {
-            IsDelete = false;
+        public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
                 if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {

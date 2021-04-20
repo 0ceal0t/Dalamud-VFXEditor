@@ -17,7 +17,6 @@ using System.Reflection;
 namespace VFXEditor
 {
     public class Plugin : IDalamudPlugin {
-        public static Plugin _Plugin;
         public string Name => "VFXEditor";
         private const string CommandName = "/vfxedit";
 
@@ -34,7 +33,6 @@ namespace VFXEditor
         public MainInterface MainUI;
 
         public static string TemplateLocation;
-        public static ImFontPtr IconFont;
 
         public AVFXBase AVFX {
             get { return Doc.ActiveDoc.AVFX; }
@@ -59,7 +57,6 @@ namespace VFXEditor
         public IntPtr ImNodesContext;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
-            _Plugin = this;
             PluginInterface = pluginInterface;
             WriteLocation = Path.Combine( new[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -94,8 +91,6 @@ namespace VFXEditor
             TexToolsManager = new TexTools( this );
             PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
-
-            IconFont = Dalamud.Interface.UiBuilder.IconFont;
 
             PluginInterface.UiBuilder.OnBuildUi += DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;

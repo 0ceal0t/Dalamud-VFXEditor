@@ -1,4 +1,4 @@
-﻿using AVFXLib.AVFX;
+using AVFXLib.AVFX;
 using AVFXLib.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,12 +12,6 @@ namespace AVFXLib.Main
     public class Util
     {
         // BYTE STUFF
-        public static void PrintBytes(byte[] b)
-        {
-            string s = BitConverter.ToString(b);
-            Console.WriteLine(BitConverter.ToString(b).Replace("-", ""));
-        }
-
         public static byte[] rb(byte[] b)
         {
             return b.Reverse().ToArray();

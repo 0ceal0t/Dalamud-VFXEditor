@@ -45,7 +45,6 @@ namespace VFXEditor.UI.VFX {
             }
 
             // now the fun (tm) begins
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var space = ImGui.GetContentRegionAvail();
             Vector2 Size = new Vector2( space.X, 150 );
             var DrawList = ImGui.GetWindowDrawList();

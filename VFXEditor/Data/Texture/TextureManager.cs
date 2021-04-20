@@ -44,8 +44,8 @@ namespace VFXEditor.Data.Texture
         public int TEX_ID = 0;
         public GradientManager GradManager;
 
-        public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // for previewing textures
-        public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>();
+        public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
+        public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
 
         public TextureManager(Plugin plugin ) {
             _plugin = plugin;
@@ -83,8 +83,7 @@ namespace VFXEditor.Data.Texture
                 var path = Path.Combine( WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 bool isDDS = Path.GetExtension( fileLocation ).ToLower() == ".dds";
-                if( isDDS ) {
-                    // get format from file
+                if( isDDS ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( fileLocation );
                     var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
                     if( format == TextureFormat.Null )
@@ -94,10 +93,8 @@ namespace VFXEditor.Data.Texture
                     }
                     ddsFile.Dispose();
                 }
-                else {
-                    // get format from internal file
+                else { //a .png file, convert it to the format currently being used by the existing game file
                     var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( replacePath );
-
                     using( var surface = Surface.LoadFromFile( fileLocation ) ) {
                         surface.FlipVertically();
 
@@ -161,6 +158,7 @@ namespace VFXEditor.Data.Texture
             }
         }
 
+        // ===== WRITES IMPORTED IMAGE TO LOCAL .ATEX FILE ========
         public static TexReplace CreateAtex(TextureFormat format, DDSContainer dds, BinaryWriter bw, bool convertToA8 = false ) {
             using( MemoryStream ms = new MemoryStream() ) {
                 dds.Write( ms );

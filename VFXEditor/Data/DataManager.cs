@@ -450,49 +450,46 @@ namespace VFXEditor.Data
         public AVFXNode LastImportNode = null;
         public bool GetLocalFile(string path, out AVFXBase avfx) {
             avfx = null;
-            try {
-                AVFXNode node = AVFXLib.Main.Reader.readAVFX( path, out List<string> messages );
-                foreach( string message in messages ) {
-                    PluginLog.Log( message );
+            if( File.Exists( path ) ) {
+                using( BinaryReader br = new BinaryReader( File.Open( path, FileMode.Open ) ) ) {
+                    return ReadGameFile( br, out avfx );
                 }
-                if( node == null )
-                    return false;
-                LastImportNode = node;
-                AVFXBase _avfx = new AVFXBase();
-                _avfx.read( node );
-                avfx = _avfx;
             }
-            catch(Exception e ) {
-                PluginLog.LogError( e.ToString() );
-                return false;
-            }
-            return true;
+            return false;
         }
-
         // ===== GAME AVFX ======
         public bool GetGameFile(string path, out AVFXBase avfx) {
             avfx = null;
             bool result = _plugin.PluginInterface.Data.FileExists( path );
             if( result )  {
-                try {
-                    var file = _plugin.PluginInterface.Data.GetFile( path );
-                    AVFXNode node = AVFXLib.Main.Reader.readAVFX( file.Data, out List<string> messages );
-                    foreach(string message in messages ) {
-                        PluginLog.Log( message );
-                    }
-                    if( node == null )
-                        return false;
-                    LastImportNode = node;
-                    AVFXBase _avfx = new AVFXBase();
-                    _avfx.read( node );
-                    avfx = _avfx;
-                }
-                catch(Exception e) {
-                    PluginLog.LogError( e.ToString() );
-                    result = false;
+                var file = _plugin.PluginInterface.Data.GetFile( path );
+                using(MemoryStream ms = new MemoryStream(file.Data))
+                using( BinaryReader br = new BinaryReader( ms ) ) {
+                    return ReadGameFile( br, out avfx );
                 }
             }
-            return result;
+            return false;
+        }
+        
+        public bool ReadGameFile(BinaryReader br, out AVFXBase avfx ) {
+            avfx = null;
+            try {
+                AVFXNode node = AVFXLib.Main.Reader.readAVFX( br, out List<string> messages );
+                foreach( string message in messages ) {
+                    PluginLog.Log( message );
+                }
+                if( node == null ) {
+                    return false;
+                }
+                LastImportNode = node;
+                avfx = new AVFXBase();
+                avfx.read( node );
+                return true;
+            }
+            catch(Exception e ) {
+                PluginLog.LogError( "Error Reading File", e );
+                return false;
+            }
         }
     }
 }

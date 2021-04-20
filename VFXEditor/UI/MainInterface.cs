@@ -86,7 +86,13 @@ namespace VFXEditor.UI
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( VFXMain == null ) {
-                ImGui.Text( "Select a source file to begin..." );
+                ImGui.Text( @"To begin, select a VFX to use in 'Data Source', and a VFX which will be replaced in 'Preview On,' then click 'UPDATE'" );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                ImGui.Text( @"For a basic usage guide, see here:" );
+                ImGui.SameLine();
+                if( ImGui.SmallButton( "Guide##Intro" ) ) {
+                    Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
+                }
             }
             else {
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
@@ -118,7 +124,6 @@ namespace VFXEditor.UI
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        var node = _plugin.AVFX.toAVFX();
                         SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
@@ -232,7 +237,7 @@ namespace VFXEditor.UI
             ImGui.NextColumn();
             ImGui.SetColumnWidth( 3, 200 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.20f, 0.20f, 0.20f, 1.0f ) );
-            if(ImGui.Button( "Manage" ) ) {
+            if(ImGui.Button( "Docs", new Vector2( 52, 23 ) ) ) {
                 DocUI.Show();
             }
             ImGui.PopStyleColor();

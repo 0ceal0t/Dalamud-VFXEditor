@@ -68,57 +68,52 @@ namespace VFXEditor.External {
                 byte[] newData;
                 int ModOffset = 0;
 
-                using( MemoryStream ms = new MemoryStream() ) {
-                    using( BinaryWriter writer = new BinaryWriter( ms ) ) {
-                        void AddMod(AVFXBase avfx, string _path) {
-                            if( !string.IsNullOrEmpty( _path ) && avfx != null ) {
-                                var modData = SquishAVFX( avfx );
+                using( MemoryStream ms = new MemoryStream() )
+                using( BinaryWriter writer = new BinaryWriter( ms ) ) {
+                    void AddMod(AVFXBase avfx, string _path) {
+                        if( !string.IsNullOrEmpty( _path ) && avfx != null ) {
+                            var modData = SquishAVFX( avfx );
+                            simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
+                            writer.Write( modData );
+                            ModOffset += modData.Length;
+                        }
+                    }
+
+                    void AddTex(TexReplace tex, string _path ) {
+                        if(!string.IsNullOrEmpty(_path) && !string.IsNullOrEmpty( tex.localPath ) ) {
+                            using( var file = File.Open( tex.localPath, FileMode.Open ) )
+                            using( BinaryReader texReader = new BinaryReader( file ) )
+                            using( MemoryStream texMs = new MemoryStream() )
+                            using( BinaryWriter texWriter = new BinaryWriter( texMs ) )  {
+                                long uncompressedLength = file.Length - 80; // .ATEX header is 80 bytes long
+                                var DDSInfo = GetDDSInfo( texReader, tex.Format, tex.Width, tex.Height, tex.MipLevels );
+                                texWriter.Write( MakeType4DatHeader( tex.Format, DDSInfo.mipPartOffsets, DDSInfo.mipPartCounts, ( int )uncompressedLength, tex.MipLevels, tex.Width, tex.Height ) );
+                                texReader.BaseStream.Seek( 0, SeekOrigin.Begin ); // already have the header, no need to do that again
+                                texWriter.Write( texReader.ReadBytes( 80 ) );
+                                texWriter.Write( DDSInfo.compressedDDS.ToArray() );
+                                var modData = texMs.ToArray();
                                 simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
                                 writer.Write( modData );
                                 ModOffset += modData.Length;
                             }
                         }
-
-                        void AddTex(TexReplace tex, string _path ) {
-                            if(!string.IsNullOrEmpty(_path) && !string.IsNullOrEmpty( tex.localPath ) ) {
-                                var file = File.Open( tex.localPath, FileMode.Open );
-                                long uncompressedLength = file.Length - 80; // .ATEX header is 80 bytes long
-                                using( MemoryStream texMs = new MemoryStream()) {
-                                    using(BinaryWriter texWriter = new BinaryWriter( texMs ) ) {
-                                        using( BinaryReader texReader = new BinaryReader( file ) ) {
-                                            var DDSInfo = GetDDSInfo( texReader, tex.Format, tex.Width, tex.Height, tex.MipLevels );
-                                            texWriter.Write( MakeType4DatHeader( tex.Format, DDSInfo.mipPartOffsets, DDSInfo.mipPartCounts, ( int )uncompressedLength, tex.MipLevels, tex.Width, tex.Height ) );
-                                            texReader.BaseStream.Seek( 0, SeekOrigin.Begin ); // already have the header, no need to do that again
-                                            texWriter.Write( texReader.ReadBytes( 80 ) );
-                                            texWriter.Write( DDSInfo.compressedDDS.ToArray() );
-                                            var modData = texMs.ToArray();
-                                            simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
-                                            writer.Write( modData );
-                                            ModOffset += modData.Length;
-                                        }
-                                    }
-                                }
-                                file.Close();
-                            }
-                        }
-
-                        if( exportAll ) {
-                            foreach(var doc in _plugin.Doc.Docs ) {
-                                AddMod( doc.AVFX, doc.Replace.Path );
-                            }
-                        }
-                        else {
-                            AddMod( _plugin.AVFX, _plugin.Doc.ActiveDoc.Replace.Path);
-                        }
-
-                        if( exportTex ) {
-                            foreach( KeyValuePair<string, TexReplace> entry in _plugin.Manager.TexManager.GamePathReplace ) {
-                                AddTex( entry.Value, entry.Key );
-                            }
-                        }
-
-                        newData = ms.ToArray();
                     }
+
+                    if( exportAll ) {
+                        foreach(var doc in _plugin.Doc.Docs ) {
+                            AddMod( doc.AVFX, doc.Replace.Path );
+                        }
+                    }
+                    else {
+                        AddMod( _plugin.AVFX, _plugin.Doc.ActiveDoc.Replace.Path);
+                    }
+
+                    if( exportTex ) {
+                        foreach( KeyValuePair<string, TexReplace> entry in _plugin.Manager.TexManager.GamePathReplace ) {
+                            AddTex( entry.Value, entry.Key );
+                        }
+                    }
+                    newData = ms.ToArray();
                 }
 
                 TTMPL mod = new TTMPL();
@@ -262,12 +257,11 @@ namespace VFXEditor.External {
         public static byte[] Compressor( byte[] uncompressedBytes ) {
             using( var uMemoryStream = new MemoryStream( uncompressedBytes ) ) {
                 byte[] compbytes = null;
-                using( var cMemoryStream = new MemoryStream() ) {
-                    using( var deflateStream = new DeflateStream( cMemoryStream, CompressionMode.Compress ) ) {
-                        uMemoryStream.CopyTo( deflateStream );
-                        deflateStream.Close();
-                        compbytes = cMemoryStream.ToArray();
-                    }
+                using( var cMemoryStream = new MemoryStream() )
+                using( var deflateStream = new DeflateStream( cMemoryStream, CompressionMode.Compress ) ) {
+                    uMemoryStream.CopyTo( deflateStream );
+                    deflateStream.Close();
+                    compbytes = cMemoryStream.ToArray();
                 }
                 return compbytes;
             }
@@ -281,7 +275,7 @@ namespace VFXEditor.External {
             var headerPadding = 128 - ( headerSize % 128 );
             headerData.AddRange( BitConverter.GetBytes( headerSize + headerPadding ) );
             headerData.AddRange( BitConverter.GetBytes( 4 ) );
-            headerData.AddRange( BitConverter.GetBytes( uncompressedLength ) );
+            headerData.AddRange( BitConverter.GetBytes( uncompressedLength + 80 ) ); // cuz reasons, I guess?
             headerData.AddRange( BitConverter.GetBytes( 0 ) );
             headerData.AddRange( BitConverter.GetBytes( 0 ) );
             headerData.AddRange( BitConverter.GetBytes( newMipCount ) );
@@ -308,9 +302,7 @@ namespace VFXEditor.External {
                     paddedSize = paddedSize + mipPartOffsets[j + partIndex];
                 }
                 headerData.AddRange( BitConverter.GetBytes( paddedSize ) );
-                headerData.AddRange( uncompMipSize > 16
-                    ? BitConverter.GetBytes( uncompMipSize )
-                    : BitConverter.GetBytes( 16 ) );
+                headerData.AddRange( uncompMipSize > 16 ? BitConverter.GetBytes( uncompMipSize ) : BitConverter.GetBytes( 16 ) );
                 uncompMipSize = uncompMipSize / 4;
                 headerData.AddRange( BitConverter.GetBytes( partIndex ) );
                 headerData.AddRange( BitConverter.GetBytes( ( int )mipPartCount[i] ) );
@@ -344,7 +336,6 @@ namespace VFXEditor.External {
             }
 
             br.BaseStream.Seek( 80, SeekOrigin.Begin ); // skip the ATEX header
-
             for( var i = 0; i < newMipCount; i++ ) {
                 var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
                 mipPartCount.Add( ( short )mipParts );
