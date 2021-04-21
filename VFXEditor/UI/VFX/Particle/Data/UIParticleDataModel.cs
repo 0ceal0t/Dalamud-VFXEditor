@@ -42,7 +42,7 @@ namespace VFXEditor.UI.VFX
             DrawList( Attributes, id );
         }
 
-        public override void Cleanup() {
+        public override void Dispose() {
             ModelSelect.DeleteSelect();
         }
     }

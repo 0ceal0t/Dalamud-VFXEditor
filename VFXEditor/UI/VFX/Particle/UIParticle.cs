@@ -112,7 +112,7 @@ namespace VFXEditor.UI.VFX
             HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
-            Data?.Cleanup();
+            Data?.Dispose();
 
             switch( Particle.ParticleVariety.Value ) {
                 case ParticleType.Model:

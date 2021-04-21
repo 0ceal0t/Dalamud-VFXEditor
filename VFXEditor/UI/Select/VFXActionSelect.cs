@@ -10,17 +10,27 @@ using ImGuiNET;
 namespace VFXEditor.UI
 {
     public class VFXActionSelect : VFXSelectTab<XivActionBase, XivActionSelected> {
-        public VFXActionSelect( string parentId, string tabId, List<XivActionBase> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXActionSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog, bool nonPlayer = false ) :
+            base( parentId, tabId, !nonPlayer ? plugin.Manager._Actions : plugin.Manager._NonPlayerActions, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivActionBase item, string searchInput ) {
             return VFXSelectDialog.Matches( item.Name, searchInput );
         }
 
+        ImGuiScene.TextureWrap Icon;
+        public override void OnSelect() {
+            LoadIcon( Selected.Icon, ref Icon );
+        }
+
         public override void DrawSelected( XivActionSelected loadedItem ) {
             if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Action.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            if( Icon != null ) {
+                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
+            }
 
             ImGui.Text( "Cast VFX Path: " );
             ImGui.SameLine();
@@ -50,28 +60,6 @@ namespace VFXEditor.UI
                     vfxIdx++;
                 }
             }
-        }
-
-        public override void Load() {
-            if(Name == "Action" ) {
-                _plugin.Manager.LoadActions();
-            }
-            else {
-                _plugin.Manager.LoadNonPlayerActions();
-            }
-        }
-
-        public override bool ReadyCheck() {
-            if( Name == "Action" ) {
-                return _plugin.Manager.ActionsLoaded;
-            }
-            else {
-                return _plugin.Manager.NonPlayerActionsLoaded;
-            }
-        }
-
-        public override bool SelectItem( XivActionBase item, out XivActionSelected loadedItem ) {
-            return _plugin.Manager.SelectAction( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivActionBase item ) {

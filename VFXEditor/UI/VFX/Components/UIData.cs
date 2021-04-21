@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UIData : UIBase {
-        public virtual void Cleanup() { }
+        public virtual void Dispose() { }
     }
 }

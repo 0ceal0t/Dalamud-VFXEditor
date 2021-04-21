@@ -11,7 +11,13 @@ using ImGuiNET;
 namespace VFXEditor.UI
 {
     public class VFXItemSelect : VFXSelectTab<XivItem, XivItemSelected> {
-        public VFXItemSelect( string parentId, string tabId, List<XivItem> data, Plugin plugin, VFXSelectDialog dialog ) : base(parentId, tabId, data, plugin, dialog) {
+        public VFXItemSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base(parentId, tabId, plugin.Manager._Items, plugin, dialog) {
+        }
+
+        ImGuiScene.TextureWrap Icon;
+        public override void OnSelect() {
+            LoadIcon( Selected.Icon, ref Icon );
         }
 
         public override bool CheckMatch( XivItem item, string searchInput ) {
@@ -22,6 +28,11 @@ namespace VFXEditor.UI
             if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Item.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            if( Icon != null ) {
+                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
+            }
+
             ImGui.Text( "Variant: " + loadedItem.Item.Variant );
             ImGui.Text( "IMC Count: " + loadedItem.Count );
             ImGui.Text( "VFX Id: " + loadedItem.VfxId );
@@ -40,18 +51,6 @@ namespace VFXEditor.UI
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.GetVFXPath(), id: ( Id + "Copy" ) );
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadItems();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.ItemsLoaded;
-        }
-
-        public override bool SelectItem( XivItem item, out XivItemSelected loadedItem ) {
-            return _plugin.Manager.SelectItem( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivItem item ) {

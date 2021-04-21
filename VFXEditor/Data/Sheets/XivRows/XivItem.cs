@@ -44,11 +44,13 @@ namespace VFXEditor
         public string imcPath;
 
         public int RowId;
+        public ushort Icon;
 
         public XivItem( Lumina.Excel.GeneratedSheets.Item item )
         {
             Name = item.Name.ToString();
             RowId = (int)item.RowId;
+            Icon = item.Icon;
 
             Ids = new XivItemIds( item.ModelMain );
             SecondaryIds = new XivItemIds( item.ModelSub );

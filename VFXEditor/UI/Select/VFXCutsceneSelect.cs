@@ -10,7 +10,8 @@ using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class VFXCutsceneSelect : VFXSelectTab<XivCutscene, XivCutsceneSelected> {
-        public VFXCutsceneSelect( string parentId, string tabId, List<XivCutscene> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXCutsceneSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base( parentId, tabId, plugin.Manager._Cutscenes, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivCutscene item, string searchInput ) {
@@ -37,18 +38,6 @@ namespace VFXEditor.UI {
                 _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadCutscenes();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.CutsceneLoaded;
-        }
-
-        public override bool SelectItem( XivCutscene item, out XivCutsceneSelected loadedItem ) {
-            return _plugin.Manager.SelectCutscene( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivCutscene item ) {

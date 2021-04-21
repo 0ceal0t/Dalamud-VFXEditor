@@ -13,6 +13,7 @@ namespace VFXEditor
         {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
+            Icon = action.Icon;
 
             SelfVFXKey = action.AnimationEnd?.Value?.Key.ToString();
             SelfVFXExists = !string.IsNullOrEmpty( SelfVFXKey );
@@ -30,6 +31,7 @@ namespace VFXEditor
                 if( HitVFXExists )
                 {
                     var sAction = new Lumina.Excel.GeneratedSheets.Action();
+                    sAction.Icon = action.Icon;
                     sAction.Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) );
                     sAction.IsPlayerAction = action.IsPlayerAction;
                     sAction.RowId = action.RowId;

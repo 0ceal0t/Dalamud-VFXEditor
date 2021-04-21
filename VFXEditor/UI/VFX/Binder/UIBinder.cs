@@ -52,7 +52,7 @@ namespace VFXEditor.UI.VFX
             HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
-            Data?.Cleanup();
+            Data?.Dispose();
 
             switch( Binder.BinderVariety.Value ) {
                 case BinderType.Point:

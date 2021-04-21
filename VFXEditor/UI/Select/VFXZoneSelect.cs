@@ -10,7 +10,8 @@ using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class VFXZoneSelect : VFXSelectTab<XivZone, XivZoneSelected> {
-        public VFXZoneSelect( string parentId, string tabId, List<XivZone> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXZoneSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base( parentId, tabId, plugin.Manager._Zones, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivZone item, string searchInput ) {
@@ -37,18 +38,6 @@ namespace VFXEditor.UI {
                 _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadZones();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.ZonesLoaded;
-        }
-
-        public override bool SelectItem( XivZone item, out XivZoneSelected loadedItem ) {
-            return _plugin.Manager.SelectZone( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivZone item ) {

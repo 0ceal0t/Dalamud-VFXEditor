@@ -31,6 +31,7 @@ namespace VFXEditor {
         public bool VerifyOnLoad = true;
         public bool LogAllFiles = false;
         public bool HideWithUI = true;
+        public int SaveRecentLimit = 10;
 
         public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
@@ -47,11 +48,12 @@ namespace VFXEditor {
         }
 
         public void AddRecent(VFXSelectResult result ) {
-            if( !RecentSelects.Contains( result ) ) {
-                RecentSelects.Add( result );
+            if( RecentSelects.Contains( result ) ) {
+                RecentSelects.Remove( result ); // want to move it to the top
             }
-            if(RecentSelects.Count > 10 ) {
-                RecentSelects.RemoveRange( 0, RecentSelects.Count - 10 );
+            RecentSelects.Add( result );
+            if(RecentSelects.Count > SaveRecentLimit ) {
+                RecentSelects.RemoveRange( 0, RecentSelects.Count - SaveRecentLimit );
             }
             Save();
         }

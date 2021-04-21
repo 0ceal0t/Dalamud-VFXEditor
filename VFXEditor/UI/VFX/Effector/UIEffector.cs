@@ -34,7 +34,7 @@ namespace VFXEditor.UI.VFX
         }
         
         public void SetType() {
-            Data?.Cleanup();
+            Data?.Dispose();
 
             switch( Effector.EffectorVariety.Value ) {
                 case EffectorType.PointLight:

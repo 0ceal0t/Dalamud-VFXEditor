@@ -26,7 +26,7 @@ namespace VFXEditor.UI.VFX
             ModelSelect.Draw( id );
         }
 
-        public override void Cleanup() {
+        public override void Dispose() {
             ModelSelect.DeleteSelect();
         }
     }

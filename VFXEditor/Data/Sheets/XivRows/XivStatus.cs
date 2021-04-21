@@ -16,6 +16,7 @@ namespace VFXEditor
 
         public string Name;
         public int RowId;
+        public ushort Icon;
 
         public string LoopVFXPath1;
         public string LoopVFXPath2;
@@ -27,6 +28,7 @@ namespace VFXEditor
         {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
+            Icon = status.Icon;
 
             //HitVFXPath = status.HitEffect.Value?.Location.Value?.Location;
 

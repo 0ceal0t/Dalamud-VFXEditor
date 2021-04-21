@@ -9,7 +9,8 @@ using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class VFXGimmickSelect : VFXSelectTab<XivGimmick, XivGimmickSelected> {
-        public VFXGimmickSelect( string parentId, string tabId, List<XivGimmick> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXGimmickSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base( parentId, tabId, plugin.Manager._Gimmicks, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivGimmick item, string searchInput ) {
@@ -38,18 +39,6 @@ namespace VFXEditor.UI {
                     vfxIdx++;
                 }
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadGimmicks();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.GimmickLoaded;
-        }
-
-        public override bool SelectItem( XivGimmick item, out XivGimmickSelected loadedItem ) {
-            return _plugin.Manager.SelectGimmick( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivGimmick item ) {

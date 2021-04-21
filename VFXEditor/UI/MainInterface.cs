@@ -87,13 +87,7 @@ namespace VFXEditor.UI
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( VFXMain == null ) {
-                ImGui.Text( @"To begin, select a VFX to use in 'Data Source', and a VFX which will be replaced in 'Preview On,' then click 'UPDATE'" );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                ImGui.Text( @"For a basic usage guide, see here:" );
-                ImGui.SameLine();
-                if( ImGui.SmallButton( "Guide##Intro" ) ) {
-                    Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
-                }
+                ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
@@ -361,6 +355,7 @@ namespace VFXEditor.UI
             var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
             if( !ret ) return;
             bool verifyOnLoad = Configuration.Config.VerifyOnLoad;
+            ImGui.SetNextItemWidth( 200 );
             if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
             {
                 Configuration.Config.VerifyOnLoad = verifyOnLoad;
@@ -380,6 +375,12 @@ namespace VFXEditor.UI
             bool hideWithUI = Configuration.Config.HideWithUI;
             if( ImGui.Checkbox( "Hide with UI##Settings", ref hideWithUI ) ) {
                 Configuration.Config.HideWithUI = hideWithUI;
+            }
+            ImGui.SameLine();
+            int recentLimit = Configuration.Config.SaveRecentLimit;
+            ImGui.SetNextItemWidth( 135 );
+            if( ImGui.InputInt( "Recent VFX Limit##Settings", ref recentLimit) ) {
+                Configuration.Config.SaveRecentLimit = Math.Max( recentLimit, 0 );
             }
 
             if( ImGui.Button( "Save##Settings" ) )

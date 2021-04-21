@@ -11,6 +11,7 @@ namespace VFXEditor
     {
         public string Name;
         public int RowId;
+        public ushort Icon;
 
         public bool CastVFXExists = false;
         public bool SelfVFXExists = false;

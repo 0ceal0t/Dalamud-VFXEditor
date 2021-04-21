@@ -10,17 +10,27 @@ using ImGuiNET;
 namespace VFXEditor.UI
 {
     public class VFXStatusSelect : VFXSelectTab<XivStatus, XivStatus> {
-        public VFXStatusSelect( string parentId, string tabId, List<XivStatus> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXStatusSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base( parentId, tabId, plugin.Manager._Statuses, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivStatus item, string searchInput ) {
             return VFXSelectDialog.Matches( item.Name, searchInput );
         }
 
+        ImGuiScene.TextureWrap Icon;
+        public override void OnSelect() {
+            LoadIcon( Selected.Icon, ref Icon );
+        }
+
         public override void DrawSelected( XivStatus loadedItem ) {
             if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            if(Icon != null ) {
+                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
+            }
 
             // ==== LOOP 1 =====
             ImGui.Text( "Loop VFX1: " );
@@ -55,19 +65,6 @@ namespace VFXEditor.UI
                 ImGui.SameLine();
                 _dialog.Copy( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Copy" );
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadStatus();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.StatusLoaded;
-        }
-
-        public override bool SelectItem( XivStatus item, out XivStatus loadedItem ) {
-            loadedItem = item;
-            return true;
         }
 
         public override string UniqueRowTitle( XivStatus item ) {

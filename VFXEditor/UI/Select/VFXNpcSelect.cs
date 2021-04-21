@@ -10,7 +10,8 @@ using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class VFXNpcSelect : VFXSelectTab<XivNpc, XivNpcSelected> {
-        public VFXNpcSelect( string parentId, string tabId, List<XivNpc> data, Plugin plugin, VFXSelectDialog dialog ) : base( parentId, tabId, data, plugin, dialog ) {
+        public VFXNpcSelect( string parentId, string tabId, Plugin plugin, VFXSelectDialog dialog ) : 
+            base( parentId, tabId, plugin.Manager._Npcs, plugin, dialog ) {
         }
 
         public override bool CheckMatch( XivNpc item, string searchInput ) {
@@ -49,18 +50,6 @@ namespace VFXEditor.UI {
                 _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
-        }
-
-        public override void Load() {
-            _plugin.Manager.LoadNpc();
-        }
-
-        public override bool ReadyCheck() {
-            return _plugin.Manager.NpcLoaded;
-        }
-
-        public override bool SelectItem( XivNpc item, out XivNpcSelected loadedItem ) {
-            return _plugin.Manager.SelectNpc( item, out loadedItem );
         }
 
         public override string UniqueRowTitle( XivNpc item ) {

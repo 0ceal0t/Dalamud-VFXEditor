@@ -64,15 +64,15 @@ namespace VFXEditor.UI
             Id = id;
 
             GameTabs = new List<VFXSelectTab>(new VFXSelectTab[]{
-                new VFXItemSelect( id, "Item", _plugin.Manager.Items, _plugin, this ),
-                new VFXStatusSelect( id, "Status", _plugin.Manager.Status, _plugin, this ),
-                new VFXActionSelect( id, "Action", _plugin.Manager.Actions, _plugin, this ),
-                new VFXActionSelect( id, "Non-Player Action", _plugin.Manager.NonPlayerActions, _plugin, this ),
-                new VFXZoneSelect( id, "Zone", _plugin.Manager.Zones, _plugin, this ),
-                new VFXNpcSelect( id, "Npc", _plugin.Manager.Npcs, _plugin, this ),
-                new VFXEmoteSelect( id, "Emote", _plugin.Manager.Emotes, _plugin, this ),
-                new VFXGimmickSelect( id, "Gimmick", _plugin.Manager.Gimmicks, _plugin, this ),
-                new VFXCutsceneSelect( id, "Cutscene", _plugin.Manager.Cutscenes, _plugin, this )
+                new VFXItemSelect( id, "Item", _plugin, this ),
+                new VFXStatusSelect( id, "Status", _plugin, this ),
+                new VFXActionSelect( id, "Action", _plugin, this ),
+                new VFXActionSelect( id, "Non-Player Action", _plugin, this, nonPlayer:true ),
+                new VFXZoneSelect( id, "Zone", _plugin, this ),
+                new VFXNpcSelect( id, "Npc", _plugin, this ),
+                new VFXEmoteSelect( id, "Emote", _plugin, this ),
+                new VFXGimmickSelect( id, "Gimmick", _plugin, this ),
+                new VFXCutsceneSelect( id, "Cutscene", _plugin, this )
             } );
         }
 
@@ -154,7 +154,7 @@ namespace VFXEditor.UI
         // ============= GAME =================
         public void DrawGame()
         {
-            var ret = ImGui.BeginTabItem( "Game##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Game File##Select/" + Id );
             if( !ret )
                 return;
             // ==========================

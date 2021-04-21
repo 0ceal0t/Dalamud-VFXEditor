@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Dalamud.Plugin;
 using ImGuiNET;
+using VFXEditor.Data.Sheets;
 
 namespace VFXEditor.UI {
     public abstract class VFXSelectTab {
@@ -16,20 +17,20 @@ namespace VFXEditor.UI {
     public abstract class VFXSelectTab<T, S> : VFXSelectTab {
         public Plugin _plugin;
         public VFXSelectDialog _dialog;
-        public List<T> Data;
+        public SheetLoader<T, S> Loader;
         public string Id;
 
         public string Name;
         public string ParentId;
 
         public string SearchInput = "";
-        public T SelectedZone = default(T);
-        public S LoadedZone = default(S);
+        public T Selected = default(T);
+        public S Loaded = default(S);
 
-        public VFXSelectTab( string parentId, string tabId, List<T> data, Plugin plugin, VFXSelectDialog dialog ) {
+        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, Plugin plugin, VFXSelectDialog dialog ) {
             _plugin = plugin;
             _dialog = dialog;
-            Data = data;
+            Loader = loader;
             Name = tabId;
             ParentId = parentId;
             Id = "##Select/" + tabId + "/" + parentId;
@@ -38,46 +39,44 @@ namespace VFXEditor.UI {
 
         public abstract bool CheckMatch( T item, string searchInput);
         public abstract string UniqueRowTitle( T item );
-        public abstract bool SelectItem( T item, out S loadedItem );
         public abstract void DrawSelected( S loadedItem );
-        public abstract void Load();
-        public abstract bool ReadyCheck();
-
         public virtual void DrawExtra() { }
+        public virtual void OnSelect() { }
 
-        public List<T> SearchedZones;
+        public List<T> Searched;
         public override void Draw() {
             var ret = ImGui.BeginTabItem( Name + "##Select/" + ParentId );
             if( !ret )
                 return;
-            Load();
-            if( !ReadyCheck() ) {
+            Loader.Load();
+            if( !Loader.Loaded ) {
                 ImGui.EndTabItem();
                 return;
             }
             //
-            if( SearchedZones == null ) { SearchedZones = new List<T>(); SearchedZones.AddRange( Data ); }
+            if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Loader.Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             bool ResetScroll = false;
             DrawExtra();
             if( ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) ) {
-                SearchedZones = Data.Where( x => CheckMatch(x, SearchInput )).ToList();
+                Searched = Loader.Items.Where( x => CheckMatch(x, SearchInput )).ToList();
                 ResetScroll = true;
             }
             ImGui.Columns( 2, Id + "Columns", true );
             ImGui.BeginChild( Id + "Tree" );
-            VFXSelectDialog.DisplayVisible( SearchedZones.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            VFXSelectDialog.DisplayVisible( Searched.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
             if( ResetScroll ) { ImGui.SetScrollHereY(); };
             int idx = 0;
-            foreach( var item in SearchedZones ) {
+            foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
-                if( ImGui.Selectable( UniqueRowTitle(item), EqualityComparer<T>.Default.Equals(SelectedZone, item) ) ) {
-                    if( !EqualityComparer<T>.Default.Equals( SelectedZone, item ) ) {
+                if( ImGui.Selectable( UniqueRowTitle(item), EqualityComparer<T>.Default.Equals( Selected, item) ) ) {
+                    if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
                         Task.Run( async () => {
-                            bool result = SelectItem( item, out LoadedZone );
+                            bool result = Loader.SelectItem( item, out Loaded );
                         });
-                        SelectedZone = item;
+                        Selected = item;
+                        OnSelect();
                     }
                 }
                 idx++;
@@ -86,14 +85,14 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
             ImGui.NextColumn();
             // ========================
-            if( SelectedZone == null ) {
+            if( Selected == null ) {
                 ImGui.Text( "Select an item..." );
             }
             else {
-                if( LoadedZone != null ) {
+                if( Loaded != null ) {
                     ImGui.BeginChild( Id + "Selected" );
 
-                    DrawSelected( LoadedZone );
+                    DrawSelected( Loaded );
 
                     ImGui.EndChild();
                 }
@@ -104,6 +103,15 @@ namespace VFXEditor.UI {
             ImGui.Columns( 1 );
             //
             ImGui.EndTabItem();
+        }
+
+        public void LoadIcon( ushort iconId, ref ImGuiScene.TextureWrap texWrap ) {
+            texWrap?.Dispose();
+            texWrap = null;
+            if( iconId > 0 ) {
+                var tex = _plugin.PluginInterface.Data.GetIcon( iconId );
+                texWrap = _plugin.PluginInterface.UiBuilder.LoadImageRaw( Data.Texture.VFXTexture.BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4 );
+            }
         }
     }
 }
