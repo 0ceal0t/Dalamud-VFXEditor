@@ -68,51 +68,56 @@ namespace VFXEditor.Data.DirectX {
             if( numPoints < 2 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
-                return;
+            }
+            else {
+                // each set of 2 keys needs 6 points
+                Vector4[] data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
+                float startTime = curve.Keys[0].Time;
+                float endTime = curve.Keys[numPoints - 1].Time;
+                float timeDiff = ( endTime - startTime );
+
+                for( int i = 0; i < numPoints - 1; i++ ) {
+                    var left = curve.Keys[i];
+                    var right = curve.Keys[i + 1];
+
+                    float leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
+                    float rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
+                    Vector4 leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
+                    Vector4 rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
+
+                    Vector4 topLeft = new Vector4( leftPosition, 1, 0, 1 );
+                    Vector4 topRight = new Vector4( rightPosition, 1, 0, 1 );
+                    Vector4 bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
+                    Vector4 bottomRight = new Vector4( rightPosition, -1, 0, 1 );
+
+                    var idx = i * 6 * MODEL_SPAN;
+                    data[idx + 0] = topLeft;
+                    data[idx + 1] = leftColor;
+
+                    data[idx + 2] = topRight;
+                    data[idx + 3] = rightColor;
+
+                    data[idx + 4] = bottomRight;
+                    data[idx + 5] = rightColor;
+
+                    data[idx + 6] = topLeft;
+                    data[idx + 7] = leftColor;
+
+                    data[idx + 8] = bottomRight;
+                    data[idx + 9] = rightColor;
+
+                    data[idx + 10] = bottomLeft;
+                    data[idx + 11] = leftColor;
+                }
+                Vertices?.Dispose();
+                Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
+                NumVerts = ( numPoints - 1 ) * 6;
             }
 
-            // each set of 2 keys needs 6 points
-            Vector4[] data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
-            float startTime = curve.Keys[0].Time;
-            float endTime = curve.Keys[numPoints - 1].Time;
-            float timeDiff = ( endTime - startTime );
-
-            for(int i = 0; i < numPoints - 1; i++ ) {
-                var left = curve.Keys[i];
-                var right = curve.Keys[i + 1];
-
-                float leftPosition = (( left.Time - startTime ) / timeDiff) * 2 - 1;
-                float rightPosition = (( right.Time - startTime ) / timeDiff) * 2 - 1;
-                Vector4 leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
-                Vector4 rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
-
-                Vector4 topLeft = new Vector4( leftPosition, 1, 0, 1 );
-                Vector4 topRight = new Vector4( rightPosition, 1, 0, 1 );
-                Vector4 bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
-                Vector4 bottomRight = new Vector4( rightPosition, -1, 0, 1 );
-
-                var idx = i * 6 * MODEL_SPAN;
-                data[idx + 0] = topLeft;
-                data[idx + 1] = leftColor;
-
-                data[idx + 2] = topRight;
-                data[idx + 3] = rightColor;
-
-                data[idx + 4] = bottomRight;
-                data[idx + 5] = rightColor;
-
-                data[idx + 6] = topLeft;
-                data[idx + 7] = leftColor;
-
-                data[idx + 8] = bottomRight;
-                data[idx + 9] = rightColor;
-
-                data[idx + 10] = bottomLeft;
-                data[idx + 11] = leftColor;
+            if( !FirstCurve ) {
+                FirstCurve = true;
             }
-            Vertices?.Dispose();
-            Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
-            NumVerts = ( numPoints - 1 ) * 6;
+            Draw();
         }
 
         public void RefreshRasterizeState() {
@@ -131,6 +136,7 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
+        public bool FirstCurve = false;
         public void Resize( Vec2 size ) {
             var w_ = ( int )size.X;
             var h_ = ( int )size.Y;
@@ -138,6 +144,9 @@ namespace VFXEditor.Data.DirectX {
                 Width = w_;
                 Height = h_;
                 ResizeResources();
+                if( FirstCurve ) {
+                    Draw();
+                }
             }
         }
 
@@ -178,6 +187,8 @@ namespace VFXEditor.Data.DirectX {
         }
 
         public void Draw() {
+            Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+
             _Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             _Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
             _Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
@@ -195,6 +206,8 @@ namespace VFXEditor.Data.DirectX {
             }
 
             _Ctx.Flush();
+
+            Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public void Dispose() {

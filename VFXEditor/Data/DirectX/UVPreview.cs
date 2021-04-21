@@ -72,22 +72,25 @@ namespace VFXEditor.Data.DirectX {
             if( _Indexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
-                return;
             }
-            Vector4[] data = new Vector4[_Indexes.Count * 3 * MODEL_SPAN]; // 3 vertices per face
-            for( int index = 0; index < _Indexes.Count; index++ ) { // each face
-                int[] _indexes = new int[] { _Indexes[index].I1, _Indexes[index].I2, _Indexes[index].I3 };
-                for( int j = 0; j < _indexes.Length; j++ ) { // push all 3 vertices per face
-                    var idx = GetIdx( index, j, MODEL_SPAN, 3 );
-                    var v = _Vertices[_indexes[j]];
-                    data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
-                    data[idx + 1] = (new Vector4( v.UV1[0], v.UV1[1], v.UV2[2], v.UV2[3] ) + 0.5f);
-                    data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
+            else {
+                Vector4[] data = new Vector4[_Indexes.Count * 3 * MODEL_SPAN]; // 3 vertices per face
+                for( int index = 0; index < _Indexes.Count; index++ ) { // each face
+                    int[] _indexes = new int[] { _Indexes[index].I1, _Indexes[index].I2, _Indexes[index].I3 };
+                    for( int j = 0; j < _indexes.Length; j++ ) { // push all 3 vertices per face
+                        var idx = GetIdx( index, j, MODEL_SPAN, 3 );
+                        var v = _Vertices[_indexes[j]];
+                        data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
+                        data[idx + 1] = ( new Vector4( v.UV1[0], v.UV1[1], v.UV2[2], v.UV2[3] ) + 0.5f );
+                        data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
+                    }
                 }
+                Vertices?.Dispose();
+                Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
+                NumVerts = _Indexes.Count * 3;
             }
-            Vertices?.Dispose();
-            Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
-            NumVerts = _Indexes.Count * 3;
+
+            UpdateDraw();
         }
         public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
             return span * ( faceIdx * pointsPer + pointIdx );
@@ -113,6 +116,10 @@ namespace VFXEditor.Data.DirectX {
             bitmap.UnlockBits( data );
 
             ShaderTexture = new ShaderResourceView( _Device, Texture );
+
+            if( FirstModel ) {
+                Draw();
+            }
         }
 
 

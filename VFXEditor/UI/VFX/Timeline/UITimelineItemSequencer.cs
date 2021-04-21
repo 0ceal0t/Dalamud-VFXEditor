@@ -23,7 +23,9 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UITimelineItem OnNew() {
-            return new UITimelineItem( Timeline.Timeline.addItem(), Timeline );
+            var newItem = Timeline.Timeline.addItem();
+            newItem.EndTime.GiveValue( (int) Max );
+            return new UITimelineItem( newItem, Timeline );
         }
 
         public override void OnDelete( UITimelineItem item ) {

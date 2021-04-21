@@ -36,15 +36,11 @@ namespace VFXEditor.Data.DirectX {
             _Gradient = new Gradient( this );
         }
 
-        public void Draw() {
-            if( !_plugin.MainUI.Visible ) return;
-            var oldState = _Ctx.Rasterizer.State;
-            var oldRenderViews = _Ctx.OutputMerger.GetRenderTargets( OutputMergerStage.SimultaneousRenderTargetCount, out var oldDepthStencilView );
-
-            _ModelPreview.Draw();
-            _UVPreview.Draw();
-            _Gradient.Draw();
-
+        public void BeforeDraw(out RasterizerState oldState, out RenderTargetView[] oldRenderViews, out DepthStencilView oldDepthStencilView ) {
+            oldState = _Ctx.Rasterizer.State;
+            oldRenderViews = _Ctx.OutputMerger.GetRenderTargets( OutputMergerStage.SimultaneousRenderTargetCount, out oldDepthStencilView );
+        }
+        public void AfterDraw( RasterizerState oldState, RenderTargetView[] oldRenderViews, DepthStencilView oldDepthStencilView ) {
             _Ctx.Rasterizer.State = oldState;
             _Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
         }

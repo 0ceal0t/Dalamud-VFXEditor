@@ -35,7 +35,6 @@ namespace VFXEditor.Data.DirectX {
         private float Distance = 5;
 
         public bool IsWireframe = false;
-
         public Matrix LocalMatrix = Matrix.Identity;
 
         public Model3D(DirectXManager manager) {
@@ -70,6 +69,7 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
+        public bool FirstModel = false;
         public void Resize( Vec2 size ) {
             var w_ = ( int )size.X;
             var h_ = ( int )size.Y;
@@ -77,6 +77,9 @@ namespace VFXEditor.Data.DirectX {
                 Width = w_;
                 Height = h_;
                 ResizeResources();
+                if( FirstModel ) {
+                    Draw();
+                }
             }
         }
 
@@ -120,11 +123,7 @@ namespace VFXEditor.Data.DirectX {
         }
 
         private float Clamp( float value, float min, float max ) {
-            return value > max
-                ? max
-                : value < min
-                    ? min
-                    : value;
+            return value > max ? max : value < min ? min : value;
         }
         public void Drag(Vec2 newPos, bool rotate ) {
             if( IsDragging ) {
@@ -151,10 +150,23 @@ namespace VFXEditor.Data.DirectX {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             Vector3 lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
             ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
+            Draw();
+        }
+
+        public void UpdateDraw() {
+            if( !FirstModel ) {
+                FirstModel = true;
+                UpdateViewMatrix();
+            }
+            else {
+                Draw();
+            }
         }
 
         public abstract void OnDraw();
         public void Draw() {
+            Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
             worldViewProj.Transpose();
@@ -173,6 +185,8 @@ namespace VFXEditor.Data.DirectX {
             OnDraw();
 
             _Ctx.Flush();
+
+            Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public abstract void OnDispose();

@@ -172,6 +172,8 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
                 _UVPreview.AnimData[2] = CurrentScroll.X;
                 _UVPreview.AnimData[3] = CurrentScroll.Y;
                 _UVPreview.AnimData[4] = CurrentRotation;
+
+                _UVPreview.Draw();
             }
         }
 

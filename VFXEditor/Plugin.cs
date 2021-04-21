@@ -92,7 +92,6 @@ namespace VFXEditor
             PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
 
-            PluginInterface.UiBuilder.OnBuildUi += DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi += Tracker.Draw;
         }
@@ -164,7 +163,6 @@ namespace VFXEditor
             MainUI.UnloadAVFX();
         }
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= DXManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Tracker.Draw;
 

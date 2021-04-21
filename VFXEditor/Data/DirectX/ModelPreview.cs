@@ -222,6 +222,8 @@ namespace VFXEditor.Data.DirectX {
                 EMIT_Instances = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
                 EMIT_NumInstances = _Emitters.Count;
             }
+
+            UpdateDraw();
         }
         public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
             return span * ( faceIdx * pointsPer + pointIdx );
