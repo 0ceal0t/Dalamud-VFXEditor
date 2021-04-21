@@ -42,14 +42,12 @@ namespace VFXEditor.Data.Texture
         public Plugin _plugin;
         public string WriteLocation;
         public int TEX_ID = 0;
-        public GradientManager GradManager;
 
         public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
         public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
 
         public TextureManager(Plugin plugin ) {
             _plugin = plugin;
-            GradManager = new GradientManager( plugin, this );
             WriteLocation = Path.Combine( plugin.WriteLocation, "documents/textures" );
             Directory.CreateDirectory( WriteLocation );
         }
@@ -152,7 +150,6 @@ namespace VFXEditor.Data.Texture
         }
 
         public void Dispose() {
-            GradManager.Dispose();
             foreach(KeyValuePair<string, TexReplace> entry in GamePathReplace) {
                 File.Delete( entry.Value.localPath );
             }

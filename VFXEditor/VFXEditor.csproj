@@ -132,6 +132,9 @@
       <None Update="Shaders\ModelEdge_VS.fx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Shaders\Gradient.fx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Shaders\ModelPreview.fx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

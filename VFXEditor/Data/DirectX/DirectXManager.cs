@@ -21,6 +21,7 @@ namespace VFXEditor.Data.DirectX {
 
         public ModelPreview _ModelPreview;
         public UVPreview _UVPreview;
+        public Gradient _Gradient;
 
         // https://github.com/ackwell/BrowserHost/blob/32104cedd10715ca44710be1e57a36b6aa8c43c3/BrowserHost.Plugin/DxHandler.cs
         public DirectXManager(Plugin plugin) {
@@ -32,6 +33,7 @@ namespace VFXEditor.Data.DirectX {
             _Ctx = _Device.ImmediateContext;
             _ModelPreview = new ModelPreview( this );
             _UVPreview = new UVPreview( this );
+            _Gradient = new Gradient( this );
         }
 
         public void Draw() {
@@ -41,6 +43,7 @@ namespace VFXEditor.Data.DirectX {
 
             _ModelPreview.Draw();
             _UVPreview.Draw();
+            _Gradient.Draw();
 
             _Ctx.Rasterizer.State = oldState;
             _Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
@@ -85,6 +88,7 @@ namespace VFXEditor.Data.DirectX {
 
             _ModelPreview.Dispose();
             _UVPreview.Dispose();
+            _Gradient.Dispose();
 
             _Device = null;
             _Ctx = null;
