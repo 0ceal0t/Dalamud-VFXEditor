@@ -19,6 +19,8 @@ namespace VFXEditor.UI.VFX {
             Parameters.Add( new UICombo<GenerateMethod>( "Generate Method", Data.GenerateMethodType ) );
             Parameters.Add( new UIInt( "Divide X", Data.DivideX ) );
             Parameters.Add( new UIInt( "Divide Y", Data.DivideY ) );
+            Tabs.Add( new UICurve( Data.AX, "Angle X" ) );
+            Tabs.Add( new UICurve( Data.AY, "Angle Y" ) );
             Tabs.Add( new UICurve( Data.Radius, "Radius" ) );
             Tabs.Add( new UICurve( Data.InjectionSpeed, "Injection Speed" ) );
             Tabs.Add( new UICurve( Data.InjectionSpeedRandom, "Injection Speed Random" ) );

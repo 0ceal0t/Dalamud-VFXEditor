@@ -12,6 +12,8 @@ namespace AVFXLib.Models {
         public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>( "GeMT" );
         public LiteralInt DivideX = new LiteralInt( "DivX" );
         public LiteralInt DivideY = new LiteralInt( "DivY" );
+        public AVFXCurve AX = new AVFXCurve( "AnX" );
+        public AVFXCurve AY = new AVFXCurve( "AnY" );
         public AVFXCurve Radius = new AVFXCurve( "Rad" );
         public AVFXCurve InjectionSpeed = new AVFXCurve( "IjS" );
         public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
@@ -25,6 +27,8 @@ namespace AVFXLib.Models {
                 GenerateMethodType,
                 DivideX,
                 DivideY,
+                AX,
+                AY,
                 Radius,
                 InjectionSpeed,
                 InjectionSpeedRandom,

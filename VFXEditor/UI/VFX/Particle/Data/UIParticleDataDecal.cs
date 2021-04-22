@@ -10,18 +10,14 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataDecal : UIData {
         public AVFXParticleDataDecal Data;
+        public UIParameters Parameters;
 
         public UIParticleDataDecal(AVFXParticleDataDecal data)
         {
             Data = data;
             //=======================
-            Attributes.Add(new UIFloat("Scaling Scale", Data.ScalingScale));
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Parameters.Add(new UIFloat("Scaling Scale", Data.ScalingScale));
         }
     }
 }

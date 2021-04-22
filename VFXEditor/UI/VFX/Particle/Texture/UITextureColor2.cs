@@ -14,6 +14,8 @@ namespace VFXEditor.UI.VFX
         public string Name;
         //============================
         public UINodeSelect<UITexture> TextureSelect;
+        public List<UIItem> Tabs;
+        public UIParameters Parameters;
 
         public UITextureColor2(AVFXTextureColor2 tex, string name, UIParticle particle )
         {
@@ -27,18 +29,20 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+            Tabs = new List<UIItem>();
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
-            Attributes.Add(new UICheckbox("Color To Alpha", Tex.ColorToAlpha));
-            Attributes.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
-            Attributes.Add(new UICheckbox("Previous Frame Copy", Tex.PreviousFrameCopy));
-            Attributes.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
-            Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
-            Attributes.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
-            Attributes.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
-            Attributes.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
-            Attributes.Add(new UICombo<TextureCalculateAlpha>("Calculate Alpha", Tex.TextureCalculateAlpha));
+            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx ));
+            Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
+            Parameters.Add(new UICheckbox("Color To Alpha", Tex.ColorToAlpha));
+            Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
+            Parameters.Add(new UICheckbox("Previous Frame Copy", Tex.PreviousFrameCopy));
+            Parameters.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
+            Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
+            Parameters.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
+            Parameters.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
+            Parameters.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
+            Parameters.Add(new UICombo<TextureCalculateAlpha>("Calculate Alpha", Tex.TextureCalculateAlpha));
         }
 
         // =========== DRAW =====================
@@ -60,8 +64,8 @@ namespace VFXEditor.UI.VFX
                 Init();
                 return;
             }
-            TextureSelect.Draw( id );
-            DrawAttrs( id );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText( ) {

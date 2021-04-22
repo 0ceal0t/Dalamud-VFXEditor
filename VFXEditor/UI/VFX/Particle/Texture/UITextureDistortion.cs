@@ -14,6 +14,8 @@ namespace VFXEditor.UI.VFX
         public string Name;
         //============================
         public UINodeSelect<UITexture> TextureSelect;
+        public List<UIItem> Tabs;
+        public UIParameters Parameters;
 
         public UITextureDistortion(AVFXTextureDistortion tex, UIParticle particle )
         {
@@ -26,18 +28,21 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+            Tabs = new List<UIItem>();
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
-            Attributes.Add(new UICheckbox("Distort UV1", Tex.TargetUV1));
-            Attributes.Add(new UICheckbox("Distort UV2", Tex.TargetUV2));
-            Attributes.Add(new UICheckbox("Distort UV3", Tex.TargetUV3));
-            Attributes.Add(new UICheckbox("Distort UV4", Tex.TargetUV4));
-            Attributes.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
-            Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
-            Attributes.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
-            Attributes.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
-            Attributes.Add(new UICurve(Tex.DPow, "Power"));
+            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx ));
+            Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
+            Parameters.Add(new UICheckbox("Distort UV1", Tex.TargetUV1));
+            Parameters.Add(new UICheckbox("Distort UV2", Tex.TargetUV2));
+            Parameters.Add(new UICheckbox("Distort UV3", Tex.TargetUV3));
+            Parameters.Add(new UICheckbox("Distort UV4", Tex.TargetUV4));
+            Parameters.Add(new UIInt("UV Set Index", Tex.UvSetIdx));
+            Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
+            Parameters.Add(new UICombo<TextureBorderType>("Texture Border U", Tex.TextureBorderU));
+            Parameters.Add(new UICombo<TextureBorderType>("Texture Border V", Tex.TextureBorderV));
+
+            Tabs.Add(new UICurve(Tex.DPow, "Power"));
         }
 
         // =========== DRAW =====================
@@ -59,8 +64,8 @@ namespace VFXEditor.UI.VFX
                 Init();
                 return;
             }
-            TextureSelect.Draw( id );
-            DrawAttrs( id );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText( ) {

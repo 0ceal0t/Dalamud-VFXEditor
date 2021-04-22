@@ -14,6 +14,8 @@ namespace VFXEditor.UI.VFX
         public string Name;
         //============================
         public UINodeSelect<UITexture> TextureSelect;
+        public List<UIItem> Tabs;
+        public UIParameters Parameters;
 
         public UITexturePalette(AVFXTexturePalette tex, UIParticle particle )
         {
@@ -26,11 +28,15 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+            Tabs = new List<UIItem>();
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
-            Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
-            Attributes.Add(new UICombo<TextureBorderType>("Texture Border", Tex.TextureBorder));
+            Parameters.Add(TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx ));
+            Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
+            Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
+            Parameters.Add(new UICombo<TextureBorderType>("Texture Border", Tex.TextureBorder));
+
+            Tabs.Add( new UICurve( Tex.Offset, "Offset" ) );
         }
 
         // =========== DRAW =====================
@@ -52,8 +58,8 @@ namespace VFXEditor.UI.VFX
                 Init();
                 return;
             }
-            TextureSelect.Draw( id );
-            DrawAttrs( id );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText() {

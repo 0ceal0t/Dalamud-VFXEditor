@@ -14,6 +14,7 @@ namespace AVFXLib.Models
         public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
         public LiteralEnum<TextureBorderType> TextureBorder = new LiteralEnum<TextureBorderType>("TBT");
         public LiteralInt TextureIdx = new LiteralInt("TxNo");
+        public AVFXCurve Offset = new AVFXCurve( "POff" );
 
         List<Base> Attributes;
 
@@ -23,7 +24,8 @@ namespace AVFXLib.Models
                 Enabled,
                 TextureFilter,
                 TextureBorder,
-                TextureIdx
+                TextureIdx,
+                Offset
             });
         }
 

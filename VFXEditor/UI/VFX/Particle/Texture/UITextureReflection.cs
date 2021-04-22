@@ -13,6 +13,8 @@ namespace VFXEditor.UI.VFX
         public UIParticle Particle;
         //============================
         public UINodeSelect<UITexture> TextureSelect;
+        public List<UIItem> Tabs;
+        public UIParameters Parameters;
 
         public UITextureReflection(AVFXTextureReflection tex, UIParticle particle) {
             Tex = tex;
@@ -24,14 +26,17 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+            Tabs = new List<UIItem>();
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Attributes.Add(new UICheckbox("Enabled", Tex.Enabled));
-            Attributes.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
-            Attributes.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
-            Attributes.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
-            Attributes.Add( new UICurve( Tex.Rate, "Rate" ) );
-            Attributes.Add(new UICurve(Tex.RPow, "Power"));
+            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx );
+            Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
+            Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
+            Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
+            Parameters.Add(new UICombo<TextureCalculateColor>("Calculate Color", Tex.TextureCalculateColor));
+
+            Tabs.Add( new UICurve( Tex.Rate, "Rate" ) );
+            Tabs.Add(new UICurve(Tex.RPow, "Power"));
         }
 
         // =========== DRAW =====================
@@ -53,8 +58,8 @@ namespace VFXEditor.UI.VFX
                 Init();
                 return;
             }
-            TextureSelect.Draw( id );
-            DrawAttrs( id );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText() {
