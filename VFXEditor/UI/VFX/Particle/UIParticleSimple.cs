@@ -11,12 +11,15 @@ namespace VFXEditor.UI.VFX {
     public class UIParticleSimple : UIItem {
         public AVFXParticleSimple Simple;
         public UIParticle Particle;
-        //=============
-        public Vector4[] Colors;
-        public int[] Frames;
 
         public UINodeSelect<UIModel> InjectionModelSelect;
         public UINodeSelect<UIModel> InjectionVertexModelSelect;
+
+        public List<UIItem> Tabs;
+        public UIParameters Creation;
+        public UIParameters Animation;
+        public UIParameters Texture;
+        public UIParameters Color;
 
         public UIParticleSimple(AVFXParticleSimple simple, UIParticle particle) {
             Simple = simple;
@@ -27,73 +30,63 @@ namespace VFXEditor.UI.VFX {
             base.Init();
             if (!Simple.Assigned) { Assigned = false; return; }
             //=======================
-            InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx );
-            InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx );
-            Attributes.Add(new UIInt("Injection Position Type", Simple.InjectionPositionType));
-            Attributes.Add(new UIInt("Injection Direction Type", Simple.InjectionDirectionType));
-            Attributes.Add(new UIInt("Base Direction Type", Simple.BaseDirectionType));
-            Attributes.Add(new UIInt("Create Count", Simple.CreateCount));
-            Attributes.Add(new UIFloat3("Create Area", Simple.CreateAreaX, Simple.CreateAreaY, Simple.CreateAreaZ));
-            Attributes.Add(new UIFloat3("Coord Accuracy", Simple.CoordAccuracyX, Simple.CoordAccuracyY, Simple.CoordAccuracyZ));
-            Attributes.Add(new UIFloat3("Coord Gra", Simple.CoordGraX, Simple.CoordGraY, Simple.CoordGraZ));
-            Attributes.Add(new UIFloat2("Scale Start", Simple.ScaleXStart, Simple.ScaleYStart));
-            Attributes.Add(new UIFloat2("Scale End", Simple.ScaleXEnd, Simple.ScaleYEnd));
-            Attributes.Add(new UIFloat("Scale Curve", Simple.ScaleCurve));
-            Attributes.Add(new UIFloat2("Scale X Random", Simple.ScaleRandX0, Simple.ScaleRandX1));
-            Attributes.Add(new UIFloat2("Scale Y Random", Simple.ScaleRandY0, Simple.ScaleRandY1));
-            Attributes.Add(new UIFloat3("Rotation Add", Simple.RotXAdd, Simple.RotYAdd, Simple.RotZAdd));
-            Attributes.Add(new UIFloat3("Rotation Base", Simple.RotXBase, Simple.RotYBase, Simple.RotZBase));
-            Attributes.Add(new UIFloat3("Rotation Velocity", Simple.RotXVel, Simple.RotYVel, Simple.RotZVel));
-            Attributes.Add(new UIFloat("Minimum Velocity", Simple.VelMin));
-            Attributes.Add(new UIFloat("Maximum Velocity", Simple.VelMax));
-            Attributes.Add(new UIFloat("Velocity Flattery Rate", Simple.VelFlatteryRate));
-            Attributes.Add(new UIFloat("Velocity Flattery Speed", Simple.VelFlatterySpeed));
-            Attributes.Add(new UIInt("UV Cell U", Simple.UvCellU));
-            Attributes.Add(new UIInt("UV Cell V", Simple.UvCellV));
-            Attributes.Add(new UIInt("UV Interval", Simple.UvInterval));
-            Attributes.Add(new UIInt("UV Number Random", Simple.UvNoRandom));
-            Attributes.Add(new UIInt("UV Number Loop Count", Simple.UvNoLoopCount));
-            Attributes.Add(new UIFloat("Injection Radial Direction 0", Simple.InjectionRadialDir0));
-            Attributes.Add(new UIFloat( "Injection Radial Direction 1", Simple.InjectionRadialDir1));
-            Attributes.Add(new UIFloat("Pivot X", Simple.PivotX));
-            Attributes.Add(new UIFloat("Pivot Y", Simple.PivotY));
-            Attributes.Add(new UIInt("Block Number", Simple.BlockNum));
-            Attributes.Add(new UIFloat("Line Length Minimum", Simple.LineLengthMin));
-            Attributes.Add(new UIFloat("Line Length Maximum", Simple.LineLengthMax));
-            Attributes.Add(new UIInt("Create Interval", Simple.CreateIntervalVal));
-            Attributes.Add(new UIInt("Create Interval Random", Simple.CreateIntervalRandom));
-            Attributes.Add(new UIInt("Create Interval Count", Simple.CreateIntervalCount));
-            Attributes.Add(new UIInt("Create Interval Life", Simple.CreateIntervalLife));
-            Attributes.Add(new UIInt("Create New After Delete", Simple.CreateNewAfterDelete));
-            Attributes.Add(new UIInt("UV Reverse", Simple.UvReverse));
-            Attributes.Add(new UIInt("Scale Random Link", Simple.ScaleRandomLink));
-            Attributes.Add(new UIInt("Bind Parent", Simple.BindParent));
-            Attributes.Add(new UIInt("Scale By Parent", Simple.ScaleByParent));
-            Attributes.Add(new UIInt("Polyline Tag", Simple.PolyLineTag));
-            //=================
-            Colors = new Vector4[4];
-            Frames = new int[4];
-            for (int i = 0; i < 4; i++) {
-                Colors[i] = new Vector4(
-                    (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 0] }) / 255,
-                    (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 1] }) / 255,
-                    (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 2] }) / 255,
-                    (float)AVFXLib.Main.Util.Bytes1ToInt(new byte[] { Simple.Colors.colors[i * 4 + 3] }) / 255
-                );
-                Frames[i] = Simple.Frames.frames[i];
-            }
+            Tabs = new List<UIItem>();
+            Tabs.Add( Creation = new UIParameters( "Creation" ) );
+            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx ) );
+            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx ) );
+            Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
+            Creation.Add( new UIInt( "Injection Direction Type", Simple.InjectionDirectionType ) );
+            Creation.Add( new UIInt( "Base Direction Type", Simple.BaseDirectionType ) );
+            Creation.Add( new UIInt( "Create Count", Simple.CreateCount ) );
+            Creation.Add( new UIFloat3( "Create Area", Simple.CreateAreaX, Simple.CreateAreaY, Simple.CreateAreaZ ) );
+            Creation.Add( new UIFloat3( "Coord Accuracy", Simple.CoordAccuracyX, Simple.CoordAccuracyY, Simple.CoordAccuracyZ ) );
+            Creation.Add( new UIFloat3( "Coord Gra", Simple.CoordGraX, Simple.CoordGraY, Simple.CoordGraZ ) );
+            Creation.Add( new UIFloat( "Injection Radial Direction 0", Simple.InjectionRadialDir0 ) );
+            Creation.Add( new UIFloat( "Injection Radial Direction 1", Simple.InjectionRadialDir1 ) );
+            Creation.Add( new UIFloat( "Pivot X", Simple.PivotX ) );
+            Creation.Add( new UIFloat( "Pivot Y", Simple.PivotY ) );
+            Creation.Add( new UIInt( "Block Number", Simple.BlockNum ) );
+            Creation.Add( new UIFloat( "Line Length Minimum", Simple.LineLengthMin ) );
+            Creation.Add( new UIFloat( "Line Length Maximum", Simple.LineLengthMax ) );
+            Creation.Add( new UIInt( "Create Interval", Simple.CreateIntervalVal ) );
+            Creation.Add( new UIInt( "Create Interval Random", Simple.CreateIntervalRandom ) );
+            Creation.Add( new UIInt( "Create Interval Count", Simple.CreateIntervalCount ) );
+            Creation.Add( new UIInt( "Create Interval Life", Simple.CreateIntervalLife ) );
+            Creation.Add( new UIInt( "Create New After Delete", Simple.CreateNewAfterDelete ) );
+
+            Tabs.Add( Animation = new UIParameters( "Animation" ) );
+            Animation.Add( new UIFloat2( "Scale Start", Simple.ScaleXStart, Simple.ScaleYStart ) );
+            Animation.Add( new UIFloat2( "Scale End", Simple.ScaleXEnd, Simple.ScaleYEnd ) );
+            Animation.Add( new UIFloat( "Scale Curve", Simple.ScaleCurve ) );
+            Animation.Add( new UIFloat2( "Scale X Random", Simple.ScaleRandX0, Simple.ScaleRandX1 ) );
+            Animation.Add( new UIFloat2( "Scale Y Random", Simple.ScaleRandY0, Simple.ScaleRandY1 ) );
+            Animation.Add( new UIFloat3( "Rotation Add", Simple.RotXAdd, Simple.RotYAdd, Simple.RotZAdd ) );
+            Animation.Add( new UIFloat3( "Rotation Base", Simple.RotXBase, Simple.RotYBase, Simple.RotZBase ) );
+            Animation.Add( new UIFloat3( "Rotation Velocity", Simple.RotXVel, Simple.RotYVel, Simple.RotZVel ) );
+            Animation.Add( new UIFloat( "Minimum Velocity", Simple.VelMin ) );
+            Animation.Add( new UIFloat( "Maximum Velocity", Simple.VelMax ) );
+            Animation.Add( new UIFloat( "Velocity Flattery Rate", Simple.VelFlatteryRate ) );
+            Animation.Add( new UIFloat( "Velocity Flattery Speed", Simple.VelFlatterySpeed ) );
+            Animation.Add( new UIInt( "Scale Random Link", Simple.ScaleRandomLink ) );
+            Animation.Add( new UIInt( "Bind Parent", Simple.BindParent ) );
+            Animation.Add( new UIInt( "Scale By Parent", Simple.ScaleByParent ) );
+            Animation.Add( new UIInt( "Polyline Tag", Simple.PolyLineTag ) );
+
+            Tabs.Add( Texture = new UIParameters( "Texture" ) );
+            Texture.Add( new UIInt( "UV Cell U", Simple.UvCellU ) );
+            Texture.Add( new UIInt( "UV Cell V", Simple.UvCellV ) );
+            Texture.Add( new UIInt( "UV Interval", Simple.UvInterval ) );
+            Texture.Add( new UIInt( "UV Number Random", Simple.UvNoRandom ) );
+            Texture.Add( new UIInt( "UV Number Loop Count", Simple.UvNoLoopCount ) );
+            Texture.Add( new UIInt( "UV Reverse", Simple.UvReverse ) );
+
+            Tabs.Add( Color = new UIParameters( "Color" ) );
+            Color.Add( new UISimpleColor( Simple, 0 ) );
+            Color.Add( new UISimpleColor( Simple, 1 ) );
+            Color.Add( new UISimpleColor( Simple, 2 ) );
+            Color.Add( new UISimpleColor( Simple, 3 ) );
         }
         // =========== DRAW =====================
-        public override void Draw( string parentId ) {
-            if( !Assigned ) {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.TreeNode( "Simple Animation" + parentId ) ) {
-                DrawBody( parentId );
-                ImGui.TreePop();
-            }
-        }
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
                 Simple.toDefault();
@@ -110,25 +103,45 @@ namespace VFXEditor.UI.VFX {
                 Init();
                 return;
             }
-            InjectionModelSelect.Draw( id );
-            InjectionVertexModelSelect.Draw( id );
-            DrawAttrs( id );
-            //====================
-            for( int i = 0; i < 4; i++ ) {
-                if( ImGui.InputInt( "Frame#" + i + id, ref Frames[i] ) ) {
-                    Simple.Frames.frames[i] = Frames[i];
-                }
-                if( ImGui.ColorEdit4( "Color#" + i + id, ref Colors[i], ImGuiColorEditFlags.Float ) ) {
-                    Simple.Colors.colors[i * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].X * 255f ) )[0];
-                    Simple.Colors.colors[i * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Y * 255f ) )[0];
-                    Simple.Colors.colors[i * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].Z * 255f ) )[0];
-                    Simple.Colors.colors[i * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Colors[i].W * 255f ) )[0];
-                }
-            }
+
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText() {
             return "Simple Animation";
+        }
+    }
+
+    class UISimpleColor : UIBase {
+        AVFXParticleSimple Simple;
+        int Idx;
+
+        Vector4 Color;
+        int Frame;
+
+        public UISimpleColor(AVFXParticleSimple simple, int idx ) {
+            Simple = simple;
+            Idx = idx;
+
+            Color = new Vector4(
+                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 0] } ) / 255,
+                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 1] } ) / 255,
+                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 2] } ) / 255,
+                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 3] } ) / 255
+                );
+            Frame = Simple.Frames.frames[Idx];
+        }
+
+        public override void Draw( string parentId ) {
+            if( ImGui.InputInt( "Frame " + Idx + parentId, ref Frame ) ) {
+                Simple.Frames.frames[Idx] = Frame;
+            }
+            if( ImGui.ColorEdit4( "Color " + Idx + parentId, ref Color, ImGuiColorEditFlags.Float ) ) {
+                Simple.Colors.colors[Idx * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.X * 255f ) )[0];
+                Simple.Colors.colors[Idx * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.Y * 255f ) )[0];
+                Simple.Colors.colors[Idx * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.Z * 255f ) )[0];
+                Simple.Colors.colors[Idx * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.W * 255f ) )[0];
+            }
         }
     }
 }
