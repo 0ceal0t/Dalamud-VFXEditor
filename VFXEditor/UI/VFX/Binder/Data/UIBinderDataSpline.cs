@@ -10,21 +10,13 @@ namespace VFXEditor.UI.VFX
 {
     public class UIBinderDataSpline : UIData {
         public AVFXBinderDataSpline Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //=======================
 
         public UIBinderDataSpline(AVFXBinderDataSpline data)
         {
             Data = data;
             //==================
-            Attributes.Add(new UICurve(data.CarryOverFactor, "Carry Over Factor"));
-            Attributes.Add(new UICurve(data.CarryOverFactorRandom, "Carry Over Factor Random"));
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add(new UICurve(data.CarryOverFactor, "Carry Over Factor"));
+            Tabs.Add(new UICurve(data.CarryOverFactorRandom, "Carry Over Factor Random"));
         }
     }
 }

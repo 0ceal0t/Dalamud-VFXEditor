@@ -15,6 +15,9 @@ namespace VFXEditor.UI.VFX
         public string Name;
         //===================
         // TODO: Name
+        public UIParameters Parameters;
+        public UICurve3Axis Position;
+        public List<UIItem> Tabs;
 
         public UIBinderProperties(string name, AVFXBinderProperty prop)
         {
@@ -27,16 +30,18 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Prop.Assigned) { Assigned = false; return; }
             //====================
-            Attributes.Add(new UICombo<BindPoint>("Bind Point Type", Prop.BindPointType));
-            Attributes.Add(new UICombo<BindTargetPoint>("Bind Target Point Type", Prop.BindTargetPointType));
-            Attributes.Add(new UIInt("Bind Point Id", Prop.BindPointId));
-            Attributes.Add(new UIInt("Generate Delay", Prop.GenerateDelay));
-            Attributes.Add(new UIInt("Coord Update Frame", Prop.CoordUpdateFrame));
-            Attributes.Add(new UICheckbox("Ring Enabled", Prop.RingEnable));
-            Attributes.Add(new UIInt("Ring Progress Time", Prop.RingProgressTime));
-            Attributes.Add(new UIFloat3("Ring Position", Prop.RingPositionX, Prop.RingPositionY, Prop.RingPositionZ));
-            Attributes.Add(new UIFloat("Ring Radius", Prop.RingRadius));
-            Attributes.Add(new UICurve3Axis(Prop.Position, "Position"));
+            Tabs = new List<UIItem>();
+            Tabs.Add( Parameters = new UIParameters("Parameters") );
+            Tabs.Add( Position = new UICurve3Axis( Prop.Position, "Position" ) );
+            Parameters.Add(new UICombo<BindPoint>("Bind Point Type", Prop.BindPointType));
+            Parameters.Add(new UICombo<BindTargetPoint>("Bind Target Point Type", Prop.BindTargetPointType));
+            Parameters.Add(new UIInt("Bind Point Id", Prop.BindPointId));
+            Parameters.Add(new UIInt("Generate Delay", Prop.GenerateDelay));
+            Parameters.Add(new UIInt("Coord Update Frame", Prop.CoordUpdateFrame));
+            Parameters.Add(new UICheckbox("Ring Enabled", Prop.RingEnable));
+            Parameters.Add(new UIInt("Ring Progress Time", Prop.RingProgressTime));
+            Parameters.Add(new UIFloat3("Ring Position", Prop.RingPositionX, Prop.RingPositionY, Prop.RingPositionZ));
+            Parameters.Add(new UIFloat("Ring Radius", Prop.RingRadius));
         }
 
         // =========== DRAW =====================
@@ -56,7 +61,7 @@ namespace VFXEditor.UI.VFX
                 Prop.Assigned = false;
                 Init();
             }
-            DrawAttrs( id );
+            DrawListTabs( Tabs, id );
         }
 
         public override string GetText() {

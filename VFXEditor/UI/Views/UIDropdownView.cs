@@ -82,7 +82,7 @@ namespace VFXEditor.UI.VFX
             // ==== SAVE =====
             if( ImGui.BeginPopup( "Save_Popup" + Id ) ) {
                 if( ImGui.Selectable( "Simple" + Id ) ) {
-                    Main.ExportDialog( Selected );
+                    UIMain.ExportDialog( Selected );
                 }
                 if( ImGui.Selectable("Advanced Export" + Id ) ) {
                     Main.ExportMultiple( Selected );

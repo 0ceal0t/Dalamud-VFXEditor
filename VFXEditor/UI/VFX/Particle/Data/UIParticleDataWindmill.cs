@@ -5,11 +5,8 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataWindmill : UIData {
         public AVFXParticleDataWindmill Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
 
-        public UIParticleDataWindmill(AVFXParticleDataWindmill data)
-        {
+        public UIParticleDataWindmill(AVFXParticleDataWindmill data) {
             Data = data;
             //=======================
             Attributes.Add( new UICombo<WindmillUVType>( "Windmill UV Type", Data.WindmillUVType ) );

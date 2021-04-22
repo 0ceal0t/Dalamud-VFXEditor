@@ -8,13 +8,15 @@ using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VFXEditor.Data.DirectX {
-    public abstract class Model3D {
+    public abstract class ModelView {
         public DirectXManager Manager;
         public Device _Device;
         public DeviceContext _Ctx;
 
         public int Width = 300;
         public int Height = 300;
+        public bool FirstModel = false;
+        public bool IsWireframe = false;
 
         public RasterizerState RState;
         public Buffer RendersizeBuffer;
@@ -34,10 +36,9 @@ namespace VFXEditor.Data.DirectX {
         private Vector3 Position = new Vector3( 0, 0, 0 );
         private float Distance = 5;
 
-        public bool IsWireframe = false;
         public Matrix LocalMatrix = Matrix.Identity;
 
-        public Model3D(DirectXManager manager) {
+        public ModelView(DirectXManager manager) {
             Manager = manager;
             _Device = Manager._Device;
             _Ctx = Manager._Ctx;
@@ -69,7 +70,6 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public bool FirstModel = false;
         public void Resize( Vec2 size ) {
             var w_ = ( int )size.X;
             var h_ = ( int )size.Y;
@@ -81,6 +81,10 @@ namespace VFXEditor.Data.DirectX {
                     Draw();
                 }
             }
+        }
+
+        public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
+            return span * ( faceIdx * pointsPer + pointIdx );
         }
 
         public void ResizeResources() {

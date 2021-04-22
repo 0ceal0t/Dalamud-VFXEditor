@@ -51,14 +51,14 @@ namespace VFXEditor.UI.Views {
         static uint ContentColor_Odd = ImGui.GetColorU32( new Vector4( 0.43f, 0.43f, 0.43f, 0.5f ) );
         static uint ContentColor_Even = ImGui.GetColorU32( new Vector4( 0.23f, 0.23f, 0.23f, 0.4f ) );
         static uint ContentColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.07f, 0, 1 ) );
-        static uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.67f, 1 ) );
+        static uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.7f, 1 ) );
         static uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
-        static uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.239f, 1 ) );
-        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
+        static uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.216f, 1 ) );
+        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
         static uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
         static uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
-        static uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
-        static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.15f, 1 ) );
+        static uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
         static uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
         static uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
         static uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
@@ -112,7 +112,6 @@ namespace VFXEditor.UI.Views {
                 MaxVisible = Max * 0.9f;
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var space = ImGui.GetContentRegionAvail();
             Vector2 Size = new Vector2( space.X, 200 );
             var DrawList = ImGui.GetWindowDrawList();
@@ -128,13 +127,13 @@ namespace VFXEditor.UI.Views {
             var LeftPosition = new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + HeaderHeight );
             var TimelinePosition = new Vector2( CanvasTopLeft.X + LeftWidth, CanvasTopLeft.Y );
             var ContentPosition = new Vector2( CanvasTopLeft.X + LeftWidth, CanvasTopLeft.Y + HeaderHeight );
-            var FooterPosition = new Vector2( CanvasTopLeft.X + LeftWidth, CanvasBottomRight.Y - FooterHeight );
+            var FooterPosition = new Vector2( CanvasTopLeft.X + LeftWidth + 5, CanvasBottomRight.Y - FooterHeight );
 
             var ContentSize = Size - new Vector2( LeftWidth, HeaderHeight + FooterHeight );
             var HeaderSize = new Vector2( Size.X, HeaderHeight );
             var TimelineSize = new Vector2( Size.X - LeftWidth, HeaderHeight );
             var LeftSize = new Vector2( LeftWidth, Size.Y - (HeaderHeight + FooterHeight) );
-            var FooterSize = new Vector2( ContentSize.X, FooterHeight );
+            var FooterSize = new Vector2( ContentSize.X  - 15, FooterHeight );
 
             var Diff = MaxVisible - MinVisible;
             float PixelsPerFrame = TimelineSize.X / Diff;

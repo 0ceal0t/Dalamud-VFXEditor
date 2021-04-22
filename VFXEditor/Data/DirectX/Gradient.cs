@@ -19,6 +19,8 @@ namespace VFXEditor.Data.DirectX {
 
         public int Width = 500;
         public int Height = 50;
+        public AVFXCurve CurrentCurve = null;
+        public bool FirstCurve = false;
 
         public RasterizerState RState;
         public Texture2D DepthTex;
@@ -61,7 +63,6 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public AVFXCurve CurrentCurve = null;
         public void SetGradient(AVFXCurve curve ) {
             CurrentCurve = curve;
             var numPoints = curve.Keys.Count;
@@ -136,7 +137,6 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public bool FirstCurve = false;
         public void Resize( Vec2 size ) {
             var w_ = ( int )size.X;
             var h_ = ( int )size.Y;

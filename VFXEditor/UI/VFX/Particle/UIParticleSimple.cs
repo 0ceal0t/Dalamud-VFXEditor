@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX {
     public class UIParticleSimple : UIItem {
         public AVFXParticleSimple Simple;
+        public UIParticle Particle;
         //=============
         public Vector4[] Colors;
         public int[] Frames;
@@ -19,15 +20,15 @@ namespace VFXEditor.UI.VFX {
 
         public UIParticleSimple(AVFXParticleSimple simple, UIParticle particle) {
             Simple = simple;
+            Particle = particle;
             Init();
-            //=======================
-            InjectionModelSelect = new UINodeSelect<UIModel>( particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx );
-            InjectionVertexModelSelect = new UINodeSelect<UIModel>( particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx );
         }
         public override void Init() {
             base.Init();
             if (!Simple.Assigned) { Assigned = false; return; }
             //=======================
+            InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx );
+            InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx );
             Attributes.Add(new UIInt("Injection Position Type", Simple.InjectionPositionType));
             Attributes.Add(new UIInt("Injection Direction Type", Simple.InjectionDirectionType));
             Attributes.Add(new UIInt("Base Direction Type", Simple.BaseDirectionType));

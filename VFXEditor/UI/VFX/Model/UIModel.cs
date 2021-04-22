@@ -15,17 +15,15 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModel : UINode {
         public AVFXModel Model;
-        public ModelPreview Mdl3D;
-        public UIMain Main;
+        public ModelPreview _ModelPreview;
         int Mode = 1;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
 
-        public UIModel( UIMain main, AVFXModel model, UIModelView view ) : base( ModelColor, false ) {
+        public UIModel( AVFXModel model ) : base( ModelColor, false ) {
             Model = model;
-            Main = main;
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
@@ -33,7 +31,7 @@ namespace VFXEditor.UI.VFX
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
-            Mdl3D = view.Mdl3D;
+            _ModelPreview = DirectXManager.Manager._ModelPreview;
             HasDependencies = false; // if imported, all set now
         }
 
@@ -55,7 +53,7 @@ namespace VFXEditor.UI.VFX
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    Main.ExportDialog( this );
+                    UIMain.ExportDialog( this );
                 }
                 ImGui.EndPopup();
             }
@@ -71,48 +69,53 @@ namespace VFXEditor.UI.VFX
             if( !ret )
                 return;
             // ===============
-            bool wireframe = Mdl3D.IsWireframe;
+            bool wireframe = _ModelPreview.IsWireframe;
             if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
-                Mdl3D.IsWireframe = wireframe;
-                Mdl3D.RefreshRasterizeState();
+                _ModelPreview.IsWireframe = wireframe;
+                _ModelPreview.RefreshRasterizeState();
+                _ModelPreview.Draw();
             }
             ImGui.SameLine();
-            ImGui.Checkbox( "Show Edges##3DModel", ref Mdl3D.ShowEdges );
+            if(ImGui.Checkbox( "Show Edges##3DModel", ref _ModelPreview.ShowEdges ) ) {
+                _ModelPreview.Draw();
+            }
             ImGui.SameLine();
-            ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Mdl3D.ShowEmitter );
+            if(ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref _ModelPreview.ShowEmitter ) ) {
+                _ModelPreview.Draw();
+            }
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
-                Mdl3D.LoadModel( Model, mode:1);
+                _ModelPreview.LoadModel( Model, mode:1);
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
-                Mdl3D.LoadModel( Model, mode: 2 );
+                _ModelPreview.LoadModel( Model, mode: 2 );
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
-                Mdl3D.LoadModel( Model, mode: 3 );
+                _ModelPreview.LoadModel( Model, mode: 3 );
             }
 
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "3DViewChild" );
 
             var space = ImGui.GetContentRegionAvail();
-            Mdl3D.Resize( space );
+            _ModelPreview.Resize( space );
 
-            ImGui.ImageButton( Mdl3D.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+            ImGui.ImageButton( _ModelPreview.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
 
             if(ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                Mdl3D.Drag( delta, true );
+                _ModelPreview.Drag( delta, true );
             }
             else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                Mdl3D.Drag( ImGui.GetMousePos() - cursor, false );
+                _ModelPreview.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
-                Mdl3D.IsDragging = false;
+                _ModelPreview.IsDragging = false;
             }
 
             if( ImGui.IsItemHovered() ) {
-                Mdl3D.Zoom( ImGui.GetIO().MouseWheel );
+                _ModelPreview.Zoom( ImGui.GetIO().MouseWheel );
             }
 
             ImGui.EndChild();
@@ -129,8 +132,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ImportDialog() {
-            Task.Run( async () =>
-            {
+            Task.Run( async () => {
                 var picker = new OpenFileDialog
                 {
                     Filter = "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*",
@@ -143,7 +145,7 @@ namespace VFXEditor.UI.VFX
                         if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
-                            Mdl3D.LoadModel( Model );
+                            _ModelPreview.LoadModel( Model );
                         }
                     }
                     catch( Exception ex ) {

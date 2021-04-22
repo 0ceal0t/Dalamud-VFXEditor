@@ -15,9 +15,11 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using AVFXLib.Models;
 
 namespace VFXEditor.Data.DirectX {
-    public class ModelPreview : Model3D {
+    public class ModelPreview : ModelView {
+
         public bool ShowEdges = true;
         public bool ShowEmitter = true;
+        public static Vector4 LINE_COLOR = new Vector4( 1, 0, 0, 1 );
 
         // ======= BASE MODEL =======
         static int MODEL_SPAN = 3; // position, color, normal
@@ -150,7 +152,6 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public static Vector4 LINE_COLOR = new Vector4( 1, 0, 0, 1 );
         public void LoadModel( AVFXModel model, int mode = 1 ) {
             LoadModel( model.Indexes, model.Vertices, model.EmitVertices, mode );
         }
@@ -224,9 +225,6 @@ namespace VFXEditor.Data.DirectX {
             }
 
             UpdateDraw();
-        }
-        public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
-            return span * ( faceIdx * pointsPer + pointIdx );
         }
 
         public override void OnDraw() {

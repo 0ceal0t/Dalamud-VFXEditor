@@ -10,8 +10,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEmitterDataModel : UIData {
         public AVFXEmitterDataModel Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
+        public UIParameters Parameters;
 
         public UINodeSelect<UIModel> ModelSelect;
 
@@ -19,21 +18,15 @@ namespace VFXEditor.UI.VFX
         {
             Data = data;
             //=======================
-            ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINode._Models, Data.ModelIdx );
-
-            Attributes.Add(new UICombo<RotationOrder>("Rotation Order", Data.RotationOrderType));
-            Attributes.Add(new UICombo<GenerateMethod>("Generate Method", Data.GenerateMethodType));
-            Attributes.Add(new UICurve(Data.AX, "Angle X"));
-            Attributes.Add(new UICurve(Data.AY, "Angle Y"));
-            Attributes.Add(new UICurve(Data.AZ, "Angle Z"));
-            Attributes.Add(new UICurve(Data.InjectionSpeed, "Injection Speed"));
-            Attributes.Add(new UICurve(Data.InjectionSpeedRandom, "Injection Speed Random"));
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINode._Models, Data.ModelIdx ));
+            Parameters.Add(new UICombo<RotationOrder>("Rotation Order", Data.RotationOrderType));
+            Parameters.Add(new UICombo<GenerateMethod>("Generate Method", Data.GenerateMethodType));
+            Tabs.Add(new UICurve(Data.AX, "Angle X"));
+            Tabs.Add(new UICurve(Data.AY, "Angle Y"));
+            Tabs.Add(new UICurve(Data.AZ, "Angle Z"));
+            Tabs.Add(new UICurve(Data.InjectionSpeed, "Injection Speed"));
+            Tabs.Add(new UICurve(Data.InjectionSpeedRandom, "Injection Speed Random"));
         }
 
         public override void Dispose() {

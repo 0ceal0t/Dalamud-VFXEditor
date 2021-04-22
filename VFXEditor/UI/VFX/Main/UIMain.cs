@@ -183,7 +183,7 @@ namespace VFXEditor.UI.VFX
             ExportUI.Export( node );
         }
 
-        public void ExportDialog(UINode node ) {
+        public static void ExportDialog(UINode node ) {
             Task.Run( async () => {
                 var picker = new SaveFileDialog {
                     Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",

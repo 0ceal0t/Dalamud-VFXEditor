@@ -10,7 +10,6 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataLightModel : UIData {
         public AVFXParticleDataLightModel Data;
-        //==========================
         public UINodeSelect<UIModel> ModelSelect;
 
         public UIParticleDataLightModel(AVFXParticleDataLightModel data, UIParticle particle)
@@ -20,8 +19,7 @@ namespace VFXEditor.UI.VFX
             ModelSelect = new UINodeSelect<UIModel>( particle, "Model", UINode._Models, Data.ModelIdx );
         }
 
-        public override void Draw(string parentId)
-        {
+        public override void Draw(string parentId) {
             string id = parentId + "/Data";
             ModelSelect.Draw( id );
         }

@@ -12,10 +12,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace VFXEditor.Data.DirectX {
-    public class UVPreview : Model3D {
+    public class UVPreview : ModelView {
         public UI.VFX.Particle.UVSet.UVAnimation _CurrentUV = null;
 
         // ======= BASE MODEL =======
+        public static int MODEL_SPAN = 3; // position, uv, normal
         public int NumVerts;
         public Buffer Vertices;
         CompilationResult vertexShaderByteCode;
@@ -60,7 +61,6 @@ namespace VFXEditor.Data.DirectX {
         }
 
         // ======= MODEL ===========
-        public static int MODEL_SPAN = 3; // position, uv, normal
         public void LoadModel( AVFXModel model) {
             if(model == null ) {
                 LoadModel( new List<Index>(), new List<Vertex>() );
@@ -91,9 +91,6 @@ namespace VFXEditor.Data.DirectX {
             }
 
             UpdateDraw();
-        }
-        public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
-            return span * ( faceIdx * pointsPer + pointIdx );
         }
         // ========= TEXUTURE ===========
         public void LoadTexture(Bitmap bitmap ) {

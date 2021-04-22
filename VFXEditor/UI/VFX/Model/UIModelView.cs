@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
             Main = main;
             Mdl3D = plugin.DXManager._ModelPreview;
             Group = UINode._Models;
-            Group.Items = AVFX.Models.Select( item => new UIModel( main, item, this ) ).ToList();
+            Group.Items = AVFX.Models.Select( item => new UIModel( item ) ).ToList();
         }
 
         public override void DrawNewButton( string parentId ) {
@@ -42,14 +42,14 @@ namespace VFXEditor.UI.VFX
         }
 
         public override UIModel OnNew() {
-            return new UIModel( Main, AVFX.addModel(), this );
+            return new UIModel( AVFX.addModel() );
         }
 
         public override UIModel OnImport( AVFXNode node ) {
             AVFXModel mdl = new AVFXModel();
             mdl.read( node );
             AVFX.addModel( mdl );
-            return new UIModel( Main, mdl, this );
+            return new UIModel( mdl );
         }
     }
 }

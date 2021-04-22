@@ -9,25 +9,20 @@ using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX {
     public class UIEmitterDataConeModel : UIData {
         public AVFXEmitterDataConeModel Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
+        public UIParameters Parameters;
 
         public UIEmitterDataConeModel( AVFXEmitterDataConeModel data ) {
             Data = data;
             //=======================
-            Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Data.RotationOrderType ) );
-            Attributes.Add( new UICombo<GenerateMethod>( "Generate Method", Data.GenerateMethodType ) );
-            Attributes.Add( new UIInt( "Divide X", Data.DivideX ) );
-            Attributes.Add( new UIInt( "Divide Y", Data.DivideY ) );
-            Attributes.Add( new UICurve( Data.Radius, "Radius" ) );
-            Attributes.Add( new UICurve( Data.InjectionSpeed, "Injection Speed" ) );
-            Attributes.Add( new UICurve( Data.InjectionSpeedRandom, "Injection Speed Random" ) );
-            Attributes.Add( new UICurve( Data.InjectionAngle, "Injection Angle" ) );
-        }
-
-        public override void Draw( string parentId ) {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Parameters.Add( new UICombo<RotationOrder>( "Rotation Order", Data.RotationOrderType ) );
+            Parameters.Add( new UICombo<GenerateMethod>( "Generate Method", Data.GenerateMethodType ) );
+            Parameters.Add( new UIInt( "Divide X", Data.DivideX ) );
+            Parameters.Add( new UIInt( "Divide Y", Data.DivideY ) );
+            Tabs.Add( new UICurve( Data.Radius, "Radius" ) );
+            Tabs.Add( new UICurve( Data.InjectionSpeed, "Injection Speed" ) );
+            Tabs.Add( new UICurve( Data.InjectionSpeedRandom, "Injection Speed Random" ) );
+            Tabs.Add( new UICurve( Data.InjectionAngle, "Injection Angle" ) );
         }
     }
 }

@@ -208,7 +208,7 @@ namespace VFXEditor.UI.VFX {
         }
     }
 
-    public abstract class UINodeSelect {
+    public abstract class UINodeSelect : UIBase {
         public UINode Node;
 
         public void UnlinkFrom( UINode node ) {
@@ -232,7 +232,6 @@ namespace VFXEditor.UI.VFX {
         public abstract void DeleteNode(UINode node); // when the selected node is deleted
         public abstract void UpdateNode();
         public abstract void SetupNode();
-        public abstract void Draw( string parentId );
     }
 
     public class UINodeSelect<T> : UINodeSelect where T : UINode {

@@ -10,8 +10,6 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataDecal : UIData {
         public AVFXParticleDataDecal Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
 
         public UIParticleDataDecal(AVFXParticleDataDecal data)
         {

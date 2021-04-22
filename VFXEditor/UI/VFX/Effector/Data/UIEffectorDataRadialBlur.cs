@@ -10,27 +10,22 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEffectorDataRadialBlur : UIData {
         public AVFXEffectorDataRadialBlur Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
+        public UIParameters Parameters;
 
         public UIEffectorDataRadialBlur(AVFXEffectorDataRadialBlur data)
         {
             Data = data;
             //=======================
-            Attributes.Add(new UIFloat("Fade Start Distance", Data.FadeStartDistance));
-            Attributes.Add(new UIFloat("Fade End Distance", Data.FadeEndDistance));
-            Attributes.Add(new UICombo<ClipBasePoint>("Fade Base Point", Data.FadeBasePointType));
-            Attributes.Add(new UICurve(Data.Length, "Length"));
-            Attributes.Add(new UICurve(Data.Strength, "Strength"));
-            Attributes.Add(new UICurve(Data.Gradation, "Gradation"));
-            Attributes.Add(new UICurve(Data.InnerRadius, "Inner Radius"));
-            Attributes.Add(new UICurve(Data.OuterRadius, "Outer Radius"));
-        }
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Parameters.Add(new UIFloat("Fade Start Distance", Data.FadeStartDistance));
+            Parameters.Add(new UIFloat("Fade End Distance", Data.FadeEndDistance));
+            Parameters.Add(new UICombo<ClipBasePoint>("Fade Base Point", Data.FadeBasePointType));
 
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add(new UICurve(Data.Length, "Length"));
+            Tabs.Add(new UICurve(Data.Strength, "Strength"));
+            Tabs.Add(new UICurve(Data.Gradation, "Gradation"));
+            Tabs.Add(new UICurve(Data.InnerRadius, "Inner Radius"));
+            Tabs.Add(new UICurve(Data.OuterRadius, "Outer Radius"));
         }
     }
 }

@@ -10,22 +10,16 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataDecalRing : UIData {
         public AVFXParticleDataDecalRing Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
+        public UIParameters Parameters;
 
         public UIParticleDataDecalRing(AVFXParticleDataDecalRing data)
         {
             Data = data;
             //=======================
-            Attributes.Add( new UICurve( Data.Width, "Width" ) );
-            Attributes.Add( new UIFloat( "Scaling Scale", Data.ScalingScale ) );
-            Attributes.Add( new UIFloat( "Ring Fan", Data.RingFan ) );
-        }
-
-        public override void Draw(string parentId)
-        {
-            string id = parentId + "/Data";
-            DrawList( Attributes, id );
+            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Parameters.Add( new UIFloat( "Scaling Scale", Data.ScalingScale ) );
+            Parameters.Add( new UIFloat( "Ring Fan", Data.RingFan ) );
+            Tabs.Add( new UICurve( Data.Width, "Width" ) );
         }
     }
 }

@@ -10,8 +10,6 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticleDataPowder: UIData {
         public AVFXParticleDataPowder Data;
-        public List<UIBase> Attributes = new List<UIBase>();
-        //==========================
 
         public UIParticleDataPowder(AVFXParticleDataPowder data)
         {
