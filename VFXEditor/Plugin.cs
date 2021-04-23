@@ -19,6 +19,7 @@ namespace VFXEditor
     public class Plugin : IDalamudPlugin {
         public string Name => "VFXEditor";
         private const string CommandName = "/vfxedit";
+        private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
 
         public DalamudPluginInterface PluginInterface;
         public Configuration Configuration;
@@ -92,8 +93,13 @@ namespace VFXEditor
             PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
 
-            PluginInterface.UiBuilder.OnBuildUi += MainUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi += Tracker.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += Draw;
+        }
+
+        public void Draw() {
+            if( !PluginReady ) return;
+            MainUI.Draw();
+            Tracker.Draw();
         }
 
         public DateTime LastSelect = DateTime.Now;
@@ -163,8 +169,7 @@ namespace VFXEditor
             MainUI.UnloadAVFX();
         }
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= MainUI.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= Tracker.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= Draw;
 
             // ====== IMGUI =======
             ImPlot.DestroyContext();

@@ -16,5 +16,12 @@ namespace VFXEditor.Structs.Vfx {
         public override void Remove() {
              _Plugin.ResourceLoader.StatusRemove( Vfx, (char) 1 );
         }
+
+        public static int GetCasterId( IntPtr vfx ) {
+            return GetId( vfx, 0x128 );
+        }
+        public static int GetTargetId( IntPtr vfx ) {
+            return GetId( vfx, 0x130 );
+        }
     }
 }

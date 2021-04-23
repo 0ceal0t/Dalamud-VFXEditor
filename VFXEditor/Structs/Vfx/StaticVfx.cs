@@ -22,7 +22,14 @@ namespace VFXEditor.Structs.Vfx {
 
             UpdateMatrix();
         }
-        
+
+        public static int GetCasterId(IntPtr vfx) {
+            return GetId( vfx, 0x1B8 );
+        }
+        public static int GetTargetId( IntPtr vfx ) {
+            return GetId( vfx, 0x1C0 );
+        }
+
         public override void Remove() {
             _Plugin.ResourceLoader.VfxRemove( Vfx );
         }

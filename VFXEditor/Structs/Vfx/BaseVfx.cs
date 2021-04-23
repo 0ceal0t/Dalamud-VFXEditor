@@ -21,8 +21,15 @@ namespace VFXEditor.Structs.Vfx {
 
         public abstract void Remove();
 
-        // ======= MATRIX STUFF ===========
+        public static int GetId(IntPtr vfx, int offset) {
+            if( vfx == IntPtr.Zero ) return 0;
+            var addr = IntPtr.Add( vfx, offset );
+            byte[] bytes = new byte[4];
+            Marshal.Copy( addr, bytes, 0, 4 );
+            return BitConverter.ToInt32( bytes, 0 );
+        }
 
+        // ======= MATRIX STUFF ===========
         /*
             *(undefined4 *)(vfx + 0x50) = DAT_01bb2850;
             *(undefined4 *)(vfx + 0x54) = DAT_01bb2854;
