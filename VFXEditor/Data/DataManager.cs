@@ -29,6 +29,7 @@ namespace VFXEditor.Data
         public NpcSheetLoader _Npcs;
         public StatusSheetLoader _Statuses;
         public ZoneSheetLoader _Zones;
+        public MountSheeetLoader _Mounts;
 
         public DataManager(Plugin plugin )
         {
@@ -45,6 +46,7 @@ namespace VFXEditor.Data
             _Npcs = new NpcSheetLoader( this, plugin );
             _Statuses = new StatusSheetLoader( this, plugin );
             _Zones = new ZoneSheetLoader( this, plugin );
+            _Mounts = new MountSheeetLoader( this, plugin );
         }
 
 

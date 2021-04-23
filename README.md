@@ -44,21 +44,17 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Tables for documents, texture view?
-- [ ] Workspaces
 - [ ] Render distance settings for overlay
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Fix live overlay view in cutscenes
 - [ ] Export/Import dependencies
 - [ ] Highlight important
-- [ ] Statuses show icon
-- [ ] Preview on select hover
-- [ ] Better 3D model bg texture
 - [ ] Option to not load 3D model
 - [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
-- [ ] Add VFX to weapons without it
+- [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Test with Penumbra
 - [ ] Flesh out Wiki
 - [ ] Clean up "troubleshooting"
@@ -74,6 +70,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
 - [ ] Better readability (colored  text)
+- [ ] Show binders on model (would requrie getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
 - [x] ~~Timeline sequencer view~~

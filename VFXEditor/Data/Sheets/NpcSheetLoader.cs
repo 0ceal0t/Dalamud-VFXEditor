@@ -13,6 +13,11 @@ namespace VFXEditor.Data.Sheets {
         public NpcSheetLoader( DataManager manager, Plugin plugin) : base(manager, plugin ) {
         }
 
+        public class NpcCsvRow {
+            public int Id;
+            public string Name;
+        }
+
         public override void OnLoad() {
             fastCSV.ReadFile<NpcCsvRow>( Manager.NpcCsv, true, ',', ( o, c ) => {
                 o.Id = Int32.Parse( c[0] );
