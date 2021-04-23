@@ -6,8 +6,8 @@
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.3.2.0</FileVersion>
-        <AssemblyVersion>1.3.2.0</AssemblyVersion>
+        <FileVersion>1.3.2.1</FileVersion>
+        <AssemblyVersion>1.3.2.1</AssemblyVersion>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
