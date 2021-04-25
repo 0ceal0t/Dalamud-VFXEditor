@@ -73,7 +73,8 @@ namespace VFXEditor.UI
                 new VFXEmoteSelect( id, "Emote", _plugin, this ),
                 new VFXGimmickSelect( id, "Gimmick", _plugin, this ),
                 new VFXCutsceneSelect( id, "Cutscene", _plugin, this ),
-                new VFXMountSelect(id, "Mount", _plugin, this)
+                new VFXMountSelect(id, "Mount", _plugin, this),
+                new VFXHousingSelect(id, "Housing", _plugin, this)
             } );
         }
 

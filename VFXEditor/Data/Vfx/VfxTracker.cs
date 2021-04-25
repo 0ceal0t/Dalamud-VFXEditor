@@ -249,6 +249,7 @@ namespace VFXEditor.Data.Vfx {
             var screenPos = ImGui.GetMainViewport().Pos;
             var screenSize = ImGui.GetMainViewport().Size;
             var windowSize = ImGui.CalcTextSize( longestString );
+            var largestSize = windowSize;
             windowSize.X += ImGui.GetStyle().WindowPadding.X + 100; // account for "COPY" button
             windowSize.Y += ImGui.GetStyle().WindowPadding.Y + 10;
             if( pos.X + windowSize.X > screenPos.X + screenSize.X || pos.Y + windowSize.Y > screenPos.Y + screenSize.Y ) return;
@@ -272,7 +273,7 @@ namespace VFXEditor.Data.Vfx {
                     if( i >= maxDisplay ) break;
 
                     ImGui.Text( $"{path}" );
-                    ImGui.SameLine();
+                    ImGui.SameLine( largestSize.X + 20 );
                     if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) {
                         ImGui.SetClipboardText( path );
                     }

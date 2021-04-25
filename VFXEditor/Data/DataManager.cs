@@ -30,6 +30,7 @@ namespace VFXEditor.Data
         public StatusSheetLoader _Statuses;
         public ZoneSheetLoader _Zones;
         public MountSheeetLoader _Mounts;
+        public HousingSheetLoader _Housing;
 
         public DataManager(Plugin plugin )
         {
@@ -47,6 +48,7 @@ namespace VFXEditor.Data
             _Statuses = new StatusSheetLoader( this, plugin );
             _Zones = new ZoneSheetLoader( this, plugin );
             _Mounts = new MountSheeetLoader( this, plugin );
+            _Housing = new HousingSheetLoader( this, plugin );
         }
 
 

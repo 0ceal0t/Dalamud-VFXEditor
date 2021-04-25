@@ -1,6 +1,8 @@
 # VFXEditor
 A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide)**)
 
+> Just want to hide certain VFXs? Use [this](https://github.com/0ceal0t/EasyEyes) instead
+
 ![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/docs/preview_5.png)
 
 ## Installation
@@ -52,7 +54,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Option to not load 3D model
 - [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
-- [ ] Only render model on tab open
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Test with Penumbra
@@ -70,7 +71,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file
 - [ ] Better readability (colored  text)
-- [ ] Show binders on model (would requrie getting skeleton, since the binder is a bone, I'm pretty sure)
+- [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
 - [x] ~~Timeline sequencer view~~

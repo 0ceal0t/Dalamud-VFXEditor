@@ -50,6 +50,14 @@ namespace VFXEditor.Data.Texture
             _plugin = plugin;
             WriteLocation = Path.Combine( plugin.WriteLocation, "documents/textures" );
             Directory.CreateDirectory( WriteLocation );
+
+            // Set paths manually since TexImpNet can be dumb sometimes
+            var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
+            string _32bitPath = Path.Combine( _plugin.AssemblyLocation, "runtimes", "win-x64", "native" );
+            string _64bitPath = Path.Combine( _plugin.AssemblyLocation, "runtimes", "win-x86", "native" );
+            lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
+            lib.Resolver.SetProbingPaths64( new string[] { _64bitPath } );
+            PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
         }
 
         public void Reset() {
@@ -93,6 +101,7 @@ namespace VFXEditor.Data.Texture
                 }
                 else { //a .png file, convert it to the format currently being used by the existing game file
                     var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( replacePath );
+                    
                     using( var surface = Surface.LoadFromFile( fileLocation ) ) {
                         surface.FlipVertically();
 
