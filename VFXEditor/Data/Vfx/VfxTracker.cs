@@ -204,7 +204,7 @@ namespace VFXEditor.Data.Vfx {
                 // ==== CHECK WINDOW POSITION ======
                 if(!WorldToScreen(height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, group.Key );
-                if( d > 100f ) {
+                if( d > 100f && Configuration.Config.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
@@ -231,7 +231,7 @@ namespace VFXEditor.Data.Vfx {
                 // ===== CHECK WINDOW POSITION =========
                 if(!WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, pos );
-                if( d > 100f ) {
+                if( d > 100f && Configuration.Config.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );

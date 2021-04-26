@@ -46,10 +46,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Investigate VFX flags
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Tables for documents, texture view?
-- [ ] Render distance settings for overlay
 - [ ] Weapons / footsteps / etc. in live view
-- [ ] Fix live overlay view in cutscenes
-- [ ] Export/Import dependencies
 - [ ] Highlight important
 - [ ] Option to not load 3D model
 - [ ] Merge A8 into Lumina
@@ -74,6 +71,10 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Render distance settings for overlay~~
+- [x] ~~Fix live overlay view in cutscenes~~ (kinda)
+- [x] ~~Mount select tab~~
+- [x] ~~Housing select tab~~
 - [x] ~~Timeline sequencer view~~
 - [x] ~~Show emitter vertices~~
 - [x] ~~Export multiple + dependencies~~

@@ -177,7 +177,7 @@ namespace VFXEditor.UI
             ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 5, 5 ) );
             ImGui.PopStyleColor();
 
-            ImGui.Columns( 4, "MainInterfaceFileColumns", false );
+            ImGui.Columns( 3, "MainInterfaceFileColumns", false );
 
             ImGui.SetColumnWidth( 0, 80 );
             ImGui.Text( "Data Source:" );
@@ -185,60 +185,83 @@ namespace VFXEditor.UI
             ImGui.Text( "Preview On:" );
             ImGui.NextColumn();
 
+            // ======= SEARCH BARS =========
             string sourceString = _plugin.SourceString;
             string previewString = _plugin.ReplaceString;
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 250 );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 10 );
-            ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
-            ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-            ImGui.PopItemWidth();
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
+            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 80 );
 
-            // ====== SEARCH + NEW ========
-            ImGui.NextColumn();
-            ImGui.SetColumnWidth( 2, 67 );
+            ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+
+            ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) {
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
                 SelectUI.Show();
             }
             ImGui.SameLine();
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.FileMedical}", new Vector2( 25, 23 ) ) ) {
-                ImGui.OpenPopup( "New_Popup1" );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
+                _plugin.RemoveSourceAVFX();
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
-            if( ImGui.BeginPopup( "New_Popup1") ) {
-                if( ImGui.Selectable( "Blank") ) {
-                    OpenTemplate( @"default_vfx.avfx" );
-                }
-                if( ImGui.Selectable( "Weapon") ) {
-                    OpenTemplate( @"default_weapon.avfx" );
-                }
-                ImGui.EndPopup();
-            }
-            // ======= SEARCH + UNLINK ========
+
+
+            ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+
+            ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect" ) ) {
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect", new Vector2( 30, 23 ) ) ) {
                 PreviewUI.Show( showLocal: false );
             }
             ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Unlink}##MainInterfaceFiles-PreviewRemove" ) ) {
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 _plugin.RemoveReplaceAVFX();
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
+
+            ImGui.PopItemWidth();
+            
+
             // ======= MANAGE + OVERLAY =========
             ImGui.NextColumn();
             ImGui.SetColumnWidth( 3, 200 );
+
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.FileMedical}", new Vector2( 28, 23 ) ) ) {
+                ImGui.OpenPopup( "New_Popup1" );
+            }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
+
+            if( ImGui.BeginPopup( "New_Popup1" ) ) {
+                if( ImGui.Selectable( "Blank" ) ) {
+                    OpenTemplate( @"default_vfx.avfx" );
+                }
+                if( ImGui.Selectable( "Weapon" ) ) {
+                    OpenTemplate( @"default_weapon.avfx" );
+                }
+                ImGui.EndPopup();
+            }
+
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.20f, 0.20f, 0.20f, 1.0f ) );
             if(ImGui.Button( "Docs", new Vector2( 52, 23 ) ) ) {
                 DocUI.Show();
             }
             ImGui.PopStyleColor();
-            ImGui.SameLine();
+
+            // =======SPAWN + MANIP =========
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{(!_plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash)}##MainInterfaceFiles-MarkVfx" ) ) {
+            if( ImGui.Button( $"{( !_plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash )}##MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
                 _plugin.Tracker.Enabled = !_plugin.Tracker.Enabled;
                 if( !_plugin.Tracker.Enabled ) {
                     _plugin.Tracker.Reset();
@@ -249,9 +272,11 @@ namespace VFXEditor.UI
                 }
             }
             ImGui.PopFont();
-            // =======SPAWN + MANIP =========
+
+            ImGui.SameLine();
             string previewSpawn = _plugin.Doc.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             if(SpawnVfx == null ) {
                 if( spawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
@@ -286,6 +311,7 @@ namespace VFXEditor.UI
             }
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             if( !VFXManip.CanBeEnabled ) {
                 ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
                 ImGui.Button( $"{( char )FontAwesomeIcon.Cube}##MainInterfaceFiles-VfxManip" );
@@ -381,6 +407,10 @@ namespace VFXEditor.UI
             ImGui.SetNextItemWidth( 135 );
             if( ImGui.InputInt( "Recent VFX Limit##Settings", ref recentLimit) ) {
                 Configuration.Config.SaveRecentLimit = Math.Max( recentLimit, 0 );
+            }
+            bool limitOverlay = Configuration.Config.OverlayLimit;
+            if( ImGui.Checkbox( "Live Overlay Limit by Distance##Settings", ref limitOverlay ) ) {
+                Configuration.Config.OverlayLimit = limitOverlay;
             }
 
             if( ImGui.Button( "Save##Settings" ) )

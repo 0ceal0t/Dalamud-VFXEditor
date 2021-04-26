@@ -139,6 +139,11 @@ namespace VFXEditor
         public void RemoveReplaceAVFX() {
             Doc.UpdateReplace( VFXSelectResult.None() );
         }
+        public void RemoveSourceAVFX() {
+            Doc.UpdateSource( VFXSelectResult.None() );
+            Doc.ActiveDoc.Written = false;
+            UnloadAVFX();
+        }
         public void RefreshDoc() {
             if( Doc.HasVFX() ) {
                 MainUI.RefreshAVFX();

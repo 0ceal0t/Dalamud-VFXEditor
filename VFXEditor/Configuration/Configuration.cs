@@ -32,6 +32,7 @@ namespace VFXEditor {
         public bool LogAllFiles = false;
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
+        public bool OverlayLimit = true;
 
         public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
