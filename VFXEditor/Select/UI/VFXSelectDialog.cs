@@ -49,6 +49,7 @@ namespace VFXSelect.UI
 
     public class VFXSelectDialog
     {
+        public bool HasRecent = true;
         public bool ShowLocal = true;
         public bool ShowRecent = true;
 
@@ -60,10 +61,12 @@ namespace VFXSelect.UI
         public List<VFXSelectTab> GameTabs;
         public List<VFXSelectResult> RecentList;
 
-        public VFXSelectDialog(SheetManager sheet, string id, List<VFXSelectResult> recentList)
-        {
+        public VFXSelectDialog(SheetManager sheet, string id, List<VFXSelectResult> recentList) {
             Id = id;
             RecentList = recentList;
+            if(recentList == null ) {
+                HasRecent = false;
+            }
 
             GameTabs = new List<VFXSelectTab>(new VFXSelectTab[]{
                 new VFXItemSelect( id, "Item", sheet, this ),
@@ -100,7 +103,7 @@ namespace VFXSelect.UI
             if( ShowLocal )
                 DrawLocal();
             DrawGame();
-            if( ShowRecent )
+            if( ShowRecent && HasRecent)
                 DrawRecent();
             ImGui.EndTabBar();
             ImGui.End();
@@ -237,7 +240,9 @@ namespace VFXSelect.UI
         public void Invoke( VFXSelectResult result )
         {
             OnSelect?.Invoke( result );
-            OnAddRecent?.Invoke( result );
+            if( HasRecent ) {
+                OnAddRecent?.Invoke( result );
+            }
         }
         public void DisplayPath(string path )
         {
