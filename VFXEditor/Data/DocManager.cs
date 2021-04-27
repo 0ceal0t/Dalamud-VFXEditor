@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.UI;
+using VFXSelect.UI;
 
 namespace VFXEditor.Data {
     public class ReplaceDoc {

@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI.Graphics;
 using VFXEditor.UI.VFX;
+using VFXSelect.UI;
 
 namespace VFXEditor.UI
 {
@@ -36,10 +37,14 @@ namespace VFXEditor.UI
         public MainInterface( Plugin plugin )
         {
             _plugin = plugin;
-            SelectUI = new VFXSelectDialog( _plugin, "File Select [SOURCE]" );
-            PreviewUI = new VFXSelectDialog( _plugin, "File Select [TARGET]" );
+            SelectUI = new VFXSelectDialog( _plugin.Manager._Sheets, "File Select [SOURCE]", _plugin.Configuration.RecentSelects );
+            PreviewUI = new VFXSelectDialog( _plugin.Manager._Sheets, "File Select [TARGET]", _plugin.Configuration.RecentSelects );
+
             SelectUI.OnSelect += _plugin.SelectAVFX;
+            SelectUI.OnAddRecent += _plugin.Configuration.AddRecent;
+
             PreviewUI.OnSelect += _plugin.ReplaceAVFX;
+            PreviewUI.OnAddRecent += _plugin.Configuration.AddRecent;
 
             TexToolsUI = new TexToolsDialog( _plugin );
             PenumbraUI = new PenumbraDialog( _plugin );
@@ -201,7 +206,7 @@ namespace VFXEditor.UI
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 0.8f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 _plugin.RemoveSourceAVFX();
             }
@@ -219,7 +224,7 @@ namespace VFXEditor.UI
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 0.8f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 _plugin.RemoveReplaceAVFX();
             }
@@ -234,7 +239,7 @@ namespace VFXEditor.UI
             ImGui.SetColumnWidth( 3, 200 );
 
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 0.8f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.FileMedical}", new Vector2( 28, 23 ) ) ) {
                 ImGui.OpenPopup( "New_Popup1" );
             }

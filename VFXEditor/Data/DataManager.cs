@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Lumina.Excel.GeneratedSheets;
 using System.IO;
 using VFXEditor.Data.Texture;
-using VFXEditor.Data.Sheets;
+using VFXSelect;
 
 namespace VFXEditor.Data
 {
@@ -18,37 +18,13 @@ namespace VFXEditor.Data
         public Plugin _plugin;
         public TextureManager TexManager;
         public string TempPath;
-        public string NpcCsv;
-
-        public ItemSheetLoader _Items;
-        public ActionSheetLoader _Actions;
-        public CutsceneSheetLoader _Cutscenes;
-        public EmoteSheetLoader _Emotes;
-        public GimmickSheetLoader _Gimmicks;
-        public NonPlayerActionSheetLoader _NonPlayerActions;
-        public NpcSheetLoader _Npcs;
-        public StatusSheetLoader _Statuses;
-        public ZoneSheetLoader _Zones;
-        public MountSheeetLoader _Mounts;
-        public HousingSheetLoader _Housing;
+        public SheetManager _Sheets;
 
         public DataManager(Plugin plugin )
         {
             _plugin = plugin;
             TexManager = new TextureManager( _plugin );
-            NpcCsv = Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" );
-
-            _Items = new ItemSheetLoader( this, plugin );
-            _Actions = new ActionSheetLoader( this, plugin );
-            _Cutscenes = new CutsceneSheetLoader( this, plugin );
-            _Emotes = new EmoteSheetLoader( this, plugin );
-            _Gimmicks = new GimmickSheetLoader( this, plugin );
-            _NonPlayerActions = new NonPlayerActionSheetLoader( this, plugin );
-            _Npcs = new NpcSheetLoader( this, plugin );
-            _Statuses = new StatusSheetLoader( this, plugin );
-            _Zones = new ZoneSheetLoader( this, plugin );
-            _Mounts = new MountSheeetLoader( this, plugin );
-            _Housing = new HousingSheetLoader( this, plugin );
+            _Sheets = new SheetManager( _plugin.PluginInterface, Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" ) );
         }
 
 

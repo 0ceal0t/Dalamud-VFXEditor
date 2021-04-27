@@ -13,6 +13,7 @@ using VFXEditor.External;
 using VFXEditor.UI;
 using VFXEditor.Data.Vfx;
 using System.Reflection;
+using VFXSelect.UI;
 
 namespace VFXEditor
 {
