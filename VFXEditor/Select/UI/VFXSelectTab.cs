@@ -34,7 +34,6 @@ namespace VFXSelect.UI {
             Name = tabId;
             ParentId = parentId;
             Id = "##Select/" + tabId + "/" + parentId;
-            // =====================
         }
 
         public abstract bool CheckMatch( T item, string searchInput);

@@ -41,10 +41,7 @@ namespace VFXEditor.UI
             PreviewUI = new VFXSelectDialog( _plugin.Manager._Sheets, "File Select [TARGET]", _plugin.Configuration.RecentSelects );
 
             SelectUI.OnSelect += _plugin.SelectAVFX;
-            SelectUI.OnAddRecent += _plugin.Configuration.AddRecent;
-
             PreviewUI.OnSelect += _plugin.ReplaceAVFX;
-            PreviewUI.OnAddRecent += _plugin.Configuration.AddRecent;
 
             TexToolsUI = new TexToolsDialog( _plugin );
             PenumbraUI = new PenumbraDialog( _plugin );
@@ -206,8 +203,8 @@ namespace VFXEditor.UI
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 0.8f ) );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 _plugin.RemoveSourceAVFX();
             }
             ImGui.PopStyleColor();
@@ -224,8 +221,8 @@ namespace VFXEditor.UI
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 0.8f ) );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Trash}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 _plugin.RemoveReplaceAVFX();
             }
             ImGui.PopStyleColor();
