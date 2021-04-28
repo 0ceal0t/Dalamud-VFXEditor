@@ -131,28 +131,36 @@ namespace VFXEditor
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var v = StaticVfxNewHook.OriginalFunction( path, pool );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( path ) );
-            _plugin.Tracker.AddStatic( v, p1 );
+            if(_plugin?.Tracker != null ) {
+                _plugin.Tracker.AddStatic( v, p1 );
+            }
             return v;
         }
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
             if( _plugin.MainUI?.SpawnVfx != null && vfx == _plugin.MainUI.SpawnVfx.Vfx ) {
                 _plugin.MainUI.SpawnVfx = null;
             }
-            _plugin.Tracker.RemoveStatic( vfx );
+            if( _plugin?.Tracker != null ) {
+                _plugin.Tracker.RemoveStatic( vfx );
+            }
             return StaticVfxRemoveHook.OriginalFunction( vfx );
         }
         // ============
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 ) {
             var v = ActorVfxNewHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( a1 ) );
-            _plugin.Tracker.AddActor( a2, v, p1 );
+            if( _plugin?.Tracker != null ) {
+                _plugin.Tracker.AddActor( a2, v, p1 );
+            }
             return v;
         }
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
             if( _plugin.MainUI?.SpawnVfx != null && vfx == _plugin.MainUI.SpawnVfx.Vfx ) {
                 _plugin.MainUI.SpawnVfx = null;
             }
-            _plugin.Tracker.RemoveActor( vfx );
+            if( _plugin?.Tracker != null ) {
+                _plugin.Tracker.RemoveActor( vfx );
+            }
             return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
         }
 
@@ -264,10 +272,11 @@ namespace VFXEditor
             }
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
-            if( _plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
+
+            if( _plugin?.Doc != null && _plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
             }
-            else if( _plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
+            else if(_plugin?.Manager?.TexManager != null && _plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;
             }
 

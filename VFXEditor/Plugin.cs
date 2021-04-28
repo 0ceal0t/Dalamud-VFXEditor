@@ -85,14 +85,15 @@ namespace VFXEditor
             ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
 
             Tracker = new VfxTracker( this );
-            ResourceLoader.Init();
-            ResourceLoader.Enable();
             Manager = new DataManager( this );
             Doc = new DocManager( this );
             MainUI = new MainInterface( this );
             TexToolsManager = new TexTools( this );
             PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
+
+            ResourceLoader.Init();
+            ResourceLoader.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
         }
@@ -105,10 +106,9 @@ namespace VFXEditor
 
         public DateTime LastSelect = DateTime.Now;
         public void SelectAVFX(VFXSelectResult selectResult ) {
-            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) { // only allow new selects every 1/2 second
-                return;
-            }
+            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) return;
             LastSelect = DateTime.Now;
+
             switch( selectResult.Type ) {
                 case VFXSelectType.Local: // LOCAL
                     bool localResult = Manager.GetLocalFile( selectResult.Path, out var localAvfx );
@@ -131,10 +131,12 @@ namespace VFXEditor
                     }
                     break;
             }
+            Configuration.AddRecent( selectResult );
             Doc.UpdateSource( selectResult );
         }
 
         public void ReplaceAVFX(VFXSelectResult replaceResult ) {
+            Configuration.AddRecent( replaceResult );
             Doc.UpdateReplace( replaceResult );
         }
         public void RemoveReplaceAVFX() {
