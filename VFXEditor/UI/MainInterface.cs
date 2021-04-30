@@ -236,7 +236,7 @@ namespace VFXEditor.UI
             ImGui.SetColumnWidth( 3, 200 );
 
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 0.8f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.FileMedical}", new Vector2( 28, 23 ) ) ) {
                 ImGui.OpenPopup( "New_Popup1" );
             }
