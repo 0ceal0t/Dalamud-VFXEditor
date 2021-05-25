@@ -178,6 +178,7 @@ namespace VFXEditor
         }
         public void Dispose() {
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
+            ResourceLoader?.Dispose();
 
             // ====== IMGUI =======
             ImPlot.DestroyContext();
@@ -185,7 +186,6 @@ namespace VFXEditor
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
             MainUI?.Dispose();
-            ResourceLoader?.Dispose();
             DXManager?.Dispose();
             Doc?.Dispose();
             Manager.TexManager.Dispose();
