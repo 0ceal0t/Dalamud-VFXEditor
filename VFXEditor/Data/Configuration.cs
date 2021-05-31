@@ -2,6 +2,7 @@ using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -35,6 +36,13 @@ namespace VFXEditor {
 
         public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
         public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
+
+        public string WriteLocation = Path.Combine( new[] {
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "XIVLauncher",
+            "pluginConfigs",
+            "VFXEditor",
+        });
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;

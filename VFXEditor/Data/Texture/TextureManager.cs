@@ -11,10 +11,6 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VFXEditor.Data.Texture;
 
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
-
 namespace VFXEditor.Data.Texture
 {
     public struct TexData { // used for the texture previews
@@ -40,7 +36,6 @@ namespace VFXEditor.Data.Texture
     public class TextureManager
     {
         public Plugin _plugin;
-        public string WriteLocation;
         public int TEX_ID = 0;
 
         public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
@@ -48,13 +43,13 @@ namespace VFXEditor.Data.Texture
 
         public TextureManager(Plugin plugin ) {
             _plugin = plugin;
-            WriteLocation = Path.Combine( plugin.WriteLocation, "documents/textures" );
-            Directory.CreateDirectory( WriteLocation );
 
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
-            string _32bitPath = Path.Combine( _plugin.AssemblyLocation, "runtimes", "win-x64", "native" );
-            string _64bitPath = Path.Combine( _plugin.AssemblyLocation, "runtimes", "win-x86", "native" );
+
+            var runtimeRoot = Path.Combine( _plugin.AssemblyLocation, "runtimes" );
+            string _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
+            string _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
             lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
             lib.Resolver.SetProbingPaths64( new string[] { _64bitPath } );
             PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
@@ -86,7 +81,7 @@ namespace VFXEditor.Data.Texture
 
             try {
                 TexReplace replaceData;
-                var path = Path.Combine( WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+                var path = Path.Combine( _plugin.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 bool isDDS = Path.GetExtension( fileLocation ).ToLower() == ".dds";
                 if( isDDS ) { // a .dds, use the format that the file is already in

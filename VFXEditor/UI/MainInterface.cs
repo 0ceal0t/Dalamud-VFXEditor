@@ -23,7 +23,7 @@ namespace VFXEditor.UI
         private readonly Plugin _plugin;
         public bool Visible = false;
 
-        public UIMain VFXMain = null;
+        public UIMain VFXMain;
         public VFXSelectDialog SelectUI;
         public VFXSelectDialog PreviewUI;
         public TexToolsDialog TexToolsUI;
@@ -32,7 +32,14 @@ namespace VFXEditor.UI
         public TextureDialog TextureUI;
         public VFXManipulator VFXManip;
 
-        public BaseVfx SpawnVfx = null;
+        public BaseVfx SpawnVfx;
+
+        private string IconText;
+        private string StatusText;
+        private Vector4 StatusColor;
+
+        private string RawInputValue;
+        private string RawTexInputValue;
 
         public MainInterface( Plugin plugin )
         {
@@ -54,7 +61,7 @@ namespace VFXEditor.UI
 #endif
         }
         public void RefreshAVFX() {
-            VFXMain = new VFX.UIMain( _plugin.AVFX, _plugin );
+            VFXMain = new UIMain( _plugin.AVFX, _plugin );
         }
         public void UnloadAVFX() {
             VFXMain = null;
@@ -76,16 +83,14 @@ namespace VFXEditor.UI
         public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            var ret = ImGui.Begin( _plugin.Name, ref Visible );
-            if( !ret ) return;
-            // ==================
+            if( !ImGui.Begin( _plugin.Name, ref Visible ) ) return;
+
             ImGui.BeginTabBar( "MainInterfaceTabs" );
             DrawFiles();
             DrawExtract();
             DrawSettings();
             DrawHelp();
             ImGui.EndTabBar();
-
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( VFXMain == null ) {
@@ -151,13 +156,8 @@ namespace VFXEditor.UI
             ImGui.End();
         }
 
-        public bool Status = false;
-        public string IconText = "";
-        public string StatusText = "";
-        public Vector4 StatusColor = new Vector4();
         public void SetStatus(bool status ) {
-            Status = status;
-            if( Status ) {
+            if( status ) {
                 IconText = $"{( char )FontAwesomeIcon.Check}";
                 StatusText = "Verified";
                 StatusColor = new Vector4( 0.15f, 0.90f, 0.15f, 1.0f );
@@ -170,9 +170,8 @@ namespace VFXEditor.UI
         }
 
         public void DrawFiles() {
-            var ret = ImGui.BeginTabItem( "Files##MainInterfaceTabs" );
-            if( !ret ) return;
-            // ==========================
+            if( !ImGui.BeginTabItem( "Files##MainInterfaceTabs" ) ) return;
+
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
             ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
             ImGui.BeginChild( "Child##MainInterface", new Vector2( ImGui.GetWindowWidth() - 0, 60 ) );
@@ -229,7 +228,6 @@ namespace VFXEditor.UI
             ImGui.PopFont();
 
             ImGui.PopItemWidth();
-            
 
             // ======= MANAGE + OVERLAY =========
             ImGui.NextColumn();
@@ -333,17 +331,13 @@ namespace VFXEditor.UI
             ImGui.EndTabItem();
         }
 
-        public string RawInputValue = "";
-        public string RawTexInputValue = "";
         public void DrawExtract() {
-            var ret = ImGui.BeginTabItem( "Extract##MainInterfaceTabs" );
-            if( !ret ) return;
+            if( !ImGui.BeginTabItem( "Extract##MainInterfaceTabs" ) ) return;
             // ======= AVFX =========
             ImGui.Text( "Extract a raw .avfx file" );
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "Extract##RawExtract" ) )
-            {
+            if( ImGui.Button( "Extract##RawExtract" ) ) {
                 bool result = _plugin.PluginInterface.Data.FileExists( RawInputValue );
                 if( result ) {
                     try {
@@ -380,43 +374,26 @@ namespace VFXEditor.UI
         }
 
         public void DrawSettings() {
-            var ret = ImGui.BeginTabItem( "Settings##MainInterfaceTabs" );
-            if( !ret ) return;
-            bool verifyOnLoad = Configuration.Config.VerifyOnLoad;
-            ImGui.SetNextItemWidth( 200 );
-            if(ImGui.Checkbox( "Verify on load##Settings", ref verifyOnLoad ) )
-            {
-                Configuration.Config.VerifyOnLoad = verifyOnLoad;
-            }
-            ImGui.SameLine();
-            bool loadTextures = Configuration.Config.PreviewTextures;
-            if( ImGui.Checkbox( "Load textures##Settings", ref loadTextures ) )
-            {
-                Configuration.Config.PreviewTextures = loadTextures;
-            }
-            ImGui.SameLine();
-            bool logAllFiles = Configuration.Config.LogAllFiles;
-            if( ImGui.Checkbox( "Log all files##Settings", ref logAllFiles ) ) {
-                Configuration.Config.LogAllFiles = logAllFiles;
-            }
-            ImGui.SameLine();
-            bool hideWithUI = Configuration.Config.HideWithUI;
-            if( ImGui.Checkbox( "Hide with UI##Settings", ref hideWithUI ) ) {
-                Configuration.Config.HideWithUI = hideWithUI;
-            }
-            ImGui.SameLine();
-            int recentLimit = Configuration.Config.SaveRecentLimit;
-            ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( "Recent VFX Limit##Settings", ref recentLimit) ) {
-                Configuration.Config.SaveRecentLimit = Math.Max( recentLimit, 0 );
-            }
-            bool limitOverlay = Configuration.Config.OverlayLimit;
-            if( ImGui.Checkbox( "Live Overlay Limit by Distance##Settings", ref limitOverlay ) ) {
-                Configuration.Config.OverlayLimit = limitOverlay;
-            }
+            if( !ImGui.BeginTabItem( "Settings##MainInterfaceTabs" ) ) return;
 
-            if( ImGui.Button( "Save##Settings" ) )
-            {
+            ImGui.Text( "Changes to the temp file location may require a restart to take effect" );
+            ImGui.InputText( "Temp file location", ref Configuration.Config.WriteLocation, 255 );
+            ImGui.SetNextItemWidth( 200 );
+            ImGui.Checkbox( "Verify on load##Settings", ref Configuration.Config.VerifyOnLoad );
+            ImGui.SameLine();
+            ImGui.Checkbox( "Load textures##Settings", ref Configuration.Config.PreviewTextures );
+            ImGui.SameLine();
+            ImGui.Checkbox( "Log all files##Settings", ref Configuration.Config.LogAllFiles );
+            ImGui.SameLine();
+            ImGui.Checkbox( "Hide with UI##Settings", ref Configuration.Config.HideWithUI );
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 135 );
+            if( ImGui.InputInt( "Recent VFX Limit##Settings", ref Configuration.Config.SaveRecentLimit ) ) {
+                Configuration.Config.SaveRecentLimit = Math.Max( Configuration.Config.SaveRecentLimit, 0 );
+            }
+            ImGui.Checkbox( "Live Overlay Limit by Distance##Settings", ref Configuration.Config.OverlayLimit );
+
+            if( ImGui.Button( "Save##Settings" ) ) {
                 Configuration.Config.Save();
             }
 
@@ -426,8 +403,7 @@ namespace VFXEditor.UI
         }
 
         public void DrawHelp() {
-            var ret = ImGui.BeginTabItem( "Help##MainInterfaceTabs" );
-            if( !ret ) return;
+            if( !ImGui.BeginTabItem( "Help##MainInterfaceTabs" ) ) return;
             if( ImGui.Button( "Report an Issue" ) ) {
                 Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }

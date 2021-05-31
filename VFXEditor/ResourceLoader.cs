@@ -76,9 +76,9 @@ namespace VFXEditor
         internal GetMatrixSingletonDelegate GetMatrixSingleton;
 
 #if !DEBUG
-        public bool EnableHooks = true;
+        private bool EnableHooks = true;
 #else
-        public bool EnableHooks = false;
+        private bool EnableHooks = false;
 #endif
 
 
@@ -267,6 +267,9 @@ namespace VFXEditor
 
             if( _plugin.Doc != null && _plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
+                if(Configuration.Config?.LogAllFiles == true) {
+                    PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );
+                }
             }
             else if(_plugin.Manager?.TexManager != null && _plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;

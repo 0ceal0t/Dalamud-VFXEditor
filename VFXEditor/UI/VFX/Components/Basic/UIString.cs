@@ -10,8 +10,7 @@ using AVFXLib.Main;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIString : UIBase
-    {
+    public class UIString : UIBase {
         public string Id;
         public LiteralString Literal;
         public string Value;
@@ -20,29 +19,19 @@ namespace VFXEditor.UI.VFX
         public delegate void Change(LiteralString literal);
         public Change ChangeFunction;
 
-        public UIString(string id, LiteralString literal, Change changeFunction = null, int maxSizeBytes = 256)
-        {
+        public UIString(string id, LiteralString literal, Change changeFunction = null, int maxSizeBytes = 256) {
             Id = id;
             Literal = literal;
-            Value = Literal.Value;
-            if(Value == null )
-            {
-                Value = "";
-            }
+            Value = Literal.Value == null ? "" : Literal.Value;
             MaxSize = (uint)maxSizeBytes;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
+            ChangeFunction = changeFunction == null ? DoNothing : changeFunction;
         }
 
-        public override void Draw(string id)
-        {
+        public override void Draw(string id) {
             ImGui.InputText(Id + id, ref Value, MaxSize);
             ImGui.SameLine();
-            if (ImGui.SmallButton("Update" + id))
-            {
-                Literal.GiveValue(Value.Trim('\0'));
+            if (ImGui.SmallButton("Update" + id)) {
+                Literal.GiveValue(Value.Trim('\0') + "\u0000");
                 ChangeFunction(Literal);
             }
         }

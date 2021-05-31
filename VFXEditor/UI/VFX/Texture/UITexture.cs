@@ -26,8 +26,7 @@ namespace VFXEditor.UI.VFX
             NodeView = new UINodeGraphView( this );
             Manager = view.Manager;
             // ================
-            UIString.Change bytesToPath = BytesToPath;
-            Path = new UIString( "Path", Texture.Path, changeFunction: bytesToPath );
+            Path = new UIString( "Path", Texture.Path);
             lastValue = Texture.Path.Value;
             if( view.GetPreviewTexture() ) {
                 Manager.LoadTexture( Texture.Path.Value );
@@ -159,11 +158,6 @@ namespace VFXEditor.UI.VFX
                     }
                 }
             } );
-        }
-
-        public static void BytesToPath(LiteralString literal)
-        {
-            literal.GiveValue(literal.Value + "\u0000");
         }
 
         public override string GetText() {

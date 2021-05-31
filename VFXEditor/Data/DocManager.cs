@@ -11,7 +11,6 @@ using VFXSelect.UI;
 namespace VFXEditor.Data {
     public class ReplaceDoc {
         public AVFXBase AVFX = null;
-        public bool Written = false;
         public string WriteLocation;
 
         public VFXSelectResult Source;
@@ -19,24 +18,21 @@ namespace VFXEditor.Data {
     }
 
     public class DocManager {
-        public ReplaceDoc ActiveDoc = null;
-        public List<ReplaceDoc> Docs = new List<ReplaceDoc>();
-        public Dictionary<string, string> GamePathToLocalPath = new Dictionary<string, string>();
+        public ReplaceDoc ActiveDoc;
+        public List<ReplaceDoc> Docs = new();
+        public Dictionary<string, string> GamePathToLocalPath = new();
 
         public Plugin _plugin;
-        public string WriteLocation;
         public int DOC_ID = 0;
 
         public DocManager( Plugin plugin ) {
             _plugin = plugin;
-            WriteLocation = Path.Combine( plugin.WriteLocation, "documents/vfx" );
-            Directory.CreateDirectory( WriteLocation );
             NewDoc();
         }
 
         public ReplaceDoc NewDoc() {
             ReplaceDoc doc = new ReplaceDoc();
-            doc.WriteLocation = Path.Combine( WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
+            doc.WriteLocation = Path.Combine( _plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
             doc.Source = VFXSelectResult.None();
             doc.Replace = VFXSelectResult.None();
 
@@ -53,16 +49,21 @@ namespace VFXEditor.Data {
                 GamePathToLocalPath.Remove( ActiveDoc.Replace.Path );
             }
             ActiveDoc.Replace = select;
-            if(ActiveDoc.Replace.Path != "")
+            if(ActiveDoc.Replace.Path != "") {
                 GamePathToLocalPath[ActiveDoc.Replace.Path] = ActiveDoc.WriteLocation;
+            }
+        }
+        public void ResetDoc() {
+            File.Delete( ActiveDoc.WriteLocation );
         }
         public void SelectDoc(ReplaceDoc doc ) {
             ActiveDoc = doc;
         }
         public bool RemoveDoc(ReplaceDoc doc ) {
             bool switchDoc = ( doc == ActiveDoc );
-            if( GamePathToLocalPath.ContainsKey( doc.Replace.Path ) )
+            if( GamePathToLocalPath.ContainsKey( doc.Replace.Path ) ) {
                 GamePathToLocalPath.Remove( doc.Replace.Path );
+            }
             Docs.Remove( doc );
             File.Delete( doc.WriteLocation );
             if( switchDoc ) {
@@ -76,18 +77,15 @@ namespace VFXEditor.Data {
         }
 
         public void Save() {
-            ActiveDoc.Written = true;
             _plugin.Manager.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.AVFX );
+            if(Configuration.Config.LogAllFiles) {
+                PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
+            }
         }
 
         public bool GetLocalPath(string gamePath, out FileInfo file ) {
             file = null;
             if( GamePathToLocalPath.ContainsKey( gamePath ) ) {
-                foreach(var doc in Docs) {
-                    if(doc.WriteLocation == GamePathToLocalPath[gamePath] && !doc.Written ) { // if it's not being replaced by anything, don't bother
-                        return false;
-                    }
-                }
                 file = new FileInfo( GamePathToLocalPath[gamePath] );
                 return true;
             }

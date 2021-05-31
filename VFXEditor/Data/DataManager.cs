@@ -17,8 +17,9 @@ namespace VFXEditor.Data
     {
         public Plugin _plugin;
         public TextureManager TexManager;
-        public string TempPath;
         public SheetManager _Sheets;
+
+        public AVFXNode LastImportNode;
 
         public DataManager(Plugin plugin )
         {
@@ -44,7 +45,6 @@ namespace VFXEditor.Data
         }
 
         // ====== LOCAL AVFX =====
-        public AVFXNode LastImportNode = null;
         public bool GetLocalFile(string path, out AVFXBase avfx) {
             avfx = null;
             if( File.Exists( path ) ) {

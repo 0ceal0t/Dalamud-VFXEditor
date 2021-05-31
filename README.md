@@ -41,6 +41,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Fix sound crashes (?)
 - [ ] Pause spawned vfx
 - [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags

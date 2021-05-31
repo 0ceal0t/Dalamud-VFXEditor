@@ -40,37 +40,24 @@ namespace VFXEditor
             get { return Doc.ActiveDoc.AVFX; }
             set { Doc.ActiveDoc.AVFX = value; }
         }
-        public string ReplaceAVFXPath {
-            get { return Doc.ActiveDoc.Replace.Path; }
-        }
-        public string SourceString {
-            get { return Doc.ActiveDoc.Source.DisplayString; }
-        }
-        public string ReplaceString {
-            get { return Doc.ActiveDoc.Replace.DisplayString; }
-        }
+        public string ReplaceAVFXPath => Doc.ActiveDoc.Replace.Path;
+        public string SourceString => Doc.ActiveDoc.Source.DisplayString;
+        public string ReplaceString => Doc.ActiveDoc.Replace.DisplayString;
+        public string WriteLocation => Configuration?.WriteLocation;
 
-        public string WriteLocation;
-        public string PluginDebugTitleStr;
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
-        // ====== IMGUI ======
-        public IntPtr ImPlotContext;
-        public IntPtr ImNodesContext;
+        private IntPtr ImPlotContext;
+
+        private DateTime LastSelect = DateTime.Now;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
-            WriteLocation = Path.Combine( new[] {
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "XIVLauncher",
-                "pluginConfigs",
-                Name,
-            } );
+            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Configuration.Initialize( PluginInterface );
             Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
             PluginLog.Log( "Write location: " + WriteLocation );
 
-            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Configuration.Initialize( PluginInterface );
             ResourceLoader = new ResourceLoader( this );
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
                 HelpMessage = "toggle ui"
@@ -104,7 +91,6 @@ namespace VFXEditor
             Tracker.Draw();
         }
 
-        public DateTime LastSelect = DateTime.Now;
         public void SelectAVFX(VFXSelectResult selectResult ) {
             if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) return;
             LastSelect = DateTime.Now;
@@ -144,7 +130,7 @@ namespace VFXEditor
         }
         public void RemoveSourceAVFX() {
             Doc.UpdateSource( VFXSelectResult.None() );
-            Doc.ActiveDoc.Written = false;
+            Doc.ResetDoc();
             UnloadAVFX();
         }
         public void RefreshDoc() {
@@ -180,7 +166,6 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
 
-            // ====== IMGUI =======
             ImPlot.DestroyContext();
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
