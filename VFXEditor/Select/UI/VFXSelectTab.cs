@@ -15,8 +15,8 @@ namespace VFXSelect.UI {
     }
 
     public abstract class VFXSelectTab<T, S> : VFXSelectTab {
-        public DalamudPluginInterface _pi;
-        public VFXSelectDialog _dialog;
+        public DalamudPluginInterface PluginInterface;
+        public VFXSelectDialog Dialog;
         public SheetLoader<T, S> Loader;
         public string Id;
 
@@ -27,9 +27,9 @@ namespace VFXSelect.UI {
         public T Selected = default(T);
         public S Loaded = default(S);
 
-        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, DalamudPluginInterface pi, VFXSelectDialog dialog ) {
-            _pi = pi;
-            _dialog = dialog;
+        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, DalamudPluginInterface pluginInterface, VFXSelectDialog dialog ) {
+            PluginInterface = pluginInterface;
+            Dialog = dialog;
             Loader = loader;
             Name = tabId;
             ParentId = parentId;
@@ -108,8 +108,8 @@ namespace VFXSelect.UI {
             texWrap?.Dispose();
             texWrap = null;
             if( iconId > 0 ) {
-                var tex = _pi.Data.GetIcon( iconId );
-                texWrap = _pi.UiBuilder.LoadImageRaw( BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4 );
+                var tex = PluginInterface.Data.GetIcon( iconId );
+                texWrap = PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 

@@ -21,20 +21,20 @@ namespace VFXEditor.UI.VFX
 
         public override UIEmitterItem OnNew() {
             if( IsParticle ) {
-                return new UIEmitterItem( Emitter.Emitter.addParticle(), true, Emitter );
+                return new UIEmitterItem( Emitter.Emitter.AddParticle(), true, Emitter );
             }
             else {
-                return new UIEmitterItem( Emitter.Emitter.addEmitter(), false, Emitter );
+                return new UIEmitterItem( Emitter.Emitter.AddEmitter(), false, Emitter );
             }
         }
 
         public override void OnDelete( UIEmitterItem item ) {
             if( IsParticle ) {
-                Emitter.Emitter.removeParticle( item.Iteration );
+                Emitter.Emitter.RemoveParticle( item.Iteration );
                 item.ParticleSelect.DeleteSelect();
             }
             else {
-                Emitter.Emitter.removeEmitter( item.Iteration );
+                Emitter.Emitter.RemoveEmitter( item.Iteration );
                 item.EmitterSelect.DeleteSelect();
             }
         }

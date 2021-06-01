@@ -16,8 +16,8 @@ namespace VFXEditor.UI.VFX
         List<UIItem> Animation;
         UIItemSplitView<UIItem> AnimationSplit;
         //========================
-        public List<UIEmitterItem> Particles;
-        public List<UIEmitterItem> Emitters;
+        public List<UIEmitterItem> ParticleList;
+        public List<UIEmitterItem> EmitterList;
         //========================
         public UIData Data;
         //========================
@@ -29,16 +29,16 @@ namespace VFXEditor.UI.VFX
         public UIString SoundInput;
         public UIInt SoundIndex;
 
-        public UIEmitter(AVFXEmitter emitter, UIEmitterView view, bool has_dependencies = false ) : base(EmitterColor, has_dependencies)
+        public UIEmitter(AVFXEmitter emitter, UIEmitterView view, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies)
         {
             Emitter = emitter;
             View = view;
-            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINode._Effectors, Emitter.EffectorIdx );
+            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINodeGroup.Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
             // =====================
             Animation = new List<UIItem>();
-            Particles = new List<UIEmitterItem>();
-            Emitters = new List<UIEmitterItem>();
+            ParticleList = new List<UIEmitterItem>();
+            EmitterList = new List<UIEmitterItem>();
             //======================
             Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, changeFunction: ChangeType );
             SoundInput = new UIString( "Sound", Emitter.Sound, changeFunction: SoundCheck );
@@ -65,18 +65,18 @@ namespace VFXEditor.UI.VFX
             Animation.Add( new UICurve3Axis( Emitter.Scale, "Scale", locked: true ) );
             //========================
             foreach( var particle in Emitter.Particles ) {
-                Particles.Add( new UIEmitterItem( particle, true, this ) );
+                ParticleList.Add( new UIEmitterItem( particle, true, this ) );
             }
             //============================
             foreach( var e in Emitter.Emitters ) {
-                Emitters.Add( new UIEmitterItem( e, false, this ) );
+                EmitterList.Add( new UIEmitterItem( e, false, this ) );
             }
             //=======================
             SetType();
             //=============================
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
-            EmitterSplit = new UIEmitterSplitView( Emitters, this, false );
-            ParticleSplit = new UIEmitterSplitView( Particles, this, true );
+            EmitterSplit = new UIEmitterSplitView( EmitterList, this, false );
+            ParticleSplit = new UIEmitterSplitView( ParticleList, this, true );
             HasDependencies = false; // if imported, all set now
         }
         public void SetType() {
@@ -177,8 +177,8 @@ namespace VFXEditor.UI.VFX
             return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
         }
 
-        public override byte[] toBytes() {
-            return Emitter.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Emitter.ToAVFX().ToBytes();
         }
     }
 }

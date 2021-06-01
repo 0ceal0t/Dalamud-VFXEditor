@@ -15,14 +15,14 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UIModelEmitterVertex OnNew() {
-            var vnum = Model.Model.addVNum();
-            var emit = Model.Model.addEmitVertex();
+            var vnum = Model.Model.AddVNum();
+            var emit = Model.Model.AddEmitVertex();
             return new UIModelEmitterVertex( vnum, emit, Model );
         }
 
         public override void OnDelete( UIModelEmitterVertex item ) {
-            Model.Model.removeEmitVertex( item.Vertex );
-            Model.Model.removeVNum( item.VertNumber );
+            Model.Model.RemoveEmitVertex( item.Vertex );
+            Model.Model.RemoveVNum( item.VertNumber );
         }
     }
 }

@@ -27,18 +27,18 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);

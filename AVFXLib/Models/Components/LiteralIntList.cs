@@ -18,7 +18,7 @@ namespace AVFXLib.Models
             Value.Add( 0 );
         }
 
-        public override void read( AVFXNode node )
+        public override void Read( AVFXNode node )
         {
         }
 
@@ -63,12 +63,12 @@ namespace AVFXLib.Models
             Value.RemoveAt( idx );
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             GiveValue( 0 );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             byte[] bytes = new byte[Value.Count];
             for(int i = 0; i < Value.Count; i++ )

@@ -299,7 +299,7 @@ namespace VFXEditor.UI.VFX {
             public void Draw() {
                 var id = "##CurveEdit";
                 if( UIUtils.RemoveButton( "Delete Key" + id, small: true ) ) {
-                    Editor.Curve.removeKey( Key );
+                    Editor.Curve.RemoveKey( Key );
                     Editor.Points.Remove( this );
                     if( Editor.Selected == this ) {
                         Editor.Selected = null;

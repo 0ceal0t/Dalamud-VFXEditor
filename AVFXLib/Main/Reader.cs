@@ -14,9 +14,9 @@ using Newtonsoft.Json.Serialization;
 namespace AVFXLib.Main
 {
     public class Reader {
-        public static AVFXNode readAVFX(BinaryReader reader, out List<string> messages) {
+        public static AVFXNode ReadAVFX(BinaryReader reader, out List<string> messages) {
             messages = new List<string>();
-            return readDef(reader, messages)[0];
+            return ReadDefinition(reader, messages)[0];
         }
 
         static readonly HashSet<string> NESTED = new HashSet<string>(new string[]{
@@ -178,17 +178,15 @@ namespace AVFXLib.Main
             "ColE"
         } );
 
-        public static List<AVFXNode> readDef(BinaryReader reader, List<string> messages)
+        public static List<AVFXNode> ReadDefinition(BinaryReader reader, List<string> messages)
         {
             List<AVFXNode> nodes = new List<AVFXNode>();
             if (reader.BaseStream.Position < reader.BaseStream.Length) {
                 // GET THE NAME
                 byte[] name = BitConverter.GetBytes(reader.ReadInt32()).Reverse().ToArray();
                 List<byte> nonZero = new List<byte>();
-                foreach (byte n in name) // parse out 00 bytes
-                {
-                    if (n != 0)
-                    {
+                foreach (byte n in name) {
+                    if (n != 0) {
                         nonZero.Add(n);
                     }
                 }
@@ -201,7 +199,7 @@ namespace AVFXLib.Main
                 {
                     BinaryReader nestedReader = new BinaryReader(new MemoryStream(Contents));
                     AVFXNode nestedNode = new AVFXNode(DefName);
-                    nestedNode.Children = readDef(nestedReader, messages);
+                    nestedNode.Children = ReadDefinition( nestedReader, messages);
                     nodes.Add(nestedNode);
                 }
                 else  {
@@ -217,7 +215,7 @@ namespace AVFXLib.Main
                 reader.ReadBytes(pad);
 
                 // KEEP READING
-                return nodes.Concat(readDef(reader, messages)).ToList();
+                return nodes.Concat( ReadDefinition( reader, messages)).ToList();
             }
             return nodes;
         }

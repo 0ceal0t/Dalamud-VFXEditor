@@ -52,7 +52,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             var modelText = SelectedModel == null ? "[NONE]" : SelectedModel.GetText();
             if(ImGui.BeginCombo("Model" + parentId, modelText ) ) {
                 var idx = 0;
-                foreach(var item in UINode._Models.Items ) {
+                foreach(var item in UINodeGroup.Models.Items ) {
                     if( ImGui.Selectable(item.GetText() + parentId + idx, item == SelectedModel) ) {
                         SelectedModel = item;
                         if(SelectedTexture != null ) {
@@ -67,7 +67,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             var texText = SelectedTexture == null ? "[NONE]" : SelectedTexture.GetText();
             if( ImGui.BeginCombo( "Texture" + parentId, texText ) ) {
                 var idx = 0;
-                foreach( var item in UINode._Textures.Items ) {
+                foreach( var item in UINodeGroup.Textures.Items ) {
                     if( ImGui.Selectable( item.GetText() + parentId + idx, item == SelectedTexture ) ) {
                         SelectedTexture = item;
                         UpdateBitmap();

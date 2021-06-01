@@ -28,7 +28,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -43,12 +43,12 @@ namespace AVFXLib.Models
                     // ITEMS ===================
                     case AVFXScheduleItem.NAME:
                         lastItem = new AVFXScheduleItem();
-                        lastItem.read(item);
+                        lastItem.Read(item);
                         break;
                     // TRIGGERS =================
                     case AVFXScheduleTrigger.NAME:
                         lastTrigger = new AVFXScheduleTrigger();
-                        lastTrigger.read(item);
+                        lastTrigger.Read(item);
                         break;
                 }
             }
@@ -63,29 +63,29 @@ namespace AVFXLib.Models
             }
         }
 
-        public AVFXScheduleSubItem addItem()
+        public AVFXScheduleSubItem AddItem()
         {
             AVFXScheduleSubItem Item = new AVFXScheduleSubItem();
-            Item.toDefault();
+            Item.ToDefault();
             Items.Add(Item);
             ItemCount.GiveValue(Items.Count());
             return Item;
         }
-        public void addItem(AVFXScheduleSubItem item ) {
+        public void AddItem(AVFXScheduleSubItem item ) {
             Items.Add( item );
             ItemCount.GiveValue( Items.Count() );
         }
-        public void removeItem(int idx)
+        public void RemoveItem(int idx)
         {
             Items.RemoveAt(idx);
             ItemCount.GiveValue(Items.Count());
         }
-        public void removeItem(AVFXScheduleSubItem item ) {
+        public void RemoveItem(AVFXScheduleSubItem item ) {
             Items.Remove( item );
             ItemCount.GiveValue( Items.Count() );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode schdAvfx = new AVFXNode("Schd");
 
@@ -97,7 +97,7 @@ namespace AVFXLib.Models
             {
                 AVFXScheduleItem Item = new AVFXScheduleItem();
                 Item.SubItems = Items.GetRange(0, i + 1);
-                schdAvfx.Children.Add(Item.toAVFX());
+                schdAvfx.Children.Add(Item.ToAVFX());
             }
 
             // Triggers
@@ -108,7 +108,7 @@ namespace AVFXLib.Models
                 Trigger.SubItems = new List<AVFXScheduleSubItem>();
                 Trigger.SubItems.AddRange(Items);
                 Trigger.SubItems.AddRange(Triggers.GetRange(0, i + 1));
-                schdAvfx.Children.Add(Trigger.toAVFX());
+                schdAvfx.Children.Add(Trigger.ToAVFX());
             }
 
             return schdAvfx;

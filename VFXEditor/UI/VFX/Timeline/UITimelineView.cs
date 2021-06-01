@@ -13,22 +13,22 @@ namespace VFXEditor.UI.VFX
     {
         public UITimelineView(UIMain main, AVFXBase avfx) : base(main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" )
         {
-            Group = UINode._Timelines;
+            Group = UINodeGroup.Timelines;
             Group.Items = AVFX.Timelines.Select( item => new UITimeline( item, this ) ).ToList();
         }
 
         public override void OnDelete( UITimeline item )
         {
-            AVFX.removeTimeline( item.Timeline );
+            AVFX.RemoveTimeline( item.Timeline );
         }
         public override byte[] OnExport( UITimeline item )
         {
-            return item.Timeline.toAVFX().toBytes();
+            return item.Timeline.ToAVFX().ToBytes();
         }
         public override UITimeline OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXTimeline item = new AVFXTimeline();
-            item.read( node );
-            AVFX.addTimeline( item );
+            item.Read( node );
+            AVFX.AddTimeline( item );
             return new UITimeline( item, this, has_dependencies );
         }
     }

@@ -61,7 +61,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.SmallButton( "+ " + Name + parentId ) )
             {
-                Curve.toDefault();
+                Curve.ToDefault();
                 Init();
             }
         }

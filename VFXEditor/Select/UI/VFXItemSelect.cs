@@ -13,7 +13,7 @@ namespace VFXSelect.UI
 {
     public class VFXItemSelect : VFXSelectTab<XivItem, XivItemSelected> {
         public VFXItemSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base(parentId, tabId, sheet._Items, sheet._pi, dialog) {
+            base(parentId, tabId, sheet.Items, sheet.PluginInterface, dialog) {
         }
 
         ImGuiScene.TextureWrap Icon;
@@ -40,17 +40,17 @@ namespace VFXSelect.UI
 
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.ImcPath );
+            Dialog.DisplayPath( loadedItem.ImcPath );
 
             ImGui.Text( "VFX Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.GetVFXPath() );
+            Dialog.DisplayPath( loadedItem.GetVFXPath() );
             if( loadedItem.VfxExists ) {
                 if( ImGui.Button( "SELECT" + Id ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[ITEM] " + loadedItem.Item.Name, loadedItem.GetVFXPath() ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[ITEM] " + loadedItem.Item.Name, loadedItem.GetVFXPath() ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( loadedItem.GetVFXPath(), id: ( Id + "Copy" ) );
+                Dialog.Copy( loadedItem.GetVFXPath(), id: ( Id + "Copy" ) );
             }
         }
 

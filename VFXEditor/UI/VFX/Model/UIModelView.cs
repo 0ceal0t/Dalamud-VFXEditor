@@ -19,7 +19,7 @@ namespace VFXEditor.UI.VFX
         {
             Main = main;
             Mdl3D = plugin.DXManager._ModelPreview;
-            Group = UINode._Models;
+            Group = UINodeGroup.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( item ) ).ToList();
         }
 
@@ -38,17 +38,17 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void OnDelete( UIModel item ) {
-            AVFX.removeModel( item.Model );
+            AVFX.RemoveModel( item.Model );
         }
 
         public override UIModel OnNew() {
-            return new UIModel( AVFX.addModel() );
+            return new UIModel( AVFX.AddModel() );
         }
 
         public override UIModel OnImport( AVFXNode node ) {
             AVFXModel mdl = new AVFXModel();
-            mdl.read( node );
-            AVFX.addModel( mdl );
+            mdl.Read( node );
+            AVFX.AddModel( mdl );
             return new UIModel( mdl );
         }
     }

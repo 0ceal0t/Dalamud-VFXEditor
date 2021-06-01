@@ -36,7 +36,7 @@ namespace VFXEditor.UI
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !_plugin.Doc.HasReplacePath( ExportAll ) ) {
+            if( !Plugin.Doc.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
             }
             ImGui.EndChild();
@@ -58,7 +58,7 @@ namespace VFXEditor.UI
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        _plugin.TexToolsManager.Export( Name, Author, Version, picker.FileName, ExportAll, ExportTex );
+                        Plugin.TexToolsManager.Export( Name, Author, Version, picker.FileName, ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {

@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Parameters.Add(TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx ));
+            Parameters.Add(TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINodeGroup.Textures, Tex.TextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));
             Parameters.Add(new UICombo<TextureBorderType>("Texture Border", Tex.TextureBorder));
@@ -44,7 +44,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.SmallButton( "+ Texture Palette" + parentId ) )
             {
-                Tex.toDefault();
+                Tex.ToDefault();
                 Init();
             }
         }

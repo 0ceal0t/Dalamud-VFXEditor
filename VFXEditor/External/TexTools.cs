@@ -19,7 +19,7 @@ namespace VFXEditor.External {
         public string Version;
         public string? Description;
         public string? ModPackPages;
-        public TTMPL_Simple[] SimpleModsList; 
+        public TTMPL_Simple[] SimpleModsList;
     }
     public struct TTMPL_Simple {
         public string Name;
@@ -187,7 +187,7 @@ namespace VFXEditor.External {
         }
 
         public byte[] SquishAVFX( AVFXBase avfx ) {
-            return CreateType2Data( avfx.toAVFX().toBytes() );
+            return CreateType2Data( avfx.ToAVFX().ToBytes() );
         }
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
         public byte[] CreateType2Data( byte[] dataToCreate ) {

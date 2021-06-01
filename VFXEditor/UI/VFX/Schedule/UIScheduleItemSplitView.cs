@@ -15,12 +15,12 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UISchedulerItem OnNew() {
-            return new UISchedulerItem( Sched.Scheduler.addItem(), "Item", Sched );
+            return new UISchedulerItem( Sched.Scheduler.AddItem(), "Item", Sched );
         }
 
         public override void OnDelete( UISchedulerItem item ) {
             item.TimelineSelect.DeleteSelect();
-            Sched.Scheduler.removeItem( item.Item );
+            Sched.Scheduler.RemoveItem( item.Item );
         }
     }
 }

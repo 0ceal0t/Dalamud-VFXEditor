@@ -17,19 +17,17 @@ namespace AVFXLib.AVFX
 
         public List<AVFXNode> Children { get; set; }
 
-        public AVFXNode(string n)
-        {
+        public AVFXNode(string n) {
             Name = n;
             Children = new List<AVFXNode>();
         }
 
-        public virtual byte[] toBytes()
-        {
+        public virtual byte[] ToBytes() {
             int totalSize = 0;
             byte[][] byteArrays = new byte[Children.Count][];
             for(int i = 0; i < Children.Count; i++)
             {
-                byteArrays[i] = Children[i].toBytes();
+                byteArrays[i] = Children[i].ToBytes();
                 totalSize += byteArrays[i].Length;
             }
             byte[] bytes = new byte[8 + Util.RoundUp(totalSize)];
@@ -47,14 +45,12 @@ namespace AVFXLib.AVFX
         }
 
         // =====================
-        public bool CheckEquals(AVFXNode node, out List<string> messages)
-        {
+        public bool CheckEquals(AVFXNode node, out List<string> messages) {
             messages = new List<string>();
             return EqualsNode(node, messages);
         }
 
-        public virtual bool EqualsNode(AVFXNode node, List<string> messages)
-        {
+        public virtual bool EqualsNode(AVFXNode node, List<string> messages) {
             if((node is AVFXLeaf) || (node is AVFXBlank))
             {
                 messages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
@@ -87,12 +83,11 @@ namespace AVFXLib.AVFX
             return true;
         }
 
-        public virtual string exportString(int level)
-        {
+        public virtual string ExportString(int level) {
             string ret = string.Format("{0}+---  {1} ----\n", new string('\t', level), Name);
             foreach(var c in Children)
             {
-                ret = ret + c.exportString(level + 1);
+                ret = ret + c.ExportString( level + 1);
             }
             return ret;
         }

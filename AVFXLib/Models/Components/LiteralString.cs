@@ -19,11 +19,11 @@ namespace AVFXLib.Models
             FixedSize = fixedSize;
         }
 
-        public override void read(AVFXNode node)
+        public override void Read( AVFXNode node)
         {
         }
 
-        public override void read(AVFXLeaf leaf)
+        public override void read( AVFXLeaf leaf)
         {
             Value = Util.BytesToString(leaf.Contents);
             if (FixedSize == -1)
@@ -43,12 +43,12 @@ namespace AVFXLib.Models
             Assigned = true;
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             GiveValue("");
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             return new AVFXLeaf(AVFXName, Size, Util.StringToBytes(Value));
         }

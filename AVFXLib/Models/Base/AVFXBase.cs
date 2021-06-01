@@ -128,7 +128,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node) {
+        public override void Read(AVFXNode node) {
             Assigned = true;
             ReadAVFX( Version, node );
             ReadAVFX(Attributes, node);
@@ -139,42 +139,42 @@ namespace AVFXLib.Models
                 {
                     case AVFXSchedule.NAME:
                         AVFXSchedule Scheduler = new AVFXSchedule();
-                        Scheduler.read(item);
+                        Scheduler.Read(item);
                         Schedulers.Add(Scheduler);
                         break;
                     case AVFXTimeline.NAME:
                         AVFXTimeline Timeline = new AVFXTimeline();
-                        Timeline.read(item);
+                        Timeline.Read(item);
                         Timelines.Add(Timeline);
                         break;
                     case AVFXEmitter.NAME:
                         AVFXEmitter Emitter = new AVFXEmitter();
-                        Emitter.read(item);
+                        Emitter.Read(item);
                         Emitters.Add(Emitter);
                         break;
                     case AVFXParticle.NAME:
                         AVFXParticle Particle = new AVFXParticle();
-                        Particle.read(item);
+                        Particle.Read(item);
                         Particles.Add(Particle);
                         break;
                     case AVFXEffector.NAME:
                         AVFXEffector Effector = new AVFXEffector();
-                        Effector.read(item);
+                        Effector.Read(item);
                         Effectors.Add(Effector);
                         break;
                     case AVFXBinder.NAME:
                         AVFXBinder Binder = new AVFXBinder();
-                        Binder.read(item);
+                        Binder.Read(item);
                         Binders.Add(Binder);
                         break;
                     case AVFXTexture.NAME:
                         AVFXTexture Texture = new AVFXTexture();
-                        Texture.read(item);
+                        Texture.Read(item);
                         Textures.Add(Texture);
                         break;
                     case AVFXModel.NAME:
                         AVFXModel Model = new AVFXModel();
-                        Model.read(item);
+                        Model.Read(item);
                         Models.Add(Model);
                         break;
                 }
@@ -182,105 +182,105 @@ namespace AVFXLib.Models
         }
 
         // ==== ADD/REMOVE ======
-        public void addTimeline( AVFXTimeline item )
+        public void AddTimeline( AVFXTimeline item )
         {
             Timelines.Add( item );
         }
-        public void removeTimeline(int idx)
+        public void RemoveTimeline(int idx)
         {
             Timelines.RemoveAt(idx);
         }
-        public void removeTimeline( AVFXTimeline item ) {
+        public void RemoveTimeline( AVFXTimeline item ) {
             Timelines.Remove( item );
         }
         //
-        public void addEffector( AVFXEffector item )
+        public void AddEffector( AVFXEffector item )
         {
             Effectors.Add( item );
         }
-        public void removeEffector(int idx)
+        public void RemoveEffector(int idx)
         {
             Effectors.RemoveAt(idx);
         }
-        public void removeEffector( AVFXEffector item ) {
+        public void RemoveEffector( AVFXEffector item ) {
             Effectors.Remove( item );
         }
         //
-        public void addEmitter( AVFXEmitter item )
+        public void AddEmitter( AVFXEmitter item )
         {
             Emitters.Add( item );
         }
-        public void removeEmitter(int idx)
+        public void RemoveEmitter(int idx)
         {
             Emitters.RemoveAt(idx);
         }
-        public void removeEmitter( AVFXEmitter item ) {
+        public void RemoveEmitter( AVFXEmitter item ) {
             Emitters.Remove( item );
         }
         //
-        public void addParticle( AVFXParticle item )
+        public void AddParticle( AVFXParticle item )
         {
             Particles.Add( item );
         }
-        public void removeParticle(int idx)
+        public void RemoveParticle(int idx)
         {
             Particles.RemoveAt(idx);
         }
-        public void removeParticle( AVFXParticle item ) {
+        public void RemoveParticle( AVFXParticle item ) {
             Particles.Remove( item );
         }
         //
-        public void addBinder( AVFXBinder item )
+        public void AddBinder( AVFXBinder item )
         {
             Binders.Add( item );
         }
-        public void removeBinder(int idx)
+        public void RemoveBinder(int idx)
         {
             Binders.RemoveAt(idx);
         }
-        public void removeBinder( AVFXBinder item ) {
+        public void RemoveBinder( AVFXBinder item ) {
             Binders.Remove( item );
         }
         //
-        public void addTexture( AVFXTexture item )
+        public void AddTexture( AVFXTexture item )
         {
             Textures.Add( item );
         }
-        public AVFXTexture addTexture()
+        public AVFXTexture AddTexture()
         {
             AVFXTexture texture = new AVFXTexture();
-            texture.toDefault();
+            texture.ToDefault();
             Textures.Add(texture);
             return texture;
         }
-        public void removeTexture(int idx)
+        public void RemoveTexture(int idx)
         {
             Textures.RemoveAt(idx);
         }
-        public void removeTexture( AVFXTexture item ) {
+        public void RemoveTexture( AVFXTexture item ) {
             Textures.Remove( item );
         }
         //
-        public void addModel( AVFXModel item )
+        public void AddModel( AVFXModel item )
         {
             Models.Add( item );
         }
-        public AVFXModel addModel()
+        public AVFXModel AddModel()
         {
             AVFXModel model = new AVFXModel();
-            model.toDefault();
+            model.ToDefault();
             Models.Add( model );
             return model;
         }
-        public void removeModel(int idx )
+        public void RemoveModel(int idx )
         {
             Models.RemoveAt( idx );
         }
-        public void removeModel( AVFXModel item ) {
+        public void RemoveModel( AVFXModel item ) {
             Models.Remove( item );
         }
         // ======= EXPORT =======
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode baseAVFX = new AVFXNode("AVFX");
 
@@ -299,51 +299,51 @@ namespace AVFXLib.Models
             // SCHEDULE
             foreach (AVFXSchedule schedElem in Schedulers)
             {
-                baseAVFX.Children.Add(schedElem.toAVFX());
+                baseAVFX.Children.Add(schedElem.ToAVFX());
             }
             // TIMELINES
             foreach (AVFXTimeline tmlnElem in Timelines)
             {
-                baseAVFX.Children.Add(tmlnElem.toAVFX());
+                baseAVFX.Children.Add(tmlnElem.ToAVFX());
             }
             // EMITTERS
             foreach (AVFXEmitter emitterElem in Emitters)
             {
-                baseAVFX.Children.Add(emitterElem.toAVFX());
+                baseAVFX.Children.Add(emitterElem.ToAVFX());
             }
             // PARTICLES
             foreach (AVFXParticle particleElement in Particles)
             {
-                baseAVFX.Children.Add(particleElement.toAVFX());
+                baseAVFX.Children.Add(particleElement.ToAVFX());
             }
             // EFFECTORS
             foreach (AVFXEffector effectorElem in Effectors)
             {
-                baseAVFX.Children.Add(effectorElem.toAVFX());
+                baseAVFX.Children.Add(effectorElem.ToAVFX());
             }
             // BINDERS
             foreach (AVFXBinder bindElem in Binders)
             {
-                baseAVFX.Children.Add(bindElem.toAVFX());
+                baseAVFX.Children.Add(bindElem.ToAVFX());
             }
             // TEXTURES
             foreach (AVFXTexture texElem in Textures)
             {
-                baseAVFX.Children.Add(texElem.toAVFX());
+                baseAVFX.Children.Add(texElem.ToAVFX());
             }
             // MODELS
             foreach (AVFXModel modelElem in Models)
             {
-                baseAVFX.Children.Add(modelElem.toAVFX());
+                baseAVFX.Children.Add(modelElem.ToAVFX());
             }
             return baseAVFX;
         }
 
-        public AVFXBase clone()
+        public AVFXBase Clone()
         {
-            AVFXNode node = toAVFX();
+            AVFXNode node = ToAVFX();
             AVFXBase ret = new AVFXBase();
-            ret.read(node);
+            ret.Read(node);
             return ret;
         }
     }

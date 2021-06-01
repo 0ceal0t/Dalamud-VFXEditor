@@ -12,12 +12,12 @@ using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor.UI.Graphics {
     public class VFXManipulator {
-        public Plugin _plugin;
+        public Plugin Plugin;
         public bool Enabled = false;
-        public bool CanBeEnabled => ( _plugin.MainUI.SpawnVfx != null );
+        public bool CanBeEnabled => ( Plugin.MainUI.SpawnVfx != null );
 
         public VFXManipulator( Plugin plugin ) {
-            _plugin = plugin;
+            Plugin = plugin;
         }
 
         private static float[] identityMatrix =
@@ -62,7 +62,7 @@ namespace VFXEditor.UI.Graphics {
                 ImGui.End();
             }
 
-            var matrixSingleton = _plugin.ResourceLoader.GetMatrixSingleton();
+            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
             if( matrixSingleton == IntPtr.Zero ) return;
             float[] viewProjectionMatrix = new float[16];
             float width, height;
@@ -93,9 +93,9 @@ namespace VFXEditor.UI.Graphics {
             float windowHeight = ImGui.GetWindowHeight();
             ImGuizmo.SetRect( ImGui.GetWindowPos().X, ImGui.GetWindowPos().Y, windowWidth, windowHeight );
 
-            if(_plugin.MainUI.SpawnVfx != null ) {
-                if( ImGuizmo.Manipulate( ref viewProjectionMatrix[0], ref identityMatrix[0], _operation, _mode, ref _plugin.MainUI.SpawnVfx.matrix[0] ) ) {
-                    _plugin.MainUI.SpawnVfx.PullMatrixUpdate();
+            if( Plugin.MainUI.SpawnVfx != null ) {
+                if( ImGuizmo.Manipulate( ref viewProjectionMatrix[0], ref identityMatrix[0], _operation, _mode, ref Plugin.MainUI.SpawnVfx.matrix[0] ) ) {
+                    Plugin.MainUI.SpawnVfx.PullMatrixUpdate();
                 }
             }
 

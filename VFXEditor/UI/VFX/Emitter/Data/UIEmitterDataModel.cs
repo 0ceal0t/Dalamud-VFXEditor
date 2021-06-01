@@ -19,7 +19,7 @@ namespace VFXEditor.UI.VFX
             Data = data;
             //=======================
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINode._Models, Data.ModelIdx ));
+            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINodeGroup.Models, Data.ModelIdx ));
             Parameters.Add(new UICombo<RotationOrder>("Rotation Order", Data.RotationOrderType));
             Parameters.Add(new UICombo<GenerateMethod>("Generate Method", Data.GenerateMethodType));
             Tabs.Add(new UICurve(Data.AX, "Angle X"));

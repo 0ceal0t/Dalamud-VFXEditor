@@ -38,7 +38,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -55,7 +55,7 @@ namespace AVFXLib.Models
             }
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode effectorAvfx = new AVFXNode("Efct");
             PutAVFX(effectorAvfx, Attributes);

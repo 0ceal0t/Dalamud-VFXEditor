@@ -19,7 +19,7 @@ namespace AVFXLib.Models
             Size = size;
         }
 
-        public abstract void read(AVFXLeaf node);
+        public abstract void read( AVFXLeaf node);
 
         public abstract string stringValue();
     }

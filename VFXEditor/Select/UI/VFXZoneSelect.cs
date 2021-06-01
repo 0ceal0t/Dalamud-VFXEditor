@@ -12,7 +12,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI {
     public class VFXZoneSelect : VFXSelectTab<XivZone, XivZoneSelected> {
         public VFXZoneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Zones, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Zones, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivZone item, string searchInput ) {
@@ -26,17 +26,17 @@ namespace VFXSelect.UI {
 
             ImGui.Text( "LGB Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.Zone.LgbPath );
+            Dialog.DisplayPath( loadedItem.Zone.LgbPath );
             int vfxIdx = 0;
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameZone, "[ZONE] " + loadedItem.Zone.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameZone, "[ZONE] " + loadedItem.Zone.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
         }

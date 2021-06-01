@@ -32,7 +32,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             Enabled = (node.Children.Count > 2);
@@ -42,7 +42,7 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
             Enabled = true;
@@ -50,7 +50,7 @@ namespace AVFXLib.Models
             Value.GiveValue(-1f);
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             if (Enabled)
             {

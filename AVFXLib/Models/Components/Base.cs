@@ -8,8 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AVFXLib.Models
 {
-    public abstract class Base
-    {
+    public abstract class Base {
         public bool Assigned { get; set; } = false;
         public string AVFXName { get; set; }
 
@@ -22,11 +21,11 @@ namespace AVFXLib.Models
             AVFXName = avfxName;
         }
 
-        public abstract AVFXNode toAVFX();
-        public abstract void read(AVFXNode node);
+        public abstract AVFXNode ToAVFX();
+        public abstract void Read(AVFXNode node);
 
         // ====== DEFAULT =======
-        public virtual void toDefault() { } // TEMP
+        public virtual void ToDefault() { } // TEMP
         public static void SetDefault(List<Base> attributes)
         {
             foreach (var attribute in attributes)
@@ -37,7 +36,7 @@ namespace AVFXLib.Models
         public static void SetDefault(Base attribute)
         {
             if (attribute == null) return;
-            attribute.toDefault();
+            attribute.ToDefault();
         }
         public static void SetUnAssigned(List<Base> attributes)
         {
@@ -70,11 +69,11 @@ namespace AVFXLib.Models
                     if (attribute is LiteralBase)
                     {
                         LiteralBase literal = (LiteralBase)attribute;
-                        literal.read((AVFXLeaf)item);
+                        literal.read( (AVFXLeaf)item);
                     }
                     else
                     {
-                        attribute.read(item);
+                        attribute.Read( item);
                     }
                     break;
                 }
@@ -99,7 +98,7 @@ namespace AVFXLib.Models
             if (b == null) return null;
             if (b.Assigned)
             {
-                return b.toAVFX();
+                return b.ToAVFX();
             }
             return new AVFXBlank();
         }

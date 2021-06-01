@@ -12,7 +12,7 @@ namespace VFXEditor.UI.VFX {
             _plugin = plugin;
             Manager = plugin.Manager.TexManager;
             // ==========
-            Group = UINode._Textures;
+            Group = UINodeGroup.Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();
         }
 
@@ -21,18 +21,18 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnDelete( UITexture item ) {
-            AVFX.removeTexture( item.Texture );
+            AVFX.RemoveTexture( item.Texture );
         }
 
         public override UITexture OnImport( AVFXNode node ) {
             AVFXTexture tex = new AVFXTexture();
-            tex.read( node );
-            AVFX.addTexture( tex );
+            tex.Read( node );
+            AVFX.AddTexture( tex );
             return new UITexture( tex, this );
         }
 
         public override UITexture OnNew() {
-            return new UITexture( AVFX.addTexture(),this );
+            return new UITexture( AVFX.AddTexture(),this );
         }
     }
 }

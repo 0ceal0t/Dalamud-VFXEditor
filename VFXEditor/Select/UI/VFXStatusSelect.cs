@@ -12,7 +12,7 @@ namespace VFXSelect.UI
 {
     public class VFXStatusSelect : VFXSelectTab<XivStatus, XivStatus> {
         public VFXStatusSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Statuses, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Statuses, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivStatus item, string searchInput ) {
@@ -36,35 +36,35 @@ namespace VFXSelect.UI
             // ==== LOOP 1 =====
             ImGui.Text( "Loop VFX1: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.GetLoopVFX1Path() );
+            Dialog.DisplayPath( loadedItem.GetLoopVFX1Path() );
             if( loadedItem.LoopVFX1Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop1" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop1", loadedItem.GetLoopVFX1Path() ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop1", loadedItem.GetLoopVFX1Path() ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( loadedItem.GetLoopVFX1Path(), id: Id + "Loop1Copy" );
+                Dialog.Copy( loadedItem.GetLoopVFX1Path(), id: Id + "Loop1Copy" );
             }
             // ==== LOOP 2 =====
             ImGui.Text( "Loop VFX2: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.GetLoopVFX2Path() );
+            Dialog.DisplayPath( loadedItem.GetLoopVFX2Path() );
             if( loadedItem.LoopVFX2Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop2" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop2", loadedItem.GetLoopVFX2Path() ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop2", loadedItem.GetLoopVFX2Path() ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( loadedItem.GetLoopVFX2Path(), id: Id + "Loop2Copy" );
+                Dialog.Copy( loadedItem.GetLoopVFX2Path(), id: Id + "Loop2Copy" );
             }
             // ==== LOOP 3 =====
             ImGui.Text( "Loop VFX3: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.GetLoopVFX3Path() );
+            Dialog.DisplayPath( loadedItem.GetLoopVFX3Path() );
             if( loadedItem.LoopVFX3Exists ) {
                 if( ImGui.Button( "SELECT" + Id + "Loop3" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop3", loadedItem.GetLoopVFX3Path() ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameStatus, "[STATUS] " + loadedItem.Name + " Loop3", loadedItem.GetLoopVFX3Path() ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Copy" );
+                Dialog.Copy( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Copy" );
             }
         }
 

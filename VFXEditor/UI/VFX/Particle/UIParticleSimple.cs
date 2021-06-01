@@ -32,8 +32,8 @@ namespace VFXEditor.UI.VFX {
             //=======================
             Tabs = new List<UIItem>();
             Tabs.Add( Creation = new UIParameters( "Creation" ) );
-            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINode._Models, Simple.InjectionModelIdx ) );
-            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINode._Models, Simple.InjectionVertexBindModelIdx ) );
+            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINodeGroup.Models, Simple.InjectionModelIdx ) );
+            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINodeGroup.Models, Simple.InjectionVertexBindModelIdx ) );
             Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
             Creation.Add( new UIInt( "Injection Direction Type", Simple.InjectionDirectionType ) );
             Creation.Add( new UIInt( "Base Direction Type", Simple.BaseDirectionType ) );
@@ -89,7 +89,7 @@ namespace VFXEditor.UI.VFX {
         // =========== DRAW =====================
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
-                Simple.toDefault();
+                Simple.ToDefault();
                 Init();
             }
         }

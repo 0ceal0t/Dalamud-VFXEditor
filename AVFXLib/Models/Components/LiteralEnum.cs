@@ -18,11 +18,11 @@ namespace AVFXLib.Models
         {
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
         }
 
-        public override void read(AVFXLeaf leaf)
+        public override void read( AVFXLeaf leaf)
         {
             int intValue = Util.Bytes4ToInt(leaf.Contents);
             //if (intValue != -1) // means none
@@ -45,13 +45,13 @@ namespace AVFXLib.Models
             Assigned = true;
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             GiveValue((T)(object)0);
         }
 
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             int enumValue = -1;
             if(Value != null)

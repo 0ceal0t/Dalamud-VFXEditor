@@ -147,7 +147,7 @@ namespace VFXEditor
             AVFX = avfx;
             // ===============
             if( Configuration.VerifyOnLoad ) {
-                var node = AVFX.toAVFX();
+                var node = AVFX.ToAVFX();
                 bool verifyResult = Manager.LastImportNode.CheckEquals( node, out List<string> messages );
                 MainUI.SetStatus( verifyResult );
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );

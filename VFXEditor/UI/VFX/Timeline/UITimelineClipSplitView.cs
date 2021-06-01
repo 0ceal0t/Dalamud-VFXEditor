@@ -16,11 +16,11 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UITimelineClip OnNew() {
-            return new UITimelineClip( Timeline.Timeline.addClip(), Timeline );
+            return new UITimelineClip( Timeline.Timeline.AddClip(), Timeline );
         }
 
         public override void OnDelete( UITimelineClip item ) {
-            Timeline.Timeline.removeClip( item.Clip );
+            Timeline.Timeline.RemoveClip( item.Clip );
         }
     }
 }

@@ -11,7 +11,7 @@ namespace VFXSelect.Data.Sheets {
     public class NpcSheetLoader : SheetLoader<XivNpc, XivNpcSelected> {
 
         public Dictionary<int, string> NpcIdToName = new Dictionary<int, string>();
-        public NpcSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public NpcSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public class NpcCsvRow {
@@ -27,8 +27,8 @@ namespace VFXSelect.Data.Sheets {
                 return true;
             } );
 
-            var _sheet = _pi.Data.GetExcelSheet<ModelChara>().Where( x => ( x.Model != 0 && ( x.Type == 2 || x.Type == 3 ) ) );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<ModelChara>().Where( x => ( x.Model != 0 && ( x.Type == 2 || x.Type == 3 ) ) );
+            foreach( var item in sheet ) {
                 var i = new XivNpc( item, NpcIdToName );
                 if( i.CSV_Defined ) {
                     Items.Add( i );
@@ -39,20 +39,20 @@ namespace VFXSelect.Data.Sheets {
         public override bool SelectItem( XivNpc item, out XivNpcSelected selectedItem ) {
             selectedItem = null;
             string imcPath = item.GetImcPath();
-            bool result = _pi.Data.FileExists( imcPath );
+            bool result = PluginInterface.Data.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = _pi.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     var tmbPath = item.GetTmbPath();
                     List<Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
                     for( int spIdx = 1; spIdx < 35; spIdx++ ) {
                         var mainTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + ".tmb";
                         var hitTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + "_hit.tmb";
-                        if( _pi.Data.FileExists( mainTmb ) ) {
-                            files.Add( _pi.Data.GetFile( mainTmb ) );
+                        if( PluginInterface.Data.FileExists( mainTmb ) ) {
+                            files.Add( PluginInterface.Data.GetFile( mainTmb ) );
                         }
-                        if( _pi.Data.FileExists( hitTmb ) ) {
-                            files.Add( _pi.Data.GetFile( hitTmb ) );
+                        if( PluginInterface.Data.FileExists( hitTmb ) ) {
+                            files.Add( PluginInterface.Data.GetFile( hitTmb ) );
                         }
                     }
                     selectedItem = new XivNpcSelected( file, item, files );

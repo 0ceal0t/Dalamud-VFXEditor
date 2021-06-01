@@ -13,7 +13,7 @@ namespace VFXEditor.UI.VFX
     {
         public UIScheduleView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##SCHED", "Select a Scheduler", allowNew:false, allowDelete:false )
         {
-            Group = UINode._Schedulers;
+            Group = UINodeGroup.Schedulers;
             Group.Items = AVFX.Schedulers.Select( item => new UIScheduler( item, this ) ).ToList();
         }
 

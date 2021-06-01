@@ -12,7 +12,7 @@ namespace AVFXLib.Main
     public class Util
     {
         // BYTE STUFF
-        public static byte[] rb(byte[] b)
+        public static byte[] ReverseBytes(byte[] b)
         {
             return b.Reverse().ToArray();
         }

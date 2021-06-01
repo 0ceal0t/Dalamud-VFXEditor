@@ -32,7 +32,7 @@ namespace VFXEditor.UI.VFX
         public UIMain(AVFXBase avfx, Plugin plugin) {
             AVFX = avfx;
             // ================
-            UINode.SetupGroups();
+            UINodeGroup.SetupGroups();
             ParticleView = new UIParticleView(this, avfx);
             ParameterView = new UIParameterView(avfx);
             BinderView = new UIBinderView( this, avfx );
@@ -42,7 +42,7 @@ namespace VFXEditor.UI.VFX
             TextureView = new UITextureView(avfx, plugin);
             ModelView = new UIModelView(this, avfx, plugin);
             ScheduleView = new UIScheduleView( this, avfx );
-            UINode.InitGroups();
+            UINodeGroup.InitGroups();
             // =================
             ExportUI = new ExportDialog( this );
         }
@@ -118,7 +118,7 @@ namespace VFXEditor.UI.VFX
 
             UpdateAllNodes( nodes );
             foreach( var n in nodes ) {
-                bw.Write( n.toBytes() );
+                bw.Write( n.ToBytes() );
             }
             foreach( var n in nodes ) {
                 n.Idx = IdxSave[n];
@@ -163,10 +163,10 @@ namespace VFXEditor.UI.VFX
         }
         public void ImportData( BinaryReader br ) {
             var messages = new List<string>();
-            var nodes = AVFXLib.Main.Reader.readDef( br, messages);
+            var nodes = AVFXLib.Main.Reader.ReadDefinition( br, messages);
             var has_dependencies = nodes.Count >= 2;
             if( has_dependencies ) {
-                UINode.PreImportGroups();
+                UINodeGroup.PreImportGroups();
             }
             nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add(ModelView.OnImport( node )) );
             nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add(TextureView.OnImport( node )) );
@@ -194,7 +194,7 @@ namespace VFXEditor.UI.VFX
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        File.WriteAllBytes( picker.FileName, node.toBytes() );
+                        File.WriteAllBytes( picker.FileName, node.ToBytes() );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );

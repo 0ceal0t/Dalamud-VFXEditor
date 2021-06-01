@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.Structs.Vfx {
     public abstract class BaseVfx {
-        public Plugin _Plugin;
+        public Plugin Plugin;
         public IntPtr Vfx;
         public string Path;
 
         public BaseVfx( Plugin plugin, string path) {
-            _Plugin = plugin;
+            Plugin = plugin;
             Path = path;
         }
 

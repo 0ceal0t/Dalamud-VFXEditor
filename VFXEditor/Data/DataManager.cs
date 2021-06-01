@@ -17,28 +17,26 @@ namespace VFXEditor.Data
     {
         public Plugin _plugin;
         public TextureManager TexManager;
-        public SheetManager _Sheets;
+        public SheetManager Sheets;
 
         public AVFXNode LastImportNode;
 
-        public DataManager(Plugin plugin )
-        {
+        public DataManager(Plugin plugin ) {
             _plugin = plugin;
             TexManager = new TextureManager( _plugin );
-            _Sheets = new SheetManager( _plugin.PluginInterface, Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" ) );
+            Sheets = new SheetManager( _plugin.PluginInterface, Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" ) );
         }
 
 
         // ======  EXPORT AVFX  ======
         public bool SaveLocalFile(string path, AVFXBase avfx ) {
             try {
-                var node = avfx.toAVFX();
-                var bytes = node.toBytes();
+                var node = avfx.ToAVFX();
+                var bytes = node.ToBytes();
                 File.WriteAllBytes( path, bytes );
             }
-            catch(Exception ex ) {
-                PluginLog.LogError( "Could not write to file: " + path );
-                PluginLog.LogError( ex.ToString() );
+            catch(Exception e) {
+                PluginLog.LogError(e, "Could not write to file: " + path);
                 return false;
             }
             return true;
@@ -71,7 +69,7 @@ namespace VFXEditor.Data
         public bool ReadGameFile(BinaryReader br, out AVFXBase avfx ) {
             avfx = null;
             try {
-                AVFXNode node = AVFXLib.Main.Reader.readAVFX( br, out List<string> messages );
+                AVFXNode node = AVFXLib.Main.Reader.ReadAVFX( br, out List<string> messages );
                 foreach( string message in messages ) {
                     PluginLog.Log( message );
                 }
@@ -80,7 +78,7 @@ namespace VFXEditor.Data
                 }
                 LastImportNode = node;
                 avfx = new AVFXBase();
-                avfx.read( node );
+                avfx.Read( node );
                 return true;
             }
             catch(Exception e ) {

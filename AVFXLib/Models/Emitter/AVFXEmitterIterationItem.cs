@@ -72,13 +72,13 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
             TargetIdx.GiveValue( -1 );
@@ -109,7 +109,7 @@ namespace AVFXLib.Models
             GenerateDelayByOne.GiveValue( false );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode dataAvfx = new AVFXNode("ItPr_Item");
             PutAVFX(dataAvfx, Attributes);

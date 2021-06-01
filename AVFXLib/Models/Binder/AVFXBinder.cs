@@ -60,7 +60,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -79,7 +79,7 @@ namespace AVFXLib.Models
             }
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode bindAvfx = new AVFXNode("Bind");
             PutAVFX(bindAvfx, Attributes);

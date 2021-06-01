@@ -11,7 +11,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI {
     public class VFXGimmickSelect : VFXSelectTab<XivGimmick, XivGimmickSelected> {
         public VFXGimmickSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Gimmicks, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Gimmicks, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivGimmick item, string searchInput ) {
@@ -26,17 +26,17 @@ namespace VFXSelect.UI {
             if( loadedItem.SelfVfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( loadedItem.SelfTmbPath );
+                Dialog.DisplayPath( loadedItem.SelfTmbPath );
                 int vfxIdx = 0;
                 foreach( var _vfx in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );
                     ImGui.SameLine();
-                    _dialog.DisplayPath( _vfx );
+                    Dialog.DisplayPath( _vfx );
                     if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameGimmick, "[GIMMICK] " + loadedItem.Gimmick.Name + " #" + vfxIdx, _vfx ) );
+                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameGimmick, "[GIMMICK] " + loadedItem.Gimmick.Name + " #" + vfxIdx, _vfx ) );
                     }
                     ImGui.SameLine();
-                    _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                    Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                     vfxIdx++;
                 }
             }

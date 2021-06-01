@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX
         public UIData Data;
         public UINodeGraphView NodeView;
 
-        public UIEffector(AVFXEffector effector, UIEffectorView view, bool has_dependencies = false ) : base( EffectorColor, has_dependencies ) {
+        public UIEffector(AVFXEffector effector, UIEffectorView view, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
             Effector = effector;
             View = view;
             NodeView = new UINodeGraphView( this );
@@ -95,8 +95,8 @@ namespace VFXEditor.UI.VFX
             return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
         }
 
-        public override byte[] toBytes() {
-            return Effector.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Effector.ToAVFX().ToBytes();
         }
     }
 }

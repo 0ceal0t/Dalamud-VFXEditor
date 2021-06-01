@@ -9,22 +9,22 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class CutsceneSheetLoader : SheetLoader<XivCutscene, XivCutsceneSelected> {
-        public CutsceneSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public CutsceneSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
+            foreach( var item in sheet ) {
                 Items.Add( new XivCutscene( item ) );
             }
         }
 
         public override bool SelectItem( XivCutscene item, out XivCutsceneSelected selectedItem ) {
             selectedItem = null;
-            bool result = _pi.Data.FileExists( item.Path );
+            bool result = PluginInterface.Data.FileExists( item.Path );
             if( result ) {
                 try {
-                    var file = _pi.Data.GetFile( item.Path );
+                    var file = PluginInterface.Data.GetFile( item.Path );
                     selectedItem = new XivCutsceneSelected( item, file );
                 }
                 catch( Exception e ) {

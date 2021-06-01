@@ -18,7 +18,7 @@ namespace VFXEditor.UI.VFX
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler(AVFXSchedule scheduler, UIScheduleView view ) : base( SchedColor, false ) {
+        public UIScheduler(AVFXSchedule scheduler, UIScheduleView view ) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
             View = view;
 
@@ -58,8 +58,8 @@ namespace VFXEditor.UI.VFX
             return "Scheduler " + Idx;
         }
 
-        public override byte[] toBytes() {
-            return Scheduler.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Scheduler.ToAVFX().ToBytes();
         }
     }
 }

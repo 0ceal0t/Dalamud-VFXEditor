@@ -28,7 +28,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -51,14 +51,14 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
             SetDefault(Attributes);
             Keys = new List<AVFXKey>();
         }
 
-        public AVFXKey addKey()
+        public AVFXKey AddKey()
         {
             AVFXKey key = new AVFXKey(KeyType.Linear, 0, 1, 1, 1);
             Keys.Add(key);
@@ -67,15 +67,15 @@ namespace AVFXLib.Models
         public void AddKey(AVFXKey item ) {
             Keys.Add( item );
         }
-        public void removeKey(int idx)
+        public void RemoveKey(int idx)
         {
             Keys.RemoveAt(idx);
         }
-        public void removeKey(AVFXKey item ) {
+        public void RemoveKey( AVFXKey item ) {
             Keys.Remove( item );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode curveAvfx = new AVFXNode(AVFXName);
 
@@ -135,19 +135,6 @@ namespace AVFXLib.Models
             X = Util.Bytes4ToFloat(xBytes);
             Y = Util.Bytes4ToFloat(yBytes);
             Z = Util.Bytes4ToFloat(zBytes);
-        }
-
-        public JObject GetJSON()
-        {
-            JObject ret = new JObject();
-            ret["time"] = new JValue(Time);
-            ret["type"] = new JValue(Type.ToString());
-            JArray valArray = new JArray();
-            valArray.Add(new JValue(X));
-            valArray.Add(new JValue(Y));
-            valArray.Add(new JValue(Z));
-            ret["vals"] = valArray;
-            return ret;
         }
 
         public byte[] GetBytes()

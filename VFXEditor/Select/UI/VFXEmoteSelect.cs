@@ -12,7 +12,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI {
     public class VFXEmoteSelect : VFXSelectTab<XivEmote, XivEmoteSelected> {
         public VFXEmoteSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Emotes, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Emotes, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivEmote item, string searchInput ) {
@@ -37,12 +37,12 @@ namespace VFXSelect.UI {
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[EMOTE] " + loadedItem.Emote.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[EMOTE] " + loadedItem.Emote.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
         }

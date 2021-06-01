@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
 
-        public UIModel( AVFXModel model ) : base( ModelColor, false ) {
+        public UIModel( AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
             NodeView = new UINodeGraphView( this );
             //===============
@@ -182,8 +182,8 @@ namespace VFXEditor.UI.VFX
             return "Model " + Idx;
         }
 
-        public override byte[] toBytes() {
-            return Model.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Model.ToAVFX().ToBytes();
         }
     }
 }

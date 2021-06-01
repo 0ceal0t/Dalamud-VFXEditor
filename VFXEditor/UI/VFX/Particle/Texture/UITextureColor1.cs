@@ -30,7 +30,7 @@ namespace VFXEditor.UI.VFX
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters("Parameters") );
 
-            Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", UINode._Textures, Tex.MaskTextureIdx ));
+            Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", UINodeGroup.Textures, Tex.MaskTextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Color To Alpha", Tex.ColorToAlpha));
             Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
@@ -50,7 +50,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) )
             {
-                Tex.toDefault();
+                Tex.ToDefault();
                 Init();
             }
         }

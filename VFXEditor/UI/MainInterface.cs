@@ -20,7 +20,7 @@ namespace VFXEditor.UI
 {
     public class MainInterface
     {
-        private readonly Plugin _plugin;
+        private readonly Plugin Plugin;
         public bool Visible = false;
 
         public UIMain VFXMain;
@@ -43,25 +43,25 @@ namespace VFXEditor.UI
 
         public MainInterface( Plugin plugin )
         {
-            _plugin = plugin;
-            SelectUI = new VFXSelectDialog( _plugin.Manager._Sheets, "File Select [SOURCE]", _plugin.Configuration.RecentSelects );
-            PreviewUI = new VFXSelectDialog( _plugin.Manager._Sheets, "File Select [TARGET]", _plugin.Configuration.RecentSelects );
+            Plugin = plugin;
+            SelectUI = new VFXSelectDialog( Plugin.Manager.Sheets, "File Select [SOURCE]", Plugin.Configuration.RecentSelects );
+            PreviewUI = new VFXSelectDialog( Plugin.Manager.Sheets, "File Select [TARGET]", Plugin.Configuration.RecentSelects );
 
-            SelectUI.OnSelect += _plugin.SelectAVFX;
-            PreviewUI.OnSelect += _plugin.ReplaceAVFX;
+            SelectUI.OnSelect += Plugin.SelectAVFX;
+            PreviewUI.OnSelect += Plugin.ReplaceAVFX;
 
-            TexToolsUI = new TexToolsDialog( _plugin );
-            PenumbraUI = new PenumbraDialog( _plugin );
-            DocUI = new DocDialog( _plugin );
-            TextureUI = new TextureDialog( _plugin );
-            VFXManip = new VFXManipulator( _plugin );
+            TexToolsUI = new TexToolsDialog( Plugin );
+            PenumbraUI = new PenumbraDialog( Plugin );
+            DocUI = new DocDialog( Plugin );
+            TextureUI = new TextureDialog( Plugin );
+            VFXManip = new VFXManipulator( Plugin );
 
 #if DEBUG
             Visible = true;
 #endif
         }
         public void RefreshAVFX() {
-            VFXMain = new UIMain( _plugin.AVFX, _plugin );
+            VFXMain = new UIMain( Plugin.AVFX, Plugin );
         }
         public void UnloadAVFX() {
             VFXMain = null;
@@ -83,7 +83,7 @@ namespace VFXEditor.UI
         public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( _plugin.Name, ref Visible ) ) return;
+            if( !ImGui.Begin( Plugin.Name, ref Visible ) ) return;
 
             ImGui.BeginTabBar( "MainInterfaceTabs" );
             DrawFiles();
@@ -100,8 +100,8 @@ namespace VFXEditor.UI
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if((DateTime.Now - LastUpdate).TotalSeconds > 0.5  ) { // only allow updates every 1/2 second
-                        _plugin.Doc.Save();
-                        _plugin.ResourceLoader.ReRender();
+                        Plugin.Doc.Save();
+                        Plugin.ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
                 }
@@ -116,8 +116,8 @@ namespace VFXEditor.UI
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node = _plugin.AVFX.toAVFX();
-                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.toBytes(), "avfx" );
+                        var node = Plugin.AVFX.ToAVFX();
+                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.ToBytes(), "avfx" );
                     }
                     if(ImGui.Selectable("TexTools Mod" ) ) {
                         TexToolsUI.Show();
@@ -126,7 +126,7 @@ namespace VFXEditor.UI
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", _plugin.Manager.LastImportNode.exportString( 0 ), "txt" );
+                        SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", Plugin.Manager.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }
@@ -138,7 +138,7 @@ namespace VFXEditor.UI
                 }
                 ImGui.PopFont();
                 ImGui.SameLine();
-                ImGui.Text( $"{_plugin.Manager.TexManager.GamePathReplace.Count} Texture(s)" );
+                ImGui.Text( $"{Plugin.Manager.TexManager.GamePathReplace.Count} Texture(s)" );
                 ImGui.SameLine();
                 // ======== VERIFY ============
                 if( Configuration.Config.VerifyOnLoad ) {
@@ -187,8 +187,8 @@ namespace VFXEditor.UI
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            string sourceString = _plugin.SourceString;
-            string previewString = _plugin.ReplaceString;
+            string sourceString = Plugin.SourceString;
+            string previewString = Plugin.ReplaceString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 80 );
 
@@ -196,15 +196,15 @@ namespace VFXEditor.UI
 
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
                 SelectUI.Show();
             }
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
-                _plugin.RemoveSourceAVFX();
+                Plugin.RemoveSourceAVFX();
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
@@ -214,15 +214,15 @@ namespace VFXEditor.UI
 
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect", new Vector2( 30, 23 ) ) ) {
                 PreviewUI.Show( showLocal: false );
             }
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
-                _plugin.RemoveReplaceAVFX();
+                Plugin.RemoveReplaceAVFX();
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
@@ -261,20 +261,20 @@ namespace VFXEditor.UI
 
             // =======SPAWN + MANIP =========
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !_plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash )}##MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                _plugin.Tracker.Enabled = !_plugin.Tracker.Enabled;
-                if( !_plugin.Tracker.Enabled ) {
-                    _plugin.Tracker.Reset();
-                    _plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
+            if( ImGui.Button( $"{( !Plugin.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash )}##MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
+                Plugin.Tracker.Enabled = !Plugin.Tracker.Enabled;
+                if( !Plugin.Tracker.Enabled ) {
+                    Plugin.Tracker.Reset();
+                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
                 }
                 else {
-                    _plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
                 }
             }
             ImGui.PopFont();
 
             ImGui.SameLine();
-            string previewSpawn = _plugin.Doc.ActiveDoc.Replace.Path;
+            string previewSpawn = Plugin.Doc.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             if(SpawnVfx == null ) {
@@ -296,15 +296,15 @@ namespace VFXEditor.UI
             }
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) {
-                    SpawnVfx = new StaticVfx( _plugin, previewSpawn, _plugin.PluginInterface.ClientState.LocalPlayer.Position);
+                    SpawnVfx = new StaticVfx( Plugin, previewSpawn, Plugin.PluginInterface.ClientState.LocalPlayer.Position);
                 }
                 if( ImGui.Selectable( "On Self" ) ) {
-                    SpawnVfx = new ActorVfx( _plugin, _plugin.PluginInterface.ClientState.LocalPlayer, _plugin.PluginInterface.ClientState.LocalPlayer, previewSpawn );
+                    SpawnVfx = new ActorVfx( Plugin, Plugin.PluginInterface.ClientState.LocalPlayer, Plugin.PluginInterface.ClientState.LocalPlayer, previewSpawn );
                 }
                 if (ImGui.Selectable("On Taget" ) ) {
-                    var t = _plugin.PluginInterface.ClientState.Targets.CurrentTarget;
+                    var t = Plugin.PluginInterface.ClientState.Targets.CurrentTarget;
                     if(t != null ) {
-                        SpawnVfx = new ActorVfx( _plugin, t, t, previewSpawn );
+                        SpawnVfx = new ActorVfx( Plugin, t, t, previewSpawn );
                     }
                 }
                 ImGui.EndPopup();
@@ -338,10 +338,10 @@ namespace VFXEditor.UI
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                bool result = _plugin.PluginInterface.Data.FileExists( RawInputValue );
+                bool result = Plugin.PluginInterface.Data.FileExists( RawInputValue );
                 if( result ) {
                     try {
-                        var file = _plugin.PluginInterface.Data.GetFile( RawInputValue );
+                        var file = Plugin.PluginInterface.Data.GetFile( RawInputValue );
                         SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data, "avfx" );
                     }
                     catch(Exception e ) {
@@ -355,10 +355,10 @@ namespace VFXEditor.UI
             ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                bool result = _plugin.PluginInterface.Data.FileExists( RawTexInputValue );
+                bool result = Plugin.PluginInterface.Data.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
-                        var file = _plugin.PluginInterface.Data.GetFile( RawTexInputValue );
+                        var file = Plugin.PluginInterface.Data.GetFile( RawTexInputValue );
                         SaveDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", file.Data, "atex" );
                     }
                     catch( Exception e ) {
@@ -432,7 +432,7 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             newResult.DisplayString = "[NEW]";
             newResult.Type = VFXSelectType.Local;
             newResult.Path = Path.Combine( Plugin.TemplateLocation, "Files", path );
-            _plugin.SelectAVFX( newResult );
+            Plugin.SelectAVFX( newResult );
         }
         public void SaveDialog( string filter, string data, string ext ) {
             SaveDialog( filter, Encoding.ASCII.GetBytes(data), ext );

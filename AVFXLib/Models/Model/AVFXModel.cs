@@ -22,7 +22,7 @@ namespace AVFXLib.Models
         {
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             foreach(AVFXNode n in node.Children)
@@ -65,41 +65,41 @@ namespace AVFXLib.Models
             }
         }
 
-        public VNum addVNum()
+        public VNum AddVNum()
         {
             VNum vnum = new VNum(new byte[VNum.SIZE]);
             VNums.Add( vnum );
             return vnum;
         }
-        public void addVNum( VNum item) {
+        public void AddVNum( VNum item) {
             VNums.Add( item );
         }
-        public void removeVNum(int idx )
+        public void RemoveVNum(int idx )
         {
             VNums.RemoveAt( idx );
         }
-        public void removeVNum(VNum item ) {
+        public void RemoveVNum(VNum item ) {
             VNums.Remove( item );
         }
         //
-        public EmitVertex addEmitVertex()
+        public EmitVertex AddEmitVertex()
         {
             EmitVertex eVert = new EmitVertex( new byte[EmitVertex.SIZE] );
             EmitVertices.Add( eVert );
             return eVert;
         }
-        public void addEmitVertex( EmitVertex item ) {
+        public void AddEmitVertex( EmitVertex item ) {
             EmitVertices.Add( item );
         }
-        public void removeEmitVertex(int idx )
+        public void RemoveEmitVertex(int idx )
         {
             EmitVertices.RemoveAt( idx );
         }
-        public void removeEmitVertex( EmitVertex item ) {
+        public void RemoveEmitVertex( EmitVertex item ) {
             EmitVertices.Remove( item );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode modelNode =  new AVFXNode("Modl");
 

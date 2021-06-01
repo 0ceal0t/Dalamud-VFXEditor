@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UITimelineItem OnNew() {
-            var newItem = Timeline.Timeline.addItem();
+            var newItem = Timeline.Timeline.AddItem();
             newItem.EndTime.GiveValue( (int) Max );
             return new UITimelineItem( newItem, Timeline );
         }
@@ -32,7 +32,7 @@ namespace VFXEditor.UI.VFX {
             item.BinderSelect.DeleteSelect();
             item.EmitterSelect.DeleteSelect();
             item.EffectorSelect.DeleteSelect();
-            Timeline.Timeline.removeItem( item.Item );
+            Timeline.Timeline.RemoveItem( item.Item );
         }
 
         public override void SetEnd( UITimelineItem item, int end ) {

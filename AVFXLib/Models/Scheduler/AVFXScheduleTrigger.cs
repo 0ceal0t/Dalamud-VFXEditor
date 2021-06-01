@@ -18,7 +18,7 @@ namespace AVFXLib.Models
         {
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
 
@@ -31,18 +31,18 @@ namespace AVFXLib.Models
                 dummyNode.Children = subItem;
 
                 AVFXScheduleSubItem Item = new AVFXScheduleSubItem();
-                Item.read(dummyNode);
+                Item.Read(dummyNode);
                 SubItems.Add(Item);
             }
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             // make ItPr by concatting elements of dummy elements
             AVFXNode itemAvfx = new AVFXNode("Trgr");
             foreach (AVFXScheduleSubItem Item in SubItems)
             {
-                itemAvfx.Children.AddRange(Item.toAVFX().Children); // flatten
+                itemAvfx.Children.AddRange(Item.ToAVFX().Children); // flatten
             }
 
             return itemAvfx;

@@ -149,7 +149,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -164,7 +164,7 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
             SetDefault(Attributes);
@@ -172,7 +172,7 @@ namespace AVFXLib.Models
             Frames = new ColorFrames(new byte[8]);
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode smplAvfx = new AVFXNode("Smpl");
 
@@ -196,16 +196,6 @@ namespace AVFXLib.Models
             colors = rawBytes;
         }
 
-        public JArray GetJSON()
-        {
-            JArray ret = new JArray();
-            foreach (byte c in colors)
-            {
-                ret.Add(new JValue(Util.Bytes1ToInt(new byte[] { c })));
-            }
-            return ret;
-        }
-
         public byte[] GetBytes()
         {
             return colors;
@@ -225,16 +215,6 @@ namespace AVFXLib.Models
             {
                 frames[idx] = Util.Bytes2ToInt(new byte[] { rawBytes[2 * idx], rawBytes[2 * idx + 1] });
             }
-        }
-
-        public JArray GetJSON()
-        {
-            JArray ret = new JArray();
-            foreach (int f in frames)
-            {
-                ret.Add(new JValue(f));
-            }
-            return ret;
         }
 
         public byte[] GetBytes()

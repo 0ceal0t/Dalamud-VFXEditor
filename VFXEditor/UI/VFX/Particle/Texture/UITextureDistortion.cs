@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINode._Textures, Tex.TextureIdx ));
+            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINodeGroup.Textures, Tex.TextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Distort UV1", Tex.TargetUV1));
             Parameters.Add(new UICheckbox("Distort UV2", Tex.TargetUV2));
@@ -50,7 +50,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) )
             {
-                Tex.toDefault();
+                Tex.ToDefault();
                 Init();
             }
         }

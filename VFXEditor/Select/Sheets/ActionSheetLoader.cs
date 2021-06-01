@@ -9,12 +9,12 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
-        public ActionSheetLoader(SheetManager manager, DalamudPluginInterface pi) : base(manager, pi ) {
+        public ActionSheetLoader(SheetManager manager, DalamudPluginInterface pluginInterface ) : base(manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.IsPlayerAction );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.IsPlayerAction );
+            foreach( var item in sheet ) {
                 var i = new XivAction( item );
                 if( i.VfxExists ) {
                     Items.Add( i );
@@ -32,10 +32,10 @@ namespace VFXSelect.Data.Sheets {
                 return true;
             }
             string tmbPath = item.GetTmbPath();
-            bool result = _pi.Data.FileExists( tmbPath );
+            bool result = PluginInterface.Data.FileExists( tmbPath );
             if( result ) {
                 try {
-                    var file = _pi.Data.GetFile( tmbPath );
+                    var file = PluginInterface.Data.GetFile( tmbPath );
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {

@@ -10,11 +10,11 @@ using ImGuizmoNET;
 namespace VFXEditor.Structs.Vfx {
     public class ActorVfx : BaseVfx {
         public ActorVfx( Plugin plugin, Actor caster, Actor target, string path ) : base( plugin, path ) {
-            Vfx = _Plugin.ResourceLoader.StatusAdd( path, caster.Address, target.Address, -1, ( char ) 0, 0, ( char ) 0 );
+            Vfx = Plugin.ResourceLoader.StatusAdd( path, caster.Address, target.Address, -1, ( char ) 0, 0, ( char ) 0 );
         }
 
         public override void Remove() {
-             _Plugin.ResourceLoader.StatusRemove( Vfx, (char) 1 );
+            Plugin.ResourceLoader.StatusRemove( Vfx, (char) 1 );
         }
 
         public static int GetCasterId( IntPtr vfx ) {

@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX
             Sched = sched;
             Name = name;
 
-            TimelineSelect = new UINodeSelect<UITimeline>( Sched, "Target Timeline", UINode._Timelines, Item.TimelineIdx );
+            TimelineSelect = new UINodeSelect<UITimeline>( Sched, "Target Timeline", UINodeGroup.Timelines, Item.TimelineIdx );
             // ============================
             Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
             Attributes.Add( new UIInt( "Start Time", Item.StartTime ) );

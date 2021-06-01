@@ -41,7 +41,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Fix sound crashes (?)
 - [ ] Pause spawned vfx
 - [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags
@@ -72,6 +71,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Fix crashes when replacing sound~~
 - [x] ~~Render distance settings for overlay~~
 - [x] ~~Fix live overlay view in cutscenes~~ (kinda)
 - [x] ~~Mount select tab~~

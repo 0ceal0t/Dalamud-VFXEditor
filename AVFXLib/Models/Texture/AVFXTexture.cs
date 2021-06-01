@@ -18,7 +18,7 @@ namespace AVFXLib.Models
         {
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
 
@@ -27,14 +27,14 @@ namespace AVFXLib.Models
             Path.GiveValue(Value);
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Path.GiveValue("");
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
-            return Path.toAVFX();
+            return Path.ToAVFX();
         }
     }
 }

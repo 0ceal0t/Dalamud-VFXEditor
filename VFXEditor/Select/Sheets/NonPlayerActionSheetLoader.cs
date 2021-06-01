@@ -9,12 +9,12 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class NonPlayerActionSheetLoader : ActionSheetLoader {
-        public NonPlayerActionSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public NonPlayerActionSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && !x.IsPlayerAction );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && !x.IsPlayerAction );
+            foreach( var item in sheet ) {
                 var action = new XivActionNonPlayer( item );
                 if( !action.IsPlaceholder ) {
                     if( action.HitVFXExists ) {

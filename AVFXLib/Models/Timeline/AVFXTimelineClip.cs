@@ -32,7 +32,7 @@ namespace AVFXLib.Models
             UnknownFloats = new float[4];
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
 
@@ -60,14 +60,14 @@ namespace AVFXLib.Models
             }
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             UniqueId = "LLIK";
             UnknownInts = new int[] { 0, 0, 0, 0 };
             UnknownFloats = new float[] { -1, 0, 0, 0 };
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             byte[] contents = new byte[164];
             int offset = 0;

@@ -17,11 +17,11 @@ namespace AVFXLib.Models
         {
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
         }
 
-        public override void read(AVFXLeaf leaf)
+        public override void read( AVFXLeaf leaf)
         {
             if(Size == 1)
             {
@@ -42,12 +42,12 @@ namespace AVFXLib.Models
             Assigned = true;
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             GiveValue(false);
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             byte[] bytes = new byte[0];
             if(Size == 4)

@@ -9,12 +9,12 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ZoneSheetLoader : SheetLoader<XivZone, XivZoneSelected> {
-        public ZoneSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public ZoneSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            foreach( var item in sheet ) {
                 Items.Add( new XivZone( item ) );
             }
         }
@@ -22,10 +22,10 @@ namespace VFXSelect.Data.Sheets {
         public override bool SelectItem( XivZone item, out XivZoneSelected selectedItem ) {
             selectedItem = null;
             string lgbPath = item.GetLgbPath();
-            bool result = _pi.Data.FileExists( lgbPath );
+            bool result = PluginInterface.Data.FileExists( lgbPath );
             if( result ) {
                 try {
-                    var file = _pi.Data.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
+                    var file = PluginInterface.Data.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
                     selectedItem = new XivZoneSelected( file, item );
                 }
                 catch( Exception e ) {

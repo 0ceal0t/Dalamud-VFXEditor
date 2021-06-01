@@ -20,7 +20,7 @@ namespace VFXEditor.UI.VFX
         public UIString Path;
         public UINodeGraphView NodeView;
 
-        public UITexture(AVFXTexture texture, UITextureView view ) : base( TextureColor, false ) {
+        public UITexture(AVFXTexture texture, UITextureView view ) : base( UINodeGroup.TextureColor, false ) {
             View = view;
             Texture = texture;
             NodeView = new UINodeGraphView( this );
@@ -164,8 +164,8 @@ namespace VFXEditor.UI.VFX
             return "Texture " + Idx;
         }
 
-        public override byte[] toBytes() {
-            return Texture.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Texture.ToAVFX().ToBytes();
         }
     }
 }

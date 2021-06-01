@@ -34,7 +34,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -48,12 +48,12 @@ namespace AVFXLib.Models
                     // ITEMS ====================
                     case AVFXTimelineItem.NAME:
                         lastItem = new AVFXTimelineItem();
-                        lastItem.read(item);
+                        lastItem.Read(item);
                         break;
                     // CLIPS ====================
                     case AVFXTimelineClip.NAME:
                         AVFXTimelineClip Clip = new AVFXTimelineClip();
-                        Clip.read(item);
+                        Clip.Read(item);
                         Clips.Add(Clip);
                         break;
                 }
@@ -65,50 +65,50 @@ namespace AVFXLib.Models
             }
         }
 
-        public AVFXTimelineSubItem addItem()
+        public AVFXTimelineSubItem AddItem()
         {
             AVFXTimelineSubItem Item = new AVFXTimelineSubItem();
-            Item.toDefault();
+            Item.ToDefault();
             Items.Add(Item);
             TimelineCount.GiveValue(Items.Count());
             return Item;
         }
-        public void addItem(AVFXTimelineSubItem item ) {
+        public void AddItem(AVFXTimelineSubItem item ) {
             Items.Add( item );
             TimelineCount.GiveValue( Items.Count() );
         }
-        public void removeItem(int idx)
+        public void RemoveItem(int idx)
         {
             Items.RemoveAt(idx);
             TimelineCount.GiveValue(Items.Count());
         }
-        public void removeItem(AVFXTimelineSubItem item ) {
+        public void RemoveItem(AVFXTimelineSubItem item ) {
             Items.Remove( item );
             TimelineCount.GiveValue( Items.Count() );
         }
-        public AVFXTimelineClip addClip()
+        public AVFXTimelineClip AddClip()
         {
             AVFXTimelineClip Clip = new AVFXTimelineClip();
-            Clip.toDefault();
+            Clip.ToDefault();
             Clips.Add(Clip);
             ClipCount.GiveValue(Clips.Count());
             return Clip;
         }
-        public void addClip(AVFXTimelineClip item ) {
+        public void AddClip(AVFXTimelineClip item ) {
             Clips.Add( item );
             ClipCount.GiveValue( Clips.Count() );
         }
-        public void removeClip(int idx)
+        public void RemoveClip(int idx)
         {
             Clips.RemoveAt(idx);
             ClipCount.GiveValue(Clips.Count());
         }
-        public void removeClip(AVFXTimelineClip item ) {
+        public void RemoveClip(AVFXTimelineClip item ) {
             Clips.Remove( item );
             ClipCount.GiveValue( Clips.Count() );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode tmlnAvfx = new AVFXNode("TmLn");
 
@@ -120,7 +120,7 @@ namespace AVFXLib.Models
             {
                 AVFXTimelineItem Item = new AVFXTimelineItem();
                 Item.SubItems = Items.GetRange(0, i + 1);
-                tmlnAvfx.Children.Add(Item.toAVFX());
+                tmlnAvfx.Children.Add(Item.ToAVFX());
             }
 
             // Clips

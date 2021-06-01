@@ -56,7 +56,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                Curve.toDefault();
+                Curve.ToDefault();
                 Init();
             }
         }

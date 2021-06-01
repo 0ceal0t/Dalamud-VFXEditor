@@ -84,7 +84,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -99,13 +99,13 @@ namespace AVFXLib.Models
                     // ITPR ==================
                     case AVFXEmitterCreateParticle.NAME:
                         lastParticle = new AVFXEmitterCreateParticle();
-                        lastParticle.read(item);
+                        lastParticle.Read(item);
                         break;
 
                     // ItEm =================
                     case AVFXEmitterCreateEmitter.NAME:
                         lastEmitter = new AVFXEmitterCreateEmitter();
-                        lastEmitter.read( item );
+                        lastEmitter.Read( item );
                         break;
 
                     // DATA ================
@@ -128,51 +128,51 @@ namespace AVFXLib.Models
             }
         }
 
-        public AVFXEmitterIterationItem addParticle()
+        public AVFXEmitterIterationItem AddParticle()
         {
             AVFXEmitterIterationItem ItPr = new AVFXEmitterIterationItem();
-            ItPr.toDefault();
+            ItPr.ToDefault();
             Particles.Add(ItPr);
             ParticleCount.GiveValue(Particles.Count());
             return ItPr;
         }
-        public void addParticle(AVFXEmitterIterationItem item ) {
+        public void AddParticle( AVFXEmitterIterationItem item ) {
             Particles.Add( item );
             ParticleCount.GiveValue( Particles.Count() );
         }
-        public void removeParticle(int idx)
+        public void RemoveParticle(int idx)
         {
             Particles.RemoveAt(idx);
             ParticleCount.GiveValue(Particles.Count());
         }
-        public void removeParticle(AVFXEmitterIterationItem item ) {
+        public void RemoveParticle( AVFXEmitterIterationItem item ) {
             Particles.Remove( item );
             ParticleCount.GiveValue( Particles.Count() );
         }
         //
-        public AVFXEmitterIterationItem addEmitter()
+        public AVFXEmitterIterationItem AddEmitter()
         {
             AVFXEmitterIterationItem ItEm = new AVFXEmitterIterationItem();
-            ItEm.toDefault();
+            ItEm.ToDefault();
             Emitters.Add(ItEm);
             EmitterCount.GiveValue(Emitters.Count());
             return ItEm;
         }
-        public void addEmitter( AVFXEmitterIterationItem item ) {
+        public void AddEmitter( AVFXEmitterIterationItem item ) {
             Emitters.Add( item );
             EmitterCount.GiveValue( Emitters.Count() );
         }
-        public void removeEmitter(int idx)
+        public void RemoveEmitter(int idx)
         {
             Emitters.RemoveAt(idx);
             EmitterCount.GiveValue(Emitters.Count());
         }
-        public void removeEmitter( AVFXEmitterIterationItem item ) {
+        public void RemoveEmitter( AVFXEmitterIterationItem item ) {
             Emitters.Remove( item );
             EmitterCount.GiveValue( Emitters.Count() );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode emitAvfx = new AVFXNode("Emit");
 
@@ -184,7 +184,7 @@ namespace AVFXLib.Models
             {
                 AVFXEmitterCreateParticle ItPr = new AVFXEmitterCreateParticle();
                 ItPr.Items = Particles.GetRange(0, i + 1);
-                emitAvfx.Children.Add(ItPr.toAVFX());
+                emitAvfx.Children.Add(ItPr.ToAVFX());
             }
 
             // ITEM
@@ -194,7 +194,7 @@ namespace AVFXLib.Models
                 AVFXEmitterCreateEmitter ItEM = new AVFXEmitterCreateEmitter();
                 ItEM.Items.AddRange(Particles);
                 ItEM.Items.AddRange(Emitters.GetRange( 0, i + 1 )); // get 1, then 2, etc.
-                emitAvfx.Children.Add( ItEM.toAVFX() );
+                emitAvfx.Children.Add( ItEM.ToAVFX() );
             }
 
             PutAVFX(emitAvfx, Data);

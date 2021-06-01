@@ -34,7 +34,7 @@ namespace VFXEditor.UI.VFX
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
 
-        public UIParticle( AVFXParticle particle, UIParticleView view, bool has_dependencies = false ) : base( ParticleColor, has_dependencies ) {
+        public UIParticle( AVFXParticle particle, UIParticleView view, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
             Particle = particle;
             View = view;
             NodeView = new UINodeGraphView( this );
@@ -205,8 +205,8 @@ namespace VFXEditor.UI.VFX
             return "Particle " + Idx + "(" + Particle.ParticleVariety.stringValue() + ")";
         }
 
-        public override byte[] toBytes() {
-            return Particle.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Particle.ToAVFX().ToBytes();
         }
     }
 }

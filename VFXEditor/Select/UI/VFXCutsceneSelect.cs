@@ -12,7 +12,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI {
     public class VFXCutsceneSelect : VFXSelectTab<XivCutscene, XivCutsceneSelected> {
         public VFXCutsceneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Cutscenes, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Cutscenes, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivCutscene item, string searchInput ) {
@@ -26,17 +26,17 @@ namespace VFXSelect.UI {
 
             ImGui.Text( "CUTB Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.Cutscene.Path );
+            Dialog.DisplayPath( loadedItem.Cutscene.Path );
             int vfxIdx = 0;
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[CUT] " + loadedItem.Cutscene.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[CUT] " + loadedItem.Cutscene.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
         }

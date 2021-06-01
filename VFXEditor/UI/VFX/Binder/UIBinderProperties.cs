@@ -49,7 +49,7 @@ namespace VFXEditor.UI.VFX
         {
             if( ImGui.SmallButton( "+ " + Name + parentId ) )
             {
-                Prop.toDefault();
+                Prop.ToDefault();
                 Init();
             }
         }

@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UIParticleUVSet OnNew() {
-            var p = Particle.Particle.addUvSet();
+            var p = Particle.Particle.AddUvSet();
             if( p != null ) {
                 return new UIParticleUVSet( p, Particle );
             }
@@ -30,7 +30,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnDelete( UIParticleUVSet item ) {
-            Particle.Particle.removeUvSet( item.UVSet );
+            Particle.Particle.RemoveUvSet( item.UVSet );
         }
     }
 }

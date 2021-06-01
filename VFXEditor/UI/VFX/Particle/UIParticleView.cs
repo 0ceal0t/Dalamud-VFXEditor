@@ -13,19 +13,19 @@ namespace VFXEditor.UI.VFX
     {
         public UIParticleView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" )
         {
-            Group = UINode._Particles;
+            Group = UINodeGroup.Particles;
             Group.Items = AVFX.Particles.Select( item => new UIParticle( item, this ) ).ToList();
         }
         public override void OnDelete( UIParticle item ) {
-            AVFX.removeParticle( item.Particle );
+            AVFX.RemoveParticle( item.Particle );
         }
         public override byte[] OnExport( UIParticle item ) {
-            return item.Particle.toAVFX().toBytes();
+            return item.Particle.ToAVFX().ToBytes();
         }
         public override UIParticle OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXParticle item = new AVFXParticle();
-            item.read( node );
-            AVFX.addParticle( item );
+            item.Read( node );
+            AVFX.AddParticle( item );
             return new UIParticle( item, this, has_dependencies );
         }
     }

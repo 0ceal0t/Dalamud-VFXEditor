@@ -9,12 +9,12 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class StatusSheetLoader : SheetLoader<XivStatus, XivStatus> {
-        public StatusSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public StatusSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            foreach( var item in sheet ) {
                 var i = new XivStatus( item );
                 if( i.VfxExists ) {
                     Items.Add( i );

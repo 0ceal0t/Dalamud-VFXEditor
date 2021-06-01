@@ -25,10 +25,10 @@ namespace VFXEditor.UI.VFX
             IsParticle = isParticle;
 
             if( IsParticle ) {
-                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", UINode._Particles, Iteration.TargetIdx );
+                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", UINodeGroup.Particles, Iteration.TargetIdx );
             }
             else {
-                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", UINode._Emitters, Iteration.TargetIdx );
+                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", UINodeGroup.Emitters, Iteration.TargetIdx );
             }
             //=========================
             Attributes.Add( new UICheckbox( "Enabled", Iteration.Enabled ) );

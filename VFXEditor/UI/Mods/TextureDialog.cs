@@ -20,7 +20,7 @@ namespace VFXEditor.UI {
         public override void OnDraw() {
             var id = "##ImportTex";
 
-            if( _plugin.Manager.TexManager.GamePathReplace.Count == 0 ) {
+            if( Plugin.Manager.TexManager.GamePathReplace.Count == 0 ) {
                 ImGui.Text( "No Textures Have Been Imported..." );
                 return;
             }
@@ -31,21 +31,21 @@ namespace VFXEditor.UI {
             ImGui.SetColumnWidth( 1, 75 );
             ImGui.SetColumnWidth( 2, 75 );
 
-            foreach(var path in _plugin.Manager.TexManager.GamePathReplace.Keys ) {
+            foreach(var path in Plugin.Manager.TexManager.GamePathReplace.Keys ) {
                 ImGui.Text( path );
             }
 
             ImGui.NextColumn();
-            foreach( var item in _plugin.Manager.TexManager.GamePathReplace.Values ) {
+            foreach( var item in Plugin.Manager.TexManager.GamePathReplace.Values ) {
                 ImGui.Text( $"({item.Format})" );
             }
 
             int idx = 0;
             ImGui.NextColumn();
-            foreach( KeyValuePair<string, TexReplace> entry in _plugin.Manager.TexManager.GamePathReplace ) {
+            foreach( KeyValuePair<string, TexReplace> entry in Plugin.Manager.TexManager.GamePathReplace ) {
                 if(UIUtils.RemoveButton("Remove" + id + idx, small: true ) ) {
-                    _plugin.Manager.TexManager.RemoveReplace( entry.Key );
-                    _plugin.Manager.TexManager.RefreshPreview( entry.Key );
+                    Plugin.Manager.TexManager.RemoveReplace( entry.Key );
+                    Plugin.Manager.TexManager.RefreshPreview( entry.Key );
                 }
                 idx++;
             }

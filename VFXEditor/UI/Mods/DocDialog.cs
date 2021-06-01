@@ -26,7 +26,7 @@ namespace VFXEditor.UI {
             ImGui.Columns( 2, id + "/Columns", false );
 
             int idx = 0;
-            foreach( var doc in _plugin.Doc.Docs ) {
+            foreach( var doc in Plugin.Doc.Docs ) {
                 if(ImGui.Selectable(doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDoc = doc;
                 }
@@ -40,7 +40,7 @@ namespace VFXEditor.UI {
             }
             ImGui.NextColumn();
 
-            foreach( var doc in _plugin.Doc.Docs ) {
+            foreach( var doc in Plugin.Doc.Docs ) {
                 ImGui.Text( doc.Replace.DisplayString );
             }
 
@@ -48,25 +48,25 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
 
             if( ImGui.Button( "+ NEW" + id ) ) {
-                _plugin.Doc.NewDoc();
-                _plugin.RefreshDoc();
+                Plugin.Doc.NewDoc();
+                Plugin.RefreshDoc();
             }
 
             if(SelectedDoc != null ) {
-                bool deleteDisabled = ( _plugin.Doc.Docs.Count == 1 );
+                bool deleteDisabled = ( Plugin.Doc.Docs.Count == 1 );
 
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
                 if(ImGui.Button("Select" + id ) ) {
-                    _plugin.Doc.SelectDoc( SelectedDoc );
-                    _plugin.RefreshDoc();
+                    Plugin.Doc.SelectDoc( SelectedDoc );
+                    Plugin.RefreshDoc();
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
                     if( UIUtils.RemoveButton( "Delete" + id ) ) {
-                        if( _plugin.Doc.RemoveDoc( SelectedDoc ) ) {
-                            _plugin.RefreshDoc();
+                        if( Plugin.Doc.RemoveDoc( SelectedDoc ) ) {
+                            Plugin.RefreshDoc();
                         }
-                        SelectedDoc = _plugin.Doc.ActiveDoc;
+                        SelectedDoc = Plugin.Doc.ActiveDoc;
                     }
                 }
             }

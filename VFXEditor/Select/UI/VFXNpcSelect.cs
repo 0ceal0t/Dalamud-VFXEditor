@@ -12,7 +12,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI {
     public class VFXNpcSelect : VFXSelectTab<XivNpc, XivNpcSelected> {
         public VFXNpcSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base( parentId, tabId, sheet._Npcs, sheet._pi, dialog ) {
+            base( parentId, tabId, sheet.Npcs, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivNpc item, string searchInput ) {
@@ -37,18 +37,18 @@ namespace VFXSelect.UI {
 
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.ImcPath );
+            Dialog.DisplayPath( loadedItem.ImcPath );
 
             int vfxIdx = 0;
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameNpc, "[NPC] " + loadedItem.Npc.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameNpc, "[NPC] " + loadedItem.Npc.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
         }

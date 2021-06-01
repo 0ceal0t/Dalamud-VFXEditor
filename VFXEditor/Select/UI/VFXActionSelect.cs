@@ -12,7 +12,7 @@ namespace VFXSelect.UI
 {
     public class VFXActionSelect : VFXSelectTab<XivActionBase, XivActionSelected> {
         public VFXActionSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog, bool nonPlayer = false ) :
-            base( parentId, tabId, !nonPlayer ? sheet._Actions : sheet._NonPlayerActions, sheet._pi, dialog ) {
+            base( parentId, tabId, !nonPlayer ? sheet.Actions : sheet.NonPlayerActions, sheet.PluginInterface, dialog ) {
         }
 
         public override bool CheckMatch( XivActionBase item, string searchInput ) {
@@ -35,29 +35,29 @@ namespace VFXSelect.UI
 
             ImGui.Text( "Cast VFX Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.CastVfxPath );
+            Dialog.DisplayPath( loadedItem.CastVfxPath );
             if( loadedItem.CastVfxExists ) {
                 if( ImGui.Button( "SELECT" + Id + "Cast" ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " Cast", loadedItem.CastVfxPath ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " Cast", loadedItem.CastVfxPath ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( loadedItem.CastVfxPath, id: Id + "CastCopy" );
+                Dialog.Copy( loadedItem.CastVfxPath, id: Id + "CastCopy" );
             }
 
             if( loadedItem.SelfVfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( loadedItem.SelfTmbPath );
+                Dialog.DisplayPath( loadedItem.SelfTmbPath );
                 int vfxIdx = 0;
                 foreach( var _vfx in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );
                     ImGui.SameLine();
-                    _dialog.DisplayPath( _vfx );
+                    Dialog.DisplayPath( _vfx );
                     if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, _vfx ) );
+                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, _vfx ) );
                     }
                     ImGui.SameLine();
-                    _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                    Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                     vfxIdx++;
                 }
             }

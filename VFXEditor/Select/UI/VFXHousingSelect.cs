@@ -13,7 +13,7 @@ namespace VFXSelect.UI
 {
     public class VFXHousingSelect : VFXSelectTab<XivHousing, XivHousingSelected> {
         public VFXHousingSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base(parentId, tabId, sheet._Housing, sheet._pi, dialog) {
+            base(parentId, tabId, sheet.Housing, sheet.PluginInterface, dialog) {
         }
 
         ImGuiScene.TextureWrap Icon;
@@ -36,18 +36,18 @@ namespace VFXSelect.UI
 
             ImGui.Text( "SGB Path: " );
             ImGui.SameLine();
-            _dialog.DisplayPath( loadedItem.Housing.sgbPath );
+            Dialog.DisplayPath( loadedItem.Housing.sgbPath );
 
             int vfxIdx = 0;
             foreach( var _vfx in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                _dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( _vfx );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    _dialog.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[HOUSING] " + loadedItem.Housing.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[HOUSING] " + loadedItem.Housing.Name + " #" + vfxIdx, _vfx ) );
                 }
                 ImGui.SameLine();
-                _dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
                 vfxIdx++;
             }
         }

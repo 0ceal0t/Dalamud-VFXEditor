@@ -21,10 +21,10 @@ namespace VFXEditor.UI.VFX
 
         public UINodeSelect<UIBinder> BinderSelect;
 
-        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool has_dependencies = false ) : base( TimelineColor, has_dependencies ) {
+        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
             View = view;
-            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINode._Binders, Timeline.BinderIdx );
+            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINodeGroup.Binders, Timeline.BinderIdx );
             //===============
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
@@ -77,8 +77,8 @@ namespace VFXEditor.UI.VFX
             return "Timeline " + Idx;
         }
 
-        public override byte[] toBytes() {
-            return Timeline.toAVFX().toBytes();
+        public override byte[] ToBytes() {
+            return Timeline.ToAVFX().ToBytes();
         }
     }
 }

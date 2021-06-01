@@ -31,13 +31,13 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
         }
 
-        public override void toDefault()
+        public override void ToDefault()
         {
             Assigned = true;
             SetUnAssigned(Attributes);
@@ -45,7 +45,7 @@ namespace AVFXLib.Models
             SetDefault(AxisConnectRandomType);
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode curveAvfx = new AVFXNode(AVFXName);
             PutAVFX(curveAvfx, Attributes);

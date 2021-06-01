@@ -9,12 +9,12 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
-        public EmoteSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public EmoteSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-            foreach( var item in _sheet ) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            foreach( var item in sheet ) {
                 var i = new XivEmote( item );
                 if( i.PapFiles.Count > 0 ) {
                     Items.Add( i );
@@ -27,9 +27,9 @@ namespace VFXSelect.Data.Sheets {
             List<Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
             try {
                 foreach( string path in item.PapFiles ) {
-                    var result = _pi.Data.FileExists( path );
+                    var result = PluginInterface.Data.FileExists( path );
                     if( result ) {
-                        files.Add( _pi.Data.GetFile( path ) );
+                        files.Add( PluginInterface.Data.GetFile( path ) );
                     }
                 }
                 selectedItem = new XivEmoteSelected( item, files );

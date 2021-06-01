@@ -9,11 +9,11 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
-        public ItemSheetLoader( SheetManager manager, DalamudPluginInterface pi ) : base( manager, pi ) {
+        public ItemSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {
-            var _sheet = _pi.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );
+            var _sheet = PluginInterface.Data.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );
             foreach( var item in _sheet ) {
                 var i = new XivItem( item );
                 if( i.HasModel ) {
@@ -28,10 +28,10 @@ namespace VFXSelect.Data.Sheets {
         public override bool SelectItem( XivItem item, out XivItemSelected selectedItem ) {
             selectedItem = null;
             string imcPath = item.GetImcPath();
-            bool result = _pi.Data.FileExists( imcPath );
+            bool result = PluginInterface.Data.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = _pi.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivItemSelected( file, item );
                 }
                 catch( Exception e ) {

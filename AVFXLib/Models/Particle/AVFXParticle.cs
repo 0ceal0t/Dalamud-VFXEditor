@@ -154,7 +154,7 @@ namespace AVFXLib.Models
             });
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             ReadAVFX(Attributes, node);
@@ -166,7 +166,7 @@ namespace AVFXLib.Models
                     // UVSET =================================
                     case AVFXParticleUVSet.NAME:
                         AVFXParticleUVSet UVSet = new AVFXParticleUVSet();
-                        UVSet.read(item);
+                        UVSet.Read(item);
                         UVSets.Add(UVSet);
                         break;
 
@@ -180,31 +180,31 @@ namespace AVFXLib.Models
             ReadAVFX(Attributes2, node);
         }
 
-        public AVFXParticleUVSet addUvSet()
+        public AVFXParticleUVSet AddUvSet()
         {
             if (UVSets.Count >= 4) return null;
             AVFXParticleUVSet UvSet = new AVFXParticleUVSet();
-            UvSet.toDefault();
+            UvSet.ToDefault();
             UVSets.Add(UvSet);
             UvSetCount.GiveValue(UVSets.Count());
             return UvSet;
         }
-        public void addUvSet(AVFXParticleUVSet item ) {
+        public void AddUvSet(AVFXParticleUVSet item ) {
             if( UVSets.Count >= 4 ) return;
             UVSets.Add( item );
             UvSetCount.GiveValue( UVSets.Count() );
         }
-        public void removeUvSet(int idx)
+        public void RemoveUvSet(int idx)
         {
             UVSets.RemoveAt(idx);
             UvSetCount.GiveValue(UVSets.Count());
         }
-        public void removeUvSet(AVFXParticleUVSet item ) {
+        public void RemoveUvSet(AVFXParticleUVSet item ) {
             UVSets.Remove( item );
             UvSetCount.GiveValue( UVSets.Count() );
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             AVFXNode ptclAvfx = new AVFXNode("Ptcl");
 

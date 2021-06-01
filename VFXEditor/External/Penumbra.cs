@@ -55,7 +55,7 @@ namespace VFXEditor.External {
 
                 void AddMod( AVFXBase _avfx, string _path ) {
                     if( !string.IsNullOrEmpty( _path ) && _avfx != null ) {
-                        var data = _avfx.toAVFX().toBytes();
+                        var data = _avfx.ToAVFX().ToBytes();
                         string modFile = Path.Combine( modFolder, _path );
                         string modFileFolder = Path.GetDirectoryName( modFile );
                         Directory.CreateDirectory( modFileFolder );

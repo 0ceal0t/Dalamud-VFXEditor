@@ -13,19 +13,19 @@ namespace VFXEditor.UI.VFX
     {
         public UIBinderView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath:"binder_default.vfxedit" )
         {
-            Group = UINode._Binders;
+            Group = UINodeGroup.Binders;
             Group.Items = AVFX.Binders.Select( item => new UIBinder( item, this ) ).ToList();
         }
         public override void OnDelete( UIBinder item ) {
-            AVFX.removeBinder( item.Binder );
+            AVFX.RemoveBinder( item.Binder );
         }
         public override byte[] OnExport( UIBinder item ) {
-            return item.Binder.toAVFX().toBytes();
+            return item.Binder.ToAVFX().ToBytes();
         }
         public override UIBinder OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXBinder item = new AVFXBinder();
-            item.read( node );
-            AVFX.addBinder( item );
+            item.Read( node );
+            AVFX.AddBinder( item );
             return new UIBinder( item, this );
         }
     }

@@ -19,7 +19,7 @@ namespace AVFXLib.Models
             Items = new List<AVFXEmitterIterationItem>();
         }
 
-        public override void read(AVFXNode node)
+        public override void Read(AVFXNode node)
         {
             Assigned = true;
             // split every 26 leafs, make dummy elements and insert
@@ -31,18 +31,18 @@ namespace AVFXLib.Models
                 dummyNode.Children = subItem;
 
                 AVFXEmitterIterationItem Item = new AVFXEmitterIterationItem();
-                Item.read(dummyNode);
+                Item.Read(dummyNode);
                 Items.Add(Item);
             }
         }
 
-        public override AVFXNode toAVFX()
+        public override AVFXNode ToAVFX()
         {
             // make ItPr by concatting elements of dummy elements
             AVFXNode ItPr = new AVFXNode("ItPr");
             foreach (AVFXEmitterIterationItem Item in Items)
             {
-                ItPr.Children.AddRange(Item.toAVFX().Children); // flatten
+                ItPr.Children.AddRange(Item.ToAVFX().Children); // flatten
             }
             return ItPr;
         }
