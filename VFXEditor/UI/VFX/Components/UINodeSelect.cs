@@ -55,18 +55,19 @@ namespace VFXEditor.UI.VFX {
             string id = parentId + "/Node";
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
                 if( ImGui.Selectable( "[NONE]", Selected == null ) ) {
-                    // 
                     UnlinkFrom( Selected );
                     Selected = null;
                     UpdateNode();
                 }
                 foreach( var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
-                        //
                         UnlinkFrom( Selected );
                         LinkTo( item );
                         Selected = item;
                         UpdateNode();
+                    }
+                    if( ImGui.IsItemHovered() ) {
+                        item.ShowTooltip();
                     }
                 }
                 ImGui.EndCombo();
@@ -148,6 +149,9 @@ namespace VFXEditor.UI.VFX {
                             LinkTo( item );
                             Selected[i] = item;
                             UpdateNode();
+                        }
+                        if( ImGui.IsItemHovered() ) {
+                            item.ShowTooltip();
                         }
                     }
                     ImGui.EndCombo();

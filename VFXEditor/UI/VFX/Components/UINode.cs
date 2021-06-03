@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UINode : UIItem {
-        public uint _Color;
+        public uint Color;
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
         public List<UINodeSelect> Selectors = new List<UINodeSelect>();
@@ -14,7 +14,7 @@ namespace VFXEditor.UI.VFX {
         public UINodeGraph Graph = null;
 
         public UINode(uint color, bool has_dependencies) {
-            _Color = color;
+            Color = color;
             HasDependencies = has_dependencies;
         }
         public void DeleteNode() {
@@ -37,6 +37,8 @@ namespace VFXEditor.UI.VFX {
         public void RefreshGraph() {
             Graph = new UINodeGraph( this );
         }
+
+        public virtual void ShowTooltip() { }
 
         public abstract byte[] ToBytes();
     }

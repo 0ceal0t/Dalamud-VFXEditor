@@ -33,12 +33,8 @@ namespace VFXEditor.UI.VFX
             }
             HasDependencies = false; // if imported, all set now
         }
-        public override void DrawBody( string parentId )
-        {
-            string id = parentId + "/Texture";
-            NodeView.Draw( id );
-            Path.Draw( id );
 
+        public string LoadTex() {
             var currentPathValue = Path.Literal.Value;
             if( currentPathValue != lastValue ) {
                 lastValue = currentPathValue;
@@ -46,6 +42,16 @@ namespace VFXEditor.UI.VFX
                     Manager.LoadTexture( currentPathValue );
                 }
             }
+            return currentPathValue;
+        }
+
+        public override void DrawBody( string parentId )
+        {
+            string id = parentId + "/Texture";
+            NodeView.Draw( id );
+            Path.Draw( id );
+
+            var currentPathValue = LoadTex();
 
             if( View.GetPreviewTexture() ) {
                 if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
@@ -77,6 +83,18 @@ namespace VFXEditor.UI.VFX
                             Manager.RefreshPreview( currentPathValue.Trim( '\0' ) );
                         }
                     }
+                }
+            }
+        }
+
+        public override void ShowTooltip() {
+            var currentPathValue = LoadTex();
+            if( View.GetPreviewTexture() ) {
+                if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
+                    var t = Manager.PathToTex[currentPathValue];
+                    ImGui.BeginTooltip();
+                    ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
+                    ImGui.EndTooltip();
                 }
             }
         }
@@ -121,7 +139,7 @@ namespace VFXEditor.UI.VFX
                                 int g = t.Data[_idx + 1];
                                 int b = t.Data[_idx + 2];
                                 int a = t.Data[_idx + 3];
-                                bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+                                bmp.SetPixel( j, i, System.Drawing.Color.FromArgb( a, r, g, b ) );
                             }
                         }
                         bmp.Save( picker.FileName, System.Drawing.Imaging.ImageFormat.Png );

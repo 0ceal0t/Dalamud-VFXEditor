@@ -102,7 +102,7 @@ namespace VFXEditor.UI.VFX {
                 var item = Node.Graph.Graph[node];
                 Vector2 Pos = CanvasBottomRight - GetPos(item);
                 DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
-                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node._Color, 5, ImDrawFlags.RoundCornersTop ); // header
+                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node.Color, 5, ImDrawFlags.RoundCornersTop ); // header
                 DrawList.AddText( Pos + TextOffset, TextColor, node.GetText() );
 
                 if(item.Level > 0 ) { // right node

@@ -38,8 +38,8 @@ namespace VFXEditor.UI
         private string StatusText;
         private Vector4 StatusColor;
 
-        private string RawInputValue;
-        private string RawTexInputValue;
+        private string RawInputValue = "";
+        private string RawTexInputValue = "";
 
         public MainInterface( Plugin plugin )
         {
