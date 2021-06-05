@@ -16,11 +16,13 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UINode {
         public AVFXModel Model;
         public ModelPreview _ModelPreview;
-        int Mode = 1;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
+
+        private int Mode = 1;
+        private bool Refresh = false;
 
         public UIModel( AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
@@ -69,6 +71,11 @@ namespace VFXEditor.UI.VFX
             if( !ret )
                 return;
             // ===============
+            if(Refresh) {
+                _ModelPreview.LoadModel( Model, mode: Mode );
+                Refresh = false;
+            }
+
             bool wireframe = _ModelPreview.IsWireframe;
             if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
                 _ModelPreview.IsWireframe = wireframe;
@@ -145,7 +152,7 @@ namespace VFXEditor.UI.VFX
                         if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
-                            _ModelPreview.LoadModel( Model );
+                            Refresh = true;
                         }
                     }
                     catch( Exception ex ) {

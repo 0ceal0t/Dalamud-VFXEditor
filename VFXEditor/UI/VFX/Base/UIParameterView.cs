@@ -29,6 +29,9 @@ namespace VFXEditor.UI.VFX
             RevisedScale = new UIFloat3( "Revised Scale", AVFX.RevisedValuesScaleX, AVFX.RevisedValuesScaleY, AVFX.RevisedValuesScaleZ );
             ScaleCombined = Math.Max( AVFX.RevisedValuesScaleX.Value, Math.Max( AVFX.RevisedValuesScaleY.Value, AVFX.RevisedValuesScaleZ.Value ) );
 
+            Attributes.Add( new UIFloat3( "Revised Position", AVFX.RevisedValuesPosX, AVFX.RevisedValuesPosY, AVFX.RevisedValuesPosZ ) );
+            Attributes.Add( new UIFloat3( "Revised Rotation", AVFX.RevisedValuesRotX, AVFX.RevisedValuesRotY, AVFX.RevisedValuesRotZ ) );
+            Attributes.Add( new UIFloat3( "Revised Color", AVFX.RevisedValuesR, AVFX.RevisedValuesG, AVFX.RevisedValuesB ) );
             Attributes.Add(new UICheckbox("Delay Fast Particle", AVFX.IsDelayFastParticle));
             Attributes.Add(new UICheckbox("Fit Ground", AVFX.IsFitGround));
             Attributes.Add(new UICheckbox("Transform Skip", AVFX.IsTranformSkip));
@@ -49,9 +52,6 @@ namespace VFXEditor.UI.VFX
             Attributes.Add(new UICombo<DirectionalLightSource>("Directional Light Source", AVFX.DirectionalLightSourceType));
             Attributes.Add(new UICombo<PointLightSouce>("Point Light 1", AVFX.PointLightsType1));
             Attributes.Add(new UICombo<PointLightSouce>("Point Light 2", AVFX.PointLightsType2));
-            Attributes.Add(new UIFloat3("Revised Position", AVFX.RevisedValuesPosX, AVFX.RevisedValuesPosY, AVFX.RevisedValuesPosZ));
-            Attributes.Add(new UIFloat3("Revised Rotation", AVFX.RevisedValuesRotX, AVFX.RevisedValuesRotY, AVFX.RevisedValuesRotZ));
-            Attributes.Add(new UIFloat3("Revised Color", AVFX.RevisedValuesR, AVFX.RevisedValuesG, AVFX.RevisedValuesB));
             Attributes.Add(new UICheckbox("Fade X", AVFX.FadeXenabled));
             Attributes.Add(new UICheckbox("Fade Y", AVFX.FadeYenabled, sl:100));
             Attributes.Add(new UICheckbox("Fade Z", AVFX.FadeZenabled, sl:200));

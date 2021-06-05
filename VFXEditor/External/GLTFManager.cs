@@ -72,7 +72,7 @@ namespace VFXEditor.External
             V = new List<Vertex>();
             I = new List<Index>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( path );
-            PluginLog.Log( "Imported GLTF from: " + path );
+            PluginLog.Log( "Importing GLTF from: " + path );
 
             if(model.LogicalMeshes.Count > 0 ) {
                 var mesh = model.LogicalMeshes[0];
