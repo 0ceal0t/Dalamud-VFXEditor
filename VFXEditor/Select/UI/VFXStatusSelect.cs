@@ -43,6 +43,7 @@ namespace VFXSelect.UI
                 }
                 ImGui.SameLine();
                 Dialog.Copy( loadedItem.GetLoopVFX1Path(), id: Id + "Loop1Copy" );
+                Dialog.Spawn( loadedItem.GetLoopVFX1Path(), id: Id + "Loop1Spawn" );
             }
             // ==== LOOP 2 =====
             ImGui.Text( "Loop VFX2: " );
@@ -54,6 +55,8 @@ namespace VFXSelect.UI
                 }
                 ImGui.SameLine();
                 Dialog.Copy( loadedItem.GetLoopVFX2Path(), id: Id + "Loop2Copy" );
+                ImGui.SameLine();
+                Dialog.Spawn( loadedItem.GetLoopVFX2Path(), id: Id + "Loop2Spawn" );
             }
             // ==== LOOP 3 =====
             ImGui.Text( "Loop VFX3: " );
@@ -65,6 +68,7 @@ namespace VFXSelect.UI
                 }
                 ImGui.SameLine();
                 Dialog.Copy( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Copy" );
+                Dialog.Spawn( loadedItem.GetLoopVFX3Path(), id: Id + "Loop3Spawn" );
             }
         }
 

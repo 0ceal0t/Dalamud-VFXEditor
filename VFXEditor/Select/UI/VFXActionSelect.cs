@@ -42,6 +42,7 @@ namespace VFXSelect.UI
                 }
                 ImGui.SameLine();
                 Dialog.Copy( loadedItem.CastVfxPath, id: Id + "CastCopy" );
+                Dialog.Spawn( loadedItem.CastVfxPath, id: Id + "CastSpawn" );
             }
 
             if( loadedItem.SelfVfxExists ) {
@@ -49,15 +50,16 @@ namespace VFXSelect.UI
                 ImGui.SameLine();
                 Dialog.DisplayPath( loadedItem.SelfTmbPath );
                 int vfxIdx = 0;
-                foreach( var _vfx in loadedItem.SelfVfxPaths ) {
+                foreach( var path in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );
                     ImGui.SameLine();
-                    Dialog.DisplayPath( _vfx );
+                    Dialog.DisplayPath( path );
                     if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, _vfx ) );
+                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, path ) );
                     }
                     ImGui.SameLine();
-                    Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                    Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                    Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                     vfxIdx++;
                 }
             }

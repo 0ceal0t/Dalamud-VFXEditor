@@ -50,7 +50,8 @@ namespace VFXSelect.UI
                     Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameNpc, "[NPC] " + loadedItem.Mount.Name, loadedItem.GetVFXPath() ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( loadedItem.GetVFXPath(), id: ( Id + "Copy" ) );
+                Dialog.Copy( loadedItem.GetVFXPath(), id: Id + "Copy" );
+                Dialog.Spawn( loadedItem.GetVFXPath(), id: Id + "Spawn" );
             }
         }
 

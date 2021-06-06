@@ -28,15 +28,16 @@ namespace VFXSelect.UI {
                 ImGui.SameLine();
                 Dialog.DisplayPath( loadedItem.SelfTmbPath );
                 int vfxIdx = 0;
-                foreach( var _vfx in loadedItem.SelfVfxPaths ) {
+                foreach( var path in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );
                     ImGui.SameLine();
-                    Dialog.DisplayPath( _vfx );
+                    Dialog.DisplayPath( path );
                     if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameGimmick, "[GIMMICK] " + loadedItem.Gimmick.Name + " #" + vfxIdx, _vfx ) );
+                        Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameGimmick, "[GIMMICK] " + loadedItem.Gimmick.Name + " #" + vfxIdx, path ) );
                     }
                     ImGui.SameLine();
-                    Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                    Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                    Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                     vfxIdx++;
                 }
             }

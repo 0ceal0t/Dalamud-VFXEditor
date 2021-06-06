@@ -28,15 +28,16 @@ namespace VFXSelect.UI {
             ImGui.SameLine();
             Dialog.DisplayPath( loadedItem.Zone.LgbPath );
             int vfxIdx = 0;
-            foreach( var _vfx in loadedItem.VfxPaths ) {
+            foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                Dialog.DisplayPath( _vfx );
+                Dialog.DisplayPath( path );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameZone, "[ZONE] " + loadedItem.Zone.Name + " #" + vfxIdx, _vfx ) );
+                    Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameZone, "[ZONE] " + loadedItem.Zone.Name + " #" + vfxIdx, path ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( _vfx, id: Id + "Copy" + vfxIdx );
+                Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                 vfxIdx++;
             }
         }

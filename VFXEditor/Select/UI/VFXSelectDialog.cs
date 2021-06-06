@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -54,12 +51,34 @@ namespace VFXSelect.UI
         public event Action<VFXSelectResult> OnSelect;
         public bool Visible = false;
 
+        private bool ShowSpawn = false;
+        private Func<bool> SpawnVfxExists;
+        private Action RemoveSpawnVfx;
+        private Action<string> SpawnOnGround;
+        private Action<string> SpawnOnSelf;
+        private Action<string> SpawnOnTarget;
+
         public List<VFXSelectTab> GameTabs;
         public List<VFXSelectResult> RecentList;
 
-        public VFXSelectDialog(SheetManager sheet, string id, List<VFXSelectResult> recentList) {
+        public VFXSelectDialog(
+            SheetManager sheet, string id, List<VFXSelectResult> recentList,
+            bool showSpawn = false,
+            Func<bool> spawnVfxExists = null,
+            Action removeSpawnVfx = null,
+            Action<string> spawnOnGround = null,
+            Action<string> spawnOnSelf = null,
+            Action<string> spawnOnTarget = null
+            ) {
             Id = id;
             RecentList = recentList;
+
+            ShowSpawn = showSpawn;
+            SpawnVfxExists = spawnVfxExists;
+            RemoveSpawnVfx = removeSpawnVfx;
+            SpawnOnGround = spawnOnGround;
+            SpawnOnSelf = spawnOnSelf;
+            SpawnOnTarget = spawnOnTarget;
 
             GameTabs = new List<VFXSelectTab>(new VFXSelectTab[]{
                 new VFXItemSelect( id, "Item", sheet, this ),
@@ -228,6 +247,32 @@ namespace VFXSelect.UI
                 ImGui.SetClipboardText( copyPath );
             }
             ImGui.PopStyleColor();
+        }
+        public void Spawn(string spawnPath, string id = "") {
+            if( !ShowSpawn ) return;
+            ImGui.SameLine();
+            if(SpawnVfxExists()) {
+                if(ImGui.Button("Remove##" + id)) {
+                    RemoveSpawnVfx();
+                }
+            }
+            else {
+                if(ImGui.Button("Spawn##" + id ) ) {
+                    ImGui.OpenPopup( "Spawn_Popup##" + id );
+                }
+                if( ImGui.BeginPopup( "Spawn_Popup##" + id ) ) {
+                    if( ImGui.Selectable( "On Ground" ) ) {
+                        SpawnOnGround( spawnPath );
+                    }
+                    if( ImGui.Selectable( "On Self" ) ) {
+                        SpawnOnSelf( spawnPath );
+                    }
+                    if( ImGui.Selectable( "On Target" ) ) {
+                        SpawnOnTarget( spawnPath );
+                    }
+                    ImGui.EndPopup();
+                }
+            }
         }
         public static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight) {
             float childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();

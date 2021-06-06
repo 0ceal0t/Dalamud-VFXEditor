@@ -44,8 +44,26 @@ namespace VFXEditor.UI
         public MainInterface( Plugin plugin )
         {
             Plugin = plugin;
-            SelectUI = new VFXSelectDialog( Plugin.Manager.Sheets, "File Select [SOURCE]", Plugin.Configuration.RecentSelects );
-            PreviewUI = new VFXSelectDialog( Plugin.Manager.Sheets, "File Select [TARGET]", Plugin.Configuration.RecentSelects );
+            SelectUI = new VFXSelectDialog( 
+                Plugin.Manager.Sheets, "File Select [SOURCE]",
+                Plugin.Configuration.RecentSelects,
+                showSpawn: true,
+                spawnVfxExists: () => SpawnExists(),
+                removeSpawnVfx: () => RemoveSpawnVfx(),
+                spawnOnGround: (string path) => SpawnOnGround( path ),
+                spawnOnSelf: (string path) => SpawnOnSelf( path ),
+                spawnOnTarget: (string path) => SpawnOnTarget(path)
+            );
+            PreviewUI = new VFXSelectDialog(
+                Plugin.Manager.Sheets, "File Select [TARGET]",
+                Plugin.Configuration.RecentSelects,
+                showSpawn: true,
+                spawnVfxExists: () => SpawnExists(),
+                removeSpawnVfx: () => RemoveSpawnVfx(),
+                spawnOnGround: ( string path ) => SpawnOnGround( path ),
+                spawnOnSelf: ( string path ) => SpawnOnSelf( path ),
+                spawnOnTarget: ( string path ) => SpawnOnTarget( path )
+            );
 
             SelectUI.OnSelect += Plugin.SelectAVFX;
             PreviewUI.OnSelect += Plugin.ReplaceAVFX;
@@ -63,8 +81,33 @@ namespace VFXEditor.UI
         public void RefreshAVFX() {
             VFXMain = new UIMain( Plugin.AVFX, Plugin );
         }
+
         public void UnloadAVFX() {
             VFXMain = null;
+        }
+
+        public bool SpawnExists() {
+            return SpawnVfx != null;
+        }
+
+        public void RemoveSpawnVfx() {
+            SpawnVfx?.Remove();
+            SpawnVfx = null;
+        }
+
+        public void SpawnOnGround(string path) {
+            SpawnVfx = new StaticVfx( Plugin, path, Plugin.PluginInterface.ClientState.LocalPlayer.Position );
+        }
+
+        public void SpawnOnSelf(string path) {
+            SpawnVfx = new ActorVfx( Plugin, Plugin.PluginInterface.ClientState.LocalPlayer, Plugin.PluginInterface.ClientState.LocalPlayer, path );
+        }
+
+        public void SpawnOnTarget(string path) {
+            var t = Plugin.PluginInterface.ClientState.Targets.CurrentTarget;
+            if( t != null ) {
+                SpawnVfx = new ActorVfx( Plugin, t, t, path );
+            }
         }
 
         public void Draw() {
@@ -277,7 +320,7 @@ namespace VFXEditor.UI
             string previewSpawn = Plugin.Doc.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            if(SpawnVfx == null ) {
+            if(!SpawnExists()) {
                 if( spawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
                 }
@@ -290,22 +333,18 @@ namespace VFXEditor.UI
             }
             else {
                 if( ImGui.Button( "Remove" ) ) {
-                    SpawnVfx?.Remove();
-                    SpawnVfx = null;
+                    RemoveSpawnVfx();
                 }
             }
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) {
-                    SpawnVfx = new StaticVfx( Plugin, previewSpawn, Plugin.PluginInterface.ClientState.LocalPlayer.Position);
+                    SpawnOnGround( previewSpawn );
                 }
                 if( ImGui.Selectable( "On Self" ) ) {
-                    SpawnVfx = new ActorVfx( Plugin, Plugin.PluginInterface.ClientState.LocalPlayer, Plugin.PluginInterface.ClientState.LocalPlayer, previewSpawn );
+                    SpawnOnSelf( previewSpawn );
                 }
                 if (ImGui.Selectable("On Taget" ) ) {
-                    var t = Plugin.PluginInterface.ClientState.Targets.CurrentTarget;
-                    if(t != null ) {
-                        SpawnVfx = new ActorVfx( Plugin, t, t, previewSpawn );
-                    }
+                    SpawnOnTarget( previewSpawn );
                 }
                 ImGui.EndPopup();
             }
