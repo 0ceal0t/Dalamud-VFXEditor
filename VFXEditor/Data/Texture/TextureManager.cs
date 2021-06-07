@@ -33,21 +33,20 @@ namespace VFXEditor.Data.Texture
         public TextureFormat Format;
     }
 
-    public class TextureManager
-    {
-        public Plugin _plugin;
+    public class TextureManager {
+        public Plugin Plugin;
         public int TEX_ID = 0;
 
         public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
         public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
 
         public TextureManager(Plugin plugin ) {
-            _plugin = plugin;
+            Plugin = plugin;
 
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
-            var runtimeRoot = Path.Combine( _plugin.AssemblyLocation, "runtimes" );
+            var runtimeRoot = Path.Combine( Plugin.AssemblyLocation, "runtimes" );
             string _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
             string _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
             lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
@@ -74,14 +73,14 @@ namespace VFXEditor.Data.Texture
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportTexture(string fileLocation, string replacePath ) {
-            if( !_plugin.PluginInterface.Data.FileExists( replacePath ) ) {
+            if( !Plugin.PluginInterface.Data.FileExists( replacePath ) ) {
                 PluginLog.Log( $"{replacePath} does not exist" );
                 return false;
             }
 
             try {
                 TexReplace replaceData;
-                var path = Path.Combine( _plugin.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+                var path = Path.Combine( Plugin.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 bool isDDS = Path.GetExtension( fileLocation ).ToLower() == ".dds";
                 if( isDDS ) { // a .dds, use the format that the file is already in
@@ -95,7 +94,7 @@ namespace VFXEditor.Data.Texture
                     ddsFile.Dispose();
                 }
                 else { //a .png file, convert it to the format currently being used by the existing game file
-                    var texFile = _plugin.PluginInterface.Data.GetFile<VFXTexture>( replacePath );
+                    var texFile = Plugin.PluginInterface.Data.GetFile<VFXTexture>( replacePath );
                     
                     using( var surface = Surface.LoadFromFile( fileLocation ) ) {
                         surface.FlipVertically();
@@ -195,7 +194,7 @@ namespace VFXEditor.Data.Texture
                 return VFXTexture.LoadFromLocal( GamePathReplace[path].localPath );
             }
             else {
-                return _plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
+                return Plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
             }
         }
 
@@ -212,7 +211,7 @@ namespace VFXEditor.Data.Texture
         }
 
         public bool CreateTexture(string path, out TexData ret, bool loadImage = true ) {
-            var result = _plugin.PluginInterface.Data.FileExists( path );
+            var result = Plugin.PluginInterface.Data.FileExists( path );
             ret = new TexData();
             if( result ) {
                 try {
@@ -231,7 +230,7 @@ namespace VFXEditor.Data.Texture
 
                     ret.Data = texFile.ImageData;
                     if( loadImage ) {
-                        var texBind = _plugin.PluginInterface.UiBuilder.LoadImageRaw( ret.Data, texFile.Header.Width, texFile.Header.Height, 4 );
+                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( ret.Data, texFile.Header.Width, texFile.Header.Height, 4 );
                         ret.Wrap = texBind;
                     }
                     return true;

@@ -40,10 +40,10 @@ namespace VFXEditor.Data.DirectX {
             // ======= BASE MODEL =========
             vertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "UVPreview_VS.fx" ), "VS", "vs_4_0" );
             pixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "UVPreview_PS.fx" ), "PS", "ps_4_0" );
-            VShader = new VertexShader( _Device, vertexShaderByteCode );
-            PShader = new PixelShader( _Device, pixelShaderByteCode );
+            VShader = new VertexShader( Device, vertexShaderByteCode );
+            PShader = new PixelShader( Device, pixelShaderByteCode );
             Signature = ShaderSignature.GetInputSignature( vertexShaderByteCode );
-            Layout = new InputLayout( _Device, Signature, new[] {
+            Layout = new InputLayout( Device, Signature, new[] {
                 new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                 new InputElement("UV", 0, Format.R32G32B32A32_Float, 16, 0),
                 new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
@@ -56,11 +56,10 @@ namespace VFXEditor.Data.DirectX {
                 AddressW = TextureAddressMode.Wrap,
                 Filter = Filter.MinMagMipLinear
             };
-            Sampler = new SamplerState( _Device, samplerStateDescription );
-            AnimDataBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            Sampler = new SamplerState( Device, samplerStateDescription );
+            AnimDataBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
         }
 
-        // ======= MODEL ===========
         public void LoadModel( AVFXModel model) {
             if(model == null ) {
                 LoadModel( new List<Index>(), new List<Vertex>() );
@@ -68,6 +67,7 @@ namespace VFXEditor.Data.DirectX {
             }
             LoadModel( model.Indexes, model.Vertices);
         }
+
         public void LoadModel( List<Index> _Indexes, List<Vertex> _Vertices) {
             if( _Indexes.Count == 0 ) {
                 NumVerts = 0;
@@ -86,19 +86,19 @@ namespace VFXEditor.Data.DirectX {
                     }
                 }
                 Vertices?.Dispose();
-                Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
+                Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
                 NumVerts = _Indexes.Count * 3;
             }
 
             UpdateDraw();
         }
-        // ========= TEXUTURE ===========
+
         public void LoadTexture(Bitmap bitmap ) {
             Texture?.Dispose();
             ShaderTexture?.Dispose();
 
             var data = bitmap.LockBits( new System.Drawing.Rectangle( 0, 0, bitmap.Width, bitmap.Height ), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb );
-            Texture = new Texture2D( _Device, new Texture2DDescription() {
+            Texture = new Texture2D( Device, new Texture2DDescription() {
                 Width = bitmap.Width,
                 Height = bitmap.Height,
                 ArraySize = 1,
@@ -112,7 +112,7 @@ namespace VFXEditor.Data.DirectX {
             }, new DataRectangle( data.Scan0, data.Stride ) );
             bitmap.UnlockBits( data );
 
-            ShaderTexture = new ShaderResourceView( _Device, Texture );
+            ShaderTexture = new ShaderResourceView( Device, Texture );
 
             if( FirstModel ) {
                 Draw();
@@ -122,21 +122,21 @@ namespace VFXEditor.Data.DirectX {
 
         public override void OnDraw() {
             // ====== DRAW BASE =========
-            _Ctx.PixelShader.Set( PShader );
-            _Ctx.VertexShader.Set( VShader );
-            _Ctx.InputAssembler.InputLayout = Layout;
-            _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+            Ctx.PixelShader.Set( PShader );
+            Ctx.VertexShader.Set( VShader );
+            Ctx.InputAssembler.InputLayout = Layout;
+            Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
 
             // ====== TEXTURE ============
-            _Ctx.UpdateSubresource( ref AnimData, AnimDataBuffer );
-            _Ctx.PixelShader.SetConstantBuffer( 0, AnimDataBuffer );
-            _Ctx.PixelShader.SetShaderResource( 0, ShaderTexture );
-            _Ctx.PixelShader.SetSampler( 0, Sampler );
+            Ctx.UpdateSubresource( ref AnimData, AnimDataBuffer );
+            Ctx.PixelShader.SetConstantBuffer( 0, AnimDataBuffer );
+            Ctx.PixelShader.SetShaderResource( 0, ShaderTexture );
+            Ctx.PixelShader.SetSampler( 0, Sampler );
 
             if( NumVerts > 0 ) {
-                _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) ); // set vertex buffer
-                _Ctx.Draw( NumVerts, 0 );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) ); // set vertex buffer
+                Ctx.Draw( NumVerts, 0 );
             }
         }
 

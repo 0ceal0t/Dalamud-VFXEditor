@@ -208,6 +208,7 @@ namespace VFXEditor.Data.Texture {
 
             return header.ToArray();
         }
+
         public enum DXGI_FORMAT : uint {
             DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT_R32G32B32A32_TYPELESS,

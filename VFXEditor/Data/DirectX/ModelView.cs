@@ -10,8 +10,8 @@ using Vec2 = System.Numerics.Vector2;
 namespace VFXEditor.Data.DirectX {
     public abstract class ModelView {
         public DirectXManager Manager;
-        public Device _Device;
-        public DeviceContext _Ctx;
+        public Device Device;
+        public DeviceContext Ctx;
 
         public int Width = 300;
         public int Height = 300;
@@ -40,14 +40,14 @@ namespace VFXEditor.Data.DirectX {
 
         public ModelView(DirectXManager manager) {
             Manager = manager;
-            _Device = Manager._Device;
-            _Ctx = Manager._Ctx;
+            Device = Manager.Device;
+            Ctx = Manager.Ctx;
 
             //  ====== CONSTANT BUFFERS =======
-            WorldBuffer = new Buffer( _Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            WorldBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
 
-            RendersizeBuffer = new Buffer( _Device, Utilities.SizeOf<Vector4>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            RendersizeBuffer = new Buffer( Device, Utilities.SizeOf<Vector4>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             RefreshRasterizeState();
             ResizeResources();
@@ -55,7 +55,7 @@ namespace VFXEditor.Data.DirectX {
 
         public void RefreshRasterizeState() {
             RState?.Dispose();
-            RState = new RasterizerState( _Device, new RasterizerStateDescription
+            RState = new RasterizerState( Device, new RasterizerStateDescription
             {
                 CullMode = CullMode.None,
                 DepthBias = 0,
@@ -90,7 +90,7 @@ namespace VFXEditor.Data.DirectX {
         public void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
             RenderTex?.Dispose();
-            RenderTex = new Texture2D( _Device, new Texture2DDescription()
+            RenderTex = new Texture2D( Device, new Texture2DDescription()
             {
                 Format = Format.B8G8R8A8_UNorm,
                 ArraySize = 1,
@@ -104,12 +104,12 @@ namespace VFXEditor.Data.DirectX {
                 OptionFlags = ResourceOptionFlags.None
             } );
             RenderShad?.Dispose();
-            RenderShad = new ShaderResourceView( _Device, RenderTex );
+            RenderShad = new ShaderResourceView( Device, RenderTex );
             RenderView?.Dispose();
-            RenderView = new RenderTargetView( _Device, RenderTex );
+            RenderView = new RenderTargetView( Device, RenderTex );
 
             DepthTex?.Dispose();
-            DepthTex = new Texture2D( _Device, new Texture2DDescription()
+            DepthTex = new Texture2D( Device, new Texture2DDescription()
             {
                 Format = Format.D32_Float_S8X24_UInt,
                 ArraySize = 1,
@@ -123,12 +123,13 @@ namespace VFXEditor.Data.DirectX {
                 OptionFlags = ResourceOptionFlags.None
             } );
             DepthView?.Dispose();
-            DepthView = new DepthStencilView( _Device, DepthTex );
+            DepthView = new DepthStencilView( Device, DepthTex );
         }
 
         private float Clamp( float value, float min, float max ) {
             return value > max ? max : value < min ? min : value;
         }
+
         public void Drag(Vec2 newPos, bool rotate ) {
             if( IsDragging ) {
                 if( rotate ) {
@@ -144,12 +145,14 @@ namespace VFXEditor.Data.DirectX {
             IsDragging = true;
             LastMousePos = new Vector2( newPos.X, newPos.Y );
         }
+
         public void Zoom(float mouseWheel ) {
             if(mouseWheel != 0 ) {
                 Distance += mouseWheel * 0.2f;
                 UpdateViewMatrix();
             }
         }
+
         public void UpdateViewMatrix() {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             Vector3 lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
@@ -168,27 +171,28 @@ namespace VFXEditor.Data.DirectX {
         }
 
         public abstract void OnDraw();
+
         public void Draw() {
             Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
             worldViewProj.Transpose();
-            _Ctx.UpdateSubresource( ref worldViewProj, WorldBuffer );
+            Ctx.UpdateSubresource( ref worldViewProj, WorldBuffer );
 
             var renderSize = new Vector4( Width, Height, 0, 0 );
-            _Ctx.UpdateSubresource( ref renderSize, RendersizeBuffer );
+            Ctx.UpdateSubresource( ref renderSize, RendersizeBuffer );
 
-            _Ctx.OutputMerger.SetTargets( DepthView, RenderView );
-            _Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
-            _Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+            Ctx.OutputMerger.SetTargets( DepthView, RenderView );
+            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
+            Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
 
-            _Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
-            _Ctx.Rasterizer.State = RState;
+            Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
+            Ctx.Rasterizer.State = RState;
 
             OnDraw();
 
-            _Ctx.Flush();
+            Ctx.Flush();
 
             Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }

@@ -22,18 +22,21 @@ namespace VFXEditor.Data.Vfx {
             public bool isChecked;
             public int actorId;
         }
+
         public struct StaticData {
             public string path;
             public bool isChecked;
             public int actorId;
         }
 
-        public Plugin _plugin;
+        public Plugin Plugin;
         public ConcurrentDictionary<IntPtr, ActorData> ActorVfxs;
         public ConcurrentDictionary<IntPtr, StaticData> StaticVfxs;
 
+        public static ClosenessComp CloseComp = new ClosenessComp();
+
         public VfxTracker(Plugin plugin ) {
-            _plugin = plugin;
+            Plugin = plugin;
             Reset();
         }
 
@@ -46,13 +49,13 @@ namespace VFXEditor.Data.Vfx {
             };
             ActorVfxs.TryAdd( vfx, data );
         }
+
         public void RemoveActor(IntPtr vfx) {
             if( !Enabled ) return;
             if( ActorVfxs.ContainsKey( vfx ) ) {
                 ActorVfxs.TryRemove( vfx, out var value );
             }
         }
-
 
         public void AddStatic(IntPtr vfx, string path ) {
             if( !Enabled ) return;
@@ -63,6 +66,7 @@ namespace VFXEditor.Data.Vfx {
             };
             StaticVfxs.TryAdd( vfx, data );
         }
+
         public void RemoveStatic(IntPtr vfx ) {
             if( !Enabled ) return;
             if( StaticVfxs.ContainsKey( vfx ) ) {
@@ -71,7 +75,7 @@ namespace VFXEditor.Data.Vfx {
         }
 
         public bool WatchingCutscene() {
-            return ( _plugin.PluginInterface.ClientState != null && _plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
+            return ( Plugin.PluginInterface.ClientState != null && Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
         }
 
         // ===== SCUFFED STUFF TO GROUP STATIC VFXS =========
@@ -79,6 +83,7 @@ namespace VFXEditor.Data.Vfx {
             public string path;
             public SharpDX.Vector3 position;
         }
+
         public class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
             public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
                 return ( x - y ).Length() < 2;
@@ -87,22 +92,20 @@ namespace VFXEditor.Data.Vfx {
                 return 0;
             }
         }
-        public static ClosenessComp CloseComp = new ClosenessComp();
+
         public static int ChooseId(int caster, int target ) {
             return target > 0 ? target : ( caster > 0 ? caster : -1 );
         }
 
-
-
         public void Draw() {
             if( !Enabled ) return;
-            var playPos = _plugin.PluginInterface.ClientState?.LocalPlayer?.Position;
+            var playPos = Plugin.PluginInterface.ClientState?.LocalPlayer?.Position;
             if( !playPos.HasValue ) return;
 
             var windowPos = ImGuiHelpers.MainViewport.Pos;
 
             // ======= IF IN A CUTSCENE, GIVE UP WITH POSITIONING ======
-            if( _plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene] || _plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] ) {
+            if( Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] ) {
                 HashSet<string> paths = new HashSet<string>();
                 foreach(var item in ActorVfxs ) {
                     paths.Add( item.Value.path );
@@ -117,7 +120,7 @@ namespace VFXEditor.Data.Vfx {
             }
 
             // ======== SET UP MATRIX, ONLY ONCE :) =====
-            var matrixSingleton = _plugin.ResourceLoader.GetMatrixSingleton();
+            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
             var viewProjectionMatrix = new SharpDX.Matrix();
             float width, height;
             unsafe {
@@ -211,13 +214,13 @@ namespace VFXEditor.Data.Vfx {
                 idx++;
             }
             // ====== DRAW ACTORS ======
-            var actorTable = _plugin.PluginInterface.ClientState.Actors;
+            var actorTable = Plugin.PluginInterface.ClientState.Actors;
             if( actorTable == null ) {
                 return;
             }
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
-                if( _plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
+                if( Plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
 
                 var result = ActorToVfxs.TryGetValue( actor.ActorId, out var paths );
                 if( !result ) continue;

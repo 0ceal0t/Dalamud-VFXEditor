@@ -125,14 +125,17 @@ namespace VFXEditor
             Configuration.AddRecent( replaceResult );
             Doc.UpdateReplace( replaceResult );
         }
+
         public void RemoveReplaceAVFX() {
             Doc.UpdateReplace( VFXSelectResult.None() );
         }
+
         public void RemoveSourceAVFX() {
             Doc.UpdateSource( VFXSelectResult.None() );
             Doc.ResetDoc();
             UnloadAVFX();
         }
+
         public void RefreshDoc() {
             if( Doc.HasVFX() ) {
                 MainUI.RefreshAVFX();
@@ -141,6 +144,7 @@ namespace VFXEditor
                 UnloadAVFX();
             }
         }
+
         public void LoadAVFX(AVFXBase avfx ) {
             if( avfx == null )
                 return;
@@ -158,10 +162,12 @@ namespace VFXEditor
             Manager.TexManager.Reset();
             MainUI.RefreshAVFX();
         }
+
         public void UnloadAVFX() {
             AVFX = null;
             MainUI.UnloadAVFX();
         }
+
         public void Dispose() {
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
@@ -175,6 +181,7 @@ namespace VFXEditor
             Doc?.Dispose();
             Manager.TexManager.Dispose();
         }
+
         private void OnCommand( string command, string rawArgs ) {
             MainUI.Visible = !MainUI.Visible;
         }

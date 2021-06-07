@@ -40,9 +40,9 @@ namespace VFXEditor.UI
 
         private string RawInputValue = "";
         private string RawTexInputValue = "";
+        public DateTime LastUpdate = DateTime.Now;
 
-        public MainInterface( Plugin plugin )
-        {
+        public MainInterface( Plugin plugin ) {
             Plugin = plugin;
             SelectUI = new VFXSelectDialog( 
                 Plugin.Manager.Sheets, "File Select [SOURCE]",
@@ -78,6 +78,7 @@ namespace VFXEditor.UI
             Visible = true;
 #endif
         }
+
         public void RefreshAVFX() {
             VFXMain = new UIMain( Plugin.AVFX, Plugin );
         }
@@ -123,7 +124,6 @@ namespace VFXEditor.UI
             VFXManip.Draw();
         }
 
-        public DateTime LastUpdate = DateTime.Now;
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
             if( !ImGui.Begin( Plugin.Name, ref Visible ) ) return;
@@ -473,9 +473,11 @@ If you are having issues loading a VFX, please open a Github issue. Make sure to
             newResult.Path = Path.Combine( Plugin.TemplateLocation, "Files", path );
             Plugin.SelectAVFX( newResult );
         }
+
         public void SaveDialog( string filter, string data, string ext ) {
             SaveDialog( filter, Encoding.ASCII.GetBytes(data), ext );
         }
+
         public void SaveDialog(string filter, byte[] data, string ext ) {
             Task.Run( async () => {
                 var picker = new SaveFileDialog {

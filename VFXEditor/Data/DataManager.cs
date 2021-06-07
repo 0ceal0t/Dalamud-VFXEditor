@@ -13,22 +13,19 @@ using VFXSelect;
 
 namespace VFXEditor.Data
 {
-    public class DataManager
-    {
-        public Plugin _plugin;
+    public class DataManager {
+        public Plugin Plugin;
         public TextureManager TexManager;
         public SheetManager Sheets;
 
         public AVFXNode LastImportNode;
 
         public DataManager(Plugin plugin ) {
-            _plugin = plugin;
-            TexManager = new TextureManager( _plugin );
-            Sheets = new SheetManager( _plugin.PluginInterface, Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" ) );
+            Plugin = plugin;
+            TexManager = new TextureManager( Plugin );
+            Sheets = new SheetManager( Plugin.PluginInterface, Path.Combine( Plugin.TemplateLocation, "Files", "npc.csv" ) );
         }
 
-
-        // ======  EXPORT AVFX  ======
         public bool SaveLocalFile(string path, AVFXBase avfx ) {
             try {
                 var node = avfx.ToAVFX();
@@ -42,7 +39,6 @@ namespace VFXEditor.Data
             return true;
         }
 
-        // ====== LOCAL AVFX =====
         public bool GetLocalFile(string path, out AVFXBase avfx) {
             avfx = null;
             if( File.Exists( path ) ) {
@@ -52,12 +48,12 @@ namespace VFXEditor.Data
             }
             return false;
         }
-        // ===== GAME AVFX ======
+
         public bool GetGameFile(string path, out AVFXBase avfx) {
             avfx = null;
-            bool result = _plugin.PluginInterface.Data.FileExists( path );
+            bool result = Plugin.PluginInterface.Data.FileExists( path );
             if( result )  {
-                var file = _plugin.PluginInterface.Data.GetFile( path );
+                var file = Plugin.PluginInterface.Data.GetFile( path );
                 using(MemoryStream ms = new MemoryStream(file.Data))
                 using( BinaryReader br = new BinaryReader( ms ) ) {
                     return ReadGameFile( br, out avfx );

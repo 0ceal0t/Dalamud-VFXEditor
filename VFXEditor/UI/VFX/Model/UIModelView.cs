@@ -18,7 +18,7 @@ namespace VFXEditor.UI.VFX
         public UIModelView(UIMain main, AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
         {
             Main = main;
-            Mdl3D = plugin.DXManager._ModelPreview;
+            Mdl3D = plugin.DXManager.ModelView;
             Group = UINodeGroup.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( item ) ).ToList();
         }

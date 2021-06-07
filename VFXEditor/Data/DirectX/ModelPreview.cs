@@ -64,10 +64,10 @@ namespace VFXEditor.Data.DirectX {
             var shaderFile = Path.Combine( Manager.ShaderPath, "ModelPreview.fx" );
             VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
             PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-            VShader = new VertexShader( _Device, VertexShaderByteCode );
-            PShader = new PixelShader( _Device, PixelShaderByteCode );
+            VShader = new VertexShader( Device, VertexShaderByteCode );
+            PShader = new PixelShader( Device, PixelShaderByteCode );
             Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-            Layout = new InputLayout( _Device, Signature, new[] {
+            Layout = new InputLayout( Device, Signature, new[] {
                 new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                 new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                 new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
@@ -78,10 +78,10 @@ namespace VFXEditor.Data.DirectX {
             EDGE_Vertices = null;
             EDGE_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
             EDGE_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
-            EDGE_VShader = new VertexShader( _Device, EDGE_VertexShaderByteCode );
-            EDGE_PShader = new PixelShader( _Device, EDGE_PixelShaderByteCode );
+            EDGE_VShader = new VertexShader( Device, EDGE_VertexShaderByteCode );
+            EDGE_PShader = new PixelShader( Device, EDGE_PixelShaderByteCode );
             EDGE_Signature = ShaderSignature.GetInputSignature( EDGE_VertexShaderByteCode );
-            EDGE_Layout = new InputLayout( _Device, EDGE_Signature, new[] {
+            EDGE_Layout = new InputLayout( Device, EDGE_Signature, new[] {
                 new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                 new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
             } );
@@ -136,16 +136,16 @@ namespace VFXEditor.Data.DirectX {
                 }
             }
             EMIT_NumVerts = v_emitter.Length / EMIT_SPAN;
-            EMIT_Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, v_emitter );
+            EMIT_Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, v_emitter );
 
             EMIT_NumInstances = 0;
             EMIT_Instances = null;
             EMIT_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
             EMIT_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
-            EMIT_VShader = new VertexShader( _Device, EMIT_VertexShaderByteCode );
-            EMIT_PShader = new PixelShader( _Device, EMIT_PixelShaderByteCode );
+            EMIT_VShader = new VertexShader( Device, EMIT_VertexShaderByteCode );
+            EMIT_PShader = new PixelShader( Device, EMIT_PixelShaderByteCode );
             EMIT_Signature = ShaderSignature.GetInputSignature( EMIT_VertexShaderByteCode );
-            EMIT_Layout = new InputLayout( _Device, EMIT_Signature, new[] {
+            EMIT_Layout = new InputLayout( Device, EMIT_Signature, new[] {
                 new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
                 new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
                 new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1)
@@ -199,11 +199,11 @@ namespace VFXEditor.Data.DirectX {
                 }
 
                 Vertices?.Dispose();
-                Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
+                Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
                 NumVerts = _Indexes.Count * 3;
 
                 EDGE_Vertices?.Dispose();
-                EDGE_Vertices = Buffer.Create( _Device, BindFlags.VertexBuffer, EDGE_data );
+                EDGE_Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, EDGE_data );
                 EDGE_NumVerts = _Indexes.Count * 4;
             }
 
@@ -220,7 +220,7 @@ namespace VFXEditor.Data.DirectX {
                 }
 
                 EMIT_Instances?.Dispose();
-                EMIT_Instances = Buffer.Create( _Device, BindFlags.VertexBuffer, data );
+                EMIT_Instances = Buffer.Create( Device, BindFlags.VertexBuffer, data );
                 EMIT_NumInstances = _Emitters.Count;
             }
 
@@ -230,43 +230,43 @@ namespace VFXEditor.Data.DirectX {
         public override void OnDraw() {
             // ====== DRAW BASE =========
             if( NumVerts > 0 ) {
-                _Ctx.PixelShader.Set( PShader );
-                _Ctx.VertexShader.Set( VShader );
-                _Ctx.InputAssembler.InputLayout = Layout;
-                _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-                _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) );
-                _Ctx.Draw( NumVerts, 0 );
+                Ctx.PixelShader.Set( PShader );
+                Ctx.VertexShader.Set( VShader );
+                Ctx.InputAssembler.InputLayout = Layout;
+                Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+                Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) );
+                Ctx.Draw( NumVerts, 0 );
             }
 
             // ====== DRAW LINE =========
             if( ShowEdges ) {
-                _Ctx.PixelShader.Set( EDGE_PShader );
-                _Ctx.VertexShader.Set( EDGE_VShader );
-                _Ctx.InputAssembler.InputLayout = EDGE_Layout;
-                _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
-                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-                _Ctx.GeometryShader.SetConstantBuffer( 0, RendersizeBuffer );
+                Ctx.PixelShader.Set( EDGE_PShader );
+                Ctx.VertexShader.Set( EDGE_VShader );
+                Ctx.InputAssembler.InputLayout = EDGE_Layout;
+                Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
+                Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+                Ctx.GeometryShader.SetConstantBuffer( 0, RendersizeBuffer );
                 if( EDGE_NumVerts > 0 ) {
-                    _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EDGE_Vertices, Utilities.SizeOf<Vector4>() * EDGE_SPAN, 0 ) );
+                    Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EDGE_Vertices, Utilities.SizeOf<Vector4>() * EDGE_SPAN, 0 ) );
                     for( int i = 0; i < EDGE_NumVerts / 4; i++ ) {
-                        _Ctx.Draw( 4, i * 4 );
+                        Ctx.Draw( 4, i * 4 );
                     }
                 }
             }
 
             // ======= EMITTER ==========
             if (EMIT_NumInstances > 0 && ShowEmitter ) {
-                _Ctx.PixelShader.Set( EMIT_PShader );
-                _Ctx.VertexShader.Set( EMIT_VShader );
-                _Ctx.InputAssembler.InputLayout = EMIT_Layout;
-                _Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                _Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+                Ctx.PixelShader.Set( EMIT_PShader );
+                Ctx.VertexShader.Set( EMIT_VShader );
+                Ctx.InputAssembler.InputLayout = EMIT_Layout;
+                Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+                Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
 
-                _Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EMIT_Vertices, Utilities.SizeOf<Vector4>() * EMIT_SPAN, 0 ) );
-                _Ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( EMIT_Instances, Utilities.SizeOf<Vector4>() * EMIT_INSTANCE_SPAN, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EMIT_Vertices, Utilities.SizeOf<Vector4>() * EMIT_SPAN, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( EMIT_Instances, Utilities.SizeOf<Vector4>() * EMIT_INSTANCE_SPAN, 0 ) );
 
-                _Ctx.DrawInstanced( EMIT_NumVerts, EMIT_NumInstances, 0, 0 );
+                Ctx.DrawInstanced( EMIT_NumVerts, EMIT_NumInstances, 0, 0 );
             }
         }
 

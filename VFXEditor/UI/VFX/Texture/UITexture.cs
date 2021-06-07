@@ -11,8 +11,7 @@ using VFXEditor.Data.Texture;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITexture : UINode
-    {
+    public class UITexture : UINode {
         public TextureManager Manager;
         public UITextureView View;
         public AVFXTexture Texture;
@@ -25,7 +24,7 @@ namespace VFXEditor.UI.VFX
             Texture = texture;
             NodeView = new UINodeGraphView( this );
             Manager = view.Manager;
-            // ================
+
             Path = new UIString( "Path", Texture.Path);
             lastValue = Texture.Path.Value;
             if( view.GetPreviewTexture() ) {
@@ -45,8 +44,7 @@ namespace VFXEditor.UI.VFX
             return currentPathValue;
         }
 
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             string id = parentId + "/Texture";
             NodeView.Draw( id );
             Path.Draw( id );
@@ -70,7 +68,7 @@ namespace VFXEditor.UI.VFX
                             SavePngDialog( t );
                         }
                         if( ImGui.Selectable( "DDS" + id ) ) {
-                            SaveDDSDialog( Manager._plugin, currentPathValue.Trim( '\0' ) );
+                            SaveDDSDialog( Manager.Plugin, currentPathValue.Trim( '\0' ) );
                         }
                         ImGui.EndPopup();
                     }

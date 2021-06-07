@@ -27,7 +27,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
         public UVAnimation(UIParticleUVSet uvSet ) {
             UVSet = uvSet;
             Assigned = true;
-            _UVPreview = DirectXManager.Manager._UVPreview;
+            _UVPreview = DirectXManager.Manager.UVView;
             SetFrame();
             timer = new Stopwatch();
             timer.Stop();

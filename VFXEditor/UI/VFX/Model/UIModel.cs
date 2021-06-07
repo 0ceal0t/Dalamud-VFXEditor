@@ -33,7 +33,7 @@ namespace VFXEditor.UI.VFX
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
-            _ModelPreview = DirectXManager.Manager._ModelPreview;
+            _ModelPreview = DirectXManager.Manager.ModelView;
             HasDependencies = false; // if imported, all set now
         }
 

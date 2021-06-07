@@ -14,11 +14,9 @@ using TeximpNet.DDS;
 
 namespace VFXEditor.Data.Texture {  
 
-    public class VFXTexture : Lumina.Data.FileResource
-    {
+    public class VFXTexture : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
-        public unsafe struct TexHeader
-        {
+        public unsafe struct TexHeader {
             public Attribute Type;
             public TextureFormat Format;
             public ushort Width;
@@ -109,6 +107,7 @@ namespace VFXEditor.Data.Texture {
                     return TextureFormat.Null;
             }
         }
+
         public static CompressionFormat TextureToCompressionFormat( TextureFormat format ) {
             switch( format ) {
                 case TextureFormat.DXT1:
@@ -130,6 +129,7 @@ namespace VFXEditor.Data.Texture {
             }
             return ret;
         }
+
         private static void DecompressA8( Span<byte> src, byte[] dst, int width, int height ) {
             for( var i = 0; i < width * height; i += 1 ) {
                 int idx = i * 4;
@@ -139,10 +139,12 @@ namespace VFXEditor.Data.Texture {
                 dst[idx + 3] = src[i];
             }
         }
+
         private static void DecompressDxt1( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT1 );
             Array.Copy( dec, dst, dst.Length );
         }
+
         private static void DecompressDxt5( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT5 );
             Array.Copy( dec, dst, dst.Length );

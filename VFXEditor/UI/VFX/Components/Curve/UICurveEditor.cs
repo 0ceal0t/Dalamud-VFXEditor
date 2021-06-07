@@ -53,8 +53,8 @@ namespace VFXEditor.UI.VFX {
                     ImPlot.PlotLine( Curve.AVFXName, ref line[0].X, ref line[0].Y, line.Length, 0, 2 * sizeof( float ) );
                     // ====== IMAGE ============
                     if( Color && Curve.Keys.Count > 1 ) {
-                        if( DirectXManager.Manager._Gradient.CurrentCurve != Curve) {
-                            DirectXManager.Manager._Gradient.SetGradient( Curve );
+                        if( DirectXManager.Manager.GradientView.CurrentCurve != Curve) {
+                            DirectXManager.Manager.GradientView.SetGradient( Curve );
                         }
 
                         var topLeft = new ImPlotPoint {
@@ -66,7 +66,7 @@ namespace VFXEditor.UI.VFX {
                             y = -1
                         };
 
-                        ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.Manager._Gradient.RenderShad.NativePointer, topLeft, bottomRight );
+                        ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.Manager.GradientView.RenderShad.NativePointer, topLeft, bottomRight );
                     }
                     // ====== POINTS ===========
                     int idx = 0;
@@ -200,7 +200,7 @@ namespace VFXEditor.UI.VFX {
                     Curve.Keys[Curve.Keys.Count - 1].Time++;
                     Points[Points.Count - 1].X++;
                 }
-                DirectXManager.Manager._Gradient.SetGradient( Curve );
+                DirectXManager.Manager.GradientView.SetGradient( Curve );
             }
         }
         // USED FOR OTHER FUNCTIONS....
