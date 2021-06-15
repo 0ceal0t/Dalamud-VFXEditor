@@ -37,6 +37,7 @@ namespace VFXEditor.External
             scene.ToGltf2().SaveGLTF(path);
             PluginLog.Log( "Saved GLTF to: " + path );
         }
+
         public static GLTFVert GetVert(Vertex vert ) {
             Vector3 Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
             Vector3 Normal = Vector3.Normalize(new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] ));
@@ -53,6 +54,7 @@ namespace VFXEditor.External
             ret.Tex = _Tex;
             return ret;
         }
+
         public static Vertex GetAVFXVert(Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2) {
             var ret = new Vertex();
             color = color * 255;
@@ -68,6 +70,7 @@ namespace VFXEditor.External
 
             return ret;
         }
+
         public static bool ImportModel(string path, out List<Vertex> V, out List<Index> I ) {
             V = new List<Vertex>();
             I = new List<Index>();

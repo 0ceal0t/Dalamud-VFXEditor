@@ -27,7 +27,6 @@ namespace VFXEditor {
         public bool IsEnabled { get; set; } = true;
 
         // ==================
-        public bool PreviewTextures = true;
         public bool VerifyOnLoad = true;
         public bool LogAllFiles = false;
         public bool HideWithUI = true;

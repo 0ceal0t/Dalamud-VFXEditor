@@ -16,10 +16,6 @@ namespace VFXEditor.UI.VFX {
             Group.Items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();
         }
 
-        public bool GetPreviewTexture() {
-            return Configuration.Config.PreviewTextures;
-        }
-
         public override void OnDelete( UITexture item ) {
             AVFX.RemoveTexture( item.Texture );
         }

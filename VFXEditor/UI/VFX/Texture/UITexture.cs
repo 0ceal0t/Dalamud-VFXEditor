@@ -27,9 +27,7 @@ namespace VFXEditor.UI.VFX
 
             Path = new UIString( "Path", Texture.Path);
             lastValue = Texture.Path.Value;
-            if( view.GetPreviewTexture() ) {
-                Manager.LoadTexture( Texture.Path.Value );
-            }
+            Manager.LoadTexture( Texture.Path.Value );
             HasDependencies = false; // if imported, all set now
         }
 
@@ -37,9 +35,7 @@ namespace VFXEditor.UI.VFX
             var currentPathValue = Path.Literal.Value;
             if( currentPathValue != lastValue ) {
                 lastValue = currentPathValue;
-                if( View.GetPreviewTexture() ) {
-                    Manager.LoadTexture( currentPathValue );
-                }
+                Manager.LoadTexture( currentPathValue );
             }
             return currentPathValue;
         }
@@ -51,35 +47,33 @@ namespace VFXEditor.UI.VFX
 
             var currentPathValue = LoadTex();
 
-            if( View.GetPreviewTexture() ) {
-                if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
-                    var t = Manager.PathToTex[currentPathValue];
-                    ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
-                    ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
-                    if(ImGui.SmallButton("Export" + id ) ) {
-                        ImGui.OpenPopup( "Tex_Export" + id );
+            if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
+                var t = Manager.PathToTex[currentPathValue];
+                ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
+                ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
+                if( ImGui.SmallButton( "Export" + id ) ) {
+                    ImGui.OpenPopup( "Tex_Export" + id );
+                }
+                ImGui.SameLine();
+                if( ImGui.SmallButton( "Replace" + id ) ) {
+                    ImportDialog( Manager, currentPathValue.Trim( '\0' ) );
+                }
+                if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
+                    if( ImGui.Selectable( "Png" + id ) ) {
+                        SavePngDialog( t );
                     }
+                    if( ImGui.Selectable( "DDS" + id ) ) {
+                        SaveDDSDialog( Manager.Plugin, currentPathValue.Trim( '\0' ) );
+                    }
+                    ImGui.EndPopup();
+                }
+                // ===== IMPORTED TEXTURE =======
+                if( t.IsReplaced ) {
+                    ImGui.TextColored( new Vector4( 1.0f, 0.0f, 0.0f, 1.0f ), "Replaced with imported texture" );
                     ImGui.SameLine();
-                    if( ImGui.SmallButton( "Replace" + id ) ) {
-                        ImportDialog(Manager, currentPathValue.Trim('\0') );
-                    }
-                    if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                        if( ImGui.Selectable( "Png" + id ) ) {
-                            SavePngDialog( t );
-                        }
-                        if( ImGui.Selectable( "DDS" + id ) ) {
-                            SaveDDSDialog( Manager.Plugin, currentPathValue.Trim( '\0' ) );
-                        }
-                        ImGui.EndPopup();
-                    }
-                    // ===== IMPORTED TEXTURE =======
-                    if( t.IsReplaced ) {
-                        ImGui.TextColored( new Vector4( 1.0f, 0.0f, 0.0f, 1.0f ), "Replaced with imported texture" );
-                        ImGui.SameLine();
-                        if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
-                            Manager.RemoveReplace( currentPathValue.Trim( '\0' ) );
-                            Manager.RefreshPreview( currentPathValue.Trim( '\0' ) );
-                        }
+                    if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
+                        Manager.RemoveReplace( currentPathValue.Trim( '\0' ) );
+                        Manager.RefreshPreview( currentPathValue.Trim( '\0' ) );
                     }
                 }
             }
@@ -87,13 +81,11 @@ namespace VFXEditor.UI.VFX
 
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
-            if( View.GetPreviewTexture() ) {
-                if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
-                    var t = Manager.PathToTex[currentPathValue];
-                    ImGui.BeginTooltip();
-                    ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
-                    ImGui.EndTooltip();
-                }
+            if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
+                var t = Manager.PathToTex[currentPathValue];
+                ImGui.BeginTooltip();
+                ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
+                ImGui.EndTooltip();
             }
         }
 

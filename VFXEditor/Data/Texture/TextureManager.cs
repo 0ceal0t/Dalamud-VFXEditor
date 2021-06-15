@@ -47,6 +47,7 @@ namespace VFXEditor.Data.Texture
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
             var runtimeRoot = Path.Combine( Plugin.AssemblyLocation, "runtimes" );
+
             string _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
             string _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
             lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
@@ -147,9 +148,9 @@ namespace VFXEditor.Data.Texture
             if( PathToTex.ContainsKey( paddedPath ) ) {
                 if( PathToTex.TryRemove( paddedPath, out var oldValue ) ) {
                     oldValue.Wrap?.Dispose();
-                    LoadTexture( paddedPath );
                 }
             }
+            LoadTexture( paddedPath );
         }
 
         public void Dispose() {
@@ -202,12 +203,10 @@ namespace VFXEditor.Data.Texture
             var _path = path.Trim( '\u0000' );
             if( PathToTex.ContainsKey( path ) )
                 return;
-            Task.Run( () => {
-                var result = CreateTexture( _path, out var tex );
-                if(result && tex.Wrap != null ) {
-                    PathToTex.TryAdd( path, tex );
-                }
-            } );
+            var result = CreateTexture( _path, out var tex );
+            if( result && tex.Wrap != null ) {
+                PathToTex.TryAdd( path, tex );
+            }
         }
 
         public bool CreateTexture(string path, out TexData ret, bool loadImage = true ) {

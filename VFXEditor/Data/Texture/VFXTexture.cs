@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Drawing;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
-using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 
@@ -48,6 +43,7 @@ namespace VFXEditor.Data.Texture {
             RawData = br.ReadBytes( size - HeaderLength );
             ImageData = BGRA_to_RGBA( Convert( new Span<byte>(RawData), Header.Width, Header.Height ) );
         }
+
         public byte[] GetDDSData() {
             if( !Local ) {
                 return DataSpan.Slice( HeaderLength ).ToArray();
@@ -78,9 +74,7 @@ namespace VFXEditor.Data.Texture {
                     DecompressDxt5( src, dst, width, height );
                     break;
                 case TextureFormat.A8R8G8B8:
-                    if(dst.Length != src.Length ) { // ???
-                        return new byte[0];
-                    }
+                    dst = new byte[src.Length];
                     src.CopyTo( dst );
                     break;
                 case TextureFormat.A8:

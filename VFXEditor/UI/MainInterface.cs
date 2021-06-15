@@ -420,8 +420,6 @@ namespace VFXEditor.UI
             ImGui.SetNextItemWidth( 200 );
             ImGui.Checkbox( "Verify on load##Settings", ref Configuration.Config.VerifyOnLoad );
             ImGui.SameLine();
-            ImGui.Checkbox( "Load textures##Settings", ref Configuration.Config.PreviewTextures );
-            ImGui.SameLine();
             ImGui.Checkbox( "Log all files##Settings", ref Configuration.Config.LogAllFiles );
             ImGui.SameLine();
             ImGui.Checkbox( "Hide with UI##Settings", ref Configuration.Config.HideWithUI );
