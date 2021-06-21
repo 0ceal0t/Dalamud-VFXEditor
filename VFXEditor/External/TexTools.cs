@@ -85,12 +85,7 @@ namespace VFXEditor.External {
                             using( BinaryReader texReader = new BinaryReader( file ) )
                             using( MemoryStream texMs = new MemoryStream() )
                             using( BinaryWriter texWriter = new BinaryWriter( texMs ) )  {
-                                long uncompressedLength = file.Length - 80; // .ATEX header is 80 bytes long
-                                var DDSInfo = GetDDSInfo( texReader, tex.Format, tex.Width, tex.Height, tex.MipLevels );
-                                texWriter.Write( MakeType4DatHeader( tex.Format, DDSInfo.mipPartOffsets, DDSInfo.mipPartCounts, ( int )uncompressedLength, tex.MipLevels, tex.Width, tex.Height ) );
-                                texReader.BaseStream.Seek( 0, SeekOrigin.Begin ); // already have the header, no need to do that again
-                                texWriter.Write( texReader.ReadBytes( 80 ) );
-                                texWriter.Write( DDSInfo.compressedDDS.ToArray() );
+                                texWriter.Write( CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
                                 var modData = texMs.ToArray();
                                 simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
                                 writer.Write( modData );
@@ -150,7 +145,7 @@ namespace VFXEditor.External {
             TTMPL_Simple simple = new TTMPL_Simple();
             string[] split = path.Split( '/' );
             simple.Name = split[split.Length - 1];
-            simple.Category = "Raw File Copy";
+            simple.Category = "Raw File Import";
             simple.FullPath = path;
             simple.IsDefault = false;
             simple.ModOffset = modOffset;
@@ -189,6 +184,7 @@ namespace VFXEditor.External {
         public byte[] SquishAVFX( AVFXBase avfx ) {
             return CreateType2Data( avfx.ToAVFX().ToBytes() );
         }
+
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
         public byte[] CreateType2Data( byte[] dataToCreate ) {
             var newData = new List<byte>();
@@ -253,6 +249,7 @@ namespace VFXEditor.External {
             newData.AddRange( dataBlocks );
             return newData.ToArray();
         }
+
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/Helpers/IOUtil.cs#L40
         public static byte[] Compressor( byte[] uncompressedBytes ) {
             using( var uMemoryStream = new MemoryStream( uncompressedBytes ) ) {
@@ -265,142 +262,6 @@ namespace VFXEditor.External {
                 }
                 return compbytes;
             }
-        }
-
-
-        // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/SqPack/FileTypes/Dat.cs#L1260
-        public static byte[] MakeType4DatHeader( TextureFormat format, List<short> mipPartOffsets, List<short> mipPartCount, int uncompressedLength, int newMipCount, int newWidth, int newHeight ) {
-            var headerData = new List<byte>();
-            var headerSize = 24 + ( newMipCount * 20 ) + ( mipPartOffsets.Count * 2 );
-            var headerPadding = 128 - ( headerSize % 128 );
-            headerData.AddRange( BitConverter.GetBytes( headerSize + headerPadding ) );
-            headerData.AddRange( BitConverter.GetBytes( 4 ) );
-            headerData.AddRange( BitConverter.GetBytes( uncompressedLength + 80 ) ); // cuz reasons, I guess?
-            headerData.AddRange( BitConverter.GetBytes( 0 ) );
-            headerData.AddRange( BitConverter.GetBytes( 0 ) );
-            headerData.AddRange( BitConverter.GetBytes( newMipCount ) );
-            var partIndex = 0;
-            var mipOffsetIndex = 80;
-            var uncompMipSize = newHeight * newWidth;
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    uncompMipSize = ( newWidth * newHeight ) / 2;
-                    break;
-                case TextureFormat.DXT5:
-                case TextureFormat.A8:
-                    uncompMipSize = newWidth * newHeight;
-                    break;
-                case TextureFormat.A8R8G8B8:
-                default:
-                    uncompMipSize = ( newWidth * newHeight ) * 4;
-                    break;
-            }
-            for( var i = 0; i < newMipCount; i++ ) {
-                headerData.AddRange( BitConverter.GetBytes( mipOffsetIndex ) );
-                var paddedSize = 0;
-                for( var j = 0; j < mipPartCount[i]; j++ ) {
-                    paddedSize = paddedSize + mipPartOffsets[j + partIndex];
-                }
-                headerData.AddRange( BitConverter.GetBytes( paddedSize ) );
-                headerData.AddRange( uncompMipSize > 16 ? BitConverter.GetBytes( uncompMipSize ) : BitConverter.GetBytes( 16 ) );
-                uncompMipSize = uncompMipSize / 4;
-                headerData.AddRange( BitConverter.GetBytes( partIndex ) );
-                headerData.AddRange( BitConverter.GetBytes( ( int )mipPartCount[i] ) );
-                partIndex = partIndex + mipPartCount[i];
-                mipOffsetIndex = mipOffsetIndex + paddedSize;
-            }
-            foreach( var part in mipPartOffsets ) {
-                headerData.AddRange( BitConverter.GetBytes( part ) );
-            }
-            headerData.AddRange( new byte[headerPadding] );
-            return headerData.ToArray();
-        }
-
-        public static (List<byte> compressedDDS, List<short> mipPartOffsets, List<short> mipPartCounts) GetDDSInfo( BinaryReader br, TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
-            var compressedDDS = new List<byte>();
-            var mipPartOffsets = new List<short>();
-            var mipPartCount = new List<short>();
-            int mipLength;
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    mipLength = ( newWidth * newHeight ) / 2;
-                    break;
-                case TextureFormat.DXT5:
-                case TextureFormat.A8:
-                    mipLength = newWidth * newHeight;
-                    break;
-                case TextureFormat.A8R8G8B8:
-                default:
-                    mipLength = ( newWidth * newHeight ) * 4;
-                    break;
-            }
-
-            br.BaseStream.Seek( 80, SeekOrigin.Begin ); // skip the ATEX header
-            for( var i = 0; i < newMipCount; i++ ) {
-                var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
-                mipPartCount.Add( ( short )mipParts );
-                if( mipParts > 1 ) {
-                    for( var j = 0; j < mipParts; j++ ) {
-                        int uncompLength;
-                        var comp = true;
-                        if( j == mipParts - 1 ) {
-                            uncompLength = mipLength % 16000;
-                        }
-                        else {
-                            uncompLength = 16000;
-                        }
-                        var uncompBytes = br.ReadBytes( uncompLength );
-                        var compressed = Compressor( uncompBytes );
-                        if( compressed.Length > uncompLength ) {
-                            compressed = uncompBytes;
-                            comp = false;
-                        }
-                        compressedDDS.AddRange( BitConverter.GetBytes( 16 ) );
-                        compressedDDS.AddRange( BitConverter.GetBytes( 0 ) );
-                        compressedDDS.AddRange( !comp
-                            ? BitConverter.GetBytes( 32000 )
-                            : BitConverter.GetBytes( compressed.Length ) );
-                        compressedDDS.AddRange( BitConverter.GetBytes( uncompLength ) );
-                        compressedDDS.AddRange( compressed );
-                        var padding = 128 - ( compressed.Length % 128 );
-                        compressedDDS.AddRange( new byte[padding] );
-                        mipPartOffsets.Add( ( short )( compressed.Length + padding + 16 ) );
-                    }
-                }
-                else {
-                    int uncompLength;
-                    var comp = true;
-                    if( mipLength != 16000 ) {
-                        uncompLength = mipLength % 16000;
-                    }
-                    else {
-                        uncompLength = 16000;
-                    }
-                    var uncompBytes = br.ReadBytes( uncompLength );
-                    var compressed = Compressor( uncompBytes );
-                    if( compressed.Length > uncompLength ) {
-                        compressed = uncompBytes;
-                        comp = false;
-                    }
-                    compressedDDS.AddRange( BitConverter.GetBytes( 16 ) );
-                    compressedDDS.AddRange( BitConverter.GetBytes( 0 ) );
-                    compressedDDS.AddRange( !comp
-                        ? BitConverter.GetBytes( 32000 )
-                        : BitConverter.GetBytes( compressed.Length ) );
-                    compressedDDS.AddRange( BitConverter.GetBytes( uncompLength ) );
-                    compressedDDS.AddRange( compressed );
-                    var padding = 128 - ( compressed.Length % 128 );
-                    compressedDDS.AddRange( new byte[padding] );
-                    mipPartOffsets.Add( ( short )( compressed.Length + padding + 16 ) );
-                }
-                if( mipLength > 32 ) {
-                    mipLength = mipLength / 4;
-                }
-                else {
-                    mipLength = 8;
-                }
-            }
-            return (compressedDDS, mipPartOffsets, mipPartCount);
         }
     }
 }
