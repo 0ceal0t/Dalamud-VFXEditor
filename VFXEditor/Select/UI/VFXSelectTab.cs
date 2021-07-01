@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Dalamud.Plugin;
 using ImGuiNET;
+using Lumina.Data.Files;
 using VFXSelect.Data.Sheets;
 
 namespace VFXSelect.UI {
@@ -108,8 +109,14 @@ namespace VFXSelect.UI {
             texWrap?.Dispose();
             texWrap = null;
             if( iconId > 0 ) {
-                var tex = PluginInterface.Data.GetIcon( iconId );
-                texWrap = PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4 );
+                TexFile tex;
+                try {
+                    tex = PluginInterface.Data.GetIcon( iconId );
+                }
+                catch( Exception ) {
+                    tex = PluginInterface.Data.GetIcon( 0 );
+                }
+                texWrap = PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 

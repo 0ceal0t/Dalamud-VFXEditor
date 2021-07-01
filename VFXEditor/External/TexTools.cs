@@ -112,7 +112,7 @@ namespace VFXEditor.External {
                 }
 
                 TTMPL mod = new TTMPL();
-                mod.TTMPVersion = "1.0s";
+                mod.TTMPVersion = "1.3s";
                 mod.Name = name;
                 mod.Author = author;
                 mod.Version = version;
