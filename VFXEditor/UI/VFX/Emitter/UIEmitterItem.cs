@@ -69,7 +69,7 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             string Type = IsParticle ? "Particle" : "Emitter";
             return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }

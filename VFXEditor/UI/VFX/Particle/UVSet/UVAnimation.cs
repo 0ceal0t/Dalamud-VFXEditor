@@ -196,7 +196,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             return curve.Assigned && curve.Curve.Keys.Count > 0 ? curve.CurveEdit.GetAtTime( frame ) : defaultValue;
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "UV Animation";
         }
     }

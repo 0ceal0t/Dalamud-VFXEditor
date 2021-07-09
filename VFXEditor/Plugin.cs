@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using AVFXLib.Models;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -10,14 +8,14 @@ using ImGuizmoNET;
 using VFXEditor.Data;
 using VFXEditor.Data.DirectX;
 using VFXEditor.External;
-using VFXEditor.UI;
 using VFXEditor.Data.Vfx;
 using System.Reflection;
-using VFXSelect.UI;
+using VFXEditor.Data.Texture;
+using VFXSelect;
 
 namespace VFXEditor
 {
-    public class Plugin : IDalamudPlugin {
+    public partial class Plugin : IDalamudPlugin {
         public string Name => "VFXEditor";
         private const string CommandName = "/vfxedit";
         private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
@@ -27,29 +25,19 @@ namespace VFXEditor
         public ResourceLoader ResourceLoader;
         public TexTools TexToolsManager;
         public Penumbra PenumbraManager;
-        public DocManager Doc;
-        public DataManager Manager;
+        public PluginDocumentManager Doc;
         public DirectXManager DXManager;
         public VfxTracker Tracker;
-
-        public MainInterface MainUI;
+        public TextureManager TexManager;
+        public SheetManager Sheets;
 
         public static string TemplateLocation;
 
-        public AVFXBase AVFX {
-            get { return Doc.ActiveDoc.AVFX; }
-            set { Doc.ActiveDoc.AVFX = value; }
-        }
-        public string ReplaceAVFXPath => Doc.ActiveDoc.Replace.Path;
-        public string SourceString => Doc.ActiveDoc.Source.DisplayString;
-        public string ReplaceString => Doc.ActiveDoc.Replace.DisplayString;
         public string WriteLocation => Configuration?.WriteLocation;
 
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
         private IntPtr ImPlotContext;
-
-        private DateTime LastSelect = DateTime.Now;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
@@ -72,9 +60,11 @@ namespace VFXEditor
             ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
 
             Tracker = new VfxTracker( this );
-            Manager = new DataManager( this );
-            Doc = new DocManager( this );
-            MainUI = new MainInterface( this );
+            TexManager = new TextureManager( this );
+            Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
+            Doc = new PluginDocumentManager( this );
+
+            InitUI();
             TexToolsManager = new TexTools( this );
             PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
@@ -87,85 +77,8 @@ namespace VFXEditor
 
         public void Draw() {
             if( !PluginReady ) return;
-            MainUI.Draw();
+            DrawUI();
             Tracker.Draw();
-        }
-
-        public void SelectAVFX(VFXSelectResult selectResult ) {
-            if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) return;
-            LastSelect = DateTime.Now;
-
-            switch( selectResult.Type ) {
-                case VFXSelectType.Local: // LOCAL
-                    bool localResult = Manager.GetLocalFile( selectResult.Path, out var localAvfx );
-                    if( localResult ) {
-                        LoadAVFX( localAvfx );
-                    }
-                    else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
-                        return;
-                    }
-                    break;
-                default: // EVERYTHING ELSE: GAME FILES
-                    bool gameResult = Manager.GetGameFile( selectResult.Path, out var gameAvfx );
-                    if( gameResult ) {
-                        LoadAVFX( gameAvfx );
-                    }
-                    else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
-                        return;
-                    }
-                    break;
-            }
-            Configuration.AddRecent( selectResult );
-            Doc.UpdateSource( selectResult );
-        }
-
-        public void ReplaceAVFX(VFXSelectResult replaceResult ) {
-            Configuration.AddRecent( replaceResult );
-            Doc.UpdateReplace( replaceResult );
-        }
-
-        public void RemoveReplaceAVFX() {
-            Doc.UpdateReplace( VFXSelectResult.None() );
-        }
-
-        public void RemoveSourceAVFX() {
-            Doc.UpdateSource( VFXSelectResult.None() );
-            Doc.ResetDoc();
-            UnloadAVFX();
-        }
-
-        public void RefreshDoc() {
-            if( Doc.HasVFX() ) {
-                MainUI.RefreshAVFX();
-            }
-            else {
-                UnloadAVFX();
-            }
-        }
-
-        public void LoadAVFX(AVFXBase avfx ) {
-            if( avfx == null )
-                return;
-            AVFX = avfx;
-            // ===============
-            if( Configuration.VerifyOnLoad ) {
-                var node = AVFX.ToAVFX();
-                bool verifyResult = Manager.LastImportNode.CheckEquals( node, out List<string> messages );
-                MainUI.SetStatus( verifyResult );
-                PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
-                foreach( var m in messages ) {
-                    PluginLog.Log( m );
-                }
-            }
-            Manager.TexManager.Reset();
-            MainUI.RefreshAVFX();
-        }
-
-        public void UnloadAVFX() {
-            AVFX = null;
-            MainUI.UnloadAVFX();
         }
 
         public void Dispose() {
@@ -176,14 +89,14 @@ namespace VFXEditor
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
-            MainUI?.Dispose();
+            SpawnVfx?.Remove();
             DXManager?.Dispose();
             Doc?.Dispose();
-            Manager.TexManager.Dispose();
+            TexManager?.Dispose();
         }
 
         private void OnCommand( string command, string rawArgs ) {
-            MainUI.Visible = !MainUI.Visible;
+            Visible = !Visible;
         }
     }
 }

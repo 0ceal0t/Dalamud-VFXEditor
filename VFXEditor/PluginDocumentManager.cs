@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXSelect.UI;
 
-namespace VFXEditor.Data {
+namespace VFXEditor {
     public class ReplaceDoc {
         public AVFXBase AVFX = null;
         public string WriteLocation;
@@ -17,7 +17,7 @@ namespace VFXEditor.Data {
         public VFXSelectResult Replace;
     }
 
-    public class DocManager {
+    public class PluginDocumentManager {
         public ReplaceDoc ActiveDoc;
         public List<ReplaceDoc> Docs = new();
 
@@ -25,7 +25,7 @@ namespace VFXEditor.Data {
         private Plugin Plugin;
         private int DOC_ID = 0;
 
-        public DocManager( Plugin plugin ) {
+        public PluginDocumentManager( Plugin plugin ) {
             Plugin = plugin;
             NewDoc();
         }
@@ -86,7 +86,7 @@ namespace VFXEditor.Data {
         }
 
         public void Save() {
-            Plugin.Manager.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.AVFX );
+            Plugin.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.AVFX );
             if(Configuration.Config.LogAllFiles) {
                 PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
             }

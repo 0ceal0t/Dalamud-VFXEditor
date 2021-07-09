@@ -57,7 +57,7 @@ namespace VFXEditor.UI.VFX
             ClipNumber.Draw( id );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return Idx + ": Emitter " + Item.EmitterIdx.Value;
         }
     }

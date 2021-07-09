@@ -62,7 +62,7 @@ namespace VFXEditor.UI.VFX
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Texture Reflection";
         }
     }

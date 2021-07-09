@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX {
             DrawAttrs( parentId );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return Name;
         }
     }

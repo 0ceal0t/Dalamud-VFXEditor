@@ -41,7 +41,7 @@ namespace VFXEditor.UI.VFX
             DrawListTabs( Curves, parentId );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "UV " + Idx;
         }
     }

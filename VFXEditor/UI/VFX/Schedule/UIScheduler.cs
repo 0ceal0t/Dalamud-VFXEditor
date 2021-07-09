@@ -54,7 +54,7 @@ namespace VFXEditor.UI.VFX
                 ImGui.EndTabBar();
             }
         }
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Scheduler " + Idx;
         }
 

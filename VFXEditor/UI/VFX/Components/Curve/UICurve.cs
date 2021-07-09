@@ -74,7 +74,7 @@ namespace VFXEditor.UI.VFX
             CurveEdit.Draw(id);
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return Name;
         }
     }

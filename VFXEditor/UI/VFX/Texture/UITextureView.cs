@@ -10,7 +10,7 @@ namespace VFXEditor.UI.VFX {
 
         public UITextureView( AVFXBase avfx, Plugin plugin ) : base( avfx, "##TEX" ) {
             _plugin = plugin;
-            Manager = plugin.Manager.TexManager;
+            Manager = plugin.TexManager;
             // ==========
             Group = UINodeGroup.Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();

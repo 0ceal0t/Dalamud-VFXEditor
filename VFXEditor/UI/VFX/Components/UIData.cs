@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX {
 
         public virtual void Dispose() { }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Data";
         }
 

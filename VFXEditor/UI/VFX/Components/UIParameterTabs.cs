@@ -25,7 +25,7 @@ namespace VFXEditor.UI.VFX {
             DrawListTabs( Items, parentId );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return Name;
         }
     }

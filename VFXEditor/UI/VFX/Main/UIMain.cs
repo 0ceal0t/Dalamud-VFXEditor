@@ -178,7 +178,6 @@ namespace VFXEditor.UI.VFX
         }
 
         // =========== DIALOG =================
-
         public void ExportMultiple(UINode node ) {
             ExportUI.Export( node );
         }

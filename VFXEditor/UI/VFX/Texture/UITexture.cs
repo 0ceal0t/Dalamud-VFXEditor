@@ -153,8 +153,8 @@ namespace VFXEditor.UI.VFX
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {
                     try {
-                        var texFile = _plugin.Manager.TexManager.GetTexture( path );
-                        byte[] header = Data.Texture.IOUtil.CreateDDSHeader( texFile.Header.Width, texFile.Header.Height, texFile.Header.Format, texFile.Header.Depth, texFile.Header.MipLevels );
+                        var texFile = _plugin.TexManager.GetTexture( path );
+                        byte[] header = IOUtil.CreateDDSHeader( texFile.Header.Width, texFile.Header.Height, texFile.Header.Format, texFile.Header.Depth, texFile.Header.MipLevels );
                         byte[] data = texFile.GetDDSData();
                         byte[] writeData = new byte[header.Length + data.Length];
                         Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
@@ -168,7 +168,7 @@ namespace VFXEditor.UI.VFX
             } );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Texture " + Idx;
         }
 

@@ -73,7 +73,7 @@ namespace VFXEditor.UI.VFX
             ImGui.EndChild();
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Timeline " + Idx;
         }
 

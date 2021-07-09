@@ -1,20 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
 using ImGuizmoNET;
-using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor.UI.Graphics {
     public class VFXManipulator {
         public Plugin Plugin;
         public bool Enabled = false;
-        public bool CanBeEnabled => ( Plugin.MainUI.SpawnVfx != null );
+        public bool CanBeEnabled => ( Plugin.SpawnVfx != null );
 
         public VFXManipulator( Plugin plugin ) {
             Plugin = plugin;
@@ -93,9 +86,9 @@ namespace VFXEditor.UI.Graphics {
             float windowHeight = ImGui.GetWindowHeight();
             ImGuizmo.SetRect( ImGui.GetWindowPos().X, ImGui.GetWindowPos().Y, windowWidth, windowHeight );
 
-            if( Plugin.MainUI.SpawnVfx != null ) {
-                if( ImGuizmo.Manipulate( ref viewProjectionMatrix[0], ref identityMatrix[0], _operation, _mode, ref Plugin.MainUI.SpawnVfx.matrix[0] ) ) {
-                    Plugin.MainUI.SpawnVfx.PullMatrixUpdate();
+            if( Plugin.SpawnVfx != null ) {
+                if( ImGuizmo.Manipulate( ref viewProjectionMatrix[0], ref identityMatrix[0], _operation, _mode, ref Plugin.SpawnVfx.matrix[0] ) ) {
+                    Plugin.SpawnVfx.PullMatrixUpdate();
                 }
             }
 

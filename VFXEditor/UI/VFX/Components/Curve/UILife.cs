@@ -42,7 +42,7 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return "Life";
         }
     }

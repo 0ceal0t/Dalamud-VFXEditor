@@ -72,7 +72,7 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public override string GetText() {
+        public override string GetDefaultText() {
             return Idx + ": " + IdOptions[Clip.UniqueId];
         }
     }

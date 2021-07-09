@@ -134,8 +134,8 @@ namespace VFXEditor
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.MainUI?.SpawnVfx != null && vfx == Plugin.MainUI.SpawnVfx.Vfx ) {
-                Plugin.MainUI.SpawnVfx = null;
+            if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+                Plugin.SpawnVfx = null;
             }
             Plugin.Tracker?.RemoveStatic( vfx );
             return StaticVfxRemoveHook.OriginalFunction( vfx );
@@ -149,8 +149,8 @@ namespace VFXEditor
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.MainUI?.SpawnVfx != null && vfx == Plugin.MainUI.SpawnVfx.Vfx ) {
-                Plugin.MainUI.SpawnVfx = null;
+            if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+                Plugin.SpawnVfx = null;
             }
             Plugin.Tracker?.RemoveActor( vfx );
             return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
@@ -271,7 +271,7 @@ namespace VFXEditor
                     PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );
                 }
             }
-            else if( Plugin.Manager?.TexManager != null && Plugin.Manager.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
+            else if( Plugin.TexManager != null && Plugin.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;
             }
 
