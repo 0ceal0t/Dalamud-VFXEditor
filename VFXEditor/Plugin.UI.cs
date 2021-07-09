@@ -176,7 +176,7 @@ namespace VFXEditor {
                 ImGui.Text( $"{TexManager.GamePathReplace.Count} Texture(s)" );
 
                 // ======== VERIFY ============
-                                ImGui.SameLine();
+                ImGui.SameLine();
                 if( Configuration.Config.VerifyOnLoad ) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
@@ -485,26 +485,19 @@ namespace VFXEditor {
         }
 
         public void SaveDialog( string filter, byte[] data, string ext ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = filter,
-                    Title = "Select a Save Location.",
-                    DefaultExt = ext,
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            SaveFileDialog( filter, "Select a Save Location.", ext,
+                ( string path ) => {
                     try {
-                        File.WriteAllBytes( picker.FileName, data );
+                        File.WriteAllBytes( path, data );
                     }
                     catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not save to: " + picker.FileName );
+                        PluginLog.LogError( ex, "Could not save to: " + path );
                     }
                 }
-            } );
+            );
         }
 
+        // =========== HELPERS ===========
         public static void HelpMarker(string text) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.TextDisabled( "(?)" );
@@ -515,6 +508,51 @@ namespace VFXEditor {
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
+        }
+
+        public static void ImportFileDialog(string filter, string title, Action<string> callback) {
+            Task.Run( async () => {
+                var picker = new OpenFileDialog
+                {
+                    Filter = filter,
+                    CheckFileExists = true,
+                    Title = title
+                };
+                var result = await picker.ShowDialogAsync();
+                if(result == DialogResult.OK) {
+                    callback( picker.FileName );
+                }
+            } );
+        }
+
+        public static void SaveFileDialog( string filter, string title, string defaultExt, Action<string> callback ) {
+            Task.Run( async () => {
+                var picker = new SaveFileDialog
+                {
+                    Filter = filter,
+                    DefaultExt = defaultExt,
+                    AddExtension = true,
+                    Title = title
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK ) {
+                    callback( picker.FileName );
+                }
+            } );
+        }
+
+        public static void SaveFolderDialog( string filter, string title, Action<string> callback ) {
+            Task.Run( async () => {
+                var picker = new SaveFileDialog
+                {
+                    Filter = filter,
+                    Title = title
+                };
+                var result = await picker.ShowDialogAsync();
+                if( result == DialogResult.OK ) {
+                    callback( picker.FileName );
+                }
+            } );
         }
     }
 }

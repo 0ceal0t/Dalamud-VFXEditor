@@ -43,24 +43,18 @@ namespace VFXEditor.UI {
             }
         }
 
-        public void SaveDialog() // idk why the folderselectdialog doesn't work, so this will do for now
-        {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog {
-                    Filter = "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*",
-                    Title = "Select a File Location."
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+        public void SaveDialog() { // idk why the folderselectdialog doesn't work, so this will do for now
+            Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
+                ( string path ) => {
                     try {
-                        Plugin.PenumbraManager.Export( Name, Author, Version, Path.GetDirectoryName( picker.FileName ), ExportAll, ExportTex );
+                        Plugin.PenumbraManager.Export( Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a mod location" );
                     }
                 }
-            } );
+            );
         }
     }
 }

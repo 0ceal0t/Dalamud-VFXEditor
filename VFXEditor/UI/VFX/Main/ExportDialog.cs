@@ -82,17 +82,10 @@ namespace VFXEditor.UI.VFX.Main {
         }
 
         public void SaveDialog() {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog {
-                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "vfxedit",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.SaveFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a Save Location.", "vfxedit",
+                ( string path ) => {
                     try {
-                        using( BinaryWriter writer = new BinaryWriter( File.Open( picker.FileName, FileMode.Create ) ) ) {
+                        using( BinaryWriter writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
                             var selected = GetSelected();
                             if( ExportDeps ) {
                                 Main.ExportDeps( selected, writer );
@@ -107,7 +100,7 @@ namespace VFXEditor.UI.VFX.Main {
                         PluginLog.LogError( ex, "Could not select a file" );
                     }
                 }
-            } );
+            );
         }
     }
 

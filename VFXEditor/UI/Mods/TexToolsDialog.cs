@@ -46,26 +46,18 @@ namespace VFXEditor.UI
             }
         }
 
-        public void SaveDialog()
-        {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog {
-                    Filter = "TexTools Mod (*.ttmp2)|*.ttmp2*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "ttmp2",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+        public void SaveDialog() {
+            Plugin.SaveFileDialog( "TexTools Mod (*.ttmp2)|*.ttmp2*|All files (*.*)|*.*", "Select a Save Location.", "ttmp2",
+                ( string path ) => {
                     try {
-                        Plugin.TexToolsManager.Export( Name, Author, Version, picker.FileName, ExportAll, ExportTex );
+                        Plugin.TexToolsManager.Export( Name, Author, Version, path, ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a mod location");
+                        PluginLog.LogError( ex, "Could not select a mod location" );
                     }
                 }
-            } );
+            );
         }
     }
 }

@@ -183,42 +183,29 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ExportDialog(UINode node ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog {
-                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "vfxedit",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.SaveFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a Save Location.", "vfxedit",
+                ( string path ) => {
                     try {
-                        File.WriteAllBytes( picker.FileName, node.ToBytes() );
+                        File.WriteAllBytes( path, node.ToBytes() );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );
                     }
                 }
-            } );
+            );
         }
 
         public void ImportDialog() {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog {
-                    Filter = "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*",
-                    Title = "Select a File Location.",
-                    CheckFileExists = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.ImportFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a File Location.",
+                ( string path ) => {
                     try {
-                        ImportData( picker.FileName );
+                        ImportData( path );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a file" );
                     }
                 }
-            } );
+            );
         }
     }
 }

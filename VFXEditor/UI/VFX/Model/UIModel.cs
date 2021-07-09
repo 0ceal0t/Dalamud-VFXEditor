@@ -140,17 +140,10 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ImportDialog() {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog
-                {
-                    Filter = "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*",
-                    CheckFileExists = true,
-                    Title = "Select GLTF File."
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.ImportFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select GLTF File.",
+                ( string path ) => {
                     try {
-                        if(GLTFManager.ImportModel( picker.FileName, out List<Vertex> v_s, out List<Index> i_s ) ) {
+                        if( GLTFManager.ImportModel( path, out List<Vertex> v_s, out List<Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
                             Refresh = true;
@@ -160,30 +153,20 @@ namespace VFXEditor.UI.VFX
                         PluginLog.LogError( ex, "Could not select the GLTF file." );
                     }
                 }
-            } );
+            );
         }
 
-        public void ExportDialog()
-        {
-            Task.Run( async () =>
-            {
-                var picker = new SaveFileDialog
-                {
-                    Filter = "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "gltf",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+        public void ExportDialog() {
+            Plugin.SaveFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select a Save Location.", "gltf",
+                ( string path ) => {
                     try {
-                        GLTFManager.ExportModel( Model, picker.FileName);
+                        GLTFManager.ExportModel( Model, path );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a save location" );
                     }
                 }
-            } );
+            );
         }
 
         public override string GetDefaultText() {

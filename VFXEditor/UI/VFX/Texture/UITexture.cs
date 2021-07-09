@@ -90,17 +90,11 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public static void ImportDialog(TextureManager manager, string path) {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog {
-                    Filter = "DDS or PNG File (*.png;*.dds)|*.png*;*.dds*|All files (*.*)|*.*",
-                    CheckFileExists = true,
-                    Title = "Select Image File."
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+        public static void ImportDialog(TextureManager manager, string newPath) {
+            Plugin.ImportFileDialog( "DDS or PNG File (*.png;*.dds)|*.png*;*.dds*|All files (*.*)|*.*", "Select Image File.",
+                ( string path ) => {
                     try {
-                        if( !manager.ImportTexture( picker.FileName, path ) ) {
+                        if( !manager.ImportTexture( path, newPath ) ) {
                             PluginLog.Log( $"Could not import" );
                         }
                     }
@@ -108,19 +102,12 @@ namespace VFXEditor.UI.VFX
                         PluginLog.LogError( ex, "Could not select an image location" );
                     }
                 }
-            } );
+            );
         }
 
         public static void SavePngDialog(TexData t) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog {
-                    Filter = "PNG Image (*.png)|*.png*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "png",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.SaveFileDialog( "PNG Image (*.png)|*.png*|All files (*.*)|*.*", "Select a Save Location.", "png",
+                ( string path ) => {
                     try {
                         Bitmap bmp = new Bitmap( t.Width, t.Height );
                         for( int i = 0; i < t.Height; i++ ) {
@@ -133,26 +120,18 @@ namespace VFXEditor.UI.VFX
                                 bmp.SetPixel( j, i, System.Drawing.Color.FromArgb( a, r, g, b ) );
                             }
                         }
-                        bmp.Save( picker.FileName, System.Drawing.Imaging.ImageFormat.Png );
+                        bmp.Save( path, System.Drawing.Imaging.ImageFormat.Png );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select an image location" );
                     }
                 }
-            });
+            );
         }
 
         public static void SaveDDSDialog(Plugin _plugin, string path ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = "DDS Image (*.dds)|*.dds*|All files (*.*)|*.*",
-                    Title = "Select a Save Location.",
-                    DefaultExt = "dds",
-                    AddExtension = true
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
+            Plugin.SaveFileDialog( "DDS Image (*.dds)|*.dds*|All files (*.*)|*.*", "Select a Save Location.", "dds",
+                ( string path ) => {
                     try {
                         var texFile = _plugin.TexManager.GetTexture( path );
                         byte[] header = IOUtil.CreateDDSHeader( texFile.Header.Width, texFile.Header.Height, texFile.Header.Format, texFile.Header.Depth, texFile.Header.MipLevels );
@@ -160,13 +139,13 @@ namespace VFXEditor.UI.VFX
                         byte[] writeData = new byte[header.Length + data.Length];
                         Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
                         Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
-                        File.WriteAllBytes( picker.FileName, writeData );
+                        File.WriteAllBytes( path, writeData );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select an image location" );
                     }
                 }
-            } );
+            );
         }
 
         public override string GetDefaultText() {
