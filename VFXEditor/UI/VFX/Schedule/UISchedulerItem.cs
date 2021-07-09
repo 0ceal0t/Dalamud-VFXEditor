@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UISchedulerItem : UIItem
-    {
+    public class UISchedulerItem : UIWorkspaceItem {
         public AVFXScheduleSubItem Item;
         public UIScheduler Sched;
         public string Name;
@@ -32,6 +31,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/" + Name;
+            DrawRename( id );
             TimelineSelect.Draw(id);
             DrawAttrs( id );
         }

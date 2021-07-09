@@ -41,6 +41,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId ) {
             string id = parentId + "/Model";
             NodeView.Draw( id );
+            DrawRename( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
             if( ImGui.SmallButton( "Replace" + id ) ) {
                 ImportDialog();

@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UITimelineClip : UIItem
-    {
+    public class UITimelineClip : UIWorkspaceItem {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;
         //===============================
@@ -43,6 +42,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Clip";
+            DrawRename( id );
             if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
             {
                 Clip.UnknownInts[0] = ( int )UnknownInts.X;

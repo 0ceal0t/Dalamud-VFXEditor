@@ -139,9 +139,10 @@ namespace VFXEditor.UI.VFX
 
         public override void DrawBody( string parentId ) {
             string id = parentId + "/Emitter";
+            DrawRename( id );
             Type.Draw( id );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             //==========================
-
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Param" );

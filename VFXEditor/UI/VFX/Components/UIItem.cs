@@ -5,23 +5,22 @@ namespace VFXEditor.UI.VFX {
     public abstract class UIItem : UIBase {
         public int Idx;
         public List<UIBase> Attributes = new List<UIBase>();
-        public string? Renamed;
+
+        public UIItem() { }
 
         public override void Init() {
             base.Init();
             Attributes = new List<UIBase>();
         }
 
-        public string GetText() {
-            return string.IsNullOrEmpty(Renamed) ? GetDefaultText() : Renamed;
+        public virtual string GetText() {
+            return GetDefaultText();
         }
         public abstract string GetDefaultText();
+
         public abstract void DrawBody( string parentId );
         public virtual void DrawUnAssigned( string parentId ) { }
         public override void Draw( string parentId ) { }
-
-        public UIItem() {
-        }
 
         public void DrawAttrs( string parentId ) {
             DrawList( Attributes, parentId );

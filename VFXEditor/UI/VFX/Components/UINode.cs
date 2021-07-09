@@ -4,7 +4,7 @@ using ImGuiNET;
 using System.Numerics;
 
 namespace VFXEditor.UI.VFX {
-    public abstract class UINode : UIItem {
+    public abstract class UINode : UIWorkspaceItem {
         public uint Color;
         public List<UINode> Children = new List<UINode>();
         public List<UINodeSelect> Parents = new List<UINodeSelect>();
@@ -17,6 +17,7 @@ namespace VFXEditor.UI.VFX {
             Color = color;
             HasDependencies = has_dependencies;
         }
+
         public void DeleteNode() {
             IsDeleted = true;
             foreach( var node in Children ) {

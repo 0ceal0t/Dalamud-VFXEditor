@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX
 {
-    public class UIEmitterItem : UIItem
+    public class UIEmitterItem : UIWorkspaceItem
     {
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
@@ -60,6 +60,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/Item";
+            DrawRename( id );
             if( IsParticle ) {
                 ParticleSelect.Draw( id );
             }
