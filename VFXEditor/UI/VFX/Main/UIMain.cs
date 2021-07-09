@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VFXEditor.UI.VFX.Main;
 
 namespace VFXEditor.UI.VFX {
     public class UIMain {

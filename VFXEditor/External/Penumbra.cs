@@ -21,23 +21,18 @@ namespace VFXEditor.External {
 
     public class Penumbra
     {
-        public Plugin _plugin;
+        /*
+        * {
+        *  "Name":"Ultimate Manatrigger",
+        *  "Author":"Gabster",
+        *  "Description":"Mod imported from TexTools mod pack",
+        *  "Version":null,
+        *  "Website":null,
+        *  "FileSwaps":{}
+        *  }
+        */
 
-        public Penumbra(Plugin plugin ) {
-            _plugin = plugin;
-            /*
-             * {
-             *  "Name":"Ultimate Manatrigger",
-             *  "Author":"Gabster",
-             *  "Description":"Mod imported from TexTools mod pack",
-             *  "Version":null,
-             *  "Website":null,
-             *  "FileSwaps":{}
-             *  }
-             */
-        }
-
-        public void Export( string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
+        public static void Export(Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
                 PenumbraMod mod = new PenumbraMod();
                 mod.Name = name;

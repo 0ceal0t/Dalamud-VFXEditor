@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.External
 {
-    public class GLTFManager {
+    public class GLTF {
         public static void ExportModel(AVFXModel model, string path) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
@@ -107,6 +107,7 @@ namespace VFXEditor.External
             return false;
         }
     }
+
     public struct GLTFVert {
         public VertexPositionNormalTangent Pos;
         public VertexColor1Texture2 Tex;

@@ -1,23 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
+using VFXEditor.External;
 
-namespace VFXEditor.UI
-{
-
-    public class TexToolsDialog : GenericDialog
-    {
-        public TexToolsDialog( Plugin plugin ) : base(plugin, "TexTools") {
+namespace VFXEditor.UI {
+    public class PenumbraDialog : GenericDialog {
+        public PenumbraDialog( Plugin plugin ) : base(plugin, "Penumbra") {
             Size = new Vector2( 400, 200 );
-        }
+    }
 
         public string Name = "";
         public string Author = "";
@@ -26,7 +18,7 @@ namespace VFXEditor.UI
         public bool ExportTex = true;
 
         public override void OnDraw() {
-            var id = "##Textools";
+            var id = "##Penumbra";
             float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
@@ -46,11 +38,11 @@ namespace VFXEditor.UI
             }
         }
 
-        public void SaveDialog() {
-            Plugin.SaveFileDialog( "TexTools Mod (*.ttmp2)|*.ttmp2*|All files (*.*)|*.*", "Select a Save Location.", "ttmp2",
+        public void SaveDialog() { // idk why the folderselectdialog doesn't work, so this will do for now
+            Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
                 ( string path ) => {
                     try {
-                        Plugin.TexToolsManager.Export( Name, Author, Version, path, ExportAll, ExportTex );
+                        Penumbra.Export( Plugin, Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {

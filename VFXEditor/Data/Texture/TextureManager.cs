@@ -49,7 +49,7 @@ namespace VFXEditor.Data.Texture
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
-            var runtimeRoot = Path.Combine( Plugin.AssemblyLocation, "runtimes" );
+            var runtimeRoot = Path.Combine( Path.GetDirectoryName(Plugin.AssemblyLocation), "runtimes" );
 
             string _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
             string _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );

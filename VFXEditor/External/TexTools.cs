@@ -21,6 +21,7 @@ namespace VFXEditor.External {
         public string? ModPackPages;
         public TTMPL_Simple[] SimpleModsList;
     }
+
     public struct TTMPL_Simple {
         public string Name;
         public string Category;
@@ -33,36 +34,32 @@ namespace VFXEditor.External {
     }
 
     public class TexTools {
-        public Plugin _plugin;
 
-        public TexTools(Plugin plugin) {
-            _plugin = plugin;
-            /*
-             * TTMPL.mpl ->
-             *  {
-             *      "TTMPVersion":"1.0s",
-             *      "Name":"Ultimate Manatrigger",
-             *      "Author":"Gabster",
-             *      "Version":"1.0.0",
-             *      "Description":null,
-             *      "ModPackPages":null,
-             *      "SimpleModsList":[
-             *          {
-             *              "Name":"Ultimate Anarchy", // "Name":"ve0009.avfx","Category":"Raw File Copy"
-             *              "Category":"Two Handed",
-             *              "FullPath":"chara/weapon/w2501/obj/body/b0027/material/v0001/mt_w2501b0027_a.mtrl",
-             *              "IsDefault":false,
-             *              "ModOffset":0,
-             *              "ModSize":768,
-             *              "DatFile":"040000",
-             *              "ModPackEntry":null
-             *         }
-             *     ]
-             *  }
-             */
-        }
+        /*
+         * TTMPL.mpl ->
+         *  {
+         *      "TTMPVersion":"1.0s",
+         *      "Name":"Ultimate Manatrigger",
+         *      "Author":"Gabster",
+         *      "Version":"1.0.0",
+         *      "Description":null,
+         *      "ModPackPages":null,
+         *      "SimpleModsList":[
+         *          {
+         *              "Name":"Ultimate Anarchy", // "Name":"ve0009.avfx","Category":"Raw File Copy"
+         *              "Category":"Two Handed",
+         *              "FullPath":"chara/weapon/w2501/obj/body/b0027/material/v0001/mt_w2501b0027_a.mtrl",
+         *              "IsDefault":false,
+         *              "ModOffset":0,
+         *              "ModSize":768,
+         *              "DatFile":"040000",
+         *              "ModPackEntry":null
+         *         }
+         *     ]
+         *  }
+         */
 
-        public void Export(string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
+        public static void Export(Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
                 List<TTMPL_Simple> simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
@@ -141,7 +138,7 @@ namespace VFXEditor.External {
             }
         }
 
-        public TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
+        public static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
             TTMPL_Simple simple = new TTMPL_Simple();
             string[] split = path.Split( '/' );
             simple.Name = split[split.Length - 1];
@@ -181,12 +178,12 @@ namespace VFXEditor.External {
             return simple;
         }
 
-        public byte[] SquishAVFX( AVFXBase avfx ) {
+        public static byte[] SquishAVFX( AVFXBase avfx ) {
             return CreateType2Data( avfx.ToAVFX().ToBytes() );
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
-        public byte[] CreateType2Data( byte[] dataToCreate ) {
+        public static byte[] CreateType2Data( byte[] dataToCreate ) {
             var newData = new List<byte>();
             var headerData = new List<byte>();
             var dataBlocks = new List<byte>();

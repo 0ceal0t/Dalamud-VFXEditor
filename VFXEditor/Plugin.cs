@@ -63,8 +63,6 @@ namespace VFXEditor
             TexManager = new TextureManager( this );
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
             Doc = new PluginDocumentManager( this );
-            TexToolsManager = new TexTools( this );
-            PenumbraManager = new Penumbra( this );
             DXManager = new DirectXManager( this );
 
             InitUI();

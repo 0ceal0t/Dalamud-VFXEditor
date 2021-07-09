@@ -42,7 +42,7 @@ namespace VFXEditor.UI.VFX {
             Items.Add( item );
         }
 
-        public override void Update() {
+        public void Update() {
             OnChange?.Invoke();
         }
 

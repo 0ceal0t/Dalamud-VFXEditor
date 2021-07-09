@@ -145,7 +145,7 @@ namespace VFXEditor.UI.VFX
             Plugin.ImportFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select GLTF File.",
                 ( string path ) => {
                     try {
-                        if( GLTFManager.ImportModel( path, out List<Vertex> v_s, out List<Index> i_s ) ) {
+                        if( GLTF.ImportModel( path, out List<Vertex> v_s, out List<Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
                             Refresh = true;
@@ -162,7 +162,7 @@ namespace VFXEditor.UI.VFX
             Plugin.SaveFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select a Save Location.", "gltf",
                 ( string path ) => {
                     try {
-                        GLTFManager.ExportModel( Model, path );
+                        GLTF.ExportModel( Model, path );
                     }
                     catch( Exception ex ) {
                         PluginLog.LogError( ex, "Could not select a save location" );

@@ -13,8 +13,7 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class DocDialog : GenericDialog {
-        public DocDialog(Plugin plugin) : base(plugin, "Documents" ) {
-        }
+        public DocDialog(Plugin plugin) : base(plugin, "Documents" ) { }
 
         public ReplaceDoc SelectedDoc = null;
         public override void OnDraw() {
