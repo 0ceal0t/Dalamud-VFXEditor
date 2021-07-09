@@ -15,7 +15,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UISchedulerItem OnNew() {
-            return new UISchedulerItem( Sched.Scheduler.AddItem(), "Item", Sched );
+            return new UISchedulerItem( Sched.Scheduler.AddItem(), Sched, "Item" );
         }
 
         public override void OnDelete( UISchedulerItem item ) {

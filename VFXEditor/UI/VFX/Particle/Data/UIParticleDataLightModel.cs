@@ -18,7 +18,7 @@ namespace VFXEditor.UI.VFX
             Data = data;
             //=======================
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( particle, "Model", UINodeGroup.Models, Data.ModelIdx ));
+            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( particle, "Model", particle.Main.Models, Data.ModelIdx ));
         }
 
         public override void Dispose() {

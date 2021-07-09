@@ -10,7 +10,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEmitter : UINode {
         public AVFXEmitter Emitter;
-        public UIEmitterView View;
+        public UIMain Main;
         //=======================
         public UICombo<EmitterType> Type;
         List<UIItem> Animation;
@@ -29,11 +29,10 @@ namespace VFXEditor.UI.VFX
         public UIString SoundInput;
         public UIInt SoundIndex;
 
-        public UIEmitter(AVFXEmitter emitter, UIEmitterView view, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies)
-        {
+        public UIEmitter(UIMain main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies) {
             Emitter = emitter;
-            View = view;
-            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", UINodeGroup.Effectors, Emitter.EffectorIdx );
+            Main = main;
+            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", Main.Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
             // =====================
             Animation = new List<UIItem>();

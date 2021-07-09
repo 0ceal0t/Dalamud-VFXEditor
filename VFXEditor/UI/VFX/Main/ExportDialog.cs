@@ -21,13 +21,13 @@ namespace VFXEditor.UI.VFX.Main {
         public ExportDialog(UIMain main ) {
             Main = main;
             Categories = new List<ExportDialogCategory>();
-            Categories.Add( new ExportDialogCategory<UITimeline>( UINodeGroup.Timelines, "Timelines" ) );
-            Categories.Add( new ExportDialogCategory<UIEmitter>( UINodeGroup.Emitters, "Emitters" ) );
-            Categories.Add( new ExportDialogCategory<UIParticle>( UINodeGroup.Particles, "Particles" ) );
-            Categories.Add( new ExportDialogCategory<UIEffector>( UINodeGroup.Effectors, "Effectors" ) );
-            Categories.Add( new ExportDialogCategory<UIBinder>( UINodeGroup.Binders, "Binders" ) );
-            Categories.Add( new ExportDialogCategory<UITexture>( UINodeGroup.Textures, "Textures" ) );
-            Categories.Add( new ExportDialogCategory<UIModel>( UINodeGroup.Models, "Models" ) );
+            Categories.Add( new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ) );
+            Categories.Add( new ExportDialogCategory<UIEmitter>( main.Emitters, "Emitters" ) );
+            Categories.Add( new ExportDialogCategory<UIParticle>( main.Particles, "Particles" ) );
+            Categories.Add( new ExportDialogCategory<UIEffector>( main.Effectors, "Effectors" ) );
+            Categories.Add( new ExportDialogCategory<UIBinder>( main.Binders, "Binders" ) );
+            Categories.Add( new ExportDialogCategory<UITexture>( main.Textures, "Textures" ) );
+            Categories.Add( new ExportDialogCategory<UIModel>( main.Models, "Models" ) );
         }
 
         public void Show() {

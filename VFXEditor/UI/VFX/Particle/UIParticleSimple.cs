@@ -26,14 +26,15 @@ namespace VFXEditor.UI.VFX {
             Particle = particle;
             Init();
         }
+
         public override void Init() {
             base.Init();
             if (!Simple.Assigned) { Assigned = false; return; }
             //=======================
             Tabs = new List<UIItem>();
             Tabs.Add( Creation = new UIParameters( "Creation" ) );
-            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", UINodeGroup.Models, Simple.InjectionModelIdx ) );
-            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", UINodeGroup.Models, Simple.InjectionVertexBindModelIdx ) );
+            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
+            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
             Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
             Creation.Add( new UIInt( "Injection Direction Type", Simple.InjectionDirectionType ) );
             Creation.Add( new UIInt( "Base Direction Type", Simple.BaseDirectionType ) );

@@ -32,7 +32,7 @@ namespace VFXEditor.UI.VFX
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINodeGroup.Textures, Tex.TextureIdx ));
+            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Color To Alpha", Tex.ColorToAlpha));
             Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
@@ -46,19 +46,16 @@ namespace VFXEditor.UI.VFX
         }
 
         // =========== DRAW =====================
-        public override void DrawUnAssigned( string parentId )
-        {
-            if( ImGui.SmallButton( "+ " + Name + parentId ) )
-            {
+        public override void DrawUnAssigned( string parentId )  {
+            if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 Tex.ToDefault();
                 Init();
             }
         }
-        public override void DrawBody( string parentId )
-        {
+
+        public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
-            {
+            if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
                 Tex.Assigned = false;
                 TextureSelect.DeleteSelect();
                 Init();

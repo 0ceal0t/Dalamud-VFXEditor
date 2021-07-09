@@ -12,22 +12,21 @@ using VFXEditor.Data.Texture;
 namespace VFXEditor.UI.VFX
 {
     public class UITexture : UINode {
-        public TextureManager Manager;
-        public UITextureView View;
+        public UIMain Main;
         public AVFXTexture Texture;
+        //===========================
         public string lastValue;
         public UIString Path;
         public UINodeGraphView NodeView;
 
-        public UITexture(AVFXTexture texture, UITextureView view ) : base( UINodeGroup.TextureColor, false ) {
-            View = view;
+        public UITexture(UIMain main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
+            Main = main;
             Texture = texture;
             NodeView = new UINodeGraphView( this );
-            Manager = view.Manager;
 
             Path = new UIString( "Path", Texture.Path);
             lastValue = Texture.Path.Value;
-            Manager.LoadTexture( Texture.Path.Value );
+            TextureManager.Manager.LoadTexture( Texture.Path.Value );
             HasDependencies = false; // if imported, all set now
         }
 
@@ -35,7 +34,7 @@ namespace VFXEditor.UI.VFX
             var currentPathValue = Path.Literal.Value;
             if( currentPathValue != lastValue ) {
                 lastValue = currentPathValue;
-                Manager.LoadTexture( currentPathValue );
+                TextureManager.Manager.LoadTexture( currentPathValue );
             }
             return currentPathValue;
         }
@@ -48,8 +47,8 @@ namespace VFXEditor.UI.VFX
 
             var currentPathValue = LoadTex();
 
-            if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
-                var t = Manager.PathToTex[currentPathValue];
+            if( TextureManager.Manager.PathToTex.ContainsKey( currentPathValue ) ) {
+                var t = TextureManager.Manager.PathToTex[currentPathValue];
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
                 if( ImGui.SmallButton( "Export" + id ) ) {
@@ -57,14 +56,14 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.SameLine();
                 if( ImGui.SmallButton( "Replace" + id ) ) {
-                    ImportDialog( Manager, currentPathValue.Trim( '\0' ) );
+                    ImportDialog( currentPathValue.Trim( '\0' ) );
                 }
                 if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
                     if( ImGui.Selectable( "Png" + id ) ) {
                         SavePngDialog( t );
                     }
                     if( ImGui.Selectable( "DDS" + id ) ) {
-                        SaveDDSDialog( Manager.Plugin, currentPathValue.Trim( '\0' ) );
+                        SaveDDSDialog( currentPathValue.Trim( '\0' ) );
                     }
                     ImGui.EndPopup();
                 }
@@ -73,8 +72,8 @@ namespace VFXEditor.UI.VFX
                     ImGui.TextColored( new Vector4( 1.0f, 0.0f, 0.0f, 1.0f ), "Replaced with imported texture" );
                     ImGui.SameLine();
                     if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
-                        Manager.RemoveReplace( currentPathValue.Trim( '\0' ) );
-                        Manager.RefreshPreview( currentPathValue.Trim( '\0' ) );
+                        TextureManager.Manager.RemoveReplace( currentPathValue.Trim( '\0' ) );
+                        TextureManager.Manager.RefreshPreview( currentPathValue.Trim( '\0' ) );
                     }
                 }
             }
@@ -82,19 +81,19 @@ namespace VFXEditor.UI.VFX
 
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
-            if( Manager.PathToTex.ContainsKey( currentPathValue ) ) {
-                var t = Manager.PathToTex[currentPathValue];
+            if( TextureManager.Manager.PathToTex.ContainsKey( currentPathValue ) ) {
+                var t = TextureManager.Manager.PathToTex[currentPathValue];
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();
             }
         }
 
-        public static void ImportDialog(TextureManager manager, string newPath) {
+        public static void ImportDialog(string newPath) {
             Plugin.ImportFileDialog( "DDS or PNG File (*.png;*.dds)|*.png*;*.dds*|All files (*.*)|*.*", "Select Image File.",
                 ( string path ) => {
                     try {
-                        if( !manager.ImportTexture( path, newPath ) ) {
+                        if( !TextureManager.Manager.ImportTexture( path, newPath ) ) {
                             PluginLog.Log( $"Could not import" );
                         }
                     }
@@ -129,11 +128,11 @@ namespace VFXEditor.UI.VFX
             );
         }
 
-        public static void SaveDDSDialog(Plugin _plugin, string path ) {
+        public static void SaveDDSDialog(string newPath ) {
             Plugin.SaveFileDialog( "DDS Image (*.dds)|*.dds*|All files (*.*)|*.*", "Select a Save Location.", "dds",
                 ( string path ) => {
                     try {
-                        var texFile = _plugin.TexManager.GetTexture( path );
+                        var texFile = TextureManager.Manager.GetTexture( newPath );
                         byte[] header = IOUtil.CreateDDSHeader( texFile.Header.Width, texFile.Header.Height, texFile.Header.Format, texFile.Header.Depth, texFile.Header.MipLevels );
                         byte[] data = texFile.GetDDSData();
                         byte[] writeData = new byte[header.Length + data.Length];

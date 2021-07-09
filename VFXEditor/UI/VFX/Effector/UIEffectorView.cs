@@ -13,8 +13,8 @@ namespace VFXEditor.UI.VFX
     {
         public UIEffectorView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##EFFCT", "Select an Effector", defaultPath: "effector_default.vfxedit" )
         {
-            Group = UINodeGroup.Effectors;
-            Group.Items = AVFX.Effectors.Select( item => new UIEffector( item, this ) ).ToList();
+            Group = main.Effectors;
+            Group.Items = AVFX.Effectors.Select( item => new UIEffector( Main, item ) ).ToList();
         }
 
         public override void OnDelete( UIEffector item ) {
@@ -27,7 +27,7 @@ namespace VFXEditor.UI.VFX
             AVFXEffector item = new AVFXEffector();
             item.Read( node );
             AVFX.AddEffector( item );
-            return new UIEffector( item, this, has_dependencies );
+            return new UIEffector( Main, item, has_dependencies );
         }
     }
 }

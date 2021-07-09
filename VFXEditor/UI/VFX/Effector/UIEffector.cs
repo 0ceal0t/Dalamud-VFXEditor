@@ -10,15 +10,15 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEffector : UINode {
         public AVFXEffector Effector;
-        public UIEffectorView View;
+        public UIMain Main;
         //========================
         public UICombo<EffectorType> Type;
         public UIData Data;
         public UINodeGraphView NodeView;
 
-        public UIEffector(AVFXEffector effector, UIEffectorView view, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
+        public UIEffector(UIMain main, AVFXEffector effector, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
             Effector = effector;
-            View = view;
+            Main = main;
             NodeView = new UINodeGraphView( this );
             //======================
             Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, changeFunction: ChangeType );

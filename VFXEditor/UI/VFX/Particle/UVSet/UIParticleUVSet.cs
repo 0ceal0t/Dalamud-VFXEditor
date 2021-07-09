@@ -14,9 +14,9 @@ namespace VFXEditor.UI.VFX
         public AVFXParticleUVSet UVSet;
         public UIParticle Particle;
 
-        public UICurve2Axis _Scale;
-        public UICurve2Axis _Scroll;
-        public UICurve _Rotation;
+        public UICurve2Axis Scale;
+        public UICurve2Axis Scroll;
+        public UICurve Rotation;
         List<UIItem> Curves = new List<UIItem>();
 
         public UIParticleUVSet(AVFXParticleUVSet uvSet, UIParticle particle)
@@ -26,15 +26,14 @@ namespace VFXEditor.UI.VFX
             //=================
             Attributes.Add( new UICombo<TextureCalculateUV>( "Calculate UV", UVSet.CalculateUVType ) );
 
-            Curves.Add( _Scale = new UICurve2Axis( UVSet.Scale, "Scale" ) );
-            Curves.Add( _Scroll = new UICurve2Axis( UVSet.Scroll, "Scroll" ) );
-            Curves.Add( _Rotation = new UICurve( UVSet.Rot, "Rotation" ) );
+            Curves.Add( Scale = new UICurve2Axis( UVSet.Scale, "Scale" ) );
+            Curves.Add( Scroll = new UICurve2Axis( UVSet.Scroll, "Scroll" ) );
+            Curves.Add( Rotation = new UICurve( UVSet.Rot, "Rotation" ) );
             Curves.Add( new UICurve( UVSet.RotRandom, "Rotation Random" ) );
             Curves.Add( new UVAnimation( this ) );
         }
 
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             string id = parentId + "/UV";
             DrawAttrs( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

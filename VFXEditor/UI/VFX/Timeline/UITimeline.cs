@@ -10,7 +10,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UITimeline : UINode {
         public AVFXTimeline Timeline;
-        public UITimelineView View;
+        public UIMain Main;
         //=====================
         public List<UITimelineItem> Items;
         //=====================
@@ -21,10 +21,10 @@ namespace VFXEditor.UI.VFX
 
         public UINodeSelect<UIBinder> BinderSelect;
 
-        public UITimeline(AVFXTimeline timeline, UITimelineView view, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
+        public UITimeline(UIMain main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
-            View = view;
-            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", UINodeGroup.Binders, Timeline.BinderIdx );
+            Main = main;
+            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", Main.Binders, Timeline.BinderIdx );
             //===============
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();

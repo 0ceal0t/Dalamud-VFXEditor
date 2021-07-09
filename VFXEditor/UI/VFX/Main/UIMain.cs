@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using VFXEditor.UI.VFX.Main;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIMain
-    {
+namespace VFXEditor.UI.VFX {
+    public class UIMain {
         public AVFXBase AVFX;
 
         public UIParameterView ParameterView;
@@ -27,22 +25,47 @@ namespace VFXEditor.UI.VFX
         public UIScheduleView ScheduleView;
         public UIBinderView BinderView;
 
+        public UINodeGroup<UIBinder> Binders;
+        public UINodeGroup<UIEmitter> Emitters;
+        public UINodeGroup<UIModel> Models;
+        public UINodeGroup<UIParticle> Particles;
+        public UINodeGroup<UIScheduler> Schedulers;
+        public UINodeGroup<UITexture> Textures;
+        public UINodeGroup<UITimeline> Timelines;
+        public UINodeGroup<UIEffector> Effectors;
+
         public ExportDialog ExportUI;
 
         public UIMain(AVFXBase avfx, Plugin plugin) {
             AVFX = avfx;
             // ================
-            UINodeGroup.SetupGroups();
+            Binders = new UINodeGroup<UIBinder>();
+            Emitters = new UINodeGroup<UIEmitter>();
+            Models = new UINodeGroup<UIModel>();
+            Particles = new UINodeGroup<UIParticle>();
+            Schedulers = new UINodeGroup<UIScheduler>();
+            Textures = new UINodeGroup<UITexture>();
+            Timelines = new UINodeGroup<UITimeline>();
+            Effectors = new UINodeGroup<UIEffector>();
+            // ================
             ParticleView = new UIParticleView(this, avfx);
             ParameterView = new UIParameterView(avfx);
             BinderView = new UIBinderView( this, avfx );
             EmitterView = new UIEmitterView( this, avfx );
             EffectorView = new UIEffectorView( this, avfx );
             TimelineView = new UITimelineView( this, avfx );
-            TextureView = new UITextureView(avfx, plugin);
-            ModelView = new UIModelView(this, avfx, plugin);
+            TextureView = new UITextureView(this, avfx);
+            ModelView = new UIModelView(this, avfx);
             ScheduleView = new UIScheduleView( this, avfx );
-            UINodeGroup.InitGroups();
+            // =================
+            Binders.Init();
+            Emitters.Init();
+            Models.Init();
+            Particles.Init();
+            Schedulers.Init();
+            Textures.Init();
+            Timelines.Init();
+            Effectors.Init();
             // =================
             ExportUI = new ExportDialog( this );
         }
@@ -166,7 +189,7 @@ namespace VFXEditor.UI.VFX
             var nodes = AVFXLib.Main.Reader.ReadDefinition( br, messages);
             var has_dependencies = nodes.Count >= 2;
             if( has_dependencies ) {
-                UINodeGroup.PreImportGroups();
+                PreImportGroups();
             }
             nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add(ModelView.OnImport( node )) );
             nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add(TextureView.OnImport( node )) );
@@ -175,6 +198,16 @@ namespace VFXEditor.UI.VFX
             nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add(ParticleView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
+        }
+        public void PreImportGroups() {
+            Binders.PreImport();
+            Emitters.PreImport();
+            Models.PreImport();
+            Particles.PreImport();
+            Schedulers.PreImport();
+            Textures.PreImport();
+            Timelines.PreImport();
+            Effectors.PreImport();
         }
 
         // =========== DIALOG =================

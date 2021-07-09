@@ -23,14 +23,13 @@ namespace VFXEditor.UI.VFX
         public UIInt StartTime;
         public UIInt EndTime;
 
-        public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline)
-        {
+        public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline) {
             Item = item;
             Timeline = timeline;
 
-            BinderSelect = new UINodeSelect<UIBinder>( timeline, "Binder Select", UINodeGroup.Binders, Item.BinderIdx );
-            EmitterSelect = new UINodeSelect<UIEmitter>( timeline, "Emitter Select", UINodeGroup.Emitters, Item.EmitterIdx );
-            EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", UINodeGroup.Effectors, Item.EffectorIdx );
+            BinderSelect = new UINodeSelect<UIBinder>( timeline, "Binder Select", Timeline.Main.Binders, Item.BinderIdx );
+            EmitterSelect = new UINodeSelect<UIEmitter>( timeline, "Emitter Select", Timeline.Main.Emitters, Item.EmitterIdx );
+            EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", Timeline.Main.Effectors, Item.EffectorIdx );
 
             ClipNumber = new UIInt( "ClipNumber", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.Assigned;
@@ -41,8 +40,7 @@ namespace VFXEditor.UI.VFX
             Attributes.Add( new UIInt( "Platform", Item.Platform ) );
         }
 
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             string id = parentId + "/Item";
             DrawRename( id );
 

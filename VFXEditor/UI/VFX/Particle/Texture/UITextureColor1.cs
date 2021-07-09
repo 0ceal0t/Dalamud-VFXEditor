@@ -16,21 +16,20 @@ namespace VFXEditor.UI.VFX
         public List<UIItem> Tabs;
         public UIParameters Parameters;
 
-        public UITextureColor1(AVFXTextureColor1 tex, UIParticle particle )
-        {
+        public UITextureColor1(AVFXTextureColor1 tex, UIParticle particle ) {
             Tex = tex;
             Particle = particle;
             Init();
         }
-        public override void Init()
-        {
+
+        public override void Init() {
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters("Parameters") );
 
-            Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", UINodeGroup.Textures, Tex.MaskTextureIdx ));
+            Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Color To Alpha", Tex.ColorToAlpha));
             Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
@@ -46,16 +45,15 @@ namespace VFXEditor.UI.VFX
         }
 
         // =========== DRAW =====================
-        public override void DrawUnAssigned( string parentId )
-        {
+        public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) )
             {
                 Tex.ToDefault();
                 Init();
             }
         }
-        public override void DrawBody( string parentId )
-        {
+
+        public override void DrawBody( string parentId ) {
             var id = parentId + "/TC1";
             if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
             {

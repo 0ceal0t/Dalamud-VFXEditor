@@ -15,6 +15,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIModel : UINode {
         public AVFXModel Model;
+        public UIMain Main;
         public ModelPreview _ModelPreview;
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
@@ -24,8 +25,9 @@ namespace VFXEditor.UI.VFX
         private int Mode = 1;
         private bool Refresh = false;
 
-        public UIModel( AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
+        public UIModel( UIMain main, AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
+            Main = main;
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();

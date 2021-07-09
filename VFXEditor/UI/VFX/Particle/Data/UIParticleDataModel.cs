@@ -19,7 +19,7 @@ namespace VFXEditor.UI.VFX
             Data = data;
             //=======================
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add(ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", UINodeGroup.Models, Data.ModelIdx ));
+            Parameters.Add(ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", particle.Main.Models, Data.ModelIdx ));
             Parameters.Add( new UIInt( "Model Number Random", Data.ModelNumberRandomValue ) );
             Parameters.Add( new UICombo<RandomType>( "Model Number Random Type", Data.ModelNumberRandomType ) );
             Parameters.Add( new UIInt( "Model Number Random Interval", Data.ModelNumberRandomInterval ) );

@@ -5,15 +5,13 @@ using VFXEditor.Data.Texture;
 
 namespace VFXEditor.UI.VFX {
     public class UITextureView : UINodeSplitView<UITexture> {
-        public Plugin _plugin;
-        public TextureManager Manager;
+        public UIMain Main;
 
-        public UITextureView( AVFXBase avfx, Plugin plugin ) : base( avfx, "##TEX" ) {
-            _plugin = plugin;
-            Manager = plugin.TexManager;
+        public UITextureView( UIMain main, AVFXBase avfx) : base( avfx, "##TEX" ) {
+            Main = main;
             // ==========
-            Group = UINodeGroup.Textures;
-            Group.Items = AVFX.Textures.Select( item => new UITexture( item, this ) ).ToList();
+            Group = main.Textures;
+            Group.Items = AVFX.Textures.Select( item => new UITexture( Main, item ) ).ToList();
         }
 
         public override void OnDelete( UITexture item ) {
@@ -24,11 +22,11 @@ namespace VFXEditor.UI.VFX {
             AVFXTexture tex = new AVFXTexture();
             tex.Read( node );
             AVFX.AddTexture( tex );
-            return new UITexture( tex, this );
+            return new UITexture( Main, tex );
         }
 
         public override UITexture OnNew() {
-            return new UITexture( AVFX.AddTexture(),this );
+            return new UITexture( Main, AVFX.AddTexture() );
         }
     }
 }

@@ -10,7 +10,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIScheduler : UINode {
         public AVFXSchedule Scheduler;
-        public UIScheduleView View;
+        public UIMain Main;
         // =================
         public List<UISchedulerItem> Items;
         public List<UISchedulerItem> Triggers;
@@ -18,20 +18,19 @@ namespace VFXEditor.UI.VFX
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler(AVFXSchedule scheduler, UIScheduleView view ) : base( UINodeGroup.SchedColor, false ) {
+        public UIScheduler(UIMain main, AVFXSchedule scheduler) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
-            View = view;
-
+            Main = main;
             // ===================
             Items = new List<UISchedulerItem>();
             Triggers = new List<UISchedulerItem>();
             // =====================
             foreach( var Item in Scheduler.Items ) {
-                Items.Add( new UISchedulerItem( Item, "Item", this ) );
+                Items.Add( new UISchedulerItem( Item, this, "Item") );
             }
             // =====================
             foreach( var Trigger in Scheduler.Triggers ) {
-                Triggers.Add( new UISchedulerItem( Trigger, "Trigger", this ) );
+                Triggers.Add( new UISchedulerItem( Trigger, this, "Trigger" ) );
             }
             // ======================
             ItemSplit = new UIScheduleItemSplitView( Items, this );

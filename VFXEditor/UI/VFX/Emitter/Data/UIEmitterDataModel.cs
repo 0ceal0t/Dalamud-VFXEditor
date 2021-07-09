@@ -14,12 +14,11 @@ namespace VFXEditor.UI.VFX
 
         public UINodeSelect<UIModel> ModelSelect;
 
-        public UIEmitterDataModel(AVFXEmitterDataModel data, UIEmitter emitter)
-        {
+        public UIEmitterDataModel(AVFXEmitterDataModel data, UIEmitter emitter) {
             Data = data;
             //=======================
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", UINodeGroup.Models, Data.ModelIdx ));
+            Parameters.Add(ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", emitter.Main.Models, Data.ModelIdx ));
             Parameters.Add(new UICombo<RotationOrder>("Rotation Order", Data.RotationOrderType));
             Parameters.Add(new UICombo<GenerateMethod>("Generate Method", Data.GenerateMethodType));
             Tabs.Add(new UICurve(Data.AX, "Angle X"));

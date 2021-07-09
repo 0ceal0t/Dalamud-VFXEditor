@@ -11,22 +11,24 @@ namespace VFXEditor.UI.VFX
 {
     public class UIBinderView : UIDropdownView<UIBinder>
     {
-        public UIBinderView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath:"binder_default.vfxedit" )
-        {
-            Group = UINodeGroup.Binders;
-            Group.Items = AVFX.Binders.Select( item => new UIBinder( item, this ) ).ToList();
+        public UIBinderView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath:"binder_default.vfxedit" ) {
+            Group = main.Binders;
+            Group.Items = AVFX.Binders.Select( item => new UIBinder( Main, item ) ).ToList();
         }
+
         public override void OnDelete( UIBinder item ) {
             AVFX.RemoveBinder( item.Binder );
         }
+
         public override byte[] OnExport( UIBinder item ) {
             return item.Binder.ToAVFX().ToBytes();
         }
+
         public override UIBinder OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXBinder item = new AVFXBinder();
             item.Read( node );
             AVFX.AddBinder( item );
-            return new UIBinder( item, this );
+            return new UIBinder( Main, item );
         }
     }
 }

@@ -52,7 +52,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             var modelText = SelectedModel == null ? "[NONE]" : SelectedModel.GetText();
             if(ImGui.BeginCombo("Model" + parentId, modelText ) ) {
                 var idx = 0;
-                foreach(var item in UINodeGroup.Models.Items ) {
+                foreach(var item in UVSet.Particle.Main.Models.Items ) {
                     if( ImGui.Selectable(item.GetText() + parentId + idx, item == SelectedModel) ) {
                         SelectedModel = item;
                         if(SelectedTexture != null ) {
@@ -67,7 +67,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
             var texText = SelectedTexture == null ? "[NONE]" : SelectedTexture.GetText();
             if( ImGui.BeginCombo( "Texture" + parentId, texText ) ) {
                 var idx = 0;
-                foreach( var item in UINodeGroup.Textures.Items ) {
+                foreach( var item in UVSet.Particle.Main.Textures.Items ) {
                     if( ImGui.Selectable( item.GetText() + parentId + idx, item == SelectedTexture ) ) {
                         SelectedTexture = item;
                         UpdateBitmap();
@@ -136,7 +136,7 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
         Bitmap _bitmap;
         public void UpdateBitmap() {
             if( SelectedTexture == null ) return;
-            var tex = SelectedTexture.Manager.GetTexture( SelectedTexture.Path.Literal.Value.Trim( '\0' ) );
+            var tex = TextureManager.Manager.GetTexture( SelectedTexture.Path.Literal.Value.Trim( '\0' ) );
             _bitmap = new Bitmap( tex.Header.Width, tex.Header.Height );
             for( int i = 0; i < tex.Header.Height; i++ ) {
                 for( int j = 0; j < tex.Header.Width; j++ ) {
@@ -162,9 +162,9 @@ namespace VFXEditor.UI.VFX.Particle.UVSet {
         }
 
         public void SetFrame( ) {
-            CurrentRotation = GetCurveValue( UVSet._Rotation, Frame, 0 );
-            CurrentScale = Get2AxisValue( UVSet._Scale, Frame, new Vector2( 1, 1 ) );
-            CurrentScroll = Get2AxisValue( UVSet._Scroll, Frame, new Vector2( 0, 0 ) );
+            CurrentRotation = GetCurveValue( UVSet.Rotation, Frame, 0 );
+            CurrentScale = Get2AxisValue( UVSet.Scale, Frame, new Vector2( 1, 1 ) );
+            CurrentScroll = Get2AxisValue( UVSet.Scroll, Frame, new Vector2( 0, 0 ) );
 
             if(_UVPreview._CurrentUV == this ) {
                 _UVPreview.AnimData[0] = CurrentScale.X; // kind of scuffed, but whatever

@@ -17,21 +17,20 @@ namespace VFXEditor.UI.VFX
         public List<UIItem> Tabs;
         public UIParameters Parameters;
 
-        public UITextureDistortion(AVFXTextureDistortion tex, UIParticle particle )
-        {
+        public UITextureDistortion(AVFXTextureDistortion tex, UIParticle particle ) {
             Tex = tex;
             Particle = particle;
             Init();
         }
-        public override void Init()
-        {
+
+        public override void Init() {
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINodeGroup.Textures, Tex.TextureIdx ));
+            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Distort UV1", Tex.TargetUV1));
             Parameters.Add(new UICheckbox("Distort UV2", Tex.TargetUV2));

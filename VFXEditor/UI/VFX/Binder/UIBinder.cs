@@ -10,7 +10,7 @@ namespace VFXEditor.UI.VFX
     public class UIBinder : UINode
     {
         public AVFXBinder Binder;
-        public UIBinderView View;
+        public UIMain Main;
         //====================
         public UICombo<BinderType> Type;
         public UIData Data;
@@ -19,9 +19,9 @@ namespace VFXEditor.UI.VFX
         public UIItemSplitView<UIBinderProperties> PropSplit;
         public UINodeGraphView NodeView;
 
-        public UIBinder(AVFXBinder binder, UIBinderView view, bool has_dependencies = false) : base( UINodeGroup.BinderColor, has_dependencies) {
+        public UIBinder(UIMain main, AVFXBinder binder, bool has_dependencies = false) : base( UINodeGroup.BinderColor, has_dependencies) {
             Binder = binder;
-            View = view;
+            Main = main;
             NodeView = new UINodeGraphView( this );
             //=====================
             Properties = new List<UIBinderProperties>();

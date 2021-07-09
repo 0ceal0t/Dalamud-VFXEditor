@@ -8,19 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Data.DirectX;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIModelView : UINodeSplitView<UIModel>
-    {
-        public ModelPreview Mdl3D;
+namespace VFXEditor.UI.VFX {
+    public class UIModelView : UINodeSplitView<UIModel> {
         public UIMain Main;
 
-        public UIModelView(UIMain main, AVFXBase avfx, Plugin plugin) : base(avfx, "##MDL")
-        {
+        public UIModelView(UIMain main, AVFXBase avfx) : base(avfx, "##MDL") {
             Main = main;
-            Mdl3D = plugin.DXManager.ModelView;
-            Group = UINodeGroup.Models;
-            Group.Items = AVFX.Models.Select( item => new UIModel( item ) ).ToList();
+            Group = main.Models;
+            Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
         }
 
         public override void DrawNewButton( string parentId ) {
@@ -34,7 +29,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void OnSelect( UIModel item ) {
-            Mdl3D.LoadModel( item.Model );
+            DirectXManager.Manager.ModelView.LoadModel( item.Model );
         }
 
         public override void OnDelete( UIModel item ) {
@@ -42,14 +37,14 @@ namespace VFXEditor.UI.VFX
         }
 
         public override UIModel OnNew() {
-            return new UIModel( AVFX.AddModel() );
+            return new UIModel( Main, AVFX.AddModel() );
         }
 
         public override UIModel OnImport( AVFXNode node ) {
             AVFXModel mdl = new AVFXModel();
             mdl.Read( node );
             AVFX.AddModel( mdl );
-            return new UIModel( mdl );
+            return new UIModel( Main, mdl );
         }
     }
 }

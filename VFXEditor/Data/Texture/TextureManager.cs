@@ -34,6 +34,8 @@ namespace VFXEditor.Data.Texture
     }
 
     public class TextureManager {
+        public static TextureManager Manager;
+
         public Plugin Plugin;
         public int TEX_ID = 0;
 
@@ -41,6 +43,7 @@ namespace VFXEditor.Data.Texture
         public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
 
         public TextureManager(Plugin plugin ) {
+            Manager = this;
             Plugin = plugin;
 
             // Set paths manually since TexImpNet can be dumb sometimes

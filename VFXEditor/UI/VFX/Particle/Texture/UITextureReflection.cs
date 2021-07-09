@@ -29,7 +29,7 @@ namespace VFXEditor.UI.VFX
             Tabs = new List<UIItem>();
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
 
-            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", UINodeGroup.Textures, Tex.TextureIdx );
+            TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx );
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
             Parameters.Add(new UICheckbox("Use Screen Copy", Tex.UseScreenCopy));
             Parameters.Add(new UICombo<TextureFilterType>("Texture Filter", Tex.TextureFilter));

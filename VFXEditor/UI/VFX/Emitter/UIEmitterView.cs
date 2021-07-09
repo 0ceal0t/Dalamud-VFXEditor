@@ -11,8 +11,8 @@ namespace VFXEditor.UI.VFX
 {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
         public UIEmitterView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
-            Group = UINodeGroup.Emitters;
-            Group.Items = AVFX.Emitters.Select( item => new UIEmitter( item, this ) ).ToList();
+            Group = main.Emitters;
+            Group.Items = AVFX.Emitters.Select( item => new UIEmitter( Main, item ) ).ToList();
         }
 
         public override void OnDelete( UIEmitter item ) {
@@ -25,7 +25,7 @@ namespace VFXEditor.UI.VFX
             AVFXEmitter item = new AVFXEmitter();
             item.Read( node );
             AVFX.AddEmitter( item );
-            return new UIEmitter( item, this, has_dependencies );
+            return new UIEmitter( Main, item, has_dependencies );
         }
     }
 }

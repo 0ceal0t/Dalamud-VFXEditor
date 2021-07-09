@@ -11,7 +11,7 @@ namespace VFXEditor.UI.VFX
 {
     public class UIParticle : UINode {
         public AVFXParticle Particle;
-        public UIParticleView View;
+        public UIMain Main;
         // =======================
         public UICombo<ParticleType> Type;
         public List<UIParticleUVSet> UVSets;
@@ -34,9 +34,9 @@ namespace VFXEditor.UI.VFX
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
 
-        public UIParticle( AVFXParticle particle, UIParticleView view, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
+        public UIParticle( UIMain main, AVFXParticle particle, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
             Particle = particle;
-            View = view;
+            Main = main;
             NodeView = new UINodeGraphView( this );
             // =======================
             Animation = new List<UIItem>();
@@ -158,15 +158,14 @@ namespace VFXEditor.UI.VFX
             SetType();
         }
 
-        private void DrawParameters(string id)
-        {
+        private void DrawParameters(string id) {
             ImGui.BeginChild( id);
             NodeView.Draw( id );
             DrawAttrs( id );
             ImGui.EndChild();
         }
-        private void DrawData( string id )
-        {
+
+        private void DrawData( string id ) {
             ImGui.BeginChild( id);
             Data.Draw( id );
             ImGui.EndChild();

@@ -7,10 +7,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIEmitterItem : UIWorkspaceItem
-    {
+namespace VFXEditor.UI.VFX {
+    public class UIEmitterItem : UIWorkspaceItem {
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;
         public bool IsParticle;
@@ -18,17 +16,16 @@ namespace VFXEditor.UI.VFX
         public UINodeSelect<UIParticle> ParticleSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
 
-        public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter)
-        {
+        public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter) {
             Iteration = iteration;
             Emitter = emitter;
             IsParticle = isParticle;
 
             if( IsParticle ) {
-                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", UINodeGroup.Particles, Iteration.TargetIdx );
+                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", Emitter.Main.Particles, Iteration.TargetIdx );
             }
             else {
-                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", UINodeGroup.Emitters, Iteration.TargetIdx );
+                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.Main.Emitters, Iteration.TargetIdx );
             }
             //=========================
             Attributes.Add( new UICheckbox( "Enabled", Iteration.Enabled ) );
@@ -57,8 +54,7 @@ namespace VFXEditor.UI.VFX
         }
         
         // =========== DRAW ==============
-        public override void DrawBody( string parentId )
-        {
+        public override void DrawBody( string parentId ) {
             string id = parentId + "/Item";
             DrawRename( id );
             if( IsParticle ) {
