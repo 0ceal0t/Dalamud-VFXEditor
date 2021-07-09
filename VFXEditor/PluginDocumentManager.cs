@@ -1,20 +1,28 @@
 using AVFXLib.Models;
 using Dalamud.Plugin;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
 namespace VFXEditor {
     public class ReplaceDoc {
-        public AVFXBase AVFX = null;
+        public UIMain Main = null;
         public string WriteLocation;
 
         public VFXSelectResult Source;
         public VFXSelectResult Replace;
+
+        public void SetAVFX(AVFXBase avfx) {
+            Dispose();
+            Main = new UIMain( avfx );
+        }
+
+        public void Dispose() {
+            Main?.Dispose();
+            Main = null;
+            File.Delete( WriteLocation );
+        }
     }
 
     public class PluginDocumentManager {
@@ -50,10 +58,6 @@ namespace VFXEditor {
             RebuildMap();
         }
 
-        public void ResetDoc() {
-            File.Delete( ActiveDoc.WriteLocation );
-        }
-
         public void SelectDoc(ReplaceDoc doc ) {
             ActiveDoc = doc;
         }
@@ -61,7 +65,7 @@ namespace VFXEditor {
         public bool RemoveDoc(ReplaceDoc doc ) {
             bool switchDoc = ( doc == ActiveDoc );
             Docs.Remove( doc );
-            File.Delete( doc.WriteLocation );
+            doc.Dispose();
             RebuildMap();
 
             if( switchDoc ) {
@@ -69,10 +73,6 @@ namespace VFXEditor {
                 return true;
             }
             return false;
-        }
-
-        public bool HasVFX() {
-            return ActiveDoc.AVFX != null;
         }
 
         private void RebuildMap() {
@@ -86,7 +86,7 @@ namespace VFXEditor {
         }
 
         public void Save() {
-            Plugin.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.AVFX );
+            Plugin.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
             if(Configuration.Config.LogAllFiles) {
                 PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
             }
@@ -103,8 +103,8 @@ namespace VFXEditor {
 
         public bool HasReplacePath(bool allDocuments ) {
             if( allDocuments ) {
-                foreach(var _doc in Docs ) {
-                    if( _doc.Replace.Path == "" )
+                foreach(var doc in Docs ) {
+                    if( doc.Replace.Path == "" )
                         return false;
                 }
                 return true;
@@ -114,7 +114,7 @@ namespace VFXEditor {
 
         public void Dispose() {
             foreach(var doc in Docs ) {
-                File.Delete( doc.WriteLocation );
+                doc.Dispose();
             }
         }
     }

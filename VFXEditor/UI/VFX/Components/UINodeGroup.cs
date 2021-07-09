@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace VFXEditor.UI.VFX {
-    public class UINodeGroup {
+    public abstract class UINodeGroup {
         public static uint BinderColor = ImGui.GetColorU32( new Vector4( 0.17f, 0.54f, 0.36f, 1 ) );
         public static uint EmitterColor = ImGui.GetColorU32( new Vector4( 0.62f, 0.37f, 0.20f, 1 ) );
         public static uint ModelColor = ImGui.GetColorU32( new Vector4( 0.49f, 0.17f, 0.19f, 1 ) );
@@ -13,6 +13,10 @@ namespace VFXEditor.UI.VFX {
         public static uint TextureColor = ImGui.GetColorU32( new Vector4( 0.40f, 0.69f, 0.12f, 1 ) );
         public static uint TimelineColor = ImGui.GetColorU32( new Vector4( 0.29f, 0.53f, 0.69f, 1 ) );
         public static uint EffectorColor = ImGui.GetColorU32( new Vector4( 0.26f, 0.24f, 0.82f, 1 ) );
+
+        public abstract void Init();
+        public abstract void PreImport();
+        public abstract void Dispose();
     }
 
     public class UINodeGroup<T> : UINodeGroup where T : UINode {
@@ -38,11 +42,11 @@ namespace VFXEditor.UI.VFX {
             Items.Add( item );
         }
 
-        public void Update() {
+        public override void Update() {
             OnChange?.Invoke();
         }
 
-        public void Init() {
+        public override void Init() {
             UpdateIdx();
             IsInit = true;
             OnInit?.Invoke();
@@ -55,8 +59,13 @@ namespace VFXEditor.UI.VFX {
             }
         }
 
-        public void PreImport() {
+        public override void PreImport() {
             PreImportSize = Items.Count;
+        }
+
+        public override void Dispose() {
+            OnInit = null;
+            OnChange = null;
         }
     }
 }

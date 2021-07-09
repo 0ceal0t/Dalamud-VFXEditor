@@ -5,17 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public AVFXBase AVFX {
-            get { return Doc.ActiveDoc.AVFX; }
-            set { Doc.ActiveDoc.AVFX = value; }
-        }
-        public string ReplaceAVFXPath => Doc.ActiveDoc.Replace.Path;
-        public string SourceString => Doc.ActiveDoc.Source.DisplayString;
-        public string ReplaceString => Doc.ActiveDoc.Replace.DisplayString;
+        public ReplaceDoc CurrentDocument => Doc.ActiveDoc;
 
         private DateTime LastSelect = DateTime.Now;
 
@@ -30,7 +25,7 @@ namespace VFXEditor {
                 case VFXSelectType.Local: // LOCAL
                     bool localResult = GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
-                        LoadVFX( localAvfx );
+                        LoadCurrentVFX( localAvfx );
                     }
                     else {
                         PluginLog.Log( "Could not get file: " + selectResult.Path );
@@ -40,7 +35,7 @@ namespace VFXEditor {
                 default: // EVERYTHING ELSE: GAME FILES
                     bool gameResult = GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
-                        LoadVFX( gameAvfx );
+                        LoadCurrentVFX( gameAvfx );
                     }
                     else {
                         PluginLog.Log( "Could not get file: " + selectResult.Path );
@@ -54,8 +49,7 @@ namespace VFXEditor {
 
         public void RemoveSourceVFX() {
             Doc.UpdateSource( VFXSelectResult.None() );
-            Doc.ResetDoc();
-            UnloadAVFX();
+            CurrentDocument.Dispose();
         }
 
         public void SetReplaceVFX( VFXSelectResult replaceResult) {
@@ -70,21 +64,12 @@ namespace VFXEditor {
             Doc.UpdateReplace( VFXSelectResult.None() );
         }
 
-        public void RefreshSelectedDocUI() {
-            if( Doc.HasVFX() ) {
-                RefreshVFXUI();
-            }
-            else {
-                UnloadAVFX();
-            }
-        }
-
-        public void LoadVFX( AVFXBase avfx ) {
+        public void LoadCurrentVFX( AVFXBase avfx ) {
             if( avfx == null ) return;
-            AVFX = avfx;
-            // ===============
+            CurrentDocument.SetAVFX( avfx );
+
             if( Configuration.VerifyOnLoad ) {
-                var node = AVFX.ToAVFX();
+                var node = avfx.ToAVFX();
                 bool verifyResult = LastImportNode.CheckEquals( node, out List<string> messages );
                 SetStatus( verifyResult );
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
@@ -92,13 +77,6 @@ namespace VFXEditor {
                     PluginLog.Log( m );
                 }
             }
-            TexManager.Reset();
-            RefreshVFXUI();
-        }
-
-        public void UnloadAVFX() {
-            AVFX = null;
-            CurrentVFXUI = null;
         }
     }
 }

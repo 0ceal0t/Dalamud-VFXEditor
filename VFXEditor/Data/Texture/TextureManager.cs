@@ -58,14 +58,6 @@ namespace VFXEditor.Data.Texture
             PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
         }
 
-        public void Reset() {
-            foreach(KeyValuePair<string, TexData> entry in PathToTex ) {
-                if(PathToTex.TryRemove( entry.Key, out var data ) ) {
-                    data.Wrap?.Dispose();
-                }
-            }
-        }
-
         public bool GetLocalPath(string gamePath, out FileInfo file ) {
             file = null;
             if( !GamePathReplace.ContainsKey( gamePath ) ) {
@@ -157,6 +149,9 @@ namespace VFXEditor.Data.Texture
         }
 
         public void Dispose() {
+            foreach( KeyValuePair<string, TexData> entry in PathToTex ) {
+                entry.Value.Wrap?.Dispose();
+            }
             foreach(KeyValuePair<string, TexReplace> entry in GamePathReplace) {
                 File.Delete( entry.Value.localPath );
             }

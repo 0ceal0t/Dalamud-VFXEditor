@@ -20,7 +20,6 @@ namespace VFXEditor {
     public partial class Plugin {
         public bool Visible = false;
 
-        public UIMain CurrentVFXUI;
         public VFXSelectDialog SelectUI;
         public VFXSelectDialog PreviewUI;
         public TexToolsDialog TexToolsUI;
@@ -75,10 +74,6 @@ namespace VFXEditor {
 #endif
         }
 
-        public void RefreshVFXUI() {
-            CurrentVFXUI = new UIMain( AVFX, this );
-        }
-
         public bool SpawnExists() {
             return SpawnVfx != null;
         }
@@ -127,7 +122,7 @@ namespace VFXEditor {
             ImGui.EndTabBar();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentVFXUI == null ) {
+            if( CurrentDocument.Main == null ) {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
@@ -150,7 +145,7 @@ namespace VFXEditor {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node = AVFX.ToAVFX();
+                        var node = CurrentDocument.Main.AVFX.ToAVFX();
                         SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
@@ -187,7 +182,7 @@ namespace VFXEditor {
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentVFXUI.Draw();
+                CurrentDocument.Main.Draw();
             }
             ImGui.End();
         }
@@ -270,8 +265,8 @@ namespace VFXEditor {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            string sourceString = SourceString;
-            string previewString = ReplaceString;
+            string sourceString = CurrentDocument.Source.DisplayString;
+            string previewString = CurrentDocument.Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 230 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 

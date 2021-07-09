@@ -49,7 +49,6 @@ namespace VFXEditor.UI {
 
             if( ImGui.Button( "+ NEW" + id ) ) {
                 Plugin.Doc.NewDoc();
-                Plugin.RefreshSelectedDocUI();
             }
 
             if(SelectedDoc != null ) {
@@ -58,14 +57,11 @@ namespace VFXEditor.UI {
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
                 if(ImGui.Button("Select" + id ) ) {
                     Plugin.Doc.SelectDoc( SelectedDoc );
-                    Plugin.RefreshSelectedDocUI();
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
                     if( UIUtils.RemoveButton( "Delete" + id ) ) {
-                        if( Plugin.Doc.RemoveDoc( SelectedDoc ) ) {
-                            Plugin.RefreshSelectedDocUI();
-                        }
+                        Plugin.Doc.RemoveDoc( SelectedDoc );
                         SelectedDoc = Plugin.Doc.ActiveDoc;
                     }
                 }

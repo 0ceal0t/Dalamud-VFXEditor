@@ -74,11 +74,11 @@ namespace VFXEditor.External {
 
                 if( exportAll ) {
                     foreach( var doc in _plugin.Doc.Docs ) {
-                        AddMod( doc.AVFX, doc.Replace.Path );
+                        AddMod( doc.Main?.AVFX, doc.Replace.Path );
                     }
                 }
                 else {
-                    AddMod( _plugin.AVFX, _plugin.Doc.ActiveDoc.Replace.Path );
+                    AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.Doc.ActiveDoc.Replace.Path );
                 }
 
                 if( exportTex ) {

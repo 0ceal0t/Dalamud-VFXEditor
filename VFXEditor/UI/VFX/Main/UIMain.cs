@@ -5,10 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using VFXEditor.UI.VFX.Main;
 
 namespace VFXEditor.UI.VFX {
@@ -25,6 +21,7 @@ namespace VFXEditor.UI.VFX {
         public UIScheduleView ScheduleView;
         public UIBinderView BinderView;
 
+        public List<UINodeGroup> AllGroups;
         public UINodeGroup<UIBinder> Binders;
         public UINodeGroup<UIEmitter> Emitters;
         public UINodeGroup<UIModel> Models;
@@ -36,17 +33,18 @@ namespace VFXEditor.UI.VFX {
 
         public ExportDialog ExportUI;
 
-        public UIMain(AVFXBase avfx, Plugin plugin) {
+        public UIMain(AVFXBase avfx) {
             AVFX = avfx;
             // ================
-            Binders = new UINodeGroup<UIBinder>();
-            Emitters = new UINodeGroup<UIEmitter>();
-            Models = new UINodeGroup<UIModel>();
-            Particles = new UINodeGroup<UIParticle>();
-            Schedulers = new UINodeGroup<UIScheduler>();
-            Textures = new UINodeGroup<UITexture>();
-            Timelines = new UINodeGroup<UITimeline>();
-            Effectors = new UINodeGroup<UIEffector>();
+            AllGroups = new();
+            AllGroups.Add(Binders = new UINodeGroup<UIBinder>());
+            AllGroups.Add( Emitters = new UINodeGroup<UIEmitter>());
+            AllGroups.Add( Models = new UINodeGroup<UIModel>());
+            AllGroups.Add( Particles = new UINodeGroup<UIParticle>());
+            AllGroups.Add( Schedulers = new UINodeGroup<UIScheduler>());
+            AllGroups.Add( Textures = new UINodeGroup<UITexture>());
+            AllGroups.Add( Timelines = new UINodeGroup<UITimeline>());
+            AllGroups.Add( Effectors = new UINodeGroup<UIEffector>());
             // ================
             ParticleView = new UIParticleView(this, avfx);
             ParameterView = new UIParameterView(avfx);
@@ -58,21 +56,13 @@ namespace VFXEditor.UI.VFX {
             ModelView = new UIModelView(this, avfx);
             ScheduleView = new UIScheduleView( this, avfx );
             // =================
-            Binders.Init();
-            Emitters.Init();
-            Models.Init();
-            Particles.Init();
-            Schedulers.Init();
-            Textures.Init();
-            Timelines.Init();
-            Effectors.Init();
+            AllGroups.ForEach( group => group.Init() );
             // =================
             ExportUI = new ExportDialog( this );
         }
 
         public void Draw() {
-            if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton))
-            {
+            if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton)) {
                 if (ImGui.BeginTabItem("Parameters##Main")) {
                     ParameterView.Draw();
                     ImGui.EndTabItem();
@@ -111,14 +101,18 @@ namespace VFXEditor.UI.VFX {
                 }
                 ImGui.EndTabBar();
             }
-            // =========
             ExportUI.Draw();
+        }
+
+        public void Dispose() {
+            AllGroups.ForEach( group => group.Dispose() );
         }
 
         // ========= EXPORT ==============
         public void ExportDeps(UINode startNode, BinaryWriter bw ) {
             ExportDeps(new List<UINode>(new []{ startNode } ), bw);
         }
+
         public void ExportDeps(List<UINode> startNodes, BinaryWriter bw) {
             HashSet<UINode> visited = new HashSet<UINode>();
             List<UINode> nodes = new List<UINode>();
@@ -148,6 +142,7 @@ namespace VFXEditor.UI.VFX {
             }
             UpdateAllNodes( nodes );
         }
+
         public void RecurseChild( UINode node, List<UINode> output, HashSet<UINode> visited ) {
             if( visited.Contains( node ) ) return; // prevents infinite loop
             visited.Add( node );
@@ -158,6 +153,7 @@ namespace VFXEditor.UI.VFX {
             if( output.Contains( node ) ) return; // make sure elements get added AFTER their children. This doesn't work otherwise, since we want each node to be AFTER its dependencies
             output.Add( node );
         }
+
         public void OrderByType<T>(List<UINode> items) where T : UINode {
             int i = 0;
             foreach(UINode node in items ) {
@@ -167,6 +163,7 @@ namespace VFXEditor.UI.VFX {
                 }
             }
         }
+
         public void UpdateAllNodes( List<UINode> nodes ) {
             foreach( var n in nodes ) {
                 foreach( var s in n.Selectors ) {
@@ -181,9 +178,11 @@ namespace VFXEditor.UI.VFX {
                 ImportData( reader );
             }
         }
+
         public void ImportData(byte[] data ) {
             ImportData( new BinaryReader( new MemoryStream( data ) ) );
         }
+
         public void ImportData( BinaryReader br ) {
             var messages = new List<string>();
             var nodes = AVFXLib.Main.Reader.ReadDefinition( br, messages);
@@ -199,15 +198,9 @@ namespace VFXEditor.UI.VFX {
             nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
         }
+
         public void PreImportGroups() {
-            Binders.PreImport();
-            Emitters.PreImport();
-            Models.PreImport();
-            Particles.PreImport();
-            Schedulers.PreImport();
-            Textures.PreImport();
-            Timelines.PreImport();
-            Effectors.PreImport();
+            AllGroups.ForEach( group => group.PreImport() );
         }
 
         // =========== DIALOG =================
