@@ -16,23 +16,25 @@ namespace VFXEditor.UI.VFX {
         }
 
         // ====== GETTING DATA FROM WORKSPACE META
-        public void PopulateWorkspaceMeta( string parentPath, Dictionary<string, string> RenameDict ) {
-            var path = parentPath + "/" + GetDefaultText();
+        public abstract string GetWorkspaceId();
+
+        public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
+            var path = GetWorkspaceId();
             if( !string.IsNullOrEmpty( Renamed ) ) {
                 RenameDict[path] = Renamed;
             }
-            PopulateWorkspaceMetaChildren( path );
+            PopulateWorkspaceMetaChildren(RenameDict);
         }
-        public virtual void PopulateWorkspaceMetaChildren( string path ) { }
+        public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
-        public void ReadWorkspaceMeta( string parentPath, Dictionary<string, string> RenameDict ) {
-            var path = parentPath + "/" + GetDefaultText();
+        public void ReadWorkspaceMeta( Dictionary<string, string> RenameDict ) {
+            var path = GetWorkspaceId();
             if( RenameDict.TryGetValue( path, out var renamed ) ) {
                 Renamed = renamed;
             }
-            ReadWorkspaceMetaChildren( path );
+            ReadWorkspaceMetaChildren( RenameDict );
         }
-        public virtual void ReadWorkspaceMetaChildren( string path ) { }
+        public virtual void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void DrawRename( string _id ) {
             var id = _id + "/Rename";
@@ -49,10 +51,12 @@ namespace VFXEditor.UI.VFX {
                     CurrentlyRenaming = false;
                 }
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( "Cancel" + id ) ) {
                     CurrentlyRenaming = false;
                 }
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( "Reset" + id ) ) {
                     Renamed = null;
                     CurrentlyRenaming = false;

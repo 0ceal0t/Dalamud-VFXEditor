@@ -70,5 +70,10 @@ namespace VFXEditor.UI.VFX {
             string Type = IsParticle ? "Particle" : "Emitter";
             return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }
+
+        public override string GetWorkspaceId() {
+            string Type = IsParticle ? "Ptcl" : "Emit";
+            return $"{Emitter.GetWorkspaceId()}/{Type}{Idx}";
+        }
     }
 }

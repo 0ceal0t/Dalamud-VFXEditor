@@ -37,5 +37,10 @@ namespace VFXEditor.UI.VFX
         public override string GetDefaultText() {
             return Idx + ": Timeline " + Item.TimelineIdx.Value;
         }
+
+        public override string GetWorkspaceId() {
+            string Type = ( Name == "Item" ) ? "Item" : "Trigger";
+            return $"{Sched.GetWorkspaceId()}/{Type}{Idx}";
+        }
     }
 }

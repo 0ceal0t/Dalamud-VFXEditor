@@ -123,6 +123,10 @@ namespace VFXEditor.UI.VFX
             return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
         }
 
+        public override string GetWorkspaceId() {
+            return $"Bind{Idx}";
+        }
+
         public override byte[] ToBytes() {
             return Binder.ToAVFX().ToBytes();
         }

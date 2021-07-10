@@ -97,6 +97,10 @@ namespace VFXEditor.UI.VFX
             return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
         }
 
+        public override string GetWorkspaceId() {
+            return $"Effct{Idx}";
+        }
+
         public override byte[] ToBytes() {
             return Effector.ToAVFX().ToBytes();
         }

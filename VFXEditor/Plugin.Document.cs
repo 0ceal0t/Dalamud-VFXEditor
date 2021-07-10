@@ -10,7 +10,7 @@ using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public ReplaceDoc CurrentDocument => Doc.ActiveDoc;
+        public ReplaceDoc CurrentDocument => DocManager.ActiveDoc;
 
         private DateTime LastSelect = DateTime.Now;
 
@@ -44,11 +44,11 @@ namespace VFXEditor {
                     break;
             }
             if( addToRecent ) Configuration.AddRecent( selectResult );
-            Doc.UpdateSource( selectResult );
+            DocManager.UpdateSource( selectResult );
         }
 
         public void RemoveSourceVFX() {
-            Doc.UpdateSource( VFXSelectResult.None() );
+            DocManager.UpdateSource( VFXSelectResult.None() );
             CurrentDocument.Dispose();
         }
 
@@ -57,11 +57,11 @@ namespace VFXEditor {
         }
         public void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
             if( addToRecent ) Configuration.AddRecent( replaceResult );
-            Doc.UpdateReplace( replaceResult );
+            DocManager.UpdateReplace( replaceResult );
         }
 
         public void RemoveReplaceVFX() {
-            Doc.UpdateReplace( VFXSelectResult.None() );
+            DocManager.UpdateReplace( VFXSelectResult.None() );
         }
 
         public void LoadCurrentVFX( AVFXBase avfx ) {

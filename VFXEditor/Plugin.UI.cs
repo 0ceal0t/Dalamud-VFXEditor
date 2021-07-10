@@ -39,6 +39,8 @@ namespace VFXEditor {
 
         public DateTime LastUpdate = DateTime.Now;
 
+        public bool IsLoading = false;
+
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
                 Sheets, "File Select [SOURCE]",
@@ -104,20 +106,28 @@ namespace VFXEditor {
         public void DrawUI() {
             if( !Visible ) return;
             DrawMainInterface();
-            SelectUI.Draw();
-            PreviewUI.Draw();
-            TexToolsUI.Draw();
-            PenumbraUI.Draw();
-            SettingsUI.Draw();
-            ToolsUI.Draw();
-            DocUI.Draw();
-            TextureUI.Draw();
-            VFXManip.Draw();
+            if(!IsLoading) {
+                SelectUI.Draw();
+                PreviewUI.Draw();
+                TexToolsUI.Draw();
+                PenumbraUI.Draw();
+                SettingsUI.Draw();
+                ToolsUI.Draw();
+                DocUI.Draw();
+                TextureUI.Draw();
+                VFXManip.Draw();
+            }
         }
 
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( Name, ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+            if( !ImGui.Begin( Name + (string.IsNullOrEmpty(CurrentWorkspaceLocation) ? "" : " - " + CurrentWorkspaceLocation), ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+
+            if(IsLoading) {
+                ImGui.Text( "Loading...." );
+                ImGui.End();
+                return;
+            }
 
             DrawHeader();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -129,7 +139,7 @@ namespace VFXEditor {
                 ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                        Doc.Save();
+                        DocManager.Save();
                         ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
@@ -198,7 +208,7 @@ namespace VFXEditor {
                     HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
                     if(ImGui.MenuItem("New##Menu")) {
-                        // NEW
+                        NewWorkspace();
                     }
                     if( ImGui.MenuItem( "Open##Menu" ) ) {
                         // OPEN
@@ -207,7 +217,7 @@ namespace VFXEditor {
                         SaveWorkspace();
                     }
                     if( ImGui.MenuItem( "Save As##Menu" ) ) {
-                        // SAVE AS
+                        SaveAsWorkspace();
                     }
                     ImGui.EndMenu();
                 }
@@ -332,7 +342,7 @@ namespace VFXEditor {
             ImGui.SameLine(); HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
 
             // =======SPAWN + MANIP =========
-            string previewSpawn = Doc.ActiveDoc.Replace.Path;
+            string previewSpawn = DocManager.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {
@@ -460,7 +470,10 @@ namespace VFXEditor {
                 var picker = new SaveFileDialog
                 {
                     Filter = filter,
-                    Title = title
+                    Title = title,
+                    ValidateNames = false,
+                    CheckFileExists = false,
+                    FileName = "Select a Folder"
                 };
                 var result = await picker.ShowDialogAsync();
                 if( result == DialogResult.OK ) {

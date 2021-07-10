@@ -9,7 +9,7 @@ namespace VFXEditor.UI {
     public class PenumbraDialog : GenericDialog {
         public PenumbraDialog( Plugin plugin ) : base(plugin, "Penumbra") {
             Size = new Vector2( 400, 200 );
-    }
+        }
 
         public string Name = "";
         public string Author = "";
@@ -28,7 +28,7 @@ namespace VFXEditor.UI {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.Doc.HasReplacePath( ExportAll ) ) {
+            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
             }
             ImGui.EndChild();
@@ -42,7 +42,7 @@ namespace VFXEditor.UI {
             Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
                 ( string path ) => {
                     try {
-                        Penumbra.Export( Plugin, Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
+                        Penumbra.Export( Plugin, Name, Author, Version, path, ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {

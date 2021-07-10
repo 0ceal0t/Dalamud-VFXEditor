@@ -116,6 +116,9 @@ namespace VFXEditor {
             foreach(var doc in Docs ) {
                 doc.Dispose();
             }
+            Docs = null;
+            ActiveDoc = null;
+            GamePathToLocalPath = null;
         }
     }
 }

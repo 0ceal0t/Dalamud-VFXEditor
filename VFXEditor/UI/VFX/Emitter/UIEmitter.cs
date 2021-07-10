@@ -177,6 +177,20 @@ namespace VFXEditor.UI.VFX
             return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
         }
 
+        public override string GetWorkspaceId() {
+            return $"Emit{Idx}";
+        }
+
+        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            EmitterList.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+            ParticleList.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+        }
+
+        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            EmitterList.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            ParticleList.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+        }
+
         public override byte[] ToBytes() {
             return Emitter.ToAVFX().ToBytes();
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using Dalamud.Plugin;
 using ImGuiNET;
 
@@ -7,7 +8,9 @@ namespace VFXEditor.UI {
         private string RawInputValue = "";
         private string RawTexInputValue = "";
 
-        public ToolsDialog( Plugin plugin ) : base( plugin, "Tools" ) { }
+        public ToolsDialog( Plugin plugin ) : base( plugin, "Tools" ) {
+            Size = new Vector2( 300, 100 );
+        }
 
         public override void OnDraw() {
             // ======= AVFX =========

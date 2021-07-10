@@ -92,12 +92,12 @@ namespace VFXEditor.External {
                     }
 
                     if( exportAll ) {
-                        foreach(var doc in _plugin.Doc.Docs ) {
+                        foreach(var doc in _plugin.DocManager.Docs ) {
                             AddMod( doc.Main?.AVFX, doc.Replace.Path );
                         }
                     }
                     else {
-                        AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.Doc.ActiveDoc.Replace.Path);
+                        AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.DocManager.ActiveDoc.Replace.Path);
                     }
 
                     if( exportTex ) {

@@ -75,5 +75,9 @@ namespace VFXEditor.UI.VFX
         public override string GetDefaultText() {
             return Idx + ": " + IdOptions[Clip.UniqueId];
         }
+
+        public override string GetWorkspaceId() {
+            return $"{Timeline.GetWorkspaceId()}/Clip{Idx}";
+        }
     }
 }

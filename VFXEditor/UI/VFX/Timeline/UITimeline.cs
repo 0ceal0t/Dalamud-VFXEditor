@@ -79,6 +79,20 @@ namespace VFXEditor.UI.VFX
             return "Timeline " + Idx;
         }
 
+        public override string GetWorkspaceId() {
+            return $"Tmln{Idx}";
+        }
+
+        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            Items.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+            Clips.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+        }
+
+        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            Items.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            Clips.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+        }
+
         public override byte[] ToBytes() {
             return Timeline.ToAVFX().ToBytes();
         }

@@ -107,6 +107,32 @@ namespace VFXEditor.UI.VFX {
             AllGroups.ForEach( group => group.Dispose() );
         }
 
+        // ========== WORKSPACE ===========
+        public Dictionary<string, string> GetRenamingMap() {
+            Dictionary<string, string> ret = new();
+            Schedulers.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Timelines.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Emitters.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Particles.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Effectors.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Binders.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Textures.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            Models.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
+            return ret;
+        }
+
+        public void ReadRenamingMap(Dictionary<string, string> renamingMap) {
+            Dictionary<string, string> ret = new();
+            Schedulers.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Timelines.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Emitters.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Particles.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Effectors.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Binders.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Textures.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+            Models.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
+        }
+
         // ========= EXPORT ==============
         public void ExportDeps(UINode startNode, BinaryWriter bw ) {
             ExportDeps(new List<UINode>(new []{ startNode } ), bw);

@@ -1,9 +1,12 @@
 using System;
+using System.Numerics;
 using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class SettingsDialog : GenericDialog {
-        public SettingsDialog( Plugin plugin ) : base( plugin, "Settings" ) { }
+        public SettingsDialog( Plugin plugin ) : base( plugin, "Settings" ) {
+            Size = new Vector2( 300, 100 );
+        }
 
         public override void OnDraw() {
             ImGui.Text( "Changes to the temp file location may require a restart to take effect" );

@@ -151,6 +151,10 @@ namespace VFXEditor.UI.VFX
             return "Texture " + Idx;
         }
 
+        public override string GetWorkspaceId() {
+            return $"Tex{Idx}";
+        }
+
         public override byte[] ToBytes() {
             return Texture.ToAVFX().ToBytes();
         }

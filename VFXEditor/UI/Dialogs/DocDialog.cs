@@ -25,7 +25,7 @@ namespace VFXEditor.UI {
             ImGui.Columns( 2, id + "/Columns", false );
 
             int idx = 0;
-            foreach( var doc in Plugin.Doc.Docs ) {
+            foreach( var doc in Plugin.DocManager.Docs ) {
                 if(ImGui.Selectable(doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDoc = doc;
                 }
@@ -39,7 +39,7 @@ namespace VFXEditor.UI {
             }
             ImGui.NextColumn();
 
-            foreach( var doc in Plugin.Doc.Docs ) {
+            foreach( var doc in Plugin.DocManager.Docs ) {
                 ImGui.Text( doc.Replace.DisplayString );
             }
 
@@ -47,21 +47,21 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
 
             if( ImGui.Button( "+ NEW" + id ) ) {
-                Plugin.Doc.NewDoc();
+                Plugin.DocManager.NewDoc();
             }
 
             if(SelectedDoc != null ) {
-                bool deleteDisabled = ( Plugin.Doc.Docs.Count == 1 );
+                bool deleteDisabled = ( Plugin.DocManager.Docs.Count == 1 );
 
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
                 if(ImGui.Button("Select" + id ) ) {
-                    Plugin.Doc.SelectDoc( SelectedDoc );
+                    Plugin.DocManager.SelectDoc( SelectedDoc );
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
                     if( UIUtils.RemoveButton( "Delete" + id ) ) {
-                        Plugin.Doc.RemoveDoc( SelectedDoc );
-                        SelectedDoc = Plugin.Doc.ActiveDoc;
+                        Plugin.DocManager.RemoveDoc( SelectedDoc );
+                        SelectedDoc = Plugin.DocManager.ActiveDoc;
                     }
                 }
             }

@@ -175,6 +175,10 @@ namespace VFXEditor.UI.VFX
             return "Model " + Idx;
         }
 
+        public override string GetWorkspaceId() {
+            return $"Mdl{Idx}";
+        }
+
         public override byte[] ToBytes() {
             return Model.ToAVFX().ToBytes();
         }

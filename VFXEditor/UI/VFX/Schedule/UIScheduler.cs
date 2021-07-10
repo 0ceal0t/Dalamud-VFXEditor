@@ -57,6 +57,20 @@ namespace VFXEditor.UI.VFX
             return "Scheduler " + Idx;
         }
 
+        public override string GetWorkspaceId() {
+            return $"Sched{Idx}";
+        }
+
+        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            Items.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+            Triggers.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
+        }
+
+        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
+            Items.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            Triggers.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+        }
+
         public override byte[] ToBytes() {
             return Scheduler.ToAVFX().ToBytes();
         }

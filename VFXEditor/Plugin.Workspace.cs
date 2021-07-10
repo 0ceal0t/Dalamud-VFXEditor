@@ -1,3 +1,4 @@
+using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,69 @@ namespace VFXEditor {
     }
 
     public partial class Plugin {
+        public string CurrentWorkspaceLocation = "";
+
+        public void NewWorkspace() {
+            Task.Run( async () => {
+                IsLoading = true;
+
+                var oldTex = TexManager;
+                TexManager = new TextureManager( this );
+                oldTex.Dispose();
+
+                var oldDoc = DocManager;
+                DocManager = new PluginDocumentManager( this );
+                oldDoc.Dispose();
+
+                IsLoading = false;
+            } );
+        }
+
+        public void OpenWorkspace() {
+            ImportFileDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select workspace file", ( string path ) =>
+            {
+                try {
+                    var loadLocation = CurrentWorkspaceLocation = Path.GetDirectoryName( path );
+                    // get meta
+
+                    // create new texmanager
+                    // copy over .atex and add them to maps
+
+                    // create new docmanager
+                    // copy over .avfx and add them to maps (if applicable)
+                    // set source and replace
+                    // read .avfx and create new UIMain
+                    // remove default doc if > 0 doc added
+
+                    //var meta = JsonConvert.DeserializeObject<WorkspaceMeta>();
+                }
+                catch(Exception e) {
+                    PluginLog.LogError( "Could not load workspace", e );
+                }
+            } );
+        }
+
         public void SaveWorkspace() {
-            var saveLocation = @"C:\tmp\test"; // TODO
+            if(string.IsNullOrEmpty(CurrentWorkspaceLocation)) {
+                SaveAsWorkspace();
+            }
+            else {
+                Task.Run( async () =>  {
+                    ExportWorkspace();
+                } );
+            }
+        }
+
+        public void SaveAsWorkspace() {
+            SaveFolderDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select save location", ( string path ) =>
+            {
+                CurrentWorkspaceLocation = Path.GetDirectoryName( path );
+                ExportWorkspace();
+            } );
+        }
+
+        public void ExportWorkspace() {
+            var saveLocation = CurrentWorkspaceLocation;
             Directory.CreateDirectory( saveLocation );
 
             var meta = new WorkspaceMeta();
@@ -45,7 +107,7 @@ namespace VFXEditor {
 
             int docId = 0;
             List<WorkspaceMetaDocument> docMeta = new();
-            foreach(var entry in Doc.Docs) {
+            foreach(var entry in DocManager.Docs) {
                 string newPath = "";
                 if( entry.Main != null ) {
                     newPath = $"VFX_{docId++}.avfx";
@@ -57,7 +119,7 @@ namespace VFXEditor {
                     Source = entry.Source,
                     Replace = entry.Replace,
                     RelativeLocation = newPath,
-                    Renaming = new()
+                    Renaming = (entry.Main == null) ? new Dictionary<string, string>() : entry.Main.GetRenamingMap()
                 } );
             }
             meta.Docs = docMeta.ToArray();
@@ -84,7 +146,7 @@ namespace VFXEditor {
             }
             meta.Tex = texMeta.ToArray();
 
-            string metaPath = Path.Combine( saveLocation, "vfx_meta.json" );
+            string metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
             string metaString = JsonConvert.SerializeObject( meta );
             File.WriteAllText( metaPath, metaString );
         }

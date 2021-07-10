@@ -58,5 +58,9 @@ namespace VFXEditor.UI.VFX
         public override string GetDefaultText() {
             return Idx + ": Emitter " + Item.EmitterIdx.Value;
         }
+
+        public override string GetWorkspaceId() {
+            return $"{Timeline.GetWorkspaceId()}/Item{Idx}";
+        }
     }
 }

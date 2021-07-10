@@ -23,9 +23,7 @@ namespace VFXEditor
         public DalamudPluginInterface PluginInterface;
         public Configuration Configuration;
         public ResourceLoader ResourceLoader;
-        public TexTools TexToolsManager;
-        public Penumbra PenumbraManager;
-        public PluginDocumentManager Doc;
+        public PluginDocumentManager DocManager;
         public DirectXManager DXManager;
         public VfxTracker Tracker;
         public TextureManager TexManager;
@@ -61,8 +59,9 @@ namespace VFXEditor
 
             Tracker = new VfxTracker( this );
             TexManager = new TextureManager( this );
+            TexManager.OneTimeSetup();
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
-            Doc = new PluginDocumentManager( this );
+            DocManager = new PluginDocumentManager( this );
             DXManager = new DirectXManager( this );
 
             InitUI();
@@ -89,7 +88,7 @@ namespace VFXEditor
             PluginInterface?.Dispose();
             SpawnVfx?.Remove();
             DXManager?.Dispose();
-            Doc?.Dispose();
+            DocManager?.Dispose();
             TexManager?.Dispose();
         }
 

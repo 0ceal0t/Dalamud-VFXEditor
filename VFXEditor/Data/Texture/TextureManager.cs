@@ -45,11 +45,13 @@ namespace VFXEditor.Data.Texture
         public TextureManager(Plugin plugin ) {
             Manager = this;
             Plugin = plugin;
+        }
 
+        public void OneTimeSetup() {
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
-            var runtimeRoot = Path.Combine( Path.GetDirectoryName(Plugin.AssemblyLocation), "runtimes" );
+            var runtimeRoot = Path.Combine( Path.GetDirectoryName( Plugin.AssemblyLocation ), "runtimes" );
 
             string _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
             string _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
@@ -155,6 +157,8 @@ namespace VFXEditor.Data.Texture
             foreach(KeyValuePair<string, TexReplace> entry in GamePathReplace) {
                 File.Delete( entry.Value.localPath );
             }
+            PathToTex = null;
+            GamePathReplace = null;
         }
 
         // ===== WRITES IMPORTED IMAGE TO LOCAL .ATEX FILE ========

@@ -265,7 +265,7 @@ namespace VFXEditor
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
 
-            if( Plugin.Doc != null && Plugin.Doc.GetLocalPath(gameFsPath, out var vfxFile ) ) {
+            if( Plugin.DocManager != null && Plugin.DocManager.GetLocalPath(gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
                 if(Configuration.Config?.LogAllFiles == true) {
                     PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );

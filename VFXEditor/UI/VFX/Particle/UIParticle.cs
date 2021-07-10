@@ -206,6 +206,10 @@ namespace VFXEditor.UI.VFX
             return "Particle " + Idx + "(" + Particle.ParticleVariety.stringValue() + ")";
         }
 
+        public override string GetWorkspaceId() {
+            return $"Ptcl{Idx}";
+        }
+
         public override byte[] ToBytes() {
             return Particle.ToAVFX().ToBytes();
         }

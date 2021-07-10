@@ -34,7 +34,7 @@ namespace VFXEditor.UI
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.Doc.HasReplacePath( ExportAll ) ) {
+            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
             }
             ImGui.EndChild();
