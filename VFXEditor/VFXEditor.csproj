@@ -164,10 +164,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <NativeLibs Remove="PluginDocumentManager.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <NativeLibs Remove="Plugin.UI.cs" />
     </ItemGroup>
 
@@ -177,5 +173,13 @@
 
     <ItemGroup>
       <NativeLibs Remove="Plugin.Workspace.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <NativeLibs Remove="DocumentManager.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <NativeLibs Remove="Plugin.InputTracker.cs" />
     </ItemGroup>
 </Project>

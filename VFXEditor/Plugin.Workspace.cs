@@ -40,13 +40,14 @@ namespace VFXEditor {
         public void NewWorkspace() {
             Task.Run( async () => {
                 IsLoading = true;
+                CurrentWorkspaceLocation = "";
 
                 var oldTex = TexManager;
                 TexManager = new TextureManager( this );
                 oldTex.Dispose();
 
                 var oldDoc = DocManager;
-                DocManager = new PluginDocumentManager( this );
+                DocManager = new DocumentManager( this );
                 oldDoc.Dispose();
 
                 IsLoading = false;
@@ -58,18 +59,42 @@ namespace VFXEditor {
             {
                 try {
                     var loadLocation = CurrentWorkspaceLocation = Path.GetDirectoryName( path );
-                    // get meta
+                    string metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
+                    if(!File.Exists(metaPath)) {
+                        PluginLog.Log( "vfx_workspace.json does not exist" );
+                        return;
+                    }
+                    var meta = JsonConvert.DeserializeObject<WorkspaceMeta>(File.ReadAllText(metaPath));
 
-                    // create new texmanager
-                    // copy over .atex and add them to maps
+                    IsLoading = true;
 
-                    // create new docmanager
-                    // copy over .avfx and add them to maps (if applicable)
-                    // set source and replace
-                    // read .avfx and create new UIMain
-                    // remove default doc if > 0 doc added
+                    var oldTex = TexManager;
+                    TexManager = new TextureManager( this );
+                    oldTex.Dispose();
 
-                    //var meta = JsonConvert.DeserializeObject<WorkspaceMeta>();
+                    var texRootPath = Path.Combine( loadLocation, "Tex" );
+                    foreach(var tex in meta.Tex) {
+                        var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
+                        TexManager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                    }
+
+                    var oldDoc = DocManager;
+                    DocManager = new DocumentManager( this );
+                    oldDoc.Dispose();
+
+                    var defaultDoc = DocManager.ActiveDoc;
+
+                    var vfxRootPath = Path.Combine( loadLocation, "VFX" );
+                    foreach(var doc in meta.Docs) {
+                        var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
+                        DocManager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
+                    }
+
+                    if(DocManager.Docs.Count > 1) {
+                        DocManager.RemoveDoc( defaultDoc );
+                    }
+
+                    IsLoading = false;
                 }
                 catch(Exception e) {
                     PluginLog.LogError( "Could not load workspace", e );
@@ -129,7 +154,7 @@ namespace VFXEditor {
 
             int texId = 0;
             List<WorkspaceMetaTex> texMeta = new();
-            foreach(var entry in TexManager.GamePathReplace) {
+            foreach(var entry in TexManager.PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.Copy( entry.Value.localPath, newFullPath, true );

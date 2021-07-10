@@ -40,6 +40,8 @@ namespace VFXEditor.UI.VFX {
                 ImPlot.FitNextPlotAxes( true, true );
                 DrawOnce = true;
             }
+            ImGui.SameLine();
+            ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
 
             bool wrongOrder = false;
             if( Color ) {
@@ -119,7 +121,6 @@ namespace VFXEditor.UI.VFX {
 
                 ImPlot.EndPlot();
             }
-            ImGui.Text( "Right-Click to add a new keyframe" );
             if( wrongOrder ) {
                 ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINT ARE IN THE WRONG ORDER" );
             }

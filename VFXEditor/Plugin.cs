@@ -23,7 +23,7 @@ namespace VFXEditor
         public DalamudPluginInterface PluginInterface;
         public Configuration Configuration;
         public ResourceLoader ResourceLoader;
-        public PluginDocumentManager DocManager;
+        public DocumentManager DocManager;
         public DirectXManager DXManager;
         public VfxTracker Tracker;
         public TextureManager TexManager;
@@ -61,7 +61,7 @@ namespace VFXEditor
             TexManager = new TextureManager( this );
             TexManager.OneTimeSetup();
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
-            DocManager = new PluginDocumentManager( this );
+            DocManager = new DocumentManager( this );
             DXManager = new DirectXManager( this );
 
             InitUI();

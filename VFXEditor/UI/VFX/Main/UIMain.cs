@@ -7,8 +7,15 @@ using System.IO;
 using System.Linq;
 
 namespace VFXEditor.UI.VFX {
+    public enum VerifiedStatus {
+        ISSUE,
+        UNKNOWN,
+        OK
+    };
+
     public class UIMain {
         public AVFXBase AVFX;
+        public VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
 
         public UIParameterView ParameterView;
         public UIEffectorView EffectorView;

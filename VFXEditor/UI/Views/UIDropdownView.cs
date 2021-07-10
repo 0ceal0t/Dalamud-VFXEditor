@@ -81,11 +81,11 @@ namespace VFXEditor.UI.VFX
             }
             // ==== SAVE =====
             if( ImGui.BeginPopup( "Save_Popup" + Id ) ) {
-                if( ImGui.Selectable( "Simple" + Id ) ) {
-                    UIMain.ExportDialog( Selected );
-                }
-                if( ImGui.Selectable("Advanced Export" + Id ) ) {
+                if( ImGui.Selectable("Export" + Id ) ) {
                     Main.ExportMultiple( Selected );
+                }
+                if( ImGui.Selectable( "Simple Export (old)" + Id ) ) {
+                    UIMain.ExportDialog( Selected );
                 }
                 ImGui.EndPopup();
             }

@@ -77,7 +77,7 @@ namespace VFXEditor.External {
                 }
 
                 if( exportTex ) {
-                    foreach(KeyValuePair<string, TexReplace> entry in _plugin.TexManager.GamePathReplace ) {
+                    foreach(KeyValuePair<string, TexReplace> entry in _plugin.TexManager.PathToTextureReplace ) {
                         AddTex( entry.Value.localPath, entry.Key );
                     }
                 }

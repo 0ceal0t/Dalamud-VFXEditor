@@ -33,10 +33,6 @@ namespace VFXEditor {
 
         public BaseVfx SpawnVfx;
 
-        private string IconText;
-        private string StatusText;
-        private Vector4 StatusColor;
-
         public DateTime LastUpdate = DateTime.Now;
 
         public bool IsLoading = false;
@@ -121,7 +117,7 @@ namespace VFXEditor {
 
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( Name + (string.IsNullOrEmpty(CurrentWorkspaceLocation) ? "" : " - " + CurrentWorkspaceLocation), ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+            if( !ImGui.Begin( Name + (string.IsNullOrEmpty(CurrentWorkspaceLocation) ? "" : " - " + CurrentWorkspaceLocation) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
 
             if(IsLoading) {
                 ImGui.Text( "Loading...." );
@@ -172,32 +168,42 @@ namespace VFXEditor {
 
                 // ======== VERIFY ============
                 ImGui.SameLine();
-                if( Configuration.Config.VerifyOnLoad ) {
+                if(Configuration.Config.VerifyOnLoad) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
-                    ImGui.TextColored( StatusColor, IconText );
+
+                    var verified = CurrentDocument.Main.Verified;
+                    Vector4 color = verified switch
+                    {
+                        VerifiedStatus.OK => new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ),
+                        VerifiedStatus.ISSUE => new Vector4( 0.90f, 0.15f, 0.15f, 1.0f ),
+                        _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
+                    };
+
+                    string icon = verified switch
+                    {
+                        VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
+                        VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
+                        _ => $"{( char )FontAwesomeIcon.Question}"
+                    };
+
+                    string text = verified switch
+                    {
+                        VerifiedStatus.OK => "Verified",
+                        VerifiedStatus.ISSUE => "Parsing Issues",
+                        _ => "Unknown"
+                    };
+
+                    ImGui.TextColored( color, icon );
                     ImGui.PopFont();
                     ImGui.SameLine();
-                    ImGui.TextColored( StatusColor, StatusText );
+                    ImGui.TextColored( color, text );
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 CurrentDocument.Main.Draw();
             }
             ImGui.End();
-        }
-
-        public void SetStatus( bool status ) {
-            if( status ) {
-                IconText = $"{( char )FontAwesomeIcon.Check}";
-                StatusText = "Verified";
-                StatusColor = new Vector4( 0.15f, 0.90f, 0.15f, 1.0f );
-            }
-            else {
-                IconText = $"{( char )FontAwesomeIcon.Times}";
-                StatusText = "Parsing Issue";
-                StatusColor = new Vector4( 0.90f, 0.15f, 0.15f, 1.0f );
-            }
         }
 
         public void DrawHeader() {
@@ -211,9 +217,9 @@ namespace VFXEditor {
                         NewWorkspace();
                     }
                     if( ImGui.MenuItem( "Open##Menu" ) ) {
-                        // OPEN
+                        OpenWorkspace();
                     }
-                    if( ImGui.MenuItem( "Save##Menu" ) ) {
+                    if( ImGui.MenuItem( "Save##Menu", "CTRL+S") ) {
                         SaveWorkspace();
                     }
                     if( ImGui.MenuItem( "Save As##Menu" ) ) {
@@ -404,23 +410,6 @@ namespace VFXEditor {
             SetSourceVFX( newResult );
         }
 
-        public static void SaveDialog( string filter, string data, string ext ) {
-            SaveDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
-        }
-
-        public static void SaveDialog( string filter, byte[] data, string ext ) {
-            SaveFileDialog( filter, "Select a Save Location.", ext,
-                ( string path ) => {
-                    try {
-                        File.WriteAllBytes( path, data );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not save to: " + path );
-                    }
-                }
-            );
-        }
-
         // =========== HELPERS ===========
         public static void HelpMarker(string text) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
@@ -447,6 +436,23 @@ namespace VFXEditor {
                     callback( picker.FileName );
                 }
             } );
+        }
+
+        public static void SaveDialog( string filter, string data, string ext ) {
+            SaveDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
+        }
+
+        public static void SaveDialog( string filter, byte[] data, string ext ) {
+            SaveFileDialog( filter, "Select a Save Location.", ext,
+                ( string path ) => {
+                    try {
+                        File.WriteAllBytes( path, data );
+                    }
+                    catch( Exception ex ) {
+                        PluginLog.LogError( ex, "Could not save to: " + path );
+                    }
+                }
+            );
         }
 
         public static void SaveFileDialog( string filter, string title, string defaultExt, Action<string> callback ) {

@@ -25,7 +25,7 @@ namespace VFXEditor {
         }
     }
 
-    public class PluginDocumentManager {
+    public class DocumentManager {
         public ReplaceDoc ActiveDoc;
         public List<ReplaceDoc> Docs = new();
 
@@ -33,7 +33,7 @@ namespace VFXEditor {
         private Plugin Plugin;
         private int DOC_ID = 0;
 
-        public PluginDocumentManager( Plugin plugin ) {
+        public DocumentManager( Plugin plugin ) {
             Plugin = plugin;
             NewDoc();
         }
@@ -47,6 +47,25 @@ namespace VFXEditor {
             Docs.Add( doc );
             ActiveDoc = doc;
             return doc;
+        }
+
+        public void ImportLocalDoc(string localPath, VFXSelectResult source, VFXSelectResult replace, Dictionary<string, string> renaming) {
+            ReplaceDoc doc = new ReplaceDoc();
+            doc.Source = source;
+            doc.Replace = replace;
+            doc.WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
+
+            if(localPath != "") {
+                File.Copy( localPath, doc.WriteLocation, true );
+                bool localResult = Plugin.GetLocalFile( doc.WriteLocation, out var localAvfx );
+                if( localResult ) {
+                    doc.Main = new UIMain( localAvfx );
+                    doc.Main.ReadRenamingMap( renaming );
+                }
+            }
+
+            Docs.Add( doc );
+            RebuildMap();
         }
 
         public void UpdateSource( VFXSelectResult select ) {
@@ -65,13 +84,15 @@ namespace VFXEditor {
         public bool RemoveDoc(ReplaceDoc doc ) {
             bool switchDoc = ( doc == ActiveDoc );
             Docs.Remove( doc );
-            doc.Dispose();
             RebuildMap();
 
             if( switchDoc ) {
                 ActiveDoc = Docs[0];
+                doc.Dispose();
                 return true;
             }
+
+            doc.Dispose();
             return false;
         }
 

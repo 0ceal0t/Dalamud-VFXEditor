@@ -39,8 +39,8 @@ namespace VFXEditor.Data.Texture
         public Plugin Plugin;
         public int TEX_ID = 0;
 
-        public ConcurrentDictionary<string, TexData> PathToTex = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
-        public ConcurrentDictionary<string, TexReplace> GamePathReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
+        public ConcurrentDictionary<string, TexData> PathToTexturePreview = new ConcurrentDictionary<string, TexData>(); // Keeps track of ImGui handles for previewed images
+        public ConcurrentDictionary<string, TexReplace> PathToTextureReplace = new ConcurrentDictionary<string, TexReplace>(); // Keeps track of imported textures which replace existing ones
 
         public TextureManager(Plugin plugin ) {
             Manager = this;
@@ -60,17 +60,39 @@ namespace VFXEditor.Data.Texture
             PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
         }
 
-        public bool GetLocalPath(string gamePath, out FileInfo file ) {
+        public bool GetLocalReplacePath(string gamePath, out FileInfo file ) {
             file = null;
-            if( !GamePathReplace.ContainsKey( gamePath ) ) {
+            if( !PathToTextureReplace.ContainsKey( gamePath ) ) {
                 return false;
             }
-            file = new FileInfo( GamePathReplace[gamePath].localPath );
+            file = new FileInfo( PathToTextureReplace[gamePath].localPath );
             return true;
         }
 
+        public void ImportReplaceTexture(string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format) {
+            if( !Plugin.PluginInterface.Data.FileExists( replacePath ) ) {
+                PluginLog.Log( $"{replacePath} does not exist" );
+                return;
+            }
+
+            var path = Path.Combine( Plugin.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+            File.Copy( localPath, path, true );
+
+            var replaceData = new TexReplace
+            {
+                Height = height,
+                Width = width,
+                Depth = depth,
+                MipLevels = mips,
+                Format = format,
+                localPath = path
+            };
+
+            PathToTextureReplace[replacePath] = replaceData;
+        }
+
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
-        public bool ImportTexture(string fileLocation, string replacePath ) {
+        public bool ImportReplaceTexture(string fileLocation, string replacePath ) {
             if( !Plugin.PluginInterface.Data.FileExists( replacePath ) ) {
                 PluginLog.Log( $"{replacePath} does not exist" );
                 return false;
@@ -118,12 +140,12 @@ namespace VFXEditor.Data.Texture
                 }
                 // if there is already a replacement for the same file, delete the old file
                 replaceData.localPath = path;
-                RemoveReplace( replacePath );
-                if( !GamePathReplace.TryAdd( replacePath, replaceData ) ) {
+                RemoveReplaceTexture( replacePath );
+                if( !PathToTextureReplace.TryAdd( replacePath, replaceData ) ) {
                     return false;
                 }
                 // refresh preview texture if it exists
-                RefreshPreview( replacePath );
+                RefreshPreviewTexture( replacePath );
                 return true;
             }
             catch(Exception e ) {
@@ -132,33 +154,23 @@ namespace VFXEditor.Data.Texture
             return false;
         }
 
-        public void RemoveReplace(string path ) {
-            if( GamePathReplace.ContainsKey( path ) ) {
-                if( GamePathReplace.TryRemove( path, out var oldValue ) ) {
+        public void RemoveReplaceTexture(string path ) {
+            if( PathToTextureReplace.ContainsKey( path ) ) {
+                if( PathToTextureReplace.TryRemove( path, out var oldValue ) ) {
                     File.Delete( oldValue.localPath );
                 }
             }
         }
 
-        public void RefreshPreview(string path ) {
-            string paddedPath = path + '\u0000';
-            if( PathToTex.ContainsKey( paddedPath ) ) {
-                if( PathToTex.TryRemove( paddedPath, out var oldValue ) ) {
-                    oldValue.Wrap?.Dispose();
-                }
-            }
-            LoadTexture( paddedPath );
-        }
-
         public void Dispose() {
-            foreach( KeyValuePair<string, TexData> entry in PathToTex ) {
+            foreach( KeyValuePair<string, TexData> entry in PathToTexturePreview ) {
                 entry.Value.Wrap?.Dispose();
             }
-            foreach(KeyValuePair<string, TexReplace> entry in GamePathReplace) {
+            foreach(KeyValuePair<string, TexReplace> entry in PathToTextureReplace ) {
                 File.Delete( entry.Value.localPath );
             }
-            PathToTex = null;
-            GamePathReplace = null;
+            PathToTexturePreview = null;
+            PathToTextureReplace = null;
         }
 
         // ===== WRITES IMPORTED IMAGE TO LOCAL .ATEX FILE ========
@@ -193,25 +205,35 @@ namespace VFXEditor.Data.Texture
 
         // ==== FOR DISPLAYING TEXTURES =======
         public VFXTexture GetTexture(string path ) {
-            if( GamePathReplace.ContainsKey( path ) ) {
-                return VFXTexture.LoadFromLocal( GamePathReplace[path].localPath );
+            if( PathToTextureReplace.ContainsKey( path ) ) {
+                return VFXTexture.LoadFromLocal( PathToTextureReplace[path].localPath );
             }
             else {
                 return Plugin.PluginInterface.Data.GetFile<VFXTexture>( path );
             }
         }
 
-        public void LoadTexture(string path ) {
+        public void LoadPreviewTexture(string path ) {
             var _path = path.Trim( '\u0000' );
-            if( PathToTex.ContainsKey( path ) )
+            if( PathToTexturePreview.ContainsKey( path ) )
                 return;
-            var result = CreateTexture( _path, out var tex );
+            var result = CreatePreviewTexture( _path, out var tex );
             if( result && tex.Wrap != null ) {
-                PathToTex.TryAdd( path, tex );
+                PathToTexturePreview.TryAdd( path, tex );
             }
         }
 
-        public bool CreateTexture(string path, out TexData ret, bool loadImage = true ) {
+        public void RefreshPreviewTexture( string path ) {
+            string paddedPath = path + '\u0000';
+            if( PathToTexturePreview.ContainsKey( paddedPath ) ) {
+                if( PathToTexturePreview.TryRemove( paddedPath, out var oldValue ) ) {
+                    oldValue.Wrap?.Dispose();
+                }
+            }
+            LoadPreviewTexture( paddedPath );
+        }
+
+        public bool CreatePreviewTexture(string path, out TexData ret, bool loadImage = true ) {
             var result = Plugin.PluginInterface.Data.FileExists( path );
             ret = new TexData();
             if( result ) {

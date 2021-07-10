@@ -271,7 +271,7 @@ namespace VFXEditor
                     PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );
                 }
             }
-            else if( Plugin.TexManager != null && Plugin.TexManager.GetLocalPath(gameFsPath, out var texFile ) ) {
+            else if( Plugin.TexManager != null && Plugin.TexManager.GetLocalReplacePath( gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;
             }
 
