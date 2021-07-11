@@ -41,44 +41,28 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- Workspace
-    - Rename
-    - Save
-    - Load
-    - Save all documents and textures in workspace
-    - Move settings and extract to menu bar
-
-
-- [ ] Pause spawned vfx
+- [ ] Ground-targeted AOEs (might need to do it manually?)
+- [ ] Menu shortcuts
+- [ ] Better PNG import support
+- [ ] Duplicate nodes
+- [ ] Scale when spawning on ground
+- [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] Update wiki (again...sigh)
-- [ ] Investigate VFX flags
+- [ ] Investigate VFX flags, better structs
 - [ ] Better nodegraph view? might not really be necessary yet
-- [ ] Tables for documents, texture view?
 - [ ] Weapons / footsteps / etc. in live view
-- [ ] Highlight important
-- [ ] Option to not load 3D model
-- [ ] Merge A8 into Lumina
 - [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
-- [ ] Test with Penumbra
-- [ ] Flesh out Wiki
-- [ ] Clean up "troubleshooting"
 - [ ] File loaded indication
-- [ ] Help text / hover text
-- [ ] Better Penumbra integration
-- [ ] Get it to work with LPL (FASM is being annoying)
-- [ ] TexTools import
-- [ ] Penumbra import
 - [ ] Better error / log display
-- [ ] Open from equipped weapon
 - [ ] Better TMB parsing (regexes, lel)
 - [ ] Update "try on" preview
-- [ ] Auto-update npc csv file
-- [ ] Better readability (colored  text)
+- [ ] Auto-update npc csv file (kinda)
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Help text / hover text~~
 - [x] ~~Fix crashes when replacing sound~~
 - [x] ~~Render distance settings for overlay~~
 - [x] ~~Fix live overlay view in cutscenes~~ (kinda)

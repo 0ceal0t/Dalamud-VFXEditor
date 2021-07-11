@@ -219,7 +219,7 @@ namespace VFXEditor {
                     if( ImGui.MenuItem( "Open##Menu" ) ) {
                         OpenWorkspace();
                     }
-                    if( ImGui.MenuItem( "Save##Menu", "CTRL+S") ) {
+                    if( ImGui.MenuItem( "Save##Menu" ) ) {
                         SaveWorkspace();
                     }
                     if( ImGui.MenuItem( "Save As##Menu" ) ) {

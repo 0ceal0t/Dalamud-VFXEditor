@@ -11,7 +11,7 @@ using Dalamud.Plugin;
 using ImGuizmoNET;
 
 namespace VFXEditor.Structs.Vfx {
-    public class StaticVfx : BaseVfx {
+    public unsafe class StaticVfx : BaseVfx {
 
         public StaticVfx( Plugin plugin, string path, Vector3 position) : base( plugin, path ) {
             Vfx = Plugin.ResourceLoader.VfxCreate( path, "Client.System.Scheduler.Instance.VfxObject" );
@@ -19,15 +19,7 @@ namespace VFXEditor.Structs.Vfx {
 
             UpdatePosition( position );
             Update();
-
             UpdateMatrix();
-        }
-
-        public static int GetCasterId(IntPtr vfx) {
-            return GetId( vfx, 0x1B8 );
-        }
-        public static int GetTargetId( IntPtr vfx ) {
-            return GetId( vfx, 0x1C0 );
         }
 
         public override void Remove() {

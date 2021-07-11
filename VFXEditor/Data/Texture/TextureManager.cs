@@ -10,6 +10,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VFXEditor.Data.Texture;
+using System.Reflection;
 
 namespace VFXEditor.Data.Texture
 {

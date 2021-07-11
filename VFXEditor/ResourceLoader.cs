@@ -11,6 +11,7 @@ using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.X64;
 using System.Threading.Tasks;
 using System.Threading;
+using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor
 {
@@ -39,35 +40,35 @@ namespace VFXEditor
 
         //====== STATIC ===========
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public delegate IntPtr VfxCreateDelegate( string path, string pool );
+        public unsafe delegate VfxStruct* VfxCreateDelegate( string path, string pool );
         public VfxCreateDelegate VfxCreate;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public delegate IntPtr VfxRunDelegate( IntPtr vfx, float a1, uint a2 );
+        public unsafe delegate IntPtr VfxRunDelegate( VfxStruct* vfx, float a1, uint a2 );
         public VfxRunDelegate VfxRun;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public delegate IntPtr VfxRemoveDelegate( IntPtr vfx );
+        public unsafe delegate IntPtr VfxRemoveDelegate( VfxStruct* vfx );
         public VfxRemoveDelegate VfxRemove;
         // ======= STATIC HOOKS ========
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr VfxCreateHook( char* path, char* pool );
+        public unsafe delegate VfxStruct* VfxCreateHook( char* path, char* pool );
         public IHook<VfxCreateHook> StaticVfxNewHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr VfxRemoveHook( IntPtr vfx );
+        public unsafe delegate IntPtr VfxRemoveHook( VfxStruct* vfx );
         public IHook<VfxRemoveHook> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public delegate IntPtr StatusAddDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
+        public unsafe delegate VfxStruct* StatusAddDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
         public StatusAddDelegate StatusAdd;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public delegate IntPtr StatusRemoveDelegate( IntPtr vfx, char a2 );
+        public unsafe delegate IntPtr StatusRemoveDelegate( VfxStruct* vfx, char a2 );
         public StatusRemoveDelegate StatusRemove;
         // ======== ACTOR HOOKS =============
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr VfxStatusAddHook( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
+        public unsafe delegate VfxStruct* VfxStatusAddHook( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
         public IHook<VfxStatusAddHook> ActorVfxNewHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr VfxStatusRemoveHook( IntPtr vfx, char a2 );
+        public unsafe delegate IntPtr VfxStatusRemoveHook( VfxStruct* vfx, char a2 );
         public IHook<VfxStatusRemoveHook> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
@@ -126,14 +127,14 @@ namespace VFXEditor
 
         }
 
-        private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
+        private unsafe VfxStruct* StaticVfxNewHandler( char* path, char* pool ) {
             var v = StaticVfxNewHook.OriginalFunction( path, pool );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( path ) );
             Plugin.Tracker?.AddStatic( v, p1 );
             return v;
         }
 
-        private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
+        private unsafe IntPtr StaticVfxRemoveHandler( VfxStruct* vfx ) {
             if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }
@@ -141,14 +142,14 @@ namespace VFXEditor
             return StaticVfxRemoveHook.OriginalFunction( vfx );
         }
 
-        private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 ) {
+        private unsafe VfxStruct* ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 ) {
             var v = ActorVfxNewHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
             var p1 = Marshal.PtrToStringAnsi( new IntPtr( a1 ) );
             Plugin.Tracker?.AddActor( a2, v, p1 );
             return v;
         }
 
-        private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
+        private unsafe IntPtr ActorVfxRemoveHandler( VfxStruct* vfx, char a2 ) {
             if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }

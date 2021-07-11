@@ -1,18 +1,51 @@
+using Dalamud.Game.ClientState.Actors;
 using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Plugin;
 using ImGuizmoNET;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Structs.Vfx {
-    public abstract class BaseVfx {
+
+    /*
+        *(undefined4 *)(vfx + 0x50) = DAT_01bb2850;
+        *(undefined4 *)(vfx + 0x54) = DAT_01bb2854;
+        *(undefined4 *)(vfx + 0x58) = DAT_01bb2858;
+        uVar3 = uRam0000000001bb286c;
+        uVar2 = uRam0000000001bb2868;
+        uVar5 = uRam0000000001bb2864;
+        *(undefined4 *)(vfx + 0x60) = _ZERO_VECTOR;
+        *(undefined4 *)(vfx + 100) = uVar5;
+        *(undefined4 *)(vfx + 0x68) = uVar2;
+        *(undefined4 *)(vfx + 0x6c) = uVar3;
+        *(undefined4 *)(vfx + 0x70) = DAT_01bb2870;
+        *(undefined4 *)(vfx + 0x74) = DAT_01bb2874;
+        uVar5 = DAT_01bb2878;
+        *(undefined4 *)(vfx + 0x78) = DAT_01bb2878;
+        *(ulonglong *)(vfx + 0x38) = *(ulonglong *)(vfx + 0x38) | 2;
+     */
+
+
+    [StructLayout( LayoutKind.Explicit, Size = 0x200 )] // idk what the size is lol
+    public unsafe struct VfxStruct {
+        [FieldOffset( 0x38 )] public byte Flags;
+        [FieldOffset( 0x50 )] public Position3 Position;
+        [FieldOffset( 0x60 )] public Quat Rotation;
+        [FieldOffset( 0x70 )] public Position3 Scale;
+
+        [FieldOffset( 0x128 )] public int ActorCaster;
+        [FieldOffset( 0x130 )] public int ActorTarget;
+
+        [FieldOffset( 0x1B8 )] public int StaticCaster;
+        [FieldOffset( 0x1C0 )] public int StaticTarget;
+    }
+
+    public unsafe abstract class BaseVfx {
         public Plugin Plugin;
-        public IntPtr Vfx;
+        public VfxStruct* Vfx;
         public string Path;
+        public float[] matrix = GetIdentityMatrix();
 
         public BaseVfx( Plugin plugin, string path) {
             Plugin = plugin;
@@ -21,42 +54,50 @@ namespace VFXEditor.Structs.Vfx {
 
         public abstract void Remove();
 
-        public static int GetId(IntPtr vfx, int offset) {
-            if( vfx == IntPtr.Zero ) return 0;
-            var addr = IntPtr.Add( vfx, offset );
-            byte[] bytes = new byte[4];
-            Marshal.Copy( addr, bytes, 0, 4 );
-            return BitConverter.ToInt32( bytes, 0 );
-        }
-
-        // ======= MATRIX STUFF ===========
-        /*
-            *(undefined4 *)(vfx + 0x50) = DAT_01bb2850;
-            *(undefined4 *)(vfx + 0x54) = DAT_01bb2854;
-            *(undefined4 *)(vfx + 0x58) = DAT_01bb2858;
-            uVar3 = uRam0000000001bb286c;
-            uVar2 = uRam0000000001bb2868;
-            uVar5 = uRam0000000001bb2864;
-            *(undefined4 *)(vfx + 0x60) = _ZERO_VECTOR;
-            *(undefined4 *)(vfx + 100) = uVar5;
-            *(undefined4 *)(vfx + 0x68) = uVar2;
-            *(undefined4 *)(vfx + 0x6c) = uVar3;
-            *(undefined4 *)(vfx + 0x70) = DAT_01bb2870;
-            *(undefined4 *)(vfx + 0x74) = DAT_01bb2874;
-            uVar5 = DAT_01bb2878;
-            *(undefined4 *)(vfx + 0x78) = DAT_01bb2878;
-            *(ulonglong *)(vfx + 0x38) = *(ulonglong *)(vfx + 0x38) | 2;
-         */
-
-        public float[] matrix = GetIdentityMatrix();
-
         public void Update() {
-            if( Vfx == IntPtr.Zero ) return;
-            var flagAddr = IntPtr.Add( Vfx, 0x38 );
-            byte currentFlag = Marshal.ReadByte( flagAddr );
-            currentFlag |= 0x2;
-            Marshal.WriteByte( flagAddr, currentFlag );
+            if( Vfx == null ) return;
+            Vfx->Flags |= 0x2;
         }
+
+        public void UpdatePosition( Vector3 position ) {
+            if( Vfx == null ) return;
+            Vfx->Position = new Position3
+            {
+                X = position.X,
+                Y = position.Y,
+                Z = position.Z
+            };
+        }
+
+        public void UpdatePosition( Actor actor ) {
+            if( Vfx == null ) return;
+            Vfx->Position = actor.Position;
+        }
+
+        public void UpdateScale( Vector3 scale ) {
+            if( Vfx == null ) return;
+            Vfx->Scale = new Position3
+            {
+                X = scale.X,
+                Y = scale.Y,
+                Z = scale.Z
+            };
+        }
+
+        public void UpdateRotation( Vector3 rotation ) {
+            if( Vfx == null ) return;
+
+            Quaternion q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
+            Vfx->Rotation = new Quat
+            {
+                X = q.X,
+                Y = q.Y,
+                Z = q.Z,
+                W = q.W
+            };
+        }
+
+        // ===========================
 
         public static float[] GetIdentityMatrix() {
             return new float[] {
@@ -67,59 +108,10 @@ namespace VFXEditor.Structs.Vfx {
             };
         }
 
-        public void UpdatePosition( Vector3 position ) {
-            if( Vfx == IntPtr.Zero ) return;
-            IntPtr addr = IntPtr.Add( Vfx, 0x50 );
-            var x = BitConverter.GetBytes( position.X );
-            var y = BitConverter.GetBytes( position.Y );
-            var z = BitConverter.GetBytes( position.Z );
-            Marshal.Copy( x, 0, addr, 4 );
-            Marshal.Copy( z, 0, addr + 0x4, 4 );
-            Marshal.Copy( y, 0, addr + 0x8, 4 );
-        }
-
-        public void UpdatePosition( Actor actor ) {
-            UpdatePosition( new Vector3( actor.Position.X, actor.Position.Y, actor.Position.Z ) );
-        }
-
-        public void UpdateScale( Vector3 scale ) {
-            if( Vfx == IntPtr.Zero ) return;
-            IntPtr addr = IntPtr.Add( Vfx, 0x70 );
-            var x = BitConverter.GetBytes( scale.X );
-            var y = BitConverter.GetBytes( scale.Y );
-            var z = BitConverter.GetBytes( scale.Z );
-            Marshal.Copy( x, 0, addr, 4 );
-            Marshal.Copy( y, 0, addr + 0x4, 4 );
-            Marshal.Copy( z, 0, addr + 0x8, 4 );
-        }
-
-        public void UpdateRotation( Vector3 rotation ) {
-            if( Vfx == IntPtr.Zero ) return;
-
-            Quaternion q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
-
-            IntPtr addr = IntPtr.Add( Vfx, 0x60 );
-            var x = BitConverter.GetBytes( q.X );
-            var y = BitConverter.GetBytes( q.Y );
-            var z = BitConverter.GetBytes( q.Z );
-            var w = BitConverter.GetBytes( q.W );
-            Marshal.Copy( x, 0, addr, 4 );
-            Marshal.Copy( y, 0, addr + 0x4, 4 );
-            Marshal.Copy( z, 0, addr + 0x8, 4 );
-            Marshal.Copy( w, 0, addr + 0xc, 4 );
-        }
-
         public void UpdateMatrix() {
-            if( Vfx == IntPtr.Zero ) return;
-            byte[] bytes = new byte[12];
+            if( Vfx == null ) return;
 
-            // POSITION
-            IntPtr posAddr = IntPtr.Add( Vfx, 0x50 );
-            Marshal.Copy( posAddr, bytes, 0, 4 );
-            Marshal.Copy( posAddr + 0x4, bytes, 4, 4 );
-            Marshal.Copy( posAddr + 0x8, bytes, 8, 4 );
-            float[] position = { BitConverter.ToSingle( bytes, 0 ), BitConverter.ToSingle( bytes, 4 ), BitConverter.ToSingle( bytes, 8 ) };
-
+            float[] position = { Vfx->Position.X, Vfx->Position.Y, Vfx->Position.Z };
             float[] scale = { 1, 1, 1 }; // don't really care about these here
             float[] rotation = { 0, 0, 0 };
 

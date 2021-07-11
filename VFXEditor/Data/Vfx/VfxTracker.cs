@@ -14,24 +14,19 @@ using System.Threading.Tasks;
 using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor.Data.Vfx {
-    public class VfxTracker {
+    public unsafe class VfxTracker {
         public bool Enabled = false;
 
-        public struct ActorData {
+        public struct TrackerData {
             public string path;
             public bool isChecked;
             public int actorId;
-        }
-
-        public struct StaticData {
-            public string path;
-            public bool isChecked;
-            public int actorId;
+            public VfxStruct* Vfx;
         }
 
         public Plugin Plugin;
-        public ConcurrentDictionary<IntPtr, ActorData> ActorVfxs;
-        public ConcurrentDictionary<IntPtr, StaticData> StaticVfxs;
+        public ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs;
+        public ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs;
 
         public static ClosenessComp CloseComp = new ClosenessComp();
 
@@ -40,37 +35,40 @@ namespace VFXEditor.Data.Vfx {
             Reset();
         }
 
-        public void AddActor(IntPtr actor, IntPtr vfx, string path ) {
+        public void AddActor(IntPtr actor, VfxStruct* vfx, string path ) {
             if( !Enabled ) return;
-            ActorData data = new ActorData() {
+            var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = -1
+                actorId = -1,
+                Vfx = vfx
             };
-            ActorVfxs.TryAdd( vfx, data );
+            ActorVfxs.TryAdd( new IntPtr(vfx), data );
         }
 
-        public void RemoveActor(IntPtr vfx) {
+        public void RemoveActor( VfxStruct* vfx ) {
             if( !Enabled ) return;
-            if( ActorVfxs.ContainsKey( vfx ) ) {
-                ActorVfxs.TryRemove( vfx, out var value );
+
+            if( ActorVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
+                ActorVfxs.TryRemove( new IntPtr( vfx ), out var value );
             }
         }
 
-        public void AddStatic(IntPtr vfx, string path ) {
+        public void AddStatic( VfxStruct* vfx, string path ) {
             if( !Enabled ) return;
-            StaticData data = new StaticData() {
+            var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = -1
+                actorId = -1,
+                Vfx = vfx
             };
-            StaticVfxs.TryAdd( vfx, data );
+            StaticVfxs.TryAdd( new IntPtr( vfx ), data );
         }
 
-        public void RemoveStatic(IntPtr vfx ) {
+        public void RemoveStatic( VfxStruct* vfx ) {
             if( !Enabled ) return;
-            if( StaticVfxs.ContainsKey( vfx ) ) {
-                StaticVfxs.TryRemove( vfx, out var value );
+            if( StaticVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
+                StaticVfxs.TryRemove( new IntPtr( vfx ), out var value );
             }
         }
 
@@ -137,19 +135,22 @@ namespace VFXEditor.Data.Vfx {
             // ====== STATIC =======
             foreach( var item in StaticVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
+
                 var vfx = item.Value;
                 if( !vfx.isChecked ) {
-
-                    var casterId = StaticVfx.GetCasterId( item.Key );
-                    var targetId = StaticVfx.GetTargetId( item.Key );
+                    var casterId = vfx.Vfx->StaticCaster;
+                    var targetId = vfx.Vfx->StaticTarget;
                     var actorId = ChooseId( casterId, targetId );
-                    vfx = new StaticData  {
+                    vfx = new TrackerData
+                    {
                         path = vfx.path,
                         isChecked = true,
-                        actorId = actorId
+                        actorId = actorId,
+                        Vfx = vfx.Vfx
                     };
                     StaticVfxs[item.Key] = vfx;
                 }
+
                 if( vfx.actorId > 0 ) { // add to actor to vfxs
                     if( !ActorToVfxs.ContainsKey( vfx.actorId ) ) {
                         ActorToVfxs[vfx.actorId] = new HashSet<string>();
@@ -157,42 +158,32 @@ namespace VFXEditor.Data.Vfx {
                     ActorToVfxs[vfx.actorId].Add( vfx.path );
                 }
                 else { // add to groups
-                    IntPtr addr = IntPtr.Add( item.Key, 0x50 );
-                    byte[] x = new byte[4];
-                    byte[] y = new byte[4];
-                    byte[] z = new byte[4];
-                    Marshal.Copy( addr, x, 0, 4 );
-                    Marshal.Copy( addr + 0x4, y, 0, 4 );
-                    Marshal.Copy( addr + 0x8, z, 0, 4 );
-
-                    var pos = new SharpDX.Vector3 {
-                        X = BitConverter.ToSingle( x, 0 ),
-                        Y = BitConverter.ToSingle( y, 0 ),
-                        Z = BitConverter.ToSingle( z, 0 )
-                    };
-
-
                     Groups.Add( new StaticVfxGroup {
                         path = vfx.path,
-                        position = pos
+                        position = vfx.Vfx->Position
                     } );
                 }
             }
+
             // ======= ACTORS =========
             foreach( var item in ActorVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
+
                 var vfx = item.Value;
                 if( !vfx.isChecked ) {
-                    var casterId = ActorVfx.GetCasterId( item.Key );
-                    var targetId = ActorVfx.GetTargetId( item.Key );
+                    var casterId = vfx.Vfx->ActorCaster;
+                    var targetId = vfx.Vfx->ActorTarget;
                     var actorId = ChooseId( casterId, targetId );
-                    vfx = new ActorData {
+                    vfx = new TrackerData
+                    {
                         path = vfx.path,
                         isChecked = true,
-                        actorId = actorId
+                        actorId = actorId,
+                        Vfx = vfx.Vfx
                     };
                     ActorVfxs[item.Key] = vfx;
                 }
+
                 if( vfx.actorId > 0 ) { // add to actor to vfxs
                     if( !ActorToVfxs.ContainsKey( vfx.actorId ) ) {
                         ActorToVfxs[vfx.actorId] = new HashSet<string>();
@@ -204,6 +195,7 @@ namespace VFXEditor.Data.Vfx {
             int idx = 0;
             foreach( var group in Groups.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
                 HashSet<string> paths = new HashSet<string>( group );
+
                 // ==== CHECK WINDOW POSITION ======
                 if(!WorldToScreen(height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, group.Key );
@@ -213,6 +205,7 @@ namespace VFXEditor.Data.Vfx {
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
                 idx++;
             }
+
             // ====== DRAW ACTORS ======
             var actorTable = Plugin.PluginInterface.ClientState.Actors;
             if( actorTable == null ) {
@@ -288,8 +281,8 @@ namespace VFXEditor.Data.Vfx {
         }
 
         public void Reset() {
-            ActorVfxs = new ConcurrentDictionary<IntPtr, ActorData>();
-            StaticVfxs = new ConcurrentDictionary<IntPtr, StaticData>();
+            ActorVfxs = new();
+            StaticVfxs = new();
         }
 
         public static float Distance(Vector3 p1, SharpDX.Vector3 p2 ) {

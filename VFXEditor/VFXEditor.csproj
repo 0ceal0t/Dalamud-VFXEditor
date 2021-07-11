@@ -178,8 +178,4 @@
     <ItemGroup>
       <NativeLibs Remove="DocumentManager.cs" />
     </ItemGroup>
-
-    <ItemGroup>
-      <NativeLibs Remove="Plugin.InputTracker.cs" />
-    </ItemGroup>
 </Project>
