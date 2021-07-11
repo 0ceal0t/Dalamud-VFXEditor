@@ -46,7 +46,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better PNG import support
 - [ ] Duplicate nodes
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
-- [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags, better structs
 - [ ] Better nodegraph view? might not really be necessary yet
@@ -62,6 +61,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Get it to work with LPL (FASM is being annoying)~~
 - [x] ~~Help text / hover text~~
 - [x] ~~Fix crashes when replacing sound~~
 - [x] ~~Render distance settings for overlay~~

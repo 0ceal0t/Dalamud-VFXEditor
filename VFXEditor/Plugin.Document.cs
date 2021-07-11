@@ -45,6 +45,7 @@ namespace VFXEditor {
             }
             if( addToRecent ) Configuration.AddRecent( selectResult );
             DocManager.UpdateSource( selectResult );
+            DocManager.Save();
         }
 
         public void RemoveSourceVFX() {

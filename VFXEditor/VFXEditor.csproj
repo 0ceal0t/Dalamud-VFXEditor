@@ -88,6 +88,7 @@
     <ItemGroup>
         <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
         <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+        <PackageReference Include="Lib.Harmony" Version="2.1.0" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="Reloaded.Hooks" Version="2.4.1" />

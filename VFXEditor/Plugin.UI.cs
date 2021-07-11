@@ -187,7 +187,7 @@ namespace VFXEditor {
                     {
                         VerifiedStatus.OK => "Verified",
                         VerifiedStatus.ISSUE => "Parsing Issues",
-                        _ => "Unknown"
+                        _ => "Unverified"
                     };
 
                     ImGui.TextColored( color, icon );
