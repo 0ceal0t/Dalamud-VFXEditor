@@ -20,7 +20,6 @@ namespace VFXEditor.Data.DirectX {
         public bool DoRender = true;
 
         public ModelPreview ModelView;
-        public UVPreview UVView;
         public Gradient GradientView;
 
         // https://github.com/ackwell/BrowserHost/blob/32104cedd10715ca44710be1e57a36b6aa8c43c3/BrowserHost.Plugin/DxHandler.cs
@@ -32,7 +31,6 @@ namespace VFXEditor.Data.DirectX {
             Device = plugin.PluginInterface.UiBuilder.Device;
             Ctx = Device.ImmediateContext;
             ModelView = new ModelPreview( this );
-            UVView = new UVPreview( this );
             GradientView = new Gradient( this );
         }
 
@@ -84,7 +82,6 @@ namespace VFXEditor.Data.DirectX {
             DoRender = false;
 
             ModelView.Dispose();
-            UVView.Dispose();
             GradientView.Dispose();
 
             Device = null;

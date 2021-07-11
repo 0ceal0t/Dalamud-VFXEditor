@@ -12,7 +12,6 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
-using VFXEditor.UI.Graphics;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
@@ -29,7 +28,6 @@ namespace VFXEditor {
         public TexToolsDialog TexToolsUI;
         public PenumbraDialog PenumbraUI;
         public TextureDialog TextureUI;
-        public VFXManipulator VFXManip;
 
         public BaseVfx SpawnVfx;
 
@@ -66,7 +64,6 @@ namespace VFXEditor {
             SettingsUI = new SettingsDialog( this );
             ToolsUI = new ToolsDialog( this );
             TextureUI = new TextureDialog( this );
-            VFXManip = new VFXManipulator( this );
             TexToolsUI = new TexToolsDialog( this );
             PenumbraUI = new PenumbraDialog( this );
 
@@ -111,7 +108,6 @@ namespace VFXEditor {
                 ToolsUI.Draw();
                 DocUI.Draw();
                 TextureUI.Draw();
-                VFXManip.Draw();
             }
         }
 
@@ -272,7 +268,7 @@ namespace VFXEditor {
             // ======= SEARCH BARS =========
             string sourceString = CurrentDocument.Source.DisplayString;
             string previewString = CurrentDocument.Replace.DisplayString;
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 230 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
             ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
@@ -312,11 +308,11 @@ namespace VFXEditor {
 
             ImGui.PopItemWidth();
 
-            // ======= TEMPLATES + OVERLAY =========
+            // ======= TEMPLATES =========
             ImGui.NextColumn();
-            ImGui.SetColumnWidth( 3, 200 );
+            ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Templates", new Vector2( 70, 23 ) ) ) {
+            if( ImGui.Button( $"Templates", new Vector2( 80, 23 ) ) ) {
                 ImGui.OpenPopup( "New_Popup1" );
             }
 
@@ -330,31 +326,14 @@ namespace VFXEditor {
                 ImGui.EndPopup();
             }
 
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash )}##MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                Tracker.Enabled = !Tracker.Enabled;
-                if( !Tracker.Enabled ) {
-                    Tracker.Reset();
-                    PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
-                }
-                else {
-                    PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
-                }
-            }
-            ImGui.PopFont();
-
-            ImGui.SameLine(); HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
-
-            // =======SPAWN + MANIP =========
+            // =======SPAWN + EYE =========
             string previewSpawn = DocManager.ActiveDoc.Replace.Path;
             bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
                 }
-                if( ImGui.Button( "Spawn", new Vector2( 70, 23 ) ) && !spawnDisabled ) {
+                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !spawnDisabled ) {
                     ImGui.OpenPopup( "Spawn_Popup" );
                 }
                 if( spawnDisabled ) {
@@ -382,19 +361,19 @@ namespace VFXEditor {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushFont( UiBuilder.IconFont );
-            if( !VFXManip.CanBeEnabled ) {
-                ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-                ImGui.Button( $"{( char )FontAwesomeIcon.Cube}##MainInterfaceFiles-VfxManip", new Vector2( 28, 23 ) );
-                ImGui.PopStyleVar();
-            }
-            else {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Cube}##MainInterfaceFiles-VfxManip", new Vector2( 28, 23 ) ) ) {
-                    VFXManip.Enabled = !VFXManip.Enabled;
+            if( ImGui.Button( $"{( !Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.EyeSlash )}##MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
+                Tracker.Enabled = !Tracker.Enabled;
+                if( !Tracker.Enabled ) {
+                    Tracker.Reset();
+                    PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
+                }
+                else {
+                    PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
                 }
             }
             ImGui.PopFont();
 
-            ImGui.SameLine(); HelpMarker( @"Use the cube icon to enable the manipulator for VFXs spawned on the ground. Note that this feature is very experimental, and will not work for most VFXs" );
+            ImGui.SameLine(); HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
 
             ImGui.Columns( 1 );
             ImGui.Separator();

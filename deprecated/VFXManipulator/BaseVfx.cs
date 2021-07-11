@@ -45,6 +45,7 @@ namespace VFXEditor.Structs.Vfx {
         public Plugin Plugin;
         public VfxStruct* Vfx;
         public string Path;
+        public float[] matrix = GetIdentityMatrix();
 
         public BaseVfx( Plugin plugin, string path) {
             Plugin = plugin;
@@ -94,6 +95,40 @@ namespace VFXEditor.Structs.Vfx {
                 Z = q.Z,
                 W = q.W
             };
+        }
+
+        // ===========================
+
+        public static float[] GetIdentityMatrix() {
+            return new float[] {
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            };
+        }
+
+        public void UpdateMatrix() {
+            if( Vfx == null ) return;
+
+            float[] position = { Vfx->Position.X, Vfx->Position.Y, Vfx->Position.Z };
+            float[] scale = { 1, 1, 1 }; // don't really care about these here
+            float[] rotation = { 0, 0, 0 };
+
+            ImGuizmo.RecomposeMatrixFromComponents( ref position[0], ref rotation[0], ref scale[0], ref matrix[0] );
+        }
+
+        public void PullMatrixUpdate() {
+            float[] position = new float[3];
+            float[] rotation = new float[3];
+            float[] scale = new float[3];
+
+            ImGuizmo.DecomposeMatrixToComponents( ref matrix[0], ref position[0], ref rotation[0], ref scale[0] );
+
+            UpdatePosition( new Vector3( position[0], position[2], position[1] ) );
+            UpdateScale( new Vector3( scale[0], scale[1], scale[2] ) );
+            UpdateRotation( new Vector3( rotation[1], rotation[0], rotation[2] ) );
+            Update();
         }
     }
 }

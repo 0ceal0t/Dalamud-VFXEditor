@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.UI.VFX.Particle.UVSet;
 
 namespace VFXEditor.UI.VFX
 {
@@ -30,7 +29,6 @@ namespace VFXEditor.UI.VFX
             Curves.Add( Scroll = new UICurve2Axis( UVSet.Scroll, "Scroll" ) );
             Curves.Add( Rotation = new UICurve( UVSet.Rot, "Rotation" ) );
             Curves.Add( new UICurve( UVSet.RotRandom, "Rotation Random" ) );
-            Curves.Add( new UVAnimation( this ) );
         }
 
         public override void DrawBody( string parentId ) {

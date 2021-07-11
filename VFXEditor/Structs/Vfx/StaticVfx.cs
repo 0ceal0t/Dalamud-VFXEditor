@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Actors.Types;
-using Dalamud.Plugin;
-
-using ImGuizmoNET;
 
 namespace VFXEditor.Structs.Vfx {
     public unsafe class StaticVfx : BaseVfx {
@@ -19,7 +9,6 @@ namespace VFXEditor.Structs.Vfx {
 
             UpdatePosition( position );
             Update();
-            UpdateMatrix();
         }
 
         public override void Remove() {
