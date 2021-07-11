@@ -45,7 +45,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Menu shortcuts
 - [ ] Better PNG import support
 - [ ] Duplicate nodes
-- [ ] Scale when spawning on ground
+- [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
 - [ ] Get it to work with LPL (FASM is being annoying)
 - [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags, better structs
