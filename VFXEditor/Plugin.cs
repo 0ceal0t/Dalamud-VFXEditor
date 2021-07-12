@@ -38,6 +38,10 @@ namespace VFXEditor
 
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
+# if DEBUG
+        public static string Patch_AssemblyLocation;
+# endif
+
         private IntPtr ImPlotContext;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
@@ -48,6 +52,7 @@ namespace VFXEditor
             PluginLog.Log( "Write location: " + WriteLocation );
 
 #if DEBUG
+            Patch_AssemblyLocation = AssemblyLocation;
             ApplyPatches();
 #endif
 
@@ -121,11 +126,11 @@ namespace VFXEditor
         }
 
         private static void AssemblyLocationPatch( Assembly __instance, ref string __result ) {
-            PluginLog.Log( __result );
+            __result = Patch_AssemblyLocation;
         }
 
         private static void AssemblyCodeBasePatch( Assembly __instance, ref string __result ) {
-            PluginLog.Log( __result );
+            __result = Patch_AssemblyLocation;
         }
 #endif
     }

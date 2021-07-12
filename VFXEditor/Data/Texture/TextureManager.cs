@@ -103,8 +103,7 @@ namespace VFXEditor.Data.Texture
                 TexReplace replaceData;
                 var path = Path.Combine( Plugin.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
-                bool isDDS = Path.GetExtension( fileLocation ).ToLower() == ".dds";
-                if( isDDS ) { // a .dds, use the format that the file is already in
+                if( Path.GetExtension( fileLocation ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( fileLocation );
                     var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
                     if( format == TextureFormat.Null )
@@ -113,6 +112,19 @@ namespace VFXEditor.Data.Texture
                         replaceData = CreateAtex( format, ddsFile, writer );
                     }
                     ddsFile.Dispose();
+                }
+                else if( Path.GetExtension( fileLocation ).ToLower() == ".atex" ) {
+                    File.Copy( fileLocation, path, true );
+                    var tex = VFXTexture.LoadFromLocal( fileLocation );
+                    replaceData = new TexReplace
+                    {
+                        Height = tex.Header.Height,
+                        Width = tex.Header.Width,
+                        Depth = tex.Header.Depth,
+                        MipLevels = tex.Header.MipLevels,
+                        Format = tex.Header.Format,
+                        localPath = path
+                    };
                 }
                 else { //a .png file, convert it to the format currently being used by the existing game file
                     var texFile = Plugin.PluginInterface.Data.GetFile<VFXTexture>( replacePath );

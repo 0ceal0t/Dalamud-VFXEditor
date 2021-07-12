@@ -90,7 +90,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ImportDialog(string newPath) {
-            Plugin.ImportFileDialog( "DDS or PNG File (*.png;*.dds)|*.png*;*.dds*|All files (*.*)|*.*", "Select Image File.",
+            Plugin.ImportFileDialog( "DDS, ATEX, or PNG File (*.png;*.atex;*.dds)|*.png*;*.atex;*.dds*|All files (*.*)|*.*", "Select Image File.",
                 ( string path ) => {
                     try {
                         if( !TextureManager.Manager.ImportReplaceTexture( path, newPath ) ) {

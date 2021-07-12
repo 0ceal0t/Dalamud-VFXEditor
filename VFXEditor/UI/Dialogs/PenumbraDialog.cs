@@ -42,7 +42,7 @@ namespace VFXEditor.UI {
             Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
                 ( string path ) => {
                     try {
-                        Penumbra.Export( Plugin, Name, Author, Version, path, ExportAll, ExportTex );
+                        Penumbra.Export( Plugin, Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
                         Visible = false;
                     }
                     catch( Exception ex ) {
