@@ -16,10 +16,10 @@ namespace AVFXLib.Models
         public LiteralFloat PointIntervalFactoryV = new LiteralFloat("PIFU");
 
         public AVFXCurve Angle = new AVFXCurve("Ang");
-        public AVFXCurve HBInner = new AVFXCurve( "HBI" );
-        public AVFXCurve HEInner = new AVFXCurve( "HEI" );
-        public AVFXCurve HBOuter = new AVFXCurve( "HBO" );
-        public AVFXCurve HEOuter = new AVFXCurve( "HEO" );
+        public AVFXCurve HeightBeginInner = new AVFXCurve( "HBI" );
+        public AVFXCurve HeightEndInner = new AVFXCurve( "HEI" );
+        public AVFXCurve HeightBeginOuter = new AVFXCurve( "HBO" );
+        public AVFXCurve HeightEndOuter = new AVFXCurve( "HEO" );
         public AVFXCurve WidthBegin = new AVFXCurve("WB");
         public AVFXCurve WidthEnd = new AVFXCurve("WE");
         public AVFXCurve RadiusBegin = new AVFXCurve("RB");
@@ -37,10 +37,10 @@ namespace AVFXLib.Models
                 PartsCountV,
                 PointIntervalFactoryV,
                 Angle,
-                HBInner,
-                HEInner,
-                HBOuter,
-                HEOuter,
+                HeightBeginInner,
+                HeightEndInner,
+                HeightBeginOuter,
+                HeightEndOuter,
                 WidthBegin,
                 WidthEnd,
                 RadiusBegin,

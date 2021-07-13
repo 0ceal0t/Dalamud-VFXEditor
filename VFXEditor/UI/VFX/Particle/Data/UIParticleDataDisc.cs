@@ -22,10 +22,10 @@ namespace VFXEditor.UI.VFX
             Parameters.Add( new UIInt( "Parts Count V", Data.PartsCountV ) );
             Parameters.Add( new UIFloat( "Point Interval Factor V", Data.PointIntervalFactoryV ) );
             Tabs.Add( new UICurve( Data.Angle, "Angle" ) );
-            Tabs.Add( new UICurve( Data.HBInner, "HB Inner" ) );
-            Tabs.Add( new UICurve( Data.HEInner, "HE Inner" ) );
-            Tabs.Add( new UICurve( Data.HBOuter, "HB Outer" ) );
-            Tabs.Add( new UICurve( Data.HEOuter, "HE Outer" ) );
+            Tabs.Add( new UICurve( Data.HeightBeginInner, "Height Begin Inner" ) );
+            Tabs.Add( new UICurve( Data.HeightEndInner, "Height End Inner" ) );
+            Tabs.Add( new UICurve( Data.HeightBeginOuter, "Height Begin Outer" ) );
+            Tabs.Add( new UICurve( Data.HeightEndOuter, "Height End Outer" ) );
             Tabs.Add( new UICurve( Data.WidthBegin, "Width Begin" ) );
             Tabs.Add( new UICurve( Data.WidthEnd, "Width End" ) );
             Tabs.Add( new UICurve( Data.RadiusBegin, "Radius Begin" ) );
