@@ -12,9 +12,6 @@ using VFXEditor.Data.Vfx;
 using System.Reflection;
 using VFXEditor.Data.Texture;
 using VFXSelect;
-#if DEBUG
-using HarmonyLib;
-#endif
 
 namespace VFXEditor
 {
@@ -38,10 +35,6 @@ namespace VFXEditor
 
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
-# if DEBUG
-        public static string Patch_AssemblyLocation;
-# endif
-
         private IntPtr ImPlotContext;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
@@ -50,11 +43,6 @@ namespace VFXEditor
             Configuration.Initialize( PluginInterface );
             Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
             PluginLog.Log( "Write location: " + WriteLocation );
-
-#if DEBUG
-            Patch_AssemblyLocation = AssemblyLocation;
-            ApplyPatches();
-#endif
 
             ResourceLoader = new ResourceLoader( this );
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
@@ -107,31 +95,5 @@ namespace VFXEditor
         private void OnCommand( string command, string rawArgs ) {
             Visible = !Visible;
         }
-
-#if DEBUG
-        private void ApplyPatches() {
-            var harmony = new Harmony( "com.vfxeditor.resourceloader" );
-
-            var targetType = typeof( Plugin ).Assembly.GetType();
-
-            var locationTarget = AccessTools.PropertyGetter( targetType, nameof( Assembly.Location ) );
-            var locationPatch = AccessTools.Method( typeof( Plugin ), nameof( Plugin.AssemblyLocationPatch ) );
-            harmony.Patch( locationTarget, postfix: new( locationPatch ) );
-
-#pragma warning disable SYSLIB0012 // Type or member is obsolete
-            var codebaseTarget = AccessTools.PropertyGetter( targetType, nameof( Assembly.CodeBase ) );
-            var codebasePatch = AccessTools.Method( typeof( Plugin ), nameof( Plugin.AssemblyCodeBasePatch ) );
-            harmony.Patch( codebaseTarget, postfix: new( codebasePatch ) );
-#pragma warning restore SYSLIB0012 // Type or member is obsolete
-        }
-
-        private static void AssemblyLocationPatch( Assembly __instance, ref string __result ) {
-            __result = Patch_AssemblyLocation;
-        }
-
-        private static void AssemblyCodeBasePatch( Assembly __instance, ref string __result ) {
-            __result = Patch_AssemblyLocation;
-        }
-#endif
     }
 }

@@ -42,7 +42,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] Ground-targeted AOEs (might need to do it manually?)
-- [ ] Menu shortcuts
+- [ ] Menu shortcuts + keys move up / down
 - [ ] Better PNG import support
 - [ ] Duplicate nodes
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
