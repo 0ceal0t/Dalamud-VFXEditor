@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using Dalamud.Plugin;
 using ImGuiNET;
+using VFXEditor.Data.Texture;
 
 namespace VFXEditor.UI {
     public class ToolsDialog : GenericDialog {
@@ -9,7 +10,7 @@ namespace VFXEditor.UI {
         private string RawTexInputValue = "";
 
         public ToolsDialog( Plugin plugin ) : base( plugin, "Tools" ) {
-            Size = new Vector2( 300, 100 );
+            Size = new Vector2( 300, 200 );
         }
 
         public override void OnDraw() {
@@ -46,6 +47,26 @@ namespace VFXEditor.UI {
                         PluginLog.LogError( e.ToString() );
                     }
                 }
+            }
+
+            ImGui.Text( ".atex to PNG" );
+            ImGui.SameLine();
+            if(ImGui.Button("Browse##AtexToPNG")) {
+                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
+                 {
+                     var texFile = VFXTexture.LoadFromLocal( path );
+                     texFile.SaveAsPng( path + ".png" );
+                 } );
+            }
+
+            ImGui.Text( ".atex to DDS" );
+            ImGui.SameLine();
+            if( ImGui.Button( "Browse##AtexToDDS" ) ) {
+                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
+                {
+                    var texFile = VFXTexture.LoadFromLocal( path );
+                    texFile.SaveAsDDS( path + ".dds" );
+                } );
             }
         }
     }

@@ -15,7 +15,6 @@ using System.Reflection;
 namespace VFXEditor.Data.Texture
 {
     public struct TexData { // used for the texture previews
-        public byte[] Data;
         public ushort Height;
         public ushort Width;
         public ushort MipLevels;
@@ -264,9 +263,8 @@ namespace VFXEditor.Data.Texture
                         return false;
                     }
 
-                    ret.Data = texFile.ImageData;
                     if( loadImage ) {
-                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( ret.Data, texFile.Header.Width, texFile.Header.Height, 4 );
+                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
                         ret.Wrap = texBind;
                     }
                     return true;

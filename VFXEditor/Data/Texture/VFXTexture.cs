@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -36,7 +37,7 @@ namespace VFXEditor.Data.Texture {
             ImageData = BGRA_to_RGBA( Convert( DataSpan.Slice( HeaderLength ), Header.Width, Header.Height ) );
         }
 
-        public void LoadFileLocal(BinaryReader br, int size) {
+        public void LoadFile(BinaryReader br, int size) {
             Local = true;
             br.BaseStream.Position = 0;
             Header = br.ReadStructure<TexHeader>();
@@ -53,11 +54,35 @@ namespace VFXEditor.Data.Texture {
             }
         }
 
+        public void SaveAsPng(string path) {
+            Bitmap bmp = new Bitmap( Header.Width, Header.Height );
+            for( int i = 0; i < Header.Height; i++ ) {
+                for( int j = 0; j < Header.Width; j++ ) {
+                    int _idx = ( i * Header.Width + j ) * 4;
+                    int r = ImageData[_idx];
+                    int g = ImageData[_idx + 1];
+                    int b = ImageData[_idx + 2];
+                    int a = ImageData[_idx + 3];
+                    bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+                }
+            }
+            bmp.Save( path, System.Drawing.Imaging.ImageFormat.Png );
+        }
+
+        public void SaveAsDDS(string path) {
+            byte[] header = IOUtil.CreateDDSHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
+            byte[] data = GetDDSData();
+            byte[] writeData = new byte[header.Length + data.Length];
+            Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
+            Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
+            File.WriteAllBytes( path, writeData );
+        }
+
         public static VFXTexture LoadFromLocal( string path ) {
             VFXTexture tex = new VFXTexture();
             var file = File.Open( path, FileMode.Open );
             using( BinaryReader reader = new BinaryReader( file ) ) {
-                tex.LoadFileLocal( reader, ( int )file.Length );
+                tex.LoadFile( reader, ( int )file.Length );
             }
             file.Close();
             return tex;
