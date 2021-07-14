@@ -3,7 +3,7 @@ A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effe
 
 > Just want to hide certain VFXs? Use [this](https://github.com/0ceal0t/EasyEyes) instead
 
-![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/docs/preview_6.png)
+![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/docs/preview_6.PNG)
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
