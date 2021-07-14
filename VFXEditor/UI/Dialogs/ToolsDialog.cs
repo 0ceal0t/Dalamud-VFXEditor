@@ -10,7 +10,7 @@ namespace VFXEditor.UI {
         private string RawTexInputValue = "";
 
         public ToolsDialog( Plugin plugin ) : base( plugin, "Tools" ) {
-            Size = new Vector2( 300, 200 );
+            Size = new Vector2( 300, 150 );
         }
 
         public override void OnDraw() {
