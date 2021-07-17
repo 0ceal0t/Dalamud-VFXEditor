@@ -52,25 +52,25 @@ namespace VFXEditor
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
 
             // ==== IMGUI ====
-            //ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            //ImPlotContext = ImPlot.CreateContext();
-            //ImPlot.SetCurrentContext( ImPlotContext );
+            ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
+            ImPlotContext = ImPlot.CreateContext();
+            ImPlot.SetCurrentContext( ImPlotContext );
 
-            //Tracker = new VfxTracker( this );
-            //TexManager = new TextureManager( this );
-            //TexManager.OneTimeSetup();
-            //Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
-            //DocManager = new DocumentManager( this );
-            //DXManager = new DirectXManager( this );
+            Tracker = new VfxTracker( this );
+            TexManager = new TextureManager( this );
+            TexManager.OneTimeSetup();
+            Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
+            DocManager = new DocumentManager( this );
+            DXManager = new DirectXManager( this );
 
-            //InitUI();
+            InitUI();
 
             PluginLog.Log( "enabling!!!!!" );
 
-            ResourceLoader.Init();
-            ResourceLoader.Enable();
+            //ResourceLoader.Init();
+            //ResourceLoader.Enable();
 
-            /*PluginInterface.UiBuilder.OnBuildUi += Draw;*/
+            PluginInterface.UiBuilder.OnBuildUi += Draw;
         }
 
         public void Draw() {
@@ -80,16 +80,16 @@ namespace VFXEditor
         }
 
         public void Dispose() {
-            //PluginInterface.UiBuilder.OnBuildUi -= Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
 
             ImPlot.DestroyContext();
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
-            //SpawnVfx?.Remove();
-            //DXManager?.Dispose();
-            //DocManager?.Dispose();
+            SpawnVfx?.Remove();
+            DXManager?.Dispose();
+            DocManager?.Dispose();
             TexManager?.Dispose();
         }
 
