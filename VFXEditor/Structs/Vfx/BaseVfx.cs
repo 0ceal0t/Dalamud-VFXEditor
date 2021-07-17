@@ -24,7 +24,7 @@ namespace VFXEditor.Structs.Vfx {
      */
 
 
-    [StructLayout( LayoutKind.Explicit, Size = 0x200 )] // idk what the size is lol
+    [StructLayout( LayoutKind.Explicit )]
     public unsafe struct VfxStruct {
         [FieldOffset( 0x38 )] public byte Flags;
         [FieldOffset( 0x50 )] public Position3 Position;
