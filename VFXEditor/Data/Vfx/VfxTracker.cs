@@ -20,7 +20,7 @@ namespace VFXEditor.Data.Vfx {
         public struct TrackerData {
             public string path;
             public bool isChecked;
-            public uint actorId;
+            public int actorId;
             public VfxStruct* Vfx;
         }
 
@@ -40,7 +40,7 @@ namespace VFXEditor.Data.Vfx {
             var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = 0,
+                actorId = -1,
                 Vfx = vfx
             };
             ActorVfxs.TryAdd( new IntPtr(vfx), data );
@@ -59,7 +59,7 @@ namespace VFXEditor.Data.Vfx {
             var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = 0,
+                actorId = -1,
                 Vfx = vfx
             };
             StaticVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -91,8 +91,8 @@ namespace VFXEditor.Data.Vfx {
             }
         }
 
-        public static uint ChooseId( uint caster, uint target ) {
-            return target > 0 ? target : ( caster > 0 ? caster : 0 );
+        public static int ChooseId( int caster, int target ) {
+            return target > 0 ? target : ( caster > 0 ? caster : -1 );
         }
 
         public void Draw() {
@@ -130,17 +130,20 @@ namespace VFXEditor.Data.Vfx {
             }
 
             List<StaticVfxGroup> Groups = new List<StaticVfxGroup>(); // static vfxs without an actor
-            Dictionary<uint, HashSet<string>> ActorToVfxs = new Dictionary<uint, HashSet<string>>(); // either one with an actor
+            Dictionary<int, HashSet<string>> ActorToVfxs = new Dictionary<int, HashSet<string>>(); // either one with an actor
 
             // ====== STATIC =======
             foreach( var item in StaticVfxs ) {
-                if( item.Key == IntPtr.Zero ) continue;
+                if( item.Key == IntPtr.Zero ) {
+                    continue;
+                }
 
                 var vfx = item.Value;
                 if( !vfx.isChecked ) {
                     var casterId = vfx.Vfx->StaticCaster;
                     var targetId = vfx.Vfx->StaticTarget;
                     var actorId = ChooseId( casterId, targetId );
+
                     vfx = new TrackerData
                     {
                         path = vfx.path,
@@ -188,6 +191,7 @@ namespace VFXEditor.Data.Vfx {
                     if( !ActorToVfxs.ContainsKey( vfx.actorId ) ) {
                         ActorToVfxs[vfx.actorId] = new HashSet<string>();
                     }
+
                     ActorToVfxs[vfx.actorId].Add( vfx.path );
                 }
             }
@@ -213,9 +217,10 @@ namespace VFXEditor.Data.Vfx {
             }
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
+
                 if( Plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
 
-                var result = ActorToVfxs.TryGetValue( actor.ActorId, out var paths );
+                var result = ActorToVfxs.TryGetValue( (int) actor.ActorId, out var paths );
                 if( !result ) continue;
 
                 var pos = new SharpDX.Vector3 {

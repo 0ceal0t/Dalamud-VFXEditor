@@ -88,15 +88,15 @@ namespace VFXEditor
 
             var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
             var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
-            //var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" );
-            //var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
+            var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" );
+            var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
 
             ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress );
-            //GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress );
-            //GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress );
+            GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress );
+            GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress );
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
 
-            /*var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
+            var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
             var staticVfxRunAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 0F 28 B4 24 ?? ?? ?? ?? 48 8B 8C 24 ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 5F" );
             var staticVfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
             
@@ -118,12 +118,12 @@ namespace VFXEditor
             ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress );
 
             var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
-            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );*/
+            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
         }
 
         private unsafe VfxStruct* StaticVfxNewHandler( char* path, char* pool ) {
             var vfx = StaticVfxCreateHook.OriginalFunction( path, pool );
-            var vfxPath = Marshal.PtrToStringAnsi( new IntPtr( path ) );
+            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII );
             Plugin.Tracker?.AddStatic( vfx, vfxPath );
             return vfx;
         }
@@ -136,9 +136,9 @@ namespace VFXEditor
             return StaticVfxRemoveHook.OriginalFunction( vfx );
         }
 
-        private unsafe VfxStruct* ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 ) {
+        private unsafe VfxStruct* ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
-            var vfxPath = Marshal.PtrToStringAnsi( new IntPtr( a1 ) );
+            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
             Plugin.Tracker?.AddActor( a2, vfx, vfxPath );
             return vfx;
         }
@@ -155,23 +155,23 @@ namespace VFXEditor
             if( IsEnabled )
                 return;
             ReadSqpackHook.Activate();
-            //GetResourceSyncHook.Activate();
-            //GetResourceAsyncHook.Activate();
+            GetResourceSyncHook.Activate();
+            GetResourceAsyncHook.Activate();
 
-            //StaticVfxCreateHook.Activate();
-            //StaticVfxRemoveHook.Activate();
-            //ActorVfxCreateHook.Activate();
-            //ActorVfxRemoveHook.Activate();
+            StaticVfxCreateHook.Activate();
+            StaticVfxRemoveHook.Activate();
+            ActorVfxCreateHook.Activate();
+            ActorVfxRemoveHook.Activate();
 
             // ==============
             ReadSqpackHook.Enable();
-            //GetResourceSyncHook.Enable();
-            //GetResourceAsyncHook.Enable();
+            GetResourceSyncHook.Enable();
+            GetResourceAsyncHook.Enable();
 
-            //StaticVfxCreateHook.Enable();
-            //StaticVfxRemoveHook.Enable();
-            //ActorVfxCreateHook.Enable();
-            //ActorVfxRemoveHook.Enable();
+            StaticVfxCreateHook.Enable();
+            StaticVfxRemoveHook.Enable();
+            ActorVfxCreateHook.Enable();
+            ActorVfxRemoveHook.Enable();
             IsEnabled = true;
         }
 
@@ -179,13 +179,13 @@ namespace VFXEditor
             if( !IsEnabled )
                 return;
             ReadSqpackHook.Disable();
-            //GetResourceSyncHook.Disable();
-            //GetResourceAsyncHook.Disable();
+            GetResourceSyncHook.Disable();
+            GetResourceAsyncHook.Disable();
 
-            //StaticVfxCreateHook.Disable();
-            //StaticVfxRemoveHook.Disable();
-            //ActorVfxCreateHook.Disable();
-            //ActorVfxRemoveHook.Disable();
+            StaticVfxCreateHook.Disable();
+            StaticVfxRemoveHook.Disable();
+            ActorVfxCreateHook.Disable();
+            ActorVfxRemoveHook.Disable();
             IsEnabled = false;
         }
 
@@ -250,6 +250,7 @@ namespace VFXEditor
             bool isUnknown
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
+
             if( Configuration.Config?.LogAllFiles == true ) {
                 PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
             }
@@ -284,30 +285,14 @@ namespace VFXEditor
 
 
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
-            //var watch = new System.Diagnostics.Stopwatch();
-            //watch.Start();
-
-            PluginLog.Log( $"-> {pFileDesc == null} {pFileDesc->ResourceHandle == null} {pFileDesc->ResourceHandle->FileName == null}" );
-            var gameFsPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( pFileDesc->ResourceHandle->FileName ), Encoding.ASCII );
-            PluginLog.Log( gameFsPath );
-
-            //for(int i = 0; i < 10000; i++) {
-            //    gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pFileDesc->ResourceHandle->FileName ) );
-            //}
-            //watch.Stop();
-            //PluginLog.Log( $"PtrToStringAnsi: {watch.ElapsedMilliseconds} ms" );
+            var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted ) {
                 return ReadSqpackHook.OriginalFunction( pFileHandler, pFileDesc, priority, isSync );
             }
 
-            PluginLog.Log( "here!" );
-
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
-
-            //var watch2 = new System.Diagnostics.Stopwatch();
-            //watch2.Start();
 
             // note: must be utf16
             var utfPath = Encoding.Unicode.GetBytes( gameFsPath );
@@ -316,19 +301,20 @@ namespace VFXEditor
             Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
             pFileDesc->FileDescriptor = fd;
 
-            //for( int i = 0; i < 10000; i++ ) {
-            //    Marshal.Copy( utfPath, 0, new IntPtr( &pFileDesc->UtfFileName ), utfPath.Length );
-            //    Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
-            //}
-            //watch2.Stop();
-            //PluginLog.Log( $"Copy: {watch2.ElapsedMilliseconds} ms" );
-
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
         }
 
         public void Dispose() {
             if( IsEnabled )
                 Disable();
+        }
+
+        public unsafe static string GetString(StdString str) {
+            var len = (int) str.Size;
+            if( len > 15 ) {
+                return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
+            }
+            return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
         }
     }
 }

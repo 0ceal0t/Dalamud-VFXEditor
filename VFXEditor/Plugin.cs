@@ -65,8 +65,6 @@ namespace VFXEditor
 
             InitUI();
 
-            PluginLog.Log( "enabling!!!!!" );
-
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
