@@ -1,5 +1,4 @@
-﻿using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
+using AVFXLib.AVFX;
 using System;
 using System.Collections.Generic;
 using System.Linq;

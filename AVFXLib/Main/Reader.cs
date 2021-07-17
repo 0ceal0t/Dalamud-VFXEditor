@@ -7,9 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AVFXLib.AVFX;
 using AVFXLib.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace AVFXLib.Main
 {

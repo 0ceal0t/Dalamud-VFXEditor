@@ -20,7 +20,7 @@ namespace VFXEditor.Data.Vfx {
         public struct TrackerData {
             public string path;
             public bool isChecked;
-            public int actorId;
+            public uint actorId;
             public VfxStruct* Vfx;
         }
 
@@ -40,7 +40,7 @@ namespace VFXEditor.Data.Vfx {
             var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = -1,
+                actorId = 0,
                 Vfx = vfx
             };
             ActorVfxs.TryAdd( new IntPtr(vfx), data );
@@ -59,7 +59,7 @@ namespace VFXEditor.Data.Vfx {
             var data = new TrackerData() {
                 path = path,
                 isChecked = false,
-                actorId = -1,
+                actorId = 0,
                 Vfx = vfx
             };
             StaticVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -91,8 +91,8 @@ namespace VFXEditor.Data.Vfx {
             }
         }
 
-        public static int ChooseId(int caster, int target ) {
-            return target > 0 ? target : ( caster > 0 ? caster : -1 );
+        public static uint ChooseId( uint caster, uint target ) {
+            return target > 0 ? target : ( caster > 0 ? caster : 0 );
         }
 
         public void Draw() {
@@ -130,7 +130,7 @@ namespace VFXEditor.Data.Vfx {
             }
 
             List<StaticVfxGroup> Groups = new List<StaticVfxGroup>(); // static vfxs without an actor
-            Dictionary<int, HashSet<string>> ActorToVfxs = new Dictionary<int, HashSet<string>>(); // either one with an actor
+            Dictionary<uint, HashSet<string>> ActorToVfxs = new Dictionary<uint, HashSet<string>>(); // either one with an actor
 
             // ====== STATIC =======
             foreach( var item in StaticVfxs ) {

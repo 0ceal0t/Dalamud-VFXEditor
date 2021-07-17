@@ -1,8 +1,5 @@
-using Dalamud.Game.ClientState.Actors;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Actors.Types;
-using Dalamud.Plugin;
-using ImGuizmoNET;
-using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -34,11 +31,11 @@ namespace VFXEditor.Structs.Vfx {
         [FieldOffset( 0x60 )] public Quat Rotation;
         [FieldOffset( 0x70 )] public Position3 Scale;
 
-        [FieldOffset( 0x128 )] public int ActorCaster;
-        [FieldOffset( 0x130 )] public int ActorTarget;
+        [FieldOffset( 0x128 )] public uint ActorCaster;
+        [FieldOffset( 0x130 )] public uint ActorTarget;
 
-        [FieldOffset( 0x1B8 )] public int StaticCaster;
-        [FieldOffset( 0x1C0 )] public int StaticTarget;
+        [FieldOffset( 0x1B8 )] public uint StaticCaster;
+        [FieldOffset( 0x1C0 )] public uint StaticTarget;
     }
 
     public unsafe abstract class BaseVfx {

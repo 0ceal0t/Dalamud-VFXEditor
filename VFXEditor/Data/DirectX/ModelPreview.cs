@@ -155,7 +155,7 @@ namespace VFXEditor.Data.DirectX {
         public void LoadModel( AVFXModel model, int mode = 1 ) {
             LoadModel( model.Indexes, model.Vertices, model.EmitVertices, mode );
         }
-        public void LoadModel( List<Index> _Indexes, List<Vertex> _Vertices, List<EmitVertex> _Emitters, int mode ) {
+        public void LoadModel( List<AVFXLib.Models.Index> _Indexes, List<Vertex> _Vertices, List<EmitVertex> _Emitters, int mode ) {
             // ======= MODEL + EDGES ========
             if( _Indexes.Count == 0 ) {
                 NumVerts = 0;

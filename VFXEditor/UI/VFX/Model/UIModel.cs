@@ -145,7 +145,7 @@ namespace VFXEditor.UI.VFX
             Plugin.ImportFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select GLTF File.",
                 ( string path ) => {
                     try {
-                        if( GLTF.ImportModel( path, out List<Vertex> v_s, out List<Index> i_s ) ) {
+                        if( GLTF.ImportModel( path, out List<Vertex> v_s, out List<AVFXLib.Models.Index> i_s ) ) {
                             Model.Vertices = v_s;
                             Model.Indexes = i_s;
                             Refresh = true;
