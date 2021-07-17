@@ -67,8 +67,8 @@ namespace VFXEditor
 
             PluginLog.Log( "enabling!!!!!" );
 
-            //ResourceLoader.Init();
-            //ResourceLoader.Enable();
+            ResourceLoader.Init();
+            ResourceLoader.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
         }
