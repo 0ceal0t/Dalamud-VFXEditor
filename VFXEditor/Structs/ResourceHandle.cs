@@ -15,7 +15,7 @@ public unsafe struct StdString {
     public byte* BufferPtr;
 
     [FieldOffset( 0x0 )]
-    public fixed char Buffer[16];
+    public fixed byte Buffer[16];
 
     [FieldOffset( 0x10 )]
     public ulong Size;
