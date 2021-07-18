@@ -21,6 +21,16 @@ namespace VFXEditor
         public bool IsEnabled { get; set; }
         public Crc32 Crc32 { get; }
 
+        // ====== REDRAW =======
+        private enum RedrawState {
+            None,
+            Start,
+            Invisible,
+            Visible
+        }
+        private RedrawState CurrentRedrawState = RedrawState.None;
+        IntPtr RenderPtr;
+
         // ===== FILES =========
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
@@ -189,23 +199,31 @@ namespace VFXEditor
             IsEnabled = false;
         }
 
-        // https://github.com/imchillin/Anamnesis/blob/0ba09fcd7fb1ec1ed13b22ab9e5b2cea6926f113/Anamnesis/Core/Memory/AddressService.cs
-        // https://github.com/imchillin/CMTool/blob/a1af42ceab86700d4d1b21b5ba61079ad79fd2f2/ConceptMatrix/OffsetSettings.json#L69
         public void ReRender() {
             var player = Plugin.PluginInterface.ClientState.LocalPlayer;
-            var charBaseAddr = player.Address;
+            RenderPtr = player.Address + 0x104;
 
-            Task.Run( async () => {
-                var entityOffset = charBaseAddr + Dalamud.Game.ClientState.Actors.Types.ActorOffsets.ObjectKind;
-                var renderOffset = charBaseAddr + 0x104;
+            if( CurrentRedrawState != RedrawState.None ) return;
+            CurrentRedrawState = RedrawState.Start;
+            Plugin.PluginInterface.Framework.OnUpdateEvent += OnUpdateEvent;
+        }
 
-                Marshal.WriteByte( entityOffset, 0x02 );
-                Marshal.WriteByte( renderOffset, 0x02 );
-                await Task.Delay( 100 );
-                Marshal.WriteByte( renderOffset, 0x00 );
-                await Task.Delay( 100 );
-                Marshal.WriteByte( entityOffset, 0x01 );
-            } );
+        private unsafe void OnUpdateEvent(object framework) {
+            switch(CurrentRedrawState) {
+                case RedrawState.Start:
+                    *( int* )RenderPtr |= 0x00_00_00_02;
+                    CurrentRedrawState = RedrawState.Invisible;
+                    break;
+                case RedrawState.Invisible:
+                    *( int* )RenderPtr &= ~0x00_00_00_02;
+                    CurrentRedrawState = RedrawState.Visible;
+                    break;
+                case RedrawState.Visible:
+                default:
+                    CurrentRedrawState = RedrawState.None;
+                    Plugin.PluginInterface.Framework.OnUpdateEvent -= OnUpdateEvent;
+                    break;
+            }
         }
 
         private unsafe void* GetResourceSyncHandler(
