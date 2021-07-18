@@ -64,7 +64,7 @@ namespace VFXEditor.UI.VFX
             var id = parentId + "/" + Name;
             // =================
             if( !Locked ) {
-                if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
+                if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
                     Init();
                     return;

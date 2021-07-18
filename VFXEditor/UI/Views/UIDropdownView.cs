@@ -1,3 +1,4 @@
+using AVFXLib.AVFX;
 using AVFXLib.Models;
 using Dalamud.Interface;
 using Dalamud.Plugin;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 
 namespace VFXEditor.UI.VFX
 {
-    public abstract class UIDropdownView<T> : UIBase where T : UINode {
+    public abstract class UIDropdownView<T> : UIBase, UINodeView<T> where T : UINode {
         public string Id;
         public string defaultText;
         public UIMain Main;
@@ -38,7 +39,7 @@ namespace VFXEditor.UI.VFX
         public abstract void OnDelete( T item );
         public abstract byte[] OnExport( T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node, bool has_dependencies = false );
+        public abstract T OnImport( AVFXNode node, bool has_dependencies = false );
 
         public override void Draw( string parentId = "" ) {
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
@@ -48,58 +49,18 @@ namespace VFXEditor.UI.VFX
             ImGui.PopStyleColor();
             ViewSelect();
 
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( AllowNew ) {
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) ) {
-                    ImGui.OpenPopup( "New_Popup" + Id );
-                }
-            }
-            if( Selected != null && AllowDelete ) {
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) ) {
-                    ImGui.OpenPopup( "Save_Popup" + Id );
-                }
-                ImGui.SameLine();
-                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
-                    Group.Remove( Selected );
-                    Selected.DeleteNode();
-                    OnDelete( Selected );
-                    Selected = null;
-                }
-            }
-            ImGui.PopFont();
-            // ===== NEW =====
-            if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
-                if( ImGui.Selectable( "Create" + Id ) ) {
-                    Main.ImportData( DefaultPath );
-                }
-                if( ImGui.Selectable( "Import" + Id ) ) {
-                    Main.ImportDialog();
-                }
-                ImGui.EndPopup();
-            }
-            // ==== SAVE =====
-            if( ImGui.BeginPopup( "Save_Popup" + Id ) ) {
-                if( ImGui.Selectable("Export" + Id ) ) {
-                    Main.ExportMultiple( Selected );
-                }
-                if( ImGui.Selectable( "Simple Export (old)" + Id ) ) {
-                    UIMain.ExportDialog( Selected );
-                }
-                ImGui.EndPopup();
-            }
+            if(AllowNew ) ImGui.SameLine();
+            UINodeView<T>.DrawControls(this, Main, Selected, Group, AllowNew, AllowDelete, Id);
 
             ImGui.Separator();
             ImGui.EndChild();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            // ====================
             if( Selected != null ) {
                 Selected.DrawBody( Id );
             }
         }
-        // ========================
+
         public void ViewSelect() {
             var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
             if( ImGui.BeginCombo( "Select" + Id, selectedString ) ) {
@@ -111,6 +72,14 @@ namespace VFXEditor.UI.VFX
                 }
                 ImGui.EndCombo();
             }
+        }
+
+        public void ControlDelete() {
+            Selected = null;
+        }
+
+        public void ControlCreate() {
+            Main.ImportData( DefaultPath );
         }
     }
 }

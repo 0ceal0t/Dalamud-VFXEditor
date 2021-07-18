@@ -1,3 +1,5 @@
+using AVFXLib.AVFX;
+using AVFXLib.Main;
 using AVFXLib.Models;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -217,7 +219,7 @@ namespace VFXEditor.UI.VFX {
 
         public void ImportData( BinaryReader br ) {
             var messages = new List<string>();
-            var nodes = AVFXLib.Main.Reader.ReadDefinition( br, messages);
+            var nodes = Reader.ReadDefinition( br, messages);
             var has_dependencies = nodes.Count >= 2;
             if( has_dependencies ) {
                 PreImportGroups();
@@ -229,6 +231,16 @@ namespace VFXEditor.UI.VFX {
             nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add(ParticleView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
             nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
+        }
+
+        public static AVFXNode CloneNode(AVFXNode node) {
+            return CloneNode( node.ToBytes() );
+        }
+        public static AVFXNode CloneNode(byte[] data) {
+            using( var ms = new MemoryStream( data ) )
+            using( var br = new BinaryReader( ms ) ) {
+                return Reader.ReadAVFX( br, out var messages );
+            }
         }
 
         public void PreImportGroups() {

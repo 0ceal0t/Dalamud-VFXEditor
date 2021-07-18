@@ -55,7 +55,7 @@ namespace VFXEditor.UI.VFX
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TC1";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
+            if( UIUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) )
             {
                 Tex.Assigned = false;
                 TextureSelect.DeleteSelect();

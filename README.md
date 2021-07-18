@@ -46,7 +46,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Better PNG import support
 - [ ] Duplicate nodes
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
-- [ ] Update wiki (again...sigh)
 - [ ] Investigate VFX flags, better structs
 - [ ] Better nodegraph view? might not really be necessary yet
 - [ ] Weapons / footsteps / etc. in live view

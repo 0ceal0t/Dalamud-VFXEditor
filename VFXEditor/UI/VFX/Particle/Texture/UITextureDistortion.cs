@@ -56,7 +56,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             string id = parentId + "/TD";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
+            if( UIUtils.RemoveButton( "Delete Texture Distortion" + id, small: true ) )
             {
                 Tex.Assigned = false;
                 TextureSelect.DeleteSelect();

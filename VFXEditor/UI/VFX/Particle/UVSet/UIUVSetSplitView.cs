@@ -23,10 +23,9 @@ namespace VFXEditor.UI.VFX {
             return null;
         }
 
-        public override void DrawNewButton( string parentId ) {
-            if(Items.Count < 4 ) {
-                base.DrawNewButton( parentId );
-            }
+        public override void DrawControls( string parentId ) {
+            AllowNew = ( Items.Count < 4 );
+            base.DrawControls( parentId );
         }
 
         public override void OnDelete( UIParticleUVSet item ) {

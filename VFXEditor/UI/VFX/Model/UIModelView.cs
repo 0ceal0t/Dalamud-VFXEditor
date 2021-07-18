@@ -10,22 +10,9 @@ using VFXEditor.Data.DirectX;
 
 namespace VFXEditor.UI.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
-        public UIMain Main;
-
-        public UIModelView(UIMain main, AVFXBase avfx) : base(avfx, "##MDL") {
-            Main = main;
+        public UIModelView(UIMain main, AVFXBase avfx) : base(main, avfx, "##MDL") {
             Group = main.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
-        }
-
-        public override void DrawNewButton( string parentId ) {
-            if( ImGui.SmallButton( "+ New" + Id ) ) {
-                Group.Add( OnNew() );
-            }
-            ImGui.SameLine();
-            if( ImGui.SmallButton( "Import" + Id ) ) {
-                Main.ImportDialog();
-            }
         }
 
         public override void OnSelect( UIModel item ) {
@@ -40,7 +27,7 @@ namespace VFXEditor.UI.VFX {
             return new UIModel( Main, AVFX.AddModel() );
         }
 
-        public override UIModel OnImport( AVFXNode node ) {
+        public override UIModel OnImport( AVFXNode node, bool has_dependencies = false ) {
             AVFXModel mdl = new AVFXModel();
             mdl.Read( node );
             AVFX.AddModel( mdl );
