@@ -12,7 +12,7 @@ using VFXEditor.Data.Vfx;
 using System.Reflection;
 using VFXEditor.Data.Texture;
 using VFXSelect;
-using FDialog;
+using ImGuiFileDialog;
 
 namespace VFXEditor
 {
@@ -71,7 +71,7 @@ namespace VFXEditor
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
-            _F = new FileDialog( "TestKey", "Choose a file", ".atex", @"C:\Users\kamin\AppData\Roaming\XIVLauncher\devPlugins", "test", "atex", 1, false, ImGuiFileDialogFlags.None );
+            _F = new FileDialog( "TestKey", "Choose a file", ".*", @"C:\Users\kamin\AppData\Roaming\XIVLauncher\devPlugins", "test", "atex", 3, false, ImGuiFileDialogFlags.None );
             _F.Show();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;

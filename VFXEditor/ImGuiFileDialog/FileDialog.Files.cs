@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FDialog {
+namespace ImGuiFileDialog {
     public partial class FileDialog {
         private enum FileStructType {
             File,
@@ -25,7 +25,6 @@ namespace FDialog {
             public FileStructType Type;
             public string FilePath;
             public string FileName;
-            public string FileName_Optimized;
             public string Ext;
             public long FileSize;
             public string FormattedFileSize;
@@ -73,7 +72,6 @@ namespace FDialog {
                         Type = FileStructType.Directory,
                         FilePath = path,
                         FileName = "..",
-                        FileName_Optimized = "..",
                         FileSize = 0,
                         FileModifiedDate = "",
                         FormattedFileSize = "",
@@ -83,7 +81,7 @@ namespace FDialog {
 
                 var dirInfo = new DirectoryInfo( path );
 
-                var dontShowHidden = ( Flags & ImGuiFileDialogFlags.DontShowHiddenFiles ) == ImGuiFileDialogFlags.DontShowHiddenFiles;
+                var dontShowHidden = Flags.HasFlag(ImGuiFileDialogFlags.DontShowHiddenFiles);
 
                 foreach( var dir in dirInfo.EnumerateDirectories().OrderBy( d => d.Name ) ) {
                     if( string.IsNullOrEmpty( dir.Name ) ) continue;
@@ -114,11 +112,10 @@ namespace FDialog {
                 FileName = file.Name,
                 FilePath = path,
                 FileModifiedDate = FormatModifiedDate( file.LastWriteTime ),
-                FileName_Optimized = file.Name.ToLower(),
                 FileSize = file.Length,
                 FormattedFileSize = BytesToString( file.Length ),
                 Type = FileStructType.File,
-                Ext = file.Extension
+                Ext = file.Extension.Trim('.')
             };
         }
 
@@ -128,7 +125,6 @@ namespace FDialog {
                 FileName = dir.Name,
                 FilePath = path,
                 FileModifiedDate = FormatModifiedDate( dir.LastWriteTime ),
-                FileName_Optimized = dir.Name.ToLower(),
                 FileSize = 0,
                 FormattedFileSize = "",
                 Type = FileStructType.Directory,
@@ -150,7 +146,6 @@ namespace FDialog {
                     Files.Add( new FileStruct
                     {
                         FileName = drive.Name,
-                        FileName_Optimized = drive.Name.ToLower(),
                         FileModifiedDate = "",
                         FileSize = 0,
                         FilePath = "",

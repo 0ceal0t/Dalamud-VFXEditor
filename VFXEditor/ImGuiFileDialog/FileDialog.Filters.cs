@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FDialog {
+namespace ImGuiFileDialog {
     public partial class FileDialog {
         private struct FilterStruct {
             public string Filter;
@@ -92,7 +92,7 @@ namespace FDialog {
 
                 foreach( var file in Files ) {
                     var show = true;
-                    if( !string.IsNullOrEmpty( SearchTag ) && !file.FileName_Optimized.Contains( SearchTag ) && !file.FileName.Contains( SearchTag ) ) {
+                    if( !string.IsNullOrEmpty( SearchBuffer ) && !file.FileName.ToLower().Contains(SearchBuffer.ToLower()) ) {
                         show = false;
                     }
 

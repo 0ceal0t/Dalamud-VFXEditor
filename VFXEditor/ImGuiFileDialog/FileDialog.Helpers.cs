@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace FDialog {
+namespace ImGuiFileDialog {
     public partial class FileDialog {
         private static string FormatModifiedDate( DateTime date ) {
             return date.ToString( "yyyy/MM/dd HH:mm" );

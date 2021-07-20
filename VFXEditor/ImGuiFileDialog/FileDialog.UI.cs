@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
@@ -8,8 +9,13 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FDialog {
+namespace ImGuiFileDialog {
     public partial class FileDialog {
+        private static Vector4 PATH_COLOR = new Vector4( 0.188f, 0.188f, 0.2f, 1f );
+        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 0.95f, 0.7f, 0.4f, 1f );
+        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.6f, 0.8f, 0.85f, 1f );
+        private static Dictionary<string, char> ICON_MAP;
+
         public bool Draw() {
             if( !Visible ) return false;
 
@@ -22,17 +28,22 @@ namespace FDialog {
 
             ResetEvents();
 
-            // TOOD: size
+            ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
 
             if( IsModal && !OkResultToConfirm ) {
                 ImGui.OpenPopup( name );
                 windowVisible = ImGui.BeginPopupModal( name, ref Visible, ImGuiWindowFlags.NoScrollbar );
             }
             else {
-                windowVisible = ImGui.Begin( name, ref Visible, ImGuiWindowFlags.NoScrollbar );
+                windowVisible = ImGui.Begin( name, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoNav );
             }
 
             if( windowVisible ) {
+                if( !Visible ) { // window closed
+                    IsOk = false;
+                    return true;
+                }
+
                 AnyWindowsHovered = ImGui.IsWindowHovered();
 
                 if( SelectedFilter.Empty() && ( Filters.Count > 0 ) ) {
@@ -70,29 +81,127 @@ namespace FDialog {
         }
 
         private void DrawHeader() {
+
             // TODO: bookmark
 
-            DrawDirectoryCreation();
             DrawPathComposer();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
             DrawSearchBar();
         }
 
-        private void DrawDirectoryCreation() {
-            if( ( Flags & ImGuiFileDialogFlags.DisableCreateDirectoryButton ) != ImGuiFileDialogFlags.DisableCreateDirectoryButton ) return;
+        private void DrawPathComposer() {
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{ ( PathInputActivated ? ( char )FontAwesomeIcon.Times : ( char )FontAwesomeIcon.Edit )}" ) ) {
+                PathInputActivated = !PathInputActivated;
+            }
+            ImGui.PopFont();
 
-            if( ImGui.Button( "+" ) ) {
+            ImGui.SameLine();
+
+            if( PathDecomposition.Count > 0 ) {
+                ImGui.SameLine();
+
+                if( PathInputActivated ) {
+                    ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
+                    ImGui.InputText( "##pathedit", ref PathInputBuffer, 255 );
+                    ImGui.PopItemWidth();
+                }
+                else {
+                    for( int idx = 0; idx < PathDecomposition.Count; idx++ ) {
+                        if( idx > 0 ) {
+                            ImGui.SameLine();
+                            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
+                        }
+
+                        ImGui.PushID( idx );
+                        ImGui.PushStyleColor( ImGuiCol.Button, PATH_COLOR );
+                        var click = ImGui.Button( PathDecomposition[idx] );
+                        ImGui.PopStyleColor();
+                        ImGui.PopID();
+
+                        if( click ) {
+                            CurrentPath = ComposeNewPath( PathDecomposition.GetRange( 0, idx + 1 ) );
+                            PathClicked = true;
+                            break;
+                        }
+
+                        if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) {
+                            PathInputBuffer = ComposeNewPath( PathDecomposition.GetRange( 0, idx + 1 ) );
+                            PathInputActivated = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DrawSearchBar() {
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Home}" ) ) {
+                SetPath( "." );
+            }
+            ImGui.PopFont();
+
+            if( ImGui.IsItemHovered() ) {
+                ImGui.SetTooltip( "Reset to current directory" );
+            }
+
+            ImGui.SameLine();
+
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Server}" ) ) {
+                DrivesClicked = true;
+            }
+            ImGui.PopFont();
+
+            if( ImGui.IsItemHovered() ) {
+                ImGui.SetTooltip( "Navigate to Drives" );
+            }
+
+
+            ImGui.SameLine();
+
+            DrawDirectoryCreation();
+
+            if( !CreateDirectoryMode ) {
+                ImGui.SameLine();
+                ImGui.Text( "Search :" );
+                ImGui.SameLine();
+                ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
+                var edited = ImGui.InputText( "##InputImGuiFileDialogSearchField", ref SearchBuffer, 255 );
+                ImGui.PopItemWidth();
+                if( edited ) {
+                    ApplyFilteringOnFileList();
+                }
+            }
+        }
+
+        private void DrawDirectoryCreation() {
+            if( Flags.HasFlag( ImGuiFileDialogFlags.DisableCreateDirectoryButton ) ) return;
+
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.FolderPlus}" ) ) {
                 if( !CreateDirectoryMode ) {
                     CreateDirectoryMode = true;
                     CreateDirectoryBuffer = "";
                 }
             }
+            ImGui.PopFont();
+
             if( ImGui.IsItemHovered() ) {
                 ImGui.SetTooltip( "Create Directory" );
             }
 
             if( CreateDirectoryMode ) {
                 ImGui.SameLine();
-                ImGui.PushItemWidth( 100f );
+                ImGui.Text( "New Directory Name" );
+
+                ImGui.SameLine();
+                ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X - 100f );
                 ImGui.InputText( "##DirectoryFileName", ref CreateDirectoryBuffer, 255 );
                 ImGui.PopItemWidth();
 
@@ -111,71 +220,6 @@ namespace FDialog {
                     CreateDirectoryMode = false;
                 }
             }
-
-            // TODO: vertical separator
-        }
-
-        private void DrawPathComposer() {
-            if( ImGui.Button( "R" ) ) {
-                SetPath( "." );
-            }
-            if( ImGui.IsItemHovered() ) {
-                ImGui.SetTooltip( "Reset to current directory" );
-            }
-
-            ImGui.SameLine();
-
-            if( ImGui.Button( "Drives" ) ) {
-                DrivesClicked = true;
-            }
-
-            ImGui.SameLine();
-
-            // TODO: vertical separator
-
-            if( PathDecomposition.Count > 0 ) {
-                ImGui.SameLine();
-
-                if( PathInputActivated ) {
-                    ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
-                    ImGui.InputText( "##pathedit", ref PathInputBuffer, 255 );
-                    ImGui.PopItemWidth();
-                }
-                else {
-                    for( int idx = 0; idx < PathDecomposition.Count; idx++ ) {
-                        if( idx > 0 ) ImGui.SameLine();
-
-                        ImGui.PushID( idx );
-                        var click = ImGui.Button( PathDecomposition[idx] );
-                        ImGui.PopID();
-
-                        if( click ) {
-                            CurrentPath = ComposeNewPath( PathDecomposition.GetRange( 0, idx + 1 ) );
-                            PluginLog.Log( CurrentPath );
-                            PathClicked = true;
-                            break;
-                        }
-
-                        if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) {
-                            PathInputBuffer = ComposeNewPath( PathDecomposition.GetRange( 0, idx + 1 ) );
-                            PathInputActivated = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        private void DrawSearchBar() {
-            ImGui.Text( "Search :" );
-            ImGui.SameLine();
-            ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
-            var edited = ImGui.InputText( "##InputImGuiFileDialogSearchField", ref SearchBuffer, 255 );
-            ImGui.PopItemWidth();
-            if( edited ) {
-                SearchTag = SearchBuffer;
-                ApplyFilteringOnFileList();
-            }
         }
 
         private void DrawContent() {
@@ -183,42 +227,40 @@ namespace FDialog {
 
             // TODO: bookmark
 
-            // TODO: side panel
-
             DrawFileListView( size );
         }
 
-        private unsafe void DrawFileListView(Vector2 size) {
+        private unsafe void DrawFileListView( Vector2 size ) {
             ImGui.BeginChild( "##FileDialog_FileList", size );
 
             ImGuiTableFlags tableFlags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.RowBg | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY | ImGuiTableFlags.NoHostExtendX;
-            if(ImGui.BeginTable("##FileTable", 4, tableFlags, size)) {
+            if( ImGui.BeginTable( "##FileTable", 4, tableFlags, size ) ) {
                 ImGui.TableSetupScrollFreeze( 0, 1 );
 
-                var hideType = ( Flags & ImGuiFileDialogFlags.HideColumnType ) == ImGuiFileDialogFlags.HideColumnType;
-                var hideSize = ( Flags & ImGuiFileDialogFlags.HideColumnSize ) == ImGuiFileDialogFlags.HideColumnSize;
-                var hideDate = ( Flags & ImGuiFileDialogFlags.HideColumnDate ) == ImGuiFileDialogFlags.HideColumnDate;
+                var hideType = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnType );
+                var hideSize = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnSize );
+                var hideDate = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnDate );
 
                 ImGui.TableSetupColumn( "File Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
-                ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed | (hideType ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None), -1, 1 );
+                ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed | ( hideType ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 1 );
                 ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed | ( hideSize ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 2 );
                 ImGui.TableSetupColumn( "Date", ImGuiTableColumnFlags.WidthFixed | ( hideDate ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 3 );
 
                 ImGui.TableNextRow( ImGuiTableRowFlags.Headers );
-                for(int column = 0; column < 4; column++ ) {
+                for( int column = 0; column < 4; column++ ) {
                     ImGui.TableSetColumnIndex( column );
                     var columnName = ImGui.TableGetColumnName( column );
                     ImGui.PushID( column );
                     ImGui.TableHeader( columnName );
                     ImGui.PopID();
                     if( ImGui.IsItemClicked() ) {
-                        if(column == 0) {
+                        if( column == 0 ) {
                             SortFields( SortingField.FileName, true );
                         }
-                        else if(column == 1) {
+                        else if( column == 1 ) {
                             SortFields( SortingField.Type, true );
                         }
-                        else if(column == 2 ) {
+                        else if( column == 2 ) {
                             SortFields( SortingField.Size, true );
                         }
                         else {
@@ -227,43 +269,35 @@ namespace FDialog {
                     }
                 }
 
-                if(FilteredFiles.Count > 0 ) {
+                if( FilteredFiles.Count > 0 ) {
                     ImGuiListClipperPtr clipper;
                     unsafe {
                         clipper = new ImGuiListClipperPtr( ImGuiNative.ImGuiListClipper_ImGuiListClipper() );
                     }
 
-                    lock(FilesLock) {
+                    lock( FilesLock ) {
                         clipper.Begin( FilteredFiles.Count );
                         while( clipper.Step() ) {
                             for( var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++ ) {
                                 if( i < 0 ) continue;
 
                                 var file = FilteredFiles[i];
-
-                                // TODO: icon
-                                // TODO: color
-
-                                string name = file.Type switch
-                                {
-                                    FileStructType.Directory => "[DIR] " + file.FileName,
-                                    FileStructType.File => "[FILE] " + file.FileName,
-                                    _ => file.FileName
-                                };
-
                                 var selected = SelectedFileNames.Contains( file.FileName );
                                 var needToBreak = false;
 
+                                if( file.Type == FileStructType.Directory ) ImGui.PushStyleColor( ImGuiCol.Text, DIR_TEXT_COLOR );
+                                if( selected ) ImGui.PushStyleColor( ImGuiCol.Text, SELECTED_TEXT_COLOR );
+
                                 ImGui.TableNextRow();
 
-                                if(ImGui.TableNextColumn()) {
-                                    needToBreak = SelectableItem( i, file, selected, name );
+                                if( ImGui.TableNextColumn() ) {
+                                    needToBreak = SelectableItem( file, selected );
                                 }
-                                if(ImGui.TableNextColumn()) {
+                                if( ImGui.TableNextColumn() ) {
                                     ImGui.Text( file.Ext );
                                 }
                                 if( ImGui.TableNextColumn() ) {
-                                    if(file.Type == FileStructType.File) {
+                                    if( file.Type == FileStructType.File ) {
                                         ImGui.Text( file.FormattedFileSize + " " );
                                     }
                                     else {
@@ -274,6 +308,9 @@ namespace FDialog {
                                     ImGui.Text( file.FileModifiedDate );
                                 }
 
+                                if( selected ) ImGui.PopStyleColor();
+                                if( file.Type == FileStructType.Directory ) ImGui.PopStyleColor();
+
                                 if( needToBreak ) break;
                             }
                         }
@@ -282,50 +319,51 @@ namespace FDialog {
                     }
                 }
 
-                if(PathInputActivated) {
-                    if(ImGui.IsKeyReleased(ImGui.GetKeyIndex(ImGuiKey.Enter))) {
+                if( PathInputActivated ) {
+                    if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Enter ) ) ) {
                         SetPath( PathInputBuffer );
                         PathInputActivated = false;
                     }
-                    if(ImGui.IsKeyReleased(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
+                    if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Escape ) ) ) {
                         PathInputActivated = false;
                     }
                 }
 
-                // TODO: key exploration
-
                 ImGui.EndTable();
             }
 
-            if(PathClicked) {
+            if( PathClicked ) {
                 SetPath( CurrentPath );
             }
-            if(DrivesClicked) {
+            if( DrivesClicked ) {
                 GetDrives();
             }
 
             ImGui.EndChild();
         }
 
-        private bool SelectableItem(int idx, FileStruct file, bool selected, string text) {
+        private bool SelectableItem( FileStruct file, bool selected ) {
             var flags = ImGuiSelectableFlags.AllowDoubleClick | ImGuiSelectableFlags.SpanAllColumns;
 
-            // TODO: key exploration
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.Text( file.Type == FileStructType.Directory ? $"{( char )FontAwesomeIcon.Folder}" : $"{GetIcon(file.Ext)}" );
+            ImGui.PopFont();
+            ImGui.SameLine();
 
-            var res = ImGui.Selectable( text, selected, flags );
-            if(res) {
-                if(file.Type == FileStructType.Directory) {
-                    if(ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left)) {
+            // TODO: key exploration
+            if( ImGui.Selectable( file.FileName, selected, flags ) ) {
+                if( file.Type == FileStructType.Directory ) {
+                    if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) {
                         PathClicked = SelectDirectory( file );
                         return true;
                     }
-                    else if(IsDirectoryMode()) {
+                    else if( IsDirectoryMode() ) {
                         SelectFileName( file );
                     }
                 }
                 else {
                     SelectFileName( file );
-                    if(ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left)) {
+                    if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) {
                         WantsToQuit = true;
                         IsOk = true;
                     }
@@ -333,6 +371,28 @@ namespace FDialog {
             }
 
             return false;
+        }
+
+        private char GetIcon( string ext ) {
+            if( ICON_MAP == null ) {
+                ICON_MAP = new();
+                AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo );
+                AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf );
+                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff" }, ( char )FontAwesomeIcon.FileImage );
+                AddToIconMap( new[] { "cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java" }, ( char )FontAwesomeIcon.FileCode );
+                AddToIconMap( new[] { "txt", "md" }, ( char )FontAwesomeIcon.FileAlt );
+                AddToIconMap( new[] { "zip", "7z", "gz", "tar" }, ( char )FontAwesomeIcon.FileArchive );
+                AddToIconMap( new[] { "mp3", "m4a", "ogg", "wav" }, ( char )FontAwesomeIcon.FileAudio );
+                AddToIconMap( new[] { "csv" }, ( char )FontAwesomeIcon.FileCsv );
+            }
+
+            return ICON_MAP.TryGetValue(ext.ToLower(), out var icon) ? icon : ( char )FontAwesomeIcon.File;
+        }
+
+        private void AddToIconMap( string[] extensions, char icon ) {
+            foreach(var ext in extensions) {
+                ICON_MAP[ext] = icon;
+            }
         }
 
 
@@ -365,8 +425,8 @@ namespace FDialog {
 
         private void SelectFileName( FileStruct file ) {
             if( ImGui.GetIO().KeyCtrl ) {
-                if(SelectionCountMax == 0) {
-                    if( SelectedFileNames.Contains( file.FileName ) ) {
+                if(SelectionCountMax == 0) { // infinite select
+                    if( !SelectedFileNames.Contains( file.FileName ) ) {
                         AddFileNameInSelection( file.FileName, true );
                     }
                     else {
@@ -375,7 +435,7 @@ namespace FDialog {
                 }
                 else {
                     if(SelectedFileNames.Count < SelectionCountMax) {
-                        if( SelectedFileNames.Contains( file.FileName ) ) {
+                        if( !SelectedFileNames.Contains( file.FileName ) ) {
                             AddFileNameInSelection( file.FileName, true );
                         }
                         else {
@@ -385,46 +445,26 @@ namespace FDialog {
                 }
             }
             else if( ImGui.GetIO().KeyShift ) {
-                if(SelectionCountMax != 1) {
+                if(SelectionCountMax != 1) { // can select a block
                     SelectedFileNames.Clear();
 
                     var startMultiSelection = false;
                     var fileNameToSelect = file.FileName;
                     string savedLastSelectedFileName = "";
 
-                    foreach(var f in Files) {
-                        var canTake = true;
-                        if( !string.IsNullOrEmpty( SearchTag ) && !f.FileName.Contains( SearchTag ) ) canTake = false; // filtered out
-                        if(canTake) {
-                            if( f.FileName == LastSelectedFileName) {
-                                startMultiSelection = true;
-                                AddFileNameInSelection( LastSelectedFileName, false );
+                    foreach(var f in FilteredFiles) {
+                        // select top-to-bottom
+                        if( f.FileName == LastSelectedFileName) { // start (the previously selected one)
+                            startMultiSelection = true;
+                            AddFileNameInSelection( LastSelectedFileName, false );
+                        }
+                        else if(startMultiSelection) {
+                            if(SelectionCountMax == 0) {
+                                AddFileNameInSelection( f.FileName, false );
                             }
-                            else if(startMultiSelection) {
-                                if(SelectionCountMax == 0) {
+                            else {
+                                if(SelectedFileNames.Count < SelectionCountMax) {
                                     AddFileNameInSelection( f.FileName, false );
-                                }
-                                else {
-                                    if(SelectedFileNames.Count < SelectionCountMax) {
-                                        AddFileNameInSelection( f.FileName, false );
-                                    }
-                                    else {
-                                        startMultiSelection = false;
-                                        if(!string.IsNullOrEmpty(savedLastSelectedFileName)) {
-                                            LastSelectedFileName = savedLastSelectedFileName;
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if(f.FileName == fileNameToSelect) {
-                                if(!startMultiSelection) {
-                                    savedLastSelectedFileName = LastSelectedFileName;
-                                    LastSelectedFileName = fileNameToSelect;
-                                    fileNameToSelect = savedLastSelectedFileName;
-                                    startMultiSelection = true;
-                                    AddFileNameInSelection( LastSelectedFileName, false );
                                 }
                                 else {
                                     startMultiSelection = false;
@@ -433,6 +473,24 @@ namespace FDialog {
                                     }
                                     break;
                                 }
+                            }
+                        }
+
+                        // select bottom-to-top
+                        if(f.FileName == fileNameToSelect) {
+                            if(!startMultiSelection) {
+                                savedLastSelectedFileName = LastSelectedFileName;
+                                LastSelectedFileName = fileNameToSelect;
+                                fileNameToSelect = savedLastSelectedFileName;
+                                startMultiSelection = true;
+                                AddFileNameInSelection( LastSelectedFileName, false );
+                            }
+                            else {
+                                startMultiSelection = false;
+                                if(!string.IsNullOrEmpty(savedLastSelectedFileName)) {
+                                    LastSelectedFileName = savedLastSelectedFileName;
+                                }
+                                break;
                             }
                         }
                     }
@@ -481,7 +539,7 @@ namespace FDialog {
 
             ImGui.SameLine();
 
-            var width = ImGui.GetContentRegionAvail().X;
+            var width = ImGui.GetContentRegionAvail().X - 100;
             if( Filters.Count > 0 ) {
                 width -= 150f;
             }
@@ -516,13 +574,19 @@ namespace FDialog {
 
             var res = false;
 
-            if( CanWeContinue && !string.IsNullOrEmpty( FileNameBuffer ) ) {
-                if( ImGui.Button( "Ok" ) ) {
-                    IsOk = true;
-                    res = true;
-                }
-                ImGui.SameLine();
+            ImGui.SameLine();
+
+            var disableOk = string.IsNullOrEmpty( FileNameBuffer ) || ( Flags.HasFlag( ImGuiFileDialogFlags.CheckIfExists ) && !IsItemSelected() );
+            if( disableOk ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+
+            if( ImGui.Button( "Ok" ) && !disableOk ) {
+                IsOk = true;
+                res = true;
             }
+
+            if( disableOk ) ImGui.PopStyleVar();
+
+            ImGui.SameLine();
 
             if( ImGui.Button( "Cancel" ) ) {
                 IsOk = false;
@@ -538,23 +602,26 @@ namespace FDialog {
             return res;
         }
 
+        private bool IsItemSelected() {
+            if( SelectedFileNames.Count > 0 ) return true;
+            if( IsDirectoryMode()) return true; // current directory
+            return false;
+        }
+
         private bool ConfirmOrOpenOverWriteFileDialogIfNeeded( bool lastAction ) {
-            if( !IsOk && lastAction ) {
-                return true;
-            }
+            if( IsDirectoryMode() ) return true;
+            if( !IsOk && lastAction ) return true; // no need to confirm anything, since it was cancelled
 
-            var confirmOverwrite = ( Flags & ImGuiFileDialogFlags.ConfirmOverwrite ) == ImGuiFileDialogFlags.ConfirmOverwrite;
+            var confirmOverwrite = Flags.HasFlag(ImGuiFileDialogFlags.ConfirmOverwrite);
 
-            if( IsOk && lastAction && !confirmOverwrite ) {
-                return true;
-            }
+            if( IsOk && lastAction && !confirmOverwrite ) return true;
 
-            if( OkResultToConfirm || ( IsOk && lastAction ) && confirmOverwrite ) {
+            if( OkResultToConfirm || ( IsOk && lastAction ) && confirmOverwrite ) { // if waiting on a confirmation, or need to start one
                 if( IsOk ) {
-                    if( !File.Exists( GetFilePathName() ) ) { // quit dialog
+                    if( !File.Exists( GetFilePathName() ) ) { // quit dialog, it doesn't exist anyway
                         return true;
                     }
-                    else {
+                    else { // already exists, open dialog to confirm overwrite
                         IsOk = false;
                         OkResultToConfirm = true;
                     }
@@ -591,16 +658,6 @@ namespace FDialog {
             }
 
             return false;
-        }
-
-        public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {
-            float childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
-            var scrollY = ImGui.GetScrollY();
-            var style = ImGui.GetStyle();
-            itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;
-            preItems = ( int )Math.Floor( scrollY / itemHeight );
-            showItems = ( int )Math.Ceiling( childHeight / itemHeight );
-            postItems = count - showItems - preItems;
         }
     }
 }

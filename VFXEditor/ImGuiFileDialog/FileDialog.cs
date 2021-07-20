@@ -7,20 +7,29 @@ using System.Threading.Tasks;
 using System.IO;
 using ImGuiNET;
 
-namespace FDialog {
-    // TODO: icons
+namespace ImGuiFileDialog {
+    [Flags]
+    public enum ImGuiFileDialogFlags {
+        None = 0,
+        ConfirmOverwrite = 1,
+        CheckIfExists = 2,
+        DontShowHiddenFiles = 3,
+        DisableCreateDirectoryButton = 4,
+        HideColumnType = 5,
+        HideColumnSize = 6,
+        HideColumnDate = 7,
+    }
 
     public partial class FileDialog {
-        // https://github.com/aiekick/ImGuiFileDialog/blob/7b96209e5e96caff9cfeaf3e67dc7cb7d686ae74/ImGuiFileDialog.cpp
-        
         // TODO: save path
         // TODO: save filter
 
-        private string Id;
         private string Title;
         private int SelectionCountMax;
         private ImGuiFileDialogFlags Flags;
-        // TODO: UserData?
+        private string Id;
+
+        private bool Visible;
 
         private string CurrentPath;
 
@@ -29,39 +38,30 @@ namespace FDialog {
         private string FileNameBuffer = "";
 
         private List<string> PathDecomposition = new();
-
-        private bool Visible;
+        private bool PathClicked = true;
+        private bool PathInputActivated = false;
+        private string PathInputBuffer = "";
 
         private bool IsModal = false;
         private bool OkResultToConfirm = false;
 
         private bool IsOk;
-
-        private bool CanWeContinue;
-
         private bool WantsToQuit;
 
         private bool ShowDrives = false;
         private bool DrivesClicked = false;
 
-        private bool AnyWindowsHovered;
+        private bool AnyWindowsHovered; // TODO
 
         private bool CreateDirectoryMode = false;
         private string CreateDirectoryBuffer = "";
 
-        private bool PathClicked = true;
-        private bool PathInputActivated = false;
-        private string PathInputBuffer = "";
-
         private string SearchBuffer = "";
-        private string SearchTag = "";
 
         private string LastSelectedFileName = "";
-
-        private float FooterHeight = 0;
-
         private List<string> SelectedFileNames = new();
 
+        private float FooterHeight = 0;
 
         public FileDialog(string id, string title, string filters, string path, string defaultFileName, string defaultExtension, int selectionCountMax, bool isModal, ImGuiFileDialogFlags flags) {
             Id = id;
@@ -87,10 +87,12 @@ namespace FDialog {
             Visible = false;
         }
 
-        private void ResetEvents() {
-            DrivesClicked = false;
-            PathClicked = false;
-            CanWeContinue = true;
+        public bool GetIsOk() {
+            return IsOk;
+        }
+
+        public bool GetWantsToQuit() {
+            return WantsToQuit;
         }
 
         private string GetFilePathName() {
@@ -104,31 +106,27 @@ namespace FDialog {
             return result;
         }
 
-        private string GetCurrentPath() {
-            var path = CurrentPath;
-            if(IsDirectoryMode()) {
+        public string GetCurrentPath() {
+            if(IsDirectoryMode()) { // combine path file with directory input
                 var selectedDirectory = FileNameBuffer;
                 if(!string.IsNullOrEmpty(selectedDirectory) && selectedDirectory != ".") {
-                    if(string.IsNullOrEmpty(path)) {
-                        path = selectedDirectory;
-                    }
-                    else {
-                        path = Path.Combine( path, selectedDirectory );
-                    }
+                    return string.IsNullOrEmpty( CurrentPath ) ? selectedDirectory : Path.Combine( CurrentPath, selectedDirectory );
                 }
             }
-            return path;
+
+            return CurrentPath;
         }
 
-        private string GetCurrentFileName() {
-            if( !IsDirectoryMode() ) {
+        public string GetCurrentFileName() {
+            if( !IsDirectoryMode() ) { // add extension
                 var result = FileNameBuffer;
 
+                // a collection like {.cpp, .h}, so can't decide on an extension
                 if( SelectedFilter.CollectionFilters != null && SelectedFilter.CollectionFilters.Count > 0 ) {
                     return result;
                 }
 
-                // not a collection
+                // a single one, like .cpp
                 if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
                     var lastPoint = result.LastIndexOf( '.' );
                     if(lastPoint != -1) {
@@ -136,10 +134,9 @@ namespace FDialog {
                     }
                     result += SelectedFilter.Filter;
                 }
-
                 return result;
             }
-            return "";
+            return ""; // when in directory mode, there is no filename
         }
 
         private void SetDefaultFileName( string filename ) {
@@ -147,7 +144,7 @@ namespace FDialog {
             FileNameBuffer = filename;
         }
 
-        private void SetPath(string path) {
+        public void SetPath(string path) {
             ShowDrives = false;
             CurrentPath = path;
             Files.Clear();
@@ -158,10 +155,10 @@ namespace FDialog {
             ScanDir( CurrentPath );
         }
 
-        private void SetCurrentDir(string path) {
+        public void SetCurrentDir(string path) {
             var dir = new DirectoryInfo( path );
             CurrentPath = dir.FullName;
-            if(CurrentPath[CurrentPath.Length - 1] == Path.DirectorySeparatorChar) {
+            if(CurrentPath[CurrentPath.Length - 1] == Path.DirectorySeparatorChar) { // handle selecting a drive, like C: -> C:\
                 CurrentPath = CurrentPath.Substring( 0, CurrentPath.Length - 1 );
             }
 
@@ -171,6 +168,11 @@ namespace FDialog {
 
         private bool IsDirectoryMode() {
             return Filters.Count == 0;
+        }
+
+        private void ResetEvents() {
+            DrivesClicked = false;
+            PathClicked = false;
         }
     }
 }
