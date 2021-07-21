@@ -33,9 +33,7 @@ fd.SaveFileDialog("ID_3", "Selecte a Location to Save", ".json,.*", "default_nam
 });
 ```
 
-### Creating a `FileDialog`
-
-#### Constructor
+## Creating a `FileDialog`
 
 ```cs
 /*
@@ -49,12 +47,11 @@ fd.SaveFileDialog("ID_3", "Selecte a Location to Save", ".json,.*", "default_nam
  * isModal: Whether the dialog will be a window or popup modal
  * flags:  See the "Flags" section
  */
+
 FileDialog(string id, string title, string filters, string path, string defaultFileName, string defaultExtension, int selectionCountMax, bool isModal, ImGuiFileDialogFlags flags)
-```
 
-#### Methods
+// ==== METHODS =====
 
-```cs
 void Show();
 
 void Hide();
@@ -68,17 +65,20 @@ bool GetIsOk();
 string GetCurrentPath();
 ```
 
-### Flags
+## Flags
 
-- `ConfirmOverwrite`: When selecting an existing file, should the selection be confirmed
-- `SelectOnly`: The results must be from existing files or directories
-- `DontShowHiddenFiles`
-- `DisableCreateDirectoryButton`
-- `HideColumnType`
-- `HideColumnSize`
-- `HideColumnDate`
+```cs
+ImGuiFileDialogFlags.None;
+ImGuiFileDialogFlags.ConfirmOverwrite; // The results must be from existing files or directories
+ImGuiFileDialogFlags.SelectOnly; // The results must be from existing files or directories
+ImGuiFileDialogFlags.DontShowHiddenFiles;
+ImGuiFileDialogFlags.DisableCreateDirectoryButton;
+ImGuiFileDialogFlags.;
+ImGuiFileDialogFlags.HideColumnSize;
+ImGuiFileDialogFlags.HideColumnDate;
+```
 
-### Filters
+## Filters
 
 If you wish the create a dialog in directory mode, set the filters to `""`. Otherwise, filters can follow formats such as these:
 
