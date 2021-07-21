@@ -55,17 +55,17 @@ FileDialog(string id, string title, string filters, string path, string defaultF
 #### Methods
 
 ```cs
-void Show()
+void Show();
 
-void Hide()
+void Hide();
 
 // Returns "true' when the dialog has a result
-bool Draw()
+bool Draw();
 
 // Returns "true" if the dialog successfully selected a file or directory
-bool GetIsOk()
+bool GetIsOk();
 
-string GetCurrentPath()
+string GetCurrentPath();
 ```
 
 ### Flags
