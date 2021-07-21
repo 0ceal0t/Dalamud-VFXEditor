@@ -54,7 +54,7 @@ namespace ImGuiFileDialog {
                         SetSelectedFilterWithExt( DefaultExtension );
                     }
                     else if( IsDirectoryMode() ) {
-                        SetDefaultFileName( "." );
+                        SetDefaultFileName( DefaultFileName );
                     }
 
                     ScanDir( CurrentPath );

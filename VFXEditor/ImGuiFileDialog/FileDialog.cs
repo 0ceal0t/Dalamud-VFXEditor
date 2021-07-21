@@ -164,7 +164,7 @@ namespace ImGuiFileDialog {
             PathDecomposition.Clear();
             SelectedFileNames.Clear();
             if( IsDirectoryMode() ) {
-                SetDefaultFileName( "." );
+                SetDefaultFileName( DefaultFileName );
             }
             ScanDir( CurrentPath );
         }
