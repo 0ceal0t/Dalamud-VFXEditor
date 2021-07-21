@@ -6,8 +6,8 @@ Ported mostly verbatim from the original [ImGuiDialog](https://github.com/aiekic
 
 You can either create a `FileDialog` directly, or use a `FileDialogManager` to handle things for you
 
-### `FileDialogManager`
-```
+## Using the Manager
+```cs
 using ImGuiFileDialog;
 
 FileDialogManager fd = new FileDialogManager();
@@ -19,51 +19,54 @@ fd.Dispose();
 ```
 
 Then, you can create dialogs like this. Note that only one dialog can be active at a time.
-```
+```cs
 fd.SelectFolderDialog("ID_1", "Selecte a Folder", (bool ok, string result) => {
-
     // ...
-
 });
 
 fd.OpenFileDialog("ID_2", "Selecte a File to Open", ".json,.*", (bool ok, string result) => {
-
     // NOTE: see the section on filters for information on how to format them
-    // ...
-
 });
 
 fd.SaveFileDialog("ID_3", "Selecte a Location to Save", ".json,.*", "default_name", "json", (bool ok, string result) => {
-
     // NOTE: see the section on filters for information on how to format them
-    // ...
-
 });
 ```
 
-### `FileDialog`
+### Creating a `FileDialog`
 
 #### Constructor
 
-- `id`: A unique id used for the main ImGui window
-- `title`: The title at the top of the window
-- `filters`: See the "Filters" section for more information. Leave this empty to switch to directory mode.
-- `path`: The starting path for the dialog
-- `defaultFileName`: The default file name. For directory mode, leave as `"."`
-- `defaultExtension`: The default extension, such as `json`. For directory mode, leave as `""`
-- `selectionCountMax`: How many files or directories can be selected at once. Set to `0` for an infinite number
-- `isModal`: Whether the dialog will be a window or popup modal
-- `flags`: See the "Flags" section
+```cs
+/*
+ * id: A unique id used for the main ImGui window
+ * title: The title at the top of the window
+ * filters: See the "Filters" section for more information. Leave this empty to switch to directory mode
+ * path: The starting path for the dialog
+ * defaultFileName: The default file name. For directory mode, leave as "."
+ * defaultExtension: The default extension, such as `json`. For directory mode, leave as ""
+ * selectionCountMax: How many files or directories can be selected at once. Set to `0` for an infinite number
+ * isModal: Whether the dialog will be a window or popup modal
+ * flags:  See the "Flags" section
+ */
+FileDialog(string id, string title, string filters, string path, string defaultFileName, string defaultExtension, int selectionCountMax, bool isModal, ImGuiFileDialogFlags flags)
+```
 
 #### Methods
 
-- `void Show()`
-- `void Hide()`
-- `bool Draw()`: Returns `true` when the dialog has a result
-- `bool GetIsOk()`: Returns `true` if the dialog successfully selected a file or directory
-- `string GetResult()`: Gets the result of the dialog. If multiple were selected, the results are separated by commas
-- `void SetPath(string path)`
-- `string GetCurrentPath()`
+```cs
+void Show()
+
+void Hide()
+
+// Returns "true' when the dialog has a result
+bool Draw()
+
+// Returns "true" if the dialog successfully selected a file or directory
+bool GetIsOk()
+
+string GetCurrentPath()
+```
 
 ### Flags
 
@@ -78,6 +81,7 @@ fd.SaveFileDialog("ID_3", "Selecte a Location to Save", ".json,.*", "default_nam
 ### Filters
 
 If you wish the create a dialog in directory mode, set the filters to `""`. Otherwise, filters can follow formats such as these:
+
 ```
 .*
 .*,.cpp,.h,.hpp

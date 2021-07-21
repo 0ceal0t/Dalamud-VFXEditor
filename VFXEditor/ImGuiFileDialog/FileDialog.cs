@@ -146,7 +146,7 @@ namespace ImGuiFileDialog {
             FileNameBuffer = filename;
         }
 
-        public void SetPath(string path) {
+        private void SetPath(string path) {
             ShowDrives = false;
             CurrentPath = path;
             Files.Clear();
