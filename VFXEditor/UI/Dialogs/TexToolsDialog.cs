@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.External;
 
@@ -45,17 +46,12 @@ namespace VFXEditor.UI
         }
 
         public void SaveDialog() {
-            Plugin.SaveFileDialog( "TexTools Mod (*.ttmp2)|*.ttmp2*|All files (*.*)|*.*", "Select a Save Location.", "ttmp2",
-                ( string path ) => {
-                    try {
-                        TexTools.Export(Plugin, Name, Author, Version, path, ExportAll, ExportTex );
-                        Visible = false;
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a mod location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", Name, "ttmp2", ( bool ok, string res ) =>
+             {
+                 if( !ok ) return;
+                 TexTools.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
+                 Visible = false;
+             } );
         }
     }
 }

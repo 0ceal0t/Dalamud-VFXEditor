@@ -10,25 +10,28 @@ You can either create a `FileDialog` directly, or use a `FileDialogManager` to h
 ```cs
 using ImGuiFileDialog;
 
-FileDialogManager fd = new FileDialogManager();
-PluginInterface.UiBuilder.OnBuildUi += fd.Draw;
+PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
 
 // on dispose...
-PluginInterface.UiBuilder.OnBuildUi -= fd.Draw;
-fd.Dispose();
+PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
+FileDialogManager.Dispose();
 ```
 
 Then, you can create dialogs like this. Note that only one dialog can be active at a time.
 ```cs
-fd.SelectFolderDialog("ID_1", "Selecte a Folder", (bool ok, string result) => {
+FileDialogManager.OpenFolderDialog("Select a Folder", (bool ok, string result) => {
     // ...
 });
 
-fd.OpenFileDialog("ID_2", "Selecte a File to Open", ".json,.*", (bool ok, string result) => {
+FileDialogManager.SaveFolderDialog("Select a Folder", (bool ok, string result) => {
+    // ...
+});
+
+fd.OpenFileDialog("Select a File to Open", ".json,.*", (bool ok, string result) => {
     // NOTE: see the section on filters for information on how to format them
 });
 
-fd.SaveFileDialog("ID_3", "Selecte a Location to Save", ".json,.*", "default_name", "json", (bool ok, string result) => {
+fd.SaveFileDialog("Select a Location to Save", ".json,.*", "default_name", "json", (bool ok, string result) => {
     // NOTE: see the section on filters for information on how to format them
 });
 ```

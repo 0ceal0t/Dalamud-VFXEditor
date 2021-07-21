@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data.Texture;
 
@@ -23,7 +24,7 @@ namespace VFXEditor.UI {
                 if( result ) {
                     try {
                         var file = Plugin.PluginInterface.Data.GetFile( RawInputValue );
-                        Plugin.SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data, "avfx" );
+                        Plugin.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
                         PluginLog.LogError( "Could not read file" );
@@ -40,7 +41,7 @@ namespace VFXEditor.UI {
                 if( result ) {
                     try {
                         var file = Plugin.PluginInterface.Data.GetFile( RawTexInputValue );
-                        Plugin.SaveDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", file.Data, "atex" );
+                        Plugin.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
                         PluginLog.LogError( "Could not read file" );
@@ -52,20 +53,22 @@ namespace VFXEditor.UI {
             ImGui.Text( ".atex to PNG" );
             ImGui.SameLine();
             if(ImGui.Button("Browse##AtexToPNG")) {
-                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
-                 {
-                     var texFile = VFXTexture.LoadFromLocal( path );
-                     texFile.SaveAsPng( path + ".png" );
-                 } );
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
+                {
+                    if( !ok ) return;
+                    var texFile = VFXTexture.LoadFromLocal( res );
+                    texFile.SaveAsPng( res + ".png" );
+                } );
             }
 
             ImGui.Text( ".atex to DDS" );
             ImGui.SameLine();
             if( ImGui.Button( "Browse##AtexToDDS" ) ) {
-                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
                 {
-                    var texFile = VFXTexture.LoadFromLocal( path );
-                    texFile.SaveAsDDS( path + ".dds" );
+                    if( !ok ) return;
+                    var texFile = VFXTexture.LoadFromLocal( res );
+                    texFile.SaveAsDDS( res + ".dds" );
                 } );
             }
         }

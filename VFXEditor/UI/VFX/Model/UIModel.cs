@@ -1,5 +1,6 @@
 using AVFXLib.Models;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -142,33 +143,28 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ImportDialog() {
-            Plugin.ImportFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select GLTF File.",
-                ( string path ) => {
-                    try {
-                        if( GLTF.ImportModel( path, out List<Vertex> v_s, out List<AVFXLib.Models.Index> i_s ) ) {
-                            Model.Vertices = v_s;
-                            Model.Indexes = i_s;
-                            Refresh = true;
-                        }
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select the GLTF file." );
+            FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                try {
+                    if( GLTF.ImportModel( res, out List<Vertex> v_s, out List<AVFXLib.Models.Index> i_s ) ) {
+                        Model.Vertices = v_s;
+                        Model.Indexes = i_s;
+                        Refresh = true;
                     }
                 }
-            );
+                catch( Exception e ) {
+                    PluginLog.LogError( "Could not import data", e );
+                }
+            } );
         }
 
         public void ExportDialog() {
-            Plugin.SaveFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select a Save Location.", "gltf",
-                ( string path ) => {
-                    try {
-                        GLTF.ExportModel( Model, path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a save location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                GLTF.ExportModel( Model, res );
+            } );
         }
 
         public override string GetDefaultText() {

@@ -59,6 +59,8 @@ namespace ImGuiFileDialog {
         }
 
         private void ScanDir( string path ) {
+            if( Directory.Exists( path ) ) return;
+
             if( PathDecomposition.Count == 0 ) {
                 SetCurrentDir( path );
             }

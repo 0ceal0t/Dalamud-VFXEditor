@@ -4,6 +4,7 @@ using System;
 using System.Numerics;
 using Dalamud.Plugin;
 using VFXEditor.Data.Texture;
+using ImGuiFileDialog;
 
 namespace VFXEditor.UI.VFX
 {
@@ -86,46 +87,36 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ImportDialog(string newPath) {
-            Plugin.ImportFileDialog( "DDS, ATEX, or PNG File (*.png;*.atex;*.dds)|*.png*;*.atex;*.dds*|All files (*.*)|*.*", "Select Image File.",
-                ( string path ) => {
-                    try {
-                        if( !TextureManager.Manager.ImportReplaceTexture( path, newPath ) ) {
-                            PluginLog.Log( $"Could not import" );
-                        }
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                try {
+                    if( !TextureManager.Manager.ImportReplaceTexture( res, newPath ) ) {
+                        PluginLog.Log( $"Could not import" );
                     }
                 }
-            );
+                catch( Exception e ) {
+                    PluginLog.LogError( "Could not import data", e );
+                }
+            } );
         }
 
         public static void SavePngDialog(string texPath) {
-            Plugin.SaveFileDialog( "PNG Image (*.png)|*.png*|All files (*.*)|*.*", "Select a Save Location.", "png",
-                ( string path ) => {
-                    try {
-                        var texFile = TextureManager.Manager.GetTexture( texPath );
-                        texFile.SaveAsPng( path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                var texFile = TextureManager.Manager.GetTexture( texPath );
+                texFile.SaveAsPng( res );
+            } );
         }
 
         public static void SaveDDSDialog(string texPath ) {
-            Plugin.SaveFileDialog( "DDS Image (*.dds)|*.dds*|All files (*.*)|*.*", "Select a Save Location.", "dds",
-                ( string path ) => {
-                    try {
-                        var texFile = TextureManager.Manager.GetTexture( texPath );
-                        texFile.SaveAsDDS( path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                var texFile = TextureManager.Manager.GetTexture( texPath );
+                texFile.SaveAsDDS( res );
+            } );
         }
 
         public override string GetDefaultText() {

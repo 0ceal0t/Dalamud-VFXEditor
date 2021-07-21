@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
@@ -148,7 +149,7 @@ namespace VFXEditor {
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
                         var node = CurrentDocument.Main.AVFX.ToAVFX();
-                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.ToBytes(), "avfx" );
+                        WriteBytesDialog( ".avfx", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
                         TexToolsUI.Show();
@@ -157,7 +158,7 @@ namespace VFXEditor {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", LastImportNode.ExportString( 0 ), "txt" );
+                        WriteBytesDialog( ".txt", LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }
@@ -402,69 +403,15 @@ namespace VFXEditor {
             }
         }
 
-        public static void ImportFileDialog(string filter, string title, Action<string> callback) {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog
-                {
-                    Filter = filter,
-                    CheckFileExists = true,
-                    Title = title
-                };
-                var result = await picker.ShowDialogAsync();
-                if(result == DialogResult.OK) {
-                    callback( picker.FileName );
-                }
-            } );
+        public static void WriteBytesDialog( string filter, string data, string ext ) {
+            WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
         }
 
-        public static void SaveDialog( string filter, string data, string ext ) {
-            SaveDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
-        }
-
-        public static void SaveDialog( string filter, byte[] data, string ext ) {
-            SaveFileDialog( filter, "Select a Save Location.", ext,
-                ( string path ) => {
-                    try {
-                        File.WriteAllBytes( path, data );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not save to: " + path );
-                    }
-                }
-            );
-        }
-
-        public static void SaveFileDialog( string filter, string title, string defaultExt, Action<string> callback ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = filter,
-                    DefaultExt = defaultExt,
-                    AddExtension = true,
-                    Title = title
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    callback( picker.FileName );
-                }
-            } );
-        }
-
-        public static void SaveFolderDialog( string filter, string title, Action<string> callback ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = filter,
-                    Title = title,
-                    ValidateNames = false,
-                    CheckFileExists = false,
-                    FileName = "Select a Folder"
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    callback( picker.FileName );
-                }
-            } );
+        public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) =>
+             {
+                 if( ok ) File.WriteAllBytes( res, data );
+             } );
         }
     }
 }

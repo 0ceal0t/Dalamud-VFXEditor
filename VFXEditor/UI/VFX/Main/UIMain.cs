@@ -2,6 +2,7 @@ using AVFXLib.AVFX;
 using AVFXLib.Main;
 using AVFXLib.Models;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -253,29 +254,24 @@ namespace VFXEditor.UI.VFX {
         }
 
         public static void ExportDialog(UINode node ) {
-            Plugin.SaveFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a Save Location.", "vfxedit",
-                ( string path ) => {
-                    try {
-                        File.WriteAllBytes( path, node.ToBytes() );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a file" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                File.WriteAllBytes( res, node.ToBytes() );
+            } );
         }
 
         public void ImportDialog() {
-            Plugin.ImportFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a File Location.",
-                ( string path ) => {
-                    try {
-                        ImportData( path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a file" );
-                    }
+            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                try {
+                    ImportData( res );
                 }
-            );
+                catch(Exception e) {
+                    PluginLog.LogError( "Could not import data", e );
+                }
+            } );
         }
     }
 }

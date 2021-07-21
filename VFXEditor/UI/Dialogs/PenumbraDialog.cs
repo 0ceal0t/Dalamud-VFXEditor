@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.External;
 
@@ -38,18 +39,13 @@ namespace VFXEditor.UI {
             }
         }
 
-        public void SaveDialog() { // idk why the folderselectdialog doesn't work, so this will do for now
-            Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
-                ( string path ) => {
-                    try {
-                        Penumbra.Export( Plugin, Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
-                        Visible = false;
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a mod location" );
-                    }
-                }
-            );
+        public void SaveDialog() {
+            FileDialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) =>
+             {
+                 if( !ok ) return;
+                 Penumbra.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
+                 Visible = false;
+             } );
         }
     }
 }

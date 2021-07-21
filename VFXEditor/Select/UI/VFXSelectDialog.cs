@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 
 namespace VFXSelect.UI
@@ -134,22 +135,10 @@ namespace VFXSelect.UI
             ImGui.InputText( id + "Input", ref localPathInput, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
-                Task.Run( async () => {
-                    var picker = new OpenFileDialog {
-                        Filter = "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*",
-                        CheckFileExists = true,
-                        Title = "Select AVFX File."
-                    };
-                    var result = await picker.ShowDialogAsync();
-                    if( result == DialogResult.OK ) {
-                        try {
-                            localPathInput = picker.FileName;
-                            Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + localPathInput, localPathInput ) );
-                        }
-                        catch( Exception ex ){
-                            PluginLog.LogError( ex, "Could not select the local file." );
-                        }
-                    }
+                FileDialogManager.OpenFileDialog( "Select a File", ".avfx,.*", ( bool ok, string res ) =>
+                {
+                    if( !ok ) return;
+                    Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + res, res ) );
                 } );
             }
             ImGui.SameLine();

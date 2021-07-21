@@ -32,7 +32,7 @@ namespace VFXEditor.External {
         *  }
         */
 
-        public static void Export(Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
+        public static void Export(Plugin _plugin, string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
             try {
                 PenumbraMod mod = new PenumbraMod();
                 mod.Name = name;
@@ -42,7 +42,6 @@ namespace VFXEditor.External {
                 mod.Website = null;
                 mod.FileSwaps = new Dictionary<string, string>();
 
-                string modFolder = Path.Combine( saveLocation, name );
                 Directory.CreateDirectory( modFolder );
                 string modConfig = Path.Combine( modFolder, "meta.json" );
                 string configString = JsonConvert.SerializeObject( mod );
@@ -82,7 +81,7 @@ namespace VFXEditor.External {
                     }
                 }
 
-                PluginLog.Log( "Exported To: " + saveLocation );
+                PluginLog.Log( "Exported To: " + modFolder );
             }
             catch( Exception e )
             {

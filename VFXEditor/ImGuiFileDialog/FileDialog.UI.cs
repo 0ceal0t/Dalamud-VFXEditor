@@ -20,7 +20,7 @@ namespace ImGuiFileDialog {
             if( !Visible ) return false;
 
             var res = false;
-            var name = Title + "##" + Id;
+            var name = Title + "###" + Id;
 
             bool windowVisible;
             IsOk = false;

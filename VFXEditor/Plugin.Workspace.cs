@@ -1,4 +1,5 @@
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -55,16 +56,17 @@ namespace VFXEditor {
         }
 
         public void OpenWorkspace() {
-            ImportFileDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select workspace file", ( string path ) =>
+            FileDialogManager.OpenFolderDialog( "Select a Workspace Folder", ( bool ok, string res ) =>
             {
+                if( !ok ) return;
                 try {
-                    var loadLocation = CurrentWorkspaceLocation = Path.GetDirectoryName( path );
+                    var loadLocation = res;
                     string metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
-                    if(!File.Exists(metaPath)) {
+                    if( !File.Exists( metaPath ) ) {
                         PluginLog.Log( "vfx_workspace.json does not exist" );
                         return;
                     }
-                    var meta = JsonConvert.DeserializeObject<WorkspaceMeta>(File.ReadAllText(metaPath));
+                    var meta = JsonConvert.DeserializeObject<WorkspaceMeta>( File.ReadAllText( metaPath ) );
 
                     IsLoading = true;
 
@@ -73,7 +75,7 @@ namespace VFXEditor {
                     oldTex.Dispose();
 
                     var texRootPath = Path.Combine( loadLocation, "Tex" );
-                    foreach(var tex in meta.Tex) {
+                    foreach( var tex in meta.Tex ) {
                         var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
                         TexManager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
                     }
@@ -85,18 +87,18 @@ namespace VFXEditor {
                     var defaultDoc = DocManager.ActiveDoc;
 
                     var vfxRootPath = Path.Combine( loadLocation, "VFX" );
-                    foreach(var doc in meta.Docs) {
+                    foreach( var doc in meta.Docs ) {
                         var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
                         DocManager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
                     }
 
-                    if(DocManager.Docs.Count > 1) {
+                    if( DocManager.Docs.Count > 1 ) {
                         DocManager.RemoveDoc( defaultDoc );
                     }
 
                     IsLoading = false;
                 }
-                catch(Exception e) {
+                catch( Exception e ) {
                     PluginLog.LogError( "Could not load workspace", e );
                 }
             } );
@@ -114,11 +116,12 @@ namespace VFXEditor {
         }
 
         public void SaveAsWorkspace() {
-            SaveFolderDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select save location", ( string path ) =>
-            {
-                CurrentWorkspaceLocation = Path.GetDirectoryName( path );
+            FileDialogManager.SaveFolderDialog( "Select a Folder", "Workspace", ( bool ok, string res ) =>
+             {
+                if( !ok ) return;
+                CurrentWorkspaceLocation = res;
                 ExportWorkspace();
-            } );
+             } );
         }
 
         public void ExportWorkspace() {

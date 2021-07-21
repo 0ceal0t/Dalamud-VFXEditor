@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.UI.VFX;
 
@@ -85,25 +86,20 @@ namespace VFXEditor.UI {
         }
 
         public void SaveDialog() {
-            Plugin.SaveFileDialog( "Partial AVFX (*.vfxedit)|*.vfxedit*|All files (*.*)|*.*", "Select a Save Location.", "vfxedit",
-                ( string path ) => {
-                    try {
-                        using( BinaryWriter writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                            var selected = GetSelected();
-                            if( ExportDeps ) {
-                                Main.ExportDeps( selected, writer );
-                            }
-                            else {
-                                selected.ForEach( node => writer.Write( node.ToBytes() ) );
-                            }
-                            Visible = false;
-                        }
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                using( BinaryWriter writer = new BinaryWriter( File.Open( res, FileMode.Create ) ) ) {
+                    var selected = GetSelected();
+                    if( ExportDeps ) {
+                        Main.ExportDeps( selected, writer );
                     }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a file" );
+                    else {
+                        selected.ForEach( node => writer.Write( node.ToBytes() ) );
                     }
+                    Visible = false;
                 }
-            );
+            } );
         }
     }
 

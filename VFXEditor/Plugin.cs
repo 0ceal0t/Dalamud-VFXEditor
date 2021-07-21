@@ -38,8 +38,6 @@ namespace VFXEditor
 
         private IntPtr ImPlotContext;
 
-        private FileDialogManager DialogManager;
-
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -71,10 +69,8 @@ namespace VFXEditor
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
-            DialogManager = new();
-
             PluginInterface.UiBuilder.OnBuildUi += Draw;
-            PluginInterface.UiBuilder.OnBuildUi += DialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
         }
 
         public void Draw() {
@@ -85,11 +81,11 @@ namespace VFXEditor
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= DialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
 
-            DialogManager.Dispose();
+            FileDialogManager.Dispose();
 
             ImPlot.DestroyContext();
 

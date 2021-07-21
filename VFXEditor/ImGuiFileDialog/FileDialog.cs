@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using ImGuiNET;
+using Dalamud.Plugin;
 
 namespace ImGuiFileDialog {
     [Flags]
@@ -58,7 +59,17 @@ namespace ImGuiFileDialog {
 
         private float FooterHeight = 0;
 
-        public FileDialog(string id, string title, string filters, string path, string defaultFileName, string defaultExtension, int selectionCountMax, bool isModal, ImGuiFileDialogFlags flags) {
+        public FileDialog(
+            string id,
+            string title,
+            string filters,
+            string path,
+            string defaultFileName,
+            string defaultExtension,
+            int selectionCountMax,
+            bool isModal,
+            ImGuiFileDialogFlags flags
+         ) {
             Id = id;
             Title = title;
             Flags = flags;
@@ -98,14 +109,14 @@ namespace ImGuiFileDialog {
 
         // the full path, specified by the text input box and the current path
         private string GetFilePathName() {
-            var result = GetCurrentPath();
+            var path = GetCurrentPath();
             var fileName = GetCurrentFileName();
 
             if(!string.IsNullOrEmpty(fileName)) {
-                result = Path.Combine( result, fileName );
+                return Path.Combine( path, fileName );
             }
 
-            return result;
+            return path;
         }
 
         // the current path. In directory mode, this takes into account the text input box
@@ -151,6 +162,7 @@ namespace ImGuiFileDialog {
             CurrentPath = path;
             Files.Clear();
             PathDecomposition.Clear();
+            SelectedFileNames.Clear();
             if( IsDirectoryMode() ) {
                 SetDefaultFileName( "." );
             }
