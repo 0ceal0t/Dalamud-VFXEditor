@@ -1,4 +1,4 @@
-#ImGuiFileDialog
+# ImGuiFileDialog
 
 Ported mostly verbatim from the original [ImGuiDialog](https://github.com/aiekick/ImGuiFileDialog) library, with some usability changes
 
@@ -8,7 +8,7 @@ You can either create a `FileDialog` directly, or use a `FileDialogManager` to h
 
 ### `FileDialogManager`
 ```
-using ImGuiDialog;
+using ImGuiFileDialog;
 
 FileDialogManager fd = new FileDialogManager();
 PluginInterface.UiBuilder.OnBuildUi += fd.Draw;
