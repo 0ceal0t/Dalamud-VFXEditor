@@ -73,7 +73,7 @@ ImGuiFileDialogFlags.ConfirmOverwrite; // The results must be from existing file
 ImGuiFileDialogFlags.SelectOnly; // The results must be from existing files or directories
 ImGuiFileDialogFlags.DontShowHiddenFiles;
 ImGuiFileDialogFlags.DisableCreateDirectoryButton;
-ImGuiFileDialogFlags.;
+ImGuiFileDialogFlags.HideColumnType;
 ImGuiFileDialogFlags.HideColumnSize;
 ImGuiFileDialogFlags.HideColumnDate;
 ```
