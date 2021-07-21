@@ -38,7 +38,7 @@ namespace VFXEditor
 
         private IntPtr ImPlotContext;
 
-        private FileDialog _F;
+        private FileDialogManager DialogManager;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
@@ -71,24 +71,25 @@ namespace VFXEditor
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
-            _F = new FileDialog( "TestKey", "Choose a file", ".*", @"C:\Users\kamin\AppData\Roaming\XIVLauncher\devPlugins", "test", "atex", 3, false, ImGuiFileDialogFlags.None );
-            _F.Show();
+            DialogManager = new();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
+            PluginInterface.UiBuilder.OnBuildUi += DialogManager.Draw;
         }
 
         public void Draw() {
             if( !PluginReady ) return;
-
-            _F.Draw();
 
             DrawUI();
             Tracker.Draw();
         }
 
         public void Dispose() {
+            PluginInterface.UiBuilder.OnBuildUi -= DialogManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
+
+            DialogManager.Dispose();
 
             ImPlot.DestroyContext();
 

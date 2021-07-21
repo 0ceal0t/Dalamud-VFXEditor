@@ -44,8 +44,6 @@ namespace ImGuiFileDialog {
                     return true;
                 }
 
-                AnyWindowsHovered = ImGui.IsWindowHovered();
-
                 if( SelectedFilter.Empty() && ( Filters.Count > 0 ) ) {
                     SelectedFilter = Filters[0];
                 }
@@ -321,7 +319,7 @@ namespace ImGuiFileDialog {
 
                 if( PathInputActivated ) {
                     if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Enter ) ) ) {
-                        SetPath( PathInputBuffer );
+                        if(Directory.Exists(PathInputBuffer)) SetPath( PathInputBuffer );
                         PathInputActivated = false;
                     }
                     if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Escape ) ) ) {
@@ -543,8 +541,13 @@ namespace ImGuiFileDialog {
             if( Filters.Count > 0 ) {
                 width -= 150f;
             }
+
+            var selectOnly = Flags.HasFlag( ImGuiFileDialogFlags.SelectOnly );
+
             ImGui.PushItemWidth( width );
-            ImGui.InputText( "##FileName", ref FileNameBuffer, 255 );
+            if( selectOnly ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+            ImGui.InputText( "##FileName", ref FileNameBuffer, 255, selectOnly ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None );
+            if( selectOnly ) ImGui.PopStyleVar();
             ImGui.PopItemWidth();
 
             if( Filters.Count > 0 ) {
@@ -576,7 +579,7 @@ namespace ImGuiFileDialog {
 
             ImGui.SameLine();
 
-            var disableOk = string.IsNullOrEmpty( FileNameBuffer ) || ( Flags.HasFlag( ImGuiFileDialogFlags.CheckIfExists ) && !IsItemSelected() );
+            var disableOk = string.IsNullOrEmpty( FileNameBuffer ) || ( selectOnly && !IsItemSelected() );
             if( disableOk ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
 
             if( ImGui.Button( "Ok" ) && !disableOk ) {
@@ -609,7 +612,7 @@ namespace ImGuiFileDialog {
         }
 
         private bool ConfirmOrOpenOverWriteFileDialogIfNeeded( bool lastAction ) {
-            if( IsDirectoryMode() ) return true;
+            if( IsDirectoryMode() ) return lastAction;
             if( !IsOk && lastAction ) return true; // no need to confirm anything, since it was cancelled
 
             var confirmOverwrite = Flags.HasFlag(ImGuiFileDialogFlags.ConfirmOverwrite);

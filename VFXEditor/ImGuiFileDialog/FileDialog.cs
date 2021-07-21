@@ -12,7 +12,7 @@ namespace ImGuiFileDialog {
     public enum ImGuiFileDialogFlags {
         None = 0,
         ConfirmOverwrite = 1,
-        CheckIfExists = 2,
+        SelectOnly = 2,
         DontShowHiddenFiles = 3,
         DisableCreateDirectoryButton = 4,
         HideColumnType = 5,
@@ -21,9 +21,6 @@ namespace ImGuiFileDialog {
     }
 
     public partial class FileDialog {
-        // TODO: save path
-        // TODO: save filter
-
         private string Title;
         private int SelectionCountMax;
         private ImGuiFileDialogFlags Flags;
@@ -50,8 +47,6 @@ namespace ImGuiFileDialog {
 
         private bool ShowDrives = false;
         private bool DrivesClicked = false;
-
-        private bool AnyWindowsHovered; // TODO
 
         private bool CreateDirectoryMode = false;
         private string CreateDirectoryBuffer = "";
@@ -91,10 +86,17 @@ namespace ImGuiFileDialog {
             return IsOk;
         }
 
-        public bool GetWantsToQuit() {
-            return WantsToQuit;
+        public string GetResult() {
+            if( !Flags.HasFlag( ImGuiFileDialogFlags.SelectOnly ) ) return GetFilePathName();
+            if(IsDirectoryMode() && SelectedFileNames.Count == 0) {
+                return GetFilePathName(); // current directory
+            }
+
+            var fullPaths = SelectedFileNames.Where( x => !string.IsNullOrEmpty( x ) ).Select( x => Path.Combine( CurrentPath, x ) );
+            return string.Join( ",", fullPaths.ToArray() );
         }
 
+        // the full path, specified by the text input box and the current path
         private string GetFilePathName() {
             var result = GetCurrentPath();
             var fileName = GetCurrentFileName();
@@ -106,6 +108,7 @@ namespace ImGuiFileDialog {
             return result;
         }
 
+        // the current path. In directory mode, this takes into account the text input box
         public string GetCurrentPath() {
             if(IsDirectoryMode()) { // combine path file with directory input
                 var selectedDirectory = FileNameBuffer;
@@ -117,26 +120,25 @@ namespace ImGuiFileDialog {
             return CurrentPath;
         }
 
-        public string GetCurrentFileName() {
-            if( !IsDirectoryMode() ) { // add extension
-                var result = FileNameBuffer;
+        // the current filename, taking into account the current filter applied. In directory mod, this is alway empty
+        private string GetCurrentFileName() {
+            if( IsDirectoryMode() ) return "";
 
-                // a collection like {.cpp, .h}, so can't decide on an extension
-                if( SelectedFilter.CollectionFilters != null && SelectedFilter.CollectionFilters.Count > 0 ) {
-                    return result;
-                }
-
-                // a single one, like .cpp
-                if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
-                    var lastPoint = result.LastIndexOf( '.' );
-                    if(lastPoint != -1) {
-                        result = result.Substring( 0, lastPoint );
-                    }
-                    result += SelectedFilter.Filter;
-                }
+            var result = FileNameBuffer;
+            // a collection like {.cpp, .h}, so can't decide on an extension
+            if( SelectedFilter.CollectionFilters != null && SelectedFilter.CollectionFilters.Count > 0 ) {
                 return result;
             }
-            return ""; // when in directory mode, there is no filename
+
+            // a single one, like .cpp
+            if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
+                var lastPoint = result.LastIndexOf( '.' );
+                if(lastPoint != -1) {
+                    result = result.Substring( 0, lastPoint );
+                }
+                result += SelectedFilter.Filter;
+            }
+            return result;
         }
 
         private void SetDefaultFileName( string filename ) {
@@ -155,7 +157,7 @@ namespace ImGuiFileDialog {
             ScanDir( CurrentPath );
         }
 
-        public void SetCurrentDir(string path) {
+        private void SetCurrentDir(string path) {
             var dir = new DirectoryInfo( path );
             CurrentPath = dir.FullName;
             if(CurrentPath[CurrentPath.Length - 1] == Path.DirectorySeparatorChar) { // handle selecting a drive, like C: -> C:\
