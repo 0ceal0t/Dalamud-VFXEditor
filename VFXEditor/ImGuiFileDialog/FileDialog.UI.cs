@@ -11,10 +11,20 @@ using System.Threading.Tasks;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
-        private static Vector4 PATH_COLOR = new Vector4( 0.188f, 0.188f, 0.2f, 1f );
-        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 0.95f, 0.7f, 0.4f, 1f );
-        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.6f, 0.8f, 0.85f, 1f );
-        private static Dictionary<string, char> ICON_MAP;
+        private static Vector4 PATH_DECOMP_COLOR = new Vector4( 0.188f, 0.188f, 0.2f, 1f );
+        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 0.74901960784f, 0.74901960784f, 0.00000000000f, 1f );
+        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.21568627451f, 0.67843137255f, 0.90588235294f, 1f );
+        private static Vector4 CODE_TEXT_COLOR = new Vector4( 0.75686274510f, 0.81176470588f, 0.47843137255f, 1f );
+        private static Vector4 MISC_TEXT_COLOR = new Vector4( 0.00000000000f, 0.74901960784f, 0.64313725490f, 1f );
+        private static Vector4 IMAGE_TEXT_COLOR = new Vector4( 0.25490196078f, 1.00000000000f, 0.21960784314f, 1f );
+        private static Vector4 STANDARD_TEXT_COLOR = new Vector4( 1f );
+
+        private struct IconColorItem {
+            public char Icon;
+            public Vector4 Color;
+        }
+
+        private static Dictionary<string, IconColorItem> ICON_MAP;
 
         public bool Draw() {
             if( !Visible ) return false;
@@ -114,7 +124,7 @@ namespace ImGuiFileDialog {
                         }
 
                         ImGui.PushID( idx );
-                        ImGui.PushStyleColor( ImGuiCol.Button, PATH_COLOR );
+                        ImGui.PushStyleColor( ImGuiCol.Button, PATH_DECOMP_COLOR );
                         var click = ImGui.Button( PathDecomposition[idx] );
                         ImGui.PopStyleColor();
                         ImGui.PopID();
@@ -316,13 +326,20 @@ namespace ImGuiFileDialog {
                                 var selected = SelectedFileNames.Contains( file.FileName );
                                 var needToBreak = false;
 
-                                if( file.Type == FileStructType.Directory ) ImGui.PushStyleColor( ImGuiCol.Text, DIR_TEXT_COLOR );
+                                var dir = file.Type == FileStructType.Directory;
+                                IconColorItem item = !dir ? GetIcon( file.Ext ) : new IconColorItem
+                                {
+                                    Color = DIR_TEXT_COLOR,
+                                    Icon = (char) FontAwesomeIcon.Folder
+                                };
+
+                                ImGui.PushStyleColor( ImGuiCol.Text, item.Color );
                                 if( selected ) ImGui.PushStyleColor( ImGuiCol.Text, SELECTED_TEXT_COLOR );
 
                                 ImGui.TableNextRow();
 
                                 if( ImGui.TableNextColumn() ) {
-                                    needToBreak = SelectableItem( file, selected );
+                                    needToBreak = SelectableItem( file, selected, item.Icon );
                                 }
                                 if( ImGui.TableNextColumn() ) {
                                     ImGui.Text( file.Ext );
@@ -343,7 +360,7 @@ namespace ImGuiFileDialog {
                                 }
 
                                 if( selected ) ImGui.PopStyleColor();
-                                if( file.Type == FileStructType.Directory ) ImGui.PopStyleColor();
+                                ImGui.PopStyleColor();
 
                                 if( needToBreak ) break;
                             }
@@ -373,11 +390,12 @@ namespace ImGuiFileDialog {
             ImGui.EndChild();
         }
 
-        private bool SelectableItem( FileStruct file, bool selected ) {
+        private bool SelectableItem( FileStruct file, bool selected, char icon ) {
             var flags = ImGuiSelectableFlags.AllowDoubleClick | ImGuiSelectableFlags.SpanAllColumns;
 
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.Text( file.Type == FileStructType.Directory ? $"{( char )FontAwesomeIcon.Folder}" : $"{GetIcon(file.Ext)}" );
+
+            ImGui.Text( $"{icon}" );
             ImGui.PopFont();
 
             ImGui.SameLine(25f);
@@ -405,25 +423,33 @@ namespace ImGuiFileDialog {
             return false;
         }
 
-        private char GetIcon( string ext ) {
+        private IconColorItem GetIcon( string ext ) {
             if( ICON_MAP == null ) {
                 ICON_MAP = new();
-                AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo );
-                AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf );
-                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff" }, ( char )FontAwesomeIcon.FileImage );
-                AddToIconMap( new[] { "cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java" }, ( char )FontAwesomeIcon.FileCode );
-                AddToIconMap( new[] { "txt", "md" }, ( char )FontAwesomeIcon.FileAlt );
-                AddToIconMap( new[] { "zip", "7z", "gz", "tar" }, ( char )FontAwesomeIcon.FileArchive );
-                AddToIconMap( new[] { "mp3", "m4a", "ogg", "wav" }, ( char )FontAwesomeIcon.FileAudio );
-                AddToIconMap( new[] { "csv" }, ( char )FontAwesomeIcon.FileCsv );
+                AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
+                AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf, MISC_TEXT_COLOR );
+                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff" }, ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );
+                AddToIconMap( new[] { "cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java" }, ( char )FontAwesomeIcon.FileCode, CODE_TEXT_COLOR );
+                AddToIconMap( new[] { "txt", "md" }, ( char )FontAwesomeIcon.FileAlt, STANDARD_TEXT_COLOR );
+                AddToIconMap( new[] { "zip", "7z", "gz", "tar" }, ( char )FontAwesomeIcon.FileArchive, MISC_TEXT_COLOR );
+                AddToIconMap( new[] { "mp3", "m4a", "ogg", "wav" }, ( char )FontAwesomeIcon.FileAudio, MISC_TEXT_COLOR );
+                AddToIconMap( new[] { "csv" }, ( char )FontAwesomeIcon.FileCsv, MISC_TEXT_COLOR );
             }
 
-            return ICON_MAP.TryGetValue(ext.ToLower(), out var icon) ? icon : ( char )FontAwesomeIcon.File;
+            return ICON_MAP.TryGetValue(ext.ToLower(), out var icon) ? icon : new IconColorItem
+            {
+                Icon = (char) FontAwesomeIcon.File,
+                Color = STANDARD_TEXT_COLOR
+            };
         }
 
-        private void AddToIconMap( string[] extensions, char icon ) {
+        private void AddToIconMap( string[] extensions, char icon, Vector4 color) {
             foreach(var ext in extensions) {
-                ICON_MAP[ext] = icon;
+                ICON_MAP[ext] = new IconColorItem
+                {
+                    Icon = icon,
+                    Color = color
+                };
             }
         }
 

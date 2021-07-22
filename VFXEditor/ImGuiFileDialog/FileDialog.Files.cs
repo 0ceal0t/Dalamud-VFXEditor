@@ -185,14 +185,14 @@ namespace ImGuiFileDialog {
             {
                 Icon = ( char )FontAwesomeIcon.Image,
                 Location = KnownFolders.GetPath( KnownFolder.Pictures ),
-                Text = "Image"
+                Text = "Pictures"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Video,
                 Location = KnownFolders.GetPath( KnownFolder.Videos ),
-                Text = "Video"
+                Text = "Videos"
             } );
         }
 
