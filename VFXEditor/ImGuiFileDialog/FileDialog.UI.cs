@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace ImGuiFileDialog {
     public partial class FileDialog {
         private static Vector4 PATH_DECOMP_COLOR = new Vector4( 0.188f, 0.188f, 0.2f, 1f );
-        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 0.74901960784f, 0.74901960784f, 0.00000000000f, 1f );
-        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.21568627451f, 0.67843137255f, 0.90588235294f, 1f );
-        private static Vector4 CODE_TEXT_COLOR = new Vector4( 0.75686274510f, 0.81176470588f, 0.47843137255f, 1f );
-        private static Vector4 MISC_TEXT_COLOR = new Vector4( 0.00000000000f, 0.74901960784f, 0.64313725490f, 1f );
-        private static Vector4 IMAGE_TEXT_COLOR = new Vector4( 0.25490196078f, 1.00000000000f, 0.21960784314f, 1f );
+        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 1.00000000000f, 0.33333333333f, 0.33333333333f, 1f );
+        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.54509803922f, 0.91372549020f, 0.99215686275f, 1f );
+        private static Vector4 CODE_TEXT_COLOR = new Vector4( 0.94509803922f, 0.98039215686f, 0.54901960784f, 1f );
+        private static Vector4 MISC_TEXT_COLOR = new Vector4( 1.00000000000f, 0.47450980392f, 0.77647058824f, 1f );
+        private static Vector4 IMAGE_TEXT_COLOR = new Vector4( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
         private static Vector4 STANDARD_TEXT_COLOR = new Vector4( 1f );
 
         private struct IconColorItem {
