@@ -19,20 +19,20 @@ namespace ImGuiFileDialog {
         HideColumnType = 5,
         HideColumnSize = 6,
         HideColumnDate = 7,
+        HideSideBar = 8
     }
 
     public partial class FileDialog {
+        private bool Visible;
+
         private string Title;
         private int SelectionCountMax;
         private ImGuiFileDialogFlags Flags;
         private string Id;
-
-        private bool Visible;
-
-        private string CurrentPath;
-
         private string DefaultExtension;
         private string DefaultFileName;
+
+        private string CurrentPath;
         private string FileNameBuffer = "";
 
         private List<string> PathDecomposition = new();
@@ -42,12 +42,8 @@ namespace ImGuiFileDialog {
 
         private bool IsModal = false;
         private bool OkResultToConfirm = false;
-
         private bool IsOk;
         private bool WantsToQuit;
-
-        private bool ShowDrives = false;
-        private bool DrivesClicked = false;
 
         private bool CreateDirectoryMode = false;
         private string CreateDirectoryBuffer = "";
@@ -58,6 +54,15 @@ namespace ImGuiFileDialog {
         private List<string> SelectedFileNames = new();
 
         private float FooterHeight = 0;
+
+        private string SelectedSideBar = "";
+        private List<SideBarItem> Drives = new();
+        private List<SideBarItem> QuickAccess = new();
+        private struct SideBarItem {
+            public char Icon;
+            public string Text;
+            public string Location;
+        }
 
         public FileDialog(
             string id,
@@ -83,6 +88,8 @@ namespace ImGuiFileDialog {
             SetSelectedFilterWithExt( DefaultExtension );
             SetDefaultFileName( defaultFileName );
             SetPath( CurrentPath );
+
+            SetupSideBar();
         }
 
         public void Show() {
@@ -158,7 +165,7 @@ namespace ImGuiFileDialog {
         }
 
         private void SetPath(string path) {
-            ShowDrives = false;
+            SelectedSideBar = "";
             CurrentPath = path;
             Files.Clear();
             PathDecomposition.Clear();
@@ -185,7 +192,6 @@ namespace ImGuiFileDialog {
         }
 
         private void ResetEvents() {
-            DrivesClicked = false;
             PathClicked = false;
         }
     }

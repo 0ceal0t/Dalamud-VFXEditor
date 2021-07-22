@@ -48,7 +48,7 @@ namespace ImGuiFileDialog {
                     SelectedFilter = Filters[0];
                 }
 
-                if( Files.Count == 0 && !ShowDrives ) {
+                if( Files.Count == 0 ) {
                     if( !string.IsNullOrEmpty( DefaultFileName ) ) {
                         SetDefaultFileName( DefaultFileName );
                         SetSelectedFilterWithExt( DefaultExtension );
@@ -79,8 +79,6 @@ namespace ImGuiFileDialog {
         }
 
         private void DrawHeader() {
-
-            // TODO: bookmark
 
             DrawPathComposer();
 
@@ -150,19 +148,6 @@ namespace ImGuiFileDialog {
 
             ImGui.SameLine();
 
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Server}" ) ) {
-                DrivesClicked = true;
-            }
-            ImGui.PopFont();
-
-            if( ImGui.IsItemHovered() ) {
-                ImGui.SetTooltip( "Navigate to Drives" );
-            }
-
-
-            ImGui.SameLine();
-
             DrawDirectoryCreation();
 
             if( !CreateDirectoryMode ) {
@@ -223,9 +208,57 @@ namespace ImGuiFileDialog {
         private void DrawContent() {
             var size = ImGui.GetContentRegionAvail() - new Vector2( 0, FooterHeight );
 
-            // TODO: bookmark
+            if(!Flags.HasFlag(ImGuiFileDialogFlags.HideSideBar)) {
+                ImGui.BeginChild( "##FileDialog_ColumnChild", size);
+                ImGui.Columns( 2, "##FileDialog_Columns" );
 
-            DrawFileListView( size );
+                DrawSideBar( new Vector2( 150, size.Y ) );
+
+                ImGui.SetColumnWidth( 0, 150 );
+                ImGui.NextColumn();
+
+                DrawFileListView( size - new Vector2(160, 0) );
+
+                ImGui.Columns( 1 );
+                ImGui.EndChild();
+            }
+            else {
+                DrawFileListView( size );
+            }
+        }
+
+        private void DrawSideBar(Vector2 size) {
+            ImGui.BeginChild( "##FileDialog_SideBar", size );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            foreach(var drive in Drives) {
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Selectable( $"{drive.Icon}##{drive.Text}", drive.Text == SelectedSideBar ) ) {
+                    SetPath( drive.Location );
+                    SelectedSideBar = drive.Text;
+                }
+                ImGui.PopFont();
+
+                ImGui.SameLine(25);
+
+                ImGui.Text( drive.Text );
+            }
+
+            foreach(var quick in QuickAccess) {
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Selectable( $"{quick.Icon}##{quick.Text}", quick.Text == SelectedSideBar ) ) {
+                    SetPath( quick.Location );
+                    SelectedSideBar = quick.Text;
+                }
+                ImGui.PopFont();
+
+                ImGui.SameLine(25);
+
+                ImGui.Text( quick.Text );
+            }
+
+            ImGui.EndChild();
         }
 
         private unsafe void DrawFileListView( Vector2 size ) {
@@ -239,7 +272,7 @@ namespace ImGuiFileDialog {
                 var hideSize = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnSize );
                 var hideDate = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnDate );
 
-                ImGui.TableSetupColumn( "File Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
+                ImGui.TableSetupColumn( " File Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
                 ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed | ( hideType ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 1 );
                 ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed | ( hideSize ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 2 );
                 ImGui.TableSetupColumn( "Date", ImGuiTableColumnFlags.WidthFixed | ( hideDate ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 3 );
@@ -303,7 +336,10 @@ namespace ImGuiFileDialog {
                                     }
                                 }
                                 if( ImGui.TableNextColumn() ) {
-                                    ImGui.Text( file.FileModifiedDate );
+                                    var sz = ImGui.CalcTextSize( file.FileModifiedDate );
+                                    ImGui.PushItemWidth( sz.X + 5 );
+                                    ImGui.Text( file.FileModifiedDate + " " );
+                                    ImGui.PopItemWidth();
                                 }
 
                                 if( selected ) ImGui.PopStyleColor();
@@ -333,9 +369,6 @@ namespace ImGuiFileDialog {
             if( PathClicked ) {
                 SetPath( CurrentPath );
             }
-            if( DrivesClicked ) {
-                GetDrives();
-            }
 
             ImGui.EndChild();
         }
@@ -346,7 +379,8 @@ namespace ImGuiFileDialog {
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.Text( file.Type == FileStructType.Directory ? $"{( char )FontAwesomeIcon.Folder}" : $"{GetIcon(file.Ext)}" );
             ImGui.PopFont();
-            ImGui.SameLine();
+
+            ImGui.SameLine(25f);
 
             // TODO: key exploration
             if( ImGui.Selectable( file.FileName, selected, flags ) ) {
@@ -393,7 +427,6 @@ namespace ImGuiFileDialog {
             }
         }
 
-
         private bool SelectDirectory( FileStruct file ) {
             var pathClick = false;
 
@@ -404,13 +437,7 @@ namespace ImGuiFileDialog {
                 }
             }
             else {
-                string newPath;
-                if( ShowDrives ) {
-                    newPath = file.FileName;
-                }
-                else {
-                    newPath = Path.Combine( CurrentPath, file.FileName );
-                }
+                string newPath = Path.Combine( CurrentPath, file.FileName );
 
                 if( Directory.Exists( newPath ) ) {
                     CurrentPath = newPath;

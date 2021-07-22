@@ -56,11 +56,11 @@ namespace VFXEditor {
         }
 
         public void OpenWorkspace() {
-            FileDialogManager.OpenFolderDialog( "Select a Workspace Folder", ( bool ok, string res ) =>
+            FileDialogManager.OpenFileDialog( "Select a Workspace JSON", ".json", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {
-                    var loadLocation = res;
+                    var loadLocation = Path.GetDirectoryName( res );
                     string metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
                     if( !File.Exists( metaPath ) ) {
                         PluginLog.Log( "vfx_workspace.json does not exist" );

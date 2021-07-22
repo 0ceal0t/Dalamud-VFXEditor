@@ -23,7 +23,7 @@ FileDialogManager.OpenFolderDialog("Select a Folder", (bool ok, string result) =
     // ...
 });
 
-FileDialogManager.SaveFolderDialog("Select a Folder", (bool ok, string result) => {
+FileDialogManager.SaveFolderDialog("Select a Folder to Save", "default_folder_name", (bool ok, string result) => {
     // ...
 });
 
@@ -31,7 +31,7 @@ fd.OpenFileDialog("Select a File to Open", ".json,.*", (bool ok, string result) 
     // NOTE: see the section on filters for information on how to format them
 });
 
-fd.SaveFileDialog("Select a Location to Save", ".json,.*", "default_name", "json", (bool ok, string result) => {
+fd.SaveFileDialog("Select a Location to Save", ".json,.*", "default_file_name", "json", (bool ok, string result) => {
     // NOTE: see the section on filters for information on how to format them
 });
 ```

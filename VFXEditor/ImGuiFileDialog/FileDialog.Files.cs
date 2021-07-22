@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
@@ -134,31 +135,65 @@ namespace ImGuiFileDialog {
             };
         }
 
-        private void GetDrives() {
+        private void SetupSideBar() {
             var drives = DriveInfo.GetDrives();
-
-            if(drives.Length > 0) {
-                CurrentPath = "";
-                PathDecomposition.Clear();
-                Files.Clear();
-
-                foreach(var drive in drives) {
-                    if( string.IsNullOrEmpty( drive.Name ) ) continue;
-
-                    Files.Add( new FileStruct
-                    {
-                        FileName = drive.Name,
-                        FileModifiedDate = "",
-                        FileSize = 0,
-                        FilePath = "",
-                        Type = FileStructType.Directory,
-                        Ext = ""
-                    } );
-                }
-
-                ShowDrives = true;
-                ApplyFilteringOnFileList();
+            foreach(var drive in drives) {
+                Drives.Add( new SideBarItem
+                {
+                    Icon = ( char )FontAwesomeIcon.Server,
+                    Location = drive.Name,
+                    Text = drive.Name
+                } ) ;
             }
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = (char) FontAwesomeIcon.Desktop,
+                Location = KnownFolders.GetPath(KnownFolder.Desktop),
+                Text = "Desktop"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.File,
+                Location = KnownFolders.GetPath( KnownFolder.Documents ),
+                Text = "Documents"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.Download,
+                Location = KnownFolders.GetPath( KnownFolder.Downloads ),
+                Text = "Downloads"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.Star,
+                Location = KnownFolders.GetPath( KnownFolder.Favorites ),
+                Text = "Favorites"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.Music,
+                Location = KnownFolders.GetPath( KnownFolder.Music ),
+                Text = "Music"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.Image,
+                Location = KnownFolders.GetPath( KnownFolder.Pictures ),
+                Text = "Image"
+            } );
+
+            QuickAccess.Add( new SideBarItem
+            {
+                Icon = ( char )FontAwesomeIcon.Video,
+                Location = KnownFolders.GetPath( KnownFolder.Videos ),
+                Text = "Video"
+            } );
         }
 
         // TODO: ascending or descending icons
