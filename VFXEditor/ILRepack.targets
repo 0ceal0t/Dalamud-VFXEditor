@@ -9,7 +9,6 @@
         <InputAssemblies Include="$(OutputPath)Iced.dll" />
         <InputAssemblies Include="$(OutputPath)SharpDisasm.dll" />
         <InputAssemblies Include="$(OutputPath)AVFXLib.dll" />
-        <InputAssemblies Include="$(OutputPath)ICSharpCode.SharpZipLib.dll" />
         <InputAssemblies Include="$(OutputPath)VFXEditor.dll" />
     </ItemGroup>
 

@@ -89,7 +89,7 @@ namespace VFXEditor
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
 
-            DialogManager.Dispose();
+            DialogManager.Reset();
 
             ImPlot.DestroyContext();
 

@@ -60,11 +60,11 @@ namespace ImGuiFileDialog {
 
                 if( Files.Count == 0 ) {
                     if( !string.IsNullOrEmpty( DefaultFileName ) ) {
-                        SetDefaultFileName( DefaultFileName );
+                        SetDefaultFileName();
                         SetSelectedFilterWithExt( DefaultExtension );
                     }
                     else if( IsDirectoryMode() ) {
-                        SetDefaultFileName( DefaultFileName );
+                        SetDefaultFileName();
                     }
 
                     ScanDir( CurrentPath );
@@ -73,8 +73,6 @@ namespace ImGuiFileDialog {
                 DrawHeader();
                 DrawContent();
                 res = DrawFooter();
-
-                // TODO: center position
 
                 if( IsModal && !OkResultToConfirm ) {
                     ImGui.EndPopup();
@@ -400,7 +398,6 @@ namespace ImGuiFileDialog {
 
             ImGui.SameLine(25f);
 
-            // TODO: key exploration
             if( ImGui.Selectable( file.FileName, selected, flags ) ) {
                 if( file.Type == FileStructType.Directory ) {
                     if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) {

@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AVFXLib.Models;
-using ICSharpCode.SharpZipLib.Zip;
 using System.IO;
 using Dalamud.Plugin;
 using Newtonsoft.Json;
@@ -126,9 +122,8 @@ namespace VFXEditor.External {
                 File.WriteAllText( mplPath, mplString );
                 File.WriteAllBytes( mdpPath, newData );
 
-                FastZip zip = new FastZip();
-                zip.CreateEmptyDirectories = true;
-                zip.CreateZip( saveLocation, tempDir, false, "" );
+                if( File.Exists( saveLocation ) ) File.Delete( saveLocation );
+                ZipFile.CreateFromDirectory( tempDir, saveLocation );
                 Directory.Delete( tempDir, true);
                 PluginLog.Log( "Exported To: " + saveLocation );
             }

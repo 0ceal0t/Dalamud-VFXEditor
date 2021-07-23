@@ -36,7 +36,7 @@ namespace ImGuiFileDialog {
             Action<bool, string> callback
         ) {
 
-            Dispose();
+            Reset();
             Callback = callback;
             Dialog = new FileDialog( id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, flags );
             Dialog.Show();
@@ -47,11 +47,11 @@ namespace ImGuiFileDialog {
             if(Dialog.Draw()) {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
                 SavedPath = Dialog.GetCurrentPath();
-                Dispose();
+                Reset();
             }
         }
 
-        public void Dispose() {
+        public void Reset() {
             Dialog?.Hide();
             Dialog = null;
             Callback = null;

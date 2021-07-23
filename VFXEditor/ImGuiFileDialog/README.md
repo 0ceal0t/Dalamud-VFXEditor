@@ -14,7 +14,6 @@ PluginInterface.UiBuilder.OnBuildUi += dialogManager.Draw;
 
 // on dispose...
 PluginInterface.UiBuilder.OnBuildUi -= dialogManager.Draw;
-dialogManager.Dispose();
 ```
 
 Then, you can create dialogs like this. Note that only one dialog can be active at a time.

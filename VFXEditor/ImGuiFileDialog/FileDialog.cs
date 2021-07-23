@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using ImGuiNET;
 
 namespace ImGuiFileDialog {
     [Flags]
@@ -24,12 +20,12 @@ namespace ImGuiFileDialog {
     public partial class FileDialog {
         private bool Visible;
 
-        private string Title;
-        private int SelectionCountMax;
-        private ImGuiFileDialogFlags Flags;
-        private string Id;
-        private string DefaultExtension;
-        private string DefaultFileName;
+        private readonly string Title;
+        private readonly int SelectionCountMax;
+        private readonly ImGuiFileDialogFlags Flags;
+        private readonly string Id;
+        private readonly string DefaultExtension;
+        private readonly string DefaultFileName;
 
         private string CurrentPath;
         private string FileNameBuffer = "";
@@ -82,10 +78,11 @@ namespace ImGuiFileDialog {
 
             CurrentPath = path;
             DefaultExtension = defaultExtension;
+            DefaultFileName = defaultFileName;
 
             ParseFilters( filters );
             SetSelectedFilterWithExt( DefaultExtension );
-            SetDefaultFileName( defaultFileName );
+            SetDefaultFileName();
             SetPath( CurrentPath );
 
             SetupSideBar();
@@ -158,9 +155,8 @@ namespace ImGuiFileDialog {
             return result;
         }
 
-        private void SetDefaultFileName( string filename ) {
-            DefaultFileName = filename;
-            FileNameBuffer = filename;
+        private void SetDefaultFileName() {
+            FileNameBuffer = DefaultFileName;
         }
 
         private void SetPath(string path) {
@@ -170,7 +166,7 @@ namespace ImGuiFileDialog {
             PathDecomposition.Clear();
             SelectedFileNames.Clear();
             if( IsDirectoryMode() ) {
-                SetDefaultFileName( DefaultFileName );
+                SetDefaultFileName();
             }
             ScanDir( CurrentPath );
         }
