@@ -254,7 +254,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public static void ExportDialog(UINode node ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 File.WriteAllBytes( res, node.ToBytes() );
@@ -262,7 +262,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) =>
+            Plugin.DialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {

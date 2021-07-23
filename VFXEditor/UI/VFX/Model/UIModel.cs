@@ -8,7 +8,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using VFXEditor.Data.DirectX;
 using VFXEditor.External;
 
@@ -143,7 +142,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) =>
+            Plugin.DialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {
@@ -160,7 +159,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ExportDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) =>
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 GLTF.ExportModel( Model, res );

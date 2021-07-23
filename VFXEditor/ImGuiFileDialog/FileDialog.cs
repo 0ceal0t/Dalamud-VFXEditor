@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using ImGuiNET;
-using Dalamud.Plugin;
 
 namespace ImGuiFileDialog {
     [Flags]

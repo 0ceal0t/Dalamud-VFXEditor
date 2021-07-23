@@ -8,30 +8,30 @@ You can either create a `FileDialog` directly, or use a `FileDialogManager` to h
 
 ## Using the Manager
 ```cs
-using ImGuiFileDialog;
+var dialogManager = new FileDialogManager();
 
-PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
+PluginInterface.UiBuilder.OnBuildUi += dialogManager.Draw;
 
 // on dispose...
-PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
-FileDialogManager.Dispose();
+PluginInterface.UiBuilder.OnBuildUi -= dialogManager.Draw;
+dialogManager.Dispose();
 ```
 
 Then, you can create dialogs like this. Note that only one dialog can be active at a time.
 ```cs
-FileDialogManager.OpenFolderDialog("Select a Folder", (bool ok, string result) => {
+dialogManager.OpenFolderDialog("Select a Folder", (bool ok, string result) => {
     // ...
 });
 
-FileDialogManager.SaveFolderDialog("Select a Folder to Save", "default_folder_name", (bool ok, string result) => {
+dialogManager.SaveFolderDialog("Select a Folder to Save", "default_folder_name", (bool ok, string result) => {
     // ...
 });
 
-fd.OpenFileDialog("Select a File to Open", ".json,.*", (bool ok, string result) => {
+dialogManager.OpenFileDialog("Select a File to Open", ".json,.*", (bool ok, string result) => {
     // NOTE: see the section on filters for information on how to format them
 });
 
-fd.SaveFileDialog("Select a Location to Save", ".json,.*", "default_file_name", "json", (bool ok, string result) => {
+dialogManager.SaveFileDialog("Select a Location to Save", ".json,.*", "default_file_name", "json", (bool ok, string result) => {
     // NOTE: see the section on filters for information on how to format them
 });
 ```

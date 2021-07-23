@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
@@ -59,11 +58,16 @@ namespace VFXSelect.UI
         private Action<string> SpawnOnSelf;
         private Action<string> SpawnOnTarget;
 
+        private FileDialogManager DialogManager;
+
         public List<VFXSelectTab> GameTabs;
         public List<VFXSelectResult> RecentList;
 
         public VFXSelectDialog(
-            SheetManager sheet, string id, List<VFXSelectResult> recentList,
+            SheetManager sheet,
+            string id,
+            List<VFXSelectResult> recentList,
+            FileDialogManager dialogManager,
             bool showSpawn = false,
             Func<bool> spawnVfxExists = null,
             Action removeSpawnVfx = null,
@@ -73,6 +77,7 @@ namespace VFXSelect.UI
             ) {
             Id = id;
             RecentList = recentList;
+            DialogManager = dialogManager;
 
             ShowSpawn = showSpawn;
             SpawnVfxExists = spawnVfxExists;
@@ -135,7 +140,7 @@ namespace VFXSelect.UI
             ImGui.InputText( id + "Input", ref localPathInput, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".avfx,.*", ( bool ok, string res ) =>
+                DialogManager.OpenFileDialog( "Select a File", ".avfx,.*", ( bool ok, string res ) =>
                 {
                     if( !ok ) return;
                     Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + res, res ) );
@@ -185,6 +190,7 @@ namespace VFXSelect.UI
 
             ImGui.EndTabItem();
         }
+
         // ======== RECENT ========
         public VFXSelectResult RecentSelected;
         public bool IsRecentSelected = false;
@@ -221,14 +227,17 @@ namespace VFXSelect.UI
         public static bool Matches(string item, string query ) {
             return item.ToLower().Contains( query.ToLower() );
         }
+
         public void Invoke( VFXSelectResult result ) {
             OnSelect?.Invoke( result );
         }
+
         public void DisplayPath(string path ) {
             ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
             ImGui.TextWrapped( path );
             ImGui.PopStyleColor();
         }
+
         public void Copy(string copyPath, string id = "" ) {
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
             if(ImGui.Button("Copy##" + id ) )
@@ -237,6 +246,7 @@ namespace VFXSelect.UI
             }
             ImGui.PopStyleColor();
         }
+
         public void Spawn(string spawnPath, string id = "") {
             if( !ShowSpawn ) return;
             ImGui.SameLine();
@@ -263,6 +273,7 @@ namespace VFXSelect.UI
                 }
             }
         }
+
         public static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight) {
             float childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
             var scrollY = ImGui.GetScrollY();

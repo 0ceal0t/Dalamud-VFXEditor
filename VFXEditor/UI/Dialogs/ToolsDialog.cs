@@ -53,7 +53,7 @@ namespace VFXEditor.UI {
             ImGui.Text( ".atex to PNG" );
             ImGui.SameLine();
             if(ImGui.Button("Browse##AtexToPNG")) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
+                Plugin.DialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
                 {
                     if( !ok ) return;
                     var texFile = VFXTexture.LoadFromLocal( res );
@@ -64,7 +64,7 @@ namespace VFXEditor.UI {
             ImGui.Text( ".atex to DDS" );
             ImGui.SameLine();
             if( ImGui.Button( "Browse##AtexToDDS" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
+                Plugin.DialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
                 {
                     if( !ok ) return;
                     var texFile = VFXTexture.LoadFromLocal( res );

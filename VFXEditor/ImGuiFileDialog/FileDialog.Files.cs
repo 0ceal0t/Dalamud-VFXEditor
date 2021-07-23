@@ -146,52 +146,54 @@ namespace ImGuiFileDialog {
                 } ) ;
             }
 
+            var personal = Path.GetDirectoryName(Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
+
             QuickAccess.Add( new SideBarItem
             {
                 Icon = (char) FontAwesomeIcon.Desktop,
-                Location = KnownFolders.GetPath(KnownFolder.Desktop),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
                 Text = "Desktop"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.File,
-                Location = KnownFolders.GetPath( KnownFolder.Documents ),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
                 Text = "Documents"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Download,
-                Location = KnownFolders.GetPath( KnownFolder.Downloads ),
+                Location = Path.Combine(personal, "Downloads"),
                 Text = "Downloads"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Star,
-                Location = KnownFolders.GetPath( KnownFolder.Favorites ),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
                 Text = "Favorites"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Music,
-                Location = KnownFolders.GetPath( KnownFolder.Music ),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
                 Text = "Music"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Image,
-                Location = KnownFolders.GetPath( KnownFolder.Pictures ),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
                 Text = "Pictures"
             } );
 
             QuickAccess.Add( new SideBarItem
             {
                 Icon = ( char )FontAwesomeIcon.Video,
-                Location = KnownFolders.GetPath( KnownFolder.Videos ),
+                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
                 Text = "Videos"
             } );
         }

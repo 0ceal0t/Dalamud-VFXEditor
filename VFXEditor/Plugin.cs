@@ -36,6 +36,8 @@ namespace VFXEditor
 
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
+        public static FileDialogManager DialogManager;
+
         private IntPtr ImPlotContext;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
@@ -51,6 +53,8 @@ namespace VFXEditor
             } );
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
+
+            DialogManager = new FileDialogManager();
 
             // ==== IMGUI ====
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
@@ -70,7 +74,7 @@ namespace VFXEditor
             ResourceLoader.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
-            PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += DialogManager.Draw;
         }
 
         public void Draw() {
@@ -81,11 +85,11 @@ namespace VFXEditor
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= DialogManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
             ResourceLoader?.Dispose();
 
-            FileDialogManager.Dispose();
+            DialogManager.Dispose();
 
             ImPlot.DestroyContext();
 

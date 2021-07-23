@@ -87,7 +87,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ImportDialog(string newPath) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
+            Plugin.DialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {
@@ -102,7 +102,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void SavePngDialog(string texPath) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 var texFile = TextureManager.Manager.GetTexture( texPath );
@@ -111,7 +111,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void SaveDDSDialog(string texPath ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 var texFile = TextureManager.Manager.GetTexture( texPath );

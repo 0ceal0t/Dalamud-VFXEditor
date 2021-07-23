@@ -5,7 +5,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -86,7 +85,7 @@ namespace VFXEditor.UI {
         }
 
         public void SaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 using( BinaryWriter writer = new BinaryWriter( File.Open( res, FileMode.Create ) ) ) {

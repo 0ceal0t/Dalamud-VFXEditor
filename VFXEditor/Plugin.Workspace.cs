@@ -56,7 +56,7 @@ namespace VFXEditor {
         }
 
         public void OpenWorkspace() {
-            FileDialogManager.OpenFileDialog( "Select a Workspace JSON", ".json", ( bool ok, string res ) =>
+            DialogManager.OpenFileDialog( "Select a Workspace JSON", ".json", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {
@@ -116,7 +116,7 @@ namespace VFXEditor {
         }
 
         public void SaveAsWorkspace() {
-            FileDialogManager.SaveFolderDialog( "Select a Folder", "Workspace", ( bool ok, string res ) =>
+             DialogManager.SaveFolderDialog( "Select a Folder", "Workspace", ( bool ok, string res ) =>
              {
                 if( !ok ) return;
                 CurrentWorkspaceLocation = res;
