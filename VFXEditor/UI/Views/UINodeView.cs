@@ -25,10 +25,12 @@ namespace VFXEditor.UI.VFX {
             }
             if( selected != null && allowDelete ) {
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) ) {
                     ImGui.OpenPopup( "Save_Popup" + Id );
                 }
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
                 if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
                     group.Remove( selected );
                     selected.DeleteNode();

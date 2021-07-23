@@ -129,7 +129,7 @@ namespace VFXEditor {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
-                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
+                ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.GREEN_COLOR );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                         DocManager.Save();
@@ -172,8 +172,8 @@ namespace VFXEditor {
                     var verified = CurrentDocument.Main.Verified;
                     Vector4 color = verified switch
                     {
-                        VerifiedStatus.OK => new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ),
-                        VerifiedStatus.ISSUE => new Vector4( 0.90f, 0.15f, 0.15f, 1.0f ),
+                        VerifiedStatus.OK => UIUtils.GREEN_COLOR,
+                        VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
                         _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
                     };
 
@@ -282,7 +282,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSourceVFX();
             }
@@ -300,7 +300,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplaceVFX();
             }

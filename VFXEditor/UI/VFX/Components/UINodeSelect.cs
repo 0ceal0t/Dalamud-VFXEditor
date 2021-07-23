@@ -167,10 +167,10 @@ namespace VFXEditor.UI.VFX {
             }
             if(Selected.Count == 0 ) {
                 ImGui.Text( Name );
-                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "WARNING: Add an item!" );
+                ImGui.TextColored( UIUtils.RED_COLOR, "WARNING: Add an item!" );
             }
             if(Group.Items.Count == 0 ) {
-                ImGui.TextColored(new Vector4(1,0,0,1), "WARNING: Add a selectable item first!" );
+                ImGui.TextColored( UIUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {

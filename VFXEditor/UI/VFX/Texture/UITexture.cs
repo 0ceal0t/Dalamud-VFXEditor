@@ -66,7 +66,7 @@ namespace VFXEditor.UI.VFX
                 }
                 // ===== IMPORTED TEXTURE =======
                 if( t.IsReplaced ) {
-                    ImGui.TextColored( new Vector4( 1.0f, 0.0f, 0.0f, 1.0f ), "Replaced with imported texture" );
+                    ImGui.TextColored( UIUtils.RED_COLOR, "Replaced with imported texture" );
                     ImGui.SameLine();
                     if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
                         TextureManager.Manager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );

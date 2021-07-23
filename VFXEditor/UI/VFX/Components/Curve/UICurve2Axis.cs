@@ -70,12 +70,18 @@ namespace VFXEditor.UI.VFX
                     return;
                 }
             }
+
+            int idx = 0;
             foreach( var c in Curves ) {
                 if( !c.Assigned ) {
-                    ImGui.SameLine();
+                    if( idx % 5 != 0 ) {
+                        ImGui.SameLine();
+                    }
                     c.Draw( id );
+                    idx++;
                 }
             }
+
             _AxisConnect.Draw( id );
             _AxisConnectRandom.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
