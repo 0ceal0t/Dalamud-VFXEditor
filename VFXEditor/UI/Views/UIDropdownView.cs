@@ -15,7 +15,7 @@ namespace VFXEditor.UI.VFX
 {
     public abstract class UIDropdownView<T> : UIBase, UINodeView<T> where T : UINode {
         public string Id;
-        public string defaultText;
+        public string DefaultText;
         public UIMain Main;
         public AVFXBase AVFX;
         public UINodeGroup<T> Group;
@@ -25,11 +25,11 @@ namespace VFXEditor.UI.VFX
         public bool AllowNew;
         public bool AllowDelete;
 
-        public UIDropdownView( UIMain main, AVFXBase avfx, string _id, string _defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
+        public UIDropdownView( UIMain main, AVFXBase avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
             Main = main;
             AVFX = avfx;
-            Id = _id;
-            defaultText = _defaultText;
+            Id = id;
+            DefaultText = defaultText;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
             DefaultPath = Path.Combine( Plugin.TemplateLocation, "Files", defaultPath );
@@ -41,19 +41,15 @@ namespace VFXEditor.UI.VFX
         public abstract T OnImport( AVFXNode node, bool has_dependencies = false );
 
         public override void Draw( string parentId = "" ) {
-            ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 0.18f, 0.18f, 0.22f, 0.4f ) );
-            ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
-            ImGui.BeginChild( "Child" + Id, new Vector2( ImGui.GetWindowWidth() - 0, 33 ) );
-            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 5, 5 ) );
-            ImGui.PopStyleColor();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();
 
             if(AllowNew ) ImGui.SameLine();
             UINodeView<T>.DrawControls(this, Main, Selected, Group, AllowNew, AllowDelete, Id);
 
-            ImGui.Separator();
-            ImGui.EndChild();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
 
             if( Selected != null ) {
                 Selected.DrawBody( Id );
@@ -61,8 +57,8 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ViewSelect() {
-            var selectedString = (Selected != null) ? Selected.GetText() : defaultText;
-            if( ImGui.BeginCombo( "Select" + Id, selectedString ) ) {
+            var selectedString = (Selected != null) ? Selected.GetText() : DefaultText;
+            if( ImGui.BeginCombo( Id + "-Select", selectedString ) ) {
                 foreach(var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                         Selected = item;

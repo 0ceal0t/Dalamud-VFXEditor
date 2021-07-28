@@ -44,7 +44,7 @@ namespace VFXEditor
             PluginInterface = pluginInterface;
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize( PluginInterface );
-            Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
+            Directory.CreateDirectory( WriteLocation );
             PluginLog.Log( "Write location: " + WriteLocation );
 
             ResourceLoader = new ResourceLoader( this );

@@ -17,6 +17,12 @@ namespace ImGuiFileDialog {
         HideSideBar = 8
     }
 
+    public struct SideBarItem {
+        public char Icon;
+        public string Text;
+        public string Location;
+    }
+
     public partial class FileDialog {
         private bool Visible;
 
@@ -53,11 +59,7 @@ namespace ImGuiFileDialog {
         private string SelectedSideBar = "";
         private List<SideBarItem> Drives = new();
         private List<SideBarItem> QuickAccess = new();
-        private struct SideBarItem {
-            public char Icon;
-            public string Text;
-            public string Location;
-        }
+        private List<SideBarItem> Recent;
 
         public FileDialog(
             string id,
@@ -68,6 +70,7 @@ namespace ImGuiFileDialog {
             string defaultExtension,
             int selectionCountMax,
             bool isModal,
+            List<SideBarItem> recent,
             ImGuiFileDialogFlags flags
          ) {
             Id = id;
@@ -75,6 +78,7 @@ namespace ImGuiFileDialog {
             Flags = flags;
             SelectionCountMax = selectionCountMax;
             IsModal = isModal;
+            Recent = recent;
 
             CurrentPath = path;
             DefaultExtension = defaultExtension;

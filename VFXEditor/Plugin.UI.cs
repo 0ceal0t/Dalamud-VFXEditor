@@ -391,7 +391,6 @@ namespace VFXEditor {
             SetSourceVFX( newResult );
         }
 
-        // =========== HELPERS ===========
         public static void HelpMarker(string text) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.TextDisabled( "(?)" );

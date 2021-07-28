@@ -22,6 +22,7 @@ namespace VFXSelect.UI
         GameCutscene,
         GameNpc
     }
+
     public struct VFXSelectResult
     {
         public VFXSelectType Type;
@@ -131,7 +132,7 @@ namespace VFXSelect.UI
             var ret = ImGui.BeginTabItem( "Local File##Select-" + Id );
             if( !ret )
                 return;
-            // ==========================
+
             var id = "##Select/Local/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( ".avfx file located on your computer, eg: C:/Users/me/Downloads/awesome.avfx" );
@@ -159,7 +160,7 @@ namespace VFXSelect.UI
             var ret = ImGui.BeginTabItem( "Game File##Select/" + Id );
             if( !ret )
                 return;
-            // ==========================
+
             ImGui.BeginTabBar( "GameSelectTabs##" + Id );
             DrawGamePath();
             foreach(var tab in GameTabs ) {
@@ -172,10 +173,10 @@ namespace VFXSelect.UI
         // ============== GAME FILE ================
         private string gamePathInput = "";
         public void DrawGamePath() {
-            var ret = ImGui.BeginTabItem( "Game File##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Game Path##Select/" + Id );
             if( !ret )
                 return;
-            // ==========================
+
             var id = "##Select/GamePath/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "In-game .avfx file, eg: vfx/common/eff/wp_astro1h.avfx" );

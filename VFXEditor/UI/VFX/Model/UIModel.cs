@@ -45,11 +45,11 @@ namespace VFXEditor.UI.VFX
             NodeView.Draw( id );
             DrawRename( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
-            if( ImGui.SmallButton( "Replace" + id ) ) {
+            if( ImGui.Button( "Replace" + id ) ) {
                 ImportDialog();
             }
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Export" + id ) ) {
+            if( ImGui.Button( "Export" + id ) ) {
                 ImGui.OpenPopup( "Save_Popup" + id );
             }
             // ==================

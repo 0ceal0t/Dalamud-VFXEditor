@@ -241,32 +241,33 @@ namespace ImGuiFileDialog {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             foreach(var drive in Drives) {
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Selectable( $"{drive.Icon}##{drive.Text}", drive.Text == SelectedSideBar ) ) {
-                    SetPath( drive.Location );
-                    SelectedSideBar = drive.Text;
-                }
-                ImGui.PopFont();
-
-                ImGui.SameLine(25);
-
-                ImGui.Text( drive.Text );
+                DrawSideBarItem( drive );
             }
 
             foreach(var quick in QuickAccess) {
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Selectable( $"{quick.Icon}##{quick.Text}", quick.Text == SelectedSideBar ) ) {
-                    SetPath( quick.Location );
-                    SelectedSideBar = quick.Text;
+                DrawSideBarItem( quick );
+            }
+
+            if(Recent != null) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+                foreach(var recent in Recent) {
+                    DrawSideBarItem( recent );
                 }
-                ImGui.PopFont();
-
-                ImGui.SameLine(25);
-
-                ImGui.Text( quick.Text );
             }
 
             ImGui.EndChild();
+        }
+
+        private void DrawSideBarItem(SideBarItem item) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Selectable( $"{item.Icon}##{item.Text}", item.Text == SelectedSideBar ) ) {
+                SetPath( item.Location );
+                SelectedSideBar = item.Text;
+            }
+            ImGui.PopFont();
+
+            ImGui.SameLine( 25 );
+            ImGui.Text( item.Text );
         }
 
         private unsafe void DrawFileListView( Vector2 size ) {

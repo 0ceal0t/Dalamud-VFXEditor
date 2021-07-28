@@ -4,14 +4,13 @@ using System;
 using System.Numerics;
 using Dalamud.Plugin;
 using VFXEditor.Data.Texture;
-using ImGuiFileDialog;
 
 namespace VFXEditor.UI.VFX
 {
     public class UITexture : UINode {
         public UIMain Main;
         public AVFXTexture Texture;
-        //===========================
+
         public string lastValue;
         public UIString Path;
         public UINodeGraphView NodeView;
@@ -48,11 +47,11 @@ namespace VFXEditor.UI.VFX
                 var t = TextureManager.Manager.PathToTexturePreview[currentPathValue];
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
-                if( ImGui.SmallButton( "Export" + id ) ) {
+                if( ImGui.Button( "Export" + id ) ) {
                     ImGui.OpenPopup( "Tex_Export" + id );
                 }
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Replace" + id ) ) {
+                if( ImGui.Button( "Replace" + id ) ) {
                     ImportDialog( currentPathValue.Trim( '\0' ) );
                 }
                 if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
@@ -64,6 +63,7 @@ namespace VFXEditor.UI.VFX
                     }
                     ImGui.EndPopup();
                 }
+
                 // ===== IMPORTED TEXTURE =======
                 if( t.IsReplaced ) {
                     ImGui.TextColored( UIUtils.RED_COLOR, "Replaced with imported texture" );

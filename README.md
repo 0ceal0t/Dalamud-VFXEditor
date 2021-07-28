@@ -41,10 +41,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Copy+Paste parameters (color keys, etc.3)
 - [ ] Ground-targeted AOEs (might need to do it manually?)
 - [ ] Menu shortcuts + keys move up / down
 - [ ] Better PNG import support
-- [ ] Duplicate nodes
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
 - [ ] Investigate VFX flags, better structs
 - [ ] Better nodegraph view? might not really be necessary yet
@@ -60,6 +60,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Duplicate nodes~~
 - [x] ~~Get it to work with LPL (FASM is being annoying)~~
 - [x] ~~Help text / hover text~~
 - [x] ~~Fix crashes when replacing sound~~

@@ -1,4 +1,7 @@
+using Dalamud.Interface;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ImGuiFileDialog {
     public class FileDialogManager {
@@ -6,6 +9,7 @@ namespace ImGuiFileDialog {
         private FileDialog Dialog;
         private string SavedPath = ".";
         private Action<bool, string> Callback;
+        private List<SideBarItem> Recent = new();
 
         public void OpenFolderDialog( string title, Action<bool, string> callback ) {
             SetDialog("OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback);
@@ -35,10 +39,9 @@ namespace ImGuiFileDialog {
             ImGuiFileDialogFlags flags,
             Action<bool, string> callback
         ) {
-
             Reset();
             Callback = callback;
-            Dialog = new FileDialog( id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, flags );
+            Dialog = new FileDialog( id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, Recent, flags );
             Dialog.Show();
         }
 
@@ -47,6 +50,7 @@ namespace ImGuiFileDialog {
             if(Dialog.Draw()) {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
                 SavedPath = Dialog.GetCurrentPath();
+                AddRecent( SavedPath );
                 Reset();
             }
         }
@@ -55,6 +59,22 @@ namespace ImGuiFileDialog {
             Dialog?.Hide();
             Dialog = null;
             Callback = null;
+        }
+
+        private void AddRecent(string path) {
+            foreach(var recent in Recent) {
+                if( recent.Location == path ) return;
+            }
+
+            Recent.Add( new SideBarItem {
+                Icon = ( char )FontAwesomeIcon.Folder,
+                Location = path,
+                Text = Path.GetFileName( path )
+            } );
+
+            while(Recent.Count > 10) {
+                Recent.RemoveAt( 0 );
+            }
         }
     }
 }

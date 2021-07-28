@@ -30,7 +30,7 @@ namespace VFXEditor.UI.VFX
         public override void Draw(string id) {
             ImGui.InputText(Id + id, ref Value, MaxSize);
             ImGui.SameLine();
-            if (ImGui.SmallButton("Update" + id)) {
+            if (ImGui.Button("Update" + id)) {
                 Literal.GiveValue(Value.Trim('\0') + "\u0000");
                 ChangeFunction(Literal);
             }
