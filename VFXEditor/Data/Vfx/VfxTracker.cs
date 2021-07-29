@@ -196,7 +196,6 @@ namespace VFXEditor.Data.Vfx {
             foreach( var group in Groups.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
                 var paths = new HashSet<string>( group );
 
-                // ==== CHECK WINDOW POSITION ======
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, group.Key );
                 if( d > 100f && Configuration.Config.OverlayLimit ) {
@@ -225,7 +224,6 @@ namespace VFXEditor.Data.Vfx {
                     Z = actor.Position.Y
                 };
 
-                // ===== CHECK WINDOW POSITION =========
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, pos );
                 if( d > 100f && Configuration.Config.OverlayLimit ) {
@@ -234,6 +232,11 @@ namespace VFXEditor.Data.Vfx {
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
                 idx++;
             }
+        }
+
+        public void Reset() {
+            ActorVfxs = new();
+            StaticVfxs = new();
         }
 
         private static void DrawOverlayItems( Vector2 pos, HashSet<string> items, int idx ) {
@@ -279,11 +282,6 @@ namespace VFXEditor.Data.Vfx {
 
                 ImGui.End();
             }
-        }
-
-        public void Reset() {
-            ActorVfxs = new();
-            StaticVfxs = new();
         }
 
         private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) {

@@ -5,7 +5,7 @@ using System.IO;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
-namespace VFXEditor {
+namespace VFXEditor.Data {
     public class ReplaceDoc {
         public UIMain Main = null;
         public string WriteLocation;

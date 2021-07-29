@@ -8,32 +8,7 @@ using System.IO.Compression;
 using VFXEditor.Data.Texture;
 
 namespace VFXEditor.External {
-    public struct TTMPL {
-        public string TTMPVersion;
-        public string Name;
-        public string Author;
-        public string Version;
-#nullable enable
-        public string? Description;
-        public string? ModPackPages;
-#nullable disable
-        public TTMPL_Simple[] SimpleModsList;
-    }
-
-    public struct TTMPL_Simple {
-        public string Name;
-        public string Category;
-        public string FullPath;
-        public bool IsDefault;
-        public int ModOffset;
-        public int ModSize;
-        public string DatFile;
-#nullable enable
-        public string? ModPackEntry;
-#nullable disable
-    }
-
-    public class TexTools {
+    public static class TexTools {
 
         /*
          * TTMPL.mpl ->
@@ -59,7 +34,33 @@ namespace VFXEditor.External {
          *  }
          */
 
-        public static void Export(Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
+        private struct TTMPL {
+            public string TTMPVersion;
+            public string Name;
+            public string Author;
+            public string Version;
+#nullable enable
+            public string? Description;
+            public string? ModPackPages;
+#nullable disable
+            public TTMPL_Simple[] SimpleModsList;
+        }
+
+        private struct TTMPL_Simple {
+            public string Name;
+            public string Category;
+            public string FullPath;
+            public bool IsDefault;
+            public int ModOffset;
+            public int ModSize;
+            public string DatFile;
+#nullable enable
+            public string? ModPackEntry;
+#nullable disable
+        }
+
+
+        public static void Export( Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
                 var simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
@@ -67,7 +68,7 @@ namespace VFXEditor.External {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    void AddMod(AVFXBase avfx, string _path) {
+                    void AddMod( AVFXBase avfx, string _path ) {
                         if( !string.IsNullOrEmpty( _path ) && avfx != null ) {
                             var modData = SquishAVFX( avfx );
                             simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
@@ -76,8 +77,8 @@ namespace VFXEditor.External {
                         }
                     }
 
-                    void AddTex(TexReplace tex, string _path ) {
-                        if(!string.IsNullOrEmpty(_path) && !string.IsNullOrEmpty( tex.localPath ) ) {
+                    void AddTex( TexReplace tex, string _path ) {
+                        if( !string.IsNullOrEmpty( _path ) && !string.IsNullOrEmpty( tex.localPath ) ) {
                             using var file = File.Open( tex.localPath, FileMode.Open );
                             using var texReader = new BinaryReader( file );
                             using var texMs = new MemoryStream();
@@ -91,16 +92,16 @@ namespace VFXEditor.External {
                     }
 
                     if( exportAll ) {
-                        foreach(var doc in _plugin.DocManager.Docs ) {
+                        foreach( var doc in _plugin.DocManager.Docs ) {
                             AddMod( doc.Main?.AVFX, doc.Replace.Path );
                         }
                     }
                     else {
-                        AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.DocManager.ActiveDoc.Replace.Path);
+                        AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.DocManager.ActiveDoc.Replace.Path );
                     }
 
                     if( exportTex ) {
-                        foreach( var entry in _plugin.TexManager.PathToTextureReplace ) {
+                        foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
                             AddTex( entry.Value, entry.Key );
                         }
                     }
@@ -121,23 +122,22 @@ namespace VFXEditor.External {
                 var tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
                 Directory.CreateDirectory( tempDir );
                 var mdpPath = Path.Combine( tempDir, "TTMPD.mpd" );
-                var mplPath = Path.Combine(  tempDir, "TTMPL.mpl" );
+                var mplPath = Path.Combine( tempDir, "TTMPL.mpl" );
                 var mplString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( mplPath, mplString );
                 File.WriteAllBytes( mdpPath, newData );
 
                 if( File.Exists( saveLocation ) ) File.Delete( saveLocation );
                 ZipFile.CreateFromDirectory( tempDir, saveLocation );
-                Directory.Delete( tempDir, true);
+                Directory.Delete( tempDir, true );
                 PluginLog.Log( "Exported To: " + saveLocation );
             }
-            catch(Exception e )
-            {
+            catch( Exception e ) {
                 PluginLog.LogError( e, "Could not export to TexTools" );
             }
         }
 
-        public static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
+        private static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
             var simple = new TTMPL_Simple();
             var split = path.Split( '/' );
             simple.Name = split[^1];
@@ -182,7 +182,7 @@ namespace VFXEditor.External {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
-        public static byte[] CreateType2Data( byte[] dataToCreate ) {
+        private static byte[] CreateType2Data( byte[] dataToCreate ) {
             var newData = new List<byte>();
             var headerData = new List<byte>();
             var dataBlocks = new List<byte>();
@@ -247,7 +247,7 @@ namespace VFXEditor.External {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/Helpers/IOUtil.cs#L40
-        public static byte[] Compressor( byte[] uncompressedBytes ) {
+        private static byte[] Compressor( byte[] uncompressedBytes ) {
             using var uMemoryStream = new MemoryStream( uncompressedBytes );
             byte[] compbytes = null;
             using( var cMemoryStream = new MemoryStream() )

@@ -4,37 +4,22 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Data.Texture;
 
 namespace VFXEditor.External {
-    public struct PenumbraMod {
-        public string Name;
-        public string Author;
-        public string Description;
+    public static class Penumbra {
+        private struct PenumbraMod {
+            public string Name;
+            public string Author;
+            public string Description;
 #nullable enable
-        public string? Version;
-        public string? Website;
+            public string? Version;
+            public string? Website;
 #nullable disable
-        public Dictionary<string, string> FileSwaps;
-    }
+            public Dictionary<string, string> FileSwaps;
+        }
 
-    public class Penumbra
-    {
-        /*
-        * {
-        *  "Name":"Ultimate Manatrigger",
-        *  "Author":"Gabster",
-        *  "Description":"Mod imported from TexTools mod pack",
-        *  "Version":null,
-        *  "Website":null,
-        *  "FileSwaps":{}
-        *  }
-        */
-
-        public static void Export(Plugin _plugin, string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
+        public static void Export( Plugin _plugin, string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
             try {
                 var mod = new PenumbraMod {
                     Name = name,
@@ -60,8 +45,8 @@ namespace VFXEditor.External {
                     }
                 }
 
-                void AddTex(string localPath, string _path ) {
-                    if(!string.IsNullOrEmpty(localPath) && !string.IsNullOrEmpty( _path ) ) {
+                void AddTex( string localPath, string _path ) {
+                    if( !string.IsNullOrEmpty( localPath ) && !string.IsNullOrEmpty( _path ) ) {
                         var modFile = Path.Combine( modFolder, _path );
                         var modFileFolder = Path.GetDirectoryName( modFile );
                         Directory.CreateDirectory( modFileFolder );
@@ -79,15 +64,14 @@ namespace VFXEditor.External {
                 }
 
                 if( exportTex ) {
-                    foreach( var entry in _plugin.TexManager.PathToTextureReplace ) {
+                    foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
                         AddTex( entry.Value.localPath, entry.Key );
                     }
                 }
 
                 PluginLog.Log( "Exported To: " + modFolder );
             }
-            catch( Exception e )
-            {
+            catch( Exception e ) {
                 PluginLog.LogError( e, "Could not export to Penumbra" );
             }
         }

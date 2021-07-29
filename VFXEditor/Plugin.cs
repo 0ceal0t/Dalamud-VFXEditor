@@ -25,7 +25,6 @@ namespace VFXEditor
         public ResourceLoader ResourceLoader;
         public DocumentManager DocManager;
         public VfxTracker Tracker;
-        public TextureManager TexManager;
         public SheetManager Sheets;
         public static FileDialogManager DialogManager;
 

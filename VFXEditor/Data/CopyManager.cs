@@ -8,16 +8,6 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.Data {
     public class CopyManager {
-        private static CopyManager Instance;
-
-        public static void Initialize() {
-            Instance = new CopyManager();
-        }
-
-        public static void Dispose() {
-        }
-
-        public CopyManager() {
-        }
+        
     }
 }

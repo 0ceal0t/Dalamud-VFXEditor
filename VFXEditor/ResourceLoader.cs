@@ -9,14 +9,11 @@ using FileMode = VFXEditor.Structs.FileMode;
 using Reloaded.Hooks;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.X64;
-using System.Threading.Tasks;
-using System.Threading;
 using VFXEditor.Structs.Vfx;
+using VFXEditor.Data.Texture;
 
-namespace VFXEditor
-{
-    public class ResourceLoader : IDisposable
-    {
+namespace VFXEditor {
+    public class ResourceLoader : IDisposable {
         public Plugin Plugin { get; set; }
         public bool IsEnabled { get; set; }
         public Crc32 Crc32 { get; }
@@ -43,9 +40,9 @@ namespace VFXEditor
         public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
         // ====== FILES HOOKS ========
-        public IHook< GetResourceSyncPrototype > GetResourceSyncHook { get; private set; }
-        public IHook< GetResourceAsyncPrototype > GetResourceAsyncHook { get; private set; }
-        public IHook< ReadSqpackPrototype > ReadSqpackHook { get; private set; }
+        public IHook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
+        public IHook<GetResourceAsyncPrototype> GetResourceAsyncHook { get; private set; }
+        public IHook<ReadSqpackPrototype> ReadSqpackHook { get; private set; }
         public ReadFilePrototype ReadFile { get; private set; }
 
         //====== STATIC ===========
@@ -109,14 +106,14 @@ namespace VFXEditor
             var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
             var staticVfxRunAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 0F 28 B4 24 ?? ?? ?? ?? 48 8B 8C 24 ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 5F" );
             var staticVfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
-            
+
             var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
             var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
             var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
 
             ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
-            
+
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( staticVfxRunAddress );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
@@ -208,8 +205,8 @@ namespace VFXEditor
             Plugin.PluginInterface.Framework.OnUpdateEvent += OnUpdateEvent;
         }
 
-        private unsafe void OnUpdateEvent(object framework) {
-            switch(CurrentRedrawState) {
+        private unsafe void OnUpdateEvent( object framework ) {
+            switch( CurrentRedrawState ) {
                 case RedrawState.Start:
                     *( int* )RenderPtr |= 0x00_00_00_02;
                     CurrentRedrawState = RedrawState.Invisible;
@@ -275,13 +272,13 @@ namespace VFXEditor
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
 
-            if( Plugin.DocManager != null && Plugin.DocManager.GetLocalPath(gameFsPath, out var vfxFile ) ) {
+            if( Plugin.DocManager != null && Plugin.DocManager.GetLocalPath( gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
-                if(Configuration.Config?.LogAllFiles == true) {
+                if( Configuration.Config?.LogAllFiles == true ) {
                     PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );
                 }
             }
-            else if( Plugin.TexManager != null && Plugin.TexManager.GetLocalReplacePath( gameFsPath, out var texFile ) ) {
+            else if( TextureManager.Manager != null && TextureManager.Manager.GetLocalReplacePath( gameFsPath, out var texFile ) ) {
                 replaceFile = texFile;
             }
 
@@ -327,8 +324,8 @@ namespace VFXEditor
                 Disable();
         }
 
-        public static unsafe string GetString(StdString str) {
-            var len = (int) str.Size;
+        public static unsafe string GetString( StdString str ) {
+            var len = ( int )str.Size;
             if( len > 15 ) {
                 return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
             }

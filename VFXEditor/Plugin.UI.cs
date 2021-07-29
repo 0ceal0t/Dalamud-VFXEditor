@@ -5,12 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 using Dalamud.Interface;
-using Dalamud.Plugin;
-using ImGuiFileDialog;
 using ImGuiNET;
-using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;
@@ -20,15 +16,15 @@ namespace VFXEditor {
     public partial class Plugin {
         public bool Visible = false;
 
-        public VFXSelectDialog SelectUI;
-        public VFXSelectDialog PreviewUI;
+        private VFXSelectDialog SelectUI;
+        private VFXSelectDialog PreviewUI;
 
-        public DocDialog DocUI;
-        public SettingsDialog SettingsUI;
-        public ToolsDialog ToolsUI;
-        public TexToolsDialog TexToolsUI;
-        public PenumbraDialog PenumbraUI;
-        public TextureDialog TextureUI;
+        private DocDialog DocUI;
+        private SettingsDialog SettingsUI;
+        private ToolsDialog ToolsUI;
+        private TexToolsDialog TexToolsUI;
+        private PenumbraDialog PenumbraUI;
+        private TextureDialog TextureUI;
 
         public BaseVfx SpawnVfx;
 
@@ -102,7 +98,7 @@ namespace VFXEditor {
         public void DrawUI() {
             if( !Visible ) return;
             DrawMainInterface();
-            if(!IsLoading) {
+            if( !IsLoading ) {
                 SelectUI.Draw();
                 PreviewUI.Draw();
                 TexToolsUI.Draw();
@@ -116,9 +112,9 @@ namespace VFXEditor {
 
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( Name + (string.IsNullOrEmpty(CurrentWorkspaceLocation) ? "" : " - " + CurrentWorkspaceLocation) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+            if( !ImGui.Begin( Name + ( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : " - " + CurrentWorkspaceLocation ) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
 
-            if(IsLoading) {
+            if( IsLoading ) {
                 ImGui.Text( "Loading...." );
                 ImGui.End();
                 return;
@@ -167,27 +163,24 @@ namespace VFXEditor {
 
                 // ======== VERIFY ============
                 ImGui.SameLine();
-                if(Configuration.Config.VerifyOnLoad) {
+                if( Configuration.Config.VerifyOnLoad ) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
 
                     var verified = CurrentDocument.Main.Verified;
-                    var color = verified switch
-                    {
+                    var color = verified switch {
                         VerifiedStatus.OK => UIUtils.GREEN_COLOR,
                         VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
                         _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
                     };
 
-                    var icon = verified switch
-                    {
+                    var icon = verified switch {
                         VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
                         VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
                         _ => $"{( char )FontAwesomeIcon.Question}"
                     };
 
-                    var text = verified switch
-                    {
+                    var text = verified switch {
                         VerifiedStatus.OK => "Verified",
                         VerifiedStatus.ISSUE => "Parsing Issues",
                         _ => "Unverified"
@@ -206,13 +199,13 @@ namespace VFXEditor {
         }
 
         public void DrawHeader() {
-            if(ImGui.BeginMenuBar()) {
-                if(ImGui.BeginMenu("File##Menu")) {
+            if( ImGui.BeginMenuBar() ) {
+                if( ImGui.BeginMenu( "File##Menu" ) ) {
                     ImGui.TextDisabled( "Workspace" );
                     ImGui.SameLine();
                     HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
-                    if(ImGui.MenuItem("New##Menu")) {
+                    if( ImGui.MenuItem( "New##Menu" ) ) {
                         NewWorkspace();
                     }
                     if( ImGui.MenuItem( "Open##Menu" ) ) {
@@ -393,10 +386,10 @@ namespace VFXEditor {
             SetSourceVFX( newResult );
         }
 
-        public static void HelpMarker(string text) {
+        public static void HelpMarker( string text ) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.TextDisabled( "(?)" );
-            if(ImGui.IsItemHovered()) {
+            if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
                 ImGui.TextUnformatted( text );
@@ -410,10 +403,9 @@ namespace VFXEditor {
         }
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
-             DialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) =>
-             {
-                 if( ok ) File.WriteAllBytes( res, data );
-             } );
+            DialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
+                if( ok ) File.WriteAllBytes( res, data );
+            } );
         }
     }
 }

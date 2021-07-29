@@ -1,10 +1,7 @@
 using AVFXLib.Models;
 using Dalamud.Plugin;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VFXEditor.Data;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
