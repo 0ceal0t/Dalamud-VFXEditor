@@ -25,18 +25,16 @@ namespace VFXEditor
         public Configuration Configuration;
         public ResourceLoader ResourceLoader;
         public DocumentManager DocManager;
-        public DirectXManager DXManager;
         public VfxTracker Tracker;
         public TextureManager TexManager;
         public SheetManager Sheets;
+        public static FileDialogManager DialogManager;
 
         public static string TemplateLocation;
 
         public string WriteLocation => Configuration?.WriteLocation;
 
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
-
-        public static FileDialogManager DialogManager;
 
         private IntPtr ImPlotContext;
 
@@ -66,7 +64,7 @@ namespace VFXEditor
             TexManager.OneTimeSetup();
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
             DocManager = new DocumentManager( this );
-            DXManager = new DirectXManager( this );
+            DirectXManager.Initialize( this );
 
             InitUI();
 
@@ -96,7 +94,7 @@ namespace VFXEditor
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
             SpawnVfx?.Remove();
-            DXManager?.Dispose();
+            DirectXManager.Dispose();
             DocManager?.Dispose();
             TexManager?.Dispose();
         }

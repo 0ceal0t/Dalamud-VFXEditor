@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -12,38 +11,33 @@ using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VFXEditor.Data.DirectX {
-    public class Gradient {
-        public DirectXManager Manager;
-        public Device Device;
-        public DeviceContext Ctx;
-
-        public int Width = 500;
-        public int Height = 50;
+    public class Gradient : GenericDirectX {
         public AVFXCurve CurrentCurve = null;
-        public bool FirstCurve = false;
+        public IntPtr Output => RenderShad.NativePointer;
 
-        public RasterizerState RState;
-        public Texture2D DepthTex;
-        public DepthStencilView DepthView;
-        public Texture2D RenderTex;
-        public ShaderResourceView RenderShad;
-        public RenderTargetView RenderView;
+        private int Width = 500;
+        private int Height = 50;
+        private bool FirstCurve = false;
+
+        private RasterizerState RState;
+        private Texture2D DepthTex;
+        private DepthStencilView DepthView;
+        private Texture2D RenderTex;
+        private ShaderResourceView RenderShad;
+        private RenderTargetView RenderView;
 
         // ======= BASE MODEL =======
-        static int MODEL_SPAN = 2; // position, color
-        int NumVerts;
-        Buffer Vertices;
-        CompilationResult VertexShaderByteCode;
-        CompilationResult PixelShaderByteCode;
-        PixelShader PShader;
-        VertexShader VShader;
-        ShaderSignature Signature;
-        InputLayout Layout;
+        private static int MODEL_SPAN = 2; // position, color
+        private int NumVerts;
+        private Buffer Vertices;
+        private CompilationResult VertexShaderByteCode;
+        private CompilationResult PixelShaderByteCode;
+        private PixelShader PShader;
+        private VertexShader VShader;
+        private ShaderSignature Signature;
+        private InputLayout Layout;
 
-        public Gradient( DirectXManager manager) {
-            Manager = manager;
-            Device = Manager.Device;
-            Ctx = Manager.Ctx;
+        public Gradient( Device device, DeviceContext ctx, string shaderPath) : base(device, ctx) {
 
             RefreshRasterizeState();
             ResizeResources();
@@ -51,7 +45,7 @@ namespace VFXEditor.Data.DirectX {
             // ======= BASE MODEL =========
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( Manager.ShaderPath, "Gradient.fx" );
+            var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
             VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
             PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
             VShader = new VertexShader( Device, VertexShaderByteCode );
@@ -187,7 +181,7 @@ namespace VFXEditor.Data.DirectX {
         }
 
         public void Draw() {
-            Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
@@ -207,7 +201,7 @@ namespace VFXEditor.Data.DirectX {
 
             Ctx.Flush();
 
-            Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+            AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public void Dispose() {

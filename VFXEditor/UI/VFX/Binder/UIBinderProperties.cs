@@ -56,7 +56,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/" + Name;
-            if( UIUtils.RemoveButton( "Delete " + Name + id ) )
+            if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) )
             {
                 Prop.Assigned = false;
                 Init();

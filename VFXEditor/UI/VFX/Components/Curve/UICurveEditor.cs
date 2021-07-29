@@ -1,15 +1,9 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using ImPlotNET;
-using ImGuizmoNET;
-using VFXEditor.Data.Texture;
 using VFXEditor.Data.DirectX;
 
 namespace VFXEditor.UI.VFX {
@@ -17,8 +11,8 @@ namespace VFXEditor.UI.VFX {
 
         public CurvePoint Selected = null;
         public AVFXCurve Curve;
-        List<CurvePoint> Points;
-        bool Color;
+        public List<CurvePoint> Points;
+        public bool Color;
 
         public static readonly Vector4 POINT_COLOR = new Vector4( 1, 1, 1, 1 );
         public static readonly Vector4 LINE_COLOR = new Vector4( 0, 0.1f, 1, 1 );
@@ -55,8 +49,8 @@ namespace VFXEditor.UI.VFX {
                     ImPlot.PlotLine( Curve.AVFXName, ref line[0].X, ref line[0].Y, line.Length, 0, 2 * sizeof( float ) );
                     // ====== IMAGE ============
                     if( Color && Curve.Keys.Count > 1 ) {
-                        if( DirectXManager.Manager.GradientView.CurrentCurve != Curve) {
-                            DirectXManager.Manager.GradientView.SetGradient( Curve );
+                        if( DirectXManager.GradientView.CurrentCurve != Curve) {
+                            DirectXManager.GradientView.SetGradient( Curve );
                         }
 
                         var topLeft = new ImPlotPoint {
@@ -68,7 +62,7 @@ namespace VFXEditor.UI.VFX {
                             y = -1
                         };
 
-                        ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.Manager.GradientView.RenderShad.NativePointer, topLeft, bottomRight );
+                        ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
                     // ====== POINTS ===========
                     int idx = 0;
@@ -201,7 +195,7 @@ namespace VFXEditor.UI.VFX {
                     Curve.Keys[Curve.Keys.Count - 1].Time++;
                     Points[Points.Count - 1].X++;
                 }
-                DirectXManager.Manager.GradientView.SetGradient( Curve );
+                DirectXManager.GradientView.SetGradient( Curve );
             }
         }
         // USED FOR OTHER FUNCTIONS....

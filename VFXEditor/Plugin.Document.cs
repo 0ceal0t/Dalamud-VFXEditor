@@ -11,7 +11,6 @@ using VFXSelect.UI;
 namespace VFXEditor {
     public partial class Plugin {
         public ReplaceDoc CurrentDocument => DocManager.ActiveDoc;
-
         private DateTime LastSelect = DateTime.Now;
 
         public void SetSourceVFX( VFXSelectResult selectResult) {

@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnSelect( UIModel item ) {
-            DirectXManager.Manager.ModelView.LoadModel( item.Model );
+            DirectXManager.ModelView.LoadModel( item.Model );
         }
 
         public override void OnDelete( UIModel item ) {

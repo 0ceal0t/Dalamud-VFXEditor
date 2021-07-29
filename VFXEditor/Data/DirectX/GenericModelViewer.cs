@@ -8,42 +8,34 @@ using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VFXEditor.Data.DirectX {
-    public abstract class ModelView {
-        public DirectXManager Manager;
-        public Device Device;
-        public DeviceContext Ctx;
+    public abstract class GenericModelViewer : GenericDirectX {
+        public IntPtr Output => RenderShad.NativePointer;
 
-        public int Width = 300;
-        public int Height = 300;
-        public bool FirstModel = false;
         public bool IsWireframe = false;
-
-        public RasterizerState RState;
-        public Buffer RendersizeBuffer;
-        public Buffer WorldBuffer;
-        public Matrix ViewMatrix;
-        public Matrix ProjMatrix;
-        public Texture2D DepthTex;
-        public DepthStencilView DepthView;
-        public Texture2D RenderTex;
-        public ShaderResourceView RenderShad;
-        public RenderTargetView RenderView;
-
         public bool IsDragging = false;
         private Vector2 LastMousePos;
         private float Yaw;
         private float Pitch;
         private Vector3 Position = new Vector3( 0, 0, 0 );
         private float Distance = 5;
-
         public Matrix LocalMatrix = Matrix.Identity;
 
-        public ModelView(DirectXManager manager) {
-            Manager = manager;
-            Device = Manager.Device;
-            Ctx = Manager.Ctx;
+        protected int Width = 300;
+        protected int Height = 300;
+        protected bool FirstModel = false;
 
-            //  ====== CONSTANT BUFFERS =======
+        protected RasterizerState RState;
+        protected Buffer RendersizeBuffer;
+        protected Buffer WorldBuffer;
+        protected Matrix ViewMatrix;
+        protected Matrix ProjMatrix;
+        protected Texture2D DepthTex;
+        protected DepthStencilView DepthView;
+        protected Texture2D RenderTex;
+        protected ShaderResourceView RenderShad;
+        protected RenderTargetView RenderView;
+
+        public GenericModelViewer(Device device, DeviceContext ctx) : base(device, ctx) {
             WorldBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
 
@@ -126,7 +118,7 @@ namespace VFXEditor.Data.DirectX {
             DepthView = new DepthStencilView( Device, DepthTex );
         }
 
-        private float Clamp( float value, float min, float max ) {
+        private static float Clamp( float value, float min, float max ) {
             return value > max ? max : value < min ? min : value;
         }
 
@@ -173,7 +165,7 @@ namespace VFXEditor.Data.DirectX {
         public abstract void OnDraw();
 
         public void Draw() {
-            Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
@@ -194,7 +186,7 @@ namespace VFXEditor.Data.DirectX {
 
             Ctx.Flush();
 
-            Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+            AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public abstract void OnDispose();
