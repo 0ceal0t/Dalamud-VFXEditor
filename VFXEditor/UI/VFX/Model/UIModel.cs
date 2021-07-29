@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
-            for( int i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
+            for( var i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
@@ -41,7 +41,7 @@ namespace VFXEditor.UI.VFX
 
         public bool Open = true;
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Model";
+            var id = parentId + "/Model";
             NodeView.Draw( id );
             DrawRename( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
@@ -79,7 +79,7 @@ namespace VFXEditor.UI.VFX
                 Refresh = false;
             }
 
-            bool wireframe = _ModelPreview.IsWireframe;
+            var wireframe = _ModelPreview.IsWireframe;
             if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
                 _ModelPreview.IsWireframe = wireframe;
                 _ModelPreview.RefreshRasterizeState();
@@ -146,7 +146,7 @@ namespace VFXEditor.UI.VFX
             {
                 if( !ok ) return;
                 try {
-                    if( GLTF.ImportModel( res, out List<Vertex> v_s, out List<AVFXLib.Models.Index> i_s ) ) {
+                    if( GLTF.ImportModel( res, out var v_s, out var i_s ) ) {
                         Model.Vertices = v_s;
                         Model.Indexes = i_s;
                         Refresh = true;

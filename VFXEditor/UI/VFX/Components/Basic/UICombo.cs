@@ -16,18 +16,13 @@ namespace VFXEditor.UI.VFX
         public int ValueIdx;
         public LiteralEnum<T> Literal;
 
-        public delegate void Change(LiteralEnum<T> literal);
-        public Change ChangeFunction;
+        public Action OnChange = null;
 
-        public UICombo(string id, LiteralEnum<T> literal, Change changeFunction = null)
+        public UICombo(string id, LiteralEnum<T> literal, Action onChange = null)
         {
             Id = id;
             Literal = literal;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
+            OnChange = onChange;
             var stringValue = Literal.Value.ToString();
             ValueIdx = Array.IndexOf( Literal.Options, stringValue );
         }
@@ -37,14 +32,14 @@ namespace VFXEditor.UI.VFX
             var text = ValueIdx == -1 ? "[NONE]" : Literal.Options[ValueIdx];
             if (ImGui.BeginCombo(Id + id, text ))
             {
-                for (int i = 0; i < Literal.Options.Length; i++)
+                for ( var i = 0; i < Literal.Options.Length; i++)
                 {
-                    bool isSelected = ( ValueIdx == i);
+                    var isSelected = ( ValueIdx == i);
                     if (ImGui.Selectable(Literal.Options[i], isSelected))
                     {
                         ValueIdx = i;
                         Literal.GiveValue(Literal.Options[ValueIdx] );
-                        ChangeFunction(Literal);
+                        OnChange?.Invoke();
                     }
                     if (isSelected)
                     {

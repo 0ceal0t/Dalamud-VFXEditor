@@ -149,13 +149,13 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void ExportDeps(List<UINode> startNodes, BinaryWriter bw) {
-            HashSet<UINode> visited = new HashSet<UINode>();
-            List<UINode> nodes = new List<UINode>();
+            var visited = new HashSet<UINode>();
+            var nodes = new List<UINode>();
             foreach(var startNode in startNodes ) {
                 RecurseChild( startNode, nodes, visited );
             }
 
-            Dictionary<UINode, int> IdxSave = new Dictionary<UINode, int>(); // save these to restore afterwards, since we don't want to modify the current document
+            var IdxSave = new Dictionary<UINode, int>(); // save these to restore afterwards, since we don't want to modify the current document
             foreach( var n in nodes ) {
                 IdxSave[n] = n.Idx;
             }
@@ -190,8 +190,8 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void OrderByType<T>(List<UINode> items) where T : UINode {
-            int i = 0;
-            foreach(UINode node in items ) {
+            var i = 0;
+            foreach( var node in items ) {
                 if (node is T ) {
                     node.Idx = i;
                     i++;
@@ -209,9 +209,8 @@ namespace VFXEditor.UI.VFX {
 
         // ========= IMPORT ==============
         public void ImportData(string path ) {
-            using( BinaryReader reader = new BinaryReader( File.Open( path, FileMode.Open ) ) ) {
-                ImportData( reader );
-            }
+            using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
+            ImportData( reader );
         }
 
         public void ImportData(byte[] data ) {
@@ -238,10 +237,9 @@ namespace VFXEditor.UI.VFX {
             return CloneNode( node.ToBytes() );
         }
         public static AVFXNode CloneNode(byte[] data) {
-            using( var ms = new MemoryStream( data ) )
-            using( var br = new BinaryReader( ms ) ) {
-                return Reader.ReadAVFX( br, out var messages );
-            }
+            using var ms = new MemoryStream( data );
+            using var br = new BinaryReader( ms );
+            return Reader.ReadAVFX( br, out var messages );
         }
 
         public void PreImportGroups() {

@@ -15,18 +15,10 @@ namespace VFXEditor.UI.VFX
         public float Value;
         public LiteralFloat Literal;
 
-        public delegate void Change(LiteralFloat literal);
-        public Change ChangeFunction;
-
-        public UIFloat(string id, LiteralFloat literal, Change changeFunction = null)
+        public UIFloat(string id, LiteralFloat literal)
         {
             Id = id;
             Literal = literal;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
             Value = Literal.Value;
         }
 
@@ -35,10 +27,7 @@ namespace VFXEditor.UI.VFX
             if (ImGui.InputFloat(Id + id, ref Value))
             {
                 Literal.GiveValue(Value);
-                ChangeFunction(Literal);
             }
         }
-
-        public static void DoNothing(LiteralFloat literal) { }
     }
 }

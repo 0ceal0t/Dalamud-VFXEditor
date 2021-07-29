@@ -30,7 +30,7 @@ namespace VFXEditor {
         public List<ReplaceDoc> Docs = new();
 
         private Dictionary<string, string> GamePathToLocalPath = new();
-        private Plugin Plugin;
+        private readonly Plugin Plugin;
         private int DOC_ID = 0;
 
         public DocumentManager( Plugin plugin ) {
@@ -39,10 +39,11 @@ namespace VFXEditor {
         }
 
         public ReplaceDoc NewDoc() {
-            ReplaceDoc doc = new ReplaceDoc();
-            doc.WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
-            doc.Source = VFXSelectResult.None();
-            doc.Replace = VFXSelectResult.None();
+            var doc = new ReplaceDoc {
+                WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
+                Source = VFXSelectResult.None(),
+                Replace = VFXSelectResult.None()
+            };
 
             Docs.Add( doc );
             ActiveDoc = doc;
@@ -50,14 +51,15 @@ namespace VFXEditor {
         }
 
         public void ImportLocalDoc(string localPath, VFXSelectResult source, VFXSelectResult replace, Dictionary<string, string> renaming) {
-            ReplaceDoc doc = new ReplaceDoc();
-            doc.Source = source;
-            doc.Replace = replace;
-            doc.WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" );
+            var doc = new ReplaceDoc {
+                Source = source,
+                Replace = replace,
+                WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" )
+            };
 
             if(localPath != "") {
                 File.Copy( localPath, doc.WriteLocation, true );
-                bool localResult = Plugin.GetLocalFile( doc.WriteLocation, out var localAvfx );
+                var localResult = Plugin.GetLocalFile( doc.WriteLocation, out var localAvfx );
                 if( localResult ) {
                     doc.Main = new UIMain( localAvfx );
                     doc.Main.ReadRenamingMap( renaming );
@@ -82,7 +84,7 @@ namespace VFXEditor {
         }
 
         public bool RemoveDoc(ReplaceDoc doc ) {
-            bool switchDoc = ( doc == ActiveDoc );
+            var switchDoc = ( doc == ActiveDoc );
             Docs.Remove( doc );
             RebuildMap();
 

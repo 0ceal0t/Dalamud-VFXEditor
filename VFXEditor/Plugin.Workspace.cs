@@ -79,7 +79,7 @@ namespace VFXEditor {
         }
 
         private void OpenWorkspaceFolder(string loadLocation) {
-            string metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
+            var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
                 PluginLog.Log( "vfx_workspace.json does not exist" );
                 return;
@@ -145,10 +145,10 @@ namespace VFXEditor {
             var vfxRootPath = Path.Combine( saveLocation, "VFX" );
             Directory.CreateDirectory( vfxRootPath );
 
-            int docId = 0;
+            var docId = 0;
             List<WorkspaceMetaDocument> docMeta = new();
             foreach(var entry in DocManager.Docs) {
-                string newPath = "";
+                var newPath = "";
                 if( entry.Main != null ) {
                     newPath = $"VFX_{docId++}.avfx";
                     var newFullPath = Path.Combine( vfxRootPath, newPath );
@@ -167,7 +167,7 @@ namespace VFXEditor {
             var texRootPath = Path.Combine( saveLocation, "Tex" );
             Directory.CreateDirectory( texRootPath );
 
-            int texId = 0;
+            var texId = 0;
             List<WorkspaceMetaTex> texMeta = new();
             foreach(var entry in TexManager.PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
@@ -186,8 +186,8 @@ namespace VFXEditor {
             }
             meta.Tex = texMeta.ToArray();
 
-            string metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
-            string metaString = JsonConvert.SerializeObject( meta );
+            var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
+            var metaString = JsonConvert.SerializeObject( meta );
             File.WriteAllText( metaPath, metaString );
 
             if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );

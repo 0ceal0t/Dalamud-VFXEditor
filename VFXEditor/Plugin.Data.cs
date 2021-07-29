@@ -28,22 +28,20 @@ namespace VFXEditor {
         public bool GetLocalFile( string path, out AVFXBase avfx ) {
             avfx = null;
             if( File.Exists( path ) ) {
-                using( BinaryReader br = new BinaryReader( File.Open( path, FileMode.Open ) ) ) {
-                    return ReadGameFile( br, out avfx );
-                }
+                using var br = new BinaryReader( File.Open( path, FileMode.Open ) );
+                return ReadGameFile( br, out avfx );
             }
             return false;
         }
 
         public bool GetGameFile( string path, out AVFXBase avfx ) {
             avfx = null;
-            bool result = PluginInterface.Data.FileExists( path );
+            var result = PluginInterface.Data.FileExists( path );
             if( result ) {
                 var file = PluginInterface.Data.GetFile( path );
-                using( MemoryStream ms = new MemoryStream( file.Data ) )
-                using( BinaryReader br = new BinaryReader( ms ) ) {
-                    return ReadGameFile( br, out avfx );
-                }
+                using var ms = new MemoryStream( file.Data );
+                using var br = new BinaryReader( ms );
+                return ReadGameFile( br, out avfx );
             }
             return false;
         }
@@ -51,8 +49,8 @@ namespace VFXEditor {
         public bool ReadGameFile( BinaryReader br, out AVFXBase avfx ) {
             avfx = null;
             try {
-                AVFXNode node = AVFXLib.Main.Reader.ReadAVFX( br, out List<string> messages );
-                foreach( string message in messages ) {
+                var node = AVFXLib.Main.Reader.ReadAVFX( br, out var messages );
+                foreach( var message in messages ) {
                     PluginLog.Log( message );
                 }
                 if( node == null ) {

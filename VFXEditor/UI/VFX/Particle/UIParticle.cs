@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace VFXEditor.UI.VFX
         //==========================
         public UIData Data;
         //========================
-        List<UIItem> Animation;
+        public List<UIItem> Animation;
         public UITextureColor1 TC1;
         public UITextureColor2 TC2;
         public UITextureColor2 TC3;
@@ -27,10 +28,10 @@ namespace VFXEditor.UI.VFX
         public UITextureDistortion TD;
         public UITexturePalette TP;
         public UITextureReflection TR;
-        List<UIItem> Tex;
+        public List<UIItem> Tex;
         // ==================
-        UIItemSplitView<UIItem> AnimationSplit;
-        UIItemSplitView<UIItem> TexSplit;
+        public UIItemSplitView<UIItem> AnimationSplit;
+        public UIItemSplitView<UIItem> TexSplit;
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
 
@@ -43,7 +44,10 @@ namespace VFXEditor.UI.VFX
             Tex = new List<UIItem>();
             UVSets = new List<UIParticleUVSet>();
             //==========================
-            Type = new UICombo<ParticleType>( "Type", Particle.ParticleVariety, changeFunction: ChangeType );
+            Type = new UICombo<ParticleType>( "Type", Particle.ParticleVariety, onChange: () => {
+                Particle.SetVariety( Particle.ParticleVariety.Value );
+                SetType();
+            } );
             Attributes.Add( new UIInt( "Loop Start", Particle.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Particle.LoopEnd ) );
             Attributes.Add( new UICheckbox( "Use Simple Animation", Particle.SimpleAnimEnable ) );
@@ -113,49 +117,20 @@ namespace VFXEditor.UI.VFX
         }
         public void SetType() {
             Data?.Dispose();
-
-            switch( Particle.ParticleVariety.Value ) {
-                case ParticleType.Model:
-                    Data = new UIParticleDataModel( ( AVFXParticleDataModel )Particle.Data, this );
-                    break;
-                case ParticleType.LightModel:
-                    Data = new UIParticleDataLightModel( ( AVFXParticleDataLightModel )Particle.Data, this );
-                    break;
-                case ParticleType.Powder:
-                    Data = new UIParticleDataPowder( ( AVFXParticleDataPowder )Particle.Data );
-                    break;
-                case ParticleType.Decal:
-                    Data = new UIParticleDataDecal( ( AVFXParticleDataDecal )Particle.Data );
-                    break;
-                case ParticleType.DecalRing:
-                    Data = new UIParticleDataDecalRing( ( AVFXParticleDataDecalRing )Particle.Data );
-                    break;
-                case ParticleType.Disc:
-                    Data = new UIParticleDataDisc( ( AVFXParticleDataDisc )Particle.Data );
-                    break;
-                case ParticleType.Laser:
-                    Data = new UIParticleDataLaser( ( AVFXParticleDataLaser )Particle.Data );
-                    break;
-                case ParticleType.Polygon:
-                    Data = new UIParticleDataPolygon( ( AVFXParticleDataPolygon )Particle.Data );
-                    break;
-                case ParticleType.Polyline:
-                    Data = new UIParticleDataPolyline( ( AVFXParticleDataPolyline )Particle.Data );
-                    break;
-                case ParticleType.Windmill:
-                    Data = new UIParticleDataWindmill( ( AVFXParticleDataWindmill )Particle.Data );
-                    break;
-                case ParticleType.Line:
-                    Data = new UIParticleDataLine( ( AVFXParticleDataLine )Particle.Data );
-                    break;
-                default:
-                    Data = null;
-                    break;
-            }
-        }
-        public void ChangeType( LiteralEnum<ParticleType> literal ) {
-            Particle.SetVariety( literal.Value );
-            SetType();
+            Data = Particle.ParticleVariety.Value switch {
+                ParticleType.Model => new UIParticleDataModel( ( AVFXParticleDataModel )Particle.Data, this ),
+                ParticleType.LightModel => new UIParticleDataLightModel( ( AVFXParticleDataLightModel )Particle.Data, this ),
+                ParticleType.Powder => new UIParticleDataPowder( ( AVFXParticleDataPowder )Particle.Data ),
+                ParticleType.Decal => new UIParticleDataDecal( ( AVFXParticleDataDecal )Particle.Data ),
+                ParticleType.DecalRing => new UIParticleDataDecalRing( ( AVFXParticleDataDecalRing )Particle.Data ),
+                ParticleType.Disc => new UIParticleDataDisc( ( AVFXParticleDataDisc )Particle.Data ),
+                ParticleType.Laser => new UIParticleDataLaser( ( AVFXParticleDataLaser )Particle.Data ),
+                ParticleType.Polygon => new UIParticleDataPolygon( ( AVFXParticleDataPolygon )Particle.Data ),
+                ParticleType.Polyline => new UIParticleDataPolyline( ( AVFXParticleDataPolyline )Particle.Data ),
+                ParticleType.Windmill => new UIParticleDataWindmill( ( AVFXParticleDataWindmill )Particle.Data ),
+                ParticleType.Line => new UIParticleDataLine( ( AVFXParticleDataLine )Particle.Data ),
+                _ => null
+            };
         }
 
         private void DrawParameters(string id) {
@@ -172,7 +147,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Ptcl";
+            var id = parentId + "/Ptcl";
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

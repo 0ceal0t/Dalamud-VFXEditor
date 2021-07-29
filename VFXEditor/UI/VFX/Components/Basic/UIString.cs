@@ -15,16 +15,14 @@ namespace VFXEditor.UI.VFX
         public LiteralString Literal;
         public string Value;
         public uint MaxSize;
-        // ========================
-        public delegate void Change(LiteralString literal);
-        public Change ChangeFunction;
+        public Action OnChange = null;
 
-        public UIString(string id, LiteralString literal, Change changeFunction = null, int maxSizeBytes = 256) {
+        public UIString(string id, LiteralString literal, Action onChange = null, int maxSizeBytes = 256) {
             Id = id;
             Literal = literal;
-            Value = Literal.Value == null ? "" : Literal.Value;
+            Value = Literal.Value ?? "";
             MaxSize = (uint)maxSizeBytes;
-            ChangeFunction = changeFunction == null ? DoNothing : changeFunction;
+            OnChange = onChange;
         }
 
         public override void Draw(string id) {
@@ -32,10 +30,8 @@ namespace VFXEditor.UI.VFX
             ImGui.SameLine();
             if (ImGui.Button("Update" + id)) {
                 Literal.GiveValue(Value.Trim('\0') + "\u0000");
-                ChangeFunction(Literal);
+                OnChange?.Invoke();
             }
         }
-
-        public static void DoNothing(LiteralString literal) { }
     }
 }

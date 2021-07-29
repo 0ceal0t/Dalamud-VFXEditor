@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UIWorkspaceItem : UIItem {
+#nullable enable
         public string? Renamed;
+#nullable disable
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;
 

@@ -14,8 +14,10 @@ namespace VFXEditor.External {
         public string Name;
         public string Author;
         public string Description;
+#nullable enable
         public string? Version;
         public string? Website;
+#nullable disable
         public Dictionary<string, string> FileSwaps;
     }
 
@@ -34,24 +36,25 @@ namespace VFXEditor.External {
 
         public static void Export(Plugin _plugin, string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
             try {
-                PenumbraMod mod = new PenumbraMod();
-                mod.Name = name;
-                mod.Author = author;
-                mod.Description = "Exported from VFXEditor";
-                mod.Version = version;
-                mod.Website = null;
-                mod.FileSwaps = new Dictionary<string, string>();
+                var mod = new PenumbraMod {
+                    Name = name,
+                    Author = author,
+                    Description = "Exported from VFXEditor",
+                    Version = version,
+                    Website = null,
+                    FileSwaps = new Dictionary<string, string>()
+                };
 
                 Directory.CreateDirectory( modFolder );
-                string modConfig = Path.Combine( modFolder, "meta.json" );
-                string configString = JsonConvert.SerializeObject( mod );
+                var modConfig = Path.Combine( modFolder, "meta.json" );
+                var configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
                 void AddMod( AVFXBase _avfx, string _path ) {
                     if( !string.IsNullOrEmpty( _path ) && _avfx != null ) {
                         var data = _avfx.ToAVFX().ToBytes();
-                        string modFile = Path.Combine( modFolder, _path );
-                        string modFileFolder = Path.GetDirectoryName( modFile );
+                        var modFile = Path.Combine( modFolder, _path );
+                        var modFileFolder = Path.GetDirectoryName( modFile );
                         Directory.CreateDirectory( modFileFolder );
                         File.WriteAllBytes( modFile, data );
                     }
@@ -59,8 +62,8 @@ namespace VFXEditor.External {
 
                 void AddTex(string localPath, string _path ) {
                     if(!string.IsNullOrEmpty(localPath) && !string.IsNullOrEmpty( _path ) ) {
-                        string modFile = Path.Combine( modFolder, _path );
-                        string modFileFolder = Path.GetDirectoryName( modFile );
+                        var modFile = Path.Combine( modFolder, _path );
+                        var modFileFolder = Path.GetDirectoryName( modFile );
                         Directory.CreateDirectory( modFileFolder );
                         File.Copy( localPath, modFile, true );
                     }
@@ -76,7 +79,7 @@ namespace VFXEditor.External {
                 }
 
                 if( exportTex ) {
-                    foreach(KeyValuePair<string, TexReplace> entry in _plugin.TexManager.PathToTextureReplace ) {
+                    foreach( var entry in _plugin.TexManager.PathToTextureReplace ) {
                         AddTex( entry.Value.localPath, entry.Key );
                     }
                 }

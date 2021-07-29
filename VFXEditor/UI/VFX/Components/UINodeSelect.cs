@@ -32,9 +32,9 @@ namespace VFXEditor.UI.VFX {
 
     public class UINodeSelect<T> : UINodeSelect where T : UINode {
         public T Selected = null;
-        LiteralInt Literal;
-        UINodeGroup<T> Group;
-        string Name;
+        public LiteralInt Literal;
+        public UINodeGroup<T> Group;
+        public string Name;
 
         public UINodeSelect( UINode node, string name, UINodeGroup<T> group, LiteralInt literal ) {
             Node = node;
@@ -52,7 +52,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void Draw( string parentId ) {
-            string id = parentId + "/Node";
+            var id = parentId + "/Node";
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
                 if( ImGui.Selectable( "[NONE]", Selected == null ) ) {
                     UnlinkFrom( Selected );
@@ -94,7 +94,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void SetupNode() {
-            int val = Literal.Value;
+            var val = Literal.Value;
             if( Node.HasDependencies && val >= 0 ) {
                 val += Group.PreImportSize;
                 Literal.GiveValue( val );
@@ -112,10 +112,10 @@ namespace VFXEditor.UI.VFX {
     }
 
     public class UINodeSelectList<T> : UINodeSelect where T : UINode {
-        public List<T> Selected = new List<T>();
-        LiteralIntList Literal;
-        UINodeGroup<T> Group;
-        string Name;
+        public List<T> Selected = new();
+        public LiteralIntList Literal;
+        public UINodeGroup<T> Group;
+        public string Name;
 
         public UINodeSelectList( UINode node, string name, UINodeGroup<T> group, LiteralIntList literal ) {
             Node = node;
@@ -133,9 +133,9 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void Draw( string parentId ) {
-            string id = parentId + "/Node";
-            for(int i = 0; i < Selected.Count; i++ ) {
-                string _id = id + i;
+            var id = parentId + "/Node";
+            for( var i = 0; i < Selected.Count; i++ ) {
+                var _id = id + i;
                 var text = ( i == 0 ) ? Name : "";
                 if(ImGui.BeginCombo(text + _id, Selected[i] == null ? "[NONE]" : Selected[i].GetText() ) ) {
                     if( ImGui.Selectable( "[NONE]", Selected[i] == null ) ) {
@@ -191,7 +191,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void UpdateNode() {
-            List<int> idxs = new List<int>();
+            var idxs = new List<int>();
             foreach(var item in Selected ) {
                 if( item == null ) {
                     idxs.Add( 255 );
@@ -204,7 +204,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void SetupNode() {
-            for(int i = 0; i < Literal.Value.Count; i++ ) {
+            for( var i = 0; i < Literal.Value.Count; i++ ) {
                 var val = Literal.Value[i];
                 if( Node.HasDependencies && val != 255 && val >= 0 ) {
                     val += Group.PreImportSize;

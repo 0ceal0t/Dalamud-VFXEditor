@@ -16,18 +16,10 @@ namespace VFXEditor.UI.VFX
         public int Value;
         public LiteralInt Literal;
 
-        public delegate void Change(LiteralInt literal);
-        public Change ChangeFunction;
-
-        public UIInt(string id, LiteralInt literal, Change changeFunction = null)
+        public UIInt(string id, LiteralInt literal)
         {
             Id = id;
             Literal = literal;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
             Value = Literal.Value;
         }
 
@@ -36,10 +28,7 @@ namespace VFXEditor.UI.VFX
             if (ImGui.InputInt(Id + id, ref Value))
             {
                 Literal.GiveValue(Value);
-                ChangeFunction(Literal);
             }
         }
-
-        public static void DoNothing(LiteralInt literal) { }
     }
 }

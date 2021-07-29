@@ -13,8 +13,10 @@ namespace VFXEditor.External {
         public string Name;
         public string Author;
         public string Version;
+#nullable enable
         public string? Description;
         public string? ModPackPages;
+#nullable disable
         public TTMPL_Simple[] SimpleModsList;
     }
 
@@ -26,7 +28,9 @@ namespace VFXEditor.External {
         public int ModOffset;
         public int ModSize;
         public string DatFile;
+#nullable enable
         public string? ModPackEntry;
+#nullable disable
     }
 
     public class TexTools {
@@ -57,12 +61,12 @@ namespace VFXEditor.External {
 
         public static void Export(Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
-                List<TTMPL_Simple> simpleParts = new List<TTMPL_Simple>();
+                var simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
-                int ModOffset = 0;
+                var ModOffset = 0;
 
-                using( MemoryStream ms = new MemoryStream() )
-                using( BinaryWriter writer = new BinaryWriter( ms ) ) {
+                using( var ms = new MemoryStream() )
+                using( var writer = new BinaryWriter( ms ) ) {
                     void AddMod(AVFXBase avfx, string _path) {
                         if( !string.IsNullOrEmpty( _path ) && avfx != null ) {
                             var modData = SquishAVFX( avfx );
@@ -74,16 +78,15 @@ namespace VFXEditor.External {
 
                     void AddTex(TexReplace tex, string _path ) {
                         if(!string.IsNullOrEmpty(_path) && !string.IsNullOrEmpty( tex.localPath ) ) {
-                            using( var file = File.Open( tex.localPath, FileMode.Open ) )
-                            using( BinaryReader texReader = new BinaryReader( file ) )
-                            using( MemoryStream texMs = new MemoryStream() )
-                            using( BinaryWriter texWriter = new BinaryWriter( texMs ) )  {
-                                texWriter.Write( CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
-                                var modData = texMs.ToArray();
-                                simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
-                                writer.Write( modData );
-                                ModOffset += modData.Length;
-                            }
+                            using var file = File.Open( tex.localPath, FileMode.Open );
+                            using var texReader = new BinaryReader( file );
+                            using var texMs = new MemoryStream();
+                            using var texWriter = new BinaryWriter( texMs );
+                            texWriter.Write( CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
+                            var modData = texMs.ToArray();
+                            simpleParts.Add( CreateModResource( _path, ModOffset, modData.Length ) );
+                            writer.Write( modData );
+                            ModOffset += modData.Length;
                         }
                     }
 
@@ -97,28 +100,29 @@ namespace VFXEditor.External {
                     }
 
                     if( exportTex ) {
-                        foreach( KeyValuePair<string, TexReplace> entry in _plugin.TexManager.PathToTextureReplace ) {
+                        foreach( var entry in _plugin.TexManager.PathToTextureReplace ) {
                             AddTex( entry.Value, entry.Key );
                         }
                     }
                     newData = ms.ToArray();
                 }
 
-                TTMPL mod = new TTMPL();
-                mod.TTMPVersion = "1.3s";
-                mod.Name = name;
-                mod.Author = author;
-                mod.Version = version;
-                mod.Description = null;
-                mod.ModPackPages = null;
-                mod.SimpleModsList = simpleParts.ToArray();
+                var mod = new TTMPL {
+                    TTMPVersion = "1.3s",
+                    Name = name,
+                    Author = author,
+                    Version = version,
+                    Description = null,
+                    ModPackPages = null,
+                    SimpleModsList = simpleParts.ToArray()
+                };
 
-                string saveDir = Path.GetDirectoryName( saveLocation );
-                string tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
+                var saveDir = Path.GetDirectoryName( saveLocation );
+                var tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
                 Directory.CreateDirectory( tempDir );
-                string mdpPath = Path.Combine( tempDir, "TTMPD.mpd" );
-                string mplPath = Path.Combine(  tempDir, "TTMPL.mpl" );
-                string mplString = JsonConvert.SerializeObject( mod );
+                var mdpPath = Path.Combine( tempDir, "TTMPD.mpd" );
+                var mplPath = Path.Combine(  tempDir, "TTMPL.mpl" );
+                var mplString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( mplPath, mplString );
                 File.WriteAllBytes( mdpPath, newData );
 
@@ -134,9 +138,9 @@ namespace VFXEditor.External {
         }
 
         public static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
-            TTMPL_Simple simple = new TTMPL_Simple();
-            string[] split = path.Split( '/' );
-            simple.Name = split[split.Length - 1];
+            var simple = new TTMPL_Simple();
+            var split = path.Split( '/' );
+            simple.Name = split[^1];
             simple.Category = "Raw File Import";
             simple.FullPath = path;
             simple.IsDefault = false;
@@ -159,8 +163,8 @@ namespace VFXEditor.External {
                         simple.DatFile += "0000"; // ok, good to go
                     }
                     else { // like ex1      bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
-                        string exNumber = split[1].Replace( "ex", "" ).PadLeft( 2, '0' );
-                        string zoneNumber = split[2].Split( '_' )[0].PadLeft( 2, '0' );
+                        var exNumber = split[1].Replace( "ex", "" ).PadLeft( 2, '0' );
+                        var zoneNumber = split[2].Split( '_' )[0].PadLeft( 2, '0' );
                         simple.DatFile += exNumber;
                         simple.DatFile += zoneNumber;
                     }
@@ -244,16 +248,15 @@ namespace VFXEditor.External {
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/Helpers/IOUtil.cs#L40
         public static byte[] Compressor( byte[] uncompressedBytes ) {
-            using( var uMemoryStream = new MemoryStream( uncompressedBytes ) ) {
-                byte[] compbytes = null;
-                using( var cMemoryStream = new MemoryStream() )
-                using( var deflateStream = new DeflateStream( cMemoryStream, CompressionMode.Compress ) ) {
-                    uMemoryStream.CopyTo( deflateStream );
-                    deflateStream.Close();
-                    compbytes = cMemoryStream.ToArray();
-                }
-                return compbytes;
+            using var uMemoryStream = new MemoryStream( uncompressedBytes );
+            byte[] compbytes = null;
+            using( var cMemoryStream = new MemoryStream() )
+            using( var deflateStream = new DeflateStream( cMemoryStream, CompressionMode.Compress ) ) {
+                uMemoryStream.CopyTo( deflateStream );
+                deflateStream.Close();
+                compbytes = cMemoryStream.ToArray();
             }
+            return compbytes;
         }
     }
 }

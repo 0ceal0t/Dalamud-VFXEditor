@@ -26,7 +26,10 @@ namespace VFXEditor.UI.VFX
             //=====================
             Properties = new List<UIBinderProperties>();
             //====================
-            Type = new UICombo<BinderType>( "Type", Binder.BinderVariety, changeFunction: ChangeType );
+            Type = new UICombo<BinderType>( "Type", Binder.BinderVariety, onChange: () => {
+                Binder.SetVariety( Binder.BinderVariety.Value );
+                SetType();
+            } );
             Attributes.Add( new UICheckbox( "Start to Global Direction", Binder.StartToGlobalDirection ) );
             Attributes.Add( new UICheckbox( "VFX Scale", Binder.VfxScaleEnabled ) );
             Attributes.Add( new UIFloat( "VFX Scale Bias", Binder.VfxScaleBias ) );
@@ -51,31 +54,16 @@ namespace VFXEditor.UI.VFX
             PropSplit = new UIItemSplitView<UIBinderProperties>( Properties );
             HasDependencies = false; // if imported, all set now
         }
+
         public void SetType() {
             Data?.Dispose();
-
-            switch( Binder.BinderVariety.Value ) {
-                case BinderType.Point:
-                    Data = new UIBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data );
-                    break;
-                case BinderType.Linear:
-                    Data = new UIBinderDataLinear( ( AVFXBinderDataLinear )Binder.Data );
-                    break;
-                case BinderType.Spline:
-                    Data = new UIBinderDataSpline( ( AVFXBinderDataSpline )Binder.Data );
-                    break;
-                case BinderType.Camera:
-                    Data = new UIBinderDataCamera( ( AVFXBinderDataCamera )Binder.Data );
-                    break;
-                default:
-                    Data = null;
-                    break;
-            }
-        }
-        public void ChangeType(LiteralEnum<BinderType> literal)
-        {
-            Binder.SetVariety(literal.Value);
-            SetType();
+            Data = Binder.BinderVariety.Value switch {
+                BinderType.Point => new UIBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data ),
+                BinderType.Linear => new UIBinderDataLinear( ( AVFXBinderDataLinear )Binder.Data ),
+                BinderType.Spline => new UIBinderDataSpline( ( AVFXBinderDataSpline )Binder.Data ),
+                BinderType.Camera => new UIBinderDataCamera( ( AVFXBinderDataCamera )Binder.Data ),
+                _ => null
+            };
         }
 
         private void DrawParameters( string id )
@@ -97,7 +85,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Binder";
+            var id = parentId + "/Binder";
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

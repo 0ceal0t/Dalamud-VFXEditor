@@ -6,9 +6,9 @@ using System.Numerics;
 namespace VFXEditor.UI.VFX {
     public abstract class UINode : UIWorkspaceItem {
         public uint Color;
-        public List<UINode> Children = new List<UINode>();
-        public List<UINodeSelect> Parents = new List<UINodeSelect>();
-        public List<UINodeSelect> Selectors = new List<UINodeSelect>();
+        public List<UINode> Children = new();
+        public List<UINodeSelect> Parents = new();
+        public List<UINodeSelect> Selectors = new();
         public bool HasDependencies;
         public bool IsDeleted = false;
         public UINodeGraph Graph = null;

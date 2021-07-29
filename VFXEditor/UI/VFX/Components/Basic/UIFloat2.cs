@@ -18,19 +18,12 @@ namespace VFXEditor.UI.VFX
         public LiteralFloat Literal1;
         public LiteralFloat Literal2;
 
-        public delegate void Change(LiteralFloat literal1, LiteralFloat literal2);
-        public Change ChangeFunction;
-
-        public UIFloat2(string id, LiteralFloat literal1, LiteralFloat literal2, Change changeFunction = null)
+        public UIFloat2(string id, LiteralFloat literal1, LiteralFloat literal2)
         {
             Id = id;
             Literal1 = literal1;
             Literal2 = literal2;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
+
             Value = new Vector2(Literal1.Value, Literal2.Value);
         }
 
@@ -40,10 +33,7 @@ namespace VFXEditor.UI.VFX
             {
                 Literal1.GiveValue(Value.X);
                 Literal2.GiveValue(Value.Y);
-                ChangeFunction(Literal1, Literal2);
             }
         }
-
-        public static void DoNothing(LiteralFloat literal1, LiteralFloat literal2) { }
     }
 }

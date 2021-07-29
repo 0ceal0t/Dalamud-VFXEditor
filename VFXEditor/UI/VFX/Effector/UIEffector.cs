@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,10 @@ namespace VFXEditor.UI.VFX
             Main = main;
             NodeView = new UINodeGraphView( this );
             //======================
-            Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, changeFunction: ChangeType );
+            Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, onChange: () => {
+                Effector.SetVariety( Effector.EffectorVariety.Value );
+                SetType();
+            } );
             Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Effector.RotationOrder ) );
             Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Effector.CoordComputeOrder ) );
             Attributes.Add( new UICheckbox( "Affect Other VFX", Effector.AffectOtherVfx ) );
@@ -35,29 +39,13 @@ namespace VFXEditor.UI.VFX
         
         public void SetType() {
             Data?.Dispose();
-
-            switch( Effector.EffectorVariety.Value ) {
-                case EffectorType.PointLight:
-                    Data = new UIEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data );
-                    break;
-                case EffectorType.RadialBlur:
-                    Data = new UIEffectorDataRadialBlur( ( AVFXEffectorDataRadialBlur )Effector.Data );
-                    break;
-                case EffectorType.CameraQuake:
-                    Data = new UIEffectorDataCameraQuake( ( AVFXEffectorDataCameraQuake )Effector.Data );
-                    break;
-                case EffectorType.DirectionalLight:
-                    Data = new UIEffectorDataDirectionalLight( ( AVFXEffectorDataDirectionalLight )Effector.Data );
-                    break;
-                default:
-                    Data = null;
-                    break;
-            }
-        }
-        public void ChangeType(LiteralEnum<EffectorType> literal)
-        {
-            Effector.SetVariety(literal.Value);
-            SetType();
+            Data = Effector.EffectorVariety.Value switch {
+                EffectorType.PointLight => new UIEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data ),
+                EffectorType.RadialBlur => new UIEffectorDataRadialBlur( ( AVFXEffectorDataRadialBlur )Effector.Data ),
+                EffectorType.CameraQuake => new UIEffectorDataCameraQuake( ( AVFXEffectorDataCameraQuake )Effector.Data ),
+                EffectorType.DirectionalLight => new UIEffectorDataDirectionalLight( ( AVFXEffectorDataDirectionalLight )Effector.Data ),
+                _ => null
+            };
         }
 
         private void DrawParameters( string id )
@@ -75,7 +63,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Effector";
+            var id = parentId + "/Effector";
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

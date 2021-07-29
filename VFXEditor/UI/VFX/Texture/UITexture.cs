@@ -36,7 +36,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Texture";
+            var id = parentId + "/Texture";
             NodeView.Draw( id );
             DrawRename( id );
             Path.Draw( id );

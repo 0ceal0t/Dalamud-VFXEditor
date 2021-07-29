@@ -19,20 +19,13 @@ namespace VFXEditor.UI.VFX
         public LiteralInt Literal2;
         public LiteralInt Literal3;
 
-        public delegate void Change(LiteralInt literal1, LiteralInt literal2, LiteralInt literal3);
-        public Change ChangeFunction;
-
-        public UIInt3(string id, LiteralInt literal1, LiteralInt literal2, LiteralInt literal3, Change changeFunction = null)
+        public UIInt3(string id, LiteralInt literal1, LiteralInt literal2, LiteralInt literal3)
         {
             Id = id;
             Literal1 = literal1;
             Literal2 = literal2;
             Literal3 = literal3;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
+
             Value = new Vector3(Literal1.Value, Literal2.Value, Literal3.Value);
         }
 
@@ -43,10 +36,7 @@ namespace VFXEditor.UI.VFX
                 Literal1.GiveValue((int)Value.X);
                 Literal2.GiveValue((int)Value.Y);
                 Literal3.GiveValue((int)Value.Z);
-                ChangeFunction(Literal1, Literal2, Literal3);
             }
         }
-
-        public static void DoNothing(LiteralInt literal1, LiteralInt literal2, LiteralInt literal3) { }
     }
 }

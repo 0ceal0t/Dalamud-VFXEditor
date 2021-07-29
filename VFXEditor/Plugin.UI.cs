@@ -10,6 +10,7 @@ using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;

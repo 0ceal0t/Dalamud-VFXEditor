@@ -54,7 +54,7 @@ namespace AVFXLib.Main
 
         public static byte[] FloatTo2Bytes(float floatVal)
         {
-            ushort ushortVal = Pack(floatVal);
+            var ushortVal = Pack(floatVal);
             return BitConverter.GetBytes(ushortVal);
         }
         public static float Bytes2ToFloat(byte[] bytes)
@@ -143,9 +143,9 @@ namespace AVFXLib.Main
 
         public static byte[] NameTo4Bytes(string name)
         {
-            byte[] nameBytes = StringToBytes(name);
-            byte[] ret = new byte[] { 0, 0, 0, 0 };
-            for(int i = 0; i < nameBytes.Length; i++)
+            var nameBytes = StringToBytes(name);
+            var ret = new byte[] { 0, 0, 0, 0 };
+            for( var i = 0; i < nameBytes.Length; i++)
             {
                 ret[i] = nameBytes[nameBytes.Length - i - 1];
             }
@@ -154,11 +154,11 @@ namespace AVFXLib.Main
 
         public static byte[][] SplitBytes(byte[] bytes, int size)
         {
-            int numElems = (int)Math.Floor((double)bytes.Length / size);
-            byte[][] ret = new byte[numElems][];
-            for(int idx = 0; idx < numElems; idx++)
+            var numElems = (int)Math.Floor((double)bytes.Length / size);
+            var ret = new byte[numElems][];
+            for( var idx = 0; idx < numElems; idx++)
             {
-                byte[] item = new byte[size];
+                var item = new byte[size];
                 Buffer.BlockCopy(bytes, idx * size, item, 0, size);
                 ret[idx] = item;
             }
@@ -166,9 +166,9 @@ namespace AVFXLib.Main
         }
         public static byte[] JoinBytes(byte[][] elems, int size)
         {
-            byte[] ret = new byte[elems.Length * size];
-            int idx = 0;
-            foreach(byte[] bytes in elems)
+            var ret = new byte[elems.Length * size];
+            var idx = 0;
+            foreach( var bytes in elems)
             {
                 Buffer.BlockCopy(bytes, 0, ret, idx * size, size);
                 idx++;
@@ -211,7 +211,7 @@ namespace AVFXLib.Main
                     while ((num & 0x400) == 0)
                     {
                         num2--;
-                        num = num << 1;
+                        num <<= 1;
                     }
                     num &= 0xfffffbff;
                     num3 = ((uint)(((value & 0x8000) << 0x10) | ((num2 + 0x7f) << 0x17))) | (num << 13);
