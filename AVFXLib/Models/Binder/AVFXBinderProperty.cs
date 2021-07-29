@@ -11,21 +11,20 @@ namespace AVFXLib.Models
     {
         public string Name = "PrpS";
 
-        public LiteralEnum<BindPoint> BindPointType = new LiteralEnum<BindPoint>("BPT");
-        public LiteralEnum<BindTargetPoint> BindTargetPointType = new LiteralEnum<BindTargetPoint>("BPTP");
-        public LiteralString BinderName = new LiteralString("Name", fixedSize:8);
-        public LiteralInt BindPointId = new LiteralInt("BPID");
-        public LiteralInt GenerateDelay = new LiteralInt("GenD");
-        public LiteralInt CoordUpdateFrame = new LiteralInt("CoUF");
-        public LiteralBool RingEnable = new LiteralBool("bRng");
-        public LiteralInt RingProgressTime = new LiteralInt("RnPT");
-        public LiteralFloat RingPositionX = new LiteralFloat("RnPX");
-        public LiteralFloat RingPositionY = new LiteralFloat("RnPY");
-        public LiteralFloat RingPositionZ = new LiteralFloat("RnPZ");
-        public LiteralFloat RingRadius = new LiteralFloat("RnRd");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
-
-        List<Base> Attributes;
+        public LiteralEnum<BindPoint> BindPointType = new("BPT");
+        public LiteralEnum<BindTargetPoint> BindTargetPointType = new("BPTP");
+        public LiteralString BinderName = new("Name", fixedSize:8);
+        public LiteralInt BindPointId = new("BPID");
+        public LiteralInt GenerateDelay = new("GenD");
+        public LiteralInt CoordUpdateFrame = new("CoUF");
+        public LiteralBool RingEnable = new("bRng");
+        public LiteralInt RingProgressTime = new("RnPT");
+        public LiteralFloat RingPositionX = new("RnPX");
+        public LiteralFloat RingPositionY = new("RnPY");
+        public LiteralFloat RingPositionZ = new("RnPZ");
+        public LiteralFloat RingRadius = new("RnRd");
+        public AVFXCurve3Axis Position = new("Pos");
+        readonly List<Base> Attributes;
 
         public AVFXBinderProperty(string name) : base(name)
         {
@@ -68,7 +67,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode(Name);
+            var dataAvfx = new AVFXNode(Name);
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

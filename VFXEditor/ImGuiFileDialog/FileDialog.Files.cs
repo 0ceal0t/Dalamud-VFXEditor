@@ -32,13 +32,13 @@ namespace ImGuiFileDialog {
             public string FileModifiedDate;
         }
 
-        private List<FileStruct> Files = new();
-        private List<FileStruct> FilteredFiles = new();
+        private readonly List<FileStruct> Files = new();
+        private readonly List<FileStruct> FilteredFiles = new();
 
         private readonly object FilesLock = new();
 
         private SortingField CurrentSortingField = SortingField.FileName;
-        private bool[] SortDescending = new[] { false, false, false, false };
+        private readonly bool[] SortDescending = new[] { false, false, false, false };
 
         private bool CreateDir( string dirPath ) {
             var newPath = Path.Combine( CurrentPath, dirPath );
@@ -51,8 +51,8 @@ namespace ImGuiFileDialog {
         private static string ComposeNewPath( List<string> decomp ) {
             if(decomp.Count == 1) {
                 var drivePath = decomp[0];
-                if(drivePath[drivePath.Length - 1] != Path.DirectorySeparatorChar) { // turn C: into C:\
-                    drivePath = drivePath + Path.DirectorySeparatorChar;
+                if(drivePath[^1] != Path.DirectorySeparatorChar) { // turn C: into C:\
+                    drivePath += Path.DirectorySeparatorChar;
                 }
                 return drivePath;
             }
@@ -244,7 +244,7 @@ namespace ImGuiFileDialog {
             if (a.FileName[0] == '.' && b.FileName[0] == '.') {
                 if( a.FileName.Length == 1 ) return -1;
                 if( b.FileName.Length == 1 ) return 1;
-                return -1 * string.Compare( a.FileName.Substring( 1 ), b.FileName.Substring( 1 ) );
+                return -1 * string.Compare( a.FileName[1..], b.FileName[1..] );
             }
 
             if( a.Type != b.Type ) return ( a.Type == FileStructType.Directory ? 1 : -1 );
@@ -257,7 +257,7 @@ namespace ImGuiFileDialog {
             if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
                 if( a.FileName.Length == 1 ) return 1;
                 if( b.FileName.Length == 1 ) return -1;
-                return string.Compare( a.FileName.Substring( 1 ), b.FileName.Substring( 1 ) );
+                return string.Compare( a.FileName[1..], b.FileName[1..] );
             }
 
             if( a.Type != b.Type ) return ( a.Type == FileStructType.Directory ? -1 : 1 );

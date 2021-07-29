@@ -55,7 +55,7 @@ namespace VFXEditor.UI.VFX {
         
         // =========== DRAW ==============
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Item";
+            var id = parentId + "/Item";
             DrawRename( id );
             if( IsParticle ) {
                 ParticleSelect.Draw( id );
@@ -67,12 +67,12 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override string GetDefaultText() {
-            string Type = IsParticle ? "Particle" : "Emitter";
+            var Type = IsParticle ? "Particle" : "Emitter";
             return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }
 
         public override string GetWorkspaceId() {
-            string Type = IsParticle ? "Ptcl" : "Emit";
+            var Type = IsParticle ? "Ptcl" : "Emit";
             return $"{Emitter.GetWorkspaceId()}/{Type}{Idx}";
         }
     }

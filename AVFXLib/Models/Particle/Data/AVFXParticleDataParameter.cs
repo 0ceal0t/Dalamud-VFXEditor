@@ -9,7 +9,7 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataParameter : AVFXParticleData
     {
-        List<Base> Attributes;
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataParameter() : base("Data")
         {
@@ -30,7 +30,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

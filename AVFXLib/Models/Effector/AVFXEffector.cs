@@ -11,18 +11,17 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Efct";
 
-        public LiteralEnum<EffectorType> EffectorVariety = new LiteralEnum<EffectorType>("EfVT");
-        public LiteralEnum<RotationOrder> RotationOrder = new LiteralEnum<RotationOrder>("RoOT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrder = new LiteralEnum<CoordComputeOrder>("CCOT");
-        public LiteralBool AffectOtherVfx = new LiteralBool("bAOV");
-        public LiteralBool AffectGame = new LiteralBool("bAGm");
-        public LiteralInt LoopPointStart = new LiteralInt("LpSt");
-        public LiteralInt LoopPointEnd = new LiteralInt("LpEd");
+        public LiteralEnum<EffectorType> EffectorVariety = new("EfVT");
+        public LiteralEnum<RotationOrder> RotationOrder = new("RoOT");
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrder = new("CCOT");
+        public LiteralBool AffectOtherVfx = new("bAOV");
+        public LiteralBool AffectGame = new("bAGm");
+        public LiteralInt LoopPointStart = new("LpSt");
+        public LiteralInt LoopPointEnd = new("LpEd");
 
         public EffectorType Type;
         public AVFXEffectorData Data;
-
-        List<Base> Attributes;
+        readonly List<Base> Attributes;
 
         public AVFXEffector() : base(NAME)
         {
@@ -43,7 +42,7 @@ namespace AVFXLib.Models
             ReadAVFX(Attributes, node);
             Type = EffectorVariety.Value;
 
-            foreach (AVFXNode item in node.Children){
+            foreach (var item in node.Children){
                 switch (item.Name){
                     // DATA ======================
                     case AVFXEffectorData.NAME:
@@ -56,7 +55,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode effectorAvfx = new AVFXNode("Efct");
+            var effectorAvfx = new AVFXNode("Efct");
             PutAVFX(effectorAvfx, Attributes);
 
             PutAVFX(effectorAvfx, Data);

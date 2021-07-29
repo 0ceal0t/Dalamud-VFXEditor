@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.Data.DirectX;
+using VFXEditor.DirectX;
 
 namespace VFXEditor.UI.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
@@ -28,7 +28,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UIModel OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXModel mdl = new AVFXModel();
+            var mdl = new AVFXModel();
             mdl.Read( node );
             AVFX.AddModel( mdl );
             return new UIModel( Main, mdl );

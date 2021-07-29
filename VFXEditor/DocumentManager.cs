@@ -40,7 +40,7 @@ namespace VFXEditor {
 
         public ReplaceDoc NewDoc() {
             var doc = new ReplaceDoc {
-                WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
+                WriteLocation = Path.Combine( Configuration.Config.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
                 Source = VFXSelectResult.None(),
                 Replace = VFXSelectResult.None()
             };
@@ -54,7 +54,7 @@ namespace VFXEditor {
             var doc = new ReplaceDoc {
                 Source = source,
                 Replace = replace,
-                WriteLocation = Path.Combine( Plugin.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" )
+                WriteLocation = Path.Combine( Configuration.Config.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" )
             };
 
             if(localPath != "") {

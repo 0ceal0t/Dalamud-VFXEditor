@@ -42,7 +42,7 @@ namespace VFXEditor {
                     }
                     break;
             }
-            if( addToRecent ) Configuration.AddRecent( selectResult );
+            if( addToRecent ) Configuration.Config.AddRecent( selectResult );
             DocManager.UpdateSource( selectResult );
             DocManager.Save();
         }
@@ -56,7 +56,7 @@ namespace VFXEditor {
             SetReplaceVFX( replaceResult, true );
         }
         public void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
-            if( addToRecent ) Configuration.AddRecent( replaceResult );
+            if( addToRecent ) Configuration.Config.AddRecent( replaceResult );
             DocManager.UpdateReplace( replaceResult );
         }
 
@@ -68,7 +68,7 @@ namespace VFXEditor {
             if( avfx == null ) return;
             CurrentDocument.SetAVFX( avfx );
 
-            if( Configuration.VerifyOnLoad ) {
+            if( Configuration.Config.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
                 var verifyResult = LastImportNode.CheckEquals( node, out var messages );
                 CurrentDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;

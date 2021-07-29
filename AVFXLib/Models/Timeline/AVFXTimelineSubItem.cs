@@ -9,16 +9,15 @@ namespace AVFXLib.Models
 {
     public class AVFXTimelineSubItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralInt StartTime = new LiteralInt("StTm");
-        public LiteralInt EndTime = new LiteralInt("EdTm");
-        public LiteralInt BinderIdx = new LiteralInt("BdNo");
-        public LiteralInt EffectorIdx = new LiteralInt("EfNo");
-        public LiteralInt EmitterIdx = new LiteralInt("EmNo");
-        public LiteralInt Platform = new LiteralInt("Plfm");
-        public LiteralInt ClipNumber = new LiteralInt("ClNo");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralInt StartTime = new("StTm");
+        public LiteralInt EndTime = new("EdTm");
+        public LiteralInt BinderIdx = new("BdNo");
+        public LiteralInt EffectorIdx = new("EfNo");
+        public LiteralInt EmitterIdx = new("EmNo");
+        public LiteralInt Platform = new("Plfm");
+        public LiteralInt ClipNumber = new("ClNo");
+        readonly List<Base> Attributes;
 
         public AVFXTimelineSubItem() : base("SubItem")
         {
@@ -51,7 +50,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("SubItem");
+            var dataAvfx = new AVFXNode("SubItem");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

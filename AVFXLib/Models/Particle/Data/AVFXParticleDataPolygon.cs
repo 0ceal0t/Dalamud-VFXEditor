@@ -9,9 +9,8 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataPolygon : AVFXParticleData
     {
-        public AVFXCurve Count = new AVFXCurve("Cnt");
-
-        List<Base> Attributes;
+        public AVFXCurve Count = new("Cnt");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataPolygon() : base("Data")
         {
@@ -34,7 +33,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

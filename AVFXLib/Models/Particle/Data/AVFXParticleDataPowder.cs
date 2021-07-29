@@ -9,11 +9,10 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataPowder : AVFXParticleData
     {
-        public LiteralBool IsLightning = new LiteralBool("bLgt");
-        public LiteralEnum<DirectionalLightType> DirectionalLightType = new LiteralEnum<DirectionalLightType>("LgtT");
-        public LiteralFloat CenterOffset = new LiteralFloat("CnOf");
-
-        List<Base> Attributes;
+        public LiteralBool IsLightning = new("bLgt");
+        public LiteralEnum<DirectionalLightType> DirectionalLightType = new("LgtT");
+        public LiteralFloat CenterOffset = new("CnOf");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataPowder() : base("Data")
         {
@@ -38,7 +37,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

@@ -9,16 +9,15 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterDataModel : AVFXEmitterData
     {
-        public LiteralInt ModelIdx = new LiteralInt("MdNo");
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("ROT");
-        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>("GeMT");
-        public AVFXCurve AX = new AVFXCurve("AnX");
-        public AVFXCurve AY = new AVFXCurve("AnY");
-        public AVFXCurve AZ = new AVFXCurve("AnZ");
-        public AVFXCurve InjectionSpeed = new AVFXCurve("IjS");
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve("IjSR");
-
-        List<Base> Attributes;
+        public LiteralInt ModelIdx = new("MdNo");
+        public LiteralEnum<RotationOrder> RotationOrderType = new("ROT");
+        public LiteralEnum<GenerateMethod> GenerateMethodType = new("GeMT");
+        public AVFXCurve AX = new("AnX");
+        public AVFXCurve AY = new("AnY");
+        public AVFXCurve AZ = new("AnZ");
+        public AVFXCurve InjectionSpeed = new("IjS");
+        public AVFXCurve InjectionSpeedRandom = new("IjSR");
+        readonly List<Base> Attributes;
 
         public AVFXEmitterDataModel() : base("Data")
         {
@@ -51,7 +50,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

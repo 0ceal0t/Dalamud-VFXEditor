@@ -31,8 +31,8 @@ namespace VFXSelect.Data.Sheets {
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }
-            string tmbPath = item.GetTmbPath();
-            bool result = PluginInterface.Data.FileExists( tmbPath );
+            var tmbPath = item.GetTmbPath();
+            var result = PluginInterface.Data.FileExists( tmbPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile( tmbPath );

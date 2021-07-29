@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UITexture OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXTexture tex = new AVFXTexture();
+            var tex = new AVFXTexture();
             tex.Read( node );
             AVFX.AddTexture( tex );
             return new UITexture( Main, tex );

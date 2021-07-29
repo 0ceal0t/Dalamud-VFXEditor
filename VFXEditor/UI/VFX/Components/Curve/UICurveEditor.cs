@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using ImPlotNET;
-using VFXEditor.Data.DirectX;
+using VFXEditor.DirectX;
 
 namespace VFXEditor.UI.VFX {
     public class UICurveEditor : UIBase {
@@ -14,8 +14,8 @@ namespace VFXEditor.UI.VFX {
         public List<CurvePoint> Points;
         public bool Color;
 
-        public static readonly Vector4 POINT_COLOR = new Vector4( 1, 1, 1, 1 );
-        public static readonly Vector4 LINE_COLOR = new Vector4( 0, 0.1f, 1, 1 );
+        public static readonly Vector4 POINT_COLOR = new( 1, 1, 1, 1 );
+        public static readonly Vector4 LINE_COLOR = new( 0, 0.1f, 1, 1 );
         public static readonly float GRABBING_DISTANCE = 25;
 
         public UICurveEditor( AVFXCurve curve, bool color ) {
@@ -37,14 +37,14 @@ namespace VFXEditor.UI.VFX {
             ImGui.SameLine();
             ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
 
-            bool wrongOrder = false;
+            var wrongOrder = false;
             if( Color ) {
                 ImPlot.SetNextPlotLimitsY( -1, 1, ImGuiCond.Always );
             }
             if( ImPlot.BeginPlot( parentId + "Plot", "Frame", "", new Vector2( -1, 300 ), ImPlotFlags.AntiAliased | ImPlotFlags.NoMenus, ImPlotAxisFlags.None, Color ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel ) ) {
                 if( Points.Count > 0 ) {
                     // ====== BACKGROUND LINE =========
-                    Vector2[] line = GetDrawLine( Points, Color );
+                    var line = GetDrawLine( Points, Color );
                     ImPlot.SetNextLineStyle( LINE_COLOR, 2 );
                     ImPlot.PlotLine( Curve.AVFXName, ref line[0].X, ref line[0].Y, line.Length, 0, 2 * sizeof( float ) );
                     // ====== IMAGE ============
@@ -58,14 +58,14 @@ namespace VFXEditor.UI.VFX {
                             y = 1
                         };
                         var bottomRight = new ImPlotPoint {
-                            x = Points[Points.Count - 1].X,
+                            x = Points[^1].X,
                             y = -1
                         };
 
                         ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
                     // ====== POINTS ===========
-                    int idx = 0;
+                    var idx = 0;
                     var dragging = false;
                     foreach( var p in Points ) {
                         // DRAW THE POINT
@@ -99,15 +99,15 @@ namespace VFXEditor.UI.VFX {
                 // ========== ADD NEW KEYFRAMES =======
                 if( ImGui.IsMouseClicked( ImGuiMouseButton.Right ) && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
-                    int insertIdx = 0;
+                    var insertIdx = 0;
                     foreach( var p in Points ) {
                         if( p.X > Math.Round( pos.x ) ) {
                             break;
                         }
                         insertIdx++;
                     }
-                    float z = Color ? 1.0f : ( float )pos.y;
-                    AVFXKey newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.x ), 1, 1, z );
+                    var z = Color ? 1.0f : ( float )pos.y;
+                    var newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.x ), 1, 1, z );
                     Curve.Keys.Insert( insertIdx, newKey );
                     Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
                     UpdateColor();
@@ -137,12 +137,12 @@ namespace VFXEditor.UI.VFX {
         }
 
         public Vector2[] GetDrawLine( List<CurvePoint> points, bool color = false ) {
-            List<Vector2> ret = new List<Vector2>();
+            var ret = new List<Vector2>();
             if( points.Count > 0 ) {
                 ret.Add( points[0].GetPosition() );
             }
 
-            for( int idx = 1; idx < points.Count; idx++ ) {
+            for( var idx = 1; idx < points.Count; idx++ ) {
                 var p1 = points[idx - 1];
                 var p2 = points[idx];
                 if( p1.Key.Type == KeyType.Linear || color ) {
@@ -157,11 +157,11 @@ namespace VFXEditor.UI.VFX {
                 else if( p1.Key.Type == KeyType.Spline ) {
                     var p1_ = p1.GetPosition();
                     var p2_ = p2.GetPosition();
-                    float midX = ( p2_.X - p1_.X ) / 2;
-                    Vector2 handle1 = new Vector2( p1_.X + p1.Key.X * midX, p1_.Y );
-                    Vector2 handle2 = new Vector2( p2_.X - p1.Key.Y * midX, p2_.Y );
-                    for( int i = 0; i < 100; i++ ) {
-                        float t = i / 99.0f;
+                    var midX = ( p2_.X - p1_.X ) / 2;
+                    var handle1 = new Vector2( p1_.X + p1.Key.X * midX, p1_.Y );
+                    var handle2 = new Vector2( p2_.X - p1.Key.Y * midX, p2_.Y );
+                    for( var i = 0; i < 100; i++ ) {
+                        var t = i / 99.0f;
                         ret.Add( Bezier( p1_, p2_, handle1, handle2, t ) );
                     }
                     ret.Add( p2_ );
@@ -171,11 +171,11 @@ namespace VFXEditor.UI.VFX {
         }
 
         public static Vector2 Bezier(Vector2 p1_, Vector2 p2_, Vector2 handle1, Vector2 handle2, float t ) {
-            float u = 1 - t;
-            float w1 = u * u * u;
-            float w2 = 3 * u * u * t;
-            float w3 = 3 * u * t * t;
-            float w4 = t * t * t;
+            var u = 1 - t;
+            var w1 = u * u * u;
+            var w2 = 3 * u * u * t;
+            var w3 = 3 * u * t * t;
+            var w4 = t * t * t;
             return new Vector2(
                 w1 * p1_.X + w2 * handle1.X + w3 * handle2.X + w4 * p2_.X,
                 w1 * p1_.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2_.Y
@@ -192,20 +192,20 @@ namespace VFXEditor.UI.VFX {
                     }
                 }
                 if( sameTime ) {
-                    Curve.Keys[Curve.Keys.Count - 1].Time++;
-                    Points[Points.Count - 1].X++;
+                    Curve.Keys[^1].Time++;
+                    Points[^1].X++;
                 }
                 DirectXManager.GradientView.SetGradient( Curve );
             }
         }
         // USED FOR OTHER FUNCTIONS....
         public float GetAtTime(int frame ) {
-            int idx = 0;
+            var idx = 0;
             if(Curve.Keys.Count > 0 && frame <= Curve.Keys[0].Time ) { // before the first point
                 return Curve.Keys[0].Z;
             }
-            if(Curve.Keys.Count > 0 && frame >= Curve.Keys[Curve.Keys.Count - 1].Time) { // after the last one
-                return Curve.Keys[Curve.Keys.Count - 1].Z;
+            if(Curve.Keys.Count > 0 && frame >= Curve.Keys[^1].Time) { // after the last one
+                return Curve.Keys[^1].Z;
             }
 
             foreach(var nextPoint in Curve.Keys ) {
@@ -216,14 +216,14 @@ namespace VFXEditor.UI.VFX {
                         return item.Z;
                     }
                     else {
-                        float t = ((float)( frame - item.Time )) / ( nextPoint.Time - item.Time );
+                        var t = ((float)( frame - item.Time )) / ( nextPoint.Time - item.Time );
                         if(item.Type == KeyType.Linear ) {
                             return item.Z + t * ( nextPoint.Z - item.Z );
                         }
                         else if(item.Type == KeyType.Spline ) {
-                            float midX = ((float)( nextPoint.X - item.X )) / 2.0f;
-                            Vector2 handle1 = new Vector2( item.Time + item.X * midX, item.Z );
-                            Vector2 handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
+                            var midX = ((float)( nextPoint.X - item.X )) / 2.0f;
+                            var handle1 = new Vector2( item.Time + item.X * midX, item.Z );
+                            var handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
                             var b = Bezier( new Vector2( item.Time, item.Z ), new Vector2( nextPoint.Time, nextPoint.Z ), handle1, handle2, t );
                             return b.Y;
                         }
@@ -264,9 +264,10 @@ namespace VFXEditor.UI.VFX {
                 return new Vector2( ( float )X, ( float )Y );
             }
             public ImPlotPoint GetImPlotPoint() {
-                var ret = new ImPlotPoint();
-                ret.x = ( float )X;
-                ret.y = ( float )Y;
+                var ret = new ImPlotPoint {
+                    x = ( float )X,
+                    y = ( float )Y
+                };
                 return ret;
             }
             public void UpdatePosition() {
@@ -313,7 +314,7 @@ namespace VFXEditor.UI.VFX {
                         Editor.UpdateColor();
                     }
                 }
-                if( Editor.Points[Editor.Points.Count - 1] != this ) {
+                if( Editor.Points[^1] != this ) {
                     ImGui.SameLine();
                     if( ImGui.SmallButton( "Shift Right" + id ) ) {
                         var idx = Editor.Points.IndexOf( this );
@@ -324,14 +325,14 @@ namespace VFXEditor.UI.VFX {
                     }
                 }
 
-                int Time = Key.Time;
+                var Time = Key.Time;
                 if( ImGui.InputInt( "Time" + id, ref Time ) ) {
                     Key.Time = Time;
                     X = Time;
                     Editor.UpdateColor();
                 }
                 if( UIUtils.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
-                    Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
+                    _ = Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
                     Key.Type = newKeyType;
                 }
                 //=====================
@@ -341,7 +342,7 @@ namespace VFXEditor.UI.VFX {
                     }
                 }
                 else {
-                    Vector3 _data = new Vector3( Key.X, Key.Y, Key.Z );
+                    var _data = new Vector3( Key.X, Key.Y, Key.Z );
                     if( ImGui.InputFloat3( "Value" + id, ref _data ) ) {
                         Key.X = _data.X;
                         Key.Y = _data.Y;

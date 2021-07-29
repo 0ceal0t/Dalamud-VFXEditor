@@ -17,7 +17,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode res = base.ToAVFX();
+            var res = base.ToAVFX();
             res.Name = NAME;
             return res;
         }

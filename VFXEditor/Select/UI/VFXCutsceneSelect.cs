@@ -27,7 +27,7 @@ namespace VFXSelect.UI {
             ImGui.Text( "CUTB Path: " );
             ImGui.SameLine();
             Dialog.DisplayPath( loadedItem.Cutscene.Path );
-            int vfxIdx = 0;
+            var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();

@@ -8,15 +8,14 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor.Data.DirectX {
-    public class Gradient : GenericDirectX {
+namespace VFXEditor.DirectX {
+    public class GradientView : Renderer {
         public AVFXCurve CurrentCurve = null;
         public IntPtr Output => RenderShad.NativePointer;
 
-        private int Width = 500;
-        private int Height = 50;
+        private readonly int Width = 500;
+        private readonly int Height = 50;
         private bool FirstCurve = false;
 
         private RasterizerState RState;
@@ -26,23 +25,21 @@ namespace VFXEditor.Data.DirectX {
         private ShaderResourceView RenderShad;
         private RenderTargetView RenderView;
 
-        // ======= BASE MODEL =======
-        private static int MODEL_SPAN = 2; // position, color
+        private static readonly int MODEL_SPAN = 2; // position, color
         private int NumVerts;
         private Buffer Vertices;
-        private CompilationResult VertexShaderByteCode;
-        private CompilationResult PixelShaderByteCode;
-        private PixelShader PShader;
-        private VertexShader VShader;
-        private ShaderSignature Signature;
-        private InputLayout Layout;
+        private readonly CompilationResult VertexShaderByteCode;
+        private readonly CompilationResult PixelShaderByteCode;
+        private readonly PixelShader PShader;
+        private readonly VertexShader VShader;
+        private readonly ShaderSignature Signature;
+        private readonly InputLayout Layout;
 
-        public Gradient( Device device, DeviceContext ctx, string shaderPath) : base(device, ctx) {
+        public GradientView( Device device, DeviceContext ctx, string shaderPath) : base(device, ctx) {
 
             RefreshRasterizeState();
             ResizeResources();
 
-            // ======= BASE MODEL =========
             NumVerts = 0;
             Vertices = null;
             var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
@@ -66,24 +63,24 @@ namespace VFXEditor.Data.DirectX {
             }
             else {
                 // each set of 2 keys needs 6 points
-                Vector4[] data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
+                var data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
                 float startTime = curve.Keys[0].Time;
                 float endTime = curve.Keys[numPoints - 1].Time;
-                float timeDiff = ( endTime - startTime );
+                var timeDiff = ( endTime - startTime );
 
-                for( int i = 0; i < numPoints - 1; i++ ) {
+                for( var i = 0; i < numPoints - 1; i++ ) {
                     var left = curve.Keys[i];
                     var right = curve.Keys[i + 1];
 
-                    float leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
-                    float rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
-                    Vector4 leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
-                    Vector4 rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
+                    var leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
+                    var rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
+                    var leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
+                    var rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
 
-                    Vector4 topLeft = new Vector4( leftPosition, 1, 0, 1 );
-                    Vector4 topRight = new Vector4( rightPosition, 1, 0, 1 );
-                    Vector4 bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
-                    Vector4 bottomRight = new Vector4( rightPosition, -1, 0, 1 );
+                    var topLeft = new Vector4( leftPosition, 1, 0, 1 );
+                    var topRight = new Vector4( rightPosition, 1, 0, 1 );
+                    var bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
+                    var bottomRight = new Vector4( rightPosition, -1, 0, 1 );
 
                     var idx = i * 6 * MODEL_SPAN;
                     data[idx + 0] = topLeft;
@@ -115,7 +112,7 @@ namespace VFXEditor.Data.DirectX {
             Draw();
         }
 
-        public void RefreshRasterizeState() {
+        private void RefreshRasterizeState() {
             RState?.Dispose();
             RState = new RasterizerState( Device, new RasterizerStateDescription {
                 CullMode = CullMode.None,
@@ -131,20 +128,7 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public void Resize( Vec2 size ) {
-            var w_ = ( int )size.X;
-            var h_ = ( int )size.Y;
-            if( w_ != Width || h_ != Height ) {
-                Width = w_;
-                Height = h_;
-                ResizeResources();
-                if( FirstCurve ) {
-                    Draw();
-                }
-            }
-        }
-
-        public void ResizeResources() {
+        private void ResizeResources() {
             RenderTex?.Dispose();
             RenderTex = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.B8G8R8A8_UNorm,

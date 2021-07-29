@@ -11,7 +11,7 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Trgr";
 
-        public List<AVFXScheduleSubItem> SubItems = new List<AVFXScheduleSubItem>();
+        public List<AVFXScheduleSubItem> SubItems = new();
 
         public AVFXScheduleTrigger() : base(NAME)
         {
@@ -22,14 +22,15 @@ namespace AVFXLib.Models
             Assigned = true;
 
             // split every 3 leafs, make dummy elements and insert
-            int numItems = (int)Math.Floor((double)node.Children.Count / 3);
-            for (int idx = 0; idx < numItems; idx++)
+            var numItems = (int)Math.Floor((double)node.Children.Count / 3);
+            for (var idx = 0; idx < numItems; idx++)
             {
-                List<AVFXNode> subItem = node.Children.GetRange(idx * 3, 3);
-                AVFXNode dummyNode = new AVFXNode("SubItem");
-                dummyNode.Children = subItem;
+                var subItem = node.Children.GetRange(idx * 3, 3);
+                var dummyNode = new AVFXNode( "SubItem" ) {
+                    Children = subItem
+                };
 
-                AVFXScheduleSubItem Item = new AVFXScheduleSubItem();
+                var Item = new AVFXScheduleSubItem();
                 Item.Read(dummyNode);
                 SubItems.Add(Item);
             }
@@ -38,8 +39,8 @@ namespace AVFXLib.Models
         public override AVFXNode ToAVFX()
         {
             // make ItPr by concatting elements of dummy elements
-            AVFXNode itemAvfx = new AVFXNode("Trgr");
-            foreach (AVFXScheduleSubItem Item in SubItems)
+            var itemAvfx = new AVFXNode("Trgr");
+            foreach (var Item in SubItems)
             {
                 itemAvfx.Children.AddRange(Item.ToAVFX().Children); // flatten
             }

@@ -11,13 +11,12 @@ namespace AVFXLib.Models
     {
         public const string NAME = "UvSt";
 
-        public LiteralEnum<TextureCalculateUV> CalculateUVType = new LiteralEnum<TextureCalculateUV>("CUvT");
-        public AVFXCurve2Axis Scale = new AVFXCurve2Axis("Scl");
-        public AVFXCurve2Axis Scroll = new AVFXCurve2Axis("Scr");
-        public AVFXCurve Rot = new AVFXCurve("Rot");
-        public AVFXCurve RotRandom = new AVFXCurve("RotR");
-
-        List<Base> Attributes;
+        public LiteralEnum<TextureCalculateUV> CalculateUVType = new("CUvT");
+        public AVFXCurve2Axis Scale = new("Scl");
+        public AVFXCurve2Axis Scroll = new("Scr");
+        public AVFXCurve Rot = new("Rot");
+        public AVFXCurve RotRandom = new("RotR");
+        readonly List<Base> Attributes;
 
         public AVFXParticleUVSet() : base(NAME)
         {
@@ -45,7 +44,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode uvstAvfx = new AVFXNode("UvSt");
+            var uvstAvfx = new AVFXNode("UvSt");
             PutAVFX(uvstAvfx, Attributes);
             return uvstAvfx;
         }

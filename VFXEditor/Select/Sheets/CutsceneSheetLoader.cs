@@ -21,7 +21,7 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivCutscene item, out XivCutsceneSelected selectedItem ) {
             selectedItem = null;
-            bool result = PluginInterface.Data.FileExists( item.Path );
+            var result = PluginInterface.Data.FileExists( item.Path );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile( item.Path );

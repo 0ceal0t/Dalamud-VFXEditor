@@ -11,67 +11,66 @@ namespace AVFXLib.Models
 {
     public class AVFXBase : Base
     {
-        public LiteralInt Version = new LiteralInt( "Ver" );
+        public LiteralInt Version = new( "Ver" );
 
-        public LiteralBool IsDelayFastParticle = new LiteralBool("bDFP");
-        public LiteralBool IsFitGround = new LiteralBool("bFG");
-        public LiteralBool IsTranformSkip = new LiteralBool("bTS");
-        public LiteralBool IsAllStopOnHide = new LiteralBool("bASH");
-        public LiteralBool CanBeClippedOut = new LiteralBool("bCBC");
-        public LiteralBool ClipBoxenabled = new LiteralBool("bCul");
-        public LiteralFloat ClipBoxX = new LiteralFloat("CBPx");
-        public LiteralFloat ClipBoxY = new LiteralFloat("CBPy");
-        public LiteralFloat ClipBoxZ = new LiteralFloat("CBPz");
-        public LiteralFloat ClipBoxsizeX = new LiteralFloat("CBSx");
-        public LiteralFloat ClipBoxsizeY = new LiteralFloat("CBSy");
-        public LiteralFloat ClipBoxsizeZ = new LiteralFloat("CBSz");
-        public LiteralFloat BiasZmaxScale = new LiteralFloat("ZBMs");
-        public LiteralFloat BiasZmaxDistance = new LiteralFloat("ZBMd");
-        public LiteralBool IsCameraSpace = new LiteralBool("bCmS");
-        public LiteralBool IsFullEnvLight = new LiteralBool("bFEL");
-        public LiteralBool IsClipOwnSetting = new LiteralBool("bOSt");
-        public LiteralFloat SoftParticleFadeRange = new LiteralFloat("SPFR");
-        public LiteralFloat SoftKeyOffset = new LiteralFloat("SKO");
-        public LiteralEnum<DrawLayer> DrawLayerType = new LiteralEnum<DrawLayer>("DwLy");
-        public LiteralEnum<DrawOrder> DrawOrderType = new LiteralEnum<DrawOrder>("DwOT");
-        public LiteralEnum<DirectionalLightSource> DirectionalLightSourceType = new LiteralEnum<DirectionalLightSource>("DLST");
-        public LiteralEnum<PointLightSouce> PointLightsType1 = new LiteralEnum<PointLightSouce>("PL1S");
-        public LiteralEnum<PointLightSouce> PointLightsType2 = new LiteralEnum<PointLightSouce>("PL2S");
-        public LiteralFloat RevisedValuesPosX = new LiteralFloat("RvPx");
-        public LiteralFloat RevisedValuesPosY = new LiteralFloat("RvPy");
-        public LiteralFloat RevisedValuesPosZ = new LiteralFloat("RvPz");
-        public LiteralFloat RevisedValuesRotX = new LiteralFloat("RvRx");
-        public LiteralFloat RevisedValuesRotY = new LiteralFloat("RvRy");
-        public LiteralFloat RevisedValuesRotZ = new LiteralFloat("RvRz");
-        public LiteralFloat RevisedValuesScaleX = new LiteralFloat("RvSx");
-        public LiteralFloat RevisedValuesScaleY = new LiteralFloat("RvSy");
-        public LiteralFloat RevisedValuesScaleZ = new LiteralFloat("RvSz");
-        public LiteralFloat RevisedValuesR = new LiteralFloat("RvR");
-        public LiteralFloat RevisedValuesG = new LiteralFloat("RvG");
-        public LiteralFloat RevisedValuesB = new LiteralFloat("RvB");
-        public LiteralBool FadeXenabled = new LiteralBool("AFXe");
-        public LiteralFloat FadeXinner = new LiteralFloat("AFXi");
-        public LiteralFloat FadeXouter = new LiteralFloat("AFXo");
-        public LiteralBool FadeYenabled = new LiteralBool("AFYe");
-        public LiteralFloat FadeYinner = new LiteralFloat("AFYi");
-        public LiteralFloat FadeYouter = new LiteralFloat("AFYo");
-        public LiteralBool FadeZenabled = new LiteralBool("AFZe");
-        public LiteralFloat FadeZinner = new LiteralFloat("AFZi");
-        public LiteralFloat FadeZouter = new LiteralFloat("AFZo");
-        public LiteralBool GlobalFogEnabled = new LiteralBool("bGFE");
-        public LiteralFloat GlobalFogInfluence = new LiteralFloat("GFIM");
-        public LiteralBool LTSEnabled = new LiteralBool("bLTS");
+        public LiteralBool IsDelayFastParticle = new("bDFP");
+        public LiteralBool IsFitGround = new("bFG");
+        public LiteralBool IsTranformSkip = new("bTS");
+        public LiteralBool IsAllStopOnHide = new("bASH");
+        public LiteralBool CanBeClippedOut = new("bCBC");
+        public LiteralBool ClipBoxenabled = new("bCul");
+        public LiteralFloat ClipBoxX = new("CBPx");
+        public LiteralFloat ClipBoxY = new("CBPy");
+        public LiteralFloat ClipBoxZ = new("CBPz");
+        public LiteralFloat ClipBoxsizeX = new("CBSx");
+        public LiteralFloat ClipBoxsizeY = new("CBSy");
+        public LiteralFloat ClipBoxsizeZ = new("CBSz");
+        public LiteralFloat BiasZmaxScale = new("ZBMs");
+        public LiteralFloat BiasZmaxDistance = new("ZBMd");
+        public LiteralBool IsCameraSpace = new("bCmS");
+        public LiteralBool IsFullEnvLight = new("bFEL");
+        public LiteralBool IsClipOwnSetting = new("bOSt");
+        public LiteralFloat SoftParticleFadeRange = new("SPFR");
+        public LiteralFloat SoftKeyOffset = new("SKO");
+        public LiteralEnum<DrawLayer> DrawLayerType = new("DwLy");
+        public LiteralEnum<DrawOrder> DrawOrderType = new("DwOT");
+        public LiteralEnum<DirectionalLightSource> DirectionalLightSourceType = new("DLST");
+        public LiteralEnum<PointLightSouce> PointLightsType1 = new("PL1S");
+        public LiteralEnum<PointLightSouce> PointLightsType2 = new("PL2S");
+        public LiteralFloat RevisedValuesPosX = new("RvPx");
+        public LiteralFloat RevisedValuesPosY = new("RvPy");
+        public LiteralFloat RevisedValuesPosZ = new("RvPz");
+        public LiteralFloat RevisedValuesRotX = new("RvRx");
+        public LiteralFloat RevisedValuesRotY = new("RvRy");
+        public LiteralFloat RevisedValuesRotZ = new("RvRz");
+        public LiteralFloat RevisedValuesScaleX = new("RvSx");
+        public LiteralFloat RevisedValuesScaleY = new("RvSy");
+        public LiteralFloat RevisedValuesScaleZ = new("RvSz");
+        public LiteralFloat RevisedValuesR = new("RvR");
+        public LiteralFloat RevisedValuesG = new("RvG");
+        public LiteralFloat RevisedValuesB = new("RvB");
+        public LiteralBool FadeXenabled = new("AFXe");
+        public LiteralFloat FadeXinner = new("AFXi");
+        public LiteralFloat FadeXouter = new("AFXo");
+        public LiteralBool FadeYenabled = new("AFYe");
+        public LiteralFloat FadeYinner = new("AFYi");
+        public LiteralFloat FadeYouter = new("AFYo");
+        public LiteralBool FadeZenabled = new("AFZe");
+        public LiteralFloat FadeZinner = new("AFZi");
+        public LiteralFloat FadeZouter = new("AFZo");
+        public LiteralBool GlobalFogEnabled = new("bGFE");
+        public LiteralFloat GlobalFogInfluence = new("GFIM");
+        public LiteralBool LTSEnabled = new("bLTS");
 
-        public List<AVFXSchedule> Schedulers = new List<AVFXSchedule>();
-        public List<AVFXTimeline> Timelines = new List<AVFXTimeline>();
-        public List<AVFXEmitter> Emitters = new List<AVFXEmitter>();
-        public List<AVFXParticle> Particles = new List<AVFXParticle>();
-        public List<AVFXEffector> Effectors = new List<AVFXEffector>();
-        public List<AVFXBinder> Binders = new List<AVFXBinder>();
-        public List<AVFXTexture> Textures = new List<AVFXTexture>();
-        public List<AVFXModel> Models = new List<AVFXModel>();
-
-        List<Base> Attributes;
+        public List<AVFXSchedule> Schedulers = new();
+        public List<AVFXTimeline> Timelines = new();
+        public List<AVFXEmitter> Emitters = new();
+        public List<AVFXParticle> Particles = new();
+        public List<AVFXEffector> Effectors = new();
+        public List<AVFXBinder> Binders = new();
+        public List<AVFXTexture> Textures = new();
+        public List<AVFXModel> Models = new();
+        readonly List<Base> Attributes;
 
         public AVFXBase() : base("AVFX")
         {
@@ -132,47 +131,47 @@ namespace AVFXLib.Models
             ReadAVFX( Version, node );
             ReadAVFX(Attributes, node);
 
-            foreach (AVFXNode item in node.Children)
+            foreach (var item in node.Children)
             {
                 switch (item.Name)
                 {
                     case AVFXSchedule.NAME:
-                        AVFXSchedule Scheduler = new AVFXSchedule();
+                        var Scheduler = new AVFXSchedule();
                         Scheduler.Read(item);
                         Schedulers.Add(Scheduler);
                         break;
                     case AVFXTimeline.NAME:
-                        AVFXTimeline Timeline = new AVFXTimeline();
+                        var Timeline = new AVFXTimeline();
                         Timeline.Read(item);
                         Timelines.Add(Timeline);
                         break;
                     case AVFXEmitter.NAME:
-                        AVFXEmitter Emitter = new AVFXEmitter();
+                        var Emitter = new AVFXEmitter();
                         Emitter.Read(item);
                         Emitters.Add(Emitter);
                         break;
                     case AVFXParticle.NAME:
-                        AVFXParticle Particle = new AVFXParticle();
+                        var Particle = new AVFXParticle();
                         Particle.Read(item);
                         Particles.Add(Particle);
                         break;
                     case AVFXEffector.NAME:
-                        AVFXEffector Effector = new AVFXEffector();
+                        var Effector = new AVFXEffector();
                         Effector.Read(item);
                         Effectors.Add(Effector);
                         break;
                     case AVFXBinder.NAME:
-                        AVFXBinder Binder = new AVFXBinder();
+                        var Binder = new AVFXBinder();
                         Binder.Read(item);
                         Binders.Add(Binder);
                         break;
                     case AVFXTexture.NAME:
-                        AVFXTexture Texture = new AVFXTexture();
+                        var Texture = new AVFXTexture();
                         Texture.Read(item);
                         Textures.Add(Texture);
                         break;
                     case AVFXModel.NAME:
-                        AVFXModel Model = new AVFXModel();
+                        var Model = new AVFXModel();
                         Model.Read(item);
                         Models.Add(Model);
                         break;
@@ -247,7 +246,7 @@ namespace AVFXLib.Models
         }
         public AVFXTexture AddTexture()
         {
-            AVFXTexture texture = new AVFXTexture();
+            var texture = new AVFXTexture();
             texture.ToDefault();
             Textures.Add(texture);
             return texture;
@@ -266,7 +265,7 @@ namespace AVFXLib.Models
         }
         public AVFXModel AddModel()
         {
-            AVFXModel model = new AVFXModel();
+            var model = new AVFXModel();
             model.ToDefault();
             Models.Add( model );
             return model;
@@ -281,7 +280,7 @@ namespace AVFXLib.Models
         // ======= EXPORT =======
         public override AVFXNode ToAVFX()
         {
-            AVFXNode baseAVFX = new AVFXNode("AVFX");
+            var baseAVFX = new AVFXNode("AVFX");
 
             baseAVFX.Children.Add(new AVFXLeaf("Ver", 4, new byte[] { 0x13, 0x09, 0x11, 0x20 })); //?
             PutAVFX(baseAVFX, Attributes);
@@ -296,42 +295,42 @@ namespace AVFXLib.Models
             baseAVFX.Children.Add(new AVFXLeaf("MdCn", 4, BitConverter.GetBytes(Models.Count())));
 
             // SCHEDULE
-            foreach (AVFXSchedule schedElem in Schedulers)
+            foreach (var schedElem in Schedulers)
             {
                 baseAVFX.Children.Add(schedElem.ToAVFX());
             }
             // TIMELINES
-            foreach (AVFXTimeline tmlnElem in Timelines)
+            foreach (var tmlnElem in Timelines)
             {
                 baseAVFX.Children.Add(tmlnElem.ToAVFX());
             }
             // EMITTERS
-            foreach (AVFXEmitter emitterElem in Emitters)
+            foreach (var emitterElem in Emitters)
             {
                 baseAVFX.Children.Add(emitterElem.ToAVFX());
             }
             // PARTICLES
-            foreach (AVFXParticle particleElement in Particles)
+            foreach (var particleElement in Particles)
             {
                 baseAVFX.Children.Add(particleElement.ToAVFX());
             }
             // EFFECTORS
-            foreach (AVFXEffector effectorElem in Effectors)
+            foreach (var effectorElem in Effectors)
             {
                 baseAVFX.Children.Add(effectorElem.ToAVFX());
             }
             // BINDERS
-            foreach (AVFXBinder bindElem in Binders)
+            foreach (var bindElem in Binders)
             {
                 baseAVFX.Children.Add(bindElem.ToAVFX());
             }
             // TEXTURES
-            foreach (AVFXTexture texElem in Textures)
+            foreach (var texElem in Textures)
             {
                 baseAVFX.Children.Add(texElem.ToAVFX());
             }
             // MODELS
-            foreach (AVFXModel modelElem in Models)
+            foreach (var modelElem in Models)
             {
                 baseAVFX.Children.Add(modelElem.ToAVFX());
             }
@@ -340,8 +339,8 @@ namespace AVFXLib.Models
 
         public AVFXBase Clone()
         {
-            AVFXNode node = ToAVFX();
-            AVFXBase ret = new AVFXBase();
+            var node = ToAVFX();
+            var ret = new AVFXBase();
             ret.Read(node);
             return ret;
         }

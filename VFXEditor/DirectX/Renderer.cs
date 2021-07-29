@@ -1,21 +1,12 @@
-using System;
-using System.IO;
-using AVFXLib.Models;
-using SharpDX;
-using SharpDX.D3DCompiler;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor.Data.DirectX {
-    public class GenericDirectX {
+namespace VFXEditor.DirectX {
+    public class Renderer {
         protected Device Device;
         protected DeviceContext Ctx;
 
-        public GenericDirectX(Device device, DeviceContext ctx) {
+        public Renderer(Device device, DeviceContext ctx) {
             Device = device;
             Ctx = ctx;
         }

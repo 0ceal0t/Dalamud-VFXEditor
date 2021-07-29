@@ -83,7 +83,7 @@ namespace VFXEditor.Structs.Vfx {
         public void UpdateRotation( Vector3 rotation ) {
             if( Vfx == null ) return;
 
-            Quaternion q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
+            var q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
             Vfx->Rotation = new Quat
             {
                 X = q.X,

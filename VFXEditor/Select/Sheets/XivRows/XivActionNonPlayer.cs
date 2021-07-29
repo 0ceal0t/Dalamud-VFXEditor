@@ -45,12 +45,13 @@ namespace VFXSelect.Data.Rows {
                 HitVFXExists = !string.IsNullOrEmpty( HitVFXKey ) && !HitVFXKey.Contains("normal_hit");
                 if( HitVFXExists )
                 {
-                    var sAction = new Lumina.Excel.GeneratedSheets.Action();
-                    sAction.Icon = action.Icon;
-                    sAction.Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) );
-                    sAction.IsPlayerAction = action.IsPlayerAction;
-                    sAction.RowId = action.RowId;
-                    sAction.AnimationEnd = action.ActionTimelineHit;
+                    var sAction = new Lumina.Excel.GeneratedSheets.Action {
+                        Icon = action.Icon,
+                        Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
+                        IsPlayerAction = action.IsPlayerAction,
+                        RowId = action.RowId,
+                        AnimationEnd = action.ActionTimelineHit
+                    };
                     HitAction = new XivActionNonPlayer( sAction, justSelf: true);
                 }
             }
@@ -61,7 +62,7 @@ namespace VFXSelect.Data.Rows {
 
     public struct MonsterKey
     {
-        public static Regex rx = new Regex( @"mon_sp\/(.*?)\/(.*)", RegexOptions.Compiled );
+        public static Regex rx = new( @"mon_sp\/(.*?)\/(.*)", RegexOptions.Compiled );
 
         public bool isMonster;
         public string skeletonKey;
@@ -69,7 +70,7 @@ namespace VFXSelect.Data.Rows {
 
         public MonsterKey(string key )
         {
-            Match match = rx.Match( key );
+            var match = rx.Match( key );
             if( match.Success )
             {
                 isMonster = true;

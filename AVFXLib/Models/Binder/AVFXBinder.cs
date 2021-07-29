@@ -11,29 +11,28 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Bind";
 
-        public LiteralBool StartToGlobalDirection = new LiteralBool("bStG");
-        public LiteralBool VfxScaleEnabled = new LiteralBool("bVSc");
-        public LiteralFloat VfxScaleBias = new LiteralFloat("bVSb");
-        public LiteralBool VfxScaleDepthOffset = new LiteralBool("bVSd");
-        public LiteralBool VfxScaleInterpolation = new LiteralBool("bVSi");
-        public LiteralBool TransformScale = new LiteralBool("bTSc");
-        public LiteralBool TransformScaleDepthOffset = new LiteralBool("bTSd");
-        public LiteralBool TransformScaleInterpolation = new LiteralBool("bTSi");
-        public LiteralBool FollowingTargetOrientation = new LiteralBool("bFTO");
-        public LiteralBool DocumentScaleEnabled = new LiteralBool("bDSE");
-        public LiteralBool AdjustToScreenEnabled = new LiteralBool("bATS");
-        public LiteralInt Life = new LiteralInt("Life");
-        public LiteralEnum<BinderRotation> BinderRotationType = new LiteralEnum<BinderRotation>("RoTp");
-        public LiteralEnum<BinderType> BinderVariety = new LiteralEnum<BinderType>("BnVr");
-        public AVFXBinderProperty PropStart = new AVFXBinderProperty("PrpS");
-        public AVFXBinderProperty Prop1 = new AVFXBinderProperty( "Prp1" );
-        public AVFXBinderProperty Prop2 = new AVFXBinderProperty( "Prp2" );
-        public AVFXBinderProperty PropGoal = new AVFXBinderProperty("PrpG");
+        public LiteralBool StartToGlobalDirection = new("bStG");
+        public LiteralBool VfxScaleEnabled = new("bVSc");
+        public LiteralFloat VfxScaleBias = new("bVSb");
+        public LiteralBool VfxScaleDepthOffset = new("bVSd");
+        public LiteralBool VfxScaleInterpolation = new("bVSi");
+        public LiteralBool TransformScale = new("bTSc");
+        public LiteralBool TransformScaleDepthOffset = new("bTSd");
+        public LiteralBool TransformScaleInterpolation = new("bTSi");
+        public LiteralBool FollowingTargetOrientation = new("bFTO");
+        public LiteralBool DocumentScaleEnabled = new("bDSE");
+        public LiteralBool AdjustToScreenEnabled = new("bATS");
+        public LiteralInt Life = new("Life");
+        public LiteralEnum<BinderRotation> BinderRotationType = new("RoTp");
+        public LiteralEnum<BinderType> BinderVariety = new("BnVr");
+        public AVFXBinderProperty PropStart = new("PrpS");
+        public AVFXBinderProperty Prop1 = new( "Prp1" );
+        public AVFXBinderProperty Prop2 = new( "Prp2" );
+        public AVFXBinderProperty PropGoal = new("PrpG");
 
         public BinderType Type;
         public AVFXBinderData Data;
-
-        List<Base> Attributes;
+        readonly List<Base> Attributes;
 
         public AVFXBinder() : base(NAME)
         {
@@ -65,7 +64,7 @@ namespace AVFXLib.Models
             ReadAVFX(Attributes, node);
             Type = BinderVariety.Value;
 
-            foreach (AVFXNode item in node.Children)
+            foreach (var item in node.Children)
             {
                 switch (item.Name)
                 {
@@ -80,7 +79,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode bindAvfx = new AVFXNode("Bind");
+            var bindAvfx = new AVFXNode("Bind");
             PutAVFX(bindAvfx, Attributes);
             PutAVFX(bindAvfx, Data);
 

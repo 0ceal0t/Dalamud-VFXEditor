@@ -39,7 +39,7 @@ namespace VFXSelect.UI {
             ImGui.SameLine();
             Dialog.DisplayPath( loadedItem.ImcPath );
 
-            int vfxIdx = 0;
+            var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();

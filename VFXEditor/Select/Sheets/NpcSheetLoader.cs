@@ -10,7 +10,7 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.Data.Sheets {
     public class NpcSheetLoader : SheetLoader<XivNpc, XivNpcSelected> {
 
-        public Dictionary<int, string> NpcIdToName = new Dictionary<int, string>();
+        public Dictionary<int, string> NpcIdToName = new();
         public NpcSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
@@ -38,14 +38,14 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivNpc item, out XivNpcSelected selectedItem ) {
             selectedItem = null;
-            string imcPath = item.GetImcPath();
-            bool result = PluginInterface.Data.FileExists( imcPath );
+            var imcPath = item.GetImcPath();
+            var result = PluginInterface.Data.FileExists( imcPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     var tmbPath = item.GetTmbPath();
-                    List<Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
-                    for( int spIdx = 1; spIdx < 35; spIdx++ ) {
+                    var files = new List<Lumina.Data.FileResource>();
+                    for( var spIdx = 1; spIdx < 35; spIdx++ ) {
                         var mainTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + ".tmb";
                         var hitTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + "_hit.tmb";
                         if( PluginInterface.Data.FileExists( mainTmb ) ) {

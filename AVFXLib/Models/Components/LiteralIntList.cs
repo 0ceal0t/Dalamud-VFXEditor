@@ -25,7 +25,7 @@ namespace AVFXLib.Models
         {
             Size = leaf.Size;
             Value.Clear();
-            for(int i = 0; i < Size; i++ )
+            for(var i = 0; i < Size; i++ )
             {
                 Value.Add( ( int )leaf.Contents[i] );
             }
@@ -69,8 +69,8 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            byte[] bytes = new byte[Value.Count];
-            for(int i = 0; i < Value.Count; i++ )
+            var bytes = new byte[Value.Count];
+            for(var i = 0; i < Value.Count; i++ )
             {
                 bytes[i] = Convert.ToByte( Value[i] );
             }

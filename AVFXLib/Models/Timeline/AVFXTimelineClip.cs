@@ -35,24 +35,24 @@ namespace AVFXLib.Models
         {
             Assigned = true;
 
-            AVFXLeaf leaf = (AVFXLeaf)node;
-            byte[] contents = leaf.Contents;
-            int offset = 0;
-            byte[] stringBytes = new byte[4];
+            var leaf = (AVFXLeaf)node;
+            var contents = leaf.Contents;
+            var offset = 0;
+            var stringBytes = new byte[4];
             Buffer.BlockCopy(contents, offset, stringBytes, 0, 4);
             UniqueId = Util.BytesToString(stringBytes);
             offset += 4;
 
-            for(int idx = 0; idx < 4; idx++)
+            for(var idx = 0; idx < 4; idx++)
             {
-                byte[] intBytes = new byte[4];
+                var intBytes = new byte[4];
                 Buffer.BlockCopy(contents, offset, intBytes, 0, 4);
                 UnknownInts[idx] = Util.Bytes4ToInt(intBytes);
                 offset += 4;
             }
-            for (int idx = 0; idx < 4; idx++)
+            for (var idx = 0; idx < 4; idx++)
             {
-                byte[] floatBytes = new byte[4];
+                var floatBytes = new byte[4];
                 Buffer.BlockCopy(contents, offset, floatBytes, 0, 4);
                 UnknownFloats[idx] = Util.Bytes4ToFloat(floatBytes);
                 offset += 4;
@@ -68,22 +68,22 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            byte[] contents = new byte[164];
-            int offset = 0;
+            var contents = new byte[164];
+            var offset = 0;
 
-            byte[] stringBytes = Util.StringToBytes(UniqueId);
+            var stringBytes = Util.StringToBytes(UniqueId);
             Buffer.BlockCopy(stringBytes, 0, contents, offset, 4);
             offset += 4;
 
-            for (int idx = 0; idx < 4; idx++)
+            for (var idx = 0; idx < 4; idx++)
             {
-                byte[] intBytes = Util.IntTo4Bytes(UnknownInts[idx]);
+                var intBytes = Util.IntTo4Bytes(UnknownInts[idx]);
                 Buffer.BlockCopy(intBytes, 0, contents, offset, 4);
                 offset += 4;
             }
-            for (int idx = 0; idx < 4; idx++)
+            for (var idx = 0; idx < 4; idx++)
             {
-                byte[] floatBytes = Util.FloatTo4Bytes(UnknownFloats[idx]);
+                var floatBytes = Util.FloatTo4Bytes(UnknownFloats[idx]);
                 Buffer.BlockCopy(floatBytes, 0, contents, offset, 4);
                 offset += 4;
             }

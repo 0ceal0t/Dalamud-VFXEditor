@@ -56,7 +56,7 @@ namespace VFXSelect.UI {
             //
             if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Loader.Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            bool ResetScroll = false;
+            var ResetScroll = false;
             DrawExtra();
             if( ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) ) {
                 Searched = Loader.Items.Where( x => CheckMatch(x, SearchInput )).ToList();
@@ -64,16 +64,16 @@ namespace VFXSelect.UI {
             }
             ImGui.Columns( 2, Id + "Columns", true );
             ImGui.BeginChild( Id + "Tree" );
-            VFXSelectDialog.DisplayVisible( Searched.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            VFXSelectDialog.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
             if( ResetScroll ) { ImGui.SetScrollHereY(); };
-            int idx = 0;
+            var idx = 0;
             foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( UniqueRowTitle(item), EqualityComparer<T>.Default.Equals( Selected, item) ) ) {
                     if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
                         Task.Run( async () => {
-                            bool result = Loader.SelectItem( item, out Loaded );
+                            var result = Loader.SelectItem( item, out Loaded );
                         });
                         Selected = item;
                         OnSelect();
@@ -121,8 +121,8 @@ namespace VFXSelect.UI {
         }
 
         public static byte[] BGRA_to_RGBA( byte[] data ) {
-            byte[] ret = new byte[data.Length];
-            for( int i = 0; i < data.Length / 4; i++ ) {
+            var ret = new byte[data.Length];
+            for( var i = 0; i < data.Length / 4; i++ ) {
                 var idx = i * 4;
                 ret[idx + 0] = data[idx + 2];
                 ret[idx + 1] = data[idx + 1];

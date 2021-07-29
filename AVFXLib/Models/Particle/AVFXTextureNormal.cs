@@ -10,15 +10,14 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureNormal : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
-        public LiteralInt TextureIdx = new LiteralInt("TxNo");
-        public AVFXCurve NPow = new AVFXCurve("NPow");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralInt UvSetIdx = new("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new("TBVT");
+        public LiteralInt TextureIdx = new("TxNo");
+        public AVFXCurve NPow = new("NPow");
+        readonly List<Base> Attributes;
 
         public AVFXTextureNormal() : base("TN")
         {
@@ -50,7 +49,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("TN");
+            var dataAvfx = new AVFXNode("TN");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

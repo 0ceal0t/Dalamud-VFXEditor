@@ -46,7 +46,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            byte[] bytes = new byte[0];
+            var bytes = new byte[0];
             if (Size == 4)
             {
                 bytes = BitConverter.GetBytes(Convert.ToInt32(Value));

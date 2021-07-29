@@ -41,9 +41,7 @@ namespace VFXEditor {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
-                var oldTex = TexManager;
-                TexManager = new TextureManager( this );
-                oldTex.Dispose();
+                TextureManager.ResetInstance( PluginInterface );
 
                 var oldDoc = DocManager;
                 DocManager = new DocumentManager( this );
@@ -88,9 +86,7 @@ namespace VFXEditor {
 
             IsLoading = true;
 
-            var oldTex = TexManager;
-            TexManager = new TextureManager( this );
-            oldTex.Dispose();
+            TextureManager.ResetInstance( PluginInterface );
 
             var texRootPath = Path.Combine( loadLocation, "Tex" );
             foreach( var tex in meta.Tex ) {

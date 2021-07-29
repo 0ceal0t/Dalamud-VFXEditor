@@ -9,12 +9,11 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLine : AVFXParticleData
     {
-        public LiteralInt LineCount = new LiteralInt( "LnCT" );
-        public AVFXCurve Length = new AVFXCurve( "Len" );
-        public AVFXCurveColor ColorBegin = new AVFXCurveColor(name: "ColB" );
-        public AVFXCurveColor ColorEnd = new AVFXCurveColor(name: "ColE" );
-
-        List<Base> Attributes;
+        public LiteralInt LineCount = new( "LnCT" );
+        public AVFXCurve Length = new( "Len" );
+        public AVFXCurveColor ColorBegin = new(name: "ColB" );
+        public AVFXCurveColor ColorEnd = new(name: "ColE" );
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataLine() : base("Data")
         {
@@ -39,7 +38,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

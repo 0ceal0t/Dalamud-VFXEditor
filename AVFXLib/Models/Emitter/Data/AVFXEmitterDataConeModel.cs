@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 
 namespace AVFXLib.Models {
     public class AVFXEmitterDataConeModel : AVFXEmitterData {
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "ROT" );
-        public LiteralEnum<GenerateMethod> GenerateMethodType = new LiteralEnum<GenerateMethod>( "GeMT" );
-        public LiteralInt DivideX = new LiteralInt( "DivX" );
-        public LiteralInt DivideY = new LiteralInt( "DivY" );
-        public AVFXCurve AX = new AVFXCurve( "AnX" );
-        public AVFXCurve AY = new AVFXCurve( "AnY" );
-        public AVFXCurve Radius = new AVFXCurve( "Rad" );
-        public AVFXCurve InjectionSpeed = new AVFXCurve( "IjS" );
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
-        public AVFXCurve InjectionAngle = new AVFXCurve( "IjA" );
-
-        List<Base> Attributes;
+        public LiteralEnum<RotationOrder> RotationOrderType = new( "ROT" );
+        public LiteralEnum<GenerateMethod> GenerateMethodType = new( "GeMT" );
+        public LiteralInt DivideX = new( "DivX" );
+        public LiteralInt DivideY = new( "DivY" );
+        public AVFXCurve AX = new( "AnX" );
+        public AVFXCurve AY = new( "AnY" );
+        public AVFXCurve Radius = new( "Rad" );
+        public AVFXCurve InjectionSpeed = new( "IjS" );
+        public AVFXCurve InjectionSpeedRandom = new( "IjSR" );
+        public AVFXCurve InjectionAngle = new( "IjA" );
+        readonly List<Base> Attributes;
 
         public AVFXEmitterDataConeModel() : base( "Data" ) {
             Attributes = new List<Base>( new Base[] {
@@ -46,7 +45,7 @@ namespace AVFXLib.Models {
         }
 
         public override AVFXNode ToAVFX() {
-            AVFXNode dataAvfx = new AVFXNode( "Data" );
+            var dataAvfx = new AVFXNode( "Data" );
             PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }

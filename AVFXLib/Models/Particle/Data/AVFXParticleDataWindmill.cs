@@ -9,9 +9,8 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataWindmill : AVFXParticleData
     {
-        public LiteralEnum<WindmillUVType> WindmillUVType = new LiteralEnum<WindmillUVType>("WUvT");
-
-        List<Base> Attributes;
+        public LiteralEnum<WindmillUVType> WindmillUVType = new("WUvT");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataWindmill() : base("Data")
         {
@@ -34,7 +33,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

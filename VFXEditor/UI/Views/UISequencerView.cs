@@ -30,7 +30,7 @@ namespace VFXEditor.UI.Views {
         }
 
         public void SetupIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
+            for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }
         }
@@ -40,29 +40,29 @@ namespace VFXEditor.UI.Views {
         public float Max = 60;
         public float Min = 0;
 
-        static int LeftWidth = 125;
-        static int HeaderHeight = 25;
-        static int FooterHeight = 15;
-        static int RowHeight = 20;
-        static int GrabWidth = 10;
+        static readonly int LeftWidth = 125;
+        static readonly int HeaderHeight = 25;
+        static readonly int FooterHeight = 15;
+        static readonly int RowHeight = 20;
+        static readonly int GrabWidth = 10;
 
-        static uint BlackLine_Color = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
-        static uint BlackLine_Color_Soft = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 0.5f ) );
-        static uint ContentColor_Odd = ImGui.GetColorU32( new Vector4( 0.43f, 0.43f, 0.43f, 0.5f ) );
-        static uint ContentColor_Even = ImGui.GetColorU32( new Vector4( 0.23f, 0.23f, 0.23f, 0.4f ) );
-        static uint ContentColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.07f, 0, 1 ) );
-        static uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.7f, 1 ) );
-        static uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
-        static uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.216f, 1 ) );
-        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
-        static uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
-        static uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
-        static uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
-        static uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
-        static uint TickColor = ImGui.GetColorU32( new Vector4( 0.376f, 0.376f, 0.376f, 1 ) );
+        static readonly uint BlackLine_Color = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
+        static readonly uint BlackLine_Color_Soft = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 0.5f ) );
+        static readonly uint ContentColor_Odd = ImGui.GetColorU32( new Vector4( 0.43f, 0.43f, 0.43f, 0.5f ) );
+        static readonly uint ContentColor_Even = ImGui.GetColorU32( new Vector4( 0.23f, 0.23f, 0.23f, 0.4f ) );
+        static readonly uint ContentColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.07f, 0, 1 ) );
+        static readonly uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.7f, 1 ) );
+        static readonly uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
+        static readonly uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.216f, 1 ) );
+        static readonly uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        static readonly uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
+        static readonly uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
+        static readonly uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        static readonly uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
+        static readonly uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
+        static readonly uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
+        static readonly uint TickColor = ImGui.GetColorU32( new Vector4( 0.376f, 0.376f, 0.376f, 1 ) );
 
         float ScrollY = 0;
 
@@ -113,7 +113,7 @@ namespace VFXEditor.UI.Views {
             }
 
             var space = ImGui.GetContentRegionAvail();
-            Vector2 Size = new Vector2( space.X, 200 );
+            var Size = new Vector2( space.X, 200 );
             var DrawList = ImGui.GetWindowDrawList();
 
             ImGui.BeginGroup();
@@ -136,7 +136,7 @@ namespace VFXEditor.UI.Views {
             var FooterSize = new Vector2( ContentSize.X  - 15, FooterHeight );
 
             var Diff = MaxVisible - MinVisible;
-            float PixelsPerFrame = TimelineSize.X / Diff;
+            var PixelsPerFrame = TimelineSize.X / Diff;
 
             DrawList.AddRectFilled( CanvasTopLeft, CanvasTopLeft + HeaderSize, HeaderColor );
             DrawList.AddRectFilled( ContentPosition, ContentPosition + ContentSize, HeaderColor );
@@ -169,8 +169,8 @@ namespace VFXEditor.UI.Views {
 
             // ==== DRAW TIMELINE ====
             DrawList.PushClipRect( TimelinePosition, TimelinePosition + TimelineSize + new Vector2(0, ContentSize.Y), true );
-            float _smallTick = 0.5f; // how many frames per tick?
-            float _largeTick = 1.0f;
+            var _smallTick = 0.5f; // how many frames per tick?
+            var _largeTick = 1.0f;
             if( PixelsPerFrame < 5 ) {
                 _smallTick = 10;
                 _largeTick = 50;
@@ -191,11 +191,11 @@ namespace VFXEditor.UI.Views {
             var _smallOffset = -(MinVisible % _smallTick);
             var _largeOffset = -(MinVisible % _largeTick);
 
-            for(int i = 0; i <= (_maxSmall - _minSmall) / _smallTick; i++ ) {
+            for(var i = 0; i <= (_maxSmall - _minSmall) / _smallTick; i++ ) {
                 var position = TimelinePosition + new Vector2( ( _smallOffset + i * _smallTick ) * PixelsPerFrame, HeaderHeight );
                 DrawList.AddLine( position + new Vector2( 0, ContentSize.Y ), position + new Vector2( 0, -7 ), TickColor, 1 );
             }
-            for( int i = 0; i <= ( _maxLarge - _minLarge ) / _largeTick; i++ ) {
+            for( var i = 0; i <= ( _maxLarge - _minLarge ) / _largeTick; i++ ) {
                 var _time = _minLarge + i * _largeTick;
                 var position = TimelinePosition + new Vector2( ( _largeOffset + i * _largeTick ) * PixelsPerFrame, HeaderHeight );
                 DrawList.AddLine( position + new Vector2( 0, ContentSize.Y ), position + new Vector2( 0, -20 ), TickColor, 1 );
@@ -211,11 +211,11 @@ namespace VFXEditor.UI.Views {
             var content_hovering = Contained( ImGui.GetMousePos(), ContentPosition, ContentSize );
 
             DrawList.PushClipRect( ContentPosition, ContentPosition + ContentSize, true );
-            for(int idx = 0; idx < Math.Ceiling(Math.Max(Items.Count, ContentSize.Y / RowHeight)); idx++ ) {
+            for(var idx = 0; idx < Math.Ceiling(Math.Max(Items.Count, ContentSize.Y / RowHeight)); idx++ ) {
                 var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddRectFilled( _position, _position + new Vector2( ContentSize.X, RowHeight ), idx % 2 == 0 ? ContentColor_Even : ContentColor_Odd ); // STRIPE
             }
-            for( int idx = 0; idx < Items.Count; idx++ ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 float _start = GetStart( item );
                 float _end = GetEnd( item );
@@ -223,8 +223,8 @@ namespace VFXEditor.UI.Views {
                 if( _isInfinite ) { // stretch it to the end
                     _end = MaxVisible;
                 }
-                float _startOffset = PixelsPerFrame * ( _start - MinVisible );
-                float _endOffset = PixelsPerFrame * ( _end - MinVisible );
+                var _startOffset = PixelsPerFrame * ( _start - MinVisible );
+                var _endOffset = PixelsPerFrame * ( _end - MinVisible );
                 var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddLine( _position, _position + new Vector2( ContentSize.X, 0 ), BlackLine_Color_Soft );
                 if( item == Selected ) {
@@ -259,7 +259,7 @@ namespace VFXEditor.UI.Views {
 
             // ======= DRAW LEFT =========
             DrawList.PushClipRect( LeftPosition, LeftPosition + LeftSize, true );
-            for( int idx = 0; idx < Items.Count; idx++ ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 var _position = LeftPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddText( _position + new Vector2( 5, 2 ), item == Selected ? LeftTextColor_SelectedColor : LeftTextColor, item.GetText() );

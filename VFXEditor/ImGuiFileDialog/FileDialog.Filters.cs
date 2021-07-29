@@ -25,10 +25,10 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private List<FilterStruct> Filters = new();
+        private readonly List<FilterStruct> Filters = new();
         private FilterStruct SelectedFilter;
 
-        public static Regex FilterRegex = new Regex( @"[^,{}]+(\{([^{}]*?)\})?", RegexOptions.Compiled );
+        public static Regex FilterRegex = new( @"[^,{}]+(\{([^{}]*?)\})?", RegexOptions.Compiled );
 
         private void ParseFilters(string filters) {
             // ".*,.cpp,.h,.hpp"
@@ -38,7 +38,7 @@ namespace ImGuiFileDialog {
             if( filters.Length == 0 ) return;
 
             var currentFilterFound = false;
-            MatchCollection matches = FilterRegex.Matches( filters );
+            var matches = FilterRegex.Matches( filters );
             foreach( Match m in matches ) {
                 var match = m.Value;
                 FilterStruct filter = new();

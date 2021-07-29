@@ -11,16 +11,15 @@ namespace AVFXLib.Models
     {
         public const string NAME = "TmLn";
 
-        public LiteralInt LoopStart = new LiteralInt("LpSt");
-        public LiteralInt LoopEnd = new LiteralInt("LpEd");
-        public LiteralInt BinderIdx = new LiteralInt("BnNo");
-        public LiteralInt TimelineCount = new LiteralInt("TICn");
-        public LiteralInt ClipCount = new LiteralInt("CpCn");
+        public LiteralInt LoopStart = new("LpSt");
+        public LiteralInt LoopEnd = new("LpEd");
+        public LiteralInt BinderIdx = new("BnNo");
+        public LiteralInt TimelineCount = new("TICn");
+        public LiteralInt ClipCount = new("CpCn");
+        readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public List<AVFXTimelineSubItem> Items = new List<AVFXTimelineSubItem>();
-        public List<AVFXTimelineClip> Clips = new List<AVFXTimelineClip>();
+        public List<AVFXTimelineSubItem> Items = new();
+        public List<AVFXTimelineClip> Clips = new();
 
         public AVFXTimeline() : base(NAME)
         {
@@ -40,7 +39,7 @@ namespace AVFXLib.Models
 
             AVFXTimelineItem lastItem = null;
 
-            foreach (AVFXNode item in node.Children)
+            foreach (var item in node.Children)
             {
                 switch (item.Name)
                 {
@@ -51,7 +50,7 @@ namespace AVFXLib.Models
                         break;
                     // CLIPS ====================
                     case AVFXTimelineClip.NAME:
-                        AVFXTimelineClip Clip = new AVFXTimelineClip();
+                        var Clip = new AVFXTimelineClip();
                         Clip.Read(item);
                         Clips.Add(Clip);
                         break;
@@ -66,7 +65,7 @@ namespace AVFXLib.Models
 
         public AVFXTimelineSubItem AddItem()
         {
-            AVFXTimelineSubItem Item = new AVFXTimelineSubItem();
+            var Item = new AVFXTimelineSubItem();
             Item.ToDefault();
             Items.Add(Item);
             TimelineCount.GiveValue(Items.Count());
@@ -87,7 +86,7 @@ namespace AVFXLib.Models
         }
         public AVFXTimelineClip AddClip()
         {
-            AVFXTimelineClip Clip = new AVFXTimelineClip();
+            var Clip = new AVFXTimelineClip();
             Clip.ToDefault();
             Clips.Add(Clip);
             ClipCount.GiveValue(Clips.Count());
@@ -109,22 +108,23 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode tmlnAvfx = new AVFXNode("TmLn");
+            var tmlnAvfx = new AVFXNode("TmLn");
 
             PutAVFX(tmlnAvfx, Attributes);
 
             // Items
             //=======================//
-            for (int i = 0; i < Items.Count(); i++)
+            for (var i = 0; i < Items.Count(); i++)
             {
-                AVFXTimelineItem Item = new AVFXTimelineItem();
-                Item.SubItems = Items.GetRange(0, i + 1);
+                var Item = new AVFXTimelineItem {
+                    SubItems = Items.GetRange( 0, i + 1 )
+                };
                 tmlnAvfx.Children.Add(Item.ToAVFX());
             }
 
             // Clips
             //=======================//
-            foreach (AVFXTimelineClip clipElem in Clips)
+            foreach (var clipElem in Clips)
             {
                 PutAVFX(tmlnAvfx, clipElem);
             }

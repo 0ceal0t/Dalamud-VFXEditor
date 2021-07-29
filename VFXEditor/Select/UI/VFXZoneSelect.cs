@@ -27,7 +27,7 @@ namespace VFXSelect.UI {
             ImGui.Text( "LGB Path: " );
             ImGui.SameLine();
             Dialog.DisplayPath( loadedItem.Zone.LgbPath );
-            int vfxIdx = 0;
+            var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();

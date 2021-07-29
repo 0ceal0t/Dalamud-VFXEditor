@@ -10,9 +10,9 @@ namespace AVFXLib.Models
 
     public class AVFXScheduleSubItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralInt StartTime = new LiteralInt("StTm");
-        public LiteralInt TimelineIdx = new LiteralInt("TlNo");
+        public LiteralBool Enabled = new("bEna");
+        public LiteralInt StartTime = new("StTm");
+        public LiteralInt TimelineIdx = new("TlNo");
 
         public List<Base> Attributes;
 
@@ -40,7 +40,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("SubItem");
+            var dataAvfx = new AVFXNode("SubItem");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

@@ -9,19 +9,18 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureColor2 : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralBool ColorToAlpha = new LiteralBool("bC2A");
-        public LiteralBool UseScreenCopy = new LiteralBool("bUSC");
-        public LiteralBool PreviousFrameCopy = new LiteralBool("bPFC");
-        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
-        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("TCCT");
-        public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new LiteralEnum<TextureCalculateAlpha>("TCAT");
-        public LiteralInt TextureIdx = new LiteralInt("TxNo");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralBool ColorToAlpha = new("bC2A");
+        public LiteralBool UseScreenCopy = new("bUSC");
+        public LiteralBool PreviousFrameCopy = new("bPFC");
+        public LiteralInt UvSetIdx = new("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new("TBVT");
+        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new("TCCT");
+        public LiteralEnum<TextureCalculateAlpha> TextureCalculateAlpha = new("TCAT");
+        public LiteralInt TextureIdx = new("TxNo");
+        readonly List<Base> Attributes;
 
         public AVFXTextureColor2(string avfxName) : base(avfxName)
         {
@@ -54,7 +53,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode(AVFXName);
+            var dataAvfx = new AVFXNode(AVFXName);
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

@@ -19,7 +19,7 @@ namespace VFXSelect.Data.Rows {
              * Gear: [Id, Var, -, -] / [-,-,-,-]
              * Weapon: [Id, Var, Id, -] / [Id, Var, Id, -]
              */
-            byte[] b = BitConverter.GetBytes( modelDataRaw );
+            var b = BitConverter.GetBytes( modelDataRaw );
             PrimaryId = BitConverter.ToInt16( b, 0 ); // primary key
             PrimaryVar = BitConverter.ToInt16( b, 2 ); // primary variant (weapon if != 0)
             SecondaryId = BitConverter.ToInt16( b, 4 ); // secondary key
@@ -58,18 +58,18 @@ namespace VFXSelect.Data.Rows {
 
             if( HasSub )
             {
-                var sItem = new Lumina.Excel.GeneratedSheets.Item();
-
-                sItem.Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) );
-                sItem.Icon = item.Icon;
-                sItem.EquipRestriction = item.EquipRestriction;
-                sItem.EquipSlotCategory = item.EquipSlotCategory;
-                sItem.ItemSearchCategory = item.ItemSearchCategory;
-                sItem.ItemSortCategory = item.ItemSortCategory;
-                sItem.ClassJobCategory = item.ClassJobCategory;
-                sItem.ItemUICategory = item.ItemUICategory;
-                sItem.ModelMain = item.ModelSub;
-                sItem.ModelSub = 0;
+                var sItem = new Lumina.Excel.GeneratedSheets.Item {
+                    Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) ),
+                    Icon = item.Icon,
+                    EquipRestriction = item.EquipRestriction,
+                    EquipSlotCategory = item.EquipSlotCategory,
+                    ItemSearchCategory = item.ItemSearchCategory,
+                    ItemSortCategory = item.ItemSortCategory,
+                    ClassJobCategory = item.ClassJobCategory,
+                    ItemUICategory = item.ItemUICategory,
+                    ModelMain = item.ModelSub,
+                    ModelSub = 0
+                };
                 SubItem = new XivItem( sItem );
             }
 

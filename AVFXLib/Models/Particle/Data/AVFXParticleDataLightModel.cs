@@ -9,9 +9,8 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLightModel : AVFXParticleData
     {
-        public LiteralInt ModelIdx = new LiteralInt("MNO", size: 1);
-
-        List<Base> Attributes;
+        public LiteralInt ModelIdx = new("MNO", size: 1);
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataLightModel() : base("Data")
         {
@@ -34,7 +33,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

@@ -9,10 +9,9 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataCamera : AVFXBinderData
     {
-        public AVFXCurve Distance = new AVFXCurve("Dst");
-        public AVFXCurve DistanceRandom = new AVFXCurve( "DstR" );
-
-        List<Base> Attributes;
+        public AVFXCurve Distance = new("Dst");
+        public AVFXCurve DistanceRandom = new( "DstR" );
+        readonly List<Base> Attributes;
 
         public AVFXBinderDataCamera() : base("Data")
         {
@@ -36,7 +35,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

@@ -48,7 +48,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            byte[] bytes = new byte[0];
+            var bytes = new byte[0];
             if(Size == 4)
             {
                 bytes = Util.BoolTo4Bytes(Value);

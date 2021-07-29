@@ -26,7 +26,7 @@ namespace VFXEditor.UI
 
         public override void OnDraw() {
             var id = "##Textools";
-            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );

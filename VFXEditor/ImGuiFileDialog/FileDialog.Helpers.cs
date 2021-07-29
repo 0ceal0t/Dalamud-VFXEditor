@@ -16,9 +16,9 @@ namespace ImGuiFileDialog {
             string[] suf = { " B", " KB", " MB", " GB", " TB"};
             if( byteCount == 0 )
                 return "0" + suf[0];
-            long bytes = Math.Abs( byteCount );
-            int place = Convert.ToInt32( Math.Floor( Math.Log( bytes, 1024 ) ) );
-            double num = Math.Round( bytes / Math.Pow( 1024, place ), 1 );
+            var bytes = Math.Abs( byteCount );
+            var place = Convert.ToInt32( Math.Floor( Math.Log( bytes, 1024 ) ) );
+            var num = Math.Round( bytes / Math.Pow( 1024, place ), 1 );
             return ( Math.Sign( byteCount ) * num ).ToString() + suf[place];
         }
     }

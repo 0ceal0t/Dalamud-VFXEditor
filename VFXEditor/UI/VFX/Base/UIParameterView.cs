@@ -12,7 +12,7 @@ namespace VFXEditor.UI.VFX
     public class UIParameterView : UIBase
     {
         public AVFXBase AVFX;
-        public List<UIBase> Attributes = new List<UIBase>();
+        public List<UIBase> Attributes = new();
         // ======================
         public int[] Version = new int[4];
         public UIFloat3 RevisedScale;
@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX
             AVFX = avfx;
             // =====================
             var versionBytes = AVFXLib.Main.Util.IntTo4Bytes( AVFX.Version.Value );
-            for(int i = 0; i < versionBytes.Length; i++ ) {
+            for(var i = 0; i < versionBytes.Length; i++ ) {
                 Version[i] = versionBytes[i];
             }
             RevisedScale = new UIFloat3( "Revised Scale", AVFX.RevisedValuesScaleX, AVFX.RevisedValuesScaleY, AVFX.RevisedValuesScaleZ );
@@ -64,7 +64,7 @@ namespace VFXEditor.UI.VFX
 
         public override void Draw(string parentId = "")
         {
-            string id = "##AVFX";
+            var id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
             ImGui.Text( "VFX Version: " + Version[0] + "." + Version[1] + "." + Version[2] + "." + Version[3] );
             if(ImGui.InputFloat("Revised Scale (Combined)", ref ScaleCombined ) ) {

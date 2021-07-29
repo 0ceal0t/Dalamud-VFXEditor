@@ -22,7 +22,7 @@ namespace VFXEditor.UI.VFX
             return item.Emitter.ToAVFX().ToBytes();
         }
         public override UIEmitter OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXEmitter item = new AVFXEmitter();
+            var item = new AVFXEmitter();
             item.Read( node );
             AVFX.AddEmitter( item );
             return new UIEmitter( Main, item, has_dependencies );

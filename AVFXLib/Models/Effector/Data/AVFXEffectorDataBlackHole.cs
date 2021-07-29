@@ -11,7 +11,7 @@ namespace AVFXLib.Models
     {
         // TODO: DON'T HAVE COMPLETE DATA
 
-        List<Base> Attributes;
+        readonly List<Base> Attributes;
 
         public AVFXEffectorDataBlackHole() : base("Data")
         {
@@ -33,7 +33,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

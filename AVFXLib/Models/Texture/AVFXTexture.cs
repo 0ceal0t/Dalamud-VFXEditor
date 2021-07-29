@@ -11,7 +11,7 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Tex";
 
-        public LiteralString Path = new LiteralString(NAME);
+        public LiteralString Path = new(NAME);
 
         public AVFXTexture() : base(NAME)
         {
@@ -21,8 +21,8 @@ namespace AVFXLib.Models
         {
             Assigned = true;
 
-            AVFXLeaf leaf = (AVFXLeaf)node;
-            string Value = Encoding.ASCII.GetString(leaf.Contents);
+            var leaf = (AVFXLeaf)node;
+            var Value = Encoding.ASCII.GetString(leaf.Contents);
             Path.GiveValue(Value);
         }
 

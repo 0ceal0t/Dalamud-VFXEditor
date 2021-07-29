@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void DrawLeftCol( string parentId ) {
-            for( int idx = 0; idx < Group.Items.Count; idx++ ) {
+            for( var idx = 0; idx < Group.Items.Count; idx++ ) {
                 var item = Group.Items[idx];
                 if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                     Selected = item;

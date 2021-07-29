@@ -17,7 +17,7 @@ namespace VFXEditor.UI.VFX {
             SetupIdx();
         }
         public void SetupIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
+            for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }
         }

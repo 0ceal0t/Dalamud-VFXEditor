@@ -9,34 +9,33 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterIterationItem : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEnb");
-        public LiteralInt TargetIdx = new LiteralInt("TgtB");
-        public LiteralInt LocalDirection = new LiteralInt("LoDr");
-        public LiteralInt CreateTime = new LiteralInt("CrTm");
-        public LiteralInt CreateCount = new LiteralInt("CrCn");
-        public LiteralInt CreateProbability = new LiteralInt("CrPr");
-        public LiteralInt ParentInfluenceCoord = new LiteralInt("PICd");
-        public LiteralInt ParentInfluenceColor = new LiteralInt("PICo");
-        public LiteralInt InfluenceCoordScale = new LiteralInt("ICbS");
-        public LiteralInt InfluenceCoordRot = new LiteralInt("ICbR");
-        public LiteralInt InfluenceCoordPos = new LiteralInt("ICbP");
-        public LiteralInt InfluenceCoordBinderPosition = new LiteralInt("ICbB");
-        public LiteralInt InfluenceCoordUnstickiness = new LiteralInt("ICSK");
-        public LiteralInt InheritParentVelocity = new LiteralInt("IPbV");
-        public LiteralInt InheritParentLife = new LiteralInt("IPbL");
-        public LiteralBool OverrideLife = new LiteralBool("bOvr");
-        public LiteralInt OverrideLifeValue = new LiteralInt("OvrV");
-        public LiteralInt OverrideLifeRandom = new LiteralInt("OvrR");
-        public LiteralInt ParameterLink = new LiteralInt("PrLk");
-        public LiteralInt StartFrame = new LiteralInt("StFr");
-        public LiteralBool StartFrameNullUpdate = new LiteralBool("bStN");
-        public LiteralFloat ByInjectionAngleX = new LiteralFloat("BIAX");
-        public LiteralFloat ByInjectionAngleY = new LiteralFloat("BIAY");
-        public LiteralFloat ByInjectionAngleZ = new LiteralFloat("BIAZ");
-        public LiteralInt GenerateDelay = new LiteralInt("GenD");
-        public LiteralBool GenerateDelayByOne = new LiteralBool("bGD");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEnb");
+        public LiteralInt TargetIdx = new("TgtB");
+        public LiteralInt LocalDirection = new("LoDr");
+        public LiteralInt CreateTime = new("CrTm");
+        public LiteralInt CreateCount = new("CrCn");
+        public LiteralInt CreateProbability = new("CrPr");
+        public LiteralInt ParentInfluenceCoord = new("PICd");
+        public LiteralInt ParentInfluenceColor = new("PICo");
+        public LiteralInt InfluenceCoordScale = new("ICbS");
+        public LiteralInt InfluenceCoordRot = new("ICbR");
+        public LiteralInt InfluenceCoordPos = new("ICbP");
+        public LiteralInt InfluenceCoordBinderPosition = new("ICbB");
+        public LiteralInt InfluenceCoordUnstickiness = new("ICSK");
+        public LiteralInt InheritParentVelocity = new("IPbV");
+        public LiteralInt InheritParentLife = new("IPbL");
+        public LiteralBool OverrideLife = new("bOvr");
+        public LiteralInt OverrideLifeValue = new("OvrV");
+        public LiteralInt OverrideLifeRandom = new("OvrR");
+        public LiteralInt ParameterLink = new("PrLk");
+        public LiteralInt StartFrame = new("StFr");
+        public LiteralBool StartFrameNullUpdate = new("bStN");
+        public LiteralFloat ByInjectionAngleX = new("BIAX");
+        public LiteralFloat ByInjectionAngleY = new("BIAY");
+        public LiteralFloat ByInjectionAngleZ = new("BIAZ");
+        public LiteralInt GenerateDelay = new("GenD");
+        public LiteralBool GenerateDelayByOne = new("bGD");
+        readonly List<Base> Attributes;
 
 
         public AVFXEmitterIterationItem() : base("ItPr_Item")
@@ -110,7 +109,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("ItPr_Item");
+            var dataAvfx = new AVFXNode("ItPr_Item");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

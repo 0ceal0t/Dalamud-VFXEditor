@@ -10,9 +10,9 @@ namespace VFXSelect.Data.Rows {
     public class XivZoneSelected {
 
         public XivZone Zone;
-        public List<string> VfxPaths = new List<string>();
+        public List<string> VfxPaths = new();
 
-        public static Regex rx = new Regex( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivZoneSelected( Lumina.Data.Files.LgbFile file, XivZone zone ) {
             Zone = zone;
@@ -20,8 +20,8 @@ namespace VFXSelect.Data.Rows {
             if( file != null ) {
                 var data = file.Data;
 
-                string stringData = Encoding.UTF8.GetString( data );
-                MatchCollection matches = rx.Matches( stringData );
+                var stringData = Encoding.UTF8.GetString( data );
+                var matches = rx.Matches( stringData );
                 foreach( Match m in matches ) {
                     VfxPaths.Add( m.Value.Trim( '\u0000') );
                 }

@@ -29,7 +29,7 @@ namespace VFXEditor
             Visible
         }
         private RedrawState CurrentRedrawState = RedrawState.None;
-        IntPtr RenderPtr;
+        private IntPtr RenderPtr;
 
         // ===== FILES =========
         [Function( CallingConventions.Microsoft )]
@@ -68,14 +68,14 @@ namespace VFXEditor
 
         // ======== ACTOR =============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate VfxStruct* ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
+        public unsafe delegate VfxStruct* ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public ActorVfxCreateDelegate ActorVfxCreate;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate( VfxStruct* vfx, char a2 );
         public ActorVfxRemoveDelegate ActorVfxRemove;
         // ======== ACTOR HOOKS =============
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate VfxStruct* ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, UInt16 a6, char a7 );
+        public unsafe delegate VfxStruct* ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public IHook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate2( VfxStruct* vfx, char a2 );
@@ -149,7 +149,7 @@ namespace VFXEditor
         private unsafe VfxStruct* ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
-            Plugin.Tracker?.AddActor( a2, vfx, vfxPath );
+            Plugin.Tracker?.AddActor( vfx, vfxPath );
             return vfx;
         }
 
@@ -327,7 +327,7 @@ namespace VFXEditor
                 Disable();
         }
 
-        public unsafe static string GetString(StdString str) {
+        public static unsafe string GetString(StdString str) {
             var len = (int) str.Size;
             if( len > 15 ) {
                 return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );

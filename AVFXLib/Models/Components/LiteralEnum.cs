@@ -23,7 +23,7 @@ namespace AVFXLib.Models
 
         public override void read( AVFXLeaf leaf)
         {
-            int intValue = Util.Bytes4ToInt(leaf.Contents);
+            var intValue = Util.Bytes4ToInt(leaf.Contents);
             //if (intValue != -1) // means none
             //{
                 Value = (T)(object)intValue;
@@ -35,7 +35,7 @@ namespace AVFXLib.Models
 
         public void GiveValue(string value)
         {
-            T enumValue = (T)Enum.Parse(typeof(T), value, true);
+            var enumValue = (T)Enum.Parse(typeof(T), value, true);
             GiveValue(enumValue);
         }
         public void GiveValue(T value)
@@ -52,7 +52,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            int enumValue = -1;
+            var enumValue = -1;
             if(Value != null)
             {
                 enumValue = (int)(object)Value;

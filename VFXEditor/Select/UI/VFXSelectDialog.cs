@@ -37,9 +37,10 @@ namespace VFXSelect.UI
         }
 
         public static VFXSelectResult None() {
-            var s = new VFXSelectResult();
-            s.DisplayString = "[NONE]";
-            s.Path = "";
+            var s = new VFXSelectResult {
+                DisplayString = "[NONE]",
+                Path = ""
+            };
             return s;
         }
     }
@@ -52,14 +53,14 @@ namespace VFXSelect.UI
         public event Action<VFXSelectResult> OnSelect;
         public bool Visible = false;
 
-        private bool ShowSpawn = false;
-        private Func<bool> SpawnVfxExists;
-        private Action RemoveSpawnVfx;
-        private Action<string> SpawnOnGround;
-        private Action<string> SpawnOnSelf;
-        private Action<string> SpawnOnTarget;
+        private readonly bool ShowSpawn = false;
+        private readonly Func<bool> SpawnVfxExists;
+        private readonly Action RemoveSpawnVfx;
+        private readonly Action<string> SpawnOnGround;
+        private readonly Action<string> SpawnOnSelf;
+        private readonly Action<string> SpawnOnTarget;
 
-        private FileDialogManager DialogManager;
+        private readonly FileDialogManager DialogManager;
 
         public List<VFXSelectTab> GameTabs;
         public List<VFXSelectResult> RecentList;
@@ -201,9 +202,9 @@ namespace VFXSelect.UI
                 return;
             var id = "##Recent/" + Id;
 
-            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
-            int idx = 0;
+            var idx = 0;
             foreach(var item in RecentList ) {
                 if( item.Type == VFXSelectType.Local && !ShowLocal )
                     continue;
@@ -276,7 +277,7 @@ namespace VFXSelect.UI
         }
 
         public static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight) {
-            float childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
+            var childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
             var scrollY = ImGui.GetScrollY();
             var style = ImGui.GetStyle();
             itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;

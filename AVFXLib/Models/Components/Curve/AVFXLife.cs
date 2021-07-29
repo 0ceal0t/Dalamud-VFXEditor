@@ -14,11 +14,10 @@ namespace AVFXLib.Models
 
         public bool Enabled;
 
-        public LiteralFloat Value = new LiteralFloat("Val");
-        public LiteralFloat ValRandom = new LiteralFloat("ValR");
-        public LiteralEnum<RandomType> ValRandomType = new LiteralEnum<RandomType>("Type");
-
-        List<Base> Attributes;
+        public LiteralFloat Value = new("Val");
+        public LiteralFloat ValRandom = new("ValR");
+        public LiteralEnum<RandomType> ValRandomType = new("Type");
+        readonly List<Base> Attributes;
 
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT
 
@@ -53,7 +52,7 @@ namespace AVFXLib.Models
         {
             if (Enabled)
             {
-                AVFXNode lifeAvfx = new AVFXNode("Life");
+                var lifeAvfx = new AVFXNode("Life");
                 PutAVFX(lifeAvfx, Attributes);
 
                 return lifeAvfx;

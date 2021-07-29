@@ -11,43 +11,42 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Emit";
 
-        public LiteralString Sound = new LiteralString("SdNm");
-        public LiteralInt SoundNumber = new LiteralInt( "SdNo");
-        public LiteralInt LoopStart = new LiteralInt("LpSt");
-        public LiteralInt LoopEnd = new LiteralInt("LpEd");
-        public LiteralInt ChildLimit = new LiteralInt("ClCn");
-        public LiteralInt EffectorIdx = new LiteralInt("EfNo");
-        public LiteralBool AnyDirection = new LiteralBool("bAD", size:1);
-        public LiteralEnum<EmitterType> EmitterVariety = new LiteralEnum<EmitterType>("EVT");
-        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new LiteralEnum<RotationDirectionBase>("RBDT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new LiteralEnum<CoordComputeOrder>("CCOT");
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("ROT");
-        public LiteralInt ParticleCount = new LiteralInt("PrCn");
-        public LiteralInt EmitterCount = new LiteralInt("EmCn");
-        public AVFXLife Life = new AVFXLife();
+        public LiteralString Sound = new("SdNm");
+        public LiteralInt SoundNumber = new( "SdNo");
+        public LiteralInt LoopStart = new("LpSt");
+        public LiteralInt LoopEnd = new("LpEd");
+        public LiteralInt ChildLimit = new("ClCn");
+        public LiteralInt EffectorIdx = new("EfNo");
+        public LiteralBool AnyDirection = new("bAD", size:1);
+        public LiteralEnum<EmitterType> EmitterVariety = new("EVT");
+        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new("RBDT");
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new("CCOT");
+        public LiteralEnum<RotationOrder> RotationOrderType = new("ROT");
+        public LiteralInt ParticleCount = new("PrCn");
+        public LiteralInt EmitterCount = new("EmCn");
+        public AVFXLife Life = new();
 
-        public AVFXCurve CreateCount = new AVFXCurve("CrC");
-        public AVFXCurve CreateCountRandom = new AVFXCurve("CrCR");
-        public AVFXCurve CreateInterval = new AVFXCurve("CrI");
-        public AVFXCurve CreateIntervalRandom = new AVFXCurve("CrIR");
-        public AVFXCurve Gravity = new AVFXCurve("Gra");
-        public AVFXCurve GravityRandom = new AVFXCurve("GraR");
-        public AVFXCurve AirResistance = new AVFXCurve("ARs");
-        public AVFXCurve AirResistanceRandom = new AVFXCurve("ARsR");
-        public AVFXCurveColor Color = new AVFXCurveColor();
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
-        public AVFXCurve3Axis Scale = new AVFXCurve3Axis("Scl");
+        public AVFXCurve CreateCount = new("CrC");
+        public AVFXCurve CreateCountRandom = new("CrCR");
+        public AVFXCurve CreateInterval = new("CrI");
+        public AVFXCurve CreateIntervalRandom = new("CrIR");
+        public AVFXCurve Gravity = new("Gra");
+        public AVFXCurve GravityRandom = new("GraR");
+        public AVFXCurve AirResistance = new("ARs");
+        public AVFXCurve AirResistanceRandom = new("ARsR");
+        public AVFXCurveColor Color = new();
+        public AVFXCurve3Axis Position = new("Pos");
+        public AVFXCurve3Axis Rotation = new("Rot");
+        public AVFXCurve3Axis Scale = new("Scl");
 
-        public List<AVFXEmitterIterationItem> Particles = new List<AVFXEmitterIterationItem>();
-        public List<AVFXEmitterIterationItem> Emitters = new List<AVFXEmitterIterationItem>();
+        public List<AVFXEmitterIterationItem> Particles = new();
+        public List<AVFXEmitterIterationItem> Emitters = new();
 
         // Data
         //========================//
         public EmitterType Type;
         public AVFXEmitterData Data;
-
-        List<Base> Attributes;
+        readonly List<Base> Attributes;
 
         public AVFXEmitter() : base(NAME)
         {
@@ -92,7 +91,7 @@ namespace AVFXLib.Models
             AVFXEmitterCreateParticle lastParticle = null;
             AVFXEmitterCreateEmitter lastEmitter = null;
 
-            foreach (AVFXNode item in node.Children)
+            foreach (var item in node.Children)
             {
                 switch (item.Name){
                     // ITPR ==================
@@ -121,15 +120,15 @@ namespace AVFXLib.Models
             }
             if(lastEmitter != null)
             {
-                int startIndex = Particles.Count();
-                int emitterCount = lastEmitter.Items.Count() - Particles.Count();
+                var startIndex = Particles.Count();
+                var emitterCount = lastEmitter.Items.Count() - Particles.Count();
                 Emitters.AddRange(lastEmitter.Items.GetRange(startIndex, emitterCount)); // remove particles
             }
         }
 
         public AVFXEmitterIterationItem AddParticle()
         {
-            AVFXEmitterIterationItem ItPr = new AVFXEmitterIterationItem();
+            var ItPr = new AVFXEmitterIterationItem();
             ItPr.ToDefault();
             Particles.Add(ItPr);
             ParticleCount.GiveValue(Particles.Count());
@@ -151,7 +150,7 @@ namespace AVFXLib.Models
         //
         public AVFXEmitterIterationItem AddEmitter()
         {
-            AVFXEmitterIterationItem ItEm = new AVFXEmitterIterationItem();
+            var ItEm = new AVFXEmitterIterationItem();
             ItEm.ToDefault();
             Emitters.Add(ItEm);
             EmitterCount.GiveValue(Emitters.Count());
@@ -173,24 +172,25 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode emitAvfx = new AVFXNode("Emit");
+            var emitAvfx = new AVFXNode("Emit");
 
             PutAVFX(emitAvfx, Attributes);
 
             // ITPR
             //=======================//
-            for (int i = 0; i < Particles.Count; i++)
+            for (var i = 0; i < Particles.Count; i++)
             {
-                AVFXEmitterCreateParticle ItPr = new AVFXEmitterCreateParticle();
-                ItPr.Items = Particles.GetRange(0, i + 1);
+                var ItPr = new AVFXEmitterCreateParticle {
+                    Items = Particles.GetRange( 0, i + 1 )
+                };
                 emitAvfx.Children.Add(ItPr.ToAVFX());
             }
 
             // ITEM
             //=======================//
-            for( int i = 0; i < Emitters.Count; i++ )
+            for( var i = 0; i < Emitters.Count; i++ )
             {
-                AVFXEmitterCreateEmitter ItEM = new AVFXEmitterCreateEmitter();
+                var ItEM = new AVFXEmitterCreateEmitter();
                 ItEM.Items.AddRange(Particles);
                 ItEM.Items.AddRange(Emitters.GetRange( 0, i + 1 )); // get 1, then 2, etc.
                 emitAvfx.Children.Add( ItEM.ToAVFX() );

@@ -24,29 +24,29 @@ namespace AVFXLib.Models
 
         public Vertex(byte[] bytes)
         {
-            MemoryStream ms = new MemoryStream(bytes);
-            BinaryReader reader = new BinaryReader(ms);
-            for(int i = 0; i < 4; i++)
+            var ms = new MemoryStream(bytes);
+            var reader = new BinaryReader(ms);
+            for(var i = 0; i < 4; i++)
             {
                 Position[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 Normal[i] = Util.Bytes1ToInt(reader.ReadBytes(1)) - 128;
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 Tangent[i] = Util.Bytes1ToInt(reader.ReadBytes(1)) - 128;
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 Color[i] = Util.Bytes1ToInt(reader.ReadBytes(1));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 UV1[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 UV2[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
             }
@@ -55,29 +55,29 @@ namespace AVFXLib.Models
 
         public byte[] toBytes()
         {
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(ms);
-            for (int i = 0; i < 4; i++)
+            var ms = new MemoryStream();
+            var writer = new BinaryWriter(ms);
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.FloatTo2Bytes(Position[i]));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.IntTo1Bytes(Normal[i] + 128));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.IntTo1Bytes(Tangent[i] + 128));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.IntTo1Bytes(Color[i]));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.FloatTo2Bytes(UV1[i]));
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 writer.Write(Util.FloatTo2Bytes(UV2[i]));
             }

@@ -10,9 +10,8 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDecal : AVFXParticleData
     {
-        public LiteralFloat ScalingScale = new LiteralFloat("SS");
-
-        List<Base> Attributes;
+        public LiteralFloat ScalingScale = new("SS");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataDecal() : base("Data")
         {
@@ -35,7 +34,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

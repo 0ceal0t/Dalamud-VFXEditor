@@ -7,18 +7,19 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor.Data.DirectX {
-    public abstract class GenericModelViewer : GenericDirectX {
+namespace VFXEditor.DirectX {
+    public abstract class ModelRenderer : Renderer {
         public IntPtr Output => RenderShad.NativePointer;
 
         public bool IsWireframe = false;
         public bool IsDragging = false;
+
         private Vector2 LastMousePos;
         private float Yaw;
         private float Pitch;
-        private Vector3 Position = new Vector3( 0, 0, 0 );
+        private Vector3 Position = new( 0, 0, 0 );
         private float Distance = 5;
-        public Matrix LocalMatrix = Matrix.Identity;
+        private Matrix LocalMatrix = Matrix.Identity;
 
         protected int Width = 300;
         protected int Height = 300;
@@ -35,7 +36,7 @@ namespace VFXEditor.Data.DirectX {
         protected ShaderResourceView RenderShad;
         protected RenderTargetView RenderView;
 
-        public GenericModelViewer(Device device, DeviceContext ctx) : base(device, ctx) {
+        public ModelRenderer(Device device, DeviceContext ctx) : base(device, ctx) {
             WorldBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
 
@@ -75,11 +76,11 @@ namespace VFXEditor.Data.DirectX {
             }
         }
 
-        public static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
+        protected static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
             return span * ( faceIdx * pointsPer + pointIdx );
         }
 
-        public void ResizeResources() {
+        protected void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
             RenderTex?.Dispose();
             RenderTex = new Texture2D( Device, new Texture2DDescription()
@@ -118,7 +119,7 @@ namespace VFXEditor.Data.DirectX {
             DepthView = new DepthStencilView( Device, DepthTex );
         }
 
-        private static float Clamp( float value, float min, float max ) {
+        protected static float Clamp( float value, float min, float max ) {
             return value > max ? max : value < min ? min : value;
         }
 
@@ -147,7 +148,7 @@ namespace VFXEditor.Data.DirectX {
 
         public void UpdateViewMatrix() {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
-            Vector3 lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
+            var lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
             ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
             Draw();
         }

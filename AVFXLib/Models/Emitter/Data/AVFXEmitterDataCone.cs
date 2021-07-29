@@ -9,14 +9,13 @@ namespace AVFXLib.Models
 {
     public class AVFXEmitterDataCone : AVFXEmitterData
     {
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>( "ROT" );
-        public AVFXCurve AngleY = new AVFXCurve( "AnY" );
-        public AVFXCurve OuterSize = new AVFXCurve( "OuS" );
-        public AVFXCurve InjectionSpeed = new AVFXCurve( "IjS" );
-        public AVFXCurve InjectionSpeedRandom = new AVFXCurve( "IjSR" );
-        public AVFXCurve InjectionAngle = new AVFXCurve( "IjA" );
-
-        List<Base> Attributes;
+        public LiteralEnum<RotationOrder> RotationOrderType = new( "ROT" );
+        public AVFXCurve AngleY = new( "AnY" );
+        public AVFXCurve OuterSize = new( "OuS" );
+        public AVFXCurve InjectionSpeed = new( "IjS" );
+        public AVFXCurve InjectionSpeedRandom = new( "IjSR" );
+        public AVFXCurve InjectionAngle = new( "IjA" );
+        readonly List<Base> Attributes;
 
         public AVFXEmitterDataCone() : base( "Data" )
         {
@@ -44,7 +43,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode( "Data" );
+            var dataAvfx = new AVFXNode( "Data" );
             PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }

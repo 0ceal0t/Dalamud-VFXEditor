@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override UIParticle OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXParticle item = new AVFXParticle();
+            var item = new AVFXParticle();
             item.Read( node );
             AVFX.AddParticle( item );
             return new UIParticle( Main, item, has_dependencies );

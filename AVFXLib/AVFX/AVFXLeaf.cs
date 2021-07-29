@@ -20,9 +20,9 @@ namespace AVFXLib.AVFX
         }
 
         public override byte[] ToBytes()  {
-            byte[] bytes = new byte[8 + Util.RoundUp(Size)];
-            byte[] name = Util.NameTo4Bytes(Name);
-            byte[] size = Util.IntTo4Bytes(Size);
+            var bytes = new byte[8 + Util.RoundUp(Size)];
+            var name = Util.NameTo4Bytes(Name);
+            var size = Util.IntTo4Bytes(Size);
             Buffer.BlockCopy(name, 0, bytes, 0, 4);
             Buffer.BlockCopy(size, 0, bytes, 4, 4);
             Buffer.BlockCopy(Contents, 0, bytes, 8, Contents.Length);
@@ -34,7 +34,7 @@ namespace AVFXLib.AVFX
                 messages.Add(string.Format("Wrong Type {0} / {1}", Name, node.Name));
                 return false;
             }
-            AVFXLeaf leaf = (AVFXLeaf)node;
+            var leaf = (AVFXLeaf)node;
             if (Name != leaf.Name) {
                 messages.Add(string.Format("Wrong Name {0} / {1}", Name, node.Name));
                 return false;
@@ -47,7 +47,7 @@ namespace AVFXLib.AVFX
                 messages.Add(string.Format("Wrong Contents Size {0} : {1} / {2} : {3}", Name, Contents.Length.ToString(), leaf.Name, leaf.Contents.Length.ToString()));
                 return false;
             }
-            for(int idx = 0; idx < Contents.Length; idx++) {
+            for(var idx = 0; idx < Contents.Length; idx++) {
                 if(Contents[idx] != leaf.Contents[idx])
                 {
                     messages.Add(string.Format("Wrong Contents in {0} byte {1} : {2} / {3}", Name, idx, Contents[idx].ToString(), leaf.Contents[idx].ToString()));
@@ -59,7 +59,7 @@ namespace AVFXLib.AVFX
 
         public override string ExportString(int level)
         {
-            string C = Size < 8 ? BitConverter.ToString(Contents).Replace("-", string.Empty) : "";
+            var C = Size < 8 ? BitConverter.ToString(Contents).Replace("-", string.Empty) : "";
             return string.Format("{0}> {1} {2} / {3}\n", new string('\t', level), Name, Size, C);
         }
     }

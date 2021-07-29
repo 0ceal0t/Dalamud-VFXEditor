@@ -8,13 +8,13 @@ namespace VFXEditor.UI.VFX {
         public List<UINode> Next;
     }
     public class UINodeGraph {
-        public Dictionary<UINode, UINodeGraphItem> Graph = new Dictionary<UINode, UINodeGraphItem>();
+        public Dictionary<UINode, UINodeGraphItem> Graph = new();
         public bool Outdated = false;
         public bool Cycle = false;
 
         public UINodeGraph( UINode node) {
             ParseGraph( 0, node, new HashSet<UINode>() );
-            Dictionary<int, int> L2Dict = new Dictionary<int, int>();
+            var L2Dict = new Dictionary<int, int>();
             foreach(var val in Graph.Values ) {
                 if( L2Dict.ContainsKey( val.Level ) ) {
                     L2Dict[val.Level] += 1;
@@ -40,9 +40,10 @@ namespace VFXEditor.UI.VFX {
             }
             else {
                 visited.Add( node );
-                UINodeGraphItem item = new UINodeGraphItem();
-                item.Level = level;
-                item.Next = new List<UINode>();
+                var item = new UINodeGraphItem {
+                    Level = level,
+                    Next = new List<UINode>()
+                };
                 foreach(var n in node.Parents ) {
                     item.Next.Add( n.Node );
                     ParseGraph( level + 1, n.Node, new HashSet<UINode>( visited ) );

@@ -21,7 +21,7 @@ namespace VFXEditor.UI.VFX {
 
     public class UINodeGroup<T> : UINodeGroup where T : UINode {
 
-        public List<T> Items = new List<T>();
+        public List<T> Items = new();
         public Action OnInit;
         public Action OnChange;
         public bool IsInit = false;
@@ -54,7 +54,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void UpdateIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
+            for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }
         }

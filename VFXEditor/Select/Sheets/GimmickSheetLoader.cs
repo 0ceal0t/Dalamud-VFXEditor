@@ -14,7 +14,7 @@ namespace VFXSelect.Data.Sheets {
 
         public override void OnLoad() {
             var territories = PluginInterface.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
-            Dictionary<string, string> suffixToName = new Dictionary<string, string>();
+            var suffixToName = new Dictionary<string, string>();
             foreach( var zone in territories ) {
                 suffixToName[zone.Name.ToString()] = zone.PlaceName.Value?.Name.ToString();
             }
@@ -28,8 +28,8 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivGimmick item, out XivGimmickSelected selectedItem ) {
             selectedItem = null;
-            string tmbPath = item.GetTmbPath();
-            bool result = PluginInterface.Data.FileExists( tmbPath );
+            var tmbPath = item.GetTmbPath();
+            var result = PluginInterface.Data.FileExists( tmbPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile( tmbPath );

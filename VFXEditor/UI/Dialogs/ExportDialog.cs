@@ -13,8 +13,7 @@ using VFXEditor.UI.VFX;
 namespace VFXEditor.UI {
     public class ExportDialog {
         public UIMain Main;
-
-        List<ExportDialogCategory> Categories;
+        readonly List<ExportDialogCategory> Categories;
 
         public bool Visible = false;
         public bool ExportDeps = true;
@@ -88,16 +87,15 @@ namespace VFXEditor.UI {
             Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                using( BinaryWriter writer = new BinaryWriter( File.Open( res, FileMode.Create ) ) ) {
-                    var selected = GetSelected();
-                    if( ExportDeps ) {
-                        Main.ExportDeps( selected, writer );
-                    }
-                    else {
-                        selected.ForEach( node => writer.Write( node.ToBytes() ) );
-                    }
-                    Visible = false;
+                using var writer = new BinaryWriter( File.Open( res, FileMode.Create ) );
+                var selected = GetSelected();
+                if( ExportDeps ) {
+                    Main.ExportDeps( selected, writer );
                 }
+                else {
+                    selected.ForEach( node => writer.Write( node.ToBytes() ) );
+                }
+                Visible = false;
             } );
         }
     }

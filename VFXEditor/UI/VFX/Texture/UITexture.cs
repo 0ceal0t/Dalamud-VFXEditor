@@ -105,7 +105,7 @@ namespace VFXEditor.UI.VFX
             Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetTexture( texPath );
+                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
                 texFile.SaveAsPng( res );
             } );
         }
@@ -114,7 +114,7 @@ namespace VFXEditor.UI.VFX
             Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetTexture( texPath );
+                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
                 texFile.SaveAsDDS( res );
             } );
         }

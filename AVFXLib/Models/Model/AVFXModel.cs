@@ -12,10 +12,10 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Modl";
 
-        public List<Vertex> Vertices = new List<Vertex>();
-        public List<Index> Indexes = new List<Index>();
-        public List<VNum> VNums = new List<VNum>();
-        public List<EmitVertex> EmitVertices = new List<EmitVertex>();
+        public List<Vertex> Vertices = new();
+        public List<Index> Indexes = new();
+        public List<VNum> VNums = new();
+        public List<EmitVertex> EmitVertices = new();
 
         public AVFXModel() : base(NAME)
         {
@@ -24,22 +24,22 @@ namespace AVFXLib.Models
         public override void Read(AVFXNode node)
         {
             Assigned = true;
-            foreach(AVFXNode n in node.Children)
+            foreach(var n in node.Children)
             {
                 AVFXLeaf leaf;
                 switch (n.Name)
                 {
                     case "VNum":
                         leaf = (AVFXLeaf)n;
-                        foreach (byte[] bytes in Util.SplitBytes(leaf.Contents, VNum.SIZE))
+                        foreach (var bytes in Util.SplitBytes(leaf.Contents, VNum.SIZE))
                         {
                             VNums.Add(new VNum(bytes));
                         }
                         break;
 
                     case "VDrw":
-                        AVFXLeaf vleaf = (AVFXLeaf)n;
-                        foreach (byte[] bytes in Util.SplitBytes(vleaf.Contents, Vertex.SIZE))
+                        var vleaf = (AVFXLeaf)n;
+                        foreach (var bytes in Util.SplitBytes(vleaf.Contents, Vertex.SIZE))
                         {
                             Vertices.Add(new Vertex(bytes));
                         }
@@ -47,7 +47,7 @@ namespace AVFXLib.Models
 
                     case "VEmt":
                         leaf = (AVFXLeaf)n;
-                        foreach (byte[] bytes in Util.SplitBytes(leaf.Contents, EmitVertex.SIZE))
+                        foreach (var bytes in Util.SplitBytes(leaf.Contents, EmitVertex.SIZE))
                         {
                             EmitVertices.Add(new EmitVertex(bytes));
                         }
@@ -55,7 +55,7 @@ namespace AVFXLib.Models
 
                     case "VIdx":
                         leaf = (AVFXLeaf)n;
-                        foreach(byte[] bytes in Util.SplitBytes(leaf.Contents, Index.SIZE))
+                        foreach(var bytes in Util.SplitBytes(leaf.Contents, Index.SIZE))
                         {
                             Indexes.Add(new Index(bytes));
                         }
@@ -66,7 +66,7 @@ namespace AVFXLib.Models
 
         public VNum AddVNum()
         {
-            VNum vnum = new VNum(new byte[VNum.SIZE]);
+            var vnum = new VNum(new byte[VNum.SIZE]);
             VNums.Add( vnum );
             return vnum;
         }
@@ -83,7 +83,7 @@ namespace AVFXLib.Models
         //
         public EmitVertex AddEmitVertex()
         {
-            EmitVertex eVert = new EmitVertex( new byte[EmitVertex.SIZE] );
+            var eVert = new EmitVertex( new byte[EmitVertex.SIZE] );
             EmitVertices.Add( eVert );
             return eVert;
         }
@@ -100,65 +100,65 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode modelNode =  new AVFXNode("Modl");
+            var modelNode =  new AVFXNode("Modl");
 
             // VNUM ==================
             if (VNums.Count > 0)
             {
-                byte[][] vnumBytes = new byte[VNums.Count][];
-                int nIdx = 0;
-                foreach (VNum n in VNums)
+                var vnumBytes = new byte[VNums.Count][];
+                var nIdx = 0;
+                foreach (var n in VNums)
                 {
                     vnumBytes[nIdx] = n.toBytes();
                     nIdx++;
                 }
-                byte[] nBytes = Util.JoinBytes(vnumBytes, VNum.SIZE);
-                AVFXLeaf vnum = new AVFXLeaf("VNum", nBytes.Length, nBytes);
+                var nBytes = Util.JoinBytes(vnumBytes, VNum.SIZE);
+                var vnum = new AVFXLeaf("VNum", nBytes.Length, nBytes);
                 modelNode.Children.Add(vnum);
             }
 
             // VEMT ==================
             if (EmitVertices.Count > 0)
             {
-                byte[][] emtBytes = new byte[EmitVertices.Count][];
-                int eIdx = 0;
-                foreach (EmitVertex e in EmitVertices)
+                var emtBytes = new byte[EmitVertices.Count][];
+                var eIdx = 0;
+                foreach (var e in EmitVertices)
                 {
                     emtBytes[eIdx] = e.toBytes();
                     eIdx++;
                 }
-                byte[] eBytes = Util.JoinBytes(emtBytes, EmitVertex.SIZE);
-                AVFXLeaf vemt = new AVFXLeaf("VEmt", eBytes.Length, eBytes);
+                var eBytes = Util.JoinBytes(emtBytes, EmitVertex.SIZE);
+                var vemt = new AVFXLeaf("VEmt", eBytes.Length, eBytes);
                 modelNode.Children.Add(vemt);
             }
 
             // VDRW ==================
             if (Vertices.Count > 0)
             {
-                byte[][] vertBytes = new byte[Vertices.Count][];
-                int vIdx = 0;
-                foreach (Vertex v in Vertices)
+                var vertBytes = new byte[Vertices.Count][];
+                var vIdx = 0;
+                foreach (var v in Vertices)
                 {
                     vertBytes[vIdx] = v.toBytes();
                     vIdx++;
                 }
-                byte[] vBytes = Util.JoinBytes(vertBytes, Vertex.SIZE);
-                AVFXLeaf vdrw = new AVFXLeaf("VDrw", vBytes.Length, vBytes);
+                var vBytes = Util.JoinBytes(vertBytes, Vertex.SIZE);
+                var vdrw = new AVFXLeaf("VDrw", vBytes.Length, vBytes);
                 modelNode.Children.Add(vdrw);
             }
 
             // VIDX ==================
             if (Indexes.Count > 0)
             {
-                byte[][] indexBytes = new byte[Indexes.Count][];
-                int iIdx = 0;
-                foreach (Index i in Indexes)
+                var indexBytes = new byte[Indexes.Count][];
+                var iIdx = 0;
+                foreach (var i in Indexes)
                 {
                     indexBytes[iIdx] = i.toBytes();
                     iIdx++;
                 }
-                byte[] iBytes = Util.JoinBytes(indexBytes, Index.SIZE);
-                AVFXLeaf vidx = new AVFXLeaf("VIdx", iBytes.Length, iBytes);
+                var iBytes = Util.JoinBytes(indexBytes, Index.SIZE);
+                var vidx = new AVFXLeaf("VIdx", iBytes.Length, iBytes);
                 modelNode.Children.Add(vidx);
             }
 

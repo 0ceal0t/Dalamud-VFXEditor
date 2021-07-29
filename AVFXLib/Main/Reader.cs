@@ -16,7 +16,7 @@ namespace AVFXLib.Main
             return ReadDefinition(reader, messages)[0];
         }
 
-        static readonly HashSet<string> NESTED = new HashSet<string>(new string[]{
+        static readonly HashSet<string> NESTED = new(new string[]{
             "RGB",
             "SclR",
             "SclG",
@@ -159,7 +159,7 @@ namespace AVFXLib.Main
             "TexNR"
         });
 
-        static readonly HashSet<string> NOT_NESTED_LARGE = new HashSet<string>(new string[]{ // not nested, larger than 8 bytes
+        static readonly HashSet<string> NOT_NESTED_LARGE = new(new string[]{ // not nested, larger than 8 bytes
             "Clip",
             "Keys",
             "Tex",
@@ -171,7 +171,7 @@ namespace AVFXLib.Main
             "SdNm"
         });
 
-        static readonly HashSet<string> NESTED_SMALL = new HashSet<string>( new string[]{ // smaller than 8 bytes, still nested
+        static readonly HashSet<string> NESTED_SMALL = new( new string[]{ // smaller than 8 bytes, still nested
             "Data",
             "Col",
             "ColB",
@@ -181,26 +181,27 @@ namespace AVFXLib.Main
 
         public static List<AVFXNode> ReadDefinition(BinaryReader reader, List<string> messages)
         {
-            List<AVFXNode> nodes = new List<AVFXNode>();
+            var nodes = new List<AVFXNode>();
             if (reader.BaseStream.Position < reader.BaseStream.Length) {
                 // GET THE NAME
-                byte[] name = BitConverter.GetBytes(reader.ReadInt32()).Reverse().ToArray();
-                List<byte> nonZero = new List<byte>();
-                foreach (byte n in name) {
+                var name = BitConverter.GetBytes(reader.ReadInt32()).Reverse().ToArray();
+                var nonZero = new List<byte>();
+                foreach (var n in name) {
                     if (n != 0) {
                         nonZero.Add(n);
                     }
                 }
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                string DefName = encoding.GetString(nonZero.ToArray());
-                int Size = reader.ReadInt32();
+                var encoding = new ASCIIEncoding();
+                var DefName = encoding.GetString(nonZero.ToArray());
+                var Size = reader.ReadInt32();
 
-                byte[] Contents = reader.ReadBytes(Size);
+                var Contents = reader.ReadBytes(Size);
                 if (NESTED.Contains(DefName) && (Size > 8 || NESTED_SMALL.Contains(DefName)))
                 {
-                    BinaryReader nestedReader = new BinaryReader(new MemoryStream(Contents));
-                    AVFXNode nestedNode = new AVFXNode(DefName);
-                    nestedNode.Children = ReadDefinition( nestedReader, messages);
+                    var nestedReader = new BinaryReader(new MemoryStream(Contents));
+                    var nestedNode = new AVFXNode( DefName ) {
+                        Children = ReadDefinition( nestedReader, messages )
+                    };
                     nodes.Add(nestedNode);
                 }
                 else  {
@@ -208,11 +209,11 @@ namespace AVFXLib.Main
                         messages.Add(string.Format("LARGE BLOCK: {0} {1}", DefName, Size));
                     }
 
-                    AVFXLeaf leafNode = new AVFXLeaf(DefName, Size, Contents);
+                    var leafNode = new AVFXLeaf(DefName, Size, Contents);
                     nodes.Add(leafNode);
                 }
                 // PAD
-                int pad = Util.RoundUp(Size) - Size;
+                var pad = Util.RoundUp(Size) - Size;
                 reader.ReadBytes(pad);
 
                 // KEEP READING

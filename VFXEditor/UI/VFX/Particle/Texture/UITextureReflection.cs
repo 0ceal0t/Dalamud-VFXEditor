@@ -50,7 +50,7 @@ namespace VFXEditor.UI.VFX
         }
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/TR";
+            var id = parentId + "/TR";
             if( UIUtils.RemoveButton( "Delete Texture Reflection" + id, small: true ) )
             {
                 Tex.Assigned = false;

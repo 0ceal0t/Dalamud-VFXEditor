@@ -11,13 +11,12 @@ namespace AVFXLib.Models
     {
         public const string NAME = "Schd";
 
-        public LiteralInt ItemCount = new LiteralInt("ItCn");
-        public LiteralInt TriggerCount = new LiteralInt("TrCn");
+        public LiteralInt ItemCount = new("ItCn");
+        public LiteralInt TriggerCount = new("TrCn");
 
-        public List<AVFXScheduleSubItem> Items = new List<AVFXScheduleSubItem>();
-        public List<AVFXScheduleSubItem> Triggers = new List<AVFXScheduleSubItem>();
-
-        List<Base> Attributes;
+        public List<AVFXScheduleSubItem> Items = new();
+        public List<AVFXScheduleSubItem> Triggers = new();
+        readonly List<Base> Attributes;
 
         public AVFXSchedule() : base(NAME)
         {
@@ -35,7 +34,7 @@ namespace AVFXLib.Models
             AVFXScheduleItem lastItem = null;
             AVFXScheduleTrigger lastTrigger = null;
 
-            foreach (AVFXNode item in node.Children)
+            foreach (var item in node.Children)
             {
                 switch (item.Name)
                 {
@@ -64,7 +63,7 @@ namespace AVFXLib.Models
 
         public AVFXScheduleSubItem AddItem()
         {
-            AVFXScheduleSubItem Item = new AVFXScheduleSubItem();
+            var Item = new AVFXScheduleSubItem();
             Item.ToDefault();
             Items.Add(Item);
             ItemCount.GiveValue(Items.Count());
@@ -86,25 +85,27 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode schdAvfx = new AVFXNode("Schd");
+            var schdAvfx = new AVFXNode("Schd");
 
             PutAVFX(schdAvfx, Attributes);
 
             // Items
             //=======================//
-            for (int i = 0; i < Items.Count(); i++)
+            for (var i = 0; i < Items.Count(); i++)
             {
-                AVFXScheduleItem Item = new AVFXScheduleItem();
-                Item.SubItems = Items.GetRange(0, i + 1);
+                var Item = new AVFXScheduleItem {
+                    SubItems = Items.GetRange( 0, i + 1 )
+                };
                 schdAvfx.Children.Add(Item.ToAVFX());
             }
 
             // Triggers
             //=======================//
-            for(int i = 0; i < Triggers.Count(); i++)
+            for(var i = 0; i < Triggers.Count(); i++)
             {
-                AVFXScheduleTrigger Trigger = new AVFXScheduleTrigger();
-                Trigger.SubItems = new List<AVFXScheduleSubItem>();
+                var Trigger = new AVFXScheduleTrigger {
+                    SubItems = new List<AVFXScheduleSubItem>()
+                };
                 Trigger.SubItems.AddRange(Items);
                 Trigger.SubItems.AddRange(Triggers.GetRange(0, i + 1));
                 schdAvfx.Children.Add(Trigger.ToAVFX());

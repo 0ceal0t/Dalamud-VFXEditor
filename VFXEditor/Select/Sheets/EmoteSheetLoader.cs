@@ -24,9 +24,9 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivEmote item, out XivEmoteSelected selectedItem ) {
             selectedItem = null;
-            List<Lumina.Data.FileResource> files = new List<Lumina.Data.FileResource>();
+            var files = new List<Lumina.Data.FileResource>();
             try {
-                foreach( string path in item.PapFiles ) {
+                foreach( var path in item.PapFiles ) {
                     var result = PluginInterface.Data.FileExists( path );
                     if( result ) {
                         files.Add( PluginInterface.Data.GetFile( path ) );

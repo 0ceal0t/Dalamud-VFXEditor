@@ -9,10 +9,9 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataLinear : AVFXBinderData
     {
-        public AVFXCurve CarryOverFactor = new AVFXCurve("COF");
-        public AVFXCurve CarryOverFactorRandom = new AVFXCurve("COFR");
-
-        List<Base> Attributes;
+        public AVFXCurve CarryOverFactor = new("COF");
+        public AVFXCurve CarryOverFactorRandom = new("COFR");
+        readonly List<Base> Attributes;
 
         public AVFXBinderDataLinear() : base("Data")
         {
@@ -36,7 +35,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

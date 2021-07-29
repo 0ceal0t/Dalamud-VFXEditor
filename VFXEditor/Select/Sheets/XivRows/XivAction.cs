@@ -29,12 +29,13 @@ namespace VFXSelect.Data.Rows {
                 HitVFXExists = !string.IsNullOrEmpty( HitVFXKey );
                 if( HitVFXExists )
                 {
-                    var sAction = new Lumina.Excel.GeneratedSheets.Action();
-                    sAction.Icon = action.Icon;
-                    sAction.Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) );
-                    sAction.IsPlayerAction = action.IsPlayerAction;
-                    sAction.RowId = action.RowId;
-                    sAction.AnimationEnd = action.ActionTimelineHit;
+                    var sAction = new Lumina.Excel.GeneratedSheets.Action {
+                        Icon = action.Icon,
+                        Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
+                        IsPlayerAction = action.IsPlayerAction,
+                        RowId = action.RowId,
+                        AnimationEnd = action.ActionTimelineHit
+                    };
                     HitAction = new XivAction( sAction, justSelf:true );
                 }
             }

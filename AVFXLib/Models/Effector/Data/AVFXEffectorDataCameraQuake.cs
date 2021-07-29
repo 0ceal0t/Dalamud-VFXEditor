@@ -9,13 +9,12 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataCameraQuake : AVFXEffectorData
     {
-        public AVFXCurve Attenuation = new AVFXCurve("Att");
-        public AVFXCurve RadiusOut = new AVFXCurve("RdO");
-        public AVFXCurve RadiusIn = new AVFXCurve("RdI");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
-
-        List<Base> Attributes;
+        public AVFXCurve Attenuation = new("Att");
+        public AVFXCurve RadiusOut = new("RdO");
+        public AVFXCurve RadiusIn = new("RdI");
+        public AVFXCurve3Axis Rotation = new("Rot");
+        public AVFXCurve3Axis Position = new("Pos");
+        readonly List<Base> Attributes;
 
         public AVFXEffectorDataCameraQuake() : base("Data")
         {
@@ -42,7 +41,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

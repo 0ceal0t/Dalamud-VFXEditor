@@ -39,7 +39,7 @@ namespace VFXEditor {
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
                 Sheets, "File Select [SOURCE]",
-                Configuration.RecentSelects,
+                Configuration.Config.RecentSelects,
                 DialogManager,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
@@ -50,7 +50,7 @@ namespace VFXEditor {
             );
             PreviewUI = new VFXSelectDialog(
                 Sheets, "File Select [TARGET]",
-                Configuration.RecentSelects,
+                Configuration.Config.RecentSelects,
                 DialogManager,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
@@ -172,21 +172,21 @@ namespace VFXEditor {
                     ImGui.PushFont( UiBuilder.IconFont );
 
                     var verified = CurrentDocument.Main.Verified;
-                    Vector4 color = verified switch
+                    var color = verified switch
                     {
                         VerifiedStatus.OK => UIUtils.GREEN_COLOR,
                         VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
                         _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
                     };
 
-                    string icon = verified switch
+                    var icon = verified switch
                     {
                         VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
                         VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
                         _ => $"{( char )FontAwesomeIcon.Question}"
                     };
 
-                    string text = verified switch
+                    var text = verified switch
                     {
                         VerifiedStatus.OK => "Verified",
                         VerifiedStatus.ISSUE => "Parsing Issues",
@@ -269,8 +269,8 @@ namespace VFXEditor {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            string sourceString = CurrentDocument.Source.DisplayString;
-            string previewString = CurrentDocument.Replace.DisplayString;
+            var sourceString = CurrentDocument.Source.DisplayString;
+            var previewString = CurrentDocument.Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
@@ -330,8 +330,8 @@ namespace VFXEditor {
             }
 
             // =======SPAWN + EYE =========
-            string previewSpawn = DocManager.ActiveDoc.Replace.Path;
-            bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
+            var previewSpawn = DocManager.ActiveDoc.Replace.Path;
+            var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
@@ -385,10 +385,11 @@ namespace VFXEditor {
 
         // ======= HELPERS ============
         public void OpenTemplate( string path ) {
-            VFXSelectResult newResult = new VFXSelectResult();
-            newResult.DisplayString = "[NEW]";
-            newResult.Type = VFXSelectType.Local;
-            newResult.Path = Path.Combine( TemplateLocation, "Files", path );
+            var newResult = new VFXSelectResult {
+                DisplayString = "[NEW]",
+                Type = VFXSelectType.Local,
+                Path = Path.Combine( TemplateLocation, "Files", path )
+            };
             SetSourceVFX( newResult );
         }
 

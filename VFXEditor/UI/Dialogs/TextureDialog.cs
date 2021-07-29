@@ -39,9 +39,9 @@ namespace VFXEditor.UI {
                 ImGui.Text( $"({item.Format})" );
             }
 
-            int idx = 0;
+            var idx = 0;
             ImGui.NextColumn();
-            foreach( KeyValuePair<string, TexReplace> entry in Plugin.TexManager.PathToTextureReplace ) {
+            foreach( var entry in Plugin.TexManager.PathToTextureReplace ) {
                 if(UIUtils.RemoveButton("Remove" + id + idx, small: true ) ) {
                     Plugin.TexManager.RemoveReplaceTexture( entry.Key );
                     Plugin.TexManager.RefreshPreviewTexture( entry.Key );

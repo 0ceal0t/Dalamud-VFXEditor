@@ -1,17 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO.Compression;
 
 namespace VFXEditor.Data.Texture {
-    public class IOUtil {
-        // ======== MAKE ATEX HEADER ============
-        // when replacing an .atex, need to write this to file in order to load using Penumbra hook
-        // ATEX Header = 80 bytes
-        public static List<byte> MakeTextureInfoHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
+    public static class IOUtil {
+        public static List<byte> CreateATEXHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
             short texFormatCode = 0;
             switch( format ) {
@@ -39,26 +32,17 @@ namespace VFXEditor.Data.Texture {
             headerData.AddRange( BitConverter.GetBytes( 0 ) );
             headerData.AddRange( BitConverter.GetBytes( 1 ) );
             headerData.AddRange( BitConverter.GetBytes( 2 ) );
-            int mipLength;
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    mipLength = ( newWidth * newHeight ) / 2;
-                    break;
-                case TextureFormat.DXT5:
-                case TextureFormat.A8:
-                    mipLength = newWidth * newHeight;
-                    break;
-                case TextureFormat.A8R8G8B8:
-                default:
-                    mipLength = ( newWidth * newHeight ) * 4;
-                    break;
-            }
+            var mipLength = format switch {
+                TextureFormat.DXT1 => ( newWidth * newHeight ) / 2,
+                TextureFormat.DXT5 or TextureFormat.A8 => newWidth * newHeight,
+                _ => ( newWidth * newHeight ) * 4,
+            };
             var combinedLength = 80;
             for( var i = 0; i < newMipCount; i++ ) {
                 headerData.AddRange( BitConverter.GetBytes( combinedLength ) );
-                combinedLength = combinedLength + mipLength;
+                combinedLength += mipLength;
                 if( mipLength > 16 ) {
-                    mipLength = mipLength / 4;
+                    mipLength /= 4;
                 }
                 else {
                     mipLength = 16;
@@ -69,10 +53,8 @@ namespace VFXEditor.Data.Texture {
             return headerData;
         }
 
-        // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/DDS.cs
-        // ========= USED FOR DDS EXPORT ==========
         public static byte[] CreateDDSHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
-            uint dwPitchOrLinearSize, pfFlags, dwFourCC;
+            uint dwPitchOrLinearSize, dwFourCC;
             var header = new List<byte>();
 
             header.AddRange( BitConverter.GetBytes( ( uint )0x20534444 ) );
@@ -107,16 +89,10 @@ namespace VFXEditor.Data.Texture {
             header.AddRange( dwReserved1 );
 
             header.AddRange( BitConverter.GetBytes( ( uint )32 ) );
-
-            switch( format ) {
-                case TextureFormat.A8R8G8B8:
-                case TextureFormat.A8:
-                    pfFlags = 2;
-                    break;
-                default:
-                    pfFlags = 4;
-                    break;
-            }
+            var pfFlags = format switch {
+                TextureFormat.A8R8G8B8 or TextureFormat.A8 => 2,
+                _ => 4,
+            };
             header.AddRange( BitConverter.GetBytes( pfFlags ) );
 
             switch( format ) {
@@ -135,7 +111,7 @@ namespace VFXEditor.Data.Texture {
             }
 
             if( depth > 1 ) {
-                var bytes = System.Text.Encoding.UTF8.GetBytes( "DX10" );
+                var bytes = Encoding.UTF8.GetBytes( "DX10" );
                 dwFourCC = BitConverter.ToUInt32( bytes, 0 );
             }
             header.AddRange( BitConverter.GetBytes( dwFourCC ) );
@@ -184,7 +160,7 @@ namespace VFXEditor.Data.Texture {
             }
 
             if( depth > 1 ) {
-                uint dxgiFormat = 0;
+                uint dxgiFormat;
                 if( format == TextureFormat.DXT1 ) {
                     dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
                 }

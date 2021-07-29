@@ -71,7 +71,7 @@ namespace VFXEditor.UI.VFX
                 }
             }
 
-            int idx = 0;
+            var idx = 0;
             foreach( var c in Curves ) {
                 if( !c.Assigned ) {
                     if( idx % 5 != 0 ) {

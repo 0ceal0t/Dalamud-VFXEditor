@@ -9,24 +9,23 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDisc : AVFXParticleData
     {
-        public LiteralInt PartsCount = new LiteralInt("PrtC");
-        public LiteralInt PartsCountU = new LiteralInt("PCnU");
-        public LiteralInt PartsCountV = new LiteralInt("PCnV");
-        public LiteralFloat PointIntervalFactoryV = new LiteralFloat("PIFU");
+        public LiteralInt PartsCount = new("PrtC");
+        public LiteralInt PartsCountU = new("PCnU");
+        public LiteralInt PartsCountV = new("PCnV");
+        public LiteralFloat PointIntervalFactoryV = new("PIFU");
 
-        public AVFXCurve Angle = new AVFXCurve("Ang");
-        public AVFXCurve HeightBeginInner = new AVFXCurve( "HBI" );
-        public AVFXCurve HeightEndInner = new AVFXCurve( "HEI" );
-        public AVFXCurve HeightBeginOuter = new AVFXCurve( "HBO" );
-        public AVFXCurve HeightEndOuter = new AVFXCurve( "HEO" );
-        public AVFXCurve WidthBegin = new AVFXCurve("WB");
-        public AVFXCurve WidthEnd = new AVFXCurve("WE");
-        public AVFXCurve RadiusBegin = new AVFXCurve("RB");
-        public AVFXCurve RadiusEnd = new AVFXCurve( "RE");
-        public AVFXCurveColor ColorEdgeInner = new AVFXCurveColor(name:"CEI");
-        public AVFXCurveColor ColorEdgeOuter = new AVFXCurveColor(name: "CEO");
-
-        List<Base> Attributes;
+        public AVFXCurve Angle = new("Ang");
+        public AVFXCurve HeightBeginInner = new( "HBI" );
+        public AVFXCurve HeightEndInner = new( "HEI" );
+        public AVFXCurve HeightBeginOuter = new( "HBO" );
+        public AVFXCurve HeightEndOuter = new( "HEO" );
+        public AVFXCurve WidthBegin = new("WB");
+        public AVFXCurve WidthEnd = new("WE");
+        public AVFXCurve RadiusBegin = new("RB");
+        public AVFXCurve RadiusEnd = new( "RE");
+        public AVFXCurveColor ColorEdgeInner = new(name:"CEI");
+        public AVFXCurveColor ColorEdgeOuter = new(name: "CEO");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataDisc() : base("Data")
         {
@@ -70,7 +69,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

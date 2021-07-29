@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace VFXEditor.UI.VFX {
     public class UIParameterTabs : UIItem {
         public string Name;
-        public List<UIItem> Items = new List<UIItem>();
+        public List<UIItem> Items = new();
 
         public UIParameterTabs( string name) {
             Assigned = true;

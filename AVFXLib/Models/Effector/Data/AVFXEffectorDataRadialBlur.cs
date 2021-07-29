@@ -9,16 +9,15 @@ namespace AVFXLib.Models
 {
     public class AVFXEffectorDataRadialBlur : AVFXEffectorData
     {
-        public AVFXCurve Length = new AVFXCurve("Len");
-        public AVFXCurve Strength = new AVFXCurve("Str");
-        public AVFXCurve Gradation = new AVFXCurve("Gra");
-        public AVFXCurve InnerRadius = new AVFXCurve("IRad");
-        public AVFXCurve OuterRadius = new AVFXCurve("ORad");
-        public LiteralFloat FadeStartDistance = new LiteralFloat( "FSDc" );
-        public LiteralFloat FadeEndDistance = new LiteralFloat( "FEDc" );
-        public LiteralEnum<ClipBasePoint> FadeBasePointType = new LiteralEnum<ClipBasePoint>( "FaBP" );
-
-        List<Base> Attributes;
+        public AVFXCurve Length = new("Len");
+        public AVFXCurve Strength = new("Str");
+        public AVFXCurve Gradation = new("Gra");
+        public AVFXCurve InnerRadius = new("IRad");
+        public AVFXCurve OuterRadius = new("ORad");
+        public LiteralFloat FadeStartDistance = new( "FSDc" );
+        public LiteralFloat FadeEndDistance = new( "FEDc" );
+        public LiteralEnum<ClipBasePoint> FadeBasePointType = new( "FaBP" );
+        readonly List<Base> Attributes;
 
         public AVFXEffectorDataRadialBlur() : base("Data")
         {
@@ -53,7 +52,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

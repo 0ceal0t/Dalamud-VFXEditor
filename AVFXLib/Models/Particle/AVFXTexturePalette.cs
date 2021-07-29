@@ -9,13 +9,12 @@ namespace AVFXLib.Models
 {
     public class AVFXTexturePalette : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
-        public LiteralEnum<TextureBorderType> TextureBorder = new LiteralEnum<TextureBorderType>("TBT");
-        public LiteralInt TextureIdx = new LiteralInt("TxNo");
-        public AVFXCurve Offset = new AVFXCurve( "POff" );
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorder = new("TBT");
+        public LiteralInt TextureIdx = new("TxNo");
+        public AVFXCurve Offset = new( "POff" );
+        readonly List<Base> Attributes;
 
         public AVFXTexturePalette() : base("TP")
         {
@@ -43,7 +42,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("TP");
+            var dataAvfx = new AVFXNode("TP");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

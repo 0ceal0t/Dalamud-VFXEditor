@@ -47,7 +47,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Timeline";
+            var id = parentId + "/Timeline";
             DrawRename( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             //=====================

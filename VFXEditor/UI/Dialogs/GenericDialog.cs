@@ -11,7 +11,7 @@ namespace VFXEditor.UI {
         public Plugin Plugin;
         public bool Visible = false;
         public string DialogName;
-        public Vector2 Size = new Vector2( 600, 400 );
+        public Vector2 Size = new( 600, 400 );
 
         public GenericDialog( Plugin plugin, string name ) {
             Plugin = plugin;

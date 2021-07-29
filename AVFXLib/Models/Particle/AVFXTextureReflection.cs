@@ -9,15 +9,14 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureReflection : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralBool UseScreenCopy = new LiteralBool("bUSC");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
-        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new LiteralEnum<TextureCalculateColor>("TCCT");
-        public LiteralInt TextureIdx = new LiteralInt("TxNo");
-        public AVFXCurve Rate = new AVFXCurve( "Rate" );
-        public AVFXCurve RPow = new AVFXCurve("RPow");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralBool UseScreenCopy = new("bUSC");
+        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
+        public LiteralEnum<TextureCalculateColor> TextureCalculateColor = new("TCCT");
+        public LiteralInt TextureIdx = new("TxNo");
+        public AVFXCurve Rate = new( "Rate" );
+        public AVFXCurve RPow = new("RPow");
+        readonly List<Base> Attributes;
 
         public AVFXTextureReflection() : base("TR")
         {
@@ -49,7 +48,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("TR");
+            var dataAvfx = new AVFXNode("TR");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

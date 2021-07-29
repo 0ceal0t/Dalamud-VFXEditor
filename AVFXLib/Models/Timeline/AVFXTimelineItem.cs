@@ -10,10 +10,9 @@ namespace AVFXLib.Models
     public class AVFXTimelineItem : Base
     {
         public const string NAME = "Item";
+        readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public List<AVFXTimelineSubItem> SubItems = new List<AVFXTimelineSubItem>();
+        public List<AVFXTimelineSubItem> SubItems = new();
 
         public AVFXTimelineItem() : base(NAME)
         {
@@ -27,17 +26,18 @@ namespace AVFXLib.Models
             ReadAVFX(Attributes, node);
 
             // split on every bEna
-            List<AVFXNode> split = new List<AVFXNode>();
-            int idx = 0;
-            foreach (AVFXNode child in node.Children)
+            var split = new List<AVFXNode>();
+            var idx = 0;
+            foreach (var child in node.Children)
             {
                 split.Add(child);
 
                 if (idx == (node.Children.Count - 1) || node.Children[idx + 1].Name == "bEna") // split before bEna
                 {
-                    AVFXNode dummyNode = new AVFXNode("SubItem");
-                    dummyNode.Children = split;
-                    AVFXTimelineSubItem Item = new AVFXTimelineSubItem();
+                    var dummyNode = new AVFXNode( "SubItem" ) {
+                        Children = split
+                    };
+                    var Item = new AVFXTimelineSubItem();
                     Item.Read(dummyNode);
                     SubItems.Add(Item);
                     split = new List<AVFXNode>();
@@ -50,8 +50,8 @@ namespace AVFXLib.Models
         public override AVFXNode ToAVFX()
         {
             // make ItPr by concatting elements of dummy elements
-            AVFXNode itemAvfx = new AVFXNode("Item");
-            foreach (AVFXTimelineSubItem Item in SubItems)
+            var itemAvfx = new AVFXNode("Item");
+            foreach (var Item in SubItems)
             {
                 itemAvfx.Children.AddRange(Item.ToAVFX().Children); // flatten
             }

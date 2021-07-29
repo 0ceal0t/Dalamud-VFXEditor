@@ -49,7 +49,7 @@ namespace VFXSelect.UI
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
                 Dialog.DisplayPath( loadedItem.SelfTmbPath );
-                int vfxIdx = 0;
+                var vfxIdx = 0;
                 foreach( var path in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );
                     ImGui.SameLine();

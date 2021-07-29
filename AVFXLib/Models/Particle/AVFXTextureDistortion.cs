@@ -9,19 +9,18 @@ namespace AVFXLib.Models
 {
     public class AVFXTextureDistortion : Base
     {
-        public LiteralBool Enabled = new LiteralBool("bEna");
-        public LiteralBool TargetUV1 = new LiteralBool("bT1");
-        public LiteralBool TargetUV2 = new LiteralBool("bT2");
-        public LiteralBool TargetUV3 = new LiteralBool("bT3");
-        public LiteralBool TargetUV4 = new LiteralBool("bT4");
-        public LiteralInt UvSetIdx = new LiteralInt("UvSN");
-        public LiteralEnum<TextureFilterType> TextureFilter = new LiteralEnum<TextureFilterType>("TFT");
-        public LiteralEnum<TextureBorderType> TextureBorderU = new LiteralEnum<TextureBorderType>("TBUT");
-        public LiteralEnum<TextureBorderType> TextureBorderV = new LiteralEnum<TextureBorderType>("TBVT");
-        public LiteralInt TextureIdx = new LiteralInt("TxNo");
-        public AVFXCurve DPow = new AVFXCurve("DPow");
-
-        List<Base> Attributes;
+        public LiteralBool Enabled = new("bEna");
+        public LiteralBool TargetUV1 = new("bT1");
+        public LiteralBool TargetUV2 = new("bT2");
+        public LiteralBool TargetUV3 = new("bT3");
+        public LiteralBool TargetUV4 = new("bT4");
+        public LiteralInt UvSetIdx = new("UvSN");
+        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
+        public LiteralEnum<TextureBorderType> TextureBorderU = new("TBUT");
+        public LiteralEnum<TextureBorderType> TextureBorderV = new("TBVT");
+        public LiteralInt TextureIdx = new("TxNo");
+        public AVFXCurve DPow = new("DPow");
+        readonly List<Base> Attributes;
 
         public AVFXTextureDistortion() : base("TD")
         {
@@ -57,7 +56,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("TD");
+            var dataAvfx = new AVFXNode("TD");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

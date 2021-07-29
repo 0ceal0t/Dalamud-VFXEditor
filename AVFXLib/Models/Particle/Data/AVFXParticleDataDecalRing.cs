@@ -9,11 +9,10 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataDecalRing : AVFXParticleData
     {
-        public AVFXCurve Width = new AVFXCurve("WID");
-        public LiteralFloat ScalingScale = new LiteralFloat("SS");
-        public LiteralFloat RingFan = new LiteralFloat("RF");
-
-        List<Base> Attributes;
+        public AVFXCurve Width = new("WID");
+        public LiteralFloat ScalingScale = new("SS");
+        public LiteralFloat RingFan = new("RF");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataDecalRing() : base("Data")
         {
@@ -40,7 +39,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

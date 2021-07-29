@@ -27,8 +27,8 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivItem item, out XivItemSelected selectedItem ) {
             selectedItem = null;
-            string imcPath = item.GetImcPath();
-            bool result = PluginInterface.Data.FileExists( imcPath );
+            var imcPath = item.GetImcPath();
+            var result = PluginInterface.Data.FileExists( imcPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );

@@ -26,8 +26,8 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivHousing item, out XivHousingSelected selectedItem ) {
             selectedItem = null;
-            string sgbPath = item.GetSbgPath();
-            bool result = PluginInterface.Data.FileExists( sgbPath );
+            var sgbPath = item.GetSbgPath();
+            var result = PluginInterface.Data.FileExists( sgbPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile( sgbPath );

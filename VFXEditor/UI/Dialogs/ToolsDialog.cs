@@ -20,7 +20,7 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                bool result = Plugin.PluginInterface.Data.FileExists( RawInputValue );
+                var result = Plugin.PluginInterface.Data.FileExists( RawInputValue );
                 if( result ) {
                     try {
                         var file = Plugin.PluginInterface.Data.GetFile( RawInputValue );
@@ -37,7 +37,7 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                bool result = Plugin.PluginInterface.Data.FileExists( RawTexInputValue );
+                var result = Plugin.PluginInterface.Data.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
                         var file = Plugin.PluginInterface.Data.GetFile( RawTexInputValue );

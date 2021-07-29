@@ -9,9 +9,8 @@ namespace AVFXLib.Models
 {
     public class AVFXBinderDataPoint : AVFXBinderData
     {
-        public AVFXCurve SpringStrength = new AVFXCurve("SpS");
-
-        List<Base> Attributes;
+        public AVFXCurve SpringStrength = new("SpS");
+        readonly List<Base> Attributes;
 
         public AVFXBinderDataPoint() : base("Data")
         {
@@ -35,7 +34,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

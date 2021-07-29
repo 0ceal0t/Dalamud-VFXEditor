@@ -11,7 +11,7 @@ namespace VFXSelect.Data.Sheets {
         public SheetManager Manager;
         public DalamudPluginInterface PluginInterface;
 
-        public List<T> Items = new List<T>();
+        public List<T> Items = new();
         public bool Loaded = false;
         public bool Waiting = false;
 

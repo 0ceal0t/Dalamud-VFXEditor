@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
-        private static Vector4 PATH_DECOMP_COLOR = new Vector4( 0.188f, 0.188f, 0.2f, 1f );
-        private static Vector4 SELECTED_TEXT_COLOR = new Vector4( 1.00000000000f, 0.33333333333f, 0.33333333333f, 1f );
-        private static Vector4 DIR_TEXT_COLOR = new Vector4( 0.54509803922f, 0.91372549020f, 0.99215686275f, 1f );
-        private static Vector4 CODE_TEXT_COLOR = new Vector4( 0.94509803922f, 0.98039215686f, 0.54901960784f, 1f );
-        private static Vector4 MISC_TEXT_COLOR = new Vector4( 1.00000000000f, 0.47450980392f, 0.77647058824f, 1f );
-        private static Vector4 IMAGE_TEXT_COLOR = new Vector4( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
-        private static Vector4 STANDARD_TEXT_COLOR = new Vector4( 1f );
+        private static Vector4 PATH_DECOMP_COLOR = new( 0.188f, 0.188f, 0.2f, 1f );
+        private static Vector4 SELECTED_TEXT_COLOR = new( 1.00000000000f, 0.33333333333f, 0.33333333333f, 1f );
+        private static Vector4 DIR_TEXT_COLOR = new( 0.54509803922f, 0.91372549020f, 0.99215686275f, 1f );
+        private static Vector4 CODE_TEXT_COLOR = new( 0.94509803922f, 0.98039215686f, 0.54901960784f, 1f );
+        private static Vector4 MISC_TEXT_COLOR = new( 1.00000000000f, 0.47450980392f, 0.77647058824f, 1f );
+        private static Vector4 IMAGE_TEXT_COLOR = new( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
+        private static Vector4 STANDARD_TEXT_COLOR = new( 1f );
 
         private struct IconColorItem {
             public char Icon;
@@ -115,7 +115,7 @@ namespace ImGuiFileDialog {
                     ImGui.PopItemWidth();
                 }
                 else {
-                    for( int idx = 0; idx < PathDecomposition.Count; idx++ ) {
+                    for( var idx = 0; idx < PathDecomposition.Count; idx++ ) {
                         if( idx > 0 ) {
                             ImGui.SameLine();
                             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
@@ -273,7 +273,7 @@ namespace ImGuiFileDialog {
         private unsafe void DrawFileListView( Vector2 size ) {
             ImGui.BeginChild( "##FileDialog_FileList", size );
 
-            ImGuiTableFlags tableFlags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.RowBg | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY | ImGuiTableFlags.NoHostExtendX;
+            var tableFlags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.RowBg | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY | ImGuiTableFlags.NoHostExtendX;
             if( ImGui.BeginTable( "##FileTable", 4, tableFlags, size ) ) {
                 ImGui.TableSetupScrollFreeze( 0, 1 );
 
@@ -287,7 +287,7 @@ namespace ImGuiFileDialog {
                 ImGui.TableSetupColumn( "Date", ImGuiTableColumnFlags.WidthFixed | ( hideDate ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 3 );
 
                 ImGui.TableNextRow( ImGuiTableRowFlags.Headers );
-                for( int column = 0; column < 4; column++ ) {
+                for( var column = 0; column < 4; column++ ) {
                     ImGui.TableSetColumnIndex( column );
                     var columnName = ImGui.TableGetColumnName( column );
                     ImGui.PushID( column );
@@ -326,7 +326,7 @@ namespace ImGuiFileDialog {
                                 var needToBreak = false;
 
                                 var dir = file.Type == FileStructType.Directory;
-                                IconColorItem item = !dir ? GetIcon( file.Ext ) : new IconColorItem
+                                var item = !dir ? GetIcon( file.Ext ) : new IconColorItem
                                 {
                                     Color = DIR_TEXT_COLOR,
                                     Icon = (char) FontAwesomeIcon.Folder
@@ -461,7 +461,7 @@ namespace ImGuiFileDialog {
                 }
             }
             else {
-                string newPath = Path.Combine( CurrentPath, file.FileName );
+                var newPath = Path.Combine( CurrentPath, file.FileName );
 
                 if( Directory.Exists( newPath ) ) {
                     CurrentPath = newPath;
@@ -499,7 +499,7 @@ namespace ImGuiFileDialog {
 
                     var startMultiSelection = false;
                     var fileNameToSelect = file.FileName;
-                    string savedLastSelectedFileName = "";
+                    var savedLastSelectedFileName = "";
 
                     foreach(var f in FilteredFiles) {
                         // select top-to-bottom
@@ -607,7 +607,7 @@ namespace ImGuiFileDialog {
 
                 ImGui.PushItemWidth( 150f );
                 if( ImGui.BeginCombo( "##Filters", SelectedFilter.Filter, ImGuiComboFlags.None ) ) {
-                    int idx = 0;
+                    var idx = 0;
                     foreach( var filter in Filters ) {
                         var selected = ( filter.Filter == SelectedFilter.Filter );
                         ImGui.PushID( idx++ );
@@ -681,9 +681,9 @@ namespace ImGuiFileDialog {
                     }
                 }
 
-                string name = $"The file Already Exists !##{Title}{Id}OverWriteDialog";
-                bool res = false;
-                bool open = true;
+                var name = $"The file Already Exists !##{Title}{Id}OverWriteDialog";
+                var res = false;
+                var open = true;
 
                 ImGui.OpenPopup( name );
                 if( ImGui.BeginPopupModal( name, ref open, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove ) ) {

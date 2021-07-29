@@ -10,20 +10,19 @@ namespace AVFXLib.Models
     public class AVFXCurveColor : Base
     {
 
-        public AVFXCurve RGB = new AVFXCurve("RGB");
-        public AVFXCurve A = new AVFXCurve("A");
-        public AVFXCurve SclR = new AVFXCurve("SclR");
-        public AVFXCurve SclG = new AVFXCurve("SclG");
-        public AVFXCurve SclB = new AVFXCurve("SclB");
-        public AVFXCurve SclA = new AVFXCurve("SclA");
-        public AVFXCurve Bri = new AVFXCurve("Bri");
-        public AVFXCurve RanR = new AVFXCurve("RanR");
-        public AVFXCurve RanG = new AVFXCurve("RanG");
-        public AVFXCurve RanB = new AVFXCurve("RanB");
-        public AVFXCurve RanA = new AVFXCurve("RanA");
-        public AVFXCurve RBri = new AVFXCurve("RBri");
-
-        List<Base> Attributes;
+        public AVFXCurve RGB = new("RGB");
+        public AVFXCurve A = new("A");
+        public AVFXCurve SclR = new("SclR");
+        public AVFXCurve SclG = new("SclG");
+        public AVFXCurve SclB = new("SclB");
+        public AVFXCurve SclA = new("SclA");
+        public AVFXCurve Bri = new("Bri");
+        public AVFXCurve RanR = new("RanR");
+        public AVFXCurve RanG = new("RanG");
+        public AVFXCurve RanB = new("RanB");
+        public AVFXCurve RanA = new("RanA");
+        public AVFXCurve RBri = new("RBri");
+        readonly List<Base> Attributes;
 
         public AVFXCurveColor(string name = "Col") : base(name)
         {
@@ -57,7 +56,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode curveAvfx = new AVFXNode(AVFXName);
+            var curveAvfx = new AVFXNode(AVFXName);
             PutAVFX(curveAvfx, Attributes);
             return curveAvfx;
         }

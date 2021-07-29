@@ -48,7 +48,7 @@ namespace VFXSelect.Data.Rows {
         }
 
         public string GetTmbPath() {
-            string prefix = ( Type == NpcType.Monster ) ? "m" : "d";
+            var prefix = ( Type == NpcType.Monster ) ? "m" : "d";
             return "chara/action/mon_sp/" + prefix + ModelId.ToString().PadLeft( 4, '0' ) + "/";
         }
 

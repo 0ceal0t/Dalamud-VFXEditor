@@ -29,7 +29,7 @@ namespace VFXEditor.UI.VFX
             UnknownFloats = new Vector4( Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3] );
         }
 
-        public static Dictionary<string, string> IdOptions = new Dictionary<string, string>()
+        public static Dictionary<string, string> IdOptions = new()
         {
             { "LLIK", "Kill" },
             { "TSER", "Rest" },
@@ -41,7 +41,7 @@ namespace VFXEditor.UI.VFX
         };
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/Clip";
+            var id = parentId + "/Clip";
             DrawRename( id );
             if( ImGui.InputFloat4( "Unknown Ints" + id, ref UnknownInts ) )
             {

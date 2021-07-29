@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UIData : UIItem {
-        public List<UIItem> Tabs = new List<UIItem>();
+        public List<UIItem> Tabs = new();
         public UIItemSplitView<UIItem> SplitView;
 
         public UIData() {
@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX {
             DrawBody( parentId );
         }
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Data";
+            var id = parentId + "/Data";
             SplitView.Draw( id );
         }
     }

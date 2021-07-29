@@ -23,20 +23,20 @@ namespace AVFXLib.AVFX
         }
 
         public virtual byte[] ToBytes() {
-            int totalSize = 0;
-            byte[][] byteArrays = new byte[Children.Count][];
-            for(int i = 0; i < Children.Count; i++)
+            var totalSize = 0;
+            var byteArrays = new byte[Children.Count][];
+            for(var i = 0; i < Children.Count; i++)
             {
                 byteArrays[i] = Children[i].ToBytes();
                 totalSize += byteArrays[i].Length;
             }
-            byte[] bytes = new byte[8 + Util.RoundUp(totalSize)];
-            byte[] name = Util.NameTo4Bytes(Name);
-            byte[] size = Util.IntTo4Bytes(totalSize);
+            var bytes = new byte[8 + Util.RoundUp(totalSize)];
+            var name = Util.NameTo4Bytes(Name);
+            var size = Util.IntTo4Bytes(totalSize);
             Buffer.BlockCopy(name, 0, bytes, 0, 4);
             Buffer.BlockCopy(size, 0, bytes, 4, 4);
-            int bytesSoFar = 8;
-            for(int i = 0; i < byteArrays.Length; i++)
+            var bytesSoFar = 8;
+            for(var i = 0; i < byteArrays.Length; i++)
             {
                 Buffer.BlockCopy(byteArrays[i], 0, bytes, bytesSoFar, byteArrays[i].Length);
                 bytesSoFar += byteArrays[i].Length;
@@ -62,8 +62,8 @@ namespace AVFXLib.AVFX
                 return false;
             }
 
-            List<AVFXNode> notBlank = Children.Where( x => !( x is AVFXBlank ) ).ToList();
-            List<AVFXNode> notBlank2 = node.Children.Where( x => !( x is AVFXBlank ) ).ToList();
+            var notBlank = Children.Where( x => !( x is AVFXBlank ) ).ToList();
+            var notBlank2 = node.Children.Where( x => !( x is AVFXBlank ) ).ToList();
 
             if(notBlank.Count != notBlank2.Count)
             {
@@ -71,9 +71,9 @@ namespace AVFXLib.AVFX
 
                 return false;
             }
-            for(int idx = 0; idx < notBlank.Count; idx++)
+            for(var idx = 0; idx < notBlank.Count; idx++)
             {
-                bool e = notBlank[idx].EqualsNode(notBlank2[idx], messages);
+                var e = notBlank[idx].EqualsNode(notBlank2[idx], messages);
                 if (!e)
                 {
                     messages.Add(string.Format("Not Equal {0} index: {1}", Name, idx));
@@ -84,10 +84,10 @@ namespace AVFXLib.AVFX
         }
 
         public virtual string ExportString(int level) {
-            string ret = string.Format("{0}+---  {1} ----\n", new string('\t', level), Name);
+            var ret = string.Format("{0}+---  {1} ----\n", new string('\t', level), Name);
             foreach(var c in Children)
             {
-                ret = ret + c.ExportString( level + 1);
+                ret += c.ExportString( level + 1);
             }
             return ret;
         }

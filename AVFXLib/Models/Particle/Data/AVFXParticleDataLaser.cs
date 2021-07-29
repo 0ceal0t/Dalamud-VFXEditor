@@ -9,10 +9,9 @@ namespace AVFXLib.Models
 {
     public class AVFXParticleDataLaser : AVFXParticleData
     {
-        public AVFXCurve Length = new AVFXCurve("Len");
-        public AVFXCurve Width = new AVFXCurve("Wdt");
-
-        List<Base> Attributes;
+        public AVFXCurve Length = new("Len");
+        public AVFXCurve Width = new("Wdt");
+        readonly List<Base> Attributes;
 
         public AVFXParticleDataLaser() : base("Data")
         {
@@ -36,7 +35,7 @@ namespace AVFXLib.Models
 
         public override AVFXNode ToAVFX()
         {
-            AVFXNode dataAvfx = new AVFXNode("Data");
+            var dataAvfx = new AVFXNode("Data");
             PutAVFX(dataAvfx, Attributes);
             return dataAvfx;
         }

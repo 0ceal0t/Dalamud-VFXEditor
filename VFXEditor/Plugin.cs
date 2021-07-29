@@ -6,7 +6,7 @@ using ImGuiNET;
 using ImPlotNET;
 using ImGuizmoNET;
 using VFXEditor.Data;
-using VFXEditor.Data.DirectX;
+using VFXEditor.DirectX;
 using VFXEditor.External;
 using VFXEditor.Data.Vfx;
 using System.Reflection;
@@ -22,7 +22,6 @@ namespace VFXEditor
         private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
 
         public DalamudPluginInterface PluginInterface;
-        public Configuration Configuration;
         public ResourceLoader ResourceLoader;
         public DocumentManager DocManager;
         public VfxTracker Tracker;
@@ -32,18 +31,15 @@ namespace VFXEditor
 
         public static string TemplateLocation;
 
-        public string WriteLocation => Configuration?.WriteLocation;
-
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
         private IntPtr ImPlotContext;
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
-            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize( PluginInterface );
-            Directory.CreateDirectory( WriteLocation );
-            PluginLog.Log( "Write location: " + WriteLocation );
+            Directory.CreateDirectory( Configuration.Config.WriteLocation );
+            PluginLog.Log( "Write location: " + Configuration.Config.WriteLocation );
 
             ResourceLoader = new ResourceLoader( this );
             PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
@@ -60,8 +56,7 @@ namespace VFXEditor
             ImPlot.SetCurrentContext( ImPlotContext );
 
             Tracker = new VfxTracker( this );
-            TexManager = new TextureManager( this );
-            TexManager.OneTimeSetup();
+            TextureManager.Initialize( this );
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
             DocManager = new DocumentManager( this );
             DirectXManager.Initialize( this );
@@ -96,7 +91,7 @@ namespace VFXEditor
             SpawnVfx?.Remove();
             DirectXManager.Dispose();
             DocManager?.Dispose();
-            TexManager?.Dispose();
+            TextureManager.Dispose();
         }
 
         private void OnCommand( string command, string rawArgs ) {

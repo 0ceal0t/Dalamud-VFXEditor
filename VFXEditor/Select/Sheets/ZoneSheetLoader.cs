@@ -21,8 +21,8 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivZone item, out XivZoneSelected selectedItem ) {
             selectedItem = null;
-            string lgbPath = item.GetLgbPath();
-            bool result = PluginInterface.Data.FileExists( lgbPath );
+            var lgbPath = item.GetLgbPath();
+            var result = PluginInterface.Data.FileExists( lgbPath );
             if( result ) {
                 try {
                     var file = PluginInterface.Data.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );

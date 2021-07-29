@@ -41,7 +41,7 @@ namespace ImGuiFileDialog {
         private bool PathInputActivated = false;
         private string PathInputBuffer = "";
 
-        private bool IsModal = false;
+        private readonly bool IsModal = false;
         private bool OkResultToConfirm = false;
         private bool IsOk;
         private bool WantsToQuit;
@@ -52,14 +52,14 @@ namespace ImGuiFileDialog {
         private string SearchBuffer = "";
 
         private string LastSelectedFileName = "";
-        private List<string> SelectedFileNames = new();
+        private readonly List<string> SelectedFileNames = new();
 
         private float FooterHeight = 0;
 
         private string SelectedSideBar = "";
-        private List<SideBarItem> Drives = new();
-        private List<SideBarItem> QuickAccess = new();
-        private List<SideBarItem> Recent;
+        private readonly List<SideBarItem> Drives = new();
+        private readonly List<SideBarItem> QuickAccess = new();
+        private readonly List<SideBarItem> Recent;
 
         public FileDialog(
             string id,
@@ -178,8 +178,8 @@ namespace ImGuiFileDialog {
         private void SetCurrentDir(string path) {
             var dir = new DirectoryInfo( path );
             CurrentPath = dir.FullName;
-            if(CurrentPath[CurrentPath.Length - 1] == Path.DirectorySeparatorChar) { // handle selecting a drive, like C: -> C:\
-                CurrentPath = CurrentPath.Substring( 0, CurrentPath.Length - 1 );
+            if(CurrentPath[^1] == Path.DirectorySeparatorChar) { // handle selecting a drive, like C: -> C:\
+                CurrentPath = CurrentPath[0..^1];
             }
 
             PathInputBuffer = CurrentPath;

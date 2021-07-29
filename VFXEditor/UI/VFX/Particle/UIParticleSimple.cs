@@ -114,8 +114,8 @@ namespace VFXEditor.UI.VFX {
     }
 
     class UISimpleColor : UIBase {
-        AVFXParticleSimple Simple;
-        int Idx;
+        readonly AVFXParticleSimple Simple;
+        readonly int Idx;
 
         Vector4 Color;
         int Frame;

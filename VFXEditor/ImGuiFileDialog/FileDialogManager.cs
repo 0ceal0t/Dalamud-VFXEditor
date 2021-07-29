@@ -9,7 +9,7 @@ namespace ImGuiFileDialog {
         private FileDialog Dialog;
         private string SavedPath = ".";
         private Action<bool, string> Callback;
-        private List<SideBarItem> Recent = new();
+        private readonly List<SideBarItem> Recent = new();
 
         public void OpenFolderDialog( string title, Action<bool, string> callback ) {
             SetDialog("OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback);
