@@ -20,7 +20,6 @@ namespace VFXEditor.Data {
         }
 
         public static void Dispose() {
-            PluginInterface = null;
             _LastImportNode = null;
         }
 

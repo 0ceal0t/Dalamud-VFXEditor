@@ -26,7 +26,6 @@ namespace VFXEditor
         public DocumentManager DocManager;
         public VfxTracker Tracker;
         public SheetManager Sheets;
-        public static FileDialogManager DialogManager;
 
         public static string TemplateLocation;
 
@@ -43,13 +42,12 @@ namespace VFXEditor
             } );
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
-
-            DialogManager = new FileDialogManager();
-
+            
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlotContext = ImPlot.CreateContext();
             ImPlot.SetCurrentContext( ImPlotContext );
 
+            FileDialogManager.Initialize();
             DataManager.Initialize( this );
             TextureManager.Initialize( this );
             DirectXManager.Initialize( this );
@@ -64,11 +62,11 @@ namespace VFXEditor
             ResourceLoader.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
-            PluginInterface.UiBuilder.OnBuildUi += DialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= DialogManager.Draw;
+            PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
 
             ResourceLoader?.Dispose();
@@ -76,10 +74,9 @@ namespace VFXEditor
             ImPlot.DestroyContext();
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
-            PluginInterface?.Dispose();
 
             SpawnVfx?.Remove();
-            DialogManager.Reset();
+            FileDialogManager.Dispose();
             DirectXManager.Dispose();
             DocManager?.Dispose();
             TextureManager.Dispose();

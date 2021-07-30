@@ -1,11 +1,9 @@
 using Dalamud.Game.ClientState;
 using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using VFXEditor.Structs.Vfx;

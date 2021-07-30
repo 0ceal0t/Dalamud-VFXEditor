@@ -11,6 +11,8 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXEmoteSelect : VFXSelectTab<XivEmote, XivEmoteSelected> {
+        private ImGuiScene.TextureWrap Icon;
+
         public VFXEmoteSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
             base( parentId, tabId, sheet.Emotes, sheet.PluginInterface, dialog ) {
         }
@@ -19,7 +21,6 @@ namespace VFXSelect.UI {
             return VFXSelectDialog.Matches( item.Name, searchInput );
         }
 
-        ImGuiScene.TextureWrap Icon;
         public override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
         }
@@ -37,12 +38,12 @@ namespace VFXSelect.UI {
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                Dialog.DisplayPath( path );
+                VFXSelectDialog.DisplayPath( path );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
                     Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[EMOTE] " + loadedItem.Emote.Name + " #" + vfxIdx, path ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                VFXSelectDialog.Copy( path, id: Id + "Copy" + vfxIdx );
                 Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                 vfxIdx++;
             }

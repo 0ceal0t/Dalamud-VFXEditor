@@ -21,7 +21,7 @@ namespace VFXSelect.Data.Sheets {
 
         public override void OnLoad() {
             fastCSV.ReadFile<NpcCsvRow>( Manager.NpcCsv, true, ',', ( o, c ) => {
-                o.Id = Int32.Parse( c[0] );
+                o.Id = int.Parse( c[0] );
                 o.Name = c[1];
                 NpcIdToName[o.Id] = o.Name;
                 return true;

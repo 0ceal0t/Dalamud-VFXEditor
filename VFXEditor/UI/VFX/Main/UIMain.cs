@@ -252,14 +252,14 @@ namespace VFXEditor.UI.VFX {
         }
 
         public static void ExportDialog( UINode node ) {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, node.ToBytes() );
             } );
         }
 
         public void ImportDialog() {
-            Plugin.DialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     ImportData( res );

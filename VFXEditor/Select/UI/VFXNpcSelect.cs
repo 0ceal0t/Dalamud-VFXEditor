@@ -37,18 +37,18 @@ namespace VFXSelect.UI {
 
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
-            Dialog.DisplayPath( loadedItem.ImcPath );
+            VFXSelectDialog.DisplayPath( loadedItem.ImcPath );
 
             var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                Dialog.DisplayPath( path );
+                VFXSelectDialog.DisplayPath( path );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
                     Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameNpc, "[NPC] " + loadedItem.Npc.Name + " #" + vfxIdx, path ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                VFXSelectDialog.Copy( path, id: Id + "Copy" + vfxIdx );
                 Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                 vfxIdx++;
             }

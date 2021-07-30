@@ -275,8 +275,8 @@ namespace VFXEditor.Data.Texture {
             foreach( var entry in PathToTextureReplace ) {
                 File.Delete( entry.Value.localPath );
             }
-            PathToTexturePreview = null;
-            PathToTextureReplace = null;
+            PathToTexturePreview.Clear();
+            PathToTextureReplace.Clear();
         }
     }
 }

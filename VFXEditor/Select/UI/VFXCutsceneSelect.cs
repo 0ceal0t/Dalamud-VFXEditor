@@ -26,17 +26,17 @@ namespace VFXSelect.UI {
 
             ImGui.Text( "CUTB Path: " );
             ImGui.SameLine();
-            Dialog.DisplayPath( loadedItem.Cutscene.Path );
+            VFXSelectDialog.DisplayPath( loadedItem.Cutscene.Path );
             var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                Dialog.DisplayPath( path );
+                VFXSelectDialog.DisplayPath( path );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
                     Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameEmote, "[CUT] " + loadedItem.Cutscene.Name + " #" + vfxIdx, path ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                VFXSelectDialog.Copy( path, id: Id + "Copy" + vfxIdx );
                 Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                 vfxIdx++;
             }

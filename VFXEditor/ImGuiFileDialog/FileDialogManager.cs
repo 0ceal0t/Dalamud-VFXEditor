@@ -4,30 +4,41 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace ImGuiFileDialog {
-    public class FileDialogManager {
+    public static class FileDialogManager {
+        private static FileDialog Dialog;
+        private static string SavedPath;
+        private static Action<bool, string> Callback;
+        private static List<SideBarItem> Recent;
 
-        private FileDialog Dialog;
-        private string SavedPath = ".";
-        private Action<bool, string> Callback;
-        private readonly List<SideBarItem> Recent = new();
+        public static void Initialize() {
+            Dialog = null;
+            SavedPath = ".";
+            Callback = null;
+            Recent = new();
+        }
 
-        public void OpenFolderDialog( string title, Action<bool, string> callback ) {
+        public static void Dispose() {
+            Dialog = null;
+            Callback = null;
+        }
+
+        public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
             SetDialog("OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback);
         }
 
-        public void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
+        public static void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
             SetDialog( "SaveFolderDialog", title, "", SavedPath, defaultFolderName, "", 1, false, ImGuiFileDialogFlags.None, callback );
         }
 
-        public void OpenFileDialog( string title, string filters, Action<bool, string> callback ) {
+        public static void OpenFileDialog( string title, string filters, Action<bool, string> callback ) {
             SetDialog( "OpenFileDialog", title, filters, SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback );
         }
 
-        public void SaveFileDialog( string title, string filters, string defaultFileName, string defaultExtension, Action<bool, string> callback ) {
+        public static void SaveFileDialog( string title, string filters, string defaultFileName, string defaultExtension, Action<bool, string> callback ) {
             SetDialog( "SaveFileDialog", title, filters, SavedPath, defaultFileName, defaultExtension, 1, false, ImGuiFileDialogFlags.None, callback );
         }
 
-        private void SetDialog(
+        private static void SetDialog(
             string id,
             string title,
             string filters,
@@ -39,29 +50,24 @@ namespace ImGuiFileDialog {
             ImGuiFileDialogFlags flags,
             Action<bool, string> callback
         ) {
-            Reset();
+            Dialog?.Hide();
             Callback = callback;
             Dialog = new FileDialog( id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, Recent, flags );
             Dialog.Show();
         }
 
-        public void Draw() {
+        public static void Draw() {
             if( Dialog == null ) return;
             if(Dialog.Draw()) {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
                 SavedPath = Dialog.GetCurrentPath();
+                Dialog?.Hide();
                 AddRecent( SavedPath );
-                Reset();
+                Dispose();
             }
         }
 
-        public void Reset() {
-            Dialog?.Hide();
-            Dialog = null;
-            Callback = null;
-        }
-
-        private void AddRecent(string path) {
+        private static void AddRecent(string path) {
             foreach(var recent in Recent) {
                 if( recent.Location == path ) return;
             }

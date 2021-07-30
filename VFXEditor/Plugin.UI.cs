@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using Dalamud.Interface;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
@@ -34,7 +35,6 @@ namespace VFXEditor {
             SelectUI = new VFXSelectDialog(
                 Sheets, "File Select [SOURCE]",
                 Configuration.Config.RecentSelects,
-                DialogManager,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -45,7 +45,6 @@ namespace VFXEditor {
             PreviewUI = new VFXSelectDialog(
                 Sheets, "File Select [TARGET]",
                 Configuration.Config.RecentSelects,
-                DialogManager,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -403,7 +402,7 @@ namespace VFXEditor {
         }
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
-            DialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
             } );
         }

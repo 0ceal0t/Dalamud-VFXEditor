@@ -9,14 +9,15 @@ using VFXEditor.DirectX;
 namespace VFXEditor.UI.VFX {
     public class UICurveEditor : UIBase {
 
-        public CurvePoint Selected = null;
-        public AVFXCurve Curve;
-        public List<CurvePoint> Points;
-        public bool Color;
+        private CurvePoint Selected = null;
+        private readonly AVFXCurve Curve;
+        private readonly List<CurvePoint> Points;
+        private readonly bool Color;
+        private bool DrawOnce = false;
 
-        public static readonly Vector4 POINT_COLOR = new( 1, 1, 1, 1 );
-        public static readonly Vector4 LINE_COLOR = new( 0, 0.1f, 1, 1 );
-        public static readonly float GRABBING_DISTANCE = 25;
+        private static readonly Vector4 POINT_COLOR = new( 1, 1, 1, 1 );
+        private static readonly Vector4 LINE_COLOR = new( 0, 0.1f, 1, 1 );
+        private static readonly float GRABBING_DISTANCE = 25;
 
         public UICurveEditor( AVFXCurve curve, bool color ) {
             Curve = curve;
@@ -26,8 +27,6 @@ namespace VFXEditor.UI.VFX {
                 Points.Add( new CurvePoint( this, key, Color ) );
             }
         }
-
-        public bool DrawOnce = false;
         public override void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
@@ -43,13 +42,13 @@ namespace VFXEditor.UI.VFX {
             }
             if( ImPlot.BeginPlot( parentId + "Plot", "Frame", "", new Vector2( -1, 300 ), ImPlotFlags.AntiAliased | ImPlotFlags.NoMenus, ImPlotAxisFlags.None, Color ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel ) ) {
                 if( Points.Count > 0 ) {
-                    // ====== BACKGROUND LINE =========
                     var line = GetDrawLine( Points, Color );
                     ImPlot.SetNextLineStyle( LINE_COLOR, 2 );
                     ImPlot.PlotLine( Curve.AVFXName, ref line[0].X, ref line[0].Y, line.Length, 0, 2 * sizeof( float ) );
+
                     // ====== IMAGE ============
                     if( Color && Curve.Keys.Count > 1 ) {
-                        if( DirectXManager.GradientView.CurrentCurve != Curve) {
+                        if( DirectXManager.GradientView.CurrentCurve != Curve ) {
                             DirectXManager.GradientView.SetGradient( Curve );
                         }
 
@@ -64,25 +63,27 @@ namespace VFXEditor.UI.VFX {
 
                         ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
+
                     // ====== POINTS ===========
                     var idx = 0;
                     var dragging = false;
                     foreach( var p in Points ) {
-                        // DRAW THE POINT
+                        // Draw the point
                         if( Color ) {
-                            ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels(p.GetImPlotPoint()), Selected == p ? 15 : 10, Invert(p.ColorData) );
+                            ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( p.GetImPlotPoint() ), Selected == p ? 15 : 10, Invert( p.ColorData ) );
                         }
                         if( ImPlot.DragPoint( "#" + idx, ref p.X, ref p.Y, true, Color ? new Vector4( p.ColorData, 1 ) : POINT_COLOR, Selected == p ? 12 : 7 ) ) {
                             Selected = p;
                             p.UpdatePosition();
                             dragging = true;
                         }
-                        // ==== CHECK ORDER ======
-                        if(idx > 0 && p.X < Points[idx - 1].X ) {
+                        // Check order
+                        if( idx > 0 && p.X < Points[idx - 1].X ) {
                             wrongOrder = true;
                         }
                         idx++;
                     }
+
                     // ====== CLICKING TO SELECT ======
                     if( !dragging && ImGui.IsMouseDown( ImGuiMouseButton.Left ) && IsHovering() ) {
                         var mousePos = ImGui.GetMousePos();
@@ -96,21 +97,12 @@ namespace VFXEditor.UI.VFX {
                         }
                     }
                 }
+
                 // ========== ADD NEW KEYFRAMES =======
                 if( ImGui.IsMouseClicked( ImGuiMouseButton.Right ) && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
-                    var insertIdx = 0;
-                    foreach( var p in Points ) {
-                        if( p.X > Math.Round( pos.x ) ) {
-                            break;
-                        }
-                        insertIdx++;
-                    }
                     var z = Color ? 1.0f : ( float )pos.y;
-                    var newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( pos.x ), 1, 1, z );
-                    Curve.Keys.Insert( insertIdx, newKey );
-                    Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
-                    UpdateColor();
+                    InsertPoint( (float) pos.x, 1, 1, z );
                 }
 
                 ImPlot.EndPlot();
@@ -124,19 +116,73 @@ namespace VFXEditor.UI.VFX {
             }
         }
 
-        public static uint Invert(Vector3 color ) {
-            return color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32(new Vector4(0,0,0,1)) : ImGui.GetColorU32( new Vector4(1,1,1,1) );
+        private void InsertPoint(float time, float x, float y, float z) {
+            var insertIdx = 0;
+            foreach( var p in Points ) {
+                if( p.X > Math.Round( time ) ) {
+                    break;
+                }
+                insertIdx++;
+            }
+            var newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
+            Curve.Keys.Insert( insertIdx, newKey );
+            Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
+            UpdateColor();
         }
 
-        public bool IsHovering() {
-            var mousePos = ImGui.GetMousePos();
-            var topLeft = ImPlot.GetPlotPos();
-            var plotSize = ImPlot.GetPlotSize();
-            if( mousePos.X >= topLeft.X && mousePos.X < topLeft.X + plotSize.X && mousePos.Y >= topLeft.Y && mousePos.Y < topLeft.Y + plotSize.Y ) return true;
-            return false;
+        public void UpdateColor() {
+            if( Color && Curve.Keys.Count > 1 ) {
+                var sameTime = true;
+                foreach( var _key in Curve.Keys ) {
+                    if( _key.Time != Curve.Keys[0].Time ) {
+                        sameTime = false;
+                        break;
+                    }
+                }
+                if( sameTime ) {
+                    Curve.Keys[^1].Time++;
+                    Points[^1].X++;
+                }
+                DirectXManager.GradientView.SetGradient( Curve );
+            }
         }
 
-        public Vector2[] GetDrawLine( List<CurvePoint> points, bool color = false ) {
+        public float GetAtTime( int frame ) {
+            var idx = 0;
+            if( Curve.Keys.Count > 0 && frame <= Curve.Keys[0].Time ) { // before the first point
+                return Curve.Keys[0].Z;
+            }
+            if( Curve.Keys.Count > 0 && frame >= Curve.Keys[^1].Time ) { // after the last one
+                return Curve.Keys[^1].Z;
+            }
+
+            foreach( var nextPoint in Curve.Keys ) {
+                if( frame < nextPoint.Time && idx != 0 ) {
+                    var item = Curve.Keys[idx - 1];
+                    if( item.Type == KeyType.Step ) {
+                        return item.Z;
+                    }
+                    else {
+                        var t = ( ( float )( frame - item.Time ) ) / ( nextPoint.Time - item.Time );
+                        if( item.Type == KeyType.Linear ) {
+                            return item.Z + t * ( nextPoint.Z - item.Z );
+                        }
+                        else if( item.Type == KeyType.Spline ) {
+                            var midX = ( ( float )( nextPoint.X - item.X ) ) / 2.0f;
+                            var handle1 = new Vector2( item.Time + item.X * midX, item.Z );
+                            var handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
+                            var b = Bezier( new Vector2( item.Time, item.Z ), new Vector2( nextPoint.Time, nextPoint.Z ), handle1, handle2, t );
+                            return b.Y;
+                        }
+                    }
+
+                }
+                idx++;
+            }
+            return 0.0f;
+        }
+
+        private static Vector2[] GetDrawLine( List<CurvePoint> points, bool color = false ) {
             var ret = new List<Vector2>();
             if( points.Count > 0 ) {
                 ret.Add( points[0].GetPosition() );
@@ -170,7 +216,19 @@ namespace VFXEditor.UI.VFX {
             return ret.ToArray();
         }
 
-        public static Vector2 Bezier(Vector2 p1_, Vector2 p2_, Vector2 handle1, Vector2 handle2, float t ) {
+        private static bool IsHovering() {
+            var mousePos = ImGui.GetMousePos();
+            var topLeft = ImPlot.GetPlotPos();
+            var plotSize = ImPlot.GetPlotSize();
+            if( mousePos.X >= topLeft.X && mousePos.X < topLeft.X + plotSize.X && mousePos.Y >= topLeft.Y && mousePos.Y < topLeft.Y + plotSize.Y ) return true;
+            return false;
+        }
+
+        private static uint Invert( Vector3 color ) {
+            return color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
+        }
+
+        private static Vector2 Bezier( Vector2 p1_, Vector2 p2_, Vector2 handle1, Vector2 handle2, float t ) {
             var u = 1 - t;
             var w1 = u * u * u;
             var w2 = 3 * u * u * t;
@@ -182,60 +240,7 @@ namespace VFXEditor.UI.VFX {
             );
         }
 
-        public void UpdateColor() {
-            if(Color && Curve.Keys.Count > 1 ) {
-                var sameTime = true;
-                foreach(var _key in Curve.Keys ) {
-                    if(_key.Time != Curve.Keys[0].Time ) {
-                        sameTime = false;
-                        break;
-                    }
-                }
-                if( sameTime ) {
-                    Curve.Keys[^1].Time++;
-                    Points[^1].X++;
-                }
-                DirectXManager.GradientView.SetGradient( Curve );
-            }
-        }
-        // USED FOR OTHER FUNCTIONS....
-        public float GetAtTime(int frame ) {
-            var idx = 0;
-            if(Curve.Keys.Count > 0 && frame <= Curve.Keys[0].Time ) { // before the first point
-                return Curve.Keys[0].Z;
-            }
-            if(Curve.Keys.Count > 0 && frame >= Curve.Keys[^1].Time) { // after the last one
-                return Curve.Keys[^1].Z;
-            }
-
-            foreach(var nextPoint in Curve.Keys ) {
-                if(frame < nextPoint.Time && idx != 0 ) {
-                    // .........
-                    var item = Curve.Keys[idx - 1];
-                    if( item.Type == KeyType.Step ) {
-                        return item.Z;
-                    }
-                    else {
-                        var t = ((float)( frame - item.Time )) / ( nextPoint.Time - item.Time );
-                        if(item.Type == KeyType.Linear ) {
-                            return item.Z + t * ( nextPoint.Z - item.Z );
-                        }
-                        else if(item.Type == KeyType.Spline ) {
-                            var midX = ((float)( nextPoint.X - item.X )) / 2.0f;
-                            var handle1 = new Vector2( item.Time + item.X * midX, item.Z );
-                            var handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
-                            var b = Bezier( new Vector2( item.Time, item.Z ), new Vector2( nextPoint.Time, nextPoint.Z ), handle1, handle2, t );
-                            return b.Y;
-                        }
-                    }
-
-                }
-                idx++;
-            }
-            return 0.0f;
-        }
-
-        public class CurvePoint {
+        private class CurvePoint {
             public static readonly string[] TypeOptions = Enum.GetNames( typeof( KeyType ) );
             public int TypeIdx;
             public double X;
@@ -276,7 +281,7 @@ namespace VFXEditor.UI.VFX {
                     X = 0;
                 }
                 Key.Time = ( int )X;
-                // =============
+
                 if( !Color ) {
                     Key.Z = ( float )Y;
                 }
@@ -303,6 +308,7 @@ namespace VFXEditor.UI.VFX {
                     Editor.UpdateColor();
                     return;
                 }
+
                 // ===== MOVE LEFT/RIGHT =====
                 if( Editor.Points[0] != this ) {
                     ImGui.SameLine();
@@ -335,6 +341,7 @@ namespace VFXEditor.UI.VFX {
                     _ = Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
                     Key.Type = newKeyType;
                 }
+
                 //=====================
                 if( Color ) {
                     if( ImGui.ColorEdit3( "Color" + id, ref ColorData, ImGuiColorEditFlags.Float ) ) {

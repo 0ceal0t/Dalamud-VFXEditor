@@ -40,7 +40,7 @@ namespace VFXEditor.UI {
         }
 
         public void SaveDialog() {
-            Plugin.DialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
+            FileDialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
                 if( !ok ) return;
                 Penumbra.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
                 Visible = false;

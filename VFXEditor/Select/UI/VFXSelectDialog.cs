@@ -7,10 +7,8 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 
-namespace VFXSelect.UI
-{
-    public enum VFXSelectType
-    {
+namespace VFXSelect.UI {
+    public enum VFXSelectType {
         Local,
         GamePath,
         GameItem,
@@ -23,14 +21,12 @@ namespace VFXSelect.UI
         GameNpc
     }
 
-    public struct VFXSelectResult
-    {
+    public struct VFXSelectResult {
         public VFXSelectType Type;
         public string DisplayString;
         public string Path;
 
-        public VFXSelectResult(VFXSelectType type, string displayString, string path)
-        {
+        public VFXSelectResult( VFXSelectType type, string displayString, string path ) {
             Type = type;
             DisplayString = displayString;
             Path = path;
@@ -45,8 +41,7 @@ namespace VFXSelect.UI
         }
     }
 
-    public class VFXSelectDialog
-    {
+    public class VFXSelectDialog {
         public bool ShowLocal = true;
 
         public string Id;
@@ -60,8 +55,6 @@ namespace VFXSelect.UI
         private readonly Action<string> SpawnOnSelf;
         private readonly Action<string> SpawnOnTarget;
 
-        private readonly FileDialogManager DialogManager;
-
         public List<VFXSelectTab> GameTabs;
         public List<VFXSelectResult> RecentList;
 
@@ -69,17 +62,15 @@ namespace VFXSelect.UI
             SheetManager sheet,
             string id,
             List<VFXSelectResult> recentList,
-            FileDialogManager dialogManager,
             bool showSpawn = false,
             Func<bool> spawnVfxExists = null,
             Action removeSpawnVfx = null,
             Action<string> spawnOnGround = null,
             Action<string> spawnOnSelf = null,
-            Action<string> spawnOnTarget = null
-            ) {
+            Action<string> spawnOnTarget = null ) {
+
             Id = id;
             RecentList = recentList;
-            DialogManager = dialogManager;
 
             ShowSpawn = showSpawn;
             SpawnVfxExists = spawnVfxExists;
@@ -88,7 +79,7 @@ namespace VFXSelect.UI
             SpawnOnSelf = spawnOnSelf;
             SpawnOnTarget = spawnOnTarget;
 
-            GameTabs = new List<VFXSelectTab>(new VFXSelectTab[]{
+            GameTabs = new List<VFXSelectTab>( new VFXSelectTab[]{
                 new VFXItemSelect( id, "Item", sheet, this ),
                 new VFXStatusSelect( id, "Status", sheet, this ),
                 new VFXActionSelect( id, "Action", sheet, this ),
@@ -103,7 +94,7 @@ namespace VFXSelect.UI
             } );
         }
 
-        public void Show(bool showLocal = true) {
+        public void Show( bool showLocal = true ) {
             ShowLocal = showLocal;
             Visible = true;
         }
@@ -113,7 +104,7 @@ namespace VFXSelect.UI
                 return;
             ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
             // ================
-            var ret = ImGui.Begin(Id + "##" + Id, ref Visible );
+            var ret = ImGui.Begin( Id + "##" + Id, ref Visible );
             if( !ret )
                 return;
 
@@ -121,7 +112,7 @@ namespace VFXSelect.UI
             if( ShowLocal )
                 DrawLocal();
             DrawGame();
-            if( RecentList != null)
+            if( RecentList != null )
                 DrawRecent();
             ImGui.EndTabBar();
             ImGui.End();
@@ -142,8 +133,7 @@ namespace VFXSelect.UI
             ImGui.InputText( id + "Input", ref localPathInput, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
-                DialogManager.OpenFileDialog( "Select a File", ".avfx,.*", ( bool ok, string res ) =>
-                {
+                FileDialogManager.OpenFileDialog( "Select a File", ".avfx,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     Invoke( new VFXSelectResult( VFXSelectType.Local, "[LOCAL] " + res, res ) );
                 } );
@@ -164,7 +154,7 @@ namespace VFXSelect.UI
 
             ImGui.BeginTabBar( "GameSelectTabs##" + Id );
             DrawGamePath();
-            foreach(var tab in GameTabs ) {
+            foreach( var tab in GameTabs ) {
                 tab.Draw();
             }
             ImGui.EndTabBar();
@@ -185,8 +175,7 @@ namespace VFXSelect.UI
             ImGui.SameLine();
             ImGui.InputText( id + "Input", ref gamePathInput, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT" + id ) )
-            {
+            if( ImGui.Button( "SELECT" + id ) ) {
                 Invoke( new VFXSelectResult( VFXSelectType.GamePath, "[GAME] " + gamePathInput, gamePathInput ) );
             }
 
@@ -205,11 +194,11 @@ namespace VFXSelect.UI
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             var idx = 0;
-            foreach(var item in RecentList ) {
+            foreach( var item in RecentList ) {
                 if( item.Type == VFXSelectType.Local && !ShowLocal )
                     continue;
 
-                if( ImGui.Selectable(item.DisplayString + id + idx, RecentSelected.Equals(item)) ) {
+                if( ImGui.Selectable( item.DisplayString + id + idx, RecentSelected.Equals( item ) ) ) {
                     IsRecentSelected = true;
                     RecentSelected = item;
                 }
@@ -225,40 +214,20 @@ namespace VFXSelect.UI
             ImGui.EndTabItem();
         }
 
-        // ======== UTIL ==========
-        public static bool Matches(string item, string query ) {
-            return item.ToLower().Contains( query.ToLower() );
-        }
-
         public void Invoke( VFXSelectResult result ) {
             OnSelect?.Invoke( result );
         }
 
-        public void DisplayPath(string path ) {
-            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
-            ImGui.TextWrapped( path );
-            ImGui.PopStyleColor();
-        }
-
-        public void Copy(string copyPath, string id = "" ) {
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
-            if(ImGui.Button("Copy##" + id ) )
-            {
-                ImGui.SetClipboardText( copyPath );
-            }
-            ImGui.PopStyleColor();
-        }
-
-        public void Spawn(string spawnPath, string id = "") {
+        public void Spawn( string spawnPath, string id = "" ) {
             if( !ShowSpawn ) return;
             ImGui.SameLine();
-            if(SpawnVfxExists()) {
-                if(ImGui.Button("Remove##" + id)) {
+            if( SpawnVfxExists() ) {
+                if( ImGui.Button( "Remove##" + id ) ) {
                     RemoveSpawnVfx();
                 }
             }
             else {
-                if(ImGui.Button("Spawn##" + id ) ) {
+                if( ImGui.Button( "Spawn##" + id ) ) {
                     ImGui.OpenPopup( "Spawn_Popup##" + id );
                 }
                 if( ImGui.BeginPopup( "Spawn_Popup##" + id ) ) {
@@ -276,7 +245,26 @@ namespace VFXSelect.UI
             }
         }
 
-        public static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight) {
+        // ======== UTIL ==========
+        public static bool Matches( string item, string query ) {
+            return item.ToLower().Contains( query.ToLower() );
+        }
+
+        public static void DisplayPath( string path ) {
+            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
+            ImGui.TextWrapped( path );
+            ImGui.PopStyleColor();
+        }
+
+        public static void Copy( string copyPath, string id = "" ) {
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
+            if( ImGui.Button( "Copy##" + id ) ) {
+                ImGui.SetClipboardText( copyPath );
+            }
+            ImGui.PopStyleColor();
+        }
+
+        public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {
             var childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
             var scrollY = ImGui.GetScrollY();
             var style = ImGui.GetStyle();

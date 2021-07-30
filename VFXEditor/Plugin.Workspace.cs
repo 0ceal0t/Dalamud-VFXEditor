@@ -1,4 +1,5 @@
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace VFXEditor {
         }
 
         private void OpenWorkspace() {
-            DialogManager.OpenFileDialog( "Select a Workspace FIle", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a Workspace FIle", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var selectedFile = new FileInfo( res );
@@ -126,7 +127,7 @@ namespace VFXEditor {
         }
 
         private void SaveAsWorkspace() {
-            DialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
                 CurrentWorkspaceLocation = res;
                 ExportWorkspace();

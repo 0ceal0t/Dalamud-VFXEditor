@@ -4,6 +4,7 @@ using System;
 using System.Numerics;
 using Dalamud.Plugin;
 using VFXEditor.Data.Texture;
+using ImGuiFileDialog;
 
 namespace VFXEditor.UI.VFX
 {
@@ -87,7 +88,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ImportDialog(string newPath) {
-            Plugin.DialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 try {
@@ -102,7 +103,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void SavePngDialog(string texPath) {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
@@ -111,7 +112,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void SaveDDSDialog(string texPath ) {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
                 var texFile = TextureManager.Manager.GetPreviewTexture( texPath );

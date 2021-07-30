@@ -12,11 +12,12 @@ using VFXSelect.Data.Rows;
 namespace VFXSelect.UI
 {
     public class VFXHousingSelect : VFXSelectTab<XivHousing, XivHousingSelected> {
+        private ImGuiScene.TextureWrap Icon;
+
         public VFXHousingSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
             base(parentId, tabId, sheet.Housing, sheet.PluginInterface, dialog) {
         }
 
-        ImGuiScene.TextureWrap Icon;
         public override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
         }
@@ -36,18 +37,18 @@ namespace VFXSelect.UI
 
             ImGui.Text( "SGB Path: " );
             ImGui.SameLine();
-            Dialog.DisplayPath( loadedItem.Housing.sgbPath );
+            VFXSelectDialog.DisplayPath( loadedItem.Housing.sgbPath );
 
             var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {
                 ImGui.Text( "VFX #" + vfxIdx + ": " );
                 ImGui.SameLine();
-                Dialog.DisplayPath( path );
+                VFXSelectDialog.DisplayPath( path );
                 if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
                     Dialog.Invoke( new VFXSelectResult( VFXSelectType.GameItem, "[HOUSING] " + loadedItem.Housing.Name + " #" + vfxIdx, path ) );
                 }
                 ImGui.SameLine();
-                Dialog.Copy( path, id: Id + "Copy" + vfxIdx );
+                VFXSelectDialog.Copy( path, id: Id + "Copy" + vfxIdx );
                 Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
                 vfxIdx++;
             }

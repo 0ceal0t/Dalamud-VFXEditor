@@ -38,12 +38,12 @@ namespace VFXEditor.Structs.Vfx {
         [FieldOffset( 0x1C0 )] public int StaticTarget;
     }
 
-    public unsafe abstract class BaseVfx {
+    public abstract unsafe class BaseVfx {
         public Plugin Plugin;
         public VfxStruct* Vfx;
         public string Path;
 
-        public BaseVfx( Plugin plugin, string path) {
+        public BaseVfx( Plugin plugin, string path ) {
             Plugin = plugin;
             Path = path;
         }
@@ -57,8 +57,7 @@ namespace VFXEditor.Structs.Vfx {
 
         public void UpdatePosition( Vector3 position ) {
             if( Vfx == null ) return;
-            Vfx->Position = new Position3
-            {
+            Vfx->Position = new Position3 {
                 X = position.X,
                 Y = position.Y,
                 Z = position.Z
@@ -72,8 +71,7 @@ namespace VFXEditor.Structs.Vfx {
 
         public void UpdateScale( Vector3 scale ) {
             if( Vfx == null ) return;
-            Vfx->Scale = new Position3
-            {
+            Vfx->Scale = new Position3 {
                 X = scale.X,
                 Y = scale.Y,
                 Z = scale.Z
@@ -84,8 +82,7 @@ namespace VFXEditor.Structs.Vfx {
             if( Vfx == null ) return;
 
             var q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
-            Vfx->Rotation = new Quat
-            {
+            Vfx->Rotation = new Quat {
                 X = q.X,
                 Y = q.Y,
                 Z = q.Z,

@@ -13,21 +13,22 @@ using VFXEditor.UI.VFX;
 namespace VFXEditor.UI {
     public class ExportDialog {
         public UIMain Main;
-        readonly List<ExportDialogCategory> Categories;
+        private readonly List<ExportDialogCategory> Categories;
 
         public bool Visible = false;
         public bool ExportDeps = true;
 
         public ExportDialog( UIMain main ) {
             Main = main;
-            Categories = new List<ExportDialogCategory>();
-            Categories.Add( new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ) );
-            Categories.Add( new ExportDialogCategory<UIEmitter>( main.Emitters, "Emitters" ) );
-            Categories.Add( new ExportDialogCategory<UIParticle>( main.Particles, "Particles" ) );
-            Categories.Add( new ExportDialogCategory<UIEffector>( main.Effectors, "Effectors" ) );
-            Categories.Add( new ExportDialogCategory<UIBinder>( main.Binders, "Binders" ) );
-            Categories.Add( new ExportDialogCategory<UITexture>( main.Textures, "Textures" ) );
-            Categories.Add( new ExportDialogCategory<UIModel>( main.Models, "Models" ) );
+            Categories = new List<ExportDialogCategory> {
+                new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ),
+                new ExportDialogCategory<UIEmitter>( main.Emitters, "Emitters" ),
+                new ExportDialogCategory<UIParticle>( main.Particles, "Particles" ),
+                new ExportDialogCategory<UIEffector>( main.Effectors, "Effectors" ),
+                new ExportDialogCategory<UIBinder>( main.Binders, "Binders" ),
+                new ExportDialogCategory<UITexture>( main.Textures, "Textures" ),
+                new ExportDialogCategory<UIModel>( main.Models, "Models" )
+            };
         }
 
         public void Show() {
@@ -84,7 +85,7 @@ namespace VFXEditor.UI {
         }
 
         public void SaveDialog() {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
                 if( !ok ) return;
                 using var writer = new BinaryWriter( File.Open( res, FileMode.Create ) );
                 var selected = GetSelected();
@@ -97,69 +98,69 @@ namespace VFXEditor.UI {
                 Visible = false;
             } );
         }
-    }
 
-    abstract class ExportDialogCategory {
-        public HashSet<UINode> Selected;
-        public abstract void Reset();
-        public abstract void Draw();
-        public abstract bool Belongs( UINode node );
-        public abstract void Select( UINode node );
-    }
-
-    class ExportDialogCategory<T> : ExportDialogCategory where T : UINode {
-        public UINodeGroup<T> Group;
-        public string HeaderText;
-        public string Id;
-
-        public ExportDialogCategory( UINodeGroup<T> group, string text ) {
-            Group = group;
-            Reset();
-            Group.OnChange += Reset;
-            HeaderText = text;
-            Id = "##" + HeaderText;
+        private abstract class ExportDialogCategory {
+            public HashSet<UINode> Selected;
+            public abstract void Reset();
+            public abstract void Draw();
+            public abstract bool Belongs( UINode node );
+            public abstract void Select( UINode node );
         }
 
-        public override void Reset() {
-            Selected = new HashSet<UINode>();
-        }
+        private class ExportDialogCategory<T> : ExportDialogCategory where T : UINode {
+            public UINodeGroup<T> Group;
+            public string HeaderText;
+            public string Id;
 
-        public override bool Belongs( UINode node ) {
-            return node is T;
-        }
-
-        public override void Select( UINode node ) {
-            Selected.Add( node );
-        }
-
-        public override void Draw() {
-            ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
-
-            var count = Selected.Count;
-            var _visible = false;
-            if( count > 0 ) {
-                ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
+            public ExportDialogCategory( UINodeGroup<T> group, string text ) {
+                Group = group;
+                Reset();
+                Group.OnChange += Reset;
+                HeaderText = text;
+                Id = "##" + HeaderText;
             }
-            if( ImGui.CollapsingHeader( $"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}" ) ) {
-                if( count > 0 ) {
-                    _visible = true;
-                    ImGui.PopStyleColor();
-                }
 
-                foreach( var item in Group.Items ) {
-                    var _selected = Selected.Contains( item );
-                    if( ImGui.Checkbox( item.GetText() + Id, ref _selected ) ) {
-                        if( _selected ) {
-                            Selected.Add( item );
-                        }
-                        else {
-                            Selected.Remove( item );
+            public override void Reset() {
+                Selected = new HashSet<UINode>();
+            }
+
+            public override bool Belongs( UINode node ) {
+                return node is T;
+            }
+
+            public override void Select( UINode node ) {
+                Selected.Add( node );
+            }
+
+            public override void Draw() {
+                ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
+
+                var count = Selected.Count;
+                var _visible = false;
+                if( count > 0 ) {
+                    ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
+                }
+                if( ImGui.CollapsingHeader( $"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}" ) ) {
+                    if( count > 0 ) {
+                        _visible = true;
+                        ImGui.PopStyleColor();
+                    }
+
+                    foreach( var item in Group.Items ) {
+                        var _selected = Selected.Contains( item );
+                        if( ImGui.Checkbox( item.GetText() + Id, ref _selected ) ) {
+                            if( _selected ) {
+                                Selected.Add( item );
+                            }
+                            else {
+                                Selected.Remove( item );
+                            }
                         }
                     }
                 }
-            }
-            if( count > 0 && !_visible ) {
-                ImGui.PopStyleColor();
+                if( count > 0 && !_visible ) {
+                    ImGui.PopStyleColor();
+                }
             }
         }
     }
