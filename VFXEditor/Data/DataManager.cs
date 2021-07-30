@@ -8,11 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor {
-    public partial class Plugin {
-        public AVFXNode LastImportNode;
+namespace VFXEditor.Data {
+    public static class DataManager {
+        public static AVFXNode LastImportNode => _LastImportNode;
 
-        public bool SaveLocalFile( string path, AVFXBase avfx ) {
+        private static AVFXNode _LastImportNode = null;
+        private static DalamudPluginInterface PluginInterface;
+
+        public static void Initialize(Plugin plugin) {
+            PluginInterface = plugin.PluginInterface;
+        }
+
+        public static void Dispose() {
+            PluginInterface = null;
+            _LastImportNode = null;
+        }
+
+        public static bool SaveLocalFile( string path, AVFXBase avfx ) {
             try {
                 var node = avfx.ToAVFX();
                 var bytes = node.ToBytes();
@@ -25,28 +37,28 @@ namespace VFXEditor {
             return true;
         }
 
-        public bool GetLocalFile( string path, out AVFXBase avfx ) {
+        public static bool GetLocalFile( string path, out AVFXBase avfx ) {
             avfx = null;
             if( File.Exists( path ) ) {
                 using var br = new BinaryReader( File.Open( path, FileMode.Open ) );
-                return ReadGameFile( br, out avfx );
+                return ReadFile( br, out avfx );
             }
             return false;
         }
 
-        public bool GetGameFile( string path, out AVFXBase avfx ) {
+        public static bool GetGameFile( string path, out AVFXBase avfx ) {
             avfx = null;
             var result = PluginInterface.Data.FileExists( path );
             if( result ) {
                 var file = PluginInterface.Data.GetFile( path );
                 using var ms = new MemoryStream( file.Data );
                 using var br = new BinaryReader( ms );
-                return ReadGameFile( br, out avfx );
+                return ReadFile( br, out avfx );
             }
             return false;
         }
 
-        public bool ReadGameFile( BinaryReader br, out AVFXBase avfx ) {
+        private static bool ReadFile( BinaryReader br, out AVFXBase avfx ) {
             avfx = null;
             try {
                 var node = AVFXLib.Main.Reader.ReadAVFX( br, out var messages );
@@ -56,7 +68,7 @@ namespace VFXEditor {
                 if( node == null ) {
                     return false;
                 }
-                LastImportNode = node;
+                _LastImportNode = node;
                 avfx = new AVFXBase();
                 avfx.Read( node );
                 return true;

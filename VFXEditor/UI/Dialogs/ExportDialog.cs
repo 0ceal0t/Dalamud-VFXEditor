@@ -18,7 +18,7 @@ namespace VFXEditor.UI {
         public bool Visible = false;
         public bool ExportDeps = true;
 
-        public ExportDialog(UIMain main ) {
+        public ExportDialog( UIMain main ) {
             Main = main;
             Categories = new List<ExportDialogCategory>();
             Categories.Add( new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ) );
@@ -41,7 +41,7 @@ namespace VFXEditor.UI {
         public void Draw() {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( new Vector2( 500, 500 ), ImGuiCond.FirstUseEver );
-            if( ImGui.Begin("Export##ExportDialog", ref Visible )) {
+            if( ImGui.Begin( "Export##ExportDialog", ref Visible ) ) {
                 ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
                 ImGui.SameLine();
                 Plugin.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
@@ -64,10 +64,10 @@ namespace VFXEditor.UI {
             }
         }
 
-        public void Export(UINode node ) {
+        public void Export( UINode node ) {
             Show();
             Reset();
-            foreach(var cat in Categories ) {
+            foreach( var cat in Categories ) {
                 if( cat.Belongs( node ) ) {
                     cat.Select( node );
                     break;
@@ -77,15 +77,14 @@ namespace VFXEditor.UI {
 
         public List<UINode> GetSelected() {
             var result = new List<UINode>();
-            foreach(var cat in Categories ) {
+            foreach( var cat in Categories ) {
                 result.AddRange( cat.Selected );
             }
             return result;
         }
 
         public void SaveDialog() {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
-            {
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
                 if( !ok ) return;
                 using var writer = new BinaryWriter( File.Open( res, FileMode.Create ) );
                 var selected = GetSelected();
@@ -99,8 +98,6 @@ namespace VFXEditor.UI {
             } );
         }
     }
-
-    // ======================
 
     abstract class ExportDialogCategory {
         public HashSet<UINode> Selected;
@@ -140,18 +137,18 @@ namespace VFXEditor.UI {
 
             var count = Selected.Count;
             var _visible = false;
-            if(count > 0) {
+            if( count > 0 ) {
                 ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
             }
-            if(ImGui.CollapsingHeader($"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}") ) {
-                if(count > 0 ) {
+            if( ImGui.CollapsingHeader( $"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}" ) ) {
+                if( count > 0 ) {
                     _visible = true;
                     ImGui.PopStyleColor();
                 }
 
-                foreach(var item in Group.Items ) {
+                foreach( var item in Group.Items ) {
                     var _selected = Selected.Contains( item );
-                    if(ImGui.Checkbox(item.GetText() + Id, ref _selected ) ) {
+                    if( ImGui.Checkbox( item.GetText() + Id, ref _selected ) ) {
                         if( _selected ) {
                             Selected.Add( item );
                         }

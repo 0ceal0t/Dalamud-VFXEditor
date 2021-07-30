@@ -45,7 +45,7 @@ namespace VFXEditor {
                 TextureManager.ResetInstance( PluginInterface );
 
                 var oldDoc = DocManager;
-                DocManager = new DocumentManager( this );
+                DocManager = new DocumentManager();
                 oldDoc.Dispose();
 
                 IsLoading = false;
@@ -96,7 +96,7 @@ namespace VFXEditor {
             }
 
             var oldDoc = DocManager;
-            DocManager = new DocumentManager( this );
+            DocManager = new DocumentManager();
             oldDoc.Dispose();
 
             var defaultDoc = DocManager.ActiveDoc;

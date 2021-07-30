@@ -8,7 +8,7 @@ using VFXEditor.External;
 
 namespace VFXEditor.UI {
     public class PenumbraDialog : GenericDialog {
-        public PenumbraDialog( Plugin plugin ) : base(plugin, "Penumbra") {
+        public PenumbraDialog( Plugin plugin ) : base( plugin, "Penumbra" ) {
             Size = new Vector2( 400, 200 );
         }
 
@@ -40,12 +40,11 @@ namespace VFXEditor.UI {
         }
 
         public void SaveDialog() {
-            Plugin.DialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) =>
-             {
-                 if( !ok ) return;
-                 Penumbra.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
-                 Visible = false;
-             } );
+            Plugin.DialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
+                if( !ok ) return;
+                Penumbra.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
+                Visible = false;
+            } );
         }
     }
 }

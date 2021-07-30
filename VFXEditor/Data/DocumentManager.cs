@@ -30,11 +30,9 @@ namespace VFXEditor.Data {
         public List<ReplaceDoc> Docs = new();
 
         private Dictionary<string, string> GamePathToLocalPath = new();
-        private readonly Plugin Plugin;
         private int DOC_ID = 0;
 
-        public DocumentManager( Plugin plugin ) {
-            Plugin = plugin;
+        public DocumentManager() {
             NewDoc();
         }
 
@@ -59,7 +57,7 @@ namespace VFXEditor.Data {
 
             if(localPath != "") {
                 File.Copy( localPath, doc.WriteLocation, true );
-                var localResult = Plugin.GetLocalFile( doc.WriteLocation, out var localAvfx );
+                var localResult = DataManager.GetLocalFile( doc.WriteLocation, out var localAvfx );
                 if( localResult ) {
                     doc.Main = new UIMain( localAvfx );
                     doc.Main.ReadRenamingMap( renaming );
@@ -98,18 +96,8 @@ namespace VFXEditor.Data {
             return false;
         }
 
-        private void RebuildMap() {
-            Dictionary<string, string> newMap = new();
-            foreach( var doc in Docs ) {
-                if(doc.Replace.Path != "") {
-                    newMap[doc.Replace.Path] = doc.WriteLocation;
-                }
-            }
-            GamePathToLocalPath = newMap;
-        }
-
         public void Save() {
-            Plugin.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
+            DataManager.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
             if(Configuration.Config.LogAllFiles) {
                 PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
             }
@@ -142,6 +130,16 @@ namespace VFXEditor.Data {
             Docs = null;
             ActiveDoc = null;
             GamePathToLocalPath = null;
+        }
+
+        private void RebuildMap() {
+            Dictionary<string, string> newMap = new();
+            foreach( var doc in Docs ) {
+                if( doc.Replace.Path != "" ) {
+                    newMap[doc.Replace.Path] = doc.WriteLocation;
+                }
+            }
+            GamePathToLocalPath = newMap;
         }
     }
 }

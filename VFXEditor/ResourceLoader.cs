@@ -26,7 +26,8 @@ namespace VFXEditor {
             Visible
         }
         private RedrawState CurrentRedrawState = RedrawState.None;
-        private IntPtr RenderPtr;
+        private int WaitFrames = 0;
+        private static readonly int DefaultWaitFrames = 30;
 
         // ===== FILES =========
         [Function( CallingConventions.Microsoft )]
@@ -89,7 +90,6 @@ namespace VFXEditor {
             Crc32 = new Crc32();
         }
 
-        // https://github.com/xivdev/Penumbra/blob/master/Penumbra/ResourceLoader.cs
         public unsafe void Init() {
             var scanner = Plugin.PluginInterface.TargetModuleScanner;
 
@@ -197,23 +197,29 @@ namespace VFXEditor {
         }
 
         public void ReRender() {
-            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
-            RenderPtr = player.Address + 0x104;
-
             if( CurrentRedrawState != RedrawState.None ) return;
             CurrentRedrawState = RedrawState.Start;
             Plugin.PluginInterface.Framework.OnUpdateEvent += OnUpdateEvent;
         }
 
         private unsafe void OnUpdateEvent( object framework ) {
+            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
+            var renderPtr = player.Address + 0x104;
+
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
-                    *( int* )RenderPtr |= 0x00_00_00_02;
+                    *( int* )renderPtr |= 0x00_00_00_02;
                     CurrentRedrawState = RedrawState.Invisible;
+                    WaitFrames = DefaultWaitFrames;
                     break;
                 case RedrawState.Invisible:
-                    *( int* )RenderPtr &= ~0x00_00_00_02;
-                    CurrentRedrawState = RedrawState.Visible;
+                    if(WaitFrames == 0) {
+                        *( int* )renderPtr &= ~0x00_00_00_02;
+                        CurrentRedrawState = RedrawState.Visible;
+                    }
+                    else {
+                        WaitFrames--;
+                    }
                     break;
                 case RedrawState.Visible:
                 default:
@@ -320,8 +326,7 @@ namespace VFXEditor {
         }
 
         public void Dispose() {
-            if( IsEnabled )
-                Disable();
+            if( IsEnabled ) Disable();
         }
 
         public static unsafe string GetString( StdString str ) {

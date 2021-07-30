@@ -24,7 +24,7 @@ namespace VFXEditor.UI {
             if( !Visible )
                 return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
-            // ================
+
             if( !ImGui.Begin( DialogName, ref Visible ) )
                 return;
             OnDraw();

@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 using Dalamud.Interface;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;
@@ -14,7 +13,9 @@ using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public bool Visible = false;
+        public BaseVfx SpawnVfx;
+
+        private bool Visible = false;
 
         private VFXSelectDialog SelectUI;
         private VFXSelectDialog PreviewUI;
@@ -26,11 +27,8 @@ namespace VFXEditor {
         private PenumbraDialog PenumbraUI;
         private TextureDialog TextureUI;
 
-        public BaseVfx SpawnVfx;
-
-        public DateTime LastUpdate = DateTime.Now;
-
-        public bool IsLoading = false;
+        private DateTime LastUpdate = DateTime.Now;
+        private bool IsLoading = false;
 
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
@@ -95,7 +93,8 @@ namespace VFXEditor {
             }
         }
 
-        public void DrawUI() {
+        public void Draw() {
+            if( !PluginReady ) return;
             if( !Visible ) return;
             DrawMainInterface();
             if( !IsLoading ) {
@@ -108,6 +107,7 @@ namespace VFXEditor {
                 DocUI.Draw();
                 TextureUI.Draw();
             }
+            Tracker.Draw();
         }
 
         public void DrawMainInterface() {
@@ -156,7 +156,7 @@ namespace VFXEditor {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        WriteBytesDialog( ".txt", LastImportNode.ExportString( 0 ), "txt" );
+                        WriteBytesDialog( ".txt", DataManager.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }

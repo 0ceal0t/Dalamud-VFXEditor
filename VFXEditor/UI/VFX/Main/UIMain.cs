@@ -42,27 +42,27 @@ namespace VFXEditor.UI.VFX {
 
         public ExportDialog ExportUI;
 
-        public UIMain(AVFXBase avfx) {
+        public UIMain( AVFXBase avfx ) {
             AVFX = avfx;
             // ================
             AllGroups = new();
-            AllGroups.Add(Binders = new UINodeGroup<UIBinder>());
-            AllGroups.Add( Emitters = new UINodeGroup<UIEmitter>());
-            AllGroups.Add( Models = new UINodeGroup<UIModel>());
-            AllGroups.Add( Particles = new UINodeGroup<UIParticle>());
-            AllGroups.Add( Schedulers = new UINodeGroup<UIScheduler>());
-            AllGroups.Add( Textures = new UINodeGroup<UITexture>());
-            AllGroups.Add( Timelines = new UINodeGroup<UITimeline>());
-            AllGroups.Add( Effectors = new UINodeGroup<UIEffector>());
+            AllGroups.Add( Binders = new UINodeGroup<UIBinder>() );
+            AllGroups.Add( Emitters = new UINodeGroup<UIEmitter>() );
+            AllGroups.Add( Models = new UINodeGroup<UIModel>() );
+            AllGroups.Add( Particles = new UINodeGroup<UIParticle>() );
+            AllGroups.Add( Schedulers = new UINodeGroup<UIScheduler>() );
+            AllGroups.Add( Textures = new UINodeGroup<UITexture>() );
+            AllGroups.Add( Timelines = new UINodeGroup<UITimeline>() );
+            AllGroups.Add( Effectors = new UINodeGroup<UIEffector>() );
             // ================
-            ParticleView = new UIParticleView(this, avfx);
-            ParameterView = new UIParameterView(avfx);
+            ParticleView = new UIParticleView( this, avfx );
+            ParameterView = new UIParameterView( avfx );
             BinderView = new UIBinderView( this, avfx );
             EmitterView = new UIEmitterView( this, avfx );
             EffectorView = new UIEffectorView( this, avfx );
             TimelineView = new UITimelineView( this, avfx );
-            TextureView = new UITextureView(this, avfx);
-            ModelView = new UIModelView(this, avfx);
+            TextureView = new UITextureView( this, avfx );
+            ModelView = new UIModelView( this, avfx );
             ScheduleView = new UIScheduleView( this, avfx );
             // =================
             AllGroups.ForEach( group => group.Init() );
@@ -71,40 +71,40 @@ namespace VFXEditor.UI.VFX {
         }
 
         public void Draw() {
-            if (ImGui.BeginTabBar("##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton)) {
-                if (ImGui.BeginTabItem("Parameters##Main")) {
+            if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( "Parameters##Main" ) ) {
                     ParameterView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Scheduler##Main")) {
+                if( ImGui.BeginTabItem( "Scheduler##Main" ) ) {
                     ScheduleView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Timelines##Main")) {
+                if( ImGui.BeginTabItem( "Timelines##Main" ) ) {
                     TimelineView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Emitters##Main")) {
+                if( ImGui.BeginTabItem( "Emitters##Main" ) ) {
                     EmitterView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Particles##Main")) {
+                if( ImGui.BeginTabItem( "Particles##Main" ) ) {
                     ParticleView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Effectors##Main")) {
+                if( ImGui.BeginTabItem( "Effectors##Main" ) ) {
                     EffectorView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Binders##Main")) {
+                if( ImGui.BeginTabItem( "Binders##Main" ) ) {
                     BinderView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Textures##Main")) {
+                if( ImGui.BeginTabItem( "Textures##Main" ) ) {
                     TextureView.Draw();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Models##Main")) {
+                if( ImGui.BeginTabItem( "Models##Main" ) ) {
                     ModelView.Draw();
                     ImGui.EndTabItem();
                 }
@@ -131,7 +131,7 @@ namespace VFXEditor.UI.VFX {
             return ret;
         }
 
-        public void ReadRenamingMap(Dictionary<string, string> renamingMap) {
+        public void ReadRenamingMap( Dictionary<string, string> renamingMap ) {
             Dictionary<string, string> ret = new();
             Schedulers.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
             Timelines.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
@@ -144,14 +144,14 @@ namespace VFXEditor.UI.VFX {
         }
 
         // ========= EXPORT ==============
-        public void ExportDeps(UINode startNode, BinaryWriter bw ) {
-            ExportDeps(new List<UINode>(new []{ startNode } ), bw);
+        public void ExportDeps( UINode startNode, BinaryWriter bw ) {
+            ExportDeps( new List<UINode>( new[] { startNode } ), bw );
         }
 
-        public void ExportDeps(List<UINode> startNodes, BinaryWriter bw) {
+        public void ExportDeps( List<UINode> startNodes, BinaryWriter bw ) {
             var visited = new HashSet<UINode>();
             var nodes = new List<UINode>();
-            foreach(var startNode in startNodes ) {
+            foreach( var startNode in startNodes ) {
                 RecurseChild( startNode, nodes, visited );
             }
 
@@ -189,17 +189,17 @@ namespace VFXEditor.UI.VFX {
             output.Add( node );
         }
 
-        public void OrderByType<T>(List<UINode> items) where T : UINode {
+        public static void OrderByType<T>( List<UINode> items ) where T : UINode {
             var i = 0;
             foreach( var node in items ) {
-                if (node is T ) {
+                if( node is T ) {
                     node.Idx = i;
                     i++;
                 }
             }
         }
 
-        public void UpdateAllNodes( List<UINode> nodes ) {
+        public static void UpdateAllNodes( List<UINode> nodes ) {
             foreach( var n in nodes ) {
                 foreach( var s in n.Selectors ) {
                     s.UpdateNode();
@@ -208,35 +208,35 @@ namespace VFXEditor.UI.VFX {
         }
 
         // ========= IMPORT ==============
-        public void ImportData(string path ) {
+        public void ImportData( string path ) {
             using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
             ImportData( reader );
         }
 
-        public void ImportData(byte[] data ) {
+        public void ImportData( byte[] data ) {
             ImportData( new BinaryReader( new MemoryStream( data ) ) );
         }
 
         public void ImportData( BinaryReader br ) {
             var messages = new List<string>();
-            var nodes = Reader.ReadDefinition( br, messages);
+            var nodes = Reader.ReadDefinition( br, messages );
             var has_dependencies = nodes.Count >= 2;
             if( has_dependencies ) {
                 PreImportGroups();
             }
-            nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add(ModelView.OnImport( node )) );
-            nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add(TextureView.OnImport( node )) );
-            nodes.Where( x => x.Name == "Bind" ).ToList().ForEach( node => BinderView.Group.Add(BinderView.OnImport( node, has_dependencies )) );
-            nodes.Where( x => x.Name == "Efct" ).ToList().ForEach( node => EffectorView.Group.Add(EffectorView.OnImport( node, has_dependencies )) );
-            nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add(ParticleView.OnImport( node, has_dependencies )) );
-            nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add(EmitterView.OnImport( node, has_dependencies )) );
-            nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add(TimelineView.OnImport( node, has_dependencies )) );
+            nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add( ModelView.OnImport( node ) ) );
+            nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add( TextureView.OnImport( node ) ) );
+            nodes.Where( x => x.Name == "Bind" ).ToList().ForEach( node => BinderView.Group.Add( BinderView.OnImport( node, has_dependencies ) ) );
+            nodes.Where( x => x.Name == "Efct" ).ToList().ForEach( node => EffectorView.Group.Add( EffectorView.OnImport( node, has_dependencies ) ) );
+            nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add( ParticleView.OnImport( node, has_dependencies ) ) );
+            nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add( EmitterView.OnImport( node, has_dependencies ) ) );
+            nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add( TimelineView.OnImport( node, has_dependencies ) ) );
         }
 
-        public static AVFXNode CloneNode(AVFXNode node) {
+        public static AVFXNode CloneNode( AVFXNode node ) {
             return CloneNode( node.ToBytes() );
         }
-        public static AVFXNode CloneNode(byte[] data) {
+        public static AVFXNode CloneNode( byte[] data ) {
             using var ms = new MemoryStream( data );
             using var br = new BinaryReader( ms );
             return Reader.ReadAVFX( br, out var messages );
@@ -247,26 +247,24 @@ namespace VFXEditor.UI.VFX {
         }
 
         // =========== DIALOG =================
-        public void ExportMultiple(UINode node ) {
+        public void ExportMultiple( UINode node ) {
             ExportUI.Export( node );
         }
 
-        public static void ExportDialog(UINode node ) {
-            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) =>
-            {
+        public static void ExportDialog( UINode node ) {
+            Plugin.DialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, node.ToBytes() );
             } );
         }
 
         public void ImportDialog() {
-            Plugin.DialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) =>
-            {
+            Plugin.DialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     ImportData( res );
                 }
-                catch(Exception e) {
+                catch( Exception e ) {
                     PluginLog.LogError( "Could not import data", e );
                 }
             } );

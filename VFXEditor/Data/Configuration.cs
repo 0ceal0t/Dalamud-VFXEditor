@@ -6,15 +6,6 @@ using System.IO;
 using VFXSelect.UI;
 
 namespace VFXEditor {
-    public enum SavedItemType {
-        None,
-        Binder,
-        Emitter,
-        Effector,
-        Particle,
-        Timeline
-    }
-
     [Serializable]
     public class Configuration : IPluginConfiguration {
         public static Configuration Config => Instance;
@@ -23,6 +14,8 @@ namespace VFXEditor {
         public static void Initialize( DalamudPluginInterface pluginInterface ) {
             Instance = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Instance.InitializeInstance( pluginInterface );
+            Directory.CreateDirectory( Instance.WriteLocation );
+            PluginLog.Log( "Write location: " + Instance.WriteLocation );
         }
 
         // ====== INSTANCE ======

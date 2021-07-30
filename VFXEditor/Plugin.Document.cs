@@ -19,7 +19,7 @@ namespace VFXEditor {
 
             switch( selectResult.Type ) {
                 case VFXSelectType.Local: // LOCAL
-                    var localResult = GetLocalFile( selectResult.Path, out var localAvfx );
+                    var localResult = DataManager.GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
                         LoadCurrentVFX( localAvfx );
                     }
@@ -29,7 +29,7 @@ namespace VFXEditor {
                     }
                     break;
                 default: // EVERYTHING ELSE: GAME FILES
-                    var gameResult = GetGameFile( selectResult.Path, out var gameAvfx );
+                    var gameResult = DataManager.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
                         LoadCurrentVFX( gameAvfx );
                     }
@@ -67,7 +67,7 @@ namespace VFXEditor {
 
             if( Configuration.Config.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
-                var verifyResult = LastImportNode.CheckEquals( node, out var messages );
+                var verifyResult = DataManager.LastImportNode.CheckEquals( node, out var messages );
                 CurrentDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {

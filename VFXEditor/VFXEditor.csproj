@@ -191,10 +191,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <NativeLibs Remove="Plugin.Data.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <NativeLibs Remove="Plugin.Workspace.cs" />
     </ItemGroup>
 

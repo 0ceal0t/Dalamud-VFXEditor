@@ -13,7 +13,7 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class DocDialog : GenericDialog {
-        public DocDialog(Plugin plugin) : base(plugin, "Documents" ) { }
+        public DocDialog( Plugin plugin ) : base( plugin, "Documents" ) { }
 
         public ReplaceDoc SelectedDoc = null;
         public override void OnDraw() {
@@ -26,7 +26,7 @@ namespace VFXEditor.UI {
 
             var idx = 0;
             foreach( var doc in Plugin.DocManager.Docs ) {
-                if(ImGui.Selectable(doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
+                if( ImGui.Selectable( doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDoc = doc;
                 }
                 if( ImGui.IsItemHovered() ) {
@@ -43,18 +43,18 @@ namespace VFXEditor.UI {
                 ImGui.Text( doc.Replace.DisplayString );
             }
 
-            ImGui.Columns(1);
+            ImGui.Columns( 1 );
             ImGui.EndChild();
 
             if( ImGui.Button( "+ NEW" + id ) ) {
                 Plugin.DocManager.NewDoc();
             }
 
-            if(SelectedDoc != null ) {
+            if( SelectedDoc != null ) {
                 var deleteDisabled = ( Plugin.DocManager.Docs.Count == 1 );
 
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
-                if(ImGui.Button("Select" + id ) ) {
+                if( ImGui.Button( "Select" + id ) ) {
                     Plugin.DocManager.SelectDoc( SelectedDoc );
                 }
                 if( !deleteDisabled ) {

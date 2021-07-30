@@ -21,6 +21,11 @@ namespace VFXEditor.Data.Vfx {
             public VfxStruct* Vfx;
         }
 
+        private struct StaticVfxGroup {
+            public string path;
+            public SharpDX.Vector3 position;
+        }
+
         private readonly Plugin Plugin;
         private ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs;
         private ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs;
@@ -30,6 +35,11 @@ namespace VFXEditor.Data.Vfx {
         public VfxTracker( Plugin plugin ) {
             Plugin = plugin;
             Reset();
+        }
+
+        public void Reset() {
+            ActorVfxs = new();
+            StaticVfxs = new();
         }
 
         public void AddActor( VfxStruct* vfx, string path ) {
@@ -67,29 +77,6 @@ namespace VFXEditor.Data.Vfx {
             if( StaticVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
                 StaticVfxs.TryRemove( new IntPtr( vfx ), out var _ );
             }
-        }
-
-        public bool WatchingCutscene() {
-            return ( Plugin.PluginInterface.ClientState != null && Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
-        }
-
-        // ===== SCUFFED STUFF TO GROUP STATIC VFXS =========
-        private struct StaticVfxGroup {
-            public string path;
-            public SharpDX.Vector3 position;
-        }
-
-        private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
-            public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
-                return ( x - y ).Length() < 2;
-            }
-            public int GetHashCode( SharpDX.Vector3 obj ) {
-                return 0;
-            }
-        }
-
-        private static int ChooseId( int caster, int target ) {
-            return target > 0 ? target : ( caster > 0 ? caster : -1 );
         }
 
         public void Draw() {
@@ -234,11 +221,6 @@ namespace VFXEditor.Data.Vfx {
             }
         }
 
-        public void Reset() {
-            ActorVfxs = new();
-            StaticVfxs = new();
-        }
-
         private static void DrawOverlayItems( Vector2 pos, HashSet<string> items, int idx ) {
             var longestString = "";
             foreach( var item in items ) {
@@ -282,6 +264,23 @@ namespace VFXEditor.Data.Vfx {
 
                 ImGui.End();
             }
+        }
+
+        private bool WatchingCutscene() {
+            return ( Plugin.PluginInterface.ClientState != null && Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
+        }
+
+        private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
+            public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
+                return ( x - y ).Length() < 2;
+            }
+            public int GetHashCode( SharpDX.Vector3 obj ) {
+                return 0;
+            }
+        }
+
+        private static int ChooseId( int caster, int target ) {
+            return target > 0 ? target : ( caster > 0 ? caster : -1 );
         }
 
         private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) {
