@@ -106,7 +106,7 @@ namespace ImGuiFileDialog {
 
         public string GetResult() {
             if( !Flags.HasFlag( ImGuiFileDialogFlags.SelectOnly ) ) return GetFilePathName();
-            if(IsDirectoryMode() && SelectedFileNames.Count == 0) {
+            if( IsDirectoryMode() && SelectedFileNames.Count == 0 ) {
                 return GetFilePathName(); // current directory
             }
 
@@ -119,7 +119,7 @@ namespace ImGuiFileDialog {
             var path = GetCurrentPath();
             var fileName = GetCurrentFileName();
 
-            if(!string.IsNullOrEmpty(fileName)) {
+            if( !string.IsNullOrEmpty( fileName ) ) {
                 return Path.Combine( path, fileName );
             }
 
@@ -128,9 +128,9 @@ namespace ImGuiFileDialog {
 
         // the current path. In directory mode, this takes into account the text input box
         public string GetCurrentPath() {
-            if(IsDirectoryMode()) { // combine path file with directory input
+            if( IsDirectoryMode() ) { // combine path file with directory input
                 var selectedDirectory = FileNameBuffer;
-                if(!string.IsNullOrEmpty(selectedDirectory) && selectedDirectory != ".") {
+                if( !string.IsNullOrEmpty( selectedDirectory ) && selectedDirectory != "." ) {
                     return string.IsNullOrEmpty( CurrentPath ) ? selectedDirectory : Path.Combine( CurrentPath, selectedDirectory );
                 }
             }
@@ -151,7 +151,7 @@ namespace ImGuiFileDialog {
             // a single one, like .cpp
             if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
                 var lastPoint = result.LastIndexOf( '.' );
-                if(lastPoint != -1) {
+                if( lastPoint != -1 ) {
                     result = result.Substring( 0, lastPoint );
                 }
                 result += SelectedFilter.Filter;
@@ -163,7 +163,7 @@ namespace ImGuiFileDialog {
             FileNameBuffer = DefaultFileName;
         }
 
-        private void SetPath(string path) {
+        private void SetPath( string path ) {
             SelectedSideBar = "";
             CurrentPath = path;
             Files.Clear();
@@ -175,10 +175,10 @@ namespace ImGuiFileDialog {
             ScanDir( CurrentPath );
         }
 
-        private void SetCurrentDir(string path) {
+        private void SetCurrentDir( string path ) {
             var dir = new DirectoryInfo( path );
             CurrentPath = dir.FullName;
-            if(CurrentPath[^1] == Path.DirectorySeparatorChar) { // handle selecting a drive, like C: -> C:\
+            if( CurrentPath[^1] == Path.DirectorySeparatorChar ) { // handle selecting a drive, like C: -> C:\
                 CurrentPath = CurrentPath[0..^1];
             }
 

@@ -12,17 +12,17 @@ namespace VFXSelect.Data.Rows {
         public ushort Icon;
         public List<string> PapFiles = new();
 
-        public static string RootPath = "chara/human/c1101/animation/a0001/bt_common/";
+        public static readonly string RootPath = "chara/human/c1101/animation/a0001/bt_common/";
 
-        public XivEmote( Lumina.Excel.GeneratedSheets.Emote emote) {
+        public XivEmote( Lumina.Excel.GeneratedSheets.Emote emote ) {
             RowId = ( int )emote.RowId;
             Name = emote.Name;
             Icon = emote.Icon;
             // "chara/human/c1101/animation/a0001/bt_common/emote_sp/sp08.pap"
             var emoteKeys = emote.ActionTimeline;
-            foreach(var e in emoteKeys ) {
+            foreach( var e in emoteKeys ) {
                 var emoteKey = e.Value?.Key.ToString();
-                if(!string.IsNullOrEmpty(emoteKey) && emoteKey.Contains( "emote_sp" ) ) {
+                if( !string.IsNullOrEmpty( emoteKey ) && emoteKey.Contains( "emote_sp" ) ) {
                     PapFiles.Add( RootPath + emoteKey + ".pap" );
                 }
             }

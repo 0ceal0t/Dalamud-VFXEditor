@@ -10,7 +10,7 @@ namespace VFXSelect.Data.Rows {
         public string Name;
         public int RowId;
         public string Path;
-        
+
         public XivCutscene( Lumina.Excel.GeneratedSheets.Cutscene cutscene ) {
             RowId = ( int )cutscene.RowId;
             var _path = cutscene.Path.ToString();

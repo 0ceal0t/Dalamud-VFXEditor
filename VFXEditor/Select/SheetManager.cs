@@ -23,7 +23,7 @@ namespace VFXSelect {
         public MountSheeetLoader Mounts;
         public HousingSheetLoader Housing;
 
-        public SheetManager(DalamudPluginInterface pluginInterface, string npcCsv ) {
+        public SheetManager( DalamudPluginInterface pluginInterface, string npcCsv ) {
             PluginInterface = pluginInterface;
             NpcCsv = npcCsv;
 

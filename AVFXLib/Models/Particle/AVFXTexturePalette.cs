@@ -5,45 +5,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXTexturePalette : Base
-    {
-        public LiteralBool Enabled = new("bEna");
-        public LiteralEnum<TextureFilterType> TextureFilter = new("TFT");
-        public LiteralEnum<TextureBorderType> TextureBorder = new("TBT");
-        public LiteralInt TextureIdx = new("TxNo");
+namespace AVFXLib.Models {
+    public class AVFXTexturePalette : Base {
+        public LiteralBool Enabled = new( "bEna" );
+        public LiteralEnum<TextureFilterType> TextureFilter = new( "TFT" );
+        public LiteralEnum<TextureBorderType> TextureBorder = new( "TBT" );
+        public LiteralInt TextureIdx = new( "TxNo" );
         public AVFXCurve Offset = new( "POff" );
-        readonly List<Base> Attributes;
+        private readonly List<Base> Attributes;
 
-        public AVFXTexturePalette() : base("TP")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXTexturePalette() : base( "TP" ) {
+            Attributes = new List<Base>( new Base[]{
                 Enabled,
                 TextureFilter,
                 TextureBorder,
                 TextureIdx,
                 Offset
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetDefault(Attributes);
+            SetDefault( Attributes );
             TextureIdx.GiveValue( -1 );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            var dataAvfx = new AVFXNode("TP");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "TP" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

@@ -25,7 +25,7 @@ namespace ImGuiFileDialog {
         }
 
         public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
-            SetDialog("OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback);
+            SetDialog( "OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback );
         }
 
         public static void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
@@ -60,7 +60,7 @@ namespace ImGuiFileDialog {
 
         public static void Draw() {
             if( Dialog == null ) return;
-            if(Dialog.Draw()) {
+            if( Dialog.Draw() ) {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
                 SavedPath = Dialog.GetCurrentPath();
                 Dialog?.Hide();
@@ -69,8 +69,8 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private static void AddRecent(string path) {
-            foreach(var recent in Recent) {
+        private static void AddRecent( string path ) {
+            foreach( var recent in Recent ) {
                 if( recent.Location == path ) return;
             }
 
@@ -80,7 +80,7 @@ namespace ImGuiFileDialog {
                 Text = Path.GetFileName( path )
             } );
 
-            while(Recent.Count > 10) {
+            while( Recent.Count > 10 ) {
                 Recent.RemoveAt( 0 );
             }
         }

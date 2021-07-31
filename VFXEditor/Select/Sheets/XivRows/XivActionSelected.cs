@@ -7,8 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace VFXSelect.Data.Rows {
-    public class XivActionSelected
-    {
+    public class XivActionSelected {
         public XivActionBase Action;
         public bool CastVfxExists = false;
         public string CastVfxPath;
@@ -17,25 +16,22 @@ namespace VFXSelect.Data.Rows {
         public string SelfTmbPath;
         public List<string> SelfVfxPaths = new();
 
-        public static Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
-        public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action )
-        {
+        public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action ) {
             Action = action;
             CastVfxExists = action.CastVFXExists;
             CastVfxPath = action.GetCastVFXPath();
 
-            if(file != null )
-            {
+            if( file != null ) {
                 var data = file.Data;
                 SelfVfxExists = true;
                 SelfTmbPath = file.FilePath.Path;
 
                 var stringData = Encoding.UTF8.GetString( data );
                 var matches = rx.Matches( stringData );
-                foreach(Match m in matches )
-                {
-                    SelfVfxPaths.Add( m.Value.Trim( '\u0000') );
+                foreach( Match m in matches ) {
+                    SelfVfxPaths.Add( m.Value.Trim( '\u0000' ) );
                 }
             }
         }

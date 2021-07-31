@@ -5,22 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXEmitterDataSphereModel : AVFXEmitterData
-    {
-        public LiteralEnum<RotationOrder> RotationOrderType = new("ROT");
-        public LiteralEnum<GenerateMethod> GenerateMethodType = new("GeMT");
-        public LiteralInt DivideX = new("DivX");
-        public LiteralInt DivideY = new("DivY");
-        public AVFXCurve Radius = new("Rads");
-        public AVFXCurve InjectionSpeed = new("IjS");
+namespace AVFXLib.Models {
+    public class AVFXEmitterDataSphereModel : AVFXEmitterData {
+        public LiteralEnum<RotationOrder> RotationOrderType = new( "ROT" );
+        public LiteralEnum<GenerateMethod> GenerateMethodType = new( "GeMT" );
+        public LiteralInt DivideX = new( "DivX" );
+        public LiteralInt DivideY = new( "DivY" );
+        public AVFXCurve Radius = new( "Rads" );
+        public AVFXCurve InjectionSpeed = new( "IjS" );
         public AVFXCurve InjectionSpeedRandom = new( "IjSR" );
-        readonly List<Base> Attributes;
+        private readonly List<Base> Attributes;
 
-        public AVFXEmitterDataSphereModel() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[] {
+        public AVFXEmitterDataSphereModel() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[] {
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -28,29 +25,26 @@ namespace AVFXLib.Models
                 Radius,
                 InjectionSpeed,
                 InjectionSpeedRandom
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetUnAssigned(Attributes);
-            SetDefault(RotationOrderType);
-            SetDefault(GenerateMethodType);
-            DivideX.GiveValue(1);
-            DivideY.GiveValue(1);
+            SetUnAssigned( Attributes );
+            SetDefault( RotationOrderType );
+            SetDefault( GenerateMethodType );
+            DivideX.GiveValue( 1 );
+            DivideY.GiveValue( 1 );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            var dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

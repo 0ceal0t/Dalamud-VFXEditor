@@ -18,7 +18,7 @@ namespace AVFXLib.Models {
         public override void Read( AVFXNode node ) {
         }
 
-        public override void read( AVFXLeaf leaf ) {
+        public override void Read( AVFXLeaf leaf ) {
             Value = Util.BytesToString( leaf.Contents );
             if( FixedSize == -1 )
                 Size = leaf.Size;
@@ -44,7 +44,7 @@ namespace AVFXLib.Models {
             return new AVFXLeaf( AVFXName, Size, Util.StringToBytes( Value ) );
         }
 
-        public override string stringValue() {
+        public override string StringValue() {
             return Value.ToString();
         }
     }

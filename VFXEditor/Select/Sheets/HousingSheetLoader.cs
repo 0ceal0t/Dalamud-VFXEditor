@@ -15,12 +15,12 @@ namespace VFXSelect.Data.Sheets {
         public override void OnLoad() {
             var sheet = PluginInterface.Data.GetExcelSheet<HousingFurniture>().Where( x => x.ModelKey > 0 );
             foreach( var item in sheet ) {
-                Items.Add(new XivHousing( item ));
+                Items.Add( new XivHousing( item ) );
             }
 
             var sheet2 = PluginInterface.Data.GetExcelSheet<HousingYardObject>().Where( x => x.ModelKey > 0 );
             foreach( var item in sheet2 ) {
-                Items.Add(new XivHousing( item ));
+                Items.Add( new XivHousing( item ) );
             }
         }
 

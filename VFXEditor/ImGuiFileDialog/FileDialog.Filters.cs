@@ -17,20 +17,20 @@ namespace ImGuiFileDialog {
             }
 
             public bool Empty() {
-                return string.IsNullOrEmpty(Filter) && ((CollectionFilters == null) ? true : (CollectionFilters.Count == 0));
+                return string.IsNullOrEmpty( Filter ) && ( ( CollectionFilters == null ) || ( CollectionFilters.Count == 0 ) );
             }
 
-            public bool FilterExists(string filter) {
-                return ( Filter == filter ) || (CollectionFilters != null && CollectionFilters.Contains( filter ));
+            public bool FilterExists( string filter ) {
+                return ( Filter == filter ) || ( CollectionFilters != null && CollectionFilters.Contains( filter ) );
             }
         }
 
         private readonly List<FilterStruct> Filters = new();
         private FilterStruct SelectedFilter;
 
-        public static Regex FilterRegex = new( @"[^,{}]+(\{([^{}]*?)\})?", RegexOptions.Compiled );
+        private static readonly Regex FilterRegex = new( @"[^,{}]+(\{([^{}]*?)\})?", RegexOptions.Compiled );
 
-        private void ParseFilters(string filters) {
+        private void ParseFilters( string filters ) {
             // ".*,.cpp,.h,.hpp"
             // "Source files{.cpp,.h,.hpp},Image files{.png,.gif,.jpg,.jpeg},.md"
 
@@ -43,45 +43,43 @@ namespace ImGuiFileDialog {
                 var match = m.Value;
                 FilterStruct filter = new();
 
-                if(match.Contains("{")) {
+                if( match.Contains( "{" ) ) {
                     var exts = m.Groups[2].Value;
-                    filter = new FilterStruct
-                    {
+                    filter = new FilterStruct {
                         Filter = match.Split( '{' )[0],
                         CollectionFilters = new HashSet<string>( exts.Split( ',' ) )
                     };
                 }
                 else {
-                    filter = new FilterStruct
-                    {
+                    filter = new FilterStruct {
                         Filter = match,
                         CollectionFilters = new()
                     };
                 }
                 Filters.Add( filter );
 
-                if(!currentFilterFound && filter.Filter == SelectedFilter.Filter) {
+                if( !currentFilterFound && filter.Filter == SelectedFilter.Filter ) {
                     currentFilterFound = true;
                     SelectedFilter = filter;
                 }
             }
 
-            if(!currentFilterFound && !(Filters.Count == 0)) {
+            if( !currentFilterFound && !( Filters.Count == 0 ) ) {
                 SelectedFilter = Filters[0];
             }
         }
 
-        private void SetSelectedFilterWithExt(string ext) {
+        private void SetSelectedFilterWithExt( string ext ) {
             if( Filters.Count == 0 ) return;
             if( string.IsNullOrEmpty( ext ) ) return;
 
-            foreach(var filter in Filters) {
-                if(filter.FilterExists(ext)) {
+            foreach( var filter in Filters ) {
+                if( filter.FilterExists( ext ) ) {
                     SelectedFilter = filter;
                 }
             }
 
-            if( SelectedFilter.Empty()) {
+            if( SelectedFilter.Empty() ) {
                 SelectedFilter = Filters[0];
             }
         }
@@ -92,7 +90,7 @@ namespace ImGuiFileDialog {
 
                 foreach( var file in Files ) {
                     var show = true;
-                    if( !string.IsNullOrEmpty( SearchBuffer ) && !file.FileName.ToLower().Contains(SearchBuffer.ToLower()) ) {
+                    if( !string.IsNullOrEmpty( SearchBuffer ) && !file.FileName.ToLower().Contains( SearchBuffer.ToLower() ) ) {
                         show = false;
                     }
 

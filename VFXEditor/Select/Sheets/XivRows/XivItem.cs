@@ -6,15 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXSelect.Data.Rows {
-    public struct XivItemIds
-    {
+    public struct XivItemIds {
         public int PrimaryId;
         public int PrimaryVar;
         public int SecondaryId;
         public int SecondaryVar;
 
-        public XivItemIds( ulong modelDataRaw )
-        {
+        public XivItemIds( ulong modelDataRaw ) {
             /*
              * Gear: [Id, Var, -, -] / [-,-,-,-]
              * Weapon: [Id, Var, Id, -] / [Id, Var, Id, -]
@@ -27,8 +25,7 @@ namespace VFXSelect.Data.Rows {
         }
     }
 
-    public class XivItem
-    {
+    public class XivItem {
         public bool HasSub;
         public XivItem SubItem = null;
 
@@ -45,10 +42,9 @@ namespace VFXSelect.Data.Rows {
         public int RowId;
         public ushort Icon;
 
-        public XivItem( Lumina.Excel.GeneratedSheets.Item item )
-        {
+        public XivItem( Lumina.Excel.GeneratedSheets.Item item ) {
             Name = item.Name.ToString();
-            RowId = (int)item.RowId;
+            RowId = ( int )item.RowId;
             Icon = item.Icon;
 
             Ids = new XivItemIds( item.ModelMain );
@@ -56,8 +52,7 @@ namespace VFXSelect.Data.Rows {
             HasModel = ( Ids.PrimaryId != 0 );
             HasSub = ( SecondaryIds.PrimaryId != 0 );
 
-            if( HasSub )
-            {
+            if( HasSub ) {
                 var sItem = new Lumina.Excel.GeneratedSheets.Item {
                     Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) ),
                     Icon = item.Icon,
@@ -78,14 +73,12 @@ namespace VFXSelect.Data.Rows {
             Variant = Ids.SecondaryId;
         }
 
-        public string GetImcPath()
-        {
+        public string GetImcPath() {
             return rootPath + "b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + ".imc";
         }
 
-        public string GetVFXPath(int idx )
-        {
-            return vfxPath + idx.ToString().PadLeft( 4, '0' ) + ".avfx";   
+        public string GetVFXPath( int idx ) {
+            return vfxPath + idx.ToString().PadLeft( 4, '0' ) + ".avfx";
         }
     }
 }

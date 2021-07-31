@@ -12,7 +12,7 @@ namespace VFXSelect.Data.Rows {
 
         public HashSet<string> VfxPaths = new();
 
-        public static Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivCutsceneSelected( XivCutscene cutscene, Lumina.Data.FileResource file ) {
             Cutscene = cutscene;
@@ -21,7 +21,7 @@ namespace VFXSelect.Data.Rows {
             var stringData = Encoding.UTF8.GetString( data );
             var matches = rx.Matches( stringData );
             foreach( Match m in matches ) {
-                VfxPaths.Add( m.Value.Trim('\u0000') );
+                VfxPaths.Add( m.Value.Trim( '\u0000' ) );
             }
         }
     }

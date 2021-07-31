@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX
         public UICurve2Axis Scale;
         public UICurve2Axis Scroll;
         public UICurve Rotation;
-        readonly List<UIItem> Curves = new();
+        private readonly List<UIItem> Curves = new();
 
         public UIParticleUVSet(AVFXParticleUVSet uvSet, UIParticle particle)
         {

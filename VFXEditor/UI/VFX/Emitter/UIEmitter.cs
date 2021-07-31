@@ -157,7 +157,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override string GetDefaultText() {
-            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
+            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.StringValue() + ")";
         }
 
         public override string GetWorkspaceId() {

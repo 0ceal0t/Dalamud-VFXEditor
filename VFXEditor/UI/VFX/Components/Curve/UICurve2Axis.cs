@@ -19,8 +19,7 @@ namespace VFXEditor.UI.VFX
         public UICombo<RandomType> _AxisConnectRandom;
         public UICurve _X;
         public UICurve _Y;
-
-        List<UICurve> Curves;
+        private List<UICurve> Curves;
 
         public UICurve2Axis(AVFXCurve2Axis curve, string name, bool locked = false )
         {

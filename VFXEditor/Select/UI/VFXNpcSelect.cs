@@ -11,7 +11,7 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXNpcSelect : VFXSelectTab<XivNpc, XivNpcSelected> {
-        public VFXNpcSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXNpcSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Npcs, sheet.PluginInterface, dialog ) {
         }
 

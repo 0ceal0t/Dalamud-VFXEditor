@@ -25,8 +25,8 @@ namespace VFXSelect.UI {
         public string ParentId;
 
         public string SearchInput = "";
-        public T Selected = default(T);
-        public S Loaded = default(S);
+        public T Selected = default;
+        public S Loaded = default;
 
         public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, DalamudPluginInterface pluginInterface, VFXSelectDialog dialog ) {
             PluginInterface = pluginInterface;

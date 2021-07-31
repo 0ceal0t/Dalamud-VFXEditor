@@ -216,8 +216,8 @@ namespace ImGuiFileDialog {
         private void DrawContent() {
             var size = ImGui.GetContentRegionAvail() - new Vector2( 0, FooterHeight );
 
-            if(!Flags.HasFlag(ImGuiFileDialogFlags.HideSideBar)) {
-                ImGui.BeginChild( "##FileDialog_ColumnChild", size);
+            if( !Flags.HasFlag( ImGuiFileDialogFlags.HideSideBar ) ) {
+                ImGui.BeginChild( "##FileDialog_ColumnChild", size );
                 ImGui.Columns( 2, "##FileDialog_Columns" );
 
                 DrawSideBar( new Vector2( 150, size.Y ) );
@@ -225,7 +225,7 @@ namespace ImGuiFileDialog {
                 ImGui.SetColumnWidth( 0, 150 );
                 ImGui.NextColumn();
 
-                DrawFileListView( size - new Vector2(160, 0) );
+                DrawFileListView( size - new Vector2( 160, 0 ) );
 
                 ImGui.Columns( 1 );
                 ImGui.EndChild();
@@ -235,22 +235,22 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private void DrawSideBar(Vector2 size) {
+        private void DrawSideBar( Vector2 size ) {
             ImGui.BeginChild( "##FileDialog_SideBar", size );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            foreach(var drive in Drives) {
+            foreach( var drive in Drives ) {
                 DrawSideBarItem( drive );
             }
 
-            foreach(var quick in QuickAccess) {
+            foreach( var quick in QuickAccess ) {
                 DrawSideBarItem( quick );
             }
 
-            if(Recent != null) {
+            if( Recent != null ) {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
-                foreach(var recent in Recent) {
+                foreach( var recent in Recent ) {
                     DrawSideBarItem( recent );
                 }
             }
@@ -258,7 +258,7 @@ namespace ImGuiFileDialog {
             ImGui.EndChild();
         }
 
-        private void DrawSideBarItem(SideBarItem item) {
+        private void DrawSideBarItem( SideBarItem item ) {
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Selectable( $"{item.Icon}##{item.Text}", item.Text == SelectedSideBar ) ) {
                 SetPath( item.Location );
@@ -326,10 +326,9 @@ namespace ImGuiFileDialog {
                                 var needToBreak = false;
 
                                 var dir = file.Type == FileStructType.Directory;
-                                var item = !dir ? GetIcon( file.Ext ) : new IconColorItem
-                                {
+                                var item = !dir ? GetIcon( file.Ext ) : new IconColorItem {
                                     Color = DIR_TEXT_COLOR,
-                                    Icon = (char) FontAwesomeIcon.Folder
+                                    Icon = ( char )FontAwesomeIcon.Folder
                                 };
 
                                 ImGui.PushStyleColor( ImGuiCol.Text, item.Color );
@@ -371,7 +370,7 @@ namespace ImGuiFileDialog {
 
                 if( PathInputActivated ) {
                     if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Enter ) ) ) {
-                        if(Directory.Exists(PathInputBuffer)) SetPath( PathInputBuffer );
+                        if( Directory.Exists( PathInputBuffer ) ) SetPath( PathInputBuffer );
                         PathInputActivated = false;
                     }
                     if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Escape ) ) ) {
@@ -397,7 +396,7 @@ namespace ImGuiFileDialog {
             ImGui.Text( $"{icon}" );
             ImGui.PopFont();
 
-            ImGui.SameLine(25f);
+            ImGui.SameLine( 25f );
 
             if( ImGui.Selectable( file.FileName, selected, flags ) ) {
                 if( file.Type == FileStructType.Directory ) {
@@ -421,7 +420,7 @@ namespace ImGuiFileDialog {
             return false;
         }
 
-        private IconColorItem GetIcon( string ext ) {
+        private static IconColorItem GetIcon( string ext ) {
             if( ICON_MAP == null ) {
                 ICON_MAP = new();
                 AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
@@ -434,17 +433,15 @@ namespace ImGuiFileDialog {
                 AddToIconMap( new[] { "csv" }, ( char )FontAwesomeIcon.FileCsv, MISC_TEXT_COLOR );
             }
 
-            return ICON_MAP.TryGetValue(ext.ToLower(), out var icon) ? icon : new IconColorItem
-            {
-                Icon = (char) FontAwesomeIcon.File,
+            return ICON_MAP.TryGetValue( ext.ToLower(), out var icon ) ? icon : new IconColorItem {
+                Icon = ( char )FontAwesomeIcon.File,
                 Color = STANDARD_TEXT_COLOR
             };
         }
 
-        private void AddToIconMap( string[] extensions, char icon, Vector4 color) {
-            foreach(var ext in extensions) {
-                ICON_MAP[ext] = new IconColorItem
-                {
+        private static void AddToIconMap( string[] extensions, char icon, Vector4 color ) {
+            foreach( var ext in extensions ) {
+                ICON_MAP[ext] = new IconColorItem {
                     Icon = icon,
                     Color = color
                 };
@@ -474,7 +471,7 @@ namespace ImGuiFileDialog {
 
         private void SelectFileName( FileStruct file ) {
             if( ImGui.GetIO().KeyCtrl ) {
-                if(SelectionCountMax == 0) { // infinite select
+                if( SelectionCountMax == 0 ) { // infinite select
                     if( !SelectedFileNames.Contains( file.FileName ) ) {
                         AddFileNameInSelection( file.FileName, true );
                     }
@@ -483,7 +480,7 @@ namespace ImGuiFileDialog {
                     }
                 }
                 else {
-                    if(SelectedFileNames.Count < SelectionCountMax) {
+                    if( SelectedFileNames.Count < SelectionCountMax ) {
                         if( !SelectedFileNames.Contains( file.FileName ) ) {
                             AddFileNameInSelection( file.FileName, true );
                         }
@@ -494,30 +491,30 @@ namespace ImGuiFileDialog {
                 }
             }
             else if( ImGui.GetIO().KeyShift ) {
-                if(SelectionCountMax != 1) { // can select a block
+                if( SelectionCountMax != 1 ) { // can select a block
                     SelectedFileNames.Clear();
 
                     var startMultiSelection = false;
                     var fileNameToSelect = file.FileName;
                     var savedLastSelectedFileName = "";
 
-                    foreach(var f in FilteredFiles) {
+                    foreach( var f in FilteredFiles ) {
                         // select top-to-bottom
-                        if( f.FileName == LastSelectedFileName) { // start (the previously selected one)
+                        if( f.FileName == LastSelectedFileName ) { // start (the previously selected one)
                             startMultiSelection = true;
                             AddFileNameInSelection( LastSelectedFileName, false );
                         }
-                        else if(startMultiSelection) {
-                            if(SelectionCountMax == 0) {
+                        else if( startMultiSelection ) {
+                            if( SelectionCountMax == 0 ) {
                                 AddFileNameInSelection( f.FileName, false );
                             }
                             else {
-                                if(SelectedFileNames.Count < SelectionCountMax) {
+                                if( SelectedFileNames.Count < SelectionCountMax ) {
                                     AddFileNameInSelection( f.FileName, false );
                                 }
                                 else {
                                     startMultiSelection = false;
-                                    if(!string.IsNullOrEmpty(savedLastSelectedFileName)) {
+                                    if( !string.IsNullOrEmpty( savedLastSelectedFileName ) ) {
                                         LastSelectedFileName = savedLastSelectedFileName;
                                     }
                                     break;
@@ -526,8 +523,8 @@ namespace ImGuiFileDialog {
                         }
 
                         // select bottom-to-top
-                        if(f.FileName == fileNameToSelect) {
-                            if(!startMultiSelection) {
+                        if( f.FileName == fileNameToSelect ) {
+                            if( !startMultiSelection ) {
                                 savedLastSelectedFileName = LastSelectedFileName;
                                 LastSelectedFileName = fileNameToSelect;
                                 fileNameToSelect = savedLastSelectedFileName;
@@ -536,7 +533,7 @@ namespace ImGuiFileDialog {
                             }
                             else {
                                 startMultiSelection = false;
-                                if(!string.IsNullOrEmpty(savedLastSelectedFileName)) {
+                                if( !string.IsNullOrEmpty( savedLastSelectedFileName ) ) {
                                     LastSelectedFileName = savedLastSelectedFileName;
                                 }
                                 break;
@@ -552,21 +549,21 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private void AddFileNameInSelection(string name, bool setLastSelection) {
+        private void AddFileNameInSelection( string name, bool setLastSelection ) {
             SelectedFileNames.Add( name );
-            if(SelectedFileNames.Count == 1) {
+            if( SelectedFileNames.Count == 1 ) {
                 FileNameBuffer = name;
             }
             else {
                 FileNameBuffer = $"{SelectedFileNames.Count} files Selected";
             }
 
-            if(setLastSelection) {
+            if( setLastSelection ) {
                 LastSelectedFileName = name;
             }
         }
 
-        private void RemoveFileNameInSelection(string name) {
+        private void RemoveFileNameInSelection( string name ) {
             SelectedFileNames.Remove( name );
             if( SelectedFileNames.Count == 1 ) {
                 FileNameBuffer = name;
@@ -658,7 +655,7 @@ namespace ImGuiFileDialog {
 
         private bool IsItemSelected() {
             if( SelectedFileNames.Count > 0 ) return true;
-            if( IsDirectoryMode()) return true; // current directory
+            if( IsDirectoryMode() ) return true; // current directory
             return false;
         }
 
@@ -666,7 +663,7 @@ namespace ImGuiFileDialog {
             if( IsDirectoryMode() ) return lastAction;
             if( !IsOk && lastAction ) return true; // no need to confirm anything, since it was cancelled
 
-            var confirmOverwrite = Flags.HasFlag(ImGuiFileDialogFlags.ConfirmOverwrite);
+            var confirmOverwrite = Flags.HasFlag( ImGuiFileDialogFlags.ConfirmOverwrite );
 
             if( IsOk && lastAction && !confirmOverwrite ) return true;
 

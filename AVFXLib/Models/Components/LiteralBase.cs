@@ -15,8 +15,8 @@ namespace AVFXLib.Models {
             Size = size;
         }
 
-        public abstract void read( AVFXLeaf node );
+        public abstract void Read( AVFXLeaf node );
 
-        public abstract string stringValue();
+        public abstract string StringValue();
     }
 }

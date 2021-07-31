@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
-namespace VFXSelect.UI
-{
+namespace VFXSelect.UI {
     public class VFXActionSelect : VFXSelectTab<XivActionBase, XivActionSelected> {
         private ImGuiScene.TextureWrap Icon;
 

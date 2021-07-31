@@ -13,7 +13,7 @@ namespace VFXSelect.UI {
     public class VFXEmoteSelect : VFXSelectTab<XivEmote, XivEmoteSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXEmoteSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXEmoteSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Emotes, sheet.PluginInterface, dialog ) {
         }
 
@@ -26,7 +26,7 @@ namespace VFXSelect.UI {
         }
 
         public override void DrawSelected( XivEmoteSelected loadedItem ) {
-            if(loadedItem == null) { return; }
+            if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Emote.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

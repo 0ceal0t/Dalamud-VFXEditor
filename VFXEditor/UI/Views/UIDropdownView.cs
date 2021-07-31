@@ -2,8 +2,7 @@ using AVFXLib.AVFX;
 using AVFXLib.Models;
 using ImGuiNET;
 using System.IO;
-namespace VFXEditor.UI.VFX
-{
+namespace VFXEditor.UI.VFX {
     public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
         public AVFXBase AVFX;
         public UIMain Main;
@@ -36,8 +35,8 @@ namespace VFXEditor.UI.VFX
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();
 
-            if(AllowNew ) ImGui.SameLine();
-            IUINodeView<T>.DrawControls(this, Main, Selected, Group, AllowNew, AllowDelete, Id);
+            if( AllowNew ) ImGui.SameLine();
+            IUINodeView<T>.DrawControls( this, Main, Selected, Group, AllowNew, AllowDelete, Id );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();
@@ -49,9 +48,9 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ViewSelect() {
-            var selectedString = (Selected != null) ? Selected.GetText() : DefaultText;
+            var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
             if( ImGui.BeginCombo( Id + "-Select", selectedString ) ) {
-                foreach(var item in Group.Items ) {
+                foreach( var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
                         Selected = item;
                         OnSelect( item );

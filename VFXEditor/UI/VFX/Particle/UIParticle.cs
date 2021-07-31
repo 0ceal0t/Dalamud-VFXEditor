@@ -178,7 +178,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override string GetDefaultText() {
-            return "Particle " + Idx + "(" + Particle.ParticleVariety.stringValue() + ")";
+            return "Particle " + Idx + "(" + Particle.ParticleVariety.StringValue() + ")";
         }
 
         public override string GetWorkspaceId() {

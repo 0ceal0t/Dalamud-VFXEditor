@@ -9,7 +9,7 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
-        public ActionSheetLoader(SheetManager manager, DalamudPluginInterface pluginInterface ) : base(manager, pluginInterface ) {
+        public ActionSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
         public override void OnLoad() {

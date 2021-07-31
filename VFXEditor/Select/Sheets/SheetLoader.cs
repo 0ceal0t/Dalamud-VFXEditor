@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
-    public abstract class SheetLoader<T,S> { // T = Not Selected, S = Selected
+    public abstract class SheetLoader<T, S> { // T = Not Selected, S = Selected
         public SheetManager Manager;
         public DalamudPluginInterface PluginInterface;
 
@@ -26,12 +26,12 @@ namespace VFXSelect.Data.Sheets {
         public void Load() {
             if( Waiting ) return;
             Waiting = true;
-            PluginLog.Log( "Loading " + typeof(T).Name );
+            PluginLog.Log( "Loading " + typeof( T ).Name );
             Task.Run( async () => {
                 try {
                     OnLoad();
                 }
-                catch(Exception e ) {
+                catch( Exception e ) {
                     PluginLog.LogError( "Error Loading " + typeof( T ).Name, e );
                 }
                 Loaded = true;

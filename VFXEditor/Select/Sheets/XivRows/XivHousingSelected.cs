@@ -11,7 +11,7 @@ namespace VFXSelect.Data.Rows {
         public XivHousing Housing;
 
         public HashSet<string> VfxPaths = new();
-        public static Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivHousingSelected( XivHousing housing, Lumina.Data.FileResource file ) {
             Housing = housing;
@@ -20,7 +20,7 @@ namespace VFXSelect.Data.Rows {
             var stringData = Encoding.UTF8.GetString( data );
             var matches = rx.Matches( stringData );
             foreach( Match m in matches ) {
-                VfxPaths.Add( m.Value.Trim('\u0000') );
+                VfxPaths.Add( m.Value.Trim( '\u0000' ) );
             }
         }
     }

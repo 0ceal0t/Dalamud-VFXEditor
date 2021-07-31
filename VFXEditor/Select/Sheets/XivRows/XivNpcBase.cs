@@ -23,7 +23,7 @@ namespace VFXSelect.Data.Rows {
 
         public string RootPath;
 
-        public XivNpcBase( Lumina.Excel.GeneratedSheets.ModelChara npc) {
+        public XivNpcBase( Lumina.Excel.GeneratedSheets.ModelChara npc ) {
             RowId = ( int )npc.RowId;
             ModelId = npc.Model;
             BaseId = npc.Base;

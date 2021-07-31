@@ -9,13 +9,12 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
-namespace VFXSelect.UI
-{
+namespace VFXSelect.UI {
     public class VFXHousingSelect : VFXSelectTab<XivHousing, XivHousingSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXHousingSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base(parentId, tabId, sheet.Housing, sheet.PluginInterface, dialog) {
+        public VFXHousingSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
+            base( parentId, tabId, sheet.Housing, sheet.PluginInterface, dialog ) {
         }
 
         public override void OnSelect() {

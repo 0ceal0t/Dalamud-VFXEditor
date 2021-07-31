@@ -6,11 +6,9 @@ using System.IO;
 using System.Text;
 using System.Windows;
 
-namespace AVFXLib.Models
-{
-    public class Vertex
-    {
-        public static int SIZE = 36;
+namespace AVFXLib.Models {
+    public class Vertex {
+        public static readonly int SIZE = 36;
 
         public float[] Position = new float[4]; // 2 bytes (half) =  8
         public int[] Normal = new int[4]; // 1 byte = 4, starts at 8  UNSIGNED?   last one = 003C
@@ -22,64 +20,50 @@ namespace AVFXLib.Models
 
         public Vertex() { }
 
-        public Vertex(byte[] bytes)
-        {
-            var ms = new MemoryStream(bytes);
-            var reader = new BinaryReader(ms);
-            for(var i = 0; i < 4; i++)
-            {
-                Position[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
+        public Vertex( byte[] bytes ) {
+            var ms = new MemoryStream( bytes );
+            var reader = new BinaryReader( ms );
+            for( var i = 0; i < 4; i++ ) {
+                Position[i] = Util.Bytes2ToFloat( reader.ReadBytes( 2 ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                Normal[i] = Util.Bytes1ToInt(reader.ReadBytes(1)) - 128;
+            for( var i = 0; i < 4; i++ ) {
+                Normal[i] = Util.Bytes1ToInt( reader.ReadBytes( 1 ) ) - 128;
             }
-            for (var i = 0; i < 4; i++)
-            {
-                Tangent[i] = Util.Bytes1ToInt(reader.ReadBytes(1)) - 128;
+            for( var i = 0; i < 4; i++ ) {
+                Tangent[i] = Util.Bytes1ToInt( reader.ReadBytes( 1 ) ) - 128;
             }
-            for (var i = 0; i < 4; i++)
-            {
-                Color[i] = Util.Bytes1ToInt(reader.ReadBytes(1));
+            for( var i = 0; i < 4; i++ ) {
+                Color[i] = Util.Bytes1ToInt( reader.ReadBytes( 1 ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                UV1[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
+            for( var i = 0; i < 4; i++ ) {
+                UV1[i] = Util.Bytes2ToFloat( reader.ReadBytes( 2 ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                UV2[i] = Util.Bytes2ToFloat(reader.ReadBytes(2));
+            for( var i = 0; i < 4; i++ ) {
+                UV2[i] = Util.Bytes2ToFloat( reader.ReadBytes( 2 ) );
             }
             ms.Close();
         }
 
-        public byte[] toBytes()
-        {
+        public byte[] ToBytes() {
             var ms = new MemoryStream();
-            var writer = new BinaryWriter(ms);
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.FloatTo2Bytes(Position[i]));
+            var writer = new BinaryWriter( ms );
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.FloatTo2Bytes( Position[i] ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.IntTo1Bytes(Normal[i] + 128));
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.IntTo1Bytes( Normal[i] + 128 ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.IntTo1Bytes(Tangent[i] + 128));
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.IntTo1Bytes( Tangent[i] + 128 ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.IntTo1Bytes(Color[i]));
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.IntTo1Bytes( Color[i] ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.FloatTo2Bytes(UV1[i]));
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.FloatTo2Bytes( UV1[i] ) );
             }
-            for (var i = 0; i < 4; i++)
-            {
-                writer.Write(Util.FloatTo2Bytes(UV2[i]));
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( Util.FloatTo2Bytes( UV2[i] ) );
             }
             return ms.ToArray();
         }

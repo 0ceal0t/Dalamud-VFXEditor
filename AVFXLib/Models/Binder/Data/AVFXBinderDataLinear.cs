@@ -5,38 +5,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXBinderDataLinear : AVFXBinderData
-    {
-        public AVFXCurve CarryOverFactor = new("COF");
-        public AVFXCurve CarryOverFactorRandom = new("COFR");
-        readonly List<Base> Attributes;
+namespace AVFXLib.Models {
+    public class AVFXBinderDataLinear : AVFXBinderData {
+        public AVFXCurve CarryOverFactor = new( "COF" );
+        public AVFXCurve CarryOverFactorRandom = new( "COFR" );
+        private readonly List<Base> Attributes;
 
-        public AVFXBinderDataLinear() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXBinderDataLinear() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[]{
                 CarryOverFactor,
                 CarryOverFactorRandom
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetUnAssigned(Attributes);
+            SetUnAssigned( Attributes );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            var dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

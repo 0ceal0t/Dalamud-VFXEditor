@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXSelect.Data.Rows {
-    public class XivStatus
-    {
+    public class XivStatus {
         public bool LoopVFX1Exists = false;
         public bool LoopVFX2Exists = false;
         public bool LoopVFX3Exists = false;
@@ -21,10 +20,9 @@ namespace VFXSelect.Data.Rows {
         public string LoopVFXPath2;
         public string LoopVFXPath3;
 
-        public static string statusPrefix = "vfx/common/eff/";
+        public static readonly string statusPrefix = "vfx/common/eff/";
 
-        public XivStatus( Lumina.Excel.GeneratedSheets.Status status )
-        {
+        public XivStatus( Lumina.Excel.GeneratedSheets.Status status ) {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
             Icon = status.Icon;
@@ -40,25 +38,22 @@ namespace VFXSelect.Data.Rows {
             LoopVFXPath3 = status.VFX.Value?.VFX3?.Value.Location;
             LoopVFX3Exists = !string.IsNullOrEmpty( LoopVFXPath3 );
 
-            VfxExists = (LoopVFX1Exists || LoopVFX2Exists || LoopVFX3Exists);
+            VfxExists = ( LoopVFX1Exists || LoopVFX2Exists || LoopVFX3Exists );
         }
 
-        public string GetLoopVFX1Path()
-        {
+        public string GetLoopVFX1Path() {
             if( !LoopVFX1Exists )
                 return "--";
             return statusPrefix + LoopVFXPath1 + ".avfx";
         }
 
-        public string GetLoopVFX2Path()
-        {
+        public string GetLoopVFX2Path() {
             if( !LoopVFX2Exists )
                 return "--";
             return statusPrefix + LoopVFXPath2 + ".avfx";
         }
 
-        public string GetLoopVFX3Path()
-        {
+        public string GetLoopVFX3Path() {
             if( !LoopVFX3Exists )
                 return "--";
             return statusPrefix + LoopVFXPath3 + ".avfx";

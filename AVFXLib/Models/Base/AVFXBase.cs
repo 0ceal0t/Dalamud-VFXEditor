@@ -70,7 +70,7 @@ namespace AVFXLib.Models
         public List<AVFXBinder> Binders = new();
         public List<AVFXTexture> Textures = new();
         public List<AVFXModel> Models = new();
-        readonly List<Base> Attributes;
+        private readonly List<Base> Attributes;
 
         public AVFXBase() : base("AVFX")
         {
@@ -285,14 +285,14 @@ namespace AVFXLib.Models
             baseAVFX.Children.Add(new AVFXLeaf("Ver", 4, new byte[] { 0x13, 0x09, 0x11, 0x20 })); //?
             PutAVFX(baseAVFX, Attributes);
 
-            baseAVFX.Children.Add(new AVFXLeaf("ScCn", 4, BitConverter.GetBytes(Schedulers.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("TlCn", 4, BitConverter.GetBytes(Timelines.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("EmCn", 4, BitConverter.GetBytes(Emitters.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("PrCn", 4, BitConverter.GetBytes(Particles.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("EfCn", 4, BitConverter.GetBytes(Effectors.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("BdCn", 4, BitConverter.GetBytes(Binders.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("TxCn", 4, BitConverter.GetBytes(Textures.Count())));
-            baseAVFX.Children.Add(new AVFXLeaf("MdCn", 4, BitConverter.GetBytes(Models.Count())));
+            baseAVFX.Children.Add(new AVFXLeaf("ScCn", 4, BitConverter.GetBytes( Schedulers.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("TlCn", 4, BitConverter.GetBytes( Timelines.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("EmCn", 4, BitConverter.GetBytes( Emitters.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("PrCn", 4, BitConverter.GetBytes( Particles.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("EfCn", 4, BitConverter.GetBytes( Effectors.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("BdCn", 4, BitConverter.GetBytes( Binders.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("TxCn", 4, BitConverter.GetBytes( Textures.Count ) ));
+            baseAVFX.Children.Add(new AVFXLeaf("MdCn", 4, BitConverter.GetBytes( Models.Count ) ));
 
             // SCHEDULE
             foreach (var schedElem in Schedulers)

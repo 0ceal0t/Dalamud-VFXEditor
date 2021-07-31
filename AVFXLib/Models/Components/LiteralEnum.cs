@@ -17,7 +17,7 @@ namespace AVFXLib.Models {
         public override void Read( AVFXNode node ) {
         }
 
-        public override void read( AVFXLeaf leaf ) {
+        public override void Read( AVFXLeaf leaf ) {
             var intValue = Util.Bytes4ToInt( leaf.Contents );
             //if (intValue != -1) // means none
             //{
@@ -50,7 +50,7 @@ namespace AVFXLib.Models {
             return new AVFXLeaf( AVFXName, Size, Util.IntTo4Bytes( enumValue ) );
         }
 
-        public override string stringValue() {
+        public override string StringValue() {
             return Value.ToString();
         }
     }

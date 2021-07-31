@@ -82,7 +82,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override string GetDefaultText() {
-            return "Effector " + Idx + "(" + Effector.EffectorVariety.stringValue() + ")";
+            return "Effector " + Idx + "(" + Effector.EffectorVariety.StringValue() + ")";
         }
 
         public override string GetWorkspaceId() {

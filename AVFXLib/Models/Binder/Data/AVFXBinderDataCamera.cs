@@ -5,38 +5,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXBinderDataCamera : AVFXBinderData
-    {
-        public AVFXCurve Distance = new("Dst");
+namespace AVFXLib.Models {
+    public class AVFXBinderDataCamera : AVFXBinderData {
+        public AVFXCurve Distance = new( "Dst" );
         public AVFXCurve DistanceRandom = new( "DstR" );
-        readonly List<Base> Attributes;
+        private readonly List<Base> Attributes;
 
-        public AVFXBinderDataCamera() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXBinderDataCamera() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[]{
                 Distance,
                 DistanceRandom
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetUnAssigned(Attributes);
+            SetUnAssigned( Attributes );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            var dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

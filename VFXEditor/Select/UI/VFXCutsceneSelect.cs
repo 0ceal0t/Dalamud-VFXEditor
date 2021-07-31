@@ -11,7 +11,7 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXCutsceneSelect : VFXSelectTab<XivCutscene, XivCutsceneSelected> {
-        public VFXCutsceneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXCutsceneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Cutscenes, sheet.PluginInterface, dialog ) {
         }
 

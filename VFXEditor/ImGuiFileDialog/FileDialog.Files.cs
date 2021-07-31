@@ -49,9 +49,9 @@ namespace ImGuiFileDialog {
         }
 
         private static string ComposeNewPath( List<string> decomp ) {
-            if(decomp.Count == 1) {
+            if( decomp.Count == 1 ) {
                 var drivePath = decomp[0];
-                if(drivePath[^1] != Path.DirectorySeparatorChar) { // turn C: into C:\
+                if( drivePath[^1] != Path.DirectorySeparatorChar ) { // turn C: into C:\
                     drivePath += Path.DirectorySeparatorChar;
                 }
                 return drivePath;
@@ -70,8 +70,7 @@ namespace ImGuiFileDialog {
                 Files.Clear();
 
                 if( PathDecomposition.Count > 1 ) {
-                    Files.Add( new FileStruct
-                    {
+                    Files.Add( new FileStruct {
                         Type = FileStructType.Directory,
                         FilePath = path,
                         FileName = "..",
@@ -84,7 +83,7 @@ namespace ImGuiFileDialog {
 
                 var dirInfo = new DirectoryInfo( path );
 
-                var dontShowHidden = Flags.HasFlag(ImGuiFileDialogFlags.DontShowHiddenFiles);
+                var dontShowHidden = Flags.HasFlag( ImGuiFileDialogFlags.DontShowHiddenFiles );
 
                 foreach( var dir in dirInfo.EnumerateDirectories().OrderBy( d => d.Name ) ) {
                     if( string.IsNullOrEmpty( dir.Name ) ) continue;
@@ -109,22 +108,20 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private FileStruct GetFile( FileInfo file, string path ) {
-            return new FileStruct
-            {
+        private static FileStruct GetFile( FileInfo file, string path ) {
+            return new FileStruct {
                 FileName = file.Name,
                 FilePath = path,
                 FileModifiedDate = FormatModifiedDate( file.LastWriteTime ),
                 FileSize = file.Length,
                 FormattedFileSize = BytesToString( file.Length ),
                 Type = FileStructType.File,
-                Ext = file.Extension.Trim('.')
+                Ext = file.Extension.Trim( '.' )
             };
         }
 
-        private FileStruct GetDir( DirectoryInfo dir, string path ) {
-            return new FileStruct
-            {
+        private static FileStruct GetDir( DirectoryInfo dir, string path ) {
+            return new FileStruct {
                 FileName = dir.Name,
                 FilePath = path,
                 FileModifiedDate = FormatModifiedDate( dir.LastWriteTime ),
@@ -137,61 +134,53 @@ namespace ImGuiFileDialog {
 
         private void SetupSideBar() {
             var drives = DriveInfo.GetDrives();
-            foreach(var drive in drives) {
-                Drives.Add( new SideBarItem
-                {
+            foreach( var drive in drives ) {
+                Drives.Add( new SideBarItem {
                     Icon = ( char )FontAwesomeIcon.Server,
                     Location = drive.Name,
                     Text = drive.Name
-                } ) ;
+                } );
             }
 
-            var personal = Path.GetDirectoryName(Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
+            var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
 
-            QuickAccess.Add( new SideBarItem
-            {
-                Icon = (char) FontAwesomeIcon.Desktop,
+            QuickAccess.Add( new SideBarItem {
+                Icon = ( char )FontAwesomeIcon.Desktop,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
                 Text = "Desktop"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.File,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
                 Text = "Documents"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Download,
-                Location = Path.Combine(personal, "Downloads"),
+                Location = Path.Combine( personal, "Downloads" ),
                 Text = "Downloads"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Star,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
                 Text = "Favorites"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Music,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
                 Text = "Music"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Image,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
                 Text = "Pictures"
             } );
 
-            QuickAccess.Add( new SideBarItem
-            {
+            QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Video,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
                 Text = "Videos"
@@ -200,10 +189,10 @@ namespace ImGuiFileDialog {
 
         // TODO: ascending or descending icons
 
-        private void SortFields(SortingField sortingField, bool canChangeOrder = false) {
-            switch(sortingField) {
+        private void SortFields( SortingField sortingField, bool canChangeOrder = false ) {
+            switch( sortingField ) {
                 case SortingField.FileName:
-                    if(canChangeOrder && sortingField == CurrentSortingField) {
+                    if( canChangeOrder && sortingField == CurrentSortingField ) {
                         SortDescending[0] = !SortDescending[0];
                     }
                     Files.Sort( SortDescending[0] ? SortByFileNameDesc : SortByFileNameAsc );
@@ -231,17 +220,17 @@ namespace ImGuiFileDialog {
                     break;
             }
 
-            if(sortingField != SortingField.None) {
+            if( sortingField != SortingField.None ) {
                 CurrentSortingField = sortingField;
             }
 
             ApplyFilteringOnFileList();
         }
 
-        private static int SortByFileNameDesc(FileStruct a, FileStruct b) {
+        private static int SortByFileNameDesc( FileStruct a, FileStruct b ) {
             if( a.FileName[0] == '.' && b.FileName[0] != '.' ) return 1;
             if( a.FileName[0] != '.' && b.FileName[0] == '.' ) return -1;
-            if (a.FileName[0] == '.' && b.FileName[0] == '.') {
+            if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
                 if( a.FileName.Length == 1 ) return -1;
                 if( b.FileName.Length == 1 ) return 1;
                 return -1 * string.Compare( a.FileName[1..], b.FileName[1..] );
@@ -265,7 +254,7 @@ namespace ImGuiFileDialog {
         }
 
         private static int SortByTypeDesc( FileStruct a, FileStruct b ) {
-            if(a.Type != b.Type) return (a.Type == FileStructType.Directory) ? 1 : -1;
+            if( a.Type != b.Type ) return ( a.Type == FileStructType.Directory ) ? 1 : -1;
             return string.Compare( a.Ext, b.Ext );
         }
 

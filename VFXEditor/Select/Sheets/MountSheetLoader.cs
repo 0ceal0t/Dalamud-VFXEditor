@@ -13,9 +13,9 @@ namespace VFXSelect.Data.Sheets {
         }
 
         public override void OnLoad() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty(x.Singular) );
+            var sheet = PluginInterface.Data.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) {
-                Items.Add(new XivMount( item ));
+                Items.Add( new XivMount( item ) );
             }
         }
 

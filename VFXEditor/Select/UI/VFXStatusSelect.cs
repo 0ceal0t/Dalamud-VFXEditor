@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
-namespace VFXSelect.UI
-{
+namespace VFXSelect.UI {
     public class VFXStatusSelect : VFXSelectTab<XivStatus, XivStatus> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXStatusSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXStatusSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Statuses, sheet.PluginInterface, dialog ) {
         }
 
@@ -30,7 +29,7 @@ namespace VFXSelect.UI
             ImGui.Text( loadedItem.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if(Icon != null ) {
+            if( Icon != null ) {
                 ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
             }
 

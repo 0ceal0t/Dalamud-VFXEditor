@@ -108,7 +108,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override string GetDefaultText() {
-            return "Binder " + Idx + "(" + Binder.BinderVariety.stringValue() + ")";
+            return "Binder " + Idx + "(" + Binder.BinderVariety.StringValue() + ")";
         }
 
         public override string GetWorkspaceId() {

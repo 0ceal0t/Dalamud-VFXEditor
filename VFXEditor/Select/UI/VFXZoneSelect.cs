@@ -11,7 +11,7 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXZoneSelect : VFXSelectTab<XivZone, XivZoneSelected> {
-        public VFXZoneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXZoneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Zones, sheet.PluginInterface, dialog ) {
         }
 

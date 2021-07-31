@@ -7,7 +7,7 @@ namespace VFXEditor.UI.VFX {
     public class UINodeGraphView : UIBase {
         public UINode Node;
         private static readonly uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
-        private  static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
+        private static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
         private static readonly uint BorderColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
         private static readonly uint TextColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
         private static readonly uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );

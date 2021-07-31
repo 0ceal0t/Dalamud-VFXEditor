@@ -9,13 +9,12 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
-namespace VFXSelect.UI
-{
+namespace VFXSelect.UI {
     public class VFXMountSelect : VFXSelectTab<XivMount, XivMountSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXMountSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
-            base(parentId, tabId, sheet.Mounts, sheet.PluginInterface, dialog) {
+        public VFXMountSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
+            base( parentId, tabId, sheet.Mounts, sheet.PluginInterface, dialog ) {
         }
 
         public override void OnSelect() {

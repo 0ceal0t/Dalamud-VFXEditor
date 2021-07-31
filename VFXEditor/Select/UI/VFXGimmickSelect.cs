@@ -10,7 +10,7 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXGimmickSelect : VFXSelectTab<XivGimmick, XivGimmickSelected> {
-        public VFXGimmickSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) : 
+        public VFXGimmickSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
             base( parentId, tabId, sheet.Gimmicks, sheet.PluginInterface, dialog ) {
         }
 

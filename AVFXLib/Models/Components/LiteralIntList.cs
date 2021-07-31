@@ -10,14 +10,15 @@ namespace AVFXLib.Models {
         public List<int> Value { get; set; }
 
         public LiteralIntList( string avfxName, int size = 1 ) : base( avfxName, size ) {
-            Value = new List<int>();
-            Value.Add( 0 );
+            Value = new List<int> {
+                0
+            };
         }
 
         public override void Read( AVFXNode node ) {
         }
 
-        public override void read( AVFXLeaf leaf ) {
+        public override void Read( AVFXLeaf leaf ) {
             Size = leaf.Size;
             Value.Clear();
             for( var i = 0; i < Size; i++ ) {
@@ -63,7 +64,7 @@ namespace AVFXLib.Models {
             return new AVFXLeaf( AVFXName, Size, bytes );
         }
 
-        public override string stringValue() {
+        public override string StringValue() {
             return Value.ToString();
         }
     }

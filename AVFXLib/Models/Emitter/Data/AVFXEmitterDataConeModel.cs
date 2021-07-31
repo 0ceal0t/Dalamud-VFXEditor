@@ -17,7 +17,7 @@ namespace AVFXLib.Models {
         public AVFXCurve InjectionSpeed = new( "IjS" );
         public AVFXCurve InjectionSpeedRandom = new( "IjSR" );
         public AVFXCurve InjectionAngle = new( "IjA" );
-        readonly List<Base> Attributes;
+        private readonly List<Base> Attributes;
 
         public AVFXEmitterDataConeModel() : base( "Data" ) {
             Attributes = new List<Base>( new Base[] {

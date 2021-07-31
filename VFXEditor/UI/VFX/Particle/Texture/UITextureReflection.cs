@@ -26,8 +26,9 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            Tabs = new List<UIItem>();
-            Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
+            Tabs = new List<UIItem> {
+                ( Parameters = new UIParameters( "Parameters" ) )
+            };
 
             TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx );
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
