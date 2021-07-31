@@ -4,11 +4,12 @@ using System.Numerics;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.External;
 
 namespace VFXEditor.UI {
     public class PenumbraDialog : GenericDialog {
-        public PenumbraDialog( Plugin plugin ) : base( plugin, "Penumbra" ) {
+        public PenumbraDialog() : base( "Penumbra" ) {
             Size = new Vector2( 400, 200 );
         }
 
@@ -29,7 +30,7 @@ namespace VFXEditor.UI {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
+            if( !DocumentManager.Manager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( VFX.UIUtils.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.EndChild();
@@ -42,7 +43,7 @@ namespace VFXEditor.UI {
         public void SaveDialog() {
             FileDialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
                 if( !ok ) return;
-                Penumbra.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
+                Penumbra.Export( Name, Author, Version, res, ExportAll, ExportTex );
                 Visible = false;
             } );
         }

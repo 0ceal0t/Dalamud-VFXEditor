@@ -8,13 +8,11 @@ using ImGuiNET;
 namespace VFXEditor.UI {
 
     public abstract class GenericDialog {
-        public Plugin Plugin;
         public bool Visible = false;
         public string DialogName;
         public Vector2 Size = new( 600, 400 );
 
-        public GenericDialog( Plugin plugin, string name ) {
-            Plugin = plugin;
+        public GenericDialog( string name ) {
             DialogName = name;
         }
         public void Show() {

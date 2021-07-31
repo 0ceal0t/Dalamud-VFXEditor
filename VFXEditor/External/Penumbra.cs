@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VFXEditor.Data;
 using VFXEditor.Data.Texture;
 
 namespace VFXEditor.External {
@@ -19,7 +20,7 @@ namespace VFXEditor.External {
             public Dictionary<string, string> FileSwaps;
         }
 
-        public static void Export( Plugin _plugin, string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
+        public static void Export( string name, string author, string version, string modFolder, bool exportAll, bool exportTex ) {
             try {
                 var mod = new PenumbraMod {
                     Name = name,
@@ -55,12 +56,12 @@ namespace VFXEditor.External {
                 }
 
                 if( exportAll ) {
-                    foreach( var doc in _plugin.DocManager.Docs ) {
+                    foreach( var doc in DocumentManager.CurrentDocs ) {
                         AddMod( doc.Main?.AVFX, doc.Replace.Path );
                     }
                 }
                 else {
-                    AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.DocManager.ActiveDoc.Replace.Path );
+                    AddMod( DocumentManager.CurrentActiveDoc.Main?.AVFX, DocumentManager.CurrentActiveDoc.Replace.Path );
                 }
 
                 if( exportTex ) {

@@ -21,6 +21,7 @@ namespace VFXEditor.Data {
 
         public static void Dispose() {
             _LastImportNode = null;
+            PluginInterface = null;
         }
 
         public static bool SaveLocalFile( string path, AVFXBase avfx ) {

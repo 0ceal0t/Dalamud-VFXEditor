@@ -20,6 +20,8 @@ namespace ImGuiFileDialog {
         public static void Dispose() {
             Dialog = null;
             Callback = null;
+            Recent = null;
+            SavedPath = null;
         }
 
         public static void OpenFolderDialog( string title, Action<bool, string> callback ) {

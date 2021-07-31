@@ -114,7 +114,7 @@
         <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
         <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
-        <PackageReference Include="Reloaded.Hooks" Version="2.4.1" />
+        <PackageReference Include="Reloaded.Hooks" Version="3.2.3" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0020" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />

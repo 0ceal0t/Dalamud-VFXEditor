@@ -13,7 +13,7 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class TextureDialog : GenericDialog {
-        public TextureDialog( Plugin plugin ) : base( plugin, "Imported Textures" ) {
+        public TextureDialog() : base( "Imported Textures" ) {
         }
 
         public override void OnDraw() {

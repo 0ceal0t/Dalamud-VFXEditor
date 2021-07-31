@@ -23,7 +23,6 @@ namespace VFXEditor
         private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
 
         public ResourceLoader ResourceLoader;
-        public DocumentManager DocManager;
         public VfxTracker Tracker;
         public SheetManager Sheets;
 
@@ -34,53 +33,65 @@ namespace VFXEditor
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
 
-            Configuration.Initialize( PluginInterface );
+            //Configuration.Initialize( PluginInterface );
 
             ResourceLoader = new ResourceLoader( this );
-            PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
-                HelpMessage = "toggle ui"
-            } );
+            //PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
+            //    HelpMessage = "toggle ui"
+            //} );
 
-            TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
+            //TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
             
-            ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            ImPlotContext = ImPlot.CreateContext();
-            ImPlot.SetCurrentContext( ImPlotContext );
+            //ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
+            //ImPlotContext = ImPlot.CreateContext();
+            //ImPlot.SetCurrentContext( ImPlotContext );
 
-            FileDialogManager.Initialize();
-            DataManager.Initialize( this );
-            TextureManager.Initialize( this );
-            DirectXManager.Initialize( this );
+            // 1.
+            //FileDialogManager.Initialize();
+            //DataManager.Initialize( this );
+            //TextureManager.Initialize( this );
+            //DirectXManager.Initialize( this );
+            //DocumentManager.Initialize();
 
-            Tracker = new VfxTracker( this );
-            Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
-            DocManager = new DocumentManager();
+            //Tracker = new VfxTracker( this );
+            //Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
 
-            InitUI();
+            //InitUI();
 
             ResourceLoader.Init();
+#if !DEBUG
             ResourceLoader.Enable();
+#endif
 
-            PluginInterface.UiBuilder.OnBuildUi += Draw;
-            PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
+            //PluginInterface.UiBuilder.OnBuildUi += Draw;
+            //PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= Draw;
+            PluginLog.Log( "disposing" );
 
-            ResourceLoader?.Dispose();
+            //PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
+            //PluginInterface.UiBuilder.OnBuildUi -= Draw;
 
-            ImPlot.DestroyContext();
+            //ImPlot.DestroyContext();
 
             PluginInterface.CommandManager.RemoveHandler( CommandName );
+            PluginInterface?.Dispose();
 
-            SpawnVfx?.Remove();
-            FileDialogManager.Dispose();
-            DirectXManager.Dispose();
-            DocManager?.Dispose();
-            TextureManager.Dispose();
-            DataManager.Dispose();
+#if !DEBUG
+            ResourceLoader?.Dispose();
+#endif
+            ResourceLoader = null;
+
+            //SpawnVfx?.Remove();
+            //Configuration.Dispose();
+
+            // 1.
+            //FileDialogManager.Dispose();
+            //DirectXManager.Dispose();
+            //DocumentManager.Dispose();
+            //TextureManager.Dispose();
+            //DataManager.Dispose();
         }
 
         private void OnCommand( string command, string rawArgs ) {

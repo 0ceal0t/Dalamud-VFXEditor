@@ -11,6 +11,8 @@ using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.X64;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Data.Texture;
+using VFXEditor.Data;
+using System.Threading;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
@@ -27,7 +29,6 @@ namespace VFXEditor {
         }
         private RedrawState CurrentRedrawState = RedrawState.None;
         private int WaitFrames = 0;
-        private static readonly int DefaultWaitFrames = 30;
 
         // ===== FILES =========
         [Function( CallingConventions.Microsoft )]
@@ -48,35 +49,35 @@ namespace VFXEditor {
 
         //====== STATIC ===========
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate VfxStruct* StaticVfxCreateDelegate( string path, string pool );
+        public unsafe delegate IntPtr StaticVfxCreateDelegate( string path, string pool );
         public StaticVfxCreateDelegate StaticVfxCreate;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate IntPtr StaticVfxRunDelegate( VfxStruct* vfx, float a1, uint a2 );
+        public unsafe delegate IntPtr StaticVfxRunDelegate( IntPtr vfx, float a1, uint a2 );
         public StaticVfxRunDelegate StaticVfxRun;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate IntPtr StaticVfxRemoveDelegate( VfxStruct* vfx );
+        public unsafe delegate IntPtr StaticVfxRemoveDelegate( IntPtr vfx );
         public StaticVfxRemoveDelegate StaticVfxRemove;
         // ======= STATIC HOOKS ========
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate VfxStruct* StaticVfxCreateDelegate2( char* path, char* pool );
+        public unsafe delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
         public IHook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr StaticVfxRemoveDelegate2( VfxStruct* vfx );
+        public unsafe delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
         public IHook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate VfxStruct* ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public unsafe delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public ActorVfxCreateDelegate ActorVfxCreate;
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
-        public unsafe delegate IntPtr ActorVfxRemoveDelegate( VfxStruct* vfx, char a2 );
+        public unsafe delegate IntPtr ActorVfxRemoveDelegate( IntPtr vfx, char a2 );
         public ActorVfxRemoveDelegate ActorVfxRemove;
         // ======== ACTOR HOOKS =============
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate VfxStruct* ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public unsafe delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public IHook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
-        public unsafe delegate IntPtr ActorVfxRemoveDelegate2( VfxStruct* vfx, char a2 );
+        public unsafe delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
         public IHook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
@@ -93,7 +94,7 @@ namespace VFXEditor {
         public unsafe void Init() {
             var scanner = Plugin.PluginInterface.TargetModuleScanner;
 
-            var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
+            /*var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
             var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
             var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" );
             var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
@@ -101,99 +102,113 @@ namespace VFXEditor {
             ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress );
             GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress );
             GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress );
-            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
+            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );*/
 
             var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
             var staticVfxRunAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 0F 28 B4 24 ?? ?? ?? ?? 48 8B 8C 24 ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 5F" );
             var staticVfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
 
-            var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
-            var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
-            var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
+            //var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
+            //var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
+            //var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
 
-            ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
+            /*ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
 
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( staticVfxRunAddress );
-            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
+            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );*/
 
             StaticVfxCreateHook = new Hook<StaticVfxCreateDelegate2>( StaticVfxNewHandler, ( long )staticVfxCreateAddress );
-            StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( StaticVfxRemoveHandler, ( long )staticVfxRemoveAddress );
+            StaticVfxCreateHook.Activate();
+            //Thread.Sleep( 500 );
+            //StaticVfxCreateHook.Enable();
+            //StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( StaticVfxRemoveHandler, ( long )staticVfxRemoveAddress );
 
-            ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( ActorVfxNewHandler, ( long )actorVfxCreateAddress );
-            ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress );
+            //ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( ActorVfxNewHandler, ( long )actorVfxCreateAddress );
+            //ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress );
 
-            var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
-            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
+            //var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
+            //GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
         }
 
-        private unsafe VfxStruct* StaticVfxNewHandler( char* path, char* pool ) {
-            var vfx = StaticVfxCreateHook.OriginalFunction( path, pool );
+        private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
+            PluginLog.Log( "static new - start" );
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII );
-            Plugin.Tracker?.AddStatic( vfx, vfxPath );
+            PluginLog.Log( $"static new - {vfxPath} {StaticVfxCreateHook == null} {StaticVfxCreateHook.IsHookEnabled} {StaticVfxCreateHook.IsHookActivated} {StaticVfxCreateHook.OriginalFunction == null}" );
+            var vfx = StaticVfxCreateHook.OriginalFunction( path, pool );
+            //Plugin.Tracker?.AddStatic( vfx, vfxPath );
+            PluginLog.Log( "static new - end" );
             return vfx;
         }
 
-        private unsafe IntPtr StaticVfxRemoveHandler( VfxStruct* vfx ) {
-            if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+        private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
+            /*if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }
-            Plugin.Tracker?.RemoveStatic( vfx );
-            return StaticVfxRemoveHook.OriginalFunction( vfx );
+            Plugin.Tracker?.RemoveStatic( vfx );*/
+            var a =  StaticVfxRemoveHook.OriginalFunction( vfx );
+            return a;
         }
 
-        private unsafe VfxStruct* ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
-            var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
+        private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
+            PluginLog.Log( "actor new - start" );
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
-            Plugin.Tracker?.AddActor( vfx, vfxPath );
+            PluginLog.Log( $"actor new - {vfxPath}" );
+            var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
+            //Plugin.Tracker?.AddActor( vfx, vfxPath );
+            PluginLog.Log( "actor new - end" );
             return vfx;
         }
 
-        private unsafe IntPtr ActorVfxRemoveHandler( VfxStruct* vfx, char a2 ) {
-            if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+        private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
+            /*if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }
-            Plugin.Tracker?.RemoveActor( vfx );
-            return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
+            Plugin.Tracker?.RemoveActor( vfx );*/
+            var a = ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
+            return a;
         }
 
         public void Enable() {
             if( IsEnabled )
                 return;
-            ReadSqpackHook.Activate();
+            /*ReadSqpackHook.Activate();
             GetResourceSyncHook.Activate();
-            GetResourceAsyncHook.Activate();
+            GetResourceAsyncHook.Activate();*/
 
-            StaticVfxCreateHook.Activate();
-            StaticVfxRemoveHook.Activate();
-            ActorVfxCreateHook.Activate();
-            ActorVfxRemoveHook.Activate();
+            //StaticVfxCreateHook.Activate();
+            //StaticVfxRemoveHook.Activate();
+            //ActorVfxCreateHook.Activate();
+            //ActorVfxRemoveHook.Activate();
 
             // ==============
-            ReadSqpackHook.Enable();
+            /*ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
-            GetResourceAsyncHook.Enable();
+            GetResourceAsyncHook.Enable();*/
 
-            StaticVfxCreateHook.Enable();
-            StaticVfxRemoveHook.Enable();
-            ActorVfxCreateHook.Enable();
-            ActorVfxRemoveHook.Enable();
+            //StaticVfxCreateHook.Enable();
+            //StaticVfxRemoveHook.Enable();
+            //ActorVfxCreateHook.Enable();
+            //ActorVfxRemoveHook.Enable();
             IsEnabled = true;
         }
 
         public void Disable() {
             if( !IsEnabled )
                 return;
-            ReadSqpackHook.Disable();
+            /*ReadSqpackHook.Disable();
             GetResourceSyncHook.Disable();
-            GetResourceAsyncHook.Disable();
-
+            GetResourceAsyncHook.Disable();*/
+            PluginLog.Log( "disabling 2" );
             StaticVfxCreateHook.Disable();
-            StaticVfxRemoveHook.Disable();
-            ActorVfxCreateHook.Disable();
-            ActorVfxRemoveHook.Disable();
+            //StaticVfxRemoveHook.Disable();
+            //ActorVfxCreateHook.Disable();
+            //ActorVfxRemoveHook.Disable();
             IsEnabled = false;
+
+            StaticVfxCreateHook = null;
+            Plugin = null;
         }
 
         public void ReRender() {
@@ -210,7 +225,7 @@ namespace VFXEditor {
                 case RedrawState.Start:
                     *( int* )renderPtr |= 0x00_00_00_02;
                     CurrentRedrawState = RedrawState.Invisible;
-                    WaitFrames = DefaultWaitFrames;
+                    WaitFrames = 30;
                     break;
                 case RedrawState.Invisible:
                     if(WaitFrames == 0) {
@@ -272,13 +287,13 @@ namespace VFXEditor {
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
-            if( Configuration.Config?.LogAllFiles == true ) {
+            if( Configuration.Config != null && Configuration.Config.LogAllFiles == true ) {
                 PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
             }
             // ============ REPLACE THE FILE ============
             FileInfo replaceFile = null;
 
-            if( Plugin.DocManager != null && Plugin.DocManager.GetLocalPath( gameFsPath, out var vfxFile ) ) {
+            if( DocumentManager.Manager != null && DocumentManager.Manager.GetLocalPath( gameFsPath, out var vfxFile ) ) {
                 replaceFile = vfxFile;
                 if( Configuration.Config?.LogAllFiles == true ) {
                     PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );

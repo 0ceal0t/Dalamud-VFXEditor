@@ -44,10 +44,7 @@ namespace VFXEditor {
                 CurrentWorkspaceLocation = "";
 
                 TextureManager.ResetInstance( PluginInterface );
-
-                var oldDoc = DocManager;
-                DocManager = new DocumentManager();
-                oldDoc.Dispose();
+                DocumentManager.ResetInstance();
 
                 IsLoading = false;
             } );
@@ -96,20 +93,18 @@ namespace VFXEditor {
                 TextureManager.Manager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
             }
 
-            var oldDoc = DocManager;
-            DocManager = new DocumentManager();
-            oldDoc.Dispose();
+            DocumentManager.ResetInstance();
 
-            var defaultDoc = DocManager.ActiveDoc;
+            var defaultDoc = DocumentManager.CurrentActiveDoc;
 
             var vfxRootPath = Path.Combine( loadLocation, "VFX" );
             foreach( var doc in meta.Docs ) {
                 var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
-                DocManager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
+                DocumentManager.Manager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
             }
 
-            if( DocManager.Docs.Count > 1 ) {
-                DocManager.RemoveDoc( defaultDoc );
+            if( DocumentManager.CurrentDocs.Count > 1 ) {
+                DocumentManager.Manager.RemoveDoc( defaultDoc );
             }
 
             IsLoading = false;
@@ -145,7 +140,7 @@ namespace VFXEditor {
 
             var docId = 0;
             List<WorkspaceMetaDocument> docMeta = new();
-            foreach( var entry in DocManager.Docs ) {
+            foreach( var entry in DocumentManager.CurrentDocs ) {
                 var newPath = "";
                 if( entry.Main != null ) {
                     newPath = $"VFX_{docId++}.avfx";

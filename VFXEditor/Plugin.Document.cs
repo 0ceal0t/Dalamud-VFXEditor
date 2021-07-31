@@ -7,7 +7,6 @@ using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public ReplaceDoc CurrentDocument => DocManager.ActiveDoc;
         private DateTime LastSelect = DateTime.Now;
 
         public void SetSourceVFX( VFXSelectResult selectResult) {
@@ -40,13 +39,13 @@ namespace VFXEditor {
                     break;
             }
             if( addToRecent ) Configuration.Config.AddRecent( selectResult );
-            DocManager.UpdateSource( selectResult );
-            DocManager.Save();
+            DocumentManager.Manager.UpdateSource( selectResult );
+            DocumentManager.Manager.Save();
         }
 
         public void RemoveSourceVFX() {
-            DocManager.UpdateSource( VFXSelectResult.None() );
-            CurrentDocument.Dispose();
+            DocumentManager.Manager.UpdateSource( VFXSelectResult.None() );
+            DocumentManager.CurrentActiveDoc.Dispose();
         }
 
         public void SetReplaceVFX( VFXSelectResult replaceResult) {
@@ -54,21 +53,21 @@ namespace VFXEditor {
         }
         public void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
             if( addToRecent ) Configuration.Config.AddRecent( replaceResult );
-            DocManager.UpdateReplace( replaceResult );
+            DocumentManager.Manager.UpdateReplace( replaceResult );
         }
 
         public void RemoveReplaceVFX() {
-            DocManager.UpdateReplace( VFXSelectResult.None() );
+            DocumentManager.Manager.UpdateReplace( VFXSelectResult.None() );
         }
 
         public void LoadCurrentVFX( AVFXBase avfx ) {
             if( avfx == null ) return;
-            CurrentDocument.SetAVFX( avfx );
+            DocumentManager.CurrentActiveDoc.SetAVFX( avfx );
 
             if( Configuration.Config.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
                 var verifyResult = DataManager.LastImportNode.CheckEquals( node, out var messages );
-                CurrentDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                DocumentManager.CurrentActiveDoc.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
                     PluginLog.Log( m );

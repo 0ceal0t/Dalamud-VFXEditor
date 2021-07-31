@@ -57,11 +57,11 @@ namespace VFXEditor {
             PreviewUI.OnSelect += SetReplaceVFX;
 
             DocUI = new DocDialog( this );
-            SettingsUI = new SettingsDialog( this );
+            SettingsUI = new SettingsDialog();
             ToolsUI = new ToolsDialog( this );
-            TextureUI = new TextureDialog( this );
-            TexToolsUI = new TexToolsDialog( this );
-            PenumbraUI = new PenumbraDialog( this );
+            TextureUI = new TextureDialog();
+            TexToolsUI = new TexToolsDialog();
+            PenumbraUI = new PenumbraDialog();
 
 #if DEBUG
             Visible = true;
@@ -122,14 +122,14 @@ namespace VFXEditor {
             DrawHeader();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentDocument.Main == null ) {
+            if( DocumentManager.CurrentActiveDoc.Main == null ) {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
                 ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.GREEN_COLOR );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                        DocManager.Save();
+                        DocumentManager.Manager.Save();
                         ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
@@ -145,7 +145,7 @@ namespace VFXEditor {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node = CurrentDocument.Main.AVFX.ToAVFX();
+                        var node =  DocumentManager.CurrentActiveDoc.Main.AVFX.ToAVFX();
                         WriteBytesDialog( ".avfx", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
@@ -166,7 +166,7 @@ namespace VFXEditor {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
 
-                    var verified = CurrentDocument.Main.Verified;
+                    var verified = DocumentManager.CurrentActiveDoc.Main.Verified;
                     var color = verified switch {
                         VerifiedStatus.OK => UIUtils.GREEN_COLOR,
                         VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
@@ -192,7 +192,7 @@ namespace VFXEditor {
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentDocument.Main.Draw();
+                DocumentManager.CurrentActiveDoc.Main.Draw();
             }
             ImGui.End();
         }
@@ -261,8 +261,8 @@ namespace VFXEditor {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            var sourceString = CurrentDocument.Source.DisplayString;
-            var previewString = CurrentDocument.Replace.DisplayString;
+            var sourceString = DocumentManager.CurrentActiveDoc.Source.DisplayString;
+            var previewString = DocumentManager.CurrentActiveDoc.Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
@@ -322,7 +322,7 @@ namespace VFXEditor {
             }
 
             // =======SPAWN + EYE =========
-            var previewSpawn = DocManager.ActiveDoc.Replace.Path;
+            var previewSpawn = DocumentManager.CurrentActiveDoc.Replace.Path;
             var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {

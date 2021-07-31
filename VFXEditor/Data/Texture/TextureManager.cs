@@ -59,6 +59,7 @@ namespace VFXEditor.Data.Texture {
 
         public static void Dispose() {
             Instance?.DisposeInstance();
+            Instance = null;
         }
 
         // ======= INSTANCE ============

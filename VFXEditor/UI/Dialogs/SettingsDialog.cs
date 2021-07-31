@@ -4,7 +4,7 @@ using ImGuiNET;
 
 namespace VFXEditor.UI {
     public class SettingsDialog : GenericDialog {
-        public SettingsDialog( Plugin plugin ) : base( plugin, "Settings" ) {
+        public SettingsDialog() : base( "Settings" ) {
             Size = new Vector2( 300, 100 );
         }
 

@@ -2,6 +2,7 @@ using AVFXLib.Models;
 using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.IO;
+using VFXEditor.Data.Texture;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
@@ -26,13 +27,36 @@ namespace VFXEditor.Data {
     }
 
     public class DocumentManager {
-        public ReplaceDoc ActiveDoc;
-        public List<ReplaceDoc> Docs = new();
+        public static DocumentManager Manager => Instance;
+        private static DocumentManager Instance = null;
+
+        public static ReplaceDoc CurrentActiveDoc => Instance?.ActiveDoc;
+        public static List<ReplaceDoc> CurrentDocs => Instance?.Docs;
+
+        public static void Initialize() {
+            ResetInstance();
+        }
+
+        public static void ResetInstance() {
+            var oldInstance = Instance;
+            Instance = new DocumentManager();
+            oldInstance?.DisposeInstance();
+        }
+
+        public static void Dispose() {
+            Instance?.DisposeInstance();
+            Instance = null;
+        }
+
+        // ========= INSTANCE =========
+
+        private ReplaceDoc ActiveDoc;
+        private List<ReplaceDoc> Docs = new();
 
         private Dictionary<string, string> GamePathToLocalPath = new();
         private int DOC_ID = 0;
 
-        public DocumentManager() {
+        private DocumentManager() {
             NewDoc();
         }
 
@@ -123,7 +147,7 @@ namespace VFXEditor.Data {
             return ActiveDoc.Replace.Path != "";
         }
 
-        public void Dispose() {
+        private void DisposeInstance() {
             foreach(var doc in Docs ) {
                 doc.Dispose();
             }

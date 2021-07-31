@@ -6,6 +6,7 @@ using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System.IO.Compression;
 using VFXEditor.Data.Texture;
+using VFXEditor.Data;
 
 namespace VFXEditor.External {
     public static class TexTools {
@@ -60,7 +61,7 @@ namespace VFXEditor.External {
         }
 
 
-        public static void Export( Plugin _plugin, string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
+        public static void Export( string name, string author, string version, string saveLocation, bool exportAll, bool exportTex ) {
             try {
                 var simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
@@ -92,12 +93,12 @@ namespace VFXEditor.External {
                     }
 
                     if( exportAll ) {
-                        foreach( var doc in _plugin.DocManager.Docs ) {
+                        foreach( var doc in DocumentManager.CurrentDocs ) {
                             AddMod( doc.Main?.AVFX, doc.Replace.Path );
                         }
                     }
                     else {
-                        AddMod( _plugin.CurrentDocument.Main?.AVFX, _plugin.DocManager.ActiveDoc.Replace.Path );
+                        AddMod( DocumentManager.CurrentActiveDoc.Main?.AVFX, DocumentManager.CurrentActiveDoc.Replace.Path );
                     }
 
                     if( exportTex ) {

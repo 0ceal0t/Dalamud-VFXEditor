@@ -13,7 +13,7 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class DocDialog : GenericDialog {
-        public DocDialog( Plugin plugin ) : base( plugin, "Documents" ) { }
+        public DocDialog( Plugin plugin ) : base( "Documents" ) { }
 
         public ReplaceDoc SelectedDoc = null;
         public override void OnDraw() {
@@ -25,7 +25,7 @@ namespace VFXEditor.UI {
             ImGui.Columns( 2, id + "/Columns", false );
 
             var idx = 0;
-            foreach( var doc in Plugin.DocManager.Docs ) {
+            foreach( var doc in DocumentManager.CurrentDocs ) {
                 if( ImGui.Selectable( doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDoc = doc;
                 }
@@ -39,7 +39,7 @@ namespace VFXEditor.UI {
             }
             ImGui.NextColumn();
 
-            foreach( var doc in Plugin.DocManager.Docs ) {
+            foreach( var doc in DocumentManager.CurrentDocs ) {
                 ImGui.Text( doc.Replace.DisplayString );
             }
 
@@ -47,21 +47,21 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
 
             if( ImGui.Button( "+ NEW" + id ) ) {
-                Plugin.DocManager.NewDoc();
+                DocumentManager.Manager.NewDoc();
             }
 
             if( SelectedDoc != null ) {
-                var deleteDisabled = ( Plugin.DocManager.Docs.Count == 1 );
+                var deleteDisabled = ( DocumentManager.CurrentDocs.Count == 1 );
 
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
                 if( ImGui.Button( "Select" + id ) ) {
-                    Plugin.DocManager.SelectDoc( SelectedDoc );
+                    DocumentManager.Manager.SelectDoc( SelectedDoc );
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
                     if( UIUtils.RemoveButton( "Delete" + id ) ) {
-                        Plugin.DocManager.RemoveDoc( SelectedDoc );
-                        SelectedDoc = Plugin.DocManager.ActiveDoc;
+                        DocumentManager.Manager.RemoveDoc( SelectedDoc );
+                        SelectedDoc = DocumentManager.CurrentActiveDoc;
                     }
                 }
             }

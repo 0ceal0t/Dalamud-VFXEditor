@@ -18,6 +18,10 @@ namespace VFXEditor {
             PluginLog.Log( "Write location: " + Instance.WriteLocation );
         }
 
+        public static void Dispose() {
+            Instance = null;
+        }
+
         // ====== INSTANCE ======
 
         public int Version { get; set; } = 0;

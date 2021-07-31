@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.External;
 
 namespace VFXEditor.UI
@@ -14,7 +9,7 @@ namespace VFXEditor.UI
 
     public class TexToolsDialog : GenericDialog
     {
-        public TexToolsDialog( Plugin plugin ) : base(plugin, "TexTools") {
+        public TexToolsDialog() : base( "TexTools") {
             Size = new Vector2( 400, 200 );
         }
 
@@ -35,7 +30,7 @@ namespace VFXEditor.UI
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
+            if( !DocumentManager.Manager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( VFX.UIUtils.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.EndChild();
@@ -49,7 +44,7 @@ namespace VFXEditor.UI
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", Name, "ttmp2", ( bool ok, string res ) =>
              {
                  if( !ok ) return;
-                 TexTools.Export( Plugin, Name, Author, Version, res, ExportAll, ExportTex );
+                 TexTools.Export( Name, Author, Version, res, ExportAll, ExportTex );
                  Visible = false;
              } );
         }
