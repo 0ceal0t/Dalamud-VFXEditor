@@ -1,22 +1,16 @@
 using AVFXLib.AVFX;
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI.VFX {
-    public interface UINodeView<T> where T : UINode {
+    public interface IUINodeView<T> where T : UINode {
         public void OnDelete( T item );
         public T OnImport( AVFXNode node, bool has_dependencies = false );
 
         public void ControlDelete();
         public void ControlCreate();
 
-        public static void DrawControls(UINodeView<T> view, UIMain main, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id) {
+        public static void DrawControls( IUINodeView<T> view, UIMain main, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
             ImGui.PushFont( UiBuilder.IconFont );
             if( allowNew ) {
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) ) {

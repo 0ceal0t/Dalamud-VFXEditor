@@ -7,22 +7,15 @@ using VFXEditor.Structs;
 using VFXEditor.Util;
 using FileMode = VFXEditor.Structs.FileMode;
 using Reloaded.Hooks;
-using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.X64;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Data.Texture;
 using VFXEditor.Data;
-using System.Threading;
 
-using Iced;
-using Reloaded.Hooks.Definitions.Enums;
-using Reloaded.Hooks.Internal;
 using Reloaded.Hooks.Tools;
-using Reloaded.Memory.Buffers;
 using Reloaded.Memory.Sources;
 using static Reloaded.Memory.Sources.Memory;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
@@ -35,7 +28,7 @@ namespace VFXEditor {
             public byte[] OpCodes;
             public IntPtr FunctionAddr;
         }
-        private List<OldFunctionStruct> OldFunctionState = new();
+        private readonly List<OldFunctionStruct> OldFunctionState = new();
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -189,6 +182,7 @@ namespace VFXEditor {
             ActorVfxRemoveHook.Activate();
 
             // ==============
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();

@@ -30,6 +30,13 @@ namespace VFXEditor.UI.VFX {
             return ret;
         }
 
+        public static bool DisabledButton(string label, bool enabled, bool small = false) {
+            if(!enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+            if( (small ? ImGui.SmallButton(label) : ImGui.Button(label)) && enabled ) return true;
+            if( !enabled ) ImGui.PopStyleVar();
+            return false;
+        }
+
         public static bool RemoveButton(string label, bool small = false) {
             var ret = false;
             ImGui.PushStyleColor(ImGuiCol.Button, RED_COLOR );
@@ -51,6 +58,7 @@ namespace VFXEditor.UI.VFX {
             var data = new byte[] { ( byte )Color.X, (byte)Color.Y, (byte)Color.Z, (byte)Color.W };
             return AVFXLib.Main.Util.Bytes4ToInt( data );
         }
+
         public static Vector4 IntToColor(int Color ) {
             var colors = AVFXLib.Main.Util.IntTo4Bytes( Color );
             return new Vector4( colors[0], colors[1], colors[2], colors[3] );

@@ -28,8 +28,6 @@ namespace VFXEditor
 
         public static string TemplateLocation;
 
-        private IntPtr ImPlotContext;
-
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
 
@@ -43,14 +41,14 @@ namespace VFXEditor
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
             
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            ImPlotContext = ImPlot.CreateContext();
-            ImPlot.SetCurrentContext( ImPlotContext );
+            ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            FileDialogManager.Initialize();
             DataManager.Initialize( this );
             TextureManager.Initialize( this );
             DirectXManager.Initialize( this );
             DocumentManager.Initialize();
+            FileDialogManager.Initialize();
+            CopyManager.Initialize();
 
             Tracker = new VfxTracker( this );
             Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
@@ -82,13 +80,14 @@ namespace VFXEditor
             ResourceLoader = null;
 
             SpawnVfx?.Remove();
-            Configuration.Dispose();
 
+            Configuration.Dispose();
             FileDialogManager.Dispose();
             DirectXManager.Dispose();
             DocumentManager.Dispose();
             TextureManager.Dispose();
             DataManager.Dispose();
+            CopyManager.Dispose();
         }
 
         private void OnCommand( string command, string rawArgs ) {

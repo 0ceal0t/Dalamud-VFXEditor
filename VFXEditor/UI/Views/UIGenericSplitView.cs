@@ -21,7 +21,7 @@ namespace VFXEditor.UI.VFX {
         public abstract void DrawRightCol( string parentId );
         public abstract void DrawControls( string parentId );
 
-        bool DrawOnce = false;
+        private bool DrawOnce = false;
         public override void Draw( string parentId = "" ) {
             ImGui.Columns( 2, parentId + "/Cols", true );
             // ===== C1 =========

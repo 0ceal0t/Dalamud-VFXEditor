@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
-    public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem{
+    public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
         public List<T> Items;
-        public T Selected = null;
+        private T Selected = null;
 
-        public UIItemSplitView(List<T> items, bool allowNew = false, bool allowDelete = false) : base(allowNew, allowDelete ) {
+        public UIItemSplitView( List<T> items, bool allowNew = false, bool allowDelete = false ) : base( allowNew, allowDelete ) {
             Items = items;
             SetupIdx();
         }
@@ -37,7 +37,7 @@ namespace VFXEditor.UI.VFX {
                     }
                 }
             }
-            if(Selected != null && AllowDelete) {
+            if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
                 if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     Items.Remove( Selected );
@@ -63,7 +63,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void DrawRightCol( string parentId ) {
-            if( Selected != null && Selected.Assigned) {
+            if( Selected != null && Selected.Assigned ) {
                 Selected.DrawBody( parentId );
             }
         }

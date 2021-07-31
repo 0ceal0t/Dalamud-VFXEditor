@@ -1,29 +1,21 @@
 using AVFXLib.AVFX;
 using AVFXLib.Models;
-using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace VFXEditor.UI.VFX
 {
-    public abstract class UIDropdownView<T> : UIBase, UINodeView<T> where T : UINode {
-        public string Id;
-        public string DefaultText;
-        public UIMain Main;
+    public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
         public AVFXBase AVFX;
+        public UIMain Main;
         public UINodeGroup<T> Group;
-        public T Selected = null;
-        public string DefaultPath;
 
-        public bool AllowNew;
-        public bool AllowDelete;
+        private T Selected = null;
+        private readonly string Id;
+        private readonly string DefaultText;
+        private readonly string DefaultPath;
+
+        private readonly bool AllowNew;
+        private readonly bool AllowDelete;
 
         public UIDropdownView( UIMain main, AVFXBase avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
             Main = main;
@@ -45,7 +37,7 @@ namespace VFXEditor.UI.VFX
             ViewSelect();
 
             if(AllowNew ) ImGui.SameLine();
-            UINodeView<T>.DrawControls(this, Main, Selected, Group, AllowNew, AllowDelete, Id);
+            IUINodeView<T>.DrawControls(this, Main, Selected, Group, AllowNew, AllowDelete, Id);
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();

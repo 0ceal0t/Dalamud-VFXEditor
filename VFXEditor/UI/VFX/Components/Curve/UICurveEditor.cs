@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using ImPlotNET;
 using VFXEditor.DirectX;
+using VFXEditor.Data;
 
 namespace VFXEditor.UI.VFX {
     public class UICurveEditor : UIBase {
@@ -29,12 +30,29 @@ namespace VFXEditor.UI.VFX {
         }
         public override void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
+
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
                 ImPlot.FitNextPlotAxes( true, true );
                 DrawOnce = true;
             }
+
             ImGui.SameLine();
-            ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
+            if(UIUtils.DisabledButton("Copy" + parentId, Curve.Keys.Count > 0)) {
+                CopyManager.ClearCurveKeys();
+                foreach(var key in Curve.Keys) {
+                    CopyManager.AddCurveKey( key.Time, key.X, key.Y, key.Z );
+                }
+            }
+
+            ImGui.SameLine();
+            if(UIUtils.DisabledButton("Paste" + parentId, CopyManager.HasCurveKeys())) {
+                foreach(var key in CopyManager.GetCurveKeys()) {
+                    InsertPoint( key.X, key.Y, key.Z, key.W );
+                    UpdateColor();
+                }
+            }
 
             var wrongOrder = false;
             if( Color ) {
@@ -103,12 +121,19 @@ namespace VFXEditor.UI.VFX {
                     var pos = ImPlot.GetPlotMousePos();
                     var z = Color ? 1.0f : ( float )pos.y;
                     InsertPoint( (float) pos.x, 1, 1, z );
+                    UpdateColor();
                 }
 
                 ImPlot.EndPlot();
             }
             if( wrongOrder ) {
-                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINT ARE IN THE WRONG ORDER" );
+                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINTS ARE IN THE WRONG ORDER" );
+                ImGui.SameLine();
+                if(ImGui.Button("Sort" + parentId)) {
+                    Curve.Keys.Sort( ( x, y ) => x.Time.CompareTo( y.Time ) );
+                    Points.Sort( ( x, y ) => x.X.CompareTo( y.X ) );
+                    UpdateColor();
+                }
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {
@@ -127,7 +152,6 @@ namespace VFXEditor.UI.VFX {
             var newKey = new AVFXKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
             Curve.Keys.Insert( insertIdx, newKey );
             Points.Insert( insertIdx, new CurvePoint( this, newKey, Color ) );
-            UpdateColor();
         }
 
         public void UpdateColor() {
@@ -265,9 +289,11 @@ namespace VFXEditor.UI.VFX {
                     ColorData = new Vector3( Key.X, Key.Y, Key.Z );
                 }
             }
+
             public Vector2 GetPosition() {
                 return new Vector2( ( float )X, ( float )Y );
             }
+
             public ImPlotPoint GetImPlotPoint() {
                 var ret = new ImPlotPoint {
                     x = ( float )X,
@@ -290,6 +316,7 @@ namespace VFXEditor.UI.VFX {
                     Editor.UpdateColor();
                 }
             }
+
             public void UpdateColorData() {
                 Key.X = ColorData.X;
                 Key.Y = ColorData.Y;
@@ -342,7 +369,6 @@ namespace VFXEditor.UI.VFX {
                     Key.Type = newKeyType;
                 }
 
-                //=====================
                 if( Color ) {
                     if( ImGui.ColorEdit3( "Color" + id, ref ColorData, ImGuiColorEditFlags.Float ) ) {
                         UpdateColorData();
