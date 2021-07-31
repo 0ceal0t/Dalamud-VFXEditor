@@ -48,7 +48,7 @@ namespace VFXEditor.UI.VFX {
 
             ImGui.SameLine();
             if(UIUtils.DisabledButton("Paste" + parentId, CopyManager.HasCurveKeys())) {
-                foreach(var key in CopyManager.GetCurveKeys()) {
+                foreach(var key in CopyManager.CurveKeys) {
                     InsertPoint( key.X, key.Y, key.Z, key.W );
                     UpdateColor();
                 }

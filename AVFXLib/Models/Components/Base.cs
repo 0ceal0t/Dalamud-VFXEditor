@@ -65,14 +65,11 @@ namespace AVFXLib.Models
             {
                 if(item.Name == attribute.AVFXName)
                 {
-                    if (attribute is LiteralBase)
-                    {
-                        var literal = (LiteralBase)attribute;
-                        literal.read( (AVFXLeaf)item);
+                    if( attribute is LiteralBase literal ) {
+                        literal.read( ( AVFXLeaf )item );
                     }
-                    else
-                    {
-                        attribute.Read( item);
+                    else {
+                        attribute.Read( item );
                     }
                     break;
                 }

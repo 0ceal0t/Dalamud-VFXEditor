@@ -5,11 +5,12 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using VFXEditor.Data;
 
 namespace VFXEditor.UI.VFX {
     public class UIUtils {
-        public static Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
-        public static Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
+        public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
+        public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
 
         public static bool EnumComboBox(string label, string[] options, ref int choiceIdx) {
             var ret = false;

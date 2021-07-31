@@ -56,7 +56,7 @@ namespace VFXEditor {
             SelectUI.OnSelect += SetSourceVFX;
             PreviewUI.OnSelect += SetReplaceVFX;
 
-            DocUI = new DocDialog( this );
+            DocUI = new DocDialog();
             SettingsUI = new SettingsDialog();
             ToolsUI = new ToolsDialog( this );
             TextureUI = new TextureDialog();
@@ -95,7 +95,10 @@ namespace VFXEditor {
         public void Draw() {
             if( !PluginReady ) return;
             if( !Visible ) return;
+
+            CopyManager.PreDraw();
             DrawMainInterface();
+            Tracker.Draw();
             if( !IsLoading ) {
                 SelectUI.Draw();
                 PreviewUI.Draw();
@@ -106,7 +109,6 @@ namespace VFXEditor {
                 DocUI.Draw();
                 TextureUI.Draw();
             }
-            Tracker.Draw();
         }
 
         public void DrawMainInterface() {
@@ -204,42 +206,25 @@ namespace VFXEditor {
                     ImGui.SameLine();
                     HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
-                    if( ImGui.MenuItem( "New##Menu" ) ) {
-                        NewWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Open##Menu" ) ) {
-                        OpenWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Save##Menu" ) ) {
-                        SaveWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Save As##Menu" ) ) {
-                        SaveAsWorkspace();
-                    }
+                    if( ImGui.MenuItem( "New##Menu" ) ) NewWorkspace();
+                    if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
+                    if( ImGui.MenuItem( "Save##Menu" ) ) SaveWorkspace();
+                    if( ImGui.MenuItem( "Save As##Menu" ) ) SaveAsWorkspace();
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Documents##Menu" ) ) {
-                    DocUI.Show();
+                if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                    if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
+                    if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
+                    ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Textures##Menu" ) ) {
-                    TextureUI.Show();
-                }
-                if( ImGui.MenuItem( "Settings##Menu" ) ) {
-                    SettingsUI.Show();
-                }
-                if( ImGui.MenuItem( "Tools##Menu" ) ) {
-                    ToolsUI.Show();
-                }
+                if( ImGui.MenuItem( "Documents##Menu" ) ) DocUI.Show();
+                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureUI.Show();
+                if( ImGui.MenuItem( "Settings##Menu" ) ) SettingsUI.Show();
+                if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    }
-                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
-                    }
-                    if( ImGui.MenuItem( "Github##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
-                    }
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();

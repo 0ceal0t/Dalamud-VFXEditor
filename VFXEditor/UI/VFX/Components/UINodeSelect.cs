@@ -1,7 +1,7 @@
 using AVFXLib.Models;
 using System.Collections.Generic;
 using ImGuiNET;
-using System.Numerics;
+using VFXEditor.Data;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UINodeSelect : UIBase {
@@ -52,26 +52,43 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void Draw( string parentId ) {
+            if( CopyManager.IsCopying ) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralInt literal ) {
+                Literal.GiveValue( literal.Value );
+                UnlinkFrom( Selected );
+                if( Literal.Value >= 0 && Literal.Value < Group.Items.Count ) LinkTo(Selected = Group.Items[Literal.Value] );
+                else Selected = null;
+            }
+
+            // ======= DRAW =========
             var id = parentId + "/Node";
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
-                if( ImGui.Selectable( "[NONE]", Selected == null ) ) {
-                    UnlinkFrom( Selected );
-                    Selected = null;
-                    UpdateNode();
-                }
+                if( ImGui.Selectable( "[NONE]", Selected == null ) ) SelectNone();
+
                 foreach( var item in Group.Items ) {
-                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
-                        UnlinkFrom( Selected );
-                        LinkTo( item );
-                        Selected = item;
-                        UpdateNode();
-                    }
-                    if( ImGui.IsItemHovered() ) {
-                        item.ShowTooltip();
-                    }
+                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) SelectItem( item );
+                    if( ImGui.IsItemHovered() ) item.ShowTooltip();
                 }
+
                 ImGui.EndCombo();
             }
+        }
+
+        private void SelectNone() {
+            if( Selected == null ) return;
+            UnlinkFrom( Selected );
+            Selected = null;
+            UpdateNode();
+        }
+
+        private void SelectItem(T item) {
+            if( Selected == item ) return;
+            UnlinkFrom( Selected );
+            LinkTo( item );
+            Selected = item;
+            UpdateNode();
         }
 
         public override void DeleteSelect() {
@@ -133,6 +150,23 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void Draw( string parentId ) {
+            if( CopyManager.IsCopying ) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralIntList literal ) {
+                Literal.GiveValue( literal.Value );
+                foreach( var s in Selected ) UnlinkFrom( s );
+                Selected.Clear();
+                foreach(var item in Literal.Value ) {
+                    if( item >= 0 && item < Group.Items.Count ) {
+                        Selected.Add( Group.Items[item] );
+                        LinkTo( Group.Items[item] );
+                    }
+                    else Selected.Add( null );
+                }
+            }
+
+            // ====== DRAW =================
             var id = parentId + "/Node";
             for( var i = 0; i < Selected.Count; i++ ) {
                 var _id = id + i;

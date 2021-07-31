@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 /*
  * AVFX
  */
-public enum DrawLayer
-{
+public enum DrawLayer {
     Screen = 0,
     BaseUpper = 1,
     Base = 2,
@@ -23,22 +22,19 @@ public enum DrawLayer
     FitWater = 10,
     Max = 11
 }
-public enum DirectionalLightSource
-{
+public enum DirectionalLightSource {
     None = 0,
     InLocal = 1,
     InGame = 2,
     Max = 3
-} 
-public enum DrawOrder
-{
+}
+public enum DrawOrder {
     Default = 0,
     Reverse = 1,
     Depth = 2,
     Max = 3
 }
-public enum PointLightSouce
-{
+public enum PointLightSouce {
     None = 0,
     CreateTimeBG = 1,
     AlwaysBG = 2,
@@ -49,8 +45,7 @@ public enum PointLightSouce
 /*
  * PARTICLE
  */
-public enum ParticleType
-{
+public enum ParticleType {
     Parameter = 0,
     Powder = 1,
     Windmill = 2,
@@ -66,8 +61,7 @@ public enum ParticleType
     Disc = 12,
     LightModel = 13
 }
-public enum RotationDirectionBase
-{
+public enum RotationDirectionBase {
     X = 0,
     Y = 1,
     Z = 2,
@@ -80,8 +74,7 @@ public enum RotationDirectionBase
     TreeBillboard = 9,
     None = 10
 }
-public enum RotationOrder
-{
+public enum RotationOrder {
     XYZ = 0,
     YZX = 1,
     ZXY = 2,
@@ -89,8 +82,7 @@ public enum RotationOrder
     YXZ = 4,
     ZYX = 5
 }
-public enum CoordComputeOrder
-{
+public enum CoordComputeOrder {
     Scale_Rot_Translate = 0,
     Translate_Scale_Rot = 1,
     Rot_Translate_Scale = 2,
@@ -98,8 +90,7 @@ public enum CoordComputeOrder
     Scale_Translate_Rot = 4,
     Rot_Scale_Translate = 5
 }
-public enum DrawMode
-{
+public enum DrawMode {
     Blend = 0,
     Multiply = 1,
     Add = 2,
@@ -110,40 +101,34 @@ public enum DrawMode
     Max = 7,
     Opacity = 8
 }
-public enum CullingType
-{
+public enum CullingType {
     None = 0,
     Front = 1,
     Back = 2,
     Double = 3,
     Max = 4
 }
-public enum EnvLight
-{
+public enum EnvLight {
     Chara = 0,
     Background = 1,
     Max = 2
 }
-public enum DirLight
-{
+public enum DirLight {
     Directional = 0,
     EnvSet = 1,
     Max = 2
 }
-public enum UVPrecision
-{
+public enum UVPrecision {
     High = 0,
     Medium = 1,
     Low = 2,
     Max = 3
 }
-public enum ClipBasePoint
-{
+public enum ClipBasePoint {
     Camera = 0,
     Caster = 1
 }
-public enum RandomType
-{
+public enum RandomType {
     FirstPlusMinus = 0,
     FirstPlus = 1,
     FirstMinus = 2,
@@ -151,58 +136,49 @@ public enum RandomType
     AlwaysPlus = 4,
     AlwaysMinus = 5
 }
-public enum TextureCalculateUV
-{
+public enum TextureCalculateUV {
     ByParameter = 0,
     ByPixelPosition = 1
 }
-public enum DirectionalLightType
-{
+public enum DirectionalLightType {
     Lambert = 0,
     HalfLambert = 1,
     Ex = 2
 }
-public enum LineCreateType
-{
+public enum LineCreateType {
     AxisOrder = 0,
     PositionHistory = 1
 }
-public enum NotBillboardBaseAxisType
-{
+public enum NotBillboardBaseAxisType {
     X = 0,
     Y = 1,
     Z = 2
 }
-public enum FresnelType
-{
+public enum FresnelType {
     None = 0,
     Camera = 1,
     AnyAxis = 2,
     AnyAxisWithWorldRotation = 3
 }
-public enum PointLightType
-{
+public enum PointLightType {
     Lambert = 0,
     HalfLambert = 1,
     Area = 2,
     Ex = 3
 }
-public enum TextureFilterType
-{
+public enum TextureFilterType {
     Disable = 0,
     Enable = 1,
     High = 2,
     VeryHigh = 3,
     VeryVeryHigh = 4
 }
-public enum TextureBorderType
-{
+public enum TextureBorderType {
     Repeat = 0,
     Clamp = 1,
     Mirror = 2
 }
-public enum TextureCalculateColor
-{
+public enum TextureCalculateColor {
     Multiply = 0,
     Add = 1,
     Subtract = 2,
@@ -210,16 +186,14 @@ public enum TextureCalculateColor
     Min = 4,
     Unknown = 5
 }
-public enum TextureCalculateAlpha
-{
+public enum TextureCalculateAlpha {
     Multiply = 0,
     Max = 1,
     Min = 2,
     None = 3
 }
 /* Emitter */
-public enum EmitterType
-{
+public enum EmitterType {
     Point = 0,
     Cone = 1,
     ConeModel = 2,
@@ -228,8 +202,7 @@ public enum EmitterType
     Model = 5,
     Unknown = 6
 }
-public enum GenerateMethod
-{
+public enum GenerateMethod {
     RandomToVertex = 0,
     OrderToVertex = 1,
     RandomOnVertex = 2,
@@ -239,42 +212,36 @@ public enum GenerateMethod
     RandomOnVertexWithoutSingularPoint = 6,
     OrderOnVertexWithoutSingularPoint = 7
 }
-public enum WindmillUVType
-{
+public enum WindmillUVType {
     Default = 0,
     Mirror = 1
 }
 /* BINDERS */
-public enum BinderRotation
-{
+public enum BinderRotation {
     Standard = 0,
     Billboard = 1,
     BillboardAxisY = 2,
     LookAtCamera = 3,
     CameraBillboardAxisY = 4
 }
-public enum BinderType
-{
+public enum BinderType {
     Point = 0,
     Linear = 1,
     Spline = 2,
-    Camera= 3
+    Camera = 3
 }
-public enum BindPoint
-{
+public enum BindPoint {
     Caster = 0,
     Target = 1
 }
-public enum BindTargetPoint
-{
+public enum BindTargetPoint {
     Origin = 0,
     FitGround = 1,
     DamageCircle = 2,
     ByName = 3
 }
 /* EFFECTOR */
-public enum EffectorType
-{
+public enum EffectorType {
     PointLight = 0,
     DirectionalLight = 1,
     Reserve1 = 2,
@@ -286,29 +253,25 @@ public enum EffectorType
     BlackHole = 8,
     CameraQuake = 9
 }
-public enum PointLightAttenuation
-{
+public enum PointLightAttenuation {
     Linear = 0,
     Quadratic = 1,
     Cubic = 2,
     Max = 3
 }
 /* CURVE */
-public enum CurveBehavior
-{
+public enum CurveBehavior {
     Const = 0,
     Repeat = 1,
     Add = 2,
     None = -1 // NOTE: so far only seen with CrC
 }
-public enum KeyType
-{
+public enum KeyType {
     Spline = 0,
     Linear = 1,
     Step = 2
 }
-public enum AxisConnect
-{
+public enum AxisConnect {
     None = 0,
     X_YZ = 1,
     X_Y = 2,

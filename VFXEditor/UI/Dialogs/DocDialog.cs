@@ -1,19 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class DocDialog : GenericDialog {
-        public DocDialog( Plugin plugin ) : base( "Documents" ) { }
+        public DocDialog() : base( "Documents" ) { }
 
         public ReplaceDoc SelectedDoc = null;
         public override void OnDraw() {

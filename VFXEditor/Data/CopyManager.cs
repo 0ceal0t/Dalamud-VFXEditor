@@ -1,19 +1,42 @@
 using AVFXLib.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.UI.VFX;
 
 namespace VFXEditor.Data {
+
     public class CopyManager {
-        private static List<Vector4> CurveKeys;
+        public static bool IsCopying { get; private set; }
+        public static bool IsPasting { get; private set; }
+
+        public static List<Vector4> CurveKeys { get; private set; }
+        public static Dictionary<string, Base> Copied { get; private set;  }
 
         public static void Initialize() {
             CurveKeys = new();
+            Copied = new();
         }
+
+        public static void Dispose() {
+            CurveKeys.Clear();
+            Copied.Clear();
+        }
+
+        // ======== COPY ==============
+        public static void PreDraw() {
+            IsCopying = false;
+            IsPasting = false;
+        }
+
+        public static void Copy() {
+            Copied.Clear();
+            IsCopying = true;
+        }
+
+        public static void Paste() {
+            IsPasting = true;
+        }
+
+        // ======== CURVE KEYS ===============
 
         public static void ClearCurveKeys() {
             CurveKeys.Clear();
@@ -23,16 +46,8 @@ namespace VFXEditor.Data {
             CurveKeys.Add( new Vector4( time, x, y, z ) );
         }
 
-        public static List<Vector4> GetCurveKeys() {
-            return CurveKeys;
-        }
-
         public static bool HasCurveKeys() {
             return CurveKeys.Count > 0;
-        }
-
-        public static void Dispose() {
-            CurveKeys.Clear();
         }
     }
 }
