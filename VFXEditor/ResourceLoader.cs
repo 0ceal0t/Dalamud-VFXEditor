@@ -14,11 +14,28 @@ using VFXEditor.Data.Texture;
 using VFXEditor.Data;
 using System.Threading;
 
+using Iced;
+using Reloaded.Hooks.Definitions.Enums;
+using Reloaded.Hooks.Internal;
+using Reloaded.Hooks.Tools;
+using Reloaded.Memory.Buffers;
+using Reloaded.Memory.Sources;
+using static Reloaded.Memory.Sources.Memory;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
         public Plugin Plugin { get; set; }
         public bool IsEnabled { get; set; }
         public Crc32 Crc32 { get; }
+
+        // =======================
+        private struct OldFunctionStruct {
+            public byte[] OpCodes;
+            public IntPtr FunctionAddr;
+        }
+        private List<OldFunctionStruct> OldFunctionState = new();
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -42,9 +59,9 @@ namespace VFXEditor {
         public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
         // ====== FILES HOOKS ========
-        public IHook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
-        public IHook<GetResourceAsyncPrototype> GetResourceAsyncHook { get; private set; }
-        public IHook<ReadSqpackPrototype> ReadSqpackHook { get; private set; }
+        public Hook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
+        public Hook<GetResourceAsyncPrototype> GetResourceAsyncHook { get; private set; }
+        public Hook<ReadSqpackPrototype> ReadSqpackHook { get; private set; }
         public ReadFilePrototype ReadFile { get; private set; }
 
         //====== STATIC ===========
@@ -60,10 +77,10 @@ namespace VFXEditor {
         // ======= STATIC HOOKS ========
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
-        public IHook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
+        public Hook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
-        public IHook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
+        public Hook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
@@ -75,10 +92,10 @@ namespace VFXEditor {
         // ======== ACTOR HOOKS =============
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
-        public IHook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
+        public Hook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
-        public IHook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
+        public Hook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
@@ -94,121 +111,127 @@ namespace VFXEditor {
         public unsafe void Init() {
             var scanner = Plugin.PluginInterface.TargetModuleScanner;
 
-            /*var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
+            var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
             var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
             var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" );
             var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
 
-            ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress );
-            GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress );
-            GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress );
-            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );*/
+            StoreOldState( ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress ), readSqpackAddress);
+            StoreOldState( GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress ), getResourceSyncAddress);
+            StoreOldState( GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress ), getResourceAsyncAddress);
+            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
 
             var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
             var staticVfxRunAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 0F 28 B4 24 ?? ?? ?? ?? 48 8B 8C 24 ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 5F" );
             var staticVfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
 
-            //var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
-            //var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
-            //var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
+            var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
+            var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
+            var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
 
-            /*ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
+            ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
 
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( staticVfxRunAddress );
-            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );*/
+            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
-            StaticVfxCreateHook = new Hook<StaticVfxCreateDelegate2>( StaticVfxNewHandler, ( long )staticVfxCreateAddress );
-            StaticVfxCreateHook.Activate();
-            //Thread.Sleep( 500 );
-            //StaticVfxCreateHook.Enable();
-            //StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( StaticVfxRemoveHandler, ( long )staticVfxRemoveAddress );
+            StoreOldState(StaticVfxCreateHook = new Hook<StaticVfxCreateDelegate2>( StaticVfxNewHandler, ( long )staticVfxCreateAddress ), staticVfxCreateAddress);
+            StoreOldState(StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( StaticVfxRemoveHandler, ( long )staticVfxRemoveAddress ), staticVfxRemoveAddress);
 
-            //ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( ActorVfxNewHandler, ( long )actorVfxCreateAddress );
-            //ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress );
+            StoreOldState( ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( ActorVfxNewHandler, ( long )actorVfxCreateAddress ), actorVfxCreateAddress);
+            StoreOldState( ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress ), actorVfxRemoveAddress);
 
-            //var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
-            //GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
+            var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
+            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
         }
 
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
-            PluginLog.Log( "static new - start" );
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII );
-            PluginLog.Log( $"static new - {vfxPath} {StaticVfxCreateHook == null} {StaticVfxCreateHook.IsHookEnabled} {StaticVfxCreateHook.IsHookActivated} {StaticVfxCreateHook.OriginalFunction == null}" );
             var vfx = StaticVfxCreateHook.OriginalFunction( path, pool );
-            //Plugin.Tracker?.AddStatic( vfx, vfxPath );
-            PluginLog.Log( "static new - end" );
+            Plugin.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            /*if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+            if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }
-            Plugin.Tracker?.RemoveStatic( vfx );*/
-            var a =  StaticVfxRemoveHook.OriginalFunction( vfx );
-            return a;
+            Plugin.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
+            return StaticVfxRemoveHook.OriginalFunction( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
-            PluginLog.Log( "actor new - start" );
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
-            PluginLog.Log( $"actor new - {vfxPath}" );
             var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
-            //Plugin.Tracker?.AddActor( vfx, vfxPath );
-            PluginLog.Log( "actor new - end" );
+            Plugin.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            /*if( Plugin.SpawnVfx != null && vfx == Plugin.SpawnVfx.Vfx ) {
+            if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
                 Plugin.SpawnVfx = null;
             }
-            Plugin.Tracker?.RemoveActor( vfx );*/
-            var a = ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
-            return a;
+            Plugin.Tracker?.RemoveActor( (VfxStruct*) vfx );
+            return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
         }
 
         public void Enable() {
             if( IsEnabled )
                 return;
-            /*ReadSqpackHook.Activate();
+            ReadSqpackHook.Activate();
             GetResourceSyncHook.Activate();
-            GetResourceAsyncHook.Activate();*/
+            GetResourceAsyncHook.Activate();
 
-            //StaticVfxCreateHook.Activate();
-            //StaticVfxRemoveHook.Activate();
-            //ActorVfxCreateHook.Activate();
-            //ActorVfxRemoveHook.Activate();
+            StaticVfxCreateHook.Activate();
+            StaticVfxRemoveHook.Activate();
+            ActorVfxCreateHook.Activate();
+            ActorVfxRemoveHook.Activate();
 
             // ==============
-            /*ReadSqpackHook.Enable();
+            ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
-            GetResourceAsyncHook.Enable();*/
+            GetResourceAsyncHook.Enable();
 
-            //StaticVfxCreateHook.Enable();
-            //StaticVfxRemoveHook.Enable();
-            //ActorVfxCreateHook.Enable();
-            //ActorVfxRemoveHook.Enable();
+            StaticVfxCreateHook.Enable();
+            StaticVfxRemoveHook.Enable();
+            ActorVfxCreateHook.Enable();
+            ActorVfxRemoveHook.Enable();
             IsEnabled = true;
+        }
+
+        private unsafe void StoreOldState<T>( Hook<T> hook, IntPtr address ) {
+            var is64Bit = sizeof( IntPtr ) == 8;
+            var jumpOpcodes = Utilities.AssembleAbsoluteJump( hook.ReverseWrapper.WrapperPointer, is64Bit );
+            var minHookLength = Utilities.GetHookLength( address, jumpOpcodes.Length, is64Bit );
+            CurrentProcess.SafeReadRaw( address, out var originalFunction, minHookLength );
+            OldFunctionState.Add( new OldFunctionStruct {
+                FunctionAddr = address,
+                OpCodes = originalFunction
+            } );
         }
 
         public void Disable() {
             if( !IsEnabled )
                 return;
-            /*ReadSqpackHook.Disable();
+            ReadSqpackHook.Disable();
             GetResourceSyncHook.Disable();
-            GetResourceAsyncHook.Disable();*/
-            PluginLog.Log( "disabling 2" );
-            StaticVfxCreateHook.Disable();
-            //StaticVfxRemoveHook.Disable();
-            //ActorVfxCreateHook.Disable();
-            //ActorVfxRemoveHook.Disable();
-            IsEnabled = false;
+            GetResourceAsyncHook.Disable();
 
-            StaticVfxCreateHook = null;
+            StaticVfxCreateHook.Disable();
+            StaticVfxRemoveHook.Disable();
+            ActorVfxCreateHook.Disable();
+            ActorVfxRemoveHook.Disable();
+
+            RestoreOldStates();
+            IsEnabled = false;
             Plugin = null;
+        }
+
+        private void RestoreOldStates() {
+            foreach(var oldState in OldFunctionState) {
+                CurrentProcess.SafeWriteRaw( oldState.FunctionAddr, oldState.OpCodes );
+            }
         }
 
         public void ReRender() {

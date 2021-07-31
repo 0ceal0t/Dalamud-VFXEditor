@@ -43,24 +43,24 @@ namespace VFXEditor {
             DocumentManager.Manager.Save();
         }
 
-        public void RemoveSourceVFX() {
+        public static void RemoveSourceVFX() {
             DocumentManager.Manager.UpdateSource( VFXSelectResult.None() );
             DocumentManager.CurrentActiveDoc.Dispose();
         }
 
-        public void SetReplaceVFX( VFXSelectResult replaceResult) {
+        public static void SetReplaceVFX( VFXSelectResult replaceResult) {
             SetReplaceVFX( replaceResult, true );
         }
-        public void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
+        public static void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
             if( addToRecent ) Configuration.Config.AddRecent( replaceResult );
             DocumentManager.Manager.UpdateReplace( replaceResult );
         }
 
-        public void RemoveReplaceVFX() {
+        public static void RemoveReplaceVFX() {
             DocumentManager.Manager.UpdateReplace( VFXSelectResult.None() );
         }
 
-        public void LoadCurrentVFX( AVFXBase avfx ) {
+        public static void LoadCurrentVFX( AVFXBase avfx ) {
             if( avfx == null ) return;
             DocumentManager.CurrentActiveDoc.SetAVFX( avfx );
 
