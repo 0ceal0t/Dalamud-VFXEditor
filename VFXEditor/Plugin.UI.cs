@@ -137,6 +137,7 @@ namespace VFXEditor {
                     }
                 }
                 ImGui.PopStyleColor();
+
                 // ===== EXPORT ======
                 ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );

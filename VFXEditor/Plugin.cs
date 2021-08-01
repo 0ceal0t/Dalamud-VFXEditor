@@ -26,7 +26,7 @@ namespace VFXEditor
         public VfxTracker Tracker;
         public SheetManager Sheets;
 
-        public static string TemplateLocation;
+        public static string TemplateLocation { get; private set; }
 
         public void Initialize( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;

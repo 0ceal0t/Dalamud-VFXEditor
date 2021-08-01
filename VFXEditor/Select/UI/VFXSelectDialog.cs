@@ -90,7 +90,8 @@ namespace VFXSelect.UI {
                 new VFXGimmickSelect( id, "Gimmick", sheet, this ),
                 new VFXCutsceneSelect( id, "Cutscene", sheet, this ),
                 new VFXMountSelect(id, "Mount", sheet, this),
-                new VFXHousingSelect(id, "Housing", sheet, this)
+                new VFXHousingSelect(id, "Housing", sheet, this),
+                new VFXCommonSelect(id, "Common", sheet, this)
             } );
         }
 
@@ -103,7 +104,7 @@ namespace VFXSelect.UI {
             if( !Visible )
                 return;
             ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
-            // ================
+
             var ret = ImGui.Begin( Id + "##" + Id, ref Visible );
             if( !ret )
                 return;
@@ -111,6 +112,7 @@ namespace VFXSelect.UI {
             ImGui.BeginTabBar( "VFXSelectDialogTabs##" + Id );
             if( ShowLocal )
                 DrawLocal();
+            DrawGamePath();
             DrawGame();
             if( RecentList != null )
                 DrawRecent();
@@ -148,12 +150,11 @@ namespace VFXSelect.UI {
 
         // ============= GAME =================
         public void DrawGame() {
-            var ret = ImGui.BeginTabItem( "Game File##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Game Items##Select/" + Id );
             if( !ret )
                 return;
 
             ImGui.BeginTabBar( "GameSelectTabs##" + Id );
-            DrawGamePath();
             foreach( var tab in GameTabs ) {
                 tab.Draw();
             }

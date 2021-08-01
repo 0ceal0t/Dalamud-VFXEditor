@@ -22,6 +22,7 @@ namespace VFXSelect {
         public ZoneSheetLoader Zones;
         public MountSheeetLoader Mounts;
         public HousingSheetLoader Housing;
+        public CommonLoader Misc;
 
         public SheetManager( DalamudPluginInterface pluginInterface, string npcCsv ) {
             PluginInterface = pluginInterface;
@@ -38,6 +39,7 @@ namespace VFXSelect {
             Zones = new ZoneSheetLoader( this, PluginInterface );
             Mounts = new MountSheeetLoader( this, PluginInterface );
             Housing = new HousingSheetLoader( this, PluginInterface );
+            Misc = new CommonLoader( this, PluginInterface );
         }
     }
 }

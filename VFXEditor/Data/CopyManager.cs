@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace VFXEditor.Data {
-
     public class CopyManager {
         public static bool IsCopying { get; private set; }
         public static bool IsPasting { get; private set; }
@@ -22,6 +21,7 @@ namespace VFXEditor.Data {
         }
 
         // ======== COPY ==============
+
         public static void PreDraw() {
             IsCopying = false;
             IsPasting = false;
