@@ -143,7 +143,7 @@ namespace VFXEditor.Data.Texture {
                         return false;
                     }
 
-                    compressor.Input.SetMipmapGeneration( true, -1 ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
+                    compressor.Input.SetMipmapGeneration( true, texFile.Header.MipLevels ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
                     compressor.Compression.SetBGRAPixelFormat();

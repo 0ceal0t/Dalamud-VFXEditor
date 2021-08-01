@@ -24,6 +24,9 @@ namespace VFXSelect.Data.Sheets {
                 new XivCommon( 10, "vfx/common/eff/abi_bari1c0h.avfx", "Collective Unconscious", 3140 ),
                 new XivCommon( 11, "vfx/common/eff/abi_gt_heal0f.avfx", "Asylum", 2632 ),
                 new XivCommon( 12, "vfx/common/eff/abi_yase1d0c.avfx", "Sacred Soil", 2804 ),
+                new XivCommon( 13, "vfx/common/eff/m7004sp_05d0t.avfx", "Earthen Fury", 2705 ),
+                new XivCommon( 14, "vfx/common/eff/m7005sp_32d0t.avfx", "Slipstream", 2716 ),
+                new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             };
 
             var sheet = PluginInterface.Data.GetExcelSheet<VFX>().Where( x => !string.IsNullOrEmpty(x.Location) );

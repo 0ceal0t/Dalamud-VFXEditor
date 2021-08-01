@@ -65,7 +65,8 @@ namespace ImGuiFileDialog {
                 SavedPath = Dialog.GetCurrentPath();
                 Dialog?.Hide();
                 AddRecent( SavedPath );
-                Dispose();
+                Dialog = null;
+                Callback = null;
             }
         }
 
