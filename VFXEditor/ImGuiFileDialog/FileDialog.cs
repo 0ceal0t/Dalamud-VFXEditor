@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Dalamud.Plugin;
 
 namespace ImGuiFileDialog {
     [Flags]
@@ -9,12 +10,10 @@ namespace ImGuiFileDialog {
         None = 0,
         ConfirmOverwrite = 1,
         SelectOnly = 2,
-        DontShowHiddenFiles = 3,
-        DisableCreateDirectoryButton = 4,
-        HideColumnType = 5,
-        HideColumnSize = 6,
-        HideColumnDate = 7,
-        HideSideBar = 8
+        DontShowHiddenFiles = 4,
+        DisableCreateDirectoryButton = 8,
+        HideSideBar = 16,
+        LoadPreview = 32,
     }
 
     public struct SideBarItem {
@@ -25,6 +24,7 @@ namespace ImGuiFileDialog {
 
     public partial class FileDialog {
         private bool Visible;
+        private readonly DalamudPluginInterface PluginInterface;
 
         private readonly string Title;
         private readonly int SelectionCountMax;
@@ -61,7 +61,12 @@ namespace ImGuiFileDialog {
         private readonly List<SideBarItem> QuickAccess = new();
         private readonly List<SideBarItem> Recent;
 
+        private ImGuiScene.TextureWrap PreviewWrap = null;
+        private readonly object PreviewLock = new();
+        private readonly bool DoLoadPreview;
+
         public FileDialog(
+            DalamudPluginInterface pluginInterface,
             string id,
             string title,
             string filters,
@@ -73,12 +78,14 @@ namespace ImGuiFileDialog {
             List<SideBarItem> recent,
             ImGuiFileDialogFlags flags
          ) {
+            PluginInterface = pluginInterface;
             Id = id;
             Title = title;
             Flags = flags;
             SelectionCountMax = selectionCountMax;
             IsModal = isModal;
             Recent = recent;
+            DoLoadPreview = Flags.HasFlag( ImGuiFileDialogFlags.LoadPreview );
 
             CurrentPath = path;
             DefaultExtension = defaultExtension;
@@ -112,6 +119,10 @@ namespace ImGuiFileDialog {
 
             var fullPaths = SelectedFileNames.Where( x => !string.IsNullOrEmpty( x ) ).Select( x => Path.Combine( CurrentPath, x ) );
             return string.Join( ",", fullPaths.ToArray() );
+        }
+
+        public void Dispose() {
+            PreviewWrap?.Dispose();
         }
 
         // the full path, specified by the text input box and the current path

@@ -1,13 +1,12 @@
 using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading.Tasks;
+using TeximpNet.DDS;
+using VFXEditor.Data.Texture;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
@@ -18,6 +17,8 @@ namespace ImGuiFileDialog {
         private static Vector4 MISC_TEXT_COLOR = new( 1.00000000000f, 0.47450980392f, 0.77647058824f, 1f );
         private static Vector4 IMAGE_TEXT_COLOR = new( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
         private static Vector4 STANDARD_TEXT_COLOR = new( 1f );
+
+        private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds" };
 
         private struct IconColorItem {
             public char Icon;
@@ -236,8 +237,7 @@ namespace ImGuiFileDialog {
         }
 
         private void DrawSideBar( Vector2 size ) {
-            ImGui.BeginChild( "##FileDialog_SideBar", size );
-
+            ImGui.BeginChild( "##FileDialog_SideBar", ( PreviewWrap != null ) ? size - new Vector2(0, size.X + 5) : size );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             foreach( var drive in Drives ) {
@@ -256,11 +256,24 @@ namespace ImGuiFileDialog {
             }
 
             ImGui.EndChild();
+
+            if( PreviewWrap != null ) {
+                var width = size.X;
+                var previewSize = new Vector2( PreviewWrap.Width, PreviewWrap.Height );
+                var ratio = Math.Min( width / previewSize.X, width / previewSize.Y );
+                var newSize = previewSize *= ratio;
+                var padding = ( new Vector2( width ) - newSize ) / 2;
+                ImGui.SetCursorPos( ImGui.GetCursorPos() + padding );
+                ImGui.Image( PreviewWrap.ImGuiHandle, newSize );
+            }
         }
 
         private void DrawSideBarItem( SideBarItem item ) {
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Selectable( $"{item.Icon}##{item.Text}", item.Text == SelectedSideBar ) ) {
+                PreviewWrap?.Dispose();
+                PreviewWrap = null;
+
                 SetPath( item.Location );
                 SelectedSideBar = item.Text;
             }
@@ -277,14 +290,10 @@ namespace ImGuiFileDialog {
             if( ImGui.BeginTable( "##FileTable", 4, tableFlags, size ) ) {
                 ImGui.TableSetupScrollFreeze( 0, 1 );
 
-                var hideType = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnType );
-                var hideSize = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnSize );
-                var hideDate = Flags.HasFlag( ImGuiFileDialogFlags.HideColumnDate );
-
                 ImGui.TableSetupColumn( " File Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
-                ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed | ( hideType ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 1 );
-                ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed | ( hideSize ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 2 );
-                ImGui.TableSetupColumn( "Date", ImGuiTableColumnFlags.WidthFixed | ( hideDate ? ImGuiTableColumnFlags.DefaultHide : ImGuiTableColumnFlags.None ), -1, 3 );
+                ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, -1, 1 );
+                ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed, -1, 2 );
+                ImGui.TableSetupColumn( "Date", ImGuiTableColumnFlags.WidthFixed, -1, 3 );
 
                 ImGui.TableNextRow( ImGuiTableRowFlags.Headers );
                 for( var column = 0; column < 4; column++ ) {
@@ -399,6 +408,9 @@ namespace ImGuiFileDialog {
             ImGui.SameLine( 25f );
 
             if( ImGui.Selectable( file.FileName, selected, flags ) ) {
+                PreviewWrap?.Dispose();
+                PreviewWrap = null;
+
                 if( file.Type == FileStructType.Directory ) {
                     if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) {
                         PathClicked = SelectDirectory( file );
@@ -414,10 +426,51 @@ namespace ImGuiFileDialog {
                         WantsToQuit = true;
                         IsOk = true;
                     }
+
+                    LoadTexturePreview( file );
                 }
             }
 
             return false;
+        }
+
+        private void LoadTexturePreview(FileStruct file) {
+            if( !DoLoadPreview ) return;
+            if( ImageExtensions.Contains( file.Ext.ToLower() ) ) {
+                Task.Run( async () => {
+
+                    lock( PreviewLock ) {
+                        var path = Path.Combine( file.FilePath, file.FileName );
+                        if( file.Ext.ToLower() == "dds" ) {
+                            var ddsFile = DDSFile.Read( path );
+
+                            using( var ms = new MemoryStream() ) {
+                                ddsFile.Write( ms );
+                                using var br = new BinaryReader( ms );
+
+                                br.BaseStream.Seek( 12, SeekOrigin.Begin );
+                                var height = br.ReadInt32();
+                                var width = br.ReadInt32();
+
+                                br.BaseStream.Seek( 128, SeekOrigin.Begin ); // skip header
+                                var uncompressedLength = ms.Length - 128;
+                                var data = new byte[uncompressedLength];
+                                br.Read( data, 0, ( int )uncompressedLength );
+
+                                var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
+                                var convertedData = VFXTexture.BGRA_to_RGBA( VFXTexture.Convert( data, format, width, height ) );
+                                PreviewWrap = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
+                            }
+
+                            ddsFile.Dispose();
+                        }
+                        else {
+                            PreviewWrap = PluginInterface.UiBuilder.LoadImage( path );
+                        }
+                    }
+
+                } );
+            }
         }
 
         private static IconColorItem GetIcon( string ext ) {

@@ -47,7 +47,7 @@ namespace VFXEditor
             TextureManager.Initialize( this );
             DirectXManager.Initialize( this );
             DocumentManager.Initialize();
-            FileDialogManager.Initialize();
+            FileDialogManager.Initialize( PluginInterface );
             CopyManager.Initialize();
 
             Tracker = new VfxTracker( this );

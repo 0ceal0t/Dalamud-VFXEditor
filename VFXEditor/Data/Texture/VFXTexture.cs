@@ -35,7 +35,8 @@ namespace VFXEditor.Data.Texture {
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
             Header = Reader.ReadStructure<TexHeader>();
-            ImageData = BGRA_to_RGBA( Convert( DataSpan[HeaderLength..], Header.Width, Header.Height ) );
+            ImageData = BGRA_to_RGBA( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
+            ValidFormat = ( ImageData.Length > 0 );
         }
 
         public void LoadFile( BinaryReader br, int size ) {
@@ -43,7 +44,8 @@ namespace VFXEditor.Data.Texture {
             br.BaseStream.Position = 0;
             Header = br.ReadStructure<TexHeader>();
             RawData = br.ReadBytes( size - HeaderLength );
-            ImageData = BGRA_to_RGBA( Convert( new Span<byte>( RawData ), Header.Width, Header.Height ) );
+            ImageData = BGRA_to_RGBA( Convert( new Span<byte>( RawData ), Header.Format, Header.Width, Header.Height ) );
+            ValidFormat = ( ImageData.Length > 0 );
         }
 
         public byte[] GetDDSData() {
@@ -90,9 +92,9 @@ namespace VFXEditor.Data.Texture {
         }
 
         // converts various formats to A8R8G8B8
-        private byte[] Convert( Span<byte> src, int width, int height ) {
+        public static byte[] Convert( Span<byte> src, TextureFormat format, int width, int height ) {
             var dst = new byte[width * height * 4];
-            switch( Header.Format ) {
+            switch( format ) {
                 case TextureFormat.DXT1:
                     DecompressDxt1( src, dst, width, height );
                     break;
@@ -109,7 +111,6 @@ namespace VFXEditor.Data.Texture {
                 default:
                     return Array.Empty<byte>(); // ???
             }
-            ValidFormat = true;
             return dst;
         }
 

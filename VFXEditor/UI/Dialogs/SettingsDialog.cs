@@ -1,11 +1,12 @@
 using System;
 using System.Numerics;
 using ImGuiNET;
+using ImGuiFileDialog;
 
 namespace VFXEditor.UI {
     public class SettingsDialog : GenericDialog {
         public SettingsDialog() : base( "Settings" ) {
-            Size = new Vector2( 300, 100 );
+            Size = new Vector2( 300, 150 );
         }
 
         public override void OnDraw() {
@@ -24,6 +25,11 @@ namespace VFXEditor.UI {
             }
 
             if(ImGui.Checkbox( "Hide with UI##Settings", ref Configuration.Config.HideWithUI )) {
+                Configuration.Config.Save();
+            }
+
+            if( ImGui.Checkbox( "File picker image preview##Settings", ref Configuration.Config.FilepickerImagePreview ) ) {
+                FileDialogManager.ImagePreview = Configuration.Config.FilepickerImagePreview;
                 Configuration.Config.Save();
             }
 

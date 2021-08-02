@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VFXSelect.UI;
+using ImGuiFileDialog;
 
 namespace VFXEditor {
     [Serializable]
@@ -39,6 +40,7 @@ namespace VFXEditor {
             "VFXEditor",
         } );
         public List<VFXSelectResult> RecentSelects = new();
+        public bool FilepickerImagePreview = true;
 
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;
@@ -46,6 +48,7 @@ namespace VFXEditor {
         private void InitializeInstance( DalamudPluginInterface pluginInterface ) {
             PluginInterface = pluginInterface;
             PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            FileDialogManager.ImagePreview = FilepickerImagePreview;
         }
 
         public void AddRecent( VFXSelectResult result ) {

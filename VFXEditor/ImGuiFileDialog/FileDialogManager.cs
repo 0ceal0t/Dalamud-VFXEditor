@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,8 +10,12 @@ namespace ImGuiFileDialog {
         private static string SavedPath;
         private static Action<bool, string> Callback;
         private static List<SideBarItem> Recent;
+        private static DalamudPluginInterface PluginInterface;
 
-        public static void Initialize() {
+        public static bool ImagePreview { get; set; } = true;
+
+        public static void Initialize( DalamudPluginInterface pluginInterface ) {
+            PluginInterface = pluginInterface;
             Dialog = null;
             SavedPath = ".";
             Callback = null;
@@ -18,10 +23,12 @@ namespace ImGuiFileDialog {
         }
 
         public static void Dispose() {
+            UnloadDialog();
             Dialog = null;
             Callback = null;
             Recent = null;
             SavedPath = null;
+            PluginInterface = null;
         }
 
         public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
@@ -52,9 +59,10 @@ namespace ImGuiFileDialog {
             ImGuiFileDialogFlags flags,
             Action<bool, string> callback
         ) {
-            Dialog?.Hide();
+            if( ImagePreview ) flags |= ImGuiFileDialogFlags.LoadPreview;
+            UnloadDialog();
             Callback = callback;
-            Dialog = new FileDialog( id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, Recent, flags );
+            Dialog = new FileDialog( PluginInterface, id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, Recent, flags );
             Dialog.Show();
         }
 
@@ -63,11 +71,16 @@ namespace ImGuiFileDialog {
             if( Dialog.Draw() ) {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
                 SavedPath = Dialog.GetCurrentPath();
-                Dialog?.Hide();
                 AddRecent( SavedPath );
+                UnloadDialog();
                 Dialog = null;
                 Callback = null;
             }
+        }
+
+        private static void UnloadDialog() {
+            Dialog?.Hide();
+            Dialog?.Dispose();
         }
 
         private static void AddRecent( string path ) {
