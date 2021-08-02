@@ -8,7 +8,7 @@ namespace VFXEditor.Data {
         public static bool IsPasting { get; private set; }
 
         public static List<Vector4> CurveKeys { get; private set; }
-        public static Dictionary<string, Base> Copied { get; private set;  }
+        public static Dictionary<string, Base> Copied { get; private set; }
 
         public static void Initialize() {
             CurveKeys = new();
@@ -42,7 +42,7 @@ namespace VFXEditor.Data {
             CurveKeys.Clear();
         }
 
-        public static void AddCurveKey(float time, float x, float y, float z) {
+        public static void AddCurveKey( float time, float x, float y, float z ) {
             CurveKeys.Add( new Vector4( time, x, y, z ) );
         }
 

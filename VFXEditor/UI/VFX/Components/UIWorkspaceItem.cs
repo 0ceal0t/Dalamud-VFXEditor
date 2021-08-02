@@ -18,7 +18,6 @@ namespace VFXEditor.UI.VFX {
             return string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
         }
 
-        // ====== GETTING DATA FROM WORKSPACE META
         public abstract string GetWorkspaceId();
 
         public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
@@ -28,6 +27,7 @@ namespace VFXEditor.UI.VFX {
             }
             PopulateWorkspaceMetaChildren(RenameDict);
         }
+
         public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void ReadWorkspaceMeta( Dictionary<string, string> RenameDict ) {
@@ -37,6 +37,7 @@ namespace VFXEditor.UI.VFX {
             }
             ReadWorkspaceMetaChildren( RenameDict );
         }
+
         public virtual void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void DrawRename( string _id ) {
@@ -79,7 +80,7 @@ namespace VFXEditor.UI.VFX {
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Edit}" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.PencilAlt}" + id ) ) {
                     CurrentlyRenaming = true;
                     RenamedTemp = currentText;
                 }

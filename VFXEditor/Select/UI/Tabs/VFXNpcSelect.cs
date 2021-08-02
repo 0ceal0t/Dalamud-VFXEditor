@@ -33,11 +33,6 @@ namespace VFXSelect.UI {
             ImGui.Text( loadedItem.Npc.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "Variant: " + loadedItem.Npc.Variant );
-            ImGui.Text( "IMC Count: " + loadedItem.Count );
-
-            ImGui.Text( "IMC Path: " );
-            ImGui.SameLine();
-            VFXSelectDialog.DisplayPath( loadedItem.ImcPath );
 
             var vfxIdx = 0;
             foreach( var path in loadedItem.VfxPaths ) {

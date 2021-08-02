@@ -51,21 +51,20 @@ namespace VFXEditor
             CopyManager.Initialize();
 
             Tracker = new VfxTracker( this );
-            Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
+            Sheets = new SheetManager( PluginInterface,
+                Path.Combine( TemplateLocation, "Files", "npc.csv" ),
+                Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ) );
 
             InitUI();
 
             ResourceLoader.Init();
-#if !DEBUG
             ResourceLoader.Enable();
-#endif
 
             PluginInterface.UiBuilder.OnBuildUi += Draw;
             PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
         }
 
         public void Dispose() {
-
             PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.OnBuildUi -= Draw;
 
@@ -74,9 +73,7 @@ namespace VFXEditor
             PluginInterface.CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
 
-#if !DEBUG
             ResourceLoader.Dispose();
-#endif
             ResourceLoader = null;
 
             SpawnVfx?.Remove();

@@ -1,7 +1,9 @@
 using Dalamud.Plugin;
 using Lumina.Excel.GeneratedSheets;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,8 @@ namespace VFXSelect.Data.Sheets {
     public class NpcSheetLoader : SheetLoader<XivNpc, XivNpcSelected> {
 
         public Dictionary<int, string> NpcIdToName = new();
+        public Dictionary<string, List<string>> MonsterVfx = new();
+
         public NpcSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
         }
 
@@ -34,35 +38,15 @@ namespace VFXSelect.Data.Sheets {
                     Items.Add( i );
                 }
             }
+
+            var text = File.ReadAllText( Manager.MonsterJson );
+            MonsterVfx = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>( text );
         }
 
         public override bool SelectItem( XivNpc item, out XivNpcSelected selectedItem ) {
-            selectedItem = null;
-            var imcPath = item.GetImcPath();
-            var result = PluginInterface.Data.FileExists( imcPath );
-            if( result ) {
-                try {
-                    var file = PluginInterface.Data.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
-                    var tmbPath = item.GetTmbPath();
-                    var files = new List<Lumina.Data.FileResource>();
-                    for( var spIdx = 1; spIdx < 35; spIdx++ ) {
-                        var mainTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + ".tmb";
-                        var hitTmb = tmbPath + "mon_sp" + spIdx.ToString().PadLeft( 3, '0' ) + "_hit.tmb";
-                        if( PluginInterface.Data.FileExists( mainTmb ) ) {
-                            files.Add( PluginInterface.Data.GetFile( mainTmb ) );
-                        }
-                        if( PluginInterface.Data.FileExists( hitTmb ) ) {
-                            files.Add( PluginInterface.Data.GetFile( hitTmb ) );
-                        }
-                    }
-                    selectedItem = new XivNpcSelected( file, item, files );
-                }
-                catch( Exception e ) {
-                    PluginLog.LogError( "Error reading npc file", e );
-                    return false;
-                }
-            }
-            return result;
+            selectedItem = new XivNpcSelected( item, MonsterVfx.TryGetValue( item.Id, out var paths ) ? paths : new List<string>() );
+
+            return true;
         }
     }
 }

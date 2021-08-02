@@ -13,7 +13,7 @@ namespace VFXEditor.DirectX {
     public class ModelPreview : ModelRenderer {
         public bool ShowEdges = true;
         public bool ShowEmitter = true;
-        public static Vector4 LINE_COLOR = new( 1, 0, 0, 1 );
+        public static readonly Vector4 LINE_COLOR = new( 1, 0, 0, 1 );
 
         // ======= BASE MODEL =======
         private static readonly int MODEL_SPAN = 3; // position, color, normal

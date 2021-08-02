@@ -84,6 +84,7 @@ namespace VFXEditor.UI.Views {
         private bool DrawOnce = false;
         public override void Draw( string parentId ) {
             var Id = parentId + "-Sequence";
+
             // ====== FIX UP BOUNDS ==========
             Max = 0;
             foreach( var item in Items ) {

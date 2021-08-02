@@ -112,6 +112,7 @@ namespace VFXEditor {
             StoreOldState( ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress ), readSqpackAddress);
             StoreOldState( GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress ), getResourceSyncAddress);
             StoreOldState( GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress ), getResourceAsyncAddress);
+
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
 
             var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
@@ -304,21 +305,11 @@ namespace VFXEditor {
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
-            if( Configuration.Config != null && Configuration.Config.LogAllFiles == true ) {
-                PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
-            }
-            // ============ REPLACE THE FILE ============
+            if( Configuration.Config?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
             FileInfo replaceFile = null;
 
-            if( DocumentManager.Manager != null && DocumentManager.Manager.GetLocalPath( gameFsPath, out var vfxFile ) ) {
-                replaceFile = vfxFile;
-                if( Configuration.Config?.LogAllFiles == true ) {
-                    PluginLog.Log( $"Loaded VFX {gameFsPath} from {replaceFile?.FullName}" );
-                }
-            }
-            else if( TextureManager.Manager != null && TextureManager.Manager.GetLocalReplacePath( gameFsPath, out var texFile ) ) {
-                replaceFile = texFile;
-            }
+            if( DocumentManager.Manager?.GetLocalPath( gameFsPath, out var vfxFile ) == true ) replaceFile = vfxFile;
+            else if( TextureManager.Manager?.GetLocalReplacePath( gameFsPath, out var texFile ) == true ) replaceFile = texFile;
 
             var fsPath = replaceFile?.FullName;
 
@@ -361,7 +352,7 @@ namespace VFXEditor {
             if( IsEnabled ) Disable();
         }
 
-        public static unsafe string GetString( StdString str ) {
+        private static unsafe string GetString( StdString str ) {
             var len = ( int )str.Size;
             if( len > 15 ) {
                 return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );

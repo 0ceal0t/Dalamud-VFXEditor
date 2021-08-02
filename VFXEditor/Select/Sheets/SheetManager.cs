@@ -10,6 +10,7 @@ namespace VFXSelect {
     public class SheetManager {
         public DalamudPluginInterface PluginInterface;
         public string NpcCsv;
+        public string MonsterJson;
 
         public ItemSheetLoader Items;
         public ActionSheetLoader Actions;
@@ -24,9 +25,10 @@ namespace VFXSelect {
         public HousingSheetLoader Housing;
         public CommonLoader Misc;
 
-        public SheetManager( DalamudPluginInterface pluginInterface, string npcCsv ) {
+        public SheetManager( DalamudPluginInterface pluginInterface, string npcCsv, string monsterJson ) {
             PluginInterface = pluginInterface;
             NpcCsv = npcCsv;
+            MonsterJson = monsterJson;
 
             Items = new ItemSheetLoader( this, PluginInterface );
             Actions = new ActionSheetLoader( this, PluginInterface );
