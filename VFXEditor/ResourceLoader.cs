@@ -6,29 +6,19 @@ using Dalamud.Plugin;
 using VFXEditor.Structs;
 using VFXEditor.Util;
 using FileMode = VFXEditor.Structs.FileMode;
-using Reloaded.Hooks;
-using Reloaded.Hooks.Definitions.X64;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Data.Texture;
 using VFXEditor.Data;
-
-using Reloaded.Hooks.Tools;
-using Reloaded.Memory.Sources;
-using static Reloaded.Memory.Sources.Memory;
 using System.Collections.Generic;
+
+using Dalamud.Hooking;
+using Reloaded.Hooks.Definitions.X64;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
         public Plugin Plugin { get; set; }
         public bool IsEnabled { get; set; }
         public Crc32 Crc32 { get; }
-
-        // =======================
-        private struct OldFunctionStruct {
-            public byte[] OpCodes;
-            public IntPtr FunctionAddr;
-        }
-        private readonly List<OldFunctionStruct> OldFunctionState = new();
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -43,14 +33,18 @@ namespace VFXEditor {
         // ===== FILES =========
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceSyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown );
+
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
+
         // ====== FILES HOOKS ========
         public Hook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
         public Hook<GetResourceAsyncPrototype> GetResourceAsyncHook { get; private set; }
@@ -61,16 +55,20 @@ namespace VFXEditor {
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxCreateDelegate( string path, string pool );
         public StaticVfxCreateDelegate StaticVfxCreate;
+
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxRunDelegate( IntPtr vfx, float a1, uint a2 );
         public StaticVfxRunDelegate StaticVfxRun;
+
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxRemoveDelegate( IntPtr vfx );
         public StaticVfxRemoveDelegate StaticVfxRemove;
+
         // ======= STATIC HOOKS ========
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
         public Hook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
+
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
         public Hook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
@@ -79,13 +77,16 @@ namespace VFXEditor {
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public ActorVfxCreateDelegate ActorVfxCreate;
+
         [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate( IntPtr vfx, char a2 );
         public ActorVfxRemoveDelegate ActorVfxRemove;
+
         // ======== ACTOR HOOKS =============
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public Hook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
+
         [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
         public Hook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
@@ -109,9 +110,9 @@ namespace VFXEditor {
             var getResourceSyncAddress = scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" );
             var getResourceAsyncAddress = scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" );
 
-            StoreOldState( ReadSqpackHook = new Hook<ReadSqpackPrototype>( ReadSqpackHandler, ( long )readSqpackAddress ), readSqpackAddress);
-            StoreOldState( GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( GetResourceSyncHandler, ( long )getResourceSyncAddress ), getResourceSyncAddress);
-            StoreOldState( GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( GetResourceAsyncHandler, ( long )getResourceAsyncAddress ), getResourceAsyncAddress);
+            ReadSqpackHook = new Hook<ReadSqpackPrototype>( readSqpackAddress, ReadSqpackHandler );
+            GetResourceSyncHook = new Hook<GetResourceSyncPrototype>( getResourceSyncAddress, GetResourceSyncHandler );
+            GetResourceAsyncHook = new Hook<GetResourceAsyncPrototype>( getResourceAsyncAddress, GetResourceAsyncHandler );
 
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
 
@@ -130,11 +131,11 @@ namespace VFXEditor {
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( staticVfxRunAddress );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
-            StoreOldState(StaticVfxCreateHook = new Hook<StaticVfxCreateDelegate2>( StaticVfxNewHandler, ( long )staticVfxCreateAddress ), staticVfxCreateAddress);
-            StoreOldState(StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( StaticVfxRemoveHandler, ( long )staticVfxRemoveAddress ), staticVfxRemoveAddress);
+            StaticVfxCreateHook = new Hook<StaticVfxCreateDelegate2>( staticVfxCreateAddress, StaticVfxNewHandler );
+            StaticVfxRemoveHook = new Hook<StaticVfxRemoveDelegate2>( staticVfxRemoveAddress, StaticVfxRemoveHandler );
 
-            StoreOldState( ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( ActorVfxNewHandler, ( long )actorVfxCreateAddress ), actorVfxCreateAddress);
-            StoreOldState( ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( ActorVfxRemoveHandler, ( long )actorVfxRemoveAddress ), actorVfxRemoveAddress);
+            ActorVfxCreateHook = new Hook<ActorVfxCreateDelegate2>( actorVfxCreateAddress, ActorVfxNewHandler );
+            ActorVfxRemoveHook = new Hook<ActorVfxRemoveDelegate2>( actorVfxRemoveAddress, ActorVfxRemoveHandler );
 
             var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
             GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
@@ -142,7 +143,7 @@ namespace VFXEditor {
 
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII );
-            var vfx = StaticVfxCreateHook.OriginalFunction( path, pool );
+            var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
@@ -152,12 +153,12 @@ namespace VFXEditor {
                 Plugin.SpawnVfx = null;
             }
             Plugin.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
-            return StaticVfxRemoveHook.OriginalFunction( vfx );
+            return StaticVfxRemoveHook.Original( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
-            var vfx = ActorVfxCreateHook.OriginalFunction( a1, a2, a3, a4, a5, a6, a7 );
+            var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
@@ -167,22 +168,11 @@ namespace VFXEditor {
                 Plugin.SpawnVfx = null;
             }
             Plugin.Tracker?.RemoveActor( (VfxStruct*) vfx );
-            return ActorVfxRemoveHook.OriginalFunction( vfx, a2 );
+            return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
         public void Enable() {
-            if( IsEnabled )
-                return;
-            ReadSqpackHook.Activate();
-            GetResourceSyncHook.Activate();
-            GetResourceAsyncHook.Activate();
-
-            StaticVfxCreateHook.Activate();
-            StaticVfxRemoveHook.Activate();
-            ActorVfxCreateHook.Activate();
-            ActorVfxRemoveHook.Activate();
-
-            // ==============
+            if( IsEnabled ) return;
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
@@ -192,41 +182,35 @@ namespace VFXEditor {
             StaticVfxRemoveHook.Enable();
             ActorVfxCreateHook.Enable();
             ActorVfxRemoveHook.Enable();
+
             IsEnabled = true;
         }
 
-        private unsafe void StoreOldState<T>( Hook<T> hook, IntPtr address ) {
-            var is64Bit = sizeof( IntPtr ) == 8;
-            var jumpOpcodes = Utilities.AssembleAbsoluteJump( hook.ReverseWrapper.WrapperPointer, is64Bit );
-            var minHookLength = Utilities.GetHookLength( address, jumpOpcodes.Length, is64Bit );
-            CurrentProcess.SafeReadRaw( address, out var originalFunction, minHookLength );
-            OldFunctionState.Add( new OldFunctionStruct {
-                FunctionAddr = address,
-                OpCodes = originalFunction
-            } );
-        }
-
         public void Disable() {
-            if( !IsEnabled )
-                return;
+            if( !IsEnabled ) return;
             ReadSqpackHook.Disable();
+            ReadSqpackHook.Dispose();
+
             GetResourceSyncHook.Disable();
+            GetResourceSyncHook.Dispose();
+
             GetResourceAsyncHook.Disable();
+            GetResourceAsyncHook.Dispose();
 
             StaticVfxCreateHook.Disable();
-            StaticVfxRemoveHook.Disable();
-            ActorVfxCreateHook.Disable();
-            ActorVfxRemoveHook.Disable();
+            StaticVfxCreateHook.Dispose();
 
-            RestoreOldStates();
+            StaticVfxRemoveHook.Disable();
+            StaticVfxRemoveHook.Dispose();
+
+            ActorVfxCreateHook.Disable();
+            ActorVfxCreateHook.Dispose();
+
+            ActorVfxRemoveHook.Disable();
+            ActorVfxRemoveHook.Dispose();
+
             IsEnabled = false;
             Plugin = null;
-        }
-
-        private void RestoreOldStates() {
-            foreach(var oldState in OldFunctionState) {
-                CurrentProcess.SafeWriteRaw( oldState.FunctionAddr, oldState.OpCodes );
-            }
         }
 
         public void ReRender() {
@@ -291,8 +275,8 @@ namespace VFXEditor {
             void* pUnknown,
             bool isUnknown
         ) => isSync
-            ? GetResourceSyncHook.OriginalFunction( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown )
-            : GetResourceAsyncHook.OriginalFunction( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+            ? GetResourceSyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown )
+            : GetResourceAsyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
 
         private unsafe void* GetResourceHandler(
             bool isSync, IntPtr pFileManager,
@@ -333,7 +317,7 @@ namespace VFXEditor {
 
             var isRooted = Path.IsPathRooted( gameFsPath );
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted ) {
-                return ReadSqpackHook.OriginalFunction( pFileHandler, pFileDesc, priority, isSync );
+                return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;

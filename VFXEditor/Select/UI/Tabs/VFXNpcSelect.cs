@@ -16,7 +16,7 @@ namespace VFXSelect.UI {
         }
 
         public override bool CheckMatch( XivNpc item, string searchInput ) {
-            return VFXSelectDialog.Matches( item.Name, searchInput );
+            return VFXSelectDialog.Matches( item.Name, searchInput ) || VFXSelectDialog.Matches( item.Id, searchInput );
         }
 
         public override void DrawExtra() {

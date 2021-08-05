@@ -3,11 +3,8 @@
     <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
 
     <ItemGroup>
-        <InputAssemblies Include="$(OutputPath)Reloaded*.dll" />
         <InputAssemblies Include="$(OutputPath)fastCSV.dll" />
         <InputAssemblies Include="$(OutputPath)SharpGLTF.*.dll" />
-        <InputAssemblies Include="$(OutputPath)Iced.dll" />
-        <InputAssemblies Include="$(OutputPath)SharpDisasm.dll" />
         <InputAssemblies Include="$(OutputPath)AVFXLib.dll" />
         <InputAssemblies Include="$(OutputPath)VFXEditor.dll" />
     </ItemGroup>
