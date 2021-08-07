@@ -186,28 +186,39 @@ namespace VFXEditor {
             IsEnabled = true;
         }
 
+        public void Dispose() {
+            if( IsEnabled ) Disable();
+        }
+
         public void Disable() {
             if( !IsEnabled ) return;
             ReadSqpackHook.Disable();
             ReadSqpackHook.Dispose();
+            ReadSqpackHook = null;
 
             GetResourceSyncHook.Disable();
             GetResourceSyncHook.Dispose();
+            GetResourceSyncHook = null;
 
             GetResourceAsyncHook.Disable();
             GetResourceAsyncHook.Dispose();
+            GetResourceAsyncHook = null;
 
             StaticVfxCreateHook.Disable();
             StaticVfxCreateHook.Dispose();
+            StaticVfxCreateHook = null;
 
             StaticVfxRemoveHook.Disable();
             StaticVfxRemoveHook.Dispose();
+            StaticVfxRemoveHook = null;
 
             ActorVfxCreateHook.Disable();
             ActorVfxCreateHook.Dispose();
+            ActorVfxCreateHook = null;
 
             ActorVfxRemoveHook.Disable();
             ActorVfxRemoveHook.Dispose();
+            ActorVfxRemoveHook = null;
 
             IsEnabled = false;
             Plugin = null;
@@ -227,7 +238,7 @@ namespace VFXEditor {
                 case RedrawState.Start:
                     *( int* )renderPtr |= 0x00_00_00_02;
                     CurrentRedrawState = RedrawState.Invisible;
-                    WaitFrames = 30;
+                    WaitFrames = 15;
                     break;
                 case RedrawState.Invisible:
                     if(WaitFrames == 0) {
@@ -330,10 +341,6 @@ namespace VFXEditor {
             pFileDesc->FileDescriptor = fd;
 
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
-        }
-
-        public void Dispose() {
-            if( IsEnabled ) Disable();
         }
 
         private static unsafe string GetString( StdString str ) {
