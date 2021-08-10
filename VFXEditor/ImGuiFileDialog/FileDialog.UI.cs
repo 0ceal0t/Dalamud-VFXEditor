@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ImGuiFileDialog {
         private static Vector4 IMAGE_TEXT_COLOR = new( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
         private static Vector4 STANDARD_TEXT_COLOR = new( 1f );
 
-        private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds" };
+        private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex" };
 
         private struct IconColorItem {
             public char Icon;
@@ -459,13 +460,20 @@ namespace ImGuiFileDialog {
 
                                 var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
                                 var convertedData = VFXTexture.BGRA_to_RGBA( VFXTexture.Convert( data, format, width, height ) );
-                                PreviewWrap = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
+                                var temp = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
+                                PreviewWrap = temp;
                             }
 
                             ddsFile.Dispose();
                         }
+                        else if( file.Ext.ToLower() == "atex" ) {
+                            var tex = VFXTexture.LoadFromLocal( path );
+                            var temp = PluginInterface.UiBuilder.LoadImageRaw( tex.ImageData, tex.Header.Width, tex.Header.Height, 4 );
+                            PreviewWrap = temp;
+                        }
                         else {
-                            PreviewWrap = PluginInterface.UiBuilder.LoadImage( path );
+                            var temp = PluginInterface.UiBuilder.LoadImage( path );
+                            PreviewWrap = temp;
                         }
                     }
 
@@ -478,7 +486,7 @@ namespace ImGuiFileDialog {
                 ICON_MAP = new();
                 AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
                 AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf, MISC_TEXT_COLOR );
-                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff" }, ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );
+                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff", "dds", "atex" }, ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );
                 AddToIconMap( new[] { "cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java" }, ( char )FontAwesomeIcon.FileCode, CODE_TEXT_COLOR );
                 AddToIconMap( new[] { "txt", "md" }, ( char )FontAwesomeIcon.FileAlt, STANDARD_TEXT_COLOR );
                 AddToIconMap( new[] { "zip", "7z", "gz", "tar" }, ( char )FontAwesomeIcon.FileArchive, MISC_TEXT_COLOR );
