@@ -10,14 +10,14 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI.Views {
     public abstract class ImGuiSequencer<T> : UIBase where T : UIItem {
-        private static int ItemHeight = 20;
-        private static int LegendWidth = 200;
-        private static float MinBarWidth = 44f;
+        private static readonly int ItemHeight = 20;
+        private static readonly int LegendWidth = 200;
+        private static readonly float MinBarWidth = 44f;
 
         private float FramePixelWidth = 10f;
         private float FramePixelWidthTarget = 10f;
 
-        private List<T> Items;
+        private readonly List<T> Items;
         private T Selected = null;
 
         private T MovingEntry = null;
@@ -364,7 +364,7 @@ namespace VFXEditor.UI.Views {
                 else {
                     var barNewWidth = Math.Max( barWidthInPixels + io.MouseDelta.X, MinBarWidth );
                     var barRatio = barNewWidth / barWidthInPixels;
-                    FramePixelWidthTarget = FramePixelWidth = FramePixelWidth / barRatio;
+                    FramePixelWidthTarget = FramePixelWidth /= barRatio;
                     var newVisibleFrameCount = ( int )( ( canvasSize.X - LegendWidth ) / FramePixelWidthTarget );
                     var lastFrame = FirstFrame + newVisibleFrameCount;
                     if( lastFrame > frameMax ) {
@@ -378,7 +378,7 @@ namespace VFXEditor.UI.Views {
                     var barNewWidth = Math.Max( barWidthInPixels - io.MouseDelta.X, MinBarWidth );
                     var barRatio = barNewWidth / barWidthInPixels;
                     var previousFramePixelWidthTarget = FramePixelWidthTarget;
-                    FramePixelWidthTarget = FramePixelWidth = FramePixelWidth / barRatio;
+                    FramePixelWidthTarget = FramePixelWidth /= barRatio;
                     var newVisibleFrameCount = ( int )( visibleFrameCount / barRatio );
                     var newFirstFrame = FirstFrame + newVisibleFrameCount - visibleFrameCount;
                     newFirstFrame = Math.Clamp( newFirstFrame, frameMin, Math.Max( frameMax - visibleFrameCount, frameMin ) );

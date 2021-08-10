@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
 using VFXEditor.Data;
@@ -23,7 +24,7 @@ namespace VFXEditor {
                         LoadCurrentVFX( localAvfx );
                     }
                     else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
+                        PluginLog.Error( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;
@@ -33,7 +34,7 @@ namespace VFXEditor {
                         LoadCurrentVFX( gameAvfx );
                     }
                     else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
+                        PluginLog.Error( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;
@@ -70,7 +71,7 @@ namespace VFXEditor {
                 DocumentManager.CurrentActiveDoc.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
-                    PluginLog.Log( m );
+                    PluginLog.Warning( m );
                 }
             }
         }

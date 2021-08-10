@@ -1,12 +1,9 @@
 using AVFXLib.AVFX;
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Data {
     public static class DataManager {
@@ -31,7 +28,7 @@ namespace VFXEditor.Data {
                 File.WriteAllBytes( path, bytes );
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, "Could not write to file: " + path );
+                PluginLog.Error( e, "Could not write to file: " + path );
                 return false;
             }
             return true;
@@ -63,7 +60,7 @@ namespace VFXEditor.Data {
             try {
                 var node = AVFXLib.Main.Reader.ReadAVFX( br, out var messages );
                 foreach( var message in messages ) {
-                    PluginLog.Log( message );
+                    PluginLog.Warning( message );
                 }
                 if( node == null ) {
                     return false;
@@ -74,7 +71,7 @@ namespace VFXEditor.Data {
                 return true;
             }
             catch( Exception e ) {
-                PluginLog.LogError( "Error Reading File", e );
+                PluginLog.Error( "Error Reading File", e );
                 return false;
             }
         }

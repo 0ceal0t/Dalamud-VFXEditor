@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.IO.Compression;
 using VFXEditor.Data.Texture;
 using VFXEditor.Data;
+using Dalamud.Logging;
 
 namespace VFXEditor.External {
     public static class TexTools {
@@ -134,7 +135,7 @@ namespace VFXEditor.External {
                 PluginLog.Log( "Exported To: " + saveLocation );
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, "Could not export to TexTools" );
+                PluginLog.Error( e, "Could not export to TexTools" );
             }
         }
 
@@ -171,7 +172,7 @@ namespace VFXEditor.External {
                     }
                     break;
                 default:
-                    PluginLog.Log( "Invalid path! Could not find DatFile" );
+                    PluginLog.Error( "Invalid path! Could not find DatFile" );
                     break;
             }
             simple.ModPackEntry = null;

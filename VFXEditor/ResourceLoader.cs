@@ -2,14 +2,13 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using VFXEditor.Structs;
 using VFXEditor.Util;
 using FileMode = VFXEditor.Structs.FileMode;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Data.Texture;
 using VFXEditor.Data;
-using System.Collections.Generic;
 
 using Dalamud.Hooking;
 using Reloaded.Hooks.Definitions.X64;

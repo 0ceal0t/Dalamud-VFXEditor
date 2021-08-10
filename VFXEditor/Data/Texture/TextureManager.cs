@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+using Dalamud.Logging;
 
 namespace VFXEditor.Data.Texture {
     public struct TexData { // used for the texture previews
@@ -79,7 +80,7 @@ namespace VFXEditor.Data.Texture {
 
         public void ImportReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
             if( !PluginInterface.Data.FileExists( replacePath ) ) {
-                PluginLog.Log( $"{replacePath} does not exist" );
+                PluginLog.Error( $"{replacePath} does not exist" );
                 return;
             }
 
@@ -101,7 +102,7 @@ namespace VFXEditor.Data.Texture {
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportReplaceTexture( string fileLocation, string replacePath ) {
             if( !PluginInterface.Data.FileExists( replacePath ) ) {
-                PluginLog.Log( $"{replacePath} does not exist" );
+                PluginLog.Error( $"{replacePath} does not exist" );
                 return false;
             }
 
@@ -165,7 +166,7 @@ namespace VFXEditor.Data.Texture {
                 return true;
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, $"Error importing {fileLocation} into {replacePath}" );
+                PluginLog.Error( e, $"Error importing {fileLocation} into {replacePath}" );
             }
             return false;
         }
@@ -248,7 +249,7 @@ namespace VFXEditor.Data.Texture {
                     ret.IsReplaced = texFile.Local;
 
                     if( !texFile.ValidFormat ) {
-                        PluginLog.Log( $"Invalid format: {ret.Format} {path}" );
+                        PluginLog.Error( $"Invalid format: {ret.Format} {path}" );
                         return false;
                     }
 
@@ -259,12 +260,12 @@ namespace VFXEditor.Data.Texture {
                     return true;
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( e, "Could not find tex:" + path );
+                    PluginLog.Error( e, "Could not find tex:" + path );
                     return false;
                 }
             }
             else {
-                PluginLog.LogError( "Could not find tex:" + path );
+                PluginLog.Error( "Could not find tex:" + path );
                 return false;
             }
         }

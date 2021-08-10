@@ -1,10 +1,8 @@
 using Dalamud.Plugin;
+using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public abstract class SheetLoader<T, S> { // T = Not Selected, S = Selected
@@ -32,7 +30,7 @@ namespace VFXSelect.Data.Sheets {
                     OnLoad();
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Error Loading " + typeof( T ).Name, e );
+                    PluginLog.Error( "Error Loading " + typeof( T ).Name, e );
                 }
                 Loaded = true;
             } );

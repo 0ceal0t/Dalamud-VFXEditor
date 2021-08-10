@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VFXSelect.UI;
 using ImGuiFileDialog;
+using Dalamud.Logging;
 
 namespace VFXEditor {
     [Serializable]

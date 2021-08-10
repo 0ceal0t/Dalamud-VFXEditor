@@ -2,7 +2,7 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using VFXEditor.Data.Texture;
 using ImGuiFileDialog;
 
@@ -93,11 +93,11 @@ namespace VFXEditor.UI.VFX
                 if( !ok ) return;
                 try {
                     if( !TextureManager.Manager.ImportReplaceTexture( res, newPath ) ) {
-                        PluginLog.Log( $"Could not import" );
+                        PluginLog.Error( $"Could not import" );
                     }
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Could not import data", e );
+                    PluginLog.Error( "Could not import data", e );
                 }
             } );
         }

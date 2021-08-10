@@ -1,7 +1,7 @@
 using AVFXLib.AVFX;
 using AVFXLib.Main;
 using AVFXLib.Models;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
@@ -265,7 +265,7 @@ namespace VFXEditor.UI.VFX {
                     ImportData( res );
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Could not import data", e );
+                    PluginLog.Error( "Could not import data", e );
                 }
             } );
         }

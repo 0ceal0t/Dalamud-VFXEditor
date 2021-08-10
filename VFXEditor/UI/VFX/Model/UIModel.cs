@@ -1,13 +1,10 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.DirectX;
 using VFXEditor.External;
 
@@ -152,7 +149,7 @@ namespace VFXEditor.UI.VFX
                     }
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Could not import data", e );
+                    PluginLog.Error( "Could not import data", e );
                 }
             } );
         }

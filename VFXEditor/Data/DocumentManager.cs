@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.IO;

@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Dalamud.Plugin;
+using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data.Texture;
@@ -9,7 +10,7 @@ namespace VFXEditor.UI {
     public class ToolsDialog : GenericDialog {
         private string RawInputValue = "";
         private string RawTexInputValue = "";
-        private DalamudPluginInterface PluginInterface;
+        private readonly DalamudPluginInterface PluginInterface;
 
         public ToolsDialog( Plugin plugin ) : base( "Tools" ) {
             PluginInterface = plugin.PluginInterface;
@@ -29,8 +30,7 @@ namespace VFXEditor.UI {
                         Plugin.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
-                        PluginLog.LogError( "Could not read file" );
-                        PluginLog.LogError( e.ToString() );
+                        PluginLog.Error( "Could not read file", e );
                     }
                 }
             }
@@ -46,8 +46,7 @@ namespace VFXEditor.UI {
                         Plugin.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
-                        PluginLog.LogError( "Could not read file" );
-                        PluginLog.LogError( e.ToString() );
+                        PluginLog.Error( "Could not read file", e );
                     }
                 }
             }

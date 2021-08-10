@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using Newtonsoft.Json;
@@ -70,7 +71,7 @@ namespace VFXEditor {
                     }
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Could not load workspace", e );
+                    PluginLog.Error( "Could not load workspace", e );
                 }
             } );
         }
@@ -78,7 +79,7 @@ namespace VFXEditor {
         private void OpenWorkspaceFolder( string loadLocation ) {
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
-                PluginLog.Log( "vfx_workspace.json does not exist" );
+                PluginLog.Error( "vfx_workspace.json does not exist" );
                 return;
             }
             var meta = JsonConvert.DeserializeObject<WorkspaceMeta>( File.ReadAllText( metaPath ) );

@@ -1,10 +1,7 @@
+using Dalamud.Logging;
 using Dalamud.Plugin;
-using Lumina.Excel.GeneratedSheets;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
@@ -39,12 +36,12 @@ namespace VFXSelect.Data.Sheets {
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Error reading TMB " + tmbPath, e );
+                    PluginLog.Error( "Error reading TMB " + tmbPath, e );
                     return false;
                 }
             }
             else {
-                PluginLog.Log( tmbPath + " does not exist" );
+                PluginLog.Error( tmbPath + " does not exist" );
             }
             return result;
         }

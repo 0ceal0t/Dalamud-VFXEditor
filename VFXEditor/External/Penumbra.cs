@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System;
@@ -73,7 +74,7 @@ namespace VFXEditor.External {
                 PluginLog.Log( "Exported To: " + modFolder );
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, "Could not export to Penumbra" );
+                PluginLog.Error( e, "Could not export to Penumbra" );
             }
         }
     }

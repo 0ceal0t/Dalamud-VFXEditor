@@ -1,4 +1,5 @@
 using Dalamud.Plugin;
+using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,12 @@ namespace VFXSelect.Data.Sheets {
                     selectedItem = new XivCutsceneSelected( item, file );
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Error Reading CUTB file " + item.Path, e );
+                    PluginLog.Error( "Error Reading CUTB file " + item.Path, e );
                     return false;
                 }
             }
             else {
-                PluginLog.Log( item.Path + " does not exist" );
+                PluginLog.Error( item.Path + " does not exist" );
             }
             return result;
         }

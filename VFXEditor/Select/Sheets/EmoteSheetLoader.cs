@@ -1,10 +1,9 @@
 using Dalamud.Plugin;
+using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
@@ -35,7 +34,7 @@ namespace VFXSelect.Data.Sheets {
                 selectedItem = new XivEmoteSelected( item, files );
             }
             catch( Exception e ) {
-                PluginLog.LogError( "Error reading emote file", e );
+                PluginLog.Error( "Error reading emote file", e );
                 return false;
             }
             return true;

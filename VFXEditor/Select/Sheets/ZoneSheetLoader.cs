@@ -1,10 +1,8 @@
 using Dalamud.Plugin;
+using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
@@ -29,7 +27,7 @@ namespace VFXSelect.Data.Sheets {
                     selectedItem = new XivZoneSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Error reading LGB file " + lgbPath, e );
+                    PluginLog.Error( "Error reading LGB file " + lgbPath, e );
                     return false;
                 }
             }

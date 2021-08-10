@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
 using ImGuiNET;
 using System;

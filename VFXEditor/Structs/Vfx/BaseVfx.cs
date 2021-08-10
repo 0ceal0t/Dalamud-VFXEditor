@@ -21,6 +21,9 @@ namespace VFXEditor.Structs.Vfx {
         uVar5 = DAT_01bb2878;
         *(undefined4 *)(vfx + 0x78) = DAT_01bb2878;
         *(ulonglong *)(vfx + 0x38) = *(ulonglong *)(vfx + 0x38) | 2;
+        * + 0x43 for the color (targeting vfx)
+        * vfxColor = vfx + 0x45
+        * 
      */
 
 

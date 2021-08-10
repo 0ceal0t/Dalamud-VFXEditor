@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
