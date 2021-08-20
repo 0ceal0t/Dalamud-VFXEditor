@@ -60,9 +60,8 @@ namespace VFXEditor.UI {
 
                 Categories.ForEach( cat => cat.Draw() );
                 ImGui.EndChild();
-
-                ImGui.End();
             }
+            ImGui.End();
         }
 
         public void Export( UINode node ) {

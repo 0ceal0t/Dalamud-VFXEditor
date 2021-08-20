@@ -143,9 +143,10 @@ namespace VFXEditor.Data.Vfx {
                     ActorToVfxs[vfx.actorId].Add( vfx.path );
                 }
                 else { // add to groups
+                    var pos = vfx.Vfx->Position;
                     Groups.Add( new StaticVfxGroup {
                         path = vfx.path,
-                        position = vfx.Vfx->Position
+                        position = new SharpDX.Vector3(pos.X, pos.Y, pos.Z)
                     } );
                 }
             }
@@ -192,7 +193,7 @@ namespace VFXEditor.Data.Vfx {
             }
 
             // ====== DRAW ACTORS ======
-            var actorTable = Plugin.PluginInterface.ClientState.Actors;
+            var actorTable = Plugin.PluginInterface.ClientState.Objects;
             if( actorTable == null ) {
                 return;
             }
@@ -201,7 +202,7 @@ namespace VFXEditor.Data.Vfx {
 
                 if( Plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
 
-                var result = ActorToVfxs.TryGetValue( ( int )actor.ActorId, out var paths );
+                var result = ActorToVfxs.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;
 
                 var pos = new SharpDX.Vector3 {
@@ -260,9 +261,8 @@ namespace VFXEditor.Data.Vfx {
                     }
                     i++;
                 }
-
-                ImGui.End();
             }
+            ImGui.End();
         }
 
         private bool WatchingCutscene() {

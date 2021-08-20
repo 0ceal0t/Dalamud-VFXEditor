@@ -19,13 +19,12 @@ namespace VFXEditor.UI {
             Visible = true;
         }
         public void Draw() {
-            if( !Visible )
-                return;
+            if( !Visible ) return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if( !ImGui.Begin( DialogName, ref Visible ) )
-                return;
-            OnDraw();
+            if( ImGui.Begin( DialogName, ref Visible ) ) {
+                OnDraw();
+            }
             ImGui.End();
         }
 

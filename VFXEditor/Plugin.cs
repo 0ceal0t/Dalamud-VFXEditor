@@ -20,7 +20,6 @@ namespace VFXEditor
         public DalamudPluginInterface PluginInterface;
 
         private const string CommandName = "/vfxedit";
-        private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
 
         public ResourceLoader ResourceLoader;
         public VfxTracker Tracker;
@@ -60,13 +59,13 @@ namespace VFXEditor
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
-            PluginInterface.UiBuilder.OnBuildUi += Draw;
-            PluginInterface.UiBuilder.OnBuildUi += FileDialogManager.Draw;
+            PluginInterface.UiBuilder.Draw += Draw;
+            PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= FileDialogManager.Draw;
-            PluginInterface.UiBuilder.OnBuildUi -= Draw;
+            PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
+            PluginInterface.UiBuilder.Draw -= Draw;
 
             ImPlot.DestroyContext();
 

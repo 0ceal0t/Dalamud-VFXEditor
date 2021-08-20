@@ -12,6 +12,7 @@ using VFXEditor.Data;
 
 using Dalamud.Hooking;
 using Reloaded.Hooks.Definitions.X64;
+using System.Threading;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
@@ -141,7 +142,7 @@ namespace VFXEditor {
         }
 
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
-            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII );
+            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
@@ -156,7 +157,7 @@ namespace VFXEditor {
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
-            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII );
+            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
@@ -192,31 +193,29 @@ namespace VFXEditor {
         public void Disable() {
             if( !IsEnabled ) return;
             ReadSqpackHook.Disable();
-            ReadSqpackHook.Dispose();
-            ReadSqpackHook = null;
-
             GetResourceSyncHook.Disable();
-            GetResourceSyncHook.Dispose();
-            GetResourceSyncHook = null;
-
             GetResourceAsyncHook.Disable();
-            GetResourceAsyncHook.Dispose();
-            GetResourceAsyncHook = null;
-
             StaticVfxCreateHook.Disable();
-            StaticVfxCreateHook.Dispose();
-            StaticVfxCreateHook = null;
-
             StaticVfxRemoveHook.Disable();
-            StaticVfxRemoveHook.Dispose();
-            StaticVfxRemoveHook = null;
-
             ActorVfxCreateHook.Disable();
-            ActorVfxCreateHook.Dispose();
-            ActorVfxCreateHook = null;
-
             ActorVfxRemoveHook.Disable();
+
+            Thread.Sleep( 500 );
+
+            ReadSqpackHook.Dispose();
+            GetResourceSyncHook.Dispose();
+            GetResourceAsyncHook.Dispose();
+            StaticVfxCreateHook.Dispose();
+            StaticVfxRemoveHook.Dispose();
+            ActorVfxCreateHook.Dispose();
             ActorVfxRemoveHook.Dispose();
+
+            ReadSqpackHook = null;
+            GetResourceSyncHook = null;
+            GetResourceAsyncHook = null;
+            StaticVfxCreateHook = null;
+            StaticVfxRemoveHook = null;
+            ActorVfxCreateHook = null;
             ActorVfxRemoveHook = null;
 
             IsEnabled = false;

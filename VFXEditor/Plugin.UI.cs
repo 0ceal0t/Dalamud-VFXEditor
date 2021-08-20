@@ -86,14 +86,13 @@ namespace VFXEditor {
         }
 
         public void SpawnOnTarget( string path ) {
-            var t = PluginInterface.ClientState.Targets.CurrentTarget;
+            var t = PluginInterface.ClientState.Targets.Target;
             if( t != null ) {
                 SpawnVfx = new ActorVfx( this, t, t, path );
             }
         }
 
         public void Draw() {
-            if( !PluginReady ) return;
             if( !Visible ) return;
 
             CopyManager.PreDraw();
@@ -113,7 +112,10 @@ namespace VFXEditor {
 
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( Name + ( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : " - " + CurrentWorkspaceLocation ) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+            if( !ImGui.Begin( Name + ( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : " - " + CurrentWorkspaceLocation ) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) {
+                ImGui.End();
+                return;
+            }
 
             if( IsLoading ) {
                 ImGui.Text( "Loading...." );
@@ -196,6 +198,7 @@ namespace VFXEditor {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 DocumentManager.CurrentActiveDoc.Main.Draw();
             }
+
             ImGui.End();
         }
 

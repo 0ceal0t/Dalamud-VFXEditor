@@ -101,21 +101,19 @@ namespace VFXSelect.UI {
         }
 
         public void Draw() {
-            if( !Visible )
-                return;
+            if( !Visible ) return;
             ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
 
-            var ret = ImGui.Begin( Id + "##" + Id, ref Visible );
-            if( !ret )
+            if( !ImGui.Begin( Id + "##" + Id, ref Visible ) ) {
+                ImGui.End();
                 return;
+            }
 
             ImGui.BeginTabBar( "VFXSelectDialogTabs##" + Id );
-            if( ShowLocal )
-                DrawLocal();
+            if( ShowLocal ) DrawLocal();
             DrawGamePath();
             DrawGame();
-            if( RecentList != null )
-                DrawRecent();
+            if( RecentList != null ) DrawRecent();
             ImGui.EndTabBar();
             ImGui.End();
         }
