@@ -5,10 +5,6 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class CommonLoader : SheetLoader<XivCommon, XivCommon> {
-
-        public CommonLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
-        }
-
         public override void OnLoad() {
             Items = new() {
                 new XivCommon( 0, "vfx/action/ab_swd_abl020/eff/abi_swd020c1t.avfx", "Passage of Arms", 2515 ),
@@ -29,7 +25,7 @@ namespace VFXSelect.Data.Sheets {
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             };
 
-            var sheet = PluginInterface.Data.GetExcelSheet<VFX>().Where( x => !string.IsNullOrEmpty(x.Location) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<VFX>().Where( x => !string.IsNullOrEmpty(x.Location) );
             foreach( var item in sheet ) {
                 Items.Add( new XivCommon(item) );
             }

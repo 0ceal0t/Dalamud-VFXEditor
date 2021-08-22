@@ -1,4 +1,3 @@
-using Dalamud.Plugin;
 using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
@@ -7,11 +6,8 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ZoneSheetLoader : SheetLoader<XivZone, XivZoneSelected> {
-        public ZoneSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
-        }
-
         public override void OnLoad() {
-            var sheet = PluginInterface.Data.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivZone( item ) );
             }
@@ -20,10 +16,10 @@ namespace VFXSelect.Data.Sheets {
         public override bool SelectItem( XivZone item, out XivZoneSelected selectedItem ) {
             selectedItem = null;
             var lgbPath = item.GetLgbPath();
-            var result = PluginInterface.Data.FileExists( lgbPath );
+            var result = SheetManager.DataManager.FileExists( lgbPath );
             if( result ) {
                 try {
-                    var file = PluginInterface.Data.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
+                    var file = SheetManager.DataManager.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
                     selectedItem = new XivZoneSelected( file, item );
                 }
                 catch( Exception e ) {

@@ -1,47 +1,46 @@
+using Dalamud.Data;
 using Dalamud.Plugin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXSelect.Data.Sheets;
 
 namespace VFXSelect {
     public class SheetManager {
-        public DalamudPluginInterface PluginInterface;
-        public string NpcCsv;
-        public string MonsterJson;
+        public static string NpcCsv { get; private set; }
+        public static string MonsterJson { get; private set; }
 
-        public ItemSheetLoader Items;
-        public ActionSheetLoader Actions;
-        public CutsceneSheetLoader Cutscenes;
-        public EmoteSheetLoader Emotes;
-        public GimmickSheetLoader Gimmicks;
-        public NonPlayerActionSheetLoader NonPlayerActions;
-        public NpcSheetLoader Npcs;
-        public StatusSheetLoader Statuses;
-        public ZoneSheetLoader Zones;
-        public MountSheeetLoader Mounts;
-        public HousingSheetLoader Housing;
-        public CommonLoader Misc;
+        public static DataManager DataManager { get; private set; }
+        public static DalamudPluginInterface PluginInterface { get; private set; }
 
-        public SheetManager( DalamudPluginInterface pluginInterface, string npcCsv, string monsterJson ) {
-            PluginInterface = pluginInterface;
+        public static ItemSheetLoader Items { get; private set; }
+        public static ActionSheetLoader Actions { get; private set; }
+        public static CutsceneSheetLoader Cutscenes { get; private set; }
+        public static EmoteSheetLoader Emotes { get; private set; }
+        public static GimmickSheetLoader Gimmicks { get; private set; }
+        public static NonPlayerActionSheetLoader NonPlayerActions { get; private set; }
+        public static NpcSheetLoader Npcs { get; private set; }
+        public static StatusSheetLoader Statuses { get; private set; }
+        public static ZoneSheetLoader Zones { get; private set; }
+        public static MountSheeetLoader Mounts { get; private set; }
+        public static HousingSheetLoader Housing { get; private set; }
+        public static CommonLoader Misc { get; private set; }
+
+        public static void Initialize( string npcCsv, string monsterJson, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
             MonsterJson = monsterJson;
+            DataManager = dataManager;
+            PluginInterface = pluginInterface;
 
-            Items = new ItemSheetLoader( this, PluginInterface );
-            Actions = new ActionSheetLoader( this, PluginInterface );
-            Cutscenes = new CutsceneSheetLoader( this, PluginInterface );
-            Emotes = new EmoteSheetLoader( this, PluginInterface );
-            Gimmicks = new GimmickSheetLoader( this, PluginInterface );
-            NonPlayerActions = new NonPlayerActionSheetLoader( this, PluginInterface );
-            Npcs = new NpcSheetLoader( this, PluginInterface );
-            Statuses = new StatusSheetLoader( this, PluginInterface );
-            Zones = new ZoneSheetLoader( this, PluginInterface );
-            Mounts = new MountSheeetLoader( this, PluginInterface );
-            Housing = new HousingSheetLoader( this, PluginInterface );
-            Misc = new CommonLoader( this, PluginInterface );
+            Items = new ItemSheetLoader();
+            Actions = new ActionSheetLoader();
+            Cutscenes = new CutsceneSheetLoader();
+            Emotes = new EmoteSheetLoader();
+            Gimmicks = new GimmickSheetLoader();
+            NonPlayerActions = new NonPlayerActionSheetLoader();
+            Npcs = new NpcSheetLoader();
+            Statuses = new StatusSheetLoader();
+            Zones = new ZoneSheetLoader();
+            Mounts = new MountSheeetLoader();
+            Housing = new HousingSheetLoader();
+            Misc = new CommonLoader();
         }
     }
 }

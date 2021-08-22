@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 using Lumina.Data.Files;
 using VFXSelect.Data.Sheets;
@@ -16,9 +12,9 @@ namespace VFXSelect.UI {
     }
 
     public abstract class VFXSelectTab<T, S> : VFXSelectTab {
-        public DalamudPluginInterface PluginInterface;
-        public VFXSelectDialog Dialog;
-        public SheetLoader<T, S> Loader;
+        protected SheetLoader<T, S> Loader;
+        protected VFXSelectDialog Dialog;
+
         public string Id;
 
         public string Name;
@@ -28,10 +24,9 @@ namespace VFXSelect.UI {
         public T Selected = default;
         public S Loaded = default;
 
-        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, DalamudPluginInterface pluginInterface, VFXSelectDialog dialog ) {
-            PluginInterface = pluginInterface;
-            Dialog = dialog;
+        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, VFXSelectDialog dialog) {
             Loader = loader;
+            Dialog = dialog;
             Name = tabId;
             ParentId = parentId;
             Id = "##Select/" + tabId + "/" + parentId;
@@ -111,12 +106,12 @@ namespace VFXSelect.UI {
             if( iconId > 0 ) {
                 TexFile tex;
                 try {
-                    tex = PluginInterface.Data.GetIcon( iconId );
+                    tex = SheetManager.DataManager.GetIcon( iconId );
                 }
                 catch( Exception ) {
-                    tex = PluginInterface.Data.GetIcon( 0 );
+                    tex = SheetManager.DataManager.GetIcon( 0 );
                 }
-                texWrap = PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                texWrap = SheetManager.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 

@@ -1,16 +1,12 @@
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using System;
 using System.Linq;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
-        public ActionSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
-        }
-
         public override void OnLoad() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
                 var i = new XivAction( item );
                 if( i.VfxExists ) {
@@ -29,10 +25,10 @@ namespace VFXSelect.Data.Sheets {
                 return true;
             }
             var tmbPath = item.GetTmbPath();
-            var result = PluginInterface.Data.FileExists( tmbPath );
+            var result = SheetManager.DataManager.FileExists( tmbPath );
             if( result ) {
                 try {
-                    var file = PluginInterface.Data.GetFile( tmbPath );
+                    var file = SheetManager.DataManager.GetFile( tmbPath );
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {

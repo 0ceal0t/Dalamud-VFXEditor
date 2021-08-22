@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 
@@ -59,7 +56,6 @@ namespace VFXSelect.UI {
         public List<VFXSelectResult> RecentList;
 
         public VFXSelectDialog(
-            SheetManager sheet,
             string id,
             List<VFXSelectResult> recentList,
             bool showSpawn = false,
@@ -80,18 +76,18 @@ namespace VFXSelect.UI {
             SpawnOnTarget = spawnOnTarget;
 
             GameTabs = new List<VFXSelectTab>( new VFXSelectTab[]{
-                new VFXItemSelect( id, "Item", sheet, this ),
-                new VFXStatusSelect( id, "Status", sheet, this ),
-                new VFXActionSelect( id, "Action", sheet, this ),
-                new VFXActionSelect( id, "Non-Player Action", sheet, this, nonPlayer:true ),
-                new VFXZoneSelect( id, "Zone", sheet, this ),
-                new VFXNpcSelect( id, "Npc", sheet, this ),
-                new VFXEmoteSelect( id, "Emote", sheet, this ),
-                new VFXGimmickSelect( id, "Gimmick", sheet, this ),
-                new VFXCutsceneSelect( id, "Cutscene", sheet, this ),
-                new VFXMountSelect(id, "Mount", sheet, this),
-                new VFXHousingSelect(id, "Housing", sheet, this),
-                new VFXCommonSelect(id, "Common", sheet, this)
+                new VFXItemSelect( id, "Item", this ),
+                new VFXStatusSelect( id, "Status", this ),
+                new VFXActionSelect( id, "Action", this ),
+                new VFXActionSelect( id, "Non-Player Action", this, nonPlayer:true ),
+                new VFXZoneSelect( id, "Zone", this ),
+                new VFXNpcSelect( id, "Npc", this ),
+                new VFXEmoteSelect( id, "Emote", this ),
+                new VFXGimmickSelect( id, "Gimmick", this ),
+                new VFXCutsceneSelect( id, "Cutscene", this ),
+                new VFXMountSelect( id, "Mount", this),
+                new VFXHousingSelect( id, "Housing", this),
+                new VFXCommonSelect( id, "Common", this)
             } );
         }
 

@@ -49,12 +49,12 @@ namespace VFXEditor.Data.Texture {
             lib.Resolver.SetProbingPaths64( new string[] { _64bitPath } );
             PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
 
-            ResetInstance( plugin.PluginInterface );
+            ResetInstance();
         }
 
-        public static void ResetInstance( DalamudPluginInterface pluginInterface ) {
+        public static void ResetInstance() {
             var oldInstance = Instance;
-            Instance = new TextureManager( pluginInterface );
+            Instance = new TextureManager();
             oldInstance?.DisposeInstance();
         }
 
@@ -64,10 +64,6 @@ namespace VFXEditor.Data.Texture {
         }
 
         // ======= INSTANCE ============
-
-        private TextureManager( DalamudPluginInterface pluginInterface ) {
-            PluginInterface = pluginInterface;
-        }
 
         public bool GetLocalReplacePath( string gamePath, out FileInfo file ) {
             file = null;
@@ -79,7 +75,7 @@ namespace VFXEditor.Data.Texture {
         }
 
         public void ImportReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
-            if( !PluginInterface.Data.FileExists( replacePath ) ) {
+            if( !Plugin.DataManager.FileExists( replacePath ) ) {
                 PluginLog.Error( $"{replacePath} does not exist" );
                 return;
             }
@@ -101,7 +97,7 @@ namespace VFXEditor.Data.Texture {
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportReplaceTexture( string fileLocation, string replacePath ) {
-            if( !PluginInterface.Data.FileExists( replacePath ) ) {
+            if( !Plugin.DataManager.FileExists( replacePath ) ) {
                 PluginLog.Error( $"{replacePath} does not exist" );
                 return false;
             }
@@ -133,7 +129,7 @@ namespace VFXEditor.Data.Texture {
                     };
                 }
                 else { //a .png file, convert it to the format currently being used by the existing game file
-                    var texFile = PluginInterface.Data.GetFile<VFXTexture>( replacePath );
+                    var texFile = Plugin.DataManager.GetFile<VFXTexture>( replacePath );
 
                     using var surface = Surface.LoadFromFile( fileLocation );
                     surface.FlipVertically();
@@ -211,7 +207,7 @@ namespace VFXEditor.Data.Texture {
                 return VFXTexture.LoadFromLocal( PathToTextureReplace[path].localPath );
             }
             else {
-                return PluginInterface.Data.GetFile<VFXTexture>( path );
+                return Plugin.DataManager.GetFile<VFXTexture>( path );
             }
         }
 
@@ -236,7 +232,7 @@ namespace VFXEditor.Data.Texture {
         }
 
         public bool CreatePreviewTexture( string path, out TexData ret, bool loadImage = true ) {
-            var result = PluginInterface.Data.FileExists( path );
+            var result = Plugin.DataManager.FileExists( path );
             ret = new TexData();
             if( result ) {
                 try {

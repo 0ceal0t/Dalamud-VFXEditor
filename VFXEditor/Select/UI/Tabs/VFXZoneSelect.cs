@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXZoneSelect : VFXSelectTab<XivZone, XivZoneSelected> {
-        public VFXZoneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Zones, sheet.PluginInterface, dialog ) {
+        public VFXZoneSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Zones, dialog ) {
         }
 
         public override bool CheckMatch( XivZone item, string searchInput ) {

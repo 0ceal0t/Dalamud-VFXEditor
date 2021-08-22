@@ -44,7 +44,7 @@ namespace VFXEditor {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
-                TextureManager.ResetInstance( PluginInterface );
+                TextureManager.ResetInstance();
                 DocumentManager.ResetInstance();
 
                 IsLoading = false;
@@ -86,7 +86,7 @@ namespace VFXEditor {
 
             IsLoading = true;
 
-            TextureManager.ResetInstance( PluginInterface );
+            TextureManager.ResetInstance();
 
             var texRootPath = Path.Combine( loadLocation, "Tex" );
             foreach( var tex in meta.Tex ) {

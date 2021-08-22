@@ -1,4 +1,3 @@
-using Dalamud.Plugin;
 using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
@@ -8,11 +7,8 @@ using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
-        public EmoteSheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) : base( manager, pluginInterface ) {
-        }
-
         public override void OnLoad() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 var i = new XivEmote( item );
                 if( i.PapFiles.Count > 0 ) {
@@ -26,9 +22,9 @@ namespace VFXSelect.Data.Sheets {
             var files = new List<Lumina.Data.FileResource>();
             try {
                 foreach( var path in item.PapFiles ) {
-                    var result = PluginInterface.Data.FileExists( path );
+                    var result = SheetManager.DataManager.FileExists( path );
                     if( result ) {
-                        files.Add( PluginInterface.Data.GetFile( path ) );
+                        files.Add( SheetManager.DataManager.GetFile( path ) );
                     }
                 }
                 selectedItem = new XivEmoteSelected( item, files );

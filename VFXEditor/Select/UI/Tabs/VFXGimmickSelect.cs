@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXGimmickSelect : VFXSelectTab<XivGimmick, XivGimmickSelected> {
-        public VFXGimmickSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Gimmicks, sheet.PluginInterface, dialog ) {
+        public VFXGimmickSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Gimmicks, dialog ) {
         }
 
         public override bool CheckMatch( XivGimmick item, string searchInput ) {

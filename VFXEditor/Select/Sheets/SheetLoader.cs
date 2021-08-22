@@ -1,4 +1,3 @@
-using Dalamud.Plugin;
 using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
@@ -6,20 +5,12 @@ using System.Threading.Tasks;
 
 namespace VFXSelect.Data.Sheets {
     public abstract class SheetLoader<T, S> { // T = Not Selected, S = Selected
-        public SheetManager Manager;
-        public DalamudPluginInterface PluginInterface;
-
         public List<T> Items = new();
         public bool Loaded = false;
         public bool Waiting = false;
 
         public abstract void OnLoad();
         public abstract bool SelectItem( T item, out S selectedItem );
-
-        public SheetLoader( SheetManager manager, DalamudPluginInterface pluginInterface ) {
-            Manager = manager;
-            PluginInterface = pluginInterface;
-        }
 
         public void Load() {
             if( Waiting ) return;

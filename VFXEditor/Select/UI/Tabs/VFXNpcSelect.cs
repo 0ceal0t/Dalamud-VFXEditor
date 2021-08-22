@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXNpcSelect : VFXSelectTab<XivNpc, XivNpcSelected> {
-        public VFXNpcSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Npcs, sheet.PluginInterface, dialog ) {
+        public VFXNpcSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Npcs, dialog ) {
         }
 
         public override bool CheckMatch( XivNpc item, string searchInput ) {

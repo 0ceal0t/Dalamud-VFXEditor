@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.UI {
     public class VFXCutsceneSelect : VFXSelectTab<XivCutscene, XivCutsceneSelected> {
-        public VFXCutsceneSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Cutscenes, sheet.PluginInterface, dialog ) {
+        public VFXCutsceneSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Cutscenes, dialog ) {
         }
 
         public override bool CheckMatch( XivCutscene item, string searchInput ) {

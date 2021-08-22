@@ -12,8 +12,7 @@ namespace VFXEditor.UI {
         private string RawTexInputValue = "";
         private readonly DalamudPluginInterface PluginInterface;
 
-        public ToolsDialog( Plugin plugin ) : base( "Tools" ) {
-            PluginInterface = plugin.PluginInterface;
+        public ToolsDialog() : base( "Tools" ) {
             Size = new Vector2( 300, 150 );
         }
 
@@ -23,10 +22,10 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                var result = PluginInterface.Data.FileExists( RawInputValue );
+                var result = Plugin.DataManager.FileExists( RawInputValue );
                 if( result ) {
                     try {
-                        var file = PluginInterface.Data.GetFile( RawInputValue );
+                        var file = Plugin.DataManager.GetFile( RawInputValue );
                         Plugin.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
@@ -39,10 +38,10 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                var result = PluginInterface.Data.FileExists( RawTexInputValue );
+                var result = Plugin.DataManager.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
-                        var file = PluginInterface.Data.GetFile( RawTexInputValue );
+                        var file = Plugin.DataManager.GetFile( RawTexInputValue );
                         Plugin.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {

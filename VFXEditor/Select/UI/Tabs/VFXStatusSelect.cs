@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
@@ -12,8 +6,8 @@ namespace VFXSelect.UI {
     public class VFXStatusSelect : VFXSelectTab<XivStatus, XivStatus> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXStatusSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Statuses, sheet.PluginInterface, dialog ) {
+        public VFXStatusSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Statuses, dialog ) {
         }
 
         public override bool CheckMatch( XivStatus item, string searchInput ) {

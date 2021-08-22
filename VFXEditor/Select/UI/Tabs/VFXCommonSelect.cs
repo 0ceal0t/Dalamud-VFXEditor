@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
@@ -12,8 +6,8 @@ namespace VFXSelect.UI {
     public class VFXCommonSelect : VFXSelectTab<XivCommon, XivCommon> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXCommonSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog ) :
-            base( parentId, tabId, sheet.Misc, sheet.PluginInterface, dialog ) {
+        public VFXCommonSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.Misc, dialog ) {
         }
 
         public override bool CheckMatch( XivCommon item, string searchInput ) {

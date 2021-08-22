@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
 using ImGuiNET;
@@ -80,13 +79,13 @@ namespace VFXEditor.Data.Vfx {
 
         public void Draw() {
             if( !Enabled ) return;
-            var playPos = Plugin.PluginInterface.ClientState?.LocalPlayer?.Position;
+            var playPos = Plugin.ClientState?.LocalPlayer?.Position;
             if( !playPos.HasValue ) return;
 
             var windowPos = ImGuiHelpers.MainViewport.Pos;
 
             // ======= IF IN A CUTSCENE, GIVE UP WITH POSITIONING ======
-            if( Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] ) {
+            if( WatchingCutscene() ) {
                 var paths = new HashSet<string>();
                 foreach( var item in ActorVfxs ) {
                     paths.Add( item.Value.path );
@@ -193,14 +192,14 @@ namespace VFXEditor.Data.Vfx {
             }
 
             // ====== DRAW ACTORS ======
-            var actorTable = Plugin.PluginInterface.ClientState.Objects;
+            var actorTable = Plugin.Objects;
             if( actorTable == null ) {
                 return;
             }
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
 
-                if( Plugin.PluginInterface.ClientState.LocalPlayer == null ) continue;
+                if( Plugin.ClientState.LocalPlayer == null ) continue;
 
                 var result = ActorToVfxs.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;
@@ -266,7 +265,7 @@ namespace VFXEditor.Data.Vfx {
         }
 
         private bool WatchingCutscene() {
-            return ( Plugin.PluginInterface.ClientState != null && Plugin.PluginInterface.ClientState.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.PluginInterface.ClientState.Condition[ConditionFlag.WatchingCutscene78] );
+            return Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
         }
 
         private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {

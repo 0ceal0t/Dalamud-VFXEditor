@@ -9,9 +9,9 @@ namespace VFXEditor.DirectX {
         public static ModelPreview ModelView => Instance?._ModelView;
         public static GradientView GradientView => Instance?._GradientView;
 
-        public static void Initialize( Plugin plugin ) {
+        public static void Initialize() {
             Instance?.DisposeInstance();
-            Instance = new DirectXManager( plugin );
+            Instance = new DirectXManager();
         }
 
         public static void Dispose() {
@@ -27,9 +27,9 @@ namespace VFXEditor.DirectX {
         private readonly ModelPreview _ModelView;
         private readonly GradientView _GradientView;
 
-        private DirectXManager( Plugin plugin ) {
+        private DirectXManager() {
             var shaderPath = Path.Combine( Plugin.TemplateLocation, "Shaders" );
-            Device = plugin.PluginInterface.UiBuilder.Device;
+            Device = Plugin.PluginInterface.UiBuilder.Device;
             Ctx = Device.ImmediateContext;
             _ModelView = new ModelPreview( Device, Ctx, shaderPath );
             _GradientView = new GradientView( Device, Ctx, shaderPath );

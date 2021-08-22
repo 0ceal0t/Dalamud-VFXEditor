@@ -5,10 +5,10 @@ using System.Text;
 using Dalamud.Logging;
 using VFXEditor.Structs;
 using VFXEditor.Util;
-using FileMode = VFXEditor.Structs.FileMode;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Data.Texture;
 using VFXEditor.Data;
+using FileMode = VFXEditor.Structs.FileMode;
 
 using Dalamud.Hooking;
 using Reloaded.Hooks.Definitions.X64;
@@ -97,13 +97,12 @@ namespace VFXEditor {
         internal GetMatrixSingletonDelegate GetMatrixSingleton;
 
 
-        public ResourceLoader( Plugin plugin ) {
-            Plugin = plugin;
+        public ResourceLoader() {
             Crc32 = new Crc32();
         }
 
         public unsafe void Init() {
-            var scanner = Plugin.PluginInterface.TargetModuleScanner;
+            var scanner = Plugin.SigScanner;
 
             var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
             var readSqpackAddress = scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" );
@@ -150,7 +149,7 @@ namespace VFXEditor {
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
             if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
-                Plugin.SpawnVfx = null;
+                Plugin.ClearSpawnVfx();
             }
             Plugin.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
             return StaticVfxRemoveHook.Original( vfx );
@@ -165,7 +164,7 @@ namespace VFXEditor {
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
             if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
-                Plugin.SpawnVfx = null;
+                Plugin.ClearSpawnVfx();
             }
             Plugin.Tracker?.RemoveActor( (VfxStruct*) vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
@@ -225,11 +224,11 @@ namespace VFXEditor {
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None ) return;
             CurrentRedrawState = RedrawState.Start;
-            Plugin.PluginInterface.Framework.OnUpdateEvent += OnUpdateEvent;
+            Plugin.Framework.OnUpdateEvent += OnUpdateEvent;
         }
 
         private unsafe void OnUpdateEvent( object framework ) {
-            var player = Plugin.PluginInterface.ClientState.LocalPlayer;
+            var player = Plugin.ClientState.LocalPlayer;
             var renderPtr = player.Address + 0x104;
 
             switch( CurrentRedrawState ) {
@@ -250,7 +249,7 @@ namespace VFXEditor {
                 case RedrawState.Visible:
                 default:
                     CurrentRedrawState = RedrawState.None;
-                    Plugin.PluginInterface.Framework.OnUpdateEvent -= OnUpdateEvent;
+                    Plugin.Framework.OnUpdateEvent -= OnUpdateEvent;
                     break;
             }
         }

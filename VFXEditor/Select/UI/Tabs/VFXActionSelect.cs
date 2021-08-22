@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 using ImGuiNET;
 using VFXSelect.Data.Rows;
 
@@ -12,8 +11,8 @@ namespace VFXSelect.UI {
     public class VFXActionSelect : VFXSelectTab<XivActionBase, XivActionSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXActionSelect( string parentId, string tabId, SheetManager sheet, VFXSelectDialog dialog, bool nonPlayer = false ) :
-            base( parentId, tabId, !nonPlayer ? sheet.Actions : sheet.NonPlayerActions, sheet.PluginInterface, dialog ) {
+        public VFXActionSelect( string parentId, string tabId, VFXSelectDialog dialog, bool nonPlayer = false ) :
+            base( parentId, tabId, !nonPlayer ? SheetManager.Actions : SheetManager.NonPlayerActions, dialog ) {
         }
 
         public override bool CheckMatch( XivActionBase item, string searchInput ) {

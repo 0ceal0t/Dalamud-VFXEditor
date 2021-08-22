@@ -82,7 +82,7 @@ namespace VFXEditor.Data {
 
             if(localPath != "") {
                 File.Copy( localPath, doc.WriteLocation, true );
-                var localResult = DataManager.GetLocalFile( doc.WriteLocation, out var localAvfx );
+                var localResult = DataHelper.GetLocalFile( doc.WriteLocation, out var localAvfx );
                 if( localResult ) {
                     doc.Main = new UIMain( localAvfx );
                     doc.Main.ReadRenamingMap( renaming );
@@ -122,7 +122,7 @@ namespace VFXEditor.Data {
         }
 
         public void Save() {
-            DataManager.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
+            DataHelper.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
             if(Configuration.Config.LogAllFiles) {
                 PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
             }

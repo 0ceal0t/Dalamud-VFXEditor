@@ -14,8 +14,6 @@ using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public BaseVfx SpawnVfx;
-
         private bool Visible = false;
 
         private VFXSelectDialog SelectUI;
@@ -33,7 +31,7 @@ namespace VFXEditor {
 
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
-                Sheets, "File Select [SOURCE]",
+                "File Select [SOURCE]",
                 Configuration.Config.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
@@ -43,7 +41,7 @@ namespace VFXEditor {
                 spawnOnTarget: ( string path ) => SpawnOnTarget( path )
             );
             PreviewUI = new VFXSelectDialog(
-                Sheets, "File Select [TARGET]",
+                "File Select [TARGET]",
                 Configuration.Config.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
@@ -58,7 +56,7 @@ namespace VFXEditor {
 
             DocUI = new DocDialog();
             SettingsUI = new SettingsDialog();
-            ToolsUI = new ToolsDialog( this );
+            ToolsUI = new ToolsDialog();
             TextureUI = new TextureDialog();
             TexToolsUI = new TexToolsDialog();
             PenumbraUI = new PenumbraDialog();
@@ -78,15 +76,15 @@ namespace VFXEditor {
         }
 
         public void SpawnOnGround( string path ) {
-            SpawnVfx = new StaticVfx( this, path, PluginInterface.ClientState.LocalPlayer.Position );
+            SpawnVfx = new StaticVfx( this, path, ClientState.LocalPlayer.Position );
         }
 
         public void SpawnOnSelf( string path ) {
-            SpawnVfx = new ActorVfx( this, PluginInterface.ClientState.LocalPlayer, PluginInterface.ClientState.LocalPlayer, path );
+            SpawnVfx = new ActorVfx( this, ClientState.LocalPlayer, ClientState.LocalPlayer, path );
         }
 
         public void SpawnOnTarget( string path ) {
-            var t = PluginInterface.ClientState.Targets.Target;
+            var t = TargetManager.Target;
             if( t != null ) {
                 SpawnVfx = new ActorVfx( this, t, t, path );
             }
@@ -160,7 +158,7 @@ namespace VFXEditor {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        WriteBytesDialog( ".txt", DataManager.LastImportNode.ExportString( 0 ), "txt" );
+                        WriteBytesDialog( ".txt", DataHelper.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }
