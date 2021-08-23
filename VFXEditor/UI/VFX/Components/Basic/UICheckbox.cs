@@ -1,49 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using ImGuiNET;
 using AVFXLib.Models;
-using Dalamud.Plugin;
+using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UICheckbox : UIBase
-    {
-        public string Id;
+namespace VFXEditor.UI.VFX {
+    public class UICheckbox : UIBase {
+        public string Name;
         public bool Value;
         public LiteralBool Literal;
 
-        public delegate void Change(LiteralBool literal);
-        public Change ChangeFunction;
-
-        public int SL;
-
-        public UICheckbox(string id, LiteralBool literal, Change changeFunction = null, int sl = 0)
-        {
-            Id = id;
+        public UICheckbox( string name, LiteralBool literal ) {
+            Name = name;
             Literal = literal;
-            SL = sl;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
-            Value = (Literal.Value == true);
+            Value = ( Literal.Value == true );
         }
 
-        public override void Draw(string id)
-        {
-            if (SL > 0) ImGui.SameLine(SL);
-            if (ImGui.Checkbox(Id + id, ref Value))
-            {
-                Literal.GiveValue(Value);
-                ChangeFunction(Literal);
+        public override void Draw( string parentId ) {
+            if(CopyManager.IsCopying) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue(Name, out var b) && b is LiteralBool literal ) {
+                Literal.GiveValue( literal.Value );
+                Value = ( Literal.Value == true );
+            }
+
+            if( ImGui.Checkbox( Name + parentId, ref Value ) ) {
+                Literal.GiveValue( Value );
             }
         }
-
-        public static void DoNothing(LiteralBool literal) {}
     }
 }

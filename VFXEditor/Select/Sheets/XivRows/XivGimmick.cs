@@ -19,7 +19,7 @@ namespace VFXSelect.Data.Rows {
             Name = Name.Replace( "mon_sp/gimmick/", "" );
 
             var split = Name.Split( '_' );
-            if(split.Length > 0 ) {
+            if( split.Length > 0 ) {
                 var suffix = split[0];
                 if( suffixToName.ContainsKey( suffix ) ) {
                     Name = "(" + suffixToName[suffix] + ") " + Name;

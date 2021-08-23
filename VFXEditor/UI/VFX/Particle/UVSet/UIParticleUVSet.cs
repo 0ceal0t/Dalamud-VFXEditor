@@ -16,7 +16,7 @@ namespace VFXEditor.UI.VFX
         public UICurve2Axis Scale;
         public UICurve2Axis Scroll;
         public UICurve Rotation;
-        List<UIItem> Curves = new List<UIItem>();
+        private readonly List<UIItem> Curves = new();
 
         public UIParticleUVSet(AVFXParticleUVSet uvSet, UIParticle particle)
         {
@@ -32,7 +32,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/UV";
+            var id = parentId + "/UV";
             DrawAttrs( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Curves, parentId );

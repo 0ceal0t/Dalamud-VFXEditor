@@ -1,34 +1,29 @@
 using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXCurveColor : Base
-    {
+namespace AVFXLib.Models {
+    public class AVFXCurveColor : Base {
 
-        public AVFXCurve RGB = new AVFXCurve("RGB");
-        public AVFXCurve A = new AVFXCurve("A");
-        public AVFXCurve SclR = new AVFXCurve("SclR");
-        public AVFXCurve SclG = new AVFXCurve("SclG");
-        public AVFXCurve SclB = new AVFXCurve("SclB");
-        public AVFXCurve SclA = new AVFXCurve("SclA");
-        public AVFXCurve Bri = new AVFXCurve("Bri");
-        public AVFXCurve RanR = new AVFXCurve("RanR");
-        public AVFXCurve RanG = new AVFXCurve("RanG");
-        public AVFXCurve RanB = new AVFXCurve("RanB");
-        public AVFXCurve RanA = new AVFXCurve("RanA");
-        public AVFXCurve RBri = new AVFXCurve("RBri");
+        public AVFXCurve RGB = new( "RGB" );
+        public AVFXCurve A = new( "A" );
+        public AVFXCurve SclR = new( "SclR" );
+        public AVFXCurve SclG = new( "SclG" );
+        public AVFXCurve SclB = new( "SclB" );
+        public AVFXCurve SclA = new( "SclA" );
+        public AVFXCurve Bri = new( "Bri" );
+        public AVFXCurve RanR = new( "RanR" );
+        public AVFXCurve RanG = new( "RanG" );
+        public AVFXCurve RanB = new( "RanB" );
+        public AVFXCurve RanA = new( "RanA" );
+        public AVFXCurve RBri = new( "RBri" );
+        private readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public AVFXCurveColor(string name = "Col") : base(name)
-        {
-            Attributes = new List<Base>(new Base[] {
+        public AVFXCurveColor( string name = "Col" ) : base( name ) {
+            Attributes = new List<Base>( new Base[] {
                 RGB,
                 A,
                 SclR,
@@ -41,25 +36,22 @@ namespace AVFXLib.Models
                 RanB,
                 RanA,
                 RBri
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetUnAssigned(Attributes);
+            SetUnAssigned( Attributes );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            AVFXNode curveAvfx = new AVFXNode(AVFXName);
-            PutAVFX(curveAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var curveAvfx = new AVFXNode( AVFXName );
+            PutAVFX( curveAvfx, Attributes );
             return curveAvfx;
         }
     }

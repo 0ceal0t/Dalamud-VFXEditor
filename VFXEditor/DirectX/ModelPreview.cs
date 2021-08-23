@@ -1,67 +1,61 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Device = SharpDX.Direct3D11.Device;
 using AVFXLib.Models;
 
-namespace VFXEditor.Data.DirectX {
-    public class ModelPreview : ModelView {
-
+namespace VFXEditor.DirectX {
+    public class ModelPreview : ModelRenderer {
         public bool ShowEdges = true;
         public bool ShowEmitter = true;
-        public static Vector4 LINE_COLOR = new Vector4( 1, 0, 0, 1 );
+        public static readonly Vector4 LINE_COLOR = new( 1, 0, 0, 1 );
 
         // ======= BASE MODEL =======
-        static int MODEL_SPAN = 3; // position, color, normal
-        int NumVerts;
-        Buffer Vertices;
-        CompilationResult VertexShaderByteCode;
-        CompilationResult PixelShaderByteCode;
-        PixelShader PShader;
-        VertexShader VShader;
-        ShaderSignature Signature;
-        InputLayout Layout;
+        private static readonly int MODEL_SPAN = 3; // position, color, normal
+        private int NumVerts;
+        private Buffer Vertices;
+        private readonly CompilationResult VertexShaderByteCode;
+        private readonly CompilationResult PixelShaderByteCode;
+        private readonly PixelShader PShader;
+        private readonly VertexShader VShader;
+        private readonly ShaderSignature Signature;
+        private readonly InputLayout Layout;
 
         // ======= EDGES ==========
-        static int EDGE_SPAN = 2;
-        int EDGE_NumVerts;
-        Buffer EDGE_Vertices;
-        CompilationResult EDGE_VertexShaderByteCode;
-        CompilationResult EDGE_PixelShaderByteCode;
-        PixelShader EDGE_PShader;
-        VertexShader EDGE_VShader;
-        ShaderSignature EDGE_Signature;
-        InputLayout EDGE_Layout;
+        private static readonly int EDGE_SPAN = 2;
+        private int EDGE_NumVerts;
+        private Buffer EDGE_Vertices;
+        private readonly CompilationResult EDGE_VertexShaderByteCode;
+        private readonly CompilationResult EDGE_PixelShaderByteCode;
+        private readonly PixelShader EDGE_PShader;
+        private readonly VertexShader EDGE_VShader;
+        private readonly ShaderSignature EDGE_Signature;
+        private readonly InputLayout EDGE_Layout;
 
         // ======= EMITTERS ==========
-        static int EMIT_SPAN = 2; // position, normal
-        int EMIT_INSTANCE_SPAN = 1; // position
-        int EMIT_NumVerts;
-        int EMIT_NumInstances;
-        Buffer EMIT_Vertices;
-        Buffer EMIT_Instances;
-        CompilationResult EMIT_VertexShaderByteCode;
-        CompilationResult EMIT_PixelShaderByteCode;
-        PixelShader EMIT_PShader;
-        VertexShader EMIT_VShader;
-        ShaderSignature EMIT_Signature;
-        InputLayout EMIT_Layout;
+        private static readonly int EMIT_SPAN = 2; // position, normal
+        private readonly int EMIT_INSTANCE_SPAN = 1; // position
+        private readonly int EMIT_NumVerts;
+        private int EMIT_NumInstances;
+        private readonly Buffer EMIT_Vertices;
+        private Buffer EMIT_Instances;
+        private readonly CompilationResult EMIT_VertexShaderByteCode;
+        private readonly CompilationResult EMIT_PixelShaderByteCode;
+        private readonly PixelShader EMIT_PShader;
+        private readonly VertexShader EMIT_VShader;
+        private readonly ShaderSignature EMIT_Signature;
+        private readonly InputLayout EMIT_Layout;
 
-        public ModelPreview( DirectXManager manager ) : base( manager ) {
+        public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             // ======= BASE MODEL =========
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( Manager.ShaderPath, "ModelPreview.fx" );
+            var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
             VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
             PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
             VShader = new VertexShader( Device, VertexShaderByteCode );
@@ -76,8 +70,8 @@ namespace VFXEditor.Data.DirectX {
             // ======= MODEL EDGES ========
             EDGE_NumVerts = 0;
             EDGE_Vertices = null;
-            EDGE_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
-            EDGE_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
+            EDGE_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
+            EDGE_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
             EDGE_VShader = new VertexShader( Device, EDGE_VertexShaderByteCode );
             EDGE_PShader = new PixelShader( Device, EDGE_PixelShaderByteCode );
             EDGE_Signature = ShaderSignature.GetInputSignature( EDGE_VertexShaderByteCode );
@@ -120,7 +114,7 @@ namespace VFXEditor.Data.DirectX {
             };
 
             var v_emitter = new Vector4[faces.Length * 6 * EMIT_SPAN]; // 6 VERTICES PER FACE (2 TRIANGLES) * 2 VECTORS PER VERTEX
-            for( int i = 0; i < faces.Length; i++ ) {
+            for( var i = 0; i < faces.Length; i++ ) {
                 var indexes = new int[]{
                     faces[i][0],
                     faces[i][1],
@@ -129,9 +123,9 @@ namespace VFXEditor.Data.DirectX {
                     faces[i][2],
                     faces[i][3]
                 };
-                for( int j = 0; j < indexes.Length; j++ ) {
+                for( var j = 0; j < indexes.Length; j++ ) {
                     var idx = i * ( 6 * EMIT_SPAN ) + j * EMIT_SPAN;
-                    v_emitter[idx] = baseVertices[indexes[j]] * new Vector4(0.1f, 0.1f, 0.1f, 1.0f); // vertex position, scale it down
+                    v_emitter[idx] = baseVertices[indexes[j]] * new Vector4( 0.1f, 0.1f, 0.1f, 1.0f ); // vertex position, scale it down
                     v_emitter[idx + 1] = normals[i]; // face normal
                 }
             }
@@ -140,8 +134,8 @@ namespace VFXEditor.Data.DirectX {
 
             EMIT_NumInstances = 0;
             EMIT_Instances = null;
-            EMIT_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
-            EMIT_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( Manager.ShaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
+            EMIT_VertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
+            EMIT_PixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
             EMIT_VShader = new VertexShader( Device, EMIT_VertexShaderByteCode );
             EMIT_PShader = new PixelShader( Device, EMIT_PixelShaderByteCode );
             EMIT_Signature = ShaderSignature.GetInputSignature( EMIT_VertexShaderByteCode );
@@ -156,7 +150,6 @@ namespace VFXEditor.Data.DirectX {
             LoadModel( model.Indexes, model.Vertices, model.EmitVertices, mode );
         }
         public void LoadModel( List<Index> _Indexes, List<Vertex> _Vertices, List<EmitVertex> _Emitters, int mode ) {
-            // ======= MODEL + EDGES ========
             if( _Indexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
@@ -165,12 +158,12 @@ namespace VFXEditor.Data.DirectX {
                 EDGE_Vertices?.Dispose();
             }
             else {
-                Vector4[] data = new Vector4[_Indexes.Count * 3 * MODEL_SPAN]; // 3 vertices per face
-                Vector4[] EDGE_data = new Vector4[_Indexes.Count * 4 * EDGE_SPAN]; // 4 points per loop
+                var data = new Vector4[_Indexes.Count * 3 * MODEL_SPAN]; // 3 vertices per face
+                var EDGE_data = new Vector4[_Indexes.Count * 4 * EDGE_SPAN]; // 4 points per loop
 
-                for( int index = 0; index < _Indexes.Count; index++ ) { // each face
-                    int[] _indexes = new int[] { _Indexes[index].I1, _Indexes[index].I2, _Indexes[index].I3 };
-                    for( int j = 0; j < _indexes.Length; j++ ) { // push all 3 vertices per face
+                for( var index = 0; index < _Indexes.Count; index++ ) { // each face
+                    var _indexes = new int[] { _Indexes[index].I1, _Indexes[index].I2, _Indexes[index].I3 };
+                    for( var j = 0; j < _indexes.Length; j++ ) { // push all 3 vertices per face
                         var idx = GetIdx( index, j, MODEL_SPAN, 3 );
                         var v = _Vertices[_indexes[j]];
 
@@ -187,11 +180,11 @@ namespace VFXEditor.Data.DirectX {
                         data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
 
                         // ========= COPY OVER EDGE DATA ==========
-                        int edgeIdx = GetIdx( index, j, EDGE_SPAN, 4 );
+                        var edgeIdx = GetIdx( index, j, EDGE_SPAN, 4 );
                         EDGE_data[edgeIdx + 0] = data[idx + 0];
                         EDGE_data[edgeIdx + 1] = LINE_COLOR;
                         if( j == 0 ) { // loop back around
-                            int lastEdgeIdx = GetIdx( index, 3, EDGE_SPAN, 4 );
+                            var lastEdgeIdx = GetIdx( index, 3, EDGE_SPAN, 4 );
                             EDGE_data[lastEdgeIdx + 0] = data[idx + 0];
                             EDGE_data[lastEdgeIdx + 1] = LINE_COLOR;
                         }
@@ -208,13 +201,13 @@ namespace VFXEditor.Data.DirectX {
             }
 
             // ========= EMITTER VERTEX INSTANCES =========
-            if(_Emitters.Count == 0 ) {
+            if( _Emitters.Count == 0 ) {
                 EMIT_NumInstances = 0;
                 EMIT_Instances?.Dispose();
             }
             else {
-                Vector4[] data = new Vector4[_Emitters.Count * EMIT_INSTANCE_SPAN];
-                for(int index = 0; index < _Emitters.Count; index++ ) {
+                var data = new Vector4[_Emitters.Count * EMIT_INSTANCE_SPAN];
+                for( var index = 0; index < _Emitters.Count; index++ ) {
                     var emit_ = _Emitters[index];
                     data[index] = new Vector4( emit_.Position[0], emit_.Position[1], emit_.Position[2], 0 );
                 }
@@ -249,14 +242,14 @@ namespace VFXEditor.Data.DirectX {
                 Ctx.GeometryShader.SetConstantBuffer( 0, RendersizeBuffer );
                 if( EDGE_NumVerts > 0 ) {
                     Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EDGE_Vertices, Utilities.SizeOf<Vector4>() * EDGE_SPAN, 0 ) );
-                    for( int i = 0; i < EDGE_NumVerts / 4; i++ ) {
+                    for( var i = 0; i < EDGE_NumVerts / 4; i++ ) {
                         Ctx.Draw( 4, i * 4 );
                     }
                 }
             }
 
             // ======= EMITTER ==========
-            if (EMIT_NumInstances > 0 && ShowEmitter ) {
+            if( EMIT_NumInstances > 0 && ShowEmitter ) {
                 Ctx.PixelShader.Set( EMIT_PShader );
                 Ctx.VertexShader.Set( EMIT_VShader );
                 Ctx.InputAssembler.InputLayout = EMIT_Layout;

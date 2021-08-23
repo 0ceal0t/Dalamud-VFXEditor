@@ -25,7 +25,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override UIBinder OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXBinder item = new AVFXBinder();
+            var item = new AVFXBinder();
             item.Read( node );
             AVFX.AddBinder( item );
             return new UIBinder( Main, item );

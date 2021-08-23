@@ -1,11 +1,13 @@
+using Dalamud.Logging;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.IO.Compression;
 using System.Threading.Tasks;
+using VFXEditor.Data;
 using VFXEditor.Data.Texture;
 using VFXSelect.UI;
 
@@ -35,94 +37,101 @@ namespace VFXEditor {
     }
 
     public partial class Plugin {
-        public string CurrentWorkspaceLocation = "";
+        private string CurrentWorkspaceLocation = "";
 
-        public void NewWorkspace() {
+        private void NewWorkspace() {
             Task.Run( async () => {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
-                var oldTex = TexManager;
-                TexManager = new TextureManager( this );
-                oldTex.Dispose();
-
-                var oldDoc = DocManager;
-                DocManager = new DocumentManager( this );
-                oldDoc.Dispose();
+                TextureManager.ResetInstance();
+                DocumentManager.ResetInstance();
 
                 IsLoading = false;
             } );
         }
 
-        public void OpenWorkspace() {
-            ImportFileDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select workspace file", ( string path ) =>
-            {
+        private void OpenWorkspace() {
+            FileDialogManager.OpenFileDialog( "Select a Workspace FIle", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
+                if( !ok ) return;
                 try {
-                    var loadLocation = CurrentWorkspaceLocation = Path.GetDirectoryName( path );
-                    string metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
-                    if(!File.Exists(metaPath)) {
-                        PluginLog.Log( "vfx_workspace.json does not exist" );
-                        return;
+                    var selectedFile = new FileInfo( res );
+                    var dir = Path.GetDirectoryName( res );
+
+                    if( selectedFile.Extension == ".json" ) { // OLD
+                        OpenWorkspaceFolder( dir );
+                        CurrentWorkspaceLocation = dir.TrimEnd( Path.DirectorySeparatorChar ) + ".vfxworkspace"; // move to new format
                     }
-                    var meta = JsonConvert.DeserializeObject<WorkspaceMeta>(File.ReadAllText(metaPath));
-
-                    IsLoading = true;
-
-                    var oldTex = TexManager;
-                    TexManager = new TextureManager( this );
-                    oldTex.Dispose();
-
-                    var texRootPath = Path.Combine( loadLocation, "Tex" );
-                    foreach(var tex in meta.Tex) {
-                        var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
-                        TexManager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                    else if( selectedFile.Extension == ".vfxworkspace" ) { // NEW
+                        var tempDir = Path.Combine( dir, "VFX_WORKSPACE_TEMP" );
+                        ZipFile.ExtractToDirectory( res, tempDir, true );
+                        OpenWorkspaceFolder( tempDir );
+                        Directory.Delete( tempDir, true );
+                        CurrentWorkspaceLocation = res;
                     }
-
-                    var oldDoc = DocManager;
-                    DocManager = new DocumentManager( this );
-                    oldDoc.Dispose();
-
-                    var defaultDoc = DocManager.ActiveDoc;
-
-                    var vfxRootPath = Path.Combine( loadLocation, "VFX" );
-                    foreach(var doc in meta.Docs) {
-                        var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
-                        DocManager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
-                    }
-
-                    if(DocManager.Docs.Count > 1) {
-                        DocManager.RemoveDoc( defaultDoc );
-                    }
-
-                    IsLoading = false;
                 }
-                catch(Exception e) {
-                    PluginLog.LogError( "Could not load workspace", e );
+                catch( Exception e ) {
+                    PluginLog.Error( "Could not load workspace", e );
                 }
             } );
         }
 
-        public void SaveWorkspace() {
-            if(string.IsNullOrEmpty(CurrentWorkspaceLocation)) {
+        private void OpenWorkspaceFolder( string loadLocation ) {
+            var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
+            if( !File.Exists( metaPath ) ) {
+                PluginLog.Error( "vfx_workspace.json does not exist" );
+                return;
+            }
+            var meta = JsonConvert.DeserializeObject<WorkspaceMeta>( File.ReadAllText( metaPath ) );
+
+            IsLoading = true;
+
+            TextureManager.ResetInstance();
+
+            var texRootPath = Path.Combine( loadLocation, "Tex" );
+            foreach( var tex in meta.Tex ) {
+                var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
+                TextureManager.Manager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+            }
+
+            DocumentManager.ResetInstance();
+
+            var defaultDoc = DocumentManager.CurrentActiveDoc;
+
+            var vfxRootPath = Path.Combine( loadLocation, "VFX" );
+            foreach( var doc in meta.Docs ) {
+                var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
+                DocumentManager.Manager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
+            }
+
+            if( DocumentManager.CurrentDocs.Count > 1 ) {
+                DocumentManager.Manager.RemoveDoc( defaultDoc );
+            }
+
+            IsLoading = false;
+        }
+
+        private void SaveWorkspace() {
+            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
                 SaveAsWorkspace();
             }
             else {
-                Task.Run( async () =>  {
+                Task.Run( async () => {
                     ExportWorkspace();
                 } );
             }
         }
 
-        public void SaveAsWorkspace() {
-            SaveFolderDialog( "JSON File (*.json)|*.json*|All files (*.*)|*.*", "Select save location", ( string path ) =>
-            {
-                CurrentWorkspaceLocation = Path.GetDirectoryName( path );
+        private void SaveAsWorkspace() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+                if( !ok ) return;
+                CurrentWorkspaceLocation = res;
                 ExportWorkspace();
             } );
         }
 
-        public void ExportWorkspace() {
-            var saveLocation = CurrentWorkspaceLocation;
+        private void ExportWorkspace() {
+            var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
             Directory.CreateDirectory( saveLocation );
 
             var meta = new WorkspaceMeta();
@@ -130,21 +139,20 @@ namespace VFXEditor {
             var vfxRootPath = Path.Combine( saveLocation, "VFX" );
             Directory.CreateDirectory( vfxRootPath );
 
-            int docId = 0;
+            var docId = 0;
             List<WorkspaceMetaDocument> docMeta = new();
-            foreach(var entry in DocManager.Docs) {
-                string newPath = "";
+            foreach( var entry in DocumentManager.CurrentDocs ) {
+                var newPath = "";
                 if( entry.Main != null ) {
                     newPath = $"VFX_{docId++}.avfx";
                     var newFullPath = Path.Combine( vfxRootPath, newPath );
                     File.WriteAllBytes( newFullPath, entry.Main.AVFX.ToAVFX().ToBytes() );
                 }
-                docMeta.Add( new WorkspaceMetaDocument
-                {
+                docMeta.Add( new WorkspaceMetaDocument {
                     Source = entry.Source,
                     Replace = entry.Replace,
                     RelativeLocation = newPath,
-                    Renaming = (entry.Main == null) ? new Dictionary<string, string>() : entry.Main.GetRenamingMap()
+                    Renaming = ( entry.Main == null ) ? new Dictionary<string, string>() : entry.Main.GetRenamingMap()
                 } );
             }
             meta.Docs = docMeta.ToArray();
@@ -152,14 +160,13 @@ namespace VFXEditor {
             var texRootPath = Path.Combine( saveLocation, "Tex" );
             Directory.CreateDirectory( texRootPath );
 
-            int texId = 0;
+            var texId = 0;
             List<WorkspaceMetaTex> texMeta = new();
-            foreach(var entry in TexManager.PathToTextureReplace ) {
+            foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.Copy( entry.Value.localPath, newFullPath, true );
-                texMeta.Add( new WorkspaceMetaTex
-                {
+                texMeta.Add( new WorkspaceMetaTex {
                     Height = entry.Value.Height,
                     Width = entry.Value.Width,
                     Depth = entry.Value.Depth,
@@ -171,9 +178,13 @@ namespace VFXEditor {
             }
             meta.Tex = texMeta.ToArray();
 
-            string metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
-            string metaString = JsonConvert.SerializeObject( meta );
+            var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
+            var metaString = JsonConvert.SerializeObject( meta );
             File.WriteAllText( metaPath, metaString );
+
+            if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );
+            ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
+            Directory.Delete( saveLocation, true );
         }
     }
 }

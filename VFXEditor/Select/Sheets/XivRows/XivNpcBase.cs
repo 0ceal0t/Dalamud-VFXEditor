@@ -22,8 +22,9 @@ namespace VFXSelect.Data.Rows {
         public NpcType Type;
 
         public string RootPath;
+        public string Id;
 
-        public XivNpcBase( Lumina.Excel.GeneratedSheets.ModelChara npc) {
+        public XivNpcBase( Lumina.Excel.GeneratedSheets.ModelChara npc ) {
             RowId = ( int )npc.RowId;
             ModelId = npc.Model;
             BaseId = npc.Base;
@@ -31,10 +32,12 @@ namespace VFXSelect.Data.Rows {
             Type = ( NpcType )npc.Type;
 
             if( Type == NpcType.Monster ) {
-                RootPath = "chara/monster/m" + ModelId.ToString().PadLeft( 4, '0' ) + "/obj/body/b" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
+                Id = "m" + ModelId.ToString().PadLeft( 4, '0' );
+                RootPath = "chara/monster/" + Id + "/obj/body/b" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
             }
             else { // demihuman
-                RootPath = "chara/demihuman/d" + ModelId.ToString().PadLeft( 4, '0' ) + "/obj/equipment/e" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
+                Id = "d" + ModelId.ToString().PadLeft( 4, '0' );
+                RootPath = "chara/demihuman/" + Id + "/obj/equipment/e" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
             }
         }
 
@@ -48,7 +51,7 @@ namespace VFXSelect.Data.Rows {
         }
 
         public string GetTmbPath() {
-            string prefix = ( Type == NpcType.Monster ) ? "m" : "d";
+            var prefix = ( Type == NpcType.Monster ) ? "m" : "d";
             return "chara/action/mon_sp/" + prefix + ModelId.ToString().PadLeft( 4, '0' ) + "/";
         }
 

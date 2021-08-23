@@ -1,37 +1,32 @@
 using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXParticleDataDisc : AVFXParticleData
-    {
-        public LiteralInt PartsCount = new LiteralInt("PrtC");
-        public LiteralInt PartsCountU = new LiteralInt("PCnU");
-        public LiteralInt PartsCountV = new LiteralInt("PCnV");
-        public LiteralFloat PointIntervalFactoryV = new LiteralFloat("PIFU");
+namespace AVFXLib.Models {
+    public class AVFXParticleDataDisc : AVFXParticleData {
+        public LiteralInt PartsCount = new( "PrtC" );
+        public LiteralInt PartsCountU = new( "PCnU" );
+        public LiteralInt PartsCountV = new( "PCnV" );
+        public LiteralFloat PointIntervalFactoryV = new( "PIFU" );
 
-        public AVFXCurve Angle = new AVFXCurve("Ang");
-        public AVFXCurve HeightBeginInner = new AVFXCurve( "HBI" );
-        public AVFXCurve HeightEndInner = new AVFXCurve( "HEI" );
-        public AVFXCurve HeightBeginOuter = new AVFXCurve( "HBO" );
-        public AVFXCurve HeightEndOuter = new AVFXCurve( "HEO" );
-        public AVFXCurve WidthBegin = new AVFXCurve("WB");
-        public AVFXCurve WidthEnd = new AVFXCurve("WE");
-        public AVFXCurve RadiusBegin = new AVFXCurve("RB");
-        public AVFXCurve RadiusEnd = new AVFXCurve( "RE");
-        public AVFXCurveColor ColorEdgeInner = new AVFXCurveColor(name:"CEI");
-        public AVFXCurveColor ColorEdgeOuter = new AVFXCurveColor(name: "CEO");
+        public AVFXCurve Angle = new( "Ang" );
+        public AVFXCurve HeightBeginInner = new( "HBI" );
+        public AVFXCurve HeightEndInner = new( "HEI" );
+        public AVFXCurve HeightBeginOuter = new( "HBO" );
+        public AVFXCurve HeightEndOuter = new( "HEO" );
+        public AVFXCurve WidthBegin = new( "WB" );
+        public AVFXCurve WidthEnd = new( "WE" );
+        public AVFXCurve RadiusBegin = new( "RB" );
+        public AVFXCurve RadiusEnd = new( "RE" );
+        public AVFXCurveColor ColorEdgeInner = new( name: "CEI" );
+        public AVFXCurveColor ColorEdgeOuter = new( name: "CEO" );
+        private readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public AVFXParticleDataDisc() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXParticleDataDisc() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[]{
                 PartsCount,
                 PartsCountU,
                 PartsCountV,
@@ -47,32 +42,29 @@ namespace AVFXLib.Models
                 RadiusEnd,
                 ColorEdgeInner,
                 ColorEdgeOuter
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetDefault(Attributes);
-            SetUnAssigned(Angle);
-            SetUnAssigned(WidthBegin);
-            SetUnAssigned(WidthEnd);
-            SetUnAssigned(RadiusBegin);
-            SetUnAssigned(RadiusEnd);
-            SetUnAssigned(ColorEdgeInner);
-            SetUnAssigned(ColorEdgeOuter);
+            SetDefault( Attributes );
+            SetUnAssigned( Angle );
+            SetUnAssigned( WidthBegin );
+            SetUnAssigned( WidthEnd );
+            SetUnAssigned( RadiusBegin );
+            SetUnAssigned( RadiusEnd );
+            SetUnAssigned( ColorEdgeInner );
+            SetUnAssigned( ColorEdgeOuter );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            AVFXNode dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

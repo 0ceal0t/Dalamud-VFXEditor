@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -7,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
-    public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem{
+    public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
         public List<T> Items;
-        public T Selected = null;
+        private T Selected = null;
 
-        public UIItemSplitView(List<T> items, bool allowNew = false, bool allowDelete = false, int leftSize = 200) : base(allowNew, allowDelete, leftSize ) {
+        public UIItemSplitView( List<T> items, bool allowNew = false, bool allowDelete = false ) : base( allowNew, allowDelete ) {
             Items = items;
             SetupIdx();
         }
         public void SetupIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
+            for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }
         }
@@ -25,25 +26,27 @@ namespace VFXEditor.UI.VFX {
         public virtual void OnDelete( T item ) { }
         public virtual void OnSelect( T item ) { }
 
-        public override void DrawNewButton( string parentId ) {
-            if( ImGui.SmallButton( "+ New" + parentId ) ) {
-                var item = OnNew();
-                if( item != null ) {
-                    item.Idx = Items.Count;
-                    Items.Add( item );
+        public override void DrawControls( string parentId ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( AllowNew ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + parentId ) ) {
+                    var item = OnNew();
+                    if( item != null ) {
+                        item.Idx = Items.Count;
+                        Items.Add( item );
+                    }
                 }
             }
-        }
-
-        public override void DrawDeleteButton( string parentId ) {
             if( Selected != null && AllowDelete ) {
-                if( UIUtils.RemoveButton( "Delete" + parentId, small: true ) ) {
+                ImGui.SameLine();
+                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     Items.Remove( Selected );
                     OnDelete( Selected );
                     SetupIdx();
                     Selected = null;
                 }
             }
+            ImGui.PopFont();
         }
 
         public override void DrawLeftCol( string parentId ) {
@@ -60,7 +63,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void DrawRightCol( string parentId ) {
-            if( Selected != null && Selected.Assigned) {
+            if( Selected != null && Selected.Assigned ) {
                 Selected.DrawBody( parentId );
             }
         }

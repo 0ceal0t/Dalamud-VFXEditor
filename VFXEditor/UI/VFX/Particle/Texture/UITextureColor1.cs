@@ -26,8 +26,9 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Tex.Assigned) { Assigned = false; return; }
             //====================
-            Tabs = new List<UIItem>();
-            Tabs.Add( Parameters = new UIParameters("Parameters") );
+            Tabs = new List<UIItem> {
+                ( Parameters = new UIParameters( "Parameters" ) )
+            };
 
             Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ));
             Parameters.Add(new UICheckbox("Enabled", Tex.Enabled));
@@ -55,7 +56,7 @@ namespace VFXEditor.UI.VFX
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TC1";
-            if( UIUtils.RemoveButton( "Delete" + id, small: true ) )
+            if( UIUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) )
             {
                 Tex.Assigned = false;
                 TextureSelect.DeleteSelect();

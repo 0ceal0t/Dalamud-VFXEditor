@@ -7,39 +7,32 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.Models;
 using Dalamud.Plugin;
+using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIInt : UIBase
-    {
-        public string Id;
+namespace VFXEditor.UI.VFX {
+    public class UIInt : UIBase {
+        public string Name;
         public int Value;
         public LiteralInt Literal;
 
-        public delegate void Change(LiteralInt literal);
-        public Change ChangeFunction;
-
-        public UIInt(string id, LiteralInt literal, Change changeFunction = null)
-        {
-            Id = id;
+        public UIInt( string name, LiteralInt literal ) {
+            Name = name;
             Literal = literal;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
             Value = Literal.Value;
         }
 
-        public override void Draw(string id)
-        {
-            if (ImGui.InputInt(Id + id, ref Value))
-            {
-                Literal.GiveValue(Value);
-                ChangeFunction(Literal);
+        public override void Draw( string id ) {
+            if( CopyManager.IsCopying ) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralInt literal ) {
+                Literal.GiveValue( literal.Value );
+                Value = Literal.Value;
+            }
+
+            if( ImGui.InputInt( Name + id, ref Value ) ) {
+                Literal.GiveValue( Value );
             }
         }
-
-        public static void DoNothing(LiteralInt literal) { }
     }
 }

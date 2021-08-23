@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -14,13 +13,13 @@ using VFXEditor.UI.VFX;
 
 namespace VFXEditor.UI {
     public class TextureDialog : GenericDialog {
-        public TextureDialog( Plugin plugin ) : base( plugin, "Imported Textures" ) {
+        public TextureDialog() : base( "Imported Textures" ) {
         }
 
         public override void OnDraw() {
             var id = "##ImportTex";
 
-            if( Plugin.TexManager.PathToTextureReplace.Count == 0 ) {
+            if( TextureManager.Manager.PathToTextureReplace.Count == 0 ) {
                 ImGui.Text( "No Textures Have Been Imported..." );
                 return;
             }
@@ -31,21 +30,21 @@ namespace VFXEditor.UI {
             ImGui.SetColumnWidth( 1, 75 );
             ImGui.SetColumnWidth( 2, 75 );
 
-            foreach(var path in Plugin.TexManager.PathToTextureReplace.Keys ) {
+            foreach(var path in TextureManager.Manager.PathToTextureReplace.Keys ) {
                 ImGui.Text( path );
             }
 
             ImGui.NextColumn();
-            foreach( var item in Plugin.TexManager.PathToTextureReplace.Values ) {
+            foreach( var item in TextureManager.Manager.PathToTextureReplace.Values ) {
                 ImGui.Text( $"({item.Format})" );
             }
 
-            int idx = 0;
+            var idx = 0;
             ImGui.NextColumn();
-            foreach( KeyValuePair<string, TexReplace> entry in Plugin.TexManager.PathToTextureReplace ) {
+            foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
                 if(UIUtils.RemoveButton("Remove" + id + idx, small: true ) ) {
-                    Plugin.TexManager.RemoveReplaceTexture( entry.Key );
-                    Plugin.TexManager.RefreshPreviewTexture( entry.Key );
+                    TextureManager.Manager.RemoveReplaceTexture( entry.Key );
+                    TextureManager.Manager.RefreshPreviewTexture( entry.Key );
                 }
                 idx++;
             }

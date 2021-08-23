@@ -4,96 +4,136 @@ using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using ImGuiNET;
 using ImPlotNET;
-using ImGuizmoNET;
+
 using VFXEditor.Data;
-using VFXEditor.Data.DirectX;
-using VFXEditor.External;
+using VFXEditor.DirectX;
 using VFXEditor.Data.Vfx;
-using System.Reflection;
 using VFXEditor.Data.Texture;
+using VFXEditor.Structs.Vfx;
 using VFXSelect;
+
+using System.Reflection;
+using ImGuiFileDialog;
+
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.ClientState;
+using Dalamud.Game;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Data;
 
 namespace VFXEditor
 {
     public partial class Plugin : IDalamudPlugin {
+        public static DalamudPluginInterface PluginInterface { get; private set; }
+        public static ClientState ClientState { get; private set; }
+        public static Framework Framework { get; private set; }
+        public static Condition Condition { get; private set; }
+        public static CommandManager CommandManager { get; private set; }
+        public static ObjectTable Objects { get; private set; }
+        public static SigScanner SigScanner { get; private set; }
+        public static DataManager DataManager { get; private set; }
+        public static TargetManager TargetManager { get; private set; }
+
+        public static BaseVfx SpawnVfx { get; private set; }
+        public static ResourceLoader ResourceLoader { get; private set; }
+
+        public static string TemplateLocation { get; private set; }
+
         public string Name => "VFXEditor";
-        private const string CommandName = "/vfxedit";
-        private bool PluginReady => PluginInterface.Framework.Gui.GetBaseUIObject() != IntPtr.Zero;
-
-        public DalamudPluginInterface PluginInterface;
-        public Configuration Configuration;
-        public ResourceLoader ResourceLoader;
-        public DocumentManager DocManager;
-        public DirectXManager DXManager;
-        public VfxTracker Tracker;
-        public TextureManager TexManager;
-        public SheetManager Sheets;
-
-        public static string TemplateLocation;
-
-        public string WriteLocation => Configuration?.WriteLocation;
-
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
 
-        private IntPtr ImPlotContext;
+        private const string CommandName = "/vfxedit";
 
-        public void Initialize( DalamudPluginInterface pluginInterface ) {
+        public VfxTracker Tracker;
+
+        public Plugin(
+                DalamudPluginInterface pluginInterface,
+                ClientState clientState,
+                CommandManager commandManager,
+                Framework framework,
+                Condition condition,
+                ObjectTable objects,
+                SigScanner sigScanner,
+                DataManager dataManager,
+                TargetManager targetManager
+            ) {
             PluginInterface = pluginInterface;
-            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Configuration.Initialize( PluginInterface );
-            Directory.CreateDirectory( WriteLocation ); // create if it doesn't already exist
-            PluginLog.Log( "Write location: " + WriteLocation );
+            ClientState = clientState;
+            Condition = condition;
+            CommandManager = commandManager;
+            Objects = objects;
+            SigScanner = sigScanner;
+            DataManager = dataManager;
+            Framework = framework;
+            TargetManager = targetManager;
 
-            ResourceLoader = new ResourceLoader( this );
-            PluginInterface.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
+            Configuration.Initialize( PluginInterface );
+
+            ResourceLoader = new ResourceLoader();
+            CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
                 HelpMessage = "toggle ui"
             } );
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
-
-            // ==== IMGUI ====
+            
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            ImPlotContext = ImPlot.CreateContext();
-            ImPlot.SetCurrentContext( ImPlotContext );
-            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
+            ImPlot.SetCurrentContext( ImPlot.CreateContext() );
+
+            DataHelper.Initialize();
+            SheetManager.Initialize(
+                Path.Combine( TemplateLocation, "Files", "npc.csv" ),
+                Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ),
+                DataManager,
+                PluginInterface
+            );
+
+            TextureManager.Initialize( this );
+            DirectXManager.Initialize();
+            DocumentManager.Initialize();
+            FileDialogManager.Initialize( PluginInterface );
+            CopyManager.Initialize();
 
             Tracker = new VfxTracker( this );
-            TexManager = new TextureManager( this );
-            TexManager.OneTimeSetup();
-            Sheets = new SheetManager( PluginInterface, Path.Combine( TemplateLocation, "Files", "npc.csv" ) );
-            DocManager = new DocumentManager( this );
-            DXManager = new DirectXManager( this );
 
             InitUI();
 
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
-            PluginInterface.UiBuilder.OnBuildUi += Draw;
-        }
-
-        public void Draw() {
-            if( !PluginReady ) return;
-            DrawUI();
-            Tracker.Draw();
+            PluginInterface.UiBuilder.Draw += Draw;
+            PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
         }
 
         public void Dispose() {
-            PluginInterface.UiBuilder.OnBuildUi -= Draw;
-            ResourceLoader?.Dispose();
+            PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
+            PluginInterface.UiBuilder.Draw -= Draw;
 
             ImPlot.DestroyContext();
 
-            PluginInterface.CommandManager.RemoveHandler( CommandName );
+            CommandManager.RemoveHandler( CommandName );
             PluginInterface?.Dispose();
+
+            ResourceLoader.Dispose();
+            ResourceLoader = null;
+
             SpawnVfx?.Remove();
-            DXManager?.Dispose();
-            DocManager?.Dispose();
-            TexManager?.Dispose();
+            SpawnVfx = null;
+
+            Configuration.Dispose();
+            FileDialogManager.Dispose();
+            DirectXManager.Dispose();
+            DocumentManager.Dispose();
+            TextureManager.Dispose();
+            DataHelper.Dispose();
+            CopyManager.Dispose();
         }
 
         private void OnCommand( string command, string rawArgs ) {
             Visible = !Visible;
+        }
+
+        public void ClearSpawnVfx() {
+            SpawnVfx = null;
         }
     }
 }

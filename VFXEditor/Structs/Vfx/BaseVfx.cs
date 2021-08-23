@@ -1,8 +1,5 @@
-using Dalamud.Game.ClientState.Actors;
-using Dalamud.Game.ClientState.Actors.Types;
-using Dalamud.Plugin;
-using ImGuizmoNET;
-using System;
+using Dalamud.Game;
+using Dalamud.Game.ClientState.Objects.Types;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -24,15 +21,18 @@ namespace VFXEditor.Structs.Vfx {
         uVar5 = DAT_01bb2878;
         *(undefined4 *)(vfx + 0x78) = DAT_01bb2878;
         *(ulonglong *)(vfx + 0x38) = *(ulonglong *)(vfx + 0x38) | 2;
+        * + 0x43 for the color (targeting vfx)
+        * vfxColor = vfx + 0x45
+        * 
      */
 
 
-    [StructLayout( LayoutKind.Explicit, Size = 0x200 )] // idk what the size is lol
+    [StructLayout( LayoutKind.Explicit )]
     public unsafe struct VfxStruct {
         [FieldOffset( 0x38 )] public byte Flags;
-        [FieldOffset( 0x50 )] public Position3 Position;
+        [FieldOffset( 0x50 )] public Vector3 Position;
         [FieldOffset( 0x60 )] public Quat Rotation;
-        [FieldOffset( 0x70 )] public Position3 Scale;
+        [FieldOffset( 0x70 )] public Vector3 Scale;
 
         [FieldOffset( 0x128 )] public int ActorCaster;
         [FieldOffset( 0x130 )] public int ActorTarget;
@@ -41,12 +41,12 @@ namespace VFXEditor.Structs.Vfx {
         [FieldOffset( 0x1C0 )] public int StaticTarget;
     }
 
-    public unsafe abstract class BaseVfx {
+    public abstract unsafe class BaseVfx {
         public Plugin Plugin;
         public VfxStruct* Vfx;
         public string Path;
 
-        public BaseVfx( Plugin plugin, string path) {
+        public BaseVfx( Plugin plugin, string path ) {
             Plugin = plugin;
             Path = path;
         }
@@ -60,23 +60,21 @@ namespace VFXEditor.Structs.Vfx {
 
         public void UpdatePosition( Vector3 position ) {
             if( Vfx == null ) return;
-            Vfx->Position = new Position3
-            {
+            Vfx->Position = new Vector3 {
                 X = position.X,
                 Y = position.Y,
                 Z = position.Z
             };
         }
 
-        public void UpdatePosition( Actor actor ) {
+        public void UpdatePosition( GameObject actor ) {
             if( Vfx == null ) return;
             Vfx->Position = actor.Position;
         }
 
         public void UpdateScale( Vector3 scale ) {
             if( Vfx == null ) return;
-            Vfx->Scale = new Position3
-            {
+            Vfx->Scale = new Vector3 {
                 X = scale.X,
                 Y = scale.Y,
                 Z = scale.Z
@@ -86,9 +84,8 @@ namespace VFXEditor.Structs.Vfx {
         public void UpdateRotation( Vector3 rotation ) {
             if( Vfx == null ) return;
 
-            Quaternion q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
-            Vfx->Rotation = new Quat
-            {
+            var q = Quaternion.CreateFromYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
+            Vfx->Rotation = new Quat {
                 X = q.X,
                 Y = q.Y,
                 Z = q.Z,

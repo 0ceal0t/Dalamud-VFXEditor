@@ -1,14 +1,11 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
+using Dalamud.Logging;
+using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using VFXEditor.Data.DirectX;
+using VFXEditor.DirectX;
 using VFXEditor.External;
 
 namespace VFXEditor.UI.VFX
@@ -16,7 +13,7 @@ namespace VFXEditor.UI.VFX
     public class UIModel : UINode {
         public AVFXModel Model;
         public UIMain Main;
-        public ModelPreview _ModelPreview;
+
         //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
@@ -31,25 +28,24 @@ namespace VFXEditor.UI.VFX
             NodeView = new UINodeGraphView( this );
             //===============
             EmitterVerts = new List<UIModelEmitterVertex>();
-            for( int i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
+            for( var i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
                 EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
-            _ModelPreview = DirectXManager.Manager.ModelView;
             HasDependencies = false; // if imported, all set now
         }
 
         public bool Open = true;
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Model";
+            var id = parentId + "/Model";
             NodeView.Draw( id );
             DrawRename( id );
             ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
-            if( ImGui.SmallButton( "Replace" + id ) ) {
+            if( ImGui.Button( "Replace" + id ) ) {
                 ImportDialog();
             }
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Export" + id ) ) {
+            if( ImGui.Button( "Export" + id ) ) {
                 ImGui.OpenPopup( "Save_Popup" + id );
             }
             // ==================
@@ -75,57 +71,57 @@ namespace VFXEditor.UI.VFX
                 return;
             // ===============
             if(Refresh) {
-                _ModelPreview.LoadModel( Model, mode: Mode );
+                DirectXManager.ModelView.LoadModel( Model, mode: Mode );
                 Refresh = false;
             }
 
-            bool wireframe = _ModelPreview.IsWireframe;
+            var wireframe = DirectXManager.ModelView.IsWireframe;
             if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
-                _ModelPreview.IsWireframe = wireframe;
-                _ModelPreview.RefreshRasterizeState();
-                _ModelPreview.Draw();
+                DirectXManager.ModelView.IsWireframe = wireframe;
+                DirectXManager.ModelView.RefreshRasterizeState();
+                DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if(ImGui.Checkbox( "Show Edges##3DModel", ref _ModelPreview.ShowEdges ) ) {
-                _ModelPreview.Draw();
+            if(ImGui.Checkbox( "Show Edges##3DModel", ref DirectXManager.ModelView.ShowEdges ) ) {
+                DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if(ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref _ModelPreview.ShowEmitter ) ) {
-                _ModelPreview.Draw();
+            if(ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref DirectXManager.ModelView.ShowEmitter ) ) {
+                DirectXManager.ModelView.Draw();
             }
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
-                _ModelPreview.LoadModel( Model, mode:1);
+                DirectXManager.ModelView.LoadModel( Model, mode:1);
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
-                _ModelPreview.LoadModel( Model, mode: 2 );
+                DirectXManager.ModelView.LoadModel( Model, mode: 2 );
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
-                _ModelPreview.LoadModel( Model, mode: 3 );
+                DirectXManager.ModelView.LoadModel( Model, mode: 3 );
             }
 
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "3DViewChild" );
 
             var space = ImGui.GetContentRegionAvail();
-            _ModelPreview.Resize( space );
+            DirectXManager.ModelView.Resize( space );
 
-            ImGui.ImageButton( _ModelPreview.RenderShad.NativePointer, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+            ImGui.ImageButton( DirectXManager.ModelView.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
 
             if(ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                _ModelPreview.Drag( delta, true );
+                DirectXManager.ModelView.Drag( delta, true );
             }
             else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                _ModelPreview.Drag( ImGui.GetMousePos() - cursor, false );
+                DirectXManager.ModelView.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
-                _ModelPreview.IsDragging = false;
+                DirectXManager.ModelView.IsDragging = false;
             }
 
             if( ImGui.IsItemHovered() ) {
-                _ModelPreview.Zoom( ImGui.GetIO().MouseWheel );
+                DirectXManager.ModelView.Zoom( ImGui.GetIO().MouseWheel );
             }
 
             ImGui.EndChild();
@@ -142,33 +138,28 @@ namespace VFXEditor.UI.VFX
         }
 
         public void ImportDialog() {
-            Plugin.ImportFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select GLTF File.",
-                ( string path ) => {
-                    try {
-                        if( GLTF.ImportModel( path, out List<Vertex> v_s, out List<Index> i_s ) ) {
-                            Model.Vertices = v_s;
-                            Model.Indexes = i_s;
-                            Refresh = true;
-                        }
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select the GLTF file." );
+            FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                try {
+                    if( GLTF.ImportModel( res, out var v_s, out var i_s ) ) {
+                        Model.Vertices = v_s;
+                        Model.Indexes = i_s;
+                        Refresh = true;
                     }
                 }
-            );
+                catch( Exception e ) {
+                    PluginLog.Error( "Could not import data", e );
+                }
+            } );
         }
 
         public void ExportDialog() {
-            Plugin.SaveFileDialog( "GLTF File (*.gltf)|*.gltf*|All files (*.*)|*.*", "Select a Save Location.", "gltf",
-                ( string path ) => {
-                    try {
-                        GLTF.ExportModel( Model, path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a save location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                GLTF.ExportModel( Model, res );
+            } );
         }
 
         public override string GetDefaultText() {

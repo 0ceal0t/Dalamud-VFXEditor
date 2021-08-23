@@ -1,19 +1,12 @@
-using Dalamud.Plugin;
-using Lumina.Excel.GeneratedSheets;
+using Dalamud.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXSelect.Data.Rows;
 
 namespace VFXSelect.Data.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
-        public ActionSheetLoader(SheetManager manager, DalamudPluginInterface pluginInterface ) : base(manager, pluginInterface ) {
-        }
-
         public override void OnLoad() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
                 var i = new XivAction( item );
                 if( i.VfxExists ) {
@@ -31,20 +24,20 @@ namespace VFXSelect.Data.Sheets {
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }
-            string tmbPath = item.GetTmbPath();
-            bool result = PluginInterface.Data.FileExists( tmbPath );
+            var tmbPath = item.GetTmbPath();
+            var result = SheetManager.DataManager.FileExists( tmbPath );
             if( result ) {
                 try {
-                    var file = PluginInterface.Data.GetFile( tmbPath );
+                    var file = SheetManager.DataManager.GetFile( tmbPath );
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.LogError( "Error reading TMB " + tmbPath, e );
+                    PluginLog.Error( "Error reading TMB " + tmbPath, e );
                     return false;
                 }
             }
             else {
-                PluginLog.Log( tmbPath + " does not exist" );
+                PluginLog.Error( tmbPath + " does not exist" );
             }
             return result;
         }

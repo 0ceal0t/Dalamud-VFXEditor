@@ -28,7 +28,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/" + Name;
+            var id = parentId + "/" + Name;
             DrawRename( id );
             TimelineSelect.Draw(id);
             DrawAttrs( id );
@@ -39,7 +39,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override string GetWorkspaceId() {
-            string Type = ( Name == "Item" ) ? "Item" : "Trigger";
+            var Type = ( Name == "Item" ) ? "Item" : "Trigger";
             return $"{Sched.GetWorkspaceId()}/{Type}{Idx}";
         }
     }

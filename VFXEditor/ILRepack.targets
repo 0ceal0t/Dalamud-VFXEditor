@@ -3,16 +3,9 @@
     <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
 
     <ItemGroup>
-        <InputAssemblies Include="$(OutputPath)Reloaded*.dll" />
         <InputAssemblies Include="$(OutputPath)fastCSV.dll" />
         <InputAssemblies Include="$(OutputPath)SharpGLTF.*.dll" />
-        <InputAssemblies Include="$(OutputPath)Iced.dll" />
-        <InputAssemblies Include="$(OutputPath)SharpDisasm.dll" />
-        <InputAssemblies Include="$(OutputPath)System.Text.Json.dll" />
-        <InputAssemblies Include="$(OutputPath)System.Text.Encodings.Web.dll" />
         <InputAssemblies Include="$(OutputPath)AVFXLib.dll" />
-        <InputAssemblies Include="$(OutputPath)ICSharpCode.SharpZipLib.dll" />
-        <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll" />
         <InputAssemblies Include="$(OutputPath)VFXEditor.dll" />
     </ItemGroup>
 

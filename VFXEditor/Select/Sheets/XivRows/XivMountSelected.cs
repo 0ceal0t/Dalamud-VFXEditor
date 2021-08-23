@@ -15,8 +15,7 @@ namespace VFXSelect.Data.Rows {
         public int VfxId;
         public string ImcPath;
 
-
-        public XivMountSelected( Lumina.Data.Files.ImcFile file, XivMount mount) {
+        public XivMountSelected( Lumina.Data.Files.ImcFile file, XivMount mount ) {
             Mount = mount;
 
             Count = file.Count;

@@ -2,12 +2,14 @@ using System;
 using System.IO;
 using System.Numerics;
 using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.External;
 
 namespace VFXEditor.UI {
     public class PenumbraDialog : GenericDialog {
-        public PenumbraDialog( Plugin plugin ) : base(plugin, "Penumbra") {
+        public PenumbraDialog() : base( "Penumbra" ) {
             Size = new Vector2( 400, 200 );
         }
 
@@ -19,7 +21,7 @@ namespace VFXEditor.UI {
 
         public override void OnDraw() {
             var id = "##Penumbra";
-            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
@@ -28,8 +30,8 @@ namespace VFXEditor.UI {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
-                ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
+            if( !DocumentManager.Manager.HasReplacePath( ExportAll ) ) {
+                ImGui.TextColored( VFX.UIUtils.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.EndChild();
 
@@ -38,18 +40,12 @@ namespace VFXEditor.UI {
             }
         }
 
-        public void SaveDialog() { // idk why the folderselectdialog doesn't work, so this will do for now
-            Plugin.SaveFolderDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", "Select a File Location.",
-                ( string path ) => {
-                    try {
-                        Penumbra.Export( Plugin, Name, Author, Version, Path.GetDirectoryName( path ), ExportAll, ExportTex );
-                        Visible = false;
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a mod location" );
-                    }
-                }
-            );
+        public void SaveDialog() {
+            FileDialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
+                if( !ok ) return;
+                Penumbra.Export( Name, Author, Version, res, ExportAll, ExportTex );
+                Visible = false;
+            } );
         }
     }
 }

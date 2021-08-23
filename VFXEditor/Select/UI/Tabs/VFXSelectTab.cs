@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 using Lumina.Data.Files;
 using VFXSelect.Data.Sheets;
@@ -16,22 +12,21 @@ namespace VFXSelect.UI {
     }
 
     public abstract class VFXSelectTab<T, S> : VFXSelectTab {
-        public DalamudPluginInterface PluginInterface;
-        public VFXSelectDialog Dialog;
-        public SheetLoader<T, S> Loader;
+        protected SheetLoader<T, S> Loader;
+        protected VFXSelectDialog Dialog;
+
         public string Id;
 
         public string Name;
         public string ParentId;
 
         public string SearchInput = "";
-        public T Selected = default(T);
-        public S Loaded = default(S);
+        public T Selected = default;
+        public S Loaded = default;
 
-        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, DalamudPluginInterface pluginInterface, VFXSelectDialog dialog ) {
-            PluginInterface = pluginInterface;
-            Dialog = dialog;
+        public VFXSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, VFXSelectDialog dialog) {
             Loader = loader;
+            Dialog = dialog;
             Name = tabId;
             ParentId = parentId;
             Id = "##Select/" + tabId + "/" + parentId;
@@ -56,7 +51,7 @@ namespace VFXSelect.UI {
             //
             if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Loader.Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            bool ResetScroll = false;
+            var ResetScroll = false;
             DrawExtra();
             if( ImGui.InputText( "Search" + Id, ref SearchInput, 255 ) ) {
                 Searched = Loader.Items.Where( x => CheckMatch(x, SearchInput )).ToList();
@@ -64,16 +59,16 @@ namespace VFXSelect.UI {
             }
             ImGui.Columns( 2, Id + "Columns", true );
             ImGui.BeginChild( Id + "Tree" );
-            VFXSelectDialog.DisplayVisible( Searched.Count, out int preItems, out int showItems, out int postItems, out float itemHeight );
+            VFXSelectDialog.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
             if( ResetScroll ) { ImGui.SetScrollHereY(); };
-            int idx = 0;
+            var idx = 0;
             foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( UniqueRowTitle(item), EqualityComparer<T>.Default.Equals( Selected, item) ) ) {
                     if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
                         Task.Run( async () => {
-                            bool result = Loader.SelectItem( item, out Loaded );
+                            var result = Loader.SelectItem( item, out Loaded );
                         });
                         Selected = item;
                         OnSelect();
@@ -111,18 +106,18 @@ namespace VFXSelect.UI {
             if( iconId > 0 ) {
                 TexFile tex;
                 try {
-                    tex = PluginInterface.Data.GetIcon( iconId );
+                    tex = SheetManager.DataManager.GetIcon( iconId );
                 }
                 catch( Exception ) {
-                    tex = PluginInterface.Data.GetIcon( 0 );
+                    tex = SheetManager.DataManager.GetIcon( 0 );
                 }
-                texWrap = PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                texWrap = SheetManager.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 
         public static byte[] BGRA_to_RGBA( byte[] data ) {
-            byte[] ret = new byte[data.Length];
-            for( int i = 0; i < data.Length / 4; i++ ) {
+            var ret = new byte[data.Length];
+            for( var i = 0; i < data.Length / 4; i++ ) {
                 var idx = i * 4;
                 ret[idx + 0] = data[idx + 2];
                 ret[idx + 1] = data[idx + 1];

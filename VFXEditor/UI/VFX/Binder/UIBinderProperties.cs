@@ -30,9 +30,10 @@ namespace VFXEditor.UI.VFX
             base.Init();
             if (!Prop.Assigned) { Assigned = false; return; }
             //====================
-            Tabs = new List<UIItem>();
-            Tabs.Add( Parameters = new UIParameters("Parameters") );
-            Tabs.Add( Position = new UICurve3Axis( Prop.Position, "Position" ) );
+            Tabs = new List<UIItem> {
+                ( Parameters = new UIParameters( "Parameters" ) ),
+                ( Position = new UICurve3Axis( Prop.Position, "Position" ) )
+            };
             Parameters.Add(new UICombo<BindPoint>("Bind Point Type", Prop.BindPointType));
             Parameters.Add(new UICombo<BindTargetPoint>("Bind Target Point Type", Prop.BindTargetPointType));
             Parameters.Add(new UIInt("Bind Point Id", Prop.BindPointId));
@@ -56,7 +57,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId )
         {
             var id = parentId + "/" + Name;
-            if( UIUtils.RemoveButton( "Delete" + id ) )
+            if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) )
             {
                 Prop.Assigned = false;
                 Init();

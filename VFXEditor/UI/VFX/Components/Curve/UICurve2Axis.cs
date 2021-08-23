@@ -19,8 +19,7 @@ namespace VFXEditor.UI.VFX
         public UICombo<RandomType> _AxisConnectRandom;
         public UICurve _X;
         public UICurve _Y;
-
-        List<UICurve> Curves;
+        private List<UICurve> Curves;
 
         public UICurve2Axis(AVFXCurve2Axis curve, string name, bool locked = false )
         {
@@ -64,18 +63,24 @@ namespace VFXEditor.UI.VFX
             var id = parentId + "/" + Name;
             // =================
             if( !Locked ) {
-                if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
+                if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
                     Init();
                     return;
                 }
             }
+
+            var idx = 0;
             foreach( var c in Curves ) {
                 if( !c.Assigned ) {
-                    ImGui.SameLine();
+                    if( idx % 5 != 0 ) {
+                        ImGui.SameLine();
+                    }
                     c.Draw( id );
+                    idx++;
                 }
             }
+
             _AxisConnect.Draw( id );
             _AxisConnectRandom.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

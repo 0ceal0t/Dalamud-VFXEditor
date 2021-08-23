@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -9,49 +8,41 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor.Data.DirectX {
-    public class Gradient {
-        public DirectXManager Manager;
-        public Device Device;
-        public DeviceContext Ctx;
-
-        public int Width = 500;
-        public int Height = 50;
+namespace VFXEditor.DirectX {
+    public class GradientView : Renderer {
         public AVFXCurve CurrentCurve = null;
-        public bool FirstCurve = false;
+        public IntPtr Output => RenderShad.NativePointer;
 
-        public RasterizerState RState;
-        public Texture2D DepthTex;
-        public DepthStencilView DepthView;
-        public Texture2D RenderTex;
-        public ShaderResourceView RenderShad;
-        public RenderTargetView RenderView;
+        private readonly int Width = 500;
+        private readonly int Height = 50;
+        private bool FirstCurve = false;
 
-        // ======= BASE MODEL =======
-        static int MODEL_SPAN = 2; // position, color
-        int NumVerts;
-        Buffer Vertices;
-        CompilationResult VertexShaderByteCode;
-        CompilationResult PixelShaderByteCode;
-        PixelShader PShader;
-        VertexShader VShader;
-        ShaderSignature Signature;
-        InputLayout Layout;
+        private RasterizerState RState;
+        private Texture2D DepthTex;
+        private DepthStencilView DepthView;
+        private Texture2D RenderTex;
+        private ShaderResourceView RenderShad;
+        private RenderTargetView RenderView;
 
-        public Gradient( DirectXManager manager) {
-            Manager = manager;
-            Device = Manager.Device;
-            Ctx = Manager.Ctx;
+        private static readonly int MODEL_SPAN = 2; // position, color
+        private int NumVerts;
+        private Buffer Vertices;
+        private readonly CompilationResult VertexShaderByteCode;
+        private readonly CompilationResult PixelShaderByteCode;
+        private readonly PixelShader PShader;
+        private readonly VertexShader VShader;
+        private readonly ShaderSignature Signature;
+        private readonly InputLayout Layout;
+
+        public GradientView( Device device, DeviceContext ctx, string shaderPath) : base(device, ctx) {
 
             RefreshRasterizeState();
             ResizeResources();
 
-            // ======= BASE MODEL =========
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( Manager.ShaderPath, "Gradient.fx" );
+            var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
             VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
             PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
             VShader = new VertexShader( Device, VertexShaderByteCode );
@@ -72,24 +63,24 @@ namespace VFXEditor.Data.DirectX {
             }
             else {
                 // each set of 2 keys needs 6 points
-                Vector4[] data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
+                var data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
                 float startTime = curve.Keys[0].Time;
                 float endTime = curve.Keys[numPoints - 1].Time;
-                float timeDiff = ( endTime - startTime );
+                var timeDiff = ( endTime - startTime );
 
-                for( int i = 0; i < numPoints - 1; i++ ) {
+                for( var i = 0; i < numPoints - 1; i++ ) {
                     var left = curve.Keys[i];
                     var right = curve.Keys[i + 1];
 
-                    float leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
-                    float rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
-                    Vector4 leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
-                    Vector4 rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
+                    var leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
+                    var rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
+                    var leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
+                    var rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
 
-                    Vector4 topLeft = new Vector4( leftPosition, 1, 0, 1 );
-                    Vector4 topRight = new Vector4( rightPosition, 1, 0, 1 );
-                    Vector4 bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
-                    Vector4 bottomRight = new Vector4( rightPosition, -1, 0, 1 );
+                    var topLeft = new Vector4( leftPosition, 1, 0, 1 );
+                    var topRight = new Vector4( rightPosition, 1, 0, 1 );
+                    var bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
+                    var bottomRight = new Vector4( rightPosition, -1, 0, 1 );
 
                     var idx = i * 6 * MODEL_SPAN;
                     data[idx + 0] = topLeft;
@@ -121,7 +112,7 @@ namespace VFXEditor.Data.DirectX {
             Draw();
         }
 
-        public void RefreshRasterizeState() {
+        private void RefreshRasterizeState() {
             RState?.Dispose();
             RState = new RasterizerState( Device, new RasterizerStateDescription {
                 CullMode = CullMode.None,
@@ -137,20 +128,7 @@ namespace VFXEditor.Data.DirectX {
             } );
         }
 
-        public void Resize( Vec2 size ) {
-            var w_ = ( int )size.X;
-            var h_ = ( int )size.Y;
-            if( w_ != Width || h_ != Height ) {
-                Width = w_;
-                Height = h_;
-                ResizeResources();
-                if( FirstCurve ) {
-                    Draw();
-                }
-            }
-        }
-
-        public void ResizeResources() {
+        private void ResizeResources() {
             RenderTex?.Dispose();
             RenderTex = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.B8G8R8A8_UNorm,
@@ -187,7 +165,7 @@ namespace VFXEditor.Data.DirectX {
         }
 
         public void Draw() {
-            Manager.BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
@@ -207,7 +185,7 @@ namespace VFXEditor.Data.DirectX {
 
             Ctx.Flush();
 
-            Manager.AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+            AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public void Dispose() {

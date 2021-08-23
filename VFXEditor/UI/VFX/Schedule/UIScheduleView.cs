@@ -19,6 +19,6 @@ namespace VFXEditor.UI.VFX
         public override byte[] OnExport( UIScheduler item ) {
             return new byte[0];
         }
-        public override UIScheduler OnImport( AVFXNode node, bool imported = false ) { return null; }
+        public override UIScheduler OnImport( AVFXNode node, bool has_dependencies = false ) { return null; }
     }
 }

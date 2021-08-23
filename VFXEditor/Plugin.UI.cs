@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Dalamud.Interface;
-using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;
@@ -17,28 +14,25 @@ using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public bool Visible = false;
+        private bool Visible = false;
 
-        public VFXSelectDialog SelectUI;
-        public VFXSelectDialog PreviewUI;
+        private VFXSelectDialog SelectUI;
+        private VFXSelectDialog PreviewUI;
 
-        public DocDialog DocUI;
-        public SettingsDialog SettingsUI;
-        public ToolsDialog ToolsUI;
-        public TexToolsDialog TexToolsUI;
-        public PenumbraDialog PenumbraUI;
-        public TextureDialog TextureUI;
+        private DocDialog DocUI;
+        private SettingsDialog SettingsUI;
+        private ToolsDialog ToolsUI;
+        private TexToolsDialog TexToolsUI;
+        private PenumbraDialog PenumbraUI;
+        private TextureDialog TextureUI;
 
-        public BaseVfx SpawnVfx;
-
-        public DateTime LastUpdate = DateTime.Now;
-
-        public bool IsLoading = false;
+        private DateTime LastUpdate = DateTime.Now;
+        private bool IsLoading = false;
 
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
-                Sheets, "File Select [SOURCE]",
-                Configuration.RecentSelects,
+                "File Select [SOURCE]",
+                Configuration.Config.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -47,8 +41,8 @@ namespace VFXEditor {
                 spawnOnTarget: ( string path ) => SpawnOnTarget( path )
             );
             PreviewUI = new VFXSelectDialog(
-                Sheets, "File Select [TARGET]",
-                Configuration.RecentSelects,
+                "File Select [TARGET]",
+                Configuration.Config.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -60,12 +54,12 @@ namespace VFXEditor {
             SelectUI.OnSelect += SetSourceVFX;
             PreviewUI.OnSelect += SetReplaceVFX;
 
-            DocUI = new DocDialog( this );
-            SettingsUI = new SettingsDialog( this );
-            ToolsUI = new ToolsDialog( this );
-            TextureUI = new TextureDialog( this );
-            TexToolsUI = new TexToolsDialog( this );
-            PenumbraUI = new PenumbraDialog( this );
+            DocUI = new DocDialog();
+            SettingsUI = new SettingsDialog();
+            ToolsUI = new ToolsDialog();
+            TextureUI = new TextureDialog();
+            TexToolsUI = new TexToolsDialog();
+            PenumbraUI = new PenumbraDialog();
 
 #if DEBUG
             Visible = true;
@@ -82,24 +76,27 @@ namespace VFXEditor {
         }
 
         public void SpawnOnGround( string path ) {
-            SpawnVfx = new StaticVfx( this, path, PluginInterface.ClientState.LocalPlayer.Position );
+            SpawnVfx = new StaticVfx( this, path, ClientState.LocalPlayer.Position );
         }
 
         public void SpawnOnSelf( string path ) {
-            SpawnVfx = new ActorVfx( this, PluginInterface.ClientState.LocalPlayer, PluginInterface.ClientState.LocalPlayer, path );
+            SpawnVfx = new ActorVfx( this, ClientState.LocalPlayer, ClientState.LocalPlayer, path );
         }
 
         public void SpawnOnTarget( string path ) {
-            var t = PluginInterface.ClientState.Targets.CurrentTarget;
+            var t = TargetManager.Target;
             if( t != null ) {
                 SpawnVfx = new ActorVfx( this, t, t, path );
             }
         }
 
-        public void DrawUI() {
+        public void Draw() {
             if( !Visible ) return;
+
+            CopyManager.PreDraw();
             DrawMainInterface();
-            if(!IsLoading) {
+            Tracker.Draw();
+            if( !IsLoading ) {
                 SelectUI.Draw();
                 PreviewUI.Draw();
                 TexToolsUI.Draw();
@@ -113,9 +110,12 @@ namespace VFXEditor {
 
         public void DrawMainInterface() {
             ImGui.SetNextWindowSize( new Vector2( 800, 1000 ), ImGuiCond.FirstUseEver );
-            if( !ImGui.Begin( Name + (string.IsNullOrEmpty(CurrentWorkspaceLocation) ? "" : " - " + CurrentWorkspaceLocation) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) return;
+            if( !ImGui.Begin( Name + ( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : " - " + CurrentWorkspaceLocation ) + "###VFXEditor", ref Visible, ImGuiWindowFlags.MenuBar ) ) {
+                ImGui.End();
+                return;
+            }
 
-            if(IsLoading) {
+            if( IsLoading ) {
                 ImGui.Text( "Loading...." );
                 ImGui.End();
                 return;
@@ -124,19 +124,20 @@ namespace VFXEditor {
             DrawHeader();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentDocument.Main == null ) {
+            if( DocumentManager.CurrentActiveDoc.Main == null ) {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
-                ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.10f, 0.80f, 0.10f, 1.0f ) );
+                ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.GREEN_COLOR );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                        DocManager.Save();
+                        DocumentManager.Manager.Save();
                         ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
                 }
                 ImGui.PopStyleColor();
+
                 // ===== EXPORT ======
                 ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );
@@ -147,8 +148,8 @@ namespace VFXEditor {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node = CurrentDocument.Main.AVFX.ToAVFX();
-                        SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", node.ToBytes(), "avfx" );
+                        var node =  DocumentManager.CurrentActiveDoc.Main.AVFX.ToAVFX();
+                        WriteBytesDialog( ".avfx", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
                         TexToolsUI.Show();
@@ -157,34 +158,30 @@ namespace VFXEditor {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        SaveDialog( "TXT files (*.txt)|*.txt|All files (*.*)|*.*", LastImportNode.ExportString( 0 ), "txt" );
+                        WriteBytesDialog( ".txt", DataHelper.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }
 
                 // ======== VERIFY ============
-                ImGui.SameLine();
-                if(Configuration.Config.VerifyOnLoad) {
+                if( Configuration.Config.VerifyOnLoad ) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
 
-                    var verified = CurrentDocument.Main.Verified;
-                    Vector4 color = verified switch
-                    {
-                        VerifiedStatus.OK => new Vector4( 0.15f, 0.90f, 0.15f, 1.0f ),
-                        VerifiedStatus.ISSUE => new Vector4( 0.90f, 0.15f, 0.15f, 1.0f ),
+                    var verified = DocumentManager.CurrentActiveDoc.Main.Verified;
+                    var color = verified switch {
+                        VerifiedStatus.OK => UIUtils.GREEN_COLOR,
+                        VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
                         _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
                     };
 
-                    string icon = verified switch
-                    {
+                    var icon = verified switch {
                         VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
                         VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
                         _ => $"{( char )FontAwesomeIcon.Question}"
                     };
 
-                    string text = verified switch
-                    {
+                    var text = verified switch {
                         VerifiedStatus.OK => "Verified",
                         VerifiedStatus.ISSUE => "Parsing Issues",
                         _ => "Unverified"
@@ -197,54 +194,38 @@ namespace VFXEditor {
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentDocument.Main.Draw();
+                DocumentManager.CurrentActiveDoc.Main.Draw();
             }
+
             ImGui.End();
         }
 
         public void DrawHeader() {
-            if(ImGui.BeginMenuBar()) {
-                if(ImGui.BeginMenu("File##Menu")) {
+            if( ImGui.BeginMenuBar() ) {
+                if( ImGui.BeginMenu( "File##Menu" ) ) {
                     ImGui.TextDisabled( "Workspace" );
                     ImGui.SameLine();
                     HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
-                    if(ImGui.MenuItem("New##Menu")) {
-                        NewWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Open##Menu" ) ) {
-                        OpenWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Save##Menu" ) ) {
-                        SaveWorkspace();
-                    }
-                    if( ImGui.MenuItem( "Save As##Menu" ) ) {
-                        SaveAsWorkspace();
-                    }
+                    if( ImGui.MenuItem( "New##Menu" ) ) NewWorkspace();
+                    if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
+                    if( ImGui.MenuItem( "Save##Menu" ) ) SaveWorkspace();
+                    if( ImGui.MenuItem( "Save As##Menu" ) ) SaveAsWorkspace();
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Documents##Menu" ) ) {
-                    DocUI.Show();
+                if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                    if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
+                    if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
+                    ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Textures##Menu" ) ) {
-                    TextureUI.Show();
-                }
-                if( ImGui.MenuItem( "Settings##Menu" ) ) {
-                    SettingsUI.Show();
-                }
-                if( ImGui.MenuItem( "Tools##Menu" ) ) {
-                    ToolsUI.Show();
-                }
+                if( ImGui.MenuItem( "Documents##Menu" ) ) DocUI.Show();
+                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureUI.Show();
+                if( ImGui.MenuItem( "Settings##Menu" ) ) SettingsUI.Show();
+                if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    }
-                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
-                    }
-                    if( ImGui.MenuItem( "Github##Menu" ) ) {
-                        Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
-                    }
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();
@@ -266,8 +247,8 @@ namespace VFXEditor {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            string sourceString = CurrentDocument.Source.DisplayString;
-            string previewString = CurrentDocument.Replace.DisplayString;
+            var sourceString = DocumentManager.CurrentActiveDoc.Source.DisplayString;
+            var previewString = DocumentManager.CurrentActiveDoc.Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
@@ -281,7 +262,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSourceVFX();
             }
@@ -299,7 +280,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.80f, 0.10f, 0.10f, 1.0f ) );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplaceVFX();
             }
@@ -327,8 +308,8 @@ namespace VFXEditor {
             }
 
             // =======SPAWN + EYE =========
-            string previewSpawn = DocManager.ActiveDoc.Replace.Path;
-            bool spawnDisabled = string.IsNullOrEmpty( previewSpawn );
+            var previewSpawn = DocumentManager.CurrentActiveDoc.Replace.Path;
+            var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
@@ -382,18 +363,18 @@ namespace VFXEditor {
 
         // ======= HELPERS ============
         public void OpenTemplate( string path ) {
-            VFXSelectResult newResult = new VFXSelectResult();
-            newResult.DisplayString = "[NEW]";
-            newResult.Type = VFXSelectType.Local;
-            newResult.Path = Path.Combine( TemplateLocation, "Files", path );
+            var newResult = new VFXSelectResult {
+                DisplayString = "[NEW]",
+                Type = VFXSelectType.Local,
+                Path = Path.Combine( TemplateLocation, "Files", path )
+            };
             SetSourceVFX( newResult );
         }
 
-        // =========== HELPERS ===========
-        public static void HelpMarker(string text) {
+        public static void HelpMarker( string text ) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.TextDisabled( "(?)" );
-            if(ImGui.IsItemHovered()) {
+            if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
                 ImGui.TextUnformatted( text );
@@ -402,68 +383,13 @@ namespace VFXEditor {
             }
         }
 
-        public static void ImportFileDialog(string filter, string title, Action<string> callback) {
-            Task.Run( async () => {
-                var picker = new OpenFileDialog
-                {
-                    Filter = filter,
-                    CheckFileExists = true,
-                    Title = title
-                };
-                var result = await picker.ShowDialogAsync();
-                if(result == DialogResult.OK) {
-                    callback( picker.FileName );
-                }
-            } );
+        public static void WriteBytesDialog( string filter, string data, string ext ) {
+            WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
         }
 
-        public static void SaveDialog( string filter, string data, string ext ) {
-            SaveDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
-        }
-
-        public static void SaveDialog( string filter, byte[] data, string ext ) {
-            SaveFileDialog( filter, "Select a Save Location.", ext,
-                ( string path ) => {
-                    try {
-                        File.WriteAllBytes( path, data );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not save to: " + path );
-                    }
-                }
-            );
-        }
-
-        public static void SaveFileDialog( string filter, string title, string defaultExt, Action<string> callback ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = filter,
-                    DefaultExt = defaultExt,
-                    AddExtension = true,
-                    Title = title
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    callback( picker.FileName );
-                }
-            } );
-        }
-
-        public static void SaveFolderDialog( string filter, string title, Action<string> callback ) {
-            Task.Run( async () => {
-                var picker = new SaveFileDialog
-                {
-                    Filter = filter,
-                    Title = title,
-                    ValidateNames = false,
-                    CheckFileExists = false,
-                    FileName = "Select a Folder"
-                };
-                var result = await picker.ShowDialogAsync();
-                if( result == DialogResult.OK ) {
-                    callback( picker.FileName );
-                }
+        public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
+                if( ok ) File.WriteAllBytes( res, data );
             } );
         }
     }

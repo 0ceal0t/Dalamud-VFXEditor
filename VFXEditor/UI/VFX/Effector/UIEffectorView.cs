@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX
             return item.Effector.ToAVFX().ToBytes();
         }
         public override UIEffector OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXEffector item = new AVFXEffector();
+            var item = new AVFXEffector();
             item.Read( node );
             AVFX.AddEffector( item );
             return new UIEffector( Main, item, has_dependencies );

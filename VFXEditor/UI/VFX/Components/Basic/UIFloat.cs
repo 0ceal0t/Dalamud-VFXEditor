@@ -6,39 +6,32 @@ using System.Threading.Tasks;
 
 using ImGuiNET;
 using AVFXLib.Models;
+using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIFloat : UIBase
-    {
-        public string Id;
+namespace VFXEditor.UI.VFX {
+    public class UIFloat : UIBase {
+        public string Name;
         public float Value;
         public LiteralFloat Literal;
 
-        public delegate void Change(LiteralFloat literal);
-        public Change ChangeFunction;
-
-        public UIFloat(string id, LiteralFloat literal, Change changeFunction = null)
-        {
-            Id = id;
+        public UIFloat( string name, LiteralFloat literal ) {
+            Name = name;
             Literal = literal;
-            if (changeFunction != null)
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
             Value = Literal.Value;
         }
 
-        public override void Draw(string id)
-        {
-            if (ImGui.InputFloat(Id + id, ref Value))
-            {
-                Literal.GiveValue(Value);
-                ChangeFunction(Literal);
+        public override void Draw( string id ) {
+            if( CopyManager.IsCopying ) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralFloat literal ) {
+                Literal.GiveValue( literal.Value );
+                Value = Literal.Value;
+            }
+
+            if( ImGui.InputFloat( Name + id, ref Value ) ) {
+                Literal.GiveValue( Value );
             }
         }
-
-        public static void DoNothing(LiteralFloat literal) { }
     }
 }

@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VFXSelect.Data.Rows {
-    public abstract class XivActionBase
-    {
+    public abstract class XivActionBase {
         public string Name;
         public int RowId;
         public ushort Icon;
@@ -23,17 +22,15 @@ namespace VFXSelect.Data.Rows {
         public string SelfVFXKey;
         public string HitVFXKey;
 
-        public static string castPrefix = "vfx/common/eff/";
+        public static readonly string castPrefix = "vfx/common/eff/";
 
-        public string GetCastVFXPath()
-        {
+        public string GetCastVFXPath() {
             if( !CastVFXExists )
                 return "--";
             return castPrefix + CastVFX + ".avfx";
         }
 
-        public string GetTmbPath()
-        {
+        public string GetTmbPath() {
             return "chara/action/" + SelfVFXKey + ".tmb";
         }
     }

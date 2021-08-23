@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VFXEditor.UI.Views;
 
 namespace VFXEditor.UI.VFX {
-    public class UITimelineItemSequencer : UISequencerView<UITimelineItem> {
+    public class UITimelineItemSequencer : ImGuiSequencer<UITimelineItem> {
 
         public UITimeline Timeline;
 
@@ -24,7 +24,7 @@ namespace VFXEditor.UI.VFX {
 
         public override UITimelineItem OnNew() {
             var newItem = Timeline.Timeline.AddItem();
-            newItem.EndTime.GiveValue( (int) Max );
+            newItem.EndTime.GiveValue( 1 );
             return new UITimelineItem( newItem, Timeline );
         }
 

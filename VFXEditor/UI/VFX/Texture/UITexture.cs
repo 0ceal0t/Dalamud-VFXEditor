@@ -2,15 +2,16 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using VFXEditor.Data.Texture;
+using ImGuiFileDialog;
 
 namespace VFXEditor.UI.VFX
 {
     public class UITexture : UINode {
         public UIMain Main;
         public AVFXTexture Texture;
-        //===========================
+
         public string lastValue;
         public UIString Path;
         public UINodeGraphView NodeView;
@@ -36,7 +37,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Texture";
+            var id = parentId + "/Texture";
             NodeView.Draw( id );
             DrawRename( id );
             Path.Draw( id );
@@ -47,11 +48,11 @@ namespace VFXEditor.UI.VFX
                 var t = TextureManager.Manager.PathToTexturePreview[currentPathValue];
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
-                if( ImGui.SmallButton( "Export" + id ) ) {
+                if( ImGui.Button( "Export" + id ) ) {
                     ImGui.OpenPopup( "Tex_Export" + id );
                 }
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Replace" + id ) ) {
+                if( ImGui.Button( "Replace" + id ) ) {
                     ImportDialog( currentPathValue.Trim( '\0' ) );
                 }
                 if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
@@ -63,9 +64,10 @@ namespace VFXEditor.UI.VFX
                     }
                     ImGui.EndPopup();
                 }
+
                 // ===== IMPORTED TEXTURE =======
                 if( t.IsReplaced ) {
-                    ImGui.TextColored( new Vector4( 1.0f, 0.0f, 0.0f, 1.0f ), "Replaced with imported texture" );
+                    ImGui.TextColored( UIUtils.RED_COLOR, "Replaced with imported texture" );
                     ImGui.SameLine();
                     if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
                         TextureManager.Manager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
@@ -86,46 +88,36 @@ namespace VFXEditor.UI.VFX
         }
 
         public static void ImportDialog(string newPath) {
-            Plugin.ImportFileDialog( "DDS, ATEX, or PNG File (*.png;*.atex;*.dds)|*.png*;*.atex;*.dds*|All files (*.*)|*.*", "Select Image File.",
-                ( string path ) => {
-                    try {
-                        if( !TextureManager.Manager.ImportReplaceTexture( path, newPath ) ) {
-                            PluginLog.Log( $"Could not import" );
-                        }
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                try {
+                    if( !TextureManager.Manager.ImportReplaceTexture( res, newPath ) ) {
+                        PluginLog.Error( $"Could not import" );
                     }
                 }
-            );
+                catch( Exception e ) {
+                    PluginLog.Error( "Could not import data", e );
+                }
+            } );
         }
 
         public static void SavePngDialog(string texPath) {
-            Plugin.SaveFileDialog( "PNG Image (*.png)|*.png*|All files (*.*)|*.*", "Select a Save Location.", "png",
-                ( string path ) => {
-                    try {
-                        var texFile = TextureManager.Manager.GetTexture( texPath );
-                        texFile.SaveAsPng( path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
+                texFile.SaveAsPng( res );
+            } );
         }
 
         public static void SaveDDSDialog(string texPath ) {
-            Plugin.SaveFileDialog( "DDS Image (*.dds)|*.dds*|All files (*.*)|*.*", "Select a Save Location.", "dds",
-                ( string path ) => {
-                    try {
-                        var texFile = TextureManager.Manager.GetTexture( texPath );
-                        texFile.SaveAsDDS( path );
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select an image location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
+            {
+                if( !ok ) return;
+                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
+                texFile.SaveAsDDS( res );
+            } );
         }
 
         public override string GetDefaultText() {

@@ -1,59 +1,54 @@
 using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXEmitter : Base
-    {
+namespace AVFXLib.Models {
+    public class AVFXEmitter : Base {
         public const string NAME = "Emit";
 
-        public LiteralString Sound = new LiteralString("SdNm");
-        public LiteralInt SoundNumber = new LiteralInt( "SdNo");
-        public LiteralInt LoopStart = new LiteralInt("LpSt");
-        public LiteralInt LoopEnd = new LiteralInt("LpEd");
-        public LiteralInt ChildLimit = new LiteralInt("ClCn");
-        public LiteralInt EffectorIdx = new LiteralInt("EfNo");
-        public LiteralBool AnyDirection = new LiteralBool("bAD", size:1);
-        public LiteralEnum<EmitterType> EmitterVariety = new LiteralEnum<EmitterType>("EVT");
-        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new LiteralEnum<RotationDirectionBase>("RBDT");
-        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new LiteralEnum<CoordComputeOrder>("CCOT");
-        public LiteralEnum<RotationOrder> RotationOrderType = new LiteralEnum<RotationOrder>("ROT");
-        public LiteralInt ParticleCount = new LiteralInt("PrCn");
-        public LiteralInt EmitterCount = new LiteralInt("EmCn");
-        public AVFXLife Life = new AVFXLife();
+        public LiteralString Sound = new( "SdNm" );
+        public LiteralInt SoundNumber = new( "SdNo" );
+        public LiteralInt LoopStart = new( "LpSt" );
+        public LiteralInt LoopEnd = new( "LpEd" );
+        public LiteralInt ChildLimit = new( "ClCn" );
+        public LiteralInt EffectorIdx = new( "EfNo" );
+        public LiteralBool AnyDirection = new( "bAD", size: 1 );
+        public LiteralEnum<EmitterType> EmitterVariety = new( "EVT" );
+        public LiteralEnum<RotationDirectionBase> RotationDirectionBaseType = new( "RBDT" );
+        public LiteralEnum<CoordComputeOrder> CoordComputeOrderType = new( "CCOT" );
+        public LiteralEnum<RotationOrder> RotationOrderType = new( "ROT" );
+        public LiteralInt ParticleCount = new( "PrCn" );
+        public LiteralInt EmitterCount = new( "EmCn" );
+        public AVFXLife Life = new();
 
-        public AVFXCurve CreateCount = new AVFXCurve("CrC");
-        public AVFXCurve CreateCountRandom = new AVFXCurve("CrCR");
-        public AVFXCurve CreateInterval = new AVFXCurve("CrI");
-        public AVFXCurve CreateIntervalRandom = new AVFXCurve("CrIR");
-        public AVFXCurve Gravity = new AVFXCurve("Gra");
-        public AVFXCurve GravityRandom = new AVFXCurve("GraR");
-        public AVFXCurve AirResistance = new AVFXCurve("ARs");
-        public AVFXCurve AirResistanceRandom = new AVFXCurve("ARsR");
-        public AVFXCurveColor Color = new AVFXCurveColor();
-        public AVFXCurve3Axis Position = new AVFXCurve3Axis("Pos");
-        public AVFXCurve3Axis Rotation = new AVFXCurve3Axis("Rot");
-        public AVFXCurve3Axis Scale = new AVFXCurve3Axis("Scl");
+        public AVFXCurve CreateCount = new( "CrC" );
+        public AVFXCurve CreateCountRandom = new( "CrCR" );
+        public AVFXCurve CreateInterval = new( "CrI" );
+        public AVFXCurve CreateIntervalRandom = new( "CrIR" );
+        public AVFXCurve Gravity = new( "Gra" );
+        public AVFXCurve GravityRandom = new( "GraR" );
+        public AVFXCurve AirResistance = new( "ARs" );
+        public AVFXCurve AirResistanceRandom = new( "ARsR" );
+        public AVFXCurveColor Color = new();
+        public AVFXCurve3Axis Position = new( "Pos" );
+        public AVFXCurve3Axis Rotation = new( "Rot" );
+        public AVFXCurve3Axis Scale = new( "Scl" );
 
-        public List<AVFXEmitterIterationItem> Particles = new List<AVFXEmitterIterationItem>();
-        public List<AVFXEmitterIterationItem> Emitters = new List<AVFXEmitterIterationItem>();
+        public List<AVFXEmitterIterationItem> Particles = new();
+        public List<AVFXEmitterIterationItem> Emitters = new();
 
         // Data
         //========================//
         public EmitterType Type;
         public AVFXEmitterData Data;
+        private readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public AVFXEmitter() : base(NAME)
-        {
+        public AVFXEmitter() : base( NAME ) {
             Assigned = true;
-            Attributes = new List<Base>(new Base[]{
+            Attributes = new List<Base>( new Base[]{
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -81,25 +76,23 @@ namespace AVFXLib.Models
                 Position,
                 Rotation,
                 Scale,
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
             Type = EmitterVariety.Value;
 
             AVFXEmitterCreateParticle lastParticle = null;
             AVFXEmitterCreateEmitter lastEmitter = null;
 
-            foreach (AVFXNode item in node.Children)
-            {
-                switch (item.Name){
+            foreach( var item in node.Children ) {
+                switch( item.Name ) {
                     // ITPR ==================
                     case AVFXEmitterCreateParticle.NAME:
                         lastParticle = new AVFXEmitterCreateParticle();
-                        lastParticle.Read(item);
+                        lastParticle.Read( item );
                         break;
 
                     // ItEm =================
@@ -110,132 +103,108 @@ namespace AVFXLib.Models
 
                     // DATA ================
                     case AVFXEmitterData.NAME:
-                        SetType(Type);
-                        ReadAVFX(Data, node);
+                        SetType( Type );
+                        ReadAVFX( Data, node );
                         break;
                 }
             }
 
-            if(lastParticle != null)
-            {
-                Particles.AddRange(lastParticle.Items);
+            if( lastParticle != null ) {
+                Particles.AddRange( lastParticle.Items );
             }
-            if(lastEmitter != null)
-            {
-                int startIndex = Particles.Count();
-                int emitterCount = lastEmitter.Items.Count() - Particles.Count();
-                Emitters.AddRange(lastEmitter.Items.GetRange(startIndex, emitterCount)); // remove particles
+            if( lastEmitter != null ) {
+                var startIndex = Particles.Count;
+                var emitterCount = lastEmitter.Items.Count - Particles.Count;
+                Emitters.AddRange( lastEmitter.Items.GetRange( startIndex, emitterCount ) ); // remove particles
             }
         }
 
-        public AVFXEmitterIterationItem AddParticle()
-        {
-            AVFXEmitterIterationItem ItPr = new AVFXEmitterIterationItem();
+        public AVFXEmitterIterationItem AddParticle() {
+            var ItPr = new AVFXEmitterIterationItem();
             ItPr.ToDefault();
-            Particles.Add(ItPr);
-            ParticleCount.GiveValue(Particles.Count());
+            Particles.Add( ItPr );
+            ParticleCount.GiveValue( Particles.Count );
             return ItPr;
         }
         public void AddParticle( AVFXEmitterIterationItem item ) {
             Particles.Add( item );
-            ParticleCount.GiveValue( Particles.Count() );
+            ParticleCount.GiveValue( Particles.Count );
         }
-        public void RemoveParticle(int idx)
-        {
-            Particles.RemoveAt(idx);
-            ParticleCount.GiveValue(Particles.Count());
+        public void RemoveParticle( int idx ) {
+            Particles.RemoveAt( idx );
+            ParticleCount.GiveValue( Particles.Count );
         }
         public void RemoveParticle( AVFXEmitterIterationItem item ) {
             Particles.Remove( item );
-            ParticleCount.GiveValue( Particles.Count() );
+            ParticleCount.GiveValue( Particles.Count );
         }
         //
-        public AVFXEmitterIterationItem AddEmitter()
-        {
-            AVFXEmitterIterationItem ItEm = new AVFXEmitterIterationItem();
+        public AVFXEmitterIterationItem AddEmitter() {
+            var ItEm = new AVFXEmitterIterationItem();
             ItEm.ToDefault();
-            Emitters.Add(ItEm);
-            EmitterCount.GiveValue(Emitters.Count());
+            Emitters.Add( ItEm );
+            EmitterCount.GiveValue( Emitters.Count );
             return ItEm;
         }
         public void AddEmitter( AVFXEmitterIterationItem item ) {
             Emitters.Add( item );
-            EmitterCount.GiveValue( Emitters.Count() );
+            EmitterCount.GiveValue( Emitters.Count );
         }
-        public void RemoveEmitter(int idx)
-        {
-            Emitters.RemoveAt(idx);
-            EmitterCount.GiveValue(Emitters.Count());
+        public void RemoveEmitter( int idx ) {
+            Emitters.RemoveAt( idx );
+            EmitterCount.GiveValue( Emitters.Count );
         }
         public void RemoveEmitter( AVFXEmitterIterationItem item ) {
             Emitters.Remove( item );
-            EmitterCount.GiveValue( Emitters.Count() );
+            EmitterCount.GiveValue( Emitters.Count );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            AVFXNode emitAvfx = new AVFXNode("Emit");
+        public override AVFXNode ToAVFX() {
+            var emitAvfx = new AVFXNode( "Emit" );
 
-            PutAVFX(emitAvfx, Attributes);
+            PutAVFX( emitAvfx, Attributes );
 
             // ITPR
             //=======================//
-            for (int i = 0; i < Particles.Count; i++)
-            {
-                AVFXEmitterCreateParticle ItPr = new AVFXEmitterCreateParticle();
-                ItPr.Items = Particles.GetRange(0, i + 1);
-                emitAvfx.Children.Add(ItPr.ToAVFX());
+            for( var i = 0; i < Particles.Count; i++ ) {
+                var ItPr = new AVFXEmitterCreateParticle {
+                    Items = Particles.GetRange( 0, i + 1 )
+                };
+                emitAvfx.Children.Add( ItPr.ToAVFX() );
             }
 
             // ITEM
             //=======================//
-            for( int i = 0; i < Emitters.Count; i++ )
-            {
-                AVFXEmitterCreateEmitter ItEM = new AVFXEmitterCreateEmitter();
-                ItEM.Items.AddRange(Particles);
-                ItEM.Items.AddRange(Emitters.GetRange( 0, i + 1 )); // get 1, then 2, etc.
+            for( var i = 0; i < Emitters.Count; i++ ) {
+                var ItEM = new AVFXEmitterCreateEmitter();
+                ItEM.Items.AddRange( Particles );
+                ItEM.Items.AddRange( Emitters.GetRange( 0, i + 1 ) ); // get 1, then 2, etc.
                 emitAvfx.Children.Add( ItEM.ToAVFX() );
             }
 
-            PutAVFX(emitAvfx, Data);
+            PutAVFX( emitAvfx, Data );
 
             return emitAvfx;
         }
 
-        public void SetVariety(EmitterType type)
-        {
-            EmitterVariety.GiveValue(type);
+        public void SetVariety( EmitterType type ) {
+            EmitterVariety.GiveValue( type );
             Type = type;
-            SetType(type);
-            SetDefault(Data);
+            SetType( type );
+            SetDefault( Data );
         }
 
-        public void SetType(EmitterType type)
-        {
-            switch (type)
-            {
-                case EmitterType.Point: // no data here :)
-                    Data = null;
-                    break;
-                case EmitterType.Cone:
-                    Data = new AVFXEmitterDataCone();
-                    break;
-                case EmitterType.ConeModel:
-                    Data = new AVFXEmitterDataConeModel();
-                    break;
-                case EmitterType.SphereModel:
-                    Data = new AVFXEmitterDataSphereModel();
-                    break;
-                case EmitterType.CylinderModel:
-                    Data = new AVFXEmitterDataCylinderModel();
-                    break;
-                case EmitterType.Model:
-                    Data = new AVFXEmitterDataModel();
-                    break;
-                default:
-                    Data = null;
-                    break;
-            }
+        public void SetType( EmitterType type ) {
+            Data = type switch {
+                // no data here :)
+                EmitterType.Point => null,
+                EmitterType.Cone => new AVFXEmitterDataCone(),
+                EmitterType.ConeModel => new AVFXEmitterDataConeModel(),
+                EmitterType.SphereModel => new AVFXEmitterDataSphereModel(),
+                EmitterType.CylinderModel => new AVFXEmitterDataCylinderModel(),
+                EmitterType.Model => new AVFXEmitterDataModel(),
+                _ => null,
+            };
         }
     }
 }

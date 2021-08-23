@@ -1,17 +1,13 @@
 using AVFXLib.Models;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VFXEditor.Data;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
 namespace VFXEditor {
     public partial class Plugin {
-        public ReplaceDoc CurrentDocument => DocManager.ActiveDoc;
-
         private DateTime LastSelect = DateTime.Now;
 
         public void SetSourceVFX( VFXSelectResult selectResult) {
@@ -23,59 +19,59 @@ namespace VFXEditor {
 
             switch( selectResult.Type ) {
                 case VFXSelectType.Local: // LOCAL
-                    bool localResult = GetLocalFile( selectResult.Path, out var localAvfx );
+                    var localResult = DataHelper.GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
                         LoadCurrentVFX( localAvfx );
                     }
                     else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
+                        PluginLog.Error( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;
                 default: // EVERYTHING ELSE: GAME FILES
-                    bool gameResult = GetGameFile( selectResult.Path, out var gameAvfx );
+                    var gameResult = DataHelper.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
                         LoadCurrentVFX( gameAvfx );
                     }
                     else {
-                        PluginLog.Log( "Could not get file: " + selectResult.Path );
+                        PluginLog.Error( "Could not get file: " + selectResult.Path );
                         return;
                     }
                     break;
             }
-            if( addToRecent ) Configuration.AddRecent( selectResult );
-            DocManager.UpdateSource( selectResult );
-            DocManager.Save();
+            if( addToRecent ) Configuration.Config.AddRecent( selectResult );
+            DocumentManager.Manager.UpdateSource( selectResult );
+            DocumentManager.Manager.Save();
         }
 
-        public void RemoveSourceVFX() {
-            DocManager.UpdateSource( VFXSelectResult.None() );
-            CurrentDocument.Dispose();
+        public static void RemoveSourceVFX() {
+            DocumentManager.Manager.UpdateSource( VFXSelectResult.None() );
+            DocumentManager.CurrentActiveDoc.Dispose();
         }
 
-        public void SetReplaceVFX( VFXSelectResult replaceResult) {
+        public static void SetReplaceVFX( VFXSelectResult replaceResult) {
             SetReplaceVFX( replaceResult, true );
         }
-        public void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
-            if( addToRecent ) Configuration.AddRecent( replaceResult );
-            DocManager.UpdateReplace( replaceResult );
+        public static void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
+            if( addToRecent ) Configuration.Config.AddRecent( replaceResult );
+            DocumentManager.Manager.UpdateReplace( replaceResult );
         }
 
-        public void RemoveReplaceVFX() {
-            DocManager.UpdateReplace( VFXSelectResult.None() );
+        public static void RemoveReplaceVFX() {
+            DocumentManager.Manager.UpdateReplace( VFXSelectResult.None() );
         }
 
-        public void LoadCurrentVFX( AVFXBase avfx ) {
+        public static void LoadCurrentVFX( AVFXBase avfx ) {
             if( avfx == null ) return;
-            CurrentDocument.SetAVFX( avfx );
+            DocumentManager.CurrentActiveDoc.SetAVFX( avfx );
 
-            if( Configuration.VerifyOnLoad ) {
+            if( Configuration.Config.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
-                bool verifyResult = LastImportNode.CheckEquals( node, out List<string> messages );
-                CurrentDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                var verifyResult = DataHelper.LastImportNode.CheckEquals( node, out var messages );
+                DocumentManager.CurrentActiveDoc.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
-                    PluginLog.Log( m );
+                    PluginLog.Warning( m );
                 }
             }
         }

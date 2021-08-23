@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +14,8 @@ namespace VFXEditor.UI.VFX
         public UIMain Main;
         //=======================
         public UICombo<EmitterType> Type;
-        List<UIItem> Animation;
-        UIItemSplitView<UIItem> AnimationSplit;
+        public List<UIItem> Animation;
+        public UIItemSplitView<UIItem> AnimationSplit;
         //========================
         public List<UIEmitterItem> ParticleList;
         public List<UIEmitterItem> EmitterList;
@@ -39,8 +40,16 @@ namespace VFXEditor.UI.VFX
             ParticleList = new List<UIEmitterItem>();
             EmitterList = new List<UIEmitterItem>();
             //======================
-            Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, changeFunction: ChangeType );
-            SoundInput = new UIString( "Sound", Emitter.Sound, changeFunction: SoundCheck );
+
+            Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, onChange: () => {
+                Emitter.SetVariety( Emitter.EmitterVariety.Value );
+                SetType();
+            } );
+            SoundInput = new UIString( "Sound", Emitter.Sound, onChange: () => {
+                if( Emitter.Sound.Value.Trim( '\0' ).Length == 0 ) {
+                    Emitter.Sound.Assigned = false;
+                }
+            } );
             SoundIndex = new UIInt( "Sound Index", Emitter.SoundNumber );
             //======================
             Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
@@ -80,35 +89,14 @@ namespace VFXEditor.UI.VFX
         }
         public void SetType() {
             Data?.Dispose();
-
-            switch( Emitter.EmitterVariety.Value ) {
-                case EmitterType.Point:
-                    Data = null;
-                    break;
-                case EmitterType.SphereModel:
-                    Data = new UIEmitterDataSphereModel( ( AVFXEmitterDataSphereModel )Emitter.Data );
-                    break;
-                case EmitterType.CylinderModel:
-                    Data = new UIEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data );
-                    break;
-                case EmitterType.Model:
-                    Data = new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data, this );
-                    break;
-                case EmitterType.Cone:
-                    Data = new UIEmitterDataCone( ( AVFXEmitterDataCone )Emitter.Data );
-                    break;
-                case EmitterType.ConeModel:
-                    Data = new UIEmitterDataConeModel( ( AVFXEmitterDataConeModel )Emitter.Data );
-                    break;
-                default:
-                    Data = null;
-                    break;
-            }
-        }
-        public void ChangeType(LiteralEnum<EmitterType> literal)
-        {
-            Emitter.SetVariety(literal.Value);
-            SetType();
+            Data = Emitter.EmitterVariety.Value switch {
+                EmitterType.SphereModel => new UIEmitterDataSphereModel( ( AVFXEmitterDataSphereModel )Emitter.Data ),
+                EmitterType.CylinderModel => new UIEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data ),
+                EmitterType.Model => new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data, this ),
+                EmitterType.Cone => new UIEmitterDataCone( ( AVFXEmitterDataCone )Emitter.Data ),
+                EmitterType.ConeModel => new UIEmitterDataConeModel( ( AVFXEmitterDataConeModel )Emitter.Data ),
+                _ => null
+            };
         }
 
         private void DrawParameters( string id )
@@ -129,6 +117,7 @@ namespace VFXEditor.UI.VFX
             DrawAttrs( id );
             ImGui.EndChild();
         }
+
         private void DrawData( string id )
         {
             ImGui.BeginChild( id );
@@ -137,7 +126,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Emitter";
+            var id = parentId + "/Emitter";
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -167,14 +156,8 @@ namespace VFXEditor.UI.VFX
             }
         }
 
-        public void SoundCheck(LiteralString literal ) { // not enough to just set the value to "", need to also unassign it
-            if(literal.Value.Trim('\0').Length == 0) {
-                literal.Assigned = false;
-            }
-        }
-
         public override string GetDefaultText() {
-            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.stringValue() + ")";
+            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.StringValue() + ")";
         }
 
         public override string GetWorkspaceId() {

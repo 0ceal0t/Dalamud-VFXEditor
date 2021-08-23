@@ -1,11 +1,4 @@
 using AVFXLib.Models;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
     public class UIEmitterItem : UIWorkspaceItem {
@@ -16,7 +9,7 @@ namespace VFXEditor.UI.VFX {
         public UINodeSelect<UIParticle> ParticleSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
 
-        public UIEmitterItem(AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter) {
+        public UIEmitterItem( AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter ) {
             Iteration = iteration;
             Emitter = emitter;
             IsParticle = isParticle;
@@ -52,10 +45,9 @@ namespace VFXEditor.UI.VFX {
             Attributes.Add( new UIInt( "Generate Delay", Iteration.GenerateDelay ) );
             Attributes.Add( new UICheckbox( "Generate Delay By One", Iteration.GenerateDelayByOne ) );
         }
-        
-        // =========== DRAW ==============
+
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Item";
+            var id = parentId + "/Item";
             DrawRename( id );
             if( IsParticle ) {
                 ParticleSelect.Draw( id );
@@ -67,12 +59,12 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override string GetDefaultText() {
-            string Type = IsParticle ? "Particle" : "Emitter";
+            var Type = IsParticle ? "Particle" : "Emitter";
             return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
         }
 
         public override string GetWorkspaceId() {
-            string Type = IsParticle ? "Ptcl" : "Emit";
+            var Type = IsParticle ? "Ptcl" : "Emit";
             return $"{Emitter.GetWorkspaceId()}/{Type}{Idx}";
         }
     }

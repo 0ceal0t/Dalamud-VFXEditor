@@ -4,70 +4,68 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VFXSelect.UI;
+using ImGuiFileDialog;
+using Dalamud.Logging;
 
 namespace VFXEditor {
-    public enum SavedItemType {
-        None,
-        Binder,
-        Emitter,
-        Effector,
-        Particle,
-        Timeline
-    }
-
-    public struct SavedItem {
-        public string Name;
-        public SavedItemType Type;
-        public string Path;
-    }
-
     [Serializable]
     public class Configuration : IPluginConfiguration {
+        public static Configuration Config => Instance;
+        private static Configuration Instance = null;
+
+        public static void Initialize( DalamudPluginInterface pluginInterface ) {
+            Instance = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Instance.InitializeInstance( pluginInterface );
+            Directory.CreateDirectory( Instance.WriteLocation );
+            PluginLog.Log( "Write location: " + Instance.WriteLocation );
+        }
+
+        public static void Dispose() {
+            Instance = null;
+        }
+
+        // ====== INSTANCE ======
+
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
-        // ==================
         public bool VerifyOnLoad = true;
         public bool LogAllFiles = false;
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
         public bool OverlayLimit = true;
-
-        public List<VFXSelectResult> RecentSelects = new List<VFXSelectResult>();
-        public Dictionary<string, SavedItem> SavedItems = new Dictionary<string, SavedItem>();
-
         public string WriteLocation = Path.Combine( new[] {
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "XIVLauncher",
             "pluginConfigs",
             "VFXEditor",
-        });
+        } );
+        public List<VFXSelectResult> RecentSelects = new();
+        public bool FilepickerImagePreview = true;
 
         [NonSerialized]
-        private DalamudPluginInterface _pluginInterface;
-        [NonSerialized]
-        public static Configuration Config;
+        private DalamudPluginInterface PluginInterface;
 
-        public void Initialize( DalamudPluginInterface pluginInterface ) {
-            _pluginInterface = pluginInterface;
-            Config = this;
-            _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+        private void InitializeInstance( DalamudPluginInterface pluginInterface ) {
+            PluginInterface = pluginInterface;
+            PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            FileDialogManager.ImagePreview = FilepickerImagePreview;
         }
 
-        public void AddRecent(VFXSelectResult result ) {
+        public void AddRecent( VFXSelectResult result ) {
             if( RecentSelects.Contains( result ) ) {
                 RecentSelects.Remove( result ); // want to move it to the top
             }
             RecentSelects.Add( result );
-            if(RecentSelects.Count > SaveRecentLimit ) {
+            if( RecentSelects.Count > SaveRecentLimit ) {
                 RecentSelects.RemoveRange( 0, RecentSelects.Count - SaveRecentLimit );
             }
             Save();
         }
 
         public void Save() {
-            _pluginInterface.SavePluginConfig( this );
-            _pluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            PluginInterface.SavePluginConfig( this );
+            PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
     }
 }

@@ -23,14 +23,14 @@ namespace VFXEditor.UI.Views {
 
         public bool AllowNewDelete = true;
 
-        public UISequencerView( List<T> _items, bool allowNewDelete = true) {
+        public UISequencerView( List<T> _items, bool allowNewDelete = true ) {
             AllowNewDelete = allowNewDelete;
             Items = _items;
             SetupIdx();
         }
 
         public void SetupIdx() {
-            for( int i = 0; i < Items.Count; i++ ) {
+            for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }
         }
@@ -40,80 +40,81 @@ namespace VFXEditor.UI.Views {
         public float Max = 60;
         public float Min = 0;
 
-        static int LeftWidth = 125;
-        static int HeaderHeight = 25;
-        static int FooterHeight = 15;
-        static int RowHeight = 20;
-        static int GrabWidth = 10;
+        private static readonly int LeftWidth = 125;
+        private static readonly int HeaderHeight = 25;
+        private static readonly int FooterHeight = 15;
+        private static readonly int RowHeight = 20;
+        private static readonly int GrabWidth = 10;
 
-        static uint BlackLine_Color = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
-        static uint BlackLine_Color_Soft = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 0.5f ) );
-        static uint ContentColor_Odd = ImGui.GetColorU32( new Vector4( 0.43f, 0.43f, 0.43f, 0.5f ) );
-        static uint ContentColor_Even = ImGui.GetColorU32( new Vector4( 0.23f, 0.23f, 0.23f, 0.4f ) );
-        static uint ContentColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.07f, 0, 1 ) );
-        static uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.7f, 1 ) );
-        static uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
-        static uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.216f, 1 ) );
-        static uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
-        static uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
-        static uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
-        static uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
-        static uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
-        static uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
-        static uint TickColor = ImGui.GetColorU32( new Vector4( 0.376f, 0.376f, 0.376f, 1 ) );
+        private static readonly uint BlackLine_Color = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
+        private static readonly uint BlackLine_Color_Soft = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 0.5f ) );
+        private static readonly uint ContentColor_Odd = ImGui.GetColorU32( new Vector4( 0.43f, 0.43f, 0.43f, 0.5f ) );
+        private static readonly uint ContentColor_Even = ImGui.GetColorU32( new Vector4( 0.23f, 0.23f, 0.23f, 0.4f ) );
+        private static readonly uint ContentColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.07f, 0, 1 ) );
+        private static readonly uint BarColor = ImGui.GetColorU32( new Vector4( 0.5f, 0.5f, 0.7f, 1 ) );
+        private static readonly uint BarColor_SelectedColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.4f, 0.2f, 0.5f ) );
+        private static readonly uint HeaderColor = ImGui.GetColorU32( new Vector4( 0.216f, 0.216f, 0.216f, 1 ) );
+        private static readonly uint FooterColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        private static readonly uint FooterColor_ScrollColor = ImGui.GetColorU32( new Vector4( 0.314f, 0.314f, 0.314f, 1 ) );
+        private static readonly uint FooterColor_HandleColor = ImGui.GetColorU32( new Vector4( 0.414f, 0.414f, 0.414f, 1 ) );
+        private static readonly uint LeftColor = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        private static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.133f, 0.133f, 0.133f, 1 ) );
+        private static readonly uint LeftTextColor = ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
+        private static readonly uint LeftTextColor_SelectedColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.6f, 0.4f, 1 ) );
+        private static readonly uint TickColor_TextColor = ImGui.GetColorU32( new Vector4( 0.73f, 0.73f, 0.73f, 1 ) );
+        private static readonly uint TickColor = ImGui.GetColorU32( new Vector4( 0.376f, 0.376f, 0.376f, 1 ) );
 
-        float ScrollY = 0;
+        private float ScrollY = 0;
 
         public T Selected = null;
 
-        enum DragState {
+        private enum DragState {
             None,
             Dragging,
             DraggingLeft,
             DraggingRight
         };
 
-        DragState Footer_Dragging = DragState.None;
-        Vector2 Footer_LastDrag;
+        private DragState Footer_Dragging = DragState.None;
+        private Vector2 Footer_LastDrag;
 
-        DragState Content_Dragging = DragState.None;
-        Vector2 Content_LastDrag;
+        private DragState Content_Dragging = DragState.None;
+        private Vector2 Content_LastDrag;
 
-        bool DrawOnce = false;
+        private bool DrawOnce = false;
         public override void Draw( string parentId ) {
             var Id = parentId + "-Sequence";
+
             // ====== FIX UP BOUNDS ==========
             Max = 0;
-            foreach(var item in Items ) {
-                if(GetEnd(item) > Max ) {
+            foreach( var item in Items ) {
+                if( GetEnd( item ) > Max ) {
                     Max = GetEnd( item );
                 }
             }
-            if(Max <= 0 ) { // all "infinite"
+            if( Max <= 0 ) { // all "infinite"
                 Max = 60;
             }
-            if(Min < 0 ) {
+            if( Min < 0 ) {
                 Min = 0;
             }
-            if(MinVisible < 0 ) {
+            if( MinVisible < 0 ) {
                 MinVisible = 0;
             }
-            if(MaxVisible > Max) {
+            if( MaxVisible > Max ) {
                 MaxVisible = Max;
             }
-            if(MinVisible < Min ) {
+            if( MinVisible < Min ) {
                 MinVisible = Min;
             }
 
-            if(!DrawOnce) {
+            if( !DrawOnce ) {
                 DrawOnce = true;
                 MaxVisible = Max * 0.9f;
             }
 
             var space = ImGui.GetContentRegionAvail();
-            Vector2 Size = new Vector2( space.X, 200 );
+            var Size = new Vector2( space.X, 200 );
             var DrawList = ImGui.GetWindowDrawList();
 
             ImGui.BeginGroup();
@@ -132,11 +133,11 @@ namespace VFXEditor.UI.Views {
             var ContentSize = Size - new Vector2( LeftWidth, HeaderHeight + FooterHeight );
             var HeaderSize = new Vector2( Size.X, HeaderHeight );
             var TimelineSize = new Vector2( Size.X - LeftWidth, HeaderHeight );
-            var LeftSize = new Vector2( LeftWidth, Size.Y - (HeaderHeight + FooterHeight) );
-            var FooterSize = new Vector2( ContentSize.X  - 15, FooterHeight );
+            var LeftSize = new Vector2( LeftWidth, Size.Y - ( HeaderHeight + FooterHeight ) );
+            var FooterSize = new Vector2( ContentSize.X - 15, FooterHeight );
 
             var Diff = MaxVisible - MinVisible;
-            float PixelsPerFrame = TimelineSize.X / Diff;
+            var PixelsPerFrame = TimelineSize.X / Diff;
 
             DrawList.AddRectFilled( CanvasTopLeft, CanvasTopLeft + HeaderSize, HeaderColor );
             DrawList.AddRectFilled( ContentPosition, ContentPosition + ContentSize, HeaderColor );
@@ -149,9 +150,9 @@ namespace VFXEditor.UI.Views {
                 if( Selected != null ) {
                     DrawList.AddText( UiBuilder.IconFont, 15, CanvasTopLeft + new Vector2( 40, 5 ), ContentColor_HandleColor, $"{( char )FontAwesomeIcon.Trash}" );
                 }
-                if(ImGui.IsItemClicked(ImGuiMouseButton.Left) ) {
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) ) {
                     var pos = ImGui.GetMousePos() - CanvasTopLeft;
-                    if(pos.X >= 10 && pos.X <= 25 && pos.Y >= 5 && pos.Y <= 20 ) { // gross, but regular buttons dont' work for some reason
+                    if( pos.X >= 10 && pos.X <= 25 && pos.Y >= 5 && pos.Y <= 20 ) { // gross, but regular buttons dont' work for some reason
                         var item = OnNew();
                         if( item != null ) {
                             item.Idx = Items.Count;
@@ -168,9 +169,9 @@ namespace VFXEditor.UI.Views {
             }
 
             // ==== DRAW TIMELINE ====
-            DrawList.PushClipRect( TimelinePosition, TimelinePosition + TimelineSize + new Vector2(0, ContentSize.Y), true );
-            float _smallTick = 0.5f; // how many frames per tick?
-            float _largeTick = 1.0f;
+            DrawList.PushClipRect( TimelinePosition, TimelinePosition + TimelineSize + new Vector2( 0, ContentSize.Y ), true );
+            var _smallTick = 0.5f; // how many frames per tick?
+            var _largeTick = 1.0f;
             if( PixelsPerFrame < 5 ) {
                 _smallTick = 10;
                 _largeTick = 50;
@@ -188,14 +189,14 @@ namespace VFXEditor.UI.Views {
             var _maxSmall = MaxVisible - ( MaxVisible % _smallTick );
             var _minLarge = MinVisible - ( MinVisible % _largeTick );
             var _maxLarge = MaxVisible - ( MaxVisible % _largeTick );
-            var _smallOffset = -(MinVisible % _smallTick);
-            var _largeOffset = -(MinVisible % _largeTick);
+            var _smallOffset = -( MinVisible % _smallTick );
+            var _largeOffset = -( MinVisible % _largeTick );
 
-            for(int i = 0; i <= (_maxSmall - _minSmall) / _smallTick; i++ ) {
+            for( var i = 0; i <= ( _maxSmall - _minSmall ) / _smallTick; i++ ) {
                 var position = TimelinePosition + new Vector2( ( _smallOffset + i * _smallTick ) * PixelsPerFrame, HeaderHeight );
                 DrawList.AddLine( position + new Vector2( 0, ContentSize.Y ), position + new Vector2( 0, -7 ), TickColor, 1 );
             }
-            for( int i = 0; i <= ( _maxLarge - _minLarge ) / _largeTick; i++ ) {
+            for( var i = 0; i <= ( _maxLarge - _minLarge ) / _largeTick; i++ ) {
                 var _time = _minLarge + i * _largeTick;
                 var position = TimelinePosition + new Vector2( ( _largeOffset + i * _largeTick ) * PixelsPerFrame, HeaderHeight );
                 DrawList.AddLine( position + new Vector2( 0, ContentSize.Y ), position + new Vector2( 0, -20 ), TickColor, 1 );
@@ -211,11 +212,11 @@ namespace VFXEditor.UI.Views {
             var content_hovering = Contained( ImGui.GetMousePos(), ContentPosition, ContentSize );
 
             DrawList.PushClipRect( ContentPosition, ContentPosition + ContentSize, true );
-            for(int idx = 0; idx < Math.Ceiling(Math.Max(Items.Count, ContentSize.Y / RowHeight)); idx++ ) {
+            for( var idx = 0; idx < Math.Ceiling( Math.Max( Items.Count, ContentSize.Y / RowHeight ) ); idx++ ) {
                 var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddRectFilled( _position, _position + new Vector2( ContentSize.X, RowHeight ), idx % 2 == 0 ? ContentColor_Even : ContentColor_Odd ); // STRIPE
             }
-            for( int idx = 0; idx < Items.Count; idx++ ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 float _start = GetStart( item );
                 float _end = GetEnd( item );
@@ -223,8 +224,8 @@ namespace VFXEditor.UI.Views {
                 if( _isInfinite ) { // stretch it to the end
                     _end = MaxVisible;
                 }
-                float _startOffset = PixelsPerFrame * ( _start - MinVisible );
-                float _endOffset = PixelsPerFrame * ( _end - MinVisible );
+                var _startOffset = PixelsPerFrame * ( _start - MinVisible );
+                var _endOffset = PixelsPerFrame * ( _end - MinVisible );
                 var _position = ContentPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddLine( _position, _position + new Vector2( ContentSize.X, 0 ), BlackLine_Color_Soft );
                 if( item == Selected ) {
@@ -233,7 +234,7 @@ namespace VFXEditor.UI.Views {
                 DrawList.AddRectFilled( _position + new Vector2( _startOffset, 2 ), _position + new Vector2( _endOffset, RowHeight - 2 ), BarColor, 2 ); // regular bar
 
                 // ==== HANDLES ====
-                if( content_hovering && row_idx == idx && Content_Dragging == DragState.None) {
+                if( content_hovering && row_idx == idx && Content_Dragging == DragState.None ) {
                     var delta = ImGui.GetMousePos().X - ContentPosition.X;
                     if( !_isInfinite && delta >= _endOffset - GrabWidth && delta <= _endOffset + GrabWidth ) { // HOVER RIGHT
                         DrawList.AddLine( _position + new Vector2( _endOffset, 0 ), _position + new Vector2( _endOffset, RowHeight ), ContentColor_HandleColor, 3 );
@@ -245,11 +246,11 @@ namespace VFXEditor.UI.Views {
                 else if( Content_Dragging == DragState.DraggingRight && Selected == item ) { // DRAG RIGHT
                     DrawList.AddLine( _position + new Vector2( _endOffset, 0 ), _position + new Vector2( _endOffset, RowHeight ), ContentColor_HandleColor, 3 );
                 }
-                else if(Content_Dragging == DragState.DraggingLeft && Selected == item ) { // DRAG LEFT
+                else if( Content_Dragging == DragState.DraggingLeft && Selected == item ) { // DRAG LEFT
                     DrawList.AddLine( _position + new Vector2( _startOffset, 0 ), _position + new Vector2( _startOffset, RowHeight ), ContentColor_HandleColor, 3 );
                 }
 
-                if(_isInfinite) {
+                if( _isInfinite ) {
                     DrawList.AddText( UiBuilder.IconFont, 12, _position + new Vector2( _endOffset - 25, 5 ), LeftTextColor, $"{( char )FontAwesomeIcon.Infinity}" );
                 }
 
@@ -259,7 +260,7 @@ namespace VFXEditor.UI.Views {
 
             // ======= DRAW LEFT =========
             DrawList.PushClipRect( LeftPosition, LeftPosition + LeftSize, true );
-            for( int idx = 0; idx < Items.Count; idx++ ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 var _position = LeftPosition + new Vector2( 0, -ScrollY + idx * RowHeight );
                 DrawList.AddText( _position + new Vector2( 5, 2 ), item == Selected ? LeftTextColor_SelectedColor : LeftTextColor, item.GetText() );
@@ -269,7 +270,7 @@ namespace VFXEditor.UI.Views {
             // ======= DRAW FOOTER =========
             var scrollWidth = FooterSize.X * ( MaxVisible - MinVisible ) / ( Max - Min );
             var offsetLeft = FooterSize.X * ( MinVisible ) / ( Max - Min );
-            var scrollStartPosition = FooterPosition + new Vector2( offsetLeft, 0);
+            var scrollStartPosition = FooterPosition + new Vector2( offsetLeft, 0 );
             var scrollEndPosition = scrollStartPosition + new Vector2( scrollWidth, 0 );
             DrawList.AddRectFilled( scrollStartPosition + new Vector2( 0, 3 ), scrollStartPosition + new Vector2( scrollWidth, FooterHeight - 4 ), FooterColor_ScrollColor );
             DrawList.AddCircleFilled( scrollStartPosition + new Vector2( 0, 7 ), 6, FooterColor_HandleColor );
@@ -288,7 +289,7 @@ namespace VFXEditor.UI.Views {
             }
 
             if( ImGui.IsItemActive() ) {
-                if( ImGui.IsMouseDragging(ImGuiMouseButton.Left) && Selected != null ) {
+                if( ImGui.IsMouseDragging( ImGuiMouseButton.Left ) && Selected != null ) {
                     var dragPos = ImGui.GetMouseDragDelta();
                     if( Content_Dragging == DragState.None ) { // START DRAGGING
                         var delta = ImGui.GetMousePos().X - ContentPosition.X;
@@ -315,15 +316,15 @@ namespace VFXEditor.UI.Views {
                             if( !_isInfinite ) { // adjust max if needed
                                 var increaseMax = Math.Max( GetEnd( Selected ) + moveFramesX - Max, 0 );
                                 Max += increaseMax;
-                                SetEnd( Selected, ( int ) Math.Round(GetEnd( Selected ) + moveFramesX)  );
+                                SetEnd( Selected, ( int )Math.Round( GetEnd( Selected ) + moveFramesX ) );
                             }
-                            SetStart( Selected, ( int ) Math.Round( GetStart( Selected ) + moveFramesX ) );
+                            SetStart( Selected, ( int )Math.Round( GetStart( Selected ) + moveFramesX ) );
                         }
-                        else if(Content_Dragging == DragState.DraggingLeft ) {
+                        else if( Content_Dragging == DragState.DraggingLeft ) {
                             moveFramesX -= Math.Min( GetStart( Selected ) + moveFramesX - Min, 0 );
                             SetStart( Selected, ( int )Math.Round( GetStart( Selected ) + moveFramesX ) );
                         }
-                        else if(Content_Dragging == DragState.DraggingRight ) {
+                        else if( Content_Dragging == DragState.DraggingRight ) {
                             var increaseMax = Math.Max( GetEnd( Selected ) + moveFramesX - Max, 0 );
                             Max += increaseMax;
                             SetEnd( Selected, ( int )Math.Round( GetEnd( Selected ) + moveFramesX ) );
@@ -350,14 +351,14 @@ namespace VFXEditor.UI.Views {
             ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 0, -LeftSize.Y - FooterHeight - 4 ) );
             ImGui.BeginChild( Id + "-Left", LeftSize, false );
             ImGui.InvisibleButton( Id + " -LeftButton", new Vector2( LeftSize.X, RowHeight * Items.Count ) );
-            if( Contained(ImGui.GetMousePos(), LeftPosition, LeftSize) ) {
+            if( Contained( ImGui.GetMousePos(), LeftPosition, LeftSize ) ) {
                 ScrollY = ImGui.GetScrollY();
             }
             else {
                 ImGui.SetScrollY( ScrollY );
             }
             if( ImGui.IsItemClicked() ) {
-                if( row_idx != -1) {
+                if( row_idx != -1 ) {
                     Selected = Items[row_idx];
                 }
             }
@@ -368,15 +369,15 @@ namespace VFXEditor.UI.Views {
             ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( LeftSize.X, -FooterHeight - 4 ) );
             ImGui.BeginChild( Id + "-Footer", FooterSize, false, ImGuiWindowFlags.NoScrollbar );
             ImGui.InvisibleButton( Id + " -FooterButton", FooterSize );
-            if( ImGui.IsItemActive()) {
+            if( ImGui.IsItemActive() ) {
                 // TODO: click move
                 if( ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                     var dragPos = ImGui.GetMouseDragDelta();
-                    if(Footer_Dragging == DragState.None ) { // START DRAGGING
+                    if( Footer_Dragging == DragState.None ) { // START DRAGGING
                         var delta = ImGui.GetMousePos().X - FooterPosition.X;
                         var _left = offsetLeft;
                         var _right = offsetLeft + scrollWidth;
-                        if(delta >= _left - GrabWidth && delta <= _left + GrabWidth ) {
+                        if( delta >= _left - GrabWidth && delta <= _left + GrabWidth ) {
                             Footer_Dragging = DragState.DraggingLeft;
                         }
                         else if( delta >= _right - GrabWidth && delta <= _right + GrabWidth ) {
@@ -385,26 +386,26 @@ namespace VFXEditor.UI.Views {
                         else if( delta < _right - GrabWidth && delta > _left + GrabWidth ) {
                             Footer_Dragging = DragState.Dragging;
                         }
-                    } 
+                    }
                     else { // CURRENTLY DRAGGING
                         var dX = dragPos.X - Footer_LastDrag.X;
                         var moveFramesX = ( dX / FooterSize.X ) * ( Max - Min );
-                        if(Footer_Dragging == DragState.Dragging ) { // MOVE BOTH TOGETHER
+                        if( Footer_Dragging == DragState.Dragging ) { // MOVE BOTH TOGETHER
                             moveFramesX -= Math.Min( MinVisible + moveFramesX - Min, 0 ); // don't move left past zero (min)
                             moveFramesX -= Math.Max( MaxVisible + moveFramesX - Max, 0 ); // don't move right past max
                             MinVisible += moveFramesX;
                             MaxVisible += moveFramesX;
                         }
-                        else if(Footer_Dragging == DragState.DraggingLeft) { // MOVE LEFT HANDLE
+                        else if( Footer_Dragging == DragState.DraggingLeft ) { // MOVE LEFT HANDLE
                             MinVisible += moveFramesX;
-                            if(MinVisible < Min ) {
+                            if( MinVisible < Min ) {
                                 MinVisible = Min;
                             }
-                            if(MinVisible > MaxVisible - 1 ) {
+                            if( MinVisible > MaxVisible - 1 ) {
                                 MinVisible = MaxVisible - 1;
                             }
                         }
-                        else if(Footer_Dragging == DragState.DraggingRight) { // MOVE RIGHT HANDLE
+                        else if( Footer_Dragging == DragState.DraggingRight ) { // MOVE RIGHT HANDLE
                             MaxVisible += moveFramesX;
                             if( MaxVisible > Max ) {
                                 MaxVisible = Max;
@@ -430,7 +431,7 @@ namespace VFXEditor.UI.Views {
 
             // ==== DRAW THE ITEM ======
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            if(Selected != null) {
+            if( Selected != null ) {
                 Selected.DrawBody( parentId );
             }
             else {
@@ -438,8 +439,8 @@ namespace VFXEditor.UI.Views {
             }
         }
 
-        public static bool Contained(Vector2 pos, Vector2 p1, Vector2 size ) {
-            if( pos.X < p1.X || pos.X > (p1.X + size.X) || pos.Y < p1.Y || pos.Y > (p1.Y + size.Y) ) return false;
+        public static bool Contained( Vector2 pos, Vector2 p1, Vector2 size ) {
+            if( pos.X < p1.X || pos.X > ( p1.X + size.X ) || pos.Y < p1.Y || pos.Y > ( p1.Y + size.Y ) ) return false;
             return true;
         }
     }

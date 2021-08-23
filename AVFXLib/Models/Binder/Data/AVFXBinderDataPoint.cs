@@ -1,43 +1,35 @@
 using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXBinderDataPoint : AVFXBinderData
-    {
-        public AVFXCurve SpringStrength = new AVFXCurve("SpS");
+namespace AVFXLib.Models {
+    public class AVFXBinderDataPoint : AVFXBinderData {
+        public AVFXCurve SpringStrength = new( "SpS" );
+        private readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public AVFXBinderDataPoint() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXBinderDataPoint() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[]{
                 SpringStrength
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
             SpringStrength.ToDefault();
             SpringStrength.AddKey();
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            AVFXNode dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

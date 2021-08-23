@@ -41,7 +41,7 @@ namespace VFXEditor.UI.VFX
         }
 
         public override void DrawBody( string parentId ) {
-            string id = parentId + "/Item";
+            var id = parentId + "/Item";
             DrawRename( id );
 
             BinderSelect.Draw( id );

@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using Dalamud.Plugin;
+using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Data;
 using VFXEditor.External;
 
 namespace VFXEditor.UI
@@ -13,7 +9,7 @@ namespace VFXEditor.UI
 
     public class TexToolsDialog : GenericDialog
     {
-        public TexToolsDialog( Plugin plugin ) : base(plugin, "TexTools") {
+        public TexToolsDialog() : base( "TexTools") {
             Size = new Vector2( 400, 200 );
         }
 
@@ -25,7 +21,7 @@ namespace VFXEditor.UI
 
         public override void OnDraw() {
             var id = "##Textools";
-            float footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             ImGui.InputText( "Mod Name" + id, ref Name, 255 );
@@ -34,8 +30,8 @@ namespace VFXEditor.UI
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocManager.HasReplacePath( ExportAll ) ) {
-                ImGui.TextColored( new Vector4( 0.8f, 0.1f, 0.1f, 1.0f ), "Missing Replace Path" );
+            if( !DocumentManager.Manager.HasReplacePath( ExportAll ) ) {
+                ImGui.TextColored( VFX.UIUtils.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.EndChild();
 
@@ -45,17 +41,12 @@ namespace VFXEditor.UI
         }
 
         public void SaveDialog() {
-            Plugin.SaveFileDialog( "TexTools Mod (*.ttmp2)|*.ttmp2*|All files (*.*)|*.*", "Select a Save Location.", "ttmp2",
-                ( string path ) => {
-                    try {
-                        TexTools.Export(Plugin, Name, Author, Version, path, ExportAll, ExportTex );
-                        Visible = false;
-                    }
-                    catch( Exception ex ) {
-                        PluginLog.LogError( ex, "Could not select a mod location" );
-                    }
-                }
-            );
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", Name, "ttmp2", ( bool ok, string res ) =>
+             {
+                 if( !ok ) return;
+                 TexTools.Export( Name, Author, Version, res, ExportAll, ExportTex );
+                 Visible = false;
+             } );
         }
     }
 }

@@ -33,7 +33,7 @@ namespace VFXEditor.UI.VFX
 
         public override void DrawBody( string parentId )
         {
-            string id = parentId + "/VNum";
+            var id = parentId + "/VNum";
             if(ImGui.InputInt("Order" + id, ref Order ) )
             {
                 VertNumber.Num = Order;

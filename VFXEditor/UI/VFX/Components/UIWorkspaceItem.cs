@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.UI.VFX {
     public abstract class UIWorkspaceItem : UIItem {
+#nullable enable
         public string? Renamed;
+#nullable disable
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;
 
@@ -15,7 +18,6 @@ namespace VFXEditor.UI.VFX {
             return string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
         }
 
-        // ====== GETTING DATA FROM WORKSPACE META
         public abstract string GetWorkspaceId();
 
         public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
@@ -25,6 +27,7 @@ namespace VFXEditor.UI.VFX {
             }
             PopulateWorkspaceMetaChildren(RenameDict);
         }
+
         public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void ReadWorkspaceMeta( Dictionary<string, string> RenameDict ) {
@@ -34,14 +37,18 @@ namespace VFXEditor.UI.VFX {
             }
             ReadWorkspaceMetaChildren( RenameDict );
         }
+
         public virtual void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void DrawRename( string _id ) {
             var id = _id + "/Rename";
             if( CurrentlyRenaming ) {
                 ImGui.InputText( "Name" + id, ref RenamedTemp, 255 );
+
+                ImGui.PushFont( UiBuilder.IconFont );
+
                 ImGui.SameLine();
-                if( ImGui.Button( "Ok" + id ) ) {
+                if( ImGui.Button( $"{(char) FontAwesomeIcon.Check}" + id ) ) {
                     if( string.IsNullOrEmpty( RenamedTemp ) || Renamed == GetDefaultText() ) {
                         Renamed = null;
                     }
@@ -50,11 +57,15 @@ namespace VFXEditor.UI.VFX {
                     }
                     CurrentlyRenaming = false;
                 }
+
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-                if( ImGui.Button( "Cancel" + id ) ) {
+                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                     CurrentlyRenaming = false;
                 }
+
+                ImGui.PopFont();
+
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( "Reset" + id ) ) {
@@ -65,11 +76,16 @@ namespace VFXEditor.UI.VFX {
             else {
                 var currentText = string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
                 ImGui.InputText( "Name" + id, ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
+
+                ImGui.PushFont( UiBuilder.IconFont );
+
                 ImGui.SameLine();
-                if( ImGui.Button( "Edit" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.PencilAlt}" + id ) ) {
                     CurrentlyRenaming = true;
                     RenamedTemp = currentText;
                 }
+
+                ImGui.PopFont();
             }
         }
     }

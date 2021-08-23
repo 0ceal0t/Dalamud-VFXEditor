@@ -63,7 +63,7 @@ namespace VFXEditor.UI.VFX
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
-                if( UIUtils.RemoveButton( "Delete" + id, small: true ) ) {
+                if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
                     Init();
                     return;

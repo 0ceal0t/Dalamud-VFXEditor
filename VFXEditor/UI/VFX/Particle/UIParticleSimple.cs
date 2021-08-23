@@ -31,8 +31,9 @@ namespace VFXEditor.UI.VFX {
             base.Init();
             if (!Simple.Assigned) { Assigned = false; return; }
             //=======================
-            Tabs = new List<UIItem>();
-            Tabs.Add( Creation = new UIParameters( "Creation" ) );
+            Tabs = new List<UIItem> {
+                ( Creation = new UIParameters( "Creation" ) )
+            };
             Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
             Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
             Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
@@ -113,12 +114,11 @@ namespace VFXEditor.UI.VFX {
         }
     }
 
-    class UISimpleColor : UIBase {
-        AVFXParticleSimple Simple;
-        int Idx;
-
-        Vector4 Color;
-        int Frame;
+    internal class UISimpleColor : UIBase {
+        private readonly AVFXParticleSimple Simple;
+        private readonly int Idx;
+        private Vector4 Color;
+        private int Frame;
 
         public UISimpleColor(AVFXParticleSimple simple, int idx ) {
             Simple = simple;

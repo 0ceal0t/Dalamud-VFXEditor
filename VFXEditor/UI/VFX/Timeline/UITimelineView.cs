@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override UITimeline OnImport( AVFXNode node, bool has_dependencies = false ) {
-            AVFXTimeline item = new AVFXTimeline();
+            var item = new AVFXTimeline();
             item.Read( node );
             AVFX.AddTimeline( item );
             return new UITimeline( Main, item, has_dependencies );

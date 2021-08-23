@@ -21,7 +21,7 @@ namespace VFXSelect.Data.Rows {
             RowId = ( int )zone.RowId;
 
             var bg = zone.Bg.ToString().Split( '/' );
-            bg[bg.Length - 1] = "vfx.lgb";
+            bg[^1] = "vfx.lgb";
             LgbPath = "bg/" + string.Join( "/", bg );
         }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Numerics;
 using Dalamud.Plugin;
+using Dalamud.Logging;
+using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data.Texture;
 
@@ -8,8 +10,9 @@ namespace VFXEditor.UI {
     public class ToolsDialog : GenericDialog {
         private string RawInputValue = "";
         private string RawTexInputValue = "";
+        private readonly DalamudPluginInterface PluginInterface;
 
-        public ToolsDialog( Plugin plugin ) : base( plugin, "Tools" ) {
+        public ToolsDialog() : base( "Tools" ) {
             Size = new Vector2( 300, 150 );
         }
 
@@ -19,15 +22,14 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                bool result = Plugin.PluginInterface.Data.FileExists( RawInputValue );
+                var result = Plugin.DataManager.FileExists( RawInputValue );
                 if( result ) {
                     try {
-                        var file = Plugin.PluginInterface.Data.GetFile( RawInputValue );
-                        Plugin.SaveDialog( "AVFX File (*.avfx)|*.avfx*|All files (*.*)|*.*", file.Data, "avfx" );
+                        var file = Plugin.DataManager.GetFile( RawInputValue );
+                        Plugin.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
-                        PluginLog.LogError( "Could not read file" );
-                        PluginLog.LogError( e.ToString() );
+                        PluginLog.Error( "Could not read file", e );
                     }
                 }
             }
@@ -36,15 +38,14 @@ namespace VFXEditor.UI {
             ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                bool result = Plugin.PluginInterface.Data.FileExists( RawTexInputValue );
+                var result = Plugin.DataManager.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
-                        var file = Plugin.PluginInterface.Data.GetFile( RawTexInputValue );
-                        Plugin.SaveDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", file.Data, "atex" );
+                        var file = Plugin.DataManager.GetFile( RawTexInputValue );
+                        Plugin.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
-                        PluginLog.LogError( "Could not read file" );
-                        PluginLog.LogError( e.ToString() );
+                        PluginLog.Error( "Could not read file", e );
                     }
                 }
             }
@@ -52,20 +53,22 @@ namespace VFXEditor.UI {
             ImGui.Text( ".atex to PNG" );
             ImGui.SameLine();
             if(ImGui.Button("Browse##AtexToPNG")) {
-                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
-                 {
-                     var texFile = VFXTexture.LoadFromLocal( path );
-                     texFile.SaveAsPng( path + ".png" );
-                 } );
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
+                {
+                    if( !ok ) return;
+                    var texFile = VFXTexture.LoadFromLocal( res );
+                    texFile.SaveAsPng( res + ".png" );
+                } );
             }
 
             ImGui.Text( ".atex to DDS" );
             ImGui.SameLine();
             if( ImGui.Button( "Browse##AtexToDDS" ) ) {
-                Plugin.ImportFileDialog( "ATEX File (*.atex)|*.atex*|All files (*.*)|*.*", "Select a file", ( string path ) =>
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) =>
                 {
-                    var texFile = VFXTexture.LoadFromLocal( path );
-                    texFile.SaveAsDDS( path + ".dds" );
+                    if( !ok ) return;
+                    var texFile = VFXTexture.LoadFromLocal( res );
+                    texFile.SaveAsDDS( res + ".dds" );
                 } );
             }
         }

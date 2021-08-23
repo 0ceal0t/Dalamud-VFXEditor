@@ -1,53 +1,48 @@
 using AVFXLib.AVFX;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AVFXLib.Models
-{
-    public class AVFXParticleDataPolyline : AVFXParticleData
-    {
-        public LiteralEnum<LineCreateType> CreateLineType = new LiteralEnum<LineCreateType>("LnCT");
-        public LiteralEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new LiteralEnum<NotBillboardBaseAxisType>("NBBA");
-        public LiteralInt BindWeaponType = new LiteralInt("BWpT");
-        public LiteralInt PointCount = new LiteralInt("PnC");
-        public LiteralInt PointCountCenter = new LiteralInt("PnCC");
-        public LiteralInt PointCountEndDistortion = new LiteralInt("PnED");
-        public LiteralBool UseEdge = new LiteralBool("bEdg");
-        public LiteralBool NotBillboard = new LiteralBool("bNtB");
-        public LiteralBool BindWeapon = new LiteralBool("BdWp");
-        public LiteralBool ConnectTarget = new LiteralBool("bCtg");
-        public LiteralBool ConnectTargetReverse = new LiteralBool("bCtr");
-        public LiteralInt TagNumber = new LiteralInt("TagN");
-        public LiteralBool IsSpline = new LiteralBool("bSpl");
-        public LiteralBool IsLocal = new LiteralBool("bLcl");
+namespace AVFXLib.Models {
+    public class AVFXParticleDataPolyline : AVFXParticleData {
+        public LiteralEnum<LineCreateType> CreateLineType = new( "LnCT" );
+        public LiteralEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new( "NBBA" );
+        public LiteralInt BindWeaponType = new( "BWpT" );
+        public LiteralInt PointCount = new( "PnC" );
+        public LiteralInt PointCountCenter = new( "PnCC" );
+        public LiteralInt PointCountEndDistortion = new( "PnED" );
+        public LiteralBool UseEdge = new( "bEdg" );
+        public LiteralBool NotBillboard = new( "bNtB" );
+        public LiteralBool BindWeapon = new( "BdWp" );
+        public LiteralBool ConnectTarget = new( "bCtg" );
+        public LiteralBool ConnectTargetReverse = new( "bCtr" );
+        public LiteralInt TagNumber = new( "TagN" );
+        public LiteralBool IsSpline = new( "bSpl" );
+        public LiteralBool IsLocal = new( "bLcl" );
 
-        public AVFXCurve CF = new AVFXCurve( "CF" );
-        public AVFXCurve Width = new AVFXCurve("Wd");
-        public AVFXCurve WidthRandom = new AVFXCurve("WdR");
-        public AVFXCurve WidthBegin = new AVFXCurve("WdB");
-        public AVFXCurve WidthCenter = new AVFXCurve("WdC");
-        public AVFXCurve WidthEnd = new AVFXCurve("WdE");
-        public AVFXCurve Length = new AVFXCurve("Len");
-        public AVFXCurve LengthRandom = new AVFXCurve( "LenR" );
-        public AVFXCurve Softness = new AVFXCurve("Sft");
-        public AVFXCurve SoftRandom = new AVFXCurve( "SftR" );
-        public AVFXCurve PnDs = new AVFXCurve( "PnDs" );
-        public AVFXCurveColor ColorBegin = new AVFXCurveColor(name: "ColB");
-        public AVFXCurveColor ColorCenter = new AVFXCurveColor(name: "ColC");
-        public AVFXCurveColor ColorEnd = new AVFXCurveColor(name: "ColE");
-        public AVFXCurveColor ColorEdgeBegin = new AVFXCurveColor(name: "CoEB");
-        public AVFXCurveColor ColorEdgeCenter = new AVFXCurveColor(name: "CoEC");
-        public AVFXCurveColor ColorEdgeEnd = new AVFXCurveColor(name: "CoEE");
+        public AVFXCurve CF = new( "CF" );
+        public AVFXCurve Width = new( "Wd" );
+        public AVFXCurve WidthRandom = new( "WdR" );
+        public AVFXCurve WidthBegin = new( "WdB" );
+        public AVFXCurve WidthCenter = new( "WdC" );
+        public AVFXCurve WidthEnd = new( "WdE" );
+        public AVFXCurve Length = new( "Len" );
+        public AVFXCurve LengthRandom = new( "LenR" );
+        public AVFXCurve Softness = new( "Sft" );
+        public AVFXCurve SoftRandom = new( "SftR" );
+        public AVFXCurve PnDs = new( "PnDs" );
+        public AVFXCurveColor ColorBegin = new( name: "ColB" );
+        public AVFXCurveColor ColorCenter = new( name: "ColC" );
+        public AVFXCurveColor ColorEnd = new( name: "ColE" );
+        public AVFXCurveColor ColorEdgeBegin = new( name: "CoEB" );
+        public AVFXCurveColor ColorEdgeCenter = new( name: "CoEC" );
+        public AVFXCurveColor ColorEdgeEnd = new( name: "CoEE" );
+        private readonly List<Base> Attributes;
 
-        List<Base> Attributes;
-
-        public AVFXParticleDataPolyline() : base("Data")
-        {
-            Attributes = new List<Base>(new Base[]{
+        public AVFXParticleDataPolyline() : base( "Data" ) {
+            Attributes = new List<Base>( new Base[]{
                 CreateLineType,
                 NotBillBoardBaseAxisType,
                 BindWeaponType,
@@ -79,38 +74,35 @@ namespace AVFXLib.Models
                 ColorEdgeBegin,
                 ColorEdgeCenter,
                 ColorEdgeEnd
-            });
+            } );
         }
 
-        public override void Read(AVFXNode node)
-        {
+        public override void Read( AVFXNode node ) {
             Assigned = true;
-            ReadAVFX(Attributes, node);
+            ReadAVFX( Attributes, node );
         }
 
-        public override void ToDefault()
-        {
+        public override void ToDefault() {
             Assigned = true;
-            SetDefault(Attributes);
-            SetUnAssigned(Width);
-            SetUnAssigned(WidthRandom);
-            SetUnAssigned(WidthBegin);
-            SetUnAssigned(WidthCenter);
-            SetUnAssigned(WidthEnd);
-            SetUnAssigned(Length);
-            SetUnAssigned(Softness);
-            SetUnAssigned(ColorBegin);
-            SetUnAssigned(ColorCenter);
-            SetUnAssigned(ColorEnd);
-            SetUnAssigned(ColorEdgeBegin);
-            SetUnAssigned(ColorEdgeCenter);
-            SetUnAssigned(ColorEdgeEnd);
+            SetDefault( Attributes );
+            SetUnAssigned( Width );
+            SetUnAssigned( WidthRandom );
+            SetUnAssigned( WidthBegin );
+            SetUnAssigned( WidthCenter );
+            SetUnAssigned( WidthEnd );
+            SetUnAssigned( Length );
+            SetUnAssigned( Softness );
+            SetUnAssigned( ColorBegin );
+            SetUnAssigned( ColorCenter );
+            SetUnAssigned( ColorEnd );
+            SetUnAssigned( ColorEdgeBegin );
+            SetUnAssigned( ColorEdgeCenter );
+            SetUnAssigned( ColorEdgeEnd );
         }
 
-        public override AVFXNode ToAVFX()
-        {
-            AVFXNode dataAvfx = new AVFXNode("Data");
-            PutAVFX(dataAvfx, Attributes);
+        public override AVFXNode ToAVFX() {
+            var dataAvfx = new AVFXNode( "Data" );
+            PutAVFX( dataAvfx, Attributes );
             return dataAvfx;
         }
     }

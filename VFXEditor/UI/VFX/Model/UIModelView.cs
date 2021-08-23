@@ -6,30 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.Data.DirectX;
+using VFXEditor.DirectX;
 
 namespace VFXEditor.UI.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
-        public UIMain Main;
-
-        public UIModelView(UIMain main, AVFXBase avfx) : base(avfx, "##MDL") {
-            Main = main;
+        public UIModelView(UIMain main, AVFXBase avfx) : base(main, avfx, "##MDL") {
             Group = main.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
         }
 
-        public override void DrawNewButton( string parentId ) {
-            if( ImGui.SmallButton( "+ New" + Id ) ) {
-                Group.Add( OnNew() );
-            }
-            ImGui.SameLine();
-            if( ImGui.SmallButton( "Import" + Id ) ) {
-                Main.ImportDialog();
-            }
-        }
-
         public override void OnSelect( UIModel item ) {
-            DirectXManager.Manager.ModelView.LoadModel( item.Model );
+            DirectXManager.ModelView.LoadModel( item.Model );
         }
 
         public override void OnDelete( UIModel item ) {
@@ -40,8 +27,8 @@ namespace VFXEditor.UI.VFX {
             return new UIModel( Main, AVFX.AddModel() );
         }
 
-        public override UIModel OnImport( AVFXNode node ) {
-            AVFXModel mdl = new AVFXModel();
+        public override UIModel OnImport( AVFXNode node, bool has_dependencies = false ) {
+            var mdl = new AVFXModel();
             mdl.Read( node );
             AVFX.AddModel( mdl );
             return new UIModel( Main, mdl );

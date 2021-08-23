@@ -6,42 +6,35 @@ using System.Threading.Tasks;
 
 using ImGuiNET;
 using AVFXLib.Models;
-using Dalamud.Plugin;
+using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX
-{
-    public class UIIntList : UIBase
-    {
-        public string Id;
+namespace VFXEditor.UI.VFX {
+    public class UIIntList : UIBase {
+        public string Name;
         public List<int> Value;
         public LiteralIntList Literal;
 
-        public delegate void Change( LiteralIntList literal );
-        public Change ChangeFunction;
 
-        public UIIntList( string id, LiteralIntList literal, Change changeFunction = null)
-        {
-            Id = id;
+        public UIIntList( string name, LiteralIntList literal ) {
+            Name = name;
             Literal = literal;
-            if( changeFunction != null )
-                ChangeFunction = changeFunction;
-            else
-                ChangeFunction = DoNothing;
-            // =====================
             Value = Literal.Value;
         }
 
-        public override void Draw( string id )
-        {
-            int v0 = Value[0];
-            if( ImGui.InputInt( Id + id, ref v0 ) )
-            {
+        public override void Draw( string id ) {
+            if( CopyManager.IsCopying ) {
+                CopyManager.Copied[Name] = Literal;
+            }
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralIntList literal ) {
+                Literal.Value[0] = literal.Value[0];
+                Value[0] = Literal.Value[0];
+            }
+
+            var v0 = Value[0];
+            if( ImGui.InputInt( Name + id, ref v0 ) ) {
                 Literal.Value[0] = v0;
                 Value[0] = v0;
-                ChangeFunction( Literal );
             }
         }
-
-        public static void DoNothing( LiteralIntList literal ) { }
     }
 }

@@ -1,24 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.4.0.0</FileVersion>
-        <AssemblyVersion>1.4.0.0</AssemblyVersion>
+        <FileVersion>1.5.0.0</FileVersion>
+        <AssemblyVersion>1.5.0.0</AssemblyVersion>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
         <DebugType>full</DebugType>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <PlatformTarget>x64</PlatformTarget>
+      <DebugType>full</DebugType>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
         <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      <PlatformTarget>x64</PlatformTarget>
+      <DebugType>pdbonly</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -76,24 +91,32 @@
             <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.Direct3D11.dll</HintPath>
             <Private>False</Private>
         </Reference>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Reference Include="System.Windows.Forms" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Net.Http" />
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(DALAMUD_ROOT)\Newtonsoft.Json.dll</HintPath>
+            <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="System.Drawing.Common">
+            <HintPath>$(DALAMUD_ROOT)\System.Drawing.Common.dll</HintPath>
+            <HintPath>..\libs\System.Drawing.Common.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\System.Drawing.Common.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Reloaded.Hooks.Definitions">
+            <HintPath>$(DALAMUD_ROOT)\Reloaded.Hooks.Definitions.dll</HintPath>
+            <HintPath>..\libs\Reloaded.Hooks.Definitions.dll</HintPath>
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Reloaded.Hooks.Definitions.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
         <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="Reloaded.Hooks" Version="2.4.1" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0020" />
-        <PackageReference Include="SharpZipLib" Version="1.3.1" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
     </ItemGroup>
 
@@ -115,6 +138,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Files\emitter_default.vfxedit">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Files\monster_vfx.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Files\npc.csv">
@@ -144,19 +170,13 @@
       <None Update="Shaders\EmitterVertex_PS.fx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Shaders\UVPreview_VS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\UVPreview_PS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="VFXEditor.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="mkdir $(TargetDir)Output\Files&#xD;&#xA;mkdir $(TargetDir)Output\Shaders&#xD;&#xA;mkdir $(TargetDir)Output\runtimes&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x64&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x86&#xD;&#xA;xcopy /E  /Y /R &quot;$(TargetDir)Files&quot; &quot;$(TargetDir)Output\Files&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)Shaders&quot; &quot;$(TargetDir)Output\Shaders&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x64&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x86&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)FASM*.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)SharpDX.D3DCompiler.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)TeximpNet.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)VFXEditor.json&quot; &quot;$(TargetDir)Output&quot;" />
+      <Exec Command="mkdir $(TargetDir)Output\Files&#xD;&#xA;mkdir $(TargetDir)Output\Shaders&#xD;&#xA;mkdir $(TargetDir)Output\runtimes&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x64&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x86&#xD;&#xA;xcopy /E  /Y /R &quot;$(TargetDir)Files&quot; &quot;$(TargetDir)Output\Files&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)Shaders&quot; &quot;$(TargetDir)Output\Shaders&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x64&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x86&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)SharpDX.D3DCompiler.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)TeximpNet.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)VFXEditor.json&quot; &quot;$(TargetDir)Output&quot;" />
     </Target>
 
     <ItemGroup>
@@ -165,10 +185,6 @@
 
     <ItemGroup>
       <NativeLibs Remove="Plugin.UI.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <NativeLibs Remove="Plugin.Data.cs" />
     </ItemGroup>
 
     <ItemGroup>
