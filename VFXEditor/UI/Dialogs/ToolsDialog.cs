@@ -10,7 +10,6 @@ namespace VFXEditor.UI {
     public class ToolsDialog : GenericDialog {
         private string RawInputValue = "";
         private string RawTexInputValue = "";
-        private readonly DalamudPluginInterface PluginInterface;
 
         public ToolsDialog() : base( "Tools" ) {
             Size = new Vector2( 300, 150 );

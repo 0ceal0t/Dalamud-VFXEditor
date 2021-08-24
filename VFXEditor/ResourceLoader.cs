@@ -224,7 +224,7 @@ namespace VFXEditor {
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None ) return;
             CurrentRedrawState = RedrawState.Start;
-            Plugin.Framework.OnUpdateEvent += OnUpdateEvent;
+            Plugin.Framework.Update += OnUpdateEvent;
         }
 
         private unsafe void OnUpdateEvent( object framework ) {
@@ -249,7 +249,7 @@ namespace VFXEditor {
                 case RedrawState.Visible:
                 default:
                     CurrentRedrawState = RedrawState.None;
-                    Plugin.Framework.OnUpdateEvent -= OnUpdateEvent;
+                    Plugin.Framework.Update -= OnUpdateEvent;
                     break;
             }
         }
