@@ -16,9 +16,9 @@ using System.Threading;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
-        public Plugin Plugin { get; set; }
-        public bool IsEnabled { get; set; }
-        public Crc32 Crc32 { get; }
+        private Plugin Plugin;
+        private bool IsEnabled;
+        private Crc32 Crc32;
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -97,8 +97,9 @@ namespace VFXEditor {
         internal GetMatrixSingletonDelegate GetMatrixSingleton;
 
 
-        public ResourceLoader() {
+        public ResourceLoader(Plugin plugin) {
             Crc32 = new Crc32();
+            Plugin = plugin;
         }
 
         public unsafe void Init() {

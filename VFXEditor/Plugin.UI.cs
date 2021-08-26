@@ -223,9 +223,9 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Settings##Menu" ) ) SettingsUI.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
-                    if( ImGui.MenuItem( "Github##Menu" ) ) Process.Start( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();
@@ -390,6 +390,13 @@ namespace VFXEditor {
         public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
+            } );
+        }
+
+        public static void OpenUrl(string url) {
+            Process.Start( new ProcessStartInfo {
+                FileName = url,
+                UseShellExecute = true
             } );
         }
     }

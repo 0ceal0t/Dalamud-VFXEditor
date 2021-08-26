@@ -53,6 +53,14 @@ namespace ImGuiFileDialog {
             if( windowVisible ) {
                 if( !Visible ) { // window closed
                     IsOk = false;
+
+                    if( IsModal && !OkResultToConfirm ) {
+                        ImGui.EndPopup();
+                    }
+                    else {
+                        ImGui.End();
+                    }
+
                     return true;
                 }
 

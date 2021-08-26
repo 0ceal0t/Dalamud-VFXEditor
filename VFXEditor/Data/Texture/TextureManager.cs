@@ -30,8 +30,6 @@ namespace VFXEditor.Data.Texture {
     public class TextureManager {
         public static TextureManager Manager => Instance;
         private static TextureManager Instance = null;
-
-        public DalamudPluginInterface PluginInterface;
         public int TEX_ID = 0;
 
         public ConcurrentDictionary<string, TexData> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
@@ -250,7 +248,7 @@ namespace VFXEditor.Data.Texture {
                     }
 
                     if( loadImage ) {
-                        var texBind = PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
+                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
                         ret.Wrap = texBind;
                     }
                     return true;

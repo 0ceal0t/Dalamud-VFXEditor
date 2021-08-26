@@ -98,7 +98,7 @@ namespace ImGuiFileDialog {
 
                     if( !string.IsNullOrEmpty( file.Extension ) ) {
                         var ext = file.Extension;
-                        if( Filters.Count > 0 && !SelectedFilter.Empty() && !SelectedFilter.FilterExists( ext ) && SelectedFilter.Filter != ".*" ) continue;
+                        if( Filters.Count > 0 && !SelectedFilter.Empty() && !SelectedFilter.FilterExists( ext.ToLower() ) && SelectedFilter.Filter != ".*" ) continue;
                     }
 
                     Files.Add( GetFile( file, path ) );

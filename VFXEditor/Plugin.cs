@@ -69,7 +69,7 @@ namespace VFXEditor
 
             Configuration.Initialize( PluginInterface );
 
-            ResourceLoader = new ResourceLoader();
+            ResourceLoader = new ResourceLoader( this );
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
                 HelpMessage = "toggle ui"
             } );

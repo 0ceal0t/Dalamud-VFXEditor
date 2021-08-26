@@ -16,7 +16,10 @@ namespace VFXSelect.UI {
             ImGui.Text( "Big thanks to Ani and the rest of the Anamnesis/CMTools team " );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Github##Anamnesis" ) ) {
-                Process.Start( "https://github.com/imchillin/Anamnesis" );
+                Process.Start( new ProcessStartInfo {
+                    FileName = "https://github.com/imchillin/Anamnesis",
+                    UseShellExecute = true
+                } );
             }
 
         }
