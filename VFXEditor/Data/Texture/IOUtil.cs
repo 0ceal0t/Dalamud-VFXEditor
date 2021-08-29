@@ -11,6 +11,9 @@ namespace VFXEditor.Data.Texture {
                 case TextureFormat.DXT1:
                     texFormatCode = 13344;
                     break;
+                case TextureFormat.DXT3:
+                    texFormatCode = 13360;
+                    break;
                 case TextureFormat.DXT5:
                     texFormatCode = 13361;
                     break;
@@ -98,6 +101,9 @@ namespace VFXEditor.Data.Texture {
             switch( format ) {
                 case TextureFormat.DXT1:
                     dwFourCC = 0x31545844;
+                    break;
+                case TextureFormat.DXT3:
+                    dwFourCC = 0x33545844;
                     break;
                 case TextureFormat.DXT5:
                     dwFourCC = 0x35545844;

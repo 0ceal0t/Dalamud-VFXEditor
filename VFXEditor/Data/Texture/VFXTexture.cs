@@ -98,6 +98,9 @@ namespace VFXEditor.Data.Texture {
                 case TextureFormat.DXT1:
                     DecompressDxt1( src, dst, width, height );
                     break;
+                case TextureFormat.DXT3:
+                    DecompressDxt3( src, dst, width, height );
+                    break;
                 case TextureFormat.DXT5:
                     DecompressDxt5( src, dst, width, height );
                     break;
@@ -118,6 +121,7 @@ namespace VFXEditor.Data.Texture {
             return format switch {
                 DXGIFormat.A8_UNorm => TextureFormat.A8,
                 DXGIFormat.BC1_UNorm => TextureFormat.DXT1,
+                DXGIFormat.BC2_UNorm => TextureFormat.DXT3,
                 DXGIFormat.BC3_UNorm => TextureFormat.DXT5,
                 DXGIFormat.B8G8R8A8_UNorm => TextureFormat.A8R8G8B8,
                 _ => TextureFormat.Null,
@@ -127,6 +131,7 @@ namespace VFXEditor.Data.Texture {
         public static CompressionFormat TextureToCompressionFormat( TextureFormat format ) {
             return format switch {
                 TextureFormat.DXT1 => CompressionFormat.BC1a,
+                TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
                 TextureFormat.A8R8G8B8 or TextureFormat.A8 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
@@ -153,6 +158,11 @@ namespace VFXEditor.Data.Texture {
 
         public static void DecompressDxt1( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT1 );
+            Array.Copy( dec, dst, dst.Length );
+        }
+
+        public static void DecompressDxt3( Span<byte> src, byte[] dst, int width, int height ) {
+            var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT3 );
             Array.Copy( dec, dst, dst.Length );
         }
 
