@@ -21,7 +21,7 @@ namespace VFXSelect.Data.Sheets {
 
         public override bool SelectItem( XivItem item, out XivItemSelected selectedItem ) {
             selectedItem = null;
-            var imcPath = item.GetImcPath();
+            var imcPath = item.ImcPath;
             var result = SheetManager.DataManager.FileExists( imcPath );
             if( result ) {
                 try {

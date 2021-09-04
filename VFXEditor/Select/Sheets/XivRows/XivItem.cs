@@ -35,9 +35,9 @@ namespace VFXSelect.Data.Rows {
         public bool HasModel;
         public int Variant;
 
-        public string rootPath;
-        public string vfxPath;
-        public string imcPath;
+        public string RootPath;
+        public string VfxRootPath;
+        public string ImcPath;
 
         public int RowId;
         public ushort Icon;
@@ -51,6 +51,11 @@ namespace VFXSelect.Data.Rows {
             SecondaryIds = new XivItemIds( item.ModelSub );
             HasModel = ( Ids.PrimaryId != 0 );
             HasSub = ( SecondaryIds.PrimaryId != 0 );
+
+            RootPath = "chara/weapon/w" + Ids.PrimaryId.ToString().PadLeft( 4, '0' ) + "/obj/body/b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + "/";
+            VfxRootPath = RootPath + "vfx/eff/vw";
+            ImcPath = RootPath + "b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + ".imc";
+            Variant = Ids.SecondaryId;
 
             if( HasSub ) {
                 var sItem = new Lumina.Excel.GeneratedSheets.Item {
@@ -66,19 +71,16 @@ namespace VFXSelect.Data.Rows {
                     ModelSub = 0
                 };
                 SubItem = new XivItem( sItem );
+
+                var category = item.ItemUICategory.Value.Name;
+                if(category == "Pugilist's Arm" || category == "Rogue's Arm" || category == "Dancer's Arm") {
+                    SubItem.ImcPath = ImcPath;
+                }
             }
-
-            rootPath = "chara/weapon/w" + Ids.PrimaryId.ToString().PadLeft( 4, '0' ) + "/obj/body/b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + "/";
-            vfxPath = rootPath + "vfx/eff/vw";
-            Variant = Ids.SecondaryId;
-        }
-
-        public string GetImcPath() {
-            return rootPath + "b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + ".imc";
         }
 
         public string GetVFXPath( int idx ) {
-            return vfxPath + idx.ToString().PadLeft( 4, '0' ) + ".avfx";
+            return VfxRootPath + idx.ToString().PadLeft( 4, '0' ) + ".avfx";
         }
     }
 }
