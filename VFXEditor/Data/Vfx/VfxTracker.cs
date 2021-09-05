@@ -206,8 +206,8 @@ namespace VFXEditor.Data.Vfx {
 
                 var pos = new SharpDX.Vector3 {
                     X = actor.Position.X,
-                    Y = actor.Position.Z + 2,
-                    Z = actor.Position.Y
+                    Y = actor.Position.Y,
+                    Z = actor.Position.Z
                 };
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
@@ -282,7 +282,7 @@ namespace VFXEditor.Data.Vfx {
         }
 
         private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) {
-            return ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Z, 2 ) + Math.Pow( p1.Z - p2.Y, 2 ) );
+            return ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
         }
 
         private static bool WorldToScreen( float height, float width, ref SharpDX.Matrix viewProjectionMatrix, Vector2 windowPos, SharpDX.Vector3 worldPos, out SharpDX.Vector2 screenPos ) {

@@ -72,8 +72,8 @@ namespace VFXSelect.Data.Rows {
                 };
                 SubItem = new XivItem( sItem );
 
-                var category = item.ItemUICategory.Value.Name;
-                if(category == "Pugilist's Arm" || category == "Rogue's Arm" || category == "Dancer's Arm") {
+                var category = item.ItemUICategory.Value.RowId;
+                if(category == 1 || category == 84 || category == 107) { // MNK, NIN, DNC weapons
                     SubItem.ImcPath = ImcPath;
                 }
             }
