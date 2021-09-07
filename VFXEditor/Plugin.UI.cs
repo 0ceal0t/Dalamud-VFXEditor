@@ -224,7 +224,7 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
                     if( ImGui.MenuItem( "Report an Issue##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    if( ImGui.MenuItem( "Basic Guide##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide" );
+                    if( ImGui.MenuItem( "Guides##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
                     if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
