@@ -80,8 +80,8 @@ namespace VFXEditor.External {
                     }
 
                     void AddTex( TexReplace tex, string _path ) {
-                        if( !string.IsNullOrEmpty( _path ) && !string.IsNullOrEmpty( tex.localPath ) ) {
-                            using var file = File.Open( tex.localPath, FileMode.Open );
+                        if( !string.IsNullOrEmpty( _path ) && !string.IsNullOrEmpty( tex.LocalPath ) ) {
+                            using var file = File.Open( tex.LocalPath, FileMode.Open );
                             using var texReader = new BinaryReader( file );
                             using var texMs = new MemoryStream();
                             using var texWriter = new BinaryWriter( texMs );

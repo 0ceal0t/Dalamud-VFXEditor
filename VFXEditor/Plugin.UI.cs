@@ -8,6 +8,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.Structs.Vfx;
+using VFXEditor.Tmb;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
@@ -105,6 +106,7 @@ namespace VFXEditor {
                 ToolsUI.Draw();
                 DocUI.Draw();
                 TextureUI.Draw();
+                Tmb.TmbManager.Manager?.Draw(); // TODO
             }
         }
 
@@ -137,6 +139,14 @@ namespace VFXEditor {
                     }
                 }
                 ImGui.PopStyleColor();
+
+                ImGui.SameLine();
+                if (ImGui.Button("Reload") ) { // load resource
+                    if( File.Exists( DocumentManager.CurrentActiveDoc.WriteLocation ) )
+                        ResourceLoader.ReloadPath( DocumentManager.CurrentActiveDoc.WriteLocation, true );
+                }
+                ImGui.SameLine();
+                HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );
 
                 // ===== EXPORT ======
                 ImGui.SameLine();
@@ -228,6 +238,7 @@ namespace VFXEditor {
                     if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
+                if( ImGui.BeginMenu( "Tmb##Menu " ) ) TmbManager.Show();
                 ImGui.EndMenuBar();
             }
 

@@ -13,12 +13,14 @@ using FileMode = VFXEditor.Structs.FileMode;
 using Dalamud.Hooking;
 using Reloaded.Hooks.Definitions.X64;
 using System.Threading;
+using VFXEditor.Tmb;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
         private Plugin Plugin;
         private bool IsEnabled;
         private Crc32 Crc32;
+        private Crc32 Crc32_Reload;
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -93,12 +95,26 @@ namespace VFXEditor {
 
         // ========= MISC ==============
         [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
-        internal delegate IntPtr GetMatrixSingletonDelegate();
-        internal GetMatrixSingletonDelegate GetMatrixSingleton;
+        public delegate IntPtr GetMatrixSingletonDelegate();
+        public GetMatrixSingletonDelegate GetMatrixSingleton { get; private set; }
+
+        [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
+        public unsafe delegate IntPtr GetFileManagerDelegate();
+        private GetFileManagerDelegate GetFileManager;
+        private GetFileManagerDelegate GetFileManager2;
+
+        [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
+        public unsafe delegate byte DecRefDelegate( IntPtr resource );
+        private DecRefDelegate DecRef;
+
+        [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
+        private unsafe delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
+        private RequestFileDelegate RequestFile;
 
 
         public ResourceLoader(Plugin plugin) {
-            Crc32 = new Crc32();
+            Crc32 = new();
+            Crc32_Reload = new();
             Plugin = plugin;
         }
 
@@ -139,6 +155,11 @@ namespace VFXEditor {
 
             var matrixAddr = scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" );
             GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( matrixAddr );
+
+            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01" ) );
+            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 4C 8B 2D ?? ?? ?? ?? 49 8B CD" ) );
+            DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 48 C7 03 ?? ?? ?? ?? C6 83" ) );
+            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? F0 FF 4F 5C 48 8D 4F 30" ) );
         }
 
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
@@ -301,8 +322,9 @@ namespace VFXEditor {
             if( Configuration.Config?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
             FileInfo replaceFile = null;
 
-            if( DocumentManager.Manager?.GetLocalPath( gameFsPath, out var vfxFile ) == true ) replaceFile = vfxFile;
-            else if( TextureManager.Manager?.GetLocalReplacePath( gameFsPath, out var texFile ) == true ) replaceFile = texFile;
+            if( DocumentManager.Manager?.GetReplacePath( gameFsPath, out var vfxFile ) == true ) replaceFile = vfxFile;
+            else if( TextureManager.Manager?.GetReplacePath( gameFsPath, out var texFile ) == true ) replaceFile = texFile;
+            else if( TmbManager.GetReplacePath( gameFsPath, out var tmbFile ) == true ) replaceFile = tmbFile;
 
             var fsPath = replaceFile?.FullName;
 
@@ -317,7 +339,38 @@ namespace VFXEditor {
             Crc32.Init();
             Crc32.Update( path );
             *pResourceHash = Crc32.Checksum;
+
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+        }
+
+        public unsafe void ReloadPath(string path, bool vfx) {
+            var pathBytes = Encoding.ASCII.GetBytes( path );
+            var bPath = stackalloc byte[pathBytes.Length + 1];
+            Marshal.Copy( pathBytes, 0, new IntPtr( bPath ), pathBytes.Length );
+            var pPath = ( char* )bPath;
+
+            var typeBytes = Encoding.ASCII.GetBytes( vfx ? "xfva" : "bmt" );
+            var bType = stackalloc byte[typeBytes.Length + 1];
+            Marshal.Copy( typeBytes, 0, new IntPtr( bType ), typeBytes.Length );
+            var pResourceType = ( char* )bType;
+
+            var categoryBytes = BitConverter.GetBytes( ( uint )(vfx ? 8 : 4) ); // vfx = 8, chara = 4
+            var bCategory = stackalloc byte[categoryBytes.Length + 1];
+            Marshal.Copy( categoryBytes, 0, new IntPtr( bCategory ), categoryBytes.Length );
+            var pCategoryId = ( uint* )bCategory;
+
+            Crc32_Reload.Init();
+            Crc32_Reload.Update( pathBytes );
+            var hashBytes = BitConverter.GetBytes( Crc32_Reload.Checksum );
+            var bHash = stackalloc byte[hashBytes.Length + 1];
+            Marshal.Copy( hashBytes, 0, new IntPtr( bHash ), hashBytes.Length );
+            var pResourceHash = ( uint* )bHash;
+
+            var resource = new IntPtr(GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ));
+            DecRef( resource );
+
+            RequestFile( GetFileManager2(), resource + 0x38, resource, 1 );
+            PluginLog.Log( $"RefCount {Marshal.ReadInt32( resource + 0xAC )}" );
         }
 
 
@@ -325,6 +378,7 @@ namespace VFXEditor {
             var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
+
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted ) {
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }

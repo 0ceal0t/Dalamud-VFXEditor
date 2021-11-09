@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             EmitterSelect = new UINodeSelect<UIEmitter>( timeline, "Emitter Select", Timeline.Main.Emitters, Item.EmitterIdx );
             EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", Timeline.Main.Effectors, Item.EffectorIdx );
 
-            ClipNumber = new UIInt( "ClipNumber", Item.ClipNumber );
+            ClipNumber = new UIInt( "Clip Index", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.Assigned;
             //==================
             Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );

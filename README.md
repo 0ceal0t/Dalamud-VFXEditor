@@ -43,7 +43,14 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] TMB editor
+- [ ] SCD editor
+- [ ] Releasing VFX handles
+
 - [ ] Menu shortcuts + keys move up / down
+- [ ] .MDL import + export
+- [ ] Better enable/disable checkboxes
+- [ ] Bind point ID research
 - [ ] Better PNG import support
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
 - [ ] Investigate VFX flags, better structs

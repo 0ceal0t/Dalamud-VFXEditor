@@ -36,7 +36,7 @@ namespace VFXEditor.UI.VFX {
             ImGui.InputText( Name + id, ref Value, MaxSize );
             ImGui.SameLine();
             if( ImGui.Button( "Update" + id ) ) {
-                Literal.GiveValue( Value.Trim( '\0' ) + "\u0000" );
+                Literal.GiveValue( Value.Trim().Trim( '\0' ) + "\u0000" );
                 OnChange?.Invoke();
             }
         }

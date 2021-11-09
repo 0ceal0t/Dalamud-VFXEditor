@@ -6,20 +6,23 @@ using ImGuiNET;
 using ImPlotNET;
 
 using VFXEditor.Data;
+using VFXEditor.Tmb;
 using VFXEditor.DirectX;
 using VFXEditor.Data.Vfx;
 using VFXEditor.Data.Texture;
+using VFXEditor.Data.Sound;
+
 using VFXEditor.Structs.Vfx;
 using VFXSelect;
 
 using System.Reflection;
 using ImGuiFileDialog;
 
+using Dalamud.Data;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
-using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Data;
 
 namespace VFXEditor
 {
@@ -87,6 +90,7 @@ namespace VFXEditor
                 PluginInterface
             );
 
+            TmbManager.Initialize( this );
             TextureManager.Initialize( this );
             DirectXManager.Initialize();
             DocumentManager.Initialize();
@@ -102,11 +106,13 @@ namespace VFXEditor
 
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
+            PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
         public void Dispose() {
             PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.Draw -= Draw;
+            PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
 
             ImPlot.DestroyContext();
 
@@ -123,9 +129,14 @@ namespace VFXEditor
             FileDialogManager.Dispose();
             DirectXManager.Dispose();
             DocumentManager.Dispose();
+            TmbManager.Dispose();
             TextureManager.Dispose();
             DataHelper.Dispose();
             CopyManager.Dispose();
+        }
+
+        private void DrawConfigUI() {
+            Visible = true;
         }
 
         private void OnCommand( string command, string rawArgs ) {

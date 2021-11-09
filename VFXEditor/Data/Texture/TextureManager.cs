@@ -19,7 +19,7 @@ namespace VFXEditor.Data.Texture {
     }
 
     public struct TexReplace {
-        public string localPath;
+        public string LocalPath;
         public int Height;
         public int Width;
         public int Depth;
@@ -28,8 +28,7 @@ namespace VFXEditor.Data.Texture {
     }
 
     public class TextureManager {
-        public static TextureManager Manager => Instance;
-        private static TextureManager Instance = null;
+        public static TextureManager Manager { get; private set; }
         public int TEX_ID = 0;
 
         public ConcurrentDictionary<string, TexData> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
@@ -51,24 +50,24 @@ namespace VFXEditor.Data.Texture {
         }
 
         public static void ResetInstance() {
-            var oldInstance = Instance;
-            Instance = new TextureManager();
+            var oldInstance = Manager;
+            Manager = new TextureManager();
             oldInstance?.DisposeInstance();
         }
 
         public static void Dispose() {
-            Instance?.DisposeInstance();
-            Instance = null;
+            Manager?.DisposeInstance();
+            Manager = null;
         }
 
         // ======= INSTANCE ============
 
-        public bool GetLocalReplacePath( string gamePath, out FileInfo file ) {
+        public bool GetReplacePath( string gamePath, out FileInfo file ) {
             file = null;
             if( !PathToTextureReplace.ContainsKey( gamePath ) ) {
                 return false;
             }
-            file = new FileInfo( PathToTextureReplace[gamePath].localPath );
+            file = new FileInfo( PathToTextureReplace[gamePath].LocalPath );
             return true;
         }
 
@@ -87,7 +86,7 @@ namespace VFXEditor.Data.Texture {
                 Depth = depth,
                 MipLevels = mips,
                 Format = format,
-                localPath = path
+                LocalPath = path
             };
 
             PathToTextureReplace[replacePath] = replaceData;
@@ -123,7 +122,7 @@ namespace VFXEditor.Data.Texture {
                         Depth = tex.Header.Depth,
                         MipLevels = tex.Header.MipLevels,
                         Format = tex.Header.Format,
-                        localPath = path
+                        LocalPath = path
                     };
                 }
                 else { //a .png file, convert it to the format currently being used by the existing game file
@@ -150,7 +149,7 @@ namespace VFXEditor.Data.Texture {
                     ddsContainer.Dispose();
                 }
                 // if there is already a replacement for the same file, delete the old file
-                replaceData.localPath = path;
+                replaceData.LocalPath = path;
                 RemoveReplaceTexture( replacePath );
                 if( !PathToTextureReplace.TryAdd( replacePath, replaceData ) ) {
                     return false;
@@ -168,7 +167,7 @@ namespace VFXEditor.Data.Texture {
         public void RemoveReplaceTexture( string path ) {
             if( PathToTextureReplace.ContainsKey( path ) ) {
                 if( PathToTextureReplace.TryRemove( path, out var oldValue ) ) {
-                    File.Delete( oldValue.localPath );
+                    File.Delete( oldValue.LocalPath );
                 }
             }
         }
@@ -202,7 +201,7 @@ namespace VFXEditor.Data.Texture {
 
         public VFXTexture GetPreviewTexture( string path ) {
             if( PathToTextureReplace.ContainsKey( path ) ) {
-                return VFXTexture.LoadFromLocal( PathToTextureReplace[path].localPath );
+                return VFXTexture.LoadFromLocal( PathToTextureReplace[path].LocalPath );
             }
             else {
                 return Plugin.DataManager.GetFile<VFXTexture>( path );
@@ -269,7 +268,7 @@ namespace VFXEditor.Data.Texture {
                 entry.Value.Wrap?.Dispose();
             }
             foreach( var entry in PathToTextureReplace ) {
-                File.Delete( entry.Value.localPath );
+                File.Delete( entry.Value.LocalPath );
             }
             PathToTexturePreview.Clear();
             PathToTextureReplace.Clear();

@@ -108,6 +108,8 @@ namespace VFXEditor {
                 DocumentManager.Manager.RemoveDoc( defaultDoc );
             }
 
+            // TODO: TMB
+
             IsLoading = false;
         }
 
@@ -165,7 +167,7 @@ namespace VFXEditor {
             foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
-                File.Copy( entry.Value.localPath, newFullPath, true );
+                File.Copy( entry.Value.LocalPath, newFullPath, true );
                 texMeta.Add( new WorkspaceMetaTex {
                     Height = entry.Value.Height,
                     Width = entry.Value.Width,

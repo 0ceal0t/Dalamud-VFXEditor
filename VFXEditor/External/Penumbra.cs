@@ -67,7 +67,7 @@ namespace VFXEditor.External {
 
                 if( exportTex ) {
                     foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
-                        AddTex( entry.Value.localPath, entry.Key );
+                        AddTex( entry.Value.LocalPath, entry.Key );
                     }
                 }
 

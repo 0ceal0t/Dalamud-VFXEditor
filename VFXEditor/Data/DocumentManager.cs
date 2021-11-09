@@ -28,25 +28,24 @@ namespace VFXEditor.Data {
     }
 
     public class DocumentManager {
-        public static DocumentManager Manager => Instance;
-        private static DocumentManager Instance = null;
+        public static DocumentManager Manager { get; private set; }
 
-        public static ReplaceDoc CurrentActiveDoc => Instance?.ActiveDoc;
-        public static List<ReplaceDoc> CurrentDocs => Instance?.Docs;
+        public static ReplaceDoc CurrentActiveDoc => Manager?.ActiveDoc;
+        public static List<ReplaceDoc> CurrentDocs => Manager?.Docs;
 
         public static void Initialize() {
             ResetInstance();
         }
 
         public static void ResetInstance() {
-            var oldInstance = Instance;
-            Instance = new DocumentManager();
+            var oldInstance = Manager;
+            Manager = new DocumentManager();
             oldInstance?.DisposeInstance();
         }
 
         public static void Dispose() {
-            Instance?.DisposeInstance();
-            Instance = null;
+            Manager?.DisposeInstance();
+            Manager = null;
         }
 
         // ========= INSTANCE =========
@@ -128,7 +127,7 @@ namespace VFXEditor.Data {
             }
         }
 
-        public bool GetLocalPath(string gamePath, out FileInfo file ) {
+        public bool GetReplacePath(string gamePath, out FileInfo file ) {
             file = null;
             if( GamePathToLocalPath.ContainsKey( gamePath ) ) {
                 file = new FileInfo( GamePathToLocalPath[gamePath] );
