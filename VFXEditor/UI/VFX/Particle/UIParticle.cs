@@ -4,7 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIParticle : UINode {
         public AVFXParticle Particle;

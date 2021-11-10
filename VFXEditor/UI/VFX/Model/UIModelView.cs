@@ -1,14 +1,8 @@
 using AVFXLib.AVFX;
 using AVFXLib.Models;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.DirectX;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIModelView : UINodeSplitView<UIModel> {
         public UIModelView(UIMain main, AVFXBase avfx) : base(main, avfx, "##MDL") {
             Group = main.Models;
@@ -16,7 +10,7 @@ namespace VFXEditor.UI.VFX {
         }
 
         public override void OnSelect( UIModel item ) {
-            DirectXManager.ModelView.LoadModel( item.Model );
+            Plugin.DirectXManager.ModelView.LoadModel( item.Model );
         }
 
         public override void OnDelete( UIModel item ) {

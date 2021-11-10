@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Dalamud.Logging;
 using VFXEditor.Structs;
-using VFXEditor.Util;
 using VFXEditor.Structs.Vfx;
 using VFXEditor.Texture;
 using FileMode = VFXEditor.Structs.FileMode;
@@ -16,11 +15,11 @@ using VFXEditor.Tmb;
 using VFXEditor.Tracker;
 using VFXEditor.Document;
 
-namespace VFXEditor {
+namespace VFXEditor.Interop {
     public class ResourceLoader : IDisposable {
         private bool IsEnabled;
-        private Crc32 Crc32;
-        private Crc32 Crc32_Reload;
+        private readonly Crc32 Crc32;
+        private readonly Crc32 Crc32_Reload;
 
         // ====== REDRAW =======
         private enum RedrawState {
@@ -164,30 +163,30 @@ namespace VFXEditor {
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            VfxTracker.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
+            Plugin.VfxTracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
+            if( Plugin.SpawnVFX != null && vfx == (IntPtr) Plugin.SpawnVFX.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            VfxTracker.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
+            Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* ) vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            VfxTracker.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
+            Plugin.VfxTracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
+            if( Plugin.SpawnVFX != null && vfx == (IntPtr) Plugin.SpawnVFX.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            VfxTracker.Tracker?.RemoveActor( (VfxStruct*) vfx );
+            Plugin.VfxTracker?.RemoveActor( (VfxStruct*) vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
@@ -317,7 +316,7 @@ namespace VFXEditor {
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
-            if( Configuration.Config?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
 
             var fsPath = GetReplacePath(gameFsPath, out var localPath) ? localPath : null;
 
@@ -382,16 +381,16 @@ namespace VFXEditor {
 
         private bool GetReplacePath(string gamePath, out string localPath) {
             localPath = null;
-            if( DocumentManager.Manager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
-                localPath = vfxFile.FullName;
+            if( Plugin.DocumentManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
+                localPath = vfxFile;
                 return true;
             }
-            else if( TextureManager.Manager?.GetReplacePath( gamePath, out var texFile ) == true ) {
+            else if( Plugin.TextureManager?.GetReplacePath( gamePath, out var texFile ) == true ) {
                 localPath = texFile;
                 return true;
             }
-            else if( TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
-                localPath = tmbFile.FullName;
+            else if( Plugin.TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
+                localPath = tmbFile;
                 return true;
             }
             return false;

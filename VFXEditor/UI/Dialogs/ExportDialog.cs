@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
-using VFXEditor.UI.VFX;
+using VFXEditor.UI.Vfx;
 
 namespace VFXEditor.UI {
     public class ExportDialog {

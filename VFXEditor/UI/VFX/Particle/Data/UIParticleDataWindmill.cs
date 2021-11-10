@@ -1,7 +1,7 @@
 using AVFXLib.Models;
 using System.Collections.Generic;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIParticleDataWindmill : UIData {
         public AVFXParticleDataWindmill Data;

@@ -2,7 +2,7 @@ using AVFXLib.AVFX;
 using AVFXLib.Models;
 using ImGuiNET;
 using System.IO;
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
         public AVFXBase AVFX;
         public UIMain Main;

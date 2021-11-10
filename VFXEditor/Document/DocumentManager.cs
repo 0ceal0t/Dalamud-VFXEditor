@@ -6,7 +6,7 @@ using AVFXLib.Models;
 
 using VFXEditor.Data;
 using VFXEditor.UI;
-using VFXEditor.UI.VFX;
+using VFXEditor.UI.Vfx;
 
 using VFXSelect.UI;
 
@@ -31,55 +31,34 @@ namespace VFXEditor.Document {
     }
 
     public partial class DocumentManager : GenericDialog {
-        public static DocumentManager Manager { get; private set; }
 
-        public static ReplaceDoc CurrentActiveDoc => Manager?.ActiveDoc;
-        public static List<ReplaceDoc> CurrentDocs => Manager?.Docs;
-
-        public static void Initialize() {
-            ResetInstance();
-        }
-
-        public static void ResetInstance() {
-            var oldInstance = Manager;
-            Manager = new DocumentManager();
-            oldInstance?.DisposeInstance();
-        }
-
-        public static void Dispose() {
-            Manager?.DisposeInstance();
-            Manager = null;
-        }
-
-        // ========= INSTANCE =========
-
-        private ReplaceDoc ActiveDoc;
-        private List<ReplaceDoc> Docs = new();
+        public ReplaceDoc ActiveDocument { get; private set; }
+        public List<ReplaceDoc> Documents { get; private set; } = new();
 
         private Dictionary<string, string> GamePathToLocalPath = new();
         private int DOC_ID = 0;
 
-        private DocumentManager() : base("Documents") {
-            NewDoc();
+        public DocumentManager() : base("Documents") {
+            CreateNewDocument();
         }
 
-        public ReplaceDoc NewDoc() {
+        public ReplaceDoc CreateNewDocument() {
             var doc = new ReplaceDoc {
-                WriteLocation = Path.Combine( Configuration.Config.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
+                WriteLocation = Path.Combine( Plugin.Configuration.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
                 Source = VFXSelectResult.None(),
                 Replace = VFXSelectResult.None()
             };
 
-            Docs.Add( doc );
-            ActiveDoc = doc;
+            Documents.Add( doc );
+            ActiveDocument = doc;
             return doc;
         }
 
-        public void ImportLocalDoc(string localPath, VFXSelectResult source, VFXSelectResult replace, Dictionary<string, string> renaming) {
+        public void ImportLocalDocument(string localPath, VFXSelectResult source, VFXSelectResult replace, Dictionary<string, string> renaming) {
             var doc = new ReplaceDoc {
                 Source = source,
                 Replace = replace,
-                WriteLocation = Path.Combine( Configuration.Config.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" )
+                WriteLocation = Path.Combine( Plugin.Configuration.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" )
             };
 
             if(localPath != "") {
@@ -91,30 +70,30 @@ namespace VFXEditor.Document {
                 }
             }
 
-            Docs.Add( doc );
+            Documents.Add( doc );
             RebuildMap();
         }
 
         public void UpdateSource( VFXSelectResult select ) {
-            ActiveDoc.Source = select;
+            ActiveDocument.Source = select;
         }
 
         public void UpdateReplace(VFXSelectResult select ) {
-            ActiveDoc.Replace = select;
+            ActiveDocument.Replace = select;
             RebuildMap();
         }
 
-        public void SelectDoc(ReplaceDoc doc ) {
-            ActiveDoc = doc;
+        public void SelectDocument(ReplaceDoc doc ) {
+            ActiveDocument = doc;
         }
 
-        public bool RemoveDoc(ReplaceDoc doc ) {
-            var switchDoc = ( doc == ActiveDoc );
-            Docs.Remove( doc );
+        public bool RemoveDocument(ReplaceDoc doc ) {
+            var switchDoc = ( doc == ActiveDocument );
+            Documents.Remove( doc );
             RebuildMap();
 
             if( switchDoc ) {
-                ActiveDoc = Docs[0];
+                ActiveDocument = Documents[0];
                 doc.Dispose();
                 return true;
             }
@@ -124,49 +103,45 @@ namespace VFXEditor.Document {
         }
 
         public void Save() {
-            AvfxHelper.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
-            if(Configuration.Config.LogAllFiles) {
-                PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
+            AvfxHelper.SaveLocalFile( ActiveDocument.WriteLocation, ActiveDocument.Main.AVFX );
+            if( Plugin.Configuration.LogAllFiles) {
+                PluginLog.Log( $"Saved VFX to {ActiveDocument.WriteLocation}" );
             }
         }
 
-        public bool GetReplacePath(string gamePath, out FileInfo file ) {
-            file = null;
-            if( GamePathToLocalPath.ContainsKey( gamePath ) ) {
-                file = new FileInfo( GamePathToLocalPath[gamePath] );
-                return true;
-            }
-            return false;
+        public bool GetReplacePath(string gamePath, out string file ) {
+            file = GamePathToLocalPath.TryGetValue( gamePath, out var path ) ? path : null;
+            return !string.IsNullOrEmpty( file );
         }
 
         public bool HasReplacePath(bool allDocuments ) {
             if( allDocuments ) {
-                foreach(var doc in Docs ) {
+                foreach(var doc in Documents ) {
                     if( doc.Replace.Path == "" )
                         return false;
                 }
                 return true;
             }
-            return ActiveDoc.Replace.Path != "";
-        }
-
-        private void DisposeInstance() {
-            foreach(var doc in Docs ) {
-                doc.Dispose();
-            }
-            Docs = null;
-            ActiveDoc = null;
-            GamePathToLocalPath = null;
+            return ActiveDocument.Replace.Path != "";
         }
 
         private void RebuildMap() {
             Dictionary<string, string> newMap = new();
-            foreach( var doc in Docs ) {
+            foreach( var doc in Documents ) {
                 if( doc.Replace.Path != "" ) {
                     newMap[doc.Replace.Path] = doc.WriteLocation;
                 }
             }
             GamePathToLocalPath = newMap;
+        }
+
+        public void Dispose() {
+            foreach( var doc in Documents ) {
+                doc.Dispose();
+            }
+            Documents = null;
+            ActiveDocument = null;
+            GamePathToLocalPath = null;
         }
     }
 }

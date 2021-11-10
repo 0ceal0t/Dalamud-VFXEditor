@@ -2,7 +2,7 @@ using AVFXLib.AVFX;
 using Dalamud.Interface;
 using ImGuiNET;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public interface IUINodeView<T> where T : UINode {
         public void OnDelete( T item );
         public T OnImport( AVFXNode node, bool has_dependencies = false );

@@ -23,6 +23,7 @@ using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
+using VFXEditor.Interop;
 
 namespace VFXEditor
 {
@@ -37,14 +38,19 @@ namespace VFXEditor
         public static DataManager DataManager { get; private set; }
         public static TargetManager TargetManager { get; private set; }
 
-        public static BaseVfx SpawnVfx { get; private set; }
-        public static ResourceLoader ResourceLoader { get; private set; }
+        public static BaseVfx SpawnVFX { get; private set; }
 
-        public static string TemplateLocation { get; private set; }
+        public static ResourceLoader ResourceLoader { get; private set; }
+        public static DirectXManager DirectXManager { get; private set; }
+        public static DocumentManager DocumentManager { get; private set; }
+        public static TextureManager TextureManager { get; private set; }
+        public static TmbManager TmbManager { get; private set; }
+        public static Configuration Configuration { get; private set; }
+        public static VfxTracker VfxTracker { get; private set; }
 
         public string Name => "VFXEditor";
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
-
+        public static string TemplateLocation { get; private set; }
         private const string CommandName = "/vfxedit";
 
         public Plugin(
@@ -68,19 +74,13 @@ namespace VFXEditor
             Framework = framework;
             TargetManager = targetManager;
 
-            Configuration.Initialize();
-
-            ResourceLoader = new ResourceLoader();
-            CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
-                HelpMessage = "toggle ui"
-            } );
+            CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
             
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            AvfxHelper.Initialize();
             SheetManager.Initialize(
                 Path.Combine( TemplateLocation, "Files", "npc.csv" ),
                 Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ),
@@ -88,13 +88,20 @@ namespace VFXEditor
                 PluginInterface
             );
 
-            TmbManager.Initialize( this );
-            TextureManager.Initialize();
-            DirectXManager.Initialize();
-            DocumentManager.Initialize();
+            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Configuration.Setup();
+
+            TextureManager = new TextureManager();
+            TextureManager.Setup();
+
+            ResourceLoader = new ResourceLoader();
+            TmbManager = new TmbManager();
+            DirectXManager = new DirectXManager();
+            DocumentManager = new DocumentManager();
+            VfxTracker = new VfxTracker();
+
             FileDialogManager.Initialize( PluginInterface );
             CopyManager.Initialize();
-            VfxTracker.Initialize();
 
             InitUI();
 
@@ -119,15 +126,15 @@ namespace VFXEditor
             ResourceLoader.Dispose();
             ResourceLoader = null;
 
-            SpawnVfx?.Remove();
-            SpawnVfx = null;
+            RemoveSpawnVfx();
 
-            Configuration.Dispose();
-            FileDialogManager.Dispose();
+            TmbManager.Dispose();
+            TextureManager.Dispose();
             DirectXManager.Dispose();
             DocumentManager.Dispose();
             TmbManager.Dispose();
-            TextureManager.Dispose();
+
+            FileDialogManager.Dispose();
             AvfxHelper.Dispose();
             CopyManager.Dispose();
         }
@@ -141,31 +148,7 @@ namespace VFXEditor
         }
 
         public static bool SpawnExists() {
-            return SpawnVfx != null;
-        }
-
-        public static void RemoveSpawnVfx() {
-            SpawnVfx?.Remove();
-            SpawnVfx = null;
-        }
-
-        public static void SpawnOnGround( string path ) {
-            SpawnVfx = new StaticVfx( path, ClientState.LocalPlayer.Position );
-        }
-
-        public static void SpawnOnSelf( string path ) {
-            SpawnVfx = new ActorVfx( ClientState.LocalPlayer, ClientState.LocalPlayer, path );
-        }
-
-        public static void SpawnOnTarget( string path ) {
-            var t = TargetManager.Target;
-            if( t != null ) {
-                SpawnVfx = new ActorVfx( t, t, path );
-            }
-        }
-
-        public static void ClearSpawnVfx() {
-            SpawnVfx = null;
+            return SpawnVFX != null;
         }
     }
 }

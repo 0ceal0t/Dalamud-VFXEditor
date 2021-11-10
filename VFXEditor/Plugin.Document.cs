@@ -4,7 +4,7 @@ using Dalamud.Plugin;
 using System;
 using VFXEditor.Data;
 using VFXEditor.Document;
-using VFXEditor.UI.VFX;
+using VFXEditor.UI.Vfx;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -40,36 +40,36 @@ namespace VFXEditor {
                     }
                     break;
             }
-            if( addToRecent ) Configuration.Config.AddRecent( selectResult );
-            DocumentManager.Manager.UpdateSource( selectResult );
-            DocumentManager.Manager.Save();
+            if( addToRecent ) Configuration.AddRecent( selectResult );
+            DocumentManager.UpdateSource( selectResult );
+            DocumentManager.Save();
         }
 
         public static void RemoveSourceVFX() {
-            DocumentManager.Manager.UpdateSource( VFXSelectResult.None() );
-            DocumentManager.CurrentActiveDoc.Dispose();
+            DocumentManager.UpdateSource( VFXSelectResult.None() );
+            DocumentManager.ActiveDocument.Dispose();
         }
 
         public static void SetReplaceVFX( VFXSelectResult replaceResult) {
             SetReplaceVFX( replaceResult, true );
         }
         public static void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
-            if( addToRecent ) Configuration.Config.AddRecent( replaceResult );
-            DocumentManager.Manager.UpdateReplace( replaceResult );
+            if( addToRecent ) Configuration.AddRecent( replaceResult );
+            DocumentManager.UpdateReplace( replaceResult );
         }
 
         public static void RemoveReplaceVFX() {
-            DocumentManager.Manager.UpdateReplace( VFXSelectResult.None() );
+            DocumentManager.UpdateReplace( VFXSelectResult.None() );
         }
 
         public static void LoadCurrentVFX( AVFXBase avfx ) {
             if( avfx == null ) return;
-            DocumentManager.CurrentActiveDoc.SetAVFX( avfx );
+            DocumentManager.ActiveDocument.SetAVFX( avfx );
 
-            if( Configuration.Config.VerifyOnLoad ) {
+            if( Configuration.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
                 var verifyResult = AvfxHelper.LastImportNode.CheckEquals( node, out var messages );
-                DocumentManager.CurrentActiveDoc.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                DocumentManager.ActiveDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
                     PluginLog.Warning( m );

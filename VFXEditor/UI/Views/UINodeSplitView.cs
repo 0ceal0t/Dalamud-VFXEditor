@@ -1,7 +1,7 @@
 using AVFXLib.Models;
 using ImGuiNET;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
         public string Id;
         public UIMain Main;

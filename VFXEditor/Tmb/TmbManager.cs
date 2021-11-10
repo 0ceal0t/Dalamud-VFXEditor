@@ -16,46 +16,22 @@ namespace VFXEditor.Tmb {
     }
 
     public class TmbManager {
-        public static TmbManager Manager { get; private set; }
+        private static string LocalPath => Path.Combine(Plugin.Configuration.WriteLocation, "test.tmb" );
 
-        public ConcurrentDictionary<string, TmbReplace> PathToTmbReplace = new();
-
-        public static void Initialize(Plugin plugin) {
-            ResetInstance();
-        }
-
-        private static string LocalPath => Path.Combine(Configuration.Config.WriteLocation, "test.tmb" );
-
-        public static bool GetReplacePath(string path, out FileInfo replacePath) {
+        public bool GetReplacePath(string path, out string replacePath) {
             replacePath = null;
-            if( Manager == null ) return false;
-            if( Manager.TmbPath.Equals(path)) {
-                replacePath = new FileInfo( LocalPath );
+            if( TmbPath.Equals(path)) {
+                replacePath = LocalPath;
                 return true;
             }
             return false;
         }
 
-        public static void ResetInstance() {
-            var oldInstance = Manager;
-            Manager = new TmbManager();
-            oldInstance?.DisposeInstance();
+        public void Dispose() {
         }
 
-        public static void Dispose() {
-            Manager?.DisposeInstance();
-            Manager = null;
-        }
-
-        public static void Show() {
-            if (Manager == null) return;
-            Manager.Visible = true;
-        }
-
-        // ==================
-
-        public void DisposeInstance() {
-            PathToTmbReplace.Clear();
+        public void Show() {
+            Visible = true;
         }
 
         private string TmbPath = "";
@@ -80,7 +56,7 @@ namespace VFXEditor.Tmb {
                         Update();
 
                         var output = CurrentFile.ToBytes();
-                        for (int i = 0; i < Math.Min(output.Length, file.Data.Length); i++) {
+                        for (var i = 0; i < Math.Min(output.Length, file.Data.Length); i++) {
                             if (output[i] != file.Data[i]) {
                                 PluginLog.Log( $"FILES DO NOT MATCH: {i}" );
                                 break;

@@ -6,7 +6,7 @@ using Dalamud.Logging;
 using VFXEditor.Texture;
 using ImGuiFileDialog;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UITexture : UINode {
         public UIMain Main;
@@ -23,7 +23,7 @@ namespace VFXEditor.UI.VFX
 
             Path = new UIString( "Path", Texture.Path);
             lastValue = Texture.Path.Value;
-            TextureManager.Manager.LoadPreviewTexture( Texture.Path.Value );
+            Plugin.TextureManager.LoadPreviewTexture( Texture.Path.Value );
             HasDependencies = false; // if imported, all set now
         }
 
@@ -31,7 +31,7 @@ namespace VFXEditor.UI.VFX
             var currentPathValue = Path.Literal.Value;
             if( currentPathValue != lastValue ) {
                 lastValue = currentPathValue;
-                TextureManager.Manager.LoadPreviewTexture( currentPathValue );
+                Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
             }
             return currentPathValue;
         }
@@ -44,7 +44,7 @@ namespace VFXEditor.UI.VFX
 
             var currentPathValue = LoadTex();
 
-            if (TextureManager.Manager.GetTexturePreview(currentPathValue, out var t)) {
+            if ( Plugin.TextureManager.GetTexturePreview(currentPathValue, out var t)) {
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
                 if( ImGui.Button( "Export" + id ) ) {
@@ -69,8 +69,8 @@ namespace VFXEditor.UI.VFX
                     ImGui.TextColored( UIUtils.RED_COLOR, "Replaced with imported texture" );
                     ImGui.SameLine();
                     if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
-                        TextureManager.Manager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
-                        TextureManager.Manager.RefreshPreviewTexture( currentPathValue.Trim( '\0' ) );
+                        Plugin.TextureManager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
+                        Plugin.TextureManager.RefreshPreviewTexture( currentPathValue.Trim( '\0' ) );
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace VFXEditor.UI.VFX
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
 
-            if( TextureManager.Manager.GetTexturePreview( currentPathValue, out var t ) ) {
+            if( Plugin.TextureManager.GetTexturePreview( currentPathValue, out var t ) ) {
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();
@@ -91,7 +91,7 @@ namespace VFXEditor.UI.VFX
             {
                 if( !ok ) return;
                 try {
-                    if( !TextureManager.Manager.AddReplaceTexture( res, newPath ) ) {
+                    if( !Plugin.TextureManager.AddReplaceTexture( res, newPath ) ) {
                         PluginLog.Error( $"Could not import" );
                     }
                 }
@@ -105,7 +105,7 @@ namespace VFXEditor.UI.VFX
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetRawTexture( texPath );
+                var texFile = Plugin.TextureManager.GetRawTexture( texPath );
                 texFile.SaveAsPNG( res );
             } );
         }
@@ -114,7 +114,7 @@ namespace VFXEditor.UI.VFX
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetRawTexture( texPath );
+                var texFile = Plugin.TextureManager.GetRawTexture( texPath );
                 texFile.SaveAsDDS( res );
             } );
         }

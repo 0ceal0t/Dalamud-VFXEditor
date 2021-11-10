@@ -21,7 +21,7 @@ namespace VFXEditor.Tmb {
             }
         }
 
-        private static Dictionary<string, EntryType> TypeDict = new() {
+        private static readonly Dictionary<string, EntryType> TypeDict = new() {
             { "C063", new EntryType( C063.Name, () => new C063(), ( BinaryReader br ) => new C063( br ) ) },
             { "C006", new EntryType( C006.Name, () => new C006(), ( BinaryReader br ) => new C006( br ) ) },
             { "C010", new EntryType( C010.Name, () => new C010(), ( BinaryReader br ) => new C010( br ) ) },
@@ -34,10 +34,10 @@ namespace VFXEditor.Tmb {
         };
 
         public short Id { get; private set; } // temp
-        private int Entry_Count;
+        private readonly int Entry_Count;
 
         private short Time = 0;
-        private List<TmbItem> Entries = new();
+        private readonly List<TmbItem> Entries = new();
         private int Unk_3 = 0;
 
         public int EntrySize => 0x18 + Entries.Select( x => x.GetSize() ).Sum();
@@ -59,7 +59,7 @@ namespace VFXEditor.Tmb {
 
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( Entry_Count - 1 ), SeekOrigin.Begin );
-            var endId = reader.ReadInt16();
+            reader.ReadInt16();
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
@@ -68,7 +68,7 @@ namespace VFXEditor.Tmb {
                 var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
                 reader.ReadInt32(); // size
 
-                TmbItem newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
+                var newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
 
                 if( newEntry == null ) {
                     PluginLog.Log( $"Unknown Entry {name}" );
@@ -107,8 +107,6 @@ namespace VFXEditor.Tmb {
             foreach( var entry in Entries ) entry.Write( entryWriter, entryPos, extraWriter, extraPos, stringWriter, stringPos, timelinePos );
         }
 
-        private string AddSelected = "[NONE]";
-
         public void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
@@ -130,17 +128,17 @@ namespace VFXEditor.Tmb {
                 i++;
             }
 
-            // ==== SELECTION DIALOG =========
-            if( ImGui.BeginCombo( $"{id}Add", AddSelected ) ) {
-                if( ImGui.Selectable( $"Movement Cancel (C131){id}", AddSelected.Equals( "C131" ) ) ) {
-                    AddSelected = "C131";
-                    Entries.Add( new C131() );
+            if( ImGui.Button( $"+ New{id}" ) ) {
+                ImGui.OpenPopup( "New_Entry_Tmb" );
+            }
+
+            if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) {
+                foreach( var entryType in TypeDict.Values ) {
+                    if( ImGui.Selectable( $"{entryType.Name}##New_Entry_Tmb" ) ) {
+                        Entries.Add( entryType.NewItem() );
+                    }
                 }
-                if( ImGui.Selectable( $"Movement Cancel (C131){id}", AddSelected.Equals( "C131" ) ) ) {
-                    AddSelected = "C131";
-                    Entries.Add( new C131() );
-                }
-                ImGui.EndCombo();
+                ImGui.EndPopup();
             }
         }
     }

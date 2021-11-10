@@ -6,7 +6,7 @@ using Dalamud.Game;
 using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
-using VFXEditor.UI.VFX;
+using VFXEditor.UI.Vfx;
 
 namespace VFXEditor.UI.Views {
     public abstract class ImGuiSequencer<T> : UIBase where T : UIItem {

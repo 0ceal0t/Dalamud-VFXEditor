@@ -8,7 +8,7 @@ using ImGuiNET;
 using AVFXLib.Models;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIIntList : UIBase {
         public string Name;
         public List<int> Value;

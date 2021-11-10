@@ -31,13 +31,12 @@ namespace VFXEditor.Texture {
     }
 
     public partial class TextureManager : GenericDialog {
-        public static TextureManager Manager { get; private set; }
         public ConcurrentDictionary<string, TextureReplace> PathToTextureReplace { get; private set; } = new(); // Keeps track of imported textures which replace existing ones
 
         private int TEX_ID = 0;
         private readonly ConcurrentDictionary<string, PreviewTexture> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
 
-        public static void Initialize() {
+        public static void Setup() {
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
@@ -48,29 +47,14 @@ namespace VFXEditor.Texture {
             lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
             lib.Resolver.SetProbingPaths64( new string[] { _64bitPath } );
             PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
-
-            ResetInstance();
         }
-
-        public static void ResetInstance() {
-            var oldInstance = Manager;
-            Manager = new TextureManager();
-            oldInstance?.DisposeInstance();
-        }
-
-        public static void Dispose() {
-            Manager?.DisposeInstance();
-            Manager = null;
-        }
-
-        // ======= INSTANCE ============
 
         public TextureManager() : base( "Imported Textures" ) {
         }
 
         public bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = PathToTextureReplace.TryGetValue( gamePath, out var textureReplace ) ? textureReplace.LocalPath : null;
-            return string.IsNullOrEmpty( localPath );
+            return !string.IsNullOrEmpty( localPath );
         }
 
         // import replacement texture from atex
@@ -80,7 +64,7 @@ namespace VFXEditor.Texture {
                 return;
             }
 
-            var path = Path.Combine( Configuration.Config.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+            var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
             File.Copy( localPath, path, true );
 
             var replaceData = new TextureReplace {
@@ -104,7 +88,7 @@ namespace VFXEditor.Texture {
 
             try {
                 TextureReplace replaceData;
-                var path = Path.Combine( Configuration.Config.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+                var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 if( Path.GetExtension( fileLocation ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( fileLocation );
@@ -263,7 +247,7 @@ namespace VFXEditor.Texture {
             }
         }
 
-        private void DisposeInstance() {
+        public void Dispose() {
             foreach( var entry in PathToTexturePreview ) {
                 entry.Value.Wrap?.Dispose();
             }

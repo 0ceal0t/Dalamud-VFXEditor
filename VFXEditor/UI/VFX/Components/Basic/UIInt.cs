@@ -9,7 +9,7 @@ using AVFXLib.Models;
 using Dalamud.Plugin;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIInt : UIBase {
         public string Name;
         public int Value;

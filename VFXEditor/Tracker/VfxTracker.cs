@@ -10,14 +10,6 @@ using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor.Tracker {
     public unsafe class VfxTracker {
-        public static VfxTracker Tracker { get; private set; }
-
-        public static void Initialize() {
-            Tracker = new VfxTracker();
-        }
-
-        // ======================
-
         public bool Enabled { get; private set; }
 
         private struct TrackerData {
@@ -194,7 +186,7 @@ namespace VFXEditor.Tracker {
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, group.Key );
-                if( d > 100f && Configuration.Config.OverlayLimit ) {
+                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
@@ -222,7 +214,7 @@ namespace VFXEditor.Tracker {
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, pos );
-                if( d > 100f && Configuration.Config.OverlayLimit ) {
+                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
@@ -274,7 +266,7 @@ namespace VFXEditor.Tracker {
             ImGui.End();
         }
 
-        private bool WatchingCutscene() {
+        private static bool WatchingCutscene() {
             return Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
         }
 

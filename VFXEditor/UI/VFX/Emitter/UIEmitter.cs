@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIEmitter : UINode {
         public AVFXEmitter Emitter;

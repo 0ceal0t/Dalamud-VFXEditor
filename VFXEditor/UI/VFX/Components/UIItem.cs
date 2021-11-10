@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.Collections.Generic;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UIItem : UIBase {
         public int Idx;
         public List<UIBase> Attributes = new();

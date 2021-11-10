@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ImGuiNET;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UINodeSelect : UIBase {
         public UINode Node;
 

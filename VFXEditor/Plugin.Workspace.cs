@@ -1,15 +1,16 @@
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using ImGuiFileDialog;
 using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using VFXEditor.Data;
+
 using VFXEditor.Document;
 using VFXEditor.Texture;
+using VFXEditor.Tmb;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -45,8 +46,9 @@ namespace VFXEditor {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
-                TextureManager.ResetInstance();
-                DocumentManager.ResetInstance();
+                ResetTextureManager();
+                ResetDocumentManager();
+                ResetTmbManager();
 
                 IsLoading = false;
             } );
@@ -87,29 +89,29 @@ namespace VFXEditor {
 
             IsLoading = true;
 
-            TextureManager.ResetInstance();
+            ResetTextureManager();
 
             var texRootPath = Path.Combine( loadLocation, "Tex" );
             foreach( var tex in meta.Tex ) {
                 var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
-                TextureManager.Manager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                TextureManager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
             }
 
-            DocumentManager.ResetInstance();
+            ResetDocumentManager();
 
-            var defaultDoc = DocumentManager.CurrentActiveDoc;
+            var defaultDoc = DocumentManager.ActiveDocument;
 
             var vfxRootPath = Path.Combine( loadLocation, "VFX" );
             foreach( var doc in meta.Docs ) {
                 var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
-                DocumentManager.Manager.ImportLocalDoc( fullPath, doc.Source, doc.Replace, doc.Renaming );
+                DocumentManager.ImportLocalDocument( fullPath, doc.Source, doc.Replace, doc.Renaming );
             }
 
-            if( DocumentManager.CurrentDocs.Count > 1 ) {
-                DocumentManager.Manager.RemoveDoc( defaultDoc );
+            if( DocumentManager.Documents.Count > 1 ) {
+                DocumentManager.RemoveDocument( defaultDoc );
             }
 
-            // TODO: TMB
+            ResetTmbManager();
 
             IsLoading = false;
         }
@@ -144,7 +146,7 @@ namespace VFXEditor {
 
             var docId = 0;
             List<WorkspaceMetaDocument> docMeta = new();
-            foreach( var entry in DocumentManager.CurrentDocs ) {
+            foreach( var entry in DocumentManager.Documents ) {
                 var newPath = "";
                 if( entry.Main != null ) {
                     newPath = $"VFX_{docId++}.avfx";
@@ -165,7 +167,7 @@ namespace VFXEditor {
 
             var texId = 0;
             List<WorkspaceMetaTex> texMeta = new();
-            foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
+            foreach( var entry in TextureManager.PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.Copy( entry.Value.LocalPath, newFullPath, true );
@@ -188,6 +190,24 @@ namespace VFXEditor {
             if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );
             ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
             Directory.Delete( saveLocation, true );
+        }
+
+        private static void ResetTextureManager() {
+            var oldManager = TextureManager;
+            TextureManager = new TextureManager();
+            oldManager?.Dispose();
+        }
+
+        private static void ResetDocumentManager() {
+            var oldManager = DocumentManager;
+            DocumentManager = new DocumentManager();
+            oldManager?.Dispose();
+        }
+
+        private static void ResetTmbManager() {
+            var oldManager = TmbManager;
+            TmbManager = new TmbManager();
+            oldManager?.Dispose();
         }
     }
 }

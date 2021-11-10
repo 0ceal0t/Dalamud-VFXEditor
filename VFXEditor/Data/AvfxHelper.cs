@@ -6,11 +6,7 @@ using System.IO;
 
 namespace VFXEditor.Data {
     public static class AvfxHelper {
-        public static AVFXNode LastImportNode { get; private set; }
-
-        public static void Initialize() {
-            LastImportNode = null;
-        }
+        public static AVFXNode LastImportNode { get; private set; } = null;
 
         public static void Dispose() {
             LastImportNode = null;

@@ -1,30 +1,20 @@
 using Dalamud.Configuration;
-using Dalamud.Plugin;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VFXSelect.UI;
+
 using ImGuiFileDialog;
 using Dalamud.Logging;
 
+using VFXEditor.UI;
+using VFXSelect.UI;
+using ImGuiNET;
+using System.Numerics;
+
 namespace VFXEditor {
     [Serializable]
-    public class Configuration : IPluginConfiguration {
-        public static Configuration Config { get; private set; }
-
-        public static void Initialize() {
-            Config = Plugin.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Config.InitializeInstance( Plugin.PluginInterface );
-            Directory.CreateDirectory( Config.WriteLocation );
-            PluginLog.Log( "Write location: " + Config.WriteLocation );
-        }
-
-        public static void Dispose() {
-            Config = null;
-        }
-
-        // ====== INSTANCE ======
-
+    public class Configuration : GenericDialog, IPluginConfiguration {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
@@ -42,13 +32,15 @@ namespace VFXEditor {
         public List<VFXSelectResult> RecentSelects = new();
         public bool FilepickerImagePreview = true;
 
-        [NonSerialized]
-        private DalamudPluginInterface PluginInterface;
+        public Configuration() : base("Settings") {
+            Size = new Vector2( 300, 150 );
+        }
 
-        private void InitializeInstance( DalamudPluginInterface pluginInterface ) {
-            PluginInterface = pluginInterface;
-            PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+        public void Setup() {
+            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
+            Directory.CreateDirectory( WriteLocation );
+            PluginLog.Log( "Write location: " + WriteLocation );
         }
 
         public void AddRecent( VFXSelectResult result ) {
@@ -63,8 +55,43 @@ namespace VFXEditor {
         }
 
         public void Save() {
-            PluginInterface.SavePluginConfig( this );
-            PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Plugin.PluginInterface.SavePluginConfig( this );
+            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+        }
+
+        public override void OnDraw() {
+            ImGui.Text( "Changes to the temp file location may require a restart to take effect" );
+            if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) {
+                Save();
+            }
+
+            ImGui.SetNextItemWidth( 200 );
+            if( ImGui.Checkbox( "Verify on load##Settings", ref VerifyOnLoad ) ) {
+                Save();
+            }
+
+            if( ImGui.Checkbox( "Log all files##Settings", ref LogAllFiles ) ) {
+                Save();
+            }
+
+            if( ImGui.Checkbox( "Hide with UI##Settings", ref HideWithUI ) ) {
+                Save();
+            }
+
+            if( ImGui.Checkbox( "File picker image preview##Settings", ref FilepickerImagePreview ) ) {
+                FileDialogManager.ImagePreview = FilepickerImagePreview;
+                Save();
+            }
+
+            ImGui.SetNextItemWidth( 135 );
+            if( ImGui.InputInt( "Recent VFX Limit##Settings", ref SaveRecentLimit ) ) {
+                SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
+                Save();
+            }
+
+            if( ImGui.Checkbox( "Live Overlay Limit by Distance##Settings", ref OverlayLimit ) ) {
+                Save();
+            }
         }
     }
 }

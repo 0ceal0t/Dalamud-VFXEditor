@@ -1,6 +1,6 @@
 using AVFXLib.Models;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIEmitterItem : UIWorkspaceItem {
         public AVFXEmitterIterationItem Iteration;
         public UIEmitter Emitter;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
         public List<T> Items;
         private T Selected = null;

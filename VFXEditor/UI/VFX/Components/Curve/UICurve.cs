@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UICurve : UIItem
     {

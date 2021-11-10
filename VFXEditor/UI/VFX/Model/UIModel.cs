@@ -5,16 +5,14 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.DirectX;
 using VFXEditor.External;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIModel : UINode {
         public AVFXModel Model;
         public UIMain Main;
 
-        //=======================
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
@@ -73,57 +71,57 @@ namespace VFXEditor.UI.VFX
                 return;
             // ===============
             if(Refresh) {
-                DirectXManager.ModelView.LoadModel( Model, mode: Mode );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: Mode );
                 Refresh = false;
             }
 
-            var wireframe = DirectXManager.ModelView.IsWireframe;
+            var wireframe = Plugin.DirectXManager.ModelView.IsWireframe;
             if(ImGui.Checkbox("Wireframe##3DModel", ref wireframe ) ) {
-                DirectXManager.ModelView.IsWireframe = wireframe;
-                DirectXManager.ModelView.RefreshRasterizeState();
-                DirectXManager.ModelView.Draw();
+                Plugin.DirectXManager.ModelView.IsWireframe = wireframe;
+                Plugin.DirectXManager.ModelView.RefreshRasterizeState();
+                Plugin.DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if(ImGui.Checkbox( "Show Edges##3DModel", ref DirectXManager.ModelView.ShowEdges ) ) {
-                DirectXManager.ModelView.Draw();
+            if(ImGui.Checkbox( "Show Edges##3DModel", ref Plugin.DirectXManager.ModelView.ShowEdges ) ) {
+                Plugin.DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if(ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref DirectXManager.ModelView.ShowEmitter ) ) {
-                DirectXManager.ModelView.Draw();
+            if(ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Plugin.DirectXManager.ModelView.ShowEmitter ) ) {
+                Plugin.DirectXManager.ModelView.Draw();
             }
             if(ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
-                DirectXManager.ModelView.LoadModel( Model, mode:1);
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode:1);
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
-                DirectXManager.ModelView.LoadModel( Model, mode: 2 );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: 2 );
             }
             ImGui.SameLine();
             if(ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
-                DirectXManager.ModelView.LoadModel( Model, mode: 3 );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: 3 );
             }
 
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "3DViewChild" );
 
             var space = ImGui.GetContentRegionAvail();
-            DirectXManager.ModelView.Resize( space );
+            Plugin.DirectXManager.ModelView.Resize( space );
 
-            ImGui.ImageButton( DirectXManager.ModelView.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+            ImGui.ImageButton( Plugin.DirectXManager.ModelView.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
 
             if(ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                DirectXManager.ModelView.Drag( delta, true );
+                Plugin.DirectXManager.ModelView.Drag( delta, true );
             }
             else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                DirectXManager.ModelView.Drag( ImGui.GetMousePos() - cursor, false );
+                Plugin.DirectXManager.ModelView.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
-                DirectXManager.ModelView.IsDragging = false;
+                Plugin.DirectXManager.ModelView.IsDragging = false;
             }
 
             if( ImGui.IsItemHovered() ) {
-                DirectXManager.ModelView.Zoom( ImGui.GetIO().MouseWheel );
+                Plugin.DirectXManager.ModelView.Zoom( ImGui.GetIO().MouseWheel );
             }
 
             ImGui.EndChild();

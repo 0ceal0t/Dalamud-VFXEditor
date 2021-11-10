@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.UI.Views;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UITimelineItemSequencer : ImGuiSequencer<UITimelineItem> {
 
         public UITimeline Timeline;

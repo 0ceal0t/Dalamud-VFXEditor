@@ -57,16 +57,16 @@ namespace VFXEditor.External {
                 }
 
                 if( exportAll ) {
-                    foreach( var doc in DocumentManager.CurrentDocs ) {
+                    foreach( var doc in Plugin.DocumentManager.Documents ) {
                         AddMod( doc.Main?.AVFX, doc.Replace.Path );
                     }
                 }
                 else {
-                    AddMod( DocumentManager.CurrentActiveDoc.Main?.AVFX, DocumentManager.CurrentActiveDoc.Replace.Path );
+                    AddMod( Plugin.DocumentManager.ActiveDocument.Main?.AVFX, Plugin.DocumentManager.ActiveDocument.Replace.Path );
                 }
 
                 if( exportTex ) {
-                    foreach( var entry in TextureManager.Manager.PathToTextureReplace ) {
+                    foreach( var entry in Plugin.TextureManager.PathToTextureReplace ) {
                         AddTex( entry.Value.LocalPath, entry.Key );
                     }
                 }

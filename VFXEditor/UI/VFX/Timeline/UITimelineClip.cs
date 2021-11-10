@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UITimelineClip : UIWorkspaceItem {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;

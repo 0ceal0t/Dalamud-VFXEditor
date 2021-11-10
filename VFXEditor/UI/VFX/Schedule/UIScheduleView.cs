@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIScheduleView : UIDropdownView<UIScheduler> {
         public UIScheduleView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##SCHED", "Select a Scheduler", allowNew:false, allowDelete:false ) {

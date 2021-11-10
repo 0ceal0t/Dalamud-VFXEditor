@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UIData : UIItem {
         public List<UIItem> Tabs = new();
         public UIItemSplitView<UIItem> SplitView;

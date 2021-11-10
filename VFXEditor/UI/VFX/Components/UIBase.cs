@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public abstract class UIBase {
         public bool Assigned = true;
 

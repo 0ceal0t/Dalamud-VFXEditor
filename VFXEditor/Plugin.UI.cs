@@ -8,12 +8,11 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.Document;
-using VFXEditor.Structs.Vfx;
 using VFXEditor.Texture;
 using VFXEditor.Tmb;
 using VFXEditor.Tracker;
 using VFXEditor.UI;
-using VFXEditor.UI.VFX;
+using VFXEditor.UI.Vfx;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -23,7 +22,6 @@ namespace VFXEditor {
         private VFXSelectDialog SelectUI;
         private VFXSelectDialog PreviewUI;
 
-        private SettingsDialog SettingsUI;
         private ToolsDialog ToolsUI;
         private TexToolsDialog TexToolsUI;
         private PenumbraDialog PenumbraUI;
@@ -34,7 +32,7 @@ namespace VFXEditor {
         public void InitUI() {
             SelectUI = new VFXSelectDialog(
                 "File Select [SOURCE]",
-                Configuration.Config.RecentSelects,
+                Configuration.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -44,7 +42,7 @@ namespace VFXEditor {
             );
             PreviewUI = new VFXSelectDialog(
                 "File Select [TARGET]",
-                Configuration.Config.RecentSelects,
+                Configuration.RecentSelects,
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -56,7 +54,6 @@ namespace VFXEditor {
             SelectUI.OnSelect += SetSourceVFX;
             PreviewUI.OnSelect += SetReplaceVFX;
 
-            SettingsUI = new SettingsDialog();
             ToolsUI = new ToolsDialog();
             TexToolsUI = new TexToolsDialog();
             PenumbraUI = new PenumbraDialog();
@@ -71,17 +68,17 @@ namespace VFXEditor {
 
             CopyManager.PreDraw();
             DrawMainInterface();
-            VfxTracker.Tracker?.Draw();
+            VfxTracker.Draw();
             if( !IsLoading ) {
                 SelectUI.Draw();
                 PreviewUI.Draw();
                 TexToolsUI.Draw();
                 PenumbraUI.Draw();
-                SettingsUI.Draw();
+                Configuration.Draw();
                 ToolsUI.Draw();
-                DocumentManager.Manager?.Draw();
-                TextureManager.Manager?.Draw();
-                TmbManager.Manager?.Draw();
+                DocumentManager.Draw();
+                TextureManager.Draw();
+                TmbManager.Draw();
             }
         }
 
@@ -101,14 +98,14 @@ namespace VFXEditor {
             DrawHeader();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( DocumentManager.CurrentActiveDoc.Main == null ) {
+            if( DocumentManager.ActiveDocument.Main == null ) {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
                 ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.GREEN_COLOR );
                 if( ImGui.Button( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                        DocumentManager.Manager.Save();
+                        DocumentManager.Save();
                         ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
@@ -117,8 +114,8 @@ namespace VFXEditor {
 
                 ImGui.SameLine();
                 if (ImGui.Button("Reload") ) { // load resource
-                    if( File.Exists( DocumentManager.CurrentActiveDoc.WriteLocation ) )
-                        ResourceLoader.ReloadPath( DocumentManager.CurrentActiveDoc.Replace.Path, true );
+                    if( File.Exists( DocumentManager.ActiveDocument.WriteLocation ) )
+                        ResourceLoader.ReloadPath( DocumentManager.ActiveDocument.Replace.Path, true );
                 }
                 ImGui.SameLine();
                 HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );
@@ -133,7 +130,7 @@ namespace VFXEditor {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node =  DocumentManager.CurrentActiveDoc.Main.AVFX.ToAVFX();
+                        var node =  DocumentManager.ActiveDocument.Main.AVFX.ToAVFX();
                         WriteBytesDialog( ".avfx", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
@@ -149,11 +146,11 @@ namespace VFXEditor {
                 }
 
                 // ======== VERIFY ============
-                if( Configuration.Config.VerifyOnLoad ) {
+                if( Configuration.VerifyOnLoad ) {
                     ImGui.SameLine();
                     ImGui.PushFont( UiBuilder.IconFont );
 
-                    var verified = DocumentManager.CurrentActiveDoc.Main.Verified;
+                    var verified = DocumentManager.ActiveDocument.Main.Verified;
                     var color = verified switch {
                         VerifiedStatus.OK => UIUtils.GREEN_COLOR,
                         VerifiedStatus.ISSUE => UIUtils.RED_COLOR,
@@ -179,7 +176,7 @@ namespace VFXEditor {
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                DocumentManager.CurrentActiveDoc.Main.Draw();
+                DocumentManager.ActiveDocument.Main.Draw();
             }
 
             ImGui.End();
@@ -203,9 +200,9 @@ namespace VFXEditor {
                     if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Documents##Menu" ) ) DocumentManager.Manager?.Show();
-                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Manager?.Show();
-                if( ImGui.MenuItem( "Settings##Menu" ) ) SettingsUI.Show();
+                if( ImGui.MenuItem( "Documents##Menu" ) ) DocumentManager.Show();
+                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
+                if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
                     if( ImGui.MenuItem( "Report an Issue##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
@@ -233,8 +230,8 @@ namespace VFXEditor {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            var sourceString = DocumentManager.CurrentActiveDoc.Source.DisplayString;
-            var previewString = DocumentManager.CurrentActiveDoc.Replace.DisplayString;
+            var sourceString = DocumentManager.ActiveDocument.Source.DisplayString;
+            var previewString = DocumentManager.ActiveDocument.Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
@@ -294,7 +291,7 @@ namespace VFXEditor {
             }
 
             // =======SPAWN + EYE =========
-            var previewSpawn = DocumentManager.CurrentActiveDoc.Replace.Path;
+            var previewSpawn = DocumentManager.ActiveDocument.Replace.Path;
             var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !SpawnExists() ) {
                 if( spawnDisabled ) {
@@ -328,10 +325,10 @@ namespace VFXEditor {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !VfxTracker.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                VfxTracker.Tracker.Toggle();
-                if( !VfxTracker.Tracker.Enabled ) {
-                    VfxTracker.Tracker.Reset();
+            if( ImGui.Button( $"{( !VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
+                VfxTracker.Toggle();
+                if( !VfxTracker.Enabled ) {
+                    VfxTracker.Reset();
                     PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
                 }
                 else {

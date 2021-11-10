@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.AVFX;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
         public UIEmitterView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {

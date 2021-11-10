@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIEmitterDataConeModel : UIData {
         public AVFXEmitterDataConeModel Data;
         public UIParameters Parameters;

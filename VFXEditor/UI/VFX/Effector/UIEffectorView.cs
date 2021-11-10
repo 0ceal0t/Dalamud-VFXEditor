@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.AVFX;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIEffectorView : UIDropdownView<UIEffector>
     {

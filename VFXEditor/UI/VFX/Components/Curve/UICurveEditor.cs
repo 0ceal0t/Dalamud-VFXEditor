@@ -7,7 +7,7 @@ using ImPlotNET;
 using VFXEditor.DirectX;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UICurveEditor : UIBase {
 
         private CurvePoint Selected = null;
@@ -66,8 +66,8 @@ namespace VFXEditor.UI.VFX {
 
                     // ====== IMAGE ============
                     if( Color && Curve.Keys.Count > 1 ) {
-                        if( DirectXManager.GradientView.CurrentCurve != Curve ) {
-                            DirectXManager.GradientView.SetGradient( Curve );
+                        if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) {
+                            Plugin.DirectXManager.GradientView.SetGradient( Curve );
                         }
 
                         var topLeft = new ImPlotPoint {
@@ -79,7 +79,7 @@ namespace VFXEditor.UI.VFX {
                             y = -1
                         };
 
-                        ImPlot.PlotImage( parentId + "gradient-image", DirectXManager.GradientView.Output, topLeft, bottomRight );
+                        ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
 
                     // ====== POINTS ===========
@@ -167,7 +167,7 @@ namespace VFXEditor.UI.VFX {
                     Curve.Keys[^1].Time++;
                     Points[^1].X++;
                 }
-                DirectXManager.GradientView.SetGradient( Curve );
+                Plugin.DirectXManager.GradientView.SetGradient( Curve );
             }
         }
 

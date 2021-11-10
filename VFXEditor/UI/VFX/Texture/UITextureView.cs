@@ -3,7 +3,7 @@ using System.Linq;
 using AVFXLib.AVFX;
 using VFXEditor.Texture;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UITextureView : UINodeSplitView<UITexture> {
 
         public UITextureView( UIMain main, AVFXBase avfx) : base( main, avfx, "##TEX" ) {

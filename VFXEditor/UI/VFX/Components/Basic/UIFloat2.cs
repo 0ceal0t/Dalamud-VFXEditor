@@ -9,7 +9,7 @@ using AVFXLib.Models;
 using System.Numerics;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UIFloat2 : UIBase {
         public string Name;
         public Vector2 Value;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.AVFX;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI.Vfx {
     public class UITimelineView : UIDropdownView<UITimeline> {
         public UITimelineView(UIMain main, AVFXBase avfx) : base(main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
             Group = main.Timelines;

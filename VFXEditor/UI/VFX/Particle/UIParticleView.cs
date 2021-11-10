@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.AVFX;
 
-namespace VFXEditor.UI.VFX
+namespace VFXEditor.UI.Vfx
 {
     public class UIParticleView : UIDropdownView<UIParticle> {
         public UIParticleView( UIMain main, AVFXBase avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" ) {
