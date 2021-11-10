@@ -64,15 +64,20 @@ namespace VFXEditor.Tmb {
                         }
                     }
                 }
-                ImGui.SameLine();
-                if( ImGui.Button( "Update" ) ) Update();
 
-                ImGui.SameLine();
-                if( ImGui.Button( "Reload" ) ) Reload();
-                ImGui.SameLine();
-                Plugin.HelpMarker( "Manually reload the resource" );
+                if (CurrentFile != null) {
+                    if ( UI.UIUtils.OkButton("UPDATE") ) Update();
 
-                if( CurrentFile != null ) CurrentFile.Draw("##Tmb");
+                    ImGui.SameLine();
+                    if( ImGui.Button( "Reload" ) ) Reload();
+                    ImGui.SameLine();
+                    Plugin.HelpMarker( "Manually reload the resource" );
+
+                    ImGui.Separator();
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+                    CurrentFile.Draw( "##Tmb" );
+                }
             }
             ImGui.End();
         }

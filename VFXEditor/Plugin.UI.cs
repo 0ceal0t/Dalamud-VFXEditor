@@ -102,18 +102,16 @@ namespace VFXEditor {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
-                ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.GREEN_COLOR );
-                if( ImGui.Button( "UPDATE" ) ) {
+                if( UIUtils.OkButton( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                         DocumentManager.Save();
                         ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
                 }
-                ImGui.PopStyleColor();
 
                 ImGui.SameLine();
-                if (ImGui.Button("Reload") ) { // load resource
+                if( ImGui.Button( "Reload" ) ) { // load resource
                     if( File.Exists( DocumentManager.ActiveDocument.WriteLocation ) )
                         ResourceLoader.ReloadPath( DocumentManager.ActiveDocument.Replace.Path, true );
                 }
@@ -130,7 +128,7 @@ namespace VFXEditor {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        var node =  DocumentManager.ActiveDocument.Main.AVFX.ToAVFX();
+                        var node = DocumentManager.ActiveDocument.Main.AVFX.ToAVFX();
                         WriteBytesDialog( ".avfx", node.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "TexTools Mod" ) ) {
@@ -221,7 +219,7 @@ namespace VFXEditor {
             ImGui.Columns( 3, "MainInterfaceFileColumns", false );
 
             // ======== INPUT TEXT =========
-            ImGui.SetColumnWidth( 0, 95 );
+            ImGui.SetColumnWidth( 0, 140 );
             ImGui.Text( "Loaded VFX" );
             ImGui.SameLine(); HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -232,7 +230,7 @@ namespace VFXEditor {
             // ======= SEARCH BARS =========
             var sourceString = DocumentManager.ActiveDocument.Source.DisplayString;
             var previewString = DocumentManager.ActiveDocument.Replace.DisplayString;
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 210 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 255 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
             ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
@@ -377,7 +375,7 @@ namespace VFXEditor {
             } );
         }
 
-        public static void OpenUrl(string url) {
+        public static void OpenUrl( string url ) {
             Process.Start( new ProcessStartInfo {
                 FileName = url,
                 UseShellExecute = true

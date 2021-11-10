@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
@@ -8,13 +9,14 @@ using System.Text;
 
 namespace VFXEditor.Tmb {
     public class TmbFile {
-        private List<TmbActor> Actors = new();
-
+        private readonly List<TmbActor> Actors = new();
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
         private short TMDH_Unk3 = 3;
 
-        public TmbFile(BinaryReader reader) {
+        private TmbActor SelectedActor = null;
+
+        public TmbFile( BinaryReader reader ) {
             reader.ReadInt32(); // TMLB
             reader.ReadInt32(); // 0x0C
             reader.ReadInt32(); // entry count (not including TMBL)
@@ -31,52 +33,68 @@ namespace VFXEditor.Tmb {
             reader.ReadInt32(); // offset from [TMAL] + 8 to timeline
             var numActors = reader.ReadInt32(); // Number of TMAC
 
-            for (var i = 0; i < numActors; i++) {
+            for( var i = 0; i < numActors; i++ ) {
                 Actors.Add( new TmbActor( reader ) );
             }
             foreach( var actor in Actors ) actor.ReadTracks( reader );
             foreach( var actor in Actors ) actor.ReadEntries( reader );
         }
 
-        public void Draw(string id) {
-            if (ImGui.CollapsingHeader($"TMDH{id}")) {
-                ImGui.Indent();
+        public void Draw( string id ) {
+            ImGui.Indent();
+            ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
+            ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
+            ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+            ImGui.Unindent();
 
-                ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
-                ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
-                ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-                ImGui.Unindent();
-            }
-
-            var i = 0;
-            foreach (var actor in Actors) {
-                if( ImGui.CollapsingHeader( $"Actor {i}{id}{i}" ) ) {
-                    ImGui.Indent();
-
-                    if (ImGui.Button($"Delete{id}{i}")) {
-                        Actors.Remove( actor );
-                        ImGui.Unindent();
-                        break;
+            var selectedIndex = SelectedActor == null ? -1 : Actors.IndexOf( SelectedActor );
+            if( ImGui.BeginCombo( $"{id}-ActorSelect", SelectedActor == null ? "[NONE]" : $"Actor {selectedIndex}" ) ) {
+                for( var i = 0; i < Actors.Count; i++ ) {
+                    var actor = Actors[i];
+                    if( ImGui.Selectable( $"Actor {i}{id}{i}", actor == SelectedActor ) ) {
+                        SelectedActor = actor;
+                        selectedIndex = i;
                     }
-                    actor.Draw( $"{id}{i}" );
-
-
-                    ImGui.Unindent();
                 }
-                i++;
+                ImGui.EndCombo();
             }
 
-            if (ImGui.Button( $"+ Actor{id}" ) ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SameLine();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 Actors.Add( new TmbActor() );
+            }
+            if( SelectedActor != null ) {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
+                if( UI.UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                    Actors.Remove( SelectedActor );
+                    SelectedActor = null;
+                }
+            }
+            ImGui.PopFont();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
+            if( SelectedActor != null ) {
+                SelectedActor.Draw( $"{id}{selectedIndex}" );
+            }
+            else {
+                ImGui.Text( "Select a timeline actor..." );
             }
         }
 
         public byte[] ToBytes() {
             var headerSize = 0x0C + 0x10 + 0x10 + Actors.Count * 0x1C;
-            var entriesSize = Actors.Select(x => x.EntrySize).Sum();
-            var extraSize = Actors.Select(x => x.ExtraSize).Sum();
-            var stringSize = Actors.Select(x => x.StringSize).Sum();
+            var entriesSize = Actors.Select( x => x.EntrySize ).Sum();
+            var extraSize = Actors.Select( x => x.ExtraSize ).Sum();
+            var stringSize = Actors.Select( x => x.StringSize ).Sum();
             var entryCount = Actors.Count + Actors.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
             var timelineSize = 2 * entryCount;
 
@@ -99,14 +117,14 @@ namespace VFXEditor.Tmb {
 
             WriteString( headerWriter, "TMDH" );
             headerWriter.Write( 0x10 );
-            headerWriter.Write( (short)1 );
+            headerWriter.Write( ( short )1 );
             headerWriter.Write( TMDH_Unk1 );
             headerWriter.Write( TMDH_Unk2 );
             headerWriter.Write( TMDH_Unk3 );
 
             WriteString( headerWriter, "TMAL" );
             headerWriter.Write( 0x10 );
-            headerWriter.Write( timelinePos - (int)headerWriter.BaseStream.Position );
+            headerWriter.Write( timelinePos - ( int )headerWriter.BaseStream.Position );
             headerWriter.Write( Actors.Count );
 
             // write timeline
@@ -115,8 +133,8 @@ namespace VFXEditor.Tmb {
             using BinaryWriter timelineWriter = new( timelineMs );
             timelineWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            for (int i = 0; i < entryCount; i++ ) {
-                timelineWriter.Write( ( short )(2 + i) );
+            for( int i = 0; i < entryCount; i++ ) {
+                timelineWriter.Write( ( short )( 2 + i ) );
             }
 
             // entries, extra, string
@@ -164,14 +182,14 @@ namespace VFXEditor.Tmb {
             return Encoding.ASCII.GetString( strBytes.ToArray() );
         }
 
-        public static void WriteString( BinaryWriter writer, string str, bool writeNull = false) {
+        public static void WriteString( BinaryWriter writer, string str, bool writeNull = false ) {
             writer.Write( Encoding.ASCII.GetBytes( str.Trim().Trim( '\0' ) ) );
             if( writeNull ) writer.Write( ( byte )0 );
         }
 
-        public static bool ShortInput(string id, ref short value) {
+        public static bool ShortInput( string id, ref short value ) {
             var val = ( int )value;
-            if (ImGui.InputInt(id, ref val)) {
+            if( ImGui.InputInt( id, ref val ) ) {
                 value = ( short )val;
                 return true;
             }

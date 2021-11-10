@@ -1,20 +1,23 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace VFXEditor.Tmb {
     public class TmbActor {
         public short Id { get; private set; } // temp
         private readonly int TrackCount;
 
+        private readonly List<TmbTrack> Tracks = new();
         private short Time = 0;
         private int Unk_2 = 0;
         private int Unk_3 = 0;
 
-        private readonly List<TmbTrack> Tracks = new();
+        private TmbTrack SelectedTrack = null;
 
         public int EntrySize => Tracks.Select( x => x.EntrySize ).Sum();
         public int ExtraSize => Tracks.Select( x => x.ExtraSize ).Sum();
@@ -88,30 +91,59 @@ namespace VFXEditor.Tmb {
         }
 
         public void Draw( string id ) {
+            ImGui.Indent();
             TmbFile.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+            ImGui.Unindent();
 
-            var i = 0;
-            foreach( var track in Tracks ) {
-                if( ImGui.CollapsingHeader( $"Track {i}{id}{i}" ) ) {
-                    ImGui.Indent();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-                    if( ImGui.Button( $"Delete{id}{i}" ) ) {
-                        Tracks.Remove( track );
-                        ImGui.Unindent();
-                        break;
-                    }
-                    track.Draw( $"{id}{i}" );
+            ImGui.BeginChild( $"{id}-ActorChild", new Vector2( -1, -1 ), true );
+            ImGui.Columns( 2, $"{id}-ActorChild-Cols", true );
 
-                    ImGui.Unindent();
-                }
-                i++;
-            }
-
-            if( ImGui.Button( $"+ Track{id}" ) ) {
+            ImGui.BeginChild( $"{id}-ActorChild-Left" );
+            // ===========
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 Tracks.Add( new TmbTrack() );
             }
+            if( SelectedTrack != null ) {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
+                if( UI.UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                    Tracks.Remove( SelectedTrack );
+                    SelectedTrack = null;
+                }
+            }
+            ImGui.PopFont();
+
+            var selectedIndex = SelectedTrack == null ? -1 : Tracks.IndexOf( SelectedTrack );
+            for( var i = 0; i < Tracks.Count; i++ ) {
+                if( ImGui.Selectable( $"Track {i}{id}{i}" ) ) {
+                    SelectedTrack = Tracks[i];
+                    selectedIndex = i;
+                }
+            }
+            // ===========
+            ImGui.EndChild();
+
+            ImGui.SetColumnWidth( 0, 150 );
+
+            ImGui.NextColumn();
+            ImGui.BeginChild( $"{id}-ActorChild-Right" );
+            // ===========
+            if( SelectedTrack != null ) {
+                SelectedTrack.Draw( $"{id}{selectedIndex}" );
+            }
+            else {
+                ImGui.Text( "Select a timeline track..." );
+            }
+            // ===========
+            ImGui.EndChild();
+
+            ImGui.Columns( 1 );
+            ImGui.EndChild();
         }
     }
 }

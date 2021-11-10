@@ -38,9 +38,13 @@ namespace VFXEditor.UI {
             return false;
         }
 
-        public static bool RemoveButton(string label, bool small = false) {
+        public static bool RemoveButton( string label, bool small = false ) => ColorButton( label, RED_COLOR, small );
+
+        public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
+
+        public static bool ColorButton( string label, Vector4 color, bool small ) {
             var ret = false;
-            ImGui.PushStyleColor(ImGuiCol.Button, RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, color );
             if( small ) {
                 if( ImGui.SmallButton( label ) ) {
                     ret = true;

@@ -115,14 +115,12 @@ namespace VFXEditor.Tmb {
             foreach( var entry in Entries ) {
                 if( ImGui.CollapsingHeader( $"{entry.GetName()}{id}{i}" ) ) {
                     ImGui.Indent();
-
-                    if( ImGui.Button( $"Delete{id}{i}" ) ) {
+                    if( UI.UIUtils.RemoveButton( $"Delete{id}{i}" ) ) {
                         Entries.Remove( entry );
                         ImGui.Unindent();
                         break;
                     }
                     entry.Draw( $"{id}{i}" );
-
                     ImGui.Unindent();
                 }
                 i++;
