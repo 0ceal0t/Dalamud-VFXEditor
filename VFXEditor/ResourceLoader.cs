@@ -320,13 +320,8 @@ namespace VFXEditor {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
             if( Configuration.Config?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
-            FileInfo replaceFile = null;
 
-            if( DocumentManager.Manager?.GetReplacePath( gameFsPath, out var vfxFile ) == true ) replaceFile = vfxFile;
-            else if( TextureManager.Manager?.GetReplacePath( gameFsPath, out var texFile ) == true ) replaceFile = texFile;
-            else if( TmbManager.GetReplacePath( gameFsPath, out var tmbFile ) == true ) replaceFile = tmbFile;
-
-            var fsPath = replaceFile?.FullName;
+            var fsPath = GetReplacePath(gameFsPath, out var localPath) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
                 return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
@@ -343,41 +338,20 @@ namespace VFXEditor {
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
         }
 
-        public unsafe void ReloadPath(string path, bool vfx) {
-            var pathBytes = Encoding.ASCII.GetBytes( path );
-            var bPath = stackalloc byte[pathBytes.Length + 1];
-            Marshal.Copy( pathBytes, 0, new IntPtr( bPath ), pathBytes.Length );
-            var pPath = ( char* )bPath;
-
-            var typeBytes = Encoding.ASCII.GetBytes( vfx ? "xfva" : "bmt" );
-            var bType = stackalloc byte[typeBytes.Length + 1];
-            Marshal.Copy( typeBytes, 0, new IntPtr( bType ), typeBytes.Length );
-            var pResourceType = ( char* )bType;
-
-            var categoryBytes = BitConverter.GetBytes( ( uint )(vfx ? 8 : 4) ); // vfx = 8, chara = 4
-            var bCategory = stackalloc byte[categoryBytes.Length + 1];
-            Marshal.Copy( categoryBytes, 0, new IntPtr( bCategory ), categoryBytes.Length );
-            var pCategoryId = ( uint* )bCategory;
-
-            Crc32_Reload.Init();
-            Crc32_Reload.Update( pathBytes );
-            var hashBytes = BitConverter.GetBytes( Crc32_Reload.Checksum );
-            var bHash = stackalloc byte[hashBytes.Length + 1];
-            Marshal.Copy( hashBytes, 0, new IntPtr( bHash ), hashBytes.Length );
-            var pResourceHash = ( uint* )bHash;
-
-            var resource = new IntPtr(GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ));
-            DecRef( resource );
-
-            RequestFile( GetFileManager2(), resource + 0x38, resource, 1 );
-            PluginLog.Log( $"RefCount {Marshal.ReadInt32( resource + 0xAC )}" );
-        }
-
-
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
             var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
+
+            // looking for refreshed paths
+            if ( gameFsPath != null && !isRooted) {
+                var replacementPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
+                
+                if (replacementPath != null && Path.IsPathRooted(replacementPath) && replacementPath.Length < 260 ) {
+                    gameFsPath = replacementPath;
+                    isRooted = true;
+                }
+            }
 
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted ) {
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
@@ -401,6 +375,57 @@ namespace VFXEditor {
                 return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
             }
             return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
+        }
+
+        public unsafe void ReloadPath( string gamePath, bool vfx ) {
+            var gameResource = GetResource( gamePath, vfx );
+            RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+        }
+
+        private bool GetReplacePath(string gamePath, out string localPath) {
+            localPath = null;
+            if( DocumentManager.Manager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
+                localPath = vfxFile.FullName;
+                return true;
+            }
+            else if( TextureManager.Manager?.GetReplacePath( gamePath, out var texFile ) == true ) {
+                localPath = texFile.FullName;
+                return true;
+            }
+            else if( TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
+                localPath = tmbFile.FullName;
+                return true;
+            }
+            return false;
+        }
+
+        private unsafe IntPtr GetResource( string path, bool vfx ) {
+            var pathBytes = Encoding.ASCII.GetBytes( path );
+            var bPath = stackalloc byte[pathBytes.Length + 1];
+            Marshal.Copy( pathBytes, 0, new IntPtr( bPath ), pathBytes.Length );
+            var pPath = ( char* )bPath;
+
+            var typeBytes = Encoding.ASCII.GetBytes( vfx ? "xfva" : "bmt" );
+            var bType = stackalloc byte[typeBytes.Length + 1];
+            Marshal.Copy( typeBytes, 0, new IntPtr( bType ), typeBytes.Length );
+            var pResourceType = ( char* )bType;
+
+            var categoryBytes = BitConverter.GetBytes( ( uint )( vfx ? 8 : 4 ) ); // vfx = 8, chara = 4
+            var bCategory = stackalloc byte[categoryBytes.Length + 1];
+            Marshal.Copy( categoryBytes, 0, new IntPtr( bCategory ), categoryBytes.Length );
+            var pCategoryId = ( uint* )bCategory;
+
+            Crc32_Reload.Init();
+            Crc32_Reload.Update( pathBytes );
+            var hashBytes = BitConverter.GetBytes( Crc32_Reload.Checksum );
+            var bHash = stackalloc byte[hashBytes.Length + 1];
+            Marshal.Copy( hashBytes, 0, new IntPtr( bHash ), hashBytes.Length );
+            var pResourceHash = ( uint* )bHash;
+
+            var resource = new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) );
+            DecRef( resource );
+
+            return resource;
         }
     }
 }

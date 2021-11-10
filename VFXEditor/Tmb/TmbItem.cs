@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.Tmb {
     public abstract class TmbItem {
+        public short Id { get; protected set; } // temp
+
         public abstract int GetSize();
         public abstract int GetStringSize();
         public abstract int GetExtraSize();
@@ -14,6 +16,10 @@ namespace VFXEditor.Tmb {
 
         public abstract void Draw( string id );
 
-        public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id );
+        public void CalculateId( ref short id ) {
+            Id = id++;
+        }
+
+        public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos );
     }
 }

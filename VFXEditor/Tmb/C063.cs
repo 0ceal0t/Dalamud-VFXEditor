@@ -1,21 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     // Sound
     public class C063 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private string Path;
-        private int Unk_4;
-        private int Unk_5;
+        private short Time = 0;
+        private int Unk_2 = 1;
+        private int Unk_3 = 0;
+        private string Path = "";
+        private int Unk_4 = 1;
+        private int Unk_5 = 0;
 
         public C063( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C063] + 8
@@ -39,14 +33,14 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => Path.Length + 1;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = ( int )stringWriter.BaseStream.Position + stringPos;
             var offset = endPos - startPos - 8;
 
             TmbFile.WriteString( entryWriter, "C063" );
             entryWriter.Write( 0x20 );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

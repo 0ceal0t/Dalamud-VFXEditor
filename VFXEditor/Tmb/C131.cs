@@ -1,17 +1,11 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Tmb {
     public class C131 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
+        private short Time = 0;
+        private int Unk_2 = 1;
+        private int Unk_3 = 0;
 
         // Animation movement cancel
         public C131( BinaryReader reader ) {
@@ -25,10 +19,10 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => 0;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             TmbFile.WriteString( entryWriter, "C131" );
             entryWriter.Write( 0x14 );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time);
             entryWriter.Write( Unk_2);
             entryWriter.Write( Unk_3);

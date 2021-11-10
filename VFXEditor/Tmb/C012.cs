@@ -9,15 +9,27 @@ using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     public class C012 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private string Path;
-        private short BindPoint_1;
-        private short BindPoint_2;
-        private short BindPoint_3;
-        private short bindPoint_4;
-        private List<List<float>> Unk_8 = new();
+        private short Time = 0;
+        private int Unk_2 = 30;
+        private int Unk_3 = 0;
+        private string Path = "";
+        private short BindPoint_1 = 1;
+        private short BindPoint_2 = 0xFF;
+        private short BindPoint_3 = 2;
+        private short bindPoint_4 = 0xFF;
+        private List<List<float>> Unk_8 = GetDefault();
+
+        private static List<List<float>> GetDefault() {
+            var ret = new List<List<float>>();
+            var a = new[] { 1f, 1f, 1f };
+            var b = new[] { 0f, 0f, 0f, 0f, 0f, 0f };
+            var c = new[] { 1f, 1f, 1f, 1f };
+
+            ret.Add( new List<float>( a ) );
+            ret.Add( new List<float>( b ) );
+            ret.Add( new List<float>( c ) );
+            return ret;
+        }
 
         public C012( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C012] + 8
@@ -37,6 +49,8 @@ namespace VFXEditor.Tmb {
             BindPoint_2 = reader.ReadInt16(); // FF?
             BindPoint_3 = reader.ReadInt16(); // 2?
             bindPoint_4 = reader.ReadInt16(); // FF?
+
+            Unk_8 = new();
 
             for(var i = 0; i < 5; i++) {
                 var Unk_8_2 = new List<float>();
@@ -60,14 +74,14 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => Path.Length + 1;
         public override int GetExtraSize() => 4 * Unk_8.Select(x => x.Count).Sum();
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = ( int )stringWriter.BaseStream.Position + stringPos;
             var offset = endPos - startPos - 8;
 
             TmbFile.WriteString( entryWriter, "C012" );
             entryWriter.Write( 0x48 );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

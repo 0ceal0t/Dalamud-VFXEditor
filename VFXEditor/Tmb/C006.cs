@@ -3,10 +3,10 @@ using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     public class C006 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private int Unk_4;
+        private short Time = 0;
+        private int Unk_2 = 1;
+        private int Unk_3 = 0;
+        private int Unk_4 = 100;
 
         public C006( BinaryReader reader ) {
             reader.ReadInt16(); // id
@@ -20,10 +20,10 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => 0;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             TmbFile.WriteString( entryWriter, "C006" );
             entryWriter.Write( 0x18 );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

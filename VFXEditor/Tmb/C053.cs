@@ -9,12 +9,12 @@ using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     public class C053 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private short Unk_4;
-        private short Unk_5;
-        private int Unk_6;
+        private short Time = 0;
+        private int Unk_2 = 0;
+        private int Unk_3 = 0;
+        private short Unk_4 = 0;
+        private short Unk_5 = 0;
+        private int Unk_6 = 0;
 
         public C053( BinaryReader reader ) {
             reader.ReadInt16(); // id
@@ -30,10 +30,10 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => 0;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             TmbFile.WriteString( entryWriter, "C053" );
             entryWriter.Write( 0x1C );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

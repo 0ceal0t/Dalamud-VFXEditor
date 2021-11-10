@@ -108,7 +108,7 @@ namespace VFXEditor.Tmb {
 
         private void Reload() {
             if( CurrentFile == null ) return;
-            Plugin.ResourceLoader.ReloadPath( LocalPath, false );
+            Plugin.ResourceLoader.ReloadPath( TmbPath, false );
         }
     }
 }

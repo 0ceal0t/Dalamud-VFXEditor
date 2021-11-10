@@ -143,7 +143,7 @@ namespace VFXEditor {
                 ImGui.SameLine();
                 if (ImGui.Button("Reload") ) { // load resource
                     if( File.Exists( DocumentManager.CurrentActiveDoc.WriteLocation ) )
-                        ResourceLoader.ReloadPath( DocumentManager.CurrentActiveDoc.WriteLocation, true );
+                        ResourceLoader.ReloadPath( DocumentManager.CurrentActiveDoc.Replace.Path, true );
                 }
                 ImGui.SameLine();
                 HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );

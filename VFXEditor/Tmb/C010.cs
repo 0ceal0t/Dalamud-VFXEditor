@@ -10,14 +10,14 @@ using ImGuiNET;
 namespace VFXEditor.Tmb {
     // Animation
     public class C010 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private int Unk_4;
-        private int Unk_5;
-        private float Unk_6;
-        private string Path;
-        private int Unk_7;
+        private short Time = 0;
+        private int Unk_2 = 50;
+        private int Unk_3 = 0;
+        private int Unk_4 = 0;
+        private int Unk_5 = 0;
+        private float Unk_6 = 0;
+        private string Path = "";
+        private int Unk_7 = 0;
 
         public C010( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C010] + 8
@@ -43,14 +43,14 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => Path.Length + 1;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = ( int )stringWriter.BaseStream.Position + stringPos;
             var offset = endPos - startPos - 8;
 
             TmbFile.WriteString( entryWriter, "C010" );
             entryWriter.Write( 0x28 );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

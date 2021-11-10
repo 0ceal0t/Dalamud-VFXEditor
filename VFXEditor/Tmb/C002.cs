@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     public class C002 : TmbItem {
-        private short Time;
-        private int Unk_2;
-        private int Unk_3;
-        private int Unk_4;
-        private string Path;
+        private short Time = 0;
+        private int Unk_2 = 50;
+        private int Unk_3 = 0;
+        private int Unk_4 = 0;
+        private string Path = "";
 
         public C002( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C002] + 8
@@ -35,14 +29,14 @@ namespace VFXEditor.Tmb {
         public override int GetStringSize() => Path.Length + 1;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos, ref short id ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = ( int )stringWriter.BaseStream.Position + stringPos;
             var offset = endPos - startPos - 8;
 
             TmbFile.WriteString( entryWriter, "C002" );
             entryWriter.Write( 0x1C );
-            entryWriter.Write( id++ );
+            entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );

@@ -8,11 +8,11 @@ using System.Text;
 
 namespace VFXEditor.Tmb {
     public class TmbFile {
-        private List<TmbTmac> TMAC = new();
+        private List<TmbActor> Actors = new();
 
-        private short TMDH_Unk1;
-        private short TMDH_Unk2;
-        private short TMDH_Unk3;
+        private short TMDH_Unk1 = 0;
+        private short TMDH_Unk2 = 0;
+        private short TMDH_Unk3 = 3;
 
         public TmbFile(BinaryReader reader) {
             reader.ReadInt32(); // TMLB
@@ -29,43 +29,57 @@ namespace VFXEditor.Tmb {
             reader.ReadInt32(); // TMAL
             reader.ReadInt32(); // 0x10
             reader.ReadInt32(); // offset from [TMAL] + 8 to timeline
-            var numTmac = reader.ReadInt32(); // Number of TMAC
+            var numActors = reader.ReadInt32(); // Number of TMAC
 
-            for (var i = 0; i < numTmac; i++) {
-                TMAC.Add( new TmbTmac( reader ) );
+            for (var i = 0; i < numActors; i++) {
+                Actors.Add( new TmbActor( reader ) );
             }
-            foreach( var tmac in TMAC ) tmac.ReadTmtr( reader );
-            foreach( var tmac in TMAC ) tmac.ReadEntries( reader );
+            foreach( var actor in Actors ) actor.ReadTracks( reader );
+            foreach( var actor in Actors ) actor.ReadEntries( reader );
         }
 
         public void Draw(string id) {
+            ImGui.Text( $"Max Slots: {Actors.Count + Actors.Select( x => x.EntryCount ).Sum()}" );
+
             if (ImGui.CollapsingHeader($"TMDH{id}")) {
                 ImGui.Indent();
 
-                ShortInput( $"TMDH Unknown #1{id}", ref TMDH_Unk1 );
-                ShortInput( $"TMDH Unknown #2{id}", ref TMDH_Unk2 );
-                ShortInput( $"TMDH Unknown #3{id}", ref TMDH_Unk3 );
+                ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
+                ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
+                ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
 
                 ImGui.Unindent();
             }
 
             var i = 0;
-            foreach (var tmac in TMAC) {
-                if( ImGui.CollapsingHeader( $"TMAC {i}{id}{i}" ) ) {
+            foreach (var actor in Actors) {
+                if( ImGui.CollapsingHeader( $"Actor {i}{id}{i}" ) ) {
                     ImGui.Indent();
-                    tmac.Draw( $"{id}{i}" );
+
+                    if (ImGui.Button($"Delete{id}{i}")) {
+                        Actors.Remove( actor );
+                        ImGui.Unindent();
+                        break;
+                    }
+                    actor.Draw( $"{id}{i}" );
+
+
                     ImGui.Unindent();
                 }
                 i++;
             }
+
+            if (ImGui.Button( $"+ Actor{id}" ) ) {
+                Actors.Add( new TmbActor() );
+            }
         }
 
         public byte[] ToBytes() {
-            var headerSize = 0x0C + 0x10 + 0x10 + TMAC.Count * 0x1C;
-            var entriesSize = TMAC.Select(x => x.EntrySize).Sum();
-            var extraSize = TMAC.Select(x => x.ExtraSize).Sum();
-            var stringSize = TMAC.Select(x => x.StringSize).Sum();
-            var entryCount = TMAC.Count + TMAC.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
+            var headerSize = 0x0C + 0x10 + 0x10 + Actors.Count * 0x1C;
+            var entriesSize = Actors.Select(x => x.EntrySize).Sum();
+            var extraSize = Actors.Select(x => x.ExtraSize).Sum();
+            var stringSize = Actors.Select(x => x.StringSize).Sum();
+            var entryCount = Actors.Count + Actors.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
             var timelineSize = 2 * entryCount;
 
             // Calculate starting positions
@@ -74,7 +88,6 @@ namespace VFXEditor.Tmb {
             var timelinePos = extraPos + extraSize;
             var stringPos = timelinePos + timelineSize;
             var totalSize = headerSize + entriesSize + extraSize + timelineSize + stringSize;
-            short id = 1;
 
             // write header
             var headerData = new byte[headerSize];
@@ -88,7 +101,7 @@ namespace VFXEditor.Tmb {
 
             WriteString( headerWriter, "TMDH" );
             headerWriter.Write( 0x10 );
-            headerWriter.Write( id++ );
+            headerWriter.Write( (short)1 );
             headerWriter.Write( TMDH_Unk1 );
             headerWriter.Write( TMDH_Unk2 );
             headerWriter.Write( TMDH_Unk3 );
@@ -96,7 +109,7 @@ namespace VFXEditor.Tmb {
             WriteString( headerWriter, "TMAL" );
             headerWriter.Write( 0x10 );
             headerWriter.Write( timelinePos - (int)headerWriter.BaseStream.Position );
-            headerWriter.Write( TMAC.Count );
+            headerWriter.Write( Actors.Count );
 
             // write timeline
             var timelineData = new byte[timelineSize];
@@ -124,9 +137,14 @@ namespace VFXEditor.Tmb {
             using BinaryWriter stringWriter = new( stringMs );
             stringWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            foreach( var tmac in TMAC ) tmac.Write( headerWriter, timelinePos, ref id );
-            foreach( var tmac in TMAC ) tmac.WriteTmtr( entriesWriter, entriesPos, timelinePos, ref id );
-            foreach( var tmac in TMAC ) tmac.WriteEntries( entriesWriter, entriesPos, extraWriter, extraPos, stringWriter, stringPos, timelinePos, ref id );
+            short id = 2;
+            foreach( var tmac in Actors ) tmac.CalculateId( ref id );
+            foreach( var tmac in Actors ) tmac.CalculateTracksId( ref id );
+            foreach( var tmac in Actors ) tmac.CalculateEntriesId( ref id );
+
+            foreach( var tmac in Actors ) tmac.Write( headerWriter, timelinePos );
+            foreach( var tmac in Actors ) tmac.WriteTracks( entriesWriter, entriesPos, timelinePos );
+            foreach( var tmac in Actors ) tmac.WriteEntries( entriesWriter, entriesPos, extraWriter, extraPos, stringWriter, stringPos, timelinePos );
 
             var output = new byte[totalSize];
             Buffer.BlockCopy( headerData, 0, output, 0, headerData.Length );
