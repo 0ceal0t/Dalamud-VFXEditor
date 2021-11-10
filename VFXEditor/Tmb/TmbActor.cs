@@ -49,8 +49,8 @@ namespace VFXEditor.Tmb {
             }
         }
 
-        public void ReadEntries( BinaryReader reader ) {
-            foreach( var track in Tracks ) track.ReadEntries( reader );
+        public void ReadEntries( BinaryReader reader, ref bool entriesOk ) {
+            foreach( var track in Tracks ) track.ReadEntries( reader, ref entriesOk );
         }
 
         public void CalculateId( ref short id ) {
@@ -91,11 +91,9 @@ namespace VFXEditor.Tmb {
         }
 
         public void Draw( string id ) {
-            ImGui.Indent();
             TmbFile.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.Unindent();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 

@@ -13,8 +13,9 @@ namespace VFXEditor.Tmb {
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
         private short TMDH_Unk3 = 3;
-
         private TmbActor SelectedActor = null;
+
+        public bool EntriesOk = true;
 
         public TmbFile( BinaryReader reader ) {
             reader.ReadInt32(); // TMLB
@@ -37,15 +38,13 @@ namespace VFXEditor.Tmb {
                 Actors.Add( new TmbActor( reader ) );
             }
             foreach( var actor in Actors ) actor.ReadTracks( reader );
-            foreach( var actor in Actors ) actor.ReadEntries( reader );
+            foreach( var actor in Actors ) actor.ReadEntries( reader, ref EntriesOk );
         }
 
         public void Draw( string id ) {
-            ImGui.Indent();
             ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
             ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
             ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
-            ImGui.Unindent();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
@@ -133,7 +132,7 @@ namespace VFXEditor.Tmb {
             using BinaryWriter timelineWriter = new( timelineMs );
             timelineWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            for( int i = 0; i < entryCount; i++ ) {
+            for( var i = 0; i < entryCount; i++ ) {
                 timelineWriter.Write( ( short )( 2 + i ) );
             }
 
@@ -175,7 +174,7 @@ namespace VFXEditor.Tmb {
         // ====================================
 
         public static string ReadString( BinaryReader input ) {
-            List<byte> strBytes = new List<byte>();
+            var strBytes = new List<byte>();
             int b;
             while( ( b = input.ReadByte() ) != 0x00 )
                 strBytes.Add( ( byte )b );

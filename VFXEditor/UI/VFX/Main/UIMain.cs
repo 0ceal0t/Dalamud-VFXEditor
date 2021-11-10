@@ -10,12 +10,6 @@ using System.IO;
 using System.Linq;
 
 namespace VFXEditor.UI.Vfx {
-    public enum VerifiedStatus {
-        ISSUE,
-        UNKNOWN,
-        OK
-    };
-
     public class UIMain {
         public AVFXBase AVFX;
         public VerifiedStatus Verified = VerifiedStatus.UNKNOWN;

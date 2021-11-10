@@ -63,15 +63,17 @@ namespace VFXEditor.Tmb {
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void ReadEntries( BinaryReader reader ) {
+        public void ReadEntries( BinaryReader reader, ref bool entriesOk ) {
             for( var i = 0; i < Entry_Count; i++ ) {
                 var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
-                reader.ReadInt32(); // size
+                var size = reader.ReadInt32(); // size
 
                 var newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
 
                 if( newEntry == null ) {
                     PluginLog.Log( $"Unknown Entry {name}" );
+                    reader.ReadBytes( size - 8 ); // skip it
+                    entriesOk = false;
                 }
                 else {
                     Entries.Add( newEntry );

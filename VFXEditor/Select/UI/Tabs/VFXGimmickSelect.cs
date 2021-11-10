@@ -20,6 +20,8 @@ namespace VFXSelect.UI {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
                 VFXSelectDialog.DisplayPath( loadedItem.SelfTmbPath );
+                VFXSelectDialog.Copy( loadedItem.SelfTmbPath, id: Id + "CopyTmb" );
+
                 var vfxIdx = 0;
                 foreach( var path in loadedItem.SelfVfxPaths ) {
                     ImGui.Text( "VFX #" + vfxIdx + ": " );

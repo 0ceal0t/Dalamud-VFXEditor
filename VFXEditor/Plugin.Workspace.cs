@@ -113,6 +113,8 @@ namespace VFXEditor {
 
             ResetTmbManager();
 
+            // TODO
+
             IsLoading = false;
         }
 

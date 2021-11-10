@@ -4,10 +4,17 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Dalamud.Interface;
 using ImGuiNET;
 using VFXEditor.Data;
 
 namespace VFXEditor.UI {
+    public enum VerifiedStatus {
+        ISSUE,
+        UNKNOWN,
+        OK
+    };
+
     public class UIUtils {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
@@ -67,6 +74,45 @@ namespace VFXEditor.UI {
         public static Vector4 IntToColor(int Color ) {
             var colors = AVFXLib.Main.Util.IntTo4Bytes( Color );
             return new Vector4( colors[0], colors[1], colors[2], colors[3] );
+        }
+
+        public static void HelpMarker( string text ) {
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.TextDisabled( "(?)" );
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
+                ImGui.TextUnformatted( text );
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
+        }
+
+        public static void ShowVerifiedStatus( VerifiedStatus verified ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+
+            var color = verified switch {
+                VerifiedStatus.OK => GREEN_COLOR,
+                VerifiedStatus.ISSUE => RED_COLOR,
+                _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
+            };
+
+            var icon = verified switch {
+                VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
+                VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
+                _ => $"{( char )FontAwesomeIcon.Question}"
+            };
+
+            var text = verified switch {
+                VerifiedStatus.OK => "Verified",
+                VerifiedStatus.ISSUE => "Parsing Issues",
+                _ => "Unverified"
+            };
+
+            ImGui.TextColored( color, icon );
+            ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.TextColored( color, text );
         }
     }
 }

@@ -69,7 +69,7 @@ namespace VFXEditor {
             if( Configuration.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
                 var verifyResult = AvfxHelper.LastImportNode.CheckEquals( node, out var messages );
-                DocumentManager.ActiveDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                DocumentManager.ActiveDocument.Main.Verified = verifyResult ? UI.VerifiedStatus.OK : UI.VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
                     PluginLog.Warning( m );
