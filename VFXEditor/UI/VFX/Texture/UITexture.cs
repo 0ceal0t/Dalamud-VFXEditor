@@ -3,7 +3,7 @@ using ImGuiNET;
 using System;
 using System.Numerics;
 using Dalamud.Logging;
-using VFXEditor.Data.Texture;
+using VFXEditor.Texture;
 using ImGuiFileDialog;
 
 namespace VFXEditor.UI.VFX
@@ -44,8 +44,7 @@ namespace VFXEditor.UI.VFX
 
             var currentPathValue = LoadTex();
 
-            if( TextureManager.Manager.PathToTexturePreview.ContainsKey( currentPathValue ) ) {
-                var t = TextureManager.Manager.PathToTexturePreview[currentPathValue];
+            if (TextureManager.Manager.GetTexturePreview(currentPathValue, out var t)) {
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
                 if( ImGui.Button( "Export" + id ) ) {
@@ -79,8 +78,8 @@ namespace VFXEditor.UI.VFX
 
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
-            if( TextureManager.Manager.PathToTexturePreview.ContainsKey( currentPathValue ) ) {
-                var t = TextureManager.Manager.PathToTexturePreview[currentPathValue];
+
+            if( TextureManager.Manager.GetTexturePreview( currentPathValue, out var t ) ) {
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();
@@ -92,7 +91,7 @@ namespace VFXEditor.UI.VFX
             {
                 if( !ok ) return;
                 try {
-                    if( !TextureManager.Manager.ImportReplaceTexture( res, newPath ) ) {
+                    if( !TextureManager.Manager.AddReplaceTexture( res, newPath ) ) {
                         PluginLog.Error( $"Could not import" );
                     }
                 }
@@ -106,8 +105,8 @@ namespace VFXEditor.UI.VFX
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
-                texFile.SaveAsPng( res );
+                var texFile = TextureManager.Manager.GetRawTexture( texPath );
+                texFile.SaveAsPNG( res );
             } );
         }
 
@@ -115,7 +114,7 @@ namespace VFXEditor.UI.VFX
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                var texFile = TextureManager.Manager.GetPreviewTexture( texPath );
+                var texFile = TextureManager.Manager.GetRawTexture( texPath );
                 texFile.SaveAsDDS( res );
             } );
         }

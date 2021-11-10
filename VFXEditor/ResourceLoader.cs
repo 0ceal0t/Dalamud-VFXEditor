@@ -6,18 +6,18 @@ using Dalamud.Logging;
 using VFXEditor.Structs;
 using VFXEditor.Util;
 using VFXEditor.Structs.Vfx;
-using VFXEditor.Data.Texture;
-using VFXEditor.Data;
+using VFXEditor.Texture;
 using FileMode = VFXEditor.Structs.FileMode;
 
 using Dalamud.Hooking;
 using Reloaded.Hooks.Definitions.X64;
 using System.Threading;
 using VFXEditor.Tmb;
+using VFXEditor.Tracker;
+using VFXEditor.Document;
 
 namespace VFXEditor {
     public class ResourceLoader : IDisposable {
-        private Plugin Plugin;
         private bool IsEnabled;
         private Crc32 Crc32;
         private Crc32 Crc32_Reload;
@@ -112,10 +112,9 @@ namespace VFXEditor {
         private RequestFileDelegate RequestFile;
 
 
-        public ResourceLoader(Plugin plugin) {
+        public ResourceLoader() {
             Crc32 = new();
             Crc32_Reload = new();
-            Plugin = plugin;
         }
 
         public unsafe void Init() {
@@ -165,7 +164,7 @@ namespace VFXEditor {
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            Plugin.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
+            VfxTracker.Tracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
@@ -173,14 +172,14 @@ namespace VFXEditor {
             if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            Plugin.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
+            VfxTracker.Tracker?.RemoveStatic( ( VfxStruct* ) vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            Plugin.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
+            VfxTracker.Tracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
             return vfx;
         }
 
@@ -188,7 +187,7 @@ namespace VFXEditor {
             if( Plugin.SpawnVfx != null && vfx == (IntPtr) Plugin.SpawnVfx.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            Plugin.Tracker?.RemoveActor( (VfxStruct*) vfx );
+            VfxTracker.Tracker?.RemoveActor( (VfxStruct*) vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
@@ -240,7 +239,6 @@ namespace VFXEditor {
             ActorVfxRemoveHook = null;
 
             IsEnabled = false;
-            Plugin = null;
         }
 
         public void ReRender() {
@@ -389,7 +387,7 @@ namespace VFXEditor {
                 return true;
             }
             else if( TextureManager.Manager?.GetReplacePath( gamePath, out var texFile ) == true ) {
-                localPath = texFile.FullName;
+                localPath = texFile;
                 return true;
             }
             else if( TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {

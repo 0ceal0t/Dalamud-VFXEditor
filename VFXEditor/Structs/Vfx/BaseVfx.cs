@@ -42,12 +42,10 @@ namespace VFXEditor.Structs.Vfx {
     }
 
     public abstract unsafe class BaseVfx {
-        public Plugin Plugin;
         public VfxStruct* Vfx;
         public string Path;
 
-        public BaseVfx( Plugin plugin, string path ) {
-            Plugin = plugin;
+        public BaseVfx( string path ) {
             Path = path;
         }
 

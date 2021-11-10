@@ -8,7 +8,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using VFXEditor.Data;
-using VFXEditor.Data.Texture;
+using VFXEditor.Document;
+using VFXEditor.Texture;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -91,7 +92,7 @@ namespace VFXEditor {
             var texRootPath = Path.Combine( loadLocation, "Tex" );
             foreach( var tex in meta.Tex ) {
                 var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
-                TextureManager.Manager.ImportReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                TextureManager.Manager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
             }
 
             DocumentManager.ResetInstance();

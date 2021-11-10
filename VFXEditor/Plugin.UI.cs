@@ -7,8 +7,11 @@ using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data;
+using VFXEditor.Document;
 using VFXEditor.Structs.Vfx;
+using VFXEditor.Texture;
 using VFXEditor.Tmb;
+using VFXEditor.Tracker;
 using VFXEditor.UI;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
@@ -20,12 +23,10 @@ namespace VFXEditor {
         private VFXSelectDialog SelectUI;
         private VFXSelectDialog PreviewUI;
 
-        private DocDialog DocUI;
         private SettingsDialog SettingsUI;
         private ToolsDialog ToolsUI;
         private TexToolsDialog TexToolsUI;
         private PenumbraDialog PenumbraUI;
-        private TextureDialog TextureUI;
 
         private DateTime LastUpdate = DateTime.Now;
         private bool IsLoading = false;
@@ -55,10 +56,8 @@ namespace VFXEditor {
             SelectUI.OnSelect += SetSourceVFX;
             PreviewUI.OnSelect += SetReplaceVFX;
 
-            DocUI = new DocDialog();
             SettingsUI = new SettingsDialog();
             ToolsUI = new ToolsDialog();
-            TextureUI = new TextureDialog();
             TexToolsUI = new TexToolsDialog();
             PenumbraUI = new PenumbraDialog();
 
@@ -67,36 +66,12 @@ namespace VFXEditor {
 #endif
         }
 
-        public bool SpawnExists() {
-            return SpawnVfx != null;
-        }
-
-        public void RemoveSpawnVfx() {
-            SpawnVfx?.Remove();
-            SpawnVfx = null;
-        }
-
-        public void SpawnOnGround( string path ) {
-            SpawnVfx = new StaticVfx( this, path, ClientState.LocalPlayer.Position );
-        }
-
-        public void SpawnOnSelf( string path ) {
-            SpawnVfx = new ActorVfx( this, ClientState.LocalPlayer, ClientState.LocalPlayer, path );
-        }
-
-        public void SpawnOnTarget( string path ) {
-            var t = TargetManager.Target;
-            if( t != null ) {
-                SpawnVfx = new ActorVfx( this, t, t, path );
-            }
-        }
-
         public void Draw() {
             if( !Visible ) return;
 
             CopyManager.PreDraw();
             DrawMainInterface();
-            Tracker.Draw();
+            VfxTracker.Tracker?.Draw();
             if( !IsLoading ) {
                 SelectUI.Draw();
                 PreviewUI.Draw();
@@ -104,9 +79,9 @@ namespace VFXEditor {
                 PenumbraUI.Draw();
                 SettingsUI.Draw();
                 ToolsUI.Draw();
-                DocUI.Draw();
-                TextureUI.Draw();
-                Tmb.TmbManager.Manager?.Draw(); // TODO
+                DocumentManager.Manager?.Draw();
+                TextureManager.Manager?.Draw();
+                TmbManager.Manager?.Draw();
             }
         }
 
@@ -168,7 +143,7 @@ namespace VFXEditor {
                         PenumbraUI.Show();
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        WriteBytesDialog( ".txt", DataHelper.LastImportNode.ExportString( 0 ), "txt" );
+                        WriteBytesDialog( ".txt", AvfxHelper.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }
@@ -228,8 +203,8 @@ namespace VFXEditor {
                     if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Documents##Menu" ) ) DocUI.Show();
-                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureUI.Show();
+                if( ImGui.MenuItem( "Documents##Menu" ) ) DocumentManager.Manager?.Show();
+                if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Manager?.Show();
                 if( ImGui.MenuItem( "Settings##Menu" ) ) SettingsUI.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsUI.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
@@ -250,10 +225,10 @@ namespace VFXEditor {
 
             // ======== INPUT TEXT =========
             ImGui.SetColumnWidth( 0, 95 );
-            ImGui.Text( "Data Source" );
+            ImGui.Text( "Loaded VFX" );
             ImGui.SameLine(); HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( "Preview On" );
+            ImGui.Text( "VFX Being Replaced" );
             ImGui.SameLine(); HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
             ImGui.NextColumn();
 
@@ -353,10 +328,10 @@ namespace VFXEditor {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                Tracker.Enabled = !Tracker.Enabled;
-                if( !Tracker.Enabled ) {
-                    Tracker.Reset();
+            if( ImGui.Button( $"{( !VfxTracker.Tracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
+                VfxTracker.Tracker.Toggle();
+                if( !VfxTracker.Tracker.Enabled ) {
+                    VfxTracker.Tracker.Reset();
                     PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
                 }
                 else {
@@ -373,6 +348,7 @@ namespace VFXEditor {
         }
 
         // ======= HELPERS ============
+
         public void OpenTemplate( string path ) {
             var newResult = new VFXSelectResult {
                 DisplayString = "[NEW]",

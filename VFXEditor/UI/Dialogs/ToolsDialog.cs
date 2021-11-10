@@ -4,7 +4,7 @@ using Dalamud.Plugin;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
-using VFXEditor.Data.Texture;
+using VFXEditor.Texture;
 
 namespace VFXEditor.UI {
     public class ToolsDialog : GenericDialog {
@@ -56,7 +56,7 @@ namespace VFXEditor.UI {
                 {
                     if( !ok ) return;
                     var texFile = VFXTexture.LoadFromLocal( res );
-                    texFile.SaveAsPng( res + ".png" );
+                    texFile.SaveAsPNG( res + ".png" );
                 } );
             }
 

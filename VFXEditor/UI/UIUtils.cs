@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using VFXEditor.Data;
 
-namespace VFXEditor.UI.VFX {
+namespace VFXEditor.UI {
     public class UIUtils {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );

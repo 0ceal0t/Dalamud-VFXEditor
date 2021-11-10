@@ -29,7 +29,7 @@ namespace AVFXLib.AVFX {
         }
 
         public override bool EqualsNode( AVFXNode node, List<string> messages ) {
-            if( !( node is AVFXLeaf ) ) {
+            if( node is not AVFXLeaf  ) {
                 messages.Add( string.Format( "Wrong Type {0} / {1}", Name, node.Name ) );
                 return false;
             }

@@ -1,11 +1,8 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Logging;
-using ImGuiNET;
 
 namespace VFXEditor.Tmb {
     public class C012 : TmbItem {
@@ -19,18 +16,23 @@ namespace VFXEditor.Tmb {
         private short bindPoint_4 = 0xFF;
         private List<List<float>> Unk_8 = GetDefault();
 
+        public static readonly string Name = "VFX (C012)";
+
         private static List<List<float>> GetDefault() {
             var ret = new List<List<float>>();
             var a = new[] { 1f, 1f, 1f };
-            var b = new[] { 0f, 0f, 0f, 0f, 0f, 0f };
-            var c = new[] { 1f, 1f, 1f, 1f };
+            var b = new[] { 0f, 0f, 0f };
+            var c = new[] { 0f, 0f, 0f };
+            var d = new[] { 1f, 1f, 1f, 1f };
 
             ret.Add( new List<float>( a ) );
             ret.Add( new List<float>( b ) );
             ret.Add( new List<float>( c ) );
+            ret.Add( new List<float>( d ) );
             return ret;
         }
 
+        public C012() { }
         public C012( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C012] + 8
 
@@ -108,7 +110,7 @@ namespace VFXEditor.Tmb {
             }
         }
 
-        public override string GetName() => "VFX (C012)";
+        public override string GetName() => Name;
 
         public override void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );

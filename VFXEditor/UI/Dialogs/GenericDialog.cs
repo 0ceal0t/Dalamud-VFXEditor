@@ -1,8 +1,4 @@
-using System;
-using System.IO;
 using System.Numerics;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiNET;
 
 namespace VFXEditor.UI {

@@ -2,6 +2,7 @@ using System.Numerics;
 using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Data;
+using VFXEditor.Document;
 using VFXEditor.External;
 
 namespace VFXEditor.UI
@@ -31,7 +32,7 @@ namespace VFXEditor.UI
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
             if( !DocumentManager.Manager.HasReplacePath( ExportAll ) ) {
-                ImGui.TextColored( VFX.UIUtils.RED_COLOR, "Missing Replace Path" );
+                ImGui.TextColored( UIUtils.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.EndChild();
 

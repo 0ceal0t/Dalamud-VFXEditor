@@ -8,7 +8,7 @@ using Lumina.Extensions;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 
-namespace VFXEditor.Data.Texture {
+namespace VFXEditor.Texture {
 
     public class VFXTexture : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
@@ -23,14 +23,13 @@ namespace VFXEditor.Data.Texture {
             public fixed uint OffsetToSurface[13];
         };
 
-        public TexHeader Header;
-        public static int HeaderLength => Unsafe.SizeOf<TexHeader>();
-
-        public bool ValidFormat = false;
-        public bool Local = false; // was this loaded from the game using Lumina, or from a local ATEX?
-
-        public byte[] RawData; // just the data, without the header. only used for local files
+        public bool ValidFormat { get; private set; } = false;
         public byte[] ImageData { get; private set; } // decompressed into ARGB or whatever. used for image previews
+        public TexHeader Header { get; private set; }
+        public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
+
+        private static int HeaderLength => Unsafe.SizeOf<TexHeader>();
+        private byte[] RawData; // just the data, without the header. only used for local files
 
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
@@ -48,16 +47,19 @@ namespace VFXEditor.Data.Texture {
             ValidFormat = ( ImageData.Length > 0 );
         }
 
-        public byte[] GetDDSData() {
-            if( !Local ) {
-                return DataSpan[HeaderLength..].ToArray();
+        public static VFXTexture LoadFromLocal( string path ) {
+            var tex = new VFXTexture();
+            var file = File.Open( path, FileMode.Open );
+            using( var reader = new BinaryReader( file ) ) {
+                tex.LoadFile( reader, ( int )file.Length );
             }
-            else {
-                return RawData;
-            }
+            file.Close();
+            return tex;
         }
 
-        public void SaveAsPng( string path ) {
+        public byte[] GetDDSData() => Local ? RawData : DataSpan[HeaderLength..].ToArray();
+
+        public void SaveAsPNG( string path ) {
             var bmp = new Bitmap( Header.Width, Header.Height );
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
@@ -73,22 +75,12 @@ namespace VFXEditor.Data.Texture {
         }
 
         public void SaveAsDDS( string path ) {
-            var header = IOUtil.CreateDDSHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
+            var header = AtexHelper.CreateDDSHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
             var data = GetDDSData();
             var writeData = new byte[header.Length + data.Length];
             Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
             Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
             File.WriteAllBytes( path, writeData );
-        }
-
-        public static VFXTexture LoadFromLocal( string path ) {
-            var tex = new VFXTexture();
-            var file = File.Open( path, FileMode.Open );
-            using( var reader = new BinaryReader( file ) ) {
-                tex.LoadFile( reader, ( int )file.Length );
-            }
-            file.Close();
-            return tex;
         }
 
         // converts various formats to A8R8G8B8

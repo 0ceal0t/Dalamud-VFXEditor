@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
 using VFXEditor.Data;
+using VFXEditor.Document;
 using VFXEditor.UI.VFX;
 using VFXSelect.UI;
 
@@ -19,7 +20,7 @@ namespace VFXEditor {
 
             switch( selectResult.Type ) {
                 case VFXSelectType.Local: // LOCAL
-                    var localResult = DataHelper.GetLocalFile( selectResult.Path, out var localAvfx );
+                    var localResult = AvfxHelper.GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
                         LoadCurrentVFX( localAvfx );
                     }
@@ -29,7 +30,7 @@ namespace VFXEditor {
                     }
                     break;
                 default: // EVERYTHING ELSE: GAME FILES
-                    var gameResult = DataHelper.GetGameFile( selectResult.Path, out var gameAvfx );
+                    var gameResult = AvfxHelper.GetGameFile( selectResult.Path, out var gameAvfx );
                     if( gameResult ) {
                         LoadCurrentVFX( gameAvfx );
                     }
@@ -67,7 +68,7 @@ namespace VFXEditor {
 
             if( Configuration.Config.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
-                var verifyResult = DataHelper.LastImportNode.CheckEquals( node, out var messages );
+                var verifyResult = AvfxHelper.LastImportNode.CheckEquals( node, out var messages );
                 DocumentManager.CurrentActiveDoc.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {

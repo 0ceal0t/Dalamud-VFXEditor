@@ -15,7 +15,7 @@ namespace AVFXLib.AVFX {
         }
 
         public override bool EqualsNode( AVFXNode node, List<string> messages ) {
-            if( !( node is AVFXBlank ) ) {
+            if( node is not AVFXBlank  ) {
                 messages.Add( string.Format( "Not Blank" ) );
                 return false;
             }

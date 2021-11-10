@@ -4,7 +4,7 @@ using System.Numerics;
 namespace VFXEditor.Structs.Vfx {
     public unsafe class StaticVfx : BaseVfx {
 
-        public StaticVfx( Plugin plugin, string path, Vector3 position ) : base( plugin, path ) {
+        public StaticVfx( string path, Vector3 position ) : base( path ) {
             Vfx = ( VfxStruct* )Plugin.ResourceLoader.StaticVfxCreate( path, "Client.System.Scheduler.Instance.VfxObject" );
             Plugin.ResourceLoader.StaticVfxRun( (IntPtr) Vfx, 0.0f, 0xFFFFFFFF );
 

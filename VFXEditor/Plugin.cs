@@ -8,9 +8,9 @@ using ImPlotNET;
 using VFXEditor.Data;
 using VFXEditor.Tmb;
 using VFXEditor.DirectX;
-using VFXEditor.Data.Vfx;
-using VFXEditor.Data.Texture;
-using VFXEditor.Data.Sound;
+using VFXEditor.Texture;
+using VFXEditor.Tracker;
+using VFXEditor.Document;
 
 using VFXEditor.Structs.Vfx;
 using VFXSelect;
@@ -47,8 +47,6 @@ namespace VFXEditor
 
         private const string CommandName = "/vfxedit";
 
-        public VfxTracker Tracker;
-
         public Plugin(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
@@ -70,9 +68,9 @@ namespace VFXEditor
             Framework = framework;
             TargetManager = targetManager;
 
-            Configuration.Initialize( PluginInterface );
+            Configuration.Initialize();
 
-            ResourceLoader = new ResourceLoader( this );
+            ResourceLoader = new ResourceLoader();
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) {
                 HelpMessage = "toggle ui"
             } );
@@ -82,7 +80,7 @@ namespace VFXEditor
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            DataHelper.Initialize();
+            AvfxHelper.Initialize();
             SheetManager.Initialize(
                 Path.Combine( TemplateLocation, "Files", "npc.csv" ),
                 Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ),
@@ -91,13 +89,12 @@ namespace VFXEditor
             );
 
             TmbManager.Initialize( this );
-            TextureManager.Initialize( this );
+            TextureManager.Initialize();
             DirectXManager.Initialize();
             DocumentManager.Initialize();
             FileDialogManager.Initialize( PluginInterface );
             CopyManager.Initialize();
-
-            Tracker = new VfxTracker( this );
+            VfxTracker.Initialize();
 
             InitUI();
 
@@ -131,7 +128,7 @@ namespace VFXEditor
             DocumentManager.Dispose();
             TmbManager.Dispose();
             TextureManager.Dispose();
-            DataHelper.Dispose();
+            AvfxHelper.Dispose();
             CopyManager.Dispose();
         }
 
@@ -143,7 +140,31 @@ namespace VFXEditor
             Visible = !Visible;
         }
 
-        public void ClearSpawnVfx() {
+        public static bool SpawnExists() {
+            return SpawnVfx != null;
+        }
+
+        public static void RemoveSpawnVfx() {
+            SpawnVfx?.Remove();
+            SpawnVfx = null;
+        }
+
+        public static void SpawnOnGround( string path ) {
+            SpawnVfx = new StaticVfx( path, ClientState.LocalPlayer.Position );
+        }
+
+        public static void SpawnOnSelf( string path ) {
+            SpawnVfx = new ActorVfx( ClientState.LocalPlayer, ClientState.LocalPlayer, path );
+        }
+
+        public static void SpawnOnTarget( string path ) {
+            var t = TargetManager.Target;
+            if( t != null ) {
+                SpawnVfx = new ActorVfx( t, t, path );
+            }
+        }
+
+        public static void ClearSpawnVfx() {
             SpawnVfx = null;
         }
     }

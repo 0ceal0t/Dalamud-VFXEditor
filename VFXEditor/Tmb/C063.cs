@@ -11,6 +11,9 @@ namespace VFXEditor.Tmb {
         private int Unk_4 = 1;
         private int Unk_5 = 0;
 
+        public static readonly string Name = "Sound (C063)";
+
+        public C063() { }
         public C063( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C063] + 8
 
@@ -52,7 +55,7 @@ namespace VFXEditor.Tmb {
             entryWriter.Write( Unk_5 );
         }
 
-        public override string GetName() => "Sound (C063)";
+        public override string GetName() => Name;
 
         public override void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );

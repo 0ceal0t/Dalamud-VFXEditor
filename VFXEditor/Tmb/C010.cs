@@ -19,6 +19,9 @@ namespace VFXEditor.Tmb {
         private string Path = "";
         private int Unk_7 = 0;
 
+        public static readonly string Name = "Animation (C010)";
+
+        public C010() { }
         public C010( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C010] + 8
 
@@ -64,7 +67,7 @@ namespace VFXEditor.Tmb {
             entryWriter.Write( Unk_7 );
         }
 
-        public override string GetName() => "Animation (C010)";
+        public override string GetName() => Name;
 
         public override void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );

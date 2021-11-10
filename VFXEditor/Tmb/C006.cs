@@ -8,6 +8,9 @@ namespace VFXEditor.Tmb {
         private int Unk_3 = 0;
         private int Unk_4 = 100;
 
+        public static readonly string Name = "C006";
+
+        public C006() { }
         public C006( BinaryReader reader ) {
             reader.ReadInt16(); // id
             Time = reader.ReadInt16(); // ?
@@ -30,7 +33,7 @@ namespace VFXEditor.Tmb {
             entryWriter.Write( Unk_4 );
         }
 
-        public override string GetName() => "C006";
+        public override string GetName() => Name;
 
         public override void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );

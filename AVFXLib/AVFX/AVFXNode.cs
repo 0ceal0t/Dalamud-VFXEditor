@@ -55,8 +55,8 @@ namespace AVFXLib.AVFX {
                 return false;
             }
 
-            var notBlank = Children.Where( x => !( x is AVFXBlank ) ).ToList();
-            var notBlank2 = node.Children.Where( x => !( x is AVFXBlank ) ).ToList();
+            var notBlank = Children.Where( x => x is not AVFXBlank  ).ToList();
+            var notBlank2 = node.Children.Where( x => x is not AVFXBlank  ).ToList();
 
             if( notBlank.Count != notBlank2.Count ) {
                 messages.Add( string.Format( "Wrong Node Size {0} : {1} / {2} : {3}", Name, notBlank.Count, node.Name, notBlank2.Count ) );

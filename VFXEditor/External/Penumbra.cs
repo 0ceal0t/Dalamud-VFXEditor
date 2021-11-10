@@ -1,12 +1,12 @@
 using AVFXLib.Models;
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using VFXEditor.Data;
-using VFXEditor.Data.Texture;
+using VFXEditor.Document;
+using VFXEditor.Texture;
 
 namespace VFXEditor.External {
     public static class Penumbra {

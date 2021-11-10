@@ -1,13 +1,10 @@
-using System.Numerics;
 using ImGuiNET;
-using VFXEditor.Data;
-using VFXEditor.UI.VFX;
+using System.Numerics;
+using VFXEditor.UI;
 
-namespace VFXEditor.UI {
-    public class DocDialog : GenericDialog {
-        public DocDialog() : base( "Documents" ) { }
-
-        public ReplaceDoc SelectedDoc = null;
+namespace VFXEditor.Document {
+    public partial class DocumentManager {
+        private ReplaceDoc SelectedDoc = null;
         public override void OnDraw() {
             var id = "##Doc";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
@@ -17,7 +14,7 @@ namespace VFXEditor.UI {
             ImGui.Columns( 2, id + "/Columns", false );
 
             var idx = 0;
-            foreach( var doc in DocumentManager.CurrentDocs ) {
+            foreach( var doc in CurrentDocs ) {
                 if( ImGui.Selectable( doc.Source.DisplayString + id + idx, doc == SelectedDoc, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDoc = doc;
                 }
@@ -31,7 +28,7 @@ namespace VFXEditor.UI {
             }
             ImGui.NextColumn();
 
-            foreach( var doc in DocumentManager.CurrentDocs ) {
+            foreach( var doc in CurrentDocs ) {
                 ImGui.Text( doc.Replace.DisplayString );
             }
 
@@ -39,21 +36,21 @@ namespace VFXEditor.UI {
             ImGui.EndChild();
 
             if( ImGui.Button( "+ NEW" + id ) ) {
-                DocumentManager.Manager.NewDoc();
+                Manager.NewDoc();
             }
 
             if( SelectedDoc != null ) {
-                var deleteDisabled = ( DocumentManager.CurrentDocs.Count == 1 );
+                var deleteDisabled = ( CurrentDocs.Count == 1 );
 
                 ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
                 if( ImGui.Button( "Select" + id ) ) {
-                    DocumentManager.Manager.SelectDoc( SelectedDoc );
+                    Manager.SelectDoc( SelectedDoc );
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
                     if( UIUtils.RemoveButton( "Delete" + id ) ) {
-                        DocumentManager.Manager.RemoveDoc( SelectedDoc );
-                        SelectedDoc = DocumentManager.CurrentActiveDoc;
+                        Manager.RemoveDoc( SelectedDoc );
+                        SelectedDoc = CurrentActiveDoc;
                     }
                 }
             }

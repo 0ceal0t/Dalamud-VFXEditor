@@ -1,7 +1,7 @@
 using AVFXLib.Models;
 using System.Linq;
 using AVFXLib.AVFX;
-using VFXEditor.Data.Texture;
+using VFXEditor.Texture;
 
 namespace VFXEditor.UI.VFX {
     public class UITextureView : UINodeSplitView<UITexture> {

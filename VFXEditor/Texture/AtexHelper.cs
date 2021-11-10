@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace VFXEditor.Data.Texture {
-    public static class IOUtil {
+namespace VFXEditor.Texture {
+    public static class AtexHelper {
         public static List<byte> CreateATEXHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
             short texFormatCode = 0;

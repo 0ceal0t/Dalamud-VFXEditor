@@ -9,6 +9,30 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.Tmb {
     public class TmbTrack {
+        private struct EntryType {
+            public string Name;
+            public Func<TmbItem> NewItem;
+            public Func<BinaryReader, TmbItem> ReadItem;
+
+            public EntryType( string name, Func<TmbItem> newItem, Func<BinaryReader, TmbItem> readItem ) {
+                Name = name;
+                NewItem = newItem;
+                ReadItem = readItem;
+            }
+        }
+
+        private static Dictionary<string, EntryType> TypeDict = new() {
+            { "C063", new EntryType( C063.Name, () => new C063(), ( BinaryReader br ) => new C063( br ) ) },
+            { "C006", new EntryType( C006.Name, () => new C006(), ( BinaryReader br ) => new C006( br ) ) },
+            { "C010", new EntryType( C010.Name, () => new C010(), ( BinaryReader br ) => new C010( br ) ) },
+            { "C131", new EntryType( C131.Name, () => new C131(), ( BinaryReader br ) => new C131( br ) ) },
+            { "C002", new EntryType( C002.Name, () => new C002(), ( BinaryReader br ) => new C002( br ) ) },
+            { "C011", new EntryType( C011.Name, () => new C011(), ( BinaryReader br ) => new C011( br ) ) },
+            { "C012", new EntryType( C012.Name, () => new C012(), ( BinaryReader br ) => new C012( br ) ) },
+            { "C067", new EntryType( C067.Name, () => new C067(), ( BinaryReader br ) => new C067( br ) ) },
+            { "C053", new EntryType( C053.Name, () => new C053(), ( BinaryReader br ) => new C053( br ) ) },
+        };
+
         public short Id { get; private set; } // temp
         private int Entry_Count;
 
@@ -22,7 +46,7 @@ namespace VFXEditor.Tmb {
         public int EntryCount => 1 + Entries.Count;
 
         public TmbTrack() { }
-        public TmbTrack(BinaryReader reader) {
+        public TmbTrack( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position;
 
             reader.ReadInt32(); // TMTR
@@ -34,28 +58,17 @@ namespace VFXEditor.Tmb {
             Unk_3 = reader.ReadInt32(); // 0
 
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( startPos + offset + 8 + 2 * (Entry_Count - 1), SeekOrigin.Begin );
+            reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( Entry_Count - 1 ), SeekOrigin.Begin );
             var endId = reader.ReadInt16();
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void ReadEntries (BinaryReader reader) {
+        public void ReadEntries( BinaryReader reader ) {
             for( var i = 0; i < Entry_Count; i++ ) {
                 var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
                 reader.ReadInt32(); // size
 
-                TmbItem newEntry = name switch {
-                    "C063" => new C063( reader ),
-                    "C006" => new C006( reader ),
-                    "C010" => new C010( reader ),
-                    "C131" => new C131( reader ),
-                    "C002" => new C002( reader ),
-                    "C011" => new C011( reader ),
-                    "C012" => new C012( reader ),
-                    "C067" => new C067( reader ),
-                    "C053" => new C053( reader ),
-                    _ => null
-                };
+                TmbItem newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
 
                 if( newEntry == null ) {
                     PluginLog.Log( $"Unknown Entry {name}" );
@@ -75,7 +88,7 @@ namespace VFXEditor.Tmb {
 
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = timelinePos + ( lastId - 2 ) * 2;
-            var offset = endPos - startPos - 8 - 2 * (Entries.Count - 1);
+            var offset = endPos - startPos - 8 - 2 * ( Entries.Count - 1 );
 
             TmbFile.WriteString( entryWriter, "TMTR" );
             entryWriter.Write( 0x18 );
@@ -93,6 +106,8 @@ namespace VFXEditor.Tmb {
         public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, BinaryWriter stringWriter, int stringPos, int timelinePos ) {
             foreach( var entry in Entries ) entry.Write( entryWriter, entryPos, extraWriter, extraPos, stringWriter, stringPos, timelinePos );
         }
+
+        private string AddSelected = "[NONE]";
 
         public void Draw( string id ) {
             TmbFile.ShortInput( $"Time{id}", ref Time );
@@ -115,7 +130,18 @@ namespace VFXEditor.Tmb {
                 i++;
             }
 
-            // TODO: dialog here
+            // ==== SELECTION DIALOG =========
+            if( ImGui.BeginCombo( $"{id}Add", AddSelected ) ) {
+                if( ImGui.Selectable( $"Movement Cancel (C131){id}", AddSelected.Equals( "C131" ) ) ) {
+                    AddSelected = "C131";
+                    Entries.Add( new C131() );
+                }
+                if( ImGui.Selectable( $"Movement Cancel (C131){id}", AddSelected.Equals( "C131" ) ) ) {
+                    AddSelected = "C131";
+                    Entries.Add( new C131() );
+                }
+                ImGui.EndCombo();
+            }
         }
     }
 }

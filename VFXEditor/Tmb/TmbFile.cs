@@ -39,8 +39,6 @@ namespace VFXEditor.Tmb {
         }
 
         public void Draw(string id) {
-            ImGui.Text( $"Max Slots: {Actors.Count + Actors.Select( x => x.EntryCount ).Sum()}" );
-
             if (ImGui.CollapsingHeader($"TMDH{id}")) {
                 ImGui.Indent();
 
@@ -82,7 +80,7 @@ namespace VFXEditor.Tmb {
             var entryCount = Actors.Count + Actors.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
             var timelineSize = 2 * entryCount;
 
-            // Calculate starting positions
+            // calculate starting positions
             var entriesPos = headerSize;
             var extraPos = entriesPos + entriesSize;
             var timelinePos = extraPos + extraSize;

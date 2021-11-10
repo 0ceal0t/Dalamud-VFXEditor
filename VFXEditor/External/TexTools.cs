@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using AVFXLib.Models;
 using System.IO;
-using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System.IO.Compression;
-using VFXEditor.Data.Texture;
+using VFXEditor.Texture;
 using VFXEditor.Data;
 using Dalamud.Logging;
+using VFXEditor.Document;
 
 namespace VFXEditor.External {
     public static class TexTools {
@@ -79,7 +79,7 @@ namespace VFXEditor.External {
                         }
                     }
 
-                    void AddTex( TexReplace tex, string _path ) {
+                    void AddTex( TextureReplace tex, string _path ) {
                         if( !string.IsNullOrEmpty( _path ) && !string.IsNullOrEmpty( tex.LocalPath ) ) {
                             using var file = File.Open( tex.LocalPath, FileMode.Open );
                             using var texReader = new BinaryReader( file );

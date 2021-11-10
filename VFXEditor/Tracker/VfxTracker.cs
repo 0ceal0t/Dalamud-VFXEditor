@@ -8,9 +8,17 @@ using System.Linq;
 using System.Numerics;
 using VFXEditor.Structs.Vfx;
 
-namespace VFXEditor.Data.Vfx {
+namespace VFXEditor.Tracker {
     public unsafe class VfxTracker {
-        public bool Enabled = false;
+        public static VfxTracker Tracker { get; private set; }
+
+        public static void Initialize() {
+            Tracker = new VfxTracker();
+        }
+
+        // ======================
+
+        public bool Enabled { get; private set; }
 
         private struct TrackerData {
             public string path;
@@ -24,20 +32,22 @@ namespace VFXEditor.Data.Vfx {
             public SharpDX.Vector3 position;
         }
 
-        private readonly Plugin Plugin;
         private ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs;
         private ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs;
 
         private static readonly ClosenessComp CloseComp = new();
 
-        public VfxTracker( Plugin plugin ) {
-            Plugin = plugin;
+        public VfxTracker() {
             Reset();
         }
 
         public void Reset() {
             ActorVfxs = new();
             StaticVfxs = new();
+        }
+
+        public void Toggle() {
+            Enabled = !Enabled;
         }
 
         public void AddActor( VfxStruct* vfx, string path ) {

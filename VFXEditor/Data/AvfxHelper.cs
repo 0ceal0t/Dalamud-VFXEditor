@@ -5,17 +5,15 @@ using System;
 using System.IO;
 
 namespace VFXEditor.Data {
-    public static class DataHelper {
-        public static AVFXNode LastImportNode => _LastImportNode;
-
-        private static AVFXNode _LastImportNode = null;
+    public static class AvfxHelper {
+        public static AVFXNode LastImportNode { get; private set; }
 
         public static void Initialize() {
-            _LastImportNode = null;
+            LastImportNode = null;
         }
 
         public static void Dispose() {
-            _LastImportNode = null;
+            LastImportNode = null;
         }
 
         public static bool SaveLocalFile( string path, AVFXBase avfx ) {
@@ -62,7 +60,7 @@ namespace VFXEditor.Data {
                 if( node == null ) {
                     return false;
                 }
-                _LastImportNode = node;
+                LastImportNode = node;
                 avfx = new AVFXBase();
                 avfx.Read( node );
                 return true;

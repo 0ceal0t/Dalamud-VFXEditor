@@ -1,14 +1,17 @@
-using Dalamud.Plugin;
 using System;
 using System.IO;
 using System.Collections.Concurrent;
+
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+
 using Dalamud.Logging;
 
-namespace VFXEditor.Data.Texture {
-    public struct TexData { // used for the texture previews
+using VFXEditor.UI;
+
+namespace VFXEditor.Texture {
+    public struct PreviewTexture { // used for the texture previews
         public ushort Height;
         public ushort Width;
         public ushort MipLevels;
@@ -18,7 +21,7 @@ namespace VFXEditor.Data.Texture {
         public ImGuiScene.TextureWrap Wrap;
     }
 
-    public struct TexReplace {
+    public struct TextureReplace {
         public string LocalPath;
         public int Height;
         public int Width;
@@ -27,18 +30,18 @@ namespace VFXEditor.Data.Texture {
         public TextureFormat Format;
     }
 
-    public class TextureManager {
+    public partial class TextureManager : GenericDialog {
         public static TextureManager Manager { get; private set; }
-        public int TEX_ID = 0;
+        public ConcurrentDictionary<string, TextureReplace> PathToTextureReplace { get; private set; } = new(); // Keeps track of imported textures which replace existing ones
 
-        public ConcurrentDictionary<string, TexData> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
-        public ConcurrentDictionary<string, TexReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
+        private int TEX_ID = 0;
+        private readonly ConcurrentDictionary<string, PreviewTexture> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
 
-        public static void Initialize( Plugin plugin ) {
+        public static void Initialize() {
             // Set paths manually since TexImpNet can be dumb sometimes
             var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
 
-            var runtimeRoot = Path.Combine( Path.GetDirectoryName( plugin.AssemblyLocation ), "runtimes" );
+            var runtimeRoot = Path.Combine( Path.GetDirectoryName( Plugin.TemplateLocation ), "runtimes" );
 
             var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
             var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
@@ -62,16 +65,16 @@ namespace VFXEditor.Data.Texture {
 
         // ======= INSTANCE ============
 
-        public bool GetReplacePath( string gamePath, out FileInfo file ) {
-            file = null;
-            if( !PathToTextureReplace.ContainsKey( gamePath ) ) {
-                return false;
-            }
-            file = new FileInfo( PathToTextureReplace[gamePath].LocalPath );
-            return true;
+        public TextureManager() : base( "Imported Textures" ) {
         }
 
-        public void ImportReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
+        public bool GetReplacePath( string gamePath, out string localPath ) {
+            localPath = PathToTextureReplace.TryGetValue( gamePath, out var textureReplace ) ? textureReplace.LocalPath : null;
+            return string.IsNullOrEmpty( localPath );
+        }
+
+        // import replacement texture from atex
+        public void AddReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
             if( !Plugin.DataManager.FileExists( replacePath ) ) {
                 PluginLog.Error( $"{replacePath} does not exist" );
                 return;
@@ -80,7 +83,7 @@ namespace VFXEditor.Data.Texture {
             var path = Path.Combine( Configuration.Config.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
             File.Copy( localPath, path, true );
 
-            var replaceData = new TexReplace {
+            var replaceData = new TextureReplace {
                 Height = height,
                 Width = width,
                 Depth = depth,
@@ -93,14 +96,14 @@ namespace VFXEditor.Data.Texture {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
-        public bool ImportReplaceTexture( string fileLocation, string replacePath ) {
+        public bool AddReplaceTexture( string fileLocation, string replacePath ) {
             if( !Plugin.DataManager.FileExists( replacePath ) ) {
                 PluginLog.Error( $"{replacePath} does not exist" );
                 return false;
             }
 
             try {
-                TexReplace replaceData;
+                TextureReplace replaceData;
                 var path = Path.Combine( Configuration.Config.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 if( Path.GetExtension( fileLocation ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
@@ -116,7 +119,7 @@ namespace VFXEditor.Data.Texture {
                 else if( Path.GetExtension( fileLocation ).ToLower() == ".atex" ) {
                     File.Copy( fileLocation, path, true );
                     var tex = VFXTexture.LoadFromLocal( fileLocation );
-                    replaceData = new TexReplace {
+                    replaceData = new TextureReplace {
                         Height = tex.Header.Height,
                         Width = tex.Header.Width,
                         Depth = tex.Header.Depth,
@@ -172,11 +175,11 @@ namespace VFXEditor.Data.Texture {
             }
         }
 
-        public static TexReplace CreateAtex( TextureFormat format, DDSContainer dds, BinaryWriter bw, bool convertToA8 = false ) {
+        private static TextureReplace CreateAtex( TextureFormat format, DDSContainer dds, BinaryWriter bw, bool convertToA8 = false ) {
             using var ms = new MemoryStream();
             dds.Write( ms );
             using var br = new BinaryReader( ms );
-            var replaceData = new TexReplace {
+            var replaceData = new TextureReplace {
                 Format = format
             };
             br.BaseStream.Seek( 12, SeekOrigin.Begin );
@@ -186,7 +189,7 @@ namespace VFXEditor.Data.Texture {
             replaceData.Depth = br.ReadInt32();
             replaceData.MipLevels = br.ReadInt32();
 
-            bw.Write( IOUtil.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
+            bw.Write( AtexHelper.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
             br.BaseStream.Seek( 128, SeekOrigin.Begin );
             var uncompressedLength = ms.Length - 128;
             var data = new byte[uncompressedLength];
@@ -199,13 +202,8 @@ namespace VFXEditor.Data.Texture {
             return replaceData;
         }
 
-        public VFXTexture GetPreviewTexture( string path ) {
-            if( PathToTextureReplace.ContainsKey( path ) ) {
-                return VFXTexture.LoadFromLocal( PathToTextureReplace[path].LocalPath );
-            }
-            else {
-                return Plugin.DataManager.GetFile<VFXTexture>( path );
-            }
+        public VFXTexture GetRawTexture( string path ) {
+            return PathToTextureReplace.TryGetValue( path, out var texturePreview ) ? VFXTexture.LoadFromLocal( texturePreview.LocalPath ) : Plugin.DataManager.GetFile<VFXTexture>( path );
         }
 
         public void LoadPreviewTexture( string path ) {
@@ -228,12 +226,14 @@ namespace VFXEditor.Data.Texture {
             LoadPreviewTexture( paddedPath );
         }
 
-        public bool CreatePreviewTexture( string path, out TexData ret, bool loadImage = true ) {
+        public bool GetTexturePreview( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
+
+        public bool CreatePreviewTexture( string path, out PreviewTexture ret, bool loadImage = true ) {
             var result = Plugin.DataManager.FileExists( path );
-            ret = new TexData();
+            ret = new PreviewTexture();
             if( result ) {
                 try {
-                    var texFile = GetPreviewTexture( path );
+                    var texFile = GetRawTexture( path );
                     ret.Format = texFile.Header.Format;
                     ret.MipLevels = texFile.Header.MipLevels;
                     ret.Width = texFile.Header.Width;
@@ -253,12 +253,12 @@ namespace VFXEditor.Data.Texture {
                     return true;
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Could not find tex:" + path );
+                    PluginLog.Error( e, "Could not find tex: " + path );
                     return false;
                 }
             }
             else {
-                PluginLog.Error( "Could not find tex:" + path );
+                PluginLog.Error( "Could not find tex: " + path );
                 return false;
             }
         }

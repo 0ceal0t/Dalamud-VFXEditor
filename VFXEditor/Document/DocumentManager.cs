@@ -1,13 +1,16 @@
-using AVFXLib.Models;
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.Data.Texture;
+
+using AVFXLib.Models;
+
+using VFXEditor.Data;
+using VFXEditor.UI;
 using VFXEditor.UI.VFX;
+
 using VFXSelect.UI;
 
-namespace VFXEditor.Data {
+namespace VFXEditor.Document {
     public class ReplaceDoc {
         public UIMain Main = null;
         public string WriteLocation;
@@ -27,7 +30,7 @@ namespace VFXEditor.Data {
         }
     }
 
-    public class DocumentManager {
+    public partial class DocumentManager : GenericDialog {
         public static DocumentManager Manager { get; private set; }
 
         public static ReplaceDoc CurrentActiveDoc => Manager?.ActiveDoc;
@@ -56,7 +59,7 @@ namespace VFXEditor.Data {
         private Dictionary<string, string> GamePathToLocalPath = new();
         private int DOC_ID = 0;
 
-        private DocumentManager() {
+        private DocumentManager() : base("Documents") {
             NewDoc();
         }
 
@@ -81,7 +84,7 @@ namespace VFXEditor.Data {
 
             if(localPath != "") {
                 File.Copy( localPath, doc.WriteLocation, true );
-                var localResult = DataHelper.GetLocalFile( doc.WriteLocation, out var localAvfx );
+                var localResult = AvfxHelper.GetLocalFile( doc.WriteLocation, out var localAvfx );
                 if( localResult ) {
                     doc.Main = new UIMain( localAvfx );
                     doc.Main.ReadRenamingMap( renaming );
@@ -121,7 +124,7 @@ namespace VFXEditor.Data {
         }
 
         public void Save() {
-            DataHelper.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
+            AvfxHelper.SaveLocalFile( ActiveDoc.WriteLocation, ActiveDoc.Main.AVFX );
             if(Configuration.Config.LogAllFiles) {
                 PluginLog.Log( $"Saved VFX to {ActiveDoc.WriteLocation}" );
             }

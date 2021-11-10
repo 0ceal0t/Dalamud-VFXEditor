@@ -10,18 +10,17 @@ using Dalamud.Logging;
 namespace VFXEditor {
     [Serializable]
     public class Configuration : IPluginConfiguration {
-        public static Configuration Config => Instance;
-        private static Configuration Instance = null;
+        public static Configuration Config { get; private set; }
 
-        public static void Initialize( DalamudPluginInterface pluginInterface ) {
-            Instance = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Instance.InitializeInstance( pluginInterface );
-            Directory.CreateDirectory( Instance.WriteLocation );
-            PluginLog.Log( "Write location: " + Instance.WriteLocation );
+        public static void Initialize() {
+            Config = Plugin.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Config.InitializeInstance( Plugin.PluginInterface );
+            Directory.CreateDirectory( Config.WriteLocation );
+            PluginLog.Log( "Write location: " + Config.WriteLocation );
         }
 
         public static void Dispose() {
-            Instance = null;
+            Config = null;
         }
 
         // ====== INSTANCE ======
