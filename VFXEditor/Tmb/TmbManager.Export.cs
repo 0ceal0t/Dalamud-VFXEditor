@@ -33,5 +33,29 @@ namespace VFXEditor.Tmb {
             writer.Write( modData );
             modOffset += modData.Length;
         }
+
+        // ======== WORKSPACE ===========
+
+        public WorkspaceMetaTmb[] WorkspaceExport( string saveLocation ) {
+            var texRootPath = Path.Combine( saveLocation, "Tmb" );
+            Directory.CreateDirectory( texRootPath );
+
+            var tmbId = 0;
+            List<WorkspaceMetaTmb> tmbMeta = new();
+
+            if ( !string.IsNullOrEmpty(TmbReplacePath) && CurrentFile != null ) {
+                var newPath = $"TMB_{tmbId++}.tmb";
+                var newFullPath = Path.Combine( texRootPath, newPath );
+                File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
+                tmbMeta.Add( new WorkspaceMetaTmb() {
+                    RelativeLocation = newPath,
+                    ReplacePath = TmbReplacePath,
+                    //Replace = null,
+                    //Source = null
+                } );
+            }
+            
+            return tmbMeta.ToArray();
+        }
     }
 }

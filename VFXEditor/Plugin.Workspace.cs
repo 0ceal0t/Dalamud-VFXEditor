@@ -17,6 +17,7 @@ namespace VFXEditor {
     public struct WorkspaceMeta {
         public WorkspaceMetaTex[] Tex;
         public WorkspaceMetaDocument[] Docs;
+        public WorkspaceMetaTmb[] Tmb;
     }
 
     public struct WorkspaceMetaDocument {
@@ -33,6 +34,14 @@ namespace VFXEditor {
         public int Depth;
         public int MipLevels;
         public TextureFormat Format;
+
+        public string RelativeLocation;
+        public string ReplacePath;
+    }
+
+    public struct WorkspaceMetaTmb {
+        public VFXSelectResult Source; // Not used right now
+        public VFXSelectResult Replace; // Not used right now
 
         public string RelativeLocation;
         public string ReplacePath;
@@ -55,7 +64,7 @@ namespace VFXEditor {
         }
 
         private void OpenWorkspace() {
-            FileDialogManager.OpenFileDialog( "Select a Workspace FIle", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var selectedFile = new FileInfo( res );
@@ -92,22 +101,32 @@ namespace VFXEditor {
             ResetTextureManager();
 
             var texRootPath = Path.Combine( loadLocation, "Tex" );
-            foreach( var tex in meta.Tex ) {
-                var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
-                TextureManager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+            if( meta.Tex != null ) {
+                foreach( var tex in meta.Tex ) {
+                    var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
+                    TextureManager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                }
             }
 
             ResetDocumentManager();
 
             var vfxRootPath = Path.Combine( loadLocation, "VFX" );
-            foreach( var doc in meta.Docs ) {
-                var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
-                DocumentManager.ImportLocalDocument( fullPath, doc.Source, doc.Replace, doc.Renaming );
+            if( meta.Docs != null ) {
+                foreach( var doc in meta.Docs ) {
+                    var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
+                    DocumentManager.ImportLocalDocument( fullPath, doc.Source, doc.Replace, doc.Renaming );
+                }
             }
 
             ResetTmbManager();
 
-            // TODO
+            var tmbRootPath = Path.Combine( loadLocation, "Tmb" );
+            if( meta.Tmb != null ) {
+                foreach(var tmb in meta.Tmb ) {
+                    var fullPath = Path.Combine( tmbRootPath, tmb.RelativeLocation );
+                    TmbManager.ImportLocalTmb( fullPath, tmb.ReplacePath );
+                }
+            }
 
             IsLoading = false;
         }
@@ -137,7 +156,8 @@ namespace VFXEditor {
 
             var meta = new WorkspaceMeta {
                 Docs = DocumentManager.WorkspaceExport( saveLocation ),
-                Tex = TextureManager.WorkspaceExport( saveLocation )
+                Tex = TextureManager.WorkspaceExport( saveLocation ),
+                Tmb = TmbManager.WorkspaceExport( saveLocation )
             };
 
             var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );

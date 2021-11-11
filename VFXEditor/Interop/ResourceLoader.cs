@@ -163,30 +163,30 @@ namespace VFXEditor.Interop {
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            Plugin.VfxTracker?.AddStatic( ( VfxStruct* ) vfx, vfxPath );
+            Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.SpawnVFX != null && vfx == (IntPtr) Plugin.SpawnVFX.Vfx ) {
+            if( Plugin.SpawnVFX != null && vfx == ( IntPtr )Plugin.SpawnVFX.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* ) vfx );
+            Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            Plugin.VfxTracker?.AddActor( ( VfxStruct* ) vfx, vfxPath );
+            Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
             return vfx;
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.SpawnVFX != null && vfx == (IntPtr) Plugin.SpawnVFX.Vfx ) {
+            if( Plugin.SpawnVFX != null && vfx == ( IntPtr )Plugin.SpawnVFX.Vfx ) {
                 Plugin.ClearSpawnVfx();
             }
-            Plugin.VfxTracker?.RemoveActor( (VfxStruct*) vfx );
+            Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
@@ -257,7 +257,7 @@ namespace VFXEditor.Interop {
                     WaitFrames = 15;
                     break;
                 case RedrawState.Invisible:
-                    if(WaitFrames == 0) {
+                    if( WaitFrames == 0 ) {
                         *( int* )renderPtr &= ~0x00_00_00_02;
                         CurrentRedrawState = RedrawState.Visible;
                     }
@@ -318,7 +318,7 @@ namespace VFXEditor.Interop {
 
             if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
 
-            var fsPath = GetReplacePath(gameFsPath, out var localPath) ? localPath : null;
+            var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
                 return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
@@ -341,10 +341,9 @@ namespace VFXEditor.Interop {
             var isRooted = Path.IsPathRooted( gameFsPath );
 
             // looking for refreshed paths
-            if ( gameFsPath != null && !isRooted) {
+            if( gameFsPath != null && !isRooted ) {
                 var replacementPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
-                
-                if (replacementPath != null && Path.IsPathRooted(replacementPath) && replacementPath.Length < 260 ) {
+                if( replacementPath != null && Path.IsPathRooted( replacementPath ) && replacementPath.Length < 260 ) {
                     gameFsPath = replacementPath;
                     isRooted = true;
                 }
@@ -374,12 +373,21 @@ namespace VFXEditor.Interop {
             return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
         }
 
-        public unsafe void ReloadPath( string gamePath, bool vfx ) {
-            var gameResource = GetResource( gamePath, vfx );
-            RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+        public unsafe void ReloadPath( string gamePath, string localPath ) {
+            if (!string.IsNullOrEmpty(gamePath)) {
+                var gameResource = GetResource( gamePath, true );
+                if (gameResource != IntPtr.Zero)
+                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+            }
+
+            if (!string.IsNullOrEmpty(localPath)) {
+                var gameResource = GetResource( gamePath, false );
+                if( gameResource != IntPtr.Zero )
+                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+            }
         }
 
-        private bool GetReplacePath(string gamePath, out string localPath) {
+        private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
             if( Plugin.DocumentManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
                 localPath = vfxFile;
@@ -396,18 +404,32 @@ namespace VFXEditor.Interop {
             return false;
         }
 
-        private unsafe IntPtr GetResource( string path, bool vfx ) {
+        private unsafe IntPtr GetResource( string path, bool original ) {
             var pathBytes = Encoding.ASCII.GetBytes( path );
             var bPath = stackalloc byte[pathBytes.Length + 1];
             Marshal.Copy( pathBytes, 0, new IntPtr( bPath ), pathBytes.Length );
             var pPath = ( char* )bPath;
 
-            var typeBytes = Encoding.ASCII.GetBytes( vfx ? "xfva" : "bmt" );
+            // File type extension
+            var ext = path.Split( '.' )[1];
+            var charArray = ext.ToCharArray();
+            Array.Reverse( charArray );
+            var flip = new string( charArray );
+            var typeBytes = Encoding.ASCII.GetBytes( flip );
             var bType = stackalloc byte[typeBytes.Length + 1];
             Marshal.Copy( typeBytes, 0, new IntPtr( bType ), typeBytes.Length );
             var pResourceType = ( char* )bType;
 
-            var categoryBytes = BitConverter.GetBytes( ( uint )( vfx ? 8 : 4 ) ); // vfx = 8, chara = 4
+            // Category
+            var split = path.Split( '/' );
+            var categoryString = split[0];
+            var categoryBytes = categoryString switch {
+                "vfx" => BitConverter.GetBytes( 8u ),
+                "chara" => BitConverter.GetBytes( 4u ),
+                "bgcommon" => BitConverter.GetBytes( 1u ),
+                "bg" => GetBGCategory( split[1], split[2] ),
+                _ => BitConverter.GetBytes( 0u )
+            };
             var bCategory = stackalloc byte[categoryBytes.Length + 1];
             Marshal.Copy( categoryBytes, 0, new IntPtr( bCategory ), categoryBytes.Length );
             var pCategoryId = ( uint* )bCategory;
@@ -419,10 +441,24 @@ namespace VFXEditor.Interop {
             Marshal.Copy( hashBytes, 0, new IntPtr( bHash ), hashBytes.Length );
             var pResourceHash = ( uint* )bHash;
 
-            var resource = new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) );
+            var resource = original ? new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) ) :
+                new IntPtr( GetResourceSyncHandler( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) );
             DecRef( resource );
 
             return resource;
+        }
+
+        private static byte[] GetBGCategory( string expansion, string zone ) {
+            var ret = BitConverter.GetBytes( 2u );
+            if( expansion == "ffxiv" ) return ret;
+            // ex1/03_abr_a2/fld/a2f1/level/a2f1 -> [02 00 03 01]
+            // expansion = ex1
+            // zone = 03_abr_a2
+            var expansionTrimmed = expansion.Replace( "ex", "" );
+            var zoneTrimmed = zone.Split( '_' )[0];
+            ret[2] = byte.Parse( zoneTrimmed );
+            ret[3] = byte.Parse( expansionTrimmed );
+            return ret;
         }
     }
 }

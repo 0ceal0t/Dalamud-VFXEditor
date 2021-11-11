@@ -49,6 +49,7 @@ namespace VFXEditor.Texture {
 
             var texId = 0;
             List<WorkspaceMetaTex> texMeta = new();
+
             foreach( var entry in PathToTextureReplace ) {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
@@ -63,6 +64,7 @@ namespace VFXEditor.Texture {
                     ReplacePath = entry.Key
                 } );
             }
+
             return texMeta.ToArray();
         }
     }

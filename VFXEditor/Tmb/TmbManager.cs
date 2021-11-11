@@ -22,12 +22,18 @@ namespace VFXEditor.Tmb {
             Size = new Vector2( 600, 400 );
         }
 
-        public void Dispose() {
-        }
-
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = TmbReplacePath.Equals( path ) ? LocalPath : null;
             return !string.IsNullOrEmpty( replacePath );
+        }
+
+        public void ImportLocalTmb( string localPath, string replacePath ) {
+            TmbReplacePath = replacePath;
+            using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
+            CurrentFile = new( br );
+        }
+
+        public void Dispose() {
         }
 
         public override void OnDraw() {
@@ -90,7 +96,7 @@ namespace VFXEditor.Tmb {
 
         private void Reload() {
             if( CurrentFile == null ) return;
-            Plugin.ResourceLoader.ReloadPath( TmbReplacePath, false );
+            Plugin.ResourceLoader.ReloadPath( TmbReplacePath, LocalPath );
         }
     }
 }
