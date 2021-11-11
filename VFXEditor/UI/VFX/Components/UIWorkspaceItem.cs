@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public abstract class UIWorkspaceItem : UIItem {
@@ -25,7 +26,7 @@ namespace VFXEditor.UI.Vfx {
             if( !string.IsNullOrEmpty( Renamed ) ) {
                 RenameDict[path] = Renamed;
             }
-            PopulateWorkspaceMetaChildren(RenameDict);
+            PopulateWorkspaceMetaChildren( RenameDict );
         }
 
         public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
@@ -48,7 +49,7 @@ namespace VFXEditor.UI.Vfx {
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-                if( ImGui.Button( $"{(char) FontAwesomeIcon.Check}" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                     if( string.IsNullOrEmpty( RenamedTemp ) || Renamed == GetDefaultText() ) {
                         Renamed = null;
                     }
@@ -60,7 +61,7 @@ namespace VFXEditor.UI.Vfx {
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
+                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                     CurrentlyRenaming = false;
                 }
 

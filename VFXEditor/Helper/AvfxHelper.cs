@@ -4,7 +4,7 @@ using Dalamud.Logging;
 using System;
 using System.IO;
 
-namespace VFXEditor.Data {
+namespace VFXEditor.Helper {
     public static class AvfxHelper {
         public static AVFXNode LastImportNode { get; private set; } = null;
 

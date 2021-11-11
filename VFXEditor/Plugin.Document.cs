@@ -1,10 +1,10 @@
 using AVFXLib.Models;
 using Dalamud.Logging;
-using Dalamud.Plugin;
+
 using System;
-using VFXEditor.Data;
+
 using VFXEditor.Document;
-using VFXEditor.UI.Vfx;
+using VFXEditor.Helper;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -69,7 +69,7 @@ namespace VFXEditor {
             if( Configuration.VerifyOnLoad ) {
                 var node = avfx.ToAVFX();
                 var verifyResult = AvfxHelper.LastImportNode.CheckEquals( node, out var messages );
-                DocumentManager.ActiveDocument.Main.Verified = verifyResult ? UI.VerifiedStatus.OK : UI.VerifiedStatus.ISSUE;
+                DocumentManager.ActiveDocument.Main.Verified = verifyResult ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
                 foreach( var m in messages ) {
                     PluginLog.Warning( m );

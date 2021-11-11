@@ -2,6 +2,7 @@ using AVFXLib.Models;
 using System.Collections.Generic;
 using ImGuiNET;
 using VFXEditor.Data;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public abstract class UINodeSelect : UIBase {
@@ -25,7 +26,7 @@ namespace VFXEditor.UI.Vfx {
 
         public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
         public abstract void UnlinkChange();
-        public abstract void DeleteNode(UINode node); // when the selected node is deleted
+        public abstract void DeleteNode( UINode node ); // when the selected node is deleted
         public abstract void UpdateNode();
         public abstract void SetupNode();
     }
@@ -58,7 +59,7 @@ namespace VFXEditor.UI.Vfx {
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralInt literal ) {
                 Literal.GiveValue( literal.Value );
                 UnlinkFrom( Selected );
-                if( Literal.Value >= 0 && Literal.Value < Group.Items.Count ) LinkTo(Selected = Group.Items[Literal.Value] );
+                if( Literal.Value >= 0 && Literal.Value < Group.Items.Count ) LinkTo( Selected = Group.Items[Literal.Value] );
                 else Selected = null;
             }
 
@@ -83,7 +84,7 @@ namespace VFXEditor.UI.Vfx {
             UpdateNode();
         }
 
-        private void SelectItem(T item) {
+        private void SelectItem( T item ) {
             if( Selected == item ) return;
             UnlinkFrom( Selected );
             LinkTo( item );
@@ -157,7 +158,7 @@ namespace VFXEditor.UI.Vfx {
                 Literal.GiveValue( literal.Value );
                 foreach( var s in Selected ) UnlinkFrom( s );
                 Selected.Clear();
-                foreach(var item in Literal.Value ) {
+                foreach( var item in Literal.Value ) {
                     if( item >= 0 && item < Group.Items.Count ) {
                         Selected.Add( Group.Items[item] );
                         LinkTo( Group.Items[item] );
@@ -171,14 +172,14 @@ namespace VFXEditor.UI.Vfx {
             for( var i = 0; i < Selected.Count; i++ ) {
                 var _id = id + i;
                 var text = ( i == 0 ) ? Name : "";
-                if(ImGui.BeginCombo(text + _id, Selected[i] == null ? "[NONE]" : Selected[i].GetText() ) ) {
+                if( ImGui.BeginCombo( text + _id, Selected[i] == null ? "[NONE]" : Selected[i].GetText() ) ) {
                     if( ImGui.Selectable( "[NONE]", Selected[i] == null ) ) {
                         UnlinkFrom( Selected[i] );
                         Selected[i] = null;
                         UpdateNode();
                     }
-                    foreach(var item in Group.Items ) {
-                        if(ImGui.Selectable(item.GetText(), Selected[i] == item ) ) {
+                    foreach( var item in Group.Items ) {
+                        if( ImGui.Selectable( item.GetText(), Selected[i] == item ) ) {
                             UnlinkFrom( Selected[i] );
                             LinkTo( item );
                             Selected[i] = item;
@@ -190,21 +191,21 @@ namespace VFXEditor.UI.Vfx {
                     }
                     ImGui.EndCombo();
                 }
-                if(i > 0 ) {
+                if( i > 0 ) {
                     ImGui.SameLine();
-                    if(UIUtils.RemoveButton("- Remove" + _id, small: true ) ) {
+                    if( UiHelper.RemoveButton( "- Remove" + _id, small: true ) ) {
                         UnlinkFrom( Selected[i] );
                         Selected.RemoveAt( i );
                         return;
                     }
                 }
             }
-            if(Selected.Count == 0 ) {
+            if( Selected.Count == 0 ) {
                 ImGui.Text( Name );
-                ImGui.TextColored( UIUtils.RED_COLOR, "WARNING: Add an item!" );
+                ImGui.TextColored( UiHelper.RED_COLOR, "WARNING: Add an item!" );
             }
-            if(Group.Items.Count == 0 ) {
-                ImGui.TextColored( UIUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
+            if( Group.Items.Count == 0 ) {
+                ImGui.TextColored( UiHelper.RED_COLOR, "WARNING: Add a selectable item first!" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {
@@ -216,7 +217,7 @@ namespace VFXEditor.UI.Vfx {
 
         public override void DeleteSelect() {
             UnlinkChange();
-            foreach(var item in Selected ) {
+            foreach( var item in Selected ) {
                 UnlinkFrom( item );
             }
         }
@@ -226,7 +227,7 @@ namespace VFXEditor.UI.Vfx {
 
         public override void UpdateNode() {
             var idxs = new List<int>();
-            foreach(var item in Selected ) {
+            foreach( var item in Selected ) {
                 if( item == null ) {
                     idxs.Add( 255 );
                 }
@@ -242,7 +243,7 @@ namespace VFXEditor.UI.Vfx {
                 var val = Literal.Value[i];
                 if( Node.HasDependencies && val != 255 && val >= 0 ) {
                     val += Group.PreImportSize;
-                    Literal.GiveValue( val, i ); 
+                    Literal.GiveValue( val, i );
                 }
                 if( val != 255 && val >= 0 && val < Group.Items.Count ) {
                     var item = Group.Items[val];

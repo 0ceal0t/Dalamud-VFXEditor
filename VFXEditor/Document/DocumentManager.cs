@@ -4,9 +4,9 @@ using System.IO;
 
 using AVFXLib.Models;
 
-using VFXEditor.Data;
 using VFXEditor.UI;
 using VFXEditor.UI.Vfx;
+using VFXEditor.Helper;
 
 using VFXSelect.UI;
 
@@ -33,8 +33,8 @@ namespace VFXEditor.Document {
     public partial class DocumentManager : GenericDialog {
 
         public ReplaceDoc ActiveDocument { get; private set; }
-        public List<ReplaceDoc> Documents { get; private set; } = new();
 
+        private List<ReplaceDoc> Documents = new();
         private Dictionary<string, string> GamePathToLocalPath = new();
         private int DOC_ID = 0;
 
@@ -72,6 +72,10 @@ namespace VFXEditor.Document {
 
             Documents.Add( doc );
             RebuildMap();
+
+            if (Documents.Count > 1) {
+                RemoveDocument( Documents[0] ); // remove the default document
+            }
         }
 
         public void UpdateSource( VFXSelectResult select ) {

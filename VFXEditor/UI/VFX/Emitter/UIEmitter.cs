@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
-namespace VFXEditor.UI.Vfx
-{
+namespace VFXEditor.UI.Vfx {
     public class UIEmitter : UINode {
         public AVFXEmitter Emitter;
         public UIMain Main;
@@ -30,7 +30,7 @@ namespace VFXEditor.UI.Vfx
         public UIString SoundInput;
         public UIInt SoundIndex;
 
-        public UIEmitter(UIMain main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies) {
+        public UIEmitter( UIMain main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
             Emitter = emitter;
             Main = main;
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", Main.Effectors, Emitter.EffectorIdx );
@@ -60,7 +60,7 @@ namespace VFXEditor.UI.Vfx
             Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ) );
             Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType ) );
             Animation.Add( new UILife( Emitter.Life ) );
-            Animation.Add( new UICurve( Emitter.CreateCount, "Create Count", locked:true ) );
+            Animation.Add( new UICurve( Emitter.CreateCount, "Create Count", locked: true ) );
             Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval", locked: true ) );
             Animation.Add( new UICurve( Emitter.CreateIntervalRandom, "Create Interval Random" ) );
             Animation.Add( new UICurve( Emitter.Gravity, "Gravity" ) );
@@ -99,12 +99,11 @@ namespace VFXEditor.UI.Vfx
             };
         }
 
-        private void DrawParameters( string id )
-        {
+        private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
             EffectorSelect.Draw( id );
-            if(UIUtils.RemoveButton("Remove Sound" + id, small: true ) ) {
+            if( UiHelper.RemoveButton( "Remove Sound" + id, small: true ) ) {
                 SoundInput.Value = "";
                 SoundInput.Literal.GiveValue( "" );
                 SoundInput.Literal.Assigned = false;
@@ -118,8 +117,7 @@ namespace VFXEditor.UI.Vfx
             ImGui.EndChild();
         }
 
-        private void DrawData( string id )
-        {
+        private void DrawData( string id ) {
             ImGui.BeginChild( id );
             Data.Draw( id );
             ImGui.EndChild();

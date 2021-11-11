@@ -1,13 +1,18 @@
 using AVFXLib.AVFX;
 using AVFXLib.Main;
 using AVFXLib.Models;
+
 using Dalamud.Logging;
+
 using ImGuiFileDialog;
 using ImGuiNET;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public class UIMain {

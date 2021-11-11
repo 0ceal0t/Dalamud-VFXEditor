@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VFXEditor.Texture;
 
-namespace VFXEditor.Texture {
+namespace VFXEditor.Helper {
     public static class AtexHelper {
         public static List<byte> CreateATEXHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();

@@ -5,9 +5,9 @@ using System.Numerics;
 using Dalamud.Logging;
 using VFXEditor.Texture;
 using ImGuiFileDialog;
+using VFXEditor.Helper;
 
-namespace VFXEditor.UI.Vfx
-{
+namespace VFXEditor.UI.Vfx {
     public class UITexture : UINode {
         public UIMain Main;
         public AVFXTexture Texture;
@@ -16,12 +16,12 @@ namespace VFXEditor.UI.Vfx
         public UIString Path;
         public UINodeGraphView NodeView;
 
-        public UITexture(UIMain main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
+        public UITexture( UIMain main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
             Main = main;
             Texture = texture;
             NodeView = new UINodeGraphView( this );
 
-            Path = new UIString( "Path", Texture.Path);
+            Path = new UIString( "Path", Texture.Path );
             lastValue = Texture.Path.Value;
             Plugin.TextureManager.LoadPreviewTexture( Texture.Path.Value );
             HasDependencies = false; // if imported, all set now
@@ -44,7 +44,7 @@ namespace VFXEditor.UI.Vfx
 
             var currentPathValue = LoadTex();
 
-            if ( Plugin.TextureManager.GetTexturePreview(currentPathValue, out var t)) {
+            if( Plugin.TextureManager.GetTexturePreview( currentPathValue, out var t ) ) {
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
                 if( ImGui.Button( "Export" + id ) ) {
@@ -66,9 +66,9 @@ namespace VFXEditor.UI.Vfx
 
                 // ===== IMPORTED TEXTURE =======
                 if( t.IsReplaced ) {
-                    ImGui.TextColored( UIUtils.RED_COLOR, "Replaced with imported texture" );
+                    ImGui.TextColored( UiHelper.RED_COLOR, "Replaced with imported texture" );
                     ImGui.SameLine();
-                    if( UIUtils.RemoveButton( "Remove" + id, small: true ) ) {
+                    if( UiHelper.RemoveButton( "Remove" + id, small: true ) ) {
                         Plugin.TextureManager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
                         Plugin.TextureManager.RefreshPreviewTexture( currentPathValue.Trim( '\0' ) );
                     }
@@ -86,9 +86,8 @@ namespace VFXEditor.UI.Vfx
             }
         }
 
-        public static void ImportDialog(string newPath) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) =>
-            {
+        public static void ImportDialog( string newPath ) {
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( !Plugin.TextureManager.AddReplaceTexture( res, newPath ) ) {
@@ -101,18 +100,16 @@ namespace VFXEditor.UI.Vfx
             } );
         }
 
-        public static void SavePngDialog(string texPath) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) =>
-            {
+        public static void SavePngDialog( string texPath ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = Plugin.TextureManager.GetRawTexture( texPath );
                 texFile.SaveAsPNG( res );
             } );
         }
 
-        public static void SaveDDSDialog(string texPath ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) =>
-            {
+        public static void SaveDDSDialog( string texPath ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = Plugin.TextureManager.GetRawTexture( texPath );
                 texFile.SaveAsDDS( res );

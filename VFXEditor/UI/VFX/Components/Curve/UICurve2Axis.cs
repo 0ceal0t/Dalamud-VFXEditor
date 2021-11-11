@@ -6,11 +6,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
-namespace VFXEditor.UI.Vfx
-{
-    public class UICurve2Axis : UIItem
-    {
+namespace VFXEditor.UI.Vfx {
+    public class UICurve2Axis : UIItem {
         public AVFXCurve2Axis Curve;
         public string Name;
         public bool Locked;
@@ -21,30 +20,28 @@ namespace VFXEditor.UI.Vfx
         public UICurve _Y;
         private List<UICurve> Curves;
 
-        public UICurve2Axis(AVFXCurve2Axis curve, string name, bool locked = false )
-        {
+        public UICurve2Axis( AVFXCurve2Axis curve, string name, bool locked = false ) {
             Curve = curve;
             Name = name;
             Locked = locked;
             Init();
         }
-        public override void Init()
-        {
+        public override void Init() {
             base.Init();
             Curves = new List<UICurve>();
-            if (!Curve.Assigned) { Assigned = false; return; }
+            if( !Curve.Assigned ) { Assigned = false; return; }
             // ======================
             _AxisConnect = new UICombo<AxisConnect>( "Axis Connect", Curve.AxisConnectType );
-            _AxisConnectRandom = new UICombo<RandomType>("Axis Connect Random", Curve.AxisConnectRandomType);
+            _AxisConnectRandom = new UICombo<RandomType>( "Axis Connect Random", Curve.AxisConnectRandomType );
 
             Curves.Add( _X = new UICurve( Curve.X, "X" ) );
             Curves.Add( _Y = new UICurve( Curve.Y, "Y" ) );
-            Curves.Add(new UICurve(Curve.RX, "Random X"));
-            Curves.Add(new UICurve(Curve.RY, "Random Y"));
+            Curves.Add( new UICurve( Curve.RX, "Random X" ) );
+            Curves.Add( new UICurve( Curve.RY, "Random Y" ) );
         }
         // =========== DRAW =====================
         public override void Draw( string parentId ) {
-            if( !Assigned )  {
+            if( !Assigned ) {
                 DrawUnAssigned( parentId );
                 return;
             }
@@ -63,7 +60,7 @@ namespace VFXEditor.UI.Vfx
             var id = parentId + "/" + Name;
             // =================
             if( !Locked ) {
-                if( UIUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
+                if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
                     Init();
                     return;
@@ -85,14 +82,10 @@ namespace VFXEditor.UI.Vfx
             _AxisConnectRandom.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             // ==================
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) )
-            {
-                foreach( var c in Curves )
-                {
-                    if( c.Assigned )
-                    {
-                        if( ImGui.BeginTabItem( c.Name + id ) )
-                        {
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                foreach( var c in Curves ) {
+                    if( c.Assigned ) {
+                        if( ImGui.BeginTabItem( c.Name + id ) ) {
                             c.DrawBody( id );
                             ImGui.EndTabItem();
                         }

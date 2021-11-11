@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb {
     public class TmbTrack {
@@ -117,7 +118,7 @@ namespace VFXEditor.Tmb {
             foreach( var entry in Entries ) {
                 if( ImGui.CollapsingHeader( $"{entry.GetName()}{id}{i}" ) ) {
                     ImGui.Indent();
-                    if( UI.UIUtils.RemoveButton( $"Delete{id}{i}" ) ) {
+                    if( UiHelper.RemoveButton( $"Delete{id}{i}" ) ) {
                         Entries.Remove( entry );
                         ImGui.Unindent();
                         break;

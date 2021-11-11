@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb {
     public class TmbFile {
@@ -70,7 +71,7 @@ namespace VFXEditor.Tmb {
             if( SelectedActor != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UI.UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Actors.Remove( SelectedActor );
                     SelectedActor = null;
                 }

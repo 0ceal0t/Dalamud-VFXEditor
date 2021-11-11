@@ -1,6 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.UI;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Document {
     public partial class DocumentManager {
@@ -49,7 +49,7 @@ namespace VFXEditor.Document {
                 }
                 if( !deleteDisabled ) {
                     ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
-                    if( UIUtils.RemoveButton( "Delete" + id ) ) {
+                    if( UiHelper.RemoveButton( "Delete" + id ) ) {
                         RemoveDocument( SelectedDocument );
                         SelectedDocument = ActiveDocument;
                     }

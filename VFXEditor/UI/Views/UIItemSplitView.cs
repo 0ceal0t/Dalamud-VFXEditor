@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
@@ -39,7 +40,7 @@ namespace VFXEditor.UI.Vfx {
             }
             if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
-                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
+                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     Items.Remove( Selected );
                     OnDelete( Selected );
                     SetupIdx();

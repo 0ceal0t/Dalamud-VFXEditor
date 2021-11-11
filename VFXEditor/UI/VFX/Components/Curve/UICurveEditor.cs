@@ -6,6 +6,7 @@ using System.Numerics;
 using ImPlotNET;
 using VFXEditor.DirectX;
 using VFXEditor.Data;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public class UICurveEditor : UIBase {
@@ -39,16 +40,16 @@ namespace VFXEditor.UI.Vfx {
             }
 
             ImGui.SameLine();
-            if(UIUtils.DisabledButton("Copy" + parentId, Curve.Keys.Count > 0)) {
+            if( UiHelper.DisabledButton( "Copy" + parentId, Curve.Keys.Count > 0 ) ) {
                 CopyManager.ClearCurveKeys();
-                foreach(var key in Curve.Keys) {
+                foreach( var key in Curve.Keys ) {
                     CopyManager.AddCurveKey( key.Time, key.X, key.Y, key.Z );
                 }
             }
 
             ImGui.SameLine();
-            if(UIUtils.DisabledButton("Paste" + parentId, CopyManager.HasCurveKeys())) {
-                foreach(var key in CopyManager.CurveKeys) {
+            if( UiHelper.DisabledButton( "Paste" + parentId, CopyManager.HasCurveKeys() ) ) {
+                foreach( var key in CopyManager.CurveKeys ) {
                     InsertPoint( key.X, key.Y, key.Z, key.W );
                     UpdateColor();
                 }
@@ -120,7 +121,7 @@ namespace VFXEditor.UI.Vfx {
                 if( ImGui.IsMouseClicked( ImGuiMouseButton.Right ) && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
                     var z = Color ? 1.0f : ( float )pos.y;
-                    InsertPoint( (float) pos.x, 1, 1, z );
+                    InsertPoint( ( float )pos.x, 1, 1, z );
                     UpdateColor();
                 }
 
@@ -129,7 +130,7 @@ namespace VFXEditor.UI.Vfx {
             if( wrongOrder ) {
                 ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINTS ARE IN THE WRONG ORDER" );
                 ImGui.SameLine();
-                if(ImGui.Button("Sort" + parentId)) {
+                if( ImGui.Button( "Sort" + parentId ) ) {
                     Curve.Keys.Sort( ( x, y ) => x.Time.CompareTo( y.Time ) );
                     Points.Sort( ( x, y ) => x.X.CompareTo( y.X ) );
                     UpdateColor();
@@ -141,7 +142,7 @@ namespace VFXEditor.UI.Vfx {
             }
         }
 
-        private void InsertPoint(float time, float x, float y, float z) {
+        private void InsertPoint( float time, float x, float y, float z ) {
             var insertIdx = 0;
             foreach( var p in Points ) {
                 if( p.X > Math.Round( time ) ) {
@@ -326,7 +327,7 @@ namespace VFXEditor.UI.Vfx {
 
             public void Draw() {
                 var id = "##CurveEdit";
-                if( UIUtils.RemoveButton( "Delete Key" + id, small: true ) ) {
+                if( UiHelper.RemoveButton( "Delete Key" + id, small: true ) ) {
                     Editor.Curve.RemoveKey( Key );
                     Editor.Points.Remove( this );
                     if( Editor.Selected == this ) {
@@ -364,7 +365,7 @@ namespace VFXEditor.UI.Vfx {
                     X = Time;
                     Editor.UpdateColor();
                 }
-                if( UIUtils.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
+                if( UiHelper.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
                     _ = Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
                     Key.Type = newKeyType;
                 }

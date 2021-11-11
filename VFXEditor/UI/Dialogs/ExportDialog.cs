@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
+using VFXEditor.Helper;
 using VFXEditor.UI.Vfx;
 
 namespace VFXEditor.UI {
@@ -45,7 +46,7 @@ namespace VFXEditor.UI {
             if( ImGui.Begin( "Export##ExportDialog", ref Visible ) ) {
                 ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
                 ImGui.SameLine();
-                UIUtils.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
+                UiHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
                 ImGui.SameLine();
                 if( ImGui.Button( "Reset##ExportDialog" ) ) {
                     Reset();

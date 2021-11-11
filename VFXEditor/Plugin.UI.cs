@@ -6,13 +6,16 @@ using System.Text;
 using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
+
 using VFXEditor.Data;
 using VFXEditor.Document;
+using VFXEditor.Helper;
+using VFXEditor.Penumbra;
+using VFXEditor.Textools;
 using VFXEditor.Texture;
 using VFXEditor.Tmb;
 using VFXEditor.Tracker;
 using VFXEditor.UI;
-using VFXEditor.UI.Vfx;
 using VFXSelect.UI;
 
 namespace VFXEditor {
@@ -102,7 +105,7 @@ namespace VFXEditor {
                 ImGui.Text( @"Select a source VFX file to begin..." );
             }
             else {
-                if( UIUtils.OkButton( "UPDATE" ) ) {
+                if( UiHelper.OkButton( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                         DocumentManager.Save();
                         ResourceLoader.ReRender();
@@ -116,7 +119,7 @@ namespace VFXEditor {
                         ResourceLoader.ReloadPath( DocumentManager.ActiveDocument.Replace.Path, true );
                 }
                 ImGui.SameLine();
-                UIUtils.HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );
+                UiHelper.HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );
 
                 // ===== EXPORT ======
                 ImGui.SameLine();
@@ -146,7 +149,7 @@ namespace VFXEditor {
                 // ======== VERIFY ============
                 if( Configuration.VerifyOnLoad ) {
                     ImGui.SameLine();
-                    UIUtils.ShowVerifiedStatus( DocumentManager.ActiveDocument.Main.Verified );
+                    UiHelper.ShowVerifiedStatus( DocumentManager.ActiveDocument.Main.Verified );
                 }
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -161,7 +164,7 @@ namespace VFXEditor {
                 if( ImGui.BeginMenu( "File##Menu" ) ) {
                     ImGui.TextDisabled( "Workspace" );
                     ImGui.SameLine();
-                    UIUtils.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
+                    UiHelper.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
                     if( ImGui.MenuItem( "New##Menu" ) ) NewWorkspace();
                     if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
@@ -197,10 +200,10 @@ namespace VFXEditor {
             // ======== INPUT TEXT =========
             ImGui.SetColumnWidth( 0, 140 );
             ImGui.Text( "Loaded VFX" );
-            ImGui.SameLine(); UIUtils.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
+            ImGui.SameLine(); UiHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "VFX Being Replaced" );
-            ImGui.SameLine(); UIUtils.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
+            ImGui.SameLine(); UiHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
@@ -219,7 +222,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSourceVFX();
             }
@@ -236,7 +239,7 @@ namespace VFXEditor {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIUtils.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplaceVFX();
             }
@@ -310,16 +313,14 @@ namespace VFXEditor {
             }
             ImGui.PopFont();
 
-            ImGui.SameLine(); UIUtils.HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
+            ImGui.SameLine(); UiHelper.HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
 
             ImGui.Columns( 1 );
             ImGui.Separator();
             ImGui.EndChild();
         }
 
-        // ======= HELPERS ============
-
-        public void OpenTemplate( string path ) {
+        private void OpenTemplate( string path ) {
             var newResult = new VFXSelectResult {
                 DisplayString = "[NEW]",
                 Type = VFXSelectType.Local,

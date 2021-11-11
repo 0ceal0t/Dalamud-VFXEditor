@@ -1,6 +1,7 @@
 using AVFXLib.AVFX;
 using Dalamud.Interface;
 using ImGuiNET;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public interface IUINodeView<T> where T : UINode {
@@ -25,7 +26,7 @@ namespace VFXEditor.UI.Vfx {
                 }
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UIUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
+                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
                     group.Remove( selected );
                     selected.DeleteNode();
                     view.OnDelete( selected );

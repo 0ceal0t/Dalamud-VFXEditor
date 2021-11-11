@@ -11,8 +11,10 @@ using VFXEditor.DirectX;
 using VFXEditor.Texture;
 using VFXEditor.Tracker;
 using VFXEditor.Document;
-
+using VFXEditor.Interop;
+using VFXEditor.Helper;
 using VFXEditor.Structs.Vfx;
+
 using VFXSelect;
 
 using System.Reflection;
@@ -23,7 +25,6 @@ using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
-using VFXEditor.Interop;
 
 namespace VFXEditor
 {

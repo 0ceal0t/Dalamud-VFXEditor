@@ -1,35 +1,34 @@
+using Dalamud.Interface;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Dalamud.Interface;
-using ImGuiNET;
-using VFXEditor.Data;
 
-namespace VFXEditor.UI {
+namespace VFXEditor.Helper {
     public enum VerifiedStatus {
         ISSUE,
         UNKNOWN,
         OK
     };
 
-    public class UIUtils {
+    public static class UiHelper {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
 
-        public static bool EnumComboBox(string label, string[] options, ref int choiceIdx) {
+        public static bool EnumComboBox( string label, string[] options, ref int choiceIdx ) {
             var ret = false;
-            if (ImGui.BeginCombo(label, options[choiceIdx])) {
-                for (var idx = 0; idx < options.Length; idx++) {
-                    var is_selected = (choiceIdx == idx);
-                    if(ImGui.Selectable(options[idx], is_selected)) {
+            if( ImGui.BeginCombo( label, options[choiceIdx] ) ) {
+                for( var idx = 0; idx < options.Length; idx++ ) {
+                    var is_selected = ( choiceIdx == idx );
+                    if( ImGui.Selectable( options[idx], is_selected ) ) {
                         choiceIdx = idx;
                         ret = true;
                     }
 
-                    if (is_selected) {
+                    if( is_selected ) {
                         ImGui.SetItemDefaultFocus();
                     }
                 }
@@ -38,9 +37,9 @@ namespace VFXEditor.UI {
             return ret;
         }
 
-        public static bool DisabledButton(string label, bool enabled, bool small = false) {
-            if(!enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( (small ? ImGui.SmallButton(label) : ImGui.Button(label)) && enabled ) return true;
+        public static bool DisabledButton( string label, bool enabled, bool small = false ) {
+            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+            if( ( small ? ImGui.SmallButton( label ) : ImGui.Button( label ) ) && enabled ) return true;
             if( !enabled ) ImGui.PopStyleVar();
             return false;
         }
@@ -66,12 +65,12 @@ namespace VFXEditor.UI {
             return ret;
         }
 
-        public static int ColorToInt(Vector4 Color ) {
-            var data = new byte[] { ( byte )Color.X, (byte)Color.Y, (byte)Color.Z, (byte)Color.W };
+        public static int ColorToInt( Vector4 Color ) {
+            var data = new byte[] { ( byte )Color.X, ( byte )Color.Y, ( byte )Color.Z, ( byte )Color.W };
             return AVFXLib.Main.Util.Bytes4ToInt( data );
         }
 
-        public static Vector4 IntToColor(int Color ) {
+        public static Vector4 IntToColor( int Color ) {
             var colors = AVFXLib.Main.Util.IntTo4Bytes( Color );
             return new Vector4( colors[0], colors[1], colors[2], colors[3] );
         }

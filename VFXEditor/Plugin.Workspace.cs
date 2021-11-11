@@ -99,16 +99,10 @@ namespace VFXEditor {
 
             ResetDocumentManager();
 
-            var defaultDoc = DocumentManager.ActiveDocument;
-
             var vfxRootPath = Path.Combine( loadLocation, "VFX" );
             foreach( var doc in meta.Docs ) {
                 var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
                 DocumentManager.ImportLocalDocument( fullPath, doc.Source, doc.Replace, doc.Renaming );
-            }
-
-            if( DocumentManager.Documents.Count > 1 ) {
-                DocumentManager.RemoveDocument( defaultDoc );
             }
 
             ResetTmbManager();
@@ -141,49 +135,10 @@ namespace VFXEditor {
             var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
             Directory.CreateDirectory( saveLocation );
 
-            var meta = new WorkspaceMeta();
-
-            var vfxRootPath = Path.Combine( saveLocation, "VFX" );
-            Directory.CreateDirectory( vfxRootPath );
-
-            var docId = 0;
-            List<WorkspaceMetaDocument> docMeta = new();
-            foreach( var entry in DocumentManager.Documents ) {
-                var newPath = "";
-                if( entry.Main != null ) {
-                    newPath = $"VFX_{docId++}.avfx";
-                    var newFullPath = Path.Combine( vfxRootPath, newPath );
-                    File.WriteAllBytes( newFullPath, entry.Main.AVFX.ToAVFX().ToBytes() );
-                }
-                docMeta.Add( new WorkspaceMetaDocument {
-                    Source = entry.Source,
-                    Replace = entry.Replace,
-                    RelativeLocation = newPath,
-                    Renaming = ( entry.Main == null ) ? new Dictionary<string, string>() : entry.Main.GetRenamingMap()
-                } );
-            }
-            meta.Docs = docMeta.ToArray();
-
-            var texRootPath = Path.Combine( saveLocation, "Tex" );
-            Directory.CreateDirectory( texRootPath );
-
-            var texId = 0;
-            List<WorkspaceMetaTex> texMeta = new();
-            foreach( var entry in TextureManager.PathToTextureReplace ) {
-                var newPath = $"VFX_{texId++}.atex";
-                var newFullPath = Path.Combine( texRootPath, newPath );
-                File.Copy( entry.Value.LocalPath, newFullPath, true );
-                texMeta.Add( new WorkspaceMetaTex {
-                    Height = entry.Value.Height,
-                    Width = entry.Value.Width,
-                    Depth = entry.Value.Depth,
-                    MipLevels = entry.Value.MipLevels,
-                    Format = entry.Value.Format,
-                    RelativeLocation = newPath,
-                    ReplacePath = entry.Key
-                } );
-            }
-            meta.Tex = texMeta.ToArray();
+            var meta = new WorkspaceMeta {
+                Docs = DocumentManager.WorkspaceExport( saveLocation ),
+                Tex = TextureManager.WorkspaceExport( saveLocation )
+            };
 
             var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
             var metaString = JsonConvert.SerializeObject( meta );

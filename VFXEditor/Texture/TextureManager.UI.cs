@@ -1,6 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.UI;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {
     public partial class TextureManager {
@@ -30,7 +30,7 @@ namespace VFXEditor.Texture {
             var idx = 0;
             ImGui.NextColumn();
             foreach( var entry in PathToTextureReplace ) {
-                if( UIUtils.RemoveButton( "Remove" + id + idx, small: true ) ) {
+                if( UiHelper.RemoveButton( "Remove" + id + idx, small: true ) ) {
                     RemoveReplaceTexture( entry.Key );
                     RefreshPreviewTexture( entry.Key );
                 }

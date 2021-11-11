@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx {
     public class UIParticleSimple : UIItem {
@@ -21,7 +22,7 @@ namespace VFXEditor.UI.Vfx {
         public UIParameters Texture;
         public UIParameters Color;
 
-        public UIParticleSimple(AVFXParticleSimple simple, UIParticle particle) {
+        public UIParticleSimple( AVFXParticleSimple simple, UIParticle particle ) {
             Simple = simple;
             Particle = particle;
             Init();
@@ -29,7 +30,7 @@ namespace VFXEditor.UI.Vfx {
 
         public override void Init() {
             base.Init();
-            if (!Simple.Assigned) { Assigned = false; return; }
+            if( !Simple.Assigned ) { Assigned = false; return; }
             //=======================
             Tabs = new List<UIItem> {
                 ( Creation = new UIParameters( "Creation" ) )
@@ -95,9 +96,10 @@ namespace VFXEditor.UI.Vfx {
                 Init();
             }
         }
+
         public override void DrawBody( string parentId ) {
             var id = parentId + "/Simple";
-            if( UIUtils.RemoveButton( "Delete" + id, small:true ) ) {
+            if( UiHelper.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
                 InjectionVertexModelSelect.DeleteSelect();
                 //===============
@@ -120,7 +122,7 @@ namespace VFXEditor.UI.Vfx {
         private Vector4 Color;
         private int Frame;
 
-        public UISimpleColor(AVFXParticleSimple simple, int idx ) {
+        public UISimpleColor( AVFXParticleSimple simple, int idx ) {
             Simple = simple;
             Idx = idx;
 
