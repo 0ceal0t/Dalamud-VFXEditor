@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace VFXSelect.Data.Rows {
+namespace VFXSelect.Select.Rows {
     public class XivActionSelected {
         public XivActionBase Action;
         public bool CastVfxExists = false;

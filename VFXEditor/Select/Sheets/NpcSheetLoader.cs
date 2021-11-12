@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VFXSelect.Data.Rows;
+using VFXSelect.Select.Rows;
 
-namespace VFXSelect.Data.Sheets {
+namespace VFXSelect.Select.Sheets {
     public class NpcSheetLoader : SheetLoader<XivNpc, XivNpcSelected> {
 
         public Dictionary<int, string> NpcIdToName = new();

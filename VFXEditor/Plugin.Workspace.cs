@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using VFXEditor.Document;
 using VFXEditor.Texture;
 using VFXEditor.Tmb;
-using VFXSelect.UI;
+using VFXSelect;
 
 namespace VFXEditor {
     public struct WorkspaceMeta {
@@ -21,8 +21,8 @@ namespace VFXEditor {
     }
 
     public struct WorkspaceMetaDocument {
-        public VFXSelectResult Source;
-        public VFXSelectResult Replace;
+        public SelectResult Source;
+        public SelectResult Replace;
         public Dictionary<string, string> Renaming;
 
         public string RelativeLocation; // can be empty if no avfx file
@@ -40,11 +40,9 @@ namespace VFXEditor {
     }
 
     public struct WorkspaceMetaTmb {
-        public VFXSelectResult Source; // Not used right now
-        public VFXSelectResult Replace; // Not used right now
-
+        public SelectResult Source;
+        public SelectResult Replace;
         public string RelativeLocation;
-        public string ReplacePath;
     }
 
     public partial class Plugin {
@@ -124,7 +122,7 @@ namespace VFXEditor {
             if( meta.Tmb != null ) {
                 foreach(var tmb in meta.Tmb ) {
                     var fullPath = Path.Combine( tmbRootPath, tmb.RelativeLocation );
-                    TmbManager.ImportLocalTmb( fullPath, tmb.ReplacePath );
+                    TmbManager.ImportLocalTmb( fullPath, tmb.Source, tmb.Replace );
                 }
             }
 

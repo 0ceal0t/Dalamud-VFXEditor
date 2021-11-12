@@ -1,9 +1,9 @@
 using Dalamud.Logging;
 using System;
 using System.Linq;
-using VFXSelect.Data.Rows;
+using VFXSelect.Select.Rows;
 
-namespace VFXSelect.Data.Sheets {
+namespace VFXSelect.Select.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
         public override void OnLoad() {
             var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );

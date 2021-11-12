@@ -5,21 +5,21 @@ using System;
 
 using VFXEditor.Document;
 using VFXEditor.Helper;
-using VFXSelect.UI;
+using VFXSelect;
 
 namespace VFXEditor {
     public partial class Plugin {
         private DateTime LastSelect = DateTime.Now;
 
-        public void SetSourceVFX( VFXSelectResult selectResult) {
+        public void SetSourceVFX( SelectResult selectResult) {
             SetSourceVFX( selectResult, true );
         }
-        public void SetSourceVFX( VFXSelectResult selectResult, bool addToRecent ) {
+        public void SetSourceVFX( SelectResult selectResult, bool addToRecent ) {
             if( ( DateTime.Now - LastSelect ).TotalSeconds < 0.5 ) return;
             LastSelect = DateTime.Now;
 
             switch( selectResult.Type ) {
-                case VFXSelectType.Local: // LOCAL
+                case SelectResultType.Local: // LOCAL
                     var localResult = AvfxHelper.GetLocalFile( selectResult.Path, out var localAvfx );
                     if( localResult ) {
                         LoadCurrentVFX( localAvfx );
@@ -46,20 +46,20 @@ namespace VFXEditor {
         }
 
         public static void RemoveSourceVFX() {
-            DocumentManager.UpdateSource( VFXSelectResult.None() );
+            DocumentManager.UpdateSource( SelectResult.None() );
             DocumentManager.ActiveDocument.Dispose();
         }
 
-        public static void SetReplaceVFX( VFXSelectResult replaceResult) {
+        public static void SetReplaceVFX( SelectResult replaceResult) {
             SetReplaceVFX( replaceResult, true );
         }
-        public static void SetReplaceVFX( VFXSelectResult replaceResult, bool addToRecent ) {
+        public static void SetReplaceVFX( SelectResult replaceResult, bool addToRecent ) {
             if( addToRecent ) Configuration.AddRecent( replaceResult );
             DocumentManager.UpdateReplace( replaceResult );
         }
 
         public static void RemoveReplaceVFX() {
-            DocumentManager.UpdateReplace( VFXSelectResult.None() );
+            DocumentManager.UpdateReplace( SelectResult.None() );
         }
 
         public static void LoadCurrentVFX( AVFXBase avfx ) {

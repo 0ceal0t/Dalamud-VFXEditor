@@ -1,16 +1,15 @@
-using Dalamud.Configuration;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 
 using ImGuiFileDialog;
+using ImGuiNET;
 using Dalamud.Logging;
+using Dalamud.Configuration;
 
 using VFXEditor.UI;
-using VFXSelect.UI;
-using ImGuiNET;
-using System.Numerics;
+using VFXSelect;
 
 namespace VFXEditor {
     [Serializable]
@@ -29,7 +28,7 @@ namespace VFXEditor {
             "pluginConfigs",
             "VFXEditor",
         } );
-        public List<VFXSelectResult> RecentSelects = new();
+        public List<SelectResult> RecentSelects = new();
         public bool FilepickerImagePreview = true;
 
         public Configuration() : base("Settings") {
@@ -43,7 +42,7 @@ namespace VFXEditor {
             PluginLog.Log( "Write location: " + WriteLocation );
         }
 
-        public void AddRecent( VFXSelectResult result ) {
+        public void AddRecent( SelectResult result ) {
             if( RecentSelects.Contains( result ) ) {
                 RecentSelects.Remove( result ); // want to move it to the top
             }

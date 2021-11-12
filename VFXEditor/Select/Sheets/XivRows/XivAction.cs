@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXSelect.Data.Rows {
+namespace VFXSelect.Select.Rows {
     public class XivAction : XivActionBase {
         public XivAction( Lumina.Excel.GeneratedSheets.Action action, bool justSelf = false ) {
             Name = action.Name.ToString();

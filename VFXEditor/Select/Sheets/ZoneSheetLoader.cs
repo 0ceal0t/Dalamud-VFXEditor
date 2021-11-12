@@ -2,9 +2,9 @@ using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Linq;
-using VFXSelect.Data.Rows;
+using VFXSelect.Select.Rows;
 
-namespace VFXSelect.Data.Sheets {
+namespace VFXSelect.Select.Sheets {
     public class ZoneSheetLoader : SheetLoader<XivZone, XivZoneSelected> {
         public override void OnLoad() {
             var sheet = SheetManager.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );

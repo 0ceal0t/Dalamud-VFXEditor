@@ -16,14 +16,16 @@ using VFXEditor.Texture;
 using VFXEditor.Tmb;
 using VFXEditor.Tracker;
 using VFXEditor.UI;
-using VFXSelect.UI;
+
+using VFXSelect;
+using VFXSelect.VFX;
 
 namespace VFXEditor {
     public partial class Plugin {
         private bool Visible = false;
 
-        private VFXSelectDialog SelectUI;
-        private VFXSelectDialog PreviewUI;
+        private VFXSelectDialog VfxSourceSelect;
+        private VFXSelectDialog VfxReplaceSelect;
 
         private ToolsDialog ToolsUI;
         private TexToolsDialog TexToolsUI;
@@ -33,9 +35,11 @@ namespace VFXEditor {
         private bool IsLoading = false;
 
         public void InitUI() {
-            SelectUI = new VFXSelectDialog(
+            VfxSourceSelect = new VFXSelectDialog(
                 "File Select [SOURCE]",
                 Configuration.RecentSelects,
+                true,
+                ( SelectResult result ) => SetSourceVFX(result),
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -43,9 +47,11 @@ namespace VFXEditor {
                 spawnOnSelf: ( string path ) => SpawnOnSelf( path ),
                 spawnOnTarget: ( string path ) => SpawnOnTarget( path )
             );
-            PreviewUI = new VFXSelectDialog(
+            VfxReplaceSelect = new VFXSelectDialog(
                 "File Select [TARGET]",
                 Configuration.RecentSelects,
+                false,
+                ( SelectResult result ) => SetReplaceVFX( result ),
                 showSpawn: true,
                 spawnVfxExists: () => SpawnExists(),
                 removeSpawnVfx: () => RemoveSpawnVfx(),
@@ -53,9 +59,6 @@ namespace VFXEditor {
                 spawnOnSelf: ( string path ) => SpawnOnSelf( path ),
                 spawnOnTarget: ( string path ) => SpawnOnTarget( path )
             );
-
-            SelectUI.OnSelect += SetSourceVFX;
-            PreviewUI.OnSelect += SetReplaceVFX;
 
             ToolsUI = new ToolsDialog();
             TexToolsUI = new TexToolsDialog();
@@ -73,8 +76,9 @@ namespace VFXEditor {
             DrawMainInterface();
             VfxTracker.Draw();
             if( !IsLoading ) {
-                SelectUI.Draw();
-                PreviewUI.Draw();
+                VfxSourceSelect.Draw();
+                VfxReplaceSelect.Draw();
+
                 TexToolsUI.Draw();
                 PenumbraUI.Draw();
                 Configuration.Draw();
@@ -218,7 +222,7 @@ namespace VFXEditor {
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
-                SelectUI.Show();
+                VfxSourceSelect.Show();
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
@@ -235,7 +239,7 @@ namespace VFXEditor {
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect", new Vector2( 30, 23 ) ) ) {
-                PreviewUI.Show( showLocal: false );
+                VfxReplaceSelect.Show();
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
@@ -321,9 +325,9 @@ namespace VFXEditor {
         }
 
         private void OpenTemplate( string path ) {
-            var newResult = new VFXSelectResult {
+            var newResult = new SelectResult {
                 DisplayString = "[NEW]",
-                Type = VFXSelectType.Local,
+                Type = SelectResultType.Local,
                 Path = Path.Combine( TemplateLocation, "Files", path )
             };
             SetSourceVFX( newResult );

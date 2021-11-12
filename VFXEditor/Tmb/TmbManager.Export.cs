@@ -14,7 +14,7 @@ namespace VFXEditor.Tmb {
 
         public void PenumbraExport( string modFolder, bool exportTmb ) {
             if( !exportTmb ) return;
-            var path = TmbReplacePath;
+            var path = TmbReplace.Path;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
 
             var data = CurrentFile.ToBytes();
@@ -25,7 +25,7 @@ namespace VFXEditor.Tmb {
 
         public void TextoolsExport( BinaryWriter writer, bool exportTmb, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
             if( !exportTmb ) return;
-            var path = TmbReplacePath;
+            var path = TmbReplace.Path;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
 
             var modData = TextoolsHelper.CreateType2Data( CurrentFile.ToBytes() );
@@ -43,15 +43,14 @@ namespace VFXEditor.Tmb {
             var tmbId = 0;
             List<WorkspaceMetaTmb> tmbMeta = new();
 
-            if ( !string.IsNullOrEmpty(TmbReplacePath) && CurrentFile != null ) {
+            if ( CurrentFile != null ) {
                 var newPath = $"TMB_{tmbId++}.tmb";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
                 tmbMeta.Add( new WorkspaceMetaTmb() {
                     RelativeLocation = newPath,
-                    ReplacePath = TmbReplacePath,
-                    //Replace = null,
-                    //Source = null
+                    Replace = TmbReplace,
+                    Source = TmbSource
                 } );
             }
             

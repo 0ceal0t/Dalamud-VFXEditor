@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXSelect.Data.Rows {
+namespace VFXSelect.Select.Rows {
     public class XivStatus {
         public bool LoopVFX1Exists = false;
         public bool LoopVFX2Exists = false;

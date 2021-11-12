@@ -1,6 +1,6 @@
 using Dalamud.Data;
 using Dalamud.Plugin;
-using VFXSelect.Data.Sheets;
+using VFXSelect.Select.Sheets;
 
 namespace VFXSelect {
     public class SheetManager {
@@ -22,6 +22,7 @@ namespace VFXSelect {
         public static MountSheeetLoader Mounts { get; private set; }
         public static HousingSheetLoader Housing { get; private set; }
         public static CommonLoader Misc { get; private set; }
+        public static TmbSheetLoader TmbSheetLoader { get; private set; }
 
         public static void Initialize( string npcCsv, string monsterJson, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
@@ -41,6 +42,7 @@ namespace VFXSelect {
             Mounts = new MountSheeetLoader();
             Housing = new HousingSheetLoader();
             Misc = new CommonLoader();
+            TmbSheetLoader = new TmbSheetLoader();
         }
     }
 }

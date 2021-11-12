@@ -2,9 +2,9 @@ using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Linq;
-using VFXSelect.Data.Rows;
+using VFXSelect.Select.Rows;
 
-namespace VFXSelect.Data.Sheets {
+namespace VFXSelect.Select.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
         public override void OnLoad() {
             var _sheet = SheetManager.DataManager.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );

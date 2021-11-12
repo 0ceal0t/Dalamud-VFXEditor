@@ -373,20 +373,6 @@ namespace VFXEditor.Interop {
             return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
         }
 
-        public unsafe void ReloadPath( string gamePath, string localPath ) {
-            if (!string.IsNullOrEmpty(gamePath)) {
-                var gameResource = GetResource( gamePath, true );
-                if (gameResource != IntPtr.Zero)
-                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
-            }
-
-            if (!string.IsNullOrEmpty(localPath)) {
-                var gameResource = GetResource( gamePath, false );
-                if( gameResource != IntPtr.Zero )
-                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
-            }
-        }
-
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
             if( Plugin.DocumentManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
@@ -402,6 +388,23 @@ namespace VFXEditor.Interop {
                 return true;
             }
             return false;
+        }
+
+        public unsafe void ReloadPath( string gamePath, string localPath ) {
+            if (!string.IsNullOrEmpty(gamePath)) {
+                var gameResource = GetResource( gamePath, true );
+                if (gameResource != IntPtr.Zero)
+                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+            }
+            else {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(localPath)) {
+                var gameResource = GetResource( gamePath, false );
+                if( gameResource != IntPtr.Zero )
+                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+            }
         }
 
         private unsafe IntPtr GetResource( string path, bool original ) {

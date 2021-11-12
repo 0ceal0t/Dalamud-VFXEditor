@@ -92,11 +92,13 @@ namespace VFXEditor
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
 
-            TextureManager = new TextureManager();
             TextureManager.Setup();
+            TextureManager = new TextureManager();
+
+            TmbManager.Setup();
+            TmbManager = new TmbManager();
 
             ResourceLoader = new ResourceLoader();
-            TmbManager = new TmbManager();
             DirectXManager = new DirectXManager();
             DocumentManager = new DocumentManager();
             VfxTracker = new VfxTracker();

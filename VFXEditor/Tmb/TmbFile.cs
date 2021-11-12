@@ -1,12 +1,15 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 using VFXEditor.Helper;
+using VFXEditor.Tmb.Item;
 
 namespace VFXEditor.Tmb {
     public class TmbFile {
@@ -16,9 +19,12 @@ namespace VFXEditor.Tmb {
         private short TMDH_Unk3 = 3;
         private TmbActor SelectedActor = null;
 
-        public bool EntriesOk = true;
+        public bool Verified = true;
 
         public TmbFile( BinaryReader reader ) {
+            var original = ReadAllBytes( reader );
+            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+
             reader.ReadInt32(); // TMLB
             reader.ReadInt32(); // 0x0C
             reader.ReadInt32(); // entry count (not including TMBL)
@@ -39,7 +45,16 @@ namespace VFXEditor.Tmb {
                 Actors.Add( new TmbActor( reader ) );
             }
             foreach( var actor in Actors ) actor.ReadTracks( reader );
-            foreach( var actor in Actors ) actor.ReadEntries( reader, ref EntriesOk );
+            foreach( var actor in Actors ) actor.ReadEntries( reader, ref Verified );
+
+            // Check if output matches the original
+            var output = ToBytes();
+            for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
+                if( output[i] != original[i] ) {
+                    PluginLog.Log( $"Warning: files do not match at {i}" );
+                    break;
+                }
+            }
         }
 
         public void Draw( string id ) {
@@ -94,7 +109,11 @@ namespace VFXEditor.Tmb {
             var headerSize = 0x0C + 0x10 + 0x10 + Actors.Count * 0x1C;
             var entriesSize = Actors.Select( x => x.EntrySize ).Sum();
             var extraSize = Actors.Select( x => x.ExtraSize ).Sum();
-            var stringSize = Actors.Select( x => x.StringSize ).Sum();
+
+            var stringList = new List<string>();
+            Actors.ForEach( x => x.PopulateStringList( stringList ) );
+            var stringSize = stringList.Select( x => x.Length + 1 ).Sum();
+
             var entryCount = Actors.Count + Actors.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
             var timelineSize = 2 * entryCount;
 
@@ -137,7 +156,18 @@ namespace VFXEditor.Tmb {
                 timelineWriter.Write( ( short )( 2 + i ) );
             }
 
-            // entries, extra, string
+            var stringData = new byte[stringSize];
+            using MemoryStream stringMs = new( stringData );
+            using BinaryWriter stringWriter = new( stringMs );
+            stringWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
+            Dictionary<string, int> stringPositions = new();
+            var currentStringPos = 0;
+            foreach(var item in stringList) {
+                stringPositions[item] = currentStringPos;
+                WriteString( stringWriter, item, true );
+                currentStringPos += item.Length + 1;
+            }
+
             var entriesData = new byte[entriesSize];
             using MemoryStream entriesMs = new( entriesData );
             using BinaryWriter entriesWriter = new( entriesMs );
@@ -148,11 +178,6 @@ namespace VFXEditor.Tmb {
             using BinaryWriter extraWriter = new( extraMs );
             extraWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            var stringData = new byte[stringSize];
-            using MemoryStream stringMs = new( stringData );
-            using BinaryWriter stringWriter = new( stringMs );
-            stringWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
-
             short id = 2;
             foreach( var tmac in Actors ) tmac.CalculateId( ref id );
             foreach( var tmac in Actors ) tmac.CalculateTracksId( ref id );
@@ -160,7 +185,7 @@ namespace VFXEditor.Tmb {
 
             foreach( var tmac in Actors ) tmac.Write( headerWriter, timelinePos );
             foreach( var tmac in Actors ) tmac.WriteTracks( entriesWriter, entriesPos, timelinePos );
-            foreach( var tmac in Actors ) tmac.WriteEntries( entriesWriter, entriesPos, extraWriter, extraPos, stringWriter, stringPos, timelinePos );
+            foreach( var tmac in Actors ) tmac.WriteEntries( entriesWriter, entriesPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
 
             var output = new byte[totalSize];
             Buffer.BlockCopy( headerData, 0, output, 0, headerData.Length );
@@ -194,6 +219,17 @@ namespace VFXEditor.Tmb {
                 return true;
             }
             return false;
+        }
+
+        public static byte[] ReadAllBytes( BinaryReader reader ) {
+            const int bufferSize = 4096;
+            using var ms = new MemoryStream();
+            var buffer = new byte[bufferSize];
+            int count;
+            while( ( count = reader.Read( buffer, 0, buffer.Length ) ) != 0 )
+                ms.Write( buffer, 0, count );
+            return ms.ToArray();
+
         }
     }
 }

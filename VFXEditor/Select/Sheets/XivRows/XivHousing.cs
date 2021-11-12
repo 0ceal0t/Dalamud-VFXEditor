@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXSelect.Data.Rows {
+namespace VFXSelect.Select.Rows {
     public class XivHousing {
         public string Name;
         public string sgbPath;

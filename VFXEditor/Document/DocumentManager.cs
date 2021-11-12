@@ -8,15 +8,15 @@ using VFXEditor.UI;
 using VFXEditor.UI.Vfx;
 using VFXEditor.Helper;
 
-using VFXSelect.UI;
+using VFXSelect;
 
 namespace VFXEditor.Document {
     public class ReplaceDoc {
         public UIMain Main = null;
         public string WriteLocation;
 
-        public VFXSelectResult Source;
-        public VFXSelectResult Replace;
+        public SelectResult Source;
+        public SelectResult Replace;
 
         public void SetAVFX(AVFXBase avfx) {
             Dispose();
@@ -45,8 +45,8 @@ namespace VFXEditor.Document {
         public ReplaceDoc CreateNewDocument() {
             var doc = new ReplaceDoc {
                 WriteLocation = Path.Combine( Plugin.Configuration.WriteLocation, "VFXtemp" + ( DOC_ID++ ) + ".avfx" ),
-                Source = VFXSelectResult.None(),
-                Replace = VFXSelectResult.None()
+                Source = SelectResult.None(),
+                Replace = SelectResult.None()
             };
 
             Documents.Add( doc );
@@ -54,7 +54,7 @@ namespace VFXEditor.Document {
             return doc;
         }
 
-        public void ImportLocalDocument(string localPath, VFXSelectResult source, VFXSelectResult replace, Dictionary<string, string> renaming) {
+        public void ImportLocalDocument(string localPath, SelectResult source, SelectResult replace, Dictionary<string, string> renaming) {
             var doc = new ReplaceDoc {
                 Source = source,
                 Replace = replace,
@@ -78,11 +78,11 @@ namespace VFXEditor.Document {
             }
         }
 
-        public void UpdateSource( VFXSelectResult select ) {
+        public void UpdateSource( SelectResult select ) {
             ActiveDocument.Source = select;
         }
 
-        public void UpdateReplace(VFXSelectResult select ) {
+        public void UpdateReplace(SelectResult select ) {
             ActiveDocument.Replace = select;
             RebuildMap();
         }

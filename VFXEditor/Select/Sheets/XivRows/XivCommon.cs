@@ -1,4 +1,4 @@
-namespace VFXSelect.Data.Rows {
+namespace VFXSelect.Select.Rows {
     public class XivCommon {
         public string Name;
         public ushort Icon;
