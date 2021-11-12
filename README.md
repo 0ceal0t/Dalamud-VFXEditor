@@ -17,7 +17,10 @@ Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 2. Select a "Preview On" VFX (the effect to temporarily overwrite, can be the same as the source)
 3. Make any modifications you want, then press "Update"
 
+## Help
 Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting) or a [basic guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide)
+
+If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues) or ask in the [QuickLauncher discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
 
 ## Building
 1. Build the solution
@@ -43,13 +46,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] TMB editor
-- [ ] SCD editor
-- [ ] Releasing VFX handles
-
+- [ ] .scd editor
+- [ ] .pap editor
+- [ ] .mdl import + export
 - [ ] Menu shortcuts + keys move up / down
-- [ ] .MDL import + export
-- [ ] Better enable/disable checkboxes
 - [ ] Bind point ID research
 - [ ] Better PNG import support
 - [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
@@ -67,6 +67,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~TMB editor~~
 - [x] ~~Copy+Paste parameters (color keys, etc.3)~~
 - [x] ~~Ground-targeted AOEs (might need to do it manually?)~~
 - [x] ~~Duplicate nodes~~

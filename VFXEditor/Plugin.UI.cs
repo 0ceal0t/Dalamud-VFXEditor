@@ -70,6 +70,8 @@ namespace VFXEditor {
         }
 
         public void Draw() {
+            TmbManager.Draw();
+
             if( !Visible ) return;
 
             CopyManager.PreDraw();
@@ -85,7 +87,6 @@ namespace VFXEditor {
                 ToolsUI.Draw();
                 DocumentManager.Draw();
                 TextureManager.Draw();
-                TmbManager.Draw();
             }
         }
 

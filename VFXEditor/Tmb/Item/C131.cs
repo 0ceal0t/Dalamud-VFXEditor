@@ -8,7 +8,7 @@ namespace VFXEditor.Tmb.Item {
         private int Unk_2 = 1;
         private int Unk_3 = 0;
 
-        public static readonly string Name = "Movement Cancel (C131)";
+        public static readonly string Name = "Animation Cancelled by Movement (C131)";
 
         // Animation movement cancel
         public C131() { }

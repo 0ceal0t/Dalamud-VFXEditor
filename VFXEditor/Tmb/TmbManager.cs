@@ -50,8 +50,8 @@ namespace VFXEditor.Tmb {
         private TmbFile CurrentFile;
         private VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
 
-        public TmbManager() : base("Tmb Tester") {
-            Size = new Vector2( 600, 400 );
+        public TmbManager() : base("Tmb Editor") {
+            Size = new Vector2( 800, 1000 );
         }
 
         public void SetSource( SelectResult result ) {
