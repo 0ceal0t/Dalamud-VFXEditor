@@ -52,7 +52,7 @@ namespace VFXEditor.Textools {
         public bool ExportTex = true;
         public bool ExportTmb = true;
 
-        public override void OnDraw() {
+        public override void DrawBody() {
             var id = "##Textools";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 

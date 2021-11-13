@@ -4,7 +4,7 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {
     public partial class TextureManager {
-        public override void OnDraw() {
+        public override void DrawBody() {
             var id = "##ImportTex";
 
             if( PathToTextureReplace.IsEmpty ) {

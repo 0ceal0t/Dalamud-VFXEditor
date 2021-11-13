@@ -5,7 +5,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.External;
+using VFXEditor.Helper;
 
 namespace VFXEditor.UI.Vfx
 {
@@ -142,7 +142,7 @@ namespace VFXEditor.UI.Vfx
             {
                 if( !ok ) return;
                 try {
-                    if( GLTF.ImportModel( res, out var v_s, out var i_s ) ) {
+                    if( GltfHelper.ImportModel( res, out var v_s, out var i_s ) ) {
                         Model.Vertices = v_s;
                         Model.Indexes = i_s;
                         Refresh = true;
@@ -158,7 +158,7 @@ namespace VFXEditor.UI.Vfx
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) =>
             {
                 if( !ok ) return;
-                GLTF.ExportModel( Model, res );
+                GltfHelper.ExportModel( Model, res );
             } );
         }
 

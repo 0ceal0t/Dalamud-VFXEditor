@@ -36,7 +36,7 @@ namespace VFXEditor.Penumbra {
         public bool ExportTex = true;
         public bool ExportTmb = true;
 
-        public override void OnDraw() {
+        public override void DrawBody() {
             var id = "##Penumbra";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 

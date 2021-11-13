@@ -36,8 +36,36 @@ namespace VFXEditor.Tmb.Item {
             { "C093", new EntryType( C093.Name, () => new C093(), ( BinaryReader br ) => new C093( br ) ) },
         };
 
-        public short Id { get; private set; } // temp
-        private readonly int Entry_Count;
+        public static void ParseEntries( BinaryReader reader, List<TmbItem> entries, List<TmbTrack> tracks, int entryCount, ref bool entriesOk ) {
+            for( var i = 0; i < entryCount; i++ ) {
+                var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
+                var size = reader.ReadInt32(); // size
+
+                if (name == "TMTR") {
+                    tracks.Add( new TmbTrack( reader ) );
+                    continue;
+                }
+
+                var newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
+
+                if( newEntry == null ) {
+                    PluginLog.Log( $"Unknown Entry {name}" );
+                    reader.ReadBytes( size - 8 ); // skip it
+                    entries.Add( null );
+                    entriesOk = false;
+                }
+                else {
+                    entries.Add( newEntry );
+                }
+            }
+        }
+
+        // ==================================
+
+        public short Id { get; private set; }
+
+        private readonly int EntryCount_Temp;
+        private readonly short LastId_Temp;
 
         private short Time = 0;
         private readonly List<TmbItem> Entries = new();
@@ -49,42 +77,22 @@ namespace VFXEditor.Tmb.Item {
 
         public TmbTrack() { }
         public TmbTrack( BinaryReader reader ) {
-            var startPos = reader.BaseStream.Position;
+            var startPos = reader.BaseStream.Position; // [TMTR] + 8
 
-            reader.ReadInt32(); // TMTR
-            reader.ReadInt32(); // 0x18
-            reader.ReadInt16(); // id
+            Id = reader.ReadInt16(); // id
             Time = reader.ReadInt16(); // ?
             var offset = reader.ReadInt32(); // before [ITEM] + offset = spot on timeline
-            Entry_Count = reader.ReadInt32();
+            EntryCount_Temp = reader.ReadInt32();
             Unk_3 = reader.ReadInt32(); // 0
 
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( Entry_Count - 1 ), SeekOrigin.Begin );
-            reader.ReadInt16();
+            reader.BaseStream.Seek( startPos + offset + 2 * ( EntryCount_Temp - 1 ), SeekOrigin.Begin );
+            LastId_Temp = reader.ReadInt16();
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void ReadEntries( BinaryReader reader, ref bool entriesOk ) {
-            for( var i = 0; i < Entry_Count; i++ ) {
-                var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
-                var size = reader.ReadInt32(); // size
-
-                var newEntry = TypeDict.TryGetValue( name, out var entryType ) ? entryType.ReadItem( reader ) : null;
-
-                if( newEntry == null ) {
-                    PluginLog.Log( $"Unknown Entry {name}" );
-                    reader.ReadBytes( size - 8 ); // skip it
-                    entriesOk = false;
-                }
-                else {
-                    Entries.Add( newEntry );
-                }
-            }
-        }
-
-        public void CalculateId( ref short id ) {
-            Id = id++;
+        public void PickEntries( List<TmbItem> entries, int startId ) {
+            Entries.AddRange(entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where(x => x != null));
         }
 
         public void Write( BinaryWriter entryWriter, int entryPos, int timelinePos ) {
@@ -103,16 +111,20 @@ namespace VFXEditor.Tmb.Item {
             entryWriter.Write( Unk_3 );
         }
 
+        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+            foreach( var entry in Entries ) entry.Write( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
+        }
+
+        public void CalculateId( ref short id ) {
+            Id = id++;
+        }
+
         public void CalculateEntriesId( ref short id ) {
             foreach( var entry in Entries ) entry.CalculateId( ref id );
         }
 
         public void PopulateStringList( List<string> stringList ) {
             foreach( var entry in Entries ) entry.PopulateStringList( stringList );
-        }
-
-        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
-            foreach( var entry in Entries ) entry.Write( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
         }
 
         public void Draw( string id ) {

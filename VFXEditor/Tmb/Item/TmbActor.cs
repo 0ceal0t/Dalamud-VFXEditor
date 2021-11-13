@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 
@@ -11,8 +12,10 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Item {
     public class TmbActor {
-        public short Id { get; private set; } // temp
-        private readonly int TrackCount;
+        public short Id { get; private set; }
+
+        private readonly int TrackCount_Temp;
+        private readonly short LastId_Temp;
 
         private readonly List<TmbTrack> Tracks = new();
         private short Time = 0;
@@ -36,26 +39,28 @@ namespace VFXEditor.Tmb.Item {
             Unk_2 = reader.ReadInt32(); // some count ?
             Unk_3 = reader.ReadInt32(); // some count ?
             var offset = reader.ReadInt32(); // before [TMAC] + offset + 8 = spot on timeline
-            TrackCount = reader.ReadInt32(); // number of TMTR
+            TrackCount_Temp = reader.ReadInt32(); // number of TMTR
 
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( TrackCount - 1 ), SeekOrigin.Begin );
-            reader.ReadInt16();
+            reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( TrackCount_Temp - 1 ), SeekOrigin.Begin );
+            LastId_Temp = reader.ReadInt16();
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void ReadTracks( BinaryReader reader ) {
-            for( var i = 0; i < TrackCount; i++ ) {
-                Tracks.Add( new TmbTrack( reader ) );
-            }
-        }
-
-        public void ReadEntries( BinaryReader reader, ref bool entriesOk ) {
-            foreach( var track in Tracks ) track.ReadEntries( reader, ref entriesOk );
+        public void PickTracks( List<TmbTrack> tracks, int startId ) {
+            Tracks.AddRange( tracks.GetRange( LastId_Temp - startId - TrackCount_Temp + 1, TrackCount_Temp ).Where( x => x != null ) );
         }
 
         public void CalculateId( ref short id ) {
             Id = id++;
+        }
+
+        public void CalculateTracksId( ref short id ) {
+            foreach( var track in Tracks ) track.CalculateId( ref id );
+        }
+
+        public void CalculateEntriesId( ref short id ) {
+            foreach( var track in Tracks ) track.CalculateEntriesId( ref id );
         }
 
         public void Write( BinaryWriter headerWriter, int timelinePos ) {
@@ -75,24 +80,16 @@ namespace VFXEditor.Tmb.Item {
             headerWriter.Write( Tracks.Count );
         }
 
-        public void CalculateTracksId( ref short id ) {
-            foreach( var track in Tracks ) track.CalculateId( ref id );
+        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+            foreach( var track in Tracks ) track.WriteEntries( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
         }
 
         public void WriteTracks( BinaryWriter entryWriter, int entryPos, int timelinePos ) {
             foreach( var track in Tracks ) track.Write( entryWriter, entryPos, timelinePos );
         }
 
-        public void CalculateEntriesId( ref short id ) {
-            foreach( var track in Tracks ) track.CalculateEntriesId( ref id );
-        }
-
         public void PopulateStringList( List<string> stringList) {
             foreach( var track in Tracks ) track.PopulateStringList( stringList );
-        }
-
-        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
-            foreach( var track in Tracks ) track.WriteEntries( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
         }
 
         public void Draw( string id ) {

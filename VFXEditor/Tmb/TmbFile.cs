@@ -27,7 +27,7 @@ namespace VFXEditor.Tmb {
 
             reader.ReadInt32(); // TMLB
             reader.ReadInt32(); // 0x0C
-            reader.ReadInt32(); // entry count (not including TMBL)
+            var numEntries = reader.ReadInt32(); // entry count (not including TMLB)
 
             reader.ReadInt32(); // TMDH
             reader.ReadInt32(); // 0x10
@@ -41,17 +41,23 @@ namespace VFXEditor.Tmb {
             reader.ReadInt32(); // offset from [TMAL] + 8 to timeline
             var numActors = reader.ReadInt32(); // Number of TMAC
 
-            for( var i = 0; i < numActors; i++ ) {
+            // ============ PARSE ================
+            for( var i = 0; i < numActors; i++ ) { // parse actors
                 Actors.Add( new TmbActor( reader ) );
             }
-            foreach( var actor in Actors ) actor.ReadTracks( reader );
-            foreach( var actor in Actors ) actor.ReadEntries( reader, ref Verified );
+            var tracks = new List<TmbTrack>();
+            var entries = new List<TmbItem>();
+            TmbTrack.ParseEntries( reader, entries, tracks, numEntries - 2 - Actors.Count, ref Verified );
+            // ===================================
+
+            foreach( var track in tracks ) track.PickEntries( entries, 2 + Actors.Count + tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
+            foreach( var actor in Actors ) actor.PickTracks( tracks, 2 + Actors.Count );
 
             // Check if output matches the original
             var output = ToBytes();
             for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                 if( output[i] != original[i] ) {
-                    PluginLog.Log( $"Warning: files do not match at {i}" );
+                    PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
                     break;
                 }
             }

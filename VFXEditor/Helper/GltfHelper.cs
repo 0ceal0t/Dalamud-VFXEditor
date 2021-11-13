@@ -1,6 +1,5 @@
 using AVFXLib.Models;
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
@@ -8,8 +7,8 @@ using SharpGLTF.Scenes;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace VFXEditor.External {
-    public static class GLTF {
+namespace VFXEditor.Helper {
+    public static class GltfHelper {
         public static void ExportModel( AVFXModel model, string path ) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
@@ -59,7 +58,7 @@ namespace VFXEditor.External {
             tangent *= 128;
             ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
 
-            var normalAdjusted = Vector3.Normalize( new Vector3(normal.X, normal.Y, normal.Z) ) * 127f;
+            var normalAdjusted = Vector3.Normalize( new Vector3( normal.X, normal.Y, normal.Z ) ) * 127f;
             var tangentAdjusted = Vector3.Normalize( new Vector3( tangent.X, tangent.Y, tangent.Z ) ) * 127f;
 
             ret.Normal = new int[] { ( int )normalAdjusted.X, ( int )normalAdjusted.Y, ( int )normalAdjusted.Z, -1 };

@@ -15,7 +15,7 @@ namespace VFXEditor.UI {
             Size = new Vector2( 300, 150 );
         }
 
-        public override void OnDraw() {
+        public override void DrawBody() {
             // ======= AVFX =========
             ImGui.Text( "Extract a raw .avfx file" );
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );

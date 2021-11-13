@@ -37,6 +37,7 @@ namespace VFXEditor.Document {
         private List<ReplaceDoc> Documents = new();
         private Dictionary<string, string> GamePathToLocalPath = new();
         private int DOC_ID = 0;
+        private bool HasDefault = true;
 
         public DocumentManager() : base("Documents") {
             CreateNewDocument();
@@ -72,9 +73,9 @@ namespace VFXEditor.Document {
 
             Documents.Add( doc );
             RebuildMap();
-
-            if (Documents.Count > 1) {
-                RemoveDocument( Documents[0] ); // remove the default document
+            if (HasDefault && Documents.Count > 1) {
+                HasDefault = false;
+                RemoveDocument( Documents[0] );
             }
         }
 

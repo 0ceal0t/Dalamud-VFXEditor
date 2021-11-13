@@ -135,7 +135,6 @@ namespace VFXEditor
             TextureManager.Dispose();
             DirectXManager.Dispose();
             DocumentManager.Dispose();
-            TmbManager.Dispose();
 
             FileDialogManager.Dispose();
             AvfxHelper.Dispose();

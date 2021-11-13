@@ -4,26 +4,30 @@ using ImGuiNET;
 namespace VFXEditor.UI {
 
     public abstract class GenericDialog {
-        public bool Visible = false;
-        public string DialogName;
-        public Vector2 Size = new( 600, 400 );
+        protected bool Visible = false;
+        protected string DialogName;
+        protected Vector2 Size = new( 600, 400 );
+        protected bool MenuBar = false;
 
-        public GenericDialog( string name ) {
+        public GenericDialog( string name, bool menuBar = false ) {
             DialogName = name;
-        }
+            MenuBar = menuBar;
+         }
+
         public void Show() {
             Visible = true;
         }
+
         public void Draw() {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( DialogName, ref Visible ) ) {
-                OnDraw();
+            if( ImGui.Begin( DialogName, ref Visible, MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) ) {
+                DrawBody();
             }
             ImGui.End();
         }
 
-        public abstract void OnDraw();
+        public abstract void DrawBody();
     }
 }

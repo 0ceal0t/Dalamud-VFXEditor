@@ -122,7 +122,7 @@ namespace VFXEditor {
             if( meta.Tmb != null ) {
                 foreach(var tmb in meta.Tmb ) {
                     var fullPath = Path.Combine( tmbRootPath, tmb.RelativeLocation );
-                    TmbManager.ImportLocalTmb( fullPath, tmb.Source, tmb.Replace );
+                    TmbManager.ImportWorkspaceFile( fullPath, tmb.Source, tmb.Replace );
                 }
             }
 

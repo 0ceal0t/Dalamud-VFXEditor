@@ -58,7 +58,7 @@ namespace VFXEditor {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
 
-        public override void OnDraw() {
+        public override void DrawBody() {
             ImGui.Text( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) {
                 Save();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VFXEditor.Tmb.Item {
     public abstract class TmbItem {
-        public short Id { get; protected set; } // temp
+        public short Id { get; protected set; }
 
         public abstract int GetSize();
         public abstract int GetExtraSize();
@@ -24,12 +24,12 @@ namespace VFXEditor.Tmb.Item {
 
         public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos );
 
-        public void AddString( string newItem, List<string> stringList ) {
+        public static void AddString( string newItem, List<string> stringList ) {
             if( stringList.Contains( newItem ) ) return;
             stringList.Add( newItem );
         }
 
-        public List<List<float>> ReadPairs(int number, BinaryReader reader, long startPos) {
+        public static List<List<float>> ReadPairs(int number, BinaryReader reader, long startPos) {
             var ret = new List<List<float>>();
             for( var i = 0; i < number; i++ ) {
                 var subRet = new List<float>();
@@ -49,7 +49,7 @@ namespace VFXEditor.Tmb.Item {
             return ret;
         }
 
-        public void WritePairs( BinaryWriter entryWriter, BinaryWriter extraWriter, int extraPos, int startPos, List<List<float>> pairs) {
+        public static void WritePairs( BinaryWriter entryWriter, BinaryWriter extraWriter, int extraPos, int startPos, List<List<float>> pairs) {
             foreach( var entry in pairs ) {
                 var extraEndPos = ( int )extraWriter.BaseStream.Position + extraPos;
                 var extraOffset = extraEndPos - startPos - 8;
@@ -64,7 +64,7 @@ namespace VFXEditor.Tmb.Item {
             }
         }
 
-        public void DrawPairs(string id, List<List<float>> Pairs) {
+        public static void DrawPairs(string id, List<List<float>> Pairs) {
             for( var i = 0; i < Pairs.Count; i++ ) {
                 var entries = Pairs[i];
                 for( var j = 0; j < entries.Count; j++ ) {

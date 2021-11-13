@@ -6,7 +6,7 @@ namespace VFXEditor.Document {
     public partial class DocumentManager {
         private ReplaceDoc SelectedDocument = null;
 
-        public override void OnDraw() {
+        public override void DrawBody() {
             var id = "##Doc";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
