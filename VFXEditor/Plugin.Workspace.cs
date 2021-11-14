@@ -98,7 +98,6 @@ namespace VFXEditor {
             IsLoading = true;
 
             ResetTextureManager();
-
             var texRootPath = Path.Combine( loadLocation, "Tex" );
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
@@ -108,8 +107,7 @@ namespace VFXEditor {
             }
 
             ResetAvfxManager();
-
-            var vfxRootPath = Path.Combine( loadLocation, "VFX" );
+            var vfxRootPath = Path.Combine( loadLocation, AvfxManager.PenumbraPath );
             if( meta.Docs != null ) {
                 foreach( var doc in meta.Docs ) {
                     var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
@@ -118,12 +116,10 @@ namespace VFXEditor {
             }
 
             ResetTmbManager();
-
-            var tmbRootPath = Path.Combine( loadLocation, "Tmb" );
+            var tmbRootPath = Path.Combine( loadLocation, TmbManager.PenumbraPath );
             if( meta.Tmb != null ) {
                 foreach(var tmb in meta.Tmb ) {
-                    var fullPath = Path.Combine( tmbRootPath, tmb.RelativeLocation );
-                    TmbManager.ImportWorkspaceFile( fullPath, tmb );
+                    TmbManager.ImportWorkspaceFile( Path.Combine( tmbRootPath, tmb.RelativeLocation ), tmb );
                 }
             }
 

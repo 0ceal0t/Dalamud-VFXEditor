@@ -138,12 +138,19 @@ namespace VFXEditor
             ResourceLoader.Dispose();
             ResourceLoader = null;
 
-            RemoveSpawnVfx();
-
             TmbManager.Dispose();
+            TmbManager = null;
+
             AvfxManager.Dispose();
+            AvfxManager = null;
+
             TextureManager.Dispose();
+            TextureManager = null;
+
             DirectXManager.Dispose();
+            DirectXManager = null;
+
+            RemoveSpawnVfx();
 
             FileDialogManager.Dispose();
             AvfxHelper.Dispose();

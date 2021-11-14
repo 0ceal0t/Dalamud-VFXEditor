@@ -70,7 +70,7 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = timelinePos + ( lastId - 2 ) * 2;
             var offset = endPos - startPos - 8 - 2 * ( Tracks.Count - 1 );
 
-            TmbFile.WriteString( headerWriter, "TMAC" );
+            FileHelper.WriteString( headerWriter, "TMAC" );
             headerWriter.Write( 0x1C );
             headerWriter.Write( Id );
             headerWriter.Write( Time );
@@ -93,7 +93,7 @@ namespace VFXEditor.Tmb.Tmb {
         }
 
         public void Draw( string id ) {
-            TmbFile.ShortInput( $"Time{id}", ref Time );
+            FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
 

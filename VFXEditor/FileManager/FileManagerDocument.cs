@@ -111,7 +111,7 @@ namespace VFXEditor.FileManager {
 
             // ======= SEARCH BARS =========
             var sourceString = Source.DisplayString;
-            var previewString = Source.DisplayString;
+            var previewString = Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 140 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 

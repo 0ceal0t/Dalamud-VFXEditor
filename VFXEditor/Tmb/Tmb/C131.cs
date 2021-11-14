@@ -1,6 +1,7 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C131 : TmbItem {
@@ -23,7 +24,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetExtraSize() => 0;
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
-            TmbFile.WriteString( entryWriter, "C131" );
+            FileHelper.WriteString( entryWriter, "C131" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );
             entryWriter.Write( Time);
@@ -34,7 +35,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override string GetName() => Name;
 
         public override void Draw( string id ) {
-            TmbFile.ShortInput( $"Time{id}", ref Time );
+            FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
         }

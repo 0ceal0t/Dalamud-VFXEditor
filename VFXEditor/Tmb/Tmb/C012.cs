@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C012 : TmbItem {
@@ -19,12 +20,13 @@ namespace VFXEditor.Tmb.Tmb {
         public static readonly string Name = "VFX (C012)";
 
         private static List<List<float>> GetDefault() {
-            var ret = new List<List<float>>();
-            ret.Add( new List<float>( new[] { 1f, 1f, 1f } ) );
-            ret.Add( new List<float>( new[] { 0f, 0f, 0f } ) );
-            ret.Add( new List<float>( new[] { 0f, 0f, 0f } ) );
-            ret.Add( new List<float>( new[] { 1f, 1f, 1f, 1f } ) );
-            ret.Add( new List<float>() );
+            var ret = new List<List<float>> {
+                new List<float>( new[] { 1f, 1f, 1f } ),
+                new List<float>( new[] { 0f, 0f, 0f } ),
+                new List<float>( new[] { 0f, 0f, 0f } ),
+                new List<float>( new[] { 1f, 1f, 1f, 1f } ),
+                new List<float>()
+            };
             return ret;
         }
 
@@ -42,7 +44,7 @@ namespace VFXEditor.Tmb.Tmb {
             var offset = reader.ReadInt32(); // path offset: [C012] + offset + 8 = path
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
-            Path = TmbFile.ReadString( reader );
+            Path = FileHelper.ReadString( reader );
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
 
             BindPoint_1 = reader.ReadInt16(); // 1?
@@ -61,7 +63,7 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            TmbFile.WriteString( entryWriter, "C012" );
+            FileHelper.WriteString( entryWriter, "C012" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );
             entryWriter.Write( Time );
@@ -81,14 +83,14 @@ namespace VFXEditor.Tmb.Tmb {
         public override string GetName() => Name;
 
         public override void Draw( string id ) {
-            TmbFile.ShortInput( $"Time{id}", ref Time );
+            FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            TmbFile.ShortInput( $"Bind Point 1{id}", ref BindPoint_1 );
-            TmbFile.ShortInput( $"Bind Point 2{id}", ref BindPoint_2 );
-            TmbFile.ShortInput( $"Bind Point 3{id}", ref BindPoint_3 );
-            TmbFile.ShortInput( $"Bind Point 4{id}", ref bindPoint_4 );
+            FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint_1 );
+            FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint_2 );
+            FileHelper.ShortInput( $"Bind Point 3{id}", ref BindPoint_3 );
+            FileHelper.ShortInput( $"Bind Point 4{id}", ref bindPoint_4 );
 
             DrawPairs( id, Unk_Pairs );
         }

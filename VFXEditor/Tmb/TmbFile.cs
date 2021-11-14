@@ -21,9 +21,12 @@ namespace VFXEditor.Tmb {
 
         public bool Verified = true;
 
-        public TmbFile( BinaryReader reader ) {
-            var original = ReadAllBytes( reader );
-            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+        public TmbFile( BinaryReader reader, bool checkOriginal = true ) {
+            byte[] original = null;
+            if (checkOriginal) {
+                original = FileHelper.ReadAllBytes( reader );
+                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            }
 
             reader.ReadInt32(); // TMLB
             reader.ReadInt32(); // 0x0C
@@ -53,20 +56,22 @@ namespace VFXEditor.Tmb {
             foreach( var track in tracks ) track.PickEntries( entries, 2 + Actors.Count + tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
             foreach( var actor in Actors ) actor.PickTracks( tracks, 2 + Actors.Count );
 
-            // Check if output matches the original
-            var output = ToBytes();
-            for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
-                if( output[i] != original[i] ) {
-                    PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
-                    break;
+            if (checkOriginal) {
+                // Check if output matches the original
+                var output = ToBytes();
+                for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
+                    if( output[i] != original[i] ) {
+                        PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
+                        break;
+                    }
                 }
             }
         }
 
         public void Draw( string id ) {
-            ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
-            ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
-            ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+            FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
+            FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
+            FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
@@ -136,18 +141,18 @@ namespace VFXEditor.Tmb {
             using BinaryWriter headerWriter = new( headerMs );
             headerWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            WriteString( headerWriter, "TMLB" );
+            FileHelper.WriteString( headerWriter, "TMLB" );
             headerWriter.Write( totalSize );
             headerWriter.Write( entryCount + 2 ); // + 2 for TMDH and TMAL
 
-            WriteString( headerWriter, "TMDH" );
+            FileHelper.WriteString( headerWriter, "TMDH" );
             headerWriter.Write( 0x10 );
             headerWriter.Write( ( short )1 );
             headerWriter.Write( TMDH_Unk1 );
             headerWriter.Write( TMDH_Unk2 );
             headerWriter.Write( TMDH_Unk3 );
 
-            WriteString( headerWriter, "TMAL" );
+            FileHelper.WriteString( headerWriter, "TMAL" );
             headerWriter.Write( 0x10 );
             headerWriter.Write( timelinePos - ( int )headerWriter.BaseStream.Position );
             headerWriter.Write( Actors.Count );
@@ -170,7 +175,7 @@ namespace VFXEditor.Tmb {
             var currentStringPos = 0;
             foreach(var item in stringList) {
                 stringPositions[item] = currentStringPos;
-                WriteString( stringWriter, item, true );
+                FileHelper.WriteString( stringWriter, item, true );
                 currentStringPos += item.Length + 1;
             }
 
@@ -201,41 +206,6 @@ namespace VFXEditor.Tmb {
             Buffer.BlockCopy( stringData, 0, output, stringPos, stringData.Length );
 
             return output;
-        }
-
-        // ====================================
-
-        public static string ReadString( BinaryReader input ) {
-            var strBytes = new List<byte>();
-            int b;
-            while( ( b = input.ReadByte() ) != 0x00 )
-                strBytes.Add( ( byte )b );
-            return Encoding.ASCII.GetString( strBytes.ToArray() );
-        }
-
-        public static void WriteString( BinaryWriter writer, string str, bool writeNull = false ) {
-            writer.Write( Encoding.ASCII.GetBytes( str.Trim().Trim( '\0' ) ) );
-            if( writeNull ) writer.Write( ( byte )0 );
-        }
-
-        public static bool ShortInput( string id, ref short value ) {
-            var val = ( int )value;
-            if( ImGui.InputInt( id, ref val ) ) {
-                value = ( short )val;
-                return true;
-            }
-            return false;
-        }
-
-        public static byte[] ReadAllBytes( BinaryReader reader ) {
-            const int bufferSize = 4096;
-            using var ms = new MemoryStream();
-            var buffer = new byte[bufferSize];
-            int count;
-            while( ( count = reader.Read( buffer, 0, buffer.Length ) ) != 0 )
-                ms.Write( buffer, 0, count );
-            return ms.ToArray();
-
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ImGuiNET;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C002 : TmbItem {
@@ -25,7 +26,7 @@ namespace VFXEditor.Tmb.Tmb {
             var offset = reader.ReadInt32(); // offset: [C002] + offset + 8 = tmb?
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
-            Path = TmbFile.ReadString( reader );
+            Path = FileHelper.ReadString( reader );
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
@@ -37,7 +38,7 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            TmbFile.WriteString( entryWriter, "C002" );
+            FileHelper.WriteString( entryWriter, "C002" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );
             entryWriter.Write( Time );
@@ -50,7 +51,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override string GetName() => Name;
 
         public override void Draw( string id ) {
-            TmbFile.ShortInput( $"Time{id}", ref Time );
+            FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );

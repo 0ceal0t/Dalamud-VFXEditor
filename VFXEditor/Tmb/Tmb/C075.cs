@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C075 : TmbItem {
@@ -15,12 +16,13 @@ namespace VFXEditor.Tmb.Tmb {
         public static readonly string Name = "C075";
 
         private static List<List<float>> GetDefault() {
-            var ret = new List<List<float>>();
-            ret.Add( new List<float>( new[] { 1f, 1f, 1f } ) );
-            ret.Add( new List<float>( new[] { 0f, 0f, 0f } ) );
-            ret.Add( new List<float>( new[] { 0f, 0f, 0f } ) );
-            ret.Add( new List<float>( new[] { 1f, 1f, 1f, 1f } ) );
-            ret.Add( new List<float>() );
+            var ret = new List<List<float>> {
+                new List<float>( new[] { 1f, 1f, 1f } ),
+                new List<float>( new[] { 0f, 0f, 0f } ),
+                new List<float>( new[] { 0f, 0f, 0f } ),
+                new List<float>( new[] { 1f, 1f, 1f, 1f } ),
+                new List<float>()
+            };
             return ret;
         }
 
@@ -45,7 +47,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
 
-            TmbFile.WriteString( entryWriter, "C075" );
+            FileHelper.WriteString( entryWriter, "C075" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );
             entryWriter.Write( Time );
@@ -59,7 +61,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override string GetName() => Name;
 
         public override void Draw( string id ) {
-            TmbFile.ShortInput( $"Time{id}", ref Time );
+            FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );

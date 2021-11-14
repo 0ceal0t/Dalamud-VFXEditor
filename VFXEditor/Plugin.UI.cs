@@ -1,9 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Numerics;
 using System.Text;
-using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
 
@@ -16,12 +14,8 @@ using VFXEditor.Tmb;
 using VFXEditor.Tracker;
 using VFXEditor.Avfx;
 
-using VFXSelect;
-using VFXSelect.VFX;
-
 namespace VFXEditor {
     public partial class Plugin {
-
         public void Draw() {
             if( !AvfxManager.IsVisible ) return;
             if( IsLoading ) return;
@@ -64,7 +58,7 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                 ImGui.EndMenu();
             }
-            if( ImGui.BeginMenu( "Tmb##Menu " ) ) TmbManager.Show();
+            if( ImGui.MenuItem( "Tmb##Menu " ) ) TmbManager.Show();
         }
 
         public static void WriteBytesDialog( string filter, string data, string ext ) {

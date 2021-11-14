@@ -55,9 +55,11 @@ namespace VFXEditor.Avfx {
             Plugin.Configuration.AddRecent( result );
         }
 
+        public static readonly string PenumbraPath = "VFX";
+        
         // =================
 
-        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: "VFX" ) { }
+        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
 
         protected override AvfxDocument GetNewDocument() => new( LocalPath );
 

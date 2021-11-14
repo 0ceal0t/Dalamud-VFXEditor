@@ -38,9 +38,11 @@ namespace VFXEditor.Tmb {
             Plugin.TmbManager?.SetReplace( result );
         }
 
+        public static readonly string PenumbraPath = "Tmb";
+
         // =====================
 
-        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: "Tmb" ) { }
+        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
 
         protected override TmbDocument GetNewDocument() => new( LocalPath );
 
