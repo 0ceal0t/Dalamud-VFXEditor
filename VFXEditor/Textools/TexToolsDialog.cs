@@ -12,7 +12,7 @@ using ImGuiNET;
 using Newtonsoft.Json;
 
 using VFXEditor.Helper;
-using VFXEditor.UI;
+using VFXEditor.Dialogs;
 
 namespace VFXEditor.Textools {
     public struct TTMPL {
@@ -64,7 +64,7 @@ namespace VFXEditor.Textools {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocumentManager.HasReplacePath( ExportAll ) ) {
+            if( !Plugin.AvfxManager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( UiHelper.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.SameLine();
@@ -93,7 +93,7 @@ namespace VFXEditor.Textools {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    Plugin.DocumentManager.TextoolsExport( writer, ExportAll, simpleParts, ref modOffset );
+                    Plugin.AvfxManager.TextoolsExport( writer, ExportAll, simpleParts, ref modOffset );
                     Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
                     Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
 

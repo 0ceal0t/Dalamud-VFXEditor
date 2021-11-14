@@ -6,9 +6,8 @@ using System.Linq;
 using System.Numerics;
 using VFXEditor.Helper;
 using VFXEditor.Textools;
-using VFXEditor.UI;
+using VFXEditor.Dialogs;
 using VFXSelect;
-
 namespace VFXEditor.FileManager {
     public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
         private int DocumentId = 0;
@@ -23,13 +22,15 @@ namespace VFXEditor.FileManager {
         private bool HasDefault = true;
 
         private T SelectedDocument = null; // for document selection dialog
-        private bool DocumentDialogVisible = false;
+        protected bool DocumentDialogVisible = false;
+        private readonly bool OnlyDocumentDialog = false;
 
-        public FileManager(string title, string id, string tempFilePrefix, string extension, string penumbaPath) : base(title, menuBar:true) {
+        public FileManager(string title, string id, string tempFilePrefix, string extension, string penumbaPath, bool onlyDocumentDialog = false) : base(title, menuBar:true) {
             Id = id;
             TempFilePrefix = tempFilePrefix;
             Extension = extension;
             PenumbraPath = penumbaPath;
+            OnlyDocumentDialog = onlyDocumentDialog;
 
             Size = new Vector2( 800, 1000 );
             AddDocument();
@@ -76,8 +77,8 @@ namespace VFXEditor.FileManager {
             return false;
         }
 
-        public void ImportWorkspaceFile( string localPath, SelectResult source, SelectResult replace ) {
-            var newDocument = GetImportedDocument( localPath, source, replace );
+        public void ImportWorkspaceFile( string localPath, S data ) {
+            var newDocument = GetImportedDocument( localPath, data );
             ActiveDocument = newDocument;
             Documents.Add( newDocument );
             if( HasDefault && Documents.Count > 1 ) {
@@ -86,7 +87,7 @@ namespace VFXEditor.FileManager {
             }
         }
 
-        protected abstract T GetImportedDocument( string localPath, SelectResult source, SelectResult replace );
+        protected abstract T GetImportedDocument( string localPath, S data );
 
         public virtual void Dispose() {
             foreach( var document in Documents ) {
@@ -98,20 +99,24 @@ namespace VFXEditor.FileManager {
 
         public override void DrawBody() {
             DrawDocumentSelect();
-            if( ImGui.BeginMenuBar() ) {
-                if( ImGui.MenuItem( "Documents##Tmb/Menu" ) ) DocumentDialogVisible = true;
-                ImGui.EndMenuBar();
-            }
-
+            if( OnlyDocumentDialog ) return;
+            DrawMenuBar();
             ActiveDocument?.Draw();
         }
 
-        public void DrawDocumentSelect() {
-            if( !DocumentDialogVisible ) return;
+        protected void DrawMenuBar() {
+            if( ImGui.BeginMenuBar() ) {
+                if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
+                ImGui.EndMenuBar();
+            }
+        }
+
+        protected void DrawDocumentSelect() {
+            if( !(OnlyDocumentDialog ? Visible : DocumentDialogVisible) ) return;
             ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( $"{DialogName} Select", ref DocumentDialogVisible ) ) {
-                var id = "##Tmb/Doc";
+            if( ImGui.Begin( $"{DialogName} Select", ref (OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible) ) ) {
+                var id = $"##{Id}/Doc";
                 var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
                 ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
@@ -161,21 +166,21 @@ namespace VFXEditor.FileManager {
             ImGui.End();
         }
 
-        public void PenumbraExport( string modFolder, bool exportTmb ) {
+        public virtual void PenumbraExport( string modFolder, bool exportTmb ) {
             if( !exportTmb ) return;
             foreach( var document in Documents ) {
                 document.PenumbraExport( modFolder );
             }
         }
 
-        public void TextoolsExport( BinaryWriter writer, bool exportTmb, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+        public virtual void TextoolsExport( BinaryWriter writer, bool exportTmb, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
             if( !exportTmb ) return;
             foreach( var document in Documents ) {
                 document.TextoolsExport( writer, simpleParts, ref modOffset );
             }
         }
 
-        public S[] WorkspaceExport( string saveLocation ) {
+        public virtual S[] WorkspaceExport( string saveLocation ) {
             var rootPath = Path.Combine( saveLocation, PenumbraPath);
             Directory.CreateDirectory( rootPath );
 

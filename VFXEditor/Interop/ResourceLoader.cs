@@ -13,7 +13,6 @@ using Reloaded.Hooks.Definitions.X64;
 using System.Threading;
 using VFXEditor.Tmb;
 using VFXEditor.Tracker;
-using VFXEditor.Document;
 
 namespace VFXEditor.Interop {
     public class ResourceLoader : IDisposable {
@@ -375,7 +374,7 @@ namespace VFXEditor.Interop {
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
-            if( Plugin.DocumentManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
+            if( Plugin.AvfxManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
                 localPath = vfxFile;
                 return true;
             }

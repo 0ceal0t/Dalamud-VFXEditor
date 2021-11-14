@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 
 using VFXEditor.Helper;
-using VFXEditor.Tmb.Item;
+using VFXEditor.Tmb.Tmb;
 
 namespace VFXEditor.Tmb {
     public class TmbFile {

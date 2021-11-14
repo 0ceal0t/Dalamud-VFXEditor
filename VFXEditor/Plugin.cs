@@ -6,11 +6,11 @@ using ImGuiNET;
 using ImPlotNET;
 
 using VFXEditor.Data;
+using VFXEditor.Avfx;
 using VFXEditor.Tmb;
 using VFXEditor.DirectX;
 using VFXEditor.Texture;
 using VFXEditor.Tracker;
-using VFXEditor.Document;
 using VFXEditor.Interop;
 using VFXEditor.Helper;
 using VFXEditor.Structs.Vfx;
@@ -25,6 +25,9 @@ using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
+using VFXEditor.Dialogs;
+using VFXEditor.Textools;
+using VFXEditor.Penumbra;
 
 namespace VFXEditor
 {
@@ -43,11 +46,14 @@ namespace VFXEditor
 
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
-        public static DocumentManager DocumentManager { get; private set; }
+        public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
         public static TmbManager TmbManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static VfxTracker VfxTracker { get; private set; }
+        public static ToolsDialog ToolsDialog { get; private set; }
+        public static TexToolsDialog TexToolsDialog { get; private set; }
+        public static PenumbraDialog PenumbraDialog { get; private set; }
 
         public string Name => "VFXEditor";
         public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
@@ -98,15 +104,18 @@ namespace VFXEditor
             TmbManager.Setup();
             TmbManager = new TmbManager();
 
+            AvfxManager.Setup();
+            AvfxManager = new AvfxManager();
+
+            ToolsDialog = new ToolsDialog();
+            PenumbraDialog = new PenumbraDialog();
+            TexToolsDialog = new TexToolsDialog();
             ResourceLoader = new ResourceLoader();
             DirectXManager = new DirectXManager();
-            DocumentManager = new DocumentManager();
             VfxTracker = new VfxTracker();
 
             FileDialogManager.Initialize( PluginInterface );
             CopyManager.Initialize();
-
-            InitUI();
 
             ResourceLoader.Init();
             ResourceLoader.Enable();
@@ -132,9 +141,9 @@ namespace VFXEditor
             RemoveSpawnVfx();
 
             TmbManager.Dispose();
+            AvfxManager.Dispose();
             TextureManager.Dispose();
             DirectXManager.Dispose();
-            DocumentManager.Dispose();
 
             FileDialogManager.Dispose();
             AvfxHelper.Dispose();
@@ -142,11 +151,11 @@ namespace VFXEditor
         }
 
         private void DrawConfigUI() {
-            Visible = true;
+            AvfxManager.Show();
         }
 
         private void OnCommand( string command, string rawArgs ) {
-            Visible = !Visible;
+            AvfxManager.Toggle();
         }
 
         public static bool SpawnExists() {

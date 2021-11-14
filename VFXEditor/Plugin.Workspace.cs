@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-using VFXEditor.Document;
+using VFXEditor.Avfx;
 using VFXEditor.Texture;
 using VFXEditor.Tmb;
 using VFXSelect;
@@ -16,11 +16,11 @@ using VFXSelect;
 namespace VFXEditor {
     public struct WorkspaceMeta {
         public WorkspaceMetaTex[] Tex;
-        public WorkspaceMetaDocument[] Docs;
+        public WorkspaceMetaAvfx[] Docs;
         public WorkspaceMetaTmb[] Tmb;
     }
 
-    public struct WorkspaceMetaDocument {
+    public struct WorkspaceMetaAvfx {
         public SelectResult Source;
         public SelectResult Replace;
         public Dictionary<string, string> Renaming;
@@ -46,22 +46,23 @@ namespace VFXEditor {
     }
 
     public partial class Plugin {
-        private string CurrentWorkspaceLocation = "";
+        public static string CurrentWorkspaceLocation { get; private set; } = "";
+        private static bool IsLoading = false;
 
-        private void NewWorkspace() {
+        private static void NewWorkspace() {
             Task.Run( async () => {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
                 ResetTextureManager();
-                ResetDocumentManager();
+                ResetAvfxManager();
                 ResetTmbManager();
 
                 IsLoading = false;
             } );
         }
 
-        private void OpenWorkspace() {
+        private static void OpenWorkspace() {
             FileDialogManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json}", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
@@ -86,7 +87,7 @@ namespace VFXEditor {
             } );
         }
 
-        private void OpenWorkspaceFolder( string loadLocation ) {
+        private static void OpenWorkspaceFolder( string loadLocation ) {
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
                 PluginLog.Error( "vfx_workspace.json does not exist" );
@@ -106,13 +107,13 @@ namespace VFXEditor {
                 }
             }
 
-            ResetDocumentManager();
+            ResetAvfxManager();
 
             var vfxRootPath = Path.Combine( loadLocation, "VFX" );
             if( meta.Docs != null ) {
                 foreach( var doc in meta.Docs ) {
                     var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
-                    DocumentManager.ImportLocalDocument( fullPath, doc.Source, doc.Replace, doc.Renaming );
+                    AvfxManager.ImportWorkspaceFile( fullPath, doc );
                 }
             }
 
@@ -122,14 +123,14 @@ namespace VFXEditor {
             if( meta.Tmb != null ) {
                 foreach(var tmb in meta.Tmb ) {
                     var fullPath = Path.Combine( tmbRootPath, tmb.RelativeLocation );
-                    TmbManager.ImportWorkspaceFile( fullPath, tmb.Source, tmb.Replace );
+                    TmbManager.ImportWorkspaceFile( fullPath, tmb );
                 }
             }
 
             IsLoading = false;
         }
 
-        private void SaveWorkspace() {
+        private static void SaveWorkspace() {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
                 SaveAsWorkspace();
             }
@@ -140,7 +141,7 @@ namespace VFXEditor {
             }
         }
 
-        private void SaveAsWorkspace() {
+        private static void SaveAsWorkspace() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
                 CurrentWorkspaceLocation = res;
@@ -148,12 +149,12 @@ namespace VFXEditor {
             } );
         }
 
-        private void ExportWorkspace() {
+        private static void ExportWorkspace() {
             var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
             Directory.CreateDirectory( saveLocation );
 
             var meta = new WorkspaceMeta {
-                Docs = DocumentManager.WorkspaceExport( saveLocation ),
+                Docs = AvfxManager.WorkspaceExport( saveLocation ),
                 Tex = TextureManager.WorkspaceExport( saveLocation ),
                 Tmb = TmbManager.WorkspaceExport( saveLocation )
             };
@@ -170,18 +171,21 @@ namespace VFXEditor {
         private static void ResetTextureManager() {
             var oldManager = TextureManager;
             TextureManager = new TextureManager();
+            TextureManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
 
-        private static void ResetDocumentManager() {
-            var oldManager = DocumentManager;
-            DocumentManager = new DocumentManager();
+        private static void ResetAvfxManager() {
+            var oldManager = AvfxManager;
+            AvfxManager = new AvfxManager();
+            AvfxManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
 
         private static void ResetTmbManager() {
             var oldManager = TmbManager;
             TmbManager = new TmbManager();
+            TmbManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
     }

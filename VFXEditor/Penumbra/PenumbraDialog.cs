@@ -8,7 +8,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;
 
-using VFXEditor.UI;
+using VFXEditor.Dialogs;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Penumbra {
@@ -49,7 +49,7 @@ namespace VFXEditor.Penumbra {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.SameLine();
             ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.DocumentManager.HasReplacePath( ExportAll ) ) {
+            if( !Plugin.AvfxManager.HasReplacePath( ExportAll ) ) {
                 ImGui.TextColored( UiHelper.RED_COLOR, "Missing Replace Path" );
             }
             ImGui.SameLine();
@@ -86,7 +86,7 @@ namespace VFXEditor.Penumbra {
                 var configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
-                Plugin.DocumentManager.PenumbraExport( modFolder, ExportAll );
+                Plugin.AvfxManager.PenumbraExport( modFolder, ExportAll );
                 Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
                 Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
 

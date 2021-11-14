@@ -5,7 +5,7 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
 using VFXEditor.Textools;
-using VFXEditor.UI;
+using VFXEditor.Avfx;
 using VFXSelect;
 using VFXSelect.VFX;
 
@@ -40,11 +40,11 @@ namespace VFXEditor.Tmb {
 
         // =====================
 
-        public TmbManager() : base( title:"Tmb Editor", id:"Tmb", tempFilePrefix:"TmbTemp", extension:"tmb", penumbaPath:"Tmb" ) { }
+        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: "Tmb" ) { }
 
         protected override TmbDocument GetNewDocument() => new( LocalPath );
 
-        protected override TmbDocument GetImportedDocument( string localPath, SelectResult source, SelectResult replace ) => new( LocalPath, localPath, source, replace );
+        protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         public override void Dispose() {
             base.Dispose();

@@ -12,19 +12,6 @@ namespace VFXEditor.Helper {
             LastImportNode = null;
         }
 
-        public static bool SaveLocalFile( string path, AVFXBase avfx ) {
-            try {
-                var node = avfx.ToAVFX();
-                var bytes = node.ToBytes();
-                File.WriteAllBytes( path, bytes );
-            }
-            catch( Exception e ) {
-                PluginLog.Error( e, "Could not write to file: " + path );
-                return false;
-            }
-            return true;
-        }
-
         public static bool GetLocalFile( string path, out AVFXBase avfx ) {
             avfx = null;
             if( File.Exists( path ) ) {

@@ -8,8 +8,8 @@ using TeximpNet.DDS;
 
 using Dalamud.Logging;
 
-using VFXEditor.UI;
 using VFXEditor.Helper;
+using VFXEditor.Dialogs;
 
 namespace VFXEditor.Texture {
     public struct PreviewTexture { // used for the texture previews
@@ -32,8 +32,8 @@ namespace VFXEditor.Texture {
     }
 
     public partial class TextureManager : GenericDialog {
-        private ConcurrentDictionary<string, TextureReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
         private int TEX_ID = 0;
+        private readonly ConcurrentDictionary<string, TextureReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
         private readonly ConcurrentDictionary<string, PreviewTexture> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
 
         public static void Setup() {

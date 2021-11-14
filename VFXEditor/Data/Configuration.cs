@@ -8,8 +8,8 @@ using ImGuiNET;
 using Dalamud.Logging;
 using Dalamud.Configuration;
 
-using VFXEditor.UI;
 using VFXSelect;
+using VFXEditor.Dialogs;
 
 namespace VFXEditor {
     [Serializable]

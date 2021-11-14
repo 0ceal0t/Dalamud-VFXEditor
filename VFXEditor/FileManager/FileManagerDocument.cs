@@ -99,7 +99,7 @@ namespace VFXEditor.FileManager {
 
         public abstract void WorkspaceExport( List<S> meta, string rootPath, string newPath );
 
-        public void Draw() {
+        public virtual void Draw() {
             ImGui.Columns( 2, $"{Id}-Columns", false );
 
             // ======== INPUT TEXT =========

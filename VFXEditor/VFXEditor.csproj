@@ -180,10 +180,6 @@
     </Target>
 
     <ItemGroup>
-      <NativeLibs Remove="Plugin.Document.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <NativeLibs Remove="Plugin.UI.cs" />
     </ItemGroup>
 
