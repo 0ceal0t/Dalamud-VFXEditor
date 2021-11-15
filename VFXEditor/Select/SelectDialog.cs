@@ -103,7 +103,7 @@ namespace VFXSelect {
             ImGui.InputText( id + "Input", ref LocalPath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".{Ext},.*", ( bool ok, string res ) => {
+                FileDialogManager.OpenFileDialog( "Select a File", $".{Ext},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
                 } );

@@ -74,28 +74,12 @@ namespace VFXEditor.Avfx {
         public override void DrawBody() {
             SourceSelect.Draw();
             ReplaceSelect.Draw();
-            DrawDocumentSelect();
-
-            DialogName = "VFXEditor" + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###VFXEditor";
-
-            if( ImGui.BeginMenuBar() ) {
-                Plugin.DrawMenu();
-                if( ImGui.MenuItem( "Documents##Menu" ) ) DocumentDialogVisible = true;
-                ImGui.EndMenuBar();
-            }
-
-            ActiveDocument?.Draw();
+            base.DrawBody();
         }
 
-        public bool HasReplacePath( bool allDocuments ) {
-            if( !allDocuments ) return !string.IsNullOrEmpty( ActiveDocument.ReplacePath );
-            foreach (var document in Documents) {
-                if( string.IsNullOrEmpty( document.ReplacePath ) ) return false;
-            }
-            return true;
-        }
+        public void PenumbraExport( string modFolder, bool exportVfx, bool exportAll ) {
+            if( !exportVfx ) return;
 
-        public override void PenumbraExport( string modFolder, bool exportAll ) {
             if( !exportAll ) {
                 ActiveDocument.PenumbraExport( modFolder );
                 return;
@@ -105,7 +89,9 @@ namespace VFXEditor.Avfx {
             }
         }
 
-        public override void TextoolsExport( BinaryWriter writer, bool exportAll, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+        public void TextoolsExport( BinaryWriter writer, bool exportVfx, bool exportAll, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+            if( !exportVfx ) return;
+
             if( !exportAll ) {
                 ActiveDocument.TextoolsExport( writer, simpleParts, ref modOffset );
                 return;

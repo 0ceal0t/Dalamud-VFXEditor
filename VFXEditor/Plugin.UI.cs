@@ -42,6 +42,17 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
                 if( ImGui.MenuItem( "Save##Menu" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As##Menu" ) ) SaveAsWorkspace();
+
+                ImGui.Separator();
+                if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
+                if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsDialog.Draw();
+                if( ImGui.BeginMenu( "Help##Menu" ) ) {
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Guides##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    ImGui.EndMenu();
+                }
+
                 ImGui.EndMenu();
             }
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
@@ -49,15 +60,13 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
                 ImGui.EndMenu();
             }
-            if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
-            if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
-            if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsDialog.Draw();
-            if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                if( ImGui.MenuItem( "Report an Issue##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                if( ImGui.MenuItem( "Guides##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
-                if( ImGui.MenuItem( "Github##Menu" ) ) OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+            if( ImGui.BeginMenu( "Mod Export##Menu" ) ) {
+                if( ImGui.MenuItem( "Penumbra##Menu" ) ) PenumbraDialog.Show();
+                if( ImGui.MenuItem( "Textools##Menu" ) ) TexToolsDialog.Show();
                 ImGui.EndMenu();
             }
+            if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
+            if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
             if( ImGui.MenuItem( "Tmb##Menu " ) ) TmbManager.Show();
         }
 

@@ -48,6 +48,7 @@ namespace VFXEditor.Textools {
         public string Name = "";
         public string Author = "";
         public string Version = "1.0.0";
+        public bool ExportVfx = true;
         public bool ExportAll = false;
         public bool ExportTex = true;
         public bool ExportTmb = true;
@@ -61,13 +62,11 @@ namespace VFXEditor.Textools {
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
-            ImGui.Checkbox( "Export Textures", ref ExportTex );
-            ImGui.SameLine();
-            ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.AvfxManager.HasReplacePath( ExportAll ) ) {
-                ImGui.TextColored( UiHelper.RED_COLOR, "Missing Replace Path" );
+            ImGui.Checkbox( "Export Vfx", ref ExportVfx );
+            if( ExportVfx ) {
+                ImGui.SameLine(); ImGui.Checkbox( "Export All Documents", ref ExportAll );
             }
-            ImGui.SameLine();
+            ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
 
             ImGui.EndChild();
@@ -93,7 +92,7 @@ namespace VFXEditor.Textools {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    Plugin.AvfxManager.TextoolsExport( writer, ExportAll, simpleParts, ref modOffset );
+                    Plugin.AvfxManager.TextoolsExport( writer, ExportVfx, ExportAll, simpleParts, ref modOffset );
                     Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
                     Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
 

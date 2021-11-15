@@ -32,6 +32,7 @@ namespace VFXEditor.Penumbra {
         public string Name = "";
         public string Author = "";
         public string Version = "1.0.0";
+        public bool ExportVfx = true;
         public bool ExportAll = false;
         public bool ExportTex = true;
         public bool ExportTmb = true;
@@ -46,13 +47,11 @@ namespace VFXEditor.Penumbra {
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
-            ImGui.Checkbox( "Export Textures", ref ExportTex );
-            ImGui.SameLine();
-            ImGui.Checkbox( "Export All Documents", ref ExportAll );
-            if( !Plugin.AvfxManager.HasReplacePath( ExportAll ) ) {
-                ImGui.TextColored( UiHelper.RED_COLOR, "Missing Replace Path" );
+            ImGui.Checkbox( "Export Vfx", ref ExportVfx );
+            if (ExportVfx) {
+                ImGui.SameLine(); ImGui.Checkbox( "Export All Documents", ref ExportAll );
             }
-            ImGui.SameLine();
+            ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
 
             ImGui.EndChild();
@@ -86,7 +85,7 @@ namespace VFXEditor.Penumbra {
                 var configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
-                Plugin.AvfxManager.PenumbraExport( modFolder, ExportAll );
+                Plugin.AvfxManager.PenumbraExport( modFolder, ExportVfx, ExportAll );
                 Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
                 Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
 

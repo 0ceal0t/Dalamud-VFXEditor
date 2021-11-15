@@ -16,6 +16,7 @@ namespace VFXEditor.FileManager {
         private readonly string PenumbraPath; // Tmb
         protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ); // temporary write location
 
+        protected readonly string Title;
         protected readonly string Id;
         protected List<T> Documents = new();
         protected T ActiveDocument = null;
@@ -26,6 +27,7 @@ namespace VFXEditor.FileManager {
         private readonly bool OnlyDocumentDialog = false;
 
         public FileManager(string title, string id, string tempFilePrefix, string extension, string penumbaPath, bool onlyDocumentDialog = false) : base(title, menuBar:true) {
+            Title = title;
             Id = id;
             TempFilePrefix = tempFilePrefix;
             Extension = extension;
@@ -100,15 +102,16 @@ namespace VFXEditor.FileManager {
         public override void DrawBody() {
             DrawDocumentSelect();
             if( OnlyDocumentDialog ) return;
-            DrawMenuBar();
-            ActiveDocument?.Draw();
-        }
 
-        protected void DrawMenuBar() {
+            DialogName = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
+
             if( ImGui.BeginMenuBar() ) {
+                Plugin.DrawMenu();
                 if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
                 ImGui.EndMenuBar();
             }
+
+            ActiveDocument?.Draw();
         }
 
         protected void DrawDocumentSelect() {
