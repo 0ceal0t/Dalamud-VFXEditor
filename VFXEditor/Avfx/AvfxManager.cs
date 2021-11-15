@@ -76,29 +76,5 @@ namespace VFXEditor.Avfx {
             ReplaceSelect.Draw();
             base.DrawBody();
         }
-
-        public void PenumbraExport( string modFolder, bool exportVfx, bool exportAll ) {
-            if( !exportVfx ) return;
-
-            if( !exportAll ) {
-                ActiveDocument.PenumbraExport( modFolder );
-                return;
-            }
-            foreach( var document in Documents ) {
-                document.PenumbraExport( modFolder );
-            }
-        }
-
-        public void TextoolsExport( BinaryWriter writer, bool exportVfx, bool exportAll, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            if( !exportVfx ) return;
-
-            if( !exportAll ) {
-                ActiveDocument.TextoolsExport( writer, simpleParts, ref modOffset );
-                return;
-            }
-            foreach( var document in Documents ) {
-                document.TextoolsExport( writer, simpleParts, ref modOffset );
-            }
-        }
     }
 }

@@ -10,7 +10,7 @@ namespace VFXEditor.Tmb.Tmb {
         private int Unk_2 = 1;
         private int Unk_3 = 0;
         private string Path = "";
-        private int Unk_4 = 1;
+        private int SoundIndex = 1;
         private int Unk_5 = 0;
 
         public static readonly string Name = "Sound (C063)";
@@ -30,7 +30,7 @@ namespace VFXEditor.Tmb.Tmb {
             Path = FileHelper.ReadString( reader );
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
 
-            Unk_4 = reader.ReadInt32(); // 1
+            SoundIndex = reader.ReadInt32(); // 1
             Unk_5 = reader.ReadInt32(); // 0
         }
 
@@ -51,7 +51,7 @@ namespace VFXEditor.Tmb.Tmb {
 
             entryWriter.Write( offset );
 
-            entryWriter.Write( Unk_4 );
+            entryWriter.Write( SoundIndex );
             entryWriter.Write( Unk_5 );
         }
 
@@ -62,7 +62,7 @@ namespace VFXEditor.Tmb.Tmb {
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Sound Index{id}", ref SoundIndex );
             ImGui.InputInt( $"Uknown 5{id}", ref Unk_5 );
         }
 
