@@ -1,36 +1,40 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dalamud.Logging;
 using ImGuiNET;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
-    public class C002 : TmbItem {
+    // Pap Animation
+    public class C009 : TmbItem {
         private short Time = 0;
         private int Unk_2 = 50;
         private int Unk_3 = 0;
-        private int Unk_4 = 0;
         private string Path = "";
 
-        public static readonly string Name = "TMB (C002)";
+        public static readonly string Name = "Animation - PAP Only (C010)";
 
-        public C002() { }
-        public C002( BinaryReader reader ) {
-            var startPos = reader.BaseStream.Position; // [C002] + 8
+        public C009() { }
+        public C009( BinaryReader reader ) {
+            var startPos = reader.BaseStream.Position; // [C009] + 8
 
             reader.ReadInt16(); // id
             Time = reader.ReadInt16(); // ?
-            Unk_2 = reader.ReadInt32(); // ? : 50
+            Unk_2 = reader.ReadInt32(); // ? ex: 50, 60
             Unk_3 = reader.ReadInt32(); // 0
-            Unk_4 = reader.ReadInt32(); // 0
 
-            var offset = reader.ReadInt32(); // offset: [C002] + offset + 8 = tmb?
+            var offset = reader.ReadInt32(); // offset: [C009] + offset + 8 = animation
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
             Path = FileHelper.ReadString( reader );
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public override int GetSize() => 0x1C;
+        public override int GetSize() => 0x18;
         public override int GetExtraSize() => 0;
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
@@ -38,13 +42,13 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            FileHelper.WriteString( entryWriter, "C002" );
+            FileHelper.WriteString( entryWriter, "C009" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );
             entryWriter.Write( Time );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
-            entryWriter.Write( Unk_4 );
+
             entryWriter.Write( offset );
         }
 
@@ -54,7 +58,6 @@ namespace VFXEditor.Tmb.Tmb {
             FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
         }
 

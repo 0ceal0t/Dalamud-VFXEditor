@@ -28,6 +28,17 @@ namespace VFXEditor.Helper {
             return false;
         }
 
+        public static bool ByteInput( string id, ref byte value ) {
+            var val = ( int )value;
+            if (ImGui.InputInt(id, ref val ) ) {
+                if( val < 0 ) val = 0;
+                if( val > 255 ) val = 255;
+                value = ( byte )val;
+                return true;
+            }
+            return false;
+        }
+
         public static byte[] ReadAllBytes( BinaryReader reader ) {
             const int bufferSize = 4096;
             using var ms = new MemoryStream();

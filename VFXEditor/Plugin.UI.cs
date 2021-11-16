@@ -27,9 +27,11 @@ namespace VFXEditor {
             ToolsDialog.Draw();
             VfxTracker.Draw();
             Configuration.Draw();
+
             AvfxManager.Draw();
             TextureManager.Draw();
             TmbManager.Draw();
+            PapManager.Draw();
         }
 
         public static void DrawMenu() {
@@ -68,6 +70,7 @@ namespace VFXEditor {
             if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
             if( ImGui.MenuItem( "Tmb##Menu " ) ) TmbManager.Show();
+            if( ImGui.MenuItem( "Pap##Menu " ) ) PapManager.Show();
         }
 
         public static void WriteBytesDialog( string filter, string data, string ext ) {

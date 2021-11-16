@@ -35,6 +35,7 @@ namespace VFXEditor.Penumbra {
         public bool ExportVfx = true;
         public bool ExportTex = true;
         public bool ExportTmb = true;
+        public bool ExportPap = true;
 
         public override void DrawBody() {
             var id = "##Penumbra";
@@ -49,6 +50,7 @@ namespace VFXEditor.Penumbra {
             ImGui.Checkbox( "Export Vfx", ref ExportVfx );
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
+            ImGui.Checkbox( "Export Pap", ref ExportPap );
 
             ImGui.EndChild();
 
@@ -84,6 +86,7 @@ namespace VFXEditor.Penumbra {
                 Plugin.AvfxManager.PenumbraExport( modFolder, ExportVfx );
                 Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
                 Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
+                Plugin.PapManager.PenumbraExport( modFolder, ExportPap );
 
                 PluginLog.Log( "Exported To: " + modFolder );
             }

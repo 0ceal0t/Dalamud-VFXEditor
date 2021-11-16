@@ -51,6 +51,7 @@ namespace VFXEditor.Textools {
         public bool ExportVfx = true;
         public bool ExportTex = true;
         public bool ExportTmb = true;
+        public bool ExportPap = true;
 
         public override void DrawBody() {
             var id = "##Textools";
@@ -64,6 +65,7 @@ namespace VFXEditor.Textools {
             ImGui.Checkbox( "Export Vfx", ref ExportVfx );
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
+            ImGui.Checkbox( "Export Pap", ref ExportPap );
 
             ImGui.EndChild();
 
@@ -91,6 +93,7 @@ namespace VFXEditor.Textools {
                     Plugin.AvfxManager.TextoolsExport( writer, ExportVfx, simpleParts, ref modOffset );
                     Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
                     Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
+                    Plugin.PapManager.TextoolsExport( writer, ExportPap, simpleParts, ref modOffset );
 
                     newData = ms.ToArray();
                 }

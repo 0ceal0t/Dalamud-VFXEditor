@@ -23,6 +23,7 @@ namespace VFXSelect {
         public static HousingSheetLoader Housing { get; private set; }
         public static CommonLoader Misc { get; private set; }
         public static TmbSheetLoader TmbSheetLoader { get; private set; }
+        public static PapSheetLoader PapSheetLoader { get; private set; }
 
         public static void Initialize( string npcCsv, string monsterJson, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
@@ -43,6 +44,7 @@ namespace VFXSelect {
             Housing = new HousingSheetLoader();
             Misc = new CommonLoader();
             TmbSheetLoader = new TmbSheetLoader();
+            PapSheetLoader = new PapSheetLoader();
         }
     }
 }

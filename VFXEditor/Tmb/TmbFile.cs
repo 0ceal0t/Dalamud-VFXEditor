@@ -21,15 +21,20 @@ namespace VFXEditor.Tmb {
 
         public bool Verified = true;
 
+        public TmbFile() {
+        }
+
         public TmbFile( BinaryReader reader, bool checkOriginal = true ) {
+            var startPos = reader.BaseStream.Position;
+
             byte[] original = null;
             if (checkOriginal) {
                 original = FileHelper.ReadAllBytes( reader );
-                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+                reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
             }
 
             reader.ReadInt32(); // TMLB
-            reader.ReadInt32(); // 0x0C
+            var size = reader.ReadInt32();
             var numEntries = reader.ReadInt32(); // entry count (not including TMLB)
 
             reader.ReadInt32(); // TMDH
@@ -56,8 +61,7 @@ namespace VFXEditor.Tmb {
             foreach( var track in tracks ) track.PickEntries( entries, 2 + Actors.Count + tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
             foreach( var actor in Actors ) actor.PickTracks( tracks, 2 + Actors.Count );
 
-            if (checkOriginal) {
-                // Check if output matches the original
+            if (checkOriginal) { // Check if output matches the original
                 var output = ToBytes();
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
@@ -66,6 +70,8 @@ namespace VFXEditor.Tmb {
                     }
                 }
             }
+
+            reader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
         }
 
         public void Draw( string id ) {

@@ -88,7 +88,7 @@ namespace VFXEditor.FileManager {
             Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation );
         }
 
-        public void Dispose() {
+        public virtual void Dispose() {
             CurrentFile = null;
             File.Delete( WriteLocation );
         }

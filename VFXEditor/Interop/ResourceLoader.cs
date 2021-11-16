@@ -400,7 +400,7 @@ namespace VFXEditor.Interop {
             }
 
             if (!string.IsNullOrEmpty(localPath)) {
-                var gameResource = GetResource( gamePath, false );
+                var gameResource = GetResource( gamePath, false ); // get local path resource
                 if( gameResource != IntPtr.Zero )
                     RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
             }

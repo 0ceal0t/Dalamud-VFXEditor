@@ -28,6 +28,7 @@ using Dalamud.Game.ClientState.Conditions;
 using VFXEditor.Dialogs;
 using VFXEditor.Textools;
 using VFXEditor.Penumbra;
+using VFXEditor.Pap;
 
 namespace VFXEditor
 {
@@ -49,6 +50,7 @@ namespace VFXEditor
         public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
         public static TmbManager TmbManager { get; private set; }
+        public static PapManager PapManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static VfxTracker VfxTracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
@@ -107,6 +109,9 @@ namespace VFXEditor
             AvfxManager.Setup();
             AvfxManager = new AvfxManager();
 
+            PapManager.Setup();
+            PapManager = new PapManager();
+
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();
             TexToolsDialog = new TexToolsDialog();
@@ -140,6 +145,9 @@ namespace VFXEditor
 
             TmbManager.Dispose();
             TmbManager = null;
+
+            PapManager.Dispose();
+            PapManager = null;
 
             AvfxManager.Dispose();
             AvfxManager = null;

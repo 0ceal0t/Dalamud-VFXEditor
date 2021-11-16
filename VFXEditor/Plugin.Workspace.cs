@@ -9,8 +9,10 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 
 using VFXEditor.Avfx;
+using VFXEditor.Pap;
 using VFXEditor.Texture;
 using VFXEditor.Tmb;
+
 using VFXSelect;
 
 namespace VFXEditor {
@@ -18,6 +20,7 @@ namespace VFXEditor {
         public WorkspaceMetaTex[] Tex;
         public WorkspaceMetaAvfx[] Docs;
         public WorkspaceMetaTmb[] Tmb;
+        public WorkspaceMetaPap[] Pap;
     }
 
     public struct WorkspaceMetaAvfx {
@@ -40,6 +43,12 @@ namespace VFXEditor {
     }
 
     public struct WorkspaceMetaTmb {
+        public SelectResult Source;
+        public SelectResult Replace;
+        public string RelativeLocation;
+    }
+
+    public struct WorkspaceMetaPap {
         public SelectResult Source;
         public SelectResult Replace;
         public string RelativeLocation;
@@ -123,6 +132,14 @@ namespace VFXEditor {
                 }
             }
 
+            ResetPapManager();
+            var papRootPath = Path.Combine( loadLocation, PapManager.PenumbraPath );
+            if( meta.Pap != null ) {
+                foreach( var pap in meta.Pap ) {
+                    PapManager.ImportWorkspaceFile( Path.Combine( papRootPath, pap.RelativeLocation ), pap );
+                }
+            }
+
             IsLoading = false;
         }
 
@@ -182,6 +199,13 @@ namespace VFXEditor {
             var oldManager = TmbManager;
             TmbManager = new TmbManager();
             TmbManager.SetVisible( oldManager.IsVisible );
+            oldManager?.Dispose();
+        }
+
+        private static void ResetPapManager() {
+            var oldManager = PapManager;
+            PapManager = new PapManager();
+            PapManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
     }
