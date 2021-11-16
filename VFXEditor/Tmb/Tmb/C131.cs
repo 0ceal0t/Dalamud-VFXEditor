@@ -15,9 +15,9 @@ namespace VFXEditor.Tmb.Tmb {
         public C131() { }
         public C131( BinaryReader reader ) {
             reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
-            Unk_2 = reader.ReadInt32(); // 1
-            Unk_3 = reader.ReadInt32(); // 0
+            Time = reader.ReadInt16();
+            Unk_2 = reader.ReadInt32();
+            Unk_3 = reader.ReadInt32();
         }
 
         public override int GetSize() => 0x14;

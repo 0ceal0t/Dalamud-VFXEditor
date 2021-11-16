@@ -41,6 +41,11 @@ namespace VFXEditor.Pap {
             ImGui.TextWrapped( "DO NOT modify movement abilities (dashes, backflips, etc.)" );
             ImGui.PopStyleColor();
 
+            ImGui.TextWrapped( "For large .pap files (like action.pap), do NOT replace the entire file. Instead export the Havok animation from the new .pap file and import it for the specific animation that you want to replace" );
+
+            ImGui.TextWrapped( "When replacing a .pap or .tmb, you may need to change the animation name (such as cbbm_ws01). Make sure to do this in the .tmb and BOTH places in the .pap file. If you have questions, please ask them in the Quicklauncher discord or check the guides" );
+            if( ImGui.Button( "Guides##Pap" ) ) Plugin.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

@@ -5,22 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
+using VFXEditor.FileManager;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Pap {
-    public class PapFile {
+    public class PapFile : FileDropdown<PapAnimation> {
         private readonly string HkxTempLocation;
 
         private short ModelId;
         private byte BaseId;
         private byte VariantId;
         private readonly List<PapAnimation> Animations = new();
-
-        private PapAnimation SelectedAnimation = null;
 
         public PapFile( BinaryReader reader, string hkxTemp ) {
             HkxTempLocation = hkxTemp;
@@ -49,7 +45,7 @@ namespace VFXEditor.Pap {
             reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
             for( var i = 0; i < numAnimations; i++ ) {
                 Animations[i].ReadTmb( reader );
-                if( numAnimations > 0 && i < ( numAnimations - 1 ) ) reader.ReadBytes( Padding( reader.BaseStream.Position ) );
+                reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations ) );
             }
         }
 
@@ -61,9 +57,7 @@ namespace VFXEditor.Pap {
             var idx = 0;
             foreach( var tmb in tmbData ) {
                 tmbSize += tmb.Length;
-                if( tmbData.Count() > 1 && idx < tmbData.Count() - 1 ) {
-                    tmbSize += Padding( tmbSize );
-                }
+                tmbSize += Padding( tmbSize, idx, tmbData.Count() );
                 idx++;
             }
 
@@ -90,19 +84,17 @@ namespace VFXEditor.Pap {
             writer.Write( headerSize + infoSize );
             writer.Write( headerSize + infoSize + havokSize );
 
-            foreach( var anim in Animations ) {
-                anim.Write( writer );
-            }
+            foreach( var anim in Animations ) anim.Write( writer );
 
             writer.Write( havokData );
 
             idx = 0;
             foreach( var tmb in tmbData ) {
                 writer.Write( tmb );
-                if( tmbData.Count() > 1 && idx < tmbData.Count() - 1 ) {
-                    var padding = Padding( writer.BaseStream.Position );
-                    for( var j = 0; j < padding; j++ ) writer.Write( ( byte )0 );
-                }
+
+                var padding = Padding( writer.BaseStream.Position, idx, tmbData.Count() );
+                for( var j = 0; j < padding; j++ ) writer.Write( ( byte )0 );
+
                 idx++;
             }
 
@@ -114,52 +106,30 @@ namespace VFXEditor.Pap {
             FileHelper.ByteInput( $"Base Id{id}", ref BaseId );
             FileHelper.ByteInput( $"Variant Id{id}", ref VariantId );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            DrawDropDown( id );
 
-            var selectedIndex = SelectedAnimation == null ? -1 : Animations.IndexOf( SelectedAnimation );
-            if( ImGui.BeginCombo( $"{id}-ActorSelect", SelectedAnimation == null ? "[NONE]" : SelectedAnimation.GetName() ) ) {
-                for( var i = 0; i < Animations.Count; i++ ) {
-                    var animation = Animations[i];
-                    if( ImGui.Selectable( $"{animation.GetName()}{id}{i}", animation == SelectedAnimation ) ) {
-                        SelectedAnimation = animation;
-                        selectedIndex = i;
-                    }
-                }
-                ImGui.EndCombo();
-            }
-
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SameLine();
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                Animations.Add( new PapAnimation() );
-            }
-            if( SelectedAnimation != null ) {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                    Animations.Remove( SelectedAnimation );
-                    SelectedAnimation = null;
-                }
-            }
-            ImGui.PopFont();
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            if( SelectedAnimation != null ) {
-                SelectedAnimation.Draw( $"{id}{selectedIndex}" );
+            if( Selected != null ) {
+                Selected.Draw( $"{id}{Animations.IndexOf(Selected)}" );
             }
             else {
                 ImGui.Text( "Select an animation..." );
             }
         }
 
-        private int Padding( long position ) {
-            var leftOver = position % 4;
-            return ( int )( leftOver == 0 ? 0 : 4 - leftOver );
+        private static int Padding( long position, int idx, int max ) {
+            if( max > 1 && idx < max - 1 ) {
+                var leftOver = position % 4;
+                return ( int )( leftOver == 0 ? 0 : 4 - leftOver );
+            }
+            return 0;
         }
+
+        protected override List<PapAnimation> GetOptions() => Animations;
+
+        protected override string GetName( PapAnimation item, int idx ) => item.GetName();
+
+        protected override void OnNew() => Animations.Add( new PapAnimation() );
+
+        protected override void OnDelete( PapAnimation item ) => Animations.Remove( item );
     }
 }

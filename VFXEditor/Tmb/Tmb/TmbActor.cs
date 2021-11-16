@@ -35,7 +35,7 @@ namespace VFXEditor.Tmb.Tmb {
             reader.ReadInt32(); // TMAC
             reader.ReadInt32(); // 0x1C
             reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
+            Time = reader.ReadInt16();
             Unk_2 = reader.ReadInt32(); // some count ?
             Unk_3 = reader.ReadInt32(); // some count ?
             var offset = reader.ReadInt32(); // before [TMAC] + offset + 8 = spot on timeline

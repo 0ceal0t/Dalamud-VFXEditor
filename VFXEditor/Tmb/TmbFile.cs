@@ -8,22 +8,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXEditor.Tmb.Tmb;
 
 namespace VFXEditor.Tmb {
-    public class TmbFile {
+    public class TmbFile : FileDropdown<TmbActor> {
         private readonly List<TmbActor> Actors = new();
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
         private short TMDH_Unk3 = 3;
-        private TmbActor SelectedActor = null;
 
         public bool Verified = true;
 
         public TmbFile() {
         }
-
         public TmbFile( BinaryReader reader, bool checkOriginal = true ) {
             var startPos = reader.BaseStream.Position;
 
@@ -72,54 +71,6 @@ namespace VFXEditor.Tmb {
             }
 
             reader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
-        }
-
-        public void Draw( string id ) {
-            FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
-            FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
-            FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            var selectedIndex = SelectedActor == null ? -1 : Actors.IndexOf( SelectedActor );
-            if( ImGui.BeginCombo( $"{id}-ActorSelect", SelectedActor == null ? "[NONE]" : $"Actor {selectedIndex}" ) ) {
-                for( var i = 0; i < Actors.Count; i++ ) {
-                    var actor = Actors[i];
-                    if( ImGui.Selectable( $"Actor {i}{id}{i}", actor == SelectedActor ) ) {
-                        SelectedActor = actor;
-                        selectedIndex = i;
-                    }
-                }
-                ImGui.EndCombo();
-            }
-
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SameLine();
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                Actors.Add( new TmbActor() );
-            }
-            if( SelectedActor != null ) {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                    Actors.Remove( SelectedActor );
-                    SelectedActor = null;
-                }
-            }
-            ImGui.PopFont();
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            if( SelectedActor != null ) {
-                SelectedActor.Draw( $"{id}{selectedIndex}" );
-            }
-            else {
-                ImGui.Text( "Select a timeline actor..." );
-            }
         }
 
         public byte[] ToBytes() {
@@ -213,5 +164,28 @@ namespace VFXEditor.Tmb {
 
             return output;
         }
+
+        public void Draw( string id ) {
+            FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
+            FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
+            FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+
+            DrawDropDown( id );
+
+            if( Selected != null ) {
+                Selected.Draw( $"{id}{Actors.IndexOf( Selected )}" );
+            }
+            else {
+                ImGui.Text( "Select a timeline actor..." );
+            }
+        }
+
+        protected override List<TmbActor> GetOptions() => Actors;
+
+        protected override string GetName( TmbActor item, int idx ) => $"Actor {idx}";
+
+        protected override void OnNew() => Actors.Add( new TmbActor() );
+
+        protected override void OnDelete( TmbActor item ) => Actors.Remove( item );
     }
 }

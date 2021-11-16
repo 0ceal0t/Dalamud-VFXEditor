@@ -36,6 +36,13 @@ namespace VFXEditor.Tmb.Tmb {
             { "C093", new EntryType( C093.Name, () => new C093(), ( BinaryReader br ) => new C093( br ) ) },
             { "C009", new EntryType( C009.Name, () => new C009(), ( BinaryReader br ) => new C009( br ) ) },
             { "C042", new EntryType( C042.Name, () => new C042(), ( BinaryReader br ) => new C042( br ) ) },
+            { "C014", new EntryType( C014.Name, () => new C014(), ( BinaryReader br ) => new C014( br ) ) },
+            { "C015", new EntryType( C015.Name, () => new C015(), ( BinaryReader br ) => new C015( br ) ) },
+            { "C118", new EntryType( C118.Name, () => new C118(), ( BinaryReader br ) => new C118( br ) ) },
+            { "C175", new EntryType( C175.Name, () => new C175(), ( BinaryReader br ) => new C175( br ) ) },
+            { "C174", new EntryType( C174.Name, () => new C174(), ( BinaryReader br ) => new C174( br ) ) },
+            { "C043", new EntryType( C043.Name, () => new C043(), ( BinaryReader br ) => new C043( br ) ) },
+            { "C031", new EntryType( C031.Name, () => new C031(), ( BinaryReader br ) => new C031( br ) ) },
         };
 
         public static void ParseEntries( BinaryReader reader, List<TmbItem> entries, List<TmbTrack> tracks, int entryCount, ref bool entriesOk ) {
@@ -82,10 +89,10 @@ namespace VFXEditor.Tmb.Tmb {
             var startPos = reader.BaseStream.Position; // [TMTR] + 8
 
             Id = reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
+            Time = reader.ReadInt16();
             var offset = reader.ReadInt32(); // before [ITEM] + offset = spot on timeline
             EntryCount_Temp = reader.ReadInt32();
-            Unk_3 = reader.ReadInt32(); // 0
+            Unk_3 = reader.ReadInt32();
 
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 2 * ( EntryCount_Temp - 1 ), SeekOrigin.Begin );

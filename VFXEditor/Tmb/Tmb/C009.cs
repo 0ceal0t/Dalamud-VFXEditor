@@ -23,9 +23,9 @@ namespace VFXEditor.Tmb.Tmb {
             var startPos = reader.BaseStream.Position; // [C009] + 8
 
             reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
-            Unk_2 = reader.ReadInt32(); // ? ex: 50, 60
-            Unk_3 = reader.ReadInt32(); // 0
+            Time = reader.ReadInt16();
+            Unk_2 = reader.ReadInt32();
+            Unk_3 = reader.ReadInt32();
 
             var offset = reader.ReadInt32(); // offset: [C009] + offset + 8 = animation
             var savePos = reader.BaseStream.Position;

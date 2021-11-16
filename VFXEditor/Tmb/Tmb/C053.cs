@@ -22,12 +22,12 @@ namespace VFXEditor.Tmb.Tmb {
         public C053() { }
         public C053( BinaryReader reader ) {
             reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
-            Unk_2 = reader.ReadInt32(); // 8
-            Unk_3 = reader.ReadInt32(); // 0
-            Unk_4 = reader.ReadInt16(); // 0
-            Unk_5 = reader.ReadInt16(); // 0
-            Unk_6 = reader.ReadInt32(); // 0
+            Time = reader.ReadInt16();
+            Unk_2 = reader.ReadInt32();
+            Unk_3 = reader.ReadInt32();
+            Unk_4 = reader.ReadInt16();
+            Unk_5 = reader.ReadInt16();
+            Unk_6 = reader.ReadInt32();
         }
 
         public override int GetSize() => 0x1C;

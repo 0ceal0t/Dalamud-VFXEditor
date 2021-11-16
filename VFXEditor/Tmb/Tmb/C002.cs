@@ -18,10 +18,10 @@ namespace VFXEditor.Tmb.Tmb {
             var startPos = reader.BaseStream.Position; // [C002] + 8
 
             reader.ReadInt16(); // id
-            Time = reader.ReadInt16(); // ?
-            Unk_2 = reader.ReadInt32(); // ? : 50
-            Unk_3 = reader.ReadInt32(); // 0
-            Unk_4 = reader.ReadInt32(); // 0
+            Time = reader.ReadInt16();
+            Unk_2 = reader.ReadInt32();
+            Unk_3 = reader.ReadInt32();
+            Unk_4 = reader.ReadInt32();
 
             var offset = reader.ReadInt32(); // offset: [C002] + offset + 8 = tmb?
             var savePos = reader.BaseStream.Position;
