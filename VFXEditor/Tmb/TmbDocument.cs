@@ -14,9 +14,7 @@ namespace VFXEditor.Tmb {
         }
 
         protected override void LoadLocal( string localPath ) {
-            if( !File.Exists( localPath ) ) return;
-            using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
-            CurrentFile = new( br );
+            CurrentFile = TmbFile.FromLocalFile( localPath );
         }
 
         protected override void LoadGame( string gamePath ) {
@@ -39,9 +37,7 @@ namespace VFXEditor.Tmb {
             ImGui.TextWrapped( "DO NOT modify movement abilities (dashes, backflips, etc.)" );
             ImGui.PopStyleColor();
 
-            ImGui.TextWrapped( "Also note that changing animation paths may not work without swapping the .pap files as well" );
-
-            ImGui.TextWrapped( "When replacing a .pap or .tmb, you may need to change the animation name (such as cbbm_ws01). Make sure to do this in the .tmb and BOTH places in the .pap file. If you have questions, please ask them in the Quicklauncher discord or check the guides" );
+            ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file" );
             if( ImGui.Button( "Guides##Pap" ) ) Plugin.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();

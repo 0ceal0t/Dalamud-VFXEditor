@@ -33,7 +33,7 @@ namespace VFXEditor.Pap {
             var footerPosition = reader.ReadInt32();
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations.Add( new PapAnimation( reader ) );
+                Animations.Add( new PapAnimation( reader, HkxTempLocation ) );
             }
 
             // ... do something about havok data ...
@@ -128,7 +128,7 @@ namespace VFXEditor.Pap {
 
         protected override string GetName( PapAnimation item, int idx ) => item.GetName();
 
-        protected override void OnNew() => Animations.Add( new PapAnimation() );
+        protected override void OnNew() => Animations.Add( new PapAnimation( HkxTempLocation ) );
 
         protected override void OnDelete( PapAnimation item ) => Animations.Remove( item );
     }

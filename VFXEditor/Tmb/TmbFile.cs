@@ -14,6 +14,14 @@ using VFXEditor.Tmb.Tmb;
 
 namespace VFXEditor.Tmb {
     public class TmbFile : FileDropdown<TmbActor> {
+        public static TmbFile FromLocalFile( string path ) {
+            if( !File.Exists( path ) ) return null;
+            using BinaryReader br = new( File.Open( path, FileMode.Open ) );
+            return new TmbFile( br );
+        }
+
+        // ==========================
+
         private readonly List<TmbActor> Actors = new();
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
