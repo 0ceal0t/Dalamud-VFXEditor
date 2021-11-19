@@ -9,7 +9,7 @@ namespace VFXEditor.Tmb.Tmb {
         private int Unk_2 = 1;
         private int Unk_3 = 0;
 
-        public static readonly string Name = "Damager Text (C010)";
+        public static readonly string Name = "Damager Text (C011)";
 
         public C011() { }
         public C011( BinaryReader reader ) {

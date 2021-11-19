@@ -16,17 +16,12 @@ namespace VFXEditor.Pap {
 
         private string Name = ""; // padded to 32 bytes (INCLUDING NULL)
         private short Unknown1 = 0;
-        private short HavokIndex = 0;
         private int Unknown2 = 0;
+        private readonly short HavokIndex;
 
         private TmbFile Tmb;
 
         private int ImportedHavokIndex = 0;
-
-        public PapAnimation( string hkxTemp ) {
-            HkxTempLocation = hkxTemp;
-            Tmb = new TmbFile();
-        }
 
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
@@ -91,18 +86,10 @@ namespace VFXEditor.Pap {
             ImGui.SetNextItemWidth( 100f );
             ImGui.InputInt( $"Imported Havok Index{id}", ref ImportedHavokIndex );
 
-            FileHelper.ShortInput( $"Havok Index (be careful about changing){id}", ref HavokIndex );
+            ImGui.Text( $"Havok Index: {HavokIndex}" );
         }
 
         private void DrawTmb( string id ) {
-            if( ImGui.Button( $"Export Tmb{id}" ) ) Plugin.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
-            ImGui.SameLine();
-            if( ImGui.Button( $"Import Tmb{id}" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", "Tmb File{.tmb},.*", ( bool ok, string res ) => {
-                    if( ok ) Tmb = TmbFile.FromLocalFile( res );
-                } );
-            }
-
             Tmb.Draw( id + "/Tmb" );
         }
     }

@@ -18,7 +18,9 @@ namespace VFXEditor.Pap {
         private byte VariantId;
         private readonly List<PapAnimation> Animations = new();
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) {
+        public bool Verified = true;
+
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( false ) {
             HkxTempLocation = hkxTemp;
 
             var startPos = reader.BaseStream.Position;
@@ -61,7 +63,8 @@ namespace VFXEditor.Pap {
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
                         PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
-                        //break;
+                        Verified = false;
+                        break;
                     }
                 }
             }
@@ -146,8 +149,8 @@ namespace VFXEditor.Pap {
 
         protected override string GetName( PapAnimation item, int idx ) => item.GetName();
 
-        protected override void OnNew() => Animations.Add( new PapAnimation( HkxTempLocation ) );
+        protected override void OnNew() { }
 
-        protected override void OnDelete( PapAnimation item ) => Animations.Remove( item );
+        protected override void OnDelete( PapAnimation item ) { }
     }
 }

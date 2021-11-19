@@ -49,7 +49,7 @@ namespace VFXSelect.VFX {
             DisplayPath( loadedItem.EndTmb );
             if( !string.IsNullOrEmpty( loadedItem.EndTmb ) ) {
                 if( ImGui.Button( "SELECT" + Id + "End" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Start", loadedItem.EndTmb ) );
+                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " End", loadedItem.EndTmb ) );
                 }
                 ImGui.SameLine();
                 Copy( loadedItem.EndTmb, id: Id + "EndCopy" );
@@ -60,7 +60,7 @@ namespace VFXSelect.VFX {
             DisplayPath( loadedItem.HitTmb );
             if( !string.IsNullOrEmpty( loadedItem.HitTmb ) ) {
                 if( ImGui.Button( "SELECT" + Id + "Hit" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Start", loadedItem.HitTmb ) );
+                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Hit", loadedItem.HitTmb ) );
                 }
                 ImGui.SameLine();
                 Copy( loadedItem.HitTmb, id: Id + "HitCopy" );

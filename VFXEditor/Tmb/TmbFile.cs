@@ -32,9 +32,7 @@ namespace VFXEditor.Tmb {
 
         public bool Verified = true;
 
-        public TmbFile() {
-        }
-        public TmbFile( BinaryReader reader, bool checkOriginal = true ) {
+        public TmbFile( BinaryReader reader, bool checkOriginal = true ) : base( true ) {
             var startPos = reader.BaseStream.Position;
 
             byte[] original = null;
@@ -74,6 +72,7 @@ namespace VFXEditor.Tmb {
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
                         PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
+                        Verified = false;
                         break;
                     }
                 }

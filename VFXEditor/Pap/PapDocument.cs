@@ -34,7 +34,7 @@ namespace VFXEditor.Pap {
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected override bool GetVerified() => true;
+        protected override bool GetVerified() => CurrentFile.Verified;
 
         protected override void DrawBody() {
             ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.9f, 0.1f, 0.1f, 1.0f ) );
@@ -61,6 +61,9 @@ namespace VFXEditor.Pap {
                     Plugin.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
                 }
                 else ImGui.PopFont();
+
+                ImGui.SameLine();
+                UiHelper.ShowVerifiedStatus( Verified );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 CurrentFile.Draw( "##Pap" );
