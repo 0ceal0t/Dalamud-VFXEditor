@@ -42,7 +42,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetSize() => 0x28;
         public override int GetExtraSize() => 4 * Unk_Pairs.Select( x => x.Count ).Sum();
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
 
             FileHelper.WriteString( entryWriter, "C093" );

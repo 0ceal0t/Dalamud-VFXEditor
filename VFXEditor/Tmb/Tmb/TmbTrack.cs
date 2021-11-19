@@ -51,7 +51,7 @@ namespace VFXEditor.Tmb.Tmb {
                 var size = reader.ReadInt32(); // size
 
                 if (name == "TMTR") {
-                    tracks.Add( new TmbTrack( reader ) );
+                    tracks.Add( new TmbTrack( entries, reader ) );
                     continue;
                 }
 
@@ -75,17 +75,18 @@ namespace VFXEditor.Tmb.Tmb {
 
         private readonly int EntryCount_Temp;
         private readonly short LastId_Temp;
+        private readonly int Offset_Temp;
 
         private short Time = 0;
-        private readonly List<TmbItem> Entries = new();
         private int Unk_3 = 0;
 
-        public int EntrySize => 0x18 + Entries.Select( x => x.GetSize() ).Sum();
-        public int ExtraSize => Entries.Select( x => x.GetExtraSize() ).Sum();
-        public int EntryCount => 1 + Entries.Count;
+        private readonly List<TmbItem> EntriesMaster;
+        public readonly List<TmbItem> Entries = new();
 
-        public TmbTrack() { }
-        public TmbTrack( BinaryReader reader ) {
+        public TmbTrack( List<TmbItem> entriesMaster ) {
+            EntriesMaster = entriesMaster;
+        }
+        public TmbTrack( List<TmbItem> entriesMaster, BinaryReader reader ) : this(entriesMaster) {
             var startPos = reader.BaseStream.Position; // [TMTR] + 8
 
             Id = reader.ReadInt16(); // id
@@ -93,6 +94,8 @@ namespace VFXEditor.Tmb.Tmb {
             var offset = reader.ReadInt32(); // before [ITEM] + offset = spot on timeline
             EntryCount_Temp = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
+
+            Offset_Temp = offset;
 
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 2 * ( EntryCount_Temp - 1 ), SeekOrigin.Begin );
@@ -104,12 +107,14 @@ namespace VFXEditor.Tmb.Tmb {
             Entries.AddRange(entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where(x => x != null));
         }
 
-        public void Write( BinaryWriter entryWriter, int entryPos, int timelinePos ) {
+        public void Write( BinaryWriter entryWriter, int entryPos, Dictionary<int, int> timelinePos ) {
             var lastId = Entries.Count > 0 ? Entries.Last().Id : Id;
 
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
-            var endPos = timelinePos + ( lastId - 2 ) * 2;
-            var offset = endPos - startPos - 8 - 2 * ( Entries.Count - 1 );
+            var endPos = timelinePos.TryGetValue( lastId, out var pos ) ? pos : 0;
+            var offset = endPos - startPos - 8 - (2 * (Entries.Count == 0 ? 0 : ( Entries.Count - 1 )));
+
+            if( Entries.Count == 0 ) offset = Offset_Temp;
 
             FileHelper.WriteString( entryWriter, "TMTR" );
             entryWriter.Write( 0x18 );
@@ -120,16 +125,8 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Unk_3 );
         }
 
-        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
-            foreach( var entry in Entries ) entry.Write( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
-        }
-
         public void CalculateId( ref short id ) {
             Id = id++;
-        }
-
-        public void CalculateEntriesId( ref short id ) {
-            foreach( var entry in Entries ) entry.CalculateId( ref id );
         }
 
         public void PopulateStringList( List<string> stringList ) {
@@ -146,6 +143,7 @@ namespace VFXEditor.Tmb.Tmb {
                     ImGui.Indent();
                     if( UiHelper.RemoveButton( $"Delete{id}{i}" ) ) {
                         Entries.Remove( entry );
+                        EntriesMaster.Remove( entry );
                         ImGui.Unindent();
                         break;
                     }
@@ -162,7 +160,15 @@ namespace VFXEditor.Tmb.Tmb {
             if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) {
                 foreach( var entryType in TypeDict.Values ) {
                     if( ImGui.Selectable( $"{entryType.Name}##New_Entry_Tmb" ) ) {
-                        Entries.Add( entryType.NewItem() );
+                        var newEntry = entryType.NewItem();
+                        if( Entries.Count == 0 ) {
+                            EntriesMaster.Add( newEntry );
+                        }
+                        else {
+                            var idx = EntriesMaster.IndexOf( Entries.Last() );
+                            EntriesMaster.Insert( idx + 1, newEntry );
+                        }
+                        Entries.Add( newEntry );
                     }
                 }
                 ImGui.EndPopup();

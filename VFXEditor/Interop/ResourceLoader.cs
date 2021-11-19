@@ -20,6 +20,8 @@ namespace VFXEditor.Interop {
         private readonly Crc32 Crc32;
         private readonly Crc32 Crc32_Reload;
 
+        private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
+
         // ====== REDRAW =======
         private enum RedrawState {
             None,
@@ -109,6 +111,7 @@ namespace VFXEditor.Interop {
         private unsafe delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
         private RequestFileDelegate RequestFile;
 
+        // ================================
 
         public ResourceLoader() {
             Crc32 = new();
@@ -251,13 +254,13 @@ namespace VFXEditor.Interop {
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
-                    *( int* )renderPtr |= 0x00_00_00_02;
+                    *( uint* )renderPtr |= INVIS_FLAG;
                     CurrentRedrawState = RedrawState.Invisible;
                     WaitFrames = 15;
                     break;
                 case RedrawState.Invisible:
                     if( WaitFrames == 0 ) {
-                        *( int* )renderPtr &= ~0x00_00_00_02;
+                        *( uint* )renderPtr &= ~INVIS_FLAG;
                         CurrentRedrawState = RedrawState.Visible;
                     }
                     else {
@@ -334,7 +337,11 @@ namespace VFXEditor.Interop {
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
         }
 
+        private IntPtr lastFileDesc;
+
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
+            lastFileDesc = new IntPtr( pFileDesc ); // ---------------------------------
+
             var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
@@ -386,23 +393,28 @@ namespace VFXEditor.Interop {
                 localPath = tmbFile;
                 return true;
             }
+            else if( Plugin.PapManager.GetReplacePath( gamePath, out var papFile ) == true ) {
+                localPath = papFile;
+                return true;
+            }
             return false;
         }
 
         public unsafe void ReloadPath( string gamePath, string localPath ) {
-            if (!string.IsNullOrEmpty(gamePath)) {
-                var gameResource = GetResource( gamePath, true );
-                if (gameResource != IntPtr.Zero)
-                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
-            }
-            else {
-                return;
+            if( string.IsNullOrEmpty( gamePath ) ) return;
+
+            var gameResource = GetResource( gamePath, true );
+            if( gamePath.Contains( ".pap" ) ) Marshal.WriteByte( gameResource + 105, 0xec );
+            if( gameResource != IntPtr.Zero ) {
+                RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
             }
 
             if (!string.IsNullOrEmpty(localPath)) {
-                var gameResource = GetResource( gamePath, false ); // get local path resource
-                if( gameResource != IntPtr.Zero )
-                    RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+                var gameResource2 = GetResource( gamePath, false ); // get local path resource
+                if( gamePath.Contains( ".pap" ) ) Marshal.WriteByte( gameResource2 + 105, 0xec );
+                if( gameResource2 != IntPtr.Zero ) {
+                    RequestFile( GetFileManager2(), gameResource2 + 0x38, gameResource2, 1 );
+                }
             }
         }
 

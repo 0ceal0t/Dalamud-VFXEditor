@@ -44,12 +44,10 @@ namespace VFXEditor.Tmb {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( CurrentFile != null ) {
-                if( UiHelper.OkButton( "UPDATE" ) ) Update();
-
-                ImGui.SameLine();
-                if( ImGui.Button( "Reload" ) ) Reload();
-                ImGui.SameLine();
-                UiHelper.HelpMarker( "Manually reload the resource" );
+                if( UiHelper.OkButton( "UPDATE" ) ) {
+                    Update();
+                    Reload();
+                }
 
                 ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );

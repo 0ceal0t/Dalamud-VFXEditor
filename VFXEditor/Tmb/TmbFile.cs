@@ -23,6 +23,9 @@ namespace VFXEditor.Tmb {
         // ==========================
 
         private readonly List<TmbActor> Actors = new();
+        private readonly List<TmbTrack> Tracks = new();
+        private readonly List<TmbItem> Entries = new();
+
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
         private short TMDH_Unk3 = 3;
@@ -35,7 +38,7 @@ namespace VFXEditor.Tmb {
             var startPos = reader.BaseStream.Position;
 
             byte[] original = null;
-            if (checkOriginal) {
+            if( checkOriginal ) {
                 original = FileHelper.ReadAllBytes( reader );
                 reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
             }
@@ -58,17 +61,15 @@ namespace VFXEditor.Tmb {
 
             // ============ PARSE ================
             for( var i = 0; i < numActors; i++ ) { // parse actors
-                Actors.Add( new TmbActor( reader ) );
+                Actors.Add( new TmbActor( Tracks, Entries, reader ) );
             }
-            var tracks = new List<TmbTrack>();
-            var entries = new List<TmbItem>();
-            TmbTrack.ParseEntries( reader, entries, tracks, numEntries - 2 - Actors.Count, ref Verified );
+            TmbTrack.ParseEntries( reader, Entries, Tracks, numEntries - 2 - Actors.Count, ref Verified );
             // ===================================
 
-            foreach( var track in tracks ) track.PickEntries( entries, 2 + Actors.Count + tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
-            foreach( var actor in Actors ) actor.PickTracks( tracks, 2 + Actors.Count );
+            foreach( var track in Tracks ) track.PickEntries( Entries, 2 + Actors.Count + Tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
+            foreach( var actor in Actors ) actor.PickTracks( Tracks, 2 + Actors.Count );
 
-            if (checkOriginal) { // Check if output matches the original
+            if( checkOriginal ) { // Check if output matches the original
                 var output = ToBytes();
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
@@ -83,15 +84,15 @@ namespace VFXEditor.Tmb {
 
         public byte[] ToBytes() {
             var headerSize = 0x0C + 0x10 + 0x10 + Actors.Count * 0x1C;
-            var entriesSize = Actors.Select( x => x.EntrySize ).Sum();
-            var extraSize = Actors.Select( x => x.ExtraSize ).Sum();
+            var entriesSize = 0x18 * Tracks.Count + Entries.Select( x => x.GetSize() ).Sum();
+            var extraSize = Entries.Select( x => x.GetExtraSize() ).Sum();
 
             var stringList = new List<string>();
-            Actors.ForEach( x => x.PopulateStringList( stringList ) );
+            Entries.ForEach( x => x.PopulateStringList( stringList ) );
             var stringSize = stringList.Select( x => x.Length + 1 ).Sum();
 
-            var entryCount = Actors.Count + Actors.Select( x => x.EntryCount ).Sum(); // include TMTR + entries
-            var timelineSize = 2 * entryCount;
+            var entryCount = Actors.Count + Tracks.Count + Entries.Count; // include TMTR + entries
+            var timelineSize = 2 * (Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum());
 
             // calculate starting positions
             var entriesPos = headerSize;
@@ -122,23 +123,13 @@ namespace VFXEditor.Tmb {
             headerWriter.Write( timelinePos - ( int )headerWriter.BaseStream.Position );
             headerWriter.Write( Actors.Count );
 
-            // write timeline
-            var timelineData = new byte[timelineSize];
-            using MemoryStream timelineMs = new( timelineData );
-            using BinaryWriter timelineWriter = new( timelineMs );
-            timelineWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
-
-            for( var i = 0; i < entryCount; i++ ) {
-                timelineWriter.Write( ( short )( 2 + i ) );
-            }
-
             var stringData = new byte[stringSize];
             using MemoryStream stringMs = new( stringData );
             using BinaryWriter stringWriter = new( stringMs );
             stringWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
             Dictionary<string, int> stringPositions = new();
             var currentStringPos = 0;
-            foreach(var item in stringList) {
+            foreach( var item in stringList ) {
                 stringPositions[item] = currentStringPos;
                 FileHelper.WriteString( stringWriter, item, true );
                 currentStringPos += item.Length + 1;
@@ -156,12 +147,37 @@ namespace VFXEditor.Tmb {
 
             short id = 2;
             foreach( var tmac in Actors ) tmac.CalculateId( ref id );
-            foreach( var tmac in Actors ) tmac.CalculateTracksId( ref id );
-            foreach( var tmac in Actors ) tmac.CalculateEntriesId( ref id );
+            foreach( var track in Tracks ) track.CalculateId( ref id );
+            foreach( var entry in Entries ) entry.CalculateId( ref id );
 
-            foreach( var tmac in Actors ) tmac.Write( headerWriter, timelinePos );
-            foreach( var tmac in Actors ) tmac.WriteTracks( entriesWriter, entriesPos, timelinePos );
-            foreach( var tmac in Actors ) tmac.WriteEntries( entriesWriter, entriesPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
+            // ========= USED IDS =========
+            var timelineData = new byte[timelineSize];
+            using MemoryStream timelineMs = new( timelineData );
+            using BinaryWriter timelineWriter = new( timelineMs );
+            timelineWriter.BaseStream.Seek( 0, SeekOrigin.Begin );
+
+            var usedIds = new List<int>();
+            foreach( var actor in Actors ) {
+                usedIds.Add( actor.Id );
+                foreach( var track in actor.Tracks ) usedIds.Add( track.Id );
+            }
+            foreach( var track in Tracks ) {
+                foreach( var entry in track.Entries ) usedIds.Add( entry.Id );
+            }
+            usedIds.Sort();
+
+            var idPositions = new Dictionary<int, int>();
+            var pos = timelinePos;
+            foreach( var _id in usedIds ) {
+                timelineWriter.Write( ( short )_id );
+                idPositions[_id] = pos;
+                pos += 2;
+            }
+            // ============================
+
+            foreach( var tmac in Actors ) tmac.Write( headerWriter, idPositions );
+            foreach( var track in Tracks ) track.Write( entriesWriter, entriesPos, idPositions );
+            foreach( var entry in Entries ) entry.Write( entriesWriter, entriesPos, extraWriter, extraPos, stringPositions, stringPos );
 
             var output = new byte[totalSize];
             Buffer.BlockCopy( headerData, 0, output, 0, headerData.Length );
@@ -192,7 +208,7 @@ namespace VFXEditor.Tmb {
 
         protected override string GetName( TmbActor item, int idx ) => $"Actor {idx}";
 
-        protected override void OnNew() => Actors.Add( new TmbActor() );
+        protected override void OnNew() => Actors.Add( new TmbActor( Tracks, Entries ) );
 
         protected override void OnDelete( TmbActor item ) => Actors.Remove( item );
     }

@@ -183,15 +183,11 @@ namespace VFXEditor.Avfx {
                 if( UiHelper.OkButton( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                         Update();
+                        Reload();
                         Plugin.ResourceLoader.ReRender();
                         LastUpdate = DateTime.Now;
                     }
                 }
-
-                ImGui.SameLine();
-                if( ImGui.Button( "Reload" ) ) Reload();
-                ImGui.SameLine();
-                UiHelper.HelpMarker( "Manually reload the resource. Only do this after pressing the UPDATE button." );
 
                 // ===== EXPORT ======
                 ImGui.SameLine();

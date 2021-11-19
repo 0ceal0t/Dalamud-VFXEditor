@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Helper;
+using VFXEditor.Interop;
 using VFXEditor.Tmb;
 
 namespace VFXEditor.Pap {
@@ -59,8 +60,22 @@ namespace VFXEditor.Pap {
             FileHelper.ShortInput( $"Unknown 1{id}", ref Unknown1 );
             ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );
 
-            // ========= HAVOK ========
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            // =====================
+            if( ImGui.BeginTabBar( $"Tabs{id}", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Havok{id}/Tab" ) ) {
+                    DrawHavok( id );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Tmb{id}/Tab" ) ) {
+                    DrawTmb( id );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+        }
 
+        private void DrawHavok( string id ) {
             if( ImGui.Button( $"Export Havok{id}" ) ) {
                 FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
@@ -68,16 +83,18 @@ namespace VFXEditor.Pap {
             }
             ImGui.SameLine();
             if( ImGui.Button( $"Import Havok{id}" ) ) {
-                // TODO
+                FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+                    if( ok ) HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, ImportedHavokIndex, HkxTempLocation );
+                } );
             }
             ImGui.SameLine();
-            ImGui.SetNextItemWidth( 25f );
+            ImGui.SetNextItemWidth( 100f );
             ImGui.InputInt( $"Imported Havok Index{id}", ref ImportedHavokIndex );
 
             FileHelper.ShortInput( $"Havok Index (be careful about changing){id}", ref HavokIndex );
+        }
 
-            // ======== TMB =========
-
+        private void DrawTmb( string id ) {
             if( ImGui.Button( $"Export Tmb{id}" ) ) Plugin.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
             ImGui.SameLine();
             if( ImGui.Button( $"Import Tmb{id}" ) ) {

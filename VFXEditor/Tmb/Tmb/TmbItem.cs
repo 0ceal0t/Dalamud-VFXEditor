@@ -22,7 +22,7 @@ namespace VFXEditor.Tmb.Tmb {
 
         public abstract void PopulateStringList( List<string> stringList );
 
-        public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos );
+        public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos );
 
         public static void AddString( string newItem, List<string> stringList ) {
             if( stringList.Contains( newItem ) ) return;

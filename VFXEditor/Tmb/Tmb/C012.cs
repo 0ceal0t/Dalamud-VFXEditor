@@ -16,6 +16,8 @@ namespace VFXEditor.Tmb.Tmb {
         private short BindPoint_3 = 2;
         private short bindPoint_4 = 0xFF;
         private readonly List<List<float>> Unk_Pairs;
+        private int Unk_4;
+        private int Unk_5;
 
         public static readonly string Name = "VFX (C012)";
 
@@ -25,7 +27,6 @@ namespace VFXEditor.Tmb.Tmb {
                 new List<float>( new[] { 0f, 0f, 0f } ),
                 new List<float>( new[] { 0f, 0f, 0f } ),
                 new List<float>( new[] { 1f, 1f, 1f, 1f } ),
-                new List<float>()
             };
             return ret;
         }
@@ -52,13 +53,16 @@ namespace VFXEditor.Tmb.Tmb {
             BindPoint_3 = reader.ReadInt16();
             bindPoint_4 = reader.ReadInt16();
 
-            Unk_Pairs = ReadPairs( 5, reader, startPos );
+            Unk_Pairs = ReadPairs( 4, reader, startPos );
+
+            Unk_4 = reader.ReadInt32();
+            Unk_5 = reader.ReadInt32();
         }
 
         public override int GetSize() => 0x48;
         public override int GetExtraSize() => 4 * Unk_Pairs.Select(x => x.Count).Sum();
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
@@ -78,6 +82,9 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( bindPoint_4 );
 
             WritePairs( entryWriter, extraWriter, extraPos, startPos, Unk_Pairs );
+
+            entryWriter.Write( Unk_4 );
+            entryWriter.Write( Unk_5 );
         }
 
         public override string GetName() => Name;
@@ -86,6 +93,8 @@ namespace VFXEditor.Tmb.Tmb {
             FileHelper.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Uknown 5{id}", ref Unk_5 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
             FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint_1 );
             FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint_2 );

@@ -33,7 +33,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetSize() => 0x1C;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;

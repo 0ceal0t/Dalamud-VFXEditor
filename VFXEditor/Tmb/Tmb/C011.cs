@@ -22,7 +22,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetSize() => 0x14;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             FileHelper.WriteString( entryWriter, "C011" );
             entryWriter.Write( GetSize() );
             entryWriter.Write( Id );

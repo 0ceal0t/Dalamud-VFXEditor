@@ -16,20 +16,22 @@ namespace VFXEditor.Tmb.Tmb {
 
         private readonly int TrackCount_Temp;
         private readonly short LastId_Temp;
+        private readonly int Offset_Temp;
 
-        private readonly List<TmbTrack> Tracks = new();
+        private readonly List<TmbTrack> TracksMaster;
+        private readonly List<TmbItem> EntriesMaster;
+        public readonly List<TmbTrack> Tracks = new();
         private short Time = 0;
         private int Unk_2 = 0;
         private int Unk_3 = 0;
 
         private TmbTrack SelectedTrack = null;
 
-        public int EntrySize => Tracks.Select( x => x.EntrySize ).Sum();
-        public int ExtraSize => Tracks.Select( x => x.ExtraSize ).Sum();
-        public int EntryCount => Tracks.Select( x => x.EntryCount ).Sum();
-
-        public TmbActor() { }
-        public TmbActor( BinaryReader reader ) {
+        public TmbActor( List<TmbTrack> tracksMaster, List<TmbItem> entriesMaster ) {
+            TracksMaster = tracksMaster;
+            EntriesMaster = entriesMaster;
+        }
+        public TmbActor( List<TmbTrack> tracksMaster, List<TmbItem> entriesMaster, BinaryReader reader ) : this( tracksMaster, entriesMaster ) {
             var startPos = reader.BaseStream.Position;
 
             reader.ReadInt32(); // TMAC
@@ -40,6 +42,8 @@ namespace VFXEditor.Tmb.Tmb {
             Unk_3 = reader.ReadInt32(); // some count ?
             var offset = reader.ReadInt32(); // before [TMAC] + offset + 8 = spot on timeline
             TrackCount_Temp = reader.ReadInt32(); // number of TMTR
+
+            Offset_Temp = offset;
 
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( TrackCount_Temp - 1 ), SeekOrigin.Begin );
@@ -55,20 +59,14 @@ namespace VFXEditor.Tmb.Tmb {
             Id = id++;
         }
 
-        public void CalculateTracksId( ref short id ) {
-            foreach( var track in Tracks ) track.CalculateId( ref id );
-        }
-
-        public void CalculateEntriesId( ref short id ) {
-            foreach( var track in Tracks ) track.CalculateEntriesId( ref id );
-        }
-
-        public void Write( BinaryWriter headerWriter, int timelinePos ) {
+        public void Write( BinaryWriter headerWriter, Dictionary<int, int> timelinePos ) {
             var lastId = Tracks.Count > 0 ? Tracks.Last().Id : Id;
 
             var startPos = ( int )headerWriter.BaseStream.Position;
-            var endPos = timelinePos + ( lastId - 2 ) * 2;
+            var endPos = timelinePos.TryGetValue( lastId, out var pos ) ? pos : 0;
             var offset = endPos - startPos - 8 - 2 * ( Tracks.Count - 1 );
+
+            if( Tracks.Count == 0 ) offset = Offset_Temp;
 
             FileHelper.WriteString( headerWriter, "TMAC" );
             headerWriter.Write( 0x1C );
@@ -78,18 +76,6 @@ namespace VFXEditor.Tmb.Tmb {
             headerWriter.Write( Unk_3 );
             headerWriter.Write( offset );
             headerWriter.Write( Tracks.Count );
-        }
-
-        public void WriteEntries( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
-            foreach( var track in Tracks ) track.WriteEntries( entryWriter, entryPos, extraWriter, extraPos, stringPositions, stringPos, timelinePos );
-        }
-
-        public void WriteTracks( BinaryWriter entryWriter, int entryPos, int timelinePos ) {
-            foreach( var track in Tracks ) track.Write( entryWriter, entryPos, timelinePos );
-        }
-
-        public void PopulateStringList( List<string> stringList) {
-            foreach( var track in Tracks ) track.PopulateStringList( stringList );
         }
 
         public void Draw( string id ) {
@@ -106,13 +92,22 @@ namespace VFXEditor.Tmb.Tmb {
             // ===========
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                Tracks.Add( new TmbTrack() );
+                var newTrack = new TmbTrack( EntriesMaster );
+                if (Tracks.Count == 0) {
+                    TracksMaster.Add( newTrack );
+                }
+                else {
+                    var idx = TracksMaster.IndexOf( Tracks.Last() );
+                    TracksMaster.Insert( idx + 1, newTrack );
+                }
+                Tracks.Add( newTrack );
             }
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
                 if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Tracks.Remove( SelectedTrack );
+                    TracksMaster.Remove( SelectedTrack );
                     SelectedTrack = null;
                 }
             }

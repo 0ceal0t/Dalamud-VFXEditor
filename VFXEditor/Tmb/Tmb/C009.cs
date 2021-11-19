@@ -16,7 +16,7 @@ namespace VFXEditor.Tmb.Tmb {
         private int Unk_3 = 0;
         private string Path = "";
 
-        public static readonly string Name = "Animation - PAP Only (C010)";
+        public static readonly string Name = "Animation - PAP Only (C009)";
 
         public C009() { }
         public C009( BinaryReader reader ) {
@@ -37,7 +37,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetSize() => 0x18;
         public override int GetExtraSize() => 0;
 
-        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos, int timelinePos ) {
+        public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;

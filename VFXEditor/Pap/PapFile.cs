@@ -18,8 +18,16 @@ namespace VFXEditor.Pap {
         private byte VariantId;
         private readonly List<PapAnimation> Animations = new();
 
-        public PapFile( BinaryReader reader, string hkxTemp ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) {
             HkxTempLocation = hkxTemp;
+
+            var startPos = reader.BaseStream.Position;
+
+            byte[] original = null;
+            if( checkOriginal ) {
+                original = FileHelper.ReadAllBytes( reader );
+                reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
+            }
 
             reader.ReadInt32(); // magic
             reader.ReadInt32(); // version
@@ -47,6 +55,16 @@ namespace VFXEditor.Pap {
                 Animations[i].ReadTmb( reader );
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations ) );
             }
+
+            if( checkOriginal ) { // Check if output matches the original
+                var output = ToBytes();
+                for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
+                    if( output[i] != original[i] ) {
+                        PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
+                        //break;
+                    }
+                }
+            }
         }
 
         public byte[] ToBytes() {
@@ -73,8 +91,8 @@ namespace VFXEditor.Pap {
 
             // ====================
 
-            writer.Write( 0x70617020 );
-            writer.Write( 0x01000200 );
+            writer.Write( 0x20706170 );
+            writer.Write( 0x00020001 );
             writer.Write( ( short )Animations.Count );
             writer.Write( ModelId );
             writer.Write( BaseId );

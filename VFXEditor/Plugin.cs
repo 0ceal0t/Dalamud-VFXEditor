@@ -166,6 +166,7 @@ namespace VFXEditor
         }
 
         private void DrawConfigUI() {
+            ResourceLoader.ReRender();
             AvfxManager.Show();
         }
 
