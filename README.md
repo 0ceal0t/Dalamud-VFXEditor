@@ -47,7 +47,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 
 ## TODO
 - [ ] .scd editor
-- [ ] .pap editor
 - [ ] .mdl import + export
 - [ ] Menu shortcuts + keys move up / down
 - [ ] Bind point ID research
@@ -67,6 +66,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~PAP editor~~
 - [x] ~~TMB editor~~
 - [x] ~~Copy+Paste parameters (color keys, etc.3)~~
 - [x] ~~Ground-targeted AOEs (might need to do it manually?)~~
