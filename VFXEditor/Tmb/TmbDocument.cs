@@ -47,6 +47,7 @@ namespace VFXEditor.Tmb {
                 if( UiHelper.OkButton( "UPDATE" ) ) {
                     Update();
                     Reload();
+                    Plugin.ResourceLoader.ReRender();
                 }
 
                 ImGui.SameLine();

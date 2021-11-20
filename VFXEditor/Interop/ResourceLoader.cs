@@ -402,28 +402,33 @@ namespace VFXEditor.Interop {
 
             var gameResource = GetResource( gamePath, true );
             if( gameResource != IntPtr.Zero ) {
-                if( papIds != null ) Marshal.WriteByte( gameResource + 105, 0xec ); // prep .pap files
+                PrepPap( gameResource, papIds );
                 RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
                 WritePapIds( gameResource, papIds );
             }
 
-            if (!string.IsNullOrEmpty(localPath)) {
+            if( !string.IsNullOrEmpty( localPath ) ) {
                 var gameResource2 = GetResource( gamePath, false ); // get local path resource
                 if( gameResource2 != IntPtr.Zero ) {
-                    if( papIds != null ) Marshal.WriteByte( gameResource2 + 105, 0xec );  // prep .pap files
+                    PrepPap( gameResource2, papIds );
                     RequestFile( GetFileManager2(), gameResource2 + 0x38, gameResource2, 1 );
                     WritePapIds( gameResource2, papIds );
                 }
             }
         }
 
-        private void WritePapIds( IntPtr resource, List<string> papIds ) {
+        private static void PrepPap( IntPtr resource, List<string> papIds ) {
+            if( papIds == null ) return;
+            Marshal.WriteByte( resource + 105, 0xec );
+        }
+
+        private static void WritePapIds( IntPtr resource, List<string> papIds ) {
             if( papIds == null ) return;
             var data = Marshal.ReadIntPtr( resource + 0xf0 );
-            for (var i = 0; i < papIds.Count; i++ ) {
+            for( var i = 0; i < papIds.Count; i++ ) {
                 var loc = data + i * 40;
                 var bytes = Encoding.ASCII.GetBytes( papIds[i] );
-                for(var j = 0; j < bytes.Length; j++) {
+                for( var j = 0; j < bytes.Length; j++ ) {
                     Marshal.WriteByte( loc + j, bytes[j] );
                 }
             }
