@@ -169,7 +169,8 @@ namespace VFXEditor {
             var meta = new WorkspaceMeta {
                 Docs = AvfxManager.WorkspaceExport( saveLocation ),
                 Tex = TextureManager.WorkspaceExport( saveLocation ),
-                Tmb = TmbManager.WorkspaceExport( saveLocation )
+                Tmb = TmbManager.WorkspaceExport( saveLocation ),
+                Pap = PapManager.WorkspaceExport( saveLocation ),
             };
 
             var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );

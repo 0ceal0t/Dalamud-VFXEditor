@@ -46,6 +46,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Add / delete Havok animations
 - [ ] .scd editor
 - [ ] .mdl import + export
 - [ ] Menu shortcuts + keys move up / down
@@ -66,6 +67,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Fix issues with .pap reloading~~ (kind of done, a bit scuffed)
 - [x] ~~PAP editor~~
 - [x] ~~TMB editor~~
 - [x] ~~Copy+Paste parameters (color keys, etc.3)~~

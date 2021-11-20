@@ -152,5 +152,7 @@ namespace VFXEditor.Pap {
         protected override void OnNew() { }
 
         protected override void OnDelete( PapAnimation item ) { }
+
+        public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
     }
 }

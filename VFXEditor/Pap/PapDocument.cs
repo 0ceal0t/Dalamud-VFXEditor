@@ -50,7 +50,7 @@ namespace VFXEditor.Pap {
             if( CurrentFile != null ) {
                 if( UiHelper.OkButton( "UPDATE" ) ) {
                     Update();
-                    Reload();
+                    Reload( CurrentFile.GetPapIds() );
                     Plugin.ResourceLoader.ReRender();
                 }
 

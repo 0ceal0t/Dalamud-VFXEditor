@@ -13,6 +13,7 @@ using Reloaded.Hooks.Definitions.X64;
 using System.Threading;
 using VFXEditor.Tmb;
 using VFXEditor.Tracker;
+using System.Collections.Generic;
 
 namespace VFXEditor.Interop {
     public class ResourceLoader : IDisposable {
@@ -337,11 +338,7 @@ namespace VFXEditor.Interop {
             return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
         }
 
-        private IntPtr lastFileDesc;
-
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
-            lastFileDesc = new IntPtr( pFileDesc ); // ---------------------------------
-
             var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
@@ -400,20 +397,34 @@ namespace VFXEditor.Interop {
             return false;
         }
 
-        public unsafe void ReloadPath( string gamePath, string localPath ) {
+        public unsafe void ReloadPath( string gamePath, string localPath, List<string> papIds = null ) {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( gamePath.Contains( ".pap" ) ) Marshal.WriteByte( gameResource + 105, 0xec );
             if( gameResource != IntPtr.Zero ) {
+                if( papIds != null ) Marshal.WriteByte( gameResource + 105, 0xec ); // prep .pap files
                 RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+                WritePapIds( gameResource, papIds );
             }
 
             if (!string.IsNullOrEmpty(localPath)) {
                 var gameResource2 = GetResource( gamePath, false ); // get local path resource
-                if( gamePath.Contains( ".pap" ) ) Marshal.WriteByte( gameResource2 + 105, 0xec );
                 if( gameResource2 != IntPtr.Zero ) {
+                    if( papIds != null ) Marshal.WriteByte( gameResource2 + 105, 0xec );  // prep .pap files
                     RequestFile( GetFileManager2(), gameResource2 + 0x38, gameResource2, 1 );
+                    WritePapIds( gameResource2, papIds );
+                }
+            }
+        }
+
+        private void WritePapIds( IntPtr resource, List<string> papIds ) {
+            if( papIds == null ) return;
+            var data = Marshal.ReadIntPtr( resource + 0xf0 );
+            for (var i = 0; i < papIds.Count; i++ ) {
+                var loc = data + i * 40;
+                var bytes = Encoding.ASCII.GetBytes( papIds[i] );
+                for(var j = 0; j < bytes.Length; j++) {
+                    Marshal.WriteByte( loc + j, bytes[j] );
                 }
             }
         }

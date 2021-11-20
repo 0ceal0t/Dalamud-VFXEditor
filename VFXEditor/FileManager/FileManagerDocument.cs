@@ -83,9 +83,9 @@ namespace VFXEditor.FileManager {
 
         protected abstract void Update();
 
-        protected void Reload() {
+        protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
-            Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation );
+            Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation, papIds );
         }
 
         public virtual void Dispose() {
