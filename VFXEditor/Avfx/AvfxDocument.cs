@@ -21,7 +21,7 @@ namespace VFXEditor.Avfx {
         }
         public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) {
         }
-        public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data) : this(writeLocation, localPath, data.Source, data.Replace) {
+        public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }
 
@@ -38,10 +38,7 @@ namespace VFXEditor.Avfx {
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected override bool GetVerified() {
-            if( !Plugin.Configuration.VerifyOnLoad ) return true;
-            return CurrentFile.GetVerified();
-        }
+        protected override bool GetVerified() => CurrentFile.GetVerified();
 
         protected override void DrawBody() { }
 
@@ -208,10 +205,8 @@ namespace VFXEditor.Avfx {
                 }
 
                 // ======== VERIFY ============
-                if( Plugin.Configuration.VerifyOnLoad ) {
-                    ImGui.SameLine();
-                    UiHelper.ShowVerifiedStatus( Verified );
-                }
+                ImGui.SameLine();
+                UiHelper.ShowVerifiedStatus( Verified );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

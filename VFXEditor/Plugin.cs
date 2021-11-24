@@ -30,8 +30,7 @@ using VFXEditor.Textools;
 using VFXEditor.Penumbra;
 using VFXEditor.Pap;
 
-namespace VFXEditor
-{
+namespace VFXEditor {
     public partial class Plugin : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ClientState ClientState { get; private set; }
@@ -86,7 +85,7 @@ namespace VFXEditor
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
             TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
-            
+
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 

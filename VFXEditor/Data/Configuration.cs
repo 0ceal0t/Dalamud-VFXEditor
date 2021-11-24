@@ -17,7 +17,6 @@ namespace VFXEditor {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
-        public bool VerifyOnLoad = true;
         public bool LogAllFiles = false;
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
@@ -61,11 +60,6 @@ namespace VFXEditor {
         public override void DrawBody() {
             ImGui.Text( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) {
-                Save();
-            }
-
-            ImGui.SetNextItemWidth( 200 );
-            if( ImGui.Checkbox( "Verify on load##Settings", ref VerifyOnLoad ) ) {
                 Save();
             }
 

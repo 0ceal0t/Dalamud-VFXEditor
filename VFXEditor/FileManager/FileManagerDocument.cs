@@ -153,7 +153,7 @@ namespace VFXEditor.FileManager {
             ImGui.Columns( 1 );
 
             // ================================
-            
+
             DrawBody();
         }
 
