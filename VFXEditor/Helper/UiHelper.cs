@@ -1,11 +1,11 @@
 using Dalamud.Interface;
+using ImGuiFileDialog;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Helper {
     public enum VerifiedStatus {
@@ -112,6 +112,23 @@ namespace VFXEditor.Helper {
             ImGui.PopFont();
             ImGui.SameLine();
             ImGui.TextColored( color, text );
+        }
+
+        public static void WriteBytesDialog( string filter, string data, string ext ) {
+            WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
+        }
+
+        public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
+                if( ok ) File.WriteAllBytes( res, data );
+            } );
+        }
+
+        public static void OpenUrl( string url ) {
+            Process.Start( new ProcessStartInfo {
+                FileName = url,
+                UseShellExecute = true
+            } );
         }
     }
 }

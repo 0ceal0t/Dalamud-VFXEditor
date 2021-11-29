@@ -196,10 +196,10 @@ namespace VFXEditor.Avfx {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        Plugin.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
+                        UiHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
                     }
                     if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        Plugin.WriteBytesDialog( ".txt", AvfxHelper.LastImportNode.ExportString( 0 ), "txt" );
+                        UiHelper.WriteBytesDialog( ".txt", AvfxHelper.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }

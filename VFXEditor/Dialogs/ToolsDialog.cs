@@ -5,6 +5,7 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Texture;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Dialogs {
     public class ToolsDialog : GenericDialog {
@@ -25,7 +26,7 @@ namespace VFXEditor.Dialogs {
                 if( result ) {
                     try {
                         var file = Plugin.DataManager.GetFile( RawInputValue );
-                        Plugin.WriteBytesDialog( ".avfx", file.Data, "avfx" );
+                        UiHelper.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
                         PluginLog.Error( "Could not read file", e );
@@ -41,7 +42,7 @@ namespace VFXEditor.Dialogs {
                 if( result ) {
                     try {
                         var file = Plugin.DataManager.GetFile( RawTexInputValue );
-                        Plugin.WriteBytesDialog( ".atex", file.Data, "atex" );
+                        UiHelper.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
                         PluginLog.Error( "Could not read file", e );

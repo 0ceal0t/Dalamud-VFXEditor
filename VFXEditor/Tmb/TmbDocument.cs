@@ -38,7 +38,7 @@ namespace VFXEditor.Tmb {
             ImGui.PopStyleColor();
 
             ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file" );
-            if( ImGui.Button( "Guides##Pap" ) ) Plugin.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            if( ImGui.Button( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -54,7 +54,7 @@ namespace VFXEditor.Tmb {
                 ImGui.PushFont( UiBuilder.IconFont );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
                     ImGui.PopFont();
-                    Plugin.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
+                    UiHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
                 }
                 else ImGui.PopFont();
 

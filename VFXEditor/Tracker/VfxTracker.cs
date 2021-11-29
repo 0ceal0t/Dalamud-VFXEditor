@@ -13,9 +13,9 @@ namespace VFXEditor.Tracker {
         public bool Enabled { get; private set; }
 
         private struct TrackerData {
-            public string path;
-            public bool isChecked;
-            public int actorId;
+            public string Path;
+            public bool IsChecked;
+            public int ActorId;
             public VfxStruct* Vfx;
         }
 
@@ -45,9 +45,9 @@ namespace VFXEditor.Tracker {
         public void AddActor( VfxStruct* vfx, string path ) {
             if( !Enabled ) return;
             var data = new TrackerData() {
-                path = path,
-                isChecked = false,
-                actorId = -1,
+                Path = path,
+                IsChecked = false,
+                ActorId = -1,
                 Vfx = vfx
             };
             ActorVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -55,7 +55,6 @@ namespace VFXEditor.Tracker {
 
         public void RemoveActor( VfxStruct* vfx ) {
             if( !Enabled ) return;
-
             if( ActorVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
                 ActorVfxs.TryRemove( new IntPtr( vfx ), out var _ );
             }
@@ -64,9 +63,9 @@ namespace VFXEditor.Tracker {
         public void AddStatic( VfxStruct* vfx, string path ) {
             if( !Enabled ) return;
             var data = new TrackerData() {
-                path = path,
-                isChecked = false,
-                actorId = -1,
+                Path = path,
+                IsChecked = false,
+                ActorId = -1,
                 Vfx = vfx
             };
             StaticVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -87,14 +86,10 @@ namespace VFXEditor.Tracker {
             var windowPos = ImGuiHelpers.MainViewport.Pos;
 
             // ======= IF IN A CUTSCENE, GIVE UP WITH POSITIONING ======
-            if( WatchingCutscene() ) {
+            if( WatchingCutscene ) {
                 var paths = new HashSet<string>();
-                foreach( var item in ActorVfxs ) {
-                    paths.Add( item.Value.path );
-                }
-                foreach( var item in StaticVfxs ) {
-                    paths.Add( item.Value.path );
-                }
+                foreach( var item in ActorVfxs ) paths.Add( item.Value.Path );
+                foreach( var item in StaticVfxs ) paths.Add( item.Value.Path );
 
                 var pos = windowPos + new Vector2( 15, 15 );
                 DrawOverlayItems( pos, paths, 0 );
@@ -113,40 +108,38 @@ namespace VFXEditor.Tracker {
                 height = *( rawMatrix + 1 );
             }
 
-            var Groups = new List<StaticVfxGroup>(); // static vfxs without an actor
-            var ActorToVfxs = new Dictionary<int, HashSet<string>>(); // either one with an actor
+            var VfxsWithoutActor = new List<StaticVfxGroup>(); // static vfxs without an actor
+            var ActorIdToVfxPath = new Dictionary<int, HashSet<string>>(); // either one with an actor
 
             // ====== STATIC =======
             foreach( var item in StaticVfxs ) {
-                if( item.Key == IntPtr.Zero ) {
-                    continue;
-                }
+                if( item.Key == IntPtr.Zero ) continue;
 
                 var vfx = item.Value;
-                if( !vfx.isChecked ) {
+                if( !vfx.IsChecked ) { // try to identify actor
                     var casterId = vfx.Vfx->StaticCaster;
                     var targetId = vfx.Vfx->StaticTarget;
                     var actorId = ChooseId( casterId, targetId );
 
                     vfx = new TrackerData {
-                        path = vfx.path,
-                        isChecked = true,
-                        actorId = actorId,
+                        Path = vfx.Path,
+                        IsChecked = true,
+                        ActorId = actorId,
                         Vfx = vfx.Vfx
                     };
                     StaticVfxs[item.Key] = vfx;
                 }
 
-                if( vfx.actorId > 0 ) { // add to actor to vfxs
-                    if( !ActorToVfxs.ContainsKey( vfx.actorId ) ) {
-                        ActorToVfxs[vfx.actorId] = new HashSet<string>();
+                if( vfx.ActorId > 0 ) {
+                    if( !ActorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
+                        ActorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
                     }
-                    ActorToVfxs[vfx.actorId].Add( vfx.path );
+                    ActorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
                 }
                 else { // add to groups
                     var pos = vfx.Vfx->Position;
-                    Groups.Add( new StaticVfxGroup {
-                        path = vfx.path,
+                    VfxsWithoutActor.Add( new StaticVfxGroup {
+                        path = vfx.Path,
                         position = new SharpDX.Vector3(pos.X, pos.Y, pos.Z)
                     } );
                 }
@@ -157,31 +150,31 @@ namespace VFXEditor.Tracker {
                 if( item.Key == IntPtr.Zero ) continue;
 
                 var vfx = item.Value;
-                if( !vfx.isChecked ) {
+                if( !vfx.IsChecked ) {
                     var casterId = vfx.Vfx->ActorCaster;
                     var targetId = vfx.Vfx->ActorTarget;
                     var actorId = ChooseId( casterId, targetId );
                     vfx = new TrackerData {
-                        path = vfx.path,
-                        isChecked = true,
-                        actorId = actorId,
+                        Path = vfx.Path,
+                        IsChecked = true,
+                        ActorId = actorId,
                         Vfx = vfx.Vfx
                     };
                     ActorVfxs[item.Key] = vfx;
                 }
 
-                if( vfx.actorId > 0 ) { // add to actor to vfxs
-                    if( !ActorToVfxs.ContainsKey( vfx.actorId ) ) {
-                        ActorToVfxs[vfx.actorId] = new HashSet<string>();
+                if( vfx.ActorId > 0 ) { // add to actor to vfxs
+                    if( !ActorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
+                        ActorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
                     }
 
-                    ActorToVfxs[vfx.actorId].Add( vfx.path );
+                    ActorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
                 }
             }
 
             // ====== DRAW GROUPS ======
             var idx = 0;
-            foreach( var group in Groups.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
+            foreach( var group in VfxsWithoutActor.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
                 var paths = new HashSet<string>( group );
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
@@ -203,7 +196,7 @@ namespace VFXEditor.Tracker {
 
                 if( Plugin.ClientState.LocalPlayer == null ) continue;
 
-                var result = ActorToVfxs.TryGetValue( ( int )actor.ObjectId, out var paths );
+                var result = ActorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;
 
                 var pos = new SharpDX.Vector3 {
@@ -266,9 +259,7 @@ namespace VFXEditor.Tracker {
             ImGui.End();
         }
 
-        private static bool WatchingCutscene() {
-            return Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
-        }
+        private static bool WatchingCutscene => Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
         private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
             public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
@@ -279,9 +270,7 @@ namespace VFXEditor.Tracker {
             }
         }
 
-        private static int ChooseId( int caster, int target ) {
-            return target > 0 ? target : ( caster > 0 ? caster : -1 );
-        }
+        private static int ChooseId( int caster, int target ) => target > 0 ? target : ( caster > 0 ? caster : -1 );
 
         private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) {
             return ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
