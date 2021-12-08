@@ -171,9 +171,5 @@ namespace VFXEditor {
         private void OnCommand( string command, string rawArgs ) {
             AvfxManager.Toggle();
         }
-
-        public static bool SpawnExists() {
-            return SpawnVFX != null;
-        }
     }
 }

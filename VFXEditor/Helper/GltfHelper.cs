@@ -71,9 +71,9 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        public static bool ImportModel( string path, out List<Vertex> V, out List<Index> I ) {
-            V = new List<Vertex>();
-            I = new List<Index>();
+        public static bool ImportModel( string path, out List<Vertex> vOut, out List<Index> iOut ) {
+            vOut = new List<Vertex>();
+            iOut = new List<Index>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( path );
             PluginLog.Log( "Importing GLTF from: " + path );
 
@@ -92,15 +92,14 @@ namespace VFXEditor.Helper {
                     var triangles = primitive.GetTriangleIndices();
 
                     for( var i = 0; i < positions.Count; i++ ) {
-                        V.Add( GetAVFXVert( positions[i], normals[i], tangents[i], colors[i], tex1s[i], tex2s[i] ) );
+                        vOut.Add( GetAVFXVert( positions[i], normals[i], tangents[i], colors[i], tex1s[i], tex2s[i] ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
-                        var i_ = new Index {
+                        iOut.Add( new Index {
                             I1 = A,
                             I2 = B,
                             I3 = C
-                        };
-                        I.Add( i_ );
+                        } );
                     }
                     return true;
                 }

@@ -30,5 +30,9 @@ namespace VFXEditor {
         public static void ClearSpawnVfx() {
             SpawnVFX = null;
         }
+
+        public static bool SpawnExists() {
+            return SpawnVFX != null;
+        }
     }
 }

@@ -61,7 +61,6 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] File loaded indication
 - [ ] Better error / log display
-- [ ] Better TMB parsing (regexes, lel)
 - [ ] Update "try on" preview
 - [ ] Auto-update npc csv file (kinda)
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
