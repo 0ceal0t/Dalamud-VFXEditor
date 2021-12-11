@@ -15,7 +15,7 @@ namespace VFXEditor.Tmb.Tmb {
         public short Id { get; private set; }
 
         private readonly int TrackCount_Temp;
-        private readonly short LastId_Temp;
+        private List<short> Ids_Temp = new();
         private readonly int Offset_Temp;
 
         private readonly List<TmbTrack> TracksMaster;
@@ -46,13 +46,19 @@ namespace VFXEditor.Tmb.Tmb {
             Offset_Temp = offset;
 
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( startPos + offset + 8 + 2 * ( TrackCount_Temp - 1 ), SeekOrigin.Begin );
-            LastId_Temp = reader.ReadInt16();
+            reader.BaseStream.Seek( startPos + offset + 8, SeekOrigin.Begin );
+            for (var i = 0; i < TrackCount_Temp; i++) {
+                Ids_Temp.Add( reader.ReadInt16() );
+            }
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
         public void PickTracks( List<TmbTrack> tracks, int startId ) {
-            Tracks.AddRange( tracks.GetRange( LastId_Temp - startId - TrackCount_Temp + 1, TrackCount_Temp ).Where( x => x != null ) );
+            foreach( var id in Ids_Temp ) {
+                var item = tracks[id - startId];
+                if( item == null ) continue;
+                Tracks.Add( item );
+            }
         }
 
         public void CalculateId( ref short id ) {
