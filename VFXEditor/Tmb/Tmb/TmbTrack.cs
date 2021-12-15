@@ -44,6 +44,7 @@ namespace VFXEditor.Tmb.Tmb {
             { "C043", new EntryType( C043.Name, () => new C043(), ( BinaryReader br ) => new C043( br ) ) },
             { "C031", new EntryType( C031.Name, () => new C031(), ( BinaryReader br ) => new C031( br ) ) },
             { "C094", new EntryType( C094.Name, () => new C094(), ( BinaryReader br ) => new C094( br ) ) },
+            { "C203", new EntryType( C203.Name, () => new C203(), ( BinaryReader br ) => new C203( br ) ) },
         };
 
         public static void ParseEntries( BinaryReader reader, List<TmbItem> entries, List<TmbTrack> tracks, int entryCount, ref bool entriesOk ) {
