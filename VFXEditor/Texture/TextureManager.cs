@@ -38,15 +38,29 @@ namespace VFXEditor.Texture {
 
         public static void Setup() {
             // Set paths manually since TexImpNet can be dumb sometimes
-            var lib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
+            var runtimeRoot = Path.Combine( Plugin.TemplateLocation, "runtimes" );
 
-            var runtimeRoot = Path.Combine( Path.GetDirectoryName( Plugin.TemplateLocation ), "runtimes" );
+            var freeImgLib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
+            var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "FreeImage.dll" );
+            var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
+            freeImgLib.Resolver.SetOverrideLibraryName32( _32bitPath );
+            freeImgLib.Resolver.SetOverrideLibraryName64( _64bitPath );
+            PluginLog.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
+            PluginLog.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            freeImgLib.LoadLibrary();
+            PluginLog.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
 
-            var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native" );
-            var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native" );
-            lib.Resolver.SetProbingPaths32( new string[] { _32bitPath } );
-            lib.Resolver.SetProbingPaths64( new string[] { _64bitPath } );
-            PluginLog.Log( $"TeximpNet paths: {_32bitPath} / {_64bitPath}" );
+            // ===============
+
+            var nvtLib = TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance;
+            var nv_32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "nvtt.dll" );
+            var nv_64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "nvtt.dll" );
+            nvtLib.Resolver.SetOverrideLibraryName32( nv_32bitPath );
+            nvtLib.Resolver.SetOverrideLibraryName64( nv_64bitPath );
+            PluginLog.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
+            PluginLog.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
+            nvtLib.LoadLibrary();
+            PluginLog.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
         }
 
         public TextureManager() : base( "Imported Textures" ) {

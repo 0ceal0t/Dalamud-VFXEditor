@@ -84,7 +84,7 @@ namespace VFXEditor.Tmb {
         public byte[] ToBytes() {
             var headerSize = 0x0C + 0x10 + 0x10 + Actors.Count * 0x1C;
             var entriesSize = 0x18 * Tracks.Count + Entries.Select( x => x.GetSize() ).Sum();
-            var extraSize = Entries.Select( x => x.GetExtraSize() ).Sum();
+            var extraSize = Entries.Select( x => x.GetExtraSize() ).Sum() + Tracks.Select( x => x.GetExtraSize() ).Sum();
 
             var stringList = new List<string>();
             Entries.ForEach( x => x.PopulateStringList( stringList ) );
@@ -175,7 +175,7 @@ namespace VFXEditor.Tmb {
             // ============================
 
             foreach( var tmac in Actors ) tmac.Write( headerWriter, idPositions );
-            foreach( var track in Tracks ) track.Write( entriesWriter, entriesPos, idPositions );
+            foreach( var track in Tracks ) track.Write( entriesWriter, entriesPos, extraWriter, extraPos, idPositions );
             foreach( var entry in Entries ) entry.Write( entriesWriter, entriesPos, extraWriter, extraPos, stringPositions, stringPos );
 
             var output = new byte[totalSize];

@@ -45,6 +45,7 @@ namespace VFXEditor.Tmb.Tmb {
             { "C031", new EntryType( C031.Name, () => new C031(), ( BinaryReader br ) => new C031( br ) ) },
             { "C094", new EntryType( C094.Name, () => new C094(), ( BinaryReader br ) => new C094( br ) ) },
             { "C203", new EntryType( C203.Name, () => new C203(), ( BinaryReader br ) => new C203( br ) ) },
+            { "C204", new EntryType( C204.Name, () => new C204(), ( BinaryReader br ) => new C204( br ) ) },
         };
 
         public static void ParseEntries( BinaryReader reader, List<TmbItem> entries, List<TmbTrack> tracks, int entryCount, ref bool entriesOk ) {
@@ -80,7 +81,8 @@ namespace VFXEditor.Tmb.Tmb {
         private readonly int Offset_Temp;
 
         private short Time = 0;
-        private int Unk_3 = 0;
+
+        private List<short> UnknownExtraData = null;
 
         private readonly List<TmbItem> EntriesMaster;
         public readonly List<TmbItem> Entries = new();
@@ -95,10 +97,22 @@ namespace VFXEditor.Tmb.Tmb {
             Time = reader.ReadInt16();
             var offset = reader.ReadInt32(); // before [ITEM] + offset = spot on timeline
             EntryCount_Temp = reader.ReadInt32();
-            Unk_3 = reader.ReadInt32();
+            var unknownOffset = reader.ReadInt32();
+
+            // ====== READ SOME UNKNOWN DATA (SO FAR ONLY IN REAPER) =========
+            if (unknownOffset > 0) {
+                UnknownExtraData = new();
+                var savePos2 = reader.BaseStream.Position;
+                reader.BaseStream.Seek( startPos + unknownOffset, SeekOrigin.Begin );
+                for (var i = 0; i < 22; i++) { // 0x2C bytes total
+                    UnknownExtraData.Add( reader.ReadInt16() );
+                }
+                reader.BaseStream.Seek( savePos2, SeekOrigin.Begin );
+            }
 
             Offset_Temp = offset;
 
+            // ====== READ IDS =========
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 2 * ( EntryCount_Temp - 1 ), SeekOrigin.Begin );
             LastId_Temp = reader.ReadInt16();
@@ -109,7 +123,7 @@ namespace VFXEditor.Tmb.Tmb {
             Entries.AddRange(entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where(x => x != null));
         }
 
-        public void Write( BinaryWriter entryWriter, int entryPos, Dictionary<int, int> timelinePos ) {
+        public void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<int, int> timelinePos ) {
             var lastId = Entries.Count > 0 ? Entries.Last().Id : Id;
 
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
@@ -124,7 +138,20 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Time );
             entryWriter.Write( offset );
             entryWriter.Write( Entries.Count );
-            entryWriter.Write( Unk_3 );
+
+            // ======= WRITE UNKNOWN DATA ===========
+            if (UnknownExtraData == null) {
+                entryWriter.Write( 0 );
+            }
+            else {
+                var extraEndPos = ( int )extraWriter.BaseStream.Position + extraPos;
+                var extraOffset = extraEndPos - startPos - 8;
+
+                entryWriter.Write( extraOffset );
+                foreach( var item in UnknownExtraData ) {
+                    extraWriter.Write( item );
+                }
+            }
         }
 
         public void CalculateId( ref short id ) {
@@ -137,7 +164,19 @@ namespace VFXEditor.Tmb.Tmb {
 
         public void Draw( string id ) {
             FileHelper.ShortInput( $"Time{id}", ref Time );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+
+            var unknowExtraDataExists = UnknownExtraData != null;
+            if (ImGui.Checkbox($"Unknown Extra Data{id}", ref unknowExtraDataExists)) {
+                UnknownExtraData = unknowExtraDataExists ? new List<short>( new short[22] ) : null;
+            }
+            if ( UnknownExtraData != null ) {
+                for( var j = 0; j < UnknownExtraData.Count; j++ ) {
+                    var item = UnknownExtraData[j];
+                    if( FileHelper.ShortInput( $"Unknown Extra Data {j}{id}", ref item ) ) {
+                        UnknownExtraData[j] = item;
+                    }
+                }
+            }
 
             var i = 0;
             foreach( var entry in Entries ) {
@@ -176,5 +215,7 @@ namespace VFXEditor.Tmb.Tmb {
                 ImGui.EndPopup();
             }
         }
+
+        public int GetExtraSize() => UnknownExtraData == null ? 0 : 2 * UnknownExtraData.Count;
     }
 }
