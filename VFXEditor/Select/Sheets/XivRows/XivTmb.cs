@@ -7,6 +7,7 @@ namespace VFXSelect.Select.Rows {
         public readonly string StartTmb;
         public readonly string EndTmb;
         public readonly string HitTmb;
+        public readonly string WeaponTmb;
 
         public XivTmb( Lumina.Excel.GeneratedSheets.Action action ) {
             RowId = ( int )action.RowId;
@@ -16,10 +17,12 @@ namespace VFXSelect.Select.Rows {
             var startKey = action.AnimationStart?.Value?.Name?.Value?.Key.ToString();
             var endKey = action.AnimationEnd?.Value?.Key.ToString();
             var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
+            var weaponKey = action.AnimationEnd?.Value?.WeaponTimeline?.Value?.File.ToString();
 
             StartTmb = ToTmb( startKey );
             EndTmb = ToTmb( endKey );
             HitTmb = ToTmb( hitKey );
+            WeaponTmb = ToTmb( weaponKey );
         }
 
         private static string ToTmb( string key ) {

@@ -65,6 +65,17 @@ namespace VFXSelect.VFX {
                 ImGui.SameLine();
                 Copy( loadedItem.HitTmb, id: Id + "HitCopy" );
             }
+
+            ImGui.Text( "Weapon Tmb Path: " );
+            ImGui.SameLine();
+            DisplayPath( loadedItem.WeaponTmb );
+            if( !string.IsNullOrEmpty( loadedItem.WeaponTmb ) ) {
+                if( ImGui.Button( "SELECT" + Id + "Weapon" ) ) {
+                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[WEAPON] " + loadedItem.Name + " Weapon", loadedItem.WeaponTmb ) );
+                }
+                ImGui.SameLine();
+                Copy( loadedItem.WeaponTmb, id: Id + "WeaponCopy" );
+            }
         }
 
         protected override string UniqueRowTitle( XivTmb item ) {
