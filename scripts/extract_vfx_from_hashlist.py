@@ -22,6 +22,8 @@ filenames = cursor.fetchall()
 for filename in filenames:
     file_hash = filename[0]
     file_path = filename[1]
+    if isinstance(file_path, int):
+        continue
     filedict[file_hash] = file_path
 
 cursor.execute("select folderhash, filehash from fullpaths;")
@@ -33,7 +35,7 @@ for fullpath in fullpaths:
         f = ""
         if b'/' in filedict[_f2]:
             f = filedict[_f2] # already has a path for some reason
-            print(f)
+            #print(f)
         else:
             f = folderdict[_f1] + b'/' + filedict[_f2]
         _fullPaths.append(f)
