@@ -43,7 +43,7 @@ namespace VFXEditor.Avfx.Vfx {
         public void Draw() {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( new Vector2( 500, 500 ), ImGuiCond.FirstUseEver );
-            if( ImGui.Begin( "Export##ExportDialog", ref Visible ) ) {
+            if( ImGui.Begin( "Export##ExportDialog", ref Visible, ImGuiWindowFlags.NoDocking ) ) {
                 ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
                 ImGui.SameLine();
                 UiHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );

@@ -118,7 +118,7 @@ namespace VFXEditor.FileManager {
             if( !(OnlyDocumentDialog ? Visible : DocumentDialogVisible) ) return;
             ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( $"{DialogName} Select", ref (OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible) ) ) {
+            if( ImGui.Begin( $"{DialogName} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
                 var id = $"##{Id}/Doc";
                 var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 

@@ -36,7 +36,7 @@ namespace VFXEditor.Dialogs {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( DialogName, ref Visible, MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) ) {
+            if( ImGui.Begin( DialogName, ref Visible, (MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDocking ) ) {
                 DrawBody();
             }
             ImGui.End();

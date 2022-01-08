@@ -47,7 +47,7 @@ namespace ImGuiFileDialog {
                 windowVisible = ImGui.BeginPopupModal( name, ref Visible, ImGuiWindowFlags.NoScrollbar );
             }
             else {
-                windowVisible = ImGui.Begin( name, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoNav );
+                windowVisible = ImGui.Begin( name, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoDocking );
             }
 
             if( windowVisible ) {

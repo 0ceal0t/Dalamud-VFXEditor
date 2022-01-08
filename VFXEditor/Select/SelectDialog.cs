@@ -74,7 +74,7 @@ namespace VFXSelect {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
 
-            if( !ImGui.Begin( Id + "##" + Id, ref Visible ) ) {
+            if( !ImGui.Begin( Id + "##" + Id, ref Visible, ImGuiWindowFlags.NoDocking ) ) {
                 ImGui.End();
                 return;
             }
