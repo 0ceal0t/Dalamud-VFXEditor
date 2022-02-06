@@ -137,7 +137,6 @@ namespace VFXEditor {
             ImPlot.DestroyContext();
 
             CommandManager.RemoveHandler( CommandName );
-            PluginInterface?.Dispose();
 
             ResourceLoader.Dispose();
             ResourceLoader = null;

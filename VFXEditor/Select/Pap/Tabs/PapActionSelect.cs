@@ -9,7 +9,7 @@ using ImGuiNET;
 using VFXSelect.Select.Rows;
 
 namespace VFXSelect.VFX {
-    public class PapActionSelect : PapSelectTab<XivPap, XivPap> {
+    public class PapActionSelect : PapSelectTab<XivPap, XivPapSelected> {
         private ImGuiScene.TextureWrap Icon;
 
         public PapActionSelect( string parentId, string tabId, PapSelectDialog dialog ) :
@@ -24,51 +24,41 @@ namespace VFXSelect.VFX {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override void DrawSelected( XivPap loadedItem ) {
+        protected override void DrawSelected( XivPapSelected loadedItem ) {
             if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Name );
+            ImGui.Text( loadedItem.Pap.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
             }
 
-            ImGui.Text( "Start Pap Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.StartPap );
-            if( !string.IsNullOrEmpty(loadedItem.StartPap ) ) {
-                if( ImGui.Button( "SELECT" + Id + "Start" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Start", loadedItem.StartPap ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.StartPap, id: Id + "StartCopy" );
-            }
+            DrawDict( loadedItem.StartAnimations, "Start", loadedItem.Pap.Name );
 
-            ImGui.Text( "End Pap Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.EndPap );
-            if( !string.IsNullOrEmpty( loadedItem.EndPap ) ) {
-                if( ImGui.Button( "SELECT" + Id + "End" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " End", loadedItem.EndPap ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.EndPap, id: Id + "EndCopy" );
-            }
+            DrawDict( loadedItem.EndAnimations, "End", loadedItem.Pap.Name );
 
-            ImGui.Text( "Hit Pap Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.HitPap );
-            if( !string.IsNullOrEmpty( loadedItem.HitPap ) ) {
-                if( ImGui.Button( "SELECT" + Id + "Hit" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Hit", loadedItem.HitPap ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.HitPap, id: Id + "HitCopy" );
-            }
+            DrawDict( loadedItem.HitAnimations, "Hit", loadedItem.Pap.Name );
         }
 
         protected override string UniqueRowTitle( XivPap item ) {
             return item.Name + "##" + item.RowId;
+        }
+
+        private void DrawDict(Dictionary<string, string> items, string label, string name) {
+            foreach( var item in items ) {
+                var skeleton = item.Key;
+                var path = item.Value;
+                ImGui.Text( $"{label} ({skeleton}): " );
+                ImGui.SameLine();
+                DisplayPath( path );
+                if( !string.IsNullOrEmpty( path ) ) {
+                    if( ImGui.Button( $"SELECT{Id}-{label}-{skeleton}" ) ) {
+                        Dialog.Invoke( new SelectResult( SelectResultType.GameAction, $"[ACTION] {name} {label} ({skeleton})", path ) );
+                    }
+                    ImGui.SameLine();
+                    Copy( path, id: $"{Id}-{label}-Copy-{skeleton}" );
+                }
+            }
         }
     }
 }

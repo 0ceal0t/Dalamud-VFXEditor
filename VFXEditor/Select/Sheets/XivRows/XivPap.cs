@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace VFXSelect.Select.Rows {
     public class XivPap {
         public readonly ushort Icon;
@@ -22,15 +24,6 @@ namespace VFXSelect.Select.Rows {
             HitPap = ToPap( hitKey );
         }
 
-        public XivPap( int rowId, ushort icon, string name, string startPap, string endPap, string hitPap ) {
-            RowId = rowId;
-            Icon = icon;
-            Name = name;
-            StartPap= startPap;
-            EndPap= endPap;
-            HitPap = hitPap;
-        }
-
         // chara/human/c0101/animation/a0001/bt_common/ability/2bw_bard/abl001.pap
         // chara/human/c0101/animation/a0001/bt_2bw_emp/ws/bt_2bw_emp/ws_s01.pap
         // chara/human/c0101/animation/a0001/bt_common/magic/2rp_redmage/mgc012.pap
@@ -52,15 +45,43 @@ namespace VFXSelect.Select.Rows {
                 // ws/bt_2sw_emp/ws_s02
                 var split = key.Split( '/' );
                 var weapon = split[1];
-                return $"chara/human/c0101/animation/a0001/{weapon}/{key}.pap";
+                return $"{weapon}/{key}.pap";
             }
             if (loadType == 1) {
-                return $"chara/human/c0101/animation/a0001/bt_common/{key}.pap";
+                return $"bt_common/{key}.pap";
             }
             if (loadType == 0) {
-                return $"chara/human/c0101/animation/a0001/bt_common/resident/action.pap";
+                return $"bt_common/resident/action.pap";
             }
             return "";
+        }
+
+        private static string GenerateSkeleton( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
+
+        public static Dictionary<string, string> GenerateAllSkeletons( string path ) {
+            Dictionary<string, string> ret = new();
+            if( string.IsNullOrEmpty( path ) ) return ret;
+
+            ret.Add( "Midlander M", GenerateSkeleton( "c0101", path) );
+            ret.Add( "Midlander F", GenerateSkeleton( "c0201", path ) );
+            ret.Add( "Highlander M", GenerateSkeleton( "c0301", path ) );
+            ret.Add( "Highlander F", GenerateSkeleton( "c0401", path ) );
+            ret.Add( "Elezen M", GenerateSkeleton( "c0501", path ) );
+            ret.Add( "Elezen F", GenerateSkeleton( "c0601", path ) );
+            ret.Add( "Miquote M", GenerateSkeleton( "c0701", path ) );
+            ret.Add( "Miquote F", GenerateSkeleton( "c0801", path ) );
+            ret.Add( "Roegadyn M", GenerateSkeleton( "c0901", path ) );
+            ret.Add( "Roegadyn F", GenerateSkeleton( "c1001", path ) );
+            ret.Add( "Lalafell M", GenerateSkeleton( "c1101", path ) );
+            ret.Add( "Lalafell F", GenerateSkeleton( "c1201", path ) );
+            ret.Add( "AuRa M", GenerateSkeleton( "c1301", path ) );
+            ret.Add( "AuRa F", GenerateSkeleton( "c1401", path ) );
+            ret.Add( "Hrothgar M", GenerateSkeleton( "c1501", path ) );
+            // 1601 coming soon (tm)
+            ret.Add( "Viera M", GenerateSkeleton( "c1701", path ) );
+            ret.Add( "Viera F", GenerateSkeleton( "c1801", path ) );
+
+            return ret;
         }
     }
 }
