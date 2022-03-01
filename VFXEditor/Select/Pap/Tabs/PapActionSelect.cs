@@ -9,14 +9,14 @@ using ImGuiNET;
 using VFXSelect.Select.Rows;
 
 namespace VFXSelect.VFX {
-    public class PapActionSelect : PapSelectTab<XivPap, XivPapSelected> {
+    public class PapActionSelect : PapSelectTab<XivActionPap, XivActionPapSelected> {
         private ImGuiScene.TextureWrap Icon;
 
         public PapActionSelect( string parentId, string tabId, PapSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.PapSheetLoader, dialog ) {
+            base( parentId, tabId, SheetManager.ActionPap, dialog ) {
         }
 
-        protected override bool CheckMatch( XivPap item, string searchInput ) {
+        protected override bool CheckMatch( XivActionPap item, string searchInput ) {
             return Matches( item.Name, searchInput );
         }
 
@@ -24,23 +24,23 @@ namespace VFXSelect.VFX {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override void DrawSelected( XivPapSelected loadedItem ) {
+        protected override void DrawSelected( XivActionPapSelected loadedItem ) {
             if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Pap.Name );
+            ImGui.Text( loadedItem.ActionPap.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
             }
 
-            DrawDict( loadedItem.StartAnimations, "Start", loadedItem.Pap.Name );
+            DrawDict( loadedItem.StartAnimations, "Start", loadedItem.ActionPap.Name );
 
-            DrawDict( loadedItem.EndAnimations, "End", loadedItem.Pap.Name );
+            DrawDict( loadedItem.EndAnimations, "End", loadedItem.ActionPap.Name );
 
-            DrawDict( loadedItem.HitAnimations, "Hit", loadedItem.Pap.Name );
+            DrawDict( loadedItem.HitAnimations, "Hit", loadedItem.ActionPap.Name );
         }
 
-        protected override string UniqueRowTitle( XivPap item ) {
+        protected override string UniqueRowTitle( XivActionPap item ) {
             return item.Name + "##" + item.RowId;
         }
 

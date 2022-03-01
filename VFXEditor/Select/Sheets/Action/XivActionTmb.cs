@@ -1,5 +1,5 @@
 namespace VFXSelect.Select.Rows {
-    public class XivTmb {
+    public class XivActionTmb {
         public readonly ushort Icon;
         public readonly int RowId;
         public readonly string Name;
@@ -9,7 +9,7 @@ namespace VFXSelect.Select.Rows {
         public readonly string HitTmb;
         public readonly string WeaponTmb;
 
-        public XivTmb( Lumina.Excel.GeneratedSheets.Action action ) {
+        public XivActionTmb( Lumina.Excel.GeneratedSheets.Action action ) {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
             Name = action.Name.ToString();

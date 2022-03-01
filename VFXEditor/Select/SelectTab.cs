@@ -67,14 +67,13 @@ namespace VFXSelect {
 
         public override void Draw() {
             var ret = ImGui.BeginTabItem( Name + "##Select/" + ParentId );
-            if( !ret )
-                return;
+            if( !ret ) return;
             Loader.Load();
             if( !Loader.Loaded ) {
                 ImGui.EndTabItem();
                 return;
             }
-            //
+
             if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Loader.Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var ResetScroll = false;
@@ -83,11 +82,13 @@ namespace VFXSelect {
                 Searched = Loader.Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
                 ResetScroll = true;
             }
+
             ImGui.Columns( 2, Id + "Columns", true );
             ImGui.BeginChild( Id + "Tree" );
             DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
             if( ResetScroll ) { ImGui.SetScrollHereY(); };
+
             var idx = 0;
             foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
@@ -102,10 +103,11 @@ namespace VFXSelect {
                 }
                 idx++;
             }
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             ImGui.EndChild();
             ImGui.NextColumn();
-            // ========================
+
             if( Selected == null ) {
                 ImGui.Text( "Select an item..." );
             }
@@ -122,7 +124,6 @@ namespace VFXSelect {
                 }
             }
             ImGui.Columns( 1 );
-            //
             ImGui.EndTabItem();
         }
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace VFXSelect.Select.Rows {
-    public class XivPap {
+    public class XivActionPap {
         public readonly ushort Icon;
         public readonly int RowId;
         public readonly string Name;
@@ -10,7 +10,7 @@ namespace VFXSelect.Select.Rows {
         public readonly string EndPap;
         public readonly string HitPap;
 
-        public XivPap( Lumina.Excel.GeneratedSheets.Action action ) {
+        public XivActionPap( Lumina.Excel.GeneratedSheets.Action action ) {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
             Name = action.Name.ToString();

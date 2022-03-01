@@ -65,8 +65,8 @@ namespace VFXEditor {
             }
             if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
-            if( ImGui.MenuItem( "Tmb##Menu " ) ) TmbManager.Show();
-            if( ImGui.MenuItem( "Pap##Menu " ) ) PapManager.Show();
+            if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();
+            if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
         }
     }
 }

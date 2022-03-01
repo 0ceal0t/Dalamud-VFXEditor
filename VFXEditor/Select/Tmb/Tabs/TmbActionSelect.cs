@@ -9,14 +9,14 @@ using ImGuiNET;
 using VFXSelect.Select.Rows;
 
 namespace VFXSelect.VFX {
-    public class TmbActionSelect : TmbSelectTab<XivTmb, XivTmb> {
+    public class TmbActionSelect : TmbSelectTab<XivActionTmb, XivActionTmb> {
         private ImGuiScene.TextureWrap Icon;
 
         public TmbActionSelect( string parentId, string tabId, TmbSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.TmbSheetLoader, dialog ) {
+            base( parentId, tabId, SheetManager.ActionTmb, dialog ) {
         }
 
-        protected override bool CheckMatch( XivTmb item, string searchInput ) {
+        protected override bool CheckMatch( XivActionTmb item, string searchInput ) {
             return Matches( item.Name, searchInput );
         }
 
@@ -24,7 +24,7 @@ namespace VFXSelect.VFX {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override void DrawSelected( XivTmb loadedItem ) {
+        protected override void DrawSelected( XivActionTmb loadedItem ) {
             if( loadedItem == null ) { return; }
             ImGui.Text( loadedItem.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -78,7 +78,7 @@ namespace VFXSelect.VFX {
             }
         }
 
-        protected override string UniqueRowTitle( XivTmb item ) {
+        protected override string UniqueRowTitle( XivActionTmb item ) {
             return item.Name + "##" + item.RowId;
         }
     }

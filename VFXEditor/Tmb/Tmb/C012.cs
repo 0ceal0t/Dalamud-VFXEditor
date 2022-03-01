@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
@@ -15,24 +16,16 @@ namespace VFXEditor.Tmb.Tmb {
         private short BindPoint_2 = 0xFF;
         private short BindPoint_3 = 2;
         private short bindPoint_4 = 0xFF;
-        private readonly List<List<float>> Unk_Pairs;
         private int Unk_4;
         private int Unk_5;
+        private Vector3 Scale = new( 1 );
+        private Vector3 Rotation = new( 0 );
+        private Vector3 Position = new( 0 );
+        private Vector4 RGBA = new( 1 );
 
         public static readonly string Name = "VFX (C012)";
 
-        private static List<List<float>> GetDefault() {
-            var ret = new List<List<float>> {
-                new List<float>( new[] { 1f, 1f, 1f } ),
-                new List<float>( new[] { 0f, 0f, 0f } ),
-                new List<float>( new[] { 0f, 0f, 0f } ),
-                new List<float>( new[] { 1f, 1f, 1f, 1f } ),
-            };
-            return ret;
-        }
-
         public C012() {
-            Unk_Pairs = GetDefault();
         }
         public C012( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C012] + 8
@@ -53,14 +46,18 @@ namespace VFXEditor.Tmb.Tmb {
             BindPoint_3 = reader.ReadInt16();
             bindPoint_4 = reader.ReadInt16();
 
-            Unk_Pairs = ReadPairs( 4, reader, startPos );
+            var pairs = ReadPairs( 4, reader, startPos );
+            Scale = ListToVec3( pairs[0] );
+            Rotation = ListToVec3( pairs[1] );
+            Position = ListToVec3( pairs[2] );
+            RGBA = ListToVec4( pairs[3] );
 
             Unk_4 = reader.ReadInt32();
             Unk_5 = reader.ReadInt32();
         }
 
         public override int GetSize() => 0x48;
-        public override int GetExtraSize() => 4 * Unk_Pairs.Select(x => x.Count).Sum();
+        public override int GetExtraSize() => 4 * ( 3 + 3 + 3 + 4 ); // scale(3) + rotation(3) + position(3) + rgba(4)
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
@@ -81,7 +78,13 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( BindPoint_3 );
             entryWriter.Write( bindPoint_4 );
 
-            WritePairs( entryWriter, extraWriter, extraPos, startPos, Unk_Pairs );
+            var pairs = new List<List<float>> {
+                Vec3ToList( Scale ),
+                Vec3ToList( Rotation ),
+                Vec3ToList( Position ),
+                Vec4ToList( RGBA )
+            };
+            WritePairs( entryWriter, extraWriter, extraPos, startPos, pairs );
 
             entryWriter.Write( Unk_4 );
             entryWriter.Write( Unk_5 );
@@ -101,7 +104,10 @@ namespace VFXEditor.Tmb.Tmb {
             FileHelper.ShortInput( $"Bind Point 3{id}", ref BindPoint_3 );
             FileHelper.ShortInput( $"Bind Point 4{id}", ref bindPoint_4 );
 
-            DrawPairs( id, Unk_Pairs );
+            ImGui.InputFloat3( $"Scale{id}", ref Scale );
+            ImGui.InputFloat3( $"Rotation{id}", ref Rotation );
+            ImGui.InputFloat3( $"Position{id}", ref Position );
+            ImGui.InputFloat4( $"RGBA{id}", ref RGBA );
         }
 
         public override void PopulateStringList( List<string> stringList ) {

@@ -22,8 +22,9 @@ namespace VFXSelect {
         public static MountSheeetLoader Mounts { get; private set; }
         public static HousingSheetLoader Housing { get; private set; }
         public static CommonLoader Misc { get; private set; }
-        public static TmbSheetLoader TmbSheetLoader { get; private set; }
-        public static PapSheetLoader PapSheetLoader { get; private set; }
+        public static ActionTmbSheetLoader ActionTmb { get; private set; }
+        public static ActionPapSheetLoader ActionPap { get; private set; }
+        public static EmoteTmbSheetLoader EmoteTmb { get; private set; }
 
         public static void Initialize( string npcCsv, string monsterJson, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
@@ -43,8 +44,9 @@ namespace VFXSelect {
             Mounts = new MountSheeetLoader();
             Housing = new HousingSheetLoader();
             Misc = new CommonLoader();
-            TmbSheetLoader = new TmbSheetLoader();
-            PapSheetLoader = new PapSheetLoader();
+            ActionTmb = new ActionTmbSheetLoader();
+            ActionPap = new ActionPapSheetLoader();
+            EmoteTmb = new EmoteTmbSheetLoader();
         }
     }
 }

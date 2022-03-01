@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,5 +76,10 @@ namespace VFXEditor.Tmb.Tmb {
                 }
             }
         }
+
+        public static Vector3 ListToVec3( List<float> list ) => list.Count == 3 ? new Vector3( list[0], list[1], list[2] ) : new Vector3( 0 );
+        public static Vector4 ListToVec4( List<float> list ) => list.Count == 4 ? new Vector4( list[0], list[1], list[2], list[3] ) : new Vector4( 0 );
+        public static List<float> Vec3ToList( Vector3 vec ) => new ( new[] { vec.X, vec.Y, vec.Z } );
+        public static List<float> Vec4ToList( Vector4 vec ) => new ( new[] { vec.X, vec.Y, vec.Z, vec.W } );
     }
 }
