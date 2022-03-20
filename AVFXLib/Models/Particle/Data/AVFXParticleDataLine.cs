@@ -9,6 +9,7 @@ namespace AVFXLib.Models {
     public class AVFXParticleDataLine : AVFXParticleData {
         public LiteralInt LineCount = new( "LnCT" );
         public AVFXCurve Length = new( "Len" );
+        public AVFXCurve LengthRandom = new( "LenR" );
         public AVFXCurveColor ColorBegin = new( name: "ColB" );
         public AVFXCurveColor ColorEnd = new( name: "ColE" );
         private readonly List<Base> Attributes;
@@ -17,6 +18,7 @@ namespace AVFXLib.Models {
             Attributes = new List<Base>( new Base[]{
                 LineCount,
                 Length,
+                LengthRandom,
                 ColorBegin,
                 ColorEnd
             } );
