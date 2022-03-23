@@ -8,8 +8,7 @@ namespace VFXEditor.Avfx.Vfx {
     public class UIBinderProperties : UIItem {
         public AVFXBinderProperty Prop;
         public string Name;
-        //===================
-        // TODO: Name
+
         public UIParameters Parameters;
         public UICurve3Axis Position;
         public List<UIItem> Tabs;
@@ -29,6 +28,7 @@ namespace VFXEditor.Avfx.Vfx {
             };
             Parameters.Add( new UICombo<BindPoint>( "Bind Point Type", Prop.BindPointType ) );
             Parameters.Add( new UICombo<BindTargetPoint>( "Bind Target Point Type", Prop.BindTargetPointType ) );
+            Parameters.Add( new UIString( "Name", Prop.BinderName, canBeUnassigned: true ) );
             Parameters.Add( new UIInt( "Bind Point Id", Prop.BindPointId ) );
             Parameters.Add( new UIInt( "Generate Delay", Prop.GenerateDelay ) );
             Parameters.Add( new UIInt( "Coord Update Frame", Prop.CoordUpdateFrame ) );

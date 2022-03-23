@@ -166,7 +166,8 @@ namespace AVFXLib.Main {
             "VNum",
             "VEmt",
             "Cols",
-            "SdNm"
+            "SdNm",
+            "Name"
         } );
         private static readonly HashSet<string> NESTED_SMALL = new( new string[]{ // smaller than 8 bytes, still nested
             "Data",

@@ -11,7 +11,7 @@ namespace AVFXLib.Models {
 
         public LiteralEnum<BindPoint> BindPointType = new( "BPT" );
         public LiteralEnum<BindTargetPoint> BindTargetPointType = new( "BPTP" );
-        public LiteralString BinderName = new( "Name", fixedSize: 8 );
+        public LiteralString BinderName = new( "Name" );
         public LiteralInt BindPointId = new( "BPID" );
         public LiteralInt GenerateDelay = new( "GenD" );
         public LiteralInt CoordUpdateFrame = new( "CoUF" );

@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using AVFXLib.Models;
 using VFXEditor.Data;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIString : UIBase {
         public string Name;
         public LiteralString Literal;
         public string Value;
-        public uint MaxSize;
-        public Action OnChange = null;
+        public bool CanBeUnassigned;
 
-        public UIString( string name, LiteralString literal, Action onChange = null, int maxSizeBytes = 256 ) {
+        public UIString( string name, LiteralString literal, bool canBeUnassigned = false ) {
             Name = name;
             Literal = literal;
             Value = Literal.Value ?? "";
-            MaxSize = ( uint )maxSizeBytes;
-            OnChange = onChange;
+            CanBeUnassigned = canBeUnassigned;
         }
 
         public override void Draw( string id ) {
@@ -33,11 +32,28 @@ namespace VFXEditor.Avfx.Vfx {
                 Value = Literal.Value ?? "";
             }
 
-            ImGui.InputText( Name + id, ref Value, MaxSize );
+            if (CanBeUnassigned) {
+                if (Literal.Assigned && UiHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
+                    Value = "";
+                    Literal.GiveValue( "" );
+                    Literal.Assigned = false;
+                }
+                else if( !Literal.Assigned && UiHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
+                    Value = "";
+                    Literal.GiveValue( "" );
+                    Literal.Assigned = true;
+                }
+
+                if( !Literal.Assigned ) return;
+            }
+
+            ImGui.InputText( Name + id, ref Value, 256 );
             ImGui.SameLine();
             if( ImGui.Button( "Update" + id ) ) {
                 Literal.GiveValue( Value.Trim().Trim( '\0' ) + "\u0000" );
-                OnChange?.Invoke();
+                if( CanBeUnassigned && Literal.Value.Trim( '\0' ).Length == 0 ) {
+                    Literal.Assigned = false;
+                }
             }
         }
     }

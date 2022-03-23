@@ -4,7 +4,7 @@ import numpy as np
 data = np.empty((0,2))
 last_id = -1
 
-skip = ["Investigate", "NONE", "[[RESERVED]]", "Empty entry"]
+skip = ["Investigate", "NONE", "[[RESERVED]]", "Empty entry","???","nan","Unknown"]
 
 xl_file = pd.ExcelFile("Model Spreadsheet.xlsx")
 for sheet_name in xl_file.sheet_names:

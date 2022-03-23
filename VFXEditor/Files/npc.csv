@@ -311,7 +311,7 @@ ModelType,Name
 311,Sleipnir
 312,Shiva (weapons)
 313,Vishap
-315,Shadowlurker (CAUSES CRASH)
+315,Shadowlurker 
 316,ADS (Black/Red)
 317,ADS (Black/White)
 318,ADS (Black/Purple)
@@ -482,293 +482,104 @@ ModelType,Name
 496,Metal Pot
 497,Jar with tied fabric lid
 498,Campfire
-520,Lightning (FFXIII Character)
-548,Generic Person
-590,Golden Brickman (Dragon Quest)
-637,Jandelaine
-993,Waitress
-605,Dullahan (NNYNB) (Purple)
-505,Black Chocobo Chick
-527,Wind-Up Shantotto
-577,Wind-Up Brickman
-578,Minute Mindflayer
-579,Tight-beaked Parrot
-580,Wind-Up Amaljaa
-581,Wind-Up Ixal
-582,Wind-Up Kobolder
-583,Wind-Up Sea Devil
-584,Wind-Up Edvya
-585,Wind-Up Sun
-586,Plush Cushion
-587,Minion of Light (Warrior)
-597,Zombie Crawl Animation
-623,Minion of Light (White Mage)
-624,Minion of Light (Black Mage)
-625,Wind-Up Leader (Raubahn)
-626,Wind-Up Leader (Merlwyb)
-627,Wind-Up Leader (Kan-E-Senna)
-634,Princely Hatchling
-682,Zu Hatchling
-683,Wind-Up Odin
-684,Wind-Up Warrior of Light
-685,Wind-Up Bahamut
-686,Baby Opo-opo
-687,Magic Broom
-688,Wind-Up Moogle
-699,Wind-Up Kobld
-700,Wind-Up Sahagin
-742,Onion Prince
-743,Eggplant Knight
-744,Garlic Jester
-745,Tomato King
-746,Mandragora Queen
-747,Treasure Box
-748,Wind-Up Succubus
-749,Wind-Up Onion Knight
-750,Wind-Up Yshtola
-751,Wind-Up Nanamo
-752,Nana Bear
-753,Miniature Minecart
-754,Tiny Tapir
-755,Nutkin
-756,Wind-Up Gilgamesh
-796,Wind-Up Thancred
-797,Wind-Up Minfilia
-798,Mummys Little Mummy
-799,Wind-Up Ultros
-800,Heavy Hatchling
-801,Littlefoot
-802,Fat Cat
-803,Hoary the Snowman
-805,Demon Box
-807,Assassin Fry
-808,Naughty Nanka
-809,Wind-Up Delivery Moogle
-816,Wind-Up Panda
-878,Wind-Up Yda
-879,Wind-Up Papalymo
-880,Wind-Up Urianger
-881,Wind-Up Louisoix
-882,Wind-Up Gentleman
-883,Midgardsormr
-884,Wind-Up Alphinaud
-885,Wind-Up Alisaie
-886,Water Imp
-887,Model Enterprise
-888,Enkidu
-889,Wind-Up Gundu Warrior
-890,Unicolt
-891,Wind-Up Cid
-892,Wind-Up Tataru
-893,Owlet
-894,Atrophied Atomos
-895,Lesser Panda
-896,Clockwork Barrow
-897,Griffin Hatchling
-898,Iron Dwarf
-899,Ugly Duckling
-900,Page 63
-901,Wind-Up Violet
-902,Wind-Up Founder
-903,Wind-Up Dezul Qualan
-988,Gaelikitten
-989,Wind-Up Kain
-990,Chocobo Chick Courier
-991,Primogs
-547,Igeyorhm
-554,Titan
-574,Phecda 
-576,Earthen Brickman (Dragon Quest)
-589,Stone Brickman (Dragon Quest)
-600,Leech King
-602,Sandman
-603,Manticore
-604,Cornu
-609,Iron Giant
-628,Starlight Treant
-647,Nael deus Darnus
-757,Onion Prince
-758,Eggplant Knight
-759,Garlic Prince
-760,Tomato King
-761,Mandragora Queen
-766,Interceptor Drone (PVP)
-832,Gnath
-837,Manxome Molaa Ja
-838,Frumious Koheel Ja (on Wivre)
-845,Captain Madison (Monster)
-868,Temple Mummy (Lalafell)
-869,Temple Mummy (Roegadyn)
-873,Sabotender Empiratriz
-874,Sabotender Guardia
-875,Sabotender Guardia (+ Shield)
-876,Vicegerent to the Warden
-916,Empuse
-1001,Atomos Prime
-534,Unicorn
-588,Behemoth (Mount)
-592,Cavalry Drake
-593,Laurel Goobbue
-594,Nightmare
-601,Dalvags Final Flame
-643,Fat Chocobo
-644,Bomb Palanquin
-675,Direwolf
-689,Cavalry Elbst
-713,Aithon
-714,Xanthos
-715,Markab
-716,Einbarr
-718,Battle Bear
-719,Warbear
-721,Warlion
-817,Gullfaxi
-818,Boreas
-820,Moonfire Elbst (2014)
-866,Sleipnir (Mount)
-926,Midgardsormr (Mount)
-929,Manacutter (White)
-958,Kirin
-964,SDS Fenrir
-965,Parade Chocobo
+908,4-tonze Weight
+907,A Tornado
+781,Abaia
 987,Adamantoise (Mount)
-992,Griffin (Mount)
-503,Fancy pillar
-506,Tonberry Scholar (+ Darkness Effect)
-507,Batraal (b) (Copy)
-508,Clockwork Bug
-509,Dark Matter Pteroc
-511,Orb (Red / Lightning)
-512,Orb (Twintanias Hatch)
-513,Orb (Green / Bright Lightning)
-514,Orb (Watery / Music Symbol)
-515,Floor Circle (Twintanias Conflagration)
-516,Floor Circle (Ice)
-517,Floor Circle (Twintanias Liquid Hell)
-518,Bertha Cannon
-519,FFXIII Odin
-521,Mythril Verge
-523,Dreadknight Bind
-524,Barrel of Cannonballs
-525,Small Device
-528,Box with Maps
-529,Snow-Covered Box
-530,Crate
+732,Adamantoise Dragon
+829,ADS (Cuboid - Black - Red)
+830,ADS (Ovoid - Black - Red)
+791,Aetherochemical Explosion Marker (Syrcus)
+782,Aevis B (White)
+713,Aithon
+773,Allagan Mamool Ja Warrior
+733,Allagan Naga
+985,Alpha Groundskeeper
+615,Amaljaa Beacon
 531,Amaljaa Standard w/ Torch
-532,Book Glow (Green) (?)
-533,Moonfire Faire Bomb Cauldron
-535,Small Void Gate
-536,Large Void Gate
-537,Belias-Egi
-538,Gungnir
-539,Black Circle
-540,Glowing Circle
-541,Purple (Book Glow?)
-542,T-Pose Default Model
-543,T-Pose Default Model
-544,T-Pose Default Model
-545,T-Pose Default Model
-546,T-Pose Default Model
-549,Generic Person
-550,Spotlight
-551,Razor Plume (Garuda)
-552,Satin Plume (Garuda)
-553,Garudas Plume (No Effect)
+956,Anchag
 555,Ancient Wyvern (- Neurolinks)
-556,Floor Circle (Conflagration)
-557,Floor Circle (Conflagration)
-558,Caduceus
-559,Blue Cobra (Glowing)
-560,Red Cobra (Glowing)
-562,Rat (2)
-563,Catoblepas
-564,Nandi
-565,Catoblepas C (Yellow w/ Magenta)
-566,Celphie
+944,Archaeornis
+942,Archaeosaur
+793,Archbishop Thordan VII
 567,Archdemon
 568,Archdemon (II) (Copy)
 569,Archdemon (III) (Copy)
-570,Okeanis A (Blue/Orange)
+653,Arioch
+807,Assassin Fry
+996,Astraea
+970,Atomos Avatar
+1001,Atomos Prime
+894,Atrophied Atomos
+734,Avere Bravearm
+778,Azer
+686,Baby Opo-opo
+913,Bandersnatch
+524,Barrel of Cannonballs
+921,Bat (b) (Copy)
+507,Batraal (b) (Copy)
+718,Battle Bear
+826,Battle Biast
+588,Behemoth (Mount)
+862,Belahdian Knight
+537,Belias-Egi
+853,Bennu (Large)
+852,Bennu (Medium)
+851,Bennu (Small)
+518,Bertha Cannon
+975,Bismarck
+840,Bitoso
+505,Black Chocobo Chick
+539,Black Circle
+943,Bladed Vinegaroon
+559,Blue Cobra (Glowing)
+923,Bogy (b) (Copy)
+678,Bomb Incubator (Red)
+644,Bomb Palanquin
+795,Boogeyman
+532,Book Glow (Green) (?)
+818,Boreas
+528,Box with Maps
+950,Brobinyak
+677,Brown crate
+737,Bubble (Hullbreaker)
+831,Byblos
+558,Caduceus
+845,Captain Madison (Monster)
+563,Catoblepas
+565,Catoblepas C (Yellow w/ Magenta)
+592,Cavalry Drake
+689,Cavalry Elbst
+566,Celphie
 571,Ceremony Chocobo
-572,Okeanis C (Red/Purple)
-573,Okeanis D (Yellow)
-575,Tiger
-591,Imp (On Fire)
-595,Zu Cockerel
-596,Zu Pullet
-598,Spotted Zu Egg
-599,White Zu Egg
-606,Zombie War Hound
-607,Floating Eye (+ Void Effect)
+997,Ceruleum Tank
+998,Ceruleum Tank
+966,Chocobo (II)
+990,Chocobo Chick Courier
+896,Clockwork Barrow
+775,Clockwork Bit
+508,Clockwork Bug
+633,Clockwork Repurposer
+981,Cloud of Darkness (- Clouds)
+604,Cornu
 608,Corrupted Flan
 610,Corrupted Slime
-611,Spiny Plume (Garuda)
 612,Corrupted Sprite
-613,Pharos Aether Cloud
-614,Orb (Green / Lighting w/ Purple Outline)
-615,Amaljaa Beacon
-616,Sylph Shroom
-617,Snowman
-618,Granite Gaoler
-619,Voidsent Energy Spear
-620,Voidsent Energy Scythe
-621,Generic Person
-622,Void Portal
-629,Rock (Gray)
-630,Spear stuck in ground
-631,Fancy pillar
-632,Fancy circular relic
-633,Clockwork Repurposer
-635,Wind
-636,Gilgamesh (Bradamante)
-638,Vassago
-639,Green Toad (Battle on the Big Bridge)
-640,Decaying Gourmand
-641,Gobmachine G-VI
-642,Leviathans Tail
-645,Wamouracampa
-646,Wamoura/Silkmoth
-648,Mimic
-649,Orb (Diabolos Nightmare)
-650,Key
-652,Enkidu (Chicken)
-653,Arioch
+530,Crate
+696,Crate
+839,Crawler
+661,Dalamud Spawn
+601,Dalvags Final Flame
+909,Damaged Adjudicator
 654,Damselfly
-655,Rafflesia
 656,Dark Matter Bulb
 657,Dark Matter Hornet
-658,The Avatar
-659,Down Wyvern
-660,Fire Dragon
-661,Dalamud Spawn
-662,Flying Thunder Dragon
-663,Flying Moss Dragon
-664,Flying Fire Dragon
-665,Flying Zombie Dragon
-666,Rock (White)
-667,Rock (White) (II)
-668,Rock (White) (III)
-669,nan
-670,Goblin Bomb
-671,Goblin Bomb (Skull)
-672,Goblin Bomb (Spiked)
-673,Magitek Vangob
-674,Pyracmon
-676,Orb (Yellow / Bubble)
-677,Brown crate
-678,Bomb Incubator (Red)
-679,Whelk Ballista
-681,Wind Cylinder
-690,Hecteyes
-691,Imp C (Green)
-692,Gilgamesh (Unarmed)
-693,Wamouracampa (II) (Copy)
-694,Wamoura (II) (Copy)
+509,Dark Matter Pteroc
 695,Dark Matter Roselet
-696,Crate
-697,Spiked Balls
 698,Dark Matter Slug (Honey)
-701,Generic Person
+846,Daughter of Imdugud
+640,Decaying Gourmand
+841,Deepeye
 702,Default Model
 703,Default Model
 704,Default Model
@@ -780,297 +591,381 @@ ModelType,Name
 710,Default Model
 711,Default Model
 712,Default Model
-717,Persona
+805,Demon Box
+986,Demon Tome
+730,Diresaur
+675,Direwolf
+659,Down Wyvern
+972,Dragonfire Fly
+523,Dreadknight Bind
+605,Dullahan (NNYNB) (Purple)
+771,Dullahan (NNYYB) (Red)
+770,Dullahan (YYYYB) (Blue)
+576,Earthen Brickman (Dragon Quest)
+743,Eggplant Knight
+758,Eggplant Knight
+716,Einbarr
+974,Einhander
+916,Empuse
+794,Endymion
+888,Enkidu
+652,Enkidu (Chicken)
+763,Enkidu (Primal)
+925,Everliving Bibliotaph
+945,Falak
+632,Fancy circular relic
+503,Fancy pillar
+631,Fancy pillar
+802,Fat Cat
+643,Fat Chocobo
+912,Feridad
+519,FFXIII Odin
+815,Field Generator B (Allagan)
+660,Fire Dragon
+983,Fire Dragonet
+821,Fireworks Launcher
+607,Floating Eye (+ Void Effect)
+922,Floating Eye (b)
+556,Floor Circle (Conflagration)
+557,Floor Circle (Conflagration)
+516,Floor Circle (Ice)
+515,Floor Circle (Twintanias Conflagration)
+517,Floor Circle (Twintanias Liquid Hell)
+736,Floor Circle (Water / Hullbreaker)
+849,Floor Fire (Phoenix)
+664,Flying Fire Dragon
+663,Flying Moss Dragon
+662,Flying Thunder Dragon
+665,Flying Zombie Dragon
+838,Frumious Koheel Ja (on Wivre)
+827,Gaelicat
+988,Gaelikitten
+744,Garlic Jester
+759,Garlic Prince
+968,Garm
+553,Garudas Plume (No Effect)
+999,Generator (Keeper of the Lake)
+548,Generic Person
+549,Generic Person
+621,Generic Person
+701,Generic Person
+636,Gilgamesh (Bradamante)
+692,Gilgamesh (Unarmed)
+540,Glowing Circle
+832,Gnath
+670,Goblin Bomb
+671,Goblin Bomb (Skull)
+672,Goblin Bomb (Spiked)
+641,Gobmachine G-VI
+590,Golden Brickman (Dragon Quest)
 720,Golden Lion Mount [Incorrect]
-722,Sallet Crab
-723,Leg Trap
-724,Narbrooi
+776,Gomory
+731,Gorynich
+618,Granite Gaoler
+639,Green Toad (Battle on the Big Bridge)
+955,Griffin
+992,Griffin (Mount)
+897,Griffin Hatchling
+817,Gullfaxi
+538,Gungnir
+941,Gungnir
+954,Harmachis
+727,Harpeia
+800,Heavy Hatchling
+690,Hecteyes
+803,Hoary the Snowman
+790,Hunters Moon Disc (Syrcus)
+825,Ice Commander
+779,Ice Gaol
+764,Icicle
+547,Igeyorhm
+833,Imdugud
+920,Imp (b)
+591,Imp (On Fire)
+691,Imp C (Green)
+766,Interceptor Drone (PVP)
+780,Interceptor Node (PVP)
+898,Iron Dwarf
+609,Iron Giant
+637,Jandelaine
+822,Kaliya
+959,Kaliya (II) (Copy)
+824,Karlabos
+650,Key
+958,Kirin
 725,Krakens Arm
 726,Krakens Tentacle
-727,Harpeia
-728,Ninki Nanka (w/ Nankas)
-729,Ninki Nanka
-730,Diresaur
-731,Gorynich
-732,Adamantoise Dragon
-733,Allagan Naga
-734,Avere Bravearm
-735,Sasquatch
-736,Floor Circle (Water / Hullbreaker)
-737,Bubble (Hullbreaker)
-738,Large Red Frog
-739,Shield Dragonling
-740,Nanka
-741,Ogrebon
-763,Enkidu (Primal)
-764,Icicle
-767,Yeti
-768,Scyllas Staff
-769,Main Meteor Target
-770,Dullahan (YYYYB) (Blue)
-771,Dullahan (NNYYB) (Red)
-772,Okeanis B (Green/Blue)
-773,Allagan Mamool Ja Warrior
 774,Kum Kum
-775,Clockwork Bit
-776,Gomory
-777,Tursus
-778,Azer
-779,Ice Gaol
-780,Interceptor Node (PVP)
-781,Abaia
-782,Aevis B (White)
-783,Orb (Red / Syrcus Fire)
-784,Orb (Blue / Syrcus Ice)
-785,Orb (Purple / Syrcus Lightning)
-786,Orb (Purple / Aether Lines)
-787,Orb (Purple / Tam-Tara HM?)
-788,Orb (Dark Blue)
-789,Orb (Purple)
-790,Hunters Moon Disc (Syrcus)
-791,Aetherochemical Explosion Marker (Syrcus)
-792,Varis zos Galvus
-793,Archbishop Thordan VII
-794,Endymion
-795,Boogeyman
-810,Small Red Frog
-811,Warsteed (Maelstrom)
-812,Warsteed (Adders)
-813,Warsteed (Flames)
-814,Postmoogle
-815,Field Generator B (Allagan)
-819,Small Meteor Target
-821,Fireworks Launcher
-822,Kaliya
-824,Karlabos
-825,Ice Commander
-826,Battle Biast
-827,Gaelicat
-828,Sentient Inkhorn
-829,ADS (Cuboid - Black - Red)
-830,ADS (Ovoid - Black - Red)
-831,Byblos
-833,Imdugud
-834,Opken
-835,White Gaol
-836,Water Imp (Dragons Neck)
-839,Crawler
-840,Bitoso
-841,Deepeye
-842,Reptoid
-843,Vicegerents Right Hand
-844,Vicegerents Left Hand
-846,Daughter of Imdugud
-847,Son of Imdugud
-848,Orb (Phoenixs Blackfire)
-849,Floor Fire (Phoenix)
-850,Orb (Phoenixs Redfire)
-851,Bennu (Small)
-852,Bennu (Medium)
-853,Bennu (Large)
-854,Phoenix (Glowing)
-855,The Blood of Meracydia
-856,The Pain of Meracydia (Neurolinked)
-857,The Gust of Meracydia
-858,The Shadow of Meracydia
-859,The Sin of Meracydia (Neurolinked)
-860,Vicegerents Head
-861,Sastasha Pugil
-862,Belahdian Knight
-863,Steinbock Doe
-864,Snoll
-865,Spriggan (Blue-eyed: Ice Rock)
-867,Snowball?
-870,Polar Bear
-871,Vine (Purple)
-872,Vine
-877,Sentient Tome
-904,Skatene
-905,Paissa
-906,Typhons FUNGAH!
-907,A Tornado
-908,4-tonze Weight
-909,Damaged Adjudicator
-910,Orb (Sandy / Qarn HM?)
-911,Shiva (No Weapons)
-912,Feridad
-913,Bandersnatch
-914,Miacid
-915,Syricta
-917,Midgardsormr (Head)
-918,Page 64/128/256
-919,Okeanis E (Blue/Red)
-920,Imp (b)
-921,Bat (b) (Copy)
-922,Floating Eye (b)
-923,Bogy (b) (Copy)
-924,Vodoriga (b)
-925,Everliving Bibliotaph
-927,Megalotragus
-928,Orb (Purple/Blue)
+547,Lahabrea
+738,Large Red Frog
+536,Large Void Gate
+593,Laurel Goobbue
+600,Leech King
+723,Leg Trap
+895,Lesser Panda
+642,Leviathans Tail
+520,Lightning (FFXIII Character)
+801,Littlefoot
+687,Magic Broom
+979,Magitek Gobwidow
 930,Magitek Gunship
-931,Orb (Green)
-932,Ultros (One Lump)
-933,Ultros (Two Lumps)
-934,Ulros (Three Lumps)
-935,Vodoriga (Slumbering)
+673,Magitek Vangob
+769,Main Meteor Target
 936,Mamool Ja Sacred Standard
 937,Mamool Ja Sacred Standard
-941,Gungnir
-942,Archaeosaur
-943,Bladed Vinegaroon
-944,Archaeornis
-945,Falak
-946,Waukkeon
-947,Spear
-948,Wivre
-949,Tarantula Hawk
-950,Brobinyak
-951,Yak
-952,Vouivre
-953,Nunyenunc
-954,Harmachis
-955,Griffin
-956,Anchag
-957,Mylodon
-959,Kaliya (II) (Copy)
-960,Orb (Blue)
-962,Oppressor
+929,Manacutter (White)
+746,Mandragora Queen
+761,Mandragora Queen
 963,Manipulator
-966,Chocobo (II)
-967,Sacrificed Allagan Mamool Ja Warrior
-968,Garm
-969,Queen Scylla
-970,Atomos Avatar
-971,Sacrificed Soldier
-972,Dragonfire Fly
-973,Triad Table
-974,Einhander
-975,Bismarck
-976,Ravana (Four Small Swords)
-977,Tioman
-978,Steam Doll (Faust)
-979,Magitek Gobwidow
-980,Proto-Ultima
-981,Cloud of Darkness (- Clouds)
-982,White Knight
-983,Fire Dragonet
-984,Oliphaunt
-985,Alpha Groundskeeper
-986,Demon Tome
-994,Mirage Dragon (Thunder)
+603,Manticore
+837,Manxome Molaa Ja
+715,Markab
+927,Megalotragus
+914,Miacid
+883,Midgardsormr
+917,Midgardsormr (Head)
+926,Midgardsormr (Mount)
+648,Mimic
+753,Miniature Minecart
+624,Minion of Light (Black Mage)
+587,Minion of Light (Warrior)
+623,Minion of Light (White Mage)
+578,Minute Mindflayer
 995,Mirage Dragon (Ice)
-996,Astraea
-997,Ceruleum Tank
-998,Ceruleum Tank
-999,Generator (Keeper of the Lake)
-1024,Generic Person - Carrying Crate
-1031,Generic Person
-1102,Generic Person
-1103,Generic Person
-1104,Generic Person
-1162,Behemoth Heir
-1163,Accompanyment Node
-1164,Steam-powered Gobwalker G-VII
-1168,Emerald Carbuncle
-1170,Paissa Brat
-1172,Pumpkin Butler
-1173,Hunting Hawk
-1174,Shalloweye
-1175,Penguin Prince
-1431,Gigi (Hildibrand)
-1016,Model Magitek Bit
-1017,Puff of Darkness
-1068,Topaz Carbuncle
-1165,Wind-Up Iceheart
-1166,Wind-Up Gestahl
-1167,Wind-Up Yugiri
-1169,Wind-up Gnath
-1171,Wind-Up Illuminatus
-1176,Wind-Up Relm
-1212,Gold Rush Minecart
-1213,Black Fat Cat
-1230,Magic Broom 2
-1318,Wind-Up Ifrit
-1319,Clockwork Twintania
-1320,Korpokkur Kid
-1321,Wind-Up Firion
-1322,Wind-Up Echidna
-1330,Wind up Garuda
-1331,Wind up Titan
-1332,Wind-up Leviathan
-1333,Dress-up Yshtola
-1334,Wind-Up Haurchefant
-1335,Wind-Up Nero
-1336,Wind-Up Krile
-1337,Little bird
-1343,Army hat bug
-1385,Hecteye
-1386,Little monkey
-1387,Dwarf rabbit
-1388,Giraffe
-1390,Jibanyan
-1391,Komasan
-1392,Whisper
-1393,Blizzaria
-1394,Kyuubi
-1395,Komajiro
-1396,Manjimutt
-1397,Noko
-1398,Venoct
-1399,Shogunyan
-1400,Hovernyan
-1401,Robonyan F-Type
-1402,USApyon
-1423,Wind-Up Zundu Warrior
-1434,Anima
-1435,Glowing Anima
-1458,Faust
-1459,Morpho
-1461,Calca
-1462,Brina
-1463,Dragonet
-1464,Lucky Bucket
-1465,Piggy
-1466,Poroggo
-1467,Fenrir
-1468,Cheerleader
-1469,Calamari
-1470,Brachiosaur
-1484,Spoony Bard
-1499,Black Cat
-1089,Enforcement Droid 210
-1090,Regula van Hydrus
-1093,Shabti
-1236,Bit E (Blue & Orange) Clockwork Turret
-1283,Clockwork Hunter
-1345,Sephirot
-1357,Brute Justice (Final Form)
-1358,Brute Justice (Glowin Final Form)
-1382,Sephirot (Phase 2)
-1403,Kuribu
-1405,Achamoth
-1409,Winged Lion
-1426,Ziggy
-1431,Wind-up Magus
-1445,Zuro Roggo (Antitower Boss 1)
-1496,Siege Breaker (Doma Castle)
-1011,Gobwalker
-1026,Fenrir (Mount)
-1065,Pegasus (Mount)
-1161,Sanuwa (Mount)
-1249,Twintania (Mount)
-1264,Midgardsormr (Mount)
-1326,Witchs Broom
-1379,Manacutter (Silver)
-1380,Manacutter (Black)
-1411,Kongamato (Mount)
-1412,Wyvern (Mount)
-1444,Gloria-class Airship
-1446,Zu (Mount)
-1447,Bennu (Mount)
-1472,Black Pegasus
-1476,Astrope
+994,Mirage Dragon (Thunder)
+887,Model Enterprise
+820,Moonfire Elbst (2014)
+533,Moonfire Faire Bomb Cauldron
+798,Mummys Little Mummy
+957,Mylodon
+521,Mythril Verge
+547,Nabriales
+647,Nael deus Darnus
+752,Nana Bear
+564,Nandi
+740,Nanka
+724,Narbrooi
+808,Naughty Nanka
+594,Nightmare
+729,Ninki Nanka
+728,Ninki Nanka (w/ Nankas)
+953,Nunyenunc
+755,Nutkin
+741,Ogrebon
+570,Okeanis A (Blue/Orange)
+772,Okeanis B (Green/Blue)
+572,Okeanis C (Red/Purple)
+573,Okeanis D (Yellow)
+919,Okeanis E (Blue/Red)
+984,Oliphaunt
+742,Onion Prince
+757,Onion Prince
+834,Opken
+962,Oppressor
+784,Orb (Blue / Syrcus Ice)
+960,Orb (Blue)
+788,Orb (Dark Blue)
+649,Orb (Diabolos Nightmare)
+513,Orb (Green / Bright Lightning)
+614,Orb (Green / Lighting w/ Purple Outline)
+931,Orb (Green)
+848,Orb (Phoenixs Blackfire)
+850,Orb (Phoenixs Redfire)
+786,Orb (Purple / Aether Lines)
+785,Orb (Purple / Syrcus Lightning)
+787,Orb (Purple / Tam-Tara HM?)
+789,Orb (Purple)
+928,Orb (Purple/Blue)
+511,Orb (Red / Lightning)
+783,Orb (Red / Syrcus Fire)
+910,Orb (Sandy / Qarn HM?)
+512,Orb (Twintanias Hatch)
+514,Orb (Watery / Music Symbol)
+676,Orb (Yellow / Bubble)
+893,Owlet
+900,Page 63
+918,Page 64/128/256
+905,Paissa
+965,Parade Chocobo
+717,Persona
+613,Pharos Aether Cloud
+574,Phecda 
+854,Phoenix (Glowing)
+586,Plush Cushion
+870,Polar Bear
+814,Postmoogle
+991,Primogs
+634,Princely Hatchling
+980,Proto-Ultima
+541,Purple (Book Glow?)
+674,Pyracmon
+969,Queen Scylla
+655,Rafflesia
+562,Rat (2)
+976,Ravana (Four Small Swords)
+551,Razor Plume (Garuda)
+560,Red Cobra (Glowing)
+842,Reptoid
+629,Rock (Gray)
+666,Rock (White)
+667,Rock (White) (II)
+668,Rock (White) (III)
+873,Sabotender Empiratriz
+874,Sabotender Guardia
+875,Sabotender Guardia (+ Shield)
+967,Sacrificed Allagan Mamool Ja Warrior
+971,Sacrificed Soldier
+722,Sallet Crab
+602,Sandman
+735,Sasquatch
+861,Sastasha Pugil
+552,Satin Plume (Garuda)
+768,Scyllas Staff
+964,SDS Fenrir
+828,Sentient Inkhorn
+877,Sentient Tome
+739,Shield Dragonling
+911,Shiva (No Weapons)
+904,Skatene
+866,Sleipnir (Mount)
+525,Small Device
+819,Small Meteor Target
+810,Small Red Frog
+535,Small Void Gate
+864,Snoll
+529,Snow-Covered Box
+867,Snowball?
+617,Snowman
+847,Son of Imdugud
+947,Spear
+630,Spear stuck in ground
+697,Spiked Balls
+611,Spiny Plume (Garuda)
+550,Spotlight
+598,Spotted Zu Egg
+865,Spriggan (Blue-eyed: Ice Rock)
+628,Starlight Treant
+978,Steam Doll (Faust)
+863,Steinbock Doe
+589,Stone Brickman (Dragon Quest)
+616,Sylph Shroom
+915,Syricta
+542,T-Pose Default Model
+543,T-Pose Default Model
+544,T-Pose Default Model
+545,T-Pose Default Model
+546,T-Pose Default Model
+949,Tarantula Hawk
+868,Temple Mummy (Lalafell)
+869,Temple Mummy (Roegadyn)
+658,The Avatar
+855,The Blood of Meracydia
+857,The Gust of Meracydia
+856,The Pain of Meracydia (Neurolinked)
+858,The Shadow of Meracydia
+859,The Sin of Meracydia (Neurolinked)
+575,Tiger
+579,Tight-beaked Parrot
+754,Tiny Tapir
+977,Tioman
+554,Titan
+745,Tomato King
+760,Tomato King
+506,Tonberry Scholar (+ Darkness Effect)
+747,Treasure Box
+973,Triad Table
+777,Tursus
+906,Typhons FUNGAH!
+899,Ugly Duckling
+934,Ulros (Three Lumps)
+932,Ultros (One Lump)
+933,Ultros (Two Lumps)
+890,Unicolt
+534,Unicorn
+792,Varis zos Galvus
+638,Vassago
+832,Vath
+876,Vicegerent to the Warden
+860,Vicegerents Head
+844,Vicegerents Left Hand
+843,Vicegerents Right Hand
+872,Vine
+871,Vine (Purple)
+924,Vodoriga (b)
+935,Vodoriga (Slumbering)
+622,Void Portal
+620,Voidsent Energy Scythe
+619,Voidsent Energy Spear
+952,Vouivre
+993,Waitress
+694,Wamoura (II) (Copy)
+646,Wamoura/Silkmoth
+645,Wamouracampa
+693,Wamouracampa (II) (Copy)
+719,Warbear
+721,Warlion
+812,Warsteed (Adders)
+813,Warsteed (Flames)
+811,Warsteed (Maelstrom)
+886,Water Imp
+836,Water Imp (Dragons Neck)
+946,Waukkeon
+679,Whelk Ballista
+835,White Gaol
+982,White Knight
+599,White Zu Egg
+635,Wind
+681,Wind Cylinder
+885,Wind-Up Alisaie
+884,Wind-Up Alphinaud
+580,Wind-Up Amaljaa
+685,Wind-Up Bahamut
+577,Wind-Up Brickman
+891,Wind-Up Cid
+809,Wind-Up Delivery Moogle
+903,Wind-Up Dezul Qualan
+584,Wind-Up Edvya
+902,Wind-Up Founder
+882,Wind-Up Gentleman
+756,Wind-Up Gilgamesh
+889,Wind-Up Gundu Warrior
+581,Wind-Up Ixal
+989,Wind-Up Kain
+699,Wind-Up Kobld
+582,Wind-Up Kobolder
+627,Wind-Up Leader (Kan-E-Senna)
+626,Wind-Up Leader (Merlwyb)
+625,Wind-Up Leader (Raubahn)
+881,Wind-Up Louisoix
+797,Wind-Up Minfilia
+688,Wind-Up Moogle
+751,Wind-Up Nanamo
+683,Wind-Up Odin
+749,Wind-Up Onion Knight
+816,Wind-Up Panda
+879,Wind-Up Papalymo
+700,Wind-Up Sahagin
+583,Wind-Up Sea Devil
+527,Wind-Up Shantotto
+748,Wind-Up Succubus
+585,Wind-Up Sun
+892,Wind-Up Tataru
+796,Wind-Up Thancred
+799,Wind-Up Ultros
+880,Wind-Up Urianger
+901,Wind-Up Violet
+684,Wind-Up Warrior of Light
+750,Wind-Up Yshtola
+878,Wind-Up Yda
+948,Wivre
+714,Xanthos
+951,Yak
+767,Yeti
+597,Zombie Crawl Animation
+606,Zombie War Hound
+595,Zu Cockerel
+682,Zu Hatchling
+596,Zu Pullet
 1001,Dragon Head (Gilgamesh)
 1002,Snare (Steps of Faith)
 1003,Exploding Barrels (Steps of Faith)
@@ -1081,21 +976,27 @@ ModelType,Name
 1008,Orb (Blue Static)
 1009,Cloud of Darkness Dark Storm
 1010,Orb (Binding Chains)
+1011,Gobwalker
 1012,Vinegaroon
 1013,Piston Lubricant
 1014,Gear Lubricant
 1015,Orb (Lightning)
+1016,Model Magitek Bit
+1017,Puff of Darkness
 1018,Mandragora (b) (Gardening Copy)
 1019,Midgardsormr (Head)
 1020,Midgardsormr (Head)
 1021,ADS (Enormous Egg) (Hartching-tide 2015)
 1022,Spriggan (Yellow-eyed w/ Red Egg)
 1023,Spriggan (Yellow-eyed w/ Yellow Egg)
+1024,Generic Person - Carrying Crate
 1025,Cloud of Darkness - Dark Cloud
+1026,Fenrir (Mount)
 1027,Rook Autoturret
 1028,Bishop Autoturret
 1029,Logistics System
 1030,Magitek Gunship B (Blue)
+1031,Generic Person
 1032,Hecteyes (II) (Slightly Lighter Copy)
 1033,Lily of the Saint
 1034,Corpse Flower
@@ -1128,8 +1029,10 @@ ModelType,Name
 1062,Living Liquid (Chiromorph Right)
 1063,Living Liquid (Chiromorph Left)
 1064,Dhalmel
+1065,Pegasus (Mount)
 1066,Matoya
 1067,King Thordan
+1068,Topaz Carbuncle
 1070,Cloth Scraps?
 1071,Dragonkiller Cannon
 1072,Raskovnik
@@ -1148,8 +1051,10 @@ ModelType,Name
 1086,Ravana (Shadowed)
 1087,Ravana (Two Large Swords)
 1088,Beta Groundskeeper
-1089,Magitek Armor 
+1089,Enforcement Droid 210
+1090,Regula van Hydrus
 1092,Cultured Shabti
+1093,Shabti
 1094,Biblioklept
 1095,Phantom Ray
 1096,Moon Gana
@@ -1158,6 +1063,9 @@ ModelType,Name
 1099,Iksalion
 1100,The Curator
 1101,Vanu Vanu
+1102,Generic Person
+1103,Generic Person
+1104,Generic Person
 1105,Chandrahas
 1106,Amphiptere
 1107,Azys Lla ADS (Spheroid - Silver - Red)
@@ -1214,6 +1122,22 @@ ModelType,Name
 1158,Pterygotus
 1159,Griffin B (Brown)
 1160,Sanguiptere
+1161,Sanuwa (Mount)
+1162,Behemoth Heir
+1163,Accompanyment Node
+1164,Steam-powered Gobwalker G-VII
+1165,Wind-Up Iceheart
+1166,Wind-Up Gestahl
+1167,Wind-Up Yugiri
+1168,Emerald Carbuncle
+1169,Wind-up Gnath
+1170,Paissa Brat
+1171,Wind-Up Illuminatus
+1172,Pumpkin Butler
+1173,Hunting Hawk
+1174,Shalloweye
+1175,Penguin Prince
+1176,Wind-Up Relm
 1181,Nunyenuncs Shadow
 1182,Bit D (Black & Gold)
 1183,Steam Bit B (Purple)
@@ -1245,6 +1169,8 @@ ModelType,Name
 1209,Gaius van Baelsar X Slash
 1210,Elder Syricta
 1211,Poroggo (+ Blue Hat)
+1212,Gold Rush Minecart
+1213,Black Fat Cat
 1214,Senmurv
 1215,The Pale Rider
 1216,Gandarewa
@@ -1261,10 +1187,12 @@ ModelType,Name
 1227,The Scarecrow
 1228,Tonberry Marauder
 1229,Gobtank G-IV
+1230,Magic Broom 2
 1231,Flying Shark
 1232,Sword
 1234,Cuchulainn
 1235,Drum Bit A (Red)
+1236,Bit E (Blue & Orange) Clockwork Turret
 1237,Field Generator A (Allagan)
 1238,Vedrfolnir
 1239,Boomtype Magitek Gobwalker G-VII
@@ -1275,6 +1203,7 @@ ModelType,Name
 1244,Orb (Spinning Discs?)
 1245,Cone (Spinning Discs?)
 1246,Orb (White / Five Heade Dragon?)
+1249,Twintania (Mount)
 1250,Knight of the Round (b)
 1251,Wyvern
 1252,Thunder Dragon (b)
@@ -1289,6 +1218,7 @@ ModelType,Name
 1261,Flying Fire Dragon (b)
 1262,Flying Zombie Dragon (Grounded)
 1263,Ice Dragonet (b)
+1264,Midgardsormr (Mount)
 1265,Generic Person
 1266,Fallen Debris (Dusk Vigil)
 1267,Fallen Debris (Dusk Vigil)
@@ -1306,6 +1236,7 @@ ModelType,Name
 1279,Manipulator (Four Short Legs)
 1280,Shiva (Sword)
 1281,Rose Garden
+1283,Clockwork Hunter
 1288,Holder with 3 city-state banners in it
 1289,Ishgardian Banner
 1290,Glowing Purple Crystal
@@ -1336,16 +1267,32 @@ ModelType,Name
 1315,Korpokkur
 1316,FFXI Beetle
 1317,Ghrah Lumiary (Sphere)
+1318,Wind-Up Ifrit
+1319,Clockwork Twintania
+1320,Korpokkur Kid
+1321,Wind-Up Firion
+1322,Wind-Up Echidna
 1323,Barghest
 1324,Plague Purge
+1326,Witchs Broom
 1327,Ascian Prime (Not Glowing)
 1328,Sinister (Mob-Right Frill)
+1330,Wind up Garuda
+1331,Wind up Titan
+1332,Wind-up Leviathan
+1333,Dress-Up Yshtola
+1334,Wind-Up Haurchefant
+1335,Wind-Up Nero
+1336,Wind-Up Krile
+1337,Little bird
 1338,Pteranodon
 1339,Irminsul (Small)
 1340,Irminsul (Large)
 1341,Sawbones (Head Vine)
 1342,Echidna (Lamia)
+1343,Army hat bug
 1344,Boomtype Magitek Gobwalker G-VII (b)
+1345,Sephirot
 1346,Cetus
 1347,Corruption (Sphere)
 1348,Corruption (Doll)
@@ -1357,6 +1304,8 @@ ModelType,Name
 1354,Vortexer (Alexander)
 1355,Swindler (Alexander)
 1356,Brawler (Alexander)
+1357,Brute Justice (Final Form)
+1358,Brute Justice (Glowin Final Form)
 1359,Void Ark Scrap
 1360,The Pagans Knot
 1361,Pharos HM Generator
@@ -1376,12 +1325,37 @@ ModelType,Name
 1376,Calca
 1377,Brina
 1378,Bloated Bulb
+1379,Manacutter (Silver)
+1380,Manacutter (Black)
 1381,Knight Hawk
+1382,Sephirot (Phase 2)
+1385,Hecteye
+1386,Little monkey
+1387,Dwarf rabbit
+1388,Giraffe
+1390,Jibanyan
+1391,Komasan
+1392,Whisper
+1393,Blizzaria
+1394,Kyuubi
+1395,Komajiro
+1396,Manjimutt
+1397,Noko
+1398,Venoct
+1399,Shogunyan
+1400,Hovernyan
+1401,Robonyan F-Type
+1402,USApyon
+1403,Kuribu
 1404,Magitek Hexadrone
+1405,Achamoth
 1406,Nidhogg (Both Eyes / No Scars)
 1407,Elemental F (White)
 1408,Animus Elemental
+1409,Winged Lion
 1410,The Strongman (Heavensturn 2016)
+1411,Kongamato (Mount)
+1412,Wyvern (Mount)
 1413,Magitek Reaper (Glowing)
 1414,Gobblydegroper (Alexander 8)
 1415,Ark Ked
@@ -1392,19 +1366,28 @@ ModelType,Name
 1420,Forgotten Wisent
 1421,Charybterix
 1422,Trained Sanuwa
+1423,Wind-Up Zundu Warrior
 1424,Okeanis F (Purple)
 1425,Spinnning Wheel with spikes in the middle
+1426,Ziggy
 1427,Enraged Marid
 1428,Groundskeeper C (Purple)
 1429,Skatene B (White)
 1430,Sephirot-Egi
+1431,Gigi (Hildibrand)
 1432,Wind Elemental
 1433,Tornado with leaves
+1434,Anima
+1435,Glowing Anima
 1436,Byakko (Beast Form)
-1437,Byakko (Beast Form - Enraged)
+1437,Byakko (Beast Form)
 1438,Sabertooth tiger
 1439,Vanara
 1443,Enormous Black Boulder/Ball
+1444,Gloria-class Airship
+1445,Zuro Roggo (Antitower Boss 1)
+1446,Zu (Mount)
+1447,Bennu (Mount)
 1448,Floating pink and red hearts
 1449,Magic Pot from FFXI
 1450,Stardust
@@ -1414,10 +1397,24 @@ ModelType,Name
 1454,Floating black void with purple glow
 1455,Sasquatch (Hullbreaker Isle Boss 1)
 1456,Tuco Tuco
+1458,Faust
+1459,Morpho
+1461,Calca
+1462,Brina
+1463,Dragonet
+1464,Lucky Bucket
+1465,Piggy
+1466,Poroggo
+1467,Fenrir
+1468,Cheerleader
+1469,Calamari
+1470,Brachiosaur
 1471,Blaster Clone (Alexander)
+1472,Black Pegasus
 1473,Minotaur
 1474,Minotaur (Mottled - Red)
 1475,Large Egg (White)
+1476,Astrope
 1477,Restrained Sephirot
 1478,Vanara of Biting Cold
 1479,Vanara of Resonating Thunder
@@ -1425,6 +1422,7 @@ ModelType,Name
 1481,Ozma Phase Two
 1482,Crimson Morpho
 1483,Moon Gana
+1484,Spoony Bard
 1486,Vath Warlord
 1487,Raubahn Sword on the ground
 1488,Callofisteri
@@ -1435,955 +1433,961 @@ ModelType,Name
 1493,Vortexer (Alexander)
 1494,Swindler ()
 1495,Brawler ()
+1496,Siege Breaker (Doma Castle)
 1498,Forgall
-1501,Small Glowing Orb with Music Note in it
-1569,Generic Person
-1570,Generic Person
-1802,Spectre of Gosetsu
-1804,The Griffin (Ilberd)
-1917,Hypertuned Grynewaht
-1918,Tomegi
-1919,Ushitora
-1920,Kageyama
-1999,Terrified Namazu
-1544,Wind-Up Ramuh
-1545,Wind-Up Shiva
-1546,Wind-up Calofisteri
-1547,Wind-Up Aymeric
-1548,Taoist Moogle
-1611,Wind-Up Yuna
-1612,Wind-Up Rikku
-1613,Wind-Up Lulu
-1614,Namingway
-1615,Shaggy Shoat
-1616,Wind-Up Thancred
-1617,Wind-Up Alisaie
-1618,Wind-Up 
-1626,Wind-Up Edda
-1648,Little Midgardsormr
-1650,Unicolt
-1651,Wind-Up Moenbryda
-1690,Bulldog Pup
-1692,Wind-Up Bartz
-1693,Wind-Up Kain
-1694,Hraesvelgr artbook
-1695,Gigi
-1696,Castaway Chick
-1697,Anima
-1698,Wind-Up Red Mage
-1769,Halloween Ahriman
-1782,Scathach
-1783,Nidhogg
-1784,Fox
-1785,Kitten Thing
-1786,Odder Otter
-1787,Tiny Tatsunoko
-1788,Bom Boko
-1789,Sparrow
-1790,Bombfish
-1824,Wind-up Lyse
-1825,Yugiri
-1826,Gosetsu
-1827,Yotsuyu
-1828,Grynethwaht
-1829,Angel bell
-1830,Namazu
-1831,Ivon Coeurlfist
-1832,Demon Doll?
-1833,Wind-up Meateater
-1834,Magitek Avenger
-1855,Wind-Up Moon
-1895,Ghido
-1896,Exdeath
-1897,Khloe
-1898,Susanoo
-1899,Lakshmi
-1902,Pig
-1968,Wind-Up Bismark
-1978,Wind-Up Hien
-1979,Wind-Up Ravana
-1980,Wind-Up Kojin
-1981,Mameshiba
-1982,Tengu
-1983,Matanga
-1525,Kargas
-1561,Ceruleum Servant
-1582,Tozol Huatotl (Xelphatol)
-1584,Diloc Ciluoc (Xelphatol)
-1590,Calofisteri
-1591,Calofisteri (Left Haircut)
-1592,Strix
-1603,Demon Tome
-1609,Demon of the Tome
-1740,Ananta
-1766,Yojimbo
-1821,Koja
-1939,Okina (S-Rank Hunt)
-1505,Nimbus Cloud
-1515,Cloud Mallow
-1520,Original Fat Chocobo
-1532,Fat Moogle
-1534,Whisper-go
-1585,Goten
-1586,Ginga
-1587,Raigo
-1593,Mystic Panda
-1629,Managarm
-1635,Disembodied Head
-1646,Whisper A-go-go
-1658,Starlight Bear
-1676,Syldra
-1725,Battle Lion
-1765,Firebird
-1773,Falcon (Mount)
-1775,Raigo
-1776,Archon Throne
-1995,Manta Ray (Kojin Quest Mount)
-1996,Magitek Predator
-1502,Old World Striking Dummy (level 60)
-1503,Edda
-1504,Revenant (Grey)
-1506,Glowing Orb
-1507,Whelk from FF6 - Purple
-1508,Whelk from FF6 - Grey
-1509,Sarchosurcus
-1510,Dragon (Zombie)
-1511,White Lanner (Bismarck)
-1512,Rose Lanner (Ravana)
-1513,Round Lanner (Thordan)
-1514,Warring Lanner (Sephirot)
-1516,Brute Justice
-1517,Creepy Black Mage
-1518,Creepy White Mage
-1519,Groundskeeper A
-1521,Ahriman (Purple)
-1522,Sea Monk (Spiked - Blue)
-1523,Riviera Striking Dummy
-1524,Orn Khai
-1526,Blue Mimic
-1527,Red Mimic
-1528,Fan Construct
-1529,Atomos (Silver)
-1530,Bird of Paradise (Rainbow)
-1531,Estinien (Nidhogg Fusion)
-1533,Nidhogg Phase 3
-1535,The Epigraph (Weeping City Mid-Boss)
-1536,Sophia
-1537,Sophias Head
-1538,Sarcophagus of the Demon Queen: Scathach
-1539,Zurvan
-1541,Diremite (Green-Yellow)
-1542,Spider Mite (Green-Yellow)
-1543,Spider Mite (Yellow-Brown)
-1549,Lamia-Dalvag-Parthenope
-1550,Lamia-Dalvag-Parthenope
-1551,Lamia-Dalvag-Parthenope
-1552,Ancient Wyvern (Iridescent Blue)
-1553,Dragon (Shadow)
-1554,Ancient Wyvern (Deep White)
-1555,Nidhogg
-1556,Glowing Nidhogg Phase 3
-1557,Hraesvelgr
-1558,Hraesvelgr
-1559,Hraesvelgr (Eyes Closed)
-1560,Hraesvelgr (One Eye Closed)
-1562,Dangerous Boquet
-1563,Barrel
-1564,Calofisteri Spine [SKL]
-1565,Entanglement
-1566,Living Lock (Vine)
-1567,Living Lock (Axe)
-1568,Living Lock (Bulb)
-1571,Floating ball of ice
-1572,Thundercloud
-1573,Floating orb of ice
-1574,Flame Sergeant Dalvag
-1575,Flame Sergeant Dalvag lookalike without the glowing eyes
-1577,Parthenope
-1578,Bijou (Calofisteri)
-1579,Wyvern (White) [Locked]
-1580,Dark Lanner (Niddhog)
-1581,Gaol (Ozma)
-1583, Prime
-1588,Nidhogg (Spirit)
-1589,Dragonet (Blue/White)
-1599,Revenant (Red)
-1600,Fancy glowing blue spear/pole
-1601,Fancy giant red sword buried in the ground
-1602,Dragons Head (Shinryu Add)
-1604,Zu Pullet
-1605,Cruise Chaser
-1606,Cruise Chaser again
-1607,A silhouette of Sophia
-1608,Tsanahale (Green/Pink)
-1610,Eradicator ( 11)
-1619,Kum Kum (Syrcus Tower Amon Adds)
-1620,Pudding (Oil)
-1621,Hraesvalgr (Spirit)
-1622,Glowing Toxic Neon Green Orb
-1623,Flaming Orb
-1624,T-Pose Default Model
-1627,3 Rocks
-1628,Balloon Turret (Xelphatol Diloc Add)
-1630,Sahagin (EQ)
-1631,Minotaur
-1632,Naked Yumemi
-1633,Cruise Seeker (Cruise Chaser Add)
-1634,Skystone (Xelphatol Diloc Add)
-1636,Glowing sky blue Allagan orb
-1637,Refurbisher ()
-1638,Gobbie (EQ)
-1639,Hecatoncheir (EQ)
-1640,Hecatoncheir (EQ)
-1641,Hecatoncheir (EQ)
-1642,Sahagin (EQ)
-1643,Ugly Red Demon
-1644,Succubus (EQ)
-1647,Nidhogg (Fused with Estinien) 2
-1649,Coincounter Primus (Aquapolis Final Boss)
-1652,T-pose Default Model
-1653,T-Pose Default Model
-1654,Magitek Killer Mantis
-1656,Gobbie (EQ)
-1657,Orange Kappa
-1659,Frog
-1660,Green Kappa
-1663,Ixal (EQ)
-1664,Liquid Flame (Humanoid Form)
-1665,Liquid Flame (Hand Form)
-1666,Liquid Flame (PIllar Form)
-1667,Allagan Drone (Ant)
-1668,Nybeth Obdilord
-1669,Magitek Predator (w/ Pilot)
-1670,Gobroller Mk. VI ( 7)
-1671,A floating multicolored crystal
-1672,Crystal-Powered Laser Cannon
-1673,Exploding Fat Cannister ( 11 Adds)
-1674,Susanoo
-1675,Lakshmi
-1677,Palace of the Dead - Kuribu (Pomander of Resolution)
-1678,Gaol (Obsidian)
-1679,Armored Weapon (Magitek Laser Thing)
-1680,Amikiri (Shisui of the Violet Tides 1st Boss)
-1681,Gowrow (Sohm Al HM 2nd Boss)
-1682,Tatsunoko (Blue/Purple)
-1683,Bombfish
-1684,Yak Ram Thing
-1685,A giant tornado
-1686,Ozma (Shade Form - Adds Sub-boss)
-1687,Floating Glowing White Staff
-1688,Christmas Paissa
-1689,Scathach
-1691,Cupid (Minion) From valentines day event
-1699,Blue Kojin (EQ - Headless)
-1700,Sophia (without head)
-1701,Sophia (second form)
-1702,Sophias glowing scales
-1703,Arrhidaeus Lanner ( Prime Add)
-1704,Arrhidaeus Lanner (Winged -  Prime Add)
-1705,Arrhidaeus Lanner (Clock -  Prime Add)
-1706,Arrhidaeus Lanner (Guns -  Prime Add)
-1708,Shinryu EX?
-1709,Ugly Blue Scorpion Bug
-1710,Purple Gryphon
-1711,Governor (Sirensong Sea 1st Boss)
-1712,Magna Roader (Purple)
-1713,Alte Roite (Omega 1) [Frozen]
-1714,Ghost Aurelia (Sirensong Sea)
-1716,Lorelei (Sirensong Sea Final Boss)
-1717,Antlion
-1718,Matamata
-1719,Unkiu
-1720,Simurgh from FFXI / Phorusrhacos
-1721,Gyuk
-1722,Refurbisher ()
-1723,Refurbisher ()
-1724, Prime ()
-1726,Qiqirn (EQ)
-1727,T-Pose Default Model
-1728,T-Pose Default Model
-1729,T-Pose Default Model
-1730,Stone Gaol (Titan)
-1731,Ferdiad Hollow
-1732,Canis Pugnax
-1733,Magma Snipper
-1734,Cait Sith
-1735,Cait Sith (Clean - Redbill Scarf)
-1736,Magitek Driller
-1737,Anala (Magma)
-1738,Garula (Bardams Mettle 1st Boss)
-1739,Ying-Yang
-1741,Magitek Gobwalker Mk. IX
-1742,Gobbie (EQ)
-1743,Suzaku
-1744,Voidsent Wyvern (Boss?)
-1745,Revenant (Purple)
-1746,Rock Rhino (Mossy)
-1747,Goobbue (Frozen)
-1748,Shadow Dragon (Purple/Green)
-1749,Generic Blue Demon thing
-1750,Sea Monk (Psychadelic)
-1751,Doom Knight
-1752,Behemoth
-1753,Arbuda (Temple of the Fist 2nd Boss)
-1754,Inferno (Castrum Abania Final Boss)
-1755,Catastrophe
-1756,Execrated Will(EQ - Zurvan Adds)
-1757,Ivan Coeurlfist
-1758,Ozma
-1759,Tenaga (Yanxian Dryad)
-1760,Sad Pumpkin
-1761,Lugat (Sirensong Sea 1st Boss)
-1762,Sophia without head (gold)
-1763,Cruise Chaser
-1764,Numbers (Eureka NM)
-1767,Muud Suud
-1768,Lanner (Sophia)
-1770,Weirdly colored lion
-1771,Rock monster with two hands
-1772,Rock Plant Fish Mouth???
-1774,Power Core (Deconstructor Add)
-1777,Golden Egg
-1778,Zenos Yae Galvus (No Helm)
-1779,Captain Madison (Satasha HM 1st Boss)
-1780,Atomos (Yellow/Black)
-1781,Diabolos (Injured)
-1791,Faehound S (Red/Black)
-1792,Karakuri Shinobi (Boss)
-1793,Namazu (Big)
-1794,Number XXIV (Castrum Abania 2nd Boss)
-1795,Imp Jester
-1796,Connla (Scathach Add)
-1797,Karakuri Mask?
-1798,Shisui Yohi (Shisui Final Boss)
-1799,Halicarnassus (Omega 3)
-1800,Hecatoncheir (Green)
-1801,Zurvan
-1803,Scathach (Dead)
-1805,Ixion
-1806,Khun Shavar (Staff Training Dummy)
-1807,Grasshopper
-1808,Armored Weapon (Magitek Laser Spider)
+1499,Black Cat
 1811,Zurvan (Fettered)
-1812,Wolf Dude (Headless?)
-1813,Doman Armor Golem? (Steel)
-1814,Coralshell
-1815,Coeurl (Grey/Green)
-1816,Coeurl (Red/Orange)
-1817,Bardams Hammer Golem
-1818,Magitek Avenger
-1819,Dhara? (Yellow/Brown)
-1820,Scathach Tendril Hand
-1822,Diabolos
-1823,Player (T)
-1835,Wolf (White/Light Red)
-1836,Wolf (Blue/Red)
-1837,Faehound L (Blue/Black)
-1838,The Griffins Blade
-1839,Scathach
-1841,Blue Orb (Big)
-1842,Orange Rotating Rings
-1843,Bulbasaur? (Skalla Boss)
-1844,Lion (White)
-1845,Lion
-1846,Lion (Magma)
-1847,Fist Temple Golem?
-1848,Dhruva? (Ice)
-1849,Dhara? (Blue/Black) / Gnome
-1850,Bear (Black)
-1851,Dragonfly (Green/Yellow)
-1852,Griffin (True)
-1853,Treant?
-1854,Electral Orb
-1856,Dragonet ( Blue)
-1857,Lanner (Zurvan)
-1858,Faehound L (Purple/Black)
-1859,Faehound S (Blue/Black)
-1860,T-Pose
-1861,Atomos (Chrome Blue)
-1862,Hex Shield Thing
-1863,Neo Exdeath
-1864,Garlean Scientist Asshole
-1865,Cait Sith
-1866,Diabolos Prime
-1867,Apa/Undine
-1868,Tengu
-1869,Elephant (Grey/Blankets)
-1870,Manta (No Saddle)
-1871,Gobroller Mk. VII (Alex 10)
-1872,Rock Beast (Purple Crystals)
-1873,Zenos (Wind Katana)
-1875,Alte Roite (Omega 1)
-1876,Hellhound (Steel Grey)
-1877,Nine-Tails (FATE Boss)
-1878,Echidna (EQ)
+1539,Zurvan
+1801,Zurvan
+1604,Zu Pullet
+1778,Zenos Yae Galvus (No Helm)
 1885,Zenos Yae Galvus (Helmet)
-1886,Player (?)
-1887,Player (?)
-1888,Demon Face Totem (Omega 4)
-1889,Ruby Tide Princess
-1890,Magna Roader (Red)
-1891,Maned Dragon?
-1892,Level Checker
-1893,Shinryu (Huge)
-1894,Yol
-1900,Temple of the Fist Ghost
-1901,Mossling
-1903,Magitek Colossus (Cobalt)
-1904,Manzasiri
-1905,Cobra (Blue)
-1906,Shalloweye
-1907,Archamoth
-1908,Mossy Stone Block Demon
-1909,Razor Disc (Doma Boss Add)
-1910,Karakuri Shinobi
-1911,Susanoo
+1956,Zenos Yae Galvus (Helmet)
+1954,Zenos Yae Galvus (Again)
+1955,Zenos Yae Galvus (Again)
 1913,Zenos Sword (Wind)
 1914,Zenos Sword (Lightning)
 1915,Zenos Sword (Force?)
-1923,Wind Blob?
-1924,Alpha (Omega)
-1925,Catastrophe Tentacle
-1926,Shinryu Tail
-1927,Hrodric Poisontongue
-1928,Dragon (Yellow)
-1929,Coblyn (Pink)
-1930,Bahamut (Large-Blue)
-1931,Wolf (Red/Grey)
-1932,Stone Gaol (Susanoo)
-1933,Namazu (Blank Eyes)
-1934,Glowing Dragon Skull (Yojimbo Add)
-1935,Steppe Stone Block?
-1936,Void Ark Plant Beast?
-1937,Living Liquid (Alex)
-1938,Gowrow (Sohl Al HM)
-1940,Magitek... Crawley Thing (Red/Black)
+1969,Zenos in black armor with no helmet
+1971,Zenos in black armor
+1873,Zenos (Wind Katana)
 1941,Yumemi (Non-Naked)
-1942,Doman Armor Golem? (Red)
-1943,Dhammel
-1944,Lammergeyer? (Red)
-1945,Scarab (Tan)
-1947,Crab Scorpion (Grey)
-1948,Doman Bear? (Orange) Wolverene
-1949,Doman Treant?
-1950,Phurble (Green)
-1951,Angler Fish (Brown/Orange)
-1952,Horse (Brown)
-1953,Lanner (Brown)
-1954,Zenos Yae Galvus (Again)
-1955,Zenos Yae Galvus (Again)
-1956,Zenos Yae Galvus (Helmet)
-1957,Feather Orb
+1825,Yugiri
+1827,Yotsuyu
+1894,Yol
+1766,Yojimbo
+1739,Ying-Yang
+1684,Yak Ram Thing
+1579,Wyvern (White) [Locked]
+1812,Wolf Dude (Headless?)
+1835,Wolf (White/Light Red)
+1931,Wolf (Red/Grey)
+1836,Wolf (Blue/Red)
+1611,Wind-Up Yuna
+1616,Wind-Up Thancred
+1545,Wind-Up Shiva
+1612,Wind-Up Rikku
+1698,Wind-Up Red Mage
+1979,Wind-Up Ravana
+1544,Wind-Up Ramuh
+1855,Wind-Up Moon
+1651,Wind-Up Moenbryda
+1833,Wind-up Meateater
+1824,Wind-up Lyse
+1613,Wind-Up Lulu
+1980,Wind-Up Kojin
+1693,Wind-Up Kain
+1978,Wind-Up Hien
+1626,Wind-Up Edda
+1546,Wind-up Calofisteri
+1968,Wind-Up Bismark
+1692,Wind-Up Bartz
+1547,Wind-Up Aymeric
+1617,Wind-Up Alisaie
+1618,Wind-Up 
+1923,Wind Blob?
+1511,White Lanner (Bismarck)
+1534,Whisper-go
+1646,Whisper A-go-go
+1507,Whelk from FF6 - Purple
+1508,Whelk from FF6 - Grey
+1770,Weirdly colored lion
 1958,Water Orb
 1959,Water Globe (Purple)
-1960,Shining Orb
-1961,Fire Orb
-1962,Sun Orb
-1963,Electric Orb
-1964,Targeting mark on ground
-1965,Susanoo Blocking Shield Effect
-1966,Black Hole
-1967,Black Hole [Effect]
-1969,Zenos in black armor with no helmet
-1970,Red Armor Zenos without helmet and with Wind Katana
-1971,Zenos in black armor
-1972,Red Armor Zenos with Wind Katana
-1973,Lammergeyer? (Green)
-1974,Magitek Bit
-1975,Lakshmi
-1984,Garlean Gatling Gun
-1985,Ancient Wyvern (Spined - Black/Purple)
-1986,Doom Knight Champion
-1987,Ixion
-1988,Salt and Light (S-Rank SB Hunt)
-1989,Orcus (A-Rank SB Hunt)
-1990,Erle (A-Rank SB Hunt)
-1991,Sum (A-Rank SB Hunt)
-1992,Grimekhala (A-Rank SB Hunt)
+1514,Warring Lanner (Sephirot)
+1744,Voidsent Wyvern (Boss?)
+1936,Void Ark Plant Beast?
 1993,Vochtstein (A-Rank SB Hunt)
-1994,Salt Dhruva
-1997,Khun Chuluu (Sad Bardam Walls)
+1740,Vira Swordmaid (?)
+1919,Ushitora
+1719,Unkiu
+1650,Unicolt
+1643,Ugly Red Demon
+1709,Ugly Blue Scorpion Bug
+1608,Tsanahale (Green/Pink)
+1853,Treant?
+1582,Tozol Huatotl (Xelphatol)
+1918,Tomegi
+1787,Tiny Tatsunoko
+1572,Thundercloud
+1838,The Griffins Blade
+1804,The Griffin (Ilberd)
+1535,The Epigraph (Weeping City Mid-Boss)
+1999,Terrified Namazu
+1868,Tengu
+1982,Tengu
+1759,Tenaga (Yanxian Dryad)
+1900,Temple of the Fist Ghost
+1682,Tatsunoko (Blue/Purple)
+1964,Targeting mark on ground
+1548,Taoist Moogle
+1624,T-Pose Default Model
+1652,T-pose Default Model
+1653,T-Pose Default Model
+1727,T-Pose Default Model
+1728,T-Pose Default Model
+1729,T-Pose Default Model
+1860,T-Pose
+1676,Syldra
+1743,Suzaku
+1965,Susanoo Blocking Shield Effect
+1674,Susanoo
+1898,Susanoo
+1911,Susanoo
+1962,Sun Orb
+1991,Sum (A-Rank SB Hunt)
+1644,Succubus (EQ)
+1592,Strix
+1730,Stone Gaol (Titan)
+1932,Stone Gaol (Susanoo)
+1935,Steppe Stone Block?
+1658,Starlight Bear
 1998,Spirit Coeurl
+1543,Spider Mite (Yellow-Brown)
+1542,Spider Mite (Green-Yellow)
+1802,Spectre of Gosetsu
+1789,Sparrow
+1537,Sophias Head
+1702,Sophias glowing scales
+1762,Sophia without head (gold)
+1700,Sophia (without head)
+1701,Sophia (second form)
+1536,Sophia
+1501,Small Glowing Orb with Music Note in it
+1634,Skystone (Xelphatol Diloc Add)
+1720,Simurgh from FFXI / Phorusrhacos
+1798,Shisui Yohi (Shisui Final Boss)
+1926,Shinryu Tail
+1708,Shinryu EX?
+1893,Shinryu (Huge)
+1960,Shining Orb
+1906,Shalloweye
+1615,Shaggy Shoat
+1748,Shadow Dragon (Purple/Green)
+1522,Sea Monk (Spiked - Blue)
+1750,Sea Monk (Psychadelic)
+1820,Scathach Tendril Hand
+1803,Scathach (Dead)
+1689,Scathach
+1782,Scathach
+1839,Scathach
+1945,Scarab (Tan)
+1538,Sarcophagus of the Demon Queen: Scathach
+1509,Sarchosurcus
+1994,Salt Dhruva
+1988,Salt and Light (S-Rank SB Hunt)
+1630,Sahagin (EQ)
+1642,Sahagin (EQ)
+1760,Sad Pumpkin
+1889,Ruby Tide Princess
+1513,Round Lanner (Thordan)
+1512,Rose Lanner (Ravana)
+1746,Rock Rhino (Mossy)
+1772,Rock Plant Fish Mouth???
+1771,Rock monster with two hands
+1872,Rock Beast (Purple Crystals)
+1523,Riviera Striking Dummy
+1599,Revenant (Red)
+1745,Revenant (Purple)
+1504,Revenant (Grey)
+1637,Refurbisher ()
+1722,Refurbisher ()
+1723,Refurbisher ()
+1527,Red Mimic
+1970,Red Armor Zenos without helmet and with Wind Katana
+1972,Red Armor Zenos with Wind Katana
+1909,Razor Disc (Doma Boss Add)
+1587,Raigo
+1775,Raigo
+1726,Qiqirn (EQ)
+1740,Qalyana Shudra
+1710,Purple Gryphon
+1620,Pudding (Oil)
+1774,Power Core (Deconstructor Add)
+1823,Player (T)
+1886,Player (?)
+1887,Player (?)
+1902,Pig
+1950,Phurble (Green)
+1577,Parthenope
+1677,Palace of the Dead - Kuribu (Pomander of Resolution)
+1686,Ozma (Shade Form - Adds Sub-boss)
+1758,Ozma
+1524,Orn Khai
+1520,Original Fat Chocobo
+1989,Orcus (A-Rank SB Hunt)
+1842,Orange Rotating Rings
+1657,Orange Kappa
+1502,Old World Striking Dummy (level 60)
+1939,Okina (S-Rank Hunt)
+1786,Odder Otter
+1668,Nybeth Obdilord
+1764,Numbers (Eureka NM)
+1794,Number XXIV (Castrum Abania 2nd Boss)
+1877,Nine-Tails (FATE Boss)
+1505,Nimbus Cloud
+1533,Nidhogg Phase 3
+1588,Nidhogg (Spirit)
+1647,Nidhogg (Fused with Estinien) 2
+1555,Nidhogg
+1783,Nidhogg
+1863,Neo Exdeath
+1614,Namingway
+1933,Namazu (Blank Eyes)
+1793,Namazu (Big)
+1830,Namazu
+1632,Naked Yumemi
+1593,Mystic Panda
+1767,Muud Suud
+1908,Mossy Stone Block Demon
+1901,Mossling
+1631,Minotaur
+1983,Matanga
+1718,Matamata
+1904,Manzasiri
+1995,Manta Ray (Kojin Quest Mount)
+1870,Manta (No Saddle)
+1891,Maned Dragon?
+1629,Managarm
+1981,Mameshiba
+1890,Magna Roader (Red)
+1712,Magna Roader (Purple)
+1733,Magma Snipper
+1940,Magitek... Crawley Thing (Red/Black)
+1669,Magitek Predator (w/ Pilot)
+1996,Magitek Predator
+1654,Magitek Killer Mantis
+1741,Magitek Gobwalker Mk. IX
+1736,Magitek Driller
+1903,Magitek Colossus (Cobalt)
+1974,Magitek Bit
+1818,Magitek Avenger
+1834,Magitek Avenger
+1761,Lugat (Sirensong Sea 1st Boss)
+1716,Lorelei (Sirensong Sea Final Boss)
+1566,Living Lock (Vine)
+1568,Living Lock (Bulb)
+1567,Living Lock (Axe)
+1937,Living Liquid (Alex)
+1648,Little Midgardsormr
+1666,Liquid Flame (PIllar Form)
+1664,Liquid Flame (Humanoid Form)
+1665,Liquid Flame (Hand Form)
+1844,Lion (White)
+1846,Lion (Magma)
+1845,Lion
+1892,Level Checker
+1857,Lanner (Zurvan)
+1768,Lanner (Sophia)
+1953,Lanner (Brown)
+1944,Lammergeyer? (Red)
+1973,Lammergeyer? (Green)
+1549,Lamia-Dalvag-Parthenope
+1550,Lamia-Dalvag-Parthenope
+1551,Lamia-Dalvag-Parthenope
+1675,Lakshmi
+1899,Lakshmi
+1975,Lakshmi
+1619,Kum Kum (Syrcus Tower Amon Adds)
+1821,Koja
+1785,Kitten Thing
+1806,Khun Shavar (Staff Training Dummy)
+1997,Khun Chuluu (Sad Bardam Walls)
+1897,Khloe
+1525,Kargas
+1792,Karakuri Shinobi (Boss)
+1910,Karakuri Shinobi
+1797,Karakuri Mask?
+1920,Kageyama
+1805,Ixion
+1987,Ixion
+1663,Ixal (EQ)
+1831,Ivon Coeurlfist
+1757,Ivan Coeurlfist
+1754,Inferno (Castrum Abania Final Boss)
+1795,Imp Jester
+1917,Hypertuned Grynewaht
+1927,Hrodric Poisontongue
+1694,Hraesvelgr artbook
+1560,Hraesvelgr (One Eye Closed)
+1559,Hraesvelgr (Eyes Closed)
+1557,Hraesvelgr
+1558,Hraesvelgr
+1621,Hraesvalgr (Spirit)
+1952,Horse (Brown)
+1862,Hex Shield Thing
+1876,Hellhound (Steel Grey)
+1800,Hecatoncheir (Green)
+1639,Hecatoncheir (EQ)
+1640,Hecatoncheir (EQ)
+1641,Hecatoncheir (EQ)
+1769,Halloween Ahriman
+1799,Halicarnassus (Omega 3)
+1721,Gyuk
+1828,Grynethwaht
+1519,Groundskeeper A
+1992,Grimekhala (A-Rank SB Hunt)
+1852,Griffin (True)
+1660,Green Kappa
+1807,Grasshopper
+1681,Gowrow (Sohm Al HM 2nd Boss)
+1938,Gowrow (Sohl Al HM)
+1711,Governor (Sirensong Sea 1st Boss)
+1585,Goten
+1826,Gosetsu
+1747,Goobbue (Frozen)
+1777,Golden Egg
+1871,Gobroller Mk. VII (Alex 10)
+1670,Gobroller Mk. VI ( 7)
+1638,Gobbie (EQ)
+1656,Gobbie (EQ)
+1742,Gobbie (EQ)
+1622,Glowing Toxic Neon Green Orb
+1636,Glowing sky blue Allagan orb
+1506,Glowing Orb
+1556,Glowing Nidhogg Phase 3
+1934,Glowing Dragon Skull (Yojimbo Add)
+1586,Ginga
+1695,Gigi
+1714,Ghost Aurelia (Sirensong Sea)
+1895,Ghido
+1569,Generic Person
+1570,Generic Person
+1749,Generic Blue Demon thing
+1738,Garula (Bardams Mettle 1st Boss)
+1864,Garlean Scientist Asshole
+1984,Garlean Gatling Gun
+1581,Gaol (Ozma)
+1678,Gaol (Obsidian)
+1659,Frog
+1784,Fox
+1573,Floating orb of ice
+1687,Floating Glowing White Staff
+1571,Floating ball of ice
+1623,Flaming Orb
+1575,Flame Sergeant Dalvag lookalike without the glowing eyes
+1574,Flame Sergeant Dalvag
+1847,Fist Temple Golem?
+1765,Firebird
+1961,Fire Orb
+1731,Ferdiad Hollow
+1957,Feather Orb
+1532,Fat Moogle
+1600,Fancy glowing blue spear/pole
+1601,Fancy giant red sword buried in the ground
+1528,Fan Construct
+1773,Falcon (Mount)
+1791,Faehound S (Red/Black)
+1859,Faehound S (Blue/Black)
+1858,Faehound L (Purple/Black)
+1837,Faehound L (Blue/Black)
+1673,Exploding Fat Cannister ( 11 Adds)
+1756,Execrated Will(EQ - Zurvan Adds)
+1896,Exdeath
+1531,Estinien (Nidhogg Fusion)
+1990,Erle (A-Rank SB Hunt)
+1610,Eradicator ( 11)
+1565,Entanglement
+1869,Elephant (Grey/Blankets)
+1963,Electric Orb
+1854,Electral Orb
+1503,Edda
+1878,Echidna (EQ)
+1851,Dragonfly (Green/Yellow)
+1589,Dragonet (Blue/White)
+1856,Dragonet ( Blue)
+1602,Dragons Head (Shinryu Add)
+1510,Dragon (Zombie)
+1928,Dragon (Yellow)
+1553,Dragon (Shadow)
+1986,Doom Knight Champion
+1751,Doom Knight
+1949,Doman Treant?
+1948,Doman Bear? (Orange) Wolverene
+1813,Doman Armor Golem? (Steel)
+1942,Doman Armor Golem? (Red)
+1635,Disembodied Head
+1541,Diremite (Green-Yellow)
+1584,Diloc Ciluoc (Xelphatol)
+1866,Diabolos Prime
+1781,Diabolos (Injured)
+1822,Diabolos
+1848,Dhruva? (Ice)
+1819,Dhara? (Yellow/Brown)
+1849,Dhara? (Blue/Black) / Gnome
+1943,Dhammel
+1603,Demon Tome
+1609,Demon of the Tome
+1888,Demon Face Totem (Omega 4)
+1832,Demon Doll?
+1580,Dark Lanner (Niddhog)
+1562,Dangerous Boquet
+1691,Cupid (Minion) From valentines day event
+1672,Crystal-Powered Laser Cannon
+1633,Cruise Seeker (Cruise Chaser Add)
+1606,Cruise Chaser again
+1605,Cruise Chaser
+1763,Cruise Chaser
+1518,Creepy White Mage
+1517,Creepy Black Mage
+1947,Crab Scorpion (Grey)
+1814,Coralshell
+1796,Connla (Scathach Add)
+1649,Coincounter Primus (Aquapolis Final Boss)
+1816,Coeurl (Red/Orange)
+1815,Coeurl (Grey/Green)
+1905,Cobra (Blue)
+1929,Coblyn (Pink)
+1515,Cloud Mallow
+1688,Christmas Paissa
+1561,Ceruleum Servant
+1925,Catastrophe Tentacle
+1755,Catastrophe
+1696,Castaway Chick
+1779,Captain Madison (Satasha HM 1st Boss)
+1732,Canis Pugnax
+1564,Calofisteri Spine [SKL]
+1591,Calofisteri (Left Haircut)
+1590,Calofisteri
+1735,Cait Sith (Clean - Redbill Scarf)
+1734,Cait Sith
+1865,Cait Sith
+1690,Bulldog Pup
+1843,Bulbasaur? (Skalla Boss)
+1516,Brute Justice
+1683,Bombfish
+1790,Bombfish
+1788,Bom Boko
+1841,Blue Orb (Big)
+1526,Blue Mimic
+1699,Blue Kojin (EQ - Headless)
+1967,Black Hole [Effect]
+1966,Black Hole
+1530,Bird of Paradise (Rainbow)
+1578,Bijou (Calofisteri)
+1752,Behemoth
+1850,Bear (Black)
+1725,Battle Lion
+1563,Barrel
+1817,Bardams Hammer Golem
+1628,Balloon Turret (Xelphatol Diloc Add)
+1930,Bahamut (Large-Blue)
+1780,Atomos (Yellow/Black)
+1529,Atomos (Silver)
+1861,Atomos (Chrome Blue)
+1704,Arrhidaeus Lanner (Winged -  Prime Add)
+1706,Arrhidaeus Lanner (Guns -  Prime Add)
+1705,Arrhidaeus Lanner (Clock -  Prime Add)
+1703,Arrhidaeus Lanner ( Prime Add)
+1679,Armored Weapon (Magitek Laser Thing)
+1808,Armored Weapon (Magitek Laser Spider)
+1776,Archon Throne
+1907,Archamoth
+1753,Arbuda (Temple of the Fist 2nd Boss)
+1867,Apa/Undine
+1717,Antlion
+1697,Anima
+1951,Angler Fish (Brown/Orange)
+1829,Angel bell
+1985,Ancient Wyvern (Spined - Black/Purple)
+1552,Ancient Wyvern (Iridescent Blue)
+1554,Ancient Wyvern (Deep White)
+1740,Ananta
+1737,Anala (Magma)
+1680,Amikiri (Shisui of the Violet Tides 1st Boss)
+1713,Alte Roite (Omega 1) [Frozen]
+1875,Alte Roite (Omega 1)
+1924,Alpha (Omega)
+1667,Allagan Drone (Ant)
+1521,Ahriman (Purple)
 2000,Adamantoise
-2031,Generic Person - With Carrying Pole
-2032,Generic Person
-2033,Generic Person - Holding Lamp
-2034,Generic Person
-2035,Generic Person - Holding Bento
+1607,A silhouette of Sophia
+1685,A giant tornado
+1671,A floating multicolored crystal
+1627,3 Rocks
+1724, Prime ()
+1583, Prime
+2016,Zenos Without Helmet
+2050,Zenos with Skull Helmet
+2017,Zenos With Helmet
 2186,Zenos (Recovering)
-2188,Koryu
-2370,Noctis
-2382,Fran
-2384,Solus Zos Galvus
-2392,Generic Person - Holding Wood
-2345,Suzaku Indicator (Red)
+2087,Zangbeto
+2265,Yukinko (Eureka Pagos)
+2059,Yol (Purple/Green)
+2020,Yol (Pink)
+2309,Yojimbo
+2404,Yojimbo
+2267,Yiazmat (Ridorana Final Boss)
+2272,Yiazmat (Enraged)
+2485,Yshtola
+2062,X Slash [Effect]
+2211,Wukong - Monkey King
+2063,Wood Table
+2294,Withered Belladonna
+2229,Wise Namazu with headband
+2228,Wise Namazu
+2413,Wind-Up Tataru
+2124,Wind-up Shinryu
+2046,Wind-Up Ramza
+2168,Wind-Up Mithra
+2133,Wind-Up Kojin ( Purple - Minion)
+2069,Wind-Up Ixion
+2343,Wind-up Elvaan
+2246,Wind up Zhloe
+2245,Wind up Tsukuyomi
+2244,Wind up Tarutaru?
+2242,Wind up Sadu
+2241,Wind up Cirina
+2141,Whittret
+2192,White Whittret
+2128,White Chicken
+2431,Wetland Warg
+2122,Weird Multicolored Sphere
+2465,War Tiger
+2408,Wall of Snakes (Seiryu)
+2077,Val Guardian
+2280,Val Corpse (Eureka Pagos)
+2070,Ultros
+2451,Ultimate Kamuy/Wolf
+2473,Ultima: The High Seraph (Orbonne)
+2264,Ultima Weapon Ultimate
+2271,Ultima Weapon of some sort
+2398,Ultima
+2126,Tyrannosaur
+2175,Typhon [Frozen]
+2171,Turtle
+2293,Tsukuyomi again
+2210,Tsukuyomi
+2191,True Griffin
+2470,Trisiltia
+2057,Treasure Chest (Copper)
+2039,Treant (Christmas Event)
+2060,Training Dummy (Elite)
+2341,Tokkapchi - Minon
+2357,Tokkapchi
+2474,Titania
+2278,Titan
+2332,Tifa
+2045,The Ultima Warrior (Fractal Cont. HM 1st Boss)
+2044,The Ultima Beast (Fractal Cont. HM Final Boss)
+2410,The Thunder God (Orbonne-Not Fucked Up)
+2075,The Old One (Skalla 2nd Boss)
+2493,The Great Serpent of Ronka
+2018,Tentacle (Exdeath Add)
+2432,Tempest mob?? Unknown
+2497,T.G. Sword
+2011,T-Pose Default Model
+2019,T-Pose Default Model
+2028,T-Pose Default Model
+2292,T-Pose Default Model
+2411,Swearing Imp Thing
+2355,Suzaku Orb
 2346,Suzaku Indicator (Yellow)
-2347,Suzaku Indicator (Blue)
+2352,Suzaku Indicator (West)
+2351,Suzaku Indicator (South)
+2345,Suzaku Indicator (Red)
 2348,Suzaku Indicator (Purple)
 2349,Suzaku Indicator (North)
 2350,Suzaku Indicator (East)
-2351,Suzaku Indicator (South)
-2352,Suzaku Indicator (West)
-2066,Koala
-2067,Salt and Pepper Seal
-2068,Mudkip
-2081,Fox kit
-2120,Raubahn
-2124,Wind-up Shinryu
-2139,Ananta
-2140,Moai Head
-2141,Whittret
-2143,Kefka
-2144,Magnai
-2155,Aurelia Polyp
-2156,Byakko cub
-2157,Shinryu
-2168,Wind-Up Mithra
-2169,Prince of Anemos
-2170,Komainu
-2171,Turtle
-2192,White Whittret
-2221,Namazu
-2232,Ananta
-2238,Monkey king
-2239,A wall lantern
-2240,Frilled Lizard
-2241,Wind up Cirina
-2242,Wind up Sadu
-2243,Malboro with skirt
-2244,Wind up Tarutaru?
-2245,Wind up Tsukuyomi
-2246,Wind up Zhloe
-2247,Math Construct
-2301,Komainu
+2347,Suzaku Indicator (Blue)
+2393,Suzaku Effect
+2259,Suzaku - Human
+2261,Suzaku - Human
+2368,Suzaku - Feather
+2366,Suzaku - Dressed
 2327,Suzaku -
-2328,OMG - Omega
-2329,Graha Tia
-2330,Cloud
-2331,Aerith
-2332,Tifa
-2343,Wind-up Elvaan
-2344,Moogle
-2412,Fran
-2414,Seiryu
-2415,Minitek Conveyor
-2416,Armored Weapon
-2438,Eggplant
-2442,Hedgehog
-2444,Fisherman Otter
-2483,Black Hayate
-2484,chameleon
-2485,Yshtola
-2486,Ryne
-2491,Micro Gigantender
-2492,Armadillo Bowler
-2493,The Great Serpent of Ronka
-2495,Bitty Duckbill
-2082,Ice-Skating Goddess (Mateus Add)
-2087,Zangbeto
-2104,BaGamnan / Bwagi
-2112,Golden Bahamut (UCOB)
-2128,White Chicken
-2029,Horse (Namazu Quest Mount)
-2030,Nezha Chariot
-2071,Korpukkur (Mount)
-2072,Magitek Avenger
-2073,Aquamarine Carbuncle
-2074,Marid
-2115,Flying Chair
-2116,Legendary Kamuy
-2117,Striped Ray
-2119,Red Hare
-2125,Citrine Carbuncle
-2126,Tyrannosaur
-2135,Regalia Type-G
-2167,Auspicious Kamuy
-2174,Air Force
-2179,Broken Heart (Left)
-2180,Broken Heart (Right)
-2191,True Griffin
-2195,Lunar Kamuy
-2202,Mikoshi
-2258,Magitek Conveyor
-2268,Grani
-2298,Magitek Predator
-2304,Juedi
-2306,Safeguard System
-2307,Prototype Conveyor
-2312,Fatter Cat
-2340,Magicked Carpet
-2372,Eldthurs
-2385,Fat Black Chocobo
-2406,Sabotender Emperador
-2437,Eldthurs
-2452,Hallowed Kamuy
-2465,War Tiger
-2467,Maxima Roader
-2468,Eurekan Petrel
-2482,Fae Gwiber
-2359,Euphonius Kamuy
-2001,Harakiri Hanya (Kugane Castle)
-2002,Magitek Rearguard (Doma Castle 1st Boss)
-2003,Magitek Bit Bomb (Rearguard Add)
-2004,Magitek Heavy Loader (Bomb)
-2005,Cerberus (Red - Eureka)
-2006,Ent
-2007,Red Egg
-2008,Blue Egg
-2009,Floating Purple Dragon Head
-2010,Ivan Coeurlfist
-2011,T-Pose Default Model
+2365,Suzaku
 2012,Susanoo Sword Part
-2013,Lakshmi
-2014,Hoarhound (Fenrir - Purple/Red)
-2015,Demon Tome (Blank)
-2016,Zenos Without Helmet
-2017,Zenos With Helmet
-2018,Tentacle (Exdeath Add)
-2019,T-Pose Default Model
-2020,Yol (Pink)
-2021,Gold Namazu
 2022,Susanoo Battle Mode
-2023,Floating Blue Light
-2024,Neo Exdeath
-2025,Spirit Warrior (Temple of the Fist)
-2026,Spirit Warrior 2 (Temple of the Fist)
-2027,Matoya (EQ-Headless)
-2028,T-Pose Default Model
-2036,Spectre (Blue)
-2037,Hashmal: Bringer of Order (Rabanastre 2nd Boss)
-2038,Mateus: the Corrupt (Rabanastre 1st Boss)
-2039,Treant (Christmas Event)
-2040,Level Checker (Red)
-2041,Level Checker (Green)
-2042,Kelpie (Skalla 1st Boss)
-2043,Sea Faerie? (Skall Add)
-2044,The Ultima Beast (Fractal Cont. HM Final Boss)
-2045,The Ultima Warrior (Fractal Cont. HM 1st Boss)
-2046,Wind-Up Ramza
-2047,Coeurl (Regular) [Frozen]
-2048,Coeurl (Red) [Frozen]
-2049,Coeurl (Dark Red) [Frozen]
-2050,Zenos with Skull Helmet
-2051,Halicarnassus (Omega 3)
-2052,Hecatoncheir (EQ)
-2053,Hecatoncheir (EQ)
-2054,Chain Bind (Green) [Effect]
-2055,Sadus Door Model [Incorrect]
 2056,Susanoo
-2057,Treasure Chest (Copper)
-2058,Scorpion Bug (Brown)
-2059,Yol (Purple/Green)
-2060,Training Dummy (Elite)
-2061,Ixion
-2062,X Slash [Effect]
-2063,Wood Table
-2064,Basket of Fish
-2065,Inferno XL (Castrum Abania Final Boss)
-2069,Wind-Up Ixion
-2070,Ultros
-2075,The Old One (Skalla 2nd Boss)
-2076,Primelephas (Eureka)
-2077,Val Guardian
-2078,Shinryu
-2079,Principia (Allagan Summoner Tome)
-2080,Midgardsormr pet size
-2083,Rofocale (Rabanastre 3rd Boss)
-2084,Argath Thadalfus (Rabanastre Final Boss)
-2085,Bombadeel (Eureka NM)
-2086,Mirrorknight (Corrupted - Green/Purple)
+2117,Striped Ray
 2088,Squib (Eureka)
-2089,Lamashtu (Eureka NM)
-2090,Block of ice
-2091,Rolling Boulder
-2092,Floating Water Bubble
-2093,Archaeodemon (Rabanastre Trash)
-2094,Little Snowman With Candy Cane
-2095,Giant Cannon (Blue)
-2096,Giant Cannon (Red)
-2097,Rival Wings Mech #1 - Blue
-2098,Rival Wings Mech #2 - Blue
-2099,Rival Wings Mech #3 - Blue
-2100,Rival Wings Mech #1 - Red
-2101,Rival Wings Mech #2 - Red
-2102,Rival Wings Mech #3 - Red
-2103,Floating Sword
-2105,Bangaa (EQ)
-2106,Bangaa (EQ)
-2107,Bangaa Guy
-2108,Bangaa Guy - red
-2109,Bangaa Guy - grey
-2110,Flying Dragon
-2111,Flying Dragon - White
-2113,Flying Dragon - Green-ish
-2114,Hecatoncheir (EQ)
-2118,Magitek Claw
-2121,Byakko
-2122,Weird Multicolored Sphere
-2123,Bangaa (EQ)
-2127,Genbu
-2130,Red Kojin (EQ)
-2131,Argath Thadalfus? (Rabanastre Final Boss)
-2132,Chocobo (Saddle: Weapon on Floor)
-2133,Wind-Up Kojin ( Purple - Minion)
-2134,Motherbit (Fractal Cont. HM 1st Boss)
-2136,Phantom Train
-2137,God Kefka
-2138,Guardian (Omega 7)
-2142,Black checkered egg
-2145,Otake-Maru (Hells Lid 1st Boss)
-2146,Kamaitachi (Hells Lid 2nd Boss)
-2147,Alpha (Chocobo from Omega)
-2148,Sea Faerie? (Skalla Trash)
+2026,Spirit Warrior 2 (Temple of the Fist)
+2025,Spirit Warrior (Temple of the Fist)
+2317,Spinning White Orb
+2308,Spinning Gear
+2036,Spectre (Blue)
+2384,Solus Zos Galvus
+2461,Soft Pillow
+2479,Slime (Gold)
+2336,Slime
+2462,Sin Eater Mob??
+2078,Shinryu
 2149,Shinryu
-2150,Pulsating blue ground field
-2151,Allagan Bit (Motherbit Add)
-2152,Crab from Hells Lid
-2153,Phantom Train Ghost
-2154,Gilgamesh
-2158,Allagan Prototype Chimera (Fractal HM)
-2159,Allagan Prototype Minotaur (Fractal HM)
-2160,Chadarnook (Omega 6 Boss)
-2161,Pazuzu (Eureka Anemos NM)
-2162,Dadaluma (Omega 7 Add)
-2163,Cat form Byakko
-2164,Goddess Chadarnook (Omega 6 Add)
-2165,Regular Kefka
-2166,Airforce (Omega 7 Add)
-2172,Pagos Bunny
-2173,Giant Tiger
-2175,Typhon [Frozen]
-2176,Indigo Whale
-2177,Glowing: Pulsating Green Sphere of Epilepsy
-2178,Ananta (EQ)
-2181,Floating Glowing Missile
-2183,Floating Gold Needle
-2184,Kefka Forsaken
-2185,Creepy Floating Head with Scythes for arms and another head on top
-2187,Otengu (Swallows Compass 1st Boss)
-2189,Eyeball Slime (Radioactive)
-2190,Orb (Byakkos Balls)
-2193,Golem (Gougan)
-2194,Dodo Bird
-2196,Belias: the Constantly Fucking Going Invincible (Ridorana 2nd Boss)
-2197,Famfrit: the Darkening Cloud (Ridorana 1st boss)
-2199,A Tornado (literally)
-2200,Phantom Train Markers
-2203,Rathalos (Monster Hunter)
-2204,Palico from Monster Hunter
-2205,Poogie? (Disappears Immediately)
-2210,Tsukuyomi
-2211,Wukong - Monkey King
-2212,Math Construct boss from Ridorana
-2213,Magitek Trooper FFXV
-2214,MA-X FFXV
-2215,Iseultalon FFXV
-2216,Eureka Pagos NM Marlboro Stack
-2217,Daidarabotchi (Swallows Compass 1st Boss)
-2218,Sai Taisui (Swallows Compass)
-2219,Flaming Wall monster from Hells Lid
-2222,Sabotender Emperatriz
-2223,Decotitus
-2224,Namazu
-2225,Another type of Namazu
-2226,Namazu with headband
-2227,Another type of Namazu with headband
-2228,Wise Namazu
-2229,Wise Namazu with headband
-2230,Flying Rathalos (Monster Hunter)
-2231,Poroggo
+2157,Shinryu
 2233,Shalloweye
+2464,Seiryu (Snake Form)
+2403,Seiryu
+2414,Seiryu
+2148,Sea Faerie? (Skalla Trash)
+2043,Sea Faerie? (Skall Add)
+2058,Scorpion Bug (Brown)
+2067,Salt and Pepper Seal
+2218,Sai Taisui (Swallows Compass)
+2306,Safeguard System
+2055,Sadus Door Model [Incorrect]
+2222,Sabotender Emperatriz
+2406,Sabotender Emperador
+2486,Ryne
+2262,Rusted Math Construct
+2091,Rolling Boulder
+2083,Rofocale (Rabanastre 3rd Boss)
+2102,Rival Wings Mech #3 - Red
+2099,Rival Wings Mech #3 - Blue
+2101,Rival Wings Mech #2 - Red
+2098,Rival Wings Mech #2 - Blue
+2100,Rival Wings Mech #1 - Red
+2097,Rival Wings Mech #1 - Blue
+2104,Rinok
+2269,Ridorana Exploding Fire Bell Trash
+2165,Regular Kefka
+2135,Regalia Type-G
+2354,Red Orb
+2130,Red Kojin (EQ)
+2119,Red Hare
+2007,Red Egg
 2234,Red Demon Spinning Mask (Heaven-on-High)
-2235,Blue Demon Spinning Mask (Heaven-on-High)
-2236,Hiruku (HoH Floor 30 Boss)
-2237,King Igloo (Eureka Pagos NM)
-2248,A giant rock - grey
-2249,A giant rock - white
-2250,A giant rock - purplish/black
+2429,Red Amaro
+2120,Raubahn
+2257,Rathalos (Monster Hunter) [Frozen]
+2203,Rathalos (Monster Hunter)
+2456,Ranjit with scythe
+2457,Ranjit pet
+2487,Ranjit - Frozen
+2455,Ranjit
+2463,Raiden
 2251,Pure White Tsukuyomi
 2252,Pure Black Tsukuyomi
-2253,Battle Mode Tsukuyomi
-2254,Battle Mode Pure White Tsukuyomi
-2255,Battle Mode Pure Black Tsukuyomi
-2256,Fallen Samurai (Mounted)
-2257,Rathalos (Monster Hunter) [Frozen]
-2259,Suzaku - Human
-2260,Bangaa Boss Guy
-2261,Suzaku - Human
-2262,Rusted Math Construct
-2264,Ultima Weapon Ultimate
-2265,Yukinko (Eureka Pagos)
-2266,Louhi (Eureka Pagos NM)
-2267,Yiazmat (Ridorana Final Boss)
-2269,Ridorana Exploding Fire Bell Trash
-2270,Cute monkey
-2271,Ultima Weapon of some sort
-2272,Yiazmat (Enraged)
-2273,Dark Ewer (Famfrit Add)
-2274,Odder Otter with asian hat
-2275,Ash Dragon (Pagos)
-2276,Garuda
-2277,Ifrit
-2278,Titan
-2279,Golden King Crab
-2280,Val Corpse (Eureka Pagos)
-2281,A ball of fire
-2283,A huge ring of green mirrors
-2284,Palico from Monster hunter (different one)
+2150,Pulsating blue ground field
+2424,Provenance Watcher
+2307,Prototype Conveyor
+2079,Principia (Allagan Summoner Tome)
+2169,Prince of Anemos
+2076,Primelephas (Eureka)
+2231,Poroggo
+2205,Poogie? (Disappears Immediately)
 2285,Poogie from Monster hunter
-2286,Floating gold fan
-2287,Dreadnaught
-2289,8 Namazu carrying a platform with nothing on it
-2290,Magitek Sky Armor
-2291,Floating blue cloud of depression
-2292,T-Pose Default Model
-2293,Tsukuyomi again
-2294,Withered Belladonna
-2295,Dorpokkur
-2296,Matamata
-2297,Nullchu
-2299,Fat Cat
-2300,Deformed Mameshiba?
-2302,Defective Drone
-2303,Fallen Samurai
-2308,Spinning Gear
-2309,Yojimbo
-2310,Festive Namazu
-2311,Omega - Midgardsormr
-2313,Frost Dragon
-2314,Frost Dragon
-2315,Immaculate Apa
-2317,Spinning White Orb
-2318,Moogle (EQ)
-2320,Omega M
-2321,Omega F
-2322,Neo Omega
-2323,Omega M | F Puddle
-2324,Alpha
-2325,Ghost
-2326,Ghost
-2333,Kukulkan
-2334,Brown Slime
-2335,Omega - Midgardsormr
-2336,Slime
-2337,Magitek Predator (EQ)
-2338,Ceruleum Engine
-2339,Mister Bright-Eyes
-2341,Tokkapchi - Minon
-2342,Capybara
-2353,Blue Orb
-2354,Red Orb
-2355,Suzaku Orb
-2356,Mist
-2357,Tokkapchi
-2358,Penthesilea
-2360,Omega
-2361,Magna Roader
-2362,Magitek Sky Armor
-2363,Gilgamesh
+2443,Pillow
 2364,Pillar
-2365,Suzaku
-2366,Suzaku - Dressed
-2367,Hedetet - Pillar
-2368,Suzaku - Feather
-2369,Chakram - The Burn
-2371,Hedetet
-2373,Khalamari
-2374,Omega Rocket Punch 1
-2375,Omega Rocket Punch 2
-2376,Desert Desman
-2377,Omega - Chaos
+2446,Phoenix Add
+2426,Phoenix - Possibly Suzaku
+2434,Phillia (Holmister final boss)
+2200,Phantom Train Markers
+2153,Phantom Train Ghost
+2136,Phantom Train
+2358,Penthesilea (a.k.a Penny)
+2161,Pazuzu (Eureka Anemos NM)
+2284,Palico from Monster hunter (different one)
+2204,Palico from Monster Hunter
+2172,Pagos Bunny
+2409,Ozma
+2498,Ozma
+2499,Owains Hand
+2453,Ovni
+2187,Otengu (Swallows Compass 1st Boss)
+2145,Otake-Maru (Hells Lid 1st Boss)
+2190,Orb (Byakkos Balls)
+2328,OMG - Omega
 2378,Omega- Floating Right Arm
 2379,Omega- Floating Left Arm
+2375,Omega Rocket Punch 2
+2374,Omega Rocket Punch 1
+2323,Omega M | F Puddle
+2459,Omega M | F Puddle
+2320,Omega M
+2436,Omega Level Checker
+2321,Omega F
 2380,Omega 12 Structure?
-2381,Gilgamesh
+2460,Omega 11s Hands
+2311,Omega - Midgardsormr
+2335,Omega - Midgardsormr
 2387,Omega - M
 2388,Omega - F (With Weapon)
 2389,Omega - F (No Weapon)
-2390,Floating Staff
-2391,Floating Axe
-2393,Suzaku Effect
-2394,Lakhamu
-2395,Jar?
-2396,Desert Armadillo
-2397,Bunch of Sticks
-2398,Ultima
-2399,Absolute Virtue
-2400,Hidden Gorge Machine
-2401,Korpokkur
-2402,Blood Angel (Ultima add)
-2403,Seiryu
-2404,Yojimbo
-2405,Alpha
-2407,Annia Quo Soranus and Julia Quo Soranus (Ghimlyt) (T-Pose)
-2408,Wall of Snakes (Seiryu)
-2409,Ozma
-2410,The Thunder God (Orbonne-Not Fucked Up)
-2411,Swearing Imp Thing
-2413,Wind-Up Tataru
-2417,Furball Minion x3
-2418,Mini Absolute Virtue
-2419,Fate boss in Greatwoods
-2420,Armor Boi (Ghimlyt)
-2421,Agrias (Orbonne)
+2377,Omega - Chaos
+2360,Omega
+2274,Odder Otter with asian hat
+2297,Nullchu
+2370,Noctis
+2030,Nezha Chariot
+2322,Neo Omega
+2024,Neo Exdeath
+2226,Namazu with headband
+2221,Namazu
+2224,Namazu
 2422,Mustadio (Orbonne)
-2423,Azulmagia
-2424,Provenance Watcher
-2425,Absolute Virtue Dragon Add
-2426,Phoenix - Possibly Suzaku
-2427,Midgardsormr Head (Omega)
-2428,Chiliad Cama
-2429,Red Amaro
-2430,Amaljaa???
-2431,Wetland Warg
-2432,Tempest mob?? Unknown
-2433,Grey Draco
-2434,Phillia (Holmister final boss)
-2435,Eros (Ravel Final Boss)
-2436,Omega Level Checker
-2439,Matmata
-2440,Giant Autoturret (Orbonne Add)
+2068,Mudkip
+2134,Motherbit (Fractal Cont. HM 1st Boss)
+2318,Moogle (EQ)
+2344,Moogle
+2238,Monkey king
+2140,Moai Head
+2339,Mister Bright-Eyes
+2356,Mist
+2086,Mirrorknight (Corrupted - Green/Purple)
+2415,Minitek Conveyor
 2441,minion nu mou
-2443,Pillow
-2445,Gigantender
-2446,Phoenix Add
-2447,Korpokkur
-2448,Harpy (Orbonne)
-2451,Ultimate Kamuy/Wolf
-2453,Ovni
-2454,Sticks are alive!?
-2455,Ranjit
-2456,Ranjit with scythe
-2457,Ranjit pet
-2458,Eden Mount!?
-2459,Omega M | F Puddle
-2460,Omega 11s Hands
-2461,Soft Pillow
-2462,Sin Eater Mob??
-2463,Raiden
-2464,Seiryu (Snake Form)
+2418,Mini Absolute Virtue
+2202,Mikoshi
+2080,Midgardsormr pet size
+2427,Midgardsormr Head (Omega)
+2491,Micro Gigantender
+2467,Maxima Roader
+2027,Matoya (EQ-Headless)
+2439,Matmata
+2212,Math Construct boss from Ridorana
+2247,Math Construct
+2038,Mateus: the Corrupt (Rabanastre 1st Boss)
+2296,Matamata
+2488,Masterless Talos
+2074,Marid
+2243,Malboro with skirt
+2144,Magnai
+2361,Magna Roader
+2213,Magitek Trooper FFXV
+2290,Magitek Sky Armor
+2362,Magitek Sky Armor
+2002,Magitek Rearguard (Doma Castle 1st Boss)
+2337,Magitek Predator (EQ)
+2298,Magitek Predator
+2004,Magitek Heavy Loader (Bomb)
+2258,Magitek Conveyor
+2118,Magitek Claw
+2003,Magitek Bit Bomb (Rearguard Add)
 2466,Magitek Avenger A-1
+2072,Magitek Avenger
+2340,Magicked Carpet
+2214,MA-X FFXV
+2195,Lunar Kamuy
+2266,Louhi (Eureka Pagos NM)
+2094,Little Snowman With Candy Cane
+2040,Level Checker (Red)
+2041,Level Checker (Green)
+2116,Legendary Kamuy
+2089,Lamashtu (Eureka NM)
+2013,Lakshmi
+2394,Lakhamu
+2477,Lakelord Aenc Thon of the Long Gait
+2333,Kukulkan
+2188,Koryu
+2071,Korpukkur (Mount)
+2401,Korpokkur
+2447,Korpokkur
+2170,Komainu
+2301,Komainu
+2066,Koala
+2237,King Igloo (Eureka Pagos NM)
+2373,Khalamari
+2042,Kelpie (Skalla 1st Boss)
+2184,Kefka Forsaken
+2143,Kefka
+2146,Kamaitachi (Hells Lid 2nd Boss)
+2304,Juedi
+2395,Jar?
+2061,Ixion
+2010,Ivan Coeurlfist
+2215,Iseultalon FFXV
+2065,Inferno XL (Castrum Abania Final Boss)
+2176,Indigo Whale
+2315,Immaculate Apa
+2277,Ifrit
+2082,Ice-Skating Goddess (Mateus Add)
+2029,Horse (Namazu Quest Mount)
+2014,Hoarhound (Fenrir - Purple/Red)
+2236,Hiruku (HoH Floor 30 Boss)
+2400,Hidden Gorge Machine
+2152,Hellish Gasame (Crab from Hells Lid)
+2442,Hedgehog
+2367,Hedetet - Pillar
+2371,Hedetet
+2052,Hecatoncheir (EQ)
+2053,Hecatoncheir (EQ)
+2114,Hecatoncheir (EQ)
+2037,Hashmal: Bringer of Order (Rabanastre 2nd Boss)
+2448,Harpy (Orbonne)
+2001,Harakiri Hanya (Kugane Castle)
+2452,Hallowed Kamuy
+2051,Halicarnassus (Omega 3)
+2478,Hades: first form
+2138,Guardian (Omega 7)
+2476,Griaule
+2433,Grey Draco
+2268,Grani
+2193,Golem (Gougan)
+2279,Golden King Crab
+2112,Golden Bahamut (UCOB)
+2021,Gold Namazu
+2164,Goddess Chadarnook (Omega 6 Add)
+2137,God Kefka
+2177,Glowing: Pulsating Green Sphere of Epilepsy
+2154,Gilgamesh
+2363,Gilgamesh
+2381,Gilgamesh
+2496,Gilgamesh
+2104,Gijuk
+2445,Gigantender
+2173,Giant Tiger
+2096,Giant Cannon (Red)
+2095,Giant Cannon (Blue)
+2440,Giant Autoturret (Orbonne Add)
+2325,Ghost
+2326,Ghost
+2031,Generic Person - With Carrying Pole
+2392,Generic Person - Holding Wood
+2033,Generic Person - Holding Lamp
+2035,Generic Person - Holding Bento
+2032,Generic Person
+2034,Generic Person
+2127,Genbu
 2469,Garuda XV Event
-2470,Trisiltia
+2276,Garuda
+2329,Graha Tia
+2417,Furball Minion x3
+2313,Frost Dragon
+2314,Frost Dragon
+2240,Frilled Lizard
+2382,Fran
+2412,Fran
+2081,Fox kit
+2230,Flying Rathalos (Monster Hunter)
+2111,Flying Dragon - White
+2113,Flying Dragon - Green-ish
+2110,Flying Dragon
+2115,Flying Chair
+2092,Floating Water Bubble
+2103,Floating Sword
+2390,Floating Staff
+2009,Floating Purple Dragon Head
+2183,Floating Gold Needle
+2286,Floating gold fan
+2181,Floating Glowing Missile
+2023,Floating Blue Light
+2291,Floating blue cloud of depression
+2391,Floating Axe
+2219,Flaming Wall monster from Hells Lid
+2444,Fisherman Otter
+2310,Festive Namazu
+2312,Fatter Cat
+2419,Fate boss in Greatwoods
+2299,Fat Cat
+2385,Fat Black Chocobo
+2197,Famfrit: the Darkening Cloud (Ridorana 1st boss)
+2256,Fallen Samurai (Mounted)
+2303,Fallen Samurai
+2482,Fae Gwiber
+2189,Eyeball Slime (Radioactive)
+2468,Eurekan Petrel
+2216,Eureka Pagos NM Marlboro Stack
+2359,Euphonius Kamuy
+2435,Eros (Ravel Final Boss)
+2006,Ent
+2372,Eldthurs
+2437,Eldthurs
+2438,Eggplant
+2458,Eden Mount!?
+2287,Dreadnaught
+2295,Dorpokkur
+2194,Dodo Bird
+2376,Desert Desman
+2396,Desert Armadillo
+2015,Demon Tome (Blank)
+2300,Deformed Mameshiba?
+2302,Defective Drone
+2223,Decotitus
+2273,Dark Ewer (Famfrit Add)
+2217,Daidarabotchi (Swallows Compass 1st Boss)
+2162,Dadaluma (Omega 7 Add)
+2270,Cute monkey
+2185,Creepy Floating Head with Scythes for arms and another head on top
+2047,Coeurl (Regular) [Frozen]
+2048,Coeurl (Red) [Frozen]
+2049,Coeurl (Dark Red) [Frozen]
+2330,Cloud
+2494,Clionid Larva minion
+2125,Citrine Carbuncle
+2481,Christmas Slime
+2132,Chocobo (Saddle: Weapon on Floor)
+2428,Chiliad Cama
+2484,chameleon
+2369,Chakram - The Burn
+2054,Chain Bind (Green) [Effect]
+2160,Chadarnook (Omega 6 Boss)
+2338,Ceruleum Engine
+2005,Cerberus (Red - Eureka)
+2163,Cat form Byakko
+2342,Capybara
+2397,Calx
+2454,Calx
+2156,Byakko cub
+2121,Byakko
+2334,Brown Slime
+2180,Broken Heart (Right)
+2179,Broken Heart (Left)
+2085,Bombadeel (Eureka NM)
+2353,Blue Orb
+2008,Blue Egg
+2235,Blue Demon Spinning Mask (Heaven-on-High)
+2402,Blood Angel (Ultima add)
+2090,Block of ice
+2483,Black Hayate
+2142,Black checkered egg
+2495,Bitty Duckbill
+2196,Belias: the Constantly Fucking Going Invincible (Ridorana 2nd Boss)
+2253,Battle Mode Tsukuyomi
+2254,Battle Mode Pure White Tsukuyomi
+2255,Battle Mode Pure Black Tsukuyomi
+2064,Basket of Fish
+2108,Bangaa Guy - red
+2109,Bangaa Guy - grey
+2107,Bangaa Guy
+2260,Bangaa Boss Guy
+2105,Bangaa (EQ)
+2106,Bangaa (EQ)
+2123,Bangaa (EQ)
+2104,BaGamnan / Bwagi
+2423,Azulmagia
+2167,Auspicious Kamuy
+2155,Aurelia Polyp
+2275,Ash Dragon (Pagos)
+2500,Arts Spear
+2416,Armored Weapon
+2420,Armor Boi (Ghimlyt)
+2492,Armadillo Bowler
+2131,Argath Thadalfus? (Rabanastre Final Boss)
+2084,Argath Thadalfus (Rabanastre Final Boss)
+2093,Archaeodemon (Rabanastre Trash)
+2073,Aquamarine Carbuncle
+2227,Another type of Namazu with headband
+2225,Another type of Namazu
+2407,Annia Quo Soranus and Julia Quo Soranus (Ghimlyt) (T-Pose)
+2178,Ananta (EQ)
+2139,Ananta
+2232,Ananta
+2489,Amphibious Talos
+2430,Amaljaa???
 2471,Alt Model (???)
 2472,Alt Model (???)
-2473,Ultima: The High Seraph (Orbonne)
-2474,Titania
+2147,Alpha (Chocobo from Omega)
+2324,Alpha
+2405,Alpha
+2159,Allagan Prototype Minotaur (Fractal HM)
+2158,Allagan Prototype Chimera (Fractal HM)
+2151,Allagan Bit (Motherbit Add)
+2166,Airforce (Omega 7 Add)
+2174,Air Force
+2421,Agrias (Orbonne)
+2331,Aerith
 2475,Aenc Thon: Lord of the Lingering Gaze
-2476,Griaule
-2477,Lakelord Aenc Thon of the Long Gait
-2478,Hades: first form
-2479,Slime (Gold)
-2481,Christmas Slime
-2487,Ranjit - Frozen
-2488,Masterless Talos
-2489,Amphibious Talos
-2494,Clionid Larva minion
-2496,Gilgamesh
-2497,T.G. Sword
-2498,Ozma
-2499,Owains Hand
-2500,Arts Spear
+2425,Absolute Virtue Dragon Add
+2399,Absolute Virtue
+2239,A wall lantern
+2199,A Tornado (literally)
+2283,A huge ring of green mirrors
+2249,A giant rock - white
+2250,A giant rock - purplish/black
+2248,A giant rock - grey
+2281,A ball of fire
+2289,8 Namazu carrying a platform with nothing on it
 2501,Owains Spear
 2502,Ceto
 2503,Art
@@ -2440,9 +2444,9 @@ ModelType,Name
 2557,Construct 8 (Refurbished)
 2558,Flower Basket
 2559,Forgiven Conformity
-2560,Sin Eater Bird (??)
-2561,Sin Eater Dzo (??)
-2562,Sin Eater Bear (??)
+2560,Forgiven Deceit (Sin Eater Bird)
+2561,Forgiven Disobedience (Sin Eater Dzo)
+2562,Forgiven Conceit (Sin Eater Bear)
 2563,The Tycoon
 2564,Giant Beaver
 2565,Suzaku
@@ -2470,8 +2474,8 @@ ModelType,Name
 2587,Echevore
 2588,Dagon
 2589,Geodude
-2590,Unsure: Tail-less Pieste (??)
-2591,Unsure: Stone beast with large bulb (??)
+2590,Shorttail Sibilus
+2591,Tarchia (S rank)
 2592,The First Beast
 2593,Aglaope
 2594,Gunitt
@@ -2502,8 +2506,8 @@ ModelType,Name
 2619,Seraph
 2620,Phoenix
 2621,Generic Person
-2622,Sin Eater Diremite (??)
-2623,Sin Eater Diremite B (??)
+2622,Forgiven Ignorance (Sin Eater Diremite)
+2623,Forgiven Folly (Sin Eater Diremite B)
 2624,Tentacle
 2625,Engendered Soma
 2627,Voidwalker
@@ -2521,8 +2525,8 @@ ModelType,Name
 2639,Gate Final Mt.Gulag
 2640,CATASTROPHE
 2641,Flying Head
-2642,Sticks Sticks but ice
-2643,Golemn
+2642,Sticks Sticks but ice (Calx variant)
+2643,Forgiven Indecency
 2644,Sword
 2645,Circus Ahriman
 2646,Magicked Bed
@@ -2536,15 +2540,14 @@ ModelType,Name
 2654,Sword
 2655,Mark CXLIV Thermocoil Boilbuster
 2656,Boulder in MSQ
-2657,Trappy thing in 73 dgn
+2657,Painted Root
 2658,Violet Triffid
 2659,Ngozi
 2660,Green Glider
-2661,A rank in greatwoods?
+2661,Supay
 2662,ShB S-rank goobue
 2663,Serpent
 2664,A rock
-2665,???
 2666,Looks Delicious: from Tempest
 2667,Shinryu head?
 2668,S-rank SHB
@@ -2554,15 +2557,6 @@ ModelType,Name
 2672,Gnole
 2673,Engedered Pteraketos
 2674,Ancient Lizard
-2675,???
-2676,???
-2677,???
-2678,???
-2679,???
-2680,???
-2681,???
-2682,???
-2683,???
 2684,Cubus
 2685,Flanborg
 2686,Succubus
@@ -2796,7 +2790,6 @@ ModelType,Name
 2931,Stack of blue cubes
 2932,Void Octopus thing
 2933,Pod (Nier raid)
-2934,Eden Shiva (Naked: Transformation)
 2935,Ruby Weapon (Nael van Darnus only)
 2936,Ruby Weapon (Shell)
 2937,Ramuhs Beard
@@ -2857,7 +2850,6 @@ ModelType,Name
 2998,Fire Orb
 2999,Ball of feathers
 3000,Young Ehll Tou (Crafter Gear)
-3001,Flight Unit Empty
 3002,"Investigate (player model, alternate animations)"
 3003,Floor Mine
 3004,Red Orb of ouch
@@ -2891,6 +2883,7 @@ ModelType,Name
 3033,Syldrion-class Insubmersible
 3034,Wind-up Gaia
 3035,Wind-up Palom
+3036,Wind-up Porom
 3037,Wind-up Edge
 3038,Wind-up Rydia
 3039,Wind-up Rosa
@@ -2999,8 +2992,8 @@ ModelType,Name
 3144,Saunion
 3145,Chi
 3148,Merlwyb
-3149,Umbral Orb (Solo)
 3150,Edens Promise
+3149,Umbral Orb (Solo)
 3151,Edens Promise
 3152,Senorita Sabotender
 3153,Benben Stone
@@ -3032,7 +3025,7 @@ ModelType,Name
 3180,Red Girl (Giant)
 3181,Xun-Zi / Meng-Zi
 3182,Ladon Lord
-3183,Ladon Lord (5 heads)
+3183,Ophioneus (S rank)
 3184,Alkonost
 3185,4th Legion Death Machine
 3186,White Pylon
@@ -3067,9 +3060,17 @@ ModelType,Name
 3215,Wind-up Runar
 3216,Wind-Up Gunnhildr
 3217,9S Automaton
+3218,Wind-up Rudy
+3219,Squirrel Emperor
+3220,Flag
 3221,Wee Ea
+3222,Wind-Up Magus Sisters
+3223,Optimus Omicron
+3224,Wind-Up Anima
 3225,Starbird (wrong textures?)
 3226,Nagxian Cat
+3227,Brave New Urianger
+3228,WInd-Up Vrtra
 3235,Diamond Gwiber
 3236,Polar Bear
 3237,Gilded Mikoshi
@@ -3084,22 +3085,39 @@ ModelType,Name
 3246,Longitudinal Marker (The Tower at Paradigms Breach)
 3247,Ice Sprite (Zadnor)
 3248,Energy Orb (The Tower at Paradigms Breach)
+3249,4th Legion Infantry
 3250,Lunatender
+3251,Lyssa
 3252,Anima
+3253,Livia the Undeterred
+3254,Arch-Lambda
+3255,Daphinia
 3256,Floating Right Hand (Diamond Weapon)
 3257,Floating Left Hand (Diamond Weapon)
 3258,Caribou
+3259,Supporter
 3260,Rathalos [Tail cut]
 3261,Gelatinous Status
 3262,Diamond Weapon
 3263,Loporrit
 3266,Hanbi
 3267,Rathalos Tail
+3270,Erichthonios
+3271,Phoinix
+3272,Hesperos
+3273,Hippokampos
 3274,Hypertuned Dabog
 3275,Dawon the Younger
+3276,Livias Bullets
+3277,Blue Face (Smileton)
 3278,Peacekeeper
 3279,Vajrarangula
-3283,Level Checker
+3280,Dreadnought
+3281,Phoinix mount
+3282,Calydontis
+3283,Victor
+3284,Level Checker
+3285,Paissa mount
 3286,Fat Cat Parasol
 3287,Great Paraserpent
 3288,Red Moon Parasol
@@ -3108,29 +3126,139 @@ ModelType,Name
 3295,Hatchingtide 2021 Chicken
 3297,Hrodvitnir
 3298,Graven Familiar
+3300,Wind-up Grebuloff
 3301,Daivadipa
 3302,Endsingers Feather
 3303,Proto-Omega
 3304,Omega Frame
-3310,Eta
-3312,Endsingers Minion
+3310,Arch-Eta (A rank)
+3312,Kakodaimon
 3313,Stigma-4
+3314,?
+3315,Burfurlur the Canny (S rank)
 3316,Dolphin Calf
 3318,Hybrid Dragon
+3319,?
 3320,Golden Wings
 3321,Face
 3322,Armstrong
+3323,?
 3324,Endsingers Head
+3325,Hesperos floor cape
 3326,Gull
 3330,Sartauvoir the Inferno
+3331,Hesperos
+3332,Airborne Freedom Fighter
+3333,Landed Freedom Fighter
+3334,Thinker
+3335,Ruminator (S rank)
+3336,Weeper
+3337,Wanderer
 3338,Rotting Flesh
+3339,Regolith
+3340,Trimmer
+3341,Yggdreant
+3342,Delta
+3343,Ker (SS rank)
+3344,UNKNOWN
 3348,Hydaelyn (crystals on left)
 3349,Hydaelyn (crystals centered)
-3352,Prince Lunartender
-3360,Herois Minion
+3350,Hippo Calf
+3351,Crabe de la Crabe
+3352,Prince Lunatender
+3353,Tiny Troll
+3354,Caduceus
+3355,Adventure Basket
+3356,Golden Dhyata
+3357,Greener Gleaner
+3358,Wind-up Grebuloff
+3359,Nosferatu
+3360,Wind-up Herois
+3361,Wind-up Daivadipa
 3362,Zenos (Reaper Outfit)
-3383,Tattered Ea
+3365,Sweeper
+3370,Hamsa
+3372,Blasphemy 
+3373,Xenofauna
+3375,Xenoflora
+3376,Osculator
+3377,Gurangatch (A rank)
+3380,Lambda
+3381,Xenoprotist
+3383,Narrow-rift (S rank)
+3384,Sphatika (S rank)
+3385,Lunatender Queen (A rank)
+3386,UNKNOWN
+3388,Alphinauds Nouliths
+3389,UNKNOWN
+3390,Hydaelyns Chakrams
+3393,Echo of Hydaelyn
+3396,The Big Cheese
+3397,Fledgling
+3400,Roiling Darkness
+3402,P4S Thorns
+3403,Target Circle - Aitiascope
+3404,UNKNOWN
+3408,Esoteric Ray
+3409,Exoterikos - Square
+3410,Exoterikos - Triangle
+3411,Blue flame ball - Daivadipa
+3413,Shiva
+3417,UNKNOWN
+3418,Lynx of Divine Light
+3419,Wivre
+3421,Meteion Bird - Blue
+3422,Meteion Bird - Dull Blue
+3423,Meteion Bird - Grey
+3424,Meteion Bird - Black
+3425,Hippocampus
 3426,Dark Angel Wings
 3427,Golden Angel Wings
+3428,Diabolos Wings
 3429,Pixie Wings
+3430,UNKNOWN
 3431,False Spectacles
+3432,Mousse Princess (A rank)
+3433,Aegeiros (A rank)
+3434,Minerva (A rank)
+3435,Sugriva (A rank)
+3437,Liturgy of the Bell (Bell)
+3438,UNKNOWN
+3441,Hulder (A rank)
+3442,Hydaelyn
+3444,UNKNOWN
+3446,Caretaker
+3447,Morbol Marquis
+3450,Drifting Ea
+3452,Sunbird
+3455,Petalodus (A rank)
+3456,Phoinix
+3459,UNKNOWN
+3460,Troll
+3465,UNKNOWN
+3468,Zenos (final enshroud form)
+3475,Thavnair Striking Dummy
+3477,Meteion Swarm
+3479,Vrtra
+3480,Vrtra (Injured)
+3481,Royal Lunatender
+3487,Flying Thule Dragon
+3498,Zodiark
+3505,Pinax (P4)
+3508,Ea
+3514,Endsingers Planets
+3515,Endsinger (with add on torso)
+3516,Endsinger (nothing on torso)
+3520,Argos
+3523,Meteion (Starbird)
+3526,Papalymos Staff
+3527,Moenbrydas Axe
+3528,Haurchefants Sword/Shield
+3536,Meteion bird (glowing blue)
+3537,Meteion bird (glowing black)
+3538,Meteion bird (black with black glow)
+3539,Garlemald radio
+3540,Endsingers planets
+3541,Endsingers planets
+3550,Zenoss reaper enshroud form (no blood on mouth)
+3554,Shinryu 

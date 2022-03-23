@@ -45,12 +45,8 @@ namespace VFXEditor.Avfx.Vfx {
                 Emitter.SetVariety( Emitter.EmitterVariety.Value );
                 SetType();
             } );
-            SoundInput = new UIString( "Sound", Emitter.Sound, onChange: () => {
-                if( Emitter.Sound.Value.Trim( '\0' ).Length == 0 ) {
-                    Emitter.Sound.Assigned = false;
-                }
-            } );
-            SoundIndex = new UIInt( "Sound Index", Emitter.SoundNumber );
+            SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true);
+            SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
             //======================
             Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
             Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
@@ -103,14 +99,6 @@ namespace VFXEditor.Avfx.Vfx {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
             EffectorSelect.Draw( id );
-            if( UiHelper.RemoveButton( "Remove Sound" + id, small: true ) ) {
-                SoundInput.Value = "";
-                SoundInput.Literal.GiveValue( "" );
-                SoundInput.Literal.Assigned = false;
-
-                SoundIndex.Value = -1;
-                SoundIndex.Literal.GiveValue( -1 );
-            }
             SoundInput.Draw( id );
             SoundIndex.Draw( id );
             DrawAttrs( id );
