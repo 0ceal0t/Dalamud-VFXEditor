@@ -14,7 +14,7 @@ namespace VFXEditor.FileManager {
         private readonly string Extension; // tmb
         private readonly string TempFilePrefix; // TmbTemp
         private readonly string PenumbraPath; // Tmb
-        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ); // temporary write location
+        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
 
         protected readonly string Title;
         protected readonly string Id;

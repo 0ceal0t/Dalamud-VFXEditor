@@ -321,7 +321,9 @@ namespace VFXEditor.Interop {
             var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
-                return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+                var value = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value ).ToString( "X8" ) );
+                return value;
             }
             var cleanPath = fsPath.Replace( '\\', '/' );
             var path = Encoding.ASCII.GetBytes( cleanPath );
@@ -332,7 +334,9 @@ namespace VFXEditor.Interop {
             Crc32.Update( path );
             *pResourceHash = Crc32.Checksum;
 
-            return CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+            var value2 = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ) );
+            return value2;
         }
 
         private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
@@ -353,7 +357,7 @@ namespace VFXEditor.Interop {
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
-            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "Replaced with {0}", gameFsPath );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Replaced with {0}", gameFsPath );
 
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
@@ -400,6 +404,8 @@ namespace VFXEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug(gamePath) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString("X8") );
+
             if( gameResource != IntPtr.Zero ) {
                 PrepPap( gameResource, papIds );
                 RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
@@ -408,6 +414,8 @@ namespace VFXEditor.Interop {
 
             if( !string.IsNullOrEmpty( localPath ) ) {
                 var gameResource2 = GetResource( gamePath, false ); // get local path resource
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource2.ToString( "X8" ) );
+
                 if( gameResource2 != IntPtr.Zero ) {
                     PrepPap( gameResource2, papIds );
                     RequestFile( GetFileManager2(), gameResource2 + 0x38, gameResource2, 1 );
@@ -489,5 +497,7 @@ namespace VFXEditor.Interop {
             ret[3] = byte.Parse( expansionTrimmed );
             return ret;
         }
+
+        private bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" );
     }
 }

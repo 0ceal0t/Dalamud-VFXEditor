@@ -19,14 +19,14 @@ namespace VFXEditor.Pap {
                 "Pap Select [SOURCE]",
                 null,
                 true,
-                ( SelectResult result ) => SetSourceGlobal( result )
+                SetSourceGlobal
             );
 
             ReplaceSelect = new PapSelectDialog(
                 "Pap Select [TARGET]",
                 null,
                 false,
-                ( SelectResult result ) => SetReplaceGlobal( result )
+                SetReplaceGlobal
             );
         }
 

@@ -109,6 +109,10 @@
             <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Reloaded.Hooks.Definitions.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="FFXIVClientStructs">
+            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>

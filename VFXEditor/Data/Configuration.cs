@@ -18,6 +18,8 @@ namespace VFXEditor {
         public bool IsEnabled { get; set; } = true;
 
         public bool LogAllFiles = false;
+        public bool LogDebug = false;
+
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
         public bool OverlayLimit = true;
@@ -64,6 +66,10 @@ namespace VFXEditor {
             }
 
             if( ImGui.Checkbox( "Log all files##Settings", ref LogAllFiles ) ) {
+                Save();
+            }
+
+            if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) {
                 Save();
             }
 

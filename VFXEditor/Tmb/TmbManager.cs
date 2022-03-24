@@ -19,14 +19,14 @@ namespace VFXEditor.Tmb {
                 "Tmb Select [SOURCE]",
                 null,
                 true,
-                ( SelectResult result ) => SetSourceGlobal( result )
+                SetSourceGlobal
             );
 
             ReplaceSelect = new TmbSelectDialog(
                 "Tmb Select [TARGET]",
                 null,
                 false,
-                ( SelectResult result ) => SetReplaceGlobal( result )
+                SetReplaceGlobal
             );
         }
 
