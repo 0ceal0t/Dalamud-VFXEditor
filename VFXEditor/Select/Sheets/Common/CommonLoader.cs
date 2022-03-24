@@ -1,4 +1,5 @@
 using Dalamud.Plugin;
+using System.IO;
 using System.Linq;
 using VFXSelect.Select.Rows;
 
@@ -27,6 +28,13 @@ namespace VFXSelect.Select.Sheets {
             var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty(x.Location) );
             foreach( var item in sheet ) {
                 Items.Add( new XivCommon(item) );
+            }
+
+            var lineIdx = 0;
+            foreach( var line in File.ReadLines( SheetManager.MiscVfxTxt ) ) {
+                lineIdx++;
+                if( string.IsNullOrEmpty( line ) ) continue;
+                Items.Add( new XivCommon( lineIdx, line, line, 0 ) );
             }
         }
 

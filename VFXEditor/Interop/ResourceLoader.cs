@@ -353,6 +353,8 @@ namespace VFXEditor.Interop {
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "Replaced with {0}", gameFsPath );
+
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
             // note: must be utf16

@@ -155,6 +155,9 @@
       <None Update="Files\timeline_default.vfxedit">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Files\vfx_misc.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Shaders\ModelEdge_PS.fx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

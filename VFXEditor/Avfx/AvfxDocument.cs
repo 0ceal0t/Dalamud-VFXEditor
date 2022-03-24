@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace VFXEditor.Avfx {
 
         protected override void Update() {
             if( CurrentFile == null ) return;
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 

@@ -51,7 +51,8 @@ namespace AVFXLib.Models {
         public override void ToDefault() {
             Assigned = true;
             SetDefault( Attributes );
-            BinderName.GiveValue( "null" );
+            BinderName.Assigned = false;
+            BinderName.GiveValue( "" );
 
             BindTargetPointType.GiveValue( BindTargetPoint.ByName );
             BindPointId.GiveValue( 3 );

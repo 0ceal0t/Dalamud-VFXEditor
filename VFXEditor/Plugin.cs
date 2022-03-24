@@ -92,6 +92,7 @@ namespace VFXEditor {
             SheetManager.Initialize(
                 Path.Combine( TemplateLocation, "Files", "npc.csv" ),
                 Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ),
+                Path.Combine( TemplateLocation, "Files", "vfx_misc.txt" ),
                 DataManager,
                 PluginInterface
             );

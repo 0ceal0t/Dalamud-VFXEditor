@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System.IO;
 using System.Numerics;
@@ -31,6 +32,7 @@ namespace VFXEditor.Pap {
 
         protected override void Update() {
             if( CurrentFile == null ) return;
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "Wrote PAP file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 

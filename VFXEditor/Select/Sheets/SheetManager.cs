@@ -6,6 +6,7 @@ namespace VFXSelect {
     public class SheetManager {
         public static string NpcCsv { get; private set; }
         public static string MonsterJson { get; private set; }
+        public static string MiscVfxTxt { get; private set; }
 
         public static DataManager DataManager { get; private set; }
         public static DalamudPluginInterface PluginInterface { get; private set; }
@@ -26,9 +27,10 @@ namespace VFXSelect {
         public static ActionPapSheetLoader ActionPap { get; private set; }
         public static EmoteTmbSheetLoader EmoteTmb { get; private set; }
 
-        public static void Initialize( string npcCsv, string monsterJson, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
+        public static void Initialize( string npcCsv, string monsterJson, string miscVfxTxt, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
             MonsterJson = monsterJson;
+            MiscVfxTxt = miscVfxTxt;
             DataManager = dataManager;
             PluginInterface = pluginInterface;
 
