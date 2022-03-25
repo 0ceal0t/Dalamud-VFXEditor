@@ -435,8 +435,9 @@ namespace VFXEditor.Interop {
             for( var i = 0; i < papIds.Count; i++ ) {
                 var loc = data + i * 40;
                 var bytes = Encoding.ASCII.GetBytes( papIds[i] );
-                for( var j = 0; j < bytes.Length; j++ ) {
-                    Marshal.WriteByte( loc + j, bytes[j] );
+                for ( var j = 0; j < 40; j++) {
+                    if( j < bytes.Length ) Marshal.WriteByte( loc + j, bytes[j] );
+                    else Marshal.WriteByte( loc + j, 0 );
                 }
             }
         }
