@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace AVFXLib.AVFX {
     public class AVFXBlank : AVFXNode {
@@ -22,8 +17,6 @@ namespace AVFXLib.AVFX {
             return true;
         }
 
-        public override string ExportString( int level ) {
-            return "";
-        }
+        public override string ExportString( int level ) => "";
     }
 }

@@ -1,21 +1,16 @@
 using AVFXLib.Main;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace AVFXLib.AVFX {
     public class AVFXLeaf : AVFXNode {
-        public byte[] Contents { get; set; }
-        public int Size { get; set; }
+        public byte[] Contents;
+        public int Size;
 
-        public AVFXLeaf( string n, int s, byte[] c ) : base( n ) {
-            Name = n;
-            Size = s;
-            Contents = c;
+        public AVFXLeaf( string name, int size, byte[] contents ) : base( name ) {
+            Name = name;
+            Size = size;
+            Contents = contents;
         }
 
         public override byte[] ToBytes() {

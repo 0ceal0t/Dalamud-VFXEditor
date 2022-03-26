@@ -80,9 +80,9 @@ namespace VFXSelect {
             }
 
             ImGui.BeginTabBar( "Tabs##" + Id );
-            if( ShowLocal ) DrawLocal();
-            DrawGamePath();
             DrawGame();
+            DrawGamePath();
+            if( ShowLocal ) DrawLocal();
             if( RecentList != null ) DrawRecent();
             ImGui.EndTabBar();
             ImGui.End();

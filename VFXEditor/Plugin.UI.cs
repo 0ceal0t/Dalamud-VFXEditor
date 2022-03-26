@@ -13,7 +13,6 @@ using VFXEditor.Avfx;
 namespace VFXEditor {
     public partial class Plugin {
         public static void Draw() {
-            if( !AvfxManager.IsVisible ) return;
             if( IsLoading ) return;
 
             CopyManager.PreDraw();

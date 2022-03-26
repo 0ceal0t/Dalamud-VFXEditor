@@ -1,22 +1,15 @@
 using AVFXLib.Main;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace AVFXLib.AVFX {
     public class AVFXNode {
+        public string Name;
+        public List<AVFXNode> Children = new();
 
-        public string Name { get; set; }
-        // calculate size on the fly
-
-        public List<AVFXNode> Children { get; set; }
-
-        public AVFXNode( string n ) {
-            Name = n;
+        public AVFXNode( string name ) {
+            Name = name;
             Children = new List<AVFXNode>();
         }
 

@@ -157,6 +157,7 @@ namespace AVFXLib.Main {
             "TexN",
             "TexNR"
         } );
+
         private static readonly HashSet<string> NOT_NESTED_LARGE = new( new string[]{ // not nested, larger than 8 bytes
             "Clip",
             "Keys",
@@ -169,6 +170,7 @@ namespace AVFXLib.Main {
             "SdNm",
             "Name"
         } );
+
         private static readonly HashSet<string> NESTED_SMALL = new( new string[]{ // smaller than 8 bytes, still nested
             "Data",
             "Col",
@@ -180,7 +182,7 @@ namespace AVFXLib.Main {
         public static List<AVFXNode> ReadDefinition( BinaryReader reader, List<string> messages ) {
             var nodes = new List<AVFXNode>();
             if( reader.BaseStream.Position < reader.BaseStream.Length ) {
-                // GET THE NAME
+                // Read name in reverse
                 var name = BitConverter.GetBytes( reader.ReadInt32() ).Reverse().ToArray();
                 var nonZero = new List<byte>();
                 foreach( var n in name ) {
@@ -208,11 +210,10 @@ namespace AVFXLib.Main {
                     var leafNode = new AVFXLeaf( DefName, Size, Contents );
                     nodes.Add( leafNode );
                 }
-                // PAD
+                // Pad to multiple of 4 bytes
                 var pad = Util.RoundUp( Size ) - Size;
                 reader.ReadBytes( pad );
 
-                // KEEP READING
                 return nodes.Concat( ReadDefinition( reader, messages ) ).ToList();
             }
             return nodes;
