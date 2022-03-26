@@ -137,10 +137,17 @@ namespace VFXSelect {
             ImGui.PopStyleColor();
         }
 
-        public static void DisplayPathWarning( string path ) {
+        public static void DisplayPathWarning( string path, string warning ) {
             ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.984375f, 0.7265625f, 0.01176470f, 1 ) );
             ImGui.TextWrapped( $"{path} (!)" );
             ImGui.PopStyleColor();
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
+                ImGui.TextUnformatted( warning );
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         public static void Copy( string copyPath, string id = "" ) {

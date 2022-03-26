@@ -51,7 +51,7 @@ namespace VFXSelect.VFX {
                 ImGui.Text( $"{label} ({skeleton}): " );
                 ImGui.SameLine();
                 if( path.Contains( "action.pap" ) ) {
-                    DisplayPathWarning( path );
+                    DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
                 }
                 else {
                     DisplayPath( path );
