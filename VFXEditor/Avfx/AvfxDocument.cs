@@ -2,12 +2,8 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 using VFXEditor.Avfx.Vfx;
 using VFXEditor.FileManager;
@@ -176,7 +172,7 @@ namespace VFXEditor.Avfx {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( CurrentFile == null ) {
-                ImGui.Text( @"Select a source VFX file to begin..." );
+                DisplayBeginHelpText();
             }
             else {
                 if( UiHelper.OkButton( "UPDATE" ) ) {

@@ -50,7 +50,12 @@ namespace VFXSelect.VFX {
                 var path = item.Value;
                 ImGui.Text( $"{label} ({skeleton}): " );
                 ImGui.SameLine();
-                DisplayPath( path );
+                if( path.Contains( "action.pap" ) ) {
+                    DisplayPathWarning( path );
+                }
+                else {
+                    DisplayPath( path );
+                }
                 if( !string.IsNullOrEmpty( path ) ) {
                     if( ImGui.Button( $"SELECT{Id}-{label}-{skeleton}" ) ) {
                         Dialog.Invoke( new SelectResult( SelectResultType.GameAction, $"[ACTION] {name} {label} ({skeleton})", path ) );

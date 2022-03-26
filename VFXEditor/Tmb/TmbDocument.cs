@@ -9,9 +9,9 @@ using VFXSelect;
 
 namespace VFXEditor.Tmb {
     public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
-        public TmbDocument( string writeLocation ) : base(writeLocation, "Tmb", "TMB") {
+        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
         }
-        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base(writeLocation, localPath, source, replace, "Tmb", "TMB") {
+        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
         }
 
         protected override void LoadLocal( string localPath ) {
@@ -39,13 +39,18 @@ namespace VFXEditor.Tmb {
             ImGui.TextWrapped( "DO NOT modify movement abilities (dashes, backflips, etc.)" );
             ImGui.PopStyleColor();
 
-            ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file" );
-            if( ImGui.Button( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file: " );
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile != null ) {
+            if( CurrentFile == null ) {
+                DisplayBeginHelpText();
+            }
+            else {
                 if( UiHelper.OkButton( "UPDATE" ) ) {
                     Update();
                     Reload();

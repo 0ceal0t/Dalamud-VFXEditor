@@ -11,9 +11,9 @@ namespace VFXEditor.Pap {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
-        public PapDocument( string writeLocation ) : base(writeLocation, "Pap", "PAP") {
+        public PapDocument( string writeLocation ) : base( writeLocation, "Pap", "PAP" ) {
         }
-        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base(writeLocation, localPath, source, replace, "Pap", "PAP") {
+        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
         }
 
         protected override void LoadLocal( string localPath ) {
@@ -44,12 +44,17 @@ namespace VFXEditor.Pap {
             ImGui.PopStyleColor();
 
             ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file" );
-            if( ImGui.Button( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile != null ) {
+            if( CurrentFile == null ) {
+                DisplayBeginHelpText();
+            }
+            else {
                 if( UiHelper.OkButton( "UPDATE" ) ) {
                     Update();
                     Reload( CurrentFile.GetPapIds() );

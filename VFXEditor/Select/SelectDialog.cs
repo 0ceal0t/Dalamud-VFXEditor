@@ -163,8 +163,7 @@ namespace VFXSelect {
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
             var idx = 0;
             foreach( var item in RecentList ) {
-                if( item.Type == SelectResultType.Local && !ShowLocal )
-                    continue;
+                if( item.Type == SelectResultType.Local && !ShowLocal ) continue;
 
                 if( ImGui.Selectable( item.DisplayString + id + idx, RecentSelected.Equals( item ) ) ) {
                     IsRecentSelected = true;

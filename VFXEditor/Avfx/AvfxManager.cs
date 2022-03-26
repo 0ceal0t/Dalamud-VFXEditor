@@ -1,15 +1,6 @@
-using ImGuiNET;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Avfx.Vfx;
-using VFXEditor.Data;
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
-using VFXEditor.Textools;
 using VFXSelect;
 using VFXSelect.VFX;
 
@@ -25,11 +16,11 @@ namespace VFXEditor.Avfx {
                 true,
                 SetSourceGlobal,
                 showSpawn: true,
-                spawnVfxExists: () => Plugin.SpawnExists(),
-                removeSpawnVfx: () => Plugin.RemoveSpawnVfx(),
-                spawnOnGround: ( string path ) => Plugin.SpawnOnGround( path ),
-                spawnOnSelf: ( string path ) => Plugin.SpawnOnSelf( path ),
-                spawnOnTarget: ( string path ) => Plugin.SpawnOnTarget( path )
+                spawnVfxExists: Plugin.SpawnExists,
+                removeSpawnVfx: Plugin.RemoveSpawnVfx,
+                spawnOnGround: Plugin.SpawnOnGround,
+                spawnOnSelf: Plugin.SpawnOnSelf,
+                spawnOnTarget: Plugin.SpawnOnTarget
             );
             ReplaceSelect = new VFXSelectDialog(
                 "File Select [TARGET]",
@@ -37,11 +28,11 @@ namespace VFXEditor.Avfx {
                 false,
                 SetReplaceGlobal,
                 showSpawn: true,
-                spawnVfxExists: () => Plugin.SpawnExists(),
-                removeSpawnVfx: () => Plugin.RemoveSpawnVfx(),
-                spawnOnGround: ( string path ) => Plugin.SpawnOnGround( path ),
-                spawnOnSelf: ( string path ) => Plugin.SpawnOnSelf( path ),
-                spawnOnTarget: ( string path ) => Plugin.SpawnOnTarget( path )
+                spawnVfxExists: Plugin.SpawnExists,
+                removeSpawnVfx: Plugin.RemoveSpawnVfx,
+                spawnOnGround: Plugin.SpawnOnGround,
+                spawnOnSelf: Plugin.SpawnOnSelf,
+                spawnOnTarget: Plugin.SpawnOnTarget
             );
         }
 

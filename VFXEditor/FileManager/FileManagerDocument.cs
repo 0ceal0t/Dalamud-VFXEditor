@@ -162,5 +162,14 @@ namespace VFXEditor.FileManager {
         protected abstract void SourceShow();
 
         protected abstract void ReplaceShow();
+
+        protected static void DisplayBeginHelpText() {
+            ImGui.Text( "To begin, select a file using the magnifying glass icon: " );
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) );
+            ImGui.PopFont();
+        }
     }
 }

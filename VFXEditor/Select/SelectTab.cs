@@ -137,6 +137,12 @@ namespace VFXSelect {
             ImGui.PopStyleColor();
         }
 
+        public static void DisplayPathWarning( string path ) {
+            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.984375f, 0.7265625f, 0.01176470f, 1 ) );
+            ImGui.TextWrapped( $"{path} (!)" );
+            ImGui.PopStyleColor();
+        }
+
         public static void Copy( string copyPath, string id = "" ) {
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
             if( ImGui.Button( "Copy##" + id ) ) {
