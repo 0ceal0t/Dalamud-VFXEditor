@@ -1,29 +1,22 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UITimelineItem : UIWorkspaceItem {
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;
-        //===========================
         public bool ClipAssigned;
         public UIInt ClipNumber;
-
         public UINodeSelect<UIBinder> BinderSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
         public UINodeSelect<UIEffector> EffectorSelect;
-
         public UIInt StartTime;
         public UIInt EndTime;
+        private readonly List<UIBase> Parameters;
 
-        public UITimelineItem(AVFXTimelineSubItem item, UITimeline timeline) {
+        public UITimelineItem( AVFXTimelineSubItem item, UITimeline timeline ) {
             Item = item;
             Timeline = timeline;
 
@@ -33,11 +26,13 @@ namespace VFXEditor.Avfx.Vfx
 
             ClipNumber = new UIInt( "Clip Index", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.Assigned;
-            //==================
-            Attributes.Add( new UICheckbox( "Enabled", Item.Enabled ) );
-            Attributes.Add( StartTime = new UIInt( "Start Time", Item.StartTime ) );
-            Attributes.Add( EndTime = new UIInt( "End Time", Item.EndTime ) );
-            Attributes.Add( new UIInt( "Platform", Item.Platform ) );
+
+            Parameters = new List<UIBase> {
+                new UICheckbox( "Enabled", Item.Enabled ),
+                ( StartTime = new UIInt( "Start Time", Item.StartTime ) ),
+                ( EndTime = new UIInt( "End Time", Item.EndTime ) ),
+                new UIInt( "Platform", Item.Platform )
+            };
         }
 
         public override void DrawBody( string parentId ) {
@@ -47,20 +42,16 @@ namespace VFXEditor.Avfx.Vfx
             BinderSelect.Draw( id );
             EmitterSelect.Draw( id );
             EffectorSelect.Draw( id );
-            DrawAttrs( id );
+            DrawList( Parameters, id );
 
-            if(ImGui.Checkbox("Clip Enabled" + id, ref ClipAssigned ) ) {
+            if( ImGui.Checkbox( "Clip Enabled" + id, ref ClipAssigned ) ) {
                 Item.ClipNumber.Assigned = ClipAssigned;
             }
             ClipNumber.Draw( id );
         }
 
-        public override string GetDefaultText() {
-            return Idx + ": Emitter " + Item.EmitterIdx.Value;
-        }
+        public override string GetDefaultText() => $"{Idx}: Emitter {Item.EmitterIdx.Value}";
 
-        public override string GetWorkspaceId() {
-            return $"{Timeline.GetWorkspaceId()}/Item{Idx}";
-        }
+        public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Item{Idx}";
     }
 }

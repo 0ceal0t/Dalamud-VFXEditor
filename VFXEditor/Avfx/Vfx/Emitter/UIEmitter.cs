@@ -29,6 +29,7 @@ namespace VFXEditor.Avfx.Vfx {
         //========================
         public UIString SoundInput;
         public UIInt SoundIndex;
+        private readonly List<UIBase> Parameters;
 
         public UIEmitter( AvfxFile main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
             Emitter = emitter;
@@ -48,13 +49,15 @@ namespace VFXEditor.Avfx.Vfx {
             SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true);
             SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
             //======================
-            Attributes.Add( new UIInt( "Loop Start", Emitter.LoopStart ) );
-            Attributes.Add( new UIInt( "Loop End", Emitter.LoopEnd ) );
-            Attributes.Add( new UIInt( "Child Limit", Emitter.ChildLimit ) );
-            Attributes.Add( new UICheckbox( "Any Direction", Emitter.AnyDirection ) );
-            Attributes.Add( new UICombo<RotationDirectionBase>( "Rotation Direction Base", Emitter.RotationDirectionBaseType ) );
-            Attributes.Add( new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ) );
-            Attributes.Add( new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType ) );
+            Parameters = new List<UIBase> {
+                new UIInt( "Loop Start", Emitter.LoopStart ),
+                new UIInt( "Loop End", Emitter.LoopEnd ),
+                new UIInt( "Child Limit", Emitter.ChildLimit ),
+                new UICheckbox( "Any Direction", Emitter.AnyDirection ),
+                new UICombo<RotationDirectionBase>( "Rotation Direction Base", Emitter.RotationDirectionBaseType ),
+                new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Emitter.CoordComputeOrderType ),
+                new UICombo<RotationOrder>( "Rotation Order", Emitter.RotationOrderType )
+            };
             Animation.Add( new UILife( Emitter.Life ) );
             Animation.Add( new UICurve( Emitter.CreateCount, "Create Count", locked: true ) );
             Animation.Add( new UICurve( Emitter.CreateInterval, "Create Interval", locked: true ) );
@@ -101,7 +104,7 @@ namespace VFXEditor.Avfx.Vfx {
             EffectorSelect.Draw( id );
             SoundInput.Draw( id );
             SoundIndex.Draw( id );
-            DrawAttrs( id );
+            DrawList( Parameters, id );
             ImGui.EndChild();
         }
 

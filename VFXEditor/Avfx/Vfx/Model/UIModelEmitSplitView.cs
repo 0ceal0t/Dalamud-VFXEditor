@@ -1,16 +1,10 @@
-using AVFXLib.Models;
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIModelEmitSplitView : UIItemSplitView<UIModelEmitterVertex> {
         public UIModel Model;
 
-        public UIModelEmitSplitView( List<UIModelEmitterVertex> items, UIModel model) : base( items, true, true ) {
+        public UIModelEmitSplitView( List<UIModelEmitterVertex> items, UIModel model ) : base( items, true, true ) {
             Model = model;
         }
 

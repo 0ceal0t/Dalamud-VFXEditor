@@ -2,44 +2,39 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UITimeline : UINode {
         public AVFXTimeline Timeline;
         public AvfxFile Main;
-        //=====================
         public List<UITimelineItem> Items;
-        //=====================
         public List<UITimelineClip> Clips;
-        //=====================
         public UITimelineClipSplitView ClipSplit;
         public UITimelineItemSequencer ItemSplit;
-
         public UINodeSelect<UIBinder> BinderSelect;
+        private readonly List<UIBase> Parameters;
 
-        public UITimeline(AvfxFile main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
+        public UITimeline( AvfxFile main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
             Main = main;
             BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", Main.Binders, Timeline.BinderIdx );
-            //===============
+
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
-            //========================
-            Attributes.Add( new UIInt( "Loop Start", Timeline.LoopStart ) );
-            Attributes.Add( new UIInt( "Loop End", Timeline.LoopEnd ) );
-            //========================
+
+            Parameters = new List<UIBase> {
+                new UIInt( "Loop Start", Timeline.LoopStart ),
+                new UIInt( "Loop End", Timeline.LoopEnd )
+            };
+
             foreach( var item in Timeline.Items ) {
                 Items.Add( new UITimelineItem( item, this ) );
             }
-            //==========================
+
             foreach( var clip in Timeline.Clips ) {
                 Clips.Add( new UITimelineClip( clip, this ) );
             }
-            //==========================
+
             ClipSplit = new UITimelineClipSplitView( Clips, this );
             ItemSplit = new UITimelineItemSequencer( Items, this );
 
@@ -50,7 +45,7 @@ namespace VFXEditor.Avfx.Vfx
             var id = parentId + "/Timeline";
             DrawRename( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            //=====================
+
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Params" );
@@ -71,16 +66,8 @@ namespace VFXEditor.Avfx.Vfx
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             BinderSelect.Draw( id );
-            DrawAttrs( id );
+            DrawList( Parameters, id );
             ImGui.EndChild();
-        }
-
-        public override string GetDefaultText() {
-            return "Timeline " + Idx;
-        }
-
-        public override string GetWorkspaceId() {
-            return $"Tmln{Idx}";
         }
 
         public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
@@ -93,8 +80,10 @@ namespace VFXEditor.Avfx.Vfx
             Clips.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
         }
 
-        public override byte[] ToBytes() {
-            return Timeline.ToAVFX().ToBytes();
-        }
+        public override string GetDefaultText() => $"Timeline {Idx}";
+
+        public override string GetWorkspaceId() => $"Tmln{Idx}";
+
+        public override byte[] ToBytes() => Timeline.ToAVFX().ToBytes();
     }
 }

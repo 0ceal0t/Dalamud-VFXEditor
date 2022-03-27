@@ -10,7 +10,7 @@ using VfxIndex = AVFXLib.Models.Index;
 
 namespace VFXEditor.Helper {
     public static class MdlHelper {
-        public static bool ImportModel( string path, out List<VfxVertex> vOut, out List<VfxIndex> iOut ) {
+       /* public static bool ImportModel( string path, out List<VfxVertex> vOut, out List<VfxIndex> iOut ) {
             vOut = new List<VfxVertex>();
             iOut = new List<VfxIndex>();
             if( !Plugin.DataManager.FileExists( path ) ) return false;
@@ -47,6 +47,6 @@ namespace VFXEditor.Helper {
             ret.UV2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
 
             return ret;
-        }
+        }*/
     }
 }

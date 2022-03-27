@@ -1,12 +1,9 @@
 using AVFXLib.AVFX;
 using AVFXLib.Main;
 using AVFXLib.Models;
-
 using Dalamud.Logging;
-
 using ImGuiFileDialog;
 using ImGuiNET;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,17 +38,18 @@ namespace VFXEditor.Avfx.Vfx {
 
         public AvfxFile( AVFXBase avfx ) {
             AVFX = avfx;
-            // ================
-            AllGroups = new();
-            AllGroups.Add( Binders = new UINodeGroup<UIBinder>() );
-            AllGroups.Add( Emitters = new UINodeGroup<UIEmitter>() );
-            AllGroups.Add( Models = new UINodeGroup<UIModel>() );
-            AllGroups.Add( Particles = new UINodeGroup<UIParticle>() );
-            AllGroups.Add( Schedulers = new UINodeGroup<UIScheduler>() );
-            AllGroups.Add( Textures = new UINodeGroup<UITexture>() );
-            AllGroups.Add( Timelines = new UINodeGroup<UITimeline>() );
-            AllGroups.Add( Effectors = new UINodeGroup<UIEffector>() );
-            // ================
+
+            AllGroups = new() {
+                ( Binders = new UINodeGroup<UIBinder>() ),
+                ( Emitters = new UINodeGroup<UIEmitter>() ),
+                ( Models = new UINodeGroup<UIModel>() ),
+                ( Particles = new UINodeGroup<UIParticle>() ),
+                ( Schedulers = new UINodeGroup<UIScheduler>() ),
+                ( Textures = new UINodeGroup<UITexture>() ),
+                ( Timelines = new UINodeGroup<UITimeline>() ),
+                ( Effectors = new UINodeGroup<UIEffector>() )
+            };
+
             ParticleView = new UIParticleView( this, avfx );
             ParameterView = new UIParameterView( avfx );
             BinderView = new UIBinderView( this, avfx );
@@ -61,9 +59,9 @@ namespace VFXEditor.Avfx.Vfx {
             TextureView = new UITextureView( this, avfx );
             ModelView = new UIModelView( this, avfx );
             ScheduleView = new UIScheduleView( this, avfx );
-            // =================
+
             AllGroups.ForEach( group => group.Init() );
-            // =================
+
             ExportUI = new ExportDialog( this );
         }
 

@@ -1,11 +1,5 @@
-using AVFXLib.Models;
-using Dalamud.Plugin;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIUVSetSplitView : UIItemSplitView<UIParticleUVSet> {

@@ -1,20 +1,11 @@
-using AVFXLib.Models;
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
-    public class UIEmitterSplitView : UIItemSplitView<UIEmitterItem>
-    {
+namespace VFXEditor.Avfx.Vfx {
+    public class UIEmitterSplitView : UIItemSplitView<UIEmitterItem> {
         public UIEmitter Emitter;
         public bool IsParticle;
 
-        public UIEmitterSplitView( List<UIEmitterItem> items, UIEmitter emitter, bool isParticle ) : base( items, true, true )
-        {
+        public UIEmitterSplitView( List<UIEmitterItem> items, UIEmitter emitter, bool isParticle ) : base( items, true, true ) {
             Emitter = emitter;
             IsParticle = isParticle;
         }

@@ -20,7 +20,6 @@ namespace VFXEditor.Avfx.Vfx {
     }
 
     public class UINodeGroup<T> : UINodeGroup where T : UINode {
-
         public List<T> Items = new();
         public Action OnInit;
         public Action OnChange;

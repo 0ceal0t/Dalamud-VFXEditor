@@ -3,7 +3,6 @@ using ImGuiNET;
 using System;
 using System.Numerics;
 using Dalamud.Logging;
-using VFXEditor.Texture;
 using ImGuiFileDialog;
 using VFXEditor.Helper;
 
@@ -11,7 +10,6 @@ namespace VFXEditor.Avfx.Vfx {
     public class UITexture : UINode {
         public AvfxFile Main;
         public AVFXTexture Texture;
-
         public string lastValue;
         public UIString Path;
         public UINodeGraphView NodeView;
@@ -86,7 +84,7 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public static void ImportDialog( string newPath ) {
+        private static void ImportDialog( string newPath ) {
             FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
@@ -100,7 +98,7 @@ namespace VFXEditor.Avfx.Vfx {
             } );
         }
 
-        public static void SavePngDialog( string texPath ) {
+        private static void SavePngDialog( string texPath ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = Plugin.TextureManager.GetRawTexture( texPath );
@@ -108,7 +106,7 @@ namespace VFXEditor.Avfx.Vfx {
             } );
         }
 
-        public static void SaveDDSDialog( string texPath ) {
+        private static void SaveDDSDialog( string texPath ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = Plugin.TextureManager.GetRawTexture( texPath );
@@ -116,16 +114,10 @@ namespace VFXEditor.Avfx.Vfx {
             } );
         }
 
-        public override string GetDefaultText() {
-            return "Texture " + Idx;
-        }
+        public override string GetDefaultText() => $"Texture {Idx}";
 
-        public override string GetWorkspaceId() {
-            return $"Tex{Idx}";
-        }
+        public override string GetWorkspaceId() => $"Tex{Idx}";
 
-        public override byte[] ToBytes() {
-            return Texture.ToAVFX().ToBytes();
-        }
+        public override byte[] ToBytes() => Texture.ToAVFX().ToBytes();
     }
 }

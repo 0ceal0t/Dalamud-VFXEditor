@@ -2,10 +2,6 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -13,7 +9,6 @@ namespace VFXEditor.Avfx.Vfx {
         public AVFXCurveColor Curve;
         public string Name;
         public bool Locked;
-        //=========================
         public List<UICurve> Curves;
 
         public UICurveColor( AVFXCurveColor curve, string name, bool locked = false ) {
@@ -27,7 +22,7 @@ namespace VFXEditor.Avfx.Vfx {
             base.Init();
             Curves = new List<UICurve>();
             if( !Curve.Assigned ) { Assigned = false; return; }
-            // ======================
+
             Curves.Add( new UICurve( Curve.RGB, "RGB", color: true ) );
             Curves.Add( new UICurve( Curve.A, "A" ) );
             Curves.Add( new UICurve( Curve.SclR, "Scale R" ) );
@@ -42,7 +37,6 @@ namespace VFXEditor.Avfx.Vfx {
             Curves.Add( new UICurve( Curve.RBri, "Random Bright" ) );
         }
 
-        // =========== DRAW =====================
         public override void Draw( string parentId ) {
             if( !Assigned ) {
                 DrawUnAssigned( parentId );
@@ -63,7 +57,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            //====================
             if( !Locked ) {
                 if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
@@ -83,9 +76,8 @@ namespace VFXEditor.Avfx.Vfx {
                 }
             }
 
-            DrawAttrs( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            //====================
+
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 foreach( var c in Curves ) {
                     if( c.Assigned ) {
@@ -99,8 +91,6 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
     }
 }

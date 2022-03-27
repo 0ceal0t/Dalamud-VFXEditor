@@ -1,31 +1,25 @@
-using AVFXLib.Models;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParameters : UIItem {
         public string Name;
+        private readonly List<UIBase> Parameters;
 
         public UIParameters( string name ) {
             Assigned = true;
             Name = name;
+            Parameters = new List<UIBase>();
         }
 
         public void Add( UIBase item ) {
-            Attributes.Add( item );
+            Parameters.Add( item );
         }
 
-        public override void DrawBody( string parentId ) {
-            DrawAttrs( parentId );
+        public override void DrawBody( string id ) {
+            DrawList( Parameters, id );
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
     }
 }

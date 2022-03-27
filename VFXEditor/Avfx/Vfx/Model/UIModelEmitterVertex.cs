@@ -1,11 +1,6 @@
 using AVFXLib.Models;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -13,16 +8,16 @@ namespace VFXEditor.Avfx.Vfx {
         public UIModel Model;
         public VNum VertNumber;
         public EmitVertex Vertex;
-
         public int Order;
         public Vector3 Position;
         public Vector3 Normal;
         public Vector4 Color;
+
         public UIModelEmitterVertex( VNum vnum, EmitVertex emitVertex, UIModel model ) {
             Model = model;
             VertNumber = vnum;
             Vertex = emitVertex;
-            //=======================
+
             Order = VertNumber.Num;
             Position = new Vector3( Vertex.Position[0], Vertex.Position[1], Vertex.Position[2] );
             Normal = new Vector3( Vertex.Normal[0], Vertex.Normal[1], Vertex.Normal[2] );
@@ -45,8 +40,6 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public override string GetDefaultText() {
-            return "" + Idx;
-        }
+        public override string GetDefaultText() => $"{Idx}";
     }
 }

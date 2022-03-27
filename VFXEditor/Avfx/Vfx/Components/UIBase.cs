@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using VFXEditor.Data;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UIBase {
@@ -9,6 +8,7 @@ namespace VFXEditor.Avfx.Vfx {
         public virtual void Init() {
             Assigned = true;
         }
+
         public abstract void Draw( string parentId );
 
         public static void DrawList( List<UIBase> items, string parentId ) {

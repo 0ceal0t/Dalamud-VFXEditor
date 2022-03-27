@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using ImGuiNET;
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using VFXEditor.Data;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -14,7 +9,6 @@ namespace VFXEditor.Avfx.Vfx {
         public string Name;
         public int ValueIdx;
         public LiteralEnum<T> Literal;
-
         public Action OnChange = null;
 
         public UICombo( string name, LiteralEnum<T> literal, Action onChange = null ) {

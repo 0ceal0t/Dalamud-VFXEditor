@@ -2,7 +2,6 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -10,7 +9,9 @@ namespace VFXEditor.Avfx.Vfx {
         public AVFXCurve3Axis Curve;
         public string Name;
         public bool Locked;
-        //=========================
+
+        public UICombo<AxisConnect> AxisConnectSelect;
+        public UICombo<RandomType> AxisConnectRandomSelect;
         public List<UICurve> Curves;
 
         public UICurve3Axis( AVFXCurve3Axis curve, string name, bool locked = false ) {
@@ -24,9 +25,10 @@ namespace VFXEditor.Avfx.Vfx {
             base.Init();
             Curves = new List<UICurve>();
             if( !Curve.Assigned ) { Assigned = false; return; }
-            // ======================
-            Attributes.Add( new UICombo<AxisConnect>( "Axis Connect", Curve.AxisConnectType ) );
-            Attributes.Add( new UICombo<RandomType>( "Axis Connect Random", Curve.AxisConnectRandomType ) );
+
+            AxisConnectSelect = new UICombo<AxisConnect>( "Axis Connect", Curve.AxisConnectType );
+            AxisConnectRandomSelect = new UICombo<RandomType>( "Axis Connect Random", Curve.AxisConnectRandomType );
+
             Curves.Add( new UICurve( Curve.X, "X" ) );
             Curves.Add( new UICurve( Curve.Y, "Y" ) );
             Curves.Add( new UICurve( Curve.Z, "Z" ) );
@@ -35,7 +37,6 @@ namespace VFXEditor.Avfx.Vfx {
             Curves.Add( new UICurve( Curve.RZ, "Random Z" ) );
         }
 
-        // =========== DRAW =====================
         public override void Draw( string parentId ) {
             if( !Assigned ) {
                 DrawUnAssigned( parentId );
@@ -56,7 +57,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            // =================
             if( !Locked ) {
                 if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.Assigned = false;
@@ -76,9 +76,10 @@ namespace VFXEditor.Avfx.Vfx {
                 }
             }
 
-            DrawAttrs( id );
+            AxisConnectSelect.Draw( id );
+            AxisConnectRandomSelect.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            // ==================
+
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 foreach( var c in Curves ) {
                     if( c.Assigned ) {
@@ -92,8 +93,6 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
     }
 }

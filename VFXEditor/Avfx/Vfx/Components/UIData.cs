@@ -1,9 +1,5 @@
-using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UIData : UIItem {
@@ -16,9 +12,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public virtual void Dispose() { }
 
-        public override string GetDefaultText() {
-            return "Data";
-        }
+        public override string GetDefaultText() => "Data";
 
         public override void Draw( string parentId ) {
             DrawBody( parentId );

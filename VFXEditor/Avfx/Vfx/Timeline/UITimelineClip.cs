@@ -1,25 +1,20 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITimelineClip : UIWorkspaceItem {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;
-        //===============================
         public string Type;
-
         public Vector4 RawInts;
         public Vector4 RawFloats;
 
         public UITimelineClip( AVFXTimelineClip clip, UITimeline timeline ) {
             Clip = clip;
             Timeline = timeline;
-            //=====================
             Type = Clip.UniqueId;
             RawInts = new Vector4( Clip.UnknownInts[0], Clip.UnknownFloats[1], Clip.UnknownInts[2], Clip.UnknownInts[3] );
             RawFloats = new Vector4( Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3] );
@@ -50,21 +45,21 @@ namespace VFXEditor.Avfx.Vfx {
                 ImGui.EndCombo();
             }
 
-            if(Type == "LLIK") {
+            if( Type == "LLIK" ) {
                 var duration = RawInts.X;
-                if(ImGui.InputFloat("Fade Out Duration" + id, ref duration ) ) {
+                if( ImGui.InputFloat( "Fade Out Duration" + id, ref duration ) ) {
                     RawInts.X = duration;
                     Clip.UnknownInts[0] = ( int )RawInts.X;
                 }
 
                 var hide = RawInts.W == 1.0f;
-                if(ImGui.Checkbox("Hide" + id, ref hide)) {
+                if( ImGui.Checkbox( "Hide" + id, ref hide ) ) {
                     RawInts.W = hide ? 1.0f : 0.0f;
                     Clip.UnknownInts[3] = ( int )RawInts.W;
                 }
 
                 var allowShow = RawFloats.X != -1f;
-                if(ImGui.Checkbox("Allow Show" + id, ref allowShow ) ) {
+                if( ImGui.Checkbox( "Allow Show" + id, ref allowShow ) ) {
                     RawFloats.X = allowShow ? 0f : -1f;
                     Clip.UnknownFloats[0] = RawFloats.X;
                 }
@@ -90,12 +85,8 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public override string GetDefaultText() {
-            return Idx + ": " + IdOptions[Clip.UniqueId];
-        }
+        public override string GetDefaultText() => $"{Idx}: {IdOptions[Clip.UniqueId]}";
 
-        public override string GetWorkspaceId() {
-            return $"{Timeline.GetWorkspaceId()}/Clip{Idx}";
-        }
+        public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Clip{Idx}";
     }
 }

@@ -7,6 +7,7 @@ namespace VFXEditor.Avfx.Vfx {
         public int Level2;
         public List<UINode> Next;
     }
+
     public class UINodeGraph {
         public Dictionary<UINode, UINodeGraphItem> Graph = new();
         public bool Outdated = false;

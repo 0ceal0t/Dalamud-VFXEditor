@@ -163,7 +163,7 @@ namespace ImGuiFileDialog {
             if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
                 var lastPoint = result.LastIndexOf( '.' );
                 if( lastPoint != -1 ) {
-                    result = result.Substring( 0, lastPoint );
+                    result = result[..lastPoint];
                 }
                 result += SelectedFilter.Filter;
             }

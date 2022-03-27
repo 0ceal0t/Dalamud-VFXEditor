@@ -2,20 +2,15 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleSimple : UIItem {
         public AVFXParticleSimple Simple;
         public UIParticle Particle;
-
         public UINodeSelect<UIModel> InjectionModelSelect;
         public UINodeSelect<UIModel> InjectionVertexModelSelect;
-
         public List<UIItem> Tabs;
         public UIParameters Creation;
         public UIParameters Animation;
@@ -31,7 +26,7 @@ namespace VFXEditor.Avfx.Vfx {
         public override void Init() {
             base.Init();
             if( !Simple.Assigned ) { Assigned = false; return; }
-            //=======================
+
             Tabs = new List<UIItem> {
                 ( Creation = new UIParameters( "Creation" ) )
             };
@@ -89,7 +84,7 @@ namespace VFXEditor.Avfx.Vfx {
             Color.Add( new UISimpleColor( Simple, 2 ) );
             Color.Add( new UISimpleColor( Simple, 3 ) );
         }
-        // =========== DRAW =====================
+
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
                 Simple.ToDefault();
@@ -102,7 +97,6 @@ namespace VFXEditor.Avfx.Vfx {
             if( UiHelper.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
                 InjectionVertexModelSelect.DeleteSelect();
-                //===============
                 Simple.Assigned = false;
                 Init();
                 return;

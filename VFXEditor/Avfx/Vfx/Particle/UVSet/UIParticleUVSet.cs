@@ -2,28 +2,24 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
-    public class UIParticleUVSet : UIItem
-    {
+namespace VFXEditor.Avfx.Vfx {
+    public class UIParticleUVSet : UIItem {
         public AVFXParticleUVSet UVSet;
         public UIParticle Particle;
-
         public UICurve2Axis Scale;
         public UICurve2Axis Scroll;
         public UICurve Rotation;
         private readonly List<UIItem> Curves = new();
+        private readonly List<UIBase> Parameters;
 
-        public UIParticleUVSet(AVFXParticleUVSet uvSet, UIParticle particle)
-        {
+        public UIParticleUVSet( AVFXParticleUVSet uvSet, UIParticle particle ) {
             UVSet = uvSet;
             Particle = particle;
-            //=================
-            Attributes.Add( new UICombo<TextureCalculateUV>( "Calculate UV", UVSet.CalculateUVType ) );
+
+            Parameters = new List<UIBase> {
+                new UICombo<TextureCalculateUV>( "Calculate UV", UVSet.CalculateUVType )
+            };
 
             Curves.Add( Scale = new UICurve2Axis( UVSet.Scale, "Scale" ) );
             Curves.Add( Scroll = new UICurve2Axis( UVSet.Scroll, "Scroll" ) );
@@ -33,13 +29,11 @@ namespace VFXEditor.Avfx.Vfx
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/UV";
-            DrawAttrs( id );
+            DrawList( Parameters, id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Curves, parentId );
         }
 
-        public override string GetDefaultText() {
-            return "UV " + Idx;
-        }
+        public override string GetDefaultText() => $"UV {Idx}";
     }
 }

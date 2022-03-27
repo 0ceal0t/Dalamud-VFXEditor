@@ -4,13 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using ImPlotNET;
-using VFXEditor.DirectX;
 using VFXEditor.Data;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UICurveEditor : UIBase {
-
         private CurvePoint Selected = null;
         private readonly AVFXCurve Curve;
         private readonly List<CurvePoint> Points;
@@ -29,6 +27,7 @@ namespace VFXEditor.Avfx.Vfx {
                 Points.Add( new CurvePoint( this, key, Color ) );
             }
         }
+
         public override void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

@@ -29,13 +29,13 @@ namespace VFXEditor.Penumbra {
             Size = new Vector2( 400, 200 );
         }
 
-        public string Name = "";
-        public string Author = "";
-        public string Version = "1.0.0";
-        public bool ExportVfx = true;
-        public bool ExportTex = true;
-        public bool ExportTmb = true;
-        public bool ExportPap = true;
+        private string Name = "";
+        private string Author = "";
+        private string Version = "1.0.0";
+        private bool ExportVfx = true;
+        private bool ExportTex = true;
+        private bool ExportTmb = true;
+        private bool ExportPap = true;
 
         public override void DrawBody() {
             var id = "##Penumbra";

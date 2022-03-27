@@ -1,26 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Avfx.Views;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITimelineItemSequencer : ImGuiSequencer<UITimelineItem> {
-
         public UITimeline Timeline;
 
-        public UITimelineItemSequencer( List<UITimelineItem> items, UITimeline timeline ) : base(items) {
+        public UITimelineItemSequencer( List<UITimelineItem> items, UITimeline timeline ) : base( items ) {
             Timeline = timeline;
         }
 
-        public override int GetEnd( UITimelineItem item ) {
-            return item.EndTime.Value;
-        }
+        public override int GetEnd( UITimelineItem item ) => item.EndTime.Value;
 
-        public override int GetStart( UITimelineItem item ) {
-            return item.StartTime.Value;
-        }
+        public override int GetStart( UITimelineItem item ) => item.StartTime.Value;
 
         public override UITimelineItem OnNew() {
             var newItem = Timeline.Timeline.AddItem();

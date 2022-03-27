@@ -1,12 +1,10 @@
 using AVFXLib.Models;
 using System.Linq;
 using AVFXLib.AVFX;
-using VFXEditor.Texture;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureView : UINodeSplitView<UITexture> {
-
-        public UITextureView( AvfxFile main, AVFXBase avfx) : base( main, avfx, "##TEX" ) {
+        public UITextureView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##TEX" ) {
             Group = main.Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( Main, item ) ).ToList();
         }

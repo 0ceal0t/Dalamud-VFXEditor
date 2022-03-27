@@ -4,17 +4,13 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UIParticle : UINode {
         public AVFXParticle Particle;
         public AvfxFile Main;
-        // =======================
         public UICombo<ParticleType> Type;
         public List<UIParticleUVSet> UVSets;
-        //==========================
         public UIData Data;
-        //========================
         public List<UIItem> Animation;
         public UITextureColor1 TC1;
         public UITextureColor2 TC2;
@@ -25,55 +21,57 @@ namespace VFXEditor.Avfx.Vfx
         public UITexturePalette TP;
         public UITextureReflection TR;
         public List<UIItem> Tex;
-        // ==================
         public UIItemSplitView<UIItem> AnimationSplit;
         public UIItemSplitView<UIItem> TexSplit;
         public UIUVSetSplitView UVSplit;
         public UINodeGraphView NodeView;
+        private readonly List<UIBase> Parameters;
 
         public UIParticle( AvfxFile main, AVFXParticle particle, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
             Particle = particle;
             Main = main;
             NodeView = new UINodeGraphView( this );
-            // =======================
+
             Animation = new List<UIItem>();
             Tex = new List<UIItem>();
             UVSets = new List<UIParticleUVSet>();
-            //==========================
+
             Type = new UICombo<ParticleType>( "Type", Particle.ParticleVariety, onChange: () => {
                 Particle.SetVariety( Particle.ParticleVariety.Value );
                 SetType();
             } );
-            Attributes.Add( new UIInt( "Loop Start", Particle.LoopStart ) );
-            Attributes.Add( new UIInt( "Loop End", Particle.LoopEnd ) );
-            Attributes.Add( new UICheckbox( "Use Simple Animation", Particle.SimpleAnimEnable ) );
-            Attributes.Add( new UICombo<RotationDirectionBase>( "Rotation Direction Base", Particle.RotationDirectionBaseType ) );
-            Attributes.Add( new UICombo<RotationOrder>( "Rotation Compute Order", Particle.RotationOrderType ) );
-            Attributes.Add( new UICombo<CoordComputeOrder>( "Coord Compute Order", Particle.CoordComputeOrderType ) );
-            Attributes.Add( new UICombo<DrawMode>( "Draw Mode", Particle.DrawModeType ) );
-            Attributes.Add( new UICombo<CullingType>( "Culling Type", Particle.CullingTypeType ) );
-            Attributes.Add( new UICombo<EnvLight>( "Enviornmental Light", Particle.EnvLightType ) );
-            Attributes.Add( new UICombo<DirLight>( "Directional Light", Particle.DirLightType ) );
-            Attributes.Add( new UICombo<UVPrecision>( "UV Precision", Particle.UvPrecisionType ) );
-            Attributes.Add( new UIInt( "Draw Priority", Particle.DrawPriority ) );
-            Attributes.Add( new UICheckbox( "Depth Test", Particle.IsDepthTest ) );
-            Attributes.Add( new UICheckbox( "Depth Write", Particle.IsDepthWrite ) );
-            Attributes.Add( new UICheckbox( "Soft Particle", Particle.IsSoftParticle ) );
-            Attributes.Add( new UIInt( "Collision Type", Particle.CollisionType ) );
-            Attributes.Add( new UICheckbox( "BS11", Particle.Bs11 ) );
-            Attributes.Add( new UICheckbox( "Apply Tone Map", Particle.IsApplyToneMap ) );
-            Attributes.Add( new UICheckbox( "Apply Fog", Particle.IsApplyFog ) );
-            Attributes.Add( new UICheckbox( "Enable Clip Near", Particle.ClipNearEnable ) );
-            Attributes.Add( new UICheckbox( "Enable Clip Far", Particle.ClipFarEnable ) );
-            Attributes.Add( new UIFloat2( "Clip Near", Particle.ClipNearStart, Particle.ClipNearEnd ) );
-            Attributes.Add( new UIFloat2( "Clip Far", Particle.ClipFarStart, Particle.ClipFarEnd ) );
-            Attributes.Add( new UICombo<ClipBasePoint>( "Clip Base Point", Particle.ClipBasePointType ) );
-            Attributes.Add( new UIInt( "Apply Rate Environment", Particle.ApplyRateEnvironment ) );
-            Attributes.Add( new UIInt( "Apply Rate Directional", Particle.ApplyRateDirectional ) );
-            Attributes.Add( new UIInt( "Apply Rate Light Buffer", Particle.ApplyRateLightBuffer ) );
-            Attributes.Add( new UICheckbox( "DOTy", Particle.DOTy ) );
-            Attributes.Add( new UIFloat( "Depth Offset", Particle.DepthOffset ) );
-            //==============================
+            Parameters = new List<UIBase> {
+                new UIInt( "Loop Start", Particle.LoopStart ),
+                new UIInt( "Loop End", Particle.LoopEnd ),
+                new UICheckbox( "Use Simple Animation", Particle.SimpleAnimEnable ),
+                new UICombo<RotationDirectionBase>( "Rotation Direction Base", Particle.RotationDirectionBaseType ),
+                new UICombo<RotationOrder>( "Rotation Compute Order", Particle.RotationOrderType ),
+                new UICombo<CoordComputeOrder>( "Coord Compute Order", Particle.CoordComputeOrderType ),
+                new UICombo<DrawMode>( "Draw Mode", Particle.DrawModeType ),
+                new UICombo<CullingType>( "Culling Type", Particle.CullingTypeType ),
+                new UICombo<EnvLight>( "Enviornmental Light", Particle.EnvLightType ),
+                new UICombo<DirLight>( "Directional Light", Particle.DirLightType ),
+                new UICombo<UVPrecision>( "UV Precision", Particle.UvPrecisionType ),
+                new UIInt( "Draw Priority", Particle.DrawPriority ),
+                new UICheckbox( "Depth Test", Particle.IsDepthTest ),
+                new UICheckbox( "Depth Write", Particle.IsDepthWrite ),
+                new UICheckbox( "Soft Particle", Particle.IsSoftParticle ),
+                new UIInt( "Collision Type", Particle.CollisionType ),
+                new UICheckbox( "BS11", Particle.Bs11 ),
+                new UICheckbox( "Apply Tone Map", Particle.IsApplyToneMap ),
+                new UICheckbox( "Apply Fog", Particle.IsApplyFog ),
+                new UICheckbox( "Enable Clip Near", Particle.ClipNearEnable ),
+                new UICheckbox( "Enable Clip Far", Particle.ClipFarEnable ),
+                new UIFloat2( "Clip Near", Particle.ClipNearStart, Particle.ClipNearEnd ),
+                new UIFloat2( "Clip Far", Particle.ClipFarStart, Particle.ClipFarEnd ),
+                new UICombo<ClipBasePoint>( "Clip Base Point", Particle.ClipBasePointType ),
+                new UIInt( "Apply Rate Environment", Particle.ApplyRateEnvironment ),
+                new UIInt( "Apply Rate Directional", Particle.ApplyRateDirectional ),
+                new UIInt( "Apply Rate Light Buffer", Particle.ApplyRateLightBuffer ),
+                new UICheckbox( "DOTy", Particle.DOTy ),
+                new UIFloat( "Depth Offset", Particle.DepthOffset )
+            };
+
             Animation.Add( new UILife( Particle.Life ) );
             Animation.Add( new UIParticleSimple( Particle.Simple, this ) );
             Animation.Add( new UICurve( Particle.Gravity, "Gravity" ) );
@@ -90,13 +88,13 @@ namespace VFXEditor.Avfx.Vfx
             Animation.Add( new UICurve( Particle.RotVelYRandom, "Rotation Velocity Y Random" ) );
             Animation.Add( new UICurve( Particle.RotVelZRandom, "Rotation Velocity Z Random" ) );
             Animation.Add( new UICurveColor( Particle.Color, "Color", locked: true ) );
-            //===============================
+
             foreach( var uvSet in Particle.UVSets ) {
                 UVSets.Add( new UIParticleUVSet( uvSet, this ) );
             }
-            //============================
+
             SetType();
-            //============================
+
             Tex.Add( TC1 = new UITextureColor1( Particle.TC1, this ) );
             Tex.Add( TC2 = new UITextureColor2( Particle.TC2, "Texture Color 2", this ) );
             Tex.Add( TC3 = new UITextureColor2( Particle.TC3, "Texture Color 3", this ) );
@@ -105,12 +103,13 @@ namespace VFXEditor.Avfx.Vfx
             Tex.Add( TR = new UITextureReflection( Particle.TR, this ) );
             Tex.Add( TD = new UITextureDistortion( Particle.TD, this ) );
             Tex.Add( TP = new UITexturePalette( Particle.TP, this ) );
-            //=============================
+
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             TexSplit = new UIItemSplitView<UIItem>( Tex );
             UVSplit = new UIUVSetSplitView( UVSets, this );
             HasDependencies = false; // if imported, all set now
         }
+
         public void SetType() {
             Data?.Dispose();
             Data = Particle.ParticleVariety.Value switch {
@@ -129,25 +128,12 @@ namespace VFXEditor.Avfx.Vfx
             };
         }
 
-        private void DrawParameters(string id) {
-            ImGui.BeginChild( id);
-            NodeView.Draw( id );
-            DrawAttrs( id );
-            ImGui.EndChild();
-        }
-
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id);
-            Data.Draw( id );
-            ImGui.EndChild();
-        }
-
         public override void DrawBody( string parentId ) {
             var id = parentId + "/Ptcl";
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            //=====================
+
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Param" );
@@ -158,31 +144,38 @@ namespace VFXEditor.Avfx.Vfx
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplit.Draw( id + "/Animation");
+                    AnimationSplit.Draw( id + "/Animation" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "UV Sets" + id ) ) {
-                    UVSplit.Draw( id + "/UVSets");
+                    UVSplit.Draw( id + "/UVSets" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Textures" + id ) ) {
-                    TexSplit.Draw( id + "/Tex");
+                    TexSplit.Draw( id + "/Tex" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
             }
         }
 
-        public override string GetDefaultText() {
-            return "Particle " + Idx + "(" + Particle.ParticleVariety.StringValue() + ")";
+        private void DrawParameters( string id ) {
+            ImGui.BeginChild( id );
+            NodeView.Draw( id );
+            DrawList( Parameters, id );
+            ImGui.EndChild();
         }
 
-        public override string GetWorkspaceId() {
-            return $"Ptcl{Idx}";
+        private void DrawData( string id ) {
+            ImGui.BeginChild( id );
+            Data.Draw( id );
+            ImGui.EndChild();
         }
 
-        public override byte[] ToBytes() {
-            return Particle.ToAVFX().ToBytes();
-        }
+        public override string GetDefaultText() => $"Particle {Idx}({Particle.ParticleVariety.StringValue()})";
+
+        public override string GetWorkspaceId() => $"Ptcl{Idx}";
+
+        public override byte[] ToBytes() => Particle.ToAVFX().ToBytes();
     }
 }

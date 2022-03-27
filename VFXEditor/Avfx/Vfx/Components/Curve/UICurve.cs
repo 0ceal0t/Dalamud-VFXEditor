@@ -1,21 +1,17 @@
 using AVFXLib.Models;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UICurve : UIItem {
-        public AVFXCurve Curve;
-        public string Name;
-        public bool Color = false;
-        public bool Locked;
-        public UICurveEditor CurveEdit;
+        public readonly string Name;
+        private readonly AVFXCurve Curve;
+        private readonly bool Color = false;
+        private readonly bool Locked;
+        private List<UIBase> Parameters;
+        private  UICurveEditor CurveEdit;
 
         public UICurve( AVFXCurve curve, string name, bool color = false, bool locked = false ) {
             Curve = curve;
@@ -24,19 +20,21 @@ namespace VFXEditor.Avfx.Vfx {
             Locked = locked;
             Init();
         }
+
         public override void Init() {
             base.Init();
             if( !Curve.Assigned ) { Assigned = false; return; }
-            //=====================
+
             CurveEdit = new UICurveEditor( Curve, Color );
-            Attributes.Add( new UICombo<CurveBehavior>( "Pre Behavior", Curve.PreBehavior ) );
-            Attributes.Add( new UICombo<CurveBehavior>( "Post Behavior", Curve.PostBehavior ) );
+            Parameters = new List<UIBase> {
+                new UICombo<CurveBehavior>( "Pre Behavior", Curve.PreBehavior ),
+                new UICombo<CurveBehavior>( "Post Behavior", Curve.PostBehavior )
+            };
             if( !Color ) {
-                Attributes.Add( new UICombo<RandomType>( "Random Type", Curve.Random ) );
+                Parameters.Add( new UICombo<RandomType>( "Random Type", Curve.Random ) );
             }
         }
 
-        // ======= DRAW ================
         public override void Draw( string parentId ) {
             if( !Assigned ) {
                 DrawUnAssigned( parentId );
@@ -47,6 +45,7 @@ namespace VFXEditor.Avfx.Vfx {
                 ImGui.TreePop();
             }
         }
+
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 Curve.ToDefault();
@@ -63,13 +62,10 @@ namespace VFXEditor.Avfx.Vfx {
                     return;
                 }
             }
-            // =====================
-            DrawAttrs( id );
+            DrawList( Parameters, id );
             CurveEdit.Draw( id );
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
     }
 }

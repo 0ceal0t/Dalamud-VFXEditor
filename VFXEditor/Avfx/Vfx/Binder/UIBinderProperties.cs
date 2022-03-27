@@ -1,30 +1,28 @@
 using AVFXLib.Models;
 using ImGuiNET;
 using System.Collections.Generic;
-
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIBinderProperties : UIItem {
-        public AVFXBinderProperty Prop;
-        public string Name;
-
-        public UIParameters Parameters;
-        public UICurve3Axis Position;
-        public List<UIItem> Tabs;
+        private readonly AVFXBinderProperty Prop;
+        private readonly string Name;
+        private UIParameters Parameters;
+        private List<UIItem> Tabs;
 
         public UIBinderProperties( string name, AVFXBinderProperty prop ) {
             Prop = prop;
             Name = name;
             Init();
         }
+
         public override void Init() {
             base.Init();
             if( !Prop.Assigned ) { Assigned = false; return; }
-            //====================
+
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) ),
-                ( Position = new UICurve3Axis( Prop.Position, "Position" ) )
+                ( new UICurve3Axis( Prop.Position, "Position" ) )
             };
             Parameters.Add( new UICombo<BindPoint>( "Bind Point Type", Prop.BindPointType ) );
             Parameters.Add( new UICombo<BindTargetPoint>( "Bind Target Point Type", Prop.BindTargetPointType ) );
@@ -38,13 +36,13 @@ namespace VFXEditor.Avfx.Vfx {
             Parameters.Add( new UIFloat( "Ring Radius", Prop.RingRadius ) );
         }
 
-        // =========== DRAW =====================
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 Prop.ToDefault();
                 Init();
             }
         }
+
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
@@ -54,8 +52,6 @@ namespace VFXEditor.Avfx.Vfx {
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
     }
 }

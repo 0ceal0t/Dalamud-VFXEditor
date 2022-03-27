@@ -20,8 +20,6 @@ namespace VFXEditor.Tmb {
             return new TmbFile( br );
         }
 
-        // ==========================
-
         private readonly List<TmbActor> Actors = new();
         private readonly List<TmbTrack> Tracks = new();
         private readonly List<TmbItem> Entries = new();

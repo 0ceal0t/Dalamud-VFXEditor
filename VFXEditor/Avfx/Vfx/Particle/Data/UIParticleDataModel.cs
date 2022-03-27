@@ -1,39 +1,27 @@
 using AVFXLib.Models;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UIParticleDataModel : UIData {
-        public AVFXParticleDataModel Data;
         public UINodeSelectList<UIModel> ModelSelect;
         public UIParameters Parameters;
-        //==========================
 
-        public UIParticleDataModel(AVFXParticleDataModel data, UIParticle particle)
-        {
-            Data = data;
-            //=======================
+        public UIParticleDataModel( AVFXParticleDataModel data, UIParticle particle ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add(ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", particle.Main.Models, Data.ModelIdx ));
-            Parameters.Add( new UIInt( "Model Number Random", Data.ModelNumberRandomValue ) );
-            Parameters.Add( new UICombo<RandomType>( "Model Number Random Type", Data.ModelNumberRandomType ) );
-            Parameters.Add( new UIInt( "Model Number Random Interval", Data.ModelNumberRandomInterval ) );
-            Parameters.Add( new UICombo<FresnelType>( "Fresnel Type", Data.FresnelType ) );
-            Parameters.Add( new UICombo<DirectionalLightType>( "Directional Light Type", Data.DirectionalLightType ) );
-            Parameters.Add( new UICombo<PointLightType>( "Point Light Type", Data.PointLightType ) );
-            Parameters.Add( new UICheckbox( "Is Lightning", Data.IsLightning ) );
-            Parameters.Add( new UICheckbox( "Is Morph", Data.IsMorph ) );
+            Parameters.Add( ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", particle.Main.Models, data.ModelIdx ) );
+            Parameters.Add( new UIInt( "Model Number Random", data.ModelNumberRandomValue ) );
+            Parameters.Add( new UICombo<RandomType>( "Model Number Random Type", data.ModelNumberRandomType ) );
+            Parameters.Add( new UIInt( "Model Number Random Interval", data.ModelNumberRandomInterval ) );
+            Parameters.Add( new UICombo<FresnelType>( "Fresnel Type", data.FresnelType ) );
+            Parameters.Add( new UICombo<DirectionalLightType>( "Directional Light Type", data.DirectionalLightType ) );
+            Parameters.Add( new UICombo<PointLightType>( "Point Light Type", data.PointLightType ) );
+            Parameters.Add( new UICheckbox( "Is Lightning", data.IsLightning ) );
+            Parameters.Add( new UICheckbox( "Is Morph", data.IsMorph ) );
 
-            Tabs.Add( new UICurve( Data.Morph, "Morph" ) );
-            Tabs.Add( new UICurve( Data.FresnelCurve, "Fresnel Curve" ) );
-            Tabs.Add( new UICurve3Axis( Data.FresnelRotation, "Fresnel Rotation" ) );
-            Tabs.Add( new UICurveColor( Data.ColorBegin, "Color Begin" ) );
-            Tabs.Add( new UICurveColor( Data.ColorEnd, "Color End" ) );
+            Tabs.Add( new UICurve( data.Morph, "Morph" ) );
+            Tabs.Add( new UICurve( data.FresnelCurve, "Fresnel Curve" ) );
+            Tabs.Add( new UICurve3Axis( data.FresnelRotation, "Fresnel Rotation" ) );
+            Tabs.Add( new UICurveColor( data.ColorBegin, "Color Begin" ) );
+            Tabs.Add( new UICurveColor( data.ColorEnd, "Color End" ) );
         }
 
         public override void Dispose() {

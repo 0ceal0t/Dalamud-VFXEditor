@@ -1,4 +1,5 @@
 using AVFXLib.Models;
+using System.Collections.Generic;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEmitterItem : UIWorkspaceItem {
@@ -8,6 +9,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public UINodeSelect<UIParticle> ParticleSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
+        private readonly List<UIBase> Parameters;
 
         public UIEmitterItem( AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter ) {
             Iteration = iteration;
@@ -21,29 +23,31 @@ namespace VFXEditor.Avfx.Vfx {
                 EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.Main.Emitters, Iteration.TargetIdx );
             }
             //=========================
-            Attributes.Add( new UICheckbox( "Enabled", Iteration.Enabled ) );
-            Attributes.Add( new UIInt( "Local Direction", Iteration.LocalDirection ) );
-            Attributes.Add( new UIInt( "Create Time", Iteration.CreateTime ) );
-            Attributes.Add( new UIInt( "Create Count", Iteration.CreateCount ) );
-            Attributes.Add( new UIInt( "Create Probability", Iteration.CreateProbability ) );
-            Attributes.Add( new UIInt( "Parent Influence Coord", Iteration.ParentInfluenceCoord ) );
-            Attributes.Add( new UIInt( "Parent Influence Color", Iteration.ParentInfluenceColor ) );
-            Attributes.Add( new UIInt( "Influence Coord Scale", Iteration.InfluenceCoordScale ) );
-            Attributes.Add( new UIInt( "Influence Coord Rotation", Iteration.InfluenceCoordRot ) );
-            Attributes.Add( new UIInt( "Influence Coord Position", Iteration.InfluenceCoordPos ) );
-            Attributes.Add( new UIInt( "Influence Coord Binder Position", Iteration.InfluenceCoordBinderPosition ) );
-            Attributes.Add( new UIInt( "Influence Coord Unstickiness", Iteration.InfluenceCoordUnstickiness ) );
-            Attributes.Add( new UIInt( "Inherit Parent Velocity", Iteration.InheritParentVelocity ) );
-            Attributes.Add( new UIInt( "Inherit Parent Life", Iteration.InheritParentLife ) );
-            Attributes.Add( new UICheckbox( "Override Life", Iteration.OverrideLife ) );
-            Attributes.Add( new UIInt( "Override Life Value", Iteration.OverrideLifeValue ) );
-            Attributes.Add( new UIInt( "Override Life Random", Iteration.OverrideLifeRandom ) );
-            Attributes.Add( new UIInt( "Parameter Link", Iteration.ParameterLink ) );
-            Attributes.Add( new UIInt( "Start Frame", Iteration.StartFrame ) );
-            Attributes.Add( new UICheckbox( "Start Frame Null Update", Iteration.StartFrameNullUpdate ) );
-            Attributes.Add( new UIFloat3( "By Injection Angle", Iteration.ByInjectionAngleX, Iteration.ByInjectionAngleY, Iteration.ByInjectionAngleZ ) );
-            Attributes.Add( new UIInt( "Generate Delay", Iteration.GenerateDelay ) );
-            Attributes.Add( new UICheckbox( "Generate Delay By One", Iteration.GenerateDelayByOne ) );
+            Parameters = new List<UIBase> {
+                new UICheckbox( "Enabled", Iteration.Enabled ),
+                new UIInt( "Local Direction", Iteration.LocalDirection ),
+                new UIInt( "Create Time", Iteration.CreateTime ),
+                new UIInt( "Create Count", Iteration.CreateCount ),
+                new UIInt( "Create Probability", Iteration.CreateProbability ),
+                new UIInt( "Parent Influence Coord", Iteration.ParentInfluenceCoord ),
+                new UIInt( "Parent Influence Color", Iteration.ParentInfluenceColor ),
+                new UIInt( "Influence Coord Scale", Iteration.InfluenceCoordScale ),
+                new UIInt( "Influence Coord Rotation", Iteration.InfluenceCoordRot ),
+                new UIInt( "Influence Coord Position", Iteration.InfluenceCoordPos ),
+                new UIInt( "Influence Coord Binder Position", Iteration.InfluenceCoordBinderPosition ),
+                new UIInt( "Influence Coord Unstickiness", Iteration.InfluenceCoordUnstickiness ),
+                new UIInt( "Inherit Parent Velocity", Iteration.InheritParentVelocity ),
+                new UIInt( "Inherit Parent Life", Iteration.InheritParentLife ),
+                new UICheckbox( "Override Life", Iteration.OverrideLife ),
+                new UIInt( "Override Life Value", Iteration.OverrideLifeValue ),
+                new UIInt( "Override Life Random", Iteration.OverrideLifeRandom ),
+                new UIInt( "Parameter Link", Iteration.ParameterLink ),
+                new UIInt( "Start Frame", Iteration.StartFrame ),
+                new UICheckbox( "Start Frame Null Update", Iteration.StartFrameNullUpdate ),
+                new UIFloat3( "By Injection Angle", Iteration.ByInjectionAngleX, Iteration.ByInjectionAngleY, Iteration.ByInjectionAngleZ ),
+                new UIInt( "Generate Delay", Iteration.GenerateDelay ),
+                new UICheckbox( "Generate Delay By One", Iteration.GenerateDelayByOne )
+            };
         }
 
         public override void DrawBody( string parentId ) {
@@ -55,7 +59,7 @@ namespace VFXEditor.Avfx.Vfx {
             else {
                 EmitterSelect.Draw( id );
             }
-            DrawAttrs( id );
+            DrawList( Parameters, id );
         }
 
         public override string GetDefaultText() {

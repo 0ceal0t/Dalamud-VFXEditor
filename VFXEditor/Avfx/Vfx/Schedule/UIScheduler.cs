@@ -2,37 +2,30 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UIScheduler : UINode {
         public AVFXSchedule Scheduler;
         public AvfxFile Main;
-        // =================
         public List<UISchedulerItem> Items;
         public List<UISchedulerItem> Triggers;
-        // ================
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler(AvfxFile main, AVFXSchedule scheduler) : base( UINodeGroup.SchedColor, false ) {
+        public UIScheduler( AvfxFile main, AVFXSchedule scheduler ) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
             Main = main;
-            // ===================
             Items = new List<UISchedulerItem>();
             Triggers = new List<UISchedulerItem>();
-            // =====================
+
             foreach( var Item in Scheduler.Items ) {
-                Items.Add( new UISchedulerItem( Item, this, "Item") );
+                Items.Add( new UISchedulerItem( Item, this, "Item" ) );
             }
-            // =====================
+
             foreach( var Trigger in Scheduler.Triggers ) {
                 Triggers.Add( new UISchedulerItem( Trigger, this, "Trigger" ) );
             }
-            // ======================
+
             ItemSplit = new UIScheduleItemSplitView( Items, this );
             TriggerSplit = new UIItemSplitView<UISchedulerItem>( Triggers );
             HasDependencies = false; // if imported, all set now
@@ -40,7 +33,7 @@ namespace VFXEditor.Avfx.Vfx
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/Scheduler";
-            //=====================
+
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Items" + id ) ) {
                     ItemSplit.Draw( id + "/Item" );
@@ -53,13 +46,6 @@ namespace VFXEditor.Avfx.Vfx
                 ImGui.EndTabBar();
             }
         }
-        public override string GetDefaultText() {
-            return "Scheduler " + Idx;
-        }
-
-        public override string GetWorkspaceId() {
-            return $"Sched{Idx}";
-        }
 
         public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
             Items.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
@@ -71,8 +57,10 @@ namespace VFXEditor.Avfx.Vfx
             Triggers.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
         }
 
-        public override byte[] ToBytes() {
-            return Scheduler.ToAVFX().ToBytes();
-        }
+        public override string GetDefaultText() => $"Scheduler {Idx}";
+
+        public override string GetWorkspaceId() => $"Sched{Idx}";
+
+        public override byte[] ToBytes() => Scheduler.ToAVFX().ToBytes();
     }
 }

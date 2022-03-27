@@ -1,11 +1,4 @@
-using Dalamud.Logging;
-using ImGuiNET;
-using System.Collections.Generic;
-using System.IO;
-using System.Numerics;
 using VFXEditor.FileManager;
-using VFXEditor.Textools;
-using VFXEditor.Avfx;
 using VFXSelect;
 using VFXSelect.VFX;
 
@@ -39,8 +32,6 @@ namespace VFXEditor.Tmb {
         }
 
         public static readonly string PenumbraPath = "Tmb";
-
-        // =====================
 
         public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
 

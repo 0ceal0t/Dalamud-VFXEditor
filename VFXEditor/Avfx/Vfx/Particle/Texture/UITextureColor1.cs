@@ -2,16 +2,12 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureColor1 : UIItem {
         public AVFXTextureColor1 Tex;
         public UIParticle Particle;
-        //============================
         public UINodeSelectList<UITexture> TextureSelect;
         public List<UIItem> Tabs;
         public UIParameters Parameters;
@@ -25,11 +21,10 @@ namespace VFXEditor.Avfx.Vfx {
         public override void Init() {
             base.Init();
             if( !Tex.Assigned ) { Assigned = false; return; }
-            //====================
+
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
-
             Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UICheckbox( "Color To Alpha", Tex.ColorToAlpha ) );
@@ -45,7 +40,6 @@ namespace VFXEditor.Avfx.Vfx {
             Tabs.Add( new UICurve( Tex.TexN, "TexN" ) );
         }
 
-        // =========== DRAW =====================
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) {
                 Tex.ToDefault();
@@ -65,8 +59,6 @@ namespace VFXEditor.Avfx.Vfx {
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetDefaultText() {
-            return "Texture Color 1";
-        }
+        public override string GetDefaultText() => "Texture Color 1";
     }
 }

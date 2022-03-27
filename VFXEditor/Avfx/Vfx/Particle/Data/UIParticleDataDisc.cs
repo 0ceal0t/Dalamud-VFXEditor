@@ -1,37 +1,26 @@
 using AVFXLib.Models;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UIParticleDataDisc : UIData {
-        public AVFXParticleDataDisc Data;
         public UIParameters Parameters;
 
-        public UIParticleDataDisc(AVFXParticleDataDisc data)
-        {
-            Data = data;
-            //=======================
+        public UIParticleDataDisc( AVFXParticleDataDisc data ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add( new UIInt( "Parts Count", Data.PartsCount ) );
-            Parameters.Add( new UIInt( "Parts Count U", Data.PartsCountU ) );
-            Parameters.Add( new UIInt( "Parts Count V", Data.PartsCountV ) );
-            Parameters.Add( new UIFloat( "Point Interval Factor V", Data.PointIntervalFactoryV ) );
-            Tabs.Add( new UICurve( Data.Angle, "Angle" ) );
-            Tabs.Add( new UICurve( Data.HeightBeginInner, "Height Begin Inner" ) );
-            Tabs.Add( new UICurve( Data.HeightEndInner, "Height End Inner" ) );
-            Tabs.Add( new UICurve( Data.HeightBeginOuter, "Height Begin Outer" ) );
-            Tabs.Add( new UICurve( Data.HeightEndOuter, "Height End Outer" ) );
-            Tabs.Add( new UICurve( Data.WidthBegin, "Width Begin" ) );
-            Tabs.Add( new UICurve( Data.WidthEnd, "Width End" ) );
-            Tabs.Add( new UICurve( Data.RadiusBegin, "Radius Begin" ) );
-            Tabs.Add( new UICurve( Data.RadiusEnd, "Radius End" ) );
-            Tabs.Add( new UICurveColor( Data.ColorEdgeInner, "Color Edge Inner" ) );
-            Tabs.Add( new UICurveColor( Data.ColorEdgeOuter, "Color Edge Outer" ) );
+            Parameters.Add( new UIInt( "Parts Count", data.PartsCount ) );
+            Parameters.Add( new UIInt( "Parts Count U", data.PartsCountU ) );
+            Parameters.Add( new UIInt( "Parts Count V", data.PartsCountV ) );
+            Parameters.Add( new UIFloat( "Point Interval Factor V", data.PointIntervalFactoryV ) );
+            Tabs.Add( new UICurve( data.Angle, "Angle" ) );
+            Tabs.Add( new UICurve( data.HeightBeginInner, "Height Begin Inner" ) );
+            Tabs.Add( new UICurve( data.HeightEndInner, "Height End Inner" ) );
+            Tabs.Add( new UICurve( data.HeightBeginOuter, "Height Begin Outer" ) );
+            Tabs.Add( new UICurve( data.HeightEndOuter, "Height End Outer" ) );
+            Tabs.Add( new UICurve( data.WidthBegin, "Width Begin" ) );
+            Tabs.Add( new UICurve( data.WidthEnd, "Width End" ) );
+            Tabs.Add( new UICurve( data.RadiusBegin, "Radius Begin" ) );
+            Tabs.Add( new UICurve( data.RadiusEnd, "Radius End" ) );
+            Tabs.Add( new UICurveColor( data.ColorEdgeInner, "Color Edge Inner" ) );
+            Tabs.Add( new UICurveColor( data.ColorEdgeOuter, "Color Edge Outer" ) );
         }
     }
 }

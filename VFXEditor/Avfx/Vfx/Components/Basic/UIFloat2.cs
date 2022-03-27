@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using ImGuiNET;
 using AVFXLib.Models;
 using System.Numerics;
@@ -13,7 +8,6 @@ namespace VFXEditor.Avfx.Vfx {
     public class UIFloat2 : UIBase {
         public string Name;
         public Vector2 Value;
-
         public LiteralFloat Literal1;
         public LiteralFloat Literal2;
 

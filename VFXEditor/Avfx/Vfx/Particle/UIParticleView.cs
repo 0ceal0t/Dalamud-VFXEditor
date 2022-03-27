@@ -1,14 +1,9 @@
 using AVFXLib.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
 using AVFXLib.AVFX;
 
-namespace VFXEditor.Avfx.Vfx
-{
+namespace VFXEditor.Avfx.Vfx {
     public class UIParticleView : UIDropdownView<UIParticle> {
         public UIParticleView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" ) {
             Group = Main.Particles;

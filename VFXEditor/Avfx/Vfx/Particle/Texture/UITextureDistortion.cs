@@ -2,9 +2,6 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -12,7 +9,6 @@ namespace VFXEditor.Avfx.Vfx {
         public AVFXTextureDistortion Tex;
         public UIParticle Particle;
         public string Name;
-        //============================
         public UINodeSelect<UITexture> TextureSelect;
         public List<UIItem> Tabs;
         public UIParameters Parameters;
@@ -26,7 +22,7 @@ namespace VFXEditor.Avfx.Vfx {
         public override void Init() {
             base.Init();
             if( !Tex.Assigned ) { Assigned = false; return; }
-            //====================
+
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
@@ -45,13 +41,13 @@ namespace VFXEditor.Avfx.Vfx {
             Tabs.Add( new UICurve( Tex.DPow, "Power" ) );
         }
 
-        // =========== DRAW =====================
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) {
                 Tex.ToDefault();
                 Init();
             }
         }
+
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TD";
             if( UiHelper.RemoveButton( "Delete Texture Distortion" + id, small: true ) ) {
@@ -64,8 +60,6 @@ namespace VFXEditor.Avfx.Vfx {
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetDefaultText() {
-            return "Texture Distortion";
-        }
+        public override string GetDefaultText() => "Texture Distortion";
     }
 }

@@ -1,15 +1,11 @@
 using AVFXLib.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
 using AVFXLib.AVFX;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITimelineView : UIDropdownView<UITimeline> {
-        public UITimelineView(AvfxFile main, AVFXBase avfx) : base(main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
+        public UITimelineView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
             Group = main.Timelines;
             Group.Items = AVFX.Timelines.Select( item => new UITimeline( Main, item ) ).ToList();
         }
@@ -18,9 +14,7 @@ namespace VFXEditor.Avfx.Vfx {
             AVFX.RemoveTimeline( item.Timeline );
         }
 
-        public override byte[] OnExport( UITimeline item ) {
-            return item.Timeline.ToAVFX().ToBytes();
-        }
+        public override byte[] OnExport( UITimeline item ) => item.Timeline.ToAVFX().ToBytes();
 
         public override UITimeline OnImport( AVFXNode node, bool has_dependencies = false ) {
             var item = new AVFXTimeline();

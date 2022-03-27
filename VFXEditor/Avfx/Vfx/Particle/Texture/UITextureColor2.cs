@@ -2,9 +2,6 @@ using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -12,7 +9,6 @@ namespace VFXEditor.Avfx.Vfx {
         public AVFXTextureColor2 Tex;
         public UIParticle Particle;
         public string Name;
-        //============================
         public UINodeSelect<UITexture> TextureSelect;
         public List<UIItem> Tabs;
         public UIParameters Parameters;
@@ -23,14 +19,14 @@ namespace VFXEditor.Avfx.Vfx {
             Particle = particle;
             Init();
         }
+
         public override void Init() {
             base.Init();
             if( !Tex.Assigned ) { Assigned = false; return; }
-            //====================
+
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
-
             Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UICheckbox( "Color To Alpha", Tex.ColorToAlpha ) );
@@ -44,7 +40,6 @@ namespace VFXEditor.Avfx.Vfx {
             Parameters.Add( new UICombo<TextureCalculateAlpha>( "Calculate Alpha", Tex.TextureCalculateAlpha ) );
         }
 
-        // =========== DRAW =====================
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 Tex.ToDefault();
@@ -64,8 +59,6 @@ namespace VFXEditor.Avfx.Vfx {
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => "Name";
     }
 }

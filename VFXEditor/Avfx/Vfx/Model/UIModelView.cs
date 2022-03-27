@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIModelView : UINodeSplitView<UIModel> {
-        public UIModelView(AvfxFile main, AVFXBase avfx) : base(main, avfx, "##MDL") {
+        public UIModelView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##MDL" ) {
             Group = main.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
         }
