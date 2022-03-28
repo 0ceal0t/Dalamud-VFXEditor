@@ -71,11 +71,11 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        public static bool ImportModel( string path, out List<Vertex> vOut, out List<Index> iOut ) {
+        public static bool ImportModel( string localPath, out List<Vertex> vOut, out List<Index> iOut ) {
             vOut = new List<Vertex>();
             iOut = new List<Index>();
-            var model = SharpGLTF.Schema2.ModelRoot.Load( path );
-            PluginLog.Log( "Importing GLTF from: " + path );
+            var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
+            PluginLog.Log( "Importing GLTF from: " + localPath );
 
             if( model.LogicalMeshes.Count > 0 ) {
                 var mesh = model.LogicalMeshes[0];

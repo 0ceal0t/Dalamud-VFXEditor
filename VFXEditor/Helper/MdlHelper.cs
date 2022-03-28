@@ -10,26 +10,29 @@ using VfxIndex = AVFXLib.Models.Index;
 
 namespace VFXEditor.Helper {
     public static class MdlHelper {
-       /* public static bool ImportModel( string path, out List<VfxVertex> vOut, out List<VfxIndex> iOut ) {
+       public static bool ImportModel( string localPath, out List<VfxVertex> vOut, out List<VfxIndex> iOut ) {
             vOut = new List<VfxVertex>();
             iOut = new List<VfxIndex>();
-            if( !Plugin.DataManager.FileExists( path ) ) return false;
+            if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
-            PluginLog.Log( "Importing MDL from: " + path );
+            PluginLog.Log( "Importing MDL from: " + localPath );
 
-            var file = Plugin.DataManager.GetFile<MdlFile>( path );
+            var file = Plugin.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
 
             foreach( var mesh in mdl.GetMeshesByType(Mesh.MeshType.Main) ) {
                 foreach( var v in mesh.Vertices ) {
                     
                 }
+                foreach( var i in mesh.Indices) {
+
+                }
             }
 
             return true;
         }
 
-        private static VfxVertex GetAVFXVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static VfxVertex GetAVFXVert( Vector4 pos, Vector4 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
             var ret = new VfxVertex();
             color *= 255;
             normal *= 128;
@@ -47,6 +50,6 @@ namespace VFXEditor.Helper {
             ret.UV2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
 
             return ret;
-        }*/
+        }
     }
 }

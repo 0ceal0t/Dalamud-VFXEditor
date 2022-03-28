@@ -9,7 +9,7 @@ Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
-2. Enable the plugins from the `/xlplugins` menu
+2. Install the plugin from the `/xlplugins` menu
 3. Once installed, open with `/vfxedit`
 
 ## Usage
@@ -22,7 +22,9 @@ Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud
 
 If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues) or ask in the [QuickLauncher discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
 
-## Building
+## Manually Building
+> Only do this if you know what you're doing
+
 1. Build the solution
 2. Place the files inside of `AppData\Roaming\XIVLauncher\devPlugins`, or wherever the `devPlugins` folder of your QuickLauncher installation is located
 3. Run QuickLauncher
