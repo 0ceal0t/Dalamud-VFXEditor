@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
@@ -95,12 +95,6 @@
             <HintPath>$(DALAMUD_ROOT)\Newtonsoft.Json.dll</HintPath>
             <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
             <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="System.Drawing.Common">
-            <HintPath>$(DALAMUD_ROOT)\System.Drawing.Common.dll</HintPath>
-            <HintPath>..\libs\System.Drawing.Common.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\System.Drawing.Common.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Reloaded.Hooks.Definitions">

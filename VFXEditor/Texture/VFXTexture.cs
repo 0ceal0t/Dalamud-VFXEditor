@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -7,6 +6,7 @@ using System.Runtime.InteropServices;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
 
+using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 
@@ -64,18 +64,19 @@ namespace VFXEditor.Texture {
         public byte[] GetDDSData() => Local ? RawData : DataSpan[HeaderLength..].ToArray();
 
         public void SaveAsPNG( string path ) {
-            var bmp = new Bitmap( Header.Width, Header.Height );
+            var data = new RGBAQuad[Header.Height * Header.Width];
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
-                    var _idx = ( i * Header.Width + j ) * 4;
-                    int r = ImageData[_idx];
-                    int g = ImageData[_idx + 1];
-                    int b = ImageData[_idx + 2];
-                    int a = ImageData[_idx + 3];
-                    bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+                    var dataIdx = ( i * Header.Width + j );
+                    var imageDataIdx = dataIdx * 4;
+                    data[dataIdx] = new RGBAQuad( ImageData[imageDataIdx], ImageData[imageDataIdx + 1], ImageData[imageDataIdx + 2], ImageData[imageDataIdx + 3] );
                 }
             }
-            bmp.Save( path, System.Drawing.Imaging.ImageFormat.Png );
+            var ptr = MemoryHelper.PinObject( data );
+            var image = Surface.LoadFromRawData( ptr, Header.Width, Header.Height, Header.Width * 4, false, true );
+            if( image == null ) return;
+
+            image.SaveToFile( ImageFormat.PNG, path );
         }
 
         public void SaveAsDDS( string path ) {

@@ -31,17 +31,13 @@ namespace VFXEditor.Interop {
         private int WaitFrames = 0;
 
         // ===== FILES =========
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
 
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
 
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceSyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown );
 
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
             uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
 
@@ -52,51 +48,40 @@ namespace VFXEditor.Interop {
         public ReadFilePrototype ReadFile { get; private set; }
 
         //====== STATIC ===========
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxCreateDelegate( string path, string pool );
         public StaticVfxCreateDelegate StaticVfxCreate;
 
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxRunDelegate( IntPtr vfx, float a1, uint a2 );
         public StaticVfxRunDelegate StaticVfxRun;
 
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr StaticVfxRemoveDelegate( IntPtr vfx );
         public StaticVfxRemoveDelegate StaticVfxRemove;
 
         // ======= STATIC HOOKS ========
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
         public Hook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
 
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
         public Hook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public ActorVfxCreateDelegate ActorVfxCreate;
 
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl, CharSet = CharSet.Ansi )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate( IntPtr vfx, char a2 );
         public ActorVfxRemoveDelegate ActorVfxRemove;
 
         // ======== ACTOR HOOKS =============
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public Hook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
 
-        [Function( CallingConventions.Microsoft )]
         public unsafe delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
         public Hook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
         public delegate IntPtr GetMatrixSingletonDelegate();
         public GetMatrixSingletonDelegate GetMatrixSingleton { get; private set; }
 
-        [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
         public unsafe delegate IntPtr GetFileManagerDelegate();
         private GetFileManagerDelegate GetFileManager;
         private GetFileManagerDelegate GetFileManager2;
@@ -108,8 +93,6 @@ namespace VFXEditor.Interop {
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
         private unsafe delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
         private RequestFileDelegate RequestFile;
-
-        // ================================
 
         public ResourceLoader() {
             Crc32 = new();
@@ -404,7 +387,7 @@ namespace VFXEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug(gamePath) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString("X8") );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString("X8") );
 
             if( gameResource != IntPtr.Zero ) {
                 PrepPap( gameResource, papIds );
@@ -499,6 +482,6 @@ namespace VFXEditor.Interop {
             return ret;
         }
 
-        private bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" );
+        private static bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" );
     }
 }
