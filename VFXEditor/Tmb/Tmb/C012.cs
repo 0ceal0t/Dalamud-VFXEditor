@@ -8,7 +8,6 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C012 : TmbItem {
-        private short Time = 0;
         private int Unk_2 = 30;
         private int Unk_3 = 0;
         private string Path = "";
@@ -23,15 +22,15 @@ namespace VFXEditor.Tmb.Tmb {
         private Vector3 Position = new( 0 );
         private Vector4 RGBA = new( 1 );
 
-        public static readonly string Name = "VFX (C012)";
+        public static readonly string DisplayName = "VFX (C012)";
+        public override string GetDisplayName() => DisplayName;
+        public override string GetName() => "C012";
 
-        public C012() {
-        }
+        public C012() { }
         public C012( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C012] + 8
 
-            reader.ReadInt16(); // id
-            Time = reader.ReadInt16();
+            ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
 
@@ -64,10 +63,7 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            FileHelper.WriteString( entryWriter, "C012" );
-            entryWriter.Write( GetSize() );
-            entryWriter.Write( Id );
-            entryWriter.Write( Time );
+            WriteInfo( entryWriter );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
 
@@ -90,10 +86,8 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Unk_5 );
         }
 
-        public override string GetName() => Name;
-
         public override void Draw( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            DrawInfo( id );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );

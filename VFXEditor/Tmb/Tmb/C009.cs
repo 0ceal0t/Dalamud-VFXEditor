@@ -1,29 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Logging;
 using ImGuiNET;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     // Pap Animation
     public class C009 : TmbItem {
-        private short Time = 0;
         private int Unk_2 = 50;
         private int Unk_3 = 0;
         private string Path = "";
 
-        public static readonly string Name = "Animation - PAP Only (C009)";
+        public static readonly string DisplayName = "Animation - PAP Only (C009)";
+        public override string GetDisplayName() => DisplayName;
+        public override string GetName() => "C009";
 
         public C009() { }
         public C009( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C009] + 8
 
-            reader.ReadInt16(); // id
-            Time = reader.ReadInt16();
+            ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
 
@@ -42,20 +38,15 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            FileHelper.WriteString( entryWriter, "C009" );
-            entryWriter.Write( GetSize() );
-            entryWriter.Write( Id );
-            entryWriter.Write( Time );
+            WriteInfo( entryWriter );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
 
             entryWriter.Write( offset );
         }
 
-        public override string GetName() => Name;
-
         public override void Draw( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            DrawInfo( id );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );

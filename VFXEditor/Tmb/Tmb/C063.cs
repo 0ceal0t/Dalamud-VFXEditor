@@ -4,23 +4,22 @@ using ImGuiNET;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
-    // Sound
     public class C063 : TmbItem {
-        private short Time = 0;
         private int Unk_2 = 1;
         private int Unk_3 = 0;
         private string Path = "";
         private int SoundIndex = 1;
         private int Unk_5 = 0;
 
-        public static readonly string Name = "Sound (C063)";
+        public static readonly string DisplayName = "Sound (C063)";
+        public override string GetDisplayName() => DisplayName;
+        public override string GetName() => "C063";
 
         public C063() { }
         public C063( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position; // [C063] + 8
 
-            reader.ReadInt16(); // id
-            Time = reader.ReadInt16();
+            ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
 
@@ -42,10 +41,7 @@ namespace VFXEditor.Tmb.Tmb {
             var endPos = stringPositions[Path] + stringPos;
             var offset = endPos - startPos - 8;
 
-            FileHelper.WriteString( entryWriter, "C063" );
-            entryWriter.Write( GetSize() );
-            entryWriter.Write( Id );
-            entryWriter.Write( Time );
+            WriteInfo( entryWriter );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
 
@@ -55,10 +51,8 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Unk_5 );
         }
 
-        public override string GetName() => Name;
-
         public override void Draw( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            DrawInfo( id );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );

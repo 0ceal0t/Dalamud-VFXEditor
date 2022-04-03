@@ -5,7 +5,6 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C175 : TmbItem {
-        private short Time = 0;
         private int Unk_2 = 0;
         private int Unk_3 = 0;
         private int Unk_4 = 4;
@@ -14,12 +13,13 @@ namespace VFXEditor.Tmb.Tmb {
         private int Unk_7 = 1;
         private int Unk_8 = 0;
 
-        public static readonly string Name = "C175";
+        public static readonly string DisplayName = "C175";
+        public override string GetDisplayName() => DisplayName;
+        public override string GetName() => "C175";
 
         public C175() { }
         public C175( BinaryReader reader ) {
-            reader.ReadInt16(); // id
-            Time = reader.ReadInt16();
+            ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
             Unk_4 = reader.ReadInt32();
@@ -33,10 +33,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetExtraSize() => 0;
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
-            FileHelper.WriteString( entryWriter, "C175" );
-            entryWriter.Write( GetSize() );
-            entryWriter.Write( Id );
-            entryWriter.Write( Time );
+            WriteInfo( entryWriter );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
             entryWriter.Write( Unk_4 );
@@ -46,10 +43,8 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Unk_8 );
         }
 
-        public override string GetName() => Name;
-
         public override void Draw( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            DrawInfo( id );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );

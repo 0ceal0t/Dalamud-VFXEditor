@@ -1,28 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Logging;
 using ImGuiNET;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public class C053 : TmbItem {
-        private short Time = 0;
         private int Unk_2 = 0;
         private int Unk_3 = 0;
         private short Unk_4 = 0;
         private short Unk_5 = 0;
         private int Unk_6 = 0;
 
-        public static readonly string Name = "C053";
+        public static readonly string DisplayName = "C053";
+        public override string GetDisplayName() => DisplayName;
+        public override string GetName() => "C053";
 
         public C053() { }
         public C053( BinaryReader reader ) {
-            reader.ReadInt16(); // id
-            Time = reader.ReadInt16();
+            ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
             Unk_4 = reader.ReadInt16();
@@ -34,10 +30,7 @@ namespace VFXEditor.Tmb.Tmb {
         public override int GetExtraSize() => 0;
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
-            FileHelper.WriteString( entryWriter, "C053" );
-            entryWriter.Write( GetSize() );
-            entryWriter.Write( Id );
-            entryWriter.Write( Time );
+            WriteInfo( entryWriter );
             entryWriter.Write( Unk_2 );
             entryWriter.Write( Unk_3 );
             entryWriter.Write( Unk_4 );
@@ -45,10 +38,8 @@ namespace VFXEditor.Tmb.Tmb {
             entryWriter.Write( Unk_6 );
         }
 
-        public override string GetName() => Name;
-
         public override void Draw( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            DrawInfo( id );
             ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
             ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
             FileHelper.ShortInput( $"Unknown 4{id}", ref Unk_4 );

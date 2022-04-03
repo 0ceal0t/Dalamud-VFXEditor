@@ -2,28 +2,46 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Tmb.Tmb {
     public abstract class TmbItem {
         public short Id { get; protected set; }
-
-        public abstract int GetSize();
-        public abstract int GetExtraSize();
-        public abstract string GetName();
-
-        public abstract void Draw( string id );
+        protected short Time = 0;
 
         public void CalculateId( ref short id ) {
             Id = id++;
         }
 
+        protected void ReadInfo(BinaryReader reader) {
+            reader.ReadInt16(); // id
+            Time = reader.ReadInt16();
+        }
+
+        public abstract int GetSize();
+        public abstract int GetExtraSize();
+        public abstract string GetName();
+        public abstract string GetDisplayName();
+
+        public abstract void Draw( string id );
+
+        protected void DrawInfo(string id) {
+            FileHelper.ShortInput( $"Time{id}", ref Time );
+        }
+
         public abstract void PopulateStringList( List<string> stringList );
 
         public abstract void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos );
+
+        protected void WriteInfo( BinaryWriter entryWriter ) {
+            FileHelper.WriteString( entryWriter, GetName() );
+            entryWriter.Write( GetSize() );
+            entryWriter.Write( Id );
+            entryWriter.Write( Time );
+        }
+
+        // ===========================
 
         public static void AddString( string newItem, List<string> stringList ) {
             if( stringList.Contains( newItem ) ) return;
