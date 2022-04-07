@@ -22,7 +22,7 @@ namespace VFXEditor.Avfx.Vfx {
 
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) ),
-                ( new UICurve3Axis( Prop.Position, "Position" ) )
+                new UICurve3Axis( Prop.Position, "Position" )
             };
             Parameters.Add( new UICombo<BindPoint>( "Bind Point Type", Prop.BindPointType ) );
             Parameters.Add( new UICombo<BindTargetPoint>( "Bind Target Point Type", Prop.BindTargetPointType ) );
