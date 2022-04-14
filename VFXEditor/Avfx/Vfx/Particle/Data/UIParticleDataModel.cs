@@ -22,6 +22,7 @@ namespace VFXEditor.Avfx.Vfx {
             Tabs.Add( new UICurve3Axis( data.FresnelRotation, "Fresnel Rotation" ) );
             Tabs.Add( new UICurveColor( data.ColorBegin, "Color Begin" ) );
             Tabs.Add( new UICurveColor( data.ColorEnd, "Color End" ) );
+            Tabs.Add( new UICurve( data.AnimationNumber, "Animation Number" ) );
         }
 
         public override void Dispose() {

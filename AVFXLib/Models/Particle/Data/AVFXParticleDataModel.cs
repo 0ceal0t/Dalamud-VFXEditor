@@ -16,7 +16,7 @@ namespace AVFXLib.Models {
         public LiteralBool IsLightning = new( "bLgt" );
         public LiteralBool IsMorph = new( "bShp" );
         public LiteralIntList ModelIdx = new( "MdNo" );
-
+        public AVFXCurve AnimationNumber = new( "NoAn" );
         public AVFXCurve Morph = new( "Moph" );
         public AVFXCurve FresnelCurve = new( "FrC" );
         public AVFXCurve3Axis FresnelRotation = new( "FrRt" );
@@ -35,6 +35,7 @@ namespace AVFXLib.Models {
                 IsLightning,
                 IsMorph,
                 ModelIdx,
+                AnimationNumber,
                 Morph,
                 FresnelCurve,
                 FresnelRotation,

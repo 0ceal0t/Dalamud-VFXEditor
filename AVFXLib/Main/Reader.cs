@@ -155,7 +155,8 @@ namespace AVFXLib.Main {
             "AnY",
             "CF",
             "TexN",
-            "TexNR"
+            "TexNR",
+            "NoAn"
         } );
 
         private static readonly HashSet<string> NOT_NESTED_LARGE = new( new string[]{ // not nested, larger than 8 bytes
