@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Game;
 using Dalamud.Interface;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiNET;
 using VFXEditor.Avfx.Vfx;
@@ -57,6 +58,7 @@ namespace VFXEditor.Avfx.Views {
             var cursorY = ( int )io.MousePos.Y;
 
             T deleteEntry = null;
+            bool newItemAdded = false;
 
             ImGui.BeginGroup();
             var drawList = ImGui.GetWindowDrawList();
@@ -111,6 +113,7 @@ namespace VFXEditor.Avfx.Views {
             ImGui.PushStyleColor( ImGuiCol.FrameBg, 0 );
             ImGui.BeginChildFrame( 889, childFrameSize );
             ImGui.InvisibleButton( "SeqContentBar", new Vector2( canvasSize.X, controlHeight ) );
+
             var contentMin = ImGui.GetItemRectMin();
             var contentMax = ImGui.GetItemRectMax();
 
@@ -122,6 +125,7 @@ namespace VFXEditor.Avfx.Views {
                 Selected = OnNew();
                 Selected.Idx = Items.Count;
                 Items.Add( Selected );
+                newItemAdded = true;
             }
 
             var modFrameCount = 10;
@@ -178,12 +182,12 @@ namespace VFXEditor.Avfx.Views {
                 var itemPosBase = new Vector2( contentMin.X, contentMin.Y + i * ItemHeight );
                 var itemPos = new Vector2( contentMin.X + 3, contentMin.Y + i * ItemHeight + 2 );
 
-                if( Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Selected = item;
+                if( !newItemAdded && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Selected = item;
 
                 drawList.AddText( itemPos, 0xFFFFFFFF, item.GetText() );
 
                 var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y + 2 ), false );
-                if( overDelete && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) deleteEntry = item;
+                if( !newItemAdded && overDelete && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) deleteEntry = item;
             }
 
             for( var i = 0; i < count; i++ ) {
