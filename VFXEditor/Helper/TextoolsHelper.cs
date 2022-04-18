@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 
 namespace VFXEditor.Helper {
     public static class TextoolsHelper {

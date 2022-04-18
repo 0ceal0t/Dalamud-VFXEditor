@@ -52,12 +52,14 @@ namespace VFXEditor.AVFX.VFX {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+
+            if( Tex.GetName() != "TC2" && UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Tex.SetAssigned( false );
 
                 TextureSelect.DeleteSelect();
                 return;
             }
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Tabs, id );
         }

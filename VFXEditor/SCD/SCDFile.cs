@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using Dalamud.Logging;
 using Lumina.Extensions;
 
-namespace VFXEditor.Data.Sound {
+namespace VFXEditor.Data.SCD {
     public class ScdFile : Lumina.Data.FileResource {
         // https://github.com/goaaats/ffxiv-explorer-fork/blob/748028c3257f2c4010b63997993ea9af0061c4cc/src/main/java/com/fragmenterworks/ffxivextract/models/SCD_File.java
         // http://ffxivexplorer.fragmenterworks.com/research/scd%20files.txt

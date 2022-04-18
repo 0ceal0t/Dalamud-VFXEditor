@@ -18,9 +18,9 @@ namespace VFXSelect.Select.Rows {
             RowId = ( int )emote.RowId;
             Name = emote.Name;
             Icon = emote.Icon;
-            // "chara/human/c1101/animation/a0001/bt_common/emote_sp/sp08.pap"
-            var emoteKeys = emote.ActionTimeline;
-            foreach( var e in emoteKeys ) {
+
+            // chara/human/c1101/animation/a0001/bt_common/emote_sp/sp08.pap
+            foreach( var e in emote.ActionTimeline ) {
                 var emoteKey = e.Value?.Key.ToString();
                 if( !string.IsNullOrEmpty( emoteKey ) && emoteKey.Contains( "emote_sp" ) ) {
                     PapFiles.Add( RootPath + emoteKey + ".pap" );

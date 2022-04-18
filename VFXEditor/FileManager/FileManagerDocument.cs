@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.Helper;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 using VFXSelect;
 
 namespace VFXEditor.FileManager {

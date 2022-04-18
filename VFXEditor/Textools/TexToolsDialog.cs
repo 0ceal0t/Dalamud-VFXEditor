@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 using VFXEditor.Helper;
 using VFXEditor.Dialogs;
 
-namespace VFXEditor.Textools {
+namespace VFXEditor.TexTools {
     public struct TTMPL {
         public string TTMPVersion;
         public string Name;

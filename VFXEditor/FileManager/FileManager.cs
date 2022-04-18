@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VFXEditor.Helper;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 using VFXEditor.Dialogs;
 using VFXSelect;
 namespace VFXEditor.FileManager {

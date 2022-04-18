@@ -4,7 +4,7 @@ using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.Helper;
 using VFXEditor.Penumbra;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 using VFXEditor.Texture;
 using VFXEditor.TMB;
 using VFXEditor.Tracker;

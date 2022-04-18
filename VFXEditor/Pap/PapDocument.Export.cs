@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using VFXEditor.Helper;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 
 namespace VFXEditor.PAP {
     public partial class PAPDocument {

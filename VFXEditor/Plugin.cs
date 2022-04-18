@@ -12,7 +12,6 @@ using VFXEditor.DirectX;
 using VFXEditor.Texture;
 using VFXEditor.Tracker;
 using VFXEditor.Interop;
-using VFXEditor.Helper;
 using VFXEditor.Structs.Vfx;
 
 using VFXSelect;
@@ -26,7 +25,7 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using VFXEditor.Dialogs;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 using VFXEditor.Penumbra;
 using VFXEditor.PAP;
 using Dalamud.Logging;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Helper;
-using VFXEditor.Textools;
+using VFXEditor.TexTools;
 
 namespace VFXEditor.AVFX {
     public partial class AVFXDocument {
