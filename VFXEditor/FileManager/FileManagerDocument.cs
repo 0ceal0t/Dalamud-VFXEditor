@@ -125,7 +125,7 @@ namespace VFXEditor.FileManager {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSource();
             }
@@ -142,7 +142,7 @@ namespace VFXEditor.FileManager {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplace();
             }

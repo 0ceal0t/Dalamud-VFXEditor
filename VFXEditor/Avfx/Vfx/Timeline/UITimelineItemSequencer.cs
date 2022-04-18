@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using VFXEditor.Avfx.Views;
+using VFXEditor.AVFX.Views;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITimelineItemSequencer : ImGuiSequencer<UITimelineItem> {
         public UITimeline Timeline;
 

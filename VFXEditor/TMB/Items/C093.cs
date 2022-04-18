@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C093 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C093 : TMBItem {
         private int Unk_2 = 30;
         private int Unk_3 = 0;
         private readonly List<List<float>> Unk_Pairs;

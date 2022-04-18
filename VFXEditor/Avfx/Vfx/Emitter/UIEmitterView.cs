@@ -4,9 +4,9 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
-        public UIEmitterView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
+        public UIEmitterView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
             Group = main.Emitters;
             Group.Items = AVFX.Emitters.Select( item => new UIEmitter( Main, item ) ).ToList();
         }

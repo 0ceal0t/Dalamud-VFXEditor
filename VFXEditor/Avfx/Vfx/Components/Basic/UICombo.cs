@@ -3,7 +3,7 @@ using ImGuiNET;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UICombo<T> : UIBase {
         public readonly string Name;
         public int ValueIdx;

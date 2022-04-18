@@ -7,15 +7,15 @@ using VFXEditor.Helper;
 using VFXEditor.AVFXLib.Texture;
 using System.IO;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITexture : UINode {
-        public AvfxFile Main;
+        public AVFXFile Main;
         public AVFXTexture Texture;
         public string lastValue;
         public UIString Path;
         public UINodeGraphView NodeView;
 
-        public UITexture( AvfxFile main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
+        public UITexture( AVFXFile main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
             Main = main;
             Texture = texture;
             NodeView = new UINodeGraphView( this );
@@ -65,9 +65,9 @@ namespace VFXEditor.Avfx.Vfx {
 
                 // ===== IMPORTED TEXTURE =======
                 if( t.IsReplaced ) {
-                    ImGui.TextColored( UiHelper.RED_COLOR, "Replaced with imported texture" );
+                    ImGui.TextColored( UIHelper.RED_COLOR, "Replaced with imported texture" );
                     ImGui.SameLine();
-                    if( UiHelper.RemoveButton( "Remove" + id, small: true ) ) {
+                    if( UIHelper.RemoveButton( "Remove" + id, small: true ) ) {
                         Plugin.TextureManager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
                         Plugin.TextureManager.RefreshPreviewTexture( currentPathValue.Trim( '\0' ) );
                     }

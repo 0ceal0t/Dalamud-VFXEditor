@@ -2,7 +2,7 @@ using ImGuiNET;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UICheckbox : UIBase {
         public readonly string Name;
         public bool Value;

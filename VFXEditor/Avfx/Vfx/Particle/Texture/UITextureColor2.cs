@@ -5,7 +5,7 @@ using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITextureColor2 : UIItem {
         public readonly AVFXParticleTextureColor2 Tex;
         public readonly UIParticle Particle;
@@ -52,7 +52,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+            if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Tex.SetAssigned( false );
 
                 TextureSelect.DeleteSelect();

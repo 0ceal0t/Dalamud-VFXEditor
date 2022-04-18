@@ -159,7 +159,7 @@ namespace VFXEditor.FileManager {
                     }
                     if( !deleteDisabled ) {
                         ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
-                        if( UiHelper.RemoveButton( "Delete" + id ) ) {
+                        if( UIHelper.RemoveButton( "Delete" + id ) ) {
                             RemoveDocument( SelectedDocument );
                             SelectedDocument = ActiveDocument;
                         }

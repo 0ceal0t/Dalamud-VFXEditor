@@ -1,7 +1,7 @@
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEmitterDataModel : UIData {
         public UIParameters Parameters;
         public UINodeSelect<UIModel> ModelSelect;

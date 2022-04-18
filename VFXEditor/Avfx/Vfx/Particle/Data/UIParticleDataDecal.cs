@@ -1,6 +1,6 @@
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleDataDecal : UIData {
         public UIParameters Parameters;
 

@@ -9,17 +9,17 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using VFXEditor.Helper;
-using VFXEditor.Avfx.Vfx;
+using VFXEditor.AVFX.VFX;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class ExportDialog {
-        public AvfxFile Main;
+        public AVFXFile Main;
         private readonly List<ExportDialogCategory> Categories;
 
         public bool Visible = false;
         public bool ExportDeps = true;
 
-        public ExportDialog( AvfxFile main ) {
+        public ExportDialog( AVFXFile main ) {
             Main = main;
             Categories = new List<ExportDialogCategory> {
                 new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ),
@@ -46,7 +46,7 @@ namespace VFXEditor.Avfx.Vfx {
             if( ImGui.Begin( "Export##ExportDialog", ref Visible, ImGuiWindowFlags.NoDocking ) ) {
                 ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
                 ImGui.SameLine();
-                UiHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
+                UIHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
                 ImGui.SameLine();
                 if( ImGui.Button( "Reset##ExportDialog" ) ) {
                     Reset();

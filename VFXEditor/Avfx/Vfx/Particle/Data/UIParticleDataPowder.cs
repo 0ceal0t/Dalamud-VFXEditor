@@ -1,7 +1,7 @@
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleDataPowder : UIData {
         public UIParameters Parameters;
 

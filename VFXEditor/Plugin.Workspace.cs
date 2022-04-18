@@ -8,10 +8,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-using VFXEditor.Avfx;
-using VFXEditor.Pap;
+using VFXEditor.AVFX;
+using VFXEditor.PAP;
 using VFXEditor.Texture;
-using VFXEditor.Tmb;
+using VFXEditor.TMB;
 
 using VFXSelect;
 
@@ -116,7 +116,7 @@ namespace VFXEditor {
             }
 
             ResetAvfxManager();
-            var vfxRootPath = Path.Combine( loadLocation, AvfxManager.PenumbraPath );
+            var vfxRootPath = Path.Combine( loadLocation, AVFXManager.PenumbraPath );
             if( meta.Docs != null ) {
                 foreach( var doc in meta.Docs ) {
                     var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
@@ -125,7 +125,7 @@ namespace VFXEditor {
             }
 
             ResetTmbManager();
-            var tmbRootPath = Path.Combine( loadLocation, TmbManager.PenumbraPath );
+            var tmbRootPath = Path.Combine( loadLocation, TMBManager.PenumbraPath );
             if( meta.Tmb != null ) {
                 foreach(var tmb in meta.Tmb ) {
                     TmbManager.ImportWorkspaceFile( Path.Combine( tmbRootPath, tmb.RelativeLocation ), tmb );
@@ -133,7 +133,7 @@ namespace VFXEditor {
             }
 
             ResetPapManager();
-            var papRootPath = Path.Combine( loadLocation, PapManager.PenumbraPath );
+            var papRootPath = Path.Combine( loadLocation, PAPManager.PenumbraPath );
             if( meta.Pap != null ) {
                 foreach( var pap in meta.Pap ) {
                     PapManager.ImportWorkspaceFile( Path.Combine( papRootPath, pap.RelativeLocation ), pap );
@@ -191,21 +191,21 @@ namespace VFXEditor {
 
         private static void ResetAvfxManager() {
             var oldManager = AvfxManager;
-            AvfxManager = new AvfxManager();
+            AvfxManager = new AVFXManager();
             AvfxManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
 
         private static void ResetTmbManager() {
             var oldManager = TmbManager;
-            TmbManager = new TmbManager();
+            TmbManager = new TMBManager();
             TmbManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
 
         private static void ResetPapManager() {
             var oldManager = PapManager;
-            PapManager = new PapManager();
+            PapManager = new PAPManager();
             PapManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }

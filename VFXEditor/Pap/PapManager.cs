@@ -4,25 +4,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
-using VFXEditor.Textools;
-using VFXEditor.Avfx;
 using VFXSelect;
-using VFXSelect.VFX;
+using VFXSelect.PAP;
 
-namespace VFXEditor.Pap {
-    public partial class PapManager : FileManager<PapDocument, WorkspaceMetaPap, PapFile> {
-        public static PapSelectDialog SourceSelect { get; private set; }
-        public static PapSelectDialog ReplaceSelect { get; private set; }
+namespace VFXEditor.PAP {
+    public partial class PAPManager : FileManager<PAPDocument, WorkspaceMetaPap, PAPFile> {
+        public static PAPSelectDialog SourceSelect { get; private set; }
+        public static PAPSelectDialog ReplaceSelect { get; private set; }
 
         public static void Setup() {
-            SourceSelect = new PapSelectDialog(
+            SourceSelect = new PAPSelectDialog(
                 "Pap Select [SOURCE]",
                 null,
                 true,
                 SetSourceGlobal
             );
 
-            ReplaceSelect = new PapSelectDialog(
+            ReplaceSelect = new PAPSelectDialog(
                 "Pap Select [TARGET]",
                 null,
                 false,
@@ -42,11 +40,11 @@ namespace VFXEditor.Pap {
 
         // =====================
 
-        public PapManager() : base( title: "Pap Editor", id: "Pap", tempFilePrefix: "PapTemp", extension: "pap", penumbaPath: PenumbraPath ) { }
+        public PAPManager() : base( title: "Pap Editor", id: "Pap", tempFilePrefix: "PapTemp", extension: "pap", penumbaPath: PenumbraPath ) { }
 
-        protected override PapDocument GetNewDocument() => new( LocalPath );
+        protected override PAPDocument GetNewDocument() => new( LocalPath );
 
-        protected override PapDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override PAPDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         public override void Dispose() {
             base.Dispose();

@@ -1,7 +1,7 @@
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Effector;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEffectorDataPointLight : UIData {
         public UIParameters Parameters;
 

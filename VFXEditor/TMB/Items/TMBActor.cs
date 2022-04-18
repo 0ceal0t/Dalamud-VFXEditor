@@ -10,28 +10,28 @@ using System.Numerics;
 
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class TmbActor {
+namespace VFXEditor.TMB.TMB {
+    public class TMBActor {
         public short Id { get; private set; }
 
         private readonly int TrackCount_Temp;
-        private List<short> Ids_Temp = new();
+        private readonly List<short> Ids_Temp = new();
         private readonly int Offset_Temp;
 
-        private readonly List<TmbTrack> TracksMaster;
-        private readonly List<TmbItem> EntriesMaster;
-        public readonly List<TmbTrack> Tracks = new();
+        private readonly List<TMBTrack> TracksMaster;
+        private readonly List<TMBItem> EntriesMaster;
+        public readonly List<TMBTrack> Tracks = new();
         private short Time = 0;
         private int Unk_2 = 0;
         private int Unk_3 = 0;
 
-        private TmbTrack SelectedTrack = null;
+        private TMBTrack SelectedTrack = null;
 
-        public TmbActor( List<TmbTrack> tracksMaster, List<TmbItem> entriesMaster ) {
+        public TMBActor( List<TMBTrack> tracksMaster, List<TMBItem> entriesMaster ) {
             TracksMaster = tracksMaster;
             EntriesMaster = entriesMaster;
         }
-        public TmbActor( List<TmbTrack> tracksMaster, List<TmbItem> entriesMaster, BinaryReader reader ) : this( tracksMaster, entriesMaster ) {
+        public TMBActor( List<TMBTrack> tracksMaster, List<TMBItem> entriesMaster, BinaryReader reader ) : this( tracksMaster, entriesMaster ) {
             var startPos = reader.BaseStream.Position;
 
             reader.ReadInt32(); // TMAC
@@ -53,7 +53,7 @@ namespace VFXEditor.Tmb.Tmb {
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void PickTracks( List<TmbTrack> tracks, int startId ) {
+        public void PickTracks( List<TMBTrack> tracks, int startId ) {
             foreach( var id in Ids_Temp ) {
                 var item = tracks[id - startId];
                 if( item == null ) continue;
@@ -98,7 +98,7 @@ namespace VFXEditor.Tmb.Tmb {
             // ===========
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                var newTrack = new TmbTrack( EntriesMaster );
+                var newTrack = new TMBTrack( EntriesMaster );
                 if (Tracks.Count == 0) {
                     TracksMaster.Add( newTrack );
                 }
@@ -111,7 +111,7 @@ namespace VFXEditor.Tmb.Tmb {
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Tracks.Remove( SelectedTrack );
                     TracksMaster.Remove( SelectedTrack );
                     SelectedTrack = null;

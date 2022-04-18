@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleUVSet : UIItem {
         public AVFXParticleUVSet UVSet;
         public UIParticle Particle;

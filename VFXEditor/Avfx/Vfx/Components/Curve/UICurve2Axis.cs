@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UICurve2Axis : UIItem {
         public readonly AVFXCurve2Axis Curve;
         public readonly string Name;
@@ -52,7 +52,7 @@ namespace VFXEditor.Avfx.Vfx {
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
-                if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+                if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.SetAssigned( false );
                     return;
                 }

@@ -6,9 +6,9 @@ using VFXEditor.Helper;
 using VFXEditor.Penumbra;
 using VFXEditor.Textools;
 using VFXEditor.Texture;
-using VFXEditor.Tmb;
+using VFXEditor.TMB;
 using VFXEditor.Tracker;
-using VFXEditor.Avfx;
+using VFXEditor.AVFX;
 
 namespace VFXEditor {
     public partial class Plugin {
@@ -33,7 +33,7 @@ namespace VFXEditor {
             if( ImGui.BeginMenu( "File##Menu" ) ) {
                 ImGui.TextDisabled( "Workspace" );
                 ImGui.SameLine();
-                UiHelper.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
+                UIHelper.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
                 if( ImGui.MenuItem( "New##Menu" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
@@ -44,9 +44,9 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsDialog.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    if( ImGui.MenuItem( "Guides##Menu" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
-                    if( ImGui.MenuItem( "Github##Menu" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Guides##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
                     ImGui.EndMenu();
                 }
 

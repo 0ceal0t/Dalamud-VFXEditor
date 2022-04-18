@@ -7,13 +7,13 @@ using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXSelect;
 
-namespace VFXEditor.Pap {
-    public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
+namespace VFXEditor.PAP {
+    public partial class PAPDocument : FileManagerDocument<PAPFile, WorkspaceMetaPap> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
-        public PapDocument( string writeLocation ) : base( writeLocation, "Pap", "PAP" ) {
+        public PAPDocument( string writeLocation ) : base( writeLocation, "Pap", "PAP" ) {
         }
-        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
+        public PAPDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
         }
 
         protected override void LoadLocal( string localPath ) {
@@ -27,7 +27,7 @@ namespace VFXEditor.Pap {
             var file = Plugin.DataManager.GetFile( gamePath );
             using var ms = new MemoryStream( file.Data );
             using var br = new BinaryReader( ms );
-            CurrentFile = new PapFile( br, HkxTemp );
+            CurrentFile = new PAPFile( br, HkxTemp );
         }
 
         protected override void Update() {
@@ -46,7 +46,7 @@ namespace VFXEditor.Pap {
             ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file" );
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.SmallButton( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -55,7 +55,7 @@ namespace VFXEditor.Pap {
                 DisplayBeginHelpText();
             }
             else {
-                if( UiHelper.OkButton( "UPDATE" ) ) {
+                if( UIHelper.OkButton( "UPDATE" ) ) {
                     Update();
                     Reload( CurrentFile.GetPapIds() );
                     Plugin.ResourceLoader.ReRender();
@@ -65,21 +65,21 @@ namespace VFXEditor.Pap {
                 ImGui.PushFont( UiBuilder.IconFont );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
                     ImGui.PopFont();
-                    UiHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
+                    UIHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
                 }
                 else ImGui.PopFont();
 
                 ImGui.SameLine();
-                UiHelper.ShowVerifiedStatus( Verified );
+                UIHelper.ShowVerifiedStatus( Verified );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 CurrentFile.Draw( "##Pap" );
             }
         }
 
-        protected override void SourceShow() => PapManager.SourceSelect.Show();
+        protected override void SourceShow() => PAPManager.SourceSelect.Show();
 
-        protected override void ReplaceShow() => PapManager.ReplaceSelect.Show();
+        protected override void ReplaceShow() => PAPManager.ReplaceSelect.Show();
 
         public override void Dispose() {
             base.Dispose();

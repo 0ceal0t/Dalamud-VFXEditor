@@ -5,10 +5,10 @@ using System.IO;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Binder;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIBinder : UINode {
         public readonly AVFXBinder Binder;
-        public readonly AvfxFile Main;
+        public readonly AVFXFile Main;
 
         private readonly UICombo<BinderType> Type;
         private readonly List<UIBinderProperties> Properties;
@@ -17,7 +17,7 @@ namespace VFXEditor.Avfx.Vfx {
         private readonly List<UIBase> Parameters;
         private UIData Data;
 
-        public UIBinder( AvfxFile main, AVFXBinder binder, bool has_dependencies = false ) : base( UINodeGroup.BinderColor, has_dependencies ) {
+        public UIBinder( AVFXFile main, AVFXBinder binder, bool has_dependencies = false ) : base( UINodeGroup.BinderColor, has_dependencies ) {
             Binder = binder;
             Main = main;
             NodeView = new UINodeGraphView( this );

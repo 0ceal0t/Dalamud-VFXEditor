@@ -6,10 +6,10 @@ using System.IO;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticle : UINode {
         public AVFXParticle Particle;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public UICombo<ParticleType> Type;
         public List<UIParticleUVSet> UVSets;
         public UIData Data;
@@ -29,7 +29,7 @@ namespace VFXEditor.Avfx.Vfx {
         public UINodeGraphView NodeView;
         private readonly List<UIBase> Parameters;
 
-        public UIParticle( AvfxFile main, AVFXParticle particle, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
+        public UIParticle( AVFXFile main, AVFXParticle particle, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
             Particle = particle;
             Main = main;
             NodeView = new UINodeGraphView( this );

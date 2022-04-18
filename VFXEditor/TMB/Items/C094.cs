@@ -3,8 +3,8 @@ using System.IO;
 using ImGuiNET;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C094 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C094 : TMBItem {
         private int Unk_2 = 0;
         private int Unk_3 = 0;
         private int Unk_4 = 0;

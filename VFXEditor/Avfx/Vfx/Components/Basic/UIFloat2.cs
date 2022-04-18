@@ -4,7 +4,7 @@ using System.Numerics;
 using VFXEditor.Data;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIFloat2 : UIBase {
         public readonly string Name;
         public Vector2 Value;

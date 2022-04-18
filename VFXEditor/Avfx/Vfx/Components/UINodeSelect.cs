@@ -4,7 +4,7 @@ using VFXEditor.Data;
 using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeSelect : UIBase {
         public UINode Node;
 
@@ -197,7 +197,7 @@ namespace VFXEditor.Avfx.Vfx {
                 }
                 if( i > 0 ) {
                     ImGui.SameLine();
-                    if( UiHelper.RemoveButton( "- Remove" + _id, small: true ) ) {
+                    if( UIHelper.RemoveButton( "- Remove" + _id, small: true ) ) {
                         UnlinkFrom( Selected[i] );
                         Selected.RemoveAt( i );
                         return;
@@ -208,10 +208,10 @@ namespace VFXEditor.Avfx.Vfx {
 
             if( Selected.Count == 0 ) {
                 ImGui.Text( Name );
-                ImGui.TextColored( UiHelper.RED_COLOR, "WARNING: Add an item!" );
+                ImGui.TextColored( UIHelper.RED_COLOR, "WARNING: Add an item!" );
             }
             if( Group.Items.Count == 0 ) {
-                ImGui.TextColored( UiHelper.RED_COLOR, "WARNING: Add a selectable item first!" );
+                ImGui.TextColored( UIHelper.RED_COLOR, "WARNING: Add a selectable item first!" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {

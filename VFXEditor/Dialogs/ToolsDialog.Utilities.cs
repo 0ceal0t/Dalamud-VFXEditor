@@ -19,7 +19,7 @@ namespace VFXEditor.Dialogs {
                 if( result ) {
                     try {
                         var file = Plugin.DataManager.GetFile( RawInputValue );
-                        UiHelper.WriteBytesDialog( ".avfx", file.Data, "avfx" );
+                        UIHelper.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
                         PluginLog.Error( "Could not read file", e );
@@ -35,7 +35,7 @@ namespace VFXEditor.Dialogs {
                 if( result ) {
                     try {
                         var file = Plugin.DataManager.GetFile( RawTexInputValue );
-                        UiHelper.WriteBytesDialog( ".atex", file.Data, "atex" );
+                        UIHelper.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
                         PluginLog.Error( "Could not read file", e );

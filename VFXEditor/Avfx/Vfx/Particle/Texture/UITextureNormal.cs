@@ -5,7 +5,7 @@ using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITextureNormal : UIItem {
         public readonly AVFXParticleTextureNormal Tex;
         public readonly UIParticle Particle;

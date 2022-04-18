@@ -80,7 +80,7 @@ namespace VFXEditor.Texture {
         }
 
         public void SaveAsDDS( string path ) {
-            var header = AtexHelper.CreateDDSHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
+            var header = ATEXHelper.CreateDDSHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
             var data = GetDDSData();
             var writeData = new byte[header.Length + data.Length];
             Buffer.BlockCopy( header, 0, writeData, 0, header.Length );

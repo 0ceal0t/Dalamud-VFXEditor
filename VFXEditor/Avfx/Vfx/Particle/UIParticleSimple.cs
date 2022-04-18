@@ -6,7 +6,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleSimple : UIItem {
         public readonly AVFXParticleSimple Simple;
         public readonly UIParticle Particle;
@@ -101,7 +101,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/Simple";
-            if( UiHelper.RemoveButton( "Delete" + id, small: true ) ) {
+            if( UIHelper.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
                 InjectionVertexModelSelect.DeleteSelect();
 

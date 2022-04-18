@@ -3,7 +3,7 @@ using ImGuiNET;
 using System.IO;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public interface IUINodeView<T> where T : UINode {
         public void OnDelete( T item );
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
@@ -11,7 +11,7 @@ namespace VFXEditor.Avfx.Vfx {
         public void ControlDelete();
         public void ControlCreate();
 
-        public static void DrawControls( IUINodeView<T> view, AvfxFile main, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
+        public static void DrawControls( IUINodeView<T> view, AVFXFile main, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
             ImGui.PushFont( UiBuilder.IconFont );
             if( allowNew ) {
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + Id ) ) {
@@ -26,7 +26,7 @@ namespace VFXEditor.Avfx.Vfx {
                 }
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
                     group.Remove( selected );
                     selected.DeleteNode();
                     view.OnDelete( selected );
@@ -61,7 +61,7 @@ namespace VFXEditor.Avfx.Vfx {
                     main.ExportMultiple( selected );
                 }
                 if( ImGui.Selectable( "Simple Export (old)" + Id ) ) {
-                    AvfxFile.ExportDialog( selected );
+                    AVFXFile.ExportDialog( selected );
                 }
                 ImGui.EndPopup();
             }

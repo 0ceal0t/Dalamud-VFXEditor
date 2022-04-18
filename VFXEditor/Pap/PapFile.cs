@@ -9,18 +9,18 @@ using System.Linq;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Pap {
-    public class PapFile : FileDropdown<PapAnimation> {
+namespace VFXEditor.PAP {
+    public class PAPFile : FileDropdown<PAPAnimation> {
         private readonly string HkxTempLocation;
 
         private short ModelId;
         private byte BaseId;
         private byte VariantId;
-        private readonly List<PapAnimation> Animations = new();
+        private readonly List<PAPAnimation> Animations = new();
 
         public bool Verified = true;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( false ) {
+        public PAPFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( false ) {
             HkxTempLocation = hkxTemp;
 
             var startPos = reader.BaseStream.Position;
@@ -43,7 +43,7 @@ namespace VFXEditor.Pap {
             var footerPosition = reader.ReadInt32();
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations.Add( new PapAnimation( reader, HkxTempLocation ) );
+                Animations.Add( new PAPAnimation( reader, HkxTempLocation ) );
             }
 
             // ... do something about havok data ...
@@ -145,13 +145,13 @@ namespace VFXEditor.Pap {
             return 0;
         }
 
-        protected override List<PapAnimation> GetOptions() => Animations;
+        protected override List<PAPAnimation> GetOptions() => Animations;
 
-        protected override string GetName( PapAnimation item, int idx ) => item.GetName();
+        protected override string GetName( PAPAnimation item, int idx ) => item.GetName();
 
         protected override void OnNew() { }
 
-        protected override void OnDelete( PapAnimation item ) { }
+        protected override void OnDelete( PAPAnimation item ) { }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
     }

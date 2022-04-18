@@ -1,7 +1,7 @@
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Effector;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEffectorDataCameraQuake : UIData {
         public UIEffectorDataCameraQuake( AVFXEffectorDataCameraQuake data ) {
             Tabs.Add( new UICurve( data.Attenuation, "Attenuation" ) );

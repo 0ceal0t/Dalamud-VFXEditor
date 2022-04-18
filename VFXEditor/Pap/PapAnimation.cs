@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Helper;
 using VFXEditor.Interop;
-using VFXEditor.Tmb;
+using VFXEditor.TMB;
 
-namespace VFXEditor.Pap {
-    public class PapAnimation {
+namespace VFXEditor.PAP {
+    public class PAPAnimation {
         private readonly string HkxTempLocation;
 
         private string Name = ""; // padded to 32 bytes (INCLUDING NULL)
@@ -19,11 +19,11 @@ namespace VFXEditor.Pap {
         private int Unknown2 = 0;
         private readonly short HavokIndex;
 
-        private TmbFile Tmb;
+        private TMBFile Tmb;
 
         private int ImportedHavokIndex = 0;
 
-        public PapAnimation( BinaryReader reader, string hkxPath ) {
+        public PAPAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
             Name = FileHelper.ReadString( reader );
             reader.ReadBytes( 32 - Name.Length - 1 );
@@ -43,7 +43,7 @@ namespace VFXEditor.Pap {
         }
 
         public void ReadTmb( BinaryReader reader ) {
-            Tmb = new TmbFile( reader, false );
+            Tmb = new TMBFile( reader, false );
         }
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
@@ -56,7 +56,7 @@ namespace VFXEditor.Pap {
             ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            // =====================
+
             if( ImGui.BeginTabBar( $"Tabs{id}", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Havok{id}/Tab" ) ) {
                     DrawHavok( id );

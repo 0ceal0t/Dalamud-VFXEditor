@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using VFXEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEmitterItem : UIWorkspaceItem {
         public AVFXEmitterItem Iteration;
         public UIEmitter Emitter;

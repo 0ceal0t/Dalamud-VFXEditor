@@ -2,10 +2,10 @@ using ImGuiNET;
 using System.IO;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
         public AVFXMain AVFX;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public UINodeGroup<T> Group;
 
         private T Selected = null;
@@ -16,7 +16,7 @@ namespace VFXEditor.Avfx.Vfx {
         private readonly bool AllowNew;
         private readonly bool AllowDelete;
 
-        public UIDropdownView( AvfxFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
+        public UIDropdownView( AVFXFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
             Main = main;
             AVFX = avfx;
             Id = id;

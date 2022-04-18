@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using imnodesNET;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UINodeGraphView : UIBase {
         public UINode Node;
         private static readonly uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );

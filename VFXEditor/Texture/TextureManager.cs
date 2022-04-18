@@ -187,7 +187,7 @@ namespace VFXEditor.Texture {
             replaceData.Depth = br.ReadInt32();
             replaceData.MipLevels = br.ReadInt32();
 
-            bw.Write( AtexHelper.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
+            bw.Write( ATEXHelper.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
             br.BaseStream.Seek( 128, SeekOrigin.Begin );
             var uncompressedLength = ms.Length - 128;
             var data = new byte[uncompressedLength];

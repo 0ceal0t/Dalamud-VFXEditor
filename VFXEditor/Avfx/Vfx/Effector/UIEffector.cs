@@ -5,16 +5,16 @@ using System.IO;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Effector;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEffector : UINode {
         public AVFXEffector Effector;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public UICombo<EffectorType> Type;
         public UIData Data;
         public UINodeGraphView NodeView;
         private readonly List<UIBase> Parameters;
 
-        public UIEffector( AvfxFile main, AVFXEffector effector, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
+        public UIEffector( AVFXFile main, AVFXEffector effector, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
             Effector = effector;
             Main = main;
             NodeView = new UINodeGraphView( this );

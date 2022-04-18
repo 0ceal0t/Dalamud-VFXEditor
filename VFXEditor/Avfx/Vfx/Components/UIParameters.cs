@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParameters : UIItem {
         public string Name;
         private readonly List<UIBase> Parameters;

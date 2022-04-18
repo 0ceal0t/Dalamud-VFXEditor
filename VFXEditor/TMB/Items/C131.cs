@@ -1,19 +1,19 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using ImGuiNET;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C011 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C131 : TMBItem {
         private int Unk_2 = 1;
         private int Unk_3 = 0;
 
-        public static readonly string DisplayName = "Damage Text (C011)";
+        public static readonly string DisplayName = "Animation Cancelled by Movement (C131)";
         public override string GetDisplayName() => DisplayName;
-        public override string GetName() => "C011";
+        public override string GetName() => "C131";
 
-        public C011() { }
-        public C011( BinaryReader reader ) {
+        public C131() { }
+        public C131( BinaryReader reader ) {
             ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
@@ -24,8 +24,8 @@ namespace VFXEditor.Tmb.Tmb {
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2 );
-            entryWriter.Write( Unk_3 );
+            entryWriter.Write( Unk_2);
+            entryWriter.Write( Unk_3);
         }
 
         public override void Draw( string id ) {

@@ -8,11 +8,11 @@ using Dalamud.Logging;
 using ImGuiNET;
 using VFXSelect.Select.Rows;
 
-namespace VFXSelect.VFX {
-    public class TmbActionSelect : TmbSelectTab<XivActionTmb, XivActionTmb> {
+namespace VFXSelect.TMB {
+    public class TMBActionSelect : TMBSelectTab<XivActionTmb, XivActionTmb> {
         private ImGuiScene.TextureWrap Icon;
 
-        public TmbActionSelect( string parentId, string tabId, TmbSelectDialog dialog ) :
+        public TMBActionSelect( string parentId, string tabId, TMBSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.ActionTmb, dialog ) {
         }
 

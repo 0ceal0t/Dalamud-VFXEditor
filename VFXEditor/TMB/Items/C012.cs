@@ -6,8 +6,8 @@ using System.Linq;
 using System.Numerics;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C012 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C012 : TMBItem {
         private int Unk_2 = 30;
         private int Unk_3 = 0;
         private string Path = "";

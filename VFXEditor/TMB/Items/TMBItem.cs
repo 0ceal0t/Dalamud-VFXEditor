@@ -5,8 +5,8 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public abstract class TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public abstract class TMBItem {
         public short Id { get; protected set; }
         protected short Time = 0;
 

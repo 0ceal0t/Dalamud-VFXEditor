@@ -4,7 +4,7 @@ using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIIntList : UIBase {
         public readonly string Name;
         public List<int> Value;

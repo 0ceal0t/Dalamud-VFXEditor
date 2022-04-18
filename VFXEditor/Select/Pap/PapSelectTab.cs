@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXSelect.Select.Sheets;
 
-namespace VFXSelect.VFX {
-    public abstract class PapSelectTab<T, S> : SelectTab<T, S> {
-        protected readonly PapSelectDialog Dialog;
+namespace VFXSelect.PAP {
+    public abstract class PAPSelectTab<T, S> : SelectTab<T, S> {
+        protected readonly PAPSelectDialog Dialog;
 
-        public PapSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, PapSelectDialog dialog ) : base(parentId, tabId, loader) {
+        public PAPSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, PAPSelectDialog dialog ) : base(parentId, tabId, loader) {
             Dialog = dialog;
         }
     }

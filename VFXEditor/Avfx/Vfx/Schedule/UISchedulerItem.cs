@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib.Scheduler;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UISchedulerItem : UIWorkspaceItem {
         public AVFXSchedulerSubItem Item;
         public UIScheduler Sched;

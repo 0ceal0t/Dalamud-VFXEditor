@@ -5,8 +5,8 @@ using System.IO;
 using VFXEditor.Helper;
 using VFXEditor.Textools;
 
-namespace VFXEditor.Tmb {
-    public partial class TmbDocument {
+namespace VFXEditor.TMB {
+    public partial class TMBDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;

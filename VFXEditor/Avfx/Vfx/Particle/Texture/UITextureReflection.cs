@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITextureReflection : UIItem {
         public readonly AVFXParticleTextureReflection Tex;
         public readonly UIParticle Particle;

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITimeline : UINode {
         public AVFXTimeline Timeline;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public List<UITimelineItem> Items;
         public List<UITimelineClip> Clips;
         public UITimelineClipSplitView ClipSplit;
@@ -15,7 +15,7 @@ namespace VFXEditor.Avfx.Vfx {
         public UINodeSelect<UIBinder> BinderSelect;
         private readonly List<UIBase> Parameters;
 
-        public UITimeline( AvfxFile main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
+        public UITimeline( AVFXFile main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
             Main = main;
             BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", Main.Binders, Timeline.BinderIdx );

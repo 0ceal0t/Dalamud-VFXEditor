@@ -3,7 +3,7 @@ using ImGuiNET;
 using System.Numerics;
 using System.IO;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UINode : UIWorkspaceItem {
         public uint Color;
         public List<UINode> Children = new();

@@ -10,19 +10,19 @@ using System.Text;
 
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
-using VFXEditor.Tmb.Tmb;
+using VFXEditor.TMB.TMB;
 
-namespace VFXEditor.Tmb {
-    public class TmbFile : FileDropdown<TmbActor> {
-        public static TmbFile FromLocalFile( string path ) {
+namespace VFXEditor.TMB {
+    public class TMBFile : FileDropdown<TMBActor> {
+        public static TMBFile FromLocalFile( string path ) {
             if( !File.Exists( path ) ) return null;
             using BinaryReader br = new( File.Open( path, FileMode.Open ) );
-            return new TmbFile( br );
+            return new TMBFile( br );
         }
 
-        private readonly List<TmbActor> Actors = new();
-        private readonly List<TmbTrack> Tracks = new();
-        private readonly List<TmbItem> Entries = new();
+        private readonly List<TMBActor> Actors = new();
+        private readonly List<TMBTrack> Tracks = new();
+        private readonly List<TMBItem> Entries = new();
 
         private short TMDH_Unk1 = 0;
         private short TMDH_Unk2 = 0;
@@ -34,7 +34,7 @@ namespace VFXEditor.Tmb {
 
         public bool Verified = true;
 
-        public TmbFile( BinaryReader reader, bool checkOriginal = true ) : base( true ) {
+        public TMBFile( BinaryReader reader, bool checkOriginal = true ) : base( true ) {
             var startPos = reader.BaseStream.Position;
 
             byte[] original = null;
@@ -74,9 +74,9 @@ namespace VFXEditor.Tmb {
 
             // ============ PARSE ================
             for( var i = 0; i < numActors; i++ ) { // parse actors
-                Actors.Add( new TmbActor( Tracks, Entries, reader ) );
+                Actors.Add( new TMBActor( Tracks, Entries, reader ) );
             }
-            TmbTrack.ParseEntries( reader, Entries, Tracks, numEntries - HeaderEntries - Actors.Count, ref Verified );
+            TMBTrack.ParseEntries( reader, Entries, Tracks, numEntries - HeaderEntries - Actors.Count, ref Verified );
             // ===================================
 
             foreach( var track in Tracks ) track.PickEntries( Entries, 2 + Actors.Count + Tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
@@ -234,12 +234,12 @@ namespace VFXEditor.Tmb {
             }
         }
 
-        protected override List<TmbActor> GetOptions() => Actors;
+        protected override List<TMBActor> GetOptions() => Actors;
 
-        protected override string GetName( TmbActor item, int idx ) => $"Actor {idx}";
+        protected override string GetName( TMBActor item, int idx ) => $"Actor {idx}";
 
-        protected override void OnNew() => Actors.Add( new TmbActor( Tracks, Entries ) );
+        protected override void OnNew() => Actors.Add( new TMBActor( Tracks, Entries ) );
 
-        protected override void OnDelete( TmbActor item ) => Actors.Remove( item );
+        protected override void OnDelete( TMBActor item ) => Actors.Remove( item );
     }
 }

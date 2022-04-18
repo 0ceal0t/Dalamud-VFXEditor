@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeGroup {
         public const uint BinderColor = 0xFF5C8A2B;
         public const uint EmitterColor = 0xFF335E9E;

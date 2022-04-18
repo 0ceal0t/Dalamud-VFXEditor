@@ -6,8 +6,8 @@ using ImGuiNET;
 using ImPlotNET;
 
 using VFXEditor.Data;
-using VFXEditor.Avfx;
-using VFXEditor.Tmb;
+using VFXEditor.AVFX;
+using VFXEditor.TMB;
 using VFXEditor.DirectX;
 using VFXEditor.Texture;
 using VFXEditor.Tracker;
@@ -28,7 +28,7 @@ using Dalamud.Game.ClientState.Conditions;
 using VFXEditor.Dialogs;
 using VFXEditor.Textools;
 using VFXEditor.Penumbra;
-using VFXEditor.Pap;
+using VFXEditor.PAP;
 using Dalamud.Logging;
 
 namespace VFXEditor {
@@ -47,10 +47,10 @@ namespace VFXEditor {
 
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
-        public static AvfxManager AvfxManager { get; private set; }
+        public static AVFXManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
-        public static TmbManager TmbManager { get; private set; }
-        public static PapManager PapManager { get; private set; }
+        public static TMBManager TmbManager { get; private set; }
+        public static PAPManager PapManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static VfxTracker VfxTracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
@@ -104,14 +104,14 @@ namespace VFXEditor {
             TextureManager.Setup();
             TextureManager = new TextureManager();
 
-            TmbManager.Setup();
-            TmbManager = new TmbManager();
+            TMBManager.Setup();
+            TmbManager = new TMBManager();
 
-            AvfxManager.Setup();
-            AvfxManager = new AvfxManager();
+            AVFXManager.Setup();
+            AvfxManager = new AVFXManager();
 
-            PapManager.Setup();
-            PapManager = new PapManager();
+            PAPManager.Setup();
+            PapManager = new PAPManager();
 
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();

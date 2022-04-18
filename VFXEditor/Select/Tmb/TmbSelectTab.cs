@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXSelect.Select.Sheets;
 
-namespace VFXSelect.VFX {
-    public abstract class TmbSelectTab<T, S> : SelectTab<T, S> {
-        protected readonly TmbSelectDialog Dialog;
+namespace VFXSelect.TMB {
+    public abstract class TMBSelectTab<T, S> : SelectTab<T, S> {
+        protected readonly TMBSelectDialog Dialog;
 
-        public TmbSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, TmbSelectDialog dialog ) : base(parentId, tabId, loader) {
+        public TMBSelectTab( string parentId, string tabId, SheetLoader<T,S> loader, TMBSelectDialog dialog ) : base(parentId, tabId, loader) {
             Dialog = dialog;
         }
     }

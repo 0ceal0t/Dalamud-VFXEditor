@@ -8,11 +8,11 @@ using Dalamud.Logging;
 using ImGuiNET;
 using VFXSelect.Select.Rows;
 
-namespace VFXSelect.VFX {
-    public class PapActionSelect : PapSelectTab<XivActionPap, XivActionPapSelected> {
+namespace VFXSelect.PAP {
+    public class PAPActionSelect : PAPSelectTab<XivActionPap, XivActionPapSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public PapActionSelect( string parentId, string tabId, PapSelectDialog dialog ) :
+        public PAPActionSelect( string parentId, string tabId, PAPSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.ActionPap, dialog ) {
         }
 

@@ -3,22 +3,22 @@ using System.IO;
 using ImGuiNET;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C198 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C175 : TMBItem {
         private int Unk_2 = 0;
         private int Unk_3 = 0;
-        private int Unk_4 = 0;
+        private int Unk_4 = 4;
         private int Unk_5 = 0;
-        private int Unk_6 = 0;
-        private int Unk_7 = 0;
+        private int Unk_6 = 1;
+        private int Unk_7 = 1;
         private int Unk_8 = 0;
 
-        public static readonly string DisplayName = "C198";
+        public static readonly string DisplayName = "C175";
         public override string GetDisplayName() => DisplayName;
-        public override string GetName() => "C198";
+        public override string GetName() => "C175";
 
-        public C198() { }
-        public C198( BinaryReader reader ) {
+        public C175() { }
+        public C175( BinaryReader reader ) {
             ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();

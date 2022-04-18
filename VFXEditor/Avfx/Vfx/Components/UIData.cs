@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UIData : UIItem {
         public List<UIItem> Tabs = new();
         public UIItemSplitView<UIItem> SplitView;

@@ -1,7 +1,7 @@
 using System;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleDataDecalRing : UIData {
         public UIParameters Parameters;
 

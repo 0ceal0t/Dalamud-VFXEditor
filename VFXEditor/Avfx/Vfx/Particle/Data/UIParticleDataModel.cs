@@ -1,7 +1,7 @@
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleDataModel : UIData {
         public UINodeSelectList<UIModel> ModelSelect;
         public UIParameters Parameters;

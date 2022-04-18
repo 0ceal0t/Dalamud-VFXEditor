@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITimelineItem : UIWorkspaceItem {
         public AVFXTimelineSubItem Item;
         public UITimeline Timeline;

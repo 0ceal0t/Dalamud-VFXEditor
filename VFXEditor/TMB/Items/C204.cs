@@ -1,20 +1,21 @@
 using System.Collections.Generic;
 using System.IO;
 using ImGuiNET;
+using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class C014 : TmbItem {
+namespace VFXEditor.TMB.TMB {
+    public class C204 : TMBItem {
         private int Unk_2 = 0;
         private int Unk_3 = 0;
         private int Unk_4 = 0;
         private int Unk_5 = 0;
 
-        public static readonly string DisplayName = "C014";
+        public static readonly string DisplayName = "C204";
         public override string GetDisplayName() => DisplayName;
-        public override string GetName() => "C014";
+        public override string GetName() => "C204";
 
-        public C014() { }
-        public C014( BinaryReader reader ) {
+        public C204() { }
+        public C204( BinaryReader reader ) {
             ReadInfo( reader );
             Unk_2 = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();

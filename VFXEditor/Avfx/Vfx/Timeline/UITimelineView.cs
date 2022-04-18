@@ -4,9 +4,9 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITimelineView : UIDropdownView<UITimeline> {
-        public UITimelineView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
+        public UITimelineView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
             Group = main.Timelines;
             Group.Items = AVFX.Timelines.Select( item => new UITimeline( Main, item ) ).ToList();
         }

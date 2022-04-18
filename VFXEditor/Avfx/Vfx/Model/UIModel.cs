@@ -8,10 +8,10 @@ using System.Numerics;
 using VFXEditor.AVFXLib.Model;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIModel : UINode {
         public AVFXModel Model;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
@@ -19,7 +19,7 @@ namespace VFXEditor.Avfx.Vfx {
         private bool Refresh = false;
         public bool Open = true;
 
-        public UIModel( AvfxFile main, AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
+        public UIModel( AVFXFile main, AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
             Main = main;
             NodeView = new UINodeGraphView( this );
@@ -46,7 +46,7 @@ namespace VFXEditor.Avfx.Vfx {
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    AvfxFile.ExportDialog( this );
+                    AVFXFile.ExportDialog( this );
                 }
                 ImGui.EndPopup();
             }
@@ -136,7 +136,7 @@ namespace VFXEditor.Avfx.Vfx {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( GltfHelper.ImportModel( res, out var v_s, out var i_s ) ) {
+                    if( GLTFHelper.ImportModel( res, out var v_s, out var i_s ) ) {
                         Model.Vertexes.Vertexes.Clear();
                         Model.Vertexes.Vertexes.AddRange(v_s);
 
@@ -154,7 +154,7 @@ namespace VFXEditor.Avfx.Vfx {
         private void ExportDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                GltfHelper.ExportModel( Model, res );
+                GLTFHelper.ExportModel( Model, res );
             } );
         }
 

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UIWorkspaceItem : UIItem {
 #nullable enable
         public string? Renamed;
@@ -58,7 +58,7 @@ namespace VFXEditor.Avfx.Vfx {
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                     CurrentlyRenaming = false;
                 }
 

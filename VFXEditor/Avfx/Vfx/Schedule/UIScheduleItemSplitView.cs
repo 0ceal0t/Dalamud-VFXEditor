@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIScheduleItemSplitView : UIItemSplitView<UISchedulerItem> {
         public UIScheduler Sched;
 

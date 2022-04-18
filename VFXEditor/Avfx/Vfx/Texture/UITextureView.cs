@@ -3,9 +3,9 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Texture;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UITextureView : UINodeSplitView<UITexture> {
-        public UITextureView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##TEX" ) {
+        public UITextureView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##TEX" ) {
             Group = main.Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( Main, item ) ).ToList();
         }

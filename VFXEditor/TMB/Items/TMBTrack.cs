@@ -8,14 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Tmb.Tmb {
-    public class TmbTrack {
+namespace VFXEditor.TMB.TMB {
+    public class TMBTrack {
         private struct EntryType {
             public string Name;
-            public Func<TmbItem> NewItem;
-            public Func<BinaryReader, TmbItem> ReadItem;
+            public Func<TMBItem> NewItem;
+            public Func<BinaryReader, TMBItem> ReadItem;
 
-            public EntryType( string name, Func<TmbItem> newItem, Func<BinaryReader, TmbItem> readItem ) {
+            public EntryType( string name, Func<TMBItem> newItem, Func<BinaryReader, TMBItem> readItem ) {
                 Name = name;
                 NewItem = newItem;
                 ReadItem = readItem;
@@ -52,13 +52,13 @@ namespace VFXEditor.Tmb.Tmb {
             { "C125", new EntryType( C125.DisplayName, () => new C125(), ( BinaryReader br ) => new C125( br ) ) },
         };
 
-        public static void ParseEntries( BinaryReader reader, List<TmbItem> entries, List<TmbTrack> tracks, int entryCount, ref bool entriesOk ) {
+        public static void ParseEntries( BinaryReader reader, List<TMBItem> entries, List<TMBTrack> tracks, int entryCount, ref bool entriesOk ) {
             for( var i = 0; i < entryCount; i++ ) {
                 var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
                 var size = reader.ReadInt32(); // size
 
                 if (name == "TMTR") {
-                    tracks.Add( new TmbTrack( entries, reader ) );
+                    tracks.Add( new TMBTrack( entries, reader ) );
                     continue;
                 }
 
@@ -88,13 +88,13 @@ namespace VFXEditor.Tmb.Tmb {
 
         private List<short> UnknownExtraData = null;
 
-        private readonly List<TmbItem> EntriesMaster;
-        public readonly List<TmbItem> Entries = new();
+        private readonly List<TMBItem> EntriesMaster;
+        public readonly List<TMBItem> Entries = new();
 
-        public TmbTrack( List<TmbItem> entriesMaster ) {
+        public TMBTrack( List<TMBItem> entriesMaster ) {
             EntriesMaster = entriesMaster;
         }
-        public TmbTrack( List<TmbItem> entriesMaster, BinaryReader reader ) : this(entriesMaster) {
+        public TMBTrack( List<TMBItem> entriesMaster, BinaryReader reader ) : this(entriesMaster) {
             var startPos = reader.BaseStream.Position; // [TMTR] + 8
 
             Id = reader.ReadInt16(); // id
@@ -123,7 +123,7 @@ namespace VFXEditor.Tmb.Tmb {
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
 
-        public void PickEntries( List<TmbItem> entries, int startId ) {
+        public void PickEntries( List<TMBItem> entries, int startId ) {
             Entries.AddRange(entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where(x => x != null));
         }
 
@@ -186,7 +186,7 @@ namespace VFXEditor.Tmb.Tmb {
             foreach( var entry in Entries ) {
                 if( ImGui.CollapsingHeader( $"{entry.GetDisplayName()}{id}{i}" ) ) {
                     ImGui.Indent();
-                    if( UiHelper.RemoveButton( $"Delete{id}{i}" ) ) {
+                    if( UIHelper.RemoveButton( $"Delete{id}{i}" ) ) {
                         Entries.Remove( entry );
                         EntriesMaster.Remove( entry );
                         ImGui.Unindent();

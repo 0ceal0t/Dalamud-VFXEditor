@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Binder;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIBinderProperties : UIItem {
         private readonly AVFXBinderProperty Prop;
         private readonly string Name;
@@ -39,7 +39,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+            if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Prop.SetAssigned( false );
             }
             DrawListTabs( Tabs, id );

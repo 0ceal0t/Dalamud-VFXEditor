@@ -2,7 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UIBase {
         public const uint LightGreen = 0xFFCCFFCE;
         public const uint LightRed = 0xFFCCD4FF;

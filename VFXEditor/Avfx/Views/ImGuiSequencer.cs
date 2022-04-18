@@ -7,9 +7,9 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiNET;
-using VFXEditor.Avfx.Vfx;
+using VFXEditor.AVFX.VFX;
 
-namespace VFXEditor.Avfx.Views {
+namespace VFXEditor.AVFX.Views {
     public abstract class ImGuiSequencer<T> : UIBase where T : UIItem {
         private static readonly int ItemHeight = 20;
         private static readonly int LegendWidth = 200;

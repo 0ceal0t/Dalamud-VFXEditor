@@ -1,6 +1,6 @@
 using VFXEditor.AVFXLib.Binder;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIBinderDataCamera : UIData {
         public UIBinderDataCamera( AVFXBinderDataCamera data ) {
             Tabs.Add( new UICurve( data.Distance, "Distance" ) );

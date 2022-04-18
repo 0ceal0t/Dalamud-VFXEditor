@@ -7,15 +7,15 @@ using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXSelect;
 
-namespace VFXEditor.Tmb {
-    public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
-        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
+namespace VFXEditor.TMB {
+    public partial class TMBDocument : FileManagerDocument<TMBFile, WorkspaceMetaTmb> {
+        public TMBDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
         }
-        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
+        public TMBDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
         }
 
         protected override void LoadLocal( string localPath ) {
-            CurrentFile = TmbFile.FromLocalFile( localPath );
+            CurrentFile = TMBFile.FromLocalFile( localPath );
         }
 
         protected override void LoadGame( string gamePath ) {
@@ -23,7 +23,7 @@ namespace VFXEditor.Tmb {
             var file = Plugin.DataManager.GetFile( gamePath );
             using var ms = new MemoryStream( file.Data );
             using var br = new BinaryReader( ms );
-            CurrentFile = new TmbFile( br );
+            CurrentFile = new TMBFile( br );
         }
 
         protected override void Update() {
@@ -42,7 +42,7 @@ namespace VFXEditor.Tmb {
             ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file: " );
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.SmallButton( "Guides##Pap" ) ) UiHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -51,7 +51,7 @@ namespace VFXEditor.Tmb {
                 DisplayBeginHelpText();
             }
             else {
-                if( UiHelper.OkButton( "UPDATE" ) ) {
+                if( UIHelper.OkButton( "UPDATE" ) ) {
                     Update();
                     Reload();
                     Plugin.ResourceLoader.ReRender();
@@ -61,20 +61,20 @@ namespace VFXEditor.Tmb {
                 ImGui.PushFont( UiBuilder.IconFont );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
                     ImGui.PopFont();
-                    UiHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
+                    UIHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
                 }
                 else ImGui.PopFont();
 
                 ImGui.SameLine();
-                UiHelper.ShowVerifiedStatus( Verified );
+                UIHelper.ShowVerifiedStatus( Verified );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 CurrentFile.Draw( "##Tmb" );
             }
         }
 
-        protected override void SourceShow() => TmbManager.SourceSelect.Show();
+        protected override void SourceShow() => TMBManager.SourceSelect.Show();
 
-        protected override void ReplaceShow() => TmbManager.ReplaceSelect.Show();
+        protected override void ReplaceShow() => TMBManager.ReplaceSelect.Show();
     }
 }

@@ -47,7 +47,7 @@ namespace VFXEditor.FileManager {
                 if( Selected != null ) {
                     ImGui.SameLine();
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
-                    if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                    if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                         OnDelete( Selected );
                         Selected = null;
                     }

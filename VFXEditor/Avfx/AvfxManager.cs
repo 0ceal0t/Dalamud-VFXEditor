@@ -1,11 +1,11 @@
 using System;
-using VFXEditor.Avfx.Vfx;
+using VFXEditor.AVFX.VFX;
 using VFXEditor.FileManager;
 using VFXSelect;
 using VFXSelect.VFX;
 
-namespace VFXEditor.Avfx {
-    public class AvfxManager : FileManager<AvfxDocument, WorkspaceMetaAvfx, AvfxFile> {
+namespace VFXEditor.AVFX {
+    public class AVFXManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
         public static VFXSelectDialog SourceSelect { get; private set; }
         public static VFXSelectDialog ReplaceSelect { get; private set; }
 
@@ -50,11 +50,11 @@ namespace VFXEditor.Avfx {
         
         // =================
 
-        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
+        public AVFXManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
 
-        protected override AvfxDocument GetNewDocument() => new( LocalPath );
+        protected override AVFXDocument GetNewDocument() => new( LocalPath );
 
-        protected override AvfxDocument GetImportedDocument( string localPath, WorkspaceMetaAvfx data ) => new( LocalPath, localPath, data );
+        protected override AVFXDocument GetImportedDocument( string localPath, WorkspaceMetaAvfx data ) => new( LocalPath, localPath, data );
 
         public override void Dispose() {
             base.Dispose();

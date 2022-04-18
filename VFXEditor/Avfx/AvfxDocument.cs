@@ -5,20 +5,20 @@ using System;
 using System.IO;
 using System.Numerics;
 
-using VFXEditor.Avfx.Vfx;
+using VFXEditor.AVFX.VFX;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXSelect;
 
-namespace VFXEditor.Avfx {
-    public partial class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaAvfx> {
+namespace VFXEditor.AVFX {
+    public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {
         private DateTime LastUpdate = DateTime.Now;
 
-        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) {
+        public AVFXDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) {
         }
-        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) {
+        public AVFXDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) {
         }
-        public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
+        public AVFXDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }
 
@@ -26,7 +26,7 @@ namespace VFXEditor.Avfx {
             if (File.Exists( localPath ) ) {
                 try {
                     using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
-                    CurrentFile = new AvfxFile( br );
+                    CurrentFile = new AVFXFile( br );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
@@ -40,7 +40,7 @@ namespace VFXEditor.Avfx {
                     var file = Plugin.DataManager.GetFile( gamePath );
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
-                    CurrentFile = new AvfxFile( br );
+                    CurrentFile = new AVFXFile( br );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
@@ -69,10 +69,10 @@ namespace VFXEditor.Avfx {
             // ======== INPUT TEXT =========
             ImGui.SetColumnWidth( 0, 140 );
             ImGui.Text( "Loaded VFX" );
-            ImGui.SameLine(); UiHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
+            ImGui.SameLine(); UIHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "VFX Being Replaced" );
-            ImGui.SameLine(); UiHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
+            ImGui.SameLine(); UIHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
@@ -91,7 +91,7 @@ namespace VFXEditor.Avfx {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSource();
             }
@@ -108,7 +108,7 @@ namespace VFXEditor.Avfx {
             }
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplace();
             }
@@ -182,7 +182,7 @@ namespace VFXEditor.Avfx {
             }
             ImGui.PopFont();
 
-            ImGui.SameLine(); UiHelper.HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
+            ImGui.SameLine(); UIHelper.HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
 
             ImGui.Columns( 1 );
             ImGui.Separator();
@@ -194,7 +194,7 @@ namespace VFXEditor.Avfx {
                 DisplayBeginHelpText();
             }
             else {
-                if( UiHelper.OkButton( "UPDATE" ) ) {
+                if( UIHelper.OkButton( "UPDATE" ) ) {
                     if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                         Update();
                         Reload();
@@ -213,14 +213,14 @@ namespace VFXEditor.Avfx {
 
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
-                        UiHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
+                        UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
                     }
                     ImGui.EndPopup();
                 }
 
                 // ======== VERIFY ============
                 ImGui.SameLine();
-                UiHelper.ShowVerifiedStatus( Verified );
+                UIHelper.ShowVerifiedStatus( Verified );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -228,9 +228,9 @@ namespace VFXEditor.Avfx {
             }
         }
 
-        protected override void SourceShow() => AvfxManager.SourceSelect.Show();
+        protected override void SourceShow() => AVFXManager.SourceSelect.Show();
 
-        protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
+        protected override void ReplaceShow() => AVFXManager.ReplaceSelect.Show();
 
         private void OpenTemplate( string path ) {
             var newResult = new SelectResult {

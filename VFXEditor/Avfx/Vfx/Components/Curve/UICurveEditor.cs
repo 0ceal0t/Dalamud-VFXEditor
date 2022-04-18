@@ -8,7 +8,7 @@ using VFXEditor.Helper;
 using VFXEditor.AVFXLib.Curve;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UICurveEditor : UIBase {
         private CurvePoint Selected = null;
         private readonly AVFXCurve Curve;
@@ -43,7 +43,7 @@ namespace VFXEditor.Avfx.Vfx {
             }
 
             ImGui.SameLine();
-            if( UiHelper.DisabledButton( "Copy" + parentId, SourceKeys.Count > 0 ) ) {
+            if( UIHelper.DisabledButton( "Copy" + parentId, SourceKeys.Count > 0 ) ) {
                 CopyManager.ClearCurveKeys();
                 foreach( var key in SourceKeys ) {
                     CopyManager.AddCurveKey( key.Time, key.X, key.Y, key.Z );
@@ -51,7 +51,7 @@ namespace VFXEditor.Avfx.Vfx {
             }
 
             ImGui.SameLine();
-            if( UiHelper.DisabledButton( "Paste" + parentId, CopyManager.HasCurveKeys() ) ) {
+            if( UIHelper.DisabledButton( "Paste" + parentId, CopyManager.HasCurveKeys() ) ) {
                 foreach( var key in CopyManager.CurveKeys ) {
                     InsertPoint( key.X, key.Y, key.Z, key.W );
                     UpdateColor();
@@ -331,7 +331,7 @@ namespace VFXEditor.Avfx.Vfx {
 
             public void Draw() {
                 var id = "##CurveEdit";
-                if( UiHelper.RemoveButton( "Delete Key" + id, small: true ) ) {
+                if( UIHelper.RemoveButton( "Delete Key" + id, small: true ) ) {
                     Editor.Curve.Keys.Remove( Key );
                     Editor.Points.Remove( this );
                     if( Editor.Selected == this ) {
@@ -370,7 +370,7 @@ namespace VFXEditor.Avfx.Vfx {
                     Editor.UpdateColor();
                 }
 
-                if( UiHelper.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
+                if( UIHelper.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
                     _ = Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
                     Key.Type = newKeyType;
                 }

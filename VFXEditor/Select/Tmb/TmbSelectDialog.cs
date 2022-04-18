@@ -4,11 +4,11 @@ using System.Numerics;
 using ImGuiFileDialog;
 using ImGuiNET;
 
-namespace VFXSelect.VFX {
-    public class TmbSelectDialog : SelectDialog {
+namespace VFXSelect.TMB {
+    public class TMBSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public TmbSelectDialog(
+        public TMBSelectDialog(
                 string id,
                 List<SelectResult> recentList,
                 bool showLocal,
@@ -16,8 +16,8 @@ namespace VFXSelect.VFX {
             ) : base( id, "tmb", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new TmbActionSelect( id, "Action", this ),
-                new TmbEmoteSelect( id, "Emote", this)
+                new TMBActionSelect( id, "Action", this ),
+                new TMBEmoteSelect( id, "Emote", this)
             } );
         }
 

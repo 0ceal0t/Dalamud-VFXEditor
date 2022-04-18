@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParameterView : UIBase {
         private readonly List<UIBase> Parameters;
         private readonly int[] Version = new int[4];

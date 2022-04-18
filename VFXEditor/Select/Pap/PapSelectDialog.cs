@@ -4,11 +4,11 @@ using System.Numerics;
 using ImGuiFileDialog;
 using ImGuiNET;
 
-namespace VFXSelect.VFX {
-    public class PapSelectDialog : SelectDialog {
+namespace VFXSelect.PAP {
+    public class PAPSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public PapSelectDialog(
+        public PAPSelectDialog(
                 string id,
                 List<SelectResult> recentList,
                 bool showLocal,
@@ -16,7 +16,7 @@ namespace VFXSelect.VFX {
             ) : base( id, "pap", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new PapActionSelect( id, "Action", this )
+                new PAPActionSelect( id, "Action", this )
             } );
         }
 

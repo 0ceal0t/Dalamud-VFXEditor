@@ -3,9 +3,9 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Model;
 
-namespace VFXEditor.Avfx.Vfx {  
+namespace VFXEditor.AVFX.VFX {  
     public class UIModelView : UINodeSplitView<UIModel> {
-        public UIModelView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##MDL" ) {
+        public UIModelView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##MDL" ) {
             Group = main.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
         }

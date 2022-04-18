@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UILife : UIItem {
         public readonly AVFXLife Life;
         private readonly List<UIBase> Parameters;

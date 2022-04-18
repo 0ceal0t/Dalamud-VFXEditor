@@ -2,7 +2,7 @@ using VFXEditor.AVFXLib.Particle;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIParticleDataWindmill : UIData {
         public UIParameters Parameters;
 

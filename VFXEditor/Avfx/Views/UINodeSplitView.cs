@@ -2,15 +2,15 @@ using ImGuiNET;
 using System.IO;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
         public string Id;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public AVFXMain AVFX;
         public UINodeGroup<T> Group;
         public T Selected = null;
 
-        public UINodeSplitView( AvfxFile main, AVFXMain avfx, string _id, bool allowNew = true, bool allowDelete = true ) : base( allowNew, allowDelete ) {
+        public UINodeSplitView( AVFXFile main, AVFXMain avfx, string _id, bool allowNew = true, bool allowDelete = true ) : base( allowNew, allowDelete ) {
             Main = main;
             AVFX = avfx;
             Id = _id;

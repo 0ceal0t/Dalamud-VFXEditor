@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEmitterSplitView : UIItemSplitView<UIEmitterItem> {
         public UIEmitter Emitter;
         public bool IsParticle;

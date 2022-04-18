@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIScheduleView : UIDropdownView<UIScheduler> {
-        public UIScheduleView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##SCHED", "Select a Scheduler", allowNew: false, allowDelete: false ) {
+        public UIScheduleView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##SCHED", "Select a Scheduler", allowNew: false, allowDelete: false ) {
             Group = main.Schedulers;
             Group.Items = AVFX.Schedulers.Select( item => new UIScheduler( main, item ) ).ToList();
         }

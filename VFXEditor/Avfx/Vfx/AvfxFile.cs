@@ -8,8 +8,8 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
-    public class AvfxFile {
+namespace VFXEditor.AVFX.VFX {
+    public class AVFXFile {
         public AVFXMain AVFX;
 
         public UIParameterView ParameterView;
@@ -38,7 +38,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public bool GetVerified() => Verified;
 
-        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) {
+        public AVFXFile( BinaryReader reader, bool checkOriginal = true ) {
             var startPos = reader.BaseStream.Position;
 
             byte[] original = null;

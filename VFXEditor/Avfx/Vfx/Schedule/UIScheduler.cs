@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.AVFXLib.Scheduler;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIScheduler : UINode {
         public AVFXScheduler Scheduler;
-        public AvfxFile Main;
+        public AVFXFile Main;
         public List<UISchedulerItem> Items;
         public List<UISchedulerItem> Triggers;
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler( AvfxFile main, AVFXScheduler scheduler ) : base( UINodeGroup.SchedColor, false ) {
+        public UIScheduler( AVFXFile main, AVFXScheduler scheduler ) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
             Main = main;
             Items = new List<UISchedulerItem>();

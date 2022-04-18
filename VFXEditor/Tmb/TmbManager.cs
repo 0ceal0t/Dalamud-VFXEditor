@@ -1,21 +1,21 @@
 using VFXEditor.FileManager;
 using VFXSelect;
-using VFXSelect.VFX;
+using VFXSelect.TMB;
 
-namespace VFXEditor.Tmb {
-    public partial class TmbManager : FileManager<TmbDocument, WorkspaceMetaTmb, TmbFile> {
-        public static TmbSelectDialog SourceSelect { get; private set; }
-        public static TmbSelectDialog ReplaceSelect { get; private set; }
+namespace VFXEditor.TMB {
+    public partial class TMBManager : FileManager<TMBDocument, WorkspaceMetaTmb, TMBFile> {
+        public static TMBSelectDialog SourceSelect { get; private set; }
+        public static TMBSelectDialog ReplaceSelect { get; private set; }
 
         public static void Setup() {
-            SourceSelect = new TmbSelectDialog(
+            SourceSelect = new TMBSelectDialog(
                 "Tmb Select [SOURCE]",
                 null,
                 true,
                 SetSourceGlobal
             );
 
-            ReplaceSelect = new TmbSelectDialog(
+            ReplaceSelect = new TMBSelectDialog(
                 "Tmb Select [TARGET]",
                 null,
                 false,
@@ -33,11 +33,11 @@ namespace VFXEditor.Tmb {
 
         public static readonly string PenumbraPath = "Tmb";
 
-        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
+        public TMBManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
 
-        protected override TmbDocument GetNewDocument() => new( LocalPath );
+        protected override TMBDocument GetNewDocument() => new( LocalPath );
 
-        protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override TMBDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         public override void Dispose() {
             base.Dispose();

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIModelEmitSplitView : UIItemSplitView<UIModelEmitterVertex> {
         public UIModel Model;
 

@@ -3,7 +3,7 @@ using System.Numerics;
 using VFXEditor.AVFXLib.Model;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIModelEmitterVertex : UIItem {
         public UIModel Model;
         public AVFXVNum VertNumber;
@@ -21,7 +21,7 @@ namespace VFXEditor.Avfx.Vfx {
             Order = VertNumber.Num;
             Position = new Vector3( Vertex.Position[0], Vertex.Position[1], Vertex.Position[2] );
             Normal = new Vector3( Vertex.Normal[0], Vertex.Normal[1], Vertex.Normal[2] );
-            Color = UiHelper.IntToColor( Vertex.C ) / 255;
+            Color = UIHelper.IntToColor( Vertex.C ) / 255;
         }
 
         public override void DrawBody( string parentId ) {
@@ -36,7 +36,7 @@ namespace VFXEditor.Avfx.Vfx {
                 Vertex.Normal = new float[] { Normal.X, Normal.Y, Normal.Z };
             }
             if( ImGui.ColorEdit4( "Color" + id, ref Color ) ) {
-                Vertex.C = UiHelper.ColorToInt( Color * 255 );
+                Vertex.C = UIHelper.ColorToInt( Color * 255 );
             }
         }
 

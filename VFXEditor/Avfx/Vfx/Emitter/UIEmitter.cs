@@ -10,10 +10,10 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Emitter;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIEmitter : UINode {
         public readonly AVFXEmitter Emitter;
-        public readonly AvfxFile Main;
+        public readonly AVFXFile Main;
 
         public readonly UICombo<EmitterType> Type;
         public readonly List<UIItem> Animation;
@@ -33,7 +33,7 @@ namespace VFXEditor.Avfx.Vfx {
         public readonly UIInt SoundIndex;
         private readonly List<UIBase> Parameters;
 
-        public UIEmitter( AvfxFile main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
+        public UIEmitter( AVFXFile main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
             Emitter = emitter;
             Main = main;
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", Main.Effectors, Emitter.EffectorIdx );

@@ -30,7 +30,7 @@ namespace VFXEditor.Texture {
             var idx = 0;
             ImGui.NextColumn();
             foreach( var entry in PathToTextureReplace ) {
-                if( UiHelper.RemoveButton( "Remove" + id + idx, small: true ) ) {
+                if( UIHelper.RemoveButton( "Remove" + id + idx, small: true ) ) {
                     RemoveReplaceTexture( entry.Key );
                     RefreshPreviewTexture( entry.Key );
                 }

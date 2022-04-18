@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Helper;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
         public List<T> Items;
         private T Selected = null;
@@ -39,7 +39,7 @@ namespace VFXEditor.Avfx.Vfx {
             }
             if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
-                if( UiHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     Items.Remove( Selected );
                     OnDelete( Selected );
                     SetupIdx();

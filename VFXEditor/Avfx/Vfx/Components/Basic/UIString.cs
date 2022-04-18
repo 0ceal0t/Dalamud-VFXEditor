@@ -4,7 +4,7 @@ using VFXEditor.Data;
 using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.AVFX.VFX {
     public class UIString : UIBase {
         public readonly string Name;
         public readonly AVFXString Literal;
@@ -29,12 +29,12 @@ namespace VFXEditor.Avfx.Vfx {
             }
 
             if (CanBeUnassigned) {
-                if (Literal.IsAssigned() && UiHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
+                if (Literal.IsAssigned() && UIHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( false );
                 }
-                else if( !Literal.IsAssigned() && UiHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
+                else if( !Literal.IsAssigned() && UIHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( true );

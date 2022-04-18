@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using VFXEditor.Helper;
 using VFXEditor.Textools;
 
-namespace VFXEditor.Avfx {
-    public partial class AvfxDocument {
+namespace VFXEditor.AVFX {
+    public partial class AVFXDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
