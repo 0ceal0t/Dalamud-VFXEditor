@@ -7,7 +7,6 @@ namespace VFXEditor.Avfx.Vfx {
         private readonly List<UIBase> Parameters;
 
         public UIParameters( string name ) {
-            Assigned = true;
             Name = name;
             Parameters = new List<UIBase>();
         }
@@ -16,10 +15,20 @@ namespace VFXEditor.Avfx.Vfx {
             Parameters.Add( item );
         }
 
+        public void Remove( UIBase item ) {
+            Parameters.Remove( item );
+        }
+
+        public void Prepend( UIBase item ) {
+            Parameters.Insert( 0, item );
+        }
+
         public override void DrawBody( string id ) {
             DrawList( Parameters, id );
         }
 
         public override string GetDefaultText() => Name;
+
+        public override bool IsAssigned() => true;
     }
 }

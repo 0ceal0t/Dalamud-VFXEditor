@@ -1,4 +1,4 @@
-using AVFXLib.Models;
+using VFXEditor.AVFXLib.Binder;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIBinderDataPoint : UIData {

@@ -1,7 +1,9 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEffector : UINode {
@@ -18,7 +20,7 @@ namespace VFXEditor.Avfx.Vfx {
             NodeView = new UINodeGraphView( this );
 
             Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, onChange: () => {
-                Effector.SetVariety( Effector.EffectorVariety.Value );
+                Effector.SetType( Effector.EffectorVariety.GetValue() );
                 SetType();
             } );
             Parameters = new List<UIBase> {
@@ -36,7 +38,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         private void SetType() {
             Data?.Dispose();
-            Data = Effector.EffectorVariety.Value switch {
+            Data = Effector.EffectorVariety.GetValue() switch {
                 EffectorType.PointLight => new UIEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data ),
                 EffectorType.RadialBlur => new UIEffectorDataRadialBlur( ( AVFXEffectorDataRadialBlur )Effector.Data ),
                 EffectorType.CameraQuake => new UIEffectorDataCameraQuake( ( AVFXEffectorDataCameraQuake )Effector.Data ),
@@ -77,10 +79,10 @@ namespace VFXEditor.Avfx.Vfx {
             ImGui.EndChild();
         }
 
-        public override string GetDefaultText() => $"Effector {Idx}({Effector.EffectorVariety.StringValue()})";
+        public override string GetDefaultText() => $"Effector {Idx}({Effector.EffectorVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Effct{Idx}";
 
-        public override byte[] ToBytes() => Effector.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Effector.Write( writer );
     }
 }

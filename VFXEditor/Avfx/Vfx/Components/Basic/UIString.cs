@@ -1,20 +1,20 @@
 using System;
 using ImGuiNET;
-using AVFXLib.Models;
 using VFXEditor.Data;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIString : UIBase {
-        public string Name;
-        public LiteralString Literal;
+        public readonly string Name;
+        public readonly AVFXString Literal;
         public string Value;
-        public bool CanBeUnassigned;
+        public readonly bool CanBeUnassigned;
 
-        public UIString( string name, LiteralString literal, bool canBeUnassigned = false ) {
+        public UIString( string name, AVFXString literal, bool canBeUnassigned = false ) {
             Name = name;
             Literal = literal;
-            Value = Literal.Value ?? "";
+            Value = Literal.GetValue() ?? "";
             CanBeUnassigned = canBeUnassigned;
         }
 
@@ -22,32 +22,36 @@ namespace VFXEditor.Avfx.Vfx {
             if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralString literal ) {
-                Literal.GiveValue( literal.Value );
-                Value = Literal.Value ?? "";
+
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXString literal ) {
+                Literal.SetValue( literal.GetValue() );
+                Value = Literal.GetValue() ?? "";
             }
 
             if (CanBeUnassigned) {
-                if (Literal.Assigned && UiHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
+                if (Literal.IsAssigned() && UiHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
                     Value = "";
-                    Literal.GiveValue( "" );
-                    Literal.Assigned = false;
+                    Literal.SetValue( "" );
+                    Literal.SetAssigned( false );
                 }
-                else if( !Literal.Assigned && UiHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
+                else if( !Literal.IsAssigned() && UiHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
                     Value = "";
-                    Literal.GiveValue( "" );
-                    Literal.Assigned = true;
+                    Literal.SetValue( "" );
+                    Literal.SetAssigned( true );
                 }
 
-                if( !Literal.Assigned ) return;
+                if( !Literal.IsAssigned() ) return;
             }
 
+            PushAssignedColor( Literal.IsAssigned() );
             ImGui.InputText( Name + id, ref Value, 256 );
+            PopAssignedColor();
+
             ImGui.SameLine();
             if( ImGui.Button( "Update" + id ) ) {
-                Literal.GiveValue( Value.Trim().Trim( '\0' ) + "\u0000" );
-                if( CanBeUnassigned && Literal.Value.Trim( '\0' ).Length == 0 ) {
-                    Literal.Assigned = false;
+                Literal.SetValue( Value.Trim().Trim( '\0' ) + "\u0000" );
+                if( CanBeUnassigned && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
+                    Literal.SetAssigned( false );
                 }
             }
         }

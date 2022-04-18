@@ -1,7 +1,8 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleUVSet : UIItem {
@@ -35,5 +36,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override string GetDefaultText() => $"UV {Idx}";
+
+        public override bool IsAssigned() => true;
     }
 }

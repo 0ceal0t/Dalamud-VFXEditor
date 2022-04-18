@@ -1,5 +1,5 @@
-using AVFXLib.Models;
 using System;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleDataDecalRing : UIData {

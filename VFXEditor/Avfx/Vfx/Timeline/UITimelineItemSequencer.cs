@@ -16,7 +16,11 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override UITimelineItem OnNew() {
             var newItem = Timeline.Timeline.AddItem();
-            newItem.EndTime.GiveValue( 1 );
+            newItem.BinderIdx.SetValue( -1 );
+            newItem.EffectorIdx.SetValue( -1 );
+            newItem.EmitterIdx.SetValue( -1 );
+            newItem.EndTime.SetValue( 1 );
+
             return new UITimelineItem( newItem, Timeline );
         }
 
@@ -29,12 +33,12 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void SetEnd( UITimelineItem item, int end ) {
             item.EndTime.Value = end;
-            item.EndTime.Literal.GiveValue( end );
+            item.EndTime.Literal.SetValue( end );
         }
 
         public override void SetStart( UITimelineItem item, int start ) {
             item.StartTime.Value = start;
-            item.StartTime.Literal.GiveValue( start );
+            item.StartTime.Literal.SetValue( start );
         }
     }
 }

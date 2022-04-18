@@ -1,11 +1,12 @@
 using System;
 using System.IO;
-using AVFXLib.Models;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+
+using VFXEditor.AVFXLib.Curve;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -56,7 +57,7 @@ namespace VFXEditor.DirectX {
 
         public void SetGradient(AVFXCurve curve ) {
             CurrentCurve = curve;
-            var numPoints = curve.Keys.Count;
+            var numPoints = curve.Keys.Keys.Count;
             if( numPoints < 2 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
@@ -64,13 +65,13 @@ namespace VFXEditor.DirectX {
             else {
                 // each set of 2 keys needs 6 points
                 var data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
-                float startTime = curve.Keys[0].Time;
-                float endTime = curve.Keys[numPoints - 1].Time;
+                float startTime = curve.Keys.Keys[0].Time;
+                float endTime = curve.Keys.Keys[numPoints - 1].Time;
                 var timeDiff = ( endTime - startTime );
 
                 for( var i = 0; i < numPoints - 1; i++ ) {
-                    var left = curve.Keys[i];
-                    var right = curve.Keys[i + 1];
+                    var left = curve.Keys.Keys[i];
+                    var right = curve.Keys.Keys[i + 1];
 
                     var leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
                     var rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;

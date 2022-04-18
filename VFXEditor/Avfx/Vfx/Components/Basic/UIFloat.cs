@@ -1,32 +1,35 @@
 using System;
 using ImGuiNET;
-using AVFXLib.Models;
+using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIFloat : UIBase {
-        public string Name;
+        public readonly string Name;
         public float Value;
-        public LiteralFloat Literal;
+        public readonly AVFXFloat Literal;
 
-        public UIFloat( string name, LiteralFloat literal ) {
+        public UIFloat( string name, AVFXFloat literal ) {
             Name = name;
             Literal = literal;
-            Value = Literal.Value;
+            Value = Literal.GetValue();
         }
 
         public override void Draw( string id ) {
             if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralFloat literal ) {
-                Literal.GiveValue( literal.Value );
-                Value = Literal.Value;
+
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXFloat literal ) {
+                Literal.SetValue( literal.GetValue() );
+                Value = Literal.GetValue();
             }
 
+            PushAssignedColor( Literal.IsAssigned() );
             if( ImGui.InputFloat( Name + id, ref Value ) ) {
-                Literal.GiveValue( Value );
+                Literal.SetValue( Value );
             }
+            PopAssignedColor();
         }
     }
 }

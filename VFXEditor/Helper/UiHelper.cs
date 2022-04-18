@@ -65,13 +65,13 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        public static int ColorToInt( Vector4 Color ) {
-            var data = new byte[] { ( byte )Color.X, ( byte )Color.Y, ( byte )Color.Z, ( byte )Color.W };
-            return AVFXLib.Main.Util.Bytes4ToInt( data );
+        public static int ColorToInt( Vector4 color ) {
+            var data = new byte[] { ( byte )color.X, ( byte )color.Y, ( byte )color.Z, ( byte )color.W };
+            return BitConverter.ToInt32( data );
         }
 
-        public static Vector4 IntToColor( int Color ) {
-            var colors = AVFXLib.Main.Util.IntTo4Bytes( Color );
+        public static Vector4 IntToColor( int color ) {
+            var colors = BitConverter.GetBytes( color );
             return new Vector4( colors[0], colors[1], colors[2], colors[3] );
         }
 

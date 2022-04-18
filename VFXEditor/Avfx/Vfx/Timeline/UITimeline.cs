@@ -1,7 +1,8 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITimeline : UINode {
@@ -84,6 +85,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override string GetWorkspaceId() => $"Tmln{Idx}";
 
-        public override byte[] ToBytes() => Timeline.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Timeline.Write( writer );
     }
 }

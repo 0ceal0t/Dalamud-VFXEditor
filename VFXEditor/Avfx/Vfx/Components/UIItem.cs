@@ -5,7 +5,7 @@ namespace VFXEditor.Avfx.Vfx {
     public abstract class UIItem : UIBase {
         public int Idx;
 
-        public UIItem() { }
+        public abstract bool IsAssigned();
 
         public virtual string GetText() => GetDefaultText();
 
@@ -18,20 +18,19 @@ namespace VFXEditor.Avfx.Vfx {
         public override void Draw( string parentId ) { }
 
         public static void DrawListTabs( List<UIItem> items, string parentId ) {
-            var idx = 0;
-            foreach( var item in items ) {
-                if( !item.Assigned ) {
-                    if(idx > 0 ) {
-                        ImGui.SameLine();
-                    }
-                    item.Draw( parentId );
-                    idx++;
-                }
+            var numerOfUnassigned = 0;
+            foreach( var item in items ) { // Draw unassigned
+                if( item.IsAssigned() ) continue;
+
+                if( numerOfUnassigned > 0 ) ImGui.SameLine();
+                item.Draw( parentId );
+                numerOfUnassigned++;
             }
 
-            ImGui.BeginTabBar( parentId + "-Tabs" );
+            ImGui.BeginTabBar( parentId + "-Tabs" ); // Draw assigned
             foreach( var item in items ) {
-                if( !item.Assigned ) continue;
+                if( !item.IsAssigned() ) continue;
+
                 if(ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
                     item.DrawBody( parentId );
                     ImGui.EndTabItem();

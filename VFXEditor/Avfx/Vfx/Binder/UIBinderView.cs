@@ -1,11 +1,12 @@
-using AVFXLib.Models;
 using System;
+using System.IO;
 using System.Linq;
-using AVFXLib.AVFX;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Binder;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIBinderView : UIDropdownView<UIBinder> {
-        public UIBinderView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath: "binder_default.vfxedit" ) {
+        public UIBinderView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath: "binder_default.vfxedit" ) {
             Group = main.Binders;
             Group.Items = AVFX.Binders.Select( item => new UIBinder( Main, item ) ).ToList();
         }
@@ -14,13 +15,11 @@ namespace VFXEditor.Avfx.Vfx {
             AVFX.RemoveBinder( item.Binder );
         }
 
-        public override byte[] OnExport( UIBinder item ) {
-            return item.Binder.ToAVFX().ToBytes();
-        }
+        public override void OnExport( BinaryWriter writer, UIBinder item ) => item.Write( writer );
 
-        public override UIBinder OnImport( AVFXNode node, bool has_dependencies = false ) {
+        public override UIBinder OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var item = new AVFXBinder();
-            item.Read( node );
+            item.Read( reader, size );
             AVFX.AddBinder( item );
             return new UIBinder( Main, item );
         }

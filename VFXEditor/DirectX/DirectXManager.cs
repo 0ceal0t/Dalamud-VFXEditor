@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
+
 namespace VFXEditor.DirectX {
     public class DirectXManager {
         private Device Device;

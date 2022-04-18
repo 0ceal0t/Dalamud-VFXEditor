@@ -1,4 +1,3 @@
-using AVFXLib.Models;
 using Dalamud.Interface;
 using ImGuiNET;
 using System;
@@ -51,20 +50,21 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override void DrawLeftCol( string parentId ) {
-            foreach( var item in Items.Where( x => x.Assigned ) ) {
+            foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
                 if( ImGui.Selectable( item.GetText() + parentId, Selected == item ) ) {
                     OnSelect( item );
                     Selected = item;
                 }
             }
+
             // not assigned, can be added
-            foreach( var item in Items.Where( x => !x.Assigned ) ) {
+            foreach( var item in Items.Where( x => !x.IsAssigned() ) ) {
                 item.DrawUnAssigned( parentId );
             }
         }
 
         public override void DrawRightCol( string parentId ) {
-            if( Selected != null && Selected.Assigned ) {
+            if( Selected != null && Selected.IsAssigned() ) {
                 Selected.DrawBody( parentId );
             }
         }

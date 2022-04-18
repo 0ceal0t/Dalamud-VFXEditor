@@ -10,12 +10,12 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override UISchedulerItem OnNew() {
-            return new UISchedulerItem( Sched.Scheduler.AddItem(), Sched, "Item" );
+            return new UISchedulerItem( Sched.Scheduler.Add(), Sched, "Item" );
         }
 
         public override void OnDelete( UISchedulerItem item ) {
             item.TimelineSelect.DeleteSelect();
-            Sched.Scheduler.RemoveItem( item.Item );
+            Sched.Scheduler.Remove( item.Item );
         }
     }
 }

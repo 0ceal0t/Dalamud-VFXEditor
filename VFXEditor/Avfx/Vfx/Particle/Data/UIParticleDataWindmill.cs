@@ -1,5 +1,6 @@
-using AVFXLib.Models;
+using VFXEditor.AVFXLib.Particle;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleDataWindmill : UIData {

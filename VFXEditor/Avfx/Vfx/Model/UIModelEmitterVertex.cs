@@ -1,19 +1,19 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System.Numerics;
+using VFXEditor.AVFXLib.Model;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIModelEmitterVertex : UIItem {
         public UIModel Model;
-        public VNum VertNumber;
-        public EmitVertex Vertex;
+        public AVFXVNum VertNumber;
+        public AVFXEmitVertex Vertex;
         public int Order;
         public Vector3 Position;
         public Vector3 Normal;
         public Vector4 Color;
 
-        public UIModelEmitterVertex( VNum vnum, EmitVertex emitVertex, UIModel model ) {
+        public UIModelEmitterVertex( AVFXVNum vnum, AVFXEmitVertex emitVertex, UIModel model ) {
             Model = model;
             VertNumber = vnum;
             Vertex = emitVertex;
@@ -41,5 +41,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override string GetDefaultText() => $"{Idx}";
+
+        public override bool IsAssigned() => true;
     }
 }

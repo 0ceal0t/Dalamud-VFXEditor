@@ -1,16 +1,16 @@
-using AVFXLib.Models;
 using System;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib.Scheduler;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UISchedulerItem : UIWorkspaceItem {
-        public AVFXScheduleSubItem Item;
+        public AVFXSchedulerSubItem Item;
         public UIScheduler Sched;
         public string Name;
         public UINodeSelect<UITimeline> TimelineSelect;
         private readonly List<UIBase> Parameters;
 
-        public UISchedulerItem( AVFXScheduleSubItem item, UIScheduler sched, string name ) {
+        public UISchedulerItem( AVFXSchedulerSubItem item, UIScheduler sched, string name ) {
             Item = item;
             Sched = sched;
             Name = name;
@@ -29,7 +29,7 @@ namespace VFXEditor.Avfx.Vfx {
             DrawList( Parameters, id );
         }
 
-        public override string GetDefaultText() => $"{Idx}: Timeline {Item.TimelineIdx.Value}";
+        public override string GetDefaultText() => $"{Idx}: Timeline {Item.TimelineIdx.GetValue()}";
 
         public override string GetWorkspaceId() {
             var Type = ( Name == "Item" ) ? "Item" : "Trigger";

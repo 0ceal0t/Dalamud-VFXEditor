@@ -1,4 +1,3 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace VFXEditor.Avfx.Vfx {
         public List<UIItem> Items = new();
 
         public UIParameterTabs( string name ) {
-            Assigned = true;
             Name = name;
         }
 
@@ -25,8 +23,8 @@ namespace VFXEditor.Avfx.Vfx {
             DrawListTabs( Items, parentId );
         }
 
-        public override string GetDefaultText() {
-            return Name;
-        }
+        public override string GetDefaultText() => Name;
+
+        public override bool IsAssigned() => true;
     }
 }

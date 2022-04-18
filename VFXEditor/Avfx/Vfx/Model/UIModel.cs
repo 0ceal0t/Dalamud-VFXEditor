@@ -1,10 +1,11 @@
-using AVFXLib.Models;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
+using VFXEditor.AVFXLib.Model;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -24,8 +25,8 @@ namespace VFXEditor.Avfx.Vfx {
             NodeView = new UINodeGraphView( this );
 
             EmitterVerts = new List<UIModelEmitterVertex>();
-            for( var i = 0; i < Math.Min( Model.VNums.Count, Model.EmitVertices.Count ); i++ ) {
-                EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums[i], Model.EmitVertices[i], this ) );
+            for( var i = 0; i < Math.Min( Model.VNums.Nums.Count, Model.EmitVertexes.EmitVertexes.Count ); i++ ) {
+                EmitterVerts.Add( new UIModelEmitterVertex( Model.VNums.Nums[i], Model.EmitVertexes.EmitVertexes[i], this ) );
             }
             EmitSplit = new UIModelEmitSplitView( EmitterVerts, this );
             HasDependencies = false; // if imported, all set now
@@ -35,7 +36,7 @@ namespace VFXEditor.Avfx.Vfx {
             var id = parentId + "/Model";
             NodeView.Draw( id );
             DrawRename( id );
-            ImGui.Text( "Vertices: " + Model.Vertices.Count + " " + "Indexes: " + Model.Indexes.Count );
+            ImGui.Text( "Vertices: " + Model.Vertexes.Vertexes.Count + " " + "Indexes: " + Model.Indexes.Indexes.Count );
             if( ImGui.Button( "Export" + id ) ) {
                 ImGui.OpenPopup( "Save_Popup" + id );
             }
@@ -136,8 +137,11 @@ namespace VFXEditor.Avfx.Vfx {
                 if( !ok ) return;
                 try {
                     if( GltfHelper.ImportModel( res, out var v_s, out var i_s ) ) {
-                        Model.Vertices = v_s;
-                        Model.Indexes = i_s;
+                        Model.Vertexes.Vertexes.Clear();
+                        Model.Vertexes.Vertexes.AddRange(v_s);
+
+                        Model.Indexes.Indexes.Clear();
+                        Model.Indexes.Indexes.AddRange(i_s);
                         Refresh = true;
                     }
                 }
@@ -158,6 +162,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override string GetWorkspaceId() => $"Mdl{Idx}";
 
-        public override byte[] ToBytes() => Model.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Model.Write( writer );
     }
 }

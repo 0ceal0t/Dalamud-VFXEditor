@@ -15,14 +15,14 @@ namespace VFXEditor.Avfx.Vfx {
 
         public UINodeGraph( UINode node) {
             ParseGraph( 0, node, new HashSet<UINode>() );
-            var L2Dict = new Dictionary<int, int>();
+            var level2Dict = new Dictionary<int, int>();
             foreach(var val in Graph.Values ) {
-                if( L2Dict.ContainsKey( val.Level ) ) {
-                    L2Dict[val.Level] += 1;
-                    val.Level2 = L2Dict[val.Level];
+                if( level2Dict.ContainsKey( val.Level ) ) {
+                    level2Dict[val.Level] += 1;
+                    val.Level2 = level2Dict[val.Level];
                 }
                 else {
-                    L2Dict[val.Level] = 0;
+                    level2Dict[val.Level] = 0;
                     val.Level2 = 0;
                 }
             }

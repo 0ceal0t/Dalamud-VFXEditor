@@ -1,33 +1,33 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureNormal : UIItem {
-        public AVFXTextureNormal Tex;
-        public UIParticle Particle;
-        public string Name;
-        public UINodeSelect<UITexture> TextureSelect;
-        public List<UIItem> Tabs;
-        public UIParameters Parameters;
+        public readonly AVFXParticleTextureNormal Tex;
+        public readonly UIParticle Particle;
+        public readonly string Name;
 
-        public UITextureNormal( AVFXTextureNormal tex, UIParticle particle ) {
+        public UINodeSelect<UITexture> TextureSelect;
+
+        public readonly List<UIItem> Tabs;
+        public readonly UIParameters Parameters;
+
+        public UITextureNormal( AVFXParticleTextureNormal tex, UIParticle particle ) {
             Tex = tex;
             Particle = particle;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Tex.Assigned ) { Assigned = false; return; }
 
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
 
-            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
+            if ( IsAssigned() ) {
+                Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
+            }
+
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UIInt( "UV Set Index", Tex.UvSetIdx ) );
             Parameters.Add( new UICombo<TextureFilterType>( "Texture Filter", Tex.TextureFilter ) );
@@ -39,23 +39,20 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Normal" + parentId ) ) {
-                Tex.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Tex, true );
+
+                Parameters.Remove( TextureSelect );
+                Parameters.Prepend( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
             }
         }
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TN";
-            if( UiHelper.RemoveButton( "Delete Texture Normal" + id, small: true ) ) {
-                Tex.Assigned = false;
-                TextureSelect.DeleteSelect();
-                Init();
-                return;
-            }
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Tabs, id );
         }
 
         public override string GetDefaultText() => "Texture Normal";
+
+        public override bool IsAssigned() => Tex.IsAssigned();
     }
 }

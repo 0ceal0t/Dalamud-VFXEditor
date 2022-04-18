@@ -1,7 +1,8 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
@@ -10,20 +11,14 @@ namespace VFXEditor.Avfx.Vfx {
         private readonly AVFXCurve Curve;
         private readonly bool Color = false;
         private readonly bool Locked;
-        private List<UIBase> Parameters;
-        private  UICurveEditor CurveEdit;
+        private readonly List<UIBase> Parameters;
+        private readonly UICurveEditor CurveEdit;
 
         public UICurve( AVFXCurve curve, string name, bool color = false, bool locked = false ) {
             Curve = curve;
             Name = name;
             Color = color;
             Locked = locked;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Curve.Assigned ) { Assigned = false; return; }
 
             CurveEdit = new UICurveEditor( Curve, Color );
             Parameters = new List<UIBase> {
@@ -36,7 +31,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override void Draw( string parentId ) {
-            if( !Assigned ) {
+            if( !IsAssigned() ) {
                 DrawUnAssigned( parentId );
                 return;
             }
@@ -48,8 +43,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                Curve.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Curve, true );
             }
         }
 
@@ -57,8 +51,7 @@ namespace VFXEditor.Avfx.Vfx {
             var id = parentId + "/" + Name;
             if( !Locked ) {
                 if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
-                    Curve.Assigned = false;
-                    Init();
+                    Curve.SetAssigned( false );
                     return;
                 }
             }
@@ -67,5 +60,34 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override string GetDefaultText() => Name;
+
+        public override bool IsAssigned() => Curve.IsAssigned();
+
+        public static void DrawUnassignedCurves( List<UICurve> curves, string id ) {
+            var idx = 0;
+            foreach( var curve in curves ) {
+                if( !curve.IsAssigned() ) {
+                    if( idx % 5 != 0 ) {
+                        ImGui.SameLine();
+                    }
+                    curve.Draw( id );
+                    idx++;
+                }
+            }
+        }
+
+        public static void DrawAssignedCurves( List<UICurve> curves, string id ) {
+            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                foreach( var curve in curves ) {
+                    if( curve.IsAssigned() ) {
+                        if( ImGui.BeginTabItem( curve.Name + id ) ) {
+                            curve.DrawBody( id );
+                            ImGui.EndTabItem();
+                        }
+                    }
+                }
+                ImGui.EndTabBar();
+            }
+        }
     }
 }

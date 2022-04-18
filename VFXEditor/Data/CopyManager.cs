@@ -1,6 +1,6 @@
-using AVFXLib.Models;
 using System.Collections.Generic;
 using System.Numerics;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Data {
     public class CopyManager {
@@ -8,7 +8,7 @@ namespace VFXEditor.Data {
         public static bool IsPasting { get; private set; }
 
         public static List<Vector4> CurveKeys { get; private set; }
-        public static Dictionary<string, Base> Copied { get; private set; }
+        public static Dictionary<string, AVFXBase> Copied { get; private set; }
 
         public static void Initialize() {
             CurveKeys = new();

@@ -1,10 +1,4 @@
-using AVFXLib.Models;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UIGenericSplitView : UIBase {
@@ -24,6 +18,7 @@ namespace VFXEditor.Avfx.Vfx {
         private bool DrawOnce = false;
         public override void Draw( string parentId = "" ) {
             ImGui.Columns( 2, parentId + "/Cols", true );
+
             // ===== C1 =========
             DrawControls( parentId );
 
@@ -35,6 +30,7 @@ namespace VFXEditor.Avfx.Vfx {
                 ImGui.SetColumnWidth( 0, 200 );
                 DrawOnce = true;
             }
+
             // ===== C2 ============
             ImGui.NextColumn();
             ImGui.BeginChild( parentId + "/Split" );

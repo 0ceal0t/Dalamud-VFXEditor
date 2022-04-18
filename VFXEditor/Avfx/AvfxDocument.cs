@@ -23,11 +23,30 @@ namespace VFXEditor.Avfx {
         }
 
         protected override void LoadLocal( string localPath ) {
-            CurrentFile = AvfxHelper.GetLocalFile( localPath, out var avfx ) ? new AvfxFile( avfx ) : CurrentFile;
+            if (File.Exists( localPath ) ) {
+                try {
+                    using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
+                    CurrentFile = new AvfxFile( br );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( "Error Reading File", e );
+                }
+            }
         }
 
         protected override void LoadGame( string gamePath ) {
-            CurrentFile = AvfxHelper.GetGameFile( gamePath, out var avfx ) ? new AvfxFile( avfx ) : CurrentFile;
+            if( Plugin.DataManager.FileExists( gamePath ) ) {
+                try {
+                    var file = Plugin.DataManager.GetFile( gamePath );
+                    using var ms = new MemoryStream( file.Data );
+                    using var br = new BinaryReader( ms );
+                    CurrentFile = new AvfxFile( br );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( "Error Reading File", e );
+                    PluginLog.Log( e.ToString() );
+                }
+            }
         }
 
         protected override void Update() {
@@ -195,9 +214,6 @@ namespace VFXEditor.Avfx {
                 if( ImGui.BeginPopup( "Export_Popup" ) ) {
                     if( ImGui.Selectable( ".AVFX" ) ) {
                         UiHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
-                    }
-                    if( ImGui.Selectable( "Export last import (raw)" ) ) {
-                        UiHelper.WriteBytesDialog( ".txt", AvfxHelper.LastImportNode.ExportString( 0 ), "txt" );
                     }
                     ImGui.EndPopup();
                 }

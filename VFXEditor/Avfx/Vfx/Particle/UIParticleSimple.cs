@@ -1,37 +1,38 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleSimple : UIItem {
-        public AVFXParticleSimple Simple;
-        public UIParticle Particle;
+        public readonly AVFXParticleSimple Simple;
+        public readonly UIParticle Particle;
+
         public UINodeSelect<UIModel> InjectionModelSelect;
         public UINodeSelect<UIModel> InjectionVertexModelSelect;
-        public List<UIItem> Tabs;
-        public UIParameters Creation;
-        public UIParameters Animation;
-        public UIParameters Texture;
-        public UIParameters Color;
+
+        public readonly List<UIItem> Tabs;
+        public readonly UIParameters Creation;
+        public readonly UIParameters Animation;
+        public readonly UIParameters Texture;
+        public readonly UIParameters Color;
 
         public UIParticleSimple( AVFXParticleSimple simple, UIParticle particle ) {
             Simple = simple;
             Particle = particle;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Simple.Assigned ) { Assigned = false; return; }
 
             Tabs = new List<UIItem> {
                 ( Creation = new UIParameters( "Creation" ) )
             };
-            Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
-            Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
+
+            if(IsAssigned()) {
+                Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
+                Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
+            }
+
             Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
             Creation.Add( new UIInt( "Injection Direction Type", Simple.InjectionDirectionType ) );
             Creation.Add( new UIInt( "Base Direction Type", Simple.BaseDirectionType ) );
@@ -87,8 +88,14 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
-                Simple.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Simple, true );
+
+                // Refresh model selects
+                Creation.Remove( InjectionModelSelect );
+                Creation.Remove( InjectionVertexModelSelect );
+
+                Creation.Prepend( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
+                Creation.Prepend( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
             }
         }
 
@@ -97,17 +104,17 @@ namespace VFXEditor.Avfx.Vfx {
             if( UiHelper.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
                 InjectionVertexModelSelect.DeleteSelect();
-                Simple.Assigned = false;
-                Init();
+
+                Simple.SetAssigned( false );
                 return;
             }
 
             DrawListTabs( Tabs, id );
         }
 
-        public override string GetDefaultText() {
-            return "Simple Animation";
-        }
+        public override string GetDefaultText() => "Simple Animation";
+
+        public override bool IsAssigned() => Simple.IsAssigned();
     }
 
     internal class UISimpleColor : UIBase {
@@ -121,23 +128,23 @@ namespace VFXEditor.Avfx.Vfx {
             Idx = idx;
 
             Color = new Vector4(
-                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 0] } ) / 255,
-                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 1] } ) / 255,
-                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 2] } ) / 255,
-                    ( float )AVFXLib.Main.Util.Bytes1ToInt( new byte[] { Simple.Colors.colors[Idx * 4 + 3] } ) / 255
-                );
-            Frame = Simple.Frames.frames[Idx];
+                ( float )( int )Simple.Colors.Colors[Idx * 4 + 0] / 255,
+                ( float )( int )Simple.Colors.Colors[Idx * 4 + 1] / 255,
+                ( float )( int )Simple.Colors.Colors[Idx * 4 + 2] / 255,
+                ( float )( int )Simple.Colors.Colors[Idx * 4 + 3] / 255
+            );
+            Frame = Simple.Frames.Frames[Idx];
         }
 
         public override void Draw( string parentId ) {
             if( ImGui.InputInt( "Frame " + Idx + parentId, ref Frame ) ) {
-                Simple.Frames.frames[Idx] = Frame;
+                Simple.Frames.Frames[Idx] = Frame;
             }
             if( ImGui.ColorEdit4( "Color " + Idx + parentId, ref Color, ImGuiColorEditFlags.Float ) ) {
-                Simple.Colors.colors[Idx * 4 + 0] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.X * 255f ) )[0];
-                Simple.Colors.colors[Idx * 4 + 1] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.Y * 255f ) )[0];
-                Simple.Colors.colors[Idx * 4 + 2] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.Z * 255f ) )[0];
-                Simple.Colors.colors[Idx * 4 + 3] = AVFXLib.Main.Util.IntTo1Bytes( ( int )( Color.W * 255f ) )[0];
+                Simple.Colors.Colors[Idx * 4 + 0] = ( byte )( int )( Color.X * 255f );
+                Simple.Colors.Colors[Idx * 4 + 1] = ( byte )( int )( Color.Y * 255f );
+                Simple.Colors.Colors[Idx * 4 + 2] = ( byte )( int )( Color.Z * 255f );
+                Simple.Colors.Colors[Idx * 4 + 3] = ( byte )( int )( Color.W * 255f );
             }
         }
     }

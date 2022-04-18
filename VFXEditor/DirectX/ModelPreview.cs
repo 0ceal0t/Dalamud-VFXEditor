@@ -5,9 +5,9 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using VFXEditor.AVFXLib.Model;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using AVFXLib.Models;
 
 namespace VFXEditor.DirectX {
     public class ModelPreview : ModelRenderer {
@@ -147,9 +147,9 @@ namespace VFXEditor.DirectX {
         }
 
         public void LoadModel( AVFXModel model, int mode = 1 ) {
-            LoadModel( model.Indexes, model.Vertices, model.EmitVertices, mode );
+            LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.EmitVertexes.EmitVertexes, mode );
         }
-        public void LoadModel( List<Index> _Indexes, List<Vertex> _Vertices, List<EmitVertex> _Emitters, int mode ) {
+        public void LoadModel( List<AVFXIndex> _Indexes, List<AVFXVertex> _Vertices, List<AVFXEmitVertex> _Emitters, int mode ) {
             if( _Indexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();

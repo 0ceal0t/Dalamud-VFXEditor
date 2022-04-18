@@ -1,33 +1,35 @@
 using System;
 using ImGuiNET;
-using AVFXLib.Models;
-using Dalamud.Plugin;
 using VFXEditor.Data;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIInt : UIBase {
-        public string Name;
+        public readonly string Name;
         public int Value;
-        public LiteralInt Literal;
+        public readonly AVFXInt Literal;
 
-        public UIInt( string name, LiteralInt literal ) {
+        public UIInt( string name, AVFXInt literal ) {
             Name = name;
             Literal = literal;
-            Value = Literal.Value;
+            Value = Literal.GetValue();
         }
 
         public override void Draw( string id ) {
             if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralInt literal ) {
-                Literal.GiveValue( literal.Value );
-                Value = Literal.Value;
+
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXInt literal ) {
+                Literal.SetValue( literal.GetValue() );
+                Value = Literal.GetValue();
             }
 
+            PushAssignedColor( Literal.IsAssigned() );
             if( ImGui.InputInt( Name + id, ref Value ) ) {
-                Literal.GiveValue( Value );
+                Literal.SetValue( Value );
             }
+            PopAssignedColor();
         }
     }
 }

@@ -17,9 +17,12 @@ namespace VFXEditor.Avfx.Vfx {
         public override void Draw( string parentId ) {
             DrawBody( parentId );
         }
+
         public override void DrawBody( string parentId ) {
             var id = parentId + "/Data";
             SplitView.Draw( id );
         }
+
+        public override bool IsAssigned() => true;
     }
 }

@@ -1,20 +1,16 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UILife : UIItem {
-        public AVFXLife Life;
-        private List<UIBase> Parameters;
+        public readonly AVFXLife Life;
+        private readonly List<UIBase> Parameters;
 
         public UILife( AVFXLife life ) {
             Life = life;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
             Parameters = new List<UIBase> {
                 new UIFloat( "Value", Life.Value ),
                 new UIFloat( "Random Value", Life.ValRandom ),
@@ -35,5 +31,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override string GetDefaultText() => "Life";
+
+        public override bool IsAssigned() => Life.IsAssigned();
     }
 }

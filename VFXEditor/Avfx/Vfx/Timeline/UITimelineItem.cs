@@ -1,7 +1,8 @@
-using AVFXLib.Models;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITimelineItem : UIWorkspaceItem {
@@ -25,7 +26,7 @@ namespace VFXEditor.Avfx.Vfx {
             EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", Timeline.Main.Effectors, Item.EffectorIdx );
 
             ClipNumber = new UIInt( "Clip Index", Item.ClipNumber );
-            ClipAssigned = Item.ClipNumber.Assigned;
+            ClipAssigned = Item.ClipNumber.IsAssigned();
 
             Parameters = new List<UIBase> {
                 new UICheckbox( "Enabled", Item.Enabled ),
@@ -45,12 +46,12 @@ namespace VFXEditor.Avfx.Vfx {
             DrawList( Parameters, id );
 
             if( ImGui.Checkbox( "Clip Enabled" + id, ref ClipAssigned ) ) {
-                Item.ClipNumber.Assigned = ClipAssigned;
+                Item.ClipNumber.SetAssigned( ClipAssigned );
             }
             ClipNumber.Draw( id );
         }
 
-        public override string GetDefaultText() => $"{Idx}: Emitter {Item.EmitterIdx.Value}";
+        public override string GetDefaultText() => $"{Idx}: Emitter {Item.EmitterIdx.GetValue()}";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Item{Idx}";
     }

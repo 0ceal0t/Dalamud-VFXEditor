@@ -1,5 +1,5 @@
-using AVFXLib.Models;
-using System;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEffectorDataRadialBlur : UIData {

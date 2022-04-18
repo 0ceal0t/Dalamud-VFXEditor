@@ -9,14 +9,14 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override UIModelEmitterVertex OnNew() {
-            var vnum = Model.Model.AddVNum();
-            var emit = Model.Model.AddEmitVertex();
+            var vnum = Model.Model.VNums.Add();
+            var emit = Model.Model.EmitVertexes.Add();
             return new UIModelEmitterVertex( vnum, emit, Model );
         }
 
         public override void OnDelete( UIModelEmitterVertex item ) {
-            Model.Model.RemoveEmitVertex( item.Vertex );
-            Model.Model.RemoveVNum( item.VertNumber );
+            Model.Model.EmitVertexes.Remove( item.Vertex );
+            Model.Model.VNums.Remove( item.VertNumber );
         }
     }
 }

@@ -3,16 +3,13 @@ using Lumina.Data.Files;
 using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.Numerics;
-
-using VfxVertex = AVFXLib.Models.Vertex;
-using VfxIndex = AVFXLib.Models.Index;
-
+using VFXEditor.AVFXLib.Model;
 
 namespace VFXEditor.Helper {
     public static class MdlHelper {
-       public static bool ImportModel( string localPath, out List<VfxVertex> vOut, out List<VfxIndex> iOut ) {
-            vOut = new List<VfxVertex>();
-            iOut = new List<VfxIndex>();
+       public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
+            vOut = new List<AVFXVertex>();
+            iOut = new List<AVFXIndex>();
             if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
@@ -32,8 +29,8 @@ namespace VFXEditor.Helper {
             return true;
         }
 
-        private static VfxVertex GetAVFXVert( Vector4 pos, Vector4 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
-            var ret = new VfxVertex();
+        private static AVFXVertex GetAVFXVert( Vector4 pos, Vector4 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+            var ret = new AVFXVertex();
             color *= 255;
             normal *= 128;
             tangent *= 128;

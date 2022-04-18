@@ -19,6 +19,7 @@ namespace VFXEditor {
 
         public bool LogAllFiles = false;
         public bool LogDebug = false;
+        public bool ShowVfxAssigned = false;
 
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
@@ -70,6 +71,10 @@ namespace VFXEditor {
             }
 
             if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) {
+                Save();
+            }
+
+            if( ImGui.Checkbox( "Show assigned parameter status##Settings", ref ShowVfxAssigned ) ) {
                 Save();
             }
 

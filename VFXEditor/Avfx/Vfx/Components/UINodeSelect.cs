@@ -1,8 +1,8 @@
-using AVFXLib.Models;
 using System.Collections.Generic;
 using ImGuiNET;
 using VFXEditor.Data;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UINodeSelect : UIBase {
@@ -33,17 +33,17 @@ namespace VFXEditor.Avfx.Vfx {
 
     public class UINodeSelect<T> : UINodeSelect where T : UINode {
         public T Selected = null;
-        public LiteralInt Literal;
+        public AVFXInt Literal;
         public UINodeGroup<T> Group;
         public string Name;
 
-        public UINodeSelect( UINode node, string name, UINodeGroup<T> group, LiteralInt literal ) {
+        public UINodeSelect( UINode node, string name, UINodeGroup<T> group, AVFXInt literal ) : base() {
             Node = node;
             Name = name;
             Group = group;
             Literal = literal;
             Group.OnChange += UpdateNode;
-            if( Group.IsInit ) {
+            if( Group.IsInitialized ) {
                 SetupNode();
             }
             else {
@@ -56,14 +56,15 @@ namespace VFXEditor.Avfx.Vfx {
             if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralInt literal ) {
-                Literal.GiveValue( literal.Value );
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is AVFXInt literal ) {
+                Literal.SetValue( literal.GetValue() );
                 UnlinkFrom( Selected );
-                if( Literal.Value >= 0 && Literal.Value < Group.Items.Count ) LinkTo( Selected = Group.Items[Literal.Value] );
+                if( Literal.GetValue() >= 0 && Literal.GetValue() < Group.Items.Count ) LinkTo( Selected = Group.Items[Literal.GetValue()] );
                 else Selected = null;
             }
 
             // ======= DRAW =========
+            PushAssignedColor( Literal.IsAssigned() );
             var id = parentId + "/Node";
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
                 if( ImGui.Selectable( "[NONE]", Selected == null ) ) SelectNone();
@@ -75,6 +76,7 @@ namespace VFXEditor.Avfx.Vfx {
 
                 ImGui.EndCombo();
             }
+            PopAssignedColor();
         }
 
         private void SelectNone() {
@@ -98,24 +100,25 @@ namespace VFXEditor.Avfx.Vfx {
                 UnlinkFrom( Selected );
             }
         }
+
         public override void UnlinkChange() {
             Group.OnChange -= UpdateNode;
         }
 
         public override void UpdateNode() {
             if( Selected != null ) {
-                Literal.GiveValue( Selected.Idx );
+                Literal.SetValue( Selected.Idx );
             }
             else {
-                Literal.GiveValue( -1 );
+                Literal.SetValue( -1 );
             }
         }
 
         public override void SetupNode() {
-            var val = Literal.Value;
+            var val = Literal.GetValue();
             if( Node.HasDependencies && val >= 0 ) {
                 val += Group.PreImportSize;
-                Literal.GiveValue( val );
+                Literal.SetValue( val );
             }
             if( val >= 0 && val < Group.Items.Count ) {
                 Selected = Group.Items[val];
@@ -131,17 +134,17 @@ namespace VFXEditor.Avfx.Vfx {
 
     public class UINodeSelectList<T> : UINodeSelect where T : UINode {
         public List<T> Selected = new();
-        public LiteralIntList Literal;
+        public AVFXIntList Literal;
         public UINodeGroup<T> Group;
         public string Name;
 
-        public UINodeSelectList( UINode node, string name, UINodeGroup<T> group, LiteralIntList literal ) {
+        public UINodeSelectList( UINode node, string name, UINodeGroup<T> group, AVFXIntList literal ) {
             Node = node;
             Name = name;
             Group = group;
             Literal = literal;
             Group.OnChange += UpdateNode;
-            if( Group.IsInit ) {
+            if( Group.IsInitialized ) {
                 SetupNode();
             }
             else {
@@ -154,11 +157,11 @@ namespace VFXEditor.Avfx.Vfx {
             if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is LiteralIntList literal ) {
-                Literal.GiveValue( literal.Value );
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is AVFXIntList literal ) {
+                Literal.SetValue( literal.GetValue() );
                 foreach( var s in Selected ) UnlinkFrom( s );
                 Selected.Clear();
-                foreach( var item in Literal.Value ) {
+                foreach( var item in Literal.GetValue() ) {
                     if( item >= 0 && item < Group.Items.Count ) {
                         Selected.Add( Group.Items[item] );
                         LinkTo( Group.Items[item] );
@@ -168,6 +171,7 @@ namespace VFXEditor.Avfx.Vfx {
             }
 
             // ====== DRAW =================
+            PushAssignedColor( Literal.IsAssigned() );
             var id = parentId + "/Node";
             for( var i = 0; i < Selected.Count; i++ ) {
                 var _id = id + i;
@@ -200,6 +204,8 @@ namespace VFXEditor.Avfx.Vfx {
                     }
                 }
             }
+            PopAssignedColor();
+
             if( Selected.Count == 0 ) {
                 ImGui.Text( Name );
                 ImGui.TextColored( UiHelper.RED_COLOR, "WARNING: Add an item!" );
@@ -221,6 +227,7 @@ namespace VFXEditor.Avfx.Vfx {
                 UnlinkFrom( item );
             }
         }
+
         public override void UnlinkChange() {
             Group.OnChange -= UpdateNode;
         }
@@ -235,15 +242,15 @@ namespace VFXEditor.Avfx.Vfx {
                     idxs.Add( item.Idx );
                 }
             }
-            Literal.GiveValue( idxs );
+            Literal.SetValue( idxs );
         }
 
         public override void SetupNode() {
-            for( var i = 0; i < Literal.Value.Count; i++ ) {
-                var val = Literal.Value[i];
+            for( var i = 0; i < Literal.GetValue().Count; i++ ) {
+                var val = Literal.GetValue()[i];
                 if( Node.HasDependencies && val != 255 && val >= 0 ) {
                     val += Group.PreImportSize;
-                    Literal.GiveValue( val, i );
+                    Literal.SetValue( val, i );
                 }
                 if( val != 255 && val >= 0 && val < Group.Items.Count ) {
                     var item = Group.Items[val];

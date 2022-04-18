@@ -1,15 +1,16 @@
-using AVFXLib.Models;
 using ImGuiNET;
+using System.IO;
+using VFXEditor.AVFXLib;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
         public string Id;
         public AvfxFile Main;
-        public AVFXBase AVFX;
+        public AVFXMain AVFX;
         public UINodeGroup<T> Group;
         public T Selected = null;
 
-        public UINodeSplitView( AvfxFile main, AVFXBase avfx, string _id, bool allowNew = true, bool allowDelete = true ) : base( allowNew, allowDelete ) {
+        public UINodeSplitView( AvfxFile main, AVFXMain avfx, string _id, bool allowNew = true, bool allowDelete = true ) : base( allowNew, allowDelete ) {
             Main = main;
             AVFX = avfx;
             Id = _id;
@@ -18,7 +19,7 @@ namespace VFXEditor.Avfx.Vfx {
         public abstract T OnNew();
         public abstract void OnDelete( T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( AVFXLib.AVFX.AVFXNode node, bool has_dependencies = false );
+        public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
 
         public override void DrawControls( string parentId ) {
             IUINodeView<T>.DrawControls( this, Main, Selected, Group, AllowNew, AllowDelete, parentId );

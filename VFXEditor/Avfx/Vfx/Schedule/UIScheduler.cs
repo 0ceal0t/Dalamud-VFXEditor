@@ -1,18 +1,19 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using VFXEditor.AVFXLib.Scheduler;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIScheduler : UINode {
-        public AVFXSchedule Scheduler;
+        public AVFXScheduler Scheduler;
         public AvfxFile Main;
         public List<UISchedulerItem> Items;
         public List<UISchedulerItem> Triggers;
         public UIScheduleItemSplitView ItemSplit;
         public UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler( AvfxFile main, AVFXSchedule scheduler ) : base( UINodeGroup.SchedColor, false ) {
+        public UIScheduler( AvfxFile main, AVFXScheduler scheduler ) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
             Main = main;
             Items = new List<UISchedulerItem>();
@@ -61,6 +62,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override string GetWorkspaceId() => $"Sched{Idx}";
 
-        public override byte[] ToBytes() => Scheduler.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Scheduler.Write( writer );
     }
 }

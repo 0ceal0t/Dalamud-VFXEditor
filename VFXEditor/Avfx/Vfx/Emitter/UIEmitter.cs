@@ -1,34 +1,36 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Emitter;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEmitter : UINode {
-        public AVFXEmitter Emitter;
-        public AvfxFile Main;
-        //=======================
-        public UICombo<EmitterType> Type;
-        public List<UIItem> Animation;
-        public UIItemSplitView<UIItem> AnimationSplit;
-        //========================
-        public List<UIEmitterItem> ParticleList;
-        public List<UIEmitterItem> EmitterList;
-        //========================
+        public readonly AVFXEmitter Emitter;
+        public readonly AvfxFile Main;
+
+        public readonly UICombo<EmitterType> Type;
+        public readonly List<UIItem> Animation;
+        public readonly UIItemSplitView<UIItem> AnimationSplit;
+
+        public readonly List<UIEmitterItem> ParticleList;
+        public readonly List<UIEmitterItem> EmitterList;
+
         public UIData Data;
-        //========================
-        public UIEmitterSplitView EmitterSplit;
-        public UIEmitterSplitView ParticleSplit;
-        public UINodeSelect<UIEffector> EffectorSelect;
+
+        public readonly UIEmitterSplitView EmitterSplit;
+        public readonly UIEmitterSplitView ParticleSplit;
+        public readonly UINodeSelect<UIEffector> EffectorSelect;
         public UINodeGraphView NodeView;
-        //========================
-        public UIString SoundInput;
-        public UIInt SoundIndex;
+
+        public readonly UIString SoundInput;
+        public readonly UIInt SoundIndex;
         private readonly List<UIBase> Parameters;
 
         public UIEmitter( AvfxFile main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
@@ -36,19 +38,19 @@ namespace VFXEditor.Avfx.Vfx {
             Main = main;
             EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", Main.Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
-            // =====================
+
             Animation = new List<UIItem>();
             ParticleList = new List<UIEmitterItem>();
             EmitterList = new List<UIEmitterItem>();
-            //======================
+
 
             Type = new UICombo<EmitterType>( "Type", Emitter.EmitterVariety, onChange: () => {
-                Emitter.SetVariety( Emitter.EmitterVariety.Value );
+                Emitter.SetType( Emitter.EmitterVariety.GetValue() );
                 SetType();
             } );
             SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true);
             SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
-            //======================
+
             Parameters = new List<UIBase> {
                 new UIInt( "Loop Start", Emitter.LoopStart ),
                 new UIInt( "Loop End", Emitter.LoopEnd ),
@@ -70,17 +72,17 @@ namespace VFXEditor.Avfx.Vfx {
             Animation.Add( new UICurve3Axis( Emitter.Position, "Position", locked: true ) );
             Animation.Add( new UICurve3Axis( Emitter.Rotation, "Rotation", locked: true ) );
             Animation.Add( new UICurve3Axis( Emitter.Scale, "Scale", locked: true ) );
-            //========================
+
             foreach( var particle in Emitter.Particles ) {
                 ParticleList.Add( new UIEmitterItem( particle, true, this ) );
             }
-            //============================
+
             foreach( var e in Emitter.Emitters ) {
                 EmitterList.Add( new UIEmitterItem( e, false, this ) );
             }
-            //=======================
+
             SetType();
-            //=============================
+
             AnimationSplit = new UIItemSplitView<UIItem>( Animation );
             EmitterSplit = new UIEmitterSplitView( EmitterList, this, false );
             ParticleSplit = new UIEmitterSplitView( ParticleList, this, true );
@@ -88,7 +90,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
         public void SetType() {
             Data?.Dispose();
-            Data = Emitter.EmitterVariety.Value switch {
+            Data = Emitter.EmitterVariety.GetValue() switch {
                 EmitterType.SphereModel => new UIEmitterDataSphereModel( ( AVFXEmitterDataSphereModel )Emitter.Data ),
                 EmitterType.CylinderModel => new UIEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data ),
                 EmitterType.Model => new UIEmitterDataModel( ( AVFXEmitterDataModel )Emitter.Data, this ),
@@ -119,7 +121,7 @@ namespace VFXEditor.Avfx.Vfx {
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            //==========================
+            
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Param" );
@@ -145,13 +147,9 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
-        public override string GetDefaultText() {
-            return "Emitter " + Idx + "(" + Emitter.EmitterVariety.StringValue() + ")";
-        }
+        public override string GetDefaultText() => $"Emitter {Idx}({Emitter.EmitterVariety.GetValue()})";
 
-        public override string GetWorkspaceId() {
-            return $"Emit{Idx}";
-        }
+        public override string GetWorkspaceId() => $"Emit{Idx}";
 
         public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
             EmitterList.ForEach( item => item.PopulateWorkspaceMeta( RenameDict ) );
@@ -163,8 +161,6 @@ namespace VFXEditor.Avfx.Vfx {
             ParticleList.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
         }
 
-        public override byte[] ToBytes() {
-            return Emitter.ToAVFX().ToBytes();
-        }
+        public override void Write( BinaryWriter writer ) => Emitter.Write( writer );
     }
 }

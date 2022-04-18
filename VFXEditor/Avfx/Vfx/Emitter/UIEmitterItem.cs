@@ -1,9 +1,9 @@
-using AVFXLib.Models;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEmitterItem : UIWorkspaceItem {
-        public AVFXEmitterIterationItem Iteration;
+        public AVFXEmitterItem Iteration;
         public UIEmitter Emitter;
         public bool IsParticle;
 
@@ -11,7 +11,7 @@ namespace VFXEditor.Avfx.Vfx {
         public UINodeSelect<UIEmitter> EmitterSelect;
         private readonly List<UIBase> Parameters;
 
-        public UIEmitterItem( AVFXEmitterIterationItem iteration, bool isParticle, UIEmitter emitter ) {
+        public UIEmitterItem( AVFXEmitterItem iteration, bool isParticle, UIEmitter emitter ) {
             Iteration = iteration;
             Emitter = emitter;
             IsParticle = isParticle;
@@ -22,7 +22,7 @@ namespace VFXEditor.Avfx.Vfx {
             else {
                 EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.Main.Emitters, Iteration.TargetIdx );
             }
-            //=========================
+
             Parameters = new List<UIBase> {
                 new UICheckbox( "Enabled", Iteration.Enabled ),
                 new UIInt( "Local Direction", Iteration.LocalDirection ),
@@ -64,7 +64,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override string GetDefaultText() {
             var Type = IsParticle ? "Particle" : "Emitter";
-            return Idx + ": " + Type + " " + Iteration.TargetIdx.Value;
+            return Idx + ": " + Type + " " + Iteration.TargetIdx.GetValue();
         }
 
         public override string GetWorkspaceId() {

@@ -1,11 +1,12 @@
-using AVFXLib.Models;
 using System;
+using System.IO;
 using System.Linq;
-using AVFXLib.AVFX;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEmitterView : UIDropdownView<UIEmitter> {
-        public UIEmitterView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
+        public UIEmitterView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
             Group = main.Emitters;
             Group.Items = AVFX.Emitters.Select( item => new UIEmitter( Main, item ) ).ToList();
         }
@@ -14,13 +15,11 @@ namespace VFXEditor.Avfx.Vfx {
             AVFX.RemoveEmitter( item.Emitter );
         }
 
-        public override byte[] OnExport( UIEmitter item ) {
-            return item.Emitter.ToAVFX().ToBytes();
-        }
+        public override void OnExport( BinaryWriter writer, UIEmitter item ) => item.Write( writer );
 
-        public override UIEmitter OnImport( AVFXNode node, bool has_dependencies = false ) {
+        public override UIEmitter OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var item = new AVFXEmitter();
-            item.Read( node );
+            item.Read( reader, size );
             AVFX.AddEmitter( item );
             return new UIEmitter( Main, item, has_dependencies );
         }

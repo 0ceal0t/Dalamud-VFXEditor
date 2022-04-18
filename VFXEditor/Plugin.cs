@@ -29,6 +29,7 @@ using VFXEditor.Dialogs;
 using VFXEditor.Textools;
 using VFXEditor.Penumbra;
 using VFXEditor.Pap;
+using Dalamud.Logging;
 
 namespace VFXEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -128,7 +129,7 @@ namespace VFXEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
-        }
+    }
 
         public void Dispose() {
             PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
@@ -160,7 +161,6 @@ namespace VFXEditor {
             RemoveSpawnVfx();
 
             FileDialogManager.Dispose();
-            AvfxHelper.Dispose();
             CopyManager.Dispose();
         }
 

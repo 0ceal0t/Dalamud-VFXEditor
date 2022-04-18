@@ -1,4 +1,3 @@
-using AVFXLib.Models;
 using Dalamud.Logging;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
@@ -6,6 +5,7 @@ using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
 using System.Collections.Generic;
 using System.Numerics;
+using VFXEditor.AVFXLib.Model;
 
 namespace VFXEditor.Helper {
     public static class GltfHelper {
@@ -13,14 +13,14 @@ namespace VFXEditor.Helper {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
 
-            var Verts = new GLTFVert[model.Vertices.Count];
+            var Verts = new GLTFVert[model.Vertexes.Vertexes.Count];
             var idx = 0;
-            foreach( var v in model.Vertices ) {
+            foreach( var v in model.Vertexes.Vertexes ) {
                 Verts[idx] = GetVert( v );
                 idx++;
             }
 
-            foreach( var tri in model.Indexes ) {
+            foreach( var tri in model.Indexes.Indexes ) {
                 var v1 = Verts[tri.I1];
                 var v2 = Verts[tri.I2];
                 var v3 = Verts[tri.I3];
@@ -33,7 +33,7 @@ namespace VFXEditor.Helper {
             PluginLog.Log( "Saved GLTF to: " + path );
         }
 
-        private static GLTFVert GetVert( Vertex vert ) {
+        private static GLTFVert GetVert( AVFXVertex vert ) {
             var Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
             var Normal = Vector3.Normalize( new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] ) );
             var Tangent = Vector4.Normalize( new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], 1 ) );
@@ -51,8 +51,8 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        private static Vertex GetAVFXVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
-            var ret = new Vertex();
+        private static AVFXVertex GetAVFXVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+            var ret = new AVFXVertex();
             color *= 255;
             normal *= 128;
             tangent *= 128;
@@ -71,9 +71,9 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        public static bool ImportModel( string localPath, out List<Vertex> vOut, out List<Index> iOut ) {
-            vOut = new List<Vertex>();
-            iOut = new List<Index>();
+        public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
+            vOut = new List<AVFXVertex>();
+            iOut = new List<AVFXIndex>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
             PluginLog.Log( "Importing GLTF from: " + localPath );
 
@@ -95,11 +95,7 @@ namespace VFXEditor.Helper {
                         vOut.Add( GetAVFXVert( positions[i], normals[i], tangents[i], colors[i], tex1s[i], tex2s[i] ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
-                        iOut.Add( new Index {
-                            I1 = A,
-                            I2 = B,
-                            I3 = C
-                        } );
+                        iOut.Add( new AVFXIndex( A, B, C ) );
                     }
                     return true;
                 }

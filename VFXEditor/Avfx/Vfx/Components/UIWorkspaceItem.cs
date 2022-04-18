@@ -12,11 +12,11 @@ namespace VFXEditor.Avfx.Vfx {
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;
 
-        public override string GetText() {
-            return string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
-        }
+        public override string GetText() => string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
 
         public abstract string GetWorkspaceId();
+
+        public override bool IsAssigned() => true;
 
         public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
             var path = GetWorkspaceId();

@@ -1,33 +1,33 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureDistortion : UIItem {
-        public AVFXTextureDistortion Tex;
-        public UIParticle Particle;
-        public string Name;
-        public UINodeSelect<UITexture> TextureSelect;
-        public List<UIItem> Tabs;
-        public UIParameters Parameters;
+        public readonly AVFXParticleTextureDistortion Tex;
+        public readonly UIParticle Particle;
+        public readonly string Name;
 
-        public UITextureDistortion( AVFXTextureDistortion tex, UIParticle particle ) {
+        public UINodeSelect<UITexture> TextureSelect;
+
+        public readonly List<UIItem> Tabs;
+        public readonly UIParameters Parameters;
+
+        public UITextureDistortion( AVFXParticleTextureDistortion tex, UIParticle particle ) {
             Tex = tex;
             Particle = particle;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Tex.Assigned ) { Assigned = false; return; }
 
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
 
-            Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
+            if ( IsAssigned() ) {
+                Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
+            }
+
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UICheckbox( "Distort UV1", Tex.TargetUV1 ) );
             Parameters.Add( new UICheckbox( "Distort UV2", Tex.TargetUV2 ) );
@@ -43,23 +43,20 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) {
-                Tex.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Tex, true );
+
+                Parameters.Remove( TextureSelect );
+                Parameters.Prepend( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
             }
         }
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TD";
-            if( UiHelper.RemoveButton( "Delete Texture Distortion" + id, small: true ) ) {
-                Tex.Assigned = false;
-                TextureSelect.DeleteSelect();
-                Init();
-                return;
-            }
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Tabs, id );
         }
 
         public override string GetDefaultText() => "Texture Distortion";
+
+        public override bool IsAssigned() => Tex.IsAssigned();
     }
 }

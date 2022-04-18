@@ -1,10 +1,11 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Numerics;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib.Texture;
+using System.IO;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITexture : UINode {
@@ -20,13 +21,13 @@ namespace VFXEditor.Avfx.Vfx {
             NodeView = new UINodeGraphView( this );
 
             Path = new UIString( "Path", Texture.Path );
-            lastValue = Texture.Path.Value;
-            Plugin.TextureManager.LoadPreviewTexture( Texture.Path.Value );
+            lastValue = Texture.Path.GetValue();
+            Plugin.TextureManager.LoadPreviewTexture( Texture.Path.GetValue() );
             HasDependencies = false; // if imported, all set now
         }
 
         public string LoadTex() {
-            var currentPathValue = Path.Literal.Value;
+            var currentPathValue = Path.Literal.GetValue();
             if( currentPathValue != lastValue ) {
                 lastValue = currentPathValue;
                 Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
@@ -118,6 +119,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override string GetWorkspaceId() => $"Tex{Idx}";
 
-        public override byte[] ToBytes() => Texture.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Texture.Write( writer );
     }
 }

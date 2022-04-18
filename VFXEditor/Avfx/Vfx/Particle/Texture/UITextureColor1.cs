@@ -1,31 +1,32 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureColor1 : UIItem {
-        public AVFXTextureColor1 Tex;
-        public UIParticle Particle;
-        public UINodeSelectList<UITexture> TextureSelect;
-        public List<UIItem> Tabs;
-        public UIParameters Parameters;
+        public readonly AVFXParticleTextureColor1 Tex;
+        public readonly UIParticle Particle;
 
-        public UITextureColor1( AVFXTextureColor1 tex, UIParticle particle ) {
+        public UINodeSelectList<UITexture> TextureSelect;
+
+        public readonly List<UIItem> Tabs;
+        public readonly UIParameters Parameters;
+
+        public UITextureColor1( AVFXParticleTextureColor1 tex, UIParticle particle ) {
             Tex = tex;
             Particle = particle;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Tex.Assigned ) { Assigned = false; return; }
 
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
-            Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
+
+            if (IsAssigned()) {
+                Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
+            }
+
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UICheckbox( "Color To Alpha", Tex.ColorToAlpha ) );
             Parameters.Add( new UICheckbox( "Use Screen Copy", Tex.UseScreenCopy ) );
@@ -42,17 +43,19 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) {
-                Tex.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Tex, true );
+
+                Parameters.Remove( TextureSelect );
+                Parameters.Prepend( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
             }
         }
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/TC1";
             if( UiHelper.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
-                Tex.Assigned = false;
+                Tex.SetAssigned( false );
+
                 TextureSelect.DeleteSelect();
-                Init();
                 return;
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -60,5 +63,7 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public override string GetDefaultText() => "Texture Color 1";
+
+        public override bool IsAssigned() => Tex.IsAssigned();
     }
 }

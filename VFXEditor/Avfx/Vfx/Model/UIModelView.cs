@@ -1,10 +1,11 @@
-using AVFXLib.AVFX;
-using AVFXLib.Models;
+using System.IO;
 using System.Linq;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Model;
 
-namespace VFXEditor.Avfx.Vfx {
+namespace VFXEditor.Avfx.Vfx {  
     public class UIModelView : UINodeSplitView<UIModel> {
-        public UIModelView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##MDL" ) {
+        public UIModelView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##MDL" ) {
             Group = main.Models;
             Group.Items = AVFX.Models.Select( item => new UIModel( Main, item ) ).ToList();
         }
@@ -21,9 +22,9 @@ namespace VFXEditor.Avfx.Vfx {
             return new UIModel( Main, AVFX.AddModel() );
         }
 
-        public override UIModel OnImport( AVFXNode node, bool has_dependencies = false ) {
+        public override UIModel OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var mdl = new AVFXModel();
-            mdl.Read( node );
+            mdl.Read( reader, size );
             AVFX.AddModel( mdl );
             return new UIModel( Main, mdl );
         }

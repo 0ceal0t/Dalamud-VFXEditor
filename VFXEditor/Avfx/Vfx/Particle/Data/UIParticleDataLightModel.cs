@@ -1,4 +1,4 @@
-using AVFXLib.Models;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleDataLightModel : UIData {

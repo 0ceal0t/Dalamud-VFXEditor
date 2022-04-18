@@ -93,7 +93,7 @@ namespace VFXEditor.Avfx.Vfx {
                     Main.ExportDeps( selected, writer );
                 }
                 else {
-                    selected.ForEach( node => writer.Write( node.ToBytes() ) );
+                    selected.ForEach( node => node.Write( writer ) );
                 }
                 Visible = false;
             } );

@@ -1,10 +1,10 @@
-using AVFXLib.AVFX;
-using AVFXLib.Models;
 using ImGuiNET;
 using System.IO;
+using VFXEditor.AVFXLib;
+
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
-        public AVFXBase AVFX;
+        public AVFXMain AVFX;
         public AvfxFile Main;
         public UINodeGroup<T> Group;
 
@@ -16,7 +16,7 @@ namespace VFXEditor.Avfx.Vfx {
         private readonly bool AllowNew;
         private readonly bool AllowDelete;
 
-        public UIDropdownView( AvfxFile main, AVFXBase avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
+        public UIDropdownView( AvfxFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
             Main = main;
             AVFX = avfx;
             Id = id;
@@ -27,9 +27,9 @@ namespace VFXEditor.Avfx.Vfx {
         }
 
         public abstract void OnDelete( T item );
-        public abstract byte[] OnExport( T item );
+        public abstract void OnExport( BinaryWriter writer, T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( AVFXNode node, bool has_dependencies = false );
+        public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
 
         public override void Draw( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

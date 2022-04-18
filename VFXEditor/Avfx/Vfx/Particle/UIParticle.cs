@@ -1,8 +1,10 @@
-using AVFXLib.Models;
 using Dalamud.Plugin;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticle : UINode {
@@ -37,7 +39,7 @@ namespace VFXEditor.Avfx.Vfx {
             UVSets = new List<UIParticleUVSet>();
 
             Type = new UICombo<ParticleType>( "Type", Particle.ParticleVariety, onChange: () => {
-                Particle.SetVariety( Particle.ParticleVariety.Value );
+                Particle.SetType( Particle.ParticleVariety.GetValue() );
                 SetType();
             } );
             Parameters = new List<UIBase> {
@@ -112,7 +114,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         public void SetType() {
             Data?.Dispose();
-            Data = Particle.ParticleVariety.Value switch {
+            Data = Particle.ParticleVariety.GetValue() switch {
                 ParticleType.Model => new UIParticleDataModel( ( AVFXParticleDataModel )Particle.Data, this ),
                 ParticleType.LightModel => new UIParticleDataLightModel( ( AVFXParticleDataLightModel )Particle.Data, this ),
                 ParticleType.Powder => new UIParticleDataPowder( ( AVFXParticleDataPowder )Particle.Data ),
@@ -172,10 +174,10 @@ namespace VFXEditor.Avfx.Vfx {
             ImGui.EndChild();
         }
 
-        public override string GetDefaultText() => $"Particle {Idx}({Particle.ParticleVariety.StringValue()})";
+        public override string GetDefaultText() => $"Particle {Idx}({Particle.ParticleVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Ptcl{Idx}";
 
-        public override byte[] ToBytes() => Particle.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Particle.Write( writer );
     }
 }

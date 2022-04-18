@@ -1,12 +1,12 @@
-using AVFXLib.AVFX;
 using Dalamud.Interface;
 using ImGuiNET;
+using System.IO;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public interface IUINodeView<T> where T : UINode {
         public void OnDelete( T item );
-        public T OnImport( AVFXNode node, bool has_dependencies = false );
+        public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
 
         public void ControlDelete();
         public void ControlCreate();
@@ -43,7 +43,15 @@ namespace VFXEditor.Avfx.Vfx {
                     main.ImportDialog();
                 }
                 if( selected != null && ImGui.Selectable( "Duplicate" + Id ) ) {
-                    group.Add( view.OnImport( AvfxFile.CloneNode( selected.ToBytes() ) ) );
+                    using var ms = new MemoryStream();
+                    using var writer = new BinaryWriter( ms );
+                    using var reader = new BinaryReader( ms );
+
+                    selected.Write( writer );
+                    reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+                    reader.ReadInt32(); // Name
+                    var size = reader.ReadInt32();
+                    group.Add( view.OnImport( reader, size ) );
                 }
                 ImGui.EndPopup();
             }

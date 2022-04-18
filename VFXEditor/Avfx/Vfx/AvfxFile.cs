@@ -1,6 +1,3 @@
-using AVFXLib.AVFX;
-using AVFXLib.Main;
-using AVFXLib.Models;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -8,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VFXEditor.AVFXLib;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class AvfxFile {
-        public AVFXBase AVFX;
+        public AVFXMain AVFX;
 
         public UIParameterView ParameterView;
         public UIEffectorView EffectorView;
@@ -36,8 +34,38 @@ namespace VFXEditor.Avfx.Vfx {
 
         public ExportDialog ExportUI;
 
-        public AvfxFile( AVFXBase avfx ) {
-            AVFX = avfx;
+        public bool Verified = true;
+
+        public bool GetVerified() => Verified;
+
+        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) {
+            var startPos = reader.BaseStream.Position;
+
+            byte[] original = null;
+            if( checkOriginal ) {
+                original = reader.ReadBytes( ( int )reader.BaseStream.Length );
+                reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
+            }
+
+            AVFX = AVFXMain.FromStream( reader );
+
+            if (checkOriginal) {
+                using var ms = new MemoryStream();
+                using var writer = new BinaryWriter( ms );
+                AVFX.Write( writer );
+
+                var newData = ms.ToArray();
+
+                for( var i = 0; i < Math.Min( newData.Length, original.Length ); i++ ) {
+                    if( newData[i] != original[i] ) {
+                        PluginLog.Log( $"Warning: files do not match at {i} {newData[i]} {original[i]}" );
+                        Verified = false;
+                        break;
+                    }
+                }
+            }
+            
+            // ======================
 
             AllGroups = new() {
                 ( Binders = new UINodeGroup<UIBinder>() ),
@@ -50,15 +78,15 @@ namespace VFXEditor.Avfx.Vfx {
                 ( Effectors = new UINodeGroup<UIEffector>() )
             };
 
-            ParticleView = new UIParticleView( this, avfx );
-            ParameterView = new UIParameterView( avfx );
-            BinderView = new UIBinderView( this, avfx );
-            EmitterView = new UIEmitterView( this, avfx );
-            EffectorView = new UIEffectorView( this, avfx );
-            TimelineView = new UITimelineView( this, avfx );
-            TextureView = new UITextureView( this, avfx );
-            ModelView = new UIModelView( this, avfx );
-            ScheduleView = new UIScheduleView( this, avfx );
+            ParticleView = new UIParticleView( this, AVFX );
+            ParameterView = new UIParameterView( AVFX );
+            BinderView = new UIBinderView( this, AVFX );
+            EmitterView = new UIEmitterView( this, AVFX );
+            EffectorView = new UIEffectorView( this, AVFX );
+            TimelineView = new UITimelineView( this, AVFX );
+            TextureView = new UITextureView( this, AVFX );
+            ModelView = new UIModelView( this, AVFX );
+            ScheduleView = new UIScheduleView( this, AVFX );
 
             AllGroups.ForEach( group => group.Init() );
 
@@ -108,17 +136,7 @@ namespace VFXEditor.Avfx.Vfx {
             ExportUI.Draw();
         }
 
-        public byte[] ToBytes() => AVFX?.ToAVFX()?.ToBytes();
-
-        public bool GetVerified() {
-            var node = AVFX.ToAVFX();
-            var verifyResult = AvfxHelper.LastImportNode.CheckEquals( node, out var messages );
-            PluginLog.Log( $"[VERIFY RESULT]: {verifyResult}" );
-            foreach( var m in messages ) {
-                PluginLog.Warning( m );
-            }
-            return verifyResult;
-        }
+        public void Write(BinaryWriter writer) => AVFX?.Write(writer);
 
         public void Dispose() {
             AllGroups.ForEach( group => group.Dispose() );
@@ -179,7 +197,7 @@ namespace VFXEditor.Avfx.Vfx {
 
             UpdateAllNodes( nodes );
             foreach( var n in nodes ) {
-                bw.Write( n.ToBytes() );
+                n.Write( bw );
             }
             foreach( var n in nodes ) {
                 n.Idx = IdxSave[n];
@@ -216,6 +234,13 @@ namespace VFXEditor.Avfx.Vfx {
             }
         }
 
+        public byte[] ToBytes() {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+            AVFX.Write( writer );
+            return ms.ToArray();
+        }
+
         // ========= IMPORT ==============
 
         public void ImportData( string path ) {
@@ -227,29 +252,84 @@ namespace VFXEditor.Avfx.Vfx {
             ImportData( new BinaryReader( new MemoryStream( data ) ) );
         }
 
-        public void ImportData( BinaryReader br ) {
-            var messages = new List<string>();
-            var nodes = Reader.ReadDefinition( br, messages );
-            var has_dependencies = nodes.Count >= 2;
+        public void ImportData( BinaryReader reader ) {
+            var totalSize = reader.BaseStream.Length;
+            if( totalSize < 8 ) return;
+            reader.ReadInt32(); // first name
+            var firstSize = reader.ReadInt32();
+
+            var has_dependencies = totalSize > ( firstSize + 8 + 4 );
+            PluginLog.Log( $"Has dependencies: {has_dependencies}" );
             if( has_dependencies ) {
                 PreImportGroups();
             }
-            nodes.Where( x => x.Name == "Modl" ).ToList().ForEach( node => ModelView.Group.Add( ModelView.OnImport( node ) ) );
-            nodes.Where( x => x.Name == "Tex" ).ToList().ForEach( node => TextureView.Group.Add( TextureView.OnImport( node ) ) );
-            nodes.Where( x => x.Name == "Bind" ).ToList().ForEach( node => BinderView.Group.Add( BinderView.OnImport( node, has_dependencies ) ) );
-            nodes.Where( x => x.Name == "Efct" ).ToList().ForEach( node => EffectorView.Group.Add( EffectorView.OnImport( node, has_dependencies ) ) );
-            nodes.Where( x => x.Name == "Ptcl" ).ToList().ForEach( node => ParticleView.Group.Add( ParticleView.OnImport( node, has_dependencies ) ) );
-            nodes.Where( x => x.Name == "Emit" ).ToList().ForEach( node => EmitterView.Group.Add( EmitterView.OnImport( node, has_dependencies ) ) );
-            nodes.Where( x => x.Name == "TmLn" ).ToList().ForEach( node => TimelineView.Group.Add( TimelineView.OnImport( node, has_dependencies ) ) );
-        }
 
-        public static AVFXNode CloneNode( AVFXNode node ) {
-            return CloneNode( node.ToBytes() );
-        }
-        public static AVFXNode CloneNode( byte[] data ) {
-            using var ms = new MemoryStream( data );
-            using var br = new BinaryReader( ms );
-            return Reader.ReadAVFX( br, out var messages );
+            reader.BaseStream.Seek( 0, SeekOrigin.Begin ); // reset position
+
+            List<NodePosition> models = new();
+            List<NodePosition> textures = new();
+            List<NodePosition> binders = new();
+            List<NodePosition> effectors = new();
+            List<NodePosition> particles = new();
+            List<NodePosition> emitters = new();
+            List<NodePosition> timelines = new();
+
+            AVFXBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+                switch ( _name) {
+                    case "Modl":
+                        models.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "Tex":
+                        textures.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "Bind":
+                        binders.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "Efct":
+                        effectors.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "Ptcl":
+                        particles.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "Emit":
+                        emitters.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                    case "TmLn":
+                        timelines.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        break;
+                }
+                _reader.ReadBytes( _size ); // skip it for now, we'll come back later
+            }, (int)totalSize );
+
+            // Import items in a specific order
+            foreach(var pos in models ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                ModelView.Group.Add( ModelView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in textures ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                TextureView.Group.Add( TextureView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in binders ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                BinderView.Group.Add( BinderView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in effectors ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                EffectorView.Group.Add( EffectorView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in particles ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                ParticleView.Group.Add( ParticleView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in emitters ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                EmitterView.Group.Add( EmitterView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
+            foreach( var pos in timelines ) {
+                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                TimelineView.Group.Add( TimelineView.OnImport( reader, pos.Size, has_dependencies ) );
+            }
         }
 
         public void PreImportGroups() {
@@ -263,7 +343,10 @@ namespace VFXEditor.Avfx.Vfx {
         public static void ExportDialog( UINode node ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
                 if( !ok ) return;
-                File.WriteAllBytes( res, node.ToBytes() );
+
+                using var fs = File.OpenWrite( res );
+                using var writer = new BinaryWriter( fs );
+                node.Write( writer );
             } );
         }
 
@@ -277,6 +360,16 @@ namespace VFXEditor.Avfx.Vfx {
                     PluginLog.Error( "Could not import data", e );
                 }
             } );
+        }
+
+        private struct NodePosition {
+            public long Position;
+            public int Size;
+
+            public NodePosition(long position, int size) {
+                Position = position;
+                Size = size;
+            }
         }
     }
 }

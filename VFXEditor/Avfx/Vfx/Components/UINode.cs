@@ -1,7 +1,7 @@
-using AVFXLib.Models;
 using System.Collections.Generic;
 using ImGuiNET;
 using System.Numerics;
+using System.IO;
 
 namespace VFXEditor.Avfx.Vfx {
     public abstract class UINode : UIWorkspaceItem {
@@ -13,7 +13,7 @@ namespace VFXEditor.Avfx.Vfx {
         public bool IsDeleted = false;
         public UINodeGraph Graph = null;
 
-        public UINode(uint color, bool has_dependencies) {
+        public UINode( uint color, bool has_dependencies ) {
             Color = color;
             HasDependencies = has_dependencies;
         }
@@ -41,6 +41,6 @@ namespace VFXEditor.Avfx.Vfx {
 
         public virtual void ShowTooltip() { }
 
-        public abstract byte[] ToBytes();
+        public abstract void Write( BinaryWriter writer );
     }
 }

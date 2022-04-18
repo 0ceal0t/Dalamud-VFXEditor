@@ -1,4 +1,5 @@
-using AVFXLib.Models;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEmitterDataCylinderModel : UIData {

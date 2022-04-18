@@ -1,7 +1,9 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Binder;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIBinder : UINode {
@@ -21,7 +23,7 @@ namespace VFXEditor.Avfx.Vfx {
             NodeView = new UINodeGraphView( this );
             Properties = new List<UIBinderProperties>();
             Type = new UICombo<BinderType>( "Type", Binder.BinderVariety, onChange: () => {
-                Binder.SetVariety( Binder.BinderVariety.Value );
+                Binder.SetType( Binder.BinderVariety.GetValue() );
                 SetType();
             } );
 
@@ -54,7 +56,7 @@ namespace VFXEditor.Avfx.Vfx {
 
         private void SetType() {
             Data?.Dispose();
-            Data = Binder.BinderVariety.Value switch {
+            Data = Binder.BinderVariety.GetValue() switch {
                 BinderType.Point => new UIBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data ),
                 BinderType.Linear => new UIBinderDataLinear( ( AVFXBinderDataLinear )Binder.Data ),
                 BinderType.Spline => new UIBinderDataSpline( ( AVFXBinderDataSpline )Binder.Data ),
@@ -103,10 +105,12 @@ namespace VFXEditor.Avfx.Vfx {
             PropSplit.Draw( id );
         }
 
-        public override string GetDefaultText() => $"Binder {Idx}({Binder.BinderVariety.StringValue()})";
+        public override string GetDefaultText() => $"Binder {Idx}({Binder.BinderVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Bind{Idx}";
 
-        public override byte[] ToBytes() => Binder.ToAVFX().ToBytes();
+        public override void Write( BinaryWriter writer ) => Binder.Write( writer );
+
+        public override bool IsAssigned() => true;
     }
 }

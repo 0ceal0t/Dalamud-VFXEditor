@@ -1,4 +1,5 @@
-using AVFXLib.Models;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIEffectorDataDirectionalLight : UIData {

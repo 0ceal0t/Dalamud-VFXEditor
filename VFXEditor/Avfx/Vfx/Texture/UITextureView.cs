@@ -1,10 +1,11 @@
-using AVFXLib.Models;
+using System.IO;
 using System.Linq;
-using AVFXLib.AVFX;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Texture;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UITextureView : UINodeSplitView<UITexture> {
-        public UITextureView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##TEX" ) {
+        public UITextureView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##TEX" ) {
             Group = main.Textures;
             Group.Items = AVFX.Textures.Select( item => new UITexture( Main, item ) ).ToList();
         }
@@ -13,9 +14,9 @@ namespace VFXEditor.Avfx.Vfx {
             AVFX.RemoveTexture( item.Texture );
         }
 
-        public override UITexture OnImport( AVFXNode node, bool has_dependencies = false ) {
+        public override UITexture OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var tex = new AVFXTexture();
-            tex.Read( node );
+            tex.Read( reader, size );
             AVFX.AddTexture( tex );
             return new UITexture( Main, tex );
         }

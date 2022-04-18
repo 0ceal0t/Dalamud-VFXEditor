@@ -1,11 +1,12 @@
-using AVFXLib.Models;
 using System;
+using System.IO;
 using System.Linq;
-using AVFXLib.AVFX;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIParticleView : UIDropdownView<UIParticle> {
-        public UIParticleView( AvfxFile main, AVFXBase avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" ) {
+        public UIParticleView( AvfxFile main, AVFXMain avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" ) {
             Group = Main.Particles;
             Group.Items = AVFX.Particles.Select( item => new UIParticle( Main, item ) ).ToList();
         }
@@ -14,13 +15,11 @@ namespace VFXEditor.Avfx.Vfx {
             AVFX.RemoveParticle( item.Particle );
         }
 
-        public override byte[] OnExport( UIParticle item ) {
-            return item.Particle.ToAVFX().ToBytes();
-        }
+        public override void OnExport( BinaryWriter writer, UIParticle item ) => item.Write( writer );
 
-        public override UIParticle OnImport( AVFXNode node, bool has_dependencies = false ) {
+        public override UIParticle OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var item = new AVFXParticle();
-            item.Read( node );
+            item.Read( reader, size );
             AVFX.AddParticle( item );
             return new UIParticle( Main, item, has_dependencies );
         }

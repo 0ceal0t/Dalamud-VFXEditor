@@ -119,10 +119,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AVFXLib\AVFXLib.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="Files\animassist.exe">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

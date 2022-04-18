@@ -1,28 +1,23 @@
-using AVFXLib.Models;
 using ImGuiNET;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Binder;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UIBinderProperties : UIItem {
         private readonly AVFXBinderProperty Prop;
         private readonly string Name;
-        private UIParameters Parameters;
-        private List<UIItem> Tabs;
+        private readonly UIParameters Parameters;
+        private readonly List<UIItem> Tabs;
 
         public UIBinderProperties( string name, AVFXBinderProperty prop ) {
             Prop = prop;
             Name = name;
-            Init();
-        }
-
-        public override void Init() {
-            base.Init();
-            if( !Prop.Assigned ) { Assigned = false; return; }
 
             Tabs = new List<UIItem> {
                 ( Parameters = new UIParameters( "Parameters" ) ),
-                new UICurve3Axis( Prop.Position, "Position" )
+                new UICurve3Axis( Prop.Position, "Position", locked:true )
             };
             Parameters.Add( new UICombo<BindPoint>( "Bind Point Type", Prop.BindPointType ) );
             Parameters.Add( new UICombo<BindTargetPoint>( "Bind Target Point Type", Prop.BindTargetPointType ) );
@@ -38,20 +33,20 @@ namespace VFXEditor.Avfx.Vfx {
 
         public override void DrawUnAssigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                Prop.ToDefault();
-                Init();
+                AVFXBase.RecurseAssigned( Prop, true );
             }
         }
 
         public override void DrawBody( string parentId ) {
             var id = parentId + "/" + Name;
             if( UiHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
-                Prop.Assigned = false;
-                Init();
+                Prop.SetAssigned( false );
             }
             DrawListTabs( Tabs, id );
         }
 
         public override string GetDefaultText() => Name;
+
+        public override bool IsAssigned() => Prop.IsAssigned();
     }
 }

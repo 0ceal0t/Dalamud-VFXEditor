@@ -1,31 +1,34 @@
 using ImGuiNET;
-using AVFXLib.Models;
+using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.Avfx.Vfx {
     public class UICheckbox : UIBase {
-        public string Name;
+        public readonly string Name;
         public bool Value;
-        public LiteralBool Literal;
+        public readonly AVFXBool Literal;
 
-        public UICheckbox( string name, LiteralBool literal ) {
+        public UICheckbox( string name, AVFXBool literal ) {
             Name = name;
             Literal = literal;
-            Value = ( Literal.Value == true );
+            Value = Literal.GetValue() == true; // can be null
         }
 
         public override void Draw( string parentId ) {
             if(CopyManager.IsCopying) {
                 CopyManager.Copied[Name] = Literal;
             }
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue(Name, out var b) && b is LiteralBool literal ) {
-                Literal.GiveValue( literal.Value );
-                Value = ( Literal.Value == true );
+
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue(Name, out var _literal) && _literal is AVFXBool literal ) {
+                Literal.SetValue( literal.GetValue() );
+                Value = ( Literal.GetValue() == true );
             }
 
+            PushAssignedColor( Literal.IsAssigned() );
             if( ImGui.Checkbox( Name + parentId, ref Value ) ) {
-                Literal.GiveValue( Value );
+                Literal.SetValue( Value );
             }
+            PopAssignedColor();
         }
     }
 }
