@@ -11,6 +11,7 @@ namespace VFXEditor.PAP {
     public partial class PAPManager : FileManager<PAPDocument, WorkspaceMetaPap, PAPFile> {
         public static PAPSelectDialog SourceSelect { get; private set; }
         public static PAPSelectDialog ReplaceSelect { get; private set; }
+        public static PAPSelectIndexDialog IndexDialog { get; private set; }
 
         public static void Setup() {
             SourceSelect = new PAPSelectDialog(
@@ -26,6 +27,7 @@ namespace VFXEditor.PAP {
                 false,
                 SetReplaceGlobal
             );
+            IndexDialog = new PAPSelectIndexDialog();
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
@@ -50,11 +52,13 @@ namespace VFXEditor.PAP {
             base.Dispose();
             SourceSelect.Hide();
             ReplaceSelect.Hide();
+            IndexDialog.Hide();
         }
 
         public override void DrawBody() {
             SourceSelect.Draw();
             ReplaceSelect.Draw();
+            IndexDialog.Draw();
             base.DrawBody();
         }
     }

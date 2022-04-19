@@ -1,23 +1,28 @@
-using Dalamud.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.Interop {
     public class HavokInterop {
-        public static void ReplaceHavokAnimation( string baseHkx, int indexToReplace, string newHkx, int indexToUse, string output) {
+        public static void ReplaceHavokAnimation( string baseHkx, int indexToReplace, string newHkx, int indexToUse, string output ) {
+            Run( $"1 {baseHkx} {indexToReplace} {newHkx} {indexToUse} {output}" );
+        }
+
+        public static void RemoveHavokAnimation( string baseHkx, int indexToRemove, string output ) {
+            Run( $"2 {baseHkx} {indexToRemove} {baseHkx} {indexToRemove} {output}" );
+        }
+
+        public static void AddHavokAnimation( string baseHkx, string newHkx, int indexToUse, string output ) {
+            Run( $"3 {baseHkx} {indexToUse} {newHkx} {indexToUse} {output}" );
+        }
+
+        public static void Run( string arguments ) {
             // Use ProcessStartInfo class
             var startInfo = new ProcessStartInfo {
                 CreateNoWindow = false,
                 UseShellExecute = false,
                 FileName = Path.Combine( Plugin.TemplateLocation, "Files", "animassist.exe" ),
                 WindowStyle = ProcessWindowStyle.Hidden,
-                Arguments = $"{baseHkx} {indexToReplace} {newHkx} {indexToUse} {output}"
+                Arguments = arguments
             };
 
             try {

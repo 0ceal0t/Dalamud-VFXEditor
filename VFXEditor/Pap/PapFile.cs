@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
+using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
+using VFXEditor.Interop;
 
 namespace VFXEditor.PAP {
     public class PAPFile : FileDropdown<PAPAnimation> {
@@ -20,7 +22,7 @@ namespace VFXEditor.PAP {
 
         public bool Verified = true;
 
-        public PAPFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( false ) {
+        public PAPFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
             HkxTempLocation = hkxTemp;
 
             var startPos = reader.BaseStream.Position;
@@ -60,6 +62,7 @@ namespace VFXEditor.PAP {
 
             if( checkOriginal ) { // Check if output matches the original
                 var output = ToBytes();
+                if (output.Length != original.Length) PluginLog.Log($"Lengths do not match {output.Length} {original.Length}");
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
                         PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
@@ -74,25 +77,11 @@ namespace VFXEditor.PAP {
             var havokData = File.ReadAllBytes( HkxTempLocation );
             var tmbData = Animations.Select( x => x.GetTmbBytes() );
 
-            var tmbSize = 0;
-            var idx = 0;
-            foreach( var tmb in tmbData ) {
-                tmbSize += tmb.Length;
-                tmbSize += Padding( tmbSize, idx, tmbData.Count() );
-                idx++;
-            }
-
-            var havokSize = havokData.Length;
-            var headerSize = 0x1A;
-            var infoSize = Animations.Count * 0x28;
-            var totalSize = headerSize + infoSize + havokSize + tmbSize;
-
-            var data = new byte[totalSize];
-            using MemoryStream dataMs = new( data );
+            using MemoryStream dataMs = new();
             using BinaryWriter writer = new( dataMs );
             writer.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            // ====================
+            var startPos = writer.BaseStream.Position;
 
             writer.Write( 0x20706170 );
             writer.Write( 0x00020001 );
@@ -101,15 +90,19 @@ namespace VFXEditor.PAP {
             writer.Write( BaseId );
             writer.Write( VariantId );
 
-            writer.Write( headerSize );
-            writer.Write( headerSize + infoSize );
-            writer.Write( headerSize + infoSize + havokSize );
+            var offsetPos = writer.BaseStream.Position; // coming back here later
+            writer.Write( 0 ); // placeholders, will come back later
+            writer.Write( 0 );
+            writer.Write( 0 );
 
+            var infoPos = writer.BaseStream.Position;
             foreach( var anim in Animations ) anim.Write( writer );
 
+            var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            idx = 0;
+            var timelinePos = writer.BaseStream.Position;
+            var idx = 0;
             foreach( var tmb in tmbData ) {
                 writer.Write( tmb );
 
@@ -119,13 +112,25 @@ namespace VFXEditor.PAP {
                 idx++;
             }
 
-            return data;
+            // go back and write sizes
+            writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
+            writer.Write( (int)(infoPos - startPos) );
+            writer.Write( (int)(havokPos - startPos) );
+            writer.Write( ( int )( timelinePos - startPos ) );
+
+            return dataMs.ToArray();
         }
 
         public void Draw( string id ) {
             FileHelper.ShortInput( $"Model Id{id}", ref ModelId );
             FileHelper.ByteInput( $"Base Id{id}", ref BaseId );
             FileHelper.ByteInput( $"Variant Id{id}", ref VariantId );
+
+            if( ImGui.Button( $"Export all Havok data{id}" ) ) {
+                FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                    if( ok ) File.Copy( HkxTempLocation, res, true );
+                } );
+            }
 
             DrawDropDown( id );
 
@@ -137,7 +142,7 @@ namespace VFXEditor.PAP {
             }
         }
 
-        private static int Padding( long position, int idx, int max ) {
+        private static int Padding( long position, int idx, int max ) { // Don't pad the last element
             if( max > 1 && idx < max - 1 ) {
                 var leftOver = position % 4;
                 return ( int )( leftOver == 0 ? 0 : 4 - leftOver );
@@ -149,10 +154,40 @@ namespace VFXEditor.PAP {
 
         protected override string GetName( PAPAnimation item, int idx ) => item.GetName();
 
-        protected override void OnNew() { }
+        protected override void OnNew() {
+            FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+                if( ok ) {
+                    PAPManager.IndexDialog.OnOk = ( int idx ) => {
+                        // TODO: add new Animation
+                        // TODO: read TMB into new
+                        var newAnim = new PAPAnimation( HkxTempLocation );
+                        newAnim.ReadTmb( Path.Combine( Plugin.TemplateLocation, "Files", "default_pap_tmb.tmb" ) );
+                        Animations.Add( newAnim );
+                        RefreshHavokIndexes();
 
-        protected override void OnDelete( PAPAnimation item ) { }
+                        HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
+                    };
+                    PAPManager.IndexDialog.Show();
+                }
+            } );
+        }
+
+        protected override void OnDelete( PAPAnimation item ) {
+            var index = Animations.IndexOf( item );
+            if( index == -1 ) return;
+
+            Animations.RemoveAt( index );
+            RefreshHavokIndexes();
+
+            HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
+        }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+
+        private void RefreshHavokIndexes() {
+            for(var i = 0; i < Animations.Count; i++) {
+                Animations[i].HavokIndex = (short)i;
+            }
+        }
     }
 }

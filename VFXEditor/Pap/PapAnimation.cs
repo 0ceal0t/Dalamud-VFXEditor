@@ -12,16 +12,17 @@ using VFXEditor.TMB;
 
 namespace VFXEditor.PAP {
     public class PAPAnimation {
-        private readonly string HkxTempLocation;
+        public short HavokIndex = 0;
 
-        private string Name = ""; // padded to 32 bytes (INCLUDING NULL)
+        private readonly string HkxTempLocation;
+        private string Name = "cbbm_replace_this"; // padded to 32 bytes (INCLUDING NULL)
         private short Unknown1 = 0;
         private int Unknown2 = 0;
-        private readonly short HavokIndex;
-
         private TMBFile Tmb;
 
-        private int ImportedHavokIndex = 0;
+        public PAPAnimation( string hkxPath ) {
+            HkxTempLocation = hkxPath;
+        }
 
         public PAPAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
@@ -46,6 +47,10 @@ namespace VFXEditor.PAP {
             Tmb = new TMBFile( reader, false );
         }
 
+        public void ReadTmb( string path ) {
+            Tmb = TMBFile.FromLocalFile( path );
+        }
+
         public byte[] GetTmbBytes() => Tmb.ToBytes();
 
         public string GetName() => Name;
@@ -57,40 +62,47 @@ namespace VFXEditor.PAP {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
+            // Havok  ================
+
+            ImGui.Text( $"This animation has Havok index: {HavokIndex}" );
+
+            if( ImGui.Button( $"Replace Havok data{id}" ) ) {
+                FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+                    if( ok ) {
+                        PAPManager.IndexDialog.OnOk = ( int idx ) => {
+                            HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
+                        };
+                        PAPManager.IndexDialog.Show();
+                    }
+                } );
+            }
+
+            // Tmb ==============
+
+            // Export Tmb
+
+            if( ImGui.Button( $"Export TMB{id}" ) ) {
+                UIHelper.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+            }
+
+            // Import Tmb
+
+            ImGui.SameLine();
+            if( ImGui.Button( $"Import TMB{id}" ) ) {
+                FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                    if( ok ) Tmb = TMBFile.FromLocalFile( res );
+                } );
+            }
+
+            // draw Tmb
+
             if( ImGui.BeginTabBar( $"Tabs{id}", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Havok{id}/Tab" ) ) {
-                    DrawHavok( id );
-                    ImGui.EndTabItem();
-                }
                 if( ImGui.BeginTabItem( $"Tmb{id}/Tab" ) ) {
-                    DrawTmb( id );
+                    Tmb.Draw( id + "/Tmb" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
             }
-        }
-
-        private void DrawHavok( string id ) {
-            if( ImGui.Button( $"Export Havok{id}" ) ) {
-                FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
-                    if( ok ) File.Copy( HkxTempLocation, res, true );
-                } );
-            }
-            ImGui.SameLine();
-            if( ImGui.Button( $"Import Havok{id}" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                    if( ok ) HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, ImportedHavokIndex, HkxTempLocation );
-                } );
-            }
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100f );
-            ImGui.InputInt( $"Imported Havok Index{id}", ref ImportedHavokIndex );
-
-            ImGui.Text( $"Havok Index: {HavokIndex}" );
-        }
-
-        private void DrawTmb( string id ) {
-            Tmb.Draw( id + "/Tmb" );
         }
     }
 }

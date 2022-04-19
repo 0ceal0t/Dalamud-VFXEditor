@@ -125,6 +125,9 @@
       <None Update="Files\binder_default.vfxedit">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Files\default_pap_tmb.tmb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Files\default_vfx.avfx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

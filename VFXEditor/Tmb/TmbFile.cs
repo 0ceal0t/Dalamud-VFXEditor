@@ -29,7 +29,7 @@ namespace VFXEditor.TMB {
         private short TMDH_Unk3 = 3;
 
         private bool TMPP = false;
-        private string TMPP_String;
+        private string TMPP_String = "";
         private int HeaderEntries => TMPP ? 3 : 2;
 
         public bool Verified = true;
@@ -215,9 +215,9 @@ namespace VFXEditor.TMB {
         }
 
         public void Draw( string id ) {
-            ImGui.Checkbox( $"TMPP{id}", ref TMPP );
+            ImGui.Checkbox( $"Use face library{id}", ref TMPP );
             if (TMPP) {
-                ImGui.InputText( $"TMPP Text{id}", ref TMPP_String, 256 );
+                ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
             }
 
             FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
