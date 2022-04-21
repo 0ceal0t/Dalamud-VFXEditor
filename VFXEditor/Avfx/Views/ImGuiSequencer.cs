@@ -58,7 +58,7 @@ namespace VFXEditor.AVFX.Views {
             var cursorY = ( int )io.MousePos.Y;
 
             T deleteEntry = null;
-            bool newItemAdded = false;
+            var newItemAdded = false;
 
             ImGui.BeginGroup();
             var drawList = ImGui.GetWindowDrawList();
@@ -110,6 +110,7 @@ namespace VFXEditor.AVFX.Views {
             drawList.AddRectFilled( canvasPos, canvasPos + headerSize, 0xFFFF0000, 0 );
             var childFramePos = ImGui.GetCursorScreenPos();
             var childFrameSize = new Vector2( canvasSize.X, canvasSize.Y - 8f - headerSize.Y - scrollBarSize.Y );
+            var childFramePosMax = childFramePos + childFrameSize;
             ImGui.PushStyleColor( ImGuiCol.FrameBg, 0 );
             ImGui.BeginChildFrame( 889, childFrameSize );
             ImGui.InvisibleButton( "SeqContentBar", new Vector2( canvasSize.X, controlHeight ) );
@@ -121,7 +122,7 @@ namespace VFXEditor.AVFX.Views {
 
             drawList.AddRectFilled( canvasPos, new Vector2( canvasPos.X + canvasSize.X, canvasPos.Y + ItemHeight ), 0xFF3D3837, 0 );
 
-            if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && ImGui.IsMouseClicked(ImGuiMouseButton.Left) ) {
+            if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && MouseClicked() ) {
                 Selected = OnNew();
                 Selected.Idx = Items.Count;
                 Items.Add( Selected );
@@ -173,7 +174,7 @@ namespace VFXEditor.AVFX.Views {
 
             drawList.PopClipRect();
 
-            drawList.PushClipRect( childFramePos, childFramePos + childFrameSize );
+            drawList.PushClipRect( childFramePos, childFramePosMax );
 
             // ======= LEFT SIDE SELECT ======
 
@@ -182,12 +183,12 @@ namespace VFXEditor.AVFX.Views {
                 var itemPosBase = new Vector2( contentMin.X, contentMin.Y + i * ItemHeight );
                 var itemPos = new Vector2( contentMin.X + 3, contentMin.Y + i * ItemHeight + 2 );
 
-                if( !newItemAdded && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Selected = item;
+                if( !newItemAdded && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) Selected = item;
 
                 drawList.AddText( itemPos, 0xFFFFFFFF, item.GetText() );
 
                 var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y + 2 ), false );
-                if( !newItemAdded && overDelete && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) deleteEntry = item;
+                if( !newItemAdded && overDelete && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) deleteEntry = item;
             }
 
             for( var i = 0; i < count; i++ ) {
@@ -267,7 +268,7 @@ namespace VFXEditor.AVFX.Views {
                         var rect = rects[j];
                         if( !Contains( rect.Min, rect.Max, io.MousePos ) ) continue;
                         if( !Contains( childFramePos, childFramePos + childFrameSize, io.MousePos ) ) continue;
-                        if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && !MovingScrollBar ) {
+                        if( MouseClicked() && !MovingScrollBar ) {
                             MovingEntry = item;
                             MovingPos = cursorX;
                             MovingPart = j + 1;
@@ -440,10 +441,9 @@ namespace VFXEditor.AVFX.Views {
         public abstract T OnNew();
 
         private static bool AddDeleteButton( ImDrawListPtr drawList, Vector2 pos, bool add = true ) {
-            var io = ImGui.GetIO();
             var size = new Vector2( 16, 16 );
             var posMax = pos + size;
-            var overDelete = Contains( pos, posMax, io.MousePos );
+            var overDelete = MouseOver( pos, posMax );
             var deleteColor = overDelete ? 0xFF1080FF : 0xFFBBBBBB;
             var midY = pos.Y + 16 / 2 - 0.5f;
             var midX = pos.X + 16 / 2 - 0.5f;
@@ -452,6 +452,13 @@ namespace VFXEditor.AVFX.Views {
             if( add ) drawList.AddLine( new Vector2( midX, pos.Y + 3 ), new Vector2( midX, posMax.Y - 3 ), deleteColor, 2 );
             return overDelete;
         }
+
+        private static bool MouseOver( Vector2 start, Vector2 end) {
+            var io = ImGui.GetIO();
+            return Contains( start, end, io.MousePos );
+        }
+
+        private static bool MouseClicked() => ImGui.IsMouseClicked( ImGuiMouseButton.Left );
 
         private static bool Contains( Vector2 min, Vector2 max, Vector2 point ) {
             return point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
