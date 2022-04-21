@@ -71,6 +71,7 @@ namespace VFXEditor.PAP {
                     if( ok ) {
                         PAPManager.IndexDialog.OnOk = ( int idx ) => {
                             HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
+                            UIHelper.OkNotification( "Havok data replaced" );
                         };
                         PAPManager.IndexDialog.Show();
                     }
@@ -90,11 +91,14 @@ namespace VFXEditor.PAP {
             ImGui.SameLine();
             if( ImGui.Button( $"Import TMB{id}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
-                    if( ok ) Tmb = TMBFile.FromLocalFile( res );
+                    if( ok ) {
+                        Tmb = TMBFile.FromLocalFile( res );
+                        UIHelper.OkNotification( "TMB data imported" );
+                    }
                 } );
             }
 
-            // draw Tmb
+            // Draw Tmb
 
             if( ImGui.BeginTabBar( $"Tabs{id}", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Tmb{id}/Tab" ) ) {

@@ -87,6 +87,24 @@ namespace VFXEditor.Helper {
             }
         }
 
+        public static void WikiButton( string url ) {
+            if (ImGui.SmallButton( $"Wiki" ) ) {
+                OpenUrl( url );
+            }
+        }
+
+        public static void OkNotification( string content, string? title = "VFXEditor") {
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Success );
+        }
+
+        public static void ErrorNotification( string content, string? title = "VFXEditor" ) {
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Error );
+        }
+
+        public static void WarningNotification( string content, string? title = "VFXEditor" ) {
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Warning );
+        }
+
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             ImGui.PushFont( UiBuilder.IconFont );
 

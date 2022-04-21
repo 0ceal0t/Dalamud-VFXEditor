@@ -158,14 +158,14 @@ namespace VFXEditor.PAP {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
                     PAPManager.IndexDialog.OnOk = ( int idx ) => {
-                        // TODO: add new Animation
-                        // TODO: read TMB into new
                         var newAnim = new PAPAnimation( HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.TemplateLocation, "Files", "default_pap_tmb.tmb" ) );
                         Animations.Add( newAnim );
                         RefreshHavokIndexes();
 
                         HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
+
+                        UIHelper.OkNotification( "Havok data imported" );
                     };
                     PAPManager.IndexDialog.Show();
                 }
@@ -180,6 +180,8 @@ namespace VFXEditor.PAP {
             RefreshHavokIndexes();
 
             HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
+
+            UIHelper.OkNotification( "Havok data removed" );
         }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();

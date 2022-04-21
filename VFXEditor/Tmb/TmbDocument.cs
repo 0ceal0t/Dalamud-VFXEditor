@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using System;
 using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
@@ -15,15 +16,32 @@ namespace VFXEditor.TMB {
         }
 
         protected override void LoadLocal( string localPath ) {
-            CurrentFile = TMBFile.FromLocalFile( localPath );
+            if( File.Exists( localPath ) ) {
+                try {
+                    CurrentFile = TMBFile.FromLocalFile( localPath );
+                    UIHelper.OkNotification( "TMB file loaded" );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( "Error Reading File", e );
+                    UIHelper.ErrorNotification( "Error reading file" );
+                }
+            }
         }
 
         protected override void LoadGame( string gamePath ) {
-            if( !Plugin.DataManager.FileExists( gamePath ) ) return;
-            var file = Plugin.DataManager.GetFile( gamePath );
-            using var ms = new MemoryStream( file.Data );
-            using var br = new BinaryReader( ms );
-            CurrentFile = new TMBFile( br );
+            if( Plugin.DataManager.FileExists( gamePath ) ) {
+                try {
+                    var file = Plugin.DataManager.GetFile( gamePath );
+                    using var ms = new MemoryStream( file.Data );
+                    using var br = new BinaryReader( ms );
+                    CurrentFile = new TMBFile( br );
+                    UIHelper.OkNotification( "TMB file loaded" );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( "Error Reading File", e );
+                    UIHelper.ErrorNotification( "Error reading file" );
+                }
+            }
         }
 
         protected override void Update() {

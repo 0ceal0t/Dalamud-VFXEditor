@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using System;
 using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
@@ -17,17 +18,33 @@ namespace VFXEditor.PAP {
         }
 
         protected override void LoadLocal( string localPath ) {
-            if( !File.Exists( localPath ) ) return;
-            using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
-            CurrentFile = new( br, HkxTemp );
+            if (File.Exists(localPath)) {
+                try {
+                    using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
+                    CurrentFile = new( br, HkxTemp );
+                    UIHelper.OkNotification( "PAP file loaded" );
+                }
+                catch(Exception e) {
+                    PluginLog.Error( "Error Reading File", e );
+                    UIHelper.ErrorNotification( "Error reading file" );
+                }
+            }
         }
 
         protected override void LoadGame( string gamePath ) {
-            if( !Plugin.DataManager.FileExists( gamePath ) ) return;
-            var file = Plugin.DataManager.GetFile( gamePath );
-            using var ms = new MemoryStream( file.Data );
-            using var br = new BinaryReader( ms );
-            CurrentFile = new PAPFile( br, HkxTemp );
+            if( Plugin.DataManager.FileExists( gamePath ) ) {
+                try {
+                    var file = Plugin.DataManager.GetFile( gamePath );
+                    using var ms = new MemoryStream( file.Data );
+                    using var br = new BinaryReader( ms );
+                    CurrentFile = new PAPFile( br, HkxTemp );
+                    UIHelper.OkNotification( "PAP file loaded" );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( "Error Reading File", e );
+                    UIHelper.ErrorNotification( "Error reading file" );
+                }
+            }
         }
 
         protected override void Update() {

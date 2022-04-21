@@ -27,9 +27,11 @@ namespace VFXEditor.AVFX {
                 try {
                     using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                     CurrentFile = new AVFXFile( br );
+                    UIHelper.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
+                    UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -41,10 +43,11 @@ namespace VFXEditor.AVFX {
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new AVFXFile( br );
+                    UIHelper.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
-                    PluginLog.Log( e.ToString() );
+                    UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
         }

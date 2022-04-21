@@ -216,7 +216,10 @@ namespace VFXEditor.TMB {
 
         public void Draw( string id ) {
             ImGui.Checkbox( $"Use face library{id}", ref TMPP );
-            if (TMPP) {
+            ImGui.SameLine();
+            UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
+
+            if( TMPP) {
                 ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
             }
 

@@ -1,7 +1,7 @@
 # VFXEditor
 A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
 
-> Just want to hide certain VFXs? Use [this](https://github.com/0ceal0t/EasyEyes) instead
+> Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
 Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
