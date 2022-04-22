@@ -86,8 +86,8 @@ namespace VFXEditor.TMB.TMB {
 
         public void Draw( string id ) {
             FileHelper.ShortInput( $"Time{id}", ref Time );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 2{id}", ref Unk_2 );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 

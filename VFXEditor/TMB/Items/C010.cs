@@ -7,7 +7,7 @@ using VFXEditor.Helper;
 namespace VFXEditor.TMB.TMB {
     // Animation
     public class C010 : TMBItem {
-        private int Unk_2 = 50;
+        private int Duration = 50;
         private int Unk_3 = 0;
         private int Unk_4 = 0;
         private int Unk_5 = 0;
@@ -24,7 +24,7 @@ namespace VFXEditor.TMB.TMB {
             var startPos = reader.BaseStream.Position; // [C010] + 8
 
             ReadInfo( reader );
-            Unk_2 = reader.ReadInt32();
+            Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
             Unk_4 = reader.ReadInt32();
             Unk_5 = reader.ReadInt32();
@@ -48,7 +48,7 @@ namespace VFXEditor.TMB.TMB {
             var offset = endPos - startPos - 8;
 
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2 );
+            entryWriter.Write( Duration );
             entryWriter.Write( Unk_3 );
             entryWriter.Write( Unk_4 );
             entryWriter.Write( Unk_5 );
@@ -61,13 +61,13 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
-            ImGui.InputInt( $"Uknown 5{id}", ref Unk_5 );
-            ImGui.InputFloat( $"Uknown 6{id}", ref Unk_6 );
+            ImGui.InputInt( $"Duration{id}", ref Duration );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
+            ImGui.InputFloat( $"Unknown 6{id}", ref Unk_6 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            ImGui.InputInt( $"Uknown 7{id}", ref Unk_7 );
+            ImGui.InputInt( $"Unknown 7{id}", ref Unk_7 );
         }
 
         public override void PopulateStringList( List<string> stringList ) {

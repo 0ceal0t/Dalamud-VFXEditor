@@ -52,12 +52,51 @@ namespace VFXEditor.TMB.TMB {
             { "C125", new EntryType( C125.DisplayName, () => new C125(), ( BinaryReader br ) => new C125( br ) ) },
         };
 
+        // =====================================
+
+        private class UnknownDataItem {
+            public int Unk1;
+            public short Unk2;
+            public short Unk3;
+            public int Unk4;
+
+            public UnknownDataItem() {
+                Unk1 = 0;
+                Unk2 = 0;
+                Unk3 = 0;
+                Unk4 = 0;
+            }
+
+            public UnknownDataItem( BinaryReader reader ) {
+                Unk1 = reader.ReadInt32();
+                Unk2 = reader.ReadInt16();
+                Unk3 = reader.ReadInt16();
+                Unk4 = reader.ReadInt32();
+            }
+
+            public void Write( BinaryWriter writer ) {
+                writer.Write( Unk1 );
+                writer.Write( Unk2 );
+                writer.Write( Unk3 );
+                writer.Write( Unk4 );
+            }
+
+            public void Draw( string id ) {
+                ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
+                FileHelper.ShortInput( $"Unknown 2{id}", ref Unk2 );
+                FileHelper.ShortInput( $"Unknown 3{id}", ref Unk3 );
+                ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+            }
+        }
+
+        // ================================
+
         public static void ParseEntries( BinaryReader reader, List<TMBItem> entries, List<TMBTrack> tracks, int entryCount, ref bool entriesOk ) {
             for( var i = 0; i < entryCount; i++ ) {
                 var name = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
                 var size = reader.ReadInt32(); // size
 
-                if (name == "TMTR") {
+                if( name == "TMTR" ) {
                     tracks.Add( new TMBTrack( entries, reader ) );
                     continue;
                 }
@@ -86,7 +125,8 @@ namespace VFXEditor.TMB.TMB {
 
         private short Time = 0;
 
-        private List<short> UnknownExtraData = null;
+        private bool UseUnknownExtraData = false;
+        private readonly List<UnknownDataItem> UnknownExtraData = new();
 
         private readonly List<TMBItem> EntriesMaster;
         public readonly List<TMBItem> Entries = new();
@@ -94,7 +134,7 @@ namespace VFXEditor.TMB.TMB {
         public TMBTrack( List<TMBItem> entriesMaster ) {
             EntriesMaster = entriesMaster;
         }
-        public TMBTrack( List<TMBItem> entriesMaster, BinaryReader reader ) : this(entriesMaster) {
+        public TMBTrack( List<TMBItem> entriesMaster, BinaryReader reader ) : this( entriesMaster ) {
             var startPos = reader.BaseStream.Position; // [TMTR] + 8
 
             Id = reader.ReadInt16(); // id
@@ -104,13 +144,18 @@ namespace VFXEditor.TMB.TMB {
             var unknownOffset = reader.ReadInt32();
 
             // ====== READ SOME UNKNOWN DATA (SO FAR ONLY IN REAPER) =========
-            if (unknownOffset > 0) {
-                UnknownExtraData = new();
+            if( unknownOffset > 0 ) {
+                UseUnknownExtraData = true;
+
                 var savePos2 = reader.BaseStream.Position;
                 reader.BaseStream.Seek( startPos + unknownOffset, SeekOrigin.Begin );
-                for (var i = 0; i < 22; i++) { // 0x2C bytes total
-                    UnknownExtraData.Add( reader.ReadInt16() );
+
+                reader.ReadInt32(); // 8
+                var unknownExtraCount = reader.ReadInt32();
+                for( var i = 0; i < unknownExtraCount; i++ ) {
+                    UnknownExtraData.Add( new UnknownDataItem( reader ) );
                 }
+
                 reader.BaseStream.Seek( savePos2, SeekOrigin.Begin );
             }
 
@@ -124,7 +169,7 @@ namespace VFXEditor.TMB.TMB {
         }
 
         public void PickEntries( List<TMBItem> entries, int startId ) {
-            Entries.AddRange(entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where(x => x != null));
+            Entries.AddRange( entries.GetRange( LastId_Temp - startId - EntryCount_Temp + 1, EntryCount_Temp ).Where( x => x != null ) );
         }
 
         public void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<int, int> timelinePos ) {
@@ -132,7 +177,7 @@ namespace VFXEditor.TMB.TMB {
 
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = timelinePos.TryGetValue( lastId, out var pos ) ? pos : 0;
-            var offset = endPos - startPos - 8 - (2 * (Entries.Count == 0 ? 0 : ( Entries.Count - 1 )));
+            var offset = endPos - startPos - 8 - ( 2 * ( Entries.Count == 0 ? 0 : ( Entries.Count - 1 ) ) );
 
             if( Entries.Count == 0 ) offset = Offset_Temp;
 
@@ -144,16 +189,19 @@ namespace VFXEditor.TMB.TMB {
             entryWriter.Write( Entries.Count );
 
             // ======= WRITE UNKNOWN DATA ===========
-            if (UnknownExtraData == null) {
+
+            if( !UseUnknownExtraData ) {
                 entryWriter.Write( 0 );
             }
             else {
                 var extraEndPos = ( int )extraWriter.BaseStream.Position + extraPos;
                 var extraOffset = extraEndPos - startPos - 8;
-
                 entryWriter.Write( extraOffset );
+
+                extraWriter.Write( 8 );
+                extraWriter.Write( UnknownExtraData.Count );
                 foreach( var item in UnknownExtraData ) {
-                    extraWriter.Write( item );
+                    item.Write( extraWriter );
                 }
             }
         }
@@ -169,33 +217,46 @@ namespace VFXEditor.TMB.TMB {
         public void Draw( string id ) {
             FileHelper.ShortInput( $"Time{id}", ref Time );
 
-            var unknowExtraDataExists = UnknownExtraData != null;
-            if (ImGui.Checkbox($"Unknown Extra Data{id}", ref unknowExtraDataExists)) {
-                UnknownExtraData = unknowExtraDataExists ? new List<short>( new short[22] ) : null;
-            }
-            if ( UnknownExtraData != null ) {
-                for( var j = 0; j < UnknownExtraData.Count; j++ ) {
-                    var item = UnknownExtraData[j];
-                    if( FileHelper.ShortInput( $"Unknown Extra Data {j}{id}", ref item ) ) {
-                        UnknownExtraData[j] = item;
+            // =======================
+
+            ImGui.Checkbox( $"Unknown Extra Data{id}", ref UseUnknownExtraData );
+            if( UseUnknownExtraData ) {
+                ImGui.SameLine();
+                if( ImGui.Button( $"+ New{id}-Unk" ) ) UnknownExtraData.Add( new UnknownDataItem() );
+
+                var unkExtraIdx = 0;
+                foreach( var item in UnknownExtraData) {
+                    var itemId = $"{id}-Unk{unkExtraIdx}";
+                    if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
+                        ImGui.Indent();
+                        if( UIHelper.RemoveButton( $"Delete{itemId}" ) ) {
+                            UnknownExtraData.Remove( item );
+                            ImGui.Unindent();
+                            break;
+                        }
+                        item.Draw( itemId );
+                        ImGui.Unindent();
                     }
+                    unkExtraIdx++;
                 }
             }
 
-            var i = 0;
+            // =========================
+
+            var entryIdx = 0;
             foreach( var entry in Entries ) {
-                if( ImGui.CollapsingHeader( $"{entry.GetDisplayName()}{id}{i}" ) ) {
+                if( ImGui.CollapsingHeader( $"{entry.GetDisplayName()}{id}{entryIdx}" ) ) {
                     ImGui.Indent();
-                    if( UIHelper.RemoveButton( $"Delete{id}{i}" ) ) {
+                    if( UIHelper.RemoveButton( $"Delete{id}{entryIdx}" ) ) {
                         Entries.Remove( entry );
                         EntriesMaster.Remove( entry );
                         ImGui.Unindent();
                         break;
                     }
-                    entry.Draw( $"{id}{i}" );
+                    entry.Draw( $"{id}{entryIdx}" );
                     ImGui.Unindent();
                 }
-                i++;
+                entryIdx++;
             }
 
             if( ImGui.Button( $"+ New{id}" ) ) {
@@ -220,6 +281,6 @@ namespace VFXEditor.TMB.TMB {
             }
         }
 
-        public int GetExtraSize() => UnknownExtraData == null ? 0 : 2 * UnknownExtraData.Count;
+        public int GetExtraSize() => !UseUnknownExtraData ? 0 : 8 + (12 * UnknownExtraData.Count);
     }
 }

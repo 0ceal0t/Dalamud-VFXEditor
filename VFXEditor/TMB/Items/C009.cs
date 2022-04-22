@@ -7,7 +7,7 @@ using VFXEditor.Helper;
 namespace VFXEditor.TMB.TMB {
     // Pap Animation
     public class C009 : TMBItem {
-        private int Unk_2 = 50;
+        private int Duration = 50;
         private int Unk_3 = 0;
         private string Path = "";
 
@@ -20,7 +20,7 @@ namespace VFXEditor.TMB.TMB {
             var startPos = reader.BaseStream.Position; // [C009] + 8
 
             ReadInfo( reader );
-            Unk_2 = reader.ReadInt32();
+            Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
 
             var offset = reader.ReadInt32(); // offset: [C009] + offset + 8 = animation
@@ -39,7 +39,7 @@ namespace VFXEditor.TMB.TMB {
             var offset = endPos - startPos - 8;
 
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2 );
+            entryWriter.Write( Duration );
             entryWriter.Write( Unk_3 );
 
             entryWriter.Write( offset );
@@ -47,8 +47,8 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Duration{id}", ref Duration );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
         }
 

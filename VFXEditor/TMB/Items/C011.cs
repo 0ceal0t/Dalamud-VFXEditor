@@ -8,7 +8,7 @@ namespace VFXEditor.TMB.TMB {
         private int Unk_2 = 1;
         private int Unk_3 = 0;
 
-        public static readonly string DisplayName = "Damage Text (C011)";
+        public static readonly string DisplayName = "Fly Text (C011)";
         public override string GetDisplayName() => DisplayName;
         public override string GetName() => "C011";
 
@@ -30,8 +30,8 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 2{id}", ref Unk_2 );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
         }
 
         public override void PopulateStringList( List<string> stringList ) {

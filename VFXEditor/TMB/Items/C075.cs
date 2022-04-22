@@ -57,9 +57,9 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Unknown 2{id}", ref Unk_2 );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
 
             DrawPairs( id, Unk_Pairs );
         }

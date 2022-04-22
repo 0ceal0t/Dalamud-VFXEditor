@@ -68,16 +68,16 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
-            ImGui.InputInt( $"Uknown 5{id}", ref Unk_5 );
+            ImGui.InputInt( $"Unknown 2{id}", ref Unk_2 );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
 
-            ImGui.InputInt( $"Uknown 2,1{id}", ref Unk2_1 );
-            ImGui.InputInt( $"Uknown 2,2{id}", ref Unk2_2 );
-            ImGui.InputInt( $"Uknown 2,3{id}", ref Unk2_3 );
-            ImGui.InputInt( $"Uknown 2,4{id}", ref Unk2_4 );
-            ImGui.InputInt( $"Uknown 2,5{id}", ref Unk2_5 );
+            ImGui.InputInt( $"Unknown 2,1{id}", ref Unk2_1 );
+            ImGui.InputInt( $"Unknown 2,2{id}", ref Unk2_2 );
+            ImGui.InputInt( $"Unknown 2,3{id}", ref Unk2_3 );
+            ImGui.InputInt( $"Unknown 2,4{id}", ref Unk2_4 );
+            ImGui.InputInt( $"Unknown 2,5{id}", ref Unk2_5 );
         }
 
         public override void PopulateStringList( List<string> stringList ) {

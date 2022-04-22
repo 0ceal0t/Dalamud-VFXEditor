@@ -26,6 +26,7 @@ namespace VFXEditor.PAP {
                 }
                 catch(Exception e) {
                     PluginLog.Error( "Error Reading File", e );
+                    PluginLog.Error( e.ToString() );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
@@ -42,6 +43,7 @@ namespace VFXEditor.PAP {
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
+                    PluginLog.Error( e.ToString() );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }

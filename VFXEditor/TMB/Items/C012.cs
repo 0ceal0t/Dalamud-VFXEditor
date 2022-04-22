@@ -8,7 +8,7 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.TMB {
     public class C012 : TMBItem {
-        private int Unk_2 = 30;
+        private int Duration = 30;
         private int Unk_3 = 0;
         private string Path = "";
         private short BindPoint_1 = 1;
@@ -31,7 +31,7 @@ namespace VFXEditor.TMB.TMB {
             var startPos = reader.BaseStream.Position; // [C012] + 8
 
             ReadInfo( reader );
-            Unk_2 = reader.ReadInt32();
+            Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
 
             var offset = reader.ReadInt32(); // path offset: [C012] + offset + 8 = path
@@ -64,7 +64,7 @@ namespace VFXEditor.TMB.TMB {
             var offset = endPos - startPos - 8;
 
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2 );
+            entryWriter.Write( Duration );
             entryWriter.Write( Unk_3 );
 
             entryWriter.Write( offset );
@@ -88,10 +88,10 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Uknown 2{id}", ref Unk_2 );
-            ImGui.InputInt( $"Uknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Uknown 4{id}", ref Unk_4 );
-            ImGui.InputInt( $"Uknown 5{id}", ref Unk_5 );
+            ImGui.InputInt( $"Duration{id}", ref Duration );
+            ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
+            ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
+            ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
             FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint_1 );
             FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint_2 );
