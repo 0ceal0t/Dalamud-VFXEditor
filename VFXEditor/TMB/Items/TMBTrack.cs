@@ -50,6 +50,8 @@ namespace VFXEditor.TMB.TMB {
             { "C107", new EntryType( C107.DisplayName, () => new C107(), ( BinaryReader br ) => new C107( br ) ) },
             { "C120", new EntryType( C120.DisplayName, () => new C120(), ( BinaryReader br ) => new C120( br ) ) },
             { "C125", new EntryType( C125.DisplayName, () => new C125(), ( BinaryReader br ) => new C125( br ) ) },
+            { "C173", new EntryType( C173.DisplayName, () => new C173(), ( BinaryReader br ) => new C173( br ) ) },
+            { "C211", new EntryType( C211.DisplayName, () => new C211(), ( BinaryReader br ) => new C211( br ) ) },
         };
 
         // =====================================
