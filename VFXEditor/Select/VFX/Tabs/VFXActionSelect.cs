@@ -28,9 +28,7 @@ namespace VFXSelect.VFX {
             ImGui.Text( loadedItem.Action.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
             DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", spawn: true );
 

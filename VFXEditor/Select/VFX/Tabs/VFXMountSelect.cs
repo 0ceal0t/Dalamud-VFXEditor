@@ -23,9 +23,7 @@ namespace VFXSelect.VFX {
             ImGui.Text( loadedItem.Mount.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + loadedItem.Mount.Variant );
             ImGui.Text( "IMC Count: " + loadedItem.Count );

@@ -23,9 +23,7 @@ namespace VFXSelect.VFX {
             ImGui.Text( loadedItem.Emote.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
             DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameEmote, "EMOTE", loadedItem.Emote.Name, spawn: true );
         }

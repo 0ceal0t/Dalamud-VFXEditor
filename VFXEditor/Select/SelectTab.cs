@@ -18,7 +18,6 @@ namespace VFXSelect {
         protected abstract string UniqueRowTitle( T item );
         protected abstract void DrawSelected( S loadedItem );
 
-
         protected virtual void DrawExtra() { }
         protected virtual void OnSelect() { }
 

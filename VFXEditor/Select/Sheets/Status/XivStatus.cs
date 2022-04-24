@@ -11,6 +11,7 @@ namespace VFXSelect.Select.Rows {
         public int RowId;
         public ushort Icon;
 
+        public string HitVFXPath;
         public string LoopVFXPath1;
         public string LoopVFXPath2;
         public string LoopVFXPath3;
@@ -23,13 +24,12 @@ namespace VFXSelect.Select.Rows {
             RowId = ( int )status.RowId;
             Icon = status.Icon;
 
-            //HitVFXPath = status.HitEffect.Value?.Location.Value?.Location;
-
+            HitVFXPath = GetVFXPath( status.HitEffect.Value?.Location.Value?.Location );
             LoopVFXPath1 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
-            LoopVFXPath2 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
-            LoopVFXPath3 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
+            LoopVFXPath2 = GetVFXPath( status.VFX.Value?.VFX2?.Value.Location );
+            LoopVFXPath3 = GetVFXPath( status.VFX.Value?.VFX3?.Value.Location );
 
-            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 );
+            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 ) || !string.IsNullOrEmpty(HitVFXPath);
         }
 
         private static string GetVFXPath( string path ) {
