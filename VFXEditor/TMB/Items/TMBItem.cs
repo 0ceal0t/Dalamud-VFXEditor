@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -14,7 +13,7 @@ namespace VFXEditor.TMB.TMB {
             Id = id++;
         }
 
-        protected void ReadInfo(BinaryReader reader) {
+        protected void ReadInfo( BinaryReader reader ) {
             reader.ReadInt16(); // id
             Time = reader.ReadInt16();
         }
@@ -26,7 +25,7 @@ namespace VFXEditor.TMB.TMB {
 
         public abstract void Draw( string id );
 
-        protected void DrawInfo(string id) {
+        protected void DrawInfo( string id ) {
             FileHelper.ShortInput( $"Time{id}", ref Time );
         }
 
@@ -48,7 +47,7 @@ namespace VFXEditor.TMB.TMB {
             stringList.Add( newItem );
         }
 
-        public static List<List<float>> ReadPairs(int number, BinaryReader reader, long startPos) {
+        public static List<List<float>> ReadPairs( int number, BinaryReader reader, long startPos ) {
             var ret = new List<List<float>>();
             for( var i = 0; i < number; i++ ) {
                 var subRet = new List<float>();
@@ -68,7 +67,7 @@ namespace VFXEditor.TMB.TMB {
             return ret;
         }
 
-        public static void WritePairs( BinaryWriter entryWriter, BinaryWriter extraWriter, int extraPos, int startPos, List<List<float>> pairs) {
+        public static void WritePairs( BinaryWriter entryWriter, BinaryWriter extraWriter, int extraPos, int startPos, List<List<float>> pairs ) {
             foreach( var entry in pairs ) {
                 var extraEndPos = ( int )extraWriter.BaseStream.Position + extraPos;
                 var extraOffset = extraEndPos - startPos - 8;
@@ -83,7 +82,7 @@ namespace VFXEditor.TMB.TMB {
             }
         }
 
-        public static void DrawPairs(string id, List<List<float>> Pairs) {
+        public static void DrawPairs( string id, List<List<float>> Pairs ) {
             for( var i = 0; i < Pairs.Count; i++ ) {
                 var entries = Pairs[i];
                 for( var j = 0; j < entries.Count; j++ ) {
@@ -97,7 +96,7 @@ namespace VFXEditor.TMB.TMB {
 
         public static Vector3 ListToVec3( List<float> list ) => list.Count == 3 ? new Vector3( list[0], list[1], list[2] ) : new Vector3( 0 );
         public static Vector4 ListToVec4( List<float> list ) => list.Count == 4 ? new Vector4( list[0], list[1], list[2], list[3] ) : new Vector4( 0 );
-        public static List<float> Vec3ToList( Vector3 vec ) => new ( new[] { vec.X, vec.Y, vec.Z } );
-        public static List<float> Vec4ToList( Vector4 vec ) => new ( new[] { vec.X, vec.Y, vec.Z, vec.W } );
+        public static List<float> Vec3ToList( Vector3 vec ) => new( new[] { vec.X, vec.Y, vec.Z } );
+        public static List<float> Vec4ToList( Vector4 vec ) => new( new[] { vec.X, vec.Y, vec.Z, vec.W } );
     }
 }

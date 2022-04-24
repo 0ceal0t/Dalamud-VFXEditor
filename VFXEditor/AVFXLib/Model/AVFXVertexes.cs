@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Model {
     public class AVFXVertexes : AVFXBase {
@@ -59,8 +55,8 @@ namespace VFXEditor.AVFXLib.Model {
         public AVFXVertex() {
         }
 
-        public AVFXVertex( BinaryReader reader) {
-            for(var i = 0; i < 4; i++) {
+        public AVFXVertex( BinaryReader reader ) {
+            for( var i = 0; i < 4; i++ ) {
                 Position[i] = AVFXBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
             }
             for( var i = 0; i < 4; i++ ) {
@@ -80,15 +76,15 @@ namespace VFXEditor.AVFXLib.Model {
             }
         }
 
-        public void Write(BinaryWriter writer) {
-            for(var i = 0; i < 4; i++) {
+        public void Write( BinaryWriter writer ) {
+            for( var i = 0; i < 4; i++ ) {
                 writer.Write( AVFXBase.FloatTo2Bytes( Position[i] ) );
             }
-            for(var i = 0; i < 4; i++) {
-                writer.Write( ( byte )(Normal[i] + 128) );
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( ( byte )( Normal[i] + 128 ) );
             }
             for( var i = 0; i < 4; i++ ) {
-                writer.Write( ( byte )(Tangent[i] + 128) );
+                writer.Write( ( byte )( Tangent[i] + 128 ) );
             }
             for( var i = 0; i < 4; i++ ) {
                 writer.Write( ( byte )Color[i] );

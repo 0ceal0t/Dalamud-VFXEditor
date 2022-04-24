@@ -1,10 +1,8 @@
-using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib {
     public abstract class AVFXBase {
@@ -46,12 +44,12 @@ namespace VFXEditor.AVFXLib {
             var endPos = writer.BaseStream.Position;
             var size = endPos - sizePos - 4;
 
-            WritePad( writer, CalculatePadding( (int)size ) );
+            WritePad( writer, CalculatePadding( ( int )size ) );
 
             endPos = writer.BaseStream.Position;
 
             writer.BaseStream.Seek( sizePos, SeekOrigin.Begin );
-            writer.Write( (int)size );
+            writer.Write( ( int )size );
 
             writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
         }
@@ -86,14 +84,14 @@ namespace VFXEditor.AVFXLib {
         }, size );
 
         public static void RecurseAssigned<T>( T child, bool assigned ) where T : AVFXBase {
-            if (child != null) {
+            if( child != null ) {
                 child.SetAssigned( assigned );
                 child.RecurseChildrenAssigned( assigned );
             }
         }
 
         public static void RecurseAssigned<T>( List<T> children, bool assigned ) where T : AVFXBase {
-            foreach(var child in children) {
+            foreach( var child in children ) {
                 if( child == null ) continue;
                 child.SetAssigned( assigned );
                 child.RecurseChildrenAssigned( assigned );
@@ -122,8 +120,8 @@ namespace VFXEditor.AVFXLib {
             }
         }
 
-        public static void WriteLeaf(BinaryWriter writer, string name, int size, int value) {
-            WriteName( writer, name);
+        public static void WriteLeaf( BinaryWriter writer, string name, int size, int value ) {
+            WriteName( writer, name );
             writer.Write( size );
             writer.Write( value );
         }
@@ -138,7 +136,7 @@ namespace VFXEditor.AVFXLib {
             return ReadName( BitConverter.GetBytes( reader.ReadInt32() ) );
         }
 
-        public static string ReadName( byte[] bytes) {
+        public static string ReadName( byte[] bytes ) {
             var nonZeroBytes = bytes.Reverse().Where( x => x != 0 ).ToArray();
             return Encoding.ASCII.GetString( nonZeroBytes );
         }

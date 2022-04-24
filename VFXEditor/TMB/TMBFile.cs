@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 
@@ -6,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
@@ -55,7 +53,7 @@ namespace VFXEditor.TMB {
             TMDH_Unk3 = reader.ReadInt16(); // 3
 
             var tmal_tmpp = reader.ReadInt32(); // TMAL or TMPP
-            if ( tmal_tmpp == 0x50504D54 ) { // TMPP
+            if( tmal_tmpp == 0x50504D54 ) { // TMPP
                 TMPP = true;
                 reader.ReadInt32(); // 0x0C
                 var tmppOffset = reader.ReadInt32(); // offset from [TMPP] + 8 to strings
@@ -97,13 +95,13 @@ namespace VFXEditor.TMB {
         }
 
         public byte[] ToBytes() {
-            var headerSize = 0x0C + 0x10 + 0x10 + (TMPP ? 0x0C : 0) + Actors.Count * 0x1C;
+            var headerSize = 0x0C + 0x10 + 0x10 + ( TMPP ? 0x0C : 0 ) + Actors.Count * 0x1C;
             var entriesSize = 0x18 * Tracks.Count + Entries.Select( x => x.GetSize() ).Sum();
             var extraSize = Entries.Select( x => x.GetExtraSize() ).Sum() + Tracks.Select( x => x.GetExtraSize() ).Sum();
 
             var stringList = new List<string>();
             Entries.ForEach( x => x.PopulateStringList( stringList ) );
-            var stringSize = stringList.Select( x => x.Length + 1 ).Sum() + (TMPP ? TMPP_String.Length + 1 : 0);
+            var stringSize = stringList.Select( x => x.Length + 1 ).Sum() + ( TMPP ? TMPP_String.Length + 1 : 0 );
 
             var entryCount = Actors.Count + Tracks.Count + Entries.Count; // include TMTR + entries
             var timelineSize = 2 * ( Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum() );
@@ -150,7 +148,7 @@ namespace VFXEditor.TMB {
 
             Dictionary<string, int> stringPositions = new();
             var currentStringPos = 0;
-            if (TMPP) {
+            if( TMPP ) {
                 FileHelper.WriteString( stringWriter, TMPP_String, true );
                 currentStringPos += TMPP_String.Length + 1;
             }
@@ -219,7 +217,7 @@ namespace VFXEditor.TMB {
             ImGui.SameLine();
             UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
-            if( TMPP) {
+            if( TMPP ) {
                 ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
             }
 

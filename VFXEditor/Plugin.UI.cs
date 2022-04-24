@@ -1,4 +1,3 @@
-using System;
 using ImGuiNET;
 
 using VFXEditor.Data;
@@ -6,9 +5,7 @@ using VFXEditor.Helper;
 using VFXEditor.Penumbra;
 using VFXEditor.TexTools;
 using VFXEditor.Texture;
-using VFXEditor.TMB;
 using VFXEditor.Tracker;
-using VFXEditor.AVFX;
 
 namespace VFXEditor {
     public partial class Plugin {

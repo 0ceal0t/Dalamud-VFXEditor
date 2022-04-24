@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -30,7 +29,7 @@ namespace VFXEditor.Helper {
 
         public static bool ByteInput( string id, ref byte value ) {
             var val = ( int )value;
-            if (ImGui.InputInt(id, ref val ) ) {
+            if( ImGui.InputInt( id, ref val ) ) {
                 if( val < 0 ) val = 0;
                 if( val > 255 ) val = 255;
                 value = ( byte )val;

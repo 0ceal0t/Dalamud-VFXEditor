@@ -1,10 +1,9 @@
+using Dalamud.Logging;
+using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Dalamud.Logging;
-using Lumina.Extensions;
 
 namespace VFXEditor.Data.SCD {
     public class ScdFile : Lumina.Data.FileResource {
@@ -21,7 +20,7 @@ namespace VFXEditor.Data.SCD {
             // padded to 0x30
         };
 
-        [StructLayout( LayoutKind.Sequential, Size = 0x20)]
+        [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
         public unsafe struct SoundOffsetsHeader {
             public short Table0_Count;
             public short Table1_Count;
@@ -89,14 +88,14 @@ namespace VFXEditor.Data.SCD {
             }
         }
 
-        private static int RoundUp(int value, int round = 4) {
-            return round * ( int )Math.Ceiling( value / (float) round );
+        private static int RoundUp( int value, int round = 4 ) {
+            return round * ( int )Math.Ceiling( value / ( float )round );
         }
 
         //public static void Test() {
-            //var test1 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
-            //PluginLog.Log( "---------------------" );
-            //var test2 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
+        //var test1 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
+        //PluginLog.Log( "---------------------" );
+        //var test2 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
         //}
     }
 
@@ -144,7 +143,7 @@ namespace VFXEditor.Data.SCD {
         protected override void Initialize( BinaryReader Reader ) {
             Header = Reader.ReadStructure<Music_Header>();
 
-            for(var i = 0; i < Header.AuxCount; i++ ) {
+            for( var i = 0; i < Header.AuxCount; i++ ) {
                 var id = Reader.ReadInt32();
                 var chunkSize = Reader.ReadInt32();
                 var data = Reader.ReadBytes( chunkSize - 8 ); // 4 bytes for id, 4 for size
@@ -179,7 +178,7 @@ namespace VFXEditor.Data.SCD {
         public CameraEntry( BinaryReader Reader ) : base( Reader ) { }
         public CameraEntry( BinaryReader Reader, int offset ) : base( Reader, offset ) { }
 
-        protected override void Initialize(BinaryReader Reader) {
+        protected override void Initialize( BinaryReader Reader ) {
             Data = Reader.ReadStructure<Camera_Data>();
 
             PluginLog.Log( $"TABLE 3: {Data.Size} {Data.Unk1} {Data.Unk2} {Data.Unk3} {Data.Unk4}" );

@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using ImGuiFileDialog;
-using ImGuiNET;
 
 namespace VFXSelect.PAP {
     public class PAPSelectDialog : SelectDialog {

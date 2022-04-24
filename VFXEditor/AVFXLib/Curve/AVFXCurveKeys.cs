@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Curve {
     public class AVFXCurveKeys : AVFXBase {
@@ -14,7 +10,7 @@ namespace VFXEditor.AVFXLib.Curve {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             var count = size / 16;
-            for(var i = 0; i < count; i++ ) {
+            for( var i = 0; i < count; i++ ) {
                 Keys.Add( new AVFXCurveKey( reader ) );
             }
         }
@@ -32,7 +28,7 @@ namespace VFXEditor.AVFXLib.Curve {
             return key;
         }
 
-        public void Add( AVFXCurveKey key) {
+        public void Add( AVFXCurveKey key ) {
             SetAssigned( true );
             Keys.Add( key );
         }
@@ -66,7 +62,7 @@ namespace VFXEditor.AVFXLib.Curve {
 
         public AVFXCurveKey( BinaryReader reader ) {
             Time = reader.ReadInt16();
-            Type = (KeyType)reader.ReadInt16();
+            Type = ( KeyType )reader.ReadInt16();
             X = reader.ReadSingle();
             Y = reader.ReadSingle();
             Z = reader.ReadSingle();

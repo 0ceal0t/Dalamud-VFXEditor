@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Curve {
     public class AVFXLife : AVFXBase {
@@ -27,7 +23,7 @@ namespace VFXEditor.AVFXLib.Curve {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            if (size > 4) {
+            if( size > 4 ) {
                 Enabled = true;
                 ReadNested( reader, Children, size );
                 return;
@@ -38,7 +34,7 @@ namespace VFXEditor.AVFXLib.Curve {
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
-            if (!Enabled) {
+            if( !Enabled ) {
                 writer.Write( -1 );
                 return;
             }

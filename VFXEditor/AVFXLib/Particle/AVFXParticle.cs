@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Particle {
@@ -148,11 +144,11 @@ namespace VFXEditor.AVFXLib.Particle {
             Type = ParticleVariety.GetValue();
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                if (_name == "Data") {
+                if( _name == "Data" ) {
                     SetData( Type );
                     Data?.Read( _reader, _size );
                 }
-                else if (_name == "UvSt" ) {
+                else if( _name == "UvSt" ) {
                     var uvSet = new AVFXParticleUVSet();
                     uvSet.Read( _reader, _size );
                     UVSets.Add( uvSet );
@@ -169,7 +165,7 @@ namespace VFXEditor.AVFXLib.Particle {
         protected override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Children );
 
-            foreach(var uvSet in UVSets) {
+            foreach( var uvSet in UVSets ) {
                 uvSet.Write( writer );
             }
 

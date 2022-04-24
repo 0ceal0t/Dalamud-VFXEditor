@@ -1,28 +1,23 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Emitter {
     public class AVFXEmitterCreate : AVFXBase {
         public readonly List<AVFXEmitterItem> Items = new();
 
-        public AVFXEmitterCreate(string name) : base( name ) {
+        public AVFXEmitterCreate( string name ) : base( name ) {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for(var i = 0; i < size / 312; i++) {
-                Items.Add( new AVFXEmitterItem( reader) );
+            for( var i = 0; i < size / 312; i++ ) {
+                Items.Add( new AVFXEmitterItem( reader ) );
             }
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            foreach(var item in Items) {
+            foreach( var item in Items ) {
                 item.Write( writer );
             }
         }
@@ -116,11 +111,11 @@ namespace VFXEditor.AVFXLib.Emitter {
             GenerateDelayByOne.SetValue( false );
         }
 
-        public AVFXEmitterItem(BinaryReader reader) : this() {
+        public AVFXEmitterItem( BinaryReader reader ) : this() {
             AVFXBase.ReadNested( reader, Children, 312 );
         }
 
-        public void Write(BinaryWriter writer) {
+        public void Write( BinaryWriter writer ) {
             AVFXBase.WriteNested( writer, Children );
         }
     }

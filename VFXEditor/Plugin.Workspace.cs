@@ -127,7 +127,7 @@ namespace VFXEditor {
             ResetTmbManager();
             var tmbRootPath = Path.Combine( loadLocation, TMBManager.PenumbraPath );
             if( meta.Tmb != null ) {
-                foreach(var tmb in meta.Tmb ) {
+                foreach( var tmb in meta.Tmb ) {
                     TmbManager.ImportWorkspaceFile( Path.Combine( tmbRootPath, tmb.RelativeLocation ), tmb );
                 }
             }

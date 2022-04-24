@@ -1,9 +1,4 @@
-using Dalamud.Plugin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXSelect.Select.Rows {
     public class XivEmote {

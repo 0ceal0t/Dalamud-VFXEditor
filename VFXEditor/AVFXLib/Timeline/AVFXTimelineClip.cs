@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Timeline {
     public class AVFXTimelineClip : AVFXBase {
@@ -11,7 +7,7 @@ namespace VFXEditor.AVFXLib.Timeline {
         public readonly int[] UnknownInts = new int[] { 0, 0, 0, 0 };
         public readonly float[] UnknownFloats = new float[] { -1, 0, 0, 0 };
 
-        public AVFXTimelineClip() : base("Clip" ) {
+        public AVFXTimelineClip() : base( "Clip" ) {
         }
 
         /*
@@ -24,13 +20,13 @@ namespace VFXEditor.AVFXLib.Timeline {
          */
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            UniqueId = Encoding.ASCII.GetString( reader.ReadBytes(4) );
+            UniqueId = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
 
-            for(var i = 0; i < 4; i++) {
+            for( var i = 0; i < 4; i++ ) {
                 UnknownInts[i] = reader.ReadInt32();
             }
 
-            for(var i = 0; i < 4; i++) {
+            for( var i = 0; i < 4; i++ ) {
                 UnknownFloats[i] = reader.ReadSingle();
             }
 
@@ -40,13 +36,13 @@ namespace VFXEditor.AVFXLib.Timeline {
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            writer.Write(Encoding.ASCII.GetBytes(UniqueId));
+            writer.Write( Encoding.ASCII.GetBytes( UniqueId ) );
 
-            for(var i = 0; i < 4; i++) {
-                writer.Write(UnknownInts[i]);
+            for( var i = 0; i < 4; i++ ) {
+                writer.Write( UnknownInts[i] );
             }
 
-            for(var i = 0; i < 4; i++) {
+            for( var i = 0; i < 4; i++ ) {
                 writer.Write( UnknownFloats[i] );
             }
 

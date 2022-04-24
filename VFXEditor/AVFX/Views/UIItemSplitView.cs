@@ -1,10 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {

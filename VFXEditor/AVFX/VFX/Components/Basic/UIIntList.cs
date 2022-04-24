@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using ImGuiNET;
-using VFXEditor.Data;
+using System.Collections.Generic;
 using VFXEditor.AVFXLib;
+using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIIntList : UIBase {

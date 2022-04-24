@@ -20,7 +20,7 @@ namespace VFXSelect.VFX {
             ImGui.SameLine();
             DisplayPath( loadedItem.Zone.LgbPath );
 
-            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name, spawn:true );
+            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivZone item ) {

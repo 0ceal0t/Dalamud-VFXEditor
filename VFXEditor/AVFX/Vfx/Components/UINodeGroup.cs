@@ -1,7 +1,5 @@
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeGroup {

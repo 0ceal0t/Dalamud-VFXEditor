@@ -140,7 +140,7 @@ namespace VFXEditor.Tracker {
                     var pos = vfx.Vfx->Position;
                     VfxsWithoutActor.Add( new StaticVfxGroup {
                         path = vfx.Path,
-                        position = new SharpDX.Vector3(pos.X, pos.Y, pos.Z)
+                        position = new SharpDX.Vector3( pos.X, pos.Y, pos.Z )
                     } );
                 }
             }

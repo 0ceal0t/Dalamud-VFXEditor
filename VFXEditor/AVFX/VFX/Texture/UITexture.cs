@@ -1,11 +1,11 @@
-using ImGuiNET;
-using System;
-using System.Numerics;
 using Dalamud.Logging;
 using ImGuiFileDialog;
-using VFXEditor.Helper;
-using VFXEditor.AVFXLib.Texture;
+using ImGuiNET;
+using System;
 using System.IO;
+using System.Numerics;
+using VFXEditor.AVFXLib.Texture;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITexture : UINode {

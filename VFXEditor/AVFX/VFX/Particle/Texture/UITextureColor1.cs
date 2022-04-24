@@ -1,9 +1,8 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
-using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITextureColor1 : UIItem {
@@ -23,7 +22,7 @@ namespace VFXEditor.AVFX.VFX {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
 
-            if (IsAssigned()) {
+            if( IsAssigned() ) {
                 Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
             }
 

@@ -88,12 +88,12 @@ namespace VFXEditor.Helper {
         }
 
         public static void WikiButton( string url ) {
-            if (ImGui.SmallButton( $"Wiki" ) ) {
+            if( ImGui.SmallButton( $"Wiki" ) ) {
                 OpenUrl( url );
             }
         }
 
-        public static void OkNotification( string content, string? title = "VFXEditor") {
+        public static void OkNotification( string content, string? title = "VFXEditor" ) {
             Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Success );
         }
 
@@ -130,6 +130,13 @@ namespace VFXEditor.Helper {
             ImGui.PopFont();
             ImGui.SameLine();
             ImGui.TextColored( color, text );
+
+            if( verified == VerifiedStatus.ISSUE ) {
+                ImGui.SameLine();
+                if( ColorButton( "Report this error", RED_COLOR, false ) ) {
+                    OpenUrl( "" );
+                }
+            }
         }
 
         public static void WriteBytesDialog( string filter, string data, string ext ) {

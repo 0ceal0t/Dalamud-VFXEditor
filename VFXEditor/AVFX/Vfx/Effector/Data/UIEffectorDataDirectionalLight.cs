@@ -1,4 +1,3 @@
-using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.AVFX.VFX {

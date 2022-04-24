@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
 using VFXEditor.Helper;
-using VFXEditor.AVFX.VFX;
 
 namespace VFXEditor.AVFX.VFX {
     public class ExportDialog {

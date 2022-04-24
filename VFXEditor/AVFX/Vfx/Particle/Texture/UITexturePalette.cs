@@ -1,7 +1,5 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
-using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
@@ -24,7 +22,7 @@ namespace VFXEditor.AVFX.VFX {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
 
-            if ( IsAssigned() ) {
+            if( IsAssigned() ) {
                 Parameters.Add( TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx ) );
             }
 

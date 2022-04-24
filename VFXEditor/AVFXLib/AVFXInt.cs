@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib {
     public class AVFXInt : AVFXBase {
         private int Size;
         private int Value = 0;
 
-        public AVFXInt( string name, int size = 4 ) : base(name) {
+        public AVFXInt( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 
@@ -29,7 +24,7 @@ namespace VFXEditor.AVFXLib {
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            if (Size == 4) {
+            if( Size == 4 ) {
                 writer.Write( Value );
             }
             else {

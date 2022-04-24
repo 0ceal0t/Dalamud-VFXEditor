@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
 using ImGuiNET;
 using VFXSelect.Select.Rows;
 
@@ -32,7 +26,7 @@ namespace VFXSelect.VFX {
 
             DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", spawn: true );
 
-            if (loadedItem.SelfVfxExists) {
+            if( loadedItem.SelfVfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
                 DisplayPath( loadedItem.SelfTmbPath );

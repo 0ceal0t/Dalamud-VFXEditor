@@ -1,9 +1,7 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
-using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITextureReflection : UIItem {
@@ -23,7 +21,7 @@ namespace VFXEditor.AVFX.VFX {
                 ( Parameters = new UIParameters( "Parameters" ) )
             };
 
-            if ( IsAssigned() ) {
+            if( IsAssigned() ) {
                 TextureSelect = new UINodeSelect<UITexture>( Particle, "Texture", Particle.Main.Textures, Tex.TextureIdx );
             }
 

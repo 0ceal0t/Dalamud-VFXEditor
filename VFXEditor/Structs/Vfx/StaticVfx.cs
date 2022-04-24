@@ -6,7 +6,7 @@ namespace VFXEditor.Structs.Vfx {
 
         public StaticVfx( string path, Vector3 position ) : base( path ) {
             Vfx = ( VfxStruct* )Plugin.ResourceLoader.StaticVfxCreate( path, "Client.System.Scheduler.Instance.VfxObject" );
-            Plugin.ResourceLoader.StaticVfxRun( (IntPtr) Vfx, 0.0f, 0xFFFFFFFF );
+            Plugin.ResourceLoader.StaticVfxRun( ( IntPtr )Vfx, 0.0f, 0xFFFFFFFF );
 
             UpdatePosition( position );
             Update();

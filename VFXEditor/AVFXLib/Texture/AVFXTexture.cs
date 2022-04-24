@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Texture {
     public class AVFXTexture : AVFXBase {
@@ -16,7 +11,7 @@ namespace VFXEditor.AVFXLib.Texture {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Path.SetValue(Encoding.ASCII.GetString( reader.ReadBytes( size ) ));
+            Path.SetValue( Encoding.ASCII.GetString( reader.ReadBytes( size ) ) );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }

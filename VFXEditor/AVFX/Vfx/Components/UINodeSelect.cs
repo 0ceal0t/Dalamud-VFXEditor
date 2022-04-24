@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using ImGuiNET;
+using System.Collections.Generic;
+using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 using VFXEditor.Helper;
-using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeSelect : UIBase {

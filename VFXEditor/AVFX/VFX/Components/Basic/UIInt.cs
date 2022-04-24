@@ -1,7 +1,6 @@
-using System;
 using ImGuiNET;
-using VFXEditor.Data;
 using VFXEditor.AVFXLib;
+using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIInt : UIBase {

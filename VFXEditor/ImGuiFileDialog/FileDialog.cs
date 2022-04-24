@@ -1,8 +1,8 @@
+using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using Dalamud.Plugin;
+using System.Linq;
 
 namespace ImGuiFileDialog {
     [Flags]

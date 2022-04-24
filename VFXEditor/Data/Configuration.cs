@@ -1,15 +1,13 @@
+using Dalamud.Configuration;
+using Dalamud.Logging;
+using ImGuiFileDialog;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-
-using ImGuiFileDialog;
-using ImGuiNET;
-using Dalamud.Logging;
-using Dalamud.Configuration;
-
-using VFXSelect;
 using VFXEditor.Dialogs;
+using VFXSelect;
 
 namespace VFXEditor {
     [Serializable]
@@ -33,7 +31,7 @@ namespace VFXEditor {
         public List<SelectResult> RecentSelects = new();
         public bool FilepickerImagePreview = true;
 
-        public Configuration() : base("Settings") {
+        public Configuration() : base( "Settings" ) {
             Size = new Vector2( 300, 150 );
         }
 

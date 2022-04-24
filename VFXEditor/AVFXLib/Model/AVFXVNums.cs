@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Model {
     public class AVFXVNums : AVFXBase {
@@ -32,7 +28,7 @@ namespace VFXEditor.AVFXLib.Model {
             return num;
         }
 
-        public void Add( AVFXVNum num) {
+        public void Add( AVFXVNum num ) {
             SetAssigned( true );
             Nums.Add( num );
         }
@@ -51,15 +47,15 @@ namespace VFXEditor.AVFXLib.Model {
     public class AVFXVNum {
         public int Num;
 
-        public AVFXVNum(int num) {
+        public AVFXVNum( int num ) {
             Num = num;
         }
 
-        public AVFXVNum(BinaryReader reader) {
+        public AVFXVNum( BinaryReader reader ) {
             Num = reader.ReadInt16();
         }
 
-        public void Write(BinaryWriter writer) {
+        public void Write( BinaryWriter writer ) {
             writer.Write( ( short )Num );
         }
     }

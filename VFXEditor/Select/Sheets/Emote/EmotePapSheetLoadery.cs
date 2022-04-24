@@ -1,5 +1,3 @@
-using Dalamud.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using VFXSelect.Select.Rows;
@@ -73,7 +71,7 @@ namespace VFXSelect.Select.Sheets {
 
         public static Dictionary<string, string> CalculateFacePath( string modelId, string path, int minFace, int maxFace ) {
             Dictionary<string, string> ret = new();
-            for ( var face = minFace; face <= maxFace; face++ ) {
+            for( var face = minFace; face <= maxFace; face++ ) {
                 ret.Add( $"Face {face}", $"chara/human/{modelId}/animation/f{face:D4}/nonresident/{path}.pap" );
             }
 

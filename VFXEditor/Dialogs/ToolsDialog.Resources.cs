@@ -1,11 +1,10 @@
-using System;
-using System.Numerics;
 using Dalamud.Interface;
-using ImGuiNET;
 using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using FFXIVClientStructs.STD;
+using ImGuiNET;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace VFXEditor.Dialogs {
     public unsafe partial class ToolsDialog {
@@ -67,12 +66,12 @@ namespace VFXEditor.Dialogs {
             if( typeMap == null ) return;
 
             var itemList = new List<ResourceItemStruct>();
-            if (typeMap->Count > 0) {
+            if( typeMap->Count > 0 ) {
                 var node = typeMap->SmallestValue;
                 while( !node->IsNil ) {
                     var path = node->KeyValuePair.Item2.Value->FileName.ToString();
 
-                    if (string.IsNullOrEmpty(ResourcePathSearch) || path.Contains(ResourcePathSearch)) { // match against search
+                    if( string.IsNullOrEmpty( ResourcePathSearch ) || path.Contains( ResourcePathSearch ) ) { // match against search
                         itemList.Add( new ResourceItemStruct {
                             Hash = node->KeyValuePair.Item1,
                             Address = ( ulong )node->KeyValuePair.Item2.Value,
@@ -84,7 +83,7 @@ namespace VFXEditor.Dialogs {
                 }
             }
 
-            if( itemList.Count == 0 && !string.IsNullOrEmpty(ResourcePathSearch) ) return; // all filtered out
+            if( itemList.Count == 0 && !string.IsNullOrEmpty( ResourcePathSearch ) ) return; // all filtered out
 
             if( !ImGui.TreeNodeEx( label ) ) {
                 return;
@@ -102,7 +101,7 @@ namespace VFXEditor.Dialogs {
             ImGui.TableSetupColumn( "Refs", ImGuiTableColumnFlags.WidthFixed, 30 * ImGuiHelpers.GlobalScale );
             ImGui.TableHeadersRow();
 
-            foreach( var item in itemList) {
+            foreach( var item in itemList ) {
 
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();

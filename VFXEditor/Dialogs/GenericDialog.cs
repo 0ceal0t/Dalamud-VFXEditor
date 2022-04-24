@@ -1,5 +1,5 @@
-using System.Numerics;
 using ImGuiNET;
+using System.Numerics;
 
 namespace VFXEditor.Dialogs {
 
@@ -14,7 +14,7 @@ namespace VFXEditor.Dialogs {
         public GenericDialog( string name, bool menuBar = false ) {
             DialogName = name;
             MenuBar = menuBar;
-         }
+        }
 
         public void Show() {
             Visible = true;
@@ -28,7 +28,7 @@ namespace VFXEditor.Dialogs {
             Visible = !Visible;
         }
 
-        public void SetVisible(bool visible) {
+        public void SetVisible( bool visible ) {
             Visible = visible;
         }
 
@@ -36,7 +36,7 @@ namespace VFXEditor.Dialogs {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( DialogName, ref Visible, (MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( DialogName, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
                 DrawBody();
             }
             ImGui.End();

@@ -1,34 +1,28 @@
-using System;
-using System.IO;
-using Dalamud.Game.Command;
-using Dalamud.Plugin;
-using ImGuiNET;
-using ImPlotNET;
-
-using VFXEditor.Data;
-using VFXEditor.AVFX;
-using VFXEditor.TMB;
-using VFXEditor.DirectX;
-using VFXEditor.Texture;
-using VFXEditor.Tracker;
-using VFXEditor.Interop;
-using VFXEditor.Structs.Vfx;
-
-using VFXSelect;
-
-using System.Reflection;
-using ImGuiFileDialog;
-
 using Dalamud.Data;
 using Dalamud.Game;
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.Command;
+using Dalamud.Plugin;
+using ImGuiFileDialog;
+using ImGuiNET;
+using ImPlotNET;
+using System.IO;
+using System.Reflection;
+using VFXEditor.AVFX;
+using VFXEditor.Data;
 using VFXEditor.Dialogs;
-using VFXEditor.TexTools;
-using VFXEditor.Penumbra;
+using VFXEditor.DirectX;
+using VFXEditor.Interop;
 using VFXEditor.PAP;
-using Dalamud.Logging;
+using VFXEditor.Penumbra;
+using VFXEditor.Structs.Vfx;
+using VFXEditor.TexTools;
+using VFXEditor.Texture;
+using VFXEditor.TMB;
+using VFXEditor.Tracker;
+using VFXSelect;
 
 namespace VFXEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -128,7 +122,7 @@ namespace VFXEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
-    }
+        }
 
         public void Dispose() {
             PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;

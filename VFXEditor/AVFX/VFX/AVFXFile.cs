@@ -4,9 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VFXEditor.AVFXLib;
-using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class AVFXFile {
@@ -49,7 +47,7 @@ namespace VFXEditor.AVFX.VFX {
 
             AVFX = AVFXMain.FromStream( reader );
 
-            if (checkOriginal) {
+            if( checkOriginal ) {
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter( ms );
                 AVFX.Write( writer );
@@ -64,7 +62,7 @@ namespace VFXEditor.AVFX.VFX {
                     }
                 }
             }
-            
+
             // ======================
 
             AllGroups = new() {
@@ -136,7 +134,7 @@ namespace VFXEditor.AVFX.VFX {
             ExportUI.Draw();
         }
 
-        public void Write(BinaryWriter writer) => AVFX?.Write(writer);
+        public void Write( BinaryWriter writer ) => AVFX?.Write( writer );
 
         public void Dispose() {
             AllGroups.ForEach( group => group.Dispose() );
@@ -275,7 +273,7 @@ namespace VFXEditor.AVFX.VFX {
             List<NodePosition> timelines = new();
 
             AVFXBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                switch ( _name) {
+                switch( _name ) {
                     case "Modl":
                         models.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
                         break;
@@ -299,10 +297,10 @@ namespace VFXEditor.AVFX.VFX {
                         break;
                 }
                 _reader.ReadBytes( _size ); // skip it for now, we'll come back later
-            }, (int)totalSize );
+            }, ( int )totalSize );
 
             // Import items in a specific order
-            foreach(var pos in models ) {
+            foreach( var pos in models ) {
                 reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
                 ModelView.Group.Add( ModelView.OnImport( reader, pos.Size, has_dependencies ) );
             }
@@ -366,7 +364,7 @@ namespace VFXEditor.AVFX.VFX {
             public long Position;
             public int Size;
 
-            public NodePosition(long position, int size) {
+            public NodePosition( long position, int size ) {
                 Position = position;
                 Size = size;
             }

@@ -7,7 +7,7 @@ using VFXEditor.AVFXLib.Model;
 
 namespace VFXEditor.Helper {
     public static class MDLHelper {
-       public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
+        public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
             vOut = new List<AVFXVertex>();
             iOut = new List<AVFXIndex>();
             if( !Plugin.DataManager.FileExists( localPath ) ) return false;
@@ -17,11 +17,11 @@ namespace VFXEditor.Helper {
             var file = Plugin.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
 
-            foreach( var mesh in mdl.GetMeshesByType(Mesh.MeshType.Main) ) {
+            foreach( var mesh in mdl.GetMeshesByType( Mesh.MeshType.Main ) ) {
                 foreach( var v in mesh.Vertices ) {
-                    
+
                 }
-                foreach( var i in mesh.Indices) {
+                foreach( var i in mesh.Indices ) {
 
                 }
             }

@@ -1,4 +1,3 @@
-using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects.Types;
 using System.Numerics;
 using System.Runtime.InteropServices;

@@ -1,6 +1,6 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using ImGuiNET;
 using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.TMB {

@@ -3,7 +3,7 @@ using System.Linq;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Model;
 
-namespace VFXEditor.AVFX.VFX {  
+namespace VFXEditor.AVFX.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
         public UIModelView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##MDL" ) {
             Group = main.Models;

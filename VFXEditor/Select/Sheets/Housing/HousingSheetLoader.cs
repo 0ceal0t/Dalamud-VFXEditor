@@ -1,4 +1,3 @@
-using Dalamud.Plugin;
 using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;

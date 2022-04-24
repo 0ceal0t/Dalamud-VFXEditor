@@ -1,11 +1,6 @@
 using ImGuiFileDialog;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 using VFXEditor.Interop;
 using VFXEditor.TMB;

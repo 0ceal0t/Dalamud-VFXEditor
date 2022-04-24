@@ -23,7 +23,7 @@ namespace VFXEditor.AVFX {
         }
 
         protected override void LoadLocal( string localPath ) {
-            if (File.Exists( localPath ) ) {
+            if( File.Exists( localPath ) ) {
                 try {
                     using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                     CurrentFile = new AVFXFile( br );

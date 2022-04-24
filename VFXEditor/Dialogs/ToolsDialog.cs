@@ -1,6 +1,5 @@
-using System;
-using System.Numerics;
 using ImGuiNET;
+using System.Numerics;
 
 namespace VFXEditor.Dialogs {
     public partial class ToolsDialog : GenericDialog {

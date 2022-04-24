@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.TMB {
@@ -227,7 +226,7 @@ namespace VFXEditor.TMB.TMB {
                 if( ImGui.Button( $"+ New{id}-Unk" ) ) UnknownExtraData.Add( new UnknownDataItem() );
 
                 var unkExtraIdx = 0;
-                foreach( var item in UnknownExtraData) {
+                foreach( var item in UnknownExtraData ) {
                     var itemId = $"{id}-Unk{unkExtraIdx}";
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
                         ImGui.Indent();
@@ -283,6 +282,6 @@ namespace VFXEditor.TMB.TMB {
             }
         }
 
-        public int GetExtraSize() => !UseUnknownExtraData ? 0 : 8 + (12 * UnknownExtraData.Count);
+        public int GetExtraSize() => !UseUnknownExtraData ? 0 : 8 + ( 12 * UnknownExtraData.Count );
     }
 }

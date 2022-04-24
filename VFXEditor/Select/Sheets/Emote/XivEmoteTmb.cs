@@ -14,7 +14,7 @@ namespace VFXSelect.Select.Rows {
             Icon = emote.Icon;
             Name = emote.Name.ToString();
 
-            TmbFiles = emote.ActionTimeline.Select( x => x?.Value?.Key.ToString() ).Where( x => !string.IsNullOrEmpty( x ) ).Select(x => ToTmb(x)).ToList();
+            TmbFiles = emote.ActionTimeline.Select( x => x?.Value?.Key.ToString() ).Where( x => !string.IsNullOrEmpty( x ) ).Select( x => ToTmb( x ) ).ToList();
         }
 
         private static string ToTmb( string key ) {

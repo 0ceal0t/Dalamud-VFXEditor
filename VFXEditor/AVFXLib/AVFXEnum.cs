@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib {
     public class AVFXEnum<T> : AVFXBase {
@@ -11,7 +7,7 @@ namespace VFXEditor.AVFXLib {
         private T Value = ( T )( object )0;
         public readonly string[] Options = Enum.GetNames( typeof( T ) );
 
-        public AVFXEnum( string name, int size = 4 ) : base(name) {
+        public AVFXEnum( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 

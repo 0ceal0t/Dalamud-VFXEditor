@@ -31,7 +31,7 @@ namespace VFXEditor.AVFX.VFX {
             foreach( var item in items ) {
                 if( !item.IsAssigned() ) continue;
 
-                if(ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
+                if( ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
                     item.DrawBody( parentId );
                     ImGui.EndTabItem();
                 }

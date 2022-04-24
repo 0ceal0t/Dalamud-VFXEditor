@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using ImGuiNET;
+using System.Diagnostics;
 using VFXSelect.Select.Rows;
 
 namespace VFXSelect.VFX {

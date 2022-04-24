@@ -1,6 +1,5 @@
-using System;
-using System.IO;
 using SharpDX.Direct3D11;
+using System.IO;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VFXEditor.DirectX {

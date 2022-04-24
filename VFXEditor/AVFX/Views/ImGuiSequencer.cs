@@ -1,12 +1,8 @@
+using Dalamud.Interface;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using Dalamud.Game;
-using Dalamud.Interface;
-using Dalamud.Logging;
-using Dalamud.Plugin;
-using ImGuiNET;
 using VFXEditor.AVFX.VFX;
 
 namespace VFXEditor.AVFX.Views {
@@ -274,10 +270,10 @@ namespace VFXEditor.AVFX.Views {
                             MovingPart = j + 1;
                             break;
                         }
-}
-}
+                    }
+                }
 
-                if(infinite) drawList.AddText( UiBuilder.IconFont, 12, new Vector2( contentMax.X - 22, contentMin.Y + i * ItemHeight + 5 ), 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Infinity}" );
+                if( infinite ) drawList.AddText( UiBuilder.IconFont, 12, new Vector2( contentMax.X - 22, contentMin.Y + i * ItemHeight + 5 ), 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Infinity}" );
             }
 
             if( MovingEntry != null ) {
@@ -453,7 +449,7 @@ namespace VFXEditor.AVFX.Views {
             return overDelete;
         }
 
-        private static bool MouseOver( Vector2 start, Vector2 end) {
+        private static bool MouseOver( Vector2 start, Vector2 end ) {
             var io = ImGui.GetIO();
             return Contains( start, end, io.MousePos );
         }

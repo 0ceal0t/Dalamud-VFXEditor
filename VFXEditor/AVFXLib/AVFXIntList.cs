@@ -1,16 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib {
     public class AVFXIntList : AVFXBase {
         private int Size;
         private readonly List<int> Value = new() { 0 };
 
-        public AVFXIntList( string name, int size = 1 ) : base(name) {
+        public AVFXIntList( string name, int size = 1 ) : base( name ) {
             Size = size;
         }
 
@@ -27,18 +23,18 @@ namespace VFXEditor.AVFXLib {
             SetValue( new List<int> { value } );
         }
 
-        public void SetValue( int value, int idx) {
+        public void SetValue( int value, int idx ) {
             SetAssigned( true );
             Value[idx] = value;
         }
 
-        public void AddItem( int item) {
+        public void AddItem( int item ) {
             SetAssigned( true );
             Size++;
             Value.Add( item );
         }
 
-        public void RemoveItem(int idx) {
+        public void RemoveItem( int idx ) {
             SetAssigned( true );
             Size--;
             Value.Remove( idx );
@@ -47,7 +43,7 @@ namespace VFXEditor.AVFXLib {
         public override void ReadContents( BinaryReader reader, int size ) {
             Size = size;
             Value.Clear();
-            for(var i = 0; i < Size; i++) {
+            for( var i = 0; i < Size; i++ ) {
                 Value.Add( reader.ReadByte() );
             }
         }
@@ -55,7 +51,7 @@ namespace VFXEditor.AVFXLib {
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            foreach(var item in Value) writer.Write( (byte)item );
+            foreach( var item in Value ) writer.Write( ( byte )item );
         }
     }
 }

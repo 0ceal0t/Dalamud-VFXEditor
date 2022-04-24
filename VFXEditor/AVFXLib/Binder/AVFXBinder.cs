@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Binder {
     public class AVFXBinder : AVFXBase {
@@ -61,7 +57,7 @@ namespace VFXEditor.AVFXLib.Binder {
             Type = BinderVariety.GetValue();
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                if (_name == "Data") {
+                if( _name == "Data" ) {
                     SetData( Type );
                     Data?.Read( _reader, _size );
                 }

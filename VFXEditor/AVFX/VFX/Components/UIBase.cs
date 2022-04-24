@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 
 namespace VFXEditor.AVFX.VFX {

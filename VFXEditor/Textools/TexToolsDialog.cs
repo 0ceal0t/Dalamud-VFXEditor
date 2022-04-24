@@ -1,17 +1,12 @@
+using Dalamud.Logging;
+using ImGuiFileDialog;
+using ImGuiNET;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Numerics;
-
-using Dalamud.Logging;
-
-using ImGuiFileDialog;
-using ImGuiNET;
-
-using Newtonsoft.Json;
-
-using VFXEditor.Helper;
 using VFXEditor.Dialogs;
 
 namespace VFXEditor.TexTools {

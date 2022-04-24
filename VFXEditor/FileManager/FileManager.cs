@@ -1,12 +1,10 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
+using VFXEditor.Dialogs;
 using VFXEditor.Helper;
 using VFXEditor.TexTools;
-using VFXEditor.Dialogs;
 using VFXSelect;
 namespace VFXEditor.FileManager {
     public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
@@ -26,7 +24,7 @@ namespace VFXEditor.FileManager {
         protected bool DocumentDialogVisible = false;
         private readonly bool OnlyDocumentDialog = false;
 
-        public FileManager(string title, string id, string tempFilePrefix, string extension, string penumbaPath, bool onlyDocumentDialog = false) : base(title, menuBar:true) {
+        public FileManager( string title, string id, string tempFilePrefix, string extension, string penumbaPath, bool onlyDocumentDialog = false ) : base( title, menuBar: true ) {
             Title = title;
             Id = id;
             TempFilePrefix = tempFilePrefix;
@@ -115,7 +113,7 @@ namespace VFXEditor.FileManager {
         }
 
         protected void DrawDocumentSelect() {
-            if( !(OnlyDocumentDialog ? Visible : DocumentDialogVisible) ) return;
+            if( !( OnlyDocumentDialog ? Visible : DocumentDialogVisible ) ) return;
             ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
 
             if( ImGui.Begin( $"{DialogName} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
@@ -124,7 +122,7 @@ namespace VFXEditor.FileManager {
 
                 ImGui.Text( "Create documents in order to replace multiple files simultaneously" );
 
-                ImGui.BeginChild( id + "/Child", new Vector2( 0, - (footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
+                ImGui.BeginChild( id + "/Child", new Vector2( 0, -( footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
 
                 ImGui.Columns( 2, id + "/Columns", false );
 
@@ -186,7 +184,7 @@ namespace VFXEditor.FileManager {
         }
 
         public virtual S[] WorkspaceExport( string saveLocation ) {
-            var rootPath = Path.Combine( saveLocation, PenumbraPath);
+            var rootPath = Path.Combine( saveLocation, PenumbraPath );
             Directory.CreateDirectory( rootPath );
 
             var tmbId = 0;

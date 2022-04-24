@@ -1,8 +1,7 @@
-using System;
 using ImGuiNET;
+using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 using VFXEditor.Helper;
-using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIString : UIBase {
@@ -28,8 +27,8 @@ namespace VFXEditor.AVFX.VFX {
                 Value = Literal.GetValue() ?? "";
             }
 
-            if (CanBeUnassigned) {
-                if (Literal.IsAssigned() && UIHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
+            if( CanBeUnassigned ) {
+                if( Literal.IsAssigned() && UIHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( false );

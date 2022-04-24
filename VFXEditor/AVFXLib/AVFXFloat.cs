@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib {
     public class AVFXFloat : AVFXBase {
         private int Size;
         private float Value = 0.0f;
 
-        public AVFXFloat( string name, int size = 4 ) : base(name) {
+        public AVFXFloat( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 

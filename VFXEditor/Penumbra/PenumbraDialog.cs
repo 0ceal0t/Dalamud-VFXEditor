@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Numerics;
-
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
 using VFXEditor.Dialogs;
-using VFXEditor.Helper;
 
 namespace VFXEditor.Penumbra {
 
@@ -67,7 +64,7 @@ namespace VFXEditor.Penumbra {
             } );
         }
 
-        private void Export(string modFolder ) {
+        private void Export( string modFolder ) {
             try {
                 var mod = new PenumbraMod {
                     Name = Name,

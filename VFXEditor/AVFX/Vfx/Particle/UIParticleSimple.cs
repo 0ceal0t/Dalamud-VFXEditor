@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VFXEditor.AVFXLib;
@@ -28,7 +27,7 @@ namespace VFXEditor.AVFX.VFX {
                 ( Creation = new UIParameters( "Creation" ) )
             };
 
-            if(IsAssigned()) {
+            if( IsAssigned() ) {
                 Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
                 Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
             }

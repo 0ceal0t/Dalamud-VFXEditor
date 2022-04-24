@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.IO;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System.Collections.Generic;
+using System.IO;
 using VFXEditor.AVFXLib.Model;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;

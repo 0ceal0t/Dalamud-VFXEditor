@@ -1,11 +1,10 @@
-using System;
-using System.IO;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-
+using System;
+using System.IO;
 using VFXEditor.AVFXLib.Curve;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -36,7 +35,7 @@ namespace VFXEditor.DirectX {
         private readonly ShaderSignature Signature;
         private readonly InputLayout Layout;
 
-        public GradientView( Device device, DeviceContext ctx, string shaderPath) : base(device, ctx) {
+        public GradientView( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
 
             RefreshRasterizeState();
             ResizeResources();
@@ -55,7 +54,7 @@ namespace VFXEditor.DirectX {
             } );
         }
 
-        public void SetGradient(AVFXCurve curve ) {
+        public void SetGradient( AVFXCurve curve ) {
             CurrentCurve = curve;
             var numPoints = curve.Keys.Keys.Count;
             if( numPoints < 2 ) {

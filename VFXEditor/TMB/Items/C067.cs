@@ -1,7 +1,6 @@
-using System;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using ImGuiNET;
 
 namespace VFXEditor.TMB.TMB {
     public class C067 : TMBItem {

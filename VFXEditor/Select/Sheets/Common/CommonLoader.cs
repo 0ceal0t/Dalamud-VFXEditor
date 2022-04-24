@@ -1,4 +1,3 @@
-using Dalamud.Plugin;
 using System.IO;
 using System.Linq;
 using VFXSelect.Select.Rows;
@@ -25,9 +24,9 @@ namespace VFXSelect.Select.Sheets {
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             };
 
-            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty(x.Location) );
+            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) {
-                Items.Add( new XivCommon(item) );
+                Items.Add( new XivCommon( item ) );
             }
 
             var lineIdx = 0;

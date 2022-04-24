@@ -1,5 +1,3 @@
-using Dalamud.Logging;
-using System;
 using System.Linq;
 using VFXSelect.Select.Rows;
 

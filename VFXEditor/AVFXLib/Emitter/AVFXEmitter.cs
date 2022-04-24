@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Emitter {
@@ -101,17 +97,17 @@ namespace VFXEditor.AVFXLib.Emitter {
             AVFXEmitterCreate lastEmitter = null;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                if (_name == "Data") {
+                if( _name == "Data" ) {
                     SetData( Type );
                     Data?.Read( _reader, _size );
                 }
-                else if(_name == "ItPr") {
-                    lastParticle = new AVFXEmitterCreate("ItPr");
+                else if( _name == "ItPr" ) {
+                    lastParticle = new AVFXEmitterCreate( "ItPr" );
                     lastParticle.Read( _reader, _size );
 
                 }
-                else if(_name == "ItEm" ) {
-                    lastEmitter = new AVFXEmitterCreate("ItEm");
+                else if( _name == "ItEm" ) {
+                    lastEmitter = new AVFXEmitterCreate( "ItEm" );
                     lastEmitter.Read( _reader, _size );
 
                 }
@@ -144,7 +140,7 @@ namespace VFXEditor.AVFXLib.Emitter {
 
             // ItEm
             for( var i = 0; i < Emitters.Count; i++ ) {
-                var ItEm = new AVFXEmitterCreate("ItEm");
+                var ItEm = new AVFXEmitterCreate( "ItEm" );
                 ItEm.Items.AddRange( Particles );
                 ItEm.Items.AddRange( Emitters.GetRange( 0, i + 1 ) ); // get 1, then 2, etc.
                 ItEm.Write( writer );

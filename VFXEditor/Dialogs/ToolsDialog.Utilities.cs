@@ -1,9 +1,9 @@
-using System;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
-using VFXEditor.Texture;
+using System;
 using VFXEditor.Helper;
+using VFXEditor.Texture;
 
 namespace VFXEditor.Dialogs {
     public partial class ToolsDialog {

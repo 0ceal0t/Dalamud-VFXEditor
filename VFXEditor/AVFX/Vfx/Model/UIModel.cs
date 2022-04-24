@@ -138,10 +138,10 @@ namespace VFXEditor.AVFX.VFX {
                 try {
                     if( GLTFHelper.ImportModel( res, out var v_s, out var i_s ) ) {
                         Model.Vertexes.Vertexes.Clear();
-                        Model.Vertexes.Vertexes.AddRange(v_s);
+                        Model.Vertexes.Vertexes.AddRange( v_s );
 
                         Model.Indexes.Indexes.Clear();
-                        Model.Indexes.Indexes.AddRange(i_s);
+                        Model.Indexes.Indexes.AddRange( i_s );
                         Refresh = true;
                     }
                 }

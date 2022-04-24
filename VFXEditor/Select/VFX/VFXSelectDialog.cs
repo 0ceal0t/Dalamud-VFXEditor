@@ -1,8 +1,6 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using ImGuiFileDialog;
-using ImGuiNET;
 
 namespace VFXSelect.VFX {
     public class VFXSelectDialog : SelectDialog {

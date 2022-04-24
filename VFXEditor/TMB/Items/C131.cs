@@ -1,7 +1,6 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.TMB {
     public class C131 : TMBItem {
@@ -24,8 +23,8 @@ namespace VFXEditor.TMB.TMB {
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2);
-            entryWriter.Write( Unk_3);
+            entryWriter.Write( Unk_2 );
+            entryWriter.Write( Unk_3 );
         }
 
         public override void Draw( string id ) {

@@ -1,10 +1,3 @@
-using Dalamud.Plugin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace VFXSelect.Select.Rows {
     public class XivStatus {
         public string Name;
@@ -29,7 +22,7 @@ namespace VFXSelect.Select.Rows {
             LoopVFXPath2 = GetVFXPath( status.VFX.Value?.VFX2?.Value.Location );
             LoopVFXPath3 = GetVFXPath( status.VFX.Value?.VFX3?.Value.Location );
 
-            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 ) || !string.IsNullOrEmpty(HitVFXPath);
+            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 ) || !string.IsNullOrEmpty( HitVFXPath );
         }
 
         private static string GetVFXPath( string path ) {

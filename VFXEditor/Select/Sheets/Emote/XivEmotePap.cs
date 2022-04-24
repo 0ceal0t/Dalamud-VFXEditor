@@ -31,7 +31,7 @@ namespace VFXSelect.Select.Rows {
                 return new XivEmotePapItem( XivEmotePapType.Normal, key );
             }
             else if( loadType == 0 ) {
-                if (key.StartsWith("facial/pose/")) {
+                if( key.StartsWith( "facial/pose/" ) ) {
                     return new XivEmotePapItem( XivEmotePapType.Facial, key.Replace( "facial/pose/", "" ) );
                 }
                 return new XivEmotePapItem( XivEmotePapType.Normal, key );

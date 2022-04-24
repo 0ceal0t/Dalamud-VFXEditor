@@ -1,11 +1,5 @@
-using Dalamud.Logging;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Timeline {
     public class AVFXTimeline : AVFXBase {
@@ -66,7 +60,7 @@ namespace VFXEditor.AVFXLib.Timeline {
                 item.Write( writer );
             }
 
-            foreach(var clip in Clips) {
+            foreach( var clip in Clips ) {
                 clip.Write( writer );
             }
         }

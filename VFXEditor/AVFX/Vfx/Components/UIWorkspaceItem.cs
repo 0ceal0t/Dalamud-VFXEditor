@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
 

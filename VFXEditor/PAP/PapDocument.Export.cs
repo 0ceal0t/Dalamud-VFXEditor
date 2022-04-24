@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -26,7 +25,7 @@ namespace VFXEditor.PAP {
         }
 
         public override void WorkspaceExport( List<WorkspaceMetaPap> papMeta, string rootPath, string newPath ) {
-            if ( CurrentFile != null ) {
+            if( CurrentFile != null ) {
                 var newFullPath = Path.Combine( rootPath, newPath );
                 File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
                 papMeta.Add( new WorkspaceMetaPap() {

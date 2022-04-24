@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Model {
     public class AVFXIndexes : AVFXBase {
@@ -27,7 +23,7 @@ namespace VFXEditor.AVFXLib.Model {
 
         public AVFXIndex Add() {
             SetAssigned( true );
-            var index = new AVFXIndex(0, 0, 0);
+            var index = new AVFXIndex( 0, 0, 0 );
             Indexes.Add( index );
             return index;
         }
@@ -53,19 +49,19 @@ namespace VFXEditor.AVFXLib.Model {
         public int I2;
         public int I3;
 
-        public AVFXIndex(int i1, int i2, int i3) {
+        public AVFXIndex( int i1, int i2, int i3 ) {
             I1 = i1;
             I2 = i2;
             I3 = i3;
         }
 
-        public AVFXIndex( BinaryReader reader) {
+        public AVFXIndex( BinaryReader reader ) {
             I1 = reader.ReadInt16();
             I2 = reader.ReadInt16();
             I3 = reader.ReadInt16();
         }
 
-        public void Write(BinaryWriter writer) {
+        public void Write( BinaryWriter writer ) {
             writer.Write( ( short )I1 );
             writer.Write( ( short )I2 );
             writer.Write( ( short )I3 );

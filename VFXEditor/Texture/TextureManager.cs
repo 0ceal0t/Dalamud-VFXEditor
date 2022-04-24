@@ -1,15 +1,12 @@
+using Dalamud.Logging;
 using System;
-using System.IO;
 using System.Collections.Concurrent;
-
+using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-
-using Dalamud.Logging;
-
-using VFXEditor.Helper;
 using VFXEditor.Dialogs;
+using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {
     public struct PreviewTexture { // used for the texture previews

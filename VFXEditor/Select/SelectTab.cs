@@ -1,11 +1,10 @@
+using ImGuiNET;
+using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using ImGuiNET;
-using Lumina.Data.Files;
-
 using VFXSelect.Select.Sheets;
 
 namespace VFXSelect {

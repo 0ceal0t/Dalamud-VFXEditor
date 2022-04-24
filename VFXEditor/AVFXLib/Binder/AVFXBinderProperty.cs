@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Binder {
@@ -51,7 +47,7 @@ namespace VFXEditor.AVFXLib.Binder {
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Children, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned);
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
     }

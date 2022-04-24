@@ -1,4 +1,3 @@
-using System;
 using ImGuiNET;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;

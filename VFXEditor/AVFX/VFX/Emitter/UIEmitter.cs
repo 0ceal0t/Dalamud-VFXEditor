@@ -1,14 +1,8 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Emitter;
-using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitter : UINode {
@@ -48,7 +42,7 @@ namespace VFXEditor.AVFX.VFX {
                 Emitter.SetType( Emitter.EmitterVariety.GetValue() );
                 SetType();
             } );
-            SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true);
+            SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true );
             SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
 
             Parameters = new List<UIBase> {
@@ -121,7 +115,7 @@ namespace VFXEditor.AVFX.VFX {
             DrawRename( id );
             Type.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            
+
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters" + id ) ) {
                     DrawParameters( id + "/Param" );

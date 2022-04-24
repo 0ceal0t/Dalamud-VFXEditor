@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using Dalamud.Logging;
 using ImGuiNET;
+using System.Numerics;
 using VFXSelect.Select.Rows;
 
 namespace VFXSelect.PAP {

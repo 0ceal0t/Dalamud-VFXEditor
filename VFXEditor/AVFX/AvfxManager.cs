@@ -1,4 +1,3 @@
-using System;
 using VFXEditor.AVFX.VFX;
 using VFXEditor.FileManager;
 using VFXSelect;
@@ -47,7 +46,7 @@ namespace VFXEditor.AVFX {
         }
 
         public static readonly string PenumbraPath = "VFX";
-        
+
         // =================
 
         public AVFXManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }

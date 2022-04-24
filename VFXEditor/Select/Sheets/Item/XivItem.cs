@@ -1,9 +1,5 @@
-using Dalamud.Plugin;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXSelect.Select.Rows {
     public struct XivItemIds {
@@ -73,7 +69,7 @@ namespace VFXSelect.Select.Rows {
                 SubItem = new XivItem( sItem );
 
                 var category = item.ItemUICategory.Value.RowId;
-                if(category == 1 || category == 84 || category == 107) { // MNK, NIN, DNC weapons
+                if( category == 1 || category == 84 || category == 107 ) { // MNK, NIN, DNC weapons
                     SubItem.ImcPath = ImcPath;
                 }
             }

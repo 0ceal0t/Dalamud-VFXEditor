@@ -1,8 +1,7 @@
-using System;
-using Dalamud.Plugin;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
@@ -36,9 +35,9 @@ namespace VFXEditor.DirectX {
         protected ShaderResourceView RenderShad;
         protected RenderTargetView RenderView;
 
-        public ModelRenderer(Device device, DeviceContext ctx) : base(device, ctx) {
+        public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
             WorldBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            ViewMatrix = Matrix.LookAtLH( new Vector3(0, 0, -Distance), Position, Vector3.UnitY );
+            ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), Position, Vector3.UnitY );
 
             RendersizeBuffer = new Buffer( Device, Utilities.SizeOf<Vector4>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
@@ -48,8 +47,7 @@ namespace VFXEditor.DirectX {
 
         public void RefreshRasterizeState() {
             RState?.Dispose();
-            RState = new RasterizerState( Device, new RasterizerStateDescription
-            {
+            RState = new RasterizerState( Device, new RasterizerStateDescription {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
@@ -83,8 +81,7 @@ namespace VFXEditor.DirectX {
         protected void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
             RenderTex?.Dispose();
-            RenderTex = new Texture2D( Device, new Texture2DDescription()
-            {
+            RenderTex = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.B8G8R8A8_UNorm,
                 ArraySize = 1,
                 MipLevels = 1,
@@ -102,8 +99,7 @@ namespace VFXEditor.DirectX {
             RenderView = new RenderTargetView( Device, RenderTex );
 
             DepthTex?.Dispose();
-            DepthTex = new Texture2D( Device, new Texture2DDescription()
-            {
+            DepthTex = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.D32_Float_S8X24_UInt,
                 ArraySize = 1,
                 MipLevels = 1,
@@ -123,7 +119,7 @@ namespace VFXEditor.DirectX {
             return value > max ? max : value < min ? min : value;
         }
 
-        public void Drag(Vec2 newPos, bool rotate ) {
+        public void Drag( Vec2 newPos, bool rotate ) {
             if( IsDragging ) {
                 if( rotate ) {
                     Yaw += ( newPos.X - LastMousePos.X ) * 0.01f;
@@ -139,8 +135,8 @@ namespace VFXEditor.DirectX {
             LastMousePos = new Vector2( newPos.X, newPos.Y );
         }
 
-        public void Zoom(float mouseWheel ) {
-            if(mouseWheel != 0 ) {
+        public void Zoom( float mouseWheel ) {
+            if( mouseWheel != 0 ) {
                 Distance += mouseWheel * 0.2f;
                 UpdateViewMatrix();
             }

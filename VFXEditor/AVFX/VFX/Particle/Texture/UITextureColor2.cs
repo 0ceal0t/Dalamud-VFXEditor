@@ -1,9 +1,8 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
-using VFXEditor.Helper;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITextureColor2 : UIItem {

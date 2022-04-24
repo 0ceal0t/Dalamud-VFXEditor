@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using ImGuiNET;
-using System.Numerics;
 using System.IO;
 
 namespace VFXEditor.AVFX.VFX {
@@ -26,7 +24,7 @@ namespace VFXEditor.AVFX.VFX {
                 node.Graph?.NowOutdated();
             }
             foreach( var node in Parents ) {
-                node.DeleteNode(this);
+                node.DeleteNode( this );
                 node.Node.Children.RemoveAll( x => x == this );
             }
 

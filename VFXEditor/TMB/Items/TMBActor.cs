@@ -1,7 +1,5 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
 
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +45,7 @@ namespace VFXEditor.TMB.TMB {
 
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( startPos + offset + 8, SeekOrigin.Begin );
-            for (var i = 0; i < TrackCount_Temp; i++) {
+            for( var i = 0; i < TrackCount_Temp; i++ ) {
                 Ids_Temp.Add( reader.ReadInt16() );
             }
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
@@ -99,7 +97,7 @@ namespace VFXEditor.TMB.TMB {
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 var newTrack = new TMBTrack( EntriesMaster );
-                if (Tracks.Count == 0) {
+                if( Tracks.Count == 0 ) {
                     TracksMaster.Add( newTrack );
                 }
                 else {

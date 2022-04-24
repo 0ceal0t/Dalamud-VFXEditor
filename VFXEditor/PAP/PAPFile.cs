@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -62,7 +61,7 @@ namespace VFXEditor.PAP {
 
             if( checkOriginal ) { // Check if output matches the original
                 var output = ToBytes();
-                if (output.Length != original.Length) PluginLog.Log($"Lengths do not match {output.Length} {original.Length}");
+                if( output.Length != original.Length ) PluginLog.Log( $"Lengths do not match {output.Length} {original.Length}" );
                 for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
                     if( output[i] != original[i] ) {
                         PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
@@ -114,8 +113,8 @@ namespace VFXEditor.PAP {
 
             // go back and write sizes
             writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
-            writer.Write( (int)(infoPos - startPos) );
-            writer.Write( (int)(havokPos - startPos) );
+            writer.Write( ( int )( infoPos - startPos ) );
+            writer.Write( ( int )( havokPos - startPos ) );
             writer.Write( ( int )( timelinePos - startPos ) );
 
             return dataMs.ToArray();
@@ -135,7 +134,7 @@ namespace VFXEditor.PAP {
             DrawDropDown( id );
 
             if( Selected != null ) {
-                Selected.Draw( $"{id}{Animations.IndexOf(Selected)}" );
+                Selected.Draw( $"{id}{Animations.IndexOf( Selected )}" );
             }
             else {
                 ImGui.Text( "Select an animation..." );
@@ -187,8 +186,8 @@ namespace VFXEditor.PAP {
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
 
         private void RefreshHavokIndexes() {
-            for(var i = 0; i < Animations.Count; i++) {
-                Animations[i].HavokIndex = (short)i;
+            for( var i = 0; i < Animations.Count; i++ ) {
+                Animations[i].HavokIndex = ( short )i;
             }
         }
     }

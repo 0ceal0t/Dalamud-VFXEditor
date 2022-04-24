@@ -1,9 +1,6 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Numerics;
 using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.TMB {
@@ -44,7 +41,7 @@ namespace VFXEditor.TMB.TMB {
 
             BindPoint_1 = reader.ReadInt16();
             BindPoint_2 = reader.ReadInt16();
-            
+
             Unk_3 = reader.ReadInt32();
             Unk_4 = reader.ReadInt32();
             Unk_5 = reader.ReadInt32();

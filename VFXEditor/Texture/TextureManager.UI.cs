@@ -8,7 +8,7 @@ namespace VFXEditor.Texture {
             var id = "##ImportTex";
 
             if( PathToTextureReplace.IsEmpty ) {
-                ImGui.Text( "No Textures Have Been Imported..." );
+                ImGui.Text( "No textures have been imported..." );
                 return;
             }
 

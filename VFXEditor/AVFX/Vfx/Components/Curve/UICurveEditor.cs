@@ -1,12 +1,12 @@
 using ImGuiNET;
+using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using ImPlotNET;
+using VFXEditor.AVFXLib;
+using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Data;
 using VFXEditor.Helper;
-using VFXEditor.AVFXLib.Curve;
-using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
     public class UICurveEditor : UIBase {

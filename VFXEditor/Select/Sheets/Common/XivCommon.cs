@@ -5,7 +5,7 @@ namespace VFXSelect.Select.Rows {
         public string VfxPath;
         public int RowId;
 
-        public XivCommon(int rowId, string vfxPath, string name, ushort icon ) {
+        public XivCommon( int rowId, string vfxPath, string name, ushort icon ) {
             RowId = rowId;
             VfxPath = vfxPath;
             Name = name;

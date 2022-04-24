@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;

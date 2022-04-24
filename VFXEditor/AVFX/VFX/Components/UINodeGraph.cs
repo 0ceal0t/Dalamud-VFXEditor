@@ -13,10 +13,10 @@ namespace VFXEditor.AVFX.VFX {
         public bool Outdated = false;
         public bool Cycle = false;
 
-        public UINodeGraph( UINode node) {
+        public UINodeGraph( UINode node ) {
             ParseGraph( 0, node, new HashSet<UINode>() );
             var level2Dict = new Dictionary<int, int>();
-            foreach(var val in Graph.Values ) {
+            foreach( var val in Graph.Values ) {
                 if( level2Dict.ContainsKey( val.Level ) ) {
                     level2Dict[val.Level] += 1;
                     val.Level2 = level2Dict[val.Level];
@@ -28,13 +28,13 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public void ParseGraph(int level, UINode node, HashSet<UINode> visited ) {
-            if(visited.Contains(node) || Cycle ) {
+        public void ParseGraph( int level, UINode node, HashSet<UINode> visited ) {
+            if( visited.Contains( node ) || Cycle ) {
                 Cycle = true;
                 return;
             }
             if( Graph.ContainsKey( node ) ) { // already defined
-                if(level > Graph[node].Level ) {
+                if( level > Graph[node].Level ) {
                     PushBack( node, level - Graph[node].Level );
                 }
                 Graph[node].Level = Math.Max( level, Graph[node].Level );
@@ -45,7 +45,7 @@ namespace VFXEditor.AVFX.VFX {
                     Level = level,
                     Next = new List<UINode>()
                 };
-                foreach(var n in node.Parents ) {
+                foreach( var n in node.Parents ) {
                     item.Next.Add( n.Node );
                     ParseGraph( level + 1, n.Node, new HashSet<UINode>( visited ) );
                 }
@@ -53,9 +53,9 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public void PushBack(UINode node, int amount ) {
+        public void PushBack( UINode node, int amount ) {
             Graph[node].Level += amount;
-            foreach(var item in Graph[node].Next ) {
+            foreach( var item in Graph[node].Next ) {
                 PushBack( item, amount );
             }
         }

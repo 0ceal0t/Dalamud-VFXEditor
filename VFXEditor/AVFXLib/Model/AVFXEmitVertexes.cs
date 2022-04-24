@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VFXEditor.AVFXLib.Model {
     public class AVFXEmitVertexes : AVFXBase {
@@ -57,7 +53,7 @@ namespace VFXEditor.AVFXLib.Model {
 
         }
 
-        public AVFXEmitVertex( BinaryReader reader) {
+        public AVFXEmitVertex( BinaryReader reader ) {
             Position[0] = reader.ReadSingle();
             Position[1] = reader.ReadSingle();
             Position[2] = reader.ReadSingle();
@@ -69,7 +65,7 @@ namespace VFXEditor.AVFXLib.Model {
             C = reader.ReadInt32();
         }
 
-        public void Write(BinaryWriter writer) {
+        public void Write( BinaryWriter writer ) {
             writer.Write( Position[0] );
             writer.Write( Position[1] );
             writer.Write( Position[2] );

@@ -1,10 +1,5 @@
- using Dalamud.Logging;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using VFXEditor.AVFXLib.Binder;
 using VFXEditor.AVFXLib.Effector;
@@ -17,7 +12,7 @@ using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.AVFXLib {
     public class AVFXMain : AVFXBase {
-        public static AVFXMain FromStream(BinaryReader reader) {
+        public static AVFXMain FromStream( BinaryReader reader ) {
             var main = new AVFXMain();
 
             reader.ReadInt32(); // AVFX

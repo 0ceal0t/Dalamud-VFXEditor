@@ -1,4 +1,3 @@
-using System;
 using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {

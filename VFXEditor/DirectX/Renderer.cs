@@ -6,7 +6,7 @@ namespace VFXEditor.DirectX {
         protected Device Device;
         protected DeviceContext Ctx;
 
-        public Renderer(Device device, DeviceContext ctx) {
+        public Renderer( Device device, DeviceContext ctx ) {
             Device = device;
             Ctx = ctx;
         }

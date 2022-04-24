@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Particle {
     public class AVFXParticleTextureColor2 : AVFXBase {

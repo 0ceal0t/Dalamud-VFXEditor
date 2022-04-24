@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Particle {
     public class AVFXParticleSimple : AVFXBase {
@@ -155,11 +150,11 @@ namespace VFXEditor.AVFXLib.Particle {
     public class SimpleColorStruct : AVFXBase {
         public byte[] Colors = new byte[16];
 
-        public SimpleColorStruct() : base("Cols") {
+        public SimpleColorStruct() : base( "Cols" ) {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for(var i = 0; i < 16; i++) {
+            for( var i = 0; i < 16; i++ ) {
                 Colors[i] = reader.ReadByte();
             }
         }
@@ -167,21 +162,21 @@ namespace VFXEditor.AVFXLib.Particle {
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            for(var i = 0; i < 16; i++) {
-                writer.Write(Colors[i]);
+            for( var i = 0; i < 16; i++ ) {
+                writer.Write( Colors[i] );
             }
         }
     }
 
     public class SimpleColorFrames : AVFXBase {
         public int[] Frames = new int[4];
-        
+
         public SimpleColorFrames() : base( "Frms" ) {
 
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for(var i = 0; i < 4; i++) {
+            for( var i = 0; i < 4; i++ ) {
                 Frames[i] = reader.ReadInt16();
             }
         }
@@ -189,7 +184,7 @@ namespace VFXEditor.AVFXLib.Particle {
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            for(var i = 0; i < 4; i++) {
+            for( var i = 0; i < 4; i++ ) {
                 writer.Write( ( short )Frames[i] );
             }
         }

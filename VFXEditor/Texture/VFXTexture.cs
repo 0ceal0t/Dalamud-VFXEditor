@@ -1,15 +1,12 @@
+using Lumina.Data.Parsing.Tex;
+using Lumina.Extensions;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-using Lumina.Data.Parsing.Tex;
-using Lumina.Extensions;
-
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-
 using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {

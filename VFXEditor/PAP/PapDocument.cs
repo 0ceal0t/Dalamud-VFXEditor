@@ -18,13 +18,13 @@ namespace VFXEditor.PAP {
         }
 
         protected override void LoadLocal( string localPath ) {
-            if (File.Exists(localPath)) {
+            if( File.Exists( localPath ) ) {
                 try {
                     using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
                     CurrentFile = new( br, HkxTemp );
                     UIHelper.OkNotification( "PAP file loaded" );
                 }
-                catch(Exception e) {
+                catch( Exception e ) {
                     PluginLog.Error( "Error Reading File", e );
                     PluginLog.Error( e.ToString() );
                     UIHelper.ErrorNotification( "Error reading file" );

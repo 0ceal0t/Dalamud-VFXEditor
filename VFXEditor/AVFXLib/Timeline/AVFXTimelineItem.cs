@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFXLib.Timeline {
     public class AVFXTimelineItem : AVFXBase {
@@ -17,11 +12,11 @@ namespace VFXEditor.AVFXLib.Timeline {
             var split = new List<byte>();
             var numElements = size / 12; // each AVFXBool or AVFXInt is 12 bytes
 
-            for(var idx = 0; idx < numElements; idx++) {
+            for( var idx = 0; idx < numElements; idx++ ) {
                 split.AddRange( reader.ReadBytes( 12 ) );
 
                 var BENA_ahead = false;
-                if (idx != numElements - 1) {
+                if( idx != numElements - 1 ) {
                     var resetPos = reader.BaseStream.Position;
                     var nextName = ReadName( reader );
                     reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
@@ -29,7 +24,7 @@ namespace VFXEditor.AVFXLib.Timeline {
                     BENA_ahead = nextName == "bEna";
                 }
 
-                if ( (idx == numElements - 1) || BENA_ahead ) { // split before bEna or when about to end
+                if( ( idx == numElements - 1 ) || BENA_ahead ) { // split before bEna or when about to end
                     var item = new AVFXTimelineSubItem( split.ToArray() );
                     Items.Add( item );
                     split = new(); // reset split

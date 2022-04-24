@@ -1,16 +1,14 @@
+using Dalamud.Hooking;
+using Dalamud.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Dalamud.Logging;
+using System.Threading;
 using VFXEditor.Structs;
 using VFXEditor.Structs.Vfx;
 using FileMode = VFXEditor.Structs.FileMode;
-
-using Dalamud.Hooking;
-using Reloaded.Hooks.Definitions.X64;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace VFXEditor.Interop {
     public class ResourceLoader : IDisposable {
@@ -387,7 +385,7 @@ namespace VFXEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString("X8") );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
                 PrepPap( gameResource, papIds );
@@ -418,7 +416,7 @@ namespace VFXEditor.Interop {
             for( var i = 0; i < papIds.Count; i++ ) {
                 var loc = data + i * 40;
                 var bytes = Encoding.ASCII.GetBytes( papIds[i] );
-                for ( var j = 0; j < 40; j++) {
+                for( var j = 0; j < 40; j++ ) {
                     if( j < bytes.Length ) Marshal.WriteByte( loc + j, bytes[j] );
                     else Marshal.WriteByte( loc + j, 0 );
                 }

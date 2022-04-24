@@ -15,11 +15,11 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void Draw( string parentId ) {
-            if(CopyManager.IsCopying) {
+            if( CopyManager.IsCopying ) {
                 CopyManager.Copied[Name] = Literal;
             }
 
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue(Name, out var _literal) && _literal is AVFXBool literal ) {
+            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXBool literal ) {
                 Literal.SetValue( literal.GetValue() );
                 Value = ( Literal.GetValue() == true );
             }

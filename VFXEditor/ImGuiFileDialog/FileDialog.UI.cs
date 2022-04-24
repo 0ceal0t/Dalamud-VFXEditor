@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -246,7 +245,7 @@ namespace ImGuiFileDialog {
         }
 
         private void DrawSideBar( Vector2 size ) {
-            ImGui.BeginChild( "##FileDialog_SideBar", ( PreviewWrap != null ) ? size - new Vector2(0, size.X + 5) : size );
+            ImGui.BeginChild( "##FileDialog_SideBar", ( PreviewWrap != null ) ? size - new Vector2( 0, size.X + 5 ) : size );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             foreach( var drive in Drives ) {
@@ -443,7 +442,7 @@ namespace ImGuiFileDialog {
             return false;
         }
 
-        private void LoadTexturePreview(FileStruct file) {
+        private void LoadTexturePreview( FileStruct file ) {
             if( !DoLoadPreview ) return;
             if( ImageExtensions.Contains( file.Ext.ToLower() ) ) {
                 Task.Run( async () => {

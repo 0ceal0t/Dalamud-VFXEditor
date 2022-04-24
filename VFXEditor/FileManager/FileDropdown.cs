@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VFXEditor.Helper;
 
@@ -28,7 +27,7 @@ namespace VFXEditor.FileManager {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
             var options = GetOptions();
-            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, options.IndexOf(Selected) ) ) ) {
+            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, options.IndexOf( Selected ) ) ) ) {
                 for( var i = 0; i < options.Count; i++ ) {
                     var option = options[i];
                     if( ImGui.Selectable( $"{GetName( option, i )}{id}{i}", option == Selected ) ) {
@@ -38,7 +37,7 @@ namespace VFXEditor.FileManager {
                 ImGui.EndCombo();
             }
 
-            if (AllowNew) {
+            if( AllowNew ) {
                 ImGui.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
