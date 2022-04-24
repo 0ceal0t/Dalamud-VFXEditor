@@ -35,17 +35,7 @@ namespace VFXSelect.VFX {
             ImGui.SameLine();
             DisplayPath( loadedItem.ImcPath );
 
-            ImGui.Text( "VFX Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.GetVFXPath() );
-            if( loadedItem.VfxExists ) {
-                if( ImGui.Button( "SELECT" + Id ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameNpc, "[NPC] " + loadedItem.Mount.Name, loadedItem.GetVFXPath() ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.GetVFXPath(), id: Id + "Copy" );
-                Dialog.Spawn( loadedItem.GetVFXPath(), id: Id + "Spawn" );
-            }
+            DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Mount.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivMount item ) {

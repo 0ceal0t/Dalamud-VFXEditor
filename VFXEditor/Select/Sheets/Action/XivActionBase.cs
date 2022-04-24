@@ -25,8 +25,7 @@ namespace VFXSelect.Select.Rows {
         public static readonly string castPrefix = "vfx/common/eff/";
 
         public string GetCastVFXPath() {
-            if( !CastVFXExists )
-                return "--";
+            if( !CastVFXExists ) return "";
             return castPrefix + CastVFX + ".avfx";
         }
 

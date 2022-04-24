@@ -29,24 +29,9 @@ namespace VFXSelect.TMB {
             ImGui.Text( loadedItem.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
-            for( var i = 0; i < loadedItem.TmbFiles.Count; i++) {
-                var path = loadedItem.TmbFiles[i];
-
-                ImGui.Text( $"Tmb Path #{i}: " );
-                ImGui.SameLine();
-                DisplayPath( path );
-                if( !string.IsNullOrEmpty( path ) ) {
-                    if( ImGui.Button( $"SELECT{Id}-{i}" ) ) {
-                        Dialog.Invoke( new SelectResult( SelectResultType.GameAction, $"[EMOTE] {loadedItem.Name} #{i}", path ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( path, id: $"{Id}-Copy-{i}" );
-                }
-            }
+            DrawPath( "Tmb Path", loadedItem.TmbFiles, Id, Dialog, SelectResultType.GameEmote, "EMOTE", loadedItem.Name );
         }
 
         protected override string UniqueRowTitle( XivEmoteTmb item ) {

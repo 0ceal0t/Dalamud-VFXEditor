@@ -32,37 +32,15 @@ namespace VFXSelect.VFX {
                 ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
             }
 
-            ImGui.Text( "Cast VFX Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.CastVfxPath );
-            if( loadedItem.CastVfxExists ) {
-                if( ImGui.Button( "SELECT" + Id + "Cast" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Action.Name + " Cast", loadedItem.CastVfxPath ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.CastVfxPath, id: Id + "CastCopy" );
-                Dialog.Spawn( loadedItem.CastVfxPath, id: Id + "CastSpawn" );
-            }
+            DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", spawn: true );
 
-            if( loadedItem.SelfVfxExists ) {
+            if (loadedItem.SelfVfxExists) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
                 DisplayPath( loadedItem.SelfTmbPath );
                 Copy( loadedItem.SelfTmbPath, id: Id + "CopyTmb" );
 
-                var vfxIdx = 0;
-                foreach( var path in loadedItem.SelfVfxPaths ) {
-                    ImGui.Text( "VFX #" + vfxIdx + ": " );
-                    ImGui.SameLine();
-                    DisplayPath( path );
-                    if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Action.Name + " #" + vfxIdx, path ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( path, id: Id + "Copy" + vfxIdx );
-                    Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
-                    vfxIdx++;
-                }
+                DrawPath( "VFX", loadedItem.SelfVfxPaths, Id, Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name, spawn: true );
             }
         }
 

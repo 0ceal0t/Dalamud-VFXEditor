@@ -30,19 +30,7 @@ namespace VFXSelect.VFX {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "Variant: " + loadedItem.Npc.Variant );
 
-            var vfxIdx = 0;
-            foreach( var path in loadedItem.VfxPaths ) {
-                ImGui.Text( "VFX #" + vfxIdx + ": " );
-                ImGui.SameLine();
-                DisplayPath( path );
-                if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameNpc, "[NPC] " + loadedItem.Npc.Name + " #" + vfxIdx, path ) );
-                }
-                ImGui.SameLine();
-                Copy( path, id: Id + "Copy" + vfxIdx );
-                Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
-                vfxIdx++;
-            }
+            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameZone, "NPC", loadedItem.Npc.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivNpc item ) {

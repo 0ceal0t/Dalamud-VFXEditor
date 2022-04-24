@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace VFXSelect.Select.Rows {
     public class XivStatus {
-        public bool LoopVFX1Exists = false;
-        public bool LoopVFX2Exists = false;
-        public bool LoopVFX3Exists = false;
-        public bool VfxExists = false;
-
         public string Name;
         public int RowId;
         public ushort Icon;
@@ -19,6 +14,7 @@ namespace VFXSelect.Select.Rows {
         public string LoopVFXPath1;
         public string LoopVFXPath2;
         public string LoopVFXPath3;
+        public bool VfxExists = false;
 
         public static readonly string statusPrefix = "vfx/common/eff/";
 
@@ -29,34 +25,16 @@ namespace VFXSelect.Select.Rows {
 
             //HitVFXPath = status.HitEffect.Value?.Location.Value?.Location;
 
-            LoopVFXPath1 = status.VFX.Value?.VFX?.Value.Location;
-            LoopVFX1Exists = !string.IsNullOrEmpty( LoopVFXPath1 );
+            LoopVFXPath1 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
+            LoopVFXPath2 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
+            LoopVFXPath3 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
 
-            LoopVFXPath2 = status.VFX.Value?.VFX2?.Value.Location;
-            LoopVFX2Exists = !string.IsNullOrEmpty( LoopVFXPath2 );
-
-            LoopVFXPath3 = status.VFX.Value?.VFX3?.Value.Location;
-            LoopVFX3Exists = !string.IsNullOrEmpty( LoopVFXPath3 );
-
-            VfxExists = ( LoopVFX1Exists || LoopVFX2Exists || LoopVFX3Exists );
+            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 );
         }
 
-        public string GetLoopVFX1Path() {
-            if( !LoopVFX1Exists )
-                return "--";
-            return statusPrefix + LoopVFXPath1 + ".avfx";
-        }
-
-        public string GetLoopVFX2Path() {
-            if( !LoopVFX2Exists )
-                return "--";
-            return statusPrefix + LoopVFXPath2 + ".avfx";
-        }
-
-        public string GetLoopVFX3Path() {
-            if( !LoopVFX3Exists )
-                return "--";
-            return statusPrefix + LoopVFXPath3 + ".avfx";
+        private static string GetVFXPath( string path ) {
+            if( string.IsNullOrEmpty( path ) ) return "";
+            return $"{statusPrefix}{path}.avfx";
         }
     }
 }

@@ -17,6 +17,8 @@ namespace VFXSelect {
         protected abstract bool CheckMatch( T item, string searchInput );
         protected abstract string UniqueRowTitle( T item );
         protected abstract void DrawSelected( S loadedItem );
+
+
         protected virtual void DrawExtra() { }
         protected virtual void OnSelect() { }
 
@@ -127,6 +129,8 @@ namespace VFXSelect {
             ImGui.EndTabItem();
         }
 
+        // ======================
+
         public static bool Matches( string item, string query ) {
             return item.ToLower().Contains( query.ToLower() );
         }
@@ -167,6 +171,39 @@ namespace VFXSelect {
             showItems = ( int )Math.Ceiling( childHeight / itemHeight );
             postItems = count - showItems - preItems;
 
+        }
+
+        public static void DrawIcon( ImGuiScene.TextureWrap icon ) {
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+            }
+        }
+
+        public static void DrawPath( string label, IEnumerable<string> paths, string id, SelectDialog dialog, SelectResultType resultType, string resultPrefix, string resultName, bool spawn = false ) {
+            var idx = 0;
+            foreach( var path in paths ) {
+                DrawPath( $"{label} #{idx}", path, $"{id}-{idx}", dialog, resultType, resultPrefix, $"{resultName} #{idx}", spawn );
+                idx++;
+            }
+        }
+
+        public static void DrawPath( string label, string path, string id, SelectDialog dialog, SelectResultType resultType, string resultPrefix, string resultName, bool spawn = false ) {
+            if( !string.IsNullOrEmpty( path ) ) {
+                if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
+                    ImGui.Text( $"{label}: " );
+                    ImGui.SameLine();
+                    DisplayPath( path );
+                }
+
+                if( ImGui.Button( $"SELECT{id}" ) ) {
+                    dialog.Invoke( new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path ) );
+                }
+                ImGui.SameLine();
+                Copy( path, id: id + "Copy" );
+                if( spawn ) {
+                    dialog.Spawn( path, id: id + "Spawn" );
+                }
+            }
         }
     }
 }

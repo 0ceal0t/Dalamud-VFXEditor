@@ -49,7 +49,7 @@ namespace VFXSelect.VFX {
             } );
         }
 
-        public void Spawn( string spawnPath, string id = "" ) {
+        public override void Spawn( string spawnPath, string id = "" ) {
             if( !ShowSpawn ) return;
             ImGui.SameLine();
             if( SpawnVfxExists() ) {

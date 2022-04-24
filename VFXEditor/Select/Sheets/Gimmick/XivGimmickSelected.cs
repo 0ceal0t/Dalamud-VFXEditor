@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace VFXSelect.Select.Rows {
     public class XivGimmickSelected {
         public XivGimmick Gimmick;
-        public List<string> SelfVfxPaths = new();
-        public string SelfTmbPath;
-        public bool SelfVfxExists = false;
+        public List<string> VfxPaths = new();
+        public string TmbPath;
+        public bool VfxExists = false;
 
         public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
@@ -20,13 +20,13 @@ namespace VFXSelect.Select.Rows {
 
             if( file != null ) {
                 var data = file.Data;
-                SelfTmbPath = file.FilePath.Path;
-                SelfVfxExists = true;
+                TmbPath = file.FilePath.Path;
+                VfxExists = true;
 
                 var stringData = Encoding.UTF8.GetString( data );
                 var matches = rx.Matches( stringData );
                 foreach( Match m in matches ) {
-                    SelfVfxPaths.Add( m.Value.Trim( '\u0000' ) );
+                    VfxPaths.Add( m.Value.Trim( '\u0000' ) );
                 }
             }
         }

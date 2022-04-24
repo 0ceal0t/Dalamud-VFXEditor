@@ -29,53 +29,15 @@ namespace VFXSelect.TMB {
             ImGui.Text( loadedItem.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
-            ImGui.Text( "Start Tmb Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.StartTmb );
-            if( !string.IsNullOrEmpty(loadedItem.StartTmb) ) {
-                if( ImGui.Button( "SELECT" + Id + "Start" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Start", loadedItem.StartTmb ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.StartTmb, id: Id + "StartCopy" );
-            }
+            DrawPath( "Start Tmb Path", loadedItem.StartTmb, Id + "Start", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Start" );
 
-            ImGui.Text( "End Tmb Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.EndTmb );
-            if( !string.IsNullOrEmpty( loadedItem.EndTmb ) ) {
-                if( ImGui.Button( "SELECT" + Id + "End" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " End", loadedItem.EndTmb ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.EndTmb, id: Id + "EndCopy" );
-            }
+            DrawPath( "End Tmb Path", loadedItem.EndTmb, Id + "End", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " End" );
 
-            ImGui.Text( "Hit Tmb Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.HitTmb );
-            if( !string.IsNullOrEmpty( loadedItem.HitTmb ) ) {
-                if( ImGui.Button( "SELECT" + Id + "Hit" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[ACTION] " + loadedItem.Name + " Hit", loadedItem.HitTmb ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.HitTmb, id: Id + "HitCopy" );
-            }
+            DrawPath( "Hit Tmb Path", loadedItem.HitTmb, Id + "Hit", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Hit" );
 
-            ImGui.Text( "Weapon Tmb Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.WeaponTmb );
-            if( !string.IsNullOrEmpty( loadedItem.WeaponTmb ) ) {
-                if( ImGui.Button( "SELECT" + Id + "Weapon" ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameAction, "[WEAPON] " + loadedItem.Name + " Weapon", loadedItem.WeaponTmb ) );
-                }
-                ImGui.SameLine();
-                Copy( loadedItem.WeaponTmb, id: Id + "WeaponCopy" );
-            }
+            DrawPath( "Weapon Tmb Path", loadedItem.WeaponTmb, Id + "Weapon", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Weapon" );
         }
 
         protected override string UniqueRowTitle( XivActionTmb item ) {

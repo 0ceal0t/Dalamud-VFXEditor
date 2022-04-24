@@ -184,5 +184,7 @@ namespace VFXSelect {
         public void Invoke( SelectResult result ) {
             OnSelect?.Invoke( result );
         }
+
+        public virtual void Spawn( string spawnPath, string id = "" ) { }
     }
 }

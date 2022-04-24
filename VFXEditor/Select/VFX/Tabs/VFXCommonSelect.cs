@@ -27,16 +27,7 @@ namespace VFXSelect.VFX {
                 ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
             }
 
-            ImGui.Text( "VFX Path: " );
-            ImGui.SameLine();
-            DisplayPath( loadedItem.VfxPath );
-
-            if( ImGui.Button( "SELECT" + Id ) ) {
-                Dialog.Invoke( new SelectResult( SelectResultType.GameStatus, "[COMMON] " + loadedItem.Name, loadedItem.VfxPath ) );
-            }
-            ImGui.SameLine();
-            Copy( loadedItem.VfxPath, id: Id + "Copy" );
-            Dialog.Spawn( loadedItem.VfxPath, id: Id + "Spawn" );
+            DrawPath( "VFX Path", loadedItem.VfxPath, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivCommon item ) {

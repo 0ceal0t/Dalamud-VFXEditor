@@ -27,14 +27,12 @@ namespace VFXSelect.Select.Rows {
                     }
                 }
             }
-            else // manually specified key
-            {
+            else { // Manually specified key
                 SelfVFXExists = true;
                 SelfVFXKey = forceSelfKey;
             }
 
-            if( !justSelf ) // when handling a hit vfx
-            {
+            if( !justSelf ) { // Just loading hit
                 CastVFX = action.VFX?.Value?.VFX.Value?.Location;
                 CastVFXExists = !string.IsNullOrEmpty( CastVFX );
 

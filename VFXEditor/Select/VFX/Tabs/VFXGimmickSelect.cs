@@ -16,25 +16,13 @@ namespace VFXSelect.VFX {
             ImGui.Text( loadedItem.Gimmick.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( loadedItem.SelfVfxExists ) {
+            if( loadedItem.VfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
-                DisplayPath( loadedItem.SelfTmbPath );
-                Copy( loadedItem.SelfTmbPath, id: Id + "CopyTmb" );
+                DisplayPath( loadedItem.TmbPath );
+                Copy( loadedItem.TmbPath, id: Id + "CopyTmb" );
 
-                var vfxIdx = 0;
-                foreach( var path in loadedItem.SelfVfxPaths ) {
-                    ImGui.Text( "VFX #" + vfxIdx + ": " );
-                    ImGui.SameLine();
-                    DisplayPath( path );
-                    if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                        Dialog.Invoke( new SelectResult( SelectResultType.GameGimmick, "[GIMMICK] " + loadedItem.Gimmick.Name + " #" + vfxIdx, path ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( path, id: Id + "Copy" + vfxIdx );
-                    Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
-                    vfxIdx++;
-                }
+                DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameItem, "GIMMICK", loadedItem.Gimmick.Name, spawn: true );
             }
         }
 

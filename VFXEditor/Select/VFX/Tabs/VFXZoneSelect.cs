@@ -19,19 +19,8 @@ namespace VFXSelect.VFX {
             ImGui.Text( "LGB Path: " );
             ImGui.SameLine();
             DisplayPath( loadedItem.Zone.LgbPath );
-            var vfxIdx = 0;
-            foreach( var path in loadedItem.VfxPaths ) {
-                ImGui.Text( "VFX #" + vfxIdx + ": " );
-                ImGui.SameLine();
-                DisplayPath( path );
-                if( ImGui.Button( "SELECT" + Id + vfxIdx ) ) {
-                    Dialog.Invoke( new SelectResult( SelectResultType.GameZone, "[ZONE] " + loadedItem.Zone.Name + " #" + vfxIdx, path ) );
-                }
-                ImGui.SameLine();
-                Copy( path, id: Id + "Copy" + vfxIdx );
-                Dialog.Spawn( path, id: Id + "Spawn" + vfxIdx );
-                vfxIdx++;
-            }
+
+            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name, spawn:true );
         }
 
         protected override string UniqueRowTitle( XivZone item ) {

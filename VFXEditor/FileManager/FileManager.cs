@@ -122,7 +122,9 @@ namespace VFXEditor.FileManager {
                 var id = $"##{Id}/Doc";
                 var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
-                ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
+                ImGui.Text( "Create documents in order to replace multiple files simultaneously" );
+
+                ImGui.BeginChild( id + "/Child", new Vector2( 0, - (footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
 
                 ImGui.Columns( 2, id + "/Columns", false );
 

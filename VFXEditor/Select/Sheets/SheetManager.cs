@@ -1,5 +1,7 @@
 using Dalamud.Data;
 using Dalamud.Plugin;
+using System.Collections.Generic;
+using System.Linq;
 using VFXSelect.Select.Sheets;
 
 namespace VFXSelect {
@@ -26,6 +28,7 @@ namespace VFXSelect {
         public static ActionTmbSheetLoader ActionTmb { get; private set; }
         public static ActionPapSheetLoader ActionPap { get; private set; }
         public static EmoteTmbSheetLoader EmoteTmb { get; private set; }
+        public static EmotePapSheetLoader EmotePap { get; private set; }
 
         public static void Initialize( string npcCsv, string monsterJson, string miscVfxTxt, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
             NpcCsv = npcCsv;
@@ -49,6 +52,11 @@ namespace VFXSelect {
             ActionTmb = new ActionTmbSheetLoader();
             ActionPap = new ActionPapSheetLoader();
             EmoteTmb = new EmoteTmbSheetLoader();
+            EmotePap = new EmotePapSheetLoader();
+        }
+
+        public static Dictionary<string, string> FilterByExists( Dictionary<string, string> dict ) {
+            return dict.Where( i => DataManager.FileExists( i.Value ) ).ToDictionary( i => i.Key, i => i.Value );
         }
     }
 }

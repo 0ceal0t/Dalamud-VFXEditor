@@ -16,7 +16,8 @@ namespace VFXSelect.PAP {
             ) : base( id, "pap", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new PAPActionSelect( id, "Action", this )
+                new PAPActionSelect( id, "Action", this ),
+                new PAPEmoteSelect( id, "Emote", this )
             } );
         }
 

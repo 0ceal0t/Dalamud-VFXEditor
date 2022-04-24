@@ -29,41 +29,17 @@ namespace VFXSelect.PAP {
             ImGui.Text( loadedItem.ActionPap.Name );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
-            }
+            DrawIcon( Icon );
 
-            DrawDict( loadedItem.StartAnimations, "Start", loadedItem.ActionPap.Name );
+            DrawPapDict( loadedItem.StartAnimations, "Start", loadedItem.ActionPap.Name );
 
-            DrawDict( loadedItem.EndAnimations, "End", loadedItem.ActionPap.Name );
+            DrawPapDict( loadedItem.EndAnimations, "End", loadedItem.ActionPap.Name );
 
-            DrawDict( loadedItem.HitAnimations, "Hit", loadedItem.ActionPap.Name );
+            DrawPapDict( loadedItem.HitAnimations, "Hit", loadedItem.ActionPap.Name );
         }
 
         protected override string UniqueRowTitle( XivActionPap item ) {
             return item.Name + "##" + item.RowId;
-        }
-
-        private void DrawDict(Dictionary<string, string> items, string label, string name) {
-            foreach( var item in items ) {
-                var skeleton = item.Key;
-                var path = item.Value;
-                ImGui.Text( $"{label} ({skeleton}): " );
-                ImGui.SameLine();
-                if( path.Contains( "action.pap" ) ) {
-                    DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
-                }
-                else {
-                    DisplayPath( path );
-                }
-                if( !string.IsNullOrEmpty( path ) ) {
-                    if( ImGui.Button( $"SELECT{Id}-{label}-{skeleton}" ) ) {
-                        Dialog.Invoke( new SelectResult( SelectResultType.GameAction, $"[ACTION] {name} {label} ({skeleton})", path ) );
-                    }
-                    ImGui.SameLine();
-                    Copy( path, id: $"{Id}-{label}-Copy-{skeleton}" );
-                }
-            }
         }
     }
 }

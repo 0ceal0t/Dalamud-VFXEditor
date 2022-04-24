@@ -24,8 +24,7 @@ namespace VFXSelect.Select.Rows {
         }
 
         public string GetVFXPath() {
-            if( !VfxExists )
-                return "--";
+            if( !VfxExists ) return "";
             return Item.GetVFXPath( VfxId );
         }
     }
