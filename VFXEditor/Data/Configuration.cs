@@ -31,6 +31,9 @@ namespace VFXEditor {
         public List<SelectResult> RecentSelects = new();
         public bool FilepickerImagePreview = true;
 
+        public bool AutosaveEnabled = false;
+        public int AutosaveSeconds = 300;
+
         public Configuration() : base( "Settings" ) {
             Size = new Vector2( 300, 150 );
         }
@@ -71,6 +74,29 @@ namespace VFXEditor {
             if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) {
                 Save();
             }
+
+            if (ImGui.Checkbox( "Autosave Workspace##Settings", ref AutosaveEnabled)) {
+                Save();
+            }
+
+            ImGui.Indent();
+
+            if (!AutosaveEnabled) {
+                var style = ImGui.GetStyle();
+                ImGui.PushStyleVar( ImGuiStyleVar.Alpha, style.Alpha * 0.5f );
+            }
+
+            if( ImGui.InputInt( "Autosave time (seconds)##Settings", ref AutosaveSeconds ) ) {
+                Save();
+            }
+
+            if( !AutosaveEnabled ) {
+                ImGui.PopStyleVar();
+            }
+
+            ImGui.Unindent();
+
+            ImGui.Separator();
 
             if( ImGui.Checkbox( "Show assigned parameter status##Settings", ref ShowVfxAssigned ) ) {
                 Save();

@@ -56,6 +56,7 @@ namespace VFXEditor {
 
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
+        private static DateTime lastAutosave = DateTime.Now;
         private static bool IsLoading = false;
 
         private static void NewWorkspace() {
@@ -97,6 +98,7 @@ namespace VFXEditor {
         }
 
         private static void OpenWorkspaceFolder( string loadLocation ) {
+            lastAutosave = DateTime.Now;
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
                 PluginLog.Error( "vfx_workspace.json does not exist" );

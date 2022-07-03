@@ -43,36 +43,7 @@ namespace VFXEditor.AVFX.VFX {
 
             var currentPathValue = LoadTex();
 
-            if( Plugin.TextureManager.GetTexturePreview( currentPathValue, out var t ) ) {
-                ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
-                ImGui.Text( $"Format: {t.Format}  MIPS: {t.MipLevels}  SIZE: {t.Width}x{t.Height}" );
-                if( ImGui.Button( "Export" + id ) ) {
-                    ImGui.OpenPopup( "Tex_Export" + id );
-                }
-                ImGui.SameLine();
-                if( ImGui.Button( "Replace" + id ) ) {
-                    ImportDialog( currentPathValue.Trim( '\0' ) );
-                }
-                if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                    if( ImGui.Selectable( "Png" + id ) ) {
-                        SavePngDialog( currentPathValue.Trim( '\0' ) );
-                    }
-                    if( ImGui.Selectable( "DDS" + id ) ) {
-                        SaveDDSDialog( currentPathValue.Trim( '\0' ) );
-                    }
-                    ImGui.EndPopup();
-                }
-
-                // ===== IMPORTED TEXTURE =======
-                if( t.IsReplaced ) {
-                    ImGui.TextColored( UIHelper.RED_COLOR, "Replaced with imported texture" );
-                    ImGui.SameLine();
-                    if( UIHelper.RemoveButton( "Remove" + id, small: true ) ) {
-                        Plugin.TextureManager.RemoveReplaceTexture( currentPathValue.Trim( '\0' ) );
-                        Plugin.TextureManager.RefreshPreviewTexture( currentPathValue.Trim( '\0' ) );
-                    }
-                }
-            }
+            Plugin.TextureManager.DrawTexture( currentPathValue, id );
         }
 
         public override void ShowTooltip() {
@@ -83,36 +54,6 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();
             }
-        }
-
-        private static void ImportDialog( string newPath ) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
-                if( !ok ) return;
-                try {
-                    if( !Plugin.TextureManager.AddReplaceTexture( res, newPath ) ) {
-                        PluginLog.Error( $"Could not import" );
-                    }
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( "Could not import data", e );
-                }
-            } );
-        }
-
-        private static void SavePngDialog( string texPath ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
-                if( !ok ) return;
-                var texFile = Plugin.TextureManager.GetRawTexture( texPath );
-                texFile.SaveAsPNG( res );
-            } );
-        }
-
-        private static void SaveDDSDialog( string texPath ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
-                if( !ok ) return;
-                var texFile = Plugin.TextureManager.GetRawTexture( texPath );
-                texFile.SaveAsDDS( res );
-            } );
         }
 
         public override string GetDefaultText() => $"Texture {Idx}";

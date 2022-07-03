@@ -140,6 +140,7 @@ namespace ImGuiFileDialog {
             }
 
             var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
+            if( string.IsNullOrEmpty( personal ) ) return;
 
             QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Desktop,

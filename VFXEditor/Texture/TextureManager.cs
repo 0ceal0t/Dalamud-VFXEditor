@@ -69,12 +69,7 @@ namespace VFXEditor.Texture {
         }
 
         // import replacement texture from atex
-        public void AddReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
-            if( !Plugin.DataManager.FileExists( replacePath ) ) {
-                PluginLog.Error( $"{replacePath} does not exist" );
-                return;
-            }
-
+        public bool AddReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
             var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
             File.Copy( localPath, path, true );
 
@@ -86,17 +81,11 @@ namespace VFXEditor.Texture {
                 Format = format,
                 LocalPath = path
             };
-
-            PathToTextureReplace[replacePath] = replaceData;
+            return ReplaceTextureAndRefreshPreview( replaceData, replacePath );
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool AddReplaceTexture( string fileLocation, string replacePath ) {
-            if( !Plugin.DataManager.FileExists( replacePath ) ) {
-                PluginLog.Error( $"{replacePath} does not exist" );
-                return false;
-            }
-
             try {
                 TextureReplace replaceData;
                 var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
@@ -123,43 +112,48 @@ namespace VFXEditor.Texture {
                         LocalPath = path
                     };
                 }
-                else { //a .png file, convert it to the format currently being used by the existing game file
-                    var texFile = Plugin.DataManager.GetFile<VFXTexture>( replacePath );
+                else {
+                    ushort mipLevels = 9;
+                    var textureFormat = TextureFormat.DXT5;
 
                     using var surface = Surface.LoadFromFile( fileLocation );
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
-                    var compFormat = VFXTexture.TextureToCompressionFormat( texFile.Header.Format );
+                    var compFormat = VFXTexture.TextureToCompressionFormat( textureFormat );
                     if( compFormat == CompressionFormat.ETC1 ) { // use ETC1 to signify "NULL" because I'm not going to be using it
                         return false;
                     }
 
-                    compressor.Input.SetMipmapGeneration( true, texFile.Header.MipLevels ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
+                    compressor.Input.SetMipmapGeneration( true, mipLevels ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
                     compressor.Compression.SetBGRAPixelFormat();
                     compressor.Process( out var ddsContainer );
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( texFile.Header.Format, ddsContainer, writer, convertToA8: ( texFile.Header.Format == TextureFormat.A8 ) );
+                        replaceData = CreateAtex( textureFormat, ddsContainer, writer, convertToA8: ( textureFormat == TextureFormat.A8 ) );
                     }
                     ddsContainer.Dispose();
                 }
-                // if there is already a replacement for the same file, delete the old file
                 replaceData.LocalPath = path;
-                RemoveReplaceTexture( replacePath );
-                if( !PathToTextureReplace.TryAdd( replacePath, replaceData ) ) {
-                    return false;
-                }
-                // refresh preview texture if it exists
-                RefreshPreviewTexture( replacePath );
-                return true;
+                return ReplaceTextureAndRefreshPreview( replaceData, replacePath );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, $"Error importing {fileLocation} into {replacePath}" );
             }
             return false;
+        }
+
+        private bool ReplaceTextureAndRefreshPreview(TextureReplace data, string path) {
+            // if there is already a replacement for the same file, delete the old file
+            RemoveReplaceTexture( path );
+            if( !PathToTextureReplace.TryAdd( path, data ) ) {
+                return false;
+            }
+            // refresh preview texture if it exists
+            RefreshPreviewTexture( path );
+            return true;
         }
 
         public void RemoveReplaceTexture( string path ) {
@@ -224,7 +218,7 @@ namespace VFXEditor.Texture {
         public bool GetTexturePreview( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
 
         public bool CreatePreviewTexture( string path, out PreviewTexture ret, bool loadImage = true ) {
-            var result = Plugin.DataManager.FileExists( path );
+            var result = Plugin.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path) ;
             ret = new PreviewTexture();
             if( result ) {
                 try {

@@ -1,5 +1,6 @@
+using Dalamud.Logging;
 using ImGuiNET;
-
+using System;
 using VFXEditor.Data;
 using VFXEditor.Helper;
 using VFXEditor.Penumbra;
@@ -24,6 +25,15 @@ namespace VFXEditor {
             TextureManager.Draw();
             TmbManager.Draw();
             PapManager.Draw();
+
+            if ( Configuration.AutosaveEnabled && 
+                 Configuration.AutosaveSeconds > 10 && 
+                 !string.IsNullOrEmpty(CurrentWorkspaceLocation) && 
+                 (DateTime.Now - lastAutosave).TotalSeconds > Configuration.AutosaveSeconds
+            ) {
+                lastAutosave = DateTime.Now;
+                SaveWorkspace();
+            }
         }
 
         public static void DrawMenu() {

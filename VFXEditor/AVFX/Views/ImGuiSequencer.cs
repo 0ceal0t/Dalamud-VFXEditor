@@ -60,7 +60,7 @@ namespace VFXEditor.AVFX.Views {
             var drawList = ImGui.GetWindowDrawList();
             var canvasPos = ImGui.GetCursorScreenPos();
             var canvasSize = ImGui.GetContentRegionAvail();
-            canvasSize.Y = 200;
+            canvasSize.Y = 400;
 
             var count = Items.Count;
             var controlHeight = count * ItemHeight;
