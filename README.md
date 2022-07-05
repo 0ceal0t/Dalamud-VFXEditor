@@ -30,7 +30,6 @@ If you have other questions, please open an [Issue](https://github.com/0ceal0t/D
 3. Run QuickLauncher
 
 ### Notes
-* This plugin does not currently work with `LivePluginLoader`
 * It might interact strangely with Penumbra
 
 ## Features
@@ -48,7 +47,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Add / delete Havok animations
 - [ ] .scd editor
 - [ ] .mdl import + export
 - [ ] Menu shortcuts + keys move up / down
@@ -68,6 +66,7 @@ A lot of the data in `.avfx` files is not fully understood, and I'm regularly fi
 - [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)
 
 ---
+- [x] ~~Add / delete Havok animations~~
 - [x] ~~Fix issues with .pap reloading~~ (kind of done, a bit scuffed)
 - [x] ~~PAP editor~~
 - [x] ~~TMB editor~~

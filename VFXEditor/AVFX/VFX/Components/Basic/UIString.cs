@@ -48,7 +48,7 @@ namespace VFXEditor.AVFX.VFX {
 
             ImGui.SameLine();
             if( ImGui.Button( "Update" + id ) ) {
-                Literal.SetValue( Value.Trim().Trim( '\0' ) + "\u0000" );
+                Literal.SetValue( Value.Trim().Trim( '\0' ) + '\u0000' );
                 if( CanBeUnassigned && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
                     Literal.SetAssigned( false );
                 }

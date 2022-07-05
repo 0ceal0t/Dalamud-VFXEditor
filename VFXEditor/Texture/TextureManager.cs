@@ -69,7 +69,7 @@ namespace VFXEditor.Texture {
         }
 
         // import replacement texture from atex
-        public bool AddReplaceTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
+        public bool ImportTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
             var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
             File.Copy( localPath, path, true );
 
@@ -81,17 +81,17 @@ namespace VFXEditor.Texture {
                 Format = format,
                 LocalPath = path
             };
-            return ReplaceTextureAndRefreshPreview( replaceData, replacePath );
+            return ReplaceAndRefreshTexture( replaceData, replacePath );
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
-        public bool AddReplaceTexture( string fileLocation, string replacePath ) {
+        public bool ImportTexture( string localPath, string replacePath ) {
             try {
                 TextureReplace replaceData;
                 var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
-                if( Path.GetExtension( fileLocation ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
-                    var ddsFile = DDSFile.Read( fileLocation );
+                if( Path.GetExtension( localPath ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
+                    var ddsFile = DDSFile.Read( localPath );
                     var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
                     if( format == TextureFormat.Null )
                         return false;
@@ -100,9 +100,9 @@ namespace VFXEditor.Texture {
                     }
                     ddsFile.Dispose();
                 }
-                else if( Path.GetExtension( fileLocation ).ToLower() == ".atex" ) {
-                    File.Copy( fileLocation, path, true );
-                    var tex = VFXTexture.LoadFromLocal( fileLocation );
+                else if( Path.GetExtension( localPath ).ToLower() == ".atex" ) {
+                    File.Copy( localPath, path, true );
+                    var tex = VFXTexture.LoadFromLocal( localPath );
                     replaceData = new TextureReplace {
                         Height = tex.Header.Height,
                         Width = tex.Header.Width,
@@ -116,7 +116,7 @@ namespace VFXEditor.Texture {
                     ushort mipLevels = 9;
                     var textureFormat = TextureFormat.DXT5;
 
-                    using var surface = Surface.LoadFromFile( fileLocation );
+                    using var surface = Surface.LoadFromFile( localPath );
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
@@ -137,15 +137,15 @@ namespace VFXEditor.Texture {
                     ddsContainer.Dispose();
                 }
                 replaceData.LocalPath = path;
-                return ReplaceTextureAndRefreshPreview( replaceData, replacePath );
+                return ReplaceAndRefreshTexture( replaceData, replacePath );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, $"Error importing {fileLocation} into {replacePath}" );
+                PluginLog.Error( e, $"Error importing {localPath} into {replacePath}" );
             }
             return false;
         }
 
-        private bool ReplaceTextureAndRefreshPreview(TextureReplace data, string path) {
+        private bool ReplaceAndRefreshTexture(TextureReplace data, string path) {
             // if there is already a replacement for the same file, delete the old file
             RemoveReplaceTexture( path );
             if( !PathToTextureReplace.TryAdd( path, data ) ) {
@@ -215,7 +215,7 @@ namespace VFXEditor.Texture {
             LoadPreviewTexture( paddedPath );
         }
 
-        public bool GetTexturePreview( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
+        public bool GetPreviewTexture( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
 
         public bool CreatePreviewTexture( string path, out PreviewTexture ret, bool loadImage = true ) {
             var result = Plugin.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path) ;

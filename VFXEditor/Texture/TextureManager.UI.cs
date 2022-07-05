@@ -32,11 +32,11 @@ namespace VFXEditor.Texture {
             ImGui.EndChild();
 
 
-            ImGui.SetNextItemWidth( ImGui.GetWindowContentRegionWidth() - 150 );
-            ImGui.InputText( $"{id}-Input", ref newCustomPath, 255 );
+            ImGui.SetNextItemWidth( ImGui.GetWindowContentRegionWidth() - 140 );
+            ImGui.InputText( $"Path{id}-Input", ref newCustomPath, 255 );
 
             ImGui.SameLine();
-            if( ImGui.Button( $"Add Custom Texture##{id}" ) ) {
+            if( ImGui.Button( $"Import Texture##{id}" ) ) {
                 var path = newCustomPath.Trim().Trim( '\0' ).ToLower();
                 if (!string.IsNullOrEmpty(path) && !PathToTextureReplace.ContainsKey(path)) {
                     ImportDialog( path );
@@ -45,7 +45,7 @@ namespace VFXEditor.Texture {
         }
 
         public void DrawTexture( string path, string id ) {
-            if( GetTexturePreview( path, out var texOut ) ) {
+            if( GetPreviewTexture( path, out var texOut ) ) {
                 ImGui.Image( texOut.Wrap.ImGuiHandle, new Vector2( texOut.Width, texOut.Height ) );
                 ImGui.Text( $"Format: {texOut.Format}  MIPS: {texOut.MipLevels}  SIZE: {texOut.Width}x{texOut.Height}" );
                 if( ImGui.Button( "Export" + id ) ) {
@@ -68,7 +68,7 @@ namespace VFXEditor.Texture {
                 // Imported texture
                 if( texOut.IsReplaced ) {
                     ImGui.SameLine();
-                    if( UIHelper.RemoveButton( "Remove Replaced Texture" + id, small: true ) ) {
+                    if( UIHelper.RemoveButton( "Remove Replaced Texture" + id ) ) {
                         RemoveReplaceTexture( path.Trim( '\0' ) );
                         RefreshPreviewTexture( path.Trim( '\0' ) );
                     }
@@ -80,7 +80,7 @@ namespace VFXEditor.Texture {
             FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( !AddReplaceTexture( res, newPath ) ) {
+                    if( !ImportTexture( res, newPath ) ) {
                         PluginLog.Error( $"Could not import" );
                     }
                 }

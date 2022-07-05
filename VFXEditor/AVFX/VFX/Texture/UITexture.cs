@@ -49,7 +49,7 @@ namespace VFXEditor.AVFX.VFX {
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
 
-            if( Plugin.TextureManager.GetTexturePreview( currentPathValue, out var t ) ) {
+            if( Plugin.TextureManager.GetPreviewTexture( currentPathValue, out var t ) ) {
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();

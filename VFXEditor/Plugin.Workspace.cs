@@ -113,7 +113,7 @@ namespace VFXEditor {
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
                     var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
-                    TextureManager.AddReplaceTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
+                    TextureManager.ImportTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
                 }
             }
 
