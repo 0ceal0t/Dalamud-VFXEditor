@@ -37,6 +37,8 @@ namespace VFXEditor.Texture {
             // Set paths manually since TexImpNet can be dumb sometimes
             var runtimeRoot = Path.Combine( Plugin.TemplateLocation, "runtimes" );
 
+            // ==============
+
             var freeImgLib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
             var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "FreeImage.dll" );
             var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
@@ -58,6 +60,13 @@ namespace VFXEditor.Texture {
             PluginLog.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
             nvtLib.LoadLibrary();
             PluginLog.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
+        }
+
+        public static void BreakDown() {
+            TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
+            TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
+            PluginLog.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
+            PluginLog.Log( $"NVTT Library loaded: { TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
 
         public TextureManager() : base( "Imported Textures" ) {

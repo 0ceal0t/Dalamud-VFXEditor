@@ -145,6 +145,7 @@ namespace VFXEditor {
             AvfxManager.Dispose();
             AvfxManager = null;
 
+            TextureManager.BreakDown();
             TextureManager.Dispose();
             TextureManager = null;
 
