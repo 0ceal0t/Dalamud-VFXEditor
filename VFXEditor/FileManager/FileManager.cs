@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -101,10 +102,11 @@ namespace VFXEditor.FileManager {
             DrawDocumentSelect();
             if( OnlyDocumentDialog ) return;
 
-            DialogName = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
+            Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawMenu();
+                ImGui.Separator();
                 if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
                 ImGui.EndMenuBar();
             }
@@ -116,14 +118,15 @@ namespace VFXEditor.FileManager {
             if( !( OnlyDocumentDialog ? Visible : DocumentDialogVisible ) ) return;
             ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( $"{DialogName} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( $"{Name} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
                 var id = $"##{Id}/Doc";
                 var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
+                if( ImGui.Button( "+ NEW" + id ) ) AddDocument();
+                ImGui.SameLine();
                 ImGui.Text( "Create documents in order to replace multiple files simultaneously" );
 
                 ImGui.BeginChild( id + "/Child", new Vector2( 0, -( footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
-
                 ImGui.Columns( 2, id + "/Columns", false );
 
                 var idx = 0;
@@ -141,25 +144,20 @@ namespace VFXEditor.FileManager {
                 }
                 ImGui.NextColumn();
 
-                foreach( var doc in Documents ) {
-                    ImGui.Text( doc.ReplaceDisplay );
+                foreach( var document in Documents ) {
+                    ImGui.Text( document.ReplaceDisplay );
                 }
 
                 ImGui.Columns( 1 );
                 ImGui.EndChild();
 
-                if( ImGui.Button( "+ NEW" + id ) ) AddDocument();
-
                 if( SelectedDocument != null ) {
-                    var deleteDisabled = ( Documents.Count == 1 );
-
-                    ImGui.SameLine( ImGui.GetWindowWidth() - 105 );
-                    if( ImGui.Button( "Select" + id ) ) {
+                    if( ImGui.Button( $"Open{id}" ) ) {
                         SelectDocument( SelectedDocument );
                     }
-                    if( !deleteDisabled ) {
-                        ImGui.SameLine( ImGui.GetWindowWidth() - 55 );
-                        if( UIHelper.RemoveButton( "Delete" + id ) ) {
+                    if( Documents.Count > 1 ) {
+                        ImGui.SameLine();
+                        if( UIHelper.RemoveButton( $"Delete{id}" ) ) {
                             RemoveDocument( SelectedDocument );
                             SelectedDocument = ActiveDocument;
                         }
@@ -169,15 +167,15 @@ namespace VFXEditor.FileManager {
             ImGui.End();
         }
 
-        public virtual void PenumbraExport( string modFolder, bool exportTmb ) {
-            if( !exportTmb ) return;
+        public virtual void PenumbraExport( string modFolder, bool doExport ) {
+            if( !doExport ) return;
             foreach( var document in Documents ) {
                 document.PenumbraExport( modFolder );
             }
         }
 
-        public virtual void TextoolsExport( BinaryWriter writer, bool exportTmb, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            if( !exportTmb ) return;
+        public virtual void TextoolsExport( BinaryWriter writer, bool doExport, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+            if( !doExport ) return;
             foreach( var document in Documents ) {
                 document.TextoolsExport( writer, simpleParts, ref modOffset );
             }
@@ -187,14 +185,14 @@ namespace VFXEditor.FileManager {
             var rootPath = Path.Combine( saveLocation, PenumbraPath );
             Directory.CreateDirectory( rootPath );
 
-            var tmbId = 0;
-            List<S> tmbMeta = new();
+            var documentIdx = 0;
+            List<S> documentMeta = new();
 
             foreach( var document in Documents ) {
-                var newPath = $"{TempFilePrefix}{tmbId++}.{Extension}";
-                document.WorkspaceExport( tmbMeta, rootPath, newPath );
+                var newPath = $"{TempFilePrefix}{documentIdx++}.{Extension}";
+                document.WorkspaceExport( documentMeta, rootPath, newPath );
             }
-            return tmbMeta.ToArray();
+            return documentMeta.ToArray();
         }
     }
 }

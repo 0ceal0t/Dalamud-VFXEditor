@@ -69,6 +69,9 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Textools##Menu" ) ) TexToolsDialog.Show();
                 ImGui.EndMenu();
             }
+
+            ImGui.Separator();
+
             if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
             if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();

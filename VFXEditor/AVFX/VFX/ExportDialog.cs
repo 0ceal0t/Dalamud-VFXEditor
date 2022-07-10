@@ -3,18 +3,17 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VFXEditor.Dialogs;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class ExportDialog {
-        public AVFXFile Main;
+    public class ExportDialog : GenericDialog {
+        private readonly AVFXFile VFXFile;
         private readonly List<ExportDialogCategory> Categories;
+        private bool ExportDeps = true;
 
-        public bool Visible = false;
-        public bool ExportDeps = true;
-
-        public ExportDialog( AVFXFile main ) {
-            Main = main;
+        public ExportDialog( AVFXFile main ) : base("Export") {
+            VFXFile = main;
             Categories = new List<ExportDialogCategory> {
                 new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ),
                 new ExportDialogCategory<UIEmitter>( main.Emitters, "Emitters" ),
@@ -26,40 +25,31 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public void Show() {
-            Visible = true;
-        }
-
         public void Reset() {
             Categories.ForEach( cat => cat.Reset() );
         }
 
-        public void Draw() {
-            if( !Visible ) return;
-            ImGui.SetNextWindowSize( new Vector2( 500, 500 ), ImGuiCond.FirstUseEver );
-            if( ImGui.Begin( "Export##ExportDialog", ref Visible, ImGuiWindowFlags.NoDocking ) ) {
-                ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
-                ImGui.SameLine();
-                UIHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
-                ImGui.SameLine();
-                if( ImGui.Button( "Reset##ExportDialog" ) ) {
-                    Reset();
-                }
-                ImGui.SameLine();
-                if( ImGui.Button( "Export##ExportDialog" ) ) {
-                    SaveDialog();
-                }
-
-                var maxSize = ImGui.GetContentRegionAvail();
-                ImGui.BeginChild( "##ExportRegion", maxSize, false );
-
-                Categories.ForEach( cat => cat.Draw() );
-                ImGui.EndChild();
+        public override void DrawBody() {
+            ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
+            ImGui.SameLine();
+            UIHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
+            ImGui.SameLine();
+            if( ImGui.Button( "Reset##ExportDialog" ) ) {
+                Reset();
             }
-            ImGui.End();
+            ImGui.SameLine();
+            if( ImGui.Button( "Export##ExportDialog" ) ) {
+                SaveDialog();
+            }
+
+            var maxSize = ImGui.GetContentRegionAvail();
+            ImGui.BeginChild( "##ExportRegion", maxSize, false );
+
+            Categories.ForEach( cat => cat.Draw() );
+            ImGui.EndChild();
         }
 
-        public void Export( UINode node ) {
+        public void ShowDialog( UINode node ) {
             Show();
             Reset();
             foreach( var cat in Categories ) {
@@ -84,7 +74,7 @@ namespace VFXEditor.AVFX.VFX {
                 using var writer = new BinaryWriter( File.Open( res, FileMode.Create ) );
                 var selected = GetSelected();
                 if( ExportDeps ) {
-                    Main.ExportDeps( selected, writer );
+                    VFXFile.ExportDependencies( selected, writer );
                 }
                 else {
                     selected.ForEach( node => node.Write( writer ) );

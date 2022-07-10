@@ -67,6 +67,7 @@ namespace VFXEditor {
                 ResetTextureManager();
                 ResetAvfxManager();
                 ResetTmbManager();
+                ResetPapManager();
 
                 IsLoading = false;
             } );
@@ -109,7 +110,7 @@ namespace VFXEditor {
             IsLoading = true;
 
             ResetTextureManager();
-            var texRootPath = Path.Combine( loadLocation, "Tex" );
+            var texRootPath = Path.Combine( loadLocation, TextureManager.PenumbraPath );
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
                     var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );

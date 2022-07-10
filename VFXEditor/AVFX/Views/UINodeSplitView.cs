@@ -21,6 +21,10 @@ namespace VFXEditor.AVFX.VFX {
         public virtual void OnSelect( T item ) { }
         public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
 
+        public void AddToGroup( T item ) {
+            Group.Add( item );
+        }
+
         public override void DrawControls( string parentId ) {
             IUINodeView<T>.DrawControls( this, Main, Selected, Group, AllowNew, AllowDelete, parentId );
         }

@@ -29,6 +29,8 @@ namespace VFXEditor.Texture {
     }
 
     public partial class TextureManager : GenericDialog {
+        public static readonly string PenumbraPath = "Tex";
+
         private int TEX_ID = 0;
         private readonly ConcurrentDictionary<string, TextureReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
         private readonly ConcurrentDictionary<string, PreviewTexture> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
@@ -94,7 +96,7 @@ namespace VFXEditor.Texture {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
-        public bool ImportTexture( string localPath, string replacePath ) {
+        public bool ImportTexture( string localPath, string replacePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
             try {
                 TextureReplace replaceData;
                 var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
@@ -122,26 +124,23 @@ namespace VFXEditor.Texture {
                     };
                 }
                 else {
-                    ushort mipLevels = 9;
-                    var textureFormat = TextureFormat.DXT5;
-
                     using var surface = Surface.LoadFromFile( localPath );
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
-                    var compFormat = VFXTexture.TextureToCompressionFormat( textureFormat );
+                    var compFormat = VFXTexture.TextureToCompressionFormat( pngFormat );
                     if( compFormat == CompressionFormat.ETC1 ) { // use ETC1 to signify "NULL" because I'm not going to be using it
                         return false;
                     }
 
-                    compressor.Input.SetMipmapGeneration( true, mipLevels ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
+                    compressor.Input.SetMipmapGeneration( true, pngMip ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
                     compressor.Compression.SetBGRAPixelFormat();
                     compressor.Process( out var ddsContainer );
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( textureFormat, ddsContainer, writer, convertToA8: ( textureFormat == TextureFormat.A8 ) );
+                        replaceData = CreateAtex( pngFormat, ddsContainer, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
                     }
                     ddsContainer.Dispose();
                 }

@@ -86,38 +86,46 @@ namespace VFXEditor.AVFX {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 255 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
-            ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
-
-            ImGui.SameLine();
+            // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
-                SourceShow();
-            }
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSource();
             }
             ImGui.PopStyleColor();
             ImGui.PopFont();
+            // Input
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            // Search
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
+                SourceShow();
+            }
+            ImGui.PopFont();
 
+            // Remove
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
+                RemoveReplace();
+            }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
+            // Input
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-
+            // Search
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect", new Vector2( 30, 23 ) ) ) {
                 ReplaceShow();
             }
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveReplace();
-            }
-            ImGui.PopStyleColor();
             ImGui.PopFont();
 
             ImGui.PopItemWidth();
@@ -140,7 +148,7 @@ namespace VFXEditor.AVFX {
                 ImGui.EndPopup();
             }
 
-            // =======SPAWN + EYE =========
+            // ======= SPAWN + EYE =========
             var previewSpawn = Replace.Path;
             var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !Plugin.SpawnExists() ) {
@@ -186,8 +194,7 @@ namespace VFXEditor.AVFX {
                 }
             }
             ImGui.PopFont();
-
-            ImGui.SameLine(); UIHelper.HelpMarker( @"Use the eye icon to enable or disable the VFX overlay. This will show you the positions of most VFXs in the game world, along with their file paths. Note that you may need to enter and exit your current zone to see all of the VFXs" );
+            UIHelper.Tooltip( "VFX path overlay" );
 
             ImGui.Columns( 1 );
             ImGui.Separator();
@@ -227,10 +234,24 @@ namespace VFXEditor.AVFX {
                 ImGui.SameLine();
                 UIHelper.ShowVerifiedStatus( Verified );
 
+                // ======== NODE LIBRARY =======
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ImGui.GetContentRegionAvail().X - 37 );
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Book}" ) ) {
+                    AVFXManager.NodeLibrary.Show();
+                }
+                ImGui.PopFont();
+                UIHelper.Tooltip( "VFX node library" );
+
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
                 CurrentFile.Draw();
             }
+        }
+
+        public void ImportData( string path ) {
+            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.ImportData( path );
         }
 
         protected override void SourceShow() => AVFXManager.SourceSelect.Show();

@@ -57,6 +57,12 @@ namespace VFXEditor.AVFX.VFX {
                 ImportDialog();
             }
 
+            ImGui.Text( "Notes on exporting GLTF models:" );
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Here" ) ) {
+                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
+            }
+
             ImGui.BeginTabBar( "ModelTabs" );
             DrawModel3D( id );
             DrawEmitterVerts( id );

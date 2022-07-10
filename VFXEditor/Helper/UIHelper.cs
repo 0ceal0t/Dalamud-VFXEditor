@@ -1,9 +1,11 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -18,23 +20,20 @@ namespace VFXEditor.Helper {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
 
-        public static bool EnumComboBox( string label, string[] options, ref int choiceIdx ) {
-            var ret = false;
-            if( ImGui.BeginCombo( label, options[choiceIdx] ) ) {
-                for( var idx = 0; idx < options.Length; idx++ ) {
-                    var is_selected = ( choiceIdx == idx );
-                    if( ImGui.Selectable( options[idx], is_selected ) ) {
-                        choiceIdx = idx;
-                        ret = true;
-                    }
+        public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue) {
+            newValue = currentValue;
+            if( ImGui.BeginCombo( label, $"{currentValue}" ) ) {
+                foreach (var option in options ) {
+                    if( ImGui.Selectable( $"{option}", currentValue.Equals( option ) ) ) {
+                        newValue = option;
 
-                    if( is_selected ) {
-                        ImGui.SetItemDefaultFocus();
+                        ImGui.EndCombo();
+                        return true;
                     }
                 }
                 ImGui.EndCombo();
             }
-            return ret;
+            return false;
         }
 
         public static bool DisabledButton( string label, bool enabled, bool small = false ) {
@@ -78,6 +77,10 @@ namespace VFXEditor.Helper {
         public static void HelpMarker( string text ) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.TextDisabled( "(?)" );
+            Tooltip( text );
+        }
+
+        public static void Tooltip( string text ) {
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
@@ -154,6 +157,14 @@ namespace VFXEditor.Helper {
                 FileName = url,
                 UseShellExecute = true
             } );
+        }
+
+        private static readonly Random random = new();
+
+        public static string RandomString( int length ) {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string( Enumerable.Repeat( chars, length )
+                .Select( s => s[random.Next( s.Length )] ).ToArray() );
         }
     }
 }

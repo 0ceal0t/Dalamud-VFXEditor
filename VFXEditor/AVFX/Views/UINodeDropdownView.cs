@@ -3,7 +3,7 @@ using System.IO;
 using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
-    public abstract class UIDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
+    public abstract class UINodeDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
         public AVFXMain AVFX;
         public AVFXFile Main;
         public UINodeGroup<T> Group;
@@ -16,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
         private readonly bool AllowNew;
         private readonly bool AllowDelete;
 
-        public UIDropdownView( AVFXFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
+        public UINodeDropdownView( AVFXFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
             Main = main;
             AVFX = avfx;
             Id = id;
@@ -30,6 +30,10 @@ namespace VFXEditor.AVFX.VFX {
         public abstract void OnExport( BinaryWriter writer, T item );
         public virtual void OnSelect( T item ) { }
         public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
+
+        public void AddToGroup( T item ) {
+            Group.Add( item );
+        }
 
         public override void Draw( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

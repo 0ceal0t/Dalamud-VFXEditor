@@ -36,8 +36,6 @@ namespace VFXEditor {
         public static DataManager DataManager { get; private set; }
         public static TargetManager TargetManager { get; private set; }
 
-        public static BaseVfx SpawnVFX { get; private set; }
-
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static AVFXManager AvfxManager { get; private set; }

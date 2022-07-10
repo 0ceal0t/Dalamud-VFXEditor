@@ -7,13 +7,36 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {
     public partial class TextureManager {
-        private string newCustomPath = string.Empty;
+        private string NewCustomPath = string.Empty;
+        private int PngMip = 9;
+        private TextureFormat PngFormat = TextureFormat.DXT5;
+        private static readonly TextureFormat[] ValidPngFormat = new[] { TextureFormat.DXT5, TextureFormat.DXT3, TextureFormat.DXT1, TextureFormat.A8, TextureFormat.A8R8G8B8 };
 
         public override void DrawBody() {
             var id = "##ImportTex";
 
-            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
-            ImGui.BeginChild( id + "/Child", new Vector2( 0, -( footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
+            ImGui.SetNextItemWidth( ImGui.GetWindowContentRegionWidth() - 140 );
+            ImGui.InputText( $"Path{id}-Input", ref NewCustomPath, 255 );
+
+            ImGui.SameLine();
+            if( ImGui.Button( $"Import Texture{id}" ) ) {
+                var path = NewCustomPath.Trim().Trim( '\0' ).ToLower();
+                if( !string.IsNullOrEmpty( path ) && !PathToTextureReplace.ContainsKey( path ) ) {
+                    ImportDialog( path );
+                }
+            }
+
+            ImGui.SetNextItemWidth( 200 );
+            ImGui.InputInt( $"PNG Mip Levels{id}", ref PngMip );
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 200 );
+            if( UIHelper.EnumComboBox( $"PNG Format{id}", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
+                PngFormat = newPngFormat;
+            }
+
+            // ======= DISPLAY IMPORTED TEXTURES =============
+
+            ImGui.BeginChild( id + "/Child", new Vector2( -1, -1 ), true );
 
             if( PathToTextureReplace.IsEmpty ) {
                 ImGui.Text( "No textures have been imported..." );
@@ -30,18 +53,6 @@ namespace VFXEditor.Texture {
             }
 
             ImGui.EndChild();
-
-
-            ImGui.SetNextItemWidth( ImGui.GetWindowContentRegionWidth() - 140 );
-            ImGui.InputText( $"Path{id}-Input", ref newCustomPath, 255 );
-
-            ImGui.SameLine();
-            if( ImGui.Button( $"Import Texture##{id}" ) ) {
-                var path = newCustomPath.Trim().Trim( '\0' ).ToLower();
-                if (!string.IsNullOrEmpty(path) && !PathToTextureReplace.ContainsKey(path)) {
-                    ImportDialog( path );
-                }
-            }
         }
 
         public void DrawTexture( string path, string id ) {
@@ -80,7 +91,7 @@ namespace VFXEditor.Texture {
             FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( !ImportTexture( res, newPath ) ) {
+                    if( !ImportTexture( res, newPath, pngMip: (ushort) PngMip, pngFormat: PngFormat ) ) {
                         PluginLog.Error( $"Could not import" );
                     }
                 }

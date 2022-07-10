@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.Dialogs;
+using VFXEditor.NodeLibrary;
 using VFXSelect;
 
 namespace VFXEditor {
@@ -33,6 +34,10 @@ namespace VFXEditor {
 
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
+
+        public List<VFXNodeLibraryItem> VFXNodeLibraryItems = new();
+
+        // ========================
 
         public Configuration() : base( "Settings" ) {
             Size = new Vector2( 300, 150 );

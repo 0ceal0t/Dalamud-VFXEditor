@@ -2,6 +2,8 @@ using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor {
     public unsafe partial class Plugin {
+        public static BaseVfx SpawnVFX { get; private set; }
+
         public static void RemoveSpawnVfx() {
             SpawnVFX?.Remove();
             SpawnVFX = null;
@@ -26,8 +28,6 @@ namespace VFXEditor {
             SpawnVFX = null;
         }
 
-        public static bool SpawnExists() {
-            return SpawnVFX != null;
-        }
+        public static bool SpawnExists() => SpawnVFX != null;
     }
 }

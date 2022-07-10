@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
@@ -169,11 +170,20 @@ namespace VFXEditor.AVFX.VFX {
 
         // ========= EXPORT ==============
 
-        public void ExportDeps( UINode startNode, BinaryWriter bw ) {
-            ExportDeps( new List<UINode>( new[] { startNode } ), bw );
+        public void AddToNodeLibrary( UINode node ) {
+            var newPath = AVFXManager.NodeLibrary.GetNextPath();
+            using var writer = new BinaryWriter( File.Open( newPath, FileMode.Create ) );
+            var numberOfNodes = ExportDependencies( node, writer );
+            AVFXManager.NodeLibrary.Add( node.GetText(), newPath, numberOfNodes );
         }
 
-        public void ExportDeps( List<UINode> startNodes, BinaryWriter bw ) {
+        public void ShowExportDialog( UINode node ) => ExportUI.ShowDialog( node );
+
+        public int ExportDependencies( UINode startNode, BinaryWriter bw ) {
+            return ExportDependencies( new List<UINode>( new[] { startNode } ), bw );
+        }
+
+        public int ExportDependencies( List<UINode> startNodes, BinaryWriter bw ) {
             var visited = new HashSet<UINode>();
             var nodes = new List<UINode>();
             foreach( var startNode in startNodes ) {
@@ -201,6 +211,8 @@ namespace VFXEditor.AVFX.VFX {
                 n.Idx = IdxSave[n];
             }
             UpdateAllNodes( nodes );
+
+            return nodes.Count;
         }
 
         public void RecurseChild( UINode node, List<UINode> output, HashSet<UINode> visited ) {
@@ -256,9 +268,9 @@ namespace VFXEditor.AVFX.VFX {
             reader.ReadInt32(); // first name
             var firstSize = reader.ReadInt32();
 
-            var has_dependencies = totalSize > ( firstSize + 8 + 4 );
-            PluginLog.Log( $"Has dependencies: {has_dependencies}" );
-            if( has_dependencies ) {
+            var hasDependencies = totalSize > ( firstSize + 8 + 4 );
+            PluginLog.Log( $"Has dependencies: {hasDependencies}" );
+            if( hasDependencies ) {
                 PreImportGroups();
             }
 
@@ -272,7 +284,9 @@ namespace VFXEditor.AVFX.VFX {
             List<NodePosition> emitters = new();
             List<NodePosition> timelines = new();
 
+            var finalNodeName = "";
             AVFXBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+                finalNodeName = _name;
                 switch( _name ) {
                     case "Modl":
                         models.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
@@ -300,33 +314,18 @@ namespace VFXEditor.AVFX.VFX {
             }, ( int )totalSize );
 
             // Import items in a specific order
-            foreach( var pos in models ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                ModelView.Group.Add( ModelView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in textures ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                TextureView.Group.Add( TextureView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in binders ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                BinderView.Group.Add( BinderView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in effectors ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                EffectorView.Group.Add( EffectorView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in particles ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                ParticleView.Group.Add( ParticleView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in emitters ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                EmitterView.Group.Add( EmitterView.OnImport( reader, pos.Size, has_dependencies ) );
-            }
-            foreach( var pos in timelines ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                TimelineView.Group.Add( TimelineView.OnImport( reader, pos.Size, has_dependencies ) );
+            ImportGroup( models, reader, ModelView, hasDependencies );
+            ImportGroup( textures, reader, TextureView, hasDependencies );
+            ImportGroup( binders, reader, BinderView, hasDependencies );
+            ImportGroup( effectors, reader, EffectorView, hasDependencies );
+            ImportGroup( particles, reader, ParticleView, hasDependencies );
+            ImportGroup( emitters, reader, EmitterView, hasDependencies );
+            ImportGroup( timelines, reader, TimelineView, hasDependencies );
+        }
+
+        private static void ImportGroup<T>(List<NodePosition> positions, BinaryReader reader, IUINodeView<T> view, bool hasDependencies) where T : UINode {
+            foreach( var pos in positions ) {
+                view.Import( reader, pos.Position, pos.Size, "", hasDependencies );
             }
         }
 
@@ -334,9 +333,7 @@ namespace VFXEditor.AVFX.VFX {
             AllGroups.ForEach( group => group.PreImport() );
         }
 
-        public void ExportMultiple( UINode node ) {
-            ExportUI.Export( node );
-        }
+        // =====================
 
         public static void ExportDialog( UINode node ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
@@ -360,7 +357,7 @@ namespace VFXEditor.AVFX.VFX {
             } );
         }
 
-        private struct NodePosition {
+        public struct NodePosition {
             public long Position;
             public int Size;
 

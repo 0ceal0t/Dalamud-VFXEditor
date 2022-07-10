@@ -36,7 +36,6 @@ namespace VFXEditor.DirectX {
         private readonly InputLayout Layout;
 
         public GradientView( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
-
             RefreshRasterizeState();
             ResizeResources();
 

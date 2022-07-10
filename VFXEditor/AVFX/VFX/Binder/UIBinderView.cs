@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Binder;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIBinderView : UIDropdownView<UIBinder> {
+    public class UIBinderView : UINodeDropdownView<UIBinder> {
         public UIBinderView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath: "binder_default.vfxedit" ) {
             Group = main.Binders;
             Group.Items = AVFX.Binders.Select( item => new UIBinder( Main, item ) ).ToList();

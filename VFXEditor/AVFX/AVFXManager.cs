@@ -1,5 +1,6 @@
 using VFXEditor.AVFX.VFX;
 using VFXEditor.FileManager;
+using VFXEditor.NodeLibrary;
 using VFXSelect;
 using VFXSelect.VFX;
 
@@ -7,6 +8,7 @@ namespace VFXEditor.AVFX {
     public class AVFXManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
         public static VFXSelectDialog SourceSelect { get; private set; }
         public static VFXSelectDialog ReplaceSelect { get; private set; }
+        public static VFXNodeLibrary NodeLibrary { get; private set; }
 
         public static void Setup() {
             SourceSelect = new VFXSelectDialog(
@@ -33,6 +35,7 @@ namespace VFXEditor.AVFX {
                 spawnOnSelf: Plugin.SpawnOnSelf,
                 spawnOnTarget: Plugin.SpawnOnTarget
             );
+            NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
@@ -64,7 +67,10 @@ namespace VFXEditor.AVFX {
         public override void DrawBody() {
             SourceSelect.Draw();
             ReplaceSelect.Draw();
+            NodeLibrary.Draw();
             base.DrawBody();
         }
+
+        public void ImportData( string path ) => ActiveDocument.ImportData( path );
     }
 }

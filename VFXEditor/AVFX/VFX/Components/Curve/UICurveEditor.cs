@@ -269,8 +269,8 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         private class CurvePoint {
-            public static readonly string[] TypeOptions = Enum.GetNames( typeof( KeyType ) );
-            public int TypeIdx;
+            public static readonly KeyType[] KeyTypeOptions = ( KeyType[] )Enum.GetValues( typeof( KeyType ) );
+
             public double X;
             public double Y;
             public bool Color;
@@ -282,7 +282,6 @@ namespace VFXEditor.AVFX.VFX {
                 Editor = editor;
                 Key = key;
                 Color = color;
-                TypeIdx = Array.IndexOf( TypeOptions, Key.Type.ToString() );
                 if( !Color ) {
                     X = key.Time;
                     Y = key.Z;
@@ -370,8 +369,7 @@ namespace VFXEditor.AVFX.VFX {
                     Editor.UpdateColor();
                 }
 
-                if( UIHelper.EnumComboBox( "Type" + id, TypeOptions, ref TypeIdx ) ) {
-                    _ = Enum.TryParse( TypeOptions[TypeIdx], out KeyType newKeyType );
+                if (UIHelper.EnumComboBox( "Type" + id, KeyTypeOptions, Key.Type, out var newKeyType ) ) {
                     Key.Type = newKeyType;
                 }
 

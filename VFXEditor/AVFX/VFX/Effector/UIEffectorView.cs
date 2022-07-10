@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIEffectorView : UIDropdownView<UIEffector> {
+    public class UIEffectorView : UINodeDropdownView<UIEffector> {
         public UIEffectorView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##EFFCT", "Select an Effector", defaultPath: "effector_default.vfxedit" ) {
             Group = main.Effectors;
             Group.Items = AVFX.Effectors.Select( item => new UIEffector( Main, item ) ).ToList();

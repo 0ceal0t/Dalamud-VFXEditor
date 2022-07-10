@@ -5,15 +5,16 @@ namespace VFXEditor.Dialogs {
 
     public abstract class GenericDialog {
         protected bool Visible = false;
-        protected string DialogName;
-        protected Vector2 Size = new( 600, 400 );
-        protected bool MenuBar = false;
+        protected string Name;
+        protected Vector2 Size;
+        protected bool MenuBar;
 
         public bool IsVisible => Visible;
 
-        public GenericDialog( string name, bool menuBar = false ) {
-            DialogName = name;
+        public GenericDialog( string name, bool menuBar = false, int startingHeight = 600, int startingWidth = 400 ) {
+            Name = name;
             MenuBar = menuBar;
+            Size = new( startingHeight, startingWidth );
         }
 
         public void Show() {
@@ -36,7 +37,7 @@ namespace VFXEditor.Dialogs {
             if( !Visible ) return;
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( DialogName, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( Name, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
                 DrawBody();
             }
             ImGui.End();
