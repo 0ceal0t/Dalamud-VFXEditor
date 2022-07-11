@@ -9,6 +9,7 @@ namespace VFXEditor.AVFX.VFX {
         public void OnDelete( T item );
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
         public void AddToGroup( T item );
+
         public void Import( BinaryReader reader, long position, int size, string renamed, bool hasDependencies) {
             reader.BaseStream.Seek( position, SeekOrigin.Begin );
             var newItem = OnImport( reader, size, hasDependencies );
@@ -16,8 +17,8 @@ namespace VFXEditor.AVFX.VFX {
             AddToGroup( newItem );
         }
 
-        public void ControlDelete();
-        public void ControlCreate();
+        public void DeleteSelected();
+        public void CreateDefault();
 
         public static void DrawControls( IUINodeView<T> nodeView, AVFXFile vfxFile, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
             ImGui.PushFont( UiBuilder.IconFont );
@@ -30,7 +31,7 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + Id ) ) {
-                    ImGui.OpenPopup( "Save_Popup" + Id );
+                    vfxFile.ShowExportDialog( selected );
                 }
 
                 ImGui.SameLine();
@@ -49,17 +50,18 @@ namespace VFXEditor.AVFX.VFX {
                     group.Remove( selected );
                     selected.DeleteNode();
                     nodeView.OnDelete( selected );
-                    nodeView.ControlDelete();
+                    nodeView.DeleteSelected();
                 }
             }
             ImGui.PopFont();
+
             // ===== NEW =====
             if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
-                if( ImGui.Selectable( "Create" + Id ) ) {
-                    nodeView.ControlCreate();
+                if( ImGui.Selectable( "Default" + Id ) ) {
+                    nodeView.CreateDefault();
                 }
                 if( ImGui.Selectable( "Import" + Id ) ) {
-                    vfxFile.ImportDialog();
+                    vfxFile.ShowImportDialog();
                 }
                 if( selected != null && ImGui.Selectable( "Duplicate" + Id ) ) {
                     using var ms = new MemoryStream();
@@ -70,17 +72,9 @@ namespace VFXEditor.AVFX.VFX {
                     reader.BaseStream.Seek( 0, SeekOrigin.Begin );
                     reader.ReadInt32(); // Name
                     var size = reader.ReadInt32();
-                    group.Add( nodeView.OnImport( reader, size ) );
-                }
-                ImGui.EndPopup();
-            }
-            // ==== SAVE =====
-            if( ImGui.BeginPopup( "Save_Popup" + Id ) ) {
-                if( ImGui.Selectable( "Export" + Id ) ) {
-                    vfxFile.ShowExportDialog( selected );
-                }
-                if( ImGui.Selectable( "Simple Export (old)" + Id ) ) {
-                    AVFXFile.ExportDialog( selected );
+                    var newNode = nodeView.OnImport( reader, size );
+                    newNode.Renamed = selected.Renamed;
+                    group.Add( newNode );
                 }
                 ImGui.EndPopup();
             }

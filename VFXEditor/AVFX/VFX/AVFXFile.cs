@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Linq;
+using System.Text;
 using VFXEditor.AVFXLib;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class AVFXFile {
@@ -172,18 +175,52 @@ namespace VFXEditor.AVFX.VFX {
 
         public void AddToNodeLibrary( UINode node ) {
             var newPath = AVFXManager.NodeLibrary.GetNextPath();
-            using var writer = new BinaryWriter( File.Open( newPath, FileMode.Create ) );
-            var numberOfNodes = ExportDependencies( node, writer );
-            AVFXManager.NodeLibrary.Add( node.GetText(), newPath, numberOfNodes );
+            Export( node, newPath, true );
+            AVFXManager.NodeLibrary.Add( node.GetText(), newPath );
         }
 
-        public void ShowExportDialog( UINode node ) => ExportUI.ShowDialog( node );
+        public void Export( UINode node, string path, bool exportDependencies) => Export( new List<UINode> { node }, path, exportDependencies );
 
-        public int ExportDependencies( UINode startNode, BinaryWriter bw ) {
-            return ExportDependencies( new List<UINode>( new[] { startNode } ), bw );
+        public void Export( List<UINode> nodes, string path, bool exportDependencies ) {
+            using var writer = new BinaryWriter( File.Open( path, FileMode.Create ) );
+
+            writer.Write( 2 ); // Magic :)
+            writer.Write( exportDependencies );
+
+            var placeholderPos = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder, number of items
+            writer.Write( 0 ); // placeholder, data size
+            writer.Write( 0 ); // placeholder, rename offset
+
+            var finalNodes = nodes;
+            var dataPos = writer.BaseStream.Position;
+            if (exportDependencies) {
+                finalNodes = ExportDependencies( nodes, writer );
+            }
+            else {
+                // leave nodes as-is
+                finalNodes.ForEach( n => n.Write( writer ) );
+            }
+            var size = writer.BaseStream.Position - dataPos;
+
+            var renames = finalNodes.Select( n => n.Renamed );
+            var renamedOffset = writer.BaseStream.Position;
+            var numberOfItems = finalNodes.Count;
+
+            foreach(var renamed in renames) {
+                FileHelper.WriteString( writer, string.IsNullOrEmpty(renamed) ? "" : renamed, true );
+            }
+            var finalPos = writer.BaseStream.Position;
+
+            // go back and fill out placeholders
+            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.Write( numberOfItems );
+            writer.Write( (int) size );
+            writer.Write( (int) renamedOffset );
+            writer.BaseStream.Seek( finalPos, SeekOrigin.Begin );
         }
 
-        public int ExportDependencies( List<UINode> startNodes, BinaryWriter bw ) {
+        private List<UINode> ExportDependencies( List<UINode> startNodes, BinaryWriter bw ) {
             var visited = new HashSet<UINode>();
             var nodes = new List<UINode>();
             foreach( var startNode in startNodes ) {
@@ -207,15 +244,15 @@ namespace VFXEditor.AVFX.VFX {
             foreach( var n in nodes ) {
                 n.Write( bw );
             }
-            foreach( var n in nodes ) {
+            foreach( var n in nodes ) { // reset index
                 n.Idx = IdxSave[n];
             }
             UpdateAllNodes( nodes );
 
-            return nodes.Count;
+            return nodes;
         }
 
-        public void RecurseChild( UINode node, List<UINode> output, HashSet<UINode> visited ) {
+        private void RecurseChild( UINode node, List<UINode> output, HashSet<UINode> visited ) {
             if( visited.Contains( node ) ) return; // prevents infinite loop
             visited.Add( node );
 
@@ -226,7 +263,7 @@ namespace VFXEditor.AVFX.VFX {
             output.Add( node );
         }
 
-        public static void OrderByType<T>( List<UINode> items ) where T : UINode {
+        private static void OrderByType<T>( List<UINode> items ) where T : UINode {
             var i = 0;
             foreach( var node in items ) {
                 if( node is T ) {
@@ -236,7 +273,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public static void UpdateAllNodes( List<UINode> nodes ) {
+        private static void UpdateAllNodes( List<UINode> nodes ) {
             foreach( var n in nodes ) {
                 foreach( var s in n.Selectors ) {
                     s.UpdateNode();
@@ -253,28 +290,48 @@ namespace VFXEditor.AVFX.VFX {
 
         // ========= IMPORT ==============
 
-        public void ImportData( string path ) {
+        public void Import( string path ) {
+            var ext = Path.GetExtension( path );
             using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
-            ImportData( reader );
+
+            if (ext == ".vfxedit") { // OLD METHOD
+                var dataSize = reader.BaseStream.Length;
+
+                if( dataSize < 8 ) return;
+                reader.ReadInt32(); // first name
+                var firstSize = reader.ReadInt32();
+                var hasDependencies = dataSize > ( firstSize + 8 + 4 );
+
+                reader.BaseStream.Seek( 0, SeekOrigin.Begin ); // reset position
+                Import( reader, ( int )dataSize, hasDependencies, null );
+            }
+            else { // NEW METHOD
+                reader.ReadInt32(); // magic
+                var hasDependencies = reader.ReadBoolean();
+                var numberOfItems = reader.ReadInt32();
+                var dataSize = reader.ReadInt32();
+                var renamedOffset = reader.ReadInt32();
+
+                if( dataSize < 8 ) return;
+
+                var dataOffset = reader.BaseStream.Position;
+                reader.BaseStream.Seek( renamedOffset, SeekOrigin.Begin );
+                List<string> renames = new();
+
+                for( var i = 0; i < numberOfItems; i++ ) {
+                    var r = FileHelper.ReadString( reader );
+                    renames.Add( FileHelper.ReadString( reader ) );
+                }
+
+                reader.BaseStream.Seek( dataOffset, SeekOrigin.Begin );
+                Import( reader, dataSize, hasDependencies, renames );
+            }
         }
 
-        public void ImportData( byte[] data ) {
-            ImportData( new BinaryReader( new MemoryStream( data ) ) );
-        }
-
-        public void ImportData( BinaryReader reader ) {
-            var totalSize = reader.BaseStream.Length;
-            if( totalSize < 8 ) return;
-            reader.ReadInt32(); // first name
-            var firstSize = reader.ReadInt32();
-
-            var hasDependencies = totalSize > ( firstSize + 8 + 4 );
-            PluginLog.Log( $"Has dependencies: {hasDependencies}" );
+        private void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
             if( hasDependencies ) {
                 PreImportGroups();
             }
-
-            reader.BaseStream.Seek( 0, SeekOrigin.Begin ); // reset position
 
             List<NodePosition> models = new();
             List<NodePosition> textures = new();
@@ -284,34 +341,35 @@ namespace VFXEditor.AVFX.VFX {
             List<NodePosition> emitters = new();
             List<NodePosition> timelines = new();
 
-            var finalNodeName = "";
+            var idx = 0;
             AVFXBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                finalNodeName = _name;
+                var renamed = renames == null ? "" : renames[idx];
                 switch( _name ) {
                     case "Modl":
-                        models.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        models.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "Tex":
-                        textures.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        textures.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "Bind":
-                        binders.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        binders.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "Efct":
-                        effectors.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        effectors.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "Ptcl":
-                        particles.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        particles.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "Emit":
-                        emitters.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        emitters.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                     case "TmLn":
-                        timelines.Add( new NodePosition( _reader.BaseStream.Position, _size ) );
+                        timelines.Add( new NodePosition( _reader.BaseStream.Position, _size, renamed ) );
                         break;
                 }
                 _reader.ReadBytes( _size ); // skip it for now, we'll come back later
-            }, ( int )totalSize );
+                idx++;
+            }, size );
 
             // Import items in a specific order
             ImportGroup( models, reader, ModelView, hasDependencies );
@@ -325,31 +383,23 @@ namespace VFXEditor.AVFX.VFX {
 
         private static void ImportGroup<T>(List<NodePosition> positions, BinaryReader reader, IUINodeView<T> view, bool hasDependencies) where T : UINode {
             foreach( var pos in positions ) {
-                view.Import( reader, pos.Position, pos.Size, "", hasDependencies );
+                view.Import( reader, pos.Position, pos.Size, pos.Renamed, hasDependencies );
             }
         }
 
-        public void PreImportGroups() {
+        private void PreImportGroups() {
             AllGroups.ForEach( group => group.PreImport() );
         }
 
         // =====================
 
-        public static void ExportDialog( UINode node ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
-                if( !ok ) return;
+        public void ShowExportDialog( UINode node ) => ExportUI.ShowDialog( node );
 
-                using var fs = File.OpenWrite( res );
-                using var writer = new BinaryWriter( fs );
-                node.Write( writer );
-            } );
-        }
-
-        public void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit,.*", ( bool ok, string res ) => {
+        public void ShowImportDialog() {
+            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit|.vfxedit2,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    ImportData( res );
+                    Import( res );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( "Could not import data", e );
@@ -357,13 +407,15 @@ namespace VFXEditor.AVFX.VFX {
             } );
         }
 
-        public struct NodePosition {
+        private struct NodePosition {
             public long Position;
             public int Size;
+            public string Renamed;
 
-            public NodePosition( long position, int size ) {
+            public NodePosition( long position, int size, string rename ) {
                 Position = position;
                 Size = size;
+                Renamed = rename;
             }
         }
     }

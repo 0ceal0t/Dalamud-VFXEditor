@@ -10,7 +10,7 @@ namespace VFXEditor.AVFX.VFX {
     public class ExportDialog : GenericDialog {
         private readonly AVFXFile VFXFile;
         private readonly List<ExportDialogCategory> Categories;
-        private bool ExportDeps = true;
+        private bool ExportDependencies = true;
 
         public ExportDialog( AVFXFile main ) : base("Export") {
             VFXFile = main;
@@ -30,7 +30,7 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void DrawBody() {
-            ImGui.Checkbox( "Export Dependencies", ref ExportDeps );
+            ImGui.Checkbox( "Export Dependencies", ref ExportDependencies );
             ImGui.SameLine();
             UIHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
             ImGui.SameLine();
@@ -52,9 +52,9 @@ namespace VFXEditor.AVFX.VFX {
         public void ShowDialog( UINode node ) {
             Show();
             Reset();
-            foreach( var cat in Categories ) {
-                if( cat.Belongs( node ) ) {
-                    cat.Select( node );
+            foreach( var category in Categories ) {
+                if( category.Belongs( node ) ) {
+                    category.Select( node );
                     break;
                 }
             }
@@ -62,23 +62,16 @@ namespace VFXEditor.AVFX.VFX {
 
         public List<UINode> GetSelected() {
             var result = new List<UINode>();
-            foreach( var cat in Categories ) {
-                result.AddRange( cat.Selected );
+            foreach( var category in Categories ) {
+                result.AddRange( category.Selected );
             }
             return result;
         }
 
         public void SaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit,.*", "ExportedVfx", "vfxedit", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
-                using var writer = new BinaryWriter( File.Open( res, FileMode.Create ) );
-                var selected = GetSelected();
-                if( ExportDeps ) {
-                    VFXFile.ExportDependencies( selected, writer );
-                }
-                else {
-                    selected.ForEach( node => node.Write( writer ) );
-                }
+                VFXFile.Export( GetSelected(), res, ExportDependencies );
                 Visible = false;
             } );
         }

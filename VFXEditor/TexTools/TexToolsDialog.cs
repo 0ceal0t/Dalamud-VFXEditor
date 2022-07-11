@@ -40,7 +40,7 @@ namespace VFXEditor.TexTools {
             Size = new Vector2( 400, 200 );
         }
 
-        private string Name = "";
+        private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";
         private bool ExportVfx = true;
@@ -53,7 +53,7 @@ namespace VFXEditor.TexTools {
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
-            ImGui.InputText( "Mod Name" + id, ref Name, 255 );
+            ImGui.InputText( "Mod Name" + id, ref ModName, 255 );
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
@@ -70,7 +70,7 @@ namespace VFXEditor.TexTools {
         }
 
         private void SaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", Name, "ttmp2", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Visible = false;
@@ -95,7 +95,7 @@ namespace VFXEditor.TexTools {
 
                 var mod = new TTMPL {
                     TTMPVersion = "1.3s",
-                    Name = Name,
+                    Name = ModName,
                     Author = Author,
                     Version = Version,
                     Description = null,

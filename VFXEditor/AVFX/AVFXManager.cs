@@ -71,6 +71,6 @@ namespace VFXEditor.AVFX {
             base.DrawBody();
         }
 
-        public void ImportData( string path ) => ActiveDocument.ImportData( path );
+        public void ImportData( string path ) => ActiveDocument.Import( path );
     }
 }

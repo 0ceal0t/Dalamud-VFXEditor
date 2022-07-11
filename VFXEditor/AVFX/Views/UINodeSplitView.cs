@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
         public override void DrawLeftCol( string parentId ) {
             for( var idx = 0; idx < Group.Items.Count; idx++ ) {
                 var item = Group.Items[idx];
-                if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
+                if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
                     Selected = item;
                     OnSelect( item );
                 }
@@ -45,11 +45,11 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public void ControlDelete() {
+        public void DeleteSelected() {
             Selected = null;
         }
 
-        public void ControlCreate() {
+        public void CreateDefault() {
             Group.Add( OnNew() );
         }
     }

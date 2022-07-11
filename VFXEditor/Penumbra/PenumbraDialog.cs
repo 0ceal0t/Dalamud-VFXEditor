@@ -26,7 +26,7 @@ namespace VFXEditor.Penumbra {
             Size = new Vector2( 400, 200 );
         }
 
-        private string Name = "";
+        private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";
         private bool ExportVfx = true;
@@ -40,7 +40,7 @@ namespace VFXEditor.Penumbra {
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
 
-            ImGui.InputText( "Mod Name" + id, ref Name, 255 );
+            ImGui.InputText( "Mod Name" + id, ref ModName, 255 );
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
@@ -57,7 +57,7 @@ namespace VFXEditor.Penumbra {
         }
 
         private void SaveDialog() {
-            FileDialogManager.SaveFolderDialog( "Select a Save Location", Name, ( bool ok, string res ) => {
+            FileDialogManager.SaveFolderDialog( "Select a Save Location", ModName, ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Visible = false;
@@ -67,7 +67,7 @@ namespace VFXEditor.Penumbra {
         private void Export( string modFolder ) {
             try {
                 var mod = new PenumbraMod {
-                    Name = Name,
+                    Name = ModName,
                     Author = Author,
                     Description = "Exported from VFXEditor",
                     Version = Version,

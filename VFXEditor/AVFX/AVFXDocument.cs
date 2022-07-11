@@ -250,8 +250,8 @@ namespace VFXEditor.AVFX {
             }
         }
 
-        public void ImportData( string path ) {
-            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.ImportData( path );
+        public void Import( string path ) {
+            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
         }
 
         protected override void SourceShow() => AVFXManager.SourceSelect.Show();

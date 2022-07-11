@@ -54,8 +54,9 @@ namespace VFXEditor.AVFX.VFX {
         public void ViewSelect() {
             var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
             if( ImGui.BeginCombo( Id + "-Select", selectedString ) ) {
-                foreach( var item in Group.Items ) {
-                    if( ImGui.Selectable( item.GetText() + Id, Selected == item ) ) {
+                for(var idx = 0; idx < Group.Items.Count; idx++) {
+                    var item = Group.Items[idx];
+                    if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
                         Selected = item;
                         OnSelect( item );
                     }
@@ -64,12 +65,12 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public void ControlDelete() {
+        public void DeleteSelected() {
             Selected = null;
         }
 
-        public void ControlCreate() {
-            Main.ImportData( DefaultPath );
+        public void CreateDefault() {
+            Main.Import( DefaultPath );
         }
     }
 }

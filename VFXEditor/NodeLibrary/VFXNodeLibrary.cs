@@ -42,9 +42,9 @@ namespace VFXEditor.NodeLibrary {
             ImGui.EndChild();
         }
 
-        public string GetNextPath() => Path.Combine( RootPath, $"VFX_NodeLibrary_{Items.Count}.vfxedit" );
+        public string GetNextPath() => Path.Combine( RootPath, $"VFX_NodeLibrary_{Items.Count}.vfxedit2" );
 
-        public unsafe void Add( string name, string path, int numberOfNodes ) {
+        public unsafe void Add( string name, string path ) {
             Items.Add( new VFXNodeLibraryItem( name, UIHelper.RandomString(12), path, "", *ImGui.GetStyleColorVec4( ImGuiCol.Header ) ) );
             Save();
         }

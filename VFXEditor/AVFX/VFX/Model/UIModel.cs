@@ -46,7 +46,7 @@ namespace VFXEditor.AVFX.VFX {
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    AVFXFile.ExportDialog( this );
+                    Main.ShowExportDialog( this );
                 }
                 ImGui.EndPopup();
             }
