@@ -158,7 +158,7 @@ namespace VFXEditor.PAP {
                 if( ok ) {
                     PAPManager.IndexDialog.OnOk = ( int idx ) => {
                         var newAnim = new PAPAnimation( HkxTempLocation );
-                        newAnim.ReadTmb( Path.Combine( Plugin.TemplateLocation, "Files", "default_pap_tmb.tmb" ) );
+                        newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
                         Animations.Add( newAnim );
                         RefreshHavokIndexes();
 

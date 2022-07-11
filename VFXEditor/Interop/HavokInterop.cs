@@ -20,7 +20,7 @@ namespace VFXEditor.Interop {
             var startInfo = new ProcessStartInfo {
                 CreateNoWindow = false,
                 UseShellExecute = false,
-                FileName = Path.Combine( Plugin.TemplateLocation, "Files", "animassist.exe" ),
+                FileName = Path.Combine( Plugin.RootLocation, "Files", "animassist.exe" ),
                 WindowStyle = ProcessWindowStyle.Hidden,
                 Arguments = arguments
             };

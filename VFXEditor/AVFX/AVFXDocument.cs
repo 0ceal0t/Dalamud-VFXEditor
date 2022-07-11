@@ -262,7 +262,7 @@ namespace VFXEditor.AVFX {
             var newResult = new SelectResult {
                 DisplayString = "[NEW]",
                 Type = SelectResultType.Local,
-                Path = Path.Combine( Plugin.TemplateLocation, "Files", path )
+                Path = Path.Combine( Plugin.RootLocation, "Files", path )
             };
             SetSource( newResult );
         }

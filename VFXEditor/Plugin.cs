@@ -17,7 +17,6 @@ using VFXEditor.DirectX;
 using VFXEditor.Interop;
 using VFXEditor.PAP;
 using VFXEditor.Penumbra;
-using VFXEditor.Structs.Vfx;
 using VFXEditor.TexTools;
 using VFXEditor.Texture;
 using VFXEditor.TMB;
@@ -49,8 +48,7 @@ namespace VFXEditor {
         public static PenumbraDialog PenumbraDialog { get; private set; }
 
         public string Name => "VFXEditor";
-        public string AssemblyLocation { get; set; } = Assembly.GetExecutingAssembly().Location;
-        public static string TemplateLocation { get; private set; }
+        public static string RootLocation { get; private set; }
         private const string CommandName = "/vfxedit";
 
         public Plugin(
@@ -76,15 +74,15 @@ namespace VFXEditor {
 
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
-            TemplateLocation = Path.GetDirectoryName( AssemblyLocation );
+            RootLocation = PluginInterface.AssemblyLocation.DirectoryName;
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
             SheetManager.Initialize(
-                Path.Combine( TemplateLocation, "Files", "npc.csv" ),
-                Path.Combine( TemplateLocation, "Files", "monster_vfx.json" ),
-                Path.Combine( TemplateLocation, "Files", "vfx_misc.txt" ),
+                Path.Combine( RootLocation, "Files", "npc.csv" ),
+                Path.Combine( RootLocation, "Files", "monster_vfx.json" ),
+                Path.Combine( RootLocation, "Files", "vfx_misc.txt" ),
                 DataManager,
                 PluginInterface
             );

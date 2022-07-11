@@ -8,7 +8,6 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Dialogs;
-using VFXEditor.Helper;
 
 namespace VFXEditor.NodeLibrary {
     public class VFXNodeLibrary : GenericDialog {
@@ -42,10 +41,10 @@ namespace VFXEditor.NodeLibrary {
             ImGui.EndChild();
         }
 
-        public string GetNextPath() => Path.Combine( RootPath, $"VFX_NodeLibrary_{Items.Count}.vfxedit2" );
+        public string GetPath( string id ) => Path.Combine( RootPath, $"VFX_NodeLibrary_{id}.vfxedit2" );
 
-        public unsafe void Add( string name, string path ) {
-            Items.Add( new VFXNodeLibraryItem( name, UIHelper.RandomString(12), path, "", *ImGui.GetStyleColorVec4( ImGuiCol.Header ) ) );
+        public unsafe void Add( string name, string id, string path ) {
+            Items.Add( new VFXNodeLibraryItem( name, id, path, "", *ImGui.GetStyleColorVec4( ImGuiCol.Header ) ) );
             Save();
         }
 

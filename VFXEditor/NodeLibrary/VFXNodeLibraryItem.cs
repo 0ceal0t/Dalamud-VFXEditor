@@ -42,6 +42,7 @@ namespace VFXEditor.NodeLibrary {
                 if( ImGui.Button( $"Import{id}" ) ) {
                     Plugin.AvfxManager.ImportData( Path );
                 }
+
                 ImGui.SameLine();
                 if( ImGui.Button( Editing ? $"Save{id}" : $"Edit{id}" ) ) {
                     Editing = !Editing;

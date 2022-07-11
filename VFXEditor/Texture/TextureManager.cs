@@ -37,7 +37,7 @@ namespace VFXEditor.Texture {
 
         public static void Setup() {
             // Set paths manually since TexImpNet can be dumb sometimes
-            var runtimeRoot = Path.Combine( Plugin.TemplateLocation, "runtimes" );
+            var runtimeRoot = Path.Combine( Plugin.RootLocation, "runtimes" );
 
             // ==============
 

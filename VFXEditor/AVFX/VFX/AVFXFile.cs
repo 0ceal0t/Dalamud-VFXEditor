@@ -174,9 +174,10 @@ namespace VFXEditor.AVFX.VFX {
         // ========= EXPORT ==============
 
         public void AddToNodeLibrary( UINode node ) {
-            var newPath = AVFXManager.NodeLibrary.GetNextPath();
+            var newId = UIHelper.RandomString( 12 );
+            var newPath = AVFXManager.NodeLibrary.GetPath( newId );
             Export( node, newPath, true );
-            AVFXManager.NodeLibrary.Add( node.GetText(), newPath );
+            AVFXManager.NodeLibrary.Add( node.GetText(), newId, newPath );
         }
 
         public void Export( UINode node, string path, bool exportDependencies) => Export( new List<UINode> { node }, path, exportDependencies );
@@ -319,7 +320,6 @@ namespace VFXEditor.AVFX.VFX {
                 List<string> renames = new();
 
                 for( var i = 0; i < numberOfItems; i++ ) {
-                    var r = FileHelper.ReadString( reader );
                     renames.Add( FileHelper.ReadString( reader ) );
                 }
 

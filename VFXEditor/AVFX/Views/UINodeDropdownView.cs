@@ -23,7 +23,7 @@ namespace VFXEditor.AVFX.VFX {
             DefaultText = defaultText;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
-            DefaultPath = Path.Combine( Plugin.TemplateLocation, "Files", defaultPath );
+            DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
         public abstract void OnDelete( T item );
