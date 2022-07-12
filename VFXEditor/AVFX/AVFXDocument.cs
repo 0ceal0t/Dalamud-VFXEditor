@@ -219,16 +219,10 @@ namespace VFXEditor.AVFX {
                 ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
-                    ImGui.OpenPopup( "Export_Popup" );
+                    UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
                 }
                 ImGui.PopFont();
-
-                if( ImGui.BeginPopup( "Export_Popup" ) ) {
-                    if( ImGui.Selectable( ".AVFX" ) ) {
-                        UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
-                    }
-                    ImGui.EndPopup();
-                }
+                UIHelper.Tooltip( "Export raw .avfx file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
 
                 // ======== VERIFY ============
                 ImGui.SameLine();

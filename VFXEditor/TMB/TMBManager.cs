@@ -25,10 +25,12 @@ namespace VFXEditor.TMB {
 
         public static void SetSourceGlobal( SelectResult result ) {
             Plugin.TmbManager?.SetSource( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsTMB, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
             Plugin.TmbManager?.SetReplace( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsTMB, result );
         }
 
         public static readonly string PenumbraPath = "Tmb";

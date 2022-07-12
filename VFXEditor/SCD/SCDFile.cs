@@ -58,18 +58,19 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table0_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"0: {Reader.BaseStream.Position} -> {offset}" );
+                PluginLog.Log( $"0: {Reader.BaseStream.Position} -> {offset:X8}" );
             }
             // ============ TABLE 1 ===============
             for( var i = 0; i < table1_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"1: {Reader.BaseStream.Position} -> {offset}" );
+                PluginLog.Log( $"1: {Reader.BaseStream.Position} -> {offset:X8}" );
             }
             // ============ TABLE 2 ===============
             for( var i = 0; i < table2_Count; i++ ) { // Sound effect entries
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
+                PluginLog.Log( $"2: {Reader.BaseStream.Position} -> {offset:X8}" );
 
                 Music.Add( new MusicEntry( Reader, offset ) );
             }
@@ -77,6 +78,7 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table3_Count; i++ ) { // Camera control
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
+                PluginLog.Log( $"3: {Reader.BaseStream.Position} -> {offset:X8}" );
 
                 Camera.Add( new CameraEntry( Reader, offset ) );
             }
@@ -84,7 +86,7 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table4_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"4: {Reader.BaseStream.Position} -> {offset}" );
+                PluginLog.Log( $"4: {Reader.BaseStream.Position} -> {offset:X8}" );
             }
         }
 
@@ -92,26 +94,26 @@ namespace VFXEditor.Data.SCD {
             return round * ( int )Math.Ceiling( value / ( float )round );
         }
 
-        //public static void Test() {
-        //var test1 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
-        //PluginLog.Log( "---------------------" );
-        //var test2 = Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
-        //}
+        public static void Test() {
+            Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
+            PluginLog.Log( "---------------------" );
+            Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
+        }
     }
 
     public abstract class ScdEntry {
         protected ScdEntry( BinaryReader Reader, int offset ) {
             var oldPosition = Reader.BaseStream.Position;
             Reader.BaseStream.Position = offset;
-            Initialize( Reader );
+            Read( Reader );
             Reader.BaseStream.Position = oldPosition;
         }
 
         protected ScdEntry( BinaryReader Reader ) {
-            Initialize( Reader );
+            Read( Reader );
         }
 
-        protected abstract void Initialize( BinaryReader Reader );
+        protected abstract void Read( BinaryReader Reader );
     }
 
     // ===== TABLE 2 (MUSIC) ==========
@@ -140,7 +142,7 @@ namespace VFXEditor.Data.SCD {
         public MusicEntry( BinaryReader Reader ) : base( Reader ) { }
         public MusicEntry( BinaryReader Reader, int offset ) : base( Reader, offset ) { }
 
-        protected override void Initialize( BinaryReader Reader ) {
+        protected override void Read( BinaryReader Reader ) {
             Header = Reader.ReadStructure<Music_Header>();
 
             for( var i = 0; i < Header.AuxCount; i++ ) {
@@ -178,7 +180,7 @@ namespace VFXEditor.Data.SCD {
         public CameraEntry( BinaryReader Reader ) : base( Reader ) { }
         public CameraEntry( BinaryReader Reader, int offset ) : base( Reader, offset ) { }
 
-        protected override void Initialize( BinaryReader Reader ) {
+        protected override void Read( BinaryReader Reader ) {
             Data = Reader.ReadStructure<Camera_Data>();
 
             PluginLog.Log( $"TABLE 3: {Data.Size} {Data.Unk1} {Data.Unk2} {Data.Unk3} {Data.Unk4}" );

@@ -396,7 +396,7 @@ namespace VFXEditor.AVFX.VFX {
         public void ShowExportDialog( UINode node ) => ExportUI.ShowDialog( node );
 
         public void ShowImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".vfxedit|.vfxedit2,.*", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a File", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     Import( res );

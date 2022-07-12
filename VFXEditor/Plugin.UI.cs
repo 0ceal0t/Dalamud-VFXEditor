@@ -29,9 +29,9 @@ namespace VFXEditor {
             if ( Configuration.AutosaveEnabled && 
                  Configuration.AutosaveSeconds > 10 && 
                  !string.IsNullOrEmpty(CurrentWorkspaceLocation) && 
-                 (DateTime.Now - lastAutosave).TotalSeconds > Configuration.AutosaveSeconds
+                 (DateTime.Now - LastAutoSave).TotalSeconds > Configuration.AutosaveSeconds
             ) {
-                lastAutosave = DateTime.Now;
+                LastAutoSave = DateTime.Now;
                 SaveWorkspace();
             }
         }

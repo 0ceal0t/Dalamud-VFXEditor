@@ -40,12 +40,12 @@ namespace VFXEditor.AVFX {
 
         public static void SetSourceGlobal( SelectResult result ) {
             Plugin.AvfxManager?.SetSource( result );
-            Plugin.Configuration.AddRecent( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
             Plugin.AvfxManager?.SetReplace( result );
-            Plugin.Configuration.AddRecent( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
         }
 
         public static readonly string PenumbraPath = "VFX";

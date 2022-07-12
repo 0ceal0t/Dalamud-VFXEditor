@@ -11,14 +11,14 @@ namespace VFXEditor.PAP {
         public static void Setup() {
             SourceSelect = new PAPSelectDialog(
                 "Pap Select [SOURCE]",
-                null,
+                Plugin.Configuration.RecentSelectsPAP,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new PAPSelectDialog(
                 "Pap Select [TARGET]",
-                null,
+                Plugin.Configuration.RecentSelectsPAP,
                 false,
                 SetReplaceGlobal
             );
@@ -27,10 +27,12 @@ namespace VFXEditor.PAP {
 
         public static void SetSourceGlobal( SelectResult result ) {
             Plugin.PapManager?.SetSource( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsPAP, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
             Plugin.PapManager?.SetReplace( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsPAP, result );
         }
 
         public static readonly string PenumbraPath = "Pap";

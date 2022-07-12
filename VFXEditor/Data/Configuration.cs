@@ -29,7 +29,11 @@ namespace VFXEditor {
             "pluginConfigs",
             "VFXEditor",
         } );
+
         public List<SelectResult> RecentSelects = new();
+        public List<SelectResult> RecentSelectsTMB = new();
+        public List<SelectResult> RecentSelectsPAP = new();
+
         public bool FilepickerImagePreview = true;
 
         public bool AutosaveEnabled = false;
@@ -50,13 +54,13 @@ namespace VFXEditor {
             PluginLog.Log( "Write location: " + WriteLocation );
         }
 
-        public void AddRecent( SelectResult result ) {
-            if( RecentSelects.Contains( result ) ) {
-                RecentSelects.Remove( result ); // want to move it to the top
+        public void AddRecent( List<SelectResult> recentList, SelectResult result ) {
+            if( recentList.Contains( result ) ) {
+                recentList.Remove( result ); // want to move it to the top
             }
-            RecentSelects.Add( result );
-            if( RecentSelects.Count > SaveRecentLimit ) {
-                RecentSelects.RemoveRange( 0, RecentSelects.Count - SaveRecentLimit );
+            recentList.Add( result );
+            if( recentList.Count > SaveRecentLimit ) {
+                recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
             }
             Save();
         }

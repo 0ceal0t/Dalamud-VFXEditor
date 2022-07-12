@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
@@ -24,6 +25,14 @@ namespace VFXEditor.NodeLibrary {
         }
 
         public override void DrawBody() {
+            ImGui.Text( "Save VFX nodes here using the " );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}##NodeLibrary" );
+            ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.Text( " button" );
+
             ImGui.InputText( "Search##NodeLibrary", ref SearchInput, 255 );
 
             ImGui.BeginChild( "##NodeLibrary-Region", ImGui.GetContentRegionAvail(), true );
