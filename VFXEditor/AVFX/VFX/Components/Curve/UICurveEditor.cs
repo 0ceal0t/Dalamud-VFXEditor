@@ -38,7 +38,7 @@ namespace VFXEditor.AVFX.VFX {
             ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
 
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
-                ImPlot.FitNextPlotAxes( true, true );
+                ImPlot.SetNextAxesToFit();
                 DrawOnce = true;
             }
 
@@ -59,12 +59,17 @@ namespace VFXEditor.AVFX.VFX {
             }
 
             var wrongOrder = false;
-            if( Color ) ImPlot.SetNextPlotLimitsY( -1, 1, ImGuiCond.Always );
-            if( ImPlot.BeginPlot( parentId + "Plot", "Frame", "", new Vector2( -1, 300 ), ImPlotFlags.AntiAliased | ImPlotFlags.NoMenus, ImPlotAxisFlags.None, Color ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel ) ) {
+            if( Color ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+            if( ImPlot.BeginPlot( $"{parentId}Plot", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, Color ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 if( Points.Count > 0 ) {
-                    var line = GetDrawLine( Points, Color );
+                    GetDrawLine( Points, Color, out var _xs, out var _ys );
+                    var xs = _xs.ToArray();
+                    var ys = _ys.ToArray();
+
                     ImPlot.SetNextLineStyle( LINE_COLOR, 2 );
-                    ImPlot.PlotLine( Curve.GetName(), ref line[0].X, ref line[0].Y, line.Length, 0, 2 * sizeof( float ) );
+
+                    ImPlot.PlotLine( Curve.GetName(), ref xs[0], ref ys[0], xs.Length );
 
                     // ====== IMAGE ============
                     if( Color && SourceKeys.Count > 1 ) {
@@ -92,7 +97,7 @@ namespace VFXEditor.AVFX.VFX {
                         if( Color ) {
                             ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( p.GetImPlotPoint() ), Selected == p ? 15 : 10, Invert( p.ColorData ) );
                         }
-                        if( ImPlot.DragPoint( "#" + idx, ref p.X, ref p.Y, true, Color ? new Vector4( p.ColorData, 1 ) : POINT_COLOR, Selected == p ? 12 : 7 ) ) {
+                        if( ImPlot.DragPoint(idx, ref p.X, ref p.Y, Color ? new Vector4( p.ColorData, 1 ) : POINT_COLOR, Selected == p ? 12 : 7, ImPlotDragToolFlags.Delayed ) ) {
                             Selected = p;
                             p.UpdatePosition();
                             dragging = true;
@@ -175,58 +180,35 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public float GetAtTime( int frame ) {
-            var idx = 0;
-            if( SourceKeys.Count > 0 && frame <= SourceKeys[0].Time ) { // before the first point
-                return SourceKeys[0].Z;
-            }
-            if( SourceKeys.Count > 0 && frame >= SourceKeys[^1].Time ) { // after the last one
-                return SourceKeys[^1].Z;
-            }
+        private static void GetDrawLine( List<CurvePoint> points, bool color, out List<float> xs, out List<float> ys ) {
+            xs = new List<float>();
+            ys = new List<float>();
 
-            foreach( var nextPoint in SourceKeys ) {
-                if( frame < nextPoint.Time && idx != 0 ) {
-                    var item = SourceKeys[idx - 1];
-                    if( item.Type == KeyType.Step ) {
-                        return item.Z;
-                    }
-                    else {
-                        var t = ( ( float )( frame - item.Time ) ) / ( nextPoint.Time - item.Time );
-                        if( item.Type == KeyType.Linear ) {
-                            return item.Z + t * ( nextPoint.Z - item.Z );
-                        }
-                        else if( item.Type == KeyType.Spline ) {
-                            var midX = ( ( float )( nextPoint.X - item.X ) ) / 2.0f;
-                            var handle1 = new Vector2( item.Time + item.X * midX, item.Z );
-                            var handle2 = new Vector2( nextPoint.Time - item.Y * midX, nextPoint.Z );
-                            var b = Bezier( new Vector2( item.Time, item.Z ), new Vector2( nextPoint.Time, nextPoint.Z ), handle1, handle2, t );
-                            return b.Y;
-                        }
-                    }
-
-                }
-                idx++;
-            }
-            return 0.0f;
-        }
-
-        private static Vector2[] GetDrawLine( List<CurvePoint> points, bool color = false ) {
-            var ret = new List<Vector2>();
             if( points.Count > 0 ) {
-                ret.Add( points[0].GetPosition() );
+                var pos = points[0].GetPosition();
+                xs.Add( pos.X );
+                ys.Add( pos.Y );
             }
 
             for( var idx = 1; idx < points.Count; idx++ ) {
                 var p1 = points[idx - 1];
                 var p2 = points[idx];
+
+
                 if( p1.Key.Type == KeyType.Linear || color ) {
                     // p1 should already be added
-                    ret.Add( p2.GetPosition() );
+                    var pos = p2.GetPosition();
+                    xs.Add( pos.X );
+                    ys.Add( pos.Y );
                 }
                 else if( p1.Key.Type == KeyType.Step ) {
                     // p1 should already be added
-                    ret.Add( new Vector2( ( float )p2.X, ( float )p1.Y ) );
-                    ret.Add( p2.GetPosition() );
+                    xs.Add( ( float )p2.X );
+                    ys.Add( ( float )p1.Y );
+
+                    var pos = p2.GetPosition();
+                    xs.Add( pos.X );
+                    ys.Add( pos.Y );
                 }
                 else if( p1.Key.Type == KeyType.Spline ) {
                     var p1_ = p1.GetPosition();
@@ -236,12 +218,17 @@ namespace VFXEditor.AVFX.VFX {
                     var handle2 = new Vector2( p2_.X - p1.Key.Y * midX, p2_.Y );
                     for( var i = 0; i < 100; i++ ) {
                         var t = i / 99.0f;
-                        ret.Add( Bezier( p1_, p2_, handle1, handle2, t ) );
+
+                        var pos = Bezier( p1_, p2_, handle1, handle2, t );
+                        xs.Add( pos.X );
+                        ys.Add( pos.Y );
                     }
-                    ret.Add( p2_ );
+
+
+                    xs.Add( p2_.X );
+                    ys.Add( p2_.Y );
                 }
             }
-            return ret.ToArray();
         }
 
         private static bool IsHovering() {

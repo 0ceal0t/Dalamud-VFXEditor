@@ -118,6 +118,8 @@ namespace VFXEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+
+            //Data.SCD.ScdFile.Test();
         }
 
         public void Dispose() {

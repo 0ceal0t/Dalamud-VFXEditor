@@ -15,7 +15,7 @@ namespace VFXEditor.Texture {
         public override void DrawBody() {
             var id = "##ImportTex";
 
-            ImGui.SetNextItemWidth( ImGui.GetWindowContentRegionWidth() - 140 );
+            ImGui.SetNextItemWidth( UIHelper.GetWindowContentRegionWidth() - 140 );
             ImGui.InputText( $"Path{id}-Input", ref NewCustomPath, 255 );
 
             ImGui.SameLine();

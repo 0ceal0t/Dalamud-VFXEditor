@@ -46,6 +46,7 @@ namespace VFXEditor.Data.SCD {
             Header = Reader.ReadStructure<SoundHeader>();
             OffsetHeader = Reader.ReadStructure<SoundOffsetsHeader>();
 
+            // padded out to multiples of 4
             var table0_Count = RoundUp( OffsetHeader.Table0_Count );
             var table1_Count = RoundUp( OffsetHeader.Table1_Count );
             var table2_Count = RoundUp( OffsetHeader.Table2_Count );
@@ -58,19 +59,19 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table0_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"0: {Reader.BaseStream.Position} -> {offset:X8}" );
+                PluginLog.Log( $"0: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
             }
             // ============ TABLE 1 ===============
             for( var i = 0; i < table1_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"1: {Reader.BaseStream.Position} -> {offset:X8}" );
+                PluginLog.Log( $"1: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
             }
             // ============ TABLE 2 ===============
             for( var i = 0; i < table2_Count; i++ ) { // Sound effect entries
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"2: {Reader.BaseStream.Position} -> {offset:X8}" );
+                PluginLog.Log( $"2: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
 
                 Music.Add( new MusicEntry( Reader, offset ) );
             }
@@ -78,7 +79,7 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table3_Count; i++ ) { // Camera control
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"3: {Reader.BaseStream.Position} -> {offset:X8}" );
+                PluginLog.Log( $"3: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
 
                 Camera.Add( new CameraEntry( Reader, offset ) );
             }
@@ -86,7 +87,7 @@ namespace VFXEditor.Data.SCD {
             for( var i = 0; i < table4_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
-                PluginLog.Log( $"4: {Reader.BaseStream.Position} -> {offset:X8}" );
+                PluginLog.Log( $"4: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
             }
         }
 

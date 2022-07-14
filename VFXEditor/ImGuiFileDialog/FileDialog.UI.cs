@@ -386,11 +386,11 @@ namespace ImGuiFileDialog {
                 }
 
                 if( PathInputActivated ) {
-                    if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Enter ) ) ) {
+                    if( ImGui.IsKeyReleased( ImGuiKey.Enter ) ) {
                         if( Directory.Exists( PathInputBuffer ) ) SetPath( PathInputBuffer );
                         PathInputActivated = false;
                     }
-                    if( ImGui.IsKeyReleased( ImGui.GetKeyIndex( ImGuiKey.Escape ) ) ) {
+                    if( ImGui.IsKeyReleased( ImGuiKey.Escape ) ) {
                         PathInputActivated = false;
                     }
                 }
