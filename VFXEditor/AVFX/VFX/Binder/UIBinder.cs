@@ -16,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
         private readonly List<UIBase> Parameters;
         private UIData Data;
 
-        public UIBinder( AVFXFile main, AVFXBinder binder, bool has_dependencies = false ) : base( UINodeGroup.BinderColor, has_dependencies ) {
+        public UIBinder( AVFXFile main, AVFXBinder binder, bool hasDependencies = false ) : base( UINodeGroup.BinderColor, hasDependencies ) {
             Binder = binder;
             Main = main;
             NodeView = new UINodeGraphView( this );

@@ -43,6 +43,13 @@ namespace VFXEditor.Helper {
             return false;
         }
 
+        public static bool DisabledRemoveButton( string label, bool enabled, bool small = false ) {
+            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+            if( RemoveButton( label, small ) && enabled ) return true;
+            if( !enabled ) ImGui.PopStyleVar();
+            return false;
+        }
+
         public static bool RemoveButton( string label, bool small = false ) => ColorButton( label, RED_COLOR, small );
 
         public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
@@ -62,16 +69,6 @@ namespace VFXEditor.Helper {
             }
             ImGui.PopStyleColor();
             return ret;
-        }
-
-        public static int ColorToInt( Vector4 color ) {
-            var data = new byte[] { ( byte )color.X, ( byte )color.Y, ( byte )color.Z, ( byte )color.W };
-            return BitConverter.ToInt32( data );
-        }
-
-        public static Vector4 IntToColor( int color ) {
-            var colors = BitConverter.GetBytes( color );
-            return new Vector4( colors[0], colors[1], colors[2], colors[3] );
         }
 
         public static void HelpMarker( string text ) {

@@ -1,14 +1,13 @@
 using Dalamud.Interface;
 using ImGuiNET;
-
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-
 using VFXEditor.Helper;
+using VFXEditor.TMB.Items;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB {
     public class TMBActor {
         public short Id { get; private set; }
 
@@ -108,7 +107,7 @@ namespace VFXEditor.TMB.TMB {
             }
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
                 if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Tracks.Remove( SelectedTrack );
                     TracksMaster.Remove( SelectedTrack );
@@ -131,6 +130,7 @@ namespace VFXEditor.TMB.TMB {
 
             ImGui.NextColumn();
             ImGui.BeginChild( $"{id}-ActorChild-Right" );
+
             // ===========
             if( SelectedTrack != null ) {
                 SelectedTrack.Draw( $"{id}{selectedIndex}" );

@@ -110,44 +110,10 @@ namespace VFXEditor.FileManager {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            var sourceString = Source.DisplayString;
-            var previewString = Replace.DisplayString;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 140 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
-            ImGui.InputText( $"##{Id}-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
-
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
-                SourceShow();
-            }
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveSource();
-            }
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
-
-            ImGui.InputText( $"##{Id}-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect", new Vector2( 30, 23 ) ) ) {
-                ReplaceShow();
-            }
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveReplace();
-            }
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
+            DisplaySearchBars();
 
             ImGui.PopItemWidth();
             ImGui.Columns( 1 );
@@ -155,6 +121,53 @@ namespace VFXEditor.FileManager {
             // ================================
 
             DrawBody();
+        }
+
+        protected void DisplaySearchBars() {
+            var sourceString = SourceDisplay;
+            var previewString = ReplaceDisplay;
+
+            // Remove
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
+                RemoveSource();
+            }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
+            // Input
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.InputText( $"##{Id}-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            // Search
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect", new Vector2( 30, 23 ) ) ) {
+                SourceShow();
+            }
+            ImGui.PopFont();
+
+            // Remove
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
+                RemoveReplace();
+            }
+            ImGui.PopStyleColor();
+            ImGui.PopFont();
+            // Input
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.InputText( $"##{Id}-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+            // Search
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect", new Vector2( 30, 23 ) ) ) {
+                ReplaceShow();
+            }
+            ImGui.PopFont();
         }
 
         protected abstract void DrawBody();
@@ -170,6 +183,28 @@ namespace VFXEditor.FileManager {
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) );
             ImGui.PopFont();
+        }
+
+        private static readonly string Text = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
+
+        protected static void DisplayAnimationWarning() {
+            ImGui.PushStyleColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
+            ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
+
+            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - 20 );
+
+            ImGui.BeginChild( "##AnimationWarning", new Vector2( -1, 
+                ImGui.GetFrameHeightWithSpacing() + 
+                textSize.Y + 
+                ImGui.GetStyle().ItemSpacing.Y * 2 +
+                ImGui.GetStyle().FramePadding.Y
+            ), true );
+
+            ImGui.TextWrapped( Text );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+
+            ImGui.EndChild();
+            ImGui.PopStyleColor( 2 );
         }
     }
 }

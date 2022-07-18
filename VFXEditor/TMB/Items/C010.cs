@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.Helper;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     // Animation
     public class C010 : TMBItem {
         private int Duration = 50;

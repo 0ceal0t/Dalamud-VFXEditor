@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     public class C203 : TMBItem {
         private int Unk_2 = 0;
         private int Unk_3 = 0;

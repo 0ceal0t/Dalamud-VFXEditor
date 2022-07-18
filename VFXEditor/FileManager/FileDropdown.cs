@@ -21,10 +21,12 @@ namespace VFXEditor.FileManager {
 
         protected abstract void OnDelete( T item );
 
-        protected void DrawDropDown( string id ) {
+        protected void DrawDropDown( string id, bool separatorBefore = true ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            if( separatorBefore) {
+                ImGui.Separator();
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            }
 
             var options = GetOptions();
             if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, options.IndexOf( Selected ) ) ) ) {
@@ -45,7 +47,7 @@ namespace VFXEditor.FileManager {
                 }
                 if( Selected != null ) {
                     ImGui.SameLine();
-                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
                     if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                         OnDelete( Selected );
                         Selected = null;

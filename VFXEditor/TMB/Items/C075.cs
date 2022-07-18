@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     public class C075 : TMBItem {
         private int Unk_2 = 30;
         private int Unk_3 = 0;

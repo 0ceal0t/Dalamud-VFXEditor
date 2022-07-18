@@ -6,11 +6,11 @@ using VFXEditor.Helper;
 using VFXEditor.Texture;
 
 namespace VFXEditor.Dialogs {
-    public partial class ToolsDialog {
+    public class ToolsDialogUtilitiesTab {
         private string RawInputValue = "";
         private string RawTexInputValue = "";
 
-        private void DrawUtilities() {
+        public void Draw() {
             ImGui.Text( "Extract a raw .avfx file" );
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();

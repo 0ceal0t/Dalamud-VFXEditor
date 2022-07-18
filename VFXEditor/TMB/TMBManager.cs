@@ -10,14 +10,14 @@ namespace VFXEditor.TMB {
         public static void Setup() {
             SourceSelect = new TMBSelectDialog(
                 "Tmb Select [SOURCE]",
-                null,
+                Plugin.Configuration.RecentSelectsTMB,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new TMBSelectDialog(
                 "Tmb Select [TARGET]",
-                null,
+                Plugin.Configuration.RecentSelectsTMB,
                 false,
                 SetReplaceGlobal
             );

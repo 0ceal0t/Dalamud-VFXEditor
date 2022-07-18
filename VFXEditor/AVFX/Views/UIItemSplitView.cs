@@ -6,14 +6,15 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
-        public List<T> Items;
+        public readonly List<T> Items;
         private T Selected = null;
 
         public UIItemSplitView( List<T> items, bool allowNew = false, bool allowDelete = false ) : base( allowNew, allowDelete ) {
             Items = items;
             SetupIdx();
         }
-        public void SetupIdx() {
+
+        private void SetupIdx() {
             for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }

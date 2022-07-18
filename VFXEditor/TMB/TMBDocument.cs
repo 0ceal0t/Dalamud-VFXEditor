@@ -55,15 +55,10 @@ namespace VFXEditor.TMB {
         protected override bool GetVerified() => CurrentFile.Verified;
 
         protected override void DrawBody() {
-            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.9f, 0.1f, 0.1f, 1.0f ) );
-            ImGui.TextWrapped( "DO NOT modify movement abilities (dashes, backflips, etc.)" );
-            ImGui.PopStyleColor();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DisplayAnimationWarning();
 
-            ImGui.TextWrapped( "Please read a guide before attempting to modify a .tmb or .pap file: " );
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.SmallButton( "Guides##Pap" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
-
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -88,7 +83,8 @@ namespace VFXEditor.TMB {
                 ImGui.SameLine();
                 UIHelper.ShowVerifiedStatus( Verified );
 
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
                 CurrentFile.Draw( "##Tmb" );
             }
         }

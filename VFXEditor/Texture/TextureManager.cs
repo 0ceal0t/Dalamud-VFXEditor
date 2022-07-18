@@ -9,7 +9,7 @@ using VFXEditor.Dialogs;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Texture {
-    public struct PreviewTexture { // used for the texture previews
+    public struct PreviewTexture { // ImGui texture previews
         public ushort Height;
         public ushort Width;
         public ushort MipLevels;
@@ -104,8 +104,8 @@ namespace VFXEditor.Texture {
                 if( Path.GetExtension( localPath ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( localPath );
                     var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
-                    if( format == TextureFormat.Null )
-                        return false;
+                    if( format == TextureFormat.Null ) return false;
+
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
                         replaceData = CreateAtex( format, ddsFile, writer );
                     }
@@ -129,9 +129,8 @@ namespace VFXEditor.Texture {
 
                     using var compressor = new Compressor();
                     var compFormat = VFXTexture.TextureToCompressionFormat( pngFormat );
-                    if( compFormat == CompressionFormat.ETC1 ) { // use ETC1 to signify "NULL" because I'm not going to be using it
-                        return false;
-                    }
+                    // use ETC1 to signify "NULL" because I'm not going to be using it
+                    if( compFormat == CompressionFormat.ETC1 ) return false;
 
                     compressor.Input.SetMipmapGeneration( true, pngMip ); // no limit on mipmaps. This is not true of stuff like UI textures (which are required to only have 1), but we don't have to worry about them
                     compressor.Input.SetData( surface );
@@ -156,9 +155,8 @@ namespace VFXEditor.Texture {
         private bool ReplaceAndRefreshTexture(TextureReplace data, string path) {
             // if there is already a replacement for the same file, delete the old file
             RemoveReplaceTexture( path );
-            if( !PathToTextureReplace.TryAdd( path, data ) ) {
-                return false;
-            }
+            if( !PathToTextureReplace.TryAdd( path, data ) ) return false;
+
             // refresh preview texture if it exists
             RefreshPreviewTexture( path );
             return true;
@@ -205,8 +203,8 @@ namespace VFXEditor.Texture {
 
         public void LoadPreviewTexture( string path ) {
             var _path = path.Trim( '\u0000' );
-            if( PathToTexturePreview.ContainsKey( path ) )
-                return;
+            if( PathToTexturePreview.ContainsKey( path ) ) return; // Already loaded
+
             var result = CreatePreviewTexture( _path, out var tex );
             if( result && tex.Wrap != null ) {
                 PathToTexturePreview.TryAdd( path, tex );

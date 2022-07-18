@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VFXEditor.Helper;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     // Pap Animation
     public class C009 : TMBItem {
         private int Duration = 50;

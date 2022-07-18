@@ -8,7 +8,7 @@ using System.Linq;
 
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
-using VFXEditor.TMB.TMB;
+using VFXEditor.TMB.Items;
 
 namespace VFXEditor.TMB {
     public class TMBFile : FileDropdown<TMBActor> {
@@ -213,25 +213,37 @@ namespace VFXEditor.TMB {
         }
 
         public void Draw( string id ) {
-            ImGui.Checkbox( $"Use face library{id}", ref TMPP );
-            ImGui.SameLine();
-            UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
+            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
+                    ImGui.Checkbox( $"Use face library{id}", ref TMPP );
+                    ImGui.SameLine();
+                    UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
-            if( TMPP ) {
-                ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
-            }
+                    if( TMPP ) {
+                        ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
+                    }
 
-            FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
-            FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
-            FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+                    FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
+                    FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
+                    FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
 
-            DrawDropDown( id );
+                    ImGui.EndTabItem();
+                }
 
-            if( Selected != null ) {
-                Selected.Draw( $"{id}{Actors.IndexOf( Selected )}" );
-            }
-            else {
-                ImGui.Text( "Select a timeline actor..." );
+                if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
+                    DrawDropDown( id, separatorBefore: false );
+
+                    if( Selected != null ) {
+                        Selected.Draw( $"{id}{Actors.IndexOf( Selected )}" );
+                    }
+                    else {
+                        ImGui.Text( "Select a timeline actor..." );
+                    }
+
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
             }
         }
 

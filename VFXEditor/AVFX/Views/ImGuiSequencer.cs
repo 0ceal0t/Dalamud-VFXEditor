@@ -42,7 +42,7 @@ namespace VFXEditor.AVFX.Views {
             SetupIdx();
         }
 
-        public void SetupIdx() {
+        private void SetupIdx() {
             for( var i = 0; i < Items.Count; i++ ) {
                 Items[i].Idx = i;
             }

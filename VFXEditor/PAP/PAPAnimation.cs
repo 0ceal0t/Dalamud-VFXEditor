@@ -53,11 +53,11 @@ namespace VFXEditor.PAP {
         public void Draw( string id ) {
             ImGui.InputText( $"Name{id}", ref Name, 31 );
             FileHelper.ShortInput( $"Unknown 1{id}", ref Unknown1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );
+            ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );   
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            // Havok  ================
+            // ====== HAVOK ========
 
             ImGui.Text( $"This animation has Havok index: {HavokIndex}" );
 
@@ -73,16 +73,7 @@ namespace VFXEditor.PAP {
                 } );
             }
 
-            // Tmb ==============
-
-            // Export Tmb
-
-            if( ImGui.Button( $"Export TMB{id}" ) ) {
-                UIHelper.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
-            }
-
-            // Import Tmb
-
+            // ===== TMB ========
             ImGui.SameLine();
             if( ImGui.Button( $"Import TMB{id}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
@@ -93,15 +84,15 @@ namespace VFXEditor.PAP {
                 } );
             }
 
-            // Draw Tmb
-
-            if( ImGui.BeginTabBar( $"Tabs{id}", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Tmb{id}/Tab" ) ) {
-                    Tmb.Draw( id + "/Tmb" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
+            ImGui.SameLine();
+            if( ImGui.Button( $"Export TMB{id}" ) ) {
+                UIHelper.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+
+            ImGui.TextDisabled( "Embedded TMB:" );
+            Tmb.Draw( id + "/Tmb" );
         }
     }
 }

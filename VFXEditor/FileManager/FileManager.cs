@@ -120,13 +120,13 @@ namespace VFXEditor.FileManager {
 
             if( ImGui.Begin( $"{Name} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
                 var id = $"##{Id}/Doc";
-                var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+                var footerHeight = ImGui.GetFrameHeightWithSpacing();
 
                 if( ImGui.Button( "+ NEW" + id ) ) AddDocument();
                 ImGui.SameLine();
                 ImGui.Text( "Create documents in order to replace multiple files simultaneously" );
 
-                ImGui.BeginChild( id + "/Child", new Vector2( 0, -( footerHeight + ImGui.GetStyle().ItemSpacing.Y ) ), true );
+                ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
                 ImGui.Columns( 2, id + "/Columns", false );
 
                 var idx = 0;
@@ -145,23 +145,19 @@ namespace VFXEditor.FileManager {
                 ImGui.NextColumn();
 
                 foreach( var document in Documents ) {
-                    ImGui.Text( document.ReplaceDisplay );
+                    ImGui.Text( document.ReplaceDisplay );  
                 }
 
                 ImGui.Columns( 1 );
                 ImGui.EndChild();
 
-                if( SelectedDocument != null ) {
-                    if( ImGui.Button( $"Open{id}" ) ) {
-                        SelectDocument( SelectedDocument );
-                    }
-                    if( Documents.Count > 1 ) {
-                        ImGui.SameLine();
-                        if( UIHelper.RemoveButton( $"Delete{id}" ) ) {
-                            RemoveDocument( SelectedDocument );
-                            SelectedDocument = ActiveDocument;
-                        }
-                    }
+                if ( UIHelper.DisabledButton($"Open{id}", SelectedDocument != null) ) {
+                    SelectDocument( SelectedDocument );
+                }
+                ImGui.SameLine();
+                if ( UIHelper.DisabledRemoveButton($"Delete{id}", SelectedDocument != null && Documents.Count > 1 ) ) {
+                    RemoveDocument( SelectedDocument );
+                    SelectedDocument = ActiveDocument;
                 }
             }
             ImGui.End();

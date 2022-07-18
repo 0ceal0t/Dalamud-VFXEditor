@@ -18,24 +18,22 @@ namespace VFXEditor.AVFX.VFX {
         private bool DrawOnce = false;
         public override void Draw( string parentId = "" ) {
             ImGui.Columns( 2, parentId + "/Cols", true );
-
-            // ===== C1 =========
             DrawControls( parentId );
 
             ImGui.BeginChild( parentId + "/Tree" );
-            // assigned, good to go
             DrawLeftCol( parentId );
             ImGui.EndChild();
+
             if( !DrawOnce ) {
                 ImGui.SetColumnWidth( 0, 200 );
                 DrawOnce = true;
             }
-
-            // ===== C2 ============
             ImGui.NextColumn();
+
             ImGui.BeginChild( parentId + "/Split" );
             DrawRightCol( parentId );
             ImGui.EndChild();
+
             ImGui.Columns( 1 );
         }
     }

@@ -6,8 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using VFXEditor.Helper;
+using VFXEditor.TMB.Items;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB {
     public class TMBTrack {
         private struct EntryType {
             public string Name;
@@ -22,35 +23,35 @@ namespace VFXEditor.TMB.TMB {
         }
 
         private static readonly Dictionary<string, EntryType> TypeDict = new() {
-            { "C063", new EntryType( C063.DisplayName, () => new C063(), ( BinaryReader br ) => new C063( br ) ) },
-            { "C006", new EntryType( C006.DisplayName, () => new C006(), ( BinaryReader br ) => new C006( br ) ) },
-            { "C010", new EntryType( C010.DisplayName, () => new C010(), ( BinaryReader br ) => new C010( br ) ) },
-            { "C131", new EntryType( C131.DisplayName, () => new C131(), ( BinaryReader br ) => new C131( br ) ) },
-            { "C002", new EntryType( C002.DisplayName, () => new C002(), ( BinaryReader br ) => new C002( br ) ) },
-            { "C011", new EntryType( C011.DisplayName, () => new C011(), ( BinaryReader br ) => new C011( br ) ) },
-            { "C012", new EntryType( C012.DisplayName, () => new C012(), ( BinaryReader br ) => new C012( br ) ) },
-            { "C067", new EntryType( C067.DisplayName, () => new C067(), ( BinaryReader br ) => new C067( br ) ) },
-            { "C053", new EntryType( C053.DisplayName, () => new C053(), ( BinaryReader br ) => new C053( br ) ) },
-            { "C075", new EntryType( C075.DisplayName, () => new C075(), ( BinaryReader br ) => new C075( br ) ) },
-            { "C093", new EntryType( C093.DisplayName, () => new C093(), ( BinaryReader br ) => new C093( br ) ) },
-            { "C009", new EntryType( C009.DisplayName, () => new C009(), ( BinaryReader br ) => new C009( br ) ) },
-            { "C042", new EntryType( C042.DisplayName, () => new C042(), ( BinaryReader br ) => new C042( br ) ) },
-            { "C014", new EntryType( C014.DisplayName, () => new C014(), ( BinaryReader br ) => new C014( br ) ) },
-            { "C015", new EntryType( C015.DisplayName, () => new C015(), ( BinaryReader br ) => new C015( br ) ) },
-            { "C118", new EntryType( C118.DisplayName, () => new C118(), ( BinaryReader br ) => new C118( br ) ) },
-            { "C175", new EntryType( C175.DisplayName, () => new C175(), ( BinaryReader br ) => new C175( br ) ) },
-            { "C174", new EntryType( C174.DisplayName, () => new C174(), ( BinaryReader br ) => new C174( br ) ) },
-            { "C043", new EntryType( C043.DisplayName, () => new C043(), ( BinaryReader br ) => new C043( br ) ) },
-            { "C031", new EntryType( C031.DisplayName, () => new C031(), ( BinaryReader br ) => new C031( br ) ) },
-            { "C094", new EntryType( C094.DisplayName, () => new C094(), ( BinaryReader br ) => new C094( br ) ) },
-            { "C203", new EntryType( C203.DisplayName, () => new C203(), ( BinaryReader br ) => new C203( br ) ) },
-            { "C204", new EntryType( C204.DisplayName, () => new C204(), ( BinaryReader br ) => new C204( br ) ) },
-            { "C198", new EntryType( C198.DisplayName, () => new C198(), ( BinaryReader br ) => new C198( br ) ) },
-            { "C107", new EntryType( C107.DisplayName, () => new C107(), ( BinaryReader br ) => new C107( br ) ) },
-            { "C120", new EntryType( C120.DisplayName, () => new C120(), ( BinaryReader br ) => new C120( br ) ) },
-            { "C125", new EntryType( C125.DisplayName, () => new C125(), ( BinaryReader br ) => new C125( br ) ) },
-            { "C173", new EntryType( C173.DisplayName, () => new C173(), ( BinaryReader br ) => new C173( br ) ) },
-            { "C211", new EntryType( C211.DisplayName, () => new C211(), ( BinaryReader br ) => new C211( br ) ) },
+            { "C063", new EntryType( C063.DisplayName, () => new C063(), ( br ) => new C063( br ) ) },
+            { "C006", new EntryType( C006.DisplayName, () => new C006(), ( br ) => new C006( br ) ) },
+            { "C010", new EntryType( C010.DisplayName, () => new C010(), ( br ) => new C010( br ) ) },
+            { "C131", new EntryType( C131.DisplayName, () => new C131(), ( br ) => new C131( br ) ) },
+            { "C002", new EntryType( C002.DisplayName, () => new C002(), ( br ) => new C002( br ) ) },
+            { "C011", new EntryType( C011.DisplayName, () => new C011(), ( br ) => new C011( br ) ) },
+            { "C012", new EntryType( C012.DisplayName, () => new C012(), ( br ) => new C012( br ) ) },
+            { "C067", new EntryType( C067.DisplayName, () => new C067(), ( br ) => new C067( br ) ) },
+            { "C053", new EntryType( C053.DisplayName, () => new C053(), ( br ) => new C053( br ) ) },
+            { "C075", new EntryType( C075.DisplayName, () => new C075(), ( br ) => new C075( br ) ) },
+            { "C093", new EntryType( C093.DisplayName, () => new C093(), ( br ) => new C093( br ) ) },
+            { "C009", new EntryType( C009.DisplayName, () => new C009(), ( br ) => new C009( br ) ) },
+            { "C042", new EntryType( C042.DisplayName, () => new C042(), ( br ) => new C042( br ) ) },
+            { "C014", new EntryType( C014.DisplayName, () => new C014(), ( br ) => new C014( br ) ) },
+            { "C015", new EntryType( C015.DisplayName, () => new C015(), ( br ) => new C015( br ) ) },
+            { "C118", new EntryType( C118.DisplayName, () => new C118(), ( br ) => new C118( br ) ) },
+            { "C175", new EntryType( C175.DisplayName, () => new C175(), ( br ) => new C175( br ) ) },
+            { "C174", new EntryType( C174.DisplayName, () => new C174(), ( br ) => new C174( br ) ) },
+            { "C043", new EntryType( C043.DisplayName, () => new C043(), ( br ) => new C043( br ) ) },
+            { "C031", new EntryType( C031.DisplayName, () => new C031(), ( br ) => new C031( br ) ) },
+            { "C094", new EntryType( C094.DisplayName, () => new C094(), ( br ) => new C094( br ) ) },
+            { "C203", new EntryType( C203.DisplayName, () => new C203(), ( br ) => new C203( br ) ) },
+            { "C204", new EntryType( C204.DisplayName, () => new C204(), ( br ) => new C204( br ) ) },
+            { "C198", new EntryType( C198.DisplayName, () => new C198(), ( br ) => new C198( br ) ) },
+            { "C107", new EntryType( C107.DisplayName, () => new C107(), ( br ) => new C107( br ) ) },
+            { "C120", new EntryType( C120.DisplayName, () => new C120(), ( br ) => new C120( br ) ) },
+            { "C125", new EntryType( C125.DisplayName, () => new C125(), ( br ) => new C125( br ) ) },
+            { "C173", new EntryType( C173.DisplayName, () => new C173(), ( br ) => new C173( br ) ) },
+            { "C211", new EntryType( C211.DisplayName, () => new C211(), ( br ) => new C211( br ) ) },
         };
 
         // =====================================
@@ -178,7 +179,7 @@ namespace VFXEditor.TMB.TMB {
 
             var startPos = ( int )entryWriter.BaseStream.Position + entryPos;
             var endPos = timelinePos.TryGetValue( lastId, out var pos ) ? pos : 0;
-            var offset = endPos - startPos - 8 - ( 2 * ( Entries.Count == 0 ? 0 : ( Entries.Count - 1 ) ) );
+            var offset = endPos - startPos - 8 -  2 * ( Entries.Count == 0 ? 0 :  Entries.Count - 1  ) ;
 
             if( Entries.Count == 0 ) offset = Offset_Temp;
 
@@ -282,6 +283,6 @@ namespace VFXEditor.TMB.TMB {
             }
         }
 
-        public int GetExtraSize() => !UseUnknownExtraData ? 0 : 8 + ( 12 * UnknownExtraData.Count );
+        public int GetExtraSize() => !UseUnknownExtraData ? 0 : 8 +  12 * UnknownExtraData.Count ;
     }
 }

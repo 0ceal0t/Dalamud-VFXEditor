@@ -81,52 +81,10 @@ namespace VFXEditor.AVFX {
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            var sourceString = SourceDisplay;
-            var previewString = ReplaceDisplay;
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 255 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
-            // Remove
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-SourceRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveSource();
-            }
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
-            // Input
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputText( "##MainInterfaceFiles-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
-            // Search
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) ) ) {
-                SourceShow();
-            }
-            ImGui.PopFont();
-
-            // Remove
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##MainInterfaceFiles-PreviewRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveReplace();
-            }
-            ImGui.PopStyleColor();
-            ImGui.PopFont();
-            // Input
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputText( "##MainInterfaceFiles-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-            // Search
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##MainInterfaceFiles-PreviewSelect", new Vector2( 30, 23 ) ) ) {
-                ReplaceShow();
-            }
-            ImGui.PopFont();
+            DisplaySearchBars();
 
             ImGui.PopItemWidth();
 
@@ -135,10 +93,10 @@ namespace VFXEditor.AVFX {
             ImGui.SetColumnWidth( 3, 150 );
 
             if( ImGui.Button( $"Templates", new Vector2( 80, 23 ) ) ) {
-                ImGui.OpenPopup( "New_Popup1" );
+                ImGui.OpenPopup( "Templates_Popup" );
             }
 
-            if( ImGui.BeginPopup( "New_Popup1" ) ) {
+            if( ImGui.BeginPopup( "Templates_Popup" ) ) {
                 if( ImGui.Selectable( "Blank" ) ) {
                     OpenTemplate( @"default_vfx.avfx" );
                 }

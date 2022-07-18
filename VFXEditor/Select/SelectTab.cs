@@ -114,9 +114,7 @@ namespace VFXSelect {
             else {
                 if( Loaded != null ) {
                     ImGui.BeginChild( Id + "Selected" );
-
                     DrawSelected( Loaded );
-
                     ImGui.EndChild();
                 }
                 else {

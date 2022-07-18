@@ -8,7 +8,7 @@ using System.Numerics;
 using VFXEditor.Helper;
 
 namespace VFXEditor.Dialogs {
-    public unsafe partial class ToolsDialog {
+    public unsafe class ToolsDialogResourceTab {
         private struct ResourceItemStruct {
             public uint Hash;
             public ulong Address;
@@ -16,15 +16,15 @@ namespace VFXEditor.Dialogs {
             public uint Refs;
         }
 
-        private string ResourcePathSearch = "";
+        private string Search = "";
 
         // Adapted from https://github.com/xivdev/Penumbra/blob/7e7e74a5346857328ee161d571c1f1ead6524e9a/Penumbra/UI/MenuTabs/TabResourceManager.cs
-        private void DrawResources() {
+        public void Draw() {
             var resourceHandler = *( ResourceManager** )Plugin.SigScanner.GetStaticAddressFromSig( "48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 32 C0" );
 
             if( resourceHandler == null ) return;
 
-            ImGui.InputText( "Search##ResourceManager", ref ResourcePathSearch, 256 );
+            ImGui.InputText( "Search##ResourceManager", ref Search, 256 );
 
             if( !ImGui.BeginChild( "##ResourceManager", -Vector2.One, true ) ) return;
 
@@ -72,7 +72,7 @@ namespace VFXEditor.Dialogs {
                 while( !node->IsNil ) {
                     var path = node->KeyValuePair.Item2.Value->FileName.ToString();
 
-                    if( string.IsNullOrEmpty( ResourcePathSearch ) || path.Contains( ResourcePathSearch ) ) { // match against search
+                    if( string.IsNullOrEmpty( Search ) || path.Contains( Search ) ) { // match against search
                         itemList.Add( new ResourceItemStruct {
                             Hash = node->KeyValuePair.Item1,
                             Address = ( ulong )node->KeyValuePair.Item2.Value,
@@ -84,7 +84,7 @@ namespace VFXEditor.Dialogs {
                 }
             }
 
-            if( itemList.Count == 0 && !string.IsNullOrEmpty( ResourcePathSearch ) ) return; // all filtered out
+            if( itemList.Count == 0 && !string.IsNullOrEmpty( Search ) ) return; // all filtered out
 
             if( !ImGui.TreeNodeEx( label ) ) {
                 return;

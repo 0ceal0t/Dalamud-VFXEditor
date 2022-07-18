@@ -4,7 +4,7 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.Helper;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     public abstract class TMBItem {
         public short Id { get; protected set; }
         protected short Time = 0;

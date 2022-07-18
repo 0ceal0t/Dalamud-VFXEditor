@@ -139,12 +139,16 @@ namespace VFXEditor.Interop {
             GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 4C 8B 2D ?? ?? ?? ?? 49 8B CD" ) );
             DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 48 C7 03 ?? ?? ?? ?? C6 83" ) );
             RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? F0 FF 4F 5C 48 8D 4F 30" ) );
+
+            //var vfxDrawObjectAddress = scanner.ScanText( "48 83 EC 28 48 8B 0D ?? ?? ?? ?? 48 8B 01" ) + 7;
+            //VfxRootDrawObject = vfxDrawObjectAddress + Marshal.ReadInt32( vfxDrawObjectAddress ) + 4;
         }
 
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
+
             return vfx;
         }
 
@@ -160,6 +164,7 @@ namespace VFXEditor.Interop {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
+
             return vfx;
         }
 

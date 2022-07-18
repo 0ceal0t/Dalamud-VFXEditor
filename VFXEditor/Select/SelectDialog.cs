@@ -1,3 +1,4 @@
+using Dalamud.Interface.Components;
 using ImGuiFileDialog;
 using ImGuiNET;
 
@@ -30,13 +31,10 @@ namespace VFXSelect {
             Path = path;
         }
 
-        public static SelectResult None() {
-            var s = new SelectResult {
-                DisplayString = "[NONE]",
-                Path = ""
-            };
-            return s;
-        }
+        public static SelectResult None() => new() {
+            DisplayString = "[NONE]",
+            Path = ""
+        };
     }
 
     public abstract class SelectDialog {
@@ -48,8 +46,9 @@ namespace VFXSelect {
         private bool Visible = false;
 
         protected Action<SelectResult> OnSelect;
-
         protected abstract List<SelectTab> GetTabs();
+        protected SelectResult RecentSelected;
+        protected bool IsRecentSelected = false;
 
         public SelectDialog( string id, string ext, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) {
             Id = id;
@@ -86,6 +85,7 @@ namespace VFXSelect {
         }
 
         // =========== LOCAL ================
+
         private string LocalPath = "";
         private void DrawLocal() {
             var ret = ImGui.BeginTabItem( "Local File##Select-" + Id );
@@ -114,6 +114,7 @@ namespace VFXSelect {
         }
 
         // ============= GAME =================
+
         public void DrawGame() {
             var ret = ImGui.BeginTabItem( "Game Items##Select/" + Id );
             if( !ret ) return;
@@ -126,7 +127,8 @@ namespace VFXSelect {
             ImGui.EndTabItem();
         }
 
-        // ============== GAME FILE ================
+        // ============== GAME FILE =============
+
         private string GamePath = "";
         public void DrawGamePath() {
             var ret = ImGui.BeginTabItem( "Game Path##Select/" + Id );
@@ -148,16 +150,16 @@ namespace VFXSelect {
         }
 
         // ======== RECENT ========
-        public SelectResult RecentSelected;
-        public bool IsRecentSelected = false;
+
         public void DrawRecent() {
             var ret = ImGui.BeginTabItem( "Recent##Select/" + Id );
             if( !ret )
                 return;
             var id = "##Recent/" + Id;
 
-            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
+            var footerHeight = ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
+
             var idx = 0;
             foreach( var item in RecentList ) {
                 if( item.Type == SelectResultType.Local && !ShowLocal ) continue;
@@ -169,11 +171,13 @@ namespace VFXSelect {
                 idx++;
             }
             ImGui.EndChild();
-            if( IsRecentSelected ) {
-                if( ImGui.Button( "SELECT" + id ) ) {
-                    Invoke( RecentSelected );
-                }
+
+            // Disable button if nothing selected
+            if( !IsRecentSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+            if( ImGui.Button( "SELECT" + id ) && IsRecentSelected ) {
+                Invoke( RecentSelected );
             }
+            if( !IsRecentSelected ) ImGui.PopStyleVar();
 
             ImGui.EndTabItem();
         }

@@ -121,23 +121,35 @@ namespace VFXEditor.PAP {
         }
 
         public void Draw( string id ) {
-            FileHelper.ShortInput( $"Model Id{id}", ref ModelId );
-            FileHelper.ByteInput( $"Base Id{id}", ref BaseId );
-            FileHelper.ByteInput( $"Variant Id{id}", ref VariantId );
+            if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
+                if( ImGui.BeginTabItem($"Parameters{id}")) {
+                    FileHelper.ShortInput( $"Model Id{id}", ref ModelId );
+                    FileHelper.ByteInput( $"Base Id{id}", ref BaseId );
+                    FileHelper.ByteInput( $"Variant Id{id}", ref VariantId );
 
-            if( ImGui.Button( $"Export all Havok data{id}" ) ) {
-                FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
-                    if( ok ) File.Copy( HkxTempLocation, res, true );
-                } );
-            }
+                    if( ImGui.Button( $"Export all Havok data{id}" ) ) {
+                        FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                            if( ok ) File.Copy( HkxTempLocation, res, true );
+                        } );
+                    }
 
-            DrawDropDown( id );
+                    ImGui.EndTabItem();
+                }
 
-            if( Selected != null ) {
-                Selected.Draw( $"{id}{Animations.IndexOf( Selected )}" );
-            }
-            else {
-                ImGui.Text( "Select an animation..." );
+                if( ImGui.BeginTabItem( $"Animations{id}" ) ) {
+                    DrawDropDown( id, separatorBefore: false );
+
+                    if( Selected != null ) {
+                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}" );
+                    }
+                    else {
+                        ImGui.Text( "Select an animation..." );
+                    }
+
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
             }
         }
 

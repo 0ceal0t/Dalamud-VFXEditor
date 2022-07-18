@@ -4,7 +4,7 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.Helper;
 
-namespace VFXEditor.TMB.TMB {
+namespace VFXEditor.TMB.Items {
     public class C012 : TMBItem {
         private int Duration = 30;
         private int Unk_3 = 0;
