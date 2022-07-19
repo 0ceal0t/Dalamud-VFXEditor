@@ -17,10 +17,10 @@ namespace VFXEditor.AVFX.VFX {
             IsParticle = isParticle;
 
             if( IsParticle ) {
-                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", Emitter.Main.Particles, Iteration.TargetIdx );
+                ParticleSelect = new UINodeSelect<UIParticle>( emitter, "Target Particle", Emitter.NodeGroups.Particles, Iteration.TargetIdx );
             }
             else {
-                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.Main.Emitters, Iteration.TargetIdx );
+                EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.NodeGroups.Emitters, Iteration.TargetIdx );
             }
 
             Parameters = new List<UIBase> {

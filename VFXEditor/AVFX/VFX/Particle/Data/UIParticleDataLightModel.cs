@@ -7,7 +7,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public UIParticleDataLightModel( AVFXParticleDataLightModel data, UIParticle particle ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UINodeSelect<UIModel>( particle, "Model", particle.Main.Models, data.ModelIdx ) );
+            Parameters.Add( ModelSelect = new UINodeSelect<UIModel>( particle, "Model", particle.NodeGroups.Models, data.ModelIdx ) );
         }
 
         public override void Dispose() {

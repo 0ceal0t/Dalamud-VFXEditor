@@ -4,23 +4,28 @@ using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
-        public AVFXMain AVFX;
-        public AVFXFile Main;
-        public UINodeGroup<T> Group;
+        public readonly AVFXMain AVFX;
+        public readonly AVFXFile VfxFile;
+        public readonly UINodeGroup<T> Group;
 
-        private T Selected = null;
         private readonly string Id;
         private readonly string DefaultText;
         private readonly string DefaultPath;
-
         private readonly bool AllowNew;
         private readonly bool AllowDelete;
 
-        public UINodeDropdownView( AVFXFile main, AVFXMain avfx, string id, string defaultText, bool allowNew = true, bool allowDelete = true, string defaultPath = "" ) {
-            Main = main;
+        private T Selected = null;
+
+        public UINodeDropdownView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
+            VfxFile = vfxFile;
             AVFX = avfx;
-            Id = id;
-            DefaultText = defaultText;
+            Group = group;
+            Id = $"##{name}";
+
+            var isVowel = "aeiouAEIOU".Contains( name[0] );
+            var aOrAn = isVowel ? "an" : "a";
+            DefaultText = $"Select {aOrAn} {name}";
+
             AllowNew = allowNew;
             AllowDelete = allowDelete;
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
@@ -31,16 +36,14 @@ namespace VFXEditor.AVFX.VFX {
         public virtual void OnSelect( T item ) { }
         public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
 
-        public void AddToGroup( T item ) {
-            Group.Add( item );
-        }
+        public void AddToGroup( T item ) => Group.Add( item );
 
         public override void Draw( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();
 
             if( AllowNew ) ImGui.SameLine();
-            IUINodeView<T>.DrawControls( this, Main, Selected, Group, AllowNew, AllowDelete, Id );
+            IUINodeView<T>.DrawControls( this, VfxFile, Selected, Group, AllowNew, AllowDelete, Id );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();
@@ -69,8 +72,6 @@ namespace VFXEditor.AVFX.VFX {
             Selected = null;
         }
 
-        public void CreateDefault() {
-            Main.Import( DefaultPath );
-        }
+        public void CreateDefault() => VfxFile.Import( DefaultPath );
     }
 }

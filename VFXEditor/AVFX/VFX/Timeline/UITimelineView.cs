@@ -5,14 +5,10 @@ using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITimelineView : UINodeDropdownView<UITimeline> {
-        public UITimelineView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##TIME", "Select a Timeline", defaultPath: "timeline_default.vfxedit" ) {
-            Group = main.Timelines;
-            Group.Items = AVFX.Timelines.Select( item => new UITimeline( Main, item ) ).ToList();
+        public UITimelineView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UITimeline> group ) : base( vfxFile, avfx, group, "Timeline", true, true, "timeline_default.vfxedit" ) {
         }
 
-        public override void OnDelete( UITimeline item ) {
-            AVFX.RemoveTimeline( item.Timeline );
-        }
+        public override void OnDelete( UITimeline item ) => AVFX.RemoveTimeline( item.Timeline );
 
         public override void OnExport( BinaryWriter writer, UITimeline item ) => item.Write( writer );
 
@@ -20,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
             var item = new AVFXTimeline();
             item.Read( reader, size );
             AVFX.AddTimeline( item );
-            return new UITimeline( Main, item, has_dependencies );
+            return new UITimeline( item, VfxFile.NodeGroupSet, has_dependencies );
         }
     }
 }

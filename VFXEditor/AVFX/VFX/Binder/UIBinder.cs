@@ -7,7 +7,6 @@ using VFXEditor.AVFXLib.Binder;
 namespace VFXEditor.AVFX.VFX {
     public class UIBinder : UINode {
         public readonly AVFXBinder Binder;
-        public readonly AVFXFile Main;
 
         private readonly UICombo<BinderType> Type;
         private readonly List<UIBinderProperties> Properties;
@@ -16,9 +15,8 @@ namespace VFXEditor.AVFX.VFX {
         private readonly List<UIBase> Parameters;
         private UIData Data;
 
-        public UIBinder( AVFXFile main, AVFXBinder binder, bool hasDependencies = false ) : base( UINodeGroup.BinderColor, hasDependencies ) {
+        public UIBinder( AVFXBinder binder, bool hasDependencies = false ) : base( UINodeGroup.BinderColor, hasDependencies ) {
             Binder = binder;
-            Main = main;
             NodeView = new UINodeGraphView( this );
             Properties = new List<UIBinderProperties>();
             Type = new UICombo<BinderType>( "Type", Binder.BinderVariety, onChange: () => {

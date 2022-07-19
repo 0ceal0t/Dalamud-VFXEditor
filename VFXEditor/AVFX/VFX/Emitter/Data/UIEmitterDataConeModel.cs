@@ -3,7 +3,7 @@ using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitterDataConeModel : UIData {
-        public UIParameters Parameters;
+        public readonly UIParameters Parameters;
 
         public UIEmitterDataConeModel( AVFXEmitterDataConeModel data ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );

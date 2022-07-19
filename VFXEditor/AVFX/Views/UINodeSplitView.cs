@@ -4,29 +4,32 @@ using VFXEditor.AVFXLib;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
-        public string Id;
-        public AVFXFile Main;
-        public AVFXMain AVFX;
-        public UINodeGroup<T> Group;
+        public readonly AVFXFile VfxFile;
+        public readonly AVFXMain Avfx;
+        public readonly UINodeGroup<T> Group;
+
+        public readonly string Id;
+
         public T Selected = null;
 
-        public UINodeSplitView( AVFXFile main, AVFXMain avfx, string _id, bool allowNew = true, bool allowDelete = true ) : base( allowNew, allowDelete ) {
-            Main = main;
-            AVFX = avfx;
-            Id = _id;
+        public UINodeSplitView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<T> group, string name, bool allowNew, bool allowDelete ) : base( allowNew, allowDelete ) {
+            VfxFile = vfxFile;
+            Avfx = avfx;
+            Group = group;
+            Id = $"##{name}";
         }
 
         public abstract T OnNew();
         public abstract void OnDelete( T item );
         public virtual void OnSelect( T item ) { }
-        public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
+        public abstract T OnImport( BinaryReader reader, int size, bool hasDependencies = false );
 
         public void AddToGroup( T item ) {
             Group.Add( item );
         }
 
         public override void DrawControls( string parentId ) {
-            IUINodeView<T>.DrawControls( this, Main, Selected, Group, AllowNew, AllowDelete, parentId );
+            IUINodeView<T>.DrawControls( this, VfxFile, Selected, Group, AllowNew, AllowDelete, parentId );
         }
 
         public override void DrawLeftCol( string parentId ) {
@@ -49,8 +52,6 @@ namespace VFXEditor.AVFX.VFX {
             Selected = null;
         }
 
-        public void CreateDefault() {
-            Group.Add( OnNew() );
-        }
+        public void CreateDefault() => Group.Add( OnNew() );
     }
 }

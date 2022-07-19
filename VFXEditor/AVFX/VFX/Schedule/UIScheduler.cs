@@ -5,16 +5,16 @@ using VFXEditor.AVFXLib.Scheduler;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIScheduler : UINode {
-        public AVFXScheduler Scheduler;
-        public AVFXFile Main;
-        public List<UISchedulerItem> Items;
-        public List<UISchedulerItem> Triggers;
-        public UIScheduleItemSplitView ItemSplit;
-        public UIItemSplitView<UISchedulerItem> TriggerSplit;
+        public readonly AVFXScheduler Scheduler;
+        public readonly UINodeGroupSet NodeGroups;
+        public readonly List<UISchedulerItem> Items;
+        public readonly List<UISchedulerItem> Triggers;
+        public readonly UIScheduleItemSplitView ItemSplit;
+        public readonly UIItemSplitView<UISchedulerItem> TriggerSplit;
 
-        public UIScheduler( AVFXFile main, AVFXScheduler scheduler ) : base( UINodeGroup.SchedColor, false ) {
+        public UIScheduler( AVFXScheduler scheduler, UINodeGroupSet nodeGroups ) : base( UINodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
-            Main = main;
+            NodeGroups = nodeGroups;
             Items = new List<UISchedulerItem>();
             Triggers = new List<UISchedulerItem>();
 

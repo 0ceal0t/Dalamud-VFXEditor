@@ -28,8 +28,8 @@ namespace VFXEditor.AVFX.VFX {
             };
 
             if( IsAssigned() ) {
-                Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
-                Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
+                Creation.Add( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.NodeGroups.Models, Simple.InjectionModelIdx ) );
+                Creation.Add( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, Simple.InjectionVertexBindModelIdx ) );
             }
 
             Creation.Add( new UIInt( "Injection Position Type", Simple.InjectionPositionType ) );
@@ -93,8 +93,8 @@ namespace VFXEditor.AVFX.VFX {
                 Creation.Remove( InjectionModelSelect );
                 Creation.Remove( InjectionVertexModelSelect );
 
-                Creation.Prepend( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.Main.Models, Simple.InjectionModelIdx ) );
-                Creation.Prepend( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.Main.Models, Simple.InjectionVertexBindModelIdx ) );
+                Creation.Prepend( InjectionModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Model", Particle.NodeGroups.Models, Simple.InjectionModelIdx ) );
+                Creation.Prepend( InjectionVertexModelSelect = new UINodeSelect<UIModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, Simple.InjectionVertexBindModelIdx ) );
             }
         }
 

@@ -8,7 +8,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public UIParticleDataModel( AVFXParticleDataModel data, UIParticle particle ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", particle.Main.Models, data.ModelIdx ) );
+            Parameters.Add( ModelSelect = new UINodeSelectList<UIModel>( particle, "Model", particle.NodeGroups.Models, data.ModelIdx ) );
             Parameters.Add( new UIInt( "Model Number Random", data.ModelNumberRandomValue ) );
             Parameters.Add( new UICombo<RandomType>( "Model Number Random Type", data.ModelNumberRandomType ) );
             Parameters.Add( new UIInt( "Model Number Random Interval", data.ModelNumberRandomInterval ) );

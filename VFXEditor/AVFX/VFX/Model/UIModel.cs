@@ -11,7 +11,6 @@ using VFXEditor.Helper;
 namespace VFXEditor.AVFX.VFX {
     public class UIModel : UINode {
         public AVFXModel Model;
-        public AVFXFile Main;
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
@@ -19,9 +18,8 @@ namespace VFXEditor.AVFX.VFX {
         private bool Refresh = false;
         public bool Open = true;
 
-        public UIModel( AVFXFile main, AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
+        public UIModel( AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
-            Main = main;
             NodeView = new UINodeGraphView( this );
 
             EmitterVerts = new List<UIModelEmitterVertex>();
@@ -46,7 +44,7 @@ namespace VFXEditor.AVFX.VFX {
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    Main.ShowExportDialog( this );
+                    Plugin.AvfxManager.ShowExportDialog( this );
                 }
                 ImGui.EndPopup();
             }

@@ -12,33 +12,23 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class AVFXFile {
-        public AVFXMain AVFX;
+        public readonly AVFXMain Avfx;
 
-        public UIParameterView ParameterView;
-        public UIEffectorView EffectorView;
-        public UIEmitterView EmitterView;
-        public UIModelView ModelView;
-        public UIParticleView ParticleView;
-        public UITextureView TextureView;
-        public UITimelineView TimelineView;
-        public UIScheduleView ScheduleView;
-        public UIBinderView BinderView;
+        public readonly UIParameterView ParameterView;
+        public readonly UIEffectorView EffectorView;
+        public readonly UIEmitterView EmitterView;
+        public readonly UIModelView ModelView;
+        public readonly UIParticleView ParticleView;
+        public readonly UITextureView TextureView;
+        public readonly UITimelineView TimelineView;
+        public readonly UIScheduleView ScheduleView;
+        public readonly UIBinderView BinderView;
 
-        public List<UINodeGroup> AllGroups;
-        public UINodeGroup<UIBinder> Binders;
-        public UINodeGroup<UIEmitter> Emitters;
-        public UINodeGroup<UIModel> Models;
-        public UINodeGroup<UIParticle> Particles;
-        public UINodeGroup<UIScheduler> Schedulers;
-        public UINodeGroup<UITexture> Textures;
-        public UINodeGroup<UITimeline> Timelines;
-        public UINodeGroup<UIEffector> Effectors;
+        public readonly UINodeGroupSet NodeGroupSet;
 
-        public ExportDialog ExportUI;
+        public readonly ExportDialog ExportUI;
 
-        public bool Verified = true;
-
-        public bool GetVerified() => Verified;
+        public bool Verified { get; private set; } = true;
 
         public AVFXFile( BinaryReader reader, bool checkOriginal = true ) {
             var startPos = reader.BaseStream.Position;
@@ -49,12 +39,12 @@ namespace VFXEditor.AVFX.VFX {
                 reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
             }
 
-            AVFX = AVFXMain.FromStream( reader );
+            Avfx = AVFXMain.FromStream( reader );
 
             if( checkOriginal ) {
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter( ms );
-                AVFX.Write( writer );
+                Avfx.Write( writer );
 
                 var newData = ms.ToArray();
 
@@ -69,28 +59,20 @@ namespace VFXEditor.AVFX.VFX {
 
             // ======================
 
-            AllGroups = new() {
-                ( Binders = new UINodeGroup<UIBinder>() ),
-                ( Emitters = new UINodeGroup<UIEmitter>() ),
-                ( Models = new UINodeGroup<UIModel>() ),
-                ( Particles = new UINodeGroup<UIParticle>() ),
-                ( Schedulers = new UINodeGroup<UIScheduler>() ),
-                ( Textures = new UINodeGroup<UITexture>() ),
-                ( Timelines = new UINodeGroup<UITimeline>() ),
-                ( Effectors = new UINodeGroup<UIEffector>() )
-            };
+            NodeGroupSet = new( Avfx );
 
-            ParticleView = new UIParticleView( this, AVFX );
-            ParameterView = new UIParameterView( AVFX );
-            BinderView = new UIBinderView( this, AVFX );
-            EmitterView = new UIEmitterView( this, AVFX );
-            EffectorView = new UIEffectorView( this, AVFX );
-            TimelineView = new UITimelineView( this, AVFX );
-            TextureView = new UITextureView( this, AVFX );
-            ModelView = new UIModelView( this, AVFX );
-            ScheduleView = new UIScheduleView( this, AVFX );
+            ParameterView = new UIParameterView( Avfx );
 
-            AllGroups.ForEach( group => group.Init() );
+            ParticleView = new UIParticleView( this, Avfx, NodeGroupSet.Particles );
+            BinderView = new UIBinderView( this, Avfx, NodeGroupSet.Binders );
+            EmitterView = new UIEmitterView( this, Avfx, NodeGroupSet.Emitters );
+            EffectorView = new UIEffectorView( this, Avfx, NodeGroupSet.Effectors );
+            TimelineView = new UITimelineView( this, Avfx, NodeGroupSet.Timelines );
+            TextureView = new UITextureView( this, Avfx, NodeGroupSet.Textures );
+            ModelView = new UIModelView( this, Avfx, NodeGroupSet.Models );
+            ScheduleView = new UIScheduleView( this, Avfx, NodeGroupSet.Schedulers );
+
+            NodeGroupSet.Init();
 
             ExportUI = new ExportDialog( this );
         }
@@ -138,38 +120,15 @@ namespace VFXEditor.AVFX.VFX {
             ExportUI.Draw();
         }
 
-        public void Write( BinaryWriter writer ) => AVFX?.Write( writer );
+        public void Write( BinaryWriter writer ) => Avfx?.Write( writer );
 
-        public void Dispose() {
-            AllGroups.ForEach( group => group.Dispose() );
-        }
+        public void Dispose() => NodeGroupSet?.Dispose();
 
         // ========== WORKSPACE ===========
 
-        public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = new();
-            Schedulers.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Timelines.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Emitters.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Particles.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Effectors.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Binders.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Textures.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            Models.Items.ForEach( item => item.PopulateWorkspaceMeta( ret ) );
-            return ret;
-        }
+        public Dictionary<string, string> GetRenamingMap() => NodeGroupSet.GetRenamingMap();
 
-        public void ReadRenamingMap( Dictionary<string, string> renamingMap ) {
-            Dictionary<string, string> ret = new();
-            Schedulers.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Timelines.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Emitters.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Particles.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Effectors.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Binders.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Textures.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-            Models.Items.ForEach( item => item.ReadWorkspaceMeta( renamingMap ) );
-        }
+        public void ReadRenamingMap( Dictionary<string, string> renamingMap ) => NodeGroupSet.ReadRenamingMap( renamingMap );
 
         // ========= EXPORT ==============
 
@@ -285,7 +244,7 @@ namespace VFXEditor.AVFX.VFX {
         public byte[] ToBytes() {
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
-            AVFX.Write( writer );
+            Avfx.Write( writer );
             return ms.ToArray();
         }
 
@@ -329,9 +288,7 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         private void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
-            if( hasDependencies ) {
-                PreImportGroups();
-            }
+            if( hasDependencies ) NodeGroupSet.PreImport();
 
             List<NodePosition> models = new();
             List<NodePosition> textures = new();
@@ -385,10 +342,6 @@ namespace VFXEditor.AVFX.VFX {
             foreach( var pos in positions ) {
                 view.Import( reader, pos.Position, pos.Size, pos.Renamed, hasDependencies );
             }
-        }
-
-        private void PreImportGroups() {
-            AllGroups.ForEach( group => group.PreImport() );
         }
 
         // =====================

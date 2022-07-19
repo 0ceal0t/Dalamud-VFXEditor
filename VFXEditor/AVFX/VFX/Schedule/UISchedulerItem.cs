@@ -4,17 +4,17 @@ using VFXEditor.AVFXLib.Scheduler;
 namespace VFXEditor.AVFX.VFX {
     public class UISchedulerItem : UIWorkspaceItem {
         public AVFXSchedulerSubItem Item;
-        public UIScheduler Sched;
+        public UIScheduler Scheduler;
         public string Name;
         public UINodeSelect<UITimeline> TimelineSelect;
         private readonly List<UIBase> Parameters;
 
-        public UISchedulerItem( AVFXSchedulerSubItem item, UIScheduler sched, string name ) {
+        public UISchedulerItem( AVFXSchedulerSubItem item, UIScheduler scheduler, string name ) {
             Item = item;
-            Sched = sched;
+            Scheduler = scheduler;
             Name = name;
 
-            TimelineSelect = new UINodeSelect<UITimeline>( Sched, "Target Timeline", Sched.Main.Timelines, Item.TimelineIdx );
+            TimelineSelect = new UINodeSelect<UITimeline>( Scheduler, "Target Timeline", Scheduler.NodeGroups.Timelines, Item.TimelineIdx );
             Parameters = new List<UIBase> {
                 new UICheckbox( "Enabled", Item.Enabled ),
                 new UIInt( "Start Time", Item.StartTime )
@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public override string GetWorkspaceId() {
             var Type = ( Name == "Item" ) ? "Item" : "Trigger";
-            return $"{Sched.GetWorkspaceId()}/{Type}{Idx}";
+            return $"{Scheduler.GetWorkspaceId()}/{Type}{Idx}";
         }
     }
 }

@@ -5,14 +5,10 @@ using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIParticleView : UINodeDropdownView<UIParticle> {
-        public UIParticleView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##PTCL", "Select a Particle", defaultPath: "particle_default.vfxedit" ) {
-            Group = Main.Particles;
-            Group.Items = AVFX.Particles.Select( item => new UIParticle( Main, item ) ).ToList();
+        public UIParticleView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIParticle> group ) : base( vfxFile, avfx, group, "Particle", true, true, "particle_default.vfxedit" ) {
         }
 
-        public override void OnDelete( UIParticle item ) {
-            AVFX.RemoveParticle( item.Particle );
-        }
+        public override void OnDelete( UIParticle item ) => AVFX.RemoveParticle( item.Particle );
 
         public override void OnExport( BinaryWriter writer, UIParticle item ) => item.Write( writer );
 
@@ -20,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
             var item = new AVFXParticle();
             item.Read( reader, size );
             AVFX.AddParticle( item );
-            return new UIParticle( Main, item, has_dependencies );
+            return new UIParticle( item, VfxFile.NodeGroupSet, has_dependencies );
         }
     }
 }

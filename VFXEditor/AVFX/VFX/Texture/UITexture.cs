@@ -9,27 +9,26 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITexture : UINode {
-        public AVFXFile Main;
-        public AVFXTexture Texture;
-        public string lastValue;
-        public UIString Path;
-        public UINodeGraphView NodeView;
+        public readonly AVFXTexture Texture;
+        public readonly UIString Path;
+        public readonly UINodeGraphView NodeView;
 
-        public UITexture( AVFXFile main, AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
-            Main = main;
+        private string LastValue;
+
+        public UITexture( AVFXTexture texture ) : base( UINodeGroup.TextureColor, false ) {
             Texture = texture;
             NodeView = new UINodeGraphView( this );
 
             Path = new UIString( "Path", Texture.Path );
-            lastValue = Texture.Path.GetValue();
+            LastValue = Texture.Path.GetValue();
             Plugin.TextureManager.LoadPreviewTexture( Texture.Path.GetValue() );
             HasDependencies = false; // if imported, all set now
         }
 
         public string LoadTex() {
             var currentPathValue = Path.Literal.GetValue();
-            if( currentPathValue != lastValue ) {
-                lastValue = currentPathValue;
+            if( currentPathValue != LastValue ) {
+                LastValue = currentPathValue;
                 Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
             }
             return currentPathValue;

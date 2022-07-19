@@ -40,7 +40,7 @@ namespace VFXEditor.NodeLibrary {
                 ImGui.Indent();
 
                 if( ImGui.Button( $"Import{id}" ) ) {
-                    Plugin.AvfxManager.ImportData( Path );
+                    Plugin.AvfxManager.Import( Path );
                 }
 
                 ImGui.SameLine();

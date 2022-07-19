@@ -3,12 +3,12 @@ using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitterDataModel : UIData {
-        public UIParameters Parameters;
+        public readonly UIParameters Parameters;
         public UINodeSelect<UIModel> ModelSelect;
 
         public UIEmitterDataModel( AVFXEmitterDataModel data, UIEmitter emitter ) {
             Tabs.Add( Parameters = new UIParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", emitter.Main.Models, data.ModelIdx ) );
+            Parameters.Add( ModelSelect = new UINodeSelect<UIModel>( emitter, "Model", emitter.NodeGroups.Models, data.ModelIdx ) );
             Parameters.Add( new UICombo<RotationOrder>( "Rotation Order", data.RotationOrderType ) );
             Parameters.Add( new UICombo<GenerateMethod>( "Generate Method", data.GenerateMethodType ) );
             Tabs.Add( new UICurve( data.AX, "Angle X" ) );

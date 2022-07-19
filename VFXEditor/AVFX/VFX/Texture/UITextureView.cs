@@ -5,24 +5,18 @@ using VFXEditor.AVFXLib.Texture;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITextureView : UINodeSplitView<UITexture> {
-        public UITextureView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##TEX" ) {
-            Group = main.Textures;
-            Group.Items = AVFX.Textures.Select( item => new UITexture( Main, item ) ).ToList();
+        public UITextureView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UITexture> group ) : base( vfxFile, avfx, group, "Texture", true, true ) {
         }
 
-        public override void OnDelete( UITexture item ) {
-            AVFX.RemoveTexture( item.Texture );
-        }
+        public override void OnDelete( UITexture item ) => Avfx.RemoveTexture( item.Texture );
 
         public override UITexture OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var tex = new AVFXTexture();
             tex.Read( reader, size );
-            AVFX.AddTexture( tex );
-            return new UITexture( Main, tex );
+            Avfx.AddTexture( tex );
+            return new UITexture( tex );
         }
 
-        public override UITexture OnNew() {
-            return new UITexture( Main, AVFX.AddTexture() );
-        }
+        public override UITexture OnNew() => new( Avfx.AddTexture() );
     }
 }

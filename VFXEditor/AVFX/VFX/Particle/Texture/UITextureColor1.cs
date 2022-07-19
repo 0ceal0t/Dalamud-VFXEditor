@@ -23,7 +23,7 @@ namespace VFXEditor.AVFX.VFX {
             };
 
             if( IsAssigned() ) {
-                Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
+                Parameters.Add( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, Tex.MaskTextureIdx ) );
             }
 
             Parameters.Add( new UICheckbox( "Enabled", Tex.Enabled ) );
@@ -45,7 +45,7 @@ namespace VFXEditor.AVFX.VFX {
                 AVFXBase.RecurseAssigned( Tex, true );
 
                 Parameters.Remove( TextureSelect );
-                Parameters.Prepend( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.Main.Textures, Tex.MaskTextureIdx ) );
+                Parameters.Prepend( TextureSelect = new UINodeSelectList<UITexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, Tex.MaskTextureIdx ) );
             }
         }
 

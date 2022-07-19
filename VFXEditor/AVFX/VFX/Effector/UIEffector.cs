@@ -6,16 +6,15 @@ using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEffector : UINode {
-        public AVFXEffector Effector;
-        public AVFXFile Main;
-        public UICombo<EffectorType> Type;
-        public UIData Data;
-        public UINodeGraphView NodeView;
+        public readonly AVFXEffector Effector;
+        public readonly UICombo<EffectorType> Type;
+        public readonly UINodeGraphView NodeView;
         private readonly List<UIBase> Parameters;
 
-        public UIEffector( AVFXFile main, AVFXEffector effector, bool has_dependencies = false ) : base( UINodeGroup.EffectorColor, has_dependencies ) {
+        public UIData Data;
+
+        public UIEffector( AVFXEffector effector, bool hasDependencies = false ) : base( UINodeGroup.EffectorColor, hasDependencies ) {
             Effector = effector;
-            Main = main;
             NodeView = new UINodeGraphView( this );
 
             Type = new UICombo<EffectorType>( "Type", Effector.EffectorVariety, onChange: () => {

@@ -19,9 +19,9 @@ namespace VFXEditor.AVFX.VFX {
             Item = item;
             Timeline = timeline;
 
-            BinderSelect = new UINodeSelect<UIBinder>( timeline, "Binder Select", Timeline.Main.Binders, Item.BinderIdx );
-            EmitterSelect = new UINodeSelect<UIEmitter>( timeline, "Emitter Select", Timeline.Main.Emitters, Item.EmitterIdx );
-            EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", Timeline.Main.Effectors, Item.EffectorIdx );
+            BinderSelect = new UINodeSelect<UIBinder>( timeline, "Binder Select", Timeline.NodeGroups.Binders, Item.BinderIdx );
+            EmitterSelect = new UINodeSelect<UIEmitter>( timeline, "Emitter Select", Timeline.NodeGroups.Emitters, Item.EmitterIdx );
+            EffectorSelect = new UINodeSelect<UIEffector>( timeline, "Effector Select", Timeline.NodeGroups.Effectors, Item.EffectorIdx );
 
             ClipNumber = new UIInt( "Clip Index", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.IsAssigned();

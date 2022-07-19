@@ -5,14 +5,10 @@ using VFXEditor.AVFXLib.Binder;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIBinderView : UINodeDropdownView<UIBinder> {
-        public UIBinderView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##BIND", "Select a Binder", defaultPath: "binder_default.vfxedit" ) {
-            Group = main.Binders;
-            Group.Items = AVFX.Binders.Select( item => new UIBinder( Main, item ) ).ToList();
+        public UIBinderView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIBinder> group ) : base( vfxFile, avfx, group, "Binder", true, true, "binder_default.vfxedit" ) {
         }
 
-        public override void OnDelete( UIBinder item ) {
-            AVFX.RemoveBinder( item.Binder );
-        }
+        public override void OnDelete( UIBinder item ) => AVFX.RemoveBinder( item.Binder );
 
         public override void OnExport( BinaryWriter writer, UIBinder item ) => item.Write( writer );
 
@@ -20,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
             var item = new AVFXBinder();
             item.Read( reader, size );
             AVFX.AddBinder( item );
-            return new UIBinder( Main, item );
+            return new UIBinder( item );
         }
     }
 }

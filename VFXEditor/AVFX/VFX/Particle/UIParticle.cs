@@ -6,30 +6,32 @@ using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIParticle : UINode {
-        public AVFXParticle Particle;
-        public AVFXFile Main;
-        public UICombo<ParticleType> Type;
-        public List<UIParticleUVSet> UVSets;
+        public readonly AVFXParticle Particle;
+        public readonly UINodeGroupSet NodeGroups;
+        public readonly UICombo<ParticleType> Type;
+        public readonly List<UIParticleUVSet> UVSets;
+
         public UIData Data;
-        public List<UIItem> Animation;
-        public UITextureColor1 TC1;
-        public UITextureColor2 TC2;
-        public UITextureColor2 TC3;
-        public UITextureColor2 TC4;
-        public UITextureNormal TN;
-        public UITextureDistortion TD;
-        public UITexturePalette TP;
-        public UITextureReflection TR;
-        public List<UIItem> Tex;
-        public UIItemSplitView<UIItem> AnimationSplit;
-        public UIItemSplitView<UIItem> TexSplit;
-        public UIUVSetSplitView UVSplit;
-        public UINodeGraphView NodeView;
+
+        public readonly List<UIItem> Animation;
+        public readonly UITextureColor1 TC1;
+        public readonly UITextureColor2 TC2;
+        public readonly UITextureColor2 TC3;
+        public readonly UITextureColor2 TC4;
+        public readonly UITextureNormal TN;
+        public readonly UITextureDistortion TD;
+        public readonly UITexturePalette TP;
+        public readonly UITextureReflection TR;
+        public readonly List<UIItem> Tex;
+        public readonly UIItemSplitView<UIItem> AnimationSplit;
+        public readonly UIItemSplitView<UIItem> TexSplit;
+        public readonly UIUVSetSplitView UVSplit;
+        public readonly UINodeGraphView NodeView;
         private readonly List<UIBase> Parameters;
 
-        public UIParticle( AVFXFile main, AVFXParticle particle, bool has_dependencies = false ) : base( UINodeGroup.ParticleColor, has_dependencies ) {
+        public UIParticle( AVFXParticle particle, UINodeGroupSet nodeGroups, bool hasDependencies = false ) : base( UINodeGroup.ParticleColor, hasDependencies ) {
             Particle = particle;
-            Main = main;
+            NodeGroups = nodeGroups;
             NodeView = new UINodeGraphView( this );
 
             Animation = new List<UIItem>();

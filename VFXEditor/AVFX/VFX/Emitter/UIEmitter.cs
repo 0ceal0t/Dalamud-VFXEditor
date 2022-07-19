@@ -7,7 +7,7 @@ using VFXEditor.AVFXLib.Emitter;
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitter : UINode {
         public readonly AVFXEmitter Emitter;
-        public readonly AVFXFile Main;
+        public readonly UINodeGroupSet NodeGroups;
 
         public readonly UICombo<EmitterType> Type;
         public readonly List<UIItem> Animation;
@@ -27,10 +27,11 @@ namespace VFXEditor.AVFX.VFX {
         public readonly UIInt SoundIndex;
         private readonly List<UIBase> Parameters;
 
-        public UIEmitter( AVFXFile main, AVFXEmitter emitter, bool has_dependencies = false ) : base( UINodeGroup.EmitterColor, has_dependencies ) {
+        public UIEmitter( AVFXEmitter emitter, UINodeGroupSet nodeGroups, bool hasDependencies = false ) : base( UINodeGroup.EmitterColor, hasDependencies ) {
             Emitter = emitter;
-            Main = main;
-            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", Main.Effectors, Emitter.EffectorIdx );
+            NodeGroups = nodeGroups;
+
+            EffectorSelect = new UINodeSelect<UIEffector>( this, "Effector Select", nodeGroups.Effectors, Emitter.EffectorIdx );
             NodeView = new UINodeGraphView( this );
 
             Animation = new List<UIItem>();

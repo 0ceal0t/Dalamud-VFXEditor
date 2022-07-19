@@ -15,13 +15,13 @@ namespace VFXEditor.AVFX.VFX {
         public ExportDialog( AVFXFile main ) : base("Export") {
             VFXFile = main;
             Categories = new List<ExportDialogCategory> {
-                new ExportDialogCategory<UITimeline>( main.Timelines, "Timelines" ),
-                new ExportDialogCategory<UIEmitter>( main.Emitters, "Emitters" ),
-                new ExportDialogCategory<UIParticle>( main.Particles, "Particles" ),
-                new ExportDialogCategory<UIEffector>( main.Effectors, "Effectors" ),
-                new ExportDialogCategory<UIBinder>( main.Binders, "Binders" ),
-                new ExportDialogCategory<UITexture>( main.Textures, "Textures" ),
-                new ExportDialogCategory<UIModel>( main.Models, "Models" )
+                new ExportDialogCategory<UITimeline>( main.NodeGroupSet.Timelines, "Timelines" ),
+                new ExportDialogCategory<UIEmitter>( main.NodeGroupSet.Emitters, "Emitters" ),
+                new ExportDialogCategory<UIParticle>( main.NodeGroupSet.Particles, "Particles" ),
+                new ExportDialogCategory<UIEffector>( main.NodeGroupSet.Effectors, "Effectors" ),
+                new ExportDialogCategory<UIBinder>( main.NodeGroupSet.Binders, "Binders" ),
+                new ExportDialogCategory<UITexture>( main.NodeGroupSet.Textures, "Textures" ),
+                new ExportDialogCategory<UIModel>( main.NodeGroupSet.Models, "Models" )
             };
         }
 

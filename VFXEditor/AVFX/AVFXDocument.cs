@@ -60,7 +60,7 @@ namespace VFXEditor.AVFX {
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected override bool GetVerified() => CurrentFile.GetVerified();
+        protected override bool GetVerified() => CurrentFile.Verified;
 
         protected override void DrawBody() { }
 
@@ -205,6 +205,8 @@ namespace VFXEditor.AVFX {
         public void Import( string path ) {
             if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
         }
+
+        public void ShowExportDialog( UINode node ) => CurrentFile.ShowExportDialog( node );
 
         protected override void SourceShow() => AVFXManager.SourceSelect.Show();
 

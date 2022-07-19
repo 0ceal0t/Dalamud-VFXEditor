@@ -5,14 +5,10 @@ using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitterView : UINodeDropdownView<UIEmitter> {
-        public UIEmitterView( AVFXFile main, AVFXMain avfx ) : base( main, avfx, "##EMIT", "Select an Emitter", defaultPath: "emitter_default.vfxedit" ) {
-            Group = main.Emitters;
-            Group.Items = AVFX.Emitters.Select( item => new UIEmitter( Main, item ) ).ToList();
+        public UIEmitterView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIEmitter> group ) : base( vfxFile, avfx, group, "Emitter", true, true, "emitter_default.vfxedit" ) {
         }
 
-        public override void OnDelete( UIEmitter item ) {
-            AVFX.RemoveEmitter( item.Emitter );
-        }
+        public override void OnDelete( UIEmitter item ) => AVFX.RemoveEmitter( item.Emitter );
 
         public override void OnExport( BinaryWriter writer, UIEmitter item ) => item.Write( writer );
 
@@ -20,7 +16,7 @@ namespace VFXEditor.AVFX.VFX {
             var item = new AVFXEmitter();
             item.Read( reader, size );
             AVFX.AddEmitter( item );
-            return new UIEmitter( Main, item, has_dependencies );
+            return new UIEmitter( item, VfxFile.NodeGroupSet, has_dependencies );
         }
     }
 }

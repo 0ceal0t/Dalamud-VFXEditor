@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEmitterSplitView : UIItemSplitView<UIEmitterItem> {
-        public UIEmitter Emitter;
-        public bool IsParticle;
+        public readonly UIEmitter Emitter;
+        public readonly bool IsParticle;
 
         public UIEmitterSplitView( List<UIEmitterItem> items, UIEmitter emitter, bool isParticle ) : base( items, true, true ) {
             Emitter = emitter;

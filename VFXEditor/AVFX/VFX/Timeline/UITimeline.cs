@@ -5,19 +5,19 @@ using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITimeline : UINode {
-        public AVFXTimeline Timeline;
-        public AVFXFile Main;
-        public List<UITimelineItem> Items;
-        public List<UITimelineClip> Clips;
-        public UITimelineClipSplitView ClipSplit;
-        public UITimelineItemSequencer ItemSplit;
-        public UINodeSelect<UIBinder> BinderSelect;
+        public readonly AVFXTimeline Timeline;
+        public readonly UINodeGroupSet NodeGroups;
+        public readonly List<UITimelineItem> Items;
+        public readonly List<UITimelineClip> Clips;
+        public readonly UITimelineClipSplitView ClipSplit;
+        public readonly UITimelineItemSequencer ItemSplit;
+        public readonly UINodeSelect<UIBinder> BinderSelect;
         private readonly List<UIBase> Parameters;
 
-        public UITimeline( AVFXFile main, AVFXTimeline timeline, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
+        public UITimeline( AVFXTimeline timeline, UINodeGroupSet nodeGroups, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
-            Main = main;
-            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", Main.Binders, Timeline.BinderIdx );
+            NodeGroups = nodeGroups;
+            BinderSelect = new UINodeSelect<UIBinder>( this, "Binder Select", nodeGroups.Binders, Timeline.BinderIdx );
 
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
