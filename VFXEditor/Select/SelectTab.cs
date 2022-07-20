@@ -94,9 +94,7 @@ namespace VFXSelect {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
                 if( ImGui.Selectable( UniqueRowTitle( item ), EqualityComparer<T>.Default.Equals( Selected, item ) ) ) {
                     if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
-                        Task.Run( async () => {
-                            var result = Loader.SelectItem( item, out Loaded );
-                        } );
+                        LoadItemAsync( item );
                         Selected = item;
                         OnSelect();
                     }
@@ -123,6 +121,12 @@ namespace VFXSelect {
             }
             ImGui.Columns( 1 );
             ImGui.EndTabItem();
+        }
+
+        private async void LoadItemAsync( T item ) {
+            await Task.Run( () => {
+                Loader.SelectItem( item, out Loaded );
+            } );
         }
 
         // ======================

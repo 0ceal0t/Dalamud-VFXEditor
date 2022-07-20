@@ -20,10 +20,10 @@ namespace VFXEditor.Helper {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
 
-        public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue) {
+        public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) {
             newValue = currentValue;
             if( ImGui.BeginCombo( label, $"{currentValue}" ) ) {
-                foreach (var option in options ) {
+                foreach( var option in options ) {
                     if( ImGui.Selectable( $"{option}", currentValue.Equals( option ) ) ) {
                         newValue = option;
 
@@ -58,23 +58,32 @@ namespace VFXEditor.Helper {
             var ret = false;
             ImGui.PushStyleColor( ImGuiCol.Button, color );
             if( small ) {
-                if( ImGui.SmallButton( label ) ) {
-                    ret = true;
-                }
+                if( ImGui.SmallButton( label ) ) ret = true;
             }
             else {
-                if( ImGui.Button( label ) ) {
-                    ret = true;
-                }
+                if( ImGui.Button( label ) ) ret = true;
             }
             ImGui.PopStyleColor();
             return ret;
         }
 
+        public static void CenteredText( string text ) {
+            var size = ImGui.CalcTextSize( text );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( ImGui.GetContentRegionMax().X - size.X ) / 2 );
+            ImGui.Text( text );
+        }
+
         public static void HelpMarker( string text ) {
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.TextDisabled( "(?)" );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 0 );
+            IconText( FontAwesomeIcon.InfoCircle, true );
             Tooltip( text );
+        }
+
+        public static void IconText( FontAwesomeIcon icon, bool disabled = false) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            if (disabled) ImGui.TextDisabled( $"{(char)icon}" );
+            else ImGui.Text( $"{( char )icon}" );
+            ImGui.PopFont();
         }
 
         public static void Tooltip( string text ) {
@@ -93,6 +102,7 @@ namespace VFXEditor.Helper {
             }
         }
 
+#nullable enable
         public static void OkNotification( string content, string? title = "VFXEditor" ) {
             Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Success );
         }
@@ -104,6 +114,7 @@ namespace VFXEditor.Helper {
         public static void WarningNotification( string content, string? title = "VFXEditor" ) {
             Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Warning );
         }
+#nullable disable
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             ImGui.PushFont( UiBuilder.IconFont );

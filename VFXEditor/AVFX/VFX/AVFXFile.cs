@@ -31,10 +31,9 @@ namespace VFXEditor.AVFX.VFX {
         public bool Verified { get; private set; } = true;
 
         public AVFXFile( BinaryReader reader, bool checkOriginal = true ) {
-            var startPos = reader.BaseStream.Position;
-
             byte[] original = null;
             if( checkOriginal ) {
+                var startPos = reader.BaseStream.Position;
                 original = reader.ReadBytes( ( int )reader.BaseStream.Length );
                 reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
             }
@@ -46,15 +45,7 @@ namespace VFXEditor.AVFX.VFX {
                 using var writer = new BinaryWriter( ms );
                 Avfx.Write( writer );
 
-                var newData = ms.ToArray();
-
-                for( var i = 0; i < Math.Min( newData.Length, original.Length ); i++ ) {
-                    if( newData[i] != original[i] ) {
-                        PluginLog.Log( $"Warning: files do not match at {i} {newData[i]} {original[i]}" );
-                        Verified = false;
-                        break;
-                    }
-                }
+                Verified = FileHelper.CompareFiles( original, ms.ToArray() );
             }
 
             // ======================

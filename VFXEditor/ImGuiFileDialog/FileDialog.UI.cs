@@ -442,11 +442,10 @@ namespace ImGuiFileDialog {
             return false;
         }
 
-        private void LoadTexturePreview( FileStruct file ) {
+        private async void LoadTexturePreview( FileStruct file ) {
             if( !DoLoadPreview ) return;
             if( ImageExtensions.Contains( file.Ext.ToLower() ) ) {
-                Task.Run( async () => {
-
+                await Task.Run( () => {
                     lock( PreviewLock ) {
                         var path = Path.Combine( file.FilePath, file.FileName );
                         if( file.Ext.ToLower() == "dds" ) {

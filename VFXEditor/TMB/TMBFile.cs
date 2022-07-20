@@ -81,14 +81,7 @@ namespace VFXEditor.TMB {
             foreach( var actor in Actors ) actor.PickTracks( Tracks, 2 + Actors.Count );
 
             if( checkOriginal ) { // Check if output matches the original
-                var output = ToBytes();
-                for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
-                    if( output[i] != original[i] ) {
-                        PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
-                        Verified = false;
-                        break;
-                    }
-                }
+                Verified = FileHelper.CompareFiles( original, ToBytes() );
             }
 
             reader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );

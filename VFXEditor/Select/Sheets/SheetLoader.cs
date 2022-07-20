@@ -12,11 +12,11 @@ namespace VFXSelect.Select.Sheets {
         public abstract void OnLoad();
         public abstract bool SelectItem( T item, out S selectedItem );
 
-        public void Load() {
+        public async void Load() {
             if( Waiting ) return;
             Waiting = true;
             PluginLog.Log( "Loading " + typeof( T ).Name );
-            Task.Run( async () => {
+            await Task.Run( () => {
                 try {
                     OnLoad();
                 }

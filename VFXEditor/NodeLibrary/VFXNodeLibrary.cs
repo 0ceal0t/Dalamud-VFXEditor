@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using VFXEditor.Dialogs;
+using VFXEditor.Helper;
 
 namespace VFXEditor.NodeLibrary {
     public class VFXNodeLibrary : GenericDialog {
@@ -25,13 +26,11 @@ namespace VFXEditor.NodeLibrary {
         }
 
         public override void DrawBody() {
-            ImGui.Text( "Save VFX nodes here using the " );
+            UIHelper.IconText( FontAwesomeIcon.InfoCircle, true );
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}##NodeLibrary" );
-            ImGui.PopFont();
+            ImGui.TextDisabled( "Save VFX nodes here using the button:" );
             ImGui.SameLine();
-            ImGui.Text( " button" );
+            UIHelper.IconText( FontAwesomeIcon.BookMedical, true );
 
             ImGui.InputText( "Search##NodeLibrary", ref SearchInput, 255 );
 

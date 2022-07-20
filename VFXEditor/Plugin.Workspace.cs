@@ -59,8 +59,8 @@ namespace VFXEditor {
         private static DateTime LastAutoSave = DateTime.Now;
         private static bool IsLoading = false;
 
-        private static void NewWorkspace() {
-            Task.Run( async () => {
+        private static async void NewWorkspace() {
+            await Task.Run( () => {
                 IsLoading = true;
                 CurrentWorkspaceLocation = "";
 
@@ -146,14 +146,12 @@ namespace VFXEditor {
             IsLoading = false;
         }
 
-        private static void SaveWorkspace() {
+        private static async void SaveWorkspace() {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
                 SaveAsWorkspace();
             }
             else {
-                Task.Run( async () => {
-                    ExportWorkspace();
-                } );
+                await Task.Run( ExportWorkspace );
             }
         }
 

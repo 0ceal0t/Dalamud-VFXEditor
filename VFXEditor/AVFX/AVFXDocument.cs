@@ -54,10 +54,23 @@ namespace VFXEditor.AVFX {
             }
         }
 
-        protected override void Update() {
+        protected override void UpdateFile() {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
+        }
+
+        protected override void Update() {
+            if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
+                UpdateFile();
+                Reload();
+                Plugin.ResourceLoader.ReRender();
+                LastUpdate = DateTime.Now;
+            }
+        }
+
+        protected override void ExportRaw() {
+            UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;
@@ -72,16 +85,17 @@ namespace VFXEditor.AVFX {
             ImGui.Columns( 3, "MainInterfaceFileColumns", false );
 
             // ======== INPUT TEXT =========
-            ImGui.SetColumnWidth( 0, 140 );
+            ImGui.SetColumnWidth( 0, 150 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            UIHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the loaded VFX" ); ImGui.SameLine();
             ImGui.Text( "Loaded VFX" );
-            ImGui.SameLine(); UIHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the data source" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            UIHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the replaced VFX" ); ImGui.SameLine();
             ImGui.Text( "VFX Being Replaced" );
-            ImGui.SameLine(); UIHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the preview vfx" );
             ImGui.NextColumn();
 
             // ======= SEARCH BARS =========
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 255 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
 
             DisplaySearchBars();
@@ -92,18 +106,8 @@ namespace VFXEditor.AVFX {
             ImGui.NextColumn();
             ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Templates", new Vector2( 80, 23 ) ) ) {
-                ImGui.OpenPopup( "Templates_Popup" );
-            }
-
-            if( ImGui.BeginPopup( "Templates_Popup" ) ) {
-                if( ImGui.Selectable( "Blank" ) ) {
-                    OpenTemplate( @"default_vfx.avfx" );
-                }
-                if( ImGui.Selectable( "Weapon" ) ) {
-                    OpenTemplate( @"default_weapon.avfx" );
-                }
-                ImGui.EndPopup();
+            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) {
+                AVFXManager.NodeLibrary.Show();
             }
 
             // ======= SPAWN + EYE =========
@@ -118,6 +122,7 @@ namespace VFXEditor.AVFX {
                 }
                 if( spawnDisabled ) {
                     ImGui.PopStyleVar();
+                    UIHelper.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
                 }
             }
             else {
@@ -160,44 +165,11 @@ namespace VFXEditor.AVFX {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile == null ) {
-                DisplayBeginHelpText();
-            }
+            if( CurrentFile == null ) DisplayBeginHelpText();
             else {
-                if( UIHelper.OkButton( "UPDATE" ) ) {
-                    if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                        Update();
-                        Reload();
-                        Plugin.ResourceLoader.ReRender();
-                        LastUpdate = DateTime.Now;
-                    }
-                }
-
-                // ===== EXPORT ======
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
-                    UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
-                }
-                ImGui.PopFont();
-                UIHelper.Tooltip( "Export raw .avfx file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
-
-                // ======== VERIFY ============
-                ImGui.SameLine();
-                UIHelper.ShowVerifiedStatus( Verified );
-
-                // ======== NODE LIBRARY =======
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ImGui.GetContentRegionAvail().X - 37 );
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Book}" ) ) {
-                    AVFXManager.NodeLibrary.Show();
-                }
-                ImGui.PopFont();
-                UIHelper.Tooltip( "VFX node library" );
+                DisplayFileControls();
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
                 CurrentFile.Draw();
             }
         }
@@ -212,7 +184,7 @@ namespace VFXEditor.AVFX {
 
         protected override void ReplaceShow() => AVFXManager.ReplaceSelect.Show();
 
-        private void OpenTemplate( string path ) {
+        public void OpenTemplate( string path ) {
             var newResult = new SelectResult {
                 DisplayString = "[NEW]",
                 Type = SelectResultType.Local,

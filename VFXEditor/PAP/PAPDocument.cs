@@ -49,10 +49,20 @@ namespace VFXEditor.PAP {
             }
         }
 
-        protected override void Update() {
+        protected override void UpdateFile() {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote PAP file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
+        }
+
+        protected override void Update() {
+            UpdateFile();
+            Reload( CurrentFile.GetPapIds() );
+            Plugin.ResourceLoader.ReRender();
+        }
+
+        protected override void ExportRaw() {
+            UIHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;
@@ -65,29 +75,11 @@ namespace VFXEditor.PAP {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile == null ) {
-                DisplayBeginHelpText();
-            }
+            if( CurrentFile == null ) DisplayBeginHelpText();
             else {
-                if( UIHelper.OkButton( "UPDATE" ) ) {
-                    Update();
-                    Reload( CurrentFile.GetPapIds() );
-                    Plugin.ResourceLoader.ReRender();
-                }
-
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
-                    ImGui.PopFont();
-                    UIHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
-                }
-                else ImGui.PopFont();
-
-                ImGui.SameLine();
-                UIHelper.ShowVerifiedStatus( Verified );
+                DisplayFileControls();
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
                 CurrentFile.Draw( "##Pap" );
             }
         }

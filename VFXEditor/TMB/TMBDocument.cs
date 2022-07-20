@@ -46,10 +46,20 @@ namespace VFXEditor.TMB {
             }
         }
 
-        protected override void Update() {
+        protected override void UpdateFile() {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
+        }
+
+        protected override void Update() {
+            UpdateFile();
+            Reload();
+            Plugin.ResourceLoader.ReRender();
+        }
+
+        protected override void ExportRaw() {
+            UIHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;
@@ -62,29 +72,11 @@ namespace VFXEditor.TMB {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile == null ) {
-                DisplayBeginHelpText();
-            }
+            if( CurrentFile == null ) DisplayBeginHelpText();
             else {
-                if( UIHelper.OkButton( "UPDATE" ) ) {
-                    Update();
-                    Reload();
-                    Plugin.ResourceLoader.ReRender();
-                }
-
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) {
-                    ImGui.PopFont();
-                    UIHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
-                }
-                else ImGui.PopFont();
-
-                ImGui.SameLine();
-                UIHelper.ShowVerifiedStatus( Verified );
+                DisplayFileControls();
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
                 CurrentFile.Draw( "##Tmb" );
             }
         }

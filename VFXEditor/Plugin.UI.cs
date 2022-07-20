@@ -36,7 +36,7 @@ namespace VFXEditor {
             }
         }
 
-        public static void DrawMenu() {
+        public static void DrawFileMenu() {
             if( ImGui.BeginMenu( "File##Menu" ) ) {
                 ImGui.TextDisabled( "Workspace" );
                 ImGui.SameLine();
@@ -59,23 +59,19 @@ namespace VFXEditor {
 
                 ImGui.EndMenu();
             }
-            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
-                if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
-                ImGui.EndMenu();
-            }
-            if( ImGui.BeginMenu( "Mod Export##Menu" ) ) {
+
+            if( ImGui.BeginMenu( "Export##Menu" ) ) {
                 if( ImGui.MenuItem( "Penumbra##Menu" ) ) PenumbraDialog.Show();
                 if( ImGui.MenuItem( "Textools##Menu" ) ) TexToolsDialog.Show();
                 ImGui.EndMenu();
             }
+        }
 
-            ImGui.Separator();
-
-            if( ImGui.MenuItem( "VFX##Menu" ) ) AvfxManager.Show();
+        public static void DrawManagersMenu() {
+            if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
-            if( ImGui.MenuItem( "TMB##Menu" ) ) TmbManager.Show();
-            if( ImGui.MenuItem( "PAP##Menu" ) ) PapManager.Show();
+            if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();
+            if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
         }
     }
 }

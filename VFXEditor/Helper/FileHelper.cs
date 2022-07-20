@@ -1,4 +1,6 @@
+using Dalamud.Logging;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -46,6 +48,16 @@ namespace VFXEditor.Helper {
             while( ( count = reader.Read( buffer, 0, buffer.Length ) ) != 0 )
                 ms.Write( buffer, 0, count );
             return ms.ToArray();
+        }
+
+        public static bool CompareFiles( byte[] original, byte[] data ) {
+            for( var i = 0; i < Math.Min( data.Length, original.Length ); i++ ) {
+                if( data[i] != original[i] ) {
+                    PluginLog.Log( $"Warning: files do not match at {i} {data[i]} {original[i]}" );
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

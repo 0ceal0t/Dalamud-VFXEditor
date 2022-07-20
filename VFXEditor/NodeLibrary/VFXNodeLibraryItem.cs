@@ -39,7 +39,7 @@ namespace VFXEditor.NodeLibrary {
                 DragDrop( library, ref listModified );
                 ImGui.Indent();
 
-                if( ImGui.Button( $"Import{id}" ) ) {
+                if (UIHelper.DisabledButton($"Import{id}", Plugin.AvfxManager.HasCurrentFile)) {
                     Plugin.AvfxManager.Import( Path );
                 }
 

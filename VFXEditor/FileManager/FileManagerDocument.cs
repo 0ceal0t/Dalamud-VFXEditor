@@ -18,6 +18,7 @@ namespace VFXEditor.FileManager {
         public string ReplacePath => Replace.Path;
 
         protected T CurrentFile;
+        public bool HasCurrentFile => CurrentFile != null;
 
         protected VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
         protected string WriteLocation;
@@ -55,7 +56,7 @@ namespace VFXEditor.FileManager {
             Source = result;
             if( CurrentFile != null ) {
                 Verified = GetVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
-                Update();
+                UpdateFile();
             }
         }
 
@@ -81,7 +82,11 @@ namespace VFXEditor.FileManager {
 
         protected abstract void LoadGame( string localPath );
 
+        protected abstract void UpdateFile();
+
         protected abstract void Update();
+
+        protected abstract void ExportRaw();
 
         protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
@@ -104,6 +109,7 @@ namespace VFXEditor.FileManager {
 
             // ======== INPUT TEXT =========
             ImGui.SetColumnWidth( 0, 140 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Text( $"Loaded {FileType}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $"{FileType} Being Replaced" );
@@ -117,8 +123,6 @@ namespace VFXEditor.FileManager {
 
             ImGui.PopItemWidth();
             ImGui.Columns( 1 );
-
-            // ================================
 
             DrawBody();
         }
@@ -170,6 +174,19 @@ namespace VFXEditor.FileManager {
             ImGui.PopFont();
         }
 
+        protected void DisplayFileControls() {
+            if( UIHelper.OkButton( "UPDATE" ) ) Update();
+
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) ExportRaw();
+            ImGui.PopFont();
+            UIHelper.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
+
+            ImGui.SameLine();
+            UIHelper.ShowVerifiedStatus( Verified );
+        }
+
         protected abstract void DrawBody();
 
         protected abstract void SourceShow();
@@ -177,12 +194,53 @@ namespace VFXEditor.FileManager {
         protected abstract void ReplaceShow();
 
         protected static void DisplayBeginHelpText() {
-            ImGui.Text( "To begin, select a file using the magnifying glass icon: " );
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.Button( $"{( char )FontAwesomeIcon.Search}", new Vector2( 30, 23 ) );
-            ImGui.PopFont();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 15 );
+
+            var availWidth = ImGui.GetContentRegionMax().X;
+            var width = availWidth > 500 ? 500 : availWidth; // cap out at 300
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( availWidth - width ) / 2 );
+            ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
+            ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
+
+            UIHelper.CenteredText( "Welcome to VFXEditor" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+            ImGui.TextWrapped( "To begin, select a file to load and one to replace using the magnifying glass icons above, then click \"Update\". For example, to edit the skill \"Fell Cleave,\" select it as both the loaded and replaced effect. For more information, please see any of the resources below." );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+
+            var buttonWidth = ImGui.GetContentRegionMax().X - ImGui.GetStyle().FramePadding.X * 2;
+
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
+            if( ImGui.Button( "Github", new Vector2( buttonWidth, 0 ) ) ) {
+                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+            }
+            ImGui.PopStyleColor();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
+            if( ImGui.Button( "Report an Issue", new Vector2( buttonWidth, 0 ) ) ) {
+                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+            }
+            ImGui.PopStyleColor();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
+            if( ImGui.Button( "Wiki", new Vector2( buttonWidth, 0 ) ) ) {
+                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            }
+            ImGui.PopStyleColor();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.33725490196f, 0.38431372549f, 0.96470588235f, 1 ) );
+            if( ImGui.Button( "Dalamud Discord", new Vector2( buttonWidth, 0 ) ) ) {
+                UIHelper.OpenUrl( "https://discord.gg/3NMcUV5" );
+            }
+            ImGui.PopStyleColor();
+
+            ImGui.EndChild();
         }
 
         private static readonly string Text = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
@@ -191,11 +249,11 @@ namespace VFXEditor.FileManager {
             ImGui.PushStyleColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
-            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - 20 );
+            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - 40 );
 
-            ImGui.BeginChild( "##AnimationWarning", new Vector2( -1, 
-                ImGui.GetFrameHeightWithSpacing() + 
-                textSize.Y + 
+            ImGui.BeginChild( "##AnimationWarning", new Vector2( -1,
+                ImGui.GetFrameHeightWithSpacing() +
+                textSize.Y +
                 ImGui.GetStyle().ItemSpacing.Y * 2 +
                 ImGui.GetStyle().FramePadding.Y
             ), true );

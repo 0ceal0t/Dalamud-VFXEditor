@@ -1,4 +1,6 @@
+using ImGuiNET;
 using VFXEditor.AVFX.VFX;
+using VFXEditor.Data;
 using VFXEditor.FileManager;
 using VFXEditor.NodeLibrary;
 using VFXSelect;
@@ -57,6 +59,21 @@ namespace VFXEditor.AVFX {
         protected override AVFXDocument GetNewDocument() => new( LocalPath );
 
         protected override AVFXDocument GetImportedDocument( string localPath, WorkspaceMetaAvfx data ) => new( LocalPath, localPath, data );
+
+        protected override void DrawMenu() {
+            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
+                if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
+
+                if( ImGui.BeginMenu( "Templates##Menu" ) ) {
+                    if( ImGui.MenuItem( "Blank##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_vfx.avfx" );
+                    if( ImGui.MenuItem( "Weapon##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_weapon.avfx" );
+                    ImGui.EndMenu();
+                }
+
+                ImGui.EndMenu();
+            }
+        }
 
         public override void Dispose() {
             base.Dispose();

@@ -45,6 +45,9 @@ namespace VFXEditor.PAP {
 
         protected override PAPDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
+        protected override void DrawMenu() {
+        }
+
         public override void Dispose() {
             base.Dispose();
             SourceSelect.Hide();

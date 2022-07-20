@@ -41,6 +41,9 @@ namespace VFXEditor.TMB {
 
         protected override TMBDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
+        protected override void DrawMenu() {
+        }
+
         public override void Dispose() {
             base.Dispose();
             SourceSelect.Hide();

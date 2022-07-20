@@ -19,6 +19,8 @@ namespace VFXEditor.FileManager {
         protected readonly string Id;
         protected List<T> Documents = new();
         protected T ActiveDocument = null;
+        public bool HasCurrentFile => ActiveDocument != null && ActiveDocument.HasCurrentFile;
+
         private bool HasDefault = true;
 
         private T SelectedDocument = null; // for document selection dialog
@@ -98,6 +100,8 @@ namespace VFXEditor.FileManager {
             ActiveDocument = null;
         }
 
+        protected abstract void DrawMenu();
+
         public override void DrawBody() {
             DrawDocumentSelect();
             if( OnlyDocumentDialog ) return;
@@ -105,9 +109,12 @@ namespace VFXEditor.FileManager {
             Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
 
             if( ImGui.BeginMenuBar() ) {
-                Plugin.DrawMenu();
-                ImGui.Separator();
+                Plugin.DrawFileMenu();
+                DrawMenu();
                 if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
+                ImGui.Separator();
+                Plugin.DrawManagersMenu();
+
                 ImGui.EndMenuBar();
             }
 

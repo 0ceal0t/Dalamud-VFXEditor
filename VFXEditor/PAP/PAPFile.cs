@@ -60,15 +60,7 @@ namespace VFXEditor.PAP {
             }
 
             if( checkOriginal ) { // Check if output matches the original
-                var output = ToBytes();
-                if( output.Length != original.Length ) PluginLog.Log( $"Lengths do not match {output.Length} {original.Length}" );
-                for( var i = 0; i < Math.Min( output.Length, original.Length ); i++ ) {
-                    if( output[i] != original[i] ) {
-                        PluginLog.Log( $"Warning: files do not match at {i} {output[i]} {original[i]}" );
-                        Verified = false;
-                        break;
-                    }
-                }
+                Verified = FileHelper.CompareFiles( original, ToBytes() );
             }
         }
 
