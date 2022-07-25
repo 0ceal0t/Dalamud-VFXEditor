@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
             if( ImGui.InputFloat3( "Position" + id, ref Position ) ) {
                 Vertex.Position = new float[] { Position.X, Position.Y, Position.Z };
             }
-            if( ImGui.InputFloat3( "Normal" + id, ref Position ) ) {
+            if( ImGui.InputFloat3( "Normal" + id, ref Normal ) ) {
                 Vertex.Normal = new float[] { Normal.X, Normal.Y, Normal.Z };
             }
             if( ImGui.ColorEdit4( "Color" + id, ref Color ) ) {

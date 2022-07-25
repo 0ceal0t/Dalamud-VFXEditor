@@ -235,7 +235,7 @@ namespace VFXEditor.FileManager {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.33725490196f, 0.38431372549f, 0.96470588235f, 1 ) );
-            if( ImGui.Button( "Dalamud Discord", new Vector2( buttonWidth, 0 ) ) ) {
+            if( ImGui.Button( "XIVLauncher Discord", new Vector2( buttonWidth, 0 ) ) ) {
                 UIHelper.OpenUrl( "https://discord.gg/3NMcUV5" );
             }
             ImGui.PopStyleColor();
