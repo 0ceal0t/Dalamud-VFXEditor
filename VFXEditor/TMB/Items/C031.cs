@@ -5,21 +5,21 @@ using VFXEditor.Helper;
 
 namespace VFXEditor.TMB.Items {
     public class C031 : TMBItem {
-        private int Unk_2 = 0;
+        private int Duration = 0;
         private int Unk_3 = 0;
-        private short Unk_4 = 0;
-        private short Unk_5 = 0;
+        private short AnimationId = 0;
+        private short Unk_5 = 2;
 
-        public static readonly string DisplayName = "C031";
+        public static readonly string DisplayName = "Lemure Animation (C031)";
         public override string GetDisplayName() => DisplayName;
         public override string GetName() => "C031";
 
         public C031() { }
         public C031( BinaryReader reader ) {
             ReadInfo( reader );
-            Unk_2 = reader.ReadInt32();
+            Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
-            Unk_4 = reader.ReadInt16();
+            AnimationId = reader.ReadInt16();
             Unk_5 = reader.ReadInt16();
         }
 
@@ -28,17 +28,17 @@ namespace VFXEditor.TMB.Items {
 
         public override void Write( BinaryWriter entryWriter, int entryPos, BinaryWriter extraWriter, int extraPos, Dictionary<string, int> stringPositions, int stringPos ) {
             WriteInfo( entryWriter );
-            entryWriter.Write( Unk_2 );
+            entryWriter.Write( Duration );
             entryWriter.Write( Unk_3 );
-            entryWriter.Write( Unk_4 );
+            entryWriter.Write( AnimationId );
             entryWriter.Write( Unk_5 );
         }
 
         public override void Draw( string id ) {
             DrawInfo( id );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk_2 );
+            ImGui.InputInt( $"Duration{id}", ref Duration );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
-            FileHelper.ShortInput( $"Unknown 4{id}", ref Unk_4 );
+            FileHelper.ShortInput( $"Animation Id{id}", ref AnimationId );
             FileHelper.ShortInput( $"Unknown 5{id}", ref Unk_5 );
         }
 

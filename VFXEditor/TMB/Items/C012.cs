@@ -9,10 +9,10 @@ namespace VFXEditor.TMB.Items {
         private int Duration = 30;
         private int Unk_3 = 0;
         private string Path = "";
-        private short BindPoint_1 = 1;
-        private short BindPoint_2 = 0xFF;
-        private short BindPoint_3 = 2;
-        private short bindPoint_4 = 0xFF;
+        private short BindPoint1 = 1;
+        private short BindPoint2 = 0xFF;
+        private short BindPoint3 = 2;
+        private short BindPoint4 = 0xFF;
         private int Unk_4;
         private int Unk_5;
         private Vector3 Scale = new( 1 );
@@ -38,10 +38,10 @@ namespace VFXEditor.TMB.Items {
             Path = FileHelper.ReadString( reader );
             reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
 
-            BindPoint_1 = reader.ReadInt16();
-            BindPoint_2 = reader.ReadInt16();
-            BindPoint_3 = reader.ReadInt16();
-            bindPoint_4 = reader.ReadInt16();
+            BindPoint1 = reader.ReadInt16();
+            BindPoint2 = reader.ReadInt16();
+            BindPoint3 = reader.ReadInt16();
+            BindPoint4 = reader.ReadInt16();
 
             var pairs = ReadPairs( 4, reader, startPos );
             Scale = ListToVec3( pairs[0] );
@@ -67,10 +67,10 @@ namespace VFXEditor.TMB.Items {
 
             entryWriter.Write( offset );
 
-            entryWriter.Write( BindPoint_1 );
-            entryWriter.Write( BindPoint_2 );
-            entryWriter.Write( BindPoint_3 );
-            entryWriter.Write( bindPoint_4 );
+            entryWriter.Write( BindPoint1 );
+            entryWriter.Write( BindPoint2 );
+            entryWriter.Write( BindPoint3 );
+            entryWriter.Write( BindPoint4 );
 
             var pairs = new List<List<float>> {
                 Vec3ToList( Scale ),
@@ -91,10 +91,10 @@ namespace VFXEditor.TMB.Items {
             ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
             ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint_1 );
-            FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint_2 );
-            FileHelper.ShortInput( $"Bind Point 3{id}", ref BindPoint_3 );
-            FileHelper.ShortInput( $"Bind Point 4{id}", ref bindPoint_4 );
+            FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint1 );
+            FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint2 );
+            FileHelper.ShortInput( $"Bind Point 3{id}", ref BindPoint3 );
+            FileHelper.ShortInput( $"Bind Point 4{id}", ref BindPoint4 );
 
             ImGui.InputFloat3( $"Scale{id}", ref Scale );
             ImGui.InputFloat3( $"Rotation{id}", ref Rotation );

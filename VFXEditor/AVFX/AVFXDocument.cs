@@ -126,20 +126,12 @@ namespace VFXEditor.AVFX {
                 }
             }
             else {
-                if( ImGui.Button( "Remove" ) ) {
-                    Plugin.RemoveSpawnVfx();
-                }
+                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawnVfx();
             }
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) {
-                    Plugin.SpawnOnGround( previewSpawn );
-                }
-                if( ImGui.Selectable( "On Self" ) ) {
-                    Plugin.SpawnOnSelf( previewSpawn );
-                }
-                if( ImGui.Selectable( "On Taget" ) ) {
-                    Plugin.SpawnOnTarget( previewSpawn );
-                }
+                if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( previewSpawn );
+                if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( previewSpawn );
+                if( ImGui.Selectable( "On Taget" ) ) Plugin.SpawnOnTarget( previewSpawn );
                 ImGui.EndPopup();
             }
 

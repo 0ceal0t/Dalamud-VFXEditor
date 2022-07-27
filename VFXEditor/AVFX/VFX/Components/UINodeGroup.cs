@@ -113,10 +113,10 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void PopulateWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => PopulateWorkspaceMeta( meta ) );
+            Items.ForEach( item => item.PopulateWorkspaceMeta( meta ) );
         }
         public override void ReadWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => ReadWorkspaceMeta( meta ) );
+            Items.ForEach( item => item.ReadWorkspaceMeta( meta ) );
         }
 
         public override void Dispose() {

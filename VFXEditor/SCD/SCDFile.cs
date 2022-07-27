@@ -3,6 +3,7 @@ using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 
 namespace VFXEditor.Data.SCD {
@@ -36,6 +37,7 @@ namespace VFXEditor.Data.SCD {
 
         public SoundHeader Header;
         public SoundOffsetsHeader OffsetHeader;
+        public List<Table0Entry> Table0 = new();
         public List<CameraEntry> Camera = new();
         public List<MusicEntry> Music = new();
 
@@ -54,12 +56,15 @@ namespace VFXEditor.Data.SCD {
             var table4_Count = table0_Count;
 
             // In the file, table data is in order: 3, 0, 1, 4, 2
+            // padded to 16 bytes between each table data (such as between 3/0)
 
             // ============ TABLE 0 ===============
             for( var i = 0; i < table0_Count; i++ ) {
                 var offset = Reader.ReadInt32();
                 if( offset == 0 ) continue;
                 PluginLog.Log( $"0: {Reader.BaseStream.Position:X8} -> {offset:X8}" );
+
+                Table0.Add( new Table0Entry( Reader, offset ) );
             }
             // ============ TABLE 1 ===============
             for( var i = 0; i < table1_Count; i++ ) {
@@ -103,18 +108,44 @@ namespace VFXEditor.Data.SCD {
     }
 
     public abstract class ScdEntry {
-        protected ScdEntry( BinaryReader Reader, int offset ) {
-            var oldPosition = Reader.BaseStream.Position;
-            Reader.BaseStream.Position = offset;
-            Read( Reader );
-            Reader.BaseStream.Position = oldPosition;
+        protected ScdEntry( BinaryReader reader, int offset ) {
+            var oldPosition = reader.BaseStream.Position;
+            reader.BaseStream.Position = offset;
+            Read( reader );
+            reader.BaseStream.Position = oldPosition;
         }
 
-        protected ScdEntry( BinaryReader Reader ) {
-            Read( Reader );
+        protected ScdEntry( BinaryReader reader ) {
+            Read( reader );
         }
 
-        protected abstract void Read( BinaryReader Reader );
+        protected abstract void Read( BinaryReader reader );
+    }
+
+    // ====== TABLE 0 =========
+    public class Table0Entry : ScdEntry {
+        [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
+        public unsafe struct Table0_Header {
+            public byte UnkCount;
+            public byte Unk1;
+            public short Unk2;
+            public short Unk3;
+            public short Unk4;
+            public float Unk5;
+            public int Unk6;
+            // TODO:
+            // 8 shorts
+            // 2*UnkCount shorts
+        }
+
+        public Table0_Header Header;
+
+        public Table0Entry( BinaryReader reader ) : base( reader ) { }
+        public Table0Entry( BinaryReader reader, int offset ) : base( reader, offset ) { }
+
+        protected override void Read( BinaryReader reader ) {
+            Header = reader.ReadStructure<Table0_Header>();
+        }
     }
 
     // ===== TABLE 2 (MUSIC) ==========
@@ -140,23 +171,23 @@ namespace VFXEditor.Data.SCD {
         public Music_Header Header;
         public List<AuxChunk> AuxChunks = new();
 
-        public MusicEntry( BinaryReader Reader ) : base( Reader ) { }
-        public MusicEntry( BinaryReader Reader, int offset ) : base( Reader, offset ) { }
+        public MusicEntry( BinaryReader reader ) : base( reader ) { }
+        public MusicEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
 
-        protected override void Read( BinaryReader Reader ) {
-            Header = Reader.ReadStructure<Music_Header>();
+        protected override void Read( BinaryReader reader ) {
+            Header = reader.ReadStructure<Music_Header>();
 
             for( var i = 0; i < Header.AuxCount; i++ ) {
-                var id = Reader.ReadInt32();
-                var chunkSize = Reader.ReadInt32();
-                var data = Reader.ReadBytes( chunkSize - 8 ); // 4 bytes for id, 4 for size
+                var id = reader.ReadInt32();
+                var chunkSize = reader.ReadInt32();
+                var data = reader.ReadBytes( chunkSize - 8 ); // 4 bytes for id, 4 for size
                 AuxChunks.Add( new AuxChunk {
                     Id = id,
                     Data = data
                 } );
             }
 
-            // TODO: data if type != -1
+            // TODO: data types
 
             PluginLog.Log( $"TABLE 2: {Header.Length} {Header.Type} {Header.AuxCount}" );
         }
@@ -178,11 +209,11 @@ namespace VFXEditor.Data.SCD {
 
         public Camera_Data Data;
 
-        public CameraEntry( BinaryReader Reader ) : base( Reader ) { }
-        public CameraEntry( BinaryReader Reader, int offset ) : base( Reader, offset ) { }
+        public CameraEntry( BinaryReader reader ) : base( reader ) { }
+        public CameraEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
 
-        protected override void Read( BinaryReader Reader ) {
-            Data = Reader.ReadStructure<Camera_Data>();
+        protected override void Read( BinaryReader reader ) {
+            Data = reader.ReadStructure<Camera_Data>();
 
             PluginLog.Log( $"TABLE 3: {Data.Size} {Data.Unk1} {Data.Unk2} {Data.Unk3} {Data.Unk4}" );
         }

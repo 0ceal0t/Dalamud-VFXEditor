@@ -8,11 +8,11 @@ namespace VFXEditor.TMB.Items {
         private int Unk_2 = 0;
         private int Unk_3 = 0;
         private int Unk_4 = 0;
-        private short Unk_5 = 0;
+        private short Unk_5 = 0; // WeaponId / parentId / subId
         private short Unk_6 = 0;
         private int Unk_7 = 0;
 
-        public static readonly string DisplayName = "C043";
+        public static readonly string DisplayName = "Call Weapons (C043)";
         public override string GetDisplayName() => DisplayName;
         public override string GetName() => "C043";
 
