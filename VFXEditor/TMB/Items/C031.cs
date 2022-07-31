@@ -10,7 +10,7 @@ namespace VFXEditor.TMB.Items {
         private short AnimationId = 0;
         private short Unk_5 = 2;
 
-        public static readonly string DisplayName = "Lemure Animation (C031)";
+        public static readonly string DisplayName = "Summon Animation (C031)";
         public override string GetDisplayName() => DisplayName;
         public override string GetName() => "C031";
 

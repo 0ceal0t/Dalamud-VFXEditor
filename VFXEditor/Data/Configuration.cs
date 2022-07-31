@@ -18,7 +18,7 @@ namespace VFXEditor {
 
         public bool LogAllFiles = false;
         public bool LogDebug = false;
-        public bool ShowVfxAssigned = false;
+        public bool HideVfxAssigned = false;
 
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
@@ -107,7 +107,7 @@ namespace VFXEditor {
 
             ImGui.Separator();
 
-            if( ImGui.Checkbox( "Show assigned parameter status##Settings", ref ShowVfxAssigned ) ) {
+            if( ImGui.Checkbox( "Hide assigned parameter status##Settings", ref HideVfxAssigned ) ) {
                 Save();
             }
 

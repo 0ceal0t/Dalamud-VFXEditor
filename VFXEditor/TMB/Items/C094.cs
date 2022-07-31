@@ -6,8 +6,8 @@ namespace VFXEditor.TMB.Items {
     public class C094 : TMBItem {
         private int Duration = 0;
         private int Unk_3 = 0;
-        private int Unk_4 = 0; // Start and end
-        private int Unk_5 = 0;
+        private float StartVisibility = 0;
+        private float EndVisibility = 0;
 
         private int Unk2_1 = 0;
         private int Unk2_2 = 0;
@@ -26,8 +26,8 @@ namespace VFXEditor.TMB.Items {
             ReadInfo( reader );
             Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
-            Unk_4 = reader.ReadInt32();
-            Unk_5 = reader.ReadInt32();
+            StartVisibility = reader.ReadSingle();
+            EndVisibility = reader.ReadSingle();
 
             var offset = reader.ReadInt32();
             var savePos = reader.BaseStream.Position;
@@ -51,8 +51,8 @@ namespace VFXEditor.TMB.Items {
             WriteInfo( entryWriter );
             entryWriter.Write( Duration );
             entryWriter.Write( Unk_3 );
-            entryWriter.Write( Unk_4 );
-            entryWriter.Write( Unk_5 );
+            entryWriter.Write( StartVisibility );
+            entryWriter.Write( EndVisibility );
 
             var extraEndPos = ( int )extraWriter.BaseStream.Position + extraPos;
             var extraOffset = extraEndPos - startPos - 8;
@@ -69,8 +69,8 @@ namespace VFXEditor.TMB.Items {
             DrawInfo( id );
             ImGui.InputInt( $"Duration{id}", ref Duration );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
-            ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
+            ImGui.InputFloat( $"Start Visibility{id}", ref StartVisibility );
+            ImGui.InputFloat( $"End Visibility{id}", ref EndVisibility );
 
             ImGui.InputInt( $"Unknown 2,1{id}", ref Unk2_1 );
             ImGui.InputInt( $"Unknown 2,2{id}", ref Unk2_2 );

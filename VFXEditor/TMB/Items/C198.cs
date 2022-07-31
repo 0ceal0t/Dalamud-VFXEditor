@@ -12,7 +12,7 @@ namespace VFXEditor.TMB.Items {
         private int Unk_7 = 0;
         private int Unk_8 = 0;
 
-        public static readonly string DisplayName = "Lemure (C198)";
+        public static readonly string DisplayName = "Summon (C198)";
         public override string GetDisplayName() => DisplayName;
         public override string GetName() => "C198";
 

@@ -20,11 +20,11 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public static void PushAssignedColor( bool assigned ) {
-            if( Plugin.Configuration.ShowVfxAssigned ) ImGui.PushStyleColor( ImGuiCol.Text, assigned ? LightGreen : LightRed );
+            if( !Plugin.Configuration.HideVfxAssigned ) ImGui.PushStyleColor( ImGuiCol.Text, assigned ? LightGreen : LightRed );
         }
 
         public static void PopAssignedColor() {
-            if( Plugin.Configuration.ShowVfxAssigned ) ImGui.PopStyleColor();
+            if( !Plugin.Configuration.HideVfxAssigned ) ImGui.PopStyleColor();
         }
     }
 }

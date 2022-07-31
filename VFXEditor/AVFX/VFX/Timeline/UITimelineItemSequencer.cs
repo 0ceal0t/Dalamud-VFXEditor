@@ -19,6 +19,7 @@ namespace VFXEditor.AVFX.VFX {
             newItem.EffectorIdx.SetValue( -1 );
             newItem.EmitterIdx.SetValue( -1 );
             newItem.EndTime.SetValue( 1 );
+            newItem.Platform.SetValue( 0 );
 
             return new UITimelineItem( newItem, Timeline );
         }
