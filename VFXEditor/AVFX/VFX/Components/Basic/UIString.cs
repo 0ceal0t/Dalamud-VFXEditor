@@ -34,18 +34,6 @@ namespace VFXEditor.AVFX.VFX {
                 return;
             }
 
-            if (ShowRemoveButton) {
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
-                    Value = "";
-                    Literal.SetValue( "" );
-                    Literal.SetAssigned( false );
-                }
-                ImGui.PopFont();
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            }
-
             ImGui.InputText( Name + id, ref Value, 256 );
 
             if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
@@ -56,6 +44,19 @@ namespace VFXEditor.AVFX.VFX {
                 if( ShowRemoveButton && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
                     Literal.SetAssigned( false );
                 }
+            }
+
+            if( ShowRemoveButton ) {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                    Value = "";
+                    Literal.SetValue( "" );
+                    Literal.SetAssigned( false );
+                }
+                ImGui.PopFont();
             }
         }
     }
