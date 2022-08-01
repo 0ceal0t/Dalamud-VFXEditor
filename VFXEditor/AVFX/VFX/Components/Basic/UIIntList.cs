@@ -9,7 +9,6 @@ namespace VFXEditor.AVFX.VFX {
         public List<int> Value;
         public readonly AVFXIntList Literal;
 
-
         public UIIntList( string name, AVFXIntList literal ) {
             Name = name;
             Literal = literal;
@@ -17,22 +16,26 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void Draw( string id ) {
-            if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name] = Literal;
-            }
-
+            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXIntList literal ) {
                 Literal.GetValue()[0] = literal.GetValue()[0];
+                Literal.SetAssigned( literal.IsAssigned() );
                 Value[0] = Literal.GetValue()[0];
             }
 
-            PushAssignedColor( Literal.IsAssigned() );
+            // Unassigned
+            if( !Literal.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
+                return;
+            }
+
             var firstValue = Value[0];
             if( ImGui.InputInt( Name + id, ref firstValue ) ) {
                 Literal.GetValue()[0] = firstValue;
                 Value[0] = firstValue;
             }
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

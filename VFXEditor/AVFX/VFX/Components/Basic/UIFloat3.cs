@@ -7,6 +7,7 @@ namespace VFXEditor.AVFX.VFX {
     public class UIFloat3 : UIBase {
         public readonly string Name;
         public Vector3 Value;
+
         public readonly AVFXFloat Literal1;
         public readonly AVFXFloat Literal2;
         public readonly AVFXFloat Literal3;
@@ -30,25 +31,42 @@ namespace VFXEditor.AVFX.VFX {
             if( CopyManager.IsPasting ) {
                 if( CopyManager.Copied.TryGetValue( Name + "_1", out var _literal1 ) && _literal1 is AVFXFloat literal1 ) {
                     Literal1.SetValue( literal1.GetValue() );
+                    Literal1.SetAssigned( literal1.IsAssigned() );
                     Value.X = Literal1.GetValue();
                 }
                 if( CopyManager.Copied.TryGetValue( Name + "_2", out var _literal2 ) && _literal2 is AVFXFloat literal2 ) {
                     Literal2.SetValue( literal2.GetValue() );
+                    Literal2.SetAssigned( literal2.IsAssigned() );
                     Value.Y = Literal2.GetValue();
                 }
                 if( CopyManager.Copied.TryGetValue( Name + "_3", out var _literal3 ) && _literal3 is AVFXFloat literal3 ) {
                     Literal3.SetValue( literal3.GetValue() );
+                    Literal3.SetAssigned( literal3.IsAssigned() );
                     Value.Z = Literal3.GetValue();
                 }
             }
 
-            PushAssignedColor( Literal1.IsAssigned() );
+            // Unassigned
+            if( !Literal1.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) {
+                    Literal1.SetAssigned( true );
+                    Literal2.SetAssigned( true );
+                    Literal3.SetAssigned( true );
+                }
+                return;
+            }
+
             if( ImGui.InputFloat3( Name + id, ref Value ) ) {
                 Literal1.SetValue( Value.X );
                 Literal2.SetValue( Value.Y );
                 Literal3.SetValue( Value.Z );
             }
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) {
+                Literal1.SetAssigned( false );
+                Literal2.SetAssigned( false );
+                Literal3.SetAssigned( false );
+            }
         }
     }
 }

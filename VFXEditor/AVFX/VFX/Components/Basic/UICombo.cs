@@ -18,17 +18,20 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void Draw( string id ) {
-            if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name] = Literal;
-            }
-
+            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXEnum<T> literal ) {
                 Literal.SetValue( literal.GetValue() );
+                Literal.SetAssigned( literal.IsAssigned() );
                 ValueIdx = Array.IndexOf( Literal.Options, Literal.GetValue().ToString() );
                 OnChange?.Invoke();
             }
 
-            PushAssignedColor( Literal.IsAssigned() );
+            // Unassigned
+            if( !Literal.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
+                return;
+            }
+
             var text = ValueIdx == -1 ? "[NONE]" : Literal.Options[ValueIdx];
             if( ImGui.BeginCombo( Name + id, text ) ) {
                 for( var i = 0; i < Literal.Options.Length; i++ ) {
@@ -43,7 +46,8 @@ namespace VFXEditor.AVFX.VFX {
                 }
                 ImGui.EndCombo();
             }
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

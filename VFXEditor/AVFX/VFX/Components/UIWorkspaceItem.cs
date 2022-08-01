@@ -40,11 +40,12 @@ namespace VFXEditor.AVFX.VFX {
         public void DrawRename( string _id ) {
             var id = _id + "/Rename";
             if( CurrentlyRenaming ) {
-                ImGui.InputText( "Name" + id, ref RenamedTemp, 255 );
+                ImGui.InputText( $"{id}-Input", ref RenamedTemp, 255 );
 
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                     if( string.IsNullOrEmpty( RenamedTemp ) || Renamed == GetDefaultText() ) {
                         Renamed = null;
@@ -72,11 +73,14 @@ namespace VFXEditor.AVFX.VFX {
             }
             else {
                 var currentText = string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
-                ImGui.InputText( "Name" + id, ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
+                ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.8f );
+                ImGui.InputText( $"{id}-Input", ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
+                ImGui.PopStyleVar();
 
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.PencilAlt}" + id ) ) {
                     CurrentlyRenaming = true;
                     RenamedTemp = currentText;

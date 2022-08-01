@@ -15,20 +15,24 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void Draw( string id ) {
-            if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name] = Literal;
-            }
-
+            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXFloat literal ) {
                 Literal.SetValue( literal.GetValue() );
+                Literal.SetAssigned( literal.IsAssigned() );
                 Value = Literal.GetValue();
             }
 
-            PushAssignedColor( Literal.IsAssigned() );
+            // Unassigned
+            if( !Literal.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
+                return;
+            }
+
             if( ImGui.InputFloat( Name + id, ref Value ) ) {
                 Literal.SetValue( Value );
             }
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

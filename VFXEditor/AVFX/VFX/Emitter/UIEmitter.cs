@@ -43,7 +43,7 @@ namespace VFXEditor.AVFX.VFX {
                 Emitter.SetType( Emitter.EmitterVariety.GetValue() );
                 SetType();
             } );
-            SoundInput = new UIString( "Sound", Emitter.Sound, canBeUnassigned: true );
+            SoundInput = new UIString( "Sound", Emitter.Sound, showRemoveButton: true );
             SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
 
             Parameters = new List<UIBase> {

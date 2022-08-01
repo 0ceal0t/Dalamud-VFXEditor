@@ -14,21 +14,25 @@ namespace VFXEditor.AVFX.VFX {
             Value = Literal.GetValue() == true; // can be null
         }
 
-        public override void Draw( string parentId ) {
-            if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name] = Literal;
-            }
-
+        public override void Draw( string id ) {
+            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXBool literal ) {
                 Literal.SetValue( literal.GetValue() );
+                Literal.SetAssigned( literal.IsAssigned() );
                 Value = ( Literal.GetValue() == true );
             }
 
-            PushAssignedColor( Literal.IsAssigned() );
-            if( ImGui.Checkbox( Name + parentId, ref Value ) ) {
+            // Unassigned
+            if( !Literal.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
+                return;
+            }
+
+            if( ImGui.Checkbox( Name + id, ref Value ) ) {
                 Literal.SetValue( Value );
             }
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

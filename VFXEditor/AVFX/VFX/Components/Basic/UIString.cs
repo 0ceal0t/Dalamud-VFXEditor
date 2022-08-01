@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
@@ -8,48 +9,51 @@ namespace VFXEditor.AVFX.VFX {
         public readonly string Name;
         public readonly AVFXString Literal;
         public string Value;
-        public readonly bool CanBeUnassigned;
+        public readonly bool ShowRemoveButton;
 
-        public UIString( string name, AVFXString literal, bool canBeUnassigned = false ) {
+        public UIString( string name, AVFXString literal, bool showRemoveButton = false ) {
             Name = name;
             Literal = literal;
             Value = Literal.GetValue() ?? "";
-            CanBeUnassigned = canBeUnassigned;
+            ShowRemoveButton = showRemoveButton;
         }
 
         public override void Draw( string id ) {
-            if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name] = Literal;
-            }
-
+            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXString literal ) {
                 Literal.SetValue( literal.GetValue() );
+                Literal.SetAssigned( literal.IsAssigned() );
                 Value = Literal.GetValue() ?? "";
             }
 
-            if( CanBeUnassigned ) {
-                if( Literal.IsAssigned() && UIHelper.RemoveButton( $"Remove {Name}{id}", small: true ) ) {
+            // Unassigned
+            if (!Literal.IsAssigned()) {
+                if (ImGui.SmallButton($"+ {Name}{id}")) {
+                    Literal.SetAssigned( true );
+                }
+                return;
+            }
+
+            if (ShowRemoveButton) {
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( false );
                 }
-                else if( !Literal.IsAssigned() && UIHelper.RemoveButton( $"Add {Name}{id}", small: true ) ) {
-                    Value = "";
-                    Literal.SetValue( "" );
-                    Literal.SetAssigned( true );
-                }
-
-                if( !Literal.IsAssigned() ) return;
+                ImGui.PopFont();
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             }
 
-            PushAssignedColor( Literal.IsAssigned() );
             ImGui.InputText( Name + id, ref Value, 256 );
-            PopAssignedColor();
+
+            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
 
             ImGui.SameLine();
-            if( ImGui.Button( "Update" + id ) ) {
+            if( ImGui.Button( $"Update{id}" ) ) {
                 Literal.SetValue( Value.Trim().Trim( '\0' ) + '\u0000' );
-                if( CanBeUnassigned && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
+                if( ShowRemoveButton && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
                     Literal.SetAssigned( false );
                 }
             }

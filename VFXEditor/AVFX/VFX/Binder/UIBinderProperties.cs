@@ -21,7 +21,7 @@ namespace VFXEditor.AVFX.VFX {
             };
             Parameters.Add( new UICombo<BindPoint>( "Bind Point Type", Prop.BindPointType ) );
             Parameters.Add( new UICombo<BindTargetPoint>( "Bind Target Point Type", Prop.BindTargetPointType ) );
-            Parameters.Add( new UIString( "Name", Prop.BinderName, canBeUnassigned: true ) );
+            Parameters.Add( new UIString( "Name", Prop.BinderName, showRemoveButton: true ) );
             Parameters.Add( new UIInt( "Bind Point Id", Prop.BindPointId ) );
             Parameters.Add( new UIInt( "Generate Delay", Prop.GenerateDelay ) );
             Parameters.Add( new UIInt( "Coord Update Frame", Prop.CoordUpdateFrame ) );

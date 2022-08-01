@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UIBase {
-        public const uint LightGreen = 0xFFCCFFCE;
-        public const uint LightRed = 0xFFCCD4FF;
-
         public abstract void Draw( string parentId );
 
         public static void DrawList( List<UIBase> items, string parentId ) {
@@ -19,12 +16,19 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public static void PushAssignedColor( bool assigned ) {
-            if( !Plugin.Configuration.HideVfxAssigned ) ImGui.PushStyleColor( ImGuiCol.Text, assigned ? LightGreen : LightRed );
-        }
-
-        public static void PopAssignedColor() {
-            if( !Plugin.Configuration.HideVfxAssigned ) ImGui.PopStyleColor();
+        public static bool DrawUnassignContextMenu( string id, string name ) {
+            var ret = false;
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) {
+                ImGui.OpenPopup( $"Unassign-{id}-{name}" );
+            }
+            if( ImGui.BeginPopup( $"Unassign-{id}-{name}" ) ) {
+                if( ImGui.Selectable( $"Unassign {name}" ) ) {
+                    ret = true;
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.EndPopup();
+            }
+            return ret;
         }
     }
 }
