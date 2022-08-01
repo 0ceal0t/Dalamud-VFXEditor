@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.VFX {
+namespace VFXEditor.Select.VFX {
     public class VFXGimmickSelect : VFXSelectTab<XivGimmick, XivGimmickSelected> {
         public VFXGimmickSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Gimmicks, dialog ) {
@@ -22,7 +22,7 @@ namespace VFXSelect.VFX {
                 DisplayPath( loadedItem.TmbPath );
                 Copy( loadedItem.TmbPath, id: Id + "CopyTmb" );
 
-                DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameItem, "GIMMICK", loadedItem.Gimmick.Name, spawn: true );
+                DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameGimmick, "GIMMICK", loadedItem.Gimmick.Name, spawn: true );
             }
         }
 

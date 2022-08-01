@@ -1,6 +1,5 @@
 using VFXEditor.FileManager;
-using VFXSelect;
-using VFXSelect.PAP;
+using VFXEditor.Select.PAP;
 
 namespace VFXEditor.PAP {
     public partial class PAPManager : FileManager<PAPDocument, WorkspaceMetaPap, PAPFile> {

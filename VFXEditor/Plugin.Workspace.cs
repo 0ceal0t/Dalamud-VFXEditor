@@ -13,8 +13,6 @@ using VFXEditor.PAP;
 using VFXEditor.Texture;
 using VFXEditor.TMB;
 
-using VFXSelect;
-
 namespace VFXEditor {
     public struct WorkspaceMeta {
         public WorkspaceMetaTex[] Tex;

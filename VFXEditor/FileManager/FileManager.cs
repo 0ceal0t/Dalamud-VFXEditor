@@ -6,7 +6,7 @@ using System.Numerics;
 using VFXEditor.Dialogs;
 using VFXEditor.Helper;
 using VFXEditor.TexTools;
-using VFXSelect;
+
 namespace VFXEditor.FileManager {
     public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
         private int DocumentId = 0;

@@ -5,7 +5,6 @@
     <ItemGroup>
         <InputAssemblies Include="$(OutputPath)fastCSV.dll" />
         <InputAssemblies Include="$(OutputPath)SharpGLTF.*.dll" />
-        <!--InputAssemblies Include="$(OutputPath)AVFXLib.dll" /-->
         <InputAssemblies Include="$(OutputPath)VFXEditor.dll" />
     </ItemGroup>
 

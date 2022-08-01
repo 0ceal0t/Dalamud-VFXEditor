@@ -2,12 +2,12 @@ using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Linq;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
         public override void OnLoad() {
-            var _sheet = SheetManager.DataManager.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );
+            var _sheet = Plugin.DataManager.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );
             foreach( var item in _sheet ) {
                 var i = new XivItem( item );
                 if( i.HasModel ) {
@@ -22,10 +22,10 @@ namespace VFXSelect.Select.Sheets {
         public override bool SelectItem( XivItem item, out XivItemSelected selectedItem ) {
             selectedItem = null;
             var imcPath = item.ImcPath;
-            var result = SheetManager.DataManager.FileExists( imcPath );
+            var result = Plugin.DataManager.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = SheetManager.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = Plugin.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivItemSelected( file, item );
                 }
                 catch( Exception e ) {

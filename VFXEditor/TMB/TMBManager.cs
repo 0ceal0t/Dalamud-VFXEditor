@@ -1,6 +1,5 @@
 using VFXEditor.FileManager;
-using VFXSelect;
-using VFXSelect.TMB;
+using VFXEditor.Select.TMB;
 
 namespace VFXEditor.TMB {
     public partial class TMBManager : FileManager<TMBDocument, WorkspaceMetaTmb, TMBFile> {

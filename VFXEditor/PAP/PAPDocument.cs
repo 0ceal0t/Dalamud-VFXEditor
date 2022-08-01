@@ -6,7 +6,6 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
-using VFXSelect;
 
 namespace VFXEditor.PAP {
     public partial class PAPDocument : FileManagerDocument<PAPFile, WorkspaceMetaPap> {

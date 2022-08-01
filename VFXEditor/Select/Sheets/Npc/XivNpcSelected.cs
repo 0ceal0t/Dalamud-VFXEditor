@@ -1,13 +1,18 @@
 using System.Collections.Generic;
+using static VFXEditor.Select.Sheets.NpcSheetLoader;
 
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public class XivNpcSelected {
-        public XivNpc Npc;
-        public List<string> VfxPaths;
+        public readonly XivNpc Npc;
+        public readonly List<string> VfxPaths;
+        public readonly List<string> TmbPaths;
+        public readonly List<string> PapPaths;
 
-        public XivNpcSelected( XivNpc npc, List<string> paths ) {
+        public XivNpcSelected( XivNpc npc, List<string> vfxPaths, List<string> tmbPaths, List<string> papPaths ) {
             Npc = npc;
-            VfxPaths = paths;
+            VfxPaths = vfxPaths;
+            TmbPaths = tmbPaths;
+            PapPaths = papPaths;
         }
     }
 }

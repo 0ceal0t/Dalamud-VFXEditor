@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace VFXSelect {
+namespace VFXEditor {
     public enum SelectResultType {
         Local,
         GamePath,

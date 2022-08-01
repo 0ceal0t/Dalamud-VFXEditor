@@ -1,4 +1,4 @@
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public abstract class XivActionBase {
         public string Name;
         public int RowId;

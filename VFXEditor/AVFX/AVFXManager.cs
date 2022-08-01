@@ -3,8 +3,7 @@ using VFXEditor.AVFX.VFX;
 using VFXEditor.Data;
 using VFXEditor.FileManager;
 using VFXEditor.NodeLibrary;
-using VFXSelect;
-using VFXSelect.VFX;
+using VFXEditor.Select.VFX;
 
 namespace VFXEditor.AVFX {
     public class AVFXManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {

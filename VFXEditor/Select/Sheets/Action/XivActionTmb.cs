@@ -1,4 +1,4 @@
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public class XivActionTmb {
         public readonly ushort Icon;
         public readonly int RowId;

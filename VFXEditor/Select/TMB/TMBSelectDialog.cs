@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXSelect.TMB {
+namespace VFXEditor.Select.TMB {
     public class TMBSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
@@ -14,7 +14,8 @@ namespace VFXSelect.TMB {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new TMBActionSelect( id, "Action", this ),
-                new TMBEmoteSelect( id, "Emote", this)
+                new TMBEmoteSelect( id, "Emote", this),
+                new TMBNpcSelect( id, "Npc", this)
             } );
         }
 

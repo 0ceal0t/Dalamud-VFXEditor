@@ -1,17 +1,16 @@
 using Dalamud.Data;
 using Dalamud.Plugin;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using VFXSelect.Select.Sheets;
+using VFXEditor.Select.Sheets;
 
-namespace VFXSelect {
+namespace VFXEditor.Select {
     public class SheetManager {
-        public static string NpcCsv { get; private set; }
-        public static string MonsterJson { get; private set; }
-        public static string MiscVfxTxt { get; private set; }
-
-        public static DataManager DataManager { get; private set; }
-        public static DalamudPluginInterface PluginInterface { get; private set; }
+        public static string NpcNamesOld { get; private set; }
+        public static string NpcFiles { get; private set; }
+        public static string MiscVfx { get; private set; }
+        public static string NpcNames { get; private set; } 
 
         public static ItemSheetLoader Items { get; private set; }
         public static ActionSheetLoader Actions { get; private set; }
@@ -30,12 +29,11 @@ namespace VFXSelect {
         public static EmoteTmbSheetLoader EmoteTmb { get; private set; }
         public static EmotePapSheetLoader EmotePap { get; private set; }
 
-        public static void Initialize( string npcCsv, string monsterJson, string miscVfxTxt, DataManager dataManager, DalamudPluginInterface pluginInterface ) {
-            NpcCsv = npcCsv;
-            MonsterJson = monsterJson;
-            MiscVfxTxt = miscVfxTxt;
-            DataManager = dataManager;
-            PluginInterface = pluginInterface;
+        public static void Initialize() {
+            NpcNamesOld = Path.Combine( Plugin.RootLocation, "Files", "npc.csv" );
+            NpcFiles = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
+            MiscVfx = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
+            NpcNames = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
 
             Items = new ItemSheetLoader();
             Actions = new ActionSheetLoader();
@@ -56,7 +54,7 @@ namespace VFXSelect {
         }
 
         public static Dictionary<string, string> FilterByExists( Dictionary<string, string> dict ) {
-            return dict.Where( i => DataManager.FileExists( i.Value ) ).ToDictionary( i => i.Key, i => i.Value );
+            return dict.Where( i => Plugin.DataManager.FileExists( i.Value ) ).ToDictionary( i => i.Key, i => i.Value );
         }
     }
 }

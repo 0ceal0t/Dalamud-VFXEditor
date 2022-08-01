@@ -1,4 +1,4 @@
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public class XivStatus {
         public string Name;
         public int RowId;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public class XivGimmick {
         public string Name;
         public int RowId;

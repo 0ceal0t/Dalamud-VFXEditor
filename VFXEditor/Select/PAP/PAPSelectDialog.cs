@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXSelect.PAP {
+namespace VFXEditor.Select.PAP {
     public class PAPSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
@@ -14,7 +14,8 @@ namespace VFXSelect.PAP {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new PAPActionSelect( id, "Action", this ),
-                new PAPEmoteSelect( id, "Emote", this )
+                new PAPEmoteSelect( id, "Emote", this ),
+                new PAPNpcSelect( id, "Npc", this )
             } );
         }
 

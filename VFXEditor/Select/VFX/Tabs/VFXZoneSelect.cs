@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.VFX {
+namespace VFXEditor.Select.VFX {
     public class VFXZoneSelect : VFXSelectTab<XivZone, XivZoneSelected> {
         public VFXZoneSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Zones, dialog ) {

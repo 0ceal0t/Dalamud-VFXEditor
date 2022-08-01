@@ -140,10 +140,13 @@
       <None Update="Files\emitter_default.vfxedit">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Files\monster_vfx.json">
+      <None Update="Files\npc_files.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Files\npc.csv">
+      <None Update="Files\npc_names_old.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Files\npc_names.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Files\particle_default.vfxedit">

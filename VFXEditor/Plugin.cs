@@ -8,8 +8,6 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
-using System.IO;
-using System.Reflection;
 using VFXEditor.AVFX;
 using VFXEditor.Data;
 using VFXEditor.Dialogs;
@@ -17,11 +15,11 @@ using VFXEditor.DirectX;
 using VFXEditor.Interop;
 using VFXEditor.PAP;
 using VFXEditor.Penumbra;
+using VFXEditor.Select;
 using VFXEditor.TexTools;
 using VFXEditor.Texture;
 using VFXEditor.TMB;
 using VFXEditor.Tracker;
-using VFXSelect;
 
 namespace VFXEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -79,13 +77,7 @@ namespace VFXEditor {
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            SheetManager.Initialize(
-                Path.Combine( RootLocation, "Files", "npc.csv" ),
-                Path.Combine( RootLocation, "Files", "monster_vfx.json" ),
-                Path.Combine( RootLocation, "Files", "vfx_misc.txt" ),
-                DataManager,
-                PluginInterface
-            );
+            SheetManager.Initialize();
 
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();

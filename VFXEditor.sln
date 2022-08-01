@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		scripts\extract_vfx_from_hashlist.py = scripts\extract_vfx_from_hashlist.py
 		scripts\extract_vfx_misc.py = scripts\extract_vfx_misc.py
+		scripts\extract_files_from_hashlist.py = scripts\extract_files_from_hashlist.py
 		LICENSE = LICENSE
-		scripts\npc_csv.py = scripts\npc_csv.py
 		README.md = README.md
+		scripts\npc_names_old.py = scripts\npc_names_old.py
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VFXEditor", "VFXEditor\VFXEditor.csproj", "{F6806E83-137E-47D8-AD35-5E89501570B3}"

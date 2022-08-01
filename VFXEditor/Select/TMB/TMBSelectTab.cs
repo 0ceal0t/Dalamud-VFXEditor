@@ -1,6 +1,6 @@
-using VFXSelect.Select.Sheets;
+using VFXEditor.Select.Sheets;
 
-namespace VFXSelect.TMB {
+namespace VFXEditor.Select.TMB {
     public abstract class TMBSelectTab<T, S> : SelectTab<T, S> {
         protected readonly TMBSelectDialog Dialog;
 

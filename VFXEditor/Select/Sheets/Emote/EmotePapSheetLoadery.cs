@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public class EmotePapSheetLoader : SheetLoader<XivEmotePap, XivEmotePapSelected> {
         public override void OnLoad() {
-            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivEmotePap( item ) );
             }

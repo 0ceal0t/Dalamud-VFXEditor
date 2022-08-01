@@ -1,8 +1,8 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.PAP {
+namespace VFXEditor.Select.PAP {
     public class PAPEmoteSelect : PAPSelectTab<XivEmotePap, XivEmotePapSelected> {
         private ImGuiScene.TextureWrap Icon;
 

@@ -5,7 +5,6 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.Helper;
 using VFXEditor.TexTools;
-using VFXSelect;
 
 namespace VFXEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : class {

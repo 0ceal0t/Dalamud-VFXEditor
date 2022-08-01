@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public abstract class SheetLoader<T, S> { // T = Not Selected, S = Selected
         public List<T> Items = new();
         public bool Loaded = false;

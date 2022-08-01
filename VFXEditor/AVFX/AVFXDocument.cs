@@ -8,7 +8,6 @@ using System.Numerics;
 using VFXEditor.AVFX.VFX;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
-using VFXSelect;
 
 namespace VFXEditor.AVFX {
     public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {
@@ -78,10 +77,6 @@ namespace VFXEditor.AVFX {
         protected override void DrawBody() { }
 
         public override void Draw() {
-            ImGui.SetCursorPos( ImGui.GetCursorPos() - new Vector2( 5, 5 ) );
-            ImGui.BeginChild( "Child##MainInterface", new Vector2( ImGui.GetWindowWidth() - 0, 60 ) );
-            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 5, 5 ) );
-
             ImGui.Columns( 3, "MainInterfaceFileColumns", false );
 
             // ======== INPUT TEXT =========
@@ -153,7 +148,6 @@ namespace VFXEditor.AVFX {
 
             ImGui.Columns( 1 );
             ImGui.Separator();
-            ImGui.EndChild();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

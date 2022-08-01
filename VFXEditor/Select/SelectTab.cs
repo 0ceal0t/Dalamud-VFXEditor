@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using VFXSelect.Select.Sheets;
+using VFXEditor.Helper;
+using VFXEditor.Select.Sheets;
 
-namespace VFXSelect {
+namespace VFXEditor {
     public abstract class SelectTab {
         public abstract void Draw();
     }
@@ -44,12 +45,12 @@ namespace VFXSelect {
             if( iconId > 0 ) {
                 TexFile tex;
                 try {
-                    tex = SheetManager.DataManager.GetIcon( iconId );
+                    tex = Plugin.DataManager.GetIcon( iconId );
                 }
                 catch( Exception ) {
-                    tex = SheetManager.DataManager.GetIcon( 0 );
+                    tex = Plugin.DataManager.GetIcon( 0 );
                 }
-                texWrap = SheetManager.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                texWrap = Plugin.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 
@@ -92,7 +93,7 @@ namespace VFXSelect {
             var idx = 0;
             foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
-                if( ImGui.Selectable( UniqueRowTitle( item ), EqualityComparer<T>.Default.Equals( Selected, item ) ) ) {
+                if( ImGui.Selectable( $"{UniqueRowTitle( item )}{idx}", EqualityComparer<T>.Default.Equals( Selected, item ) ) ) {
                     if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
                         LoadItemAsync( item );
                         Selected = item;
@@ -203,6 +204,14 @@ namespace VFXSelect {
                 if( spawn ) {
                     dialog.Spawn( path, id: id + "Spawn" );
                 }
+            }
+        }
+
+        public static void DrawThankYou() {
+            ImGui.Text( "Thank you to Anamnesis/CMTools for compiling the list of NPC names" );
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Github##Anamnesis" ) ) {
+                UIHelper.OpenUrl( "https://github.com/imchillin/Anamnesis" );
             }
         }
     }

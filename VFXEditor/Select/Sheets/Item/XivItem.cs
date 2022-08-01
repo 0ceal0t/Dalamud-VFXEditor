@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace VFXSelect.Select.Rows {
+namespace VFXEditor.Select.Rows {
     public struct XivItemIds {
         public int PrimaryId;
         public int PrimaryVar;

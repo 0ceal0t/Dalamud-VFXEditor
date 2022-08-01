@@ -3,12 +3,12 @@ using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
         public override void OnLoad() {
-            var sheet = SheetManager.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 var i = new XivEmote( item );
                 if( i.PapFiles.Count > 0 ) {
@@ -22,9 +22,9 @@ namespace VFXSelect.Select.Sheets {
             var files = new List<Lumina.Data.FileResource>();
             try {
                 foreach( var path in item.PapFiles ) {
-                    var result = SheetManager.DataManager.FileExists( path );
+                    var result = Plugin.DataManager.FileExists( path );
                     if( result ) {
-                        files.Add( SheetManager.DataManager.GetFile( path ) );
+                        files.Add( Plugin.DataManager.GetFile( path ) );
                     }
                 }
                 selectedItem = new XivEmoteSelected( item, files );

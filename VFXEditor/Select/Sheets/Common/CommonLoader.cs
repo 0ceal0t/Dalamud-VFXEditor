@@ -1,8 +1,8 @@
 using System.IO;
 using System.Linq;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public class CommonLoader : SheetLoader<XivCommon, XivCommon> {
         public override void OnLoad() {
             Items = new() {
@@ -24,13 +24,13 @@ namespace VFXSelect.Select.Sheets {
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             };
 
-            var sheet = SheetManager.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivCommon( item ) );
             }
 
             var lineIdx = 0;
-            foreach( var line in File.ReadLines( SheetManager.MiscVfxTxt ) ) {
+            foreach( var line in File.ReadLines( SheetManager.MiscVfx ) ) {
                 lineIdx++;
                 if( string.IsNullOrEmpty( line ) ) continue;
                 Items.Add( new XivCommon( lineIdx, line, line, 0 ) );

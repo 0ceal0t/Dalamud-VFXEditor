@@ -2,12 +2,12 @@ using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Linq;
-using VFXSelect.Select.Rows;
+using VFXEditor.Select.Rows;
 
-namespace VFXSelect.Select.Sheets {
+namespace VFXEditor.Select.Sheets {
     public class MountSheeetLoader : SheetLoader<XivMount, XivMountSelected> {
         public override void OnLoad() {
-            var sheet = SheetManager.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivMount( item ) );
             }
@@ -16,10 +16,10 @@ namespace VFXSelect.Select.Sheets {
         public override bool SelectItem( XivMount item, out XivMountSelected selectedItem ) {
             selectedItem = null;
             var imcPath = item.GetImcPath();
-            var result = SheetManager.DataManager.FileExists( imcPath );
+            var result = Plugin.DataManager.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = SheetManager.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = Plugin.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivMountSelected( file, item );
                 }
                 catch( Exception e ) {
