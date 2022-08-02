@@ -19,7 +19,7 @@ namespace VFXEditor.AVFX.VFX {
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXBool literal ) {
                 Literal.SetValue( literal.GetValue() );
                 Literal.SetAssigned( literal.IsAssigned() );
-                Value = ( Literal.GetValue() == true );
+                Value = Literal.GetValue() == true;
             }
 
             // Unassigned

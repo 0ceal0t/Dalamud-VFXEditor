@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net5.0-windows</TargetFramework>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.6.4.2</FileVersion>
-        <AssemblyVersion>1.6.4.2</AssemblyVersion>
-        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <FileVersion>1.6.4.3</FileVersion>
+        <AssemblyVersion>1.6.4.3</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <PlatformTarget>x64</PlatformTarget>
-      <DebugType>full</DebugType>
-      <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugType>full</DebugType>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,84 +32,67 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <PlatformTarget>x64</PlatformTarget>
-      <DebugType>pdbonly</DebugType>
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
     </PropertyGroup>
 
     <ItemGroup>
         <Reference Include="Dalamud">
-            <HintPath>$(DALAMUD_ROOT)\Dalamud.dll</HintPath>
-            <HintPath>..\libs\Dalamud.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
+            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="ImGui.NET">
-            <HintPath>$(DALAMUD_ROOT)\ImGui.NET.dll</HintPath>
-            <HintPath>..\libs\ImGui.NET.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGui.NET.dll</HintPath>
+            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="ImGuiScene">
-            <HintPath>$(DALAMUD_ROOT)\ImGuiScene.dll</HintPath>
-            <HintPath>..\libs\ImGuiScene.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGuiScene.dll</HintPath>
+            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Lumina">
-            <HintPath>$(DALAMUD_ROOT)\Lumina.dll</HintPath>
-            <HintPath>..\libs\Lumina.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
+            <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Lumina.Excel">
-            <HintPath>$(DALAMUD_ROOT)\Lumin.Excel.dll</HintPath>
-            <HintPath>..\libs\Lumina.Excel.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
+            <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.dll</HintPath>
-            <HintPath>..\libs\SharpDX.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.dll</HintPath>
+            <HintPath>$(DalamudLibPath)SharpDX.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.DXGI">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.DXGI.dll</HintPath>
-            <HintPath>..\libs\SharpDX.DXGI.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.DXGI.dll</HintPath>
+            <HintPath>$(DalamudLibPath)SharpDX.DXGI.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Mathematics">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Mathematics.dll</HintPath>
-            <HintPath>..\libs\SharpDX.Mathematics.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.Mathematics.dll</HintPath>
+            <HintPath>$(DalamudLibPath)SharpDX.Mathematics.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Direct3D11">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Direct3D11.dll</HintPath>
-            <HintPath>..\libs\SharpDX.Direct3D11.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\SharpDX.Direct3D11.dll</HintPath>
+            <HintPath>$(DalamudLibPath)SharpDX.Direct3D11.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DALAMUD_ROOT)\Newtonsoft.Json.dll</HintPath>
-            <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
+            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Reloaded.Hooks.Definitions">
-            <HintPath>$(DALAMUD_ROOT)\Reloaded.Hooks.Definitions.dll</HintPath>
-            <HintPath>..\libs\Reloaded.Hooks.Definitions.dll</HintPath>
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Reloaded.Hooks.Definitions.dll</HintPath>
+            <HintPath>$(DalamudLibPath)Reloaded.Hooks.Definitions.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="FFXIVClientStructs">
-            <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+            <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="DalamudPackager" Version="2.1.7" />
         <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
         <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
@@ -119,81 +102,65 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Files\animassist.exe">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\binder_default.vfxedit">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\default_pap_tmb.tmb">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\default_vfx.avfx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\default_weapon.avfx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\effector_default.vfxedit">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\emitter_default.vfxedit">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\npc_files.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\npc_names_old.csv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\npc_names.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\particle_default.vfxedit">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\timeline_default.vfxedit">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Files\vfx_misc.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\ModelEdge_PS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\ModelEdge_VS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\Gradient.fx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\ModelPreview.fx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\EmitterVertex_VS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\EmitterVertex_PS.fx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="VFXEditor.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="mkdir $(TargetDir)Output\Files&#xD;&#xA;mkdir $(TargetDir)Output\Shaders&#xD;&#xA;mkdir $(TargetDir)Output\runtimes&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x64&#xD;&#xA;mkdir $(TargetDir)Output\runtimes\win-x86&#xD;&#xA;xcopy /E  /Y /R &quot;$(TargetDir)Files&quot; &quot;$(TargetDir)Output\Files&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)Shaders&quot; &quot;$(TargetDir)Output\Shaders&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x64&quot;&#xD;&#xA;xcopy /E /Y /R &quot;$(TargetDir)runtimes\win-x64&quot; &quot;$(TargetDir)Output\runtimes\win-x86&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)SharpDX.D3DCompiler.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)TeximpNet.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)VFXEditor.json&quot; &quot;$(TargetDir)Output&quot;" />
-    </Target>
-
-    <ItemGroup>
-      <NativeLibs Remove="Plugin.UI.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <NativeLibs Remove="Plugin.Workspace.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <NativeLibs Remove="DocumentManager.cs" />
+        <None Update="Files\animassist.exe">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\binder_default.vfxedit">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\default_pap_tmb.tmb">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\default_vfx.avfx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\default_weapon.avfx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\effector_default.vfxedit">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\emitter_default.vfxedit">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\npc_files.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\npc_names_old.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\npc_names.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\particle_default.vfxedit">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\timeline_default.vfxedit">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\vfx_misc.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ModelEdge_PS.fx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ModelEdge_VS.fx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\Gradient.fx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ModelPreview.fx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\EmitterVertex_VS.fx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\EmitterVertex_PS.fx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="VFXEditor.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

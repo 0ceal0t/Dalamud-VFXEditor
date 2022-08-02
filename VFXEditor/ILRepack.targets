@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="PostBuildStuff" AfterTargets="ILRepacker">
+        <Exec Command="del $(OutputPath)fastCSV.dll" />
+        <Exec Command="del $(OutputPath)SharpGLTF.*.dll" />
+
+        <Exec Command="del $(OutputPath)*.pdb" />
+        <Exec Command="del $(OutputPath)*.deps.json" />
+    </Target>
+    
     <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
 
     <ItemGroup>
@@ -20,7 +28,7 @@
         InputAssemblies="@(InputAssemblies)"
         LibraryPath="@(LibraryAssemblies)"
         TargetKind="Dll"
-        OutputFile="$(OutputPath)\Output\VFXEditor.dll"
+        OutputFile="$(OutputPath)\VFXEditor.dll"
     />
 
     </Target>

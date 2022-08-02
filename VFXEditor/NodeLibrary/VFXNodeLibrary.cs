@@ -36,10 +36,9 @@ namespace VFXEditor.NodeLibrary {
 
             ImGui.BeginChild( "##NodeLibrary-Region", ImGui.GetContentRegionAvail(), true );
 
-            var itemIdx = 0;
-
             if( Items.Count == 0 ) ImGui.Text( "No nodes saved..." );
 
+            var itemIdx = 0;
             foreach( var item in Items ) {
                 if( !item.Matches( SearchInput ) ) continue;
                 if( item.Draw( this ) ) break;
