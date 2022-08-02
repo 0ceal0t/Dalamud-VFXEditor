@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-    <Target Name="PostBuildStuff" AfterTargets="Build">
-        <Exec Command="del $(OutputPath)SharpDX.dll" />
+    <Target Name="DeleteFile" AfterTargets="Build">
+        <Delete Files="$(TargetDir)\SharpDX.dll" />
     </Target>
     
-    <Target Name="PackagePlugin" AfterTargets="PostBuildStuff" Condition="'$(Configuration)' == 'Release'">
+    <Target Name="PackagePlugin" AfterTargets="DeleteFile" Condition="'$(Configuration)' == 'Release'">
         <DalamudPackager
                 ProjectDir="$(ProjectDir)"
                 OutputPath="$(OutputPath)"
