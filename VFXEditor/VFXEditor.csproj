@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <TargetFramework>net6.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
@@ -11,6 +10,8 @@
         <AssemblyVersion>1.6.4.3</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
