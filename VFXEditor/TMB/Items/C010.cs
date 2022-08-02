@@ -9,7 +9,7 @@ namespace VFXEditor.TMB.Items {
         private int Duration = 50;
         private int Unk_3 = 0;
         private int Unk_4 = 0;
-        private int Unk_5 = 0;
+        private float Unk_5 = 0;
         private float Unk_6 = 0;
         private string Path = "";
         private int Unk_7 = 0;
@@ -26,7 +26,7 @@ namespace VFXEditor.TMB.Items {
             Duration = reader.ReadInt32();
             Unk_3 = reader.ReadInt32();
             Unk_4 = reader.ReadInt32();
-            Unk_5 = reader.ReadInt32();
+            Unk_5 = reader.ReadSingle();
             Unk_6 = reader.ReadSingle();
 
             var offset = reader.ReadInt32(); // offset: [C010] + offset + 8 = animation
@@ -63,7 +63,7 @@ namespace VFXEditor.TMB.Items {
             ImGui.InputInt( $"Duration{id}", ref Duration );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
             ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
-            ImGui.InputInt( $"Unknown 5{id}", ref Unk_5 );
+            ImGui.InputFloat( $"Unknown 5{id}", ref Unk_5 );
             ImGui.InputFloat( $"Unknown 6{id}", ref Unk_6 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
             ImGui.InputInt( $"Unknown 7{id}", ref Unk_7 );

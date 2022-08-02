@@ -450,6 +450,7 @@ namespace ImGuiFileDialog {
                         var path = Path.Combine( file.FilePath, file.FileName );
                         if( file.Ext.ToLower() == "dds" ) {
                             var ddsFile = DDSFile.Read( path );
+                            if( ddsFile == null ) return;
 
                             using( var ms = new MemoryStream() ) {
                                 ddsFile.Write( ms );
@@ -474,6 +475,8 @@ namespace ImGuiFileDialog {
                         }
                         else if( file.Ext.ToLower() == "atex" ) {
                             var tex = VFXTexture.LoadFromLocal( path );
+                            if( tex == null ) return;
+
                             var temp = PluginInterface.UiBuilder.LoadImageRaw( tex.ImageData, tex.Header.Width, tex.Header.Height, 4 );
                             PreviewWrap = temp;
                         }
