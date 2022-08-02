@@ -3,6 +3,7 @@
     <Target Name="PostBuildStuff" AfterTargets="ILRepacker">
         <Exec Command="del $(OutputPath)fastCSV.dll" />
         <Exec Command="del $(OutputPath)SharpGLTF.*.dll" />
+        <Exec Command="del $(OutputPath)SharpDX.dll" />
 
         <Exec Command="del $(OutputPath)*.pdb" />
         <Exec Command="del $(OutputPath)*.deps.json" />

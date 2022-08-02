@@ -37,6 +37,7 @@ namespace VFXEditor.Texture {
 
         public static void Setup() {
             // Set paths manually since TexImpNet can be dumb sometimes
+            // Using the 32-bit version in all cases because net6, I guess
             var runtimeRoot = Path.Combine( Plugin.RootLocation, "runtimes" );
 
             // ==============
@@ -45,7 +46,7 @@ namespace VFXEditor.Texture {
             var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "FreeImage.dll" );
             var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
             freeImgLib.Resolver.SetOverrideLibraryName32( _32bitPath );
-            freeImgLib.Resolver.SetOverrideLibraryName64( _64bitPath );
+            freeImgLib.Resolver.SetOverrideLibraryName64( _32bitPath );
             PluginLog.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
             PluginLog.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
             freeImgLib.LoadLibrary();
@@ -57,7 +58,7 @@ namespace VFXEditor.Texture {
             var nv_32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "nvtt.dll" );
             var nv_64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "nvtt.dll" );
             nvtLib.Resolver.SetOverrideLibraryName32( nv_32bitPath );
-            nvtLib.Resolver.SetOverrideLibraryName64( nv_64bitPath );
+            nvtLib.Resolver.SetOverrideLibraryName64( nv_32bitPath );
             PluginLog.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
             PluginLog.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
             nvtLib.LoadLibrary();

@@ -63,18 +63,22 @@
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX">
+            <HintPath>$(DALAMUD_ROOT)\SharpDX.dll</HintPath>
             <HintPath>$(DalamudLibPath)SharpDX.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.DXGI">
+            <HintPath>$(DALAMUD_ROOT)\SharpDX.DXGI.dll</HintPath>
             <HintPath>$(DalamudLibPath)SharpDX.DXGI.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Mathematics">
+            <HintPath>$(DALAMUD_ROOT)\SharpDX.Mathematics.dll</HintPath>
             <HintPath>$(DalamudLibPath)SharpDX.Mathematics.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="SharpDX.Direct3D11">
+            <HintPath>$(DALAMUD_ROOT)\SharpDX.Direct3D11.dll</HintPath>
             <HintPath>$(DalamudLibPath)SharpDX.Direct3D11.dll</HintPath>
             <Private>False</Private>
         </Reference>
