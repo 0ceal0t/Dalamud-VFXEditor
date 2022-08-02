@@ -2,9 +2,6 @@
 <Project>
     <Target Name="PostBuildStuff" AfterTargets="Build">
         <Exec Command="del $(OutputPath)SharpDX.dll" />
-
-        <Exec Command="del $(OutputPath)*.pdb" />
-        <Exec Command="del $(OutputPath)*.deps.json" />
     </Target>
     
     <Target Name="PackagePlugin" AfterTargets="PostBuildStuff" Condition="'$(Configuration)' == 'Release'">
