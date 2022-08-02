@@ -8,18 +8,6 @@
         "resolved": "2.1.7",
         "contentHash": "jnZ/sdInyn07ycuWI+pPOtP/xE3v+c4+jYJfDt36FWnBF9NKqkpzfviJtPl/jGLgbaCmFIXu+Yid0N8GvdKefg=="
       },
-      "ILRepack": {
-        "type": "Direct",
-        "requested": "[2.1.0-beta1, )",
-        "resolved": "2.1.0-beta1",
-        "contentHash": "CUmDepugxfNKVMAsd1PzS8NSoyDfELsufDzwJ1+7D08bMAQbtHEQ9UVdjWjR3GBE0iPc0GvOhSJi0+xfFXwiRA=="
-      },
-      "ILRepack.Lib.MSBuild.Task": {
-        "type": "Direct",
-        "requested": "[2.0.18.2, )",
-        "resolved": "2.0.18.2",
-        "contentHash": "lreK19MMDA/ekeqjLY4w171cG7+pHwjeTMHMNq6tghuhTOIOfHT+b/LTMj5jpfbJoR7J6AMD3yOYZoyY/2wtJA=="
-      },
       "mgholam.fastCSV": {
         "type": "Direct",
         "requested": "[2.0.9, )",

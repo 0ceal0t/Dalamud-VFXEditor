@@ -30,7 +30,7 @@ namespace VFXEditor.Select {
         public static EmotePapSheetLoader EmotePap { get; private set; }
 
         public static void Initialize() {
-            NpcNamesOld = Path.Combine( Plugin.RootLocation, "Files", "npc.csv" );
+            NpcNamesOld = Path.Combine( Plugin.RootLocation, "Files", "npc_names_old.csv" );
             NpcFiles = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
             MiscVfx = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
             NpcNames = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
