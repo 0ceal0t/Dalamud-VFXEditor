@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib.Particle;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UITextureColor1 : UIItem {
+    public class UITextureColor1 : UIAssignableItem {
         public readonly AVFXParticleTextureColor1 Tex;
         public readonly UIParticle Particle;
 
@@ -40,7 +40,7 @@ namespace VFXEditor.AVFX.VFX {
             Tabs.Add( new UICurve( Tex.TexN, "TexN" ) );
         }
 
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) {
                 AVFXBase.RecurseAssigned( Tex, true );
 
@@ -49,7 +49,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TC1";
             if( UIHelper.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
                 Tex.SetAssigned( false );

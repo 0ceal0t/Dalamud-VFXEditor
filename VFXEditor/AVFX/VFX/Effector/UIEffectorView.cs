@@ -5,8 +5,7 @@ using VFXEditor.AVFXLib.Effector;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIEffectorView : UINodeDropdownView<UIEffector> {
-        public UIEffectorView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIEffector> group ) : base( vfxFile, avfx, group, "Effector", true, true, "effector_default.vfxedit" ) {
-        }
+        public UIEffectorView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIEffector> group ) : base( vfxFile, avfx, group, "Effector", true, true, "default_effector.vfxedit" ) { }
 
         public override void OnDelete( UIEffector item ) => AVFX.RemoveEffector( item.Effector );
 
@@ -18,5 +17,7 @@ namespace VFXEditor.AVFX.VFX {
             AVFX.AddEffector( item );
             return new UIEffector( item, hasDependencies );
         }
+
+        public override void OnSelect( UIEffector item ) { }
     }
 }

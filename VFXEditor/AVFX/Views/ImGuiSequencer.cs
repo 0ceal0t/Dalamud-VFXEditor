@@ -6,7 +6,7 @@ using System.Numerics;
 using VFXEditor.AVFX.VFX;
 
 namespace VFXEditor.AVFX.Views {
-    public abstract class ImGuiSequencer<T> : UIBase where T : UIItem {
+    public abstract class ImGuiSequencer<T> : IUIBase where T : UIItem {
         private static readonly int ItemHeight = 20;
         private static readonly int LegendWidth = 200;
         private static readonly float MinBarWidth = 44f;
@@ -48,7 +48,7 @@ namespace VFXEditor.AVFX.Views {
             }
         }
 
-        public override void Draw( string parentId ) {
+        public void DrawInline( string parentId ) {
             var io = ImGui.GetIO();
             var cursorX = ( int )io.MousePos.X;
             var cursorY = ( int )io.MousePos.Y;
@@ -422,7 +422,7 @@ namespace VFXEditor.AVFX.Views {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {
-                Selected.DrawBody( parentId );
+                Selected.DrawInline( parentId );
             }
             else {
                 ImGui.Text( "Select an item..." );

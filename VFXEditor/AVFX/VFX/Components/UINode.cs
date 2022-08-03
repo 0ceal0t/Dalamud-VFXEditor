@@ -11,9 +11,9 @@ namespace VFXEditor.AVFX.VFX {
         public bool IsDeleted = false;
         public UINodeGraph Graph = null;
 
-        public UINode( uint color, bool has_dependencies ) {
+        public UINode( uint color, bool hasDependencies ) {
             Color = color;
-            HasDependencies = has_dependencies;
+            HasDependencies = hasDependencies;
         }
 
         public void DeleteNode() {

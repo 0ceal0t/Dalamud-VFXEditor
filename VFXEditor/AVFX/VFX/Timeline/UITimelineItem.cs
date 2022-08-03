@@ -13,7 +13,7 @@ namespace VFXEditor.AVFX.VFX {
         public UINodeSelect<UIEffector> EffectorSelect;
         public UIInt StartTime;
         public UIInt EndTime;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UITimelineItem( AVFXTimelineSubItem item, UITimeline timeline ) {
             Item = item;
@@ -26,7 +26,7 @@ namespace VFXEditor.AVFX.VFX {
             ClipNumber = new UIInt( "Clip Index", Item.ClipNumber );
             ClipAssigned = Item.ClipNumber.IsAssigned();
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICheckbox( "Enabled", Item.Enabled ),
                 ( StartTime = new UIInt( "Start Time", Item.StartTime ) ),
                 ( EndTime = new UIInt( "End Time", Item.EndTime ) ),
@@ -34,19 +34,19 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Item";
             DrawRename( id );
 
-            BinderSelect.Draw( id );
-            EmitterSelect.Draw( id );
-            EffectorSelect.Draw( id );
-            DrawList( Parameters, id );
+            BinderSelect.DrawInline( id );
+            EmitterSelect.DrawInline( id );
+            EffectorSelect.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
 
             if( ImGui.Checkbox( "Clip Enabled" + id, ref ClipAssigned ) ) {
                 Item.ClipNumber.SetAssigned( ClipAssigned );
             }
-            ClipNumber.Draw( id );
+            ClipNumber.DrawInline( id );
         }
 
         public override string GetDefaultText() => $"{Idx}: Emitter {Item.EmitterIdx.GetValue()}";

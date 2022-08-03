@@ -30,9 +30,9 @@ namespace VFXEditor.AVFX.VFX {
             HasDependencies = false; // if imported, all set now
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Model";
-            NodeView.Draw( id );
+            NodeView.DrawInline( id );
             DrawRename( id );
             ImGui.Text( "Vertices: " + Model.Vertexes.Vertexes.Count + " " + "Indexes: " + Model.Indexes.Indexes.Count );
             if( ImGui.Button( "Export" + id ) ) {
@@ -132,7 +132,7 @@ namespace VFXEditor.AVFX.VFX {
             var ret = ImGui.BeginTabItem( "Emitter Vertices" + parentId );
             if( !ret )
                 return;
-            EmitSplit.Draw( parentId );
+            EmitSplit.DrawInline( parentId );
             ImGui.EndTabItem();
         }
 

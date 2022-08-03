@@ -12,7 +12,7 @@ namespace VFXEditor.AVFX.VFX {
         public readonly UITimelineClipSplitView ClipSplit;
         public readonly UITimelineItemSequencer ItemSplit;
         public readonly UINodeSelect<UIBinder> BinderSelect;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UITimeline( AVFXTimeline timeline, UINodeGroupSet nodeGroups, bool has_dependencies = false ) : base( UINodeGroup.TimelineColor, has_dependencies ) {
             Timeline = timeline;
@@ -22,7 +22,7 @@ namespace VFXEditor.AVFX.VFX {
             Items = new List<UITimelineItem>();
             Clips = new List<UITimelineClip>();
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UIInt( "Loop Start", Timeline.LoopStart ),
                 new UIInt( "Loop End", Timeline.LoopEnd )
             };
@@ -41,7 +41,7 @@ namespace VFXEditor.AVFX.VFX {
             HasDependencies = false; // if imported, all set now
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Timeline";
             DrawRename( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -52,11 +52,11 @@ namespace VFXEditor.AVFX.VFX {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Items" + id ) ) {
-                    ItemSplit.Draw( id + "/Items" );
+                    ItemSplit.DrawInline( id + "/Items" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Clips" + id ) ) {
-                    ClipSplit.Draw( id + "/Clips" );
+                    ClipSplit.DrawInline( id + "/Clips" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -65,8 +65,8 @@ namespace VFXEditor.AVFX.VFX {
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
-            BinderSelect.Draw( id );
-            DrawList( Parameters, id );
+            BinderSelect.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
 

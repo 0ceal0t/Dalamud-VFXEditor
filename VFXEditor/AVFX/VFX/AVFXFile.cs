@@ -71,39 +71,39 @@ namespace VFXEditor.AVFX.VFX {
         public void Draw() {
             if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Parameters##Main" ) ) {
-                    ParameterView.Draw();
+                    ParameterView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Scheduler##Main" ) ) {
-                    ScheduleView.Draw();
+                    ScheduleView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Timelines##Main" ) ) {
-                    TimelineView.Draw();
+                    TimelineView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Emitters##Main" ) ) {
-                    EmitterView.Draw();
+                    EmitterView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Particles##Main" ) ) {
-                    ParticleView.Draw();
+                    ParticleView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Effectors##Main" ) ) {
-                    EffectorView.Draw();
+                    EffectorView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Binders##Main" ) ) {
-                    BinderView.Draw();
+                    BinderView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Textures##Main" ) ) {
-                    TextureView.Draw();
+                    TextureView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Models##Main" ) ) {
-                    ModelView.Draw();
+                    ModelView.DrawInline();
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();

@@ -108,11 +108,17 @@
         <None Update="Files\animassist.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\binder_default.vfxedit">
+        <None Update="Files\default_binder.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\default_model.vfxedit2">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\default_pap_tmb.tmb">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\default_texture.vfxedit2">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\default_vfx.avfx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -120,10 +126,10 @@
         <None Update="Files\default_weapon.avfx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\effector_default.vfxedit">
+        <None Update="Files\default_effector.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\emitter_default.vfxedit">
+        <None Update="Files\default_emitter.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\npc_files.json">
@@ -135,10 +141,10 @@
         <None Update="Files\npc_names.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\particle_default.vfxedit">
+        <None Update="Files\default_particle.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\timeline_default.vfxedit">
+        <None Update="Files\default_timeline.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\vfx_misc.txt">

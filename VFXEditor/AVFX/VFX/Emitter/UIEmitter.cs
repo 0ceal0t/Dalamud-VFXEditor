@@ -25,7 +25,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public readonly UIString SoundInput;
         public readonly UIInt SoundIndex;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UIEmitter( AVFXEmitter emitter, UINodeGroupSet nodeGroups, bool hasDependencies = false ) : base( UINodeGroup.EmitterColor, hasDependencies ) {
             Emitter = emitter;
@@ -46,7 +46,7 @@ namespace VFXEditor.AVFX.VFX {
             SoundInput = new UIString( "Sound", Emitter.Sound, showRemoveButton: true );
             SoundIndex = new UIInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UIInt( "Loop Start", Emitter.LoopStart ),
                 new UIInt( "Loop End", Emitter.LoopEnd ),
                 new UIInt( "Child Limit", Emitter.ChildLimit ),
@@ -97,24 +97,24 @@ namespace VFXEditor.AVFX.VFX {
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            EffectorSelect.Draw( id );
-            SoundInput.Draw( id );
-            SoundIndex.Draw( id );
-            DrawList( Parameters, id );
+            NodeView.DrawInline( id );
+            EffectorSelect.DrawInline( id );
+            SoundInput.DrawInline( id );
+            SoundIndex.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
 
         private void DrawData( string id ) {
             ImGui.BeginChild( id );
-            Data.Draw( id );
+            Data.DrawInline( id );
             ImGui.EndChild();
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Emitter";
             DrawRename( id );
-            Type.Draw( id );
+            Type.DrawInline( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
@@ -127,15 +127,15 @@ namespace VFXEditor.AVFX.VFX {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplit.Draw( id + "/Anim" );
+                    AnimationSplit.DrawInline( id + "/Anim" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Create Particles" + id ) ) {
-                    ParticleSplit.Draw( id + "/ItPr" );
+                    ParticleSplit.DrawInline( id + "/ItPr" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Create Emitters" + id ) ) {
-                    EmitterSplit.Draw( id + "/ItEm" );
+                    EmitterSplit.DrawInline( id + "/ItEm" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();

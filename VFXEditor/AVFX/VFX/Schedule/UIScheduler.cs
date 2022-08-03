@@ -31,16 +31,16 @@ namespace VFXEditor.AVFX.VFX {
             HasDependencies = false; // if imported, all set now
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Scheduler";
 
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( "Items" + id ) ) {
-                    ItemSplit.Draw( id + "/Item" );
+                    ItemSplit.DrawInline( id + "/Item" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Triggers" + id ) ) {
-                    TriggerSplit.Draw( id + "/Trigger" );
+                    TriggerSplit.DrawInline( id + "/Trigger" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();

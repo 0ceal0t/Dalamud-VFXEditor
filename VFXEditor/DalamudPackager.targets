@@ -5,10 +5,6 @@
     </Target>
     
     <Target Name="PackagePlugin" AfterTargets="DeleteFile" Condition="'$(Configuration)' == 'Release'">
-        <DalamudPackager
-                ProjectDir="$(ProjectDir)"
-                OutputPath="$(OutputPath)"
-                AssemblyName="$(AssemblyName)"
-                MakeZip="true"/>
+        <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" MakeZip="true"/>
     </Target>
 </Project>

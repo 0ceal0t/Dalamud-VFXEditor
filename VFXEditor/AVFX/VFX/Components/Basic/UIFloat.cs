@@ -3,7 +3,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIFloat : UIBase {
+    public class UIFloat : IUIBase {
         public readonly string Name;
         public float Value;
         public readonly AVFXFloat Literal;
@@ -14,7 +14,7 @@ namespace VFXEditor.AVFX.VFX {
             Value = Literal.GetValue();
         }
 
-        public override void Draw( string id ) {
+        public void DrawInline( string id ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXFloat literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
                 Literal.SetValue( Value );
             }
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

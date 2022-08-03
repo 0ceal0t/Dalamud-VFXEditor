@@ -48,7 +48,7 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override void DrawLeftCol( string parentId ) {
-            foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
+            foreach( var item in Items.Where( UIItem.IsAssigned ) ) {
                 if( ImGui.Selectable( item.GetText() + parentId, Selected == item ) ) {
                     OnSelect( item );
                     Selected = item;
@@ -56,14 +56,14 @@ namespace VFXEditor.AVFX.VFX {
             }
 
             // not assigned, can be added
-            foreach( var item in Items.Where( x => !x.IsAssigned() ) ) {
-                item.DrawUnAssigned( parentId );
+            foreach( var item in Items.Where( UIItem.IsUnassigned ) ) {
+                item.DrawInline( parentId );
             }
         }
 
         public override void DrawRightCol( string parentId ) {
-            if( Selected != null && Selected.IsAssigned() ) {
-                Selected.DrawBody( parentId );
+            if( Selected != null && UIItem.IsAssigned( Selected ) ) {
+                Selected.DrawInline( parentId );
             }
         }
     }

@@ -9,7 +9,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public UINodeSelect<UIParticle> ParticleSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UIEmitterItem( AVFXEmitterItem iteration, bool isParticle, UIEmitter emitter ) {
             Iteration = iteration;
@@ -23,7 +23,7 @@ namespace VFXEditor.AVFX.VFX {
                 EmitterSelect = new UINodeSelect<UIEmitter>( emitter, "Target Emitter", Emitter.NodeGroups.Emitters, Iteration.TargetIdx );
             }
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICheckbox( "Enabled", Iteration.Enabled ),
                 new UIInt( "Local Direction", Iteration.LocalDirection ),
                 new UIInt( "Create Time", Iteration.CreateTime ),
@@ -50,16 +50,16 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Item";
             DrawRename( id );
             if( IsParticle ) {
-                ParticleSelect.Draw( id );
+                ParticleSelect.DrawInline( id );
             }
             else {
-                EmitterSelect.Draw( id );
+                EmitterSelect.DrawInline( id );
             }
-            DrawList( Parameters, id );
+            IUIBase.DrawList( Parameters, id );
         }
 
         public override string GetDefaultText() {

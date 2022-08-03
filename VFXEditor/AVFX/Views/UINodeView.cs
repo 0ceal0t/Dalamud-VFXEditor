@@ -9,6 +9,8 @@ namespace VFXEditor.AVFX.VFX {
         public void OnDelete( T item );
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
         public void AddToGroup( T item );
+        public void DeleteSelected();
+        public void OnNew();
 
         public void Import( BinaryReader reader, long position, int size, string renamed, bool hasDependencies) {
             reader.BaseStream.Seek( position, SeekOrigin.Begin );
@@ -16,9 +18,6 @@ namespace VFXEditor.AVFX.VFX {
             if( !string.IsNullOrEmpty( renamed ) ) newItem.Renamed = renamed;
             AddToGroup( newItem );
         }
-
-        public void DeleteSelected();
-        public void CreateDefault();
 
         public static void DrawControls( IUINodeView<T> nodeView, AVFXFile vfxFile, T selected, UINodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
             ImGui.PushFont( UiBuilder.IconFont );
@@ -58,7 +57,7 @@ namespace VFXEditor.AVFX.VFX {
             // ===== NEW =====
             if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
                 if( ImGui.Selectable( "Default" + Id ) ) {
-                    nodeView.CreateDefault();
+                    nodeView.OnNew();
                 }
                 if( ImGui.Selectable( "Import" + Id ) ) {
                     vfxFile.ShowImportDialog();

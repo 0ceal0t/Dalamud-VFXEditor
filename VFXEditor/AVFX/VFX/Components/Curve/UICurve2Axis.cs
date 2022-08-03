@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICurve2Axis : UIItem {
+    public class UICurve2Axis : UIAssignableItem {
         public readonly AVFXCurve2Axis Curve;
         public readonly string Name;
         public readonly bool Locked;
@@ -31,24 +31,13 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void Draw( string parentId ) {
-            if( !IsAssigned() ) {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.TreeNode( Name + parentId ) ) {
-                DrawBody( parentId );
-                ImGui.TreePop();
-            }
-        }
-
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 AVFXBase.RecurseAssigned( Curve, true );
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
                 if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
@@ -59,8 +48,8 @@ namespace VFXEditor.AVFX.VFX {
 
             UICurve.DrawUnassignedCurves( Curves, id );
 
-            AxisConnectSelect.Draw( id );
-            AxisConnectRandomSelect.Draw( id );
+            AxisConnectSelect.DrawInline( id );
+            AxisConnectRandomSelect.DrawInline( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             UICurve.DrawAssignedCurves( Curves, id );

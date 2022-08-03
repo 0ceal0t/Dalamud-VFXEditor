@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIIntList : UIBase {
+    public class UIIntList : IUIBase {
         public readonly string Name;
         public List<int> Value;
         public readonly AVFXIntList Literal;
@@ -15,7 +15,7 @@ namespace VFXEditor.AVFX.VFX {
             Value = Literal.GetValue();
         }
 
-        public override void Draw( string id ) {
+        public void DrawInline( string id ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXIntList literal ) {
                 Literal.GetValue()[0] = literal.GetValue()[0];
@@ -35,7 +35,7 @@ namespace VFXEditor.AVFX.VFX {
                 Value[0] = firstValue;
             }
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

@@ -9,7 +9,7 @@ namespace VFXEditor.AVFX.VFX {
         public readonly AVFXEffector Effector;
         public readonly UICombo<EffectorType> Type;
         public readonly UINodeGraphView NodeView;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UIData Data;
 
@@ -21,7 +21,7 @@ namespace VFXEditor.AVFX.VFX {
                 Effector.SetType( Effector.EffectorVariety.GetValue() );
                 SetType();
             } );
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICombo<RotationOrder>( "Rotation Order", Effector.RotationOrder ),
                 new UICombo<CoordComputeOrder>( "Coordinate Compute Order", Effector.CoordComputeOrder ),
                 new UICheckbox( "Affect Other VFX", Effector.AffectOtherVfx ),
@@ -45,10 +45,10 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Effector";
             DrawRename( id );
-            Type.Draw( id );
+            Type.DrawInline( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
@@ -66,14 +66,14 @@ namespace VFXEditor.AVFX.VFX {
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            DrawList( Parameters, id );
+            NodeView.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
 
         private void DrawData( string id ) {
             ImGui.BeginChild( id );
-            Data.Draw( id );
+            Data.DrawInline( id );
             ImGui.EndChild();
         }
 

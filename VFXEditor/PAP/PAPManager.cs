@@ -21,6 +21,7 @@ namespace VFXEditor.PAP {
                 false,
                 SetReplaceGlobal
             );
+
             IndexDialog = new PAPSelectIndexDialog();
         }
 

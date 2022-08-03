@@ -26,7 +26,7 @@ namespace VFXEditor.AVFX.VFX {
             node.Selectors.Add( this );
         }
 
-        public override void Draw( string parentId ) {
+        public override void DrawInline( string parentId ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is AVFXIntList literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -74,7 +74,7 @@ namespace VFXEditor.AVFX.VFX {
                     ImGui.EndCombo();
                 }
 
-                if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+                if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
 
                 if( i > 0 ) {
                     ImGui.SameLine();
@@ -99,7 +99,7 @@ namespace VFXEditor.AVFX.VFX {
                     LinkTo( Group.Items[0] );
                 }
 
-                if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+                if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
             }
         }
 

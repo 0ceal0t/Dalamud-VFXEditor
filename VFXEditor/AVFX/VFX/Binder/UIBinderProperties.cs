@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib.Binder;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIBinderProperties : UIItem {
+    public class UIBinderProperties : UIAssignableItem {
         private readonly AVFXBinderProperty Prop;
         private readonly string Name;
         private readonly UIParameters Parameters;
@@ -31,13 +31,13 @@ namespace VFXEditor.AVFX.VFX {
             Parameters.Add( new UIFloat( "Ring Radius", Prop.RingRadius ) );
         }
 
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 AVFXBase.RecurseAssigned( Prop, true );
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
             if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Prop.SetAssigned( false );

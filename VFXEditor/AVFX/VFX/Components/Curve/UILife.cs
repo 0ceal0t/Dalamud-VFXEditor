@@ -4,29 +4,28 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UILife : UIItem {
+    public class UILife : UIAssignableItem {
         public readonly AVFXLife Life;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UILife( AVFXLife life ) {
             Life = life;
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UIFloat( "Value", Life.Value ),
                 new UIFloat( "Random Value", Life.ValRandom ),
                 new UICombo<RandomType>( "Random Type", Life.ValRandomType )
             };
         }
 
-        public override void Draw( string parentId ) {
-            if( ImGui.TreeNode( "Life" + parentId ) ) {
-                DrawBody( parentId );
-                ImGui.TreePop();
-            }
+        public override void DrawAssigned( string parentId ) {
+            var id = parentId + "/Life";
+            IUIBase.DrawList( Parameters, id );
         }
 
-        public override void DrawBody( string parentId ) {
-            var id = parentId + "/Life";
-            DrawList( Parameters, id );
+        public override void DrawUnassigned( string id ) {
+            if( ImGui.SmallButton( "+ Life" + id ) ) {
+                AVFXBase.RecurseAssigned( Life, true );
+            }
         }
 
         public override string GetDefaultText() => "Life";

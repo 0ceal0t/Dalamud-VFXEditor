@@ -15,8 +15,6 @@ namespace VFXEditor.AVFX.VFX {
 
         public abstract string GetWorkspaceId();
 
-        public override bool IsAssigned() => true;
-
         public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
             var path = GetWorkspaceId();
             if( !string.IsNullOrEmpty( Renamed ) ) {

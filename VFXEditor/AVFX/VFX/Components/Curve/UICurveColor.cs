@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICurveColor : UIItem {
+    public class UICurveColor : UIAssignableItem {
         public readonly AVFXCurveColor Curve;
         public readonly string Name;
         public readonly bool Locked;
@@ -32,24 +32,13 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void Draw( string parentId ) {
-            if( !IsAssigned() ) {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.TreeNode( Name + parentId ) ) {
-                DrawBody( parentId );
-                ImGui.TreePop();
-            }
-        }
-
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 AVFXBase.RecurseAssigned( Curve, true );
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
                 if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {

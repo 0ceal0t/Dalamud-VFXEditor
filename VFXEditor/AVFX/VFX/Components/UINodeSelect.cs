@@ -2,10 +2,9 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
-using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public abstract class UINodeSelect : UIBase {
+    public abstract class UINodeSelect : IUIBase {
         public UINode Node;
 
         public void UnlinkFrom( UINode node ) {
@@ -29,6 +28,7 @@ namespace VFXEditor.AVFX.VFX {
         public abstract void DeleteNode( UINode node ); // when the selected node is deleted
         public abstract void UpdateNode();
         public abstract void SetupNode();
+        public abstract void DrawInline(string id);
     }
 
     public class UINodeSelect<T> : UINodeSelect where T : UINode {
@@ -52,7 +52,7 @@ namespace VFXEditor.AVFX.VFX {
             node.Selectors.Add( this );
         }
 
-        public override void Draw( string parentId ) {
+        public override void DrawInline( string parentId ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is AVFXInt literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -82,7 +82,7 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.EndCombo();
             }
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
 
         private void SelectNone() {

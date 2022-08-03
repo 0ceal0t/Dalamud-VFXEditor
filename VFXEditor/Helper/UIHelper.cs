@@ -3,11 +3,13 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using VFXEditor.AVFX.VFX;
 
 namespace VFXEditor.Helper {
     public enum VerifiedStatus {
@@ -19,6 +21,11 @@ namespace VFXEditor.Helper {
     public static class UIHelper {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
+
+        public static string GetArticle( string input ) {
+            var isVowel = "aeiouAEIOU".Contains( input[0] );
+            return isVowel ? "an" : "a";
+        }
 
         public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) {
             newValue = currentValue;

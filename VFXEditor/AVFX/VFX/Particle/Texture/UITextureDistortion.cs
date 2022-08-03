@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UITextureDistortion : UIItem {
+    public class UITextureDistortion : UIAssignableItem {
         public readonly AVFXParticleTextureDistortion Tex;
         public readonly UIParticle Particle;
         public readonly string Name;
@@ -39,7 +39,7 @@ namespace VFXEditor.AVFX.VFX {
             Tabs.Add( new UICurve( Tex.DPow, "Power" ) );
         }
 
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) {
                 AVFXBase.RecurseAssigned( Tex, true );
 
@@ -48,7 +48,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TD";
             DrawListTabs( Tabs, id );
         }

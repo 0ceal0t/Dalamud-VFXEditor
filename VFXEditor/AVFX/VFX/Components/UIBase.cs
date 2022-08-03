@@ -2,17 +2,17 @@ using ImGuiNET;
 using System.Collections.Generic;
 
 namespace VFXEditor.AVFX.VFX {
-    public abstract class UIBase {
-        public abstract void Draw( string parentId );
+    public interface IUIBase {
+        public abstract void DrawInline( string parentId );
 
-        public static void DrawList( List<UIBase> items, string parentId ) {
+        public static void DrawList( List<IUIBase> items, string parentId ) {
             foreach( var item in items ) { // Draw assigned items
-                if( item is UIItem optionalItem && !optionalItem.IsAssigned() ) continue;
-                item.Draw( parentId );
+                if( item is UIAssignableItem optionalItem && !optionalItem.IsAssigned() ) continue;
+                item.DrawInline( parentId );
             }
 
             foreach( var item in items ) { // Draw unassigned items
-                if( item is UIItem optionalItem && !optionalItem.IsAssigned() ) item.Draw( parentId );
+                if( item is UIAssignableItem optionalItem && !optionalItem.IsAssigned() ) item.DrawInline( parentId );
             }
         }
 

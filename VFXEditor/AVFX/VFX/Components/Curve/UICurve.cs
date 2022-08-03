@@ -5,12 +5,12 @@ using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICurve : UIItem {
+    public class UICurve : UIAssignableItem {
         public readonly string Name;
         private readonly AVFXCurve Curve;
         private readonly bool Color = false;
         private readonly bool Locked;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
         private readonly UICurveEditor CurveEdit;
 
         public UICurve( AVFXCurve curve, string name, bool color = false, bool locked = false ) {
@@ -20,7 +20,7 @@ namespace VFXEditor.AVFX.VFX {
             Locked = locked;
 
             CurveEdit = new UICurveEditor( Curve, Color );
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICombo<CurveBehavior>( "Pre Behavior", Curve.PreBehavior ),
                 new UICombo<CurveBehavior>( "Post Behavior", Curve.PostBehavior )
             };
@@ -29,24 +29,13 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void Draw( string parentId ) {
-            if( !IsAssigned() ) {
-                DrawUnAssigned( parentId );
-                return;
-            }
-            if( ImGui.TreeNode( Name + parentId ) ) {
-                DrawBody( parentId );
-                ImGui.TreePop();
-            }
-        }
-
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
                 AVFXBase.RecurseAssigned( Curve, true );
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
                 if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
@@ -54,8 +43,8 @@ namespace VFXEditor.AVFX.VFX {
                     return;
                 }
             }
-            DrawList( Parameters, id );
-            CurveEdit.Draw( id );
+            IUIBase.DrawList( Parameters, id );
+            CurveEdit.DrawInline( id );
         }
 
         public override string GetDefaultText() => Name;
@@ -69,7 +58,7 @@ namespace VFXEditor.AVFX.VFX {
                     if( idx % 5 != 0 ) {
                         ImGui.SameLine();
                     }
-                    curve.Draw( id );
+                    curve.DrawInline( id );
                     idx++;
                 }
             }
@@ -80,7 +69,7 @@ namespace VFXEditor.AVFX.VFX {
                 foreach( var curve in curves ) {
                     if( curve.IsAssigned() ) {
                         if( ImGui.BeginTabItem( curve.Name + id ) ) {
-                            curve.DrawBody( id );
+                            curve.DrawAssigned( id );
                             ImGui.EndTabItem();
                         }
                     }

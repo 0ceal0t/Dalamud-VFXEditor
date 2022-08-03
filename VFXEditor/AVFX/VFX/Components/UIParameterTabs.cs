@@ -13,12 +13,10 @@ namespace VFXEditor.AVFX.VFX {
             Items.Add( item );
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             DrawListTabs( Items, parentId );
         }
 
         public override string GetDefaultText() => Name;
-
-        public override bool IsAssigned() => true;
     }
 }

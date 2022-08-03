@@ -286,12 +286,6 @@ namespace VFXEditor.AVFXLib {
             Textures.Add( item );
         }
 
-        public AVFXTexture AddTexture() {
-            var texture = new AVFXTexture();
-            Textures.Add( texture );
-            return texture;
-        }
-
         public void RemoveTexture( int idx ) {
             Textures.RemoveAt( idx );
         }
@@ -302,12 +296,6 @@ namespace VFXEditor.AVFXLib {
 
         public void AddModel( AVFXModel item ) {
             Models.Add( item );
-        }
-
-        public AVFXModel AddModel() {
-            var model = new AVFXModel();
-            Models.Add( model );
-            return model;
         }
 
         public void RemoveModel( int idx ) {

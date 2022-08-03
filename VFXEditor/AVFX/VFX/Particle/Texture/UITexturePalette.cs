@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UITexturePalette : UIItem {
+    public class UITexturePalette : UIAssignableItem {
         public readonly AVFXParticleTexturePalette Tex;
         public readonly UIParticle Particle;
         public readonly string Name;
@@ -33,7 +33,7 @@ namespace VFXEditor.AVFX.VFX {
             Tabs.Add( new UICurve( Tex.Offset, "Offset" ) );
         }
 
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Palette" + parentId ) ) {
                 AVFXBase.RecurseAssigned( Tex, true );
 
@@ -42,7 +42,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TP";
             DrawListTabs( Tabs, id );
         }

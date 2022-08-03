@@ -27,7 +27,7 @@ namespace VFXEditor.AVFX.VFX {
         public readonly UIItemSplitView<UIItem> TexSplit;
         public readonly UIUVSetSplitView UVSplit;
         public readonly UINodeGraphView NodeView;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UIParticle( AVFXParticle particle, UINodeGroupSet nodeGroups, bool hasDependencies = false ) : base( UINodeGroup.ParticleColor, hasDependencies ) {
             Particle = particle;
@@ -42,7 +42,7 @@ namespace VFXEditor.AVFX.VFX {
                 Particle.SetType( Particle.ParticleVariety.GetValue() );
                 SetType();
             } );
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UIInt( "Loop Start", Particle.LoopStart ),
                 new UIInt( "Loop End", Particle.LoopEnd ),
                 new UICheckbox( "Use Simple Animation", Particle.SimpleAnimEnable ),
@@ -130,10 +130,10 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Ptcl";
             DrawRename( id );
-            Type.Draw( id );
+            Type.DrawInline( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
@@ -146,15 +146,15 @@ namespace VFXEditor.AVFX.VFX {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplit.Draw( id + "/Animation" );
+                    AnimationSplit.DrawInline( id + "/Animation" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "UV Sets" + id ) ) {
-                    UVSplit.Draw( id + "/UVSets" );
+                    UVSplit.DrawInline( id + "/UVSets" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Textures" + id ) ) {
-                    TexSplit.Draw( id + "/Tex" );
+                    TexSplit.DrawInline( id + "/Tex" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -163,14 +163,14 @@ namespace VFXEditor.AVFX.VFX {
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            DrawList( Parameters, id );
+            NodeView.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
 
         private void DrawData( string id ) {
             ImGui.BeginChild( id );
-            Data.Draw( id );
+            Data.DrawInline( id );
             ImGui.EndChild();
         }
 

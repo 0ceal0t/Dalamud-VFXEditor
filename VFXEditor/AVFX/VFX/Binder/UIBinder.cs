@@ -12,7 +12,7 @@ namespace VFXEditor.AVFX.VFX {
         private readonly List<UIBinderProperties> Properties;
         private readonly UIItemSplitView<UIBinderProperties> PropSplit;
         private readonly UINodeGraphView NodeView;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
         private UIData Data;
 
         public UIBinder( AVFXBinder binder, bool hasDependencies = false ) : base( UINodeGroup.BinderColor, hasDependencies ) {
@@ -24,7 +24,7 @@ namespace VFXEditor.AVFX.VFX {
                 SetType();
             } );
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICheckbox( "Start to Global Direction", Binder.StartToGlobalDirection ),
                 new UICheckbox( "VFX Scale", Binder.VfxScaleEnabled ),
                 new UIFloat( "VFX Scale Bias", Binder.VfxScaleBias ),
@@ -62,10 +62,10 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Binder";
             DrawRename( id );
-            Type.Draw( id );
+            Type.DrawInline( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
@@ -87,19 +87,19 @@ namespace VFXEditor.AVFX.VFX {
 
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            DrawList( Parameters, id );
+            NodeView.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
 
         private void DrawData( string id ) {
             ImGui.BeginChild( id );
-            Data.Draw( id );
+            Data.DrawInline( id );
             ImGui.EndChild();
         }
 
         private void DrawProperties( string id ) {
-            PropSplit.Draw( id );
+            PropSplit.DrawInline( id );
         }
 
         public override string GetDefaultText() => $"Binder {Idx}({Binder.BinderVariety.GetValue()})";
@@ -107,7 +107,5 @@ namespace VFXEditor.AVFX.VFX {
         public override string GetWorkspaceId() => $"Bind{Idx}";
 
         public override void Write( BinaryWriter writer ) => Binder.Write( writer );
-
-        public override bool IsAssigned() => true;
     }
 }

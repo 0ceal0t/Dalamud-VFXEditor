@@ -7,7 +7,7 @@ namespace VFXEditor.AVFX.VFX {
         public UIScheduler Scheduler;
         public string Name;
         public UINodeSelect<UITimeline> TimelineSelect;
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UISchedulerItem( AVFXSchedulerSubItem item, UIScheduler scheduler, string name ) {
             Item = item;
@@ -15,17 +15,17 @@ namespace VFXEditor.AVFX.VFX {
             Name = name;
 
             TimelineSelect = new UINodeSelect<UITimeline>( Scheduler, "Target Timeline", Scheduler.NodeGroups.Timelines, Item.TimelineIdx );
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICheckbox( "Enabled", Item.Enabled ),
                 new UIInt( "Start Time", Item.StartTime )
             };
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/" + Name;
             DrawRename( id );
-            TimelineSelect.Draw( id );
-            DrawList( Parameters, id );
+            TimelineSelect.DrawInline( id );
+            IUIBase.DrawList( Parameters, id );
         }
 
         public override string GetDefaultText() => $"{Idx}: Timeline {Item.TimelineIdx.GetValue()}";

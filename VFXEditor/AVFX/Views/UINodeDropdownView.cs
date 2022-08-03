@@ -1,9 +1,10 @@
 using ImGuiNET;
 using System.IO;
 using VFXEditor.AVFXLib;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public abstract class UINodeDropdownView<T> : UIBase, IUINodeView<T> where T : UINode {
+    public abstract class UINodeDropdownView<T> : IUIBase, IUINodeView<T> where T : UINode {
         public readonly AVFXMain AVFX;
         public readonly AVFXFile VfxFile;
         public readonly UINodeGroup<T> Group;
@@ -20,25 +21,23 @@ namespace VFXEditor.AVFX.VFX {
             VfxFile = vfxFile;
             AVFX = avfx;
             Group = group;
-            Id = $"##{name}";
-
-            var isVowel = "aeiouAEIOU".Contains( name[0] );
-            var aOrAn = isVowel ? "an" : "a";
-            DefaultText = $"Select {aOrAn} {name}";
-
             AllowNew = allowNew;
             AllowDelete = allowDelete;
+
+            Id = $"##{name}";
+            DefaultText = $"Select {UIHelper.GetArticle(name)} {name}";
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
         public abstract void OnDelete( T item );
         public abstract void OnExport( BinaryWriter writer, T item );
-        public virtual void OnSelect( T item ) { }
+        public abstract void OnSelect( T item );
         public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
+        public void OnNew() => VfxFile.Import( DefaultPath );
 
         public void AddToGroup( T item ) => Group.Add( item );
 
-        public override void Draw( string parentId = "" ) {
+        public void DrawInline( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();
 
@@ -50,7 +49,7 @@ namespace VFXEditor.AVFX.VFX {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
 
             if( Selected != null ) {
-                Selected.DrawBody( Id );
+                Selected.DrawInline( Id );
             }
         }
 
@@ -71,7 +70,5 @@ namespace VFXEditor.AVFX.VFX {
         public void DeleteSelected() {
             Selected = null;
         }
-
-        public void CreateDefault() => VfxFile.Import( DefaultPath );
     }
 }

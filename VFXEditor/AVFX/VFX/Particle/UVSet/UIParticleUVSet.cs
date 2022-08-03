@@ -11,13 +11,13 @@ namespace VFXEditor.AVFX.VFX {
         public UICurve2Axis Scroll;
         public UICurve Rotation;
         private readonly List<UIItem> Curves = new();
-        private readonly List<UIBase> Parameters;
+        private readonly List<IUIBase> Parameters;
 
         public UIParticleUVSet( AVFXParticleUVSet uvSet, UIParticle particle ) {
             UVSet = uvSet;
             Particle = particle;
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UICombo<TextureCalculateUV>( "Calculate UV", UVSet.CalculateUVType )
             };
 
@@ -27,15 +27,13 @@ namespace VFXEditor.AVFX.VFX {
             Curves.Add( new UICurve( UVSet.RotRandom, "Rotation Random" ) );
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/UV";
-            DrawList( Parameters, id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawListTabs( Curves, parentId );
         }
 
         public override string GetDefaultText() => $"UV {Idx}";
-
-        public override bool IsAssigned() => true;
     }
 }

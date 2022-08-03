@@ -9,7 +9,7 @@ using VFXEditor.Data;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICurveEditor : UIBase {
+    public class UICurveEditor : IUIBase {
         private CurvePoint Selected = null;
         private readonly AVFXCurve Curve;
         private readonly List<AVFXCurveKey> SourceKeys;
@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void Draw( string parentId ) {
+        public void DrawInline( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );

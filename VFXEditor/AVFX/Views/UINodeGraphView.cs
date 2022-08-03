@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Numerics;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UINodeGraphView : UIBase {
+    public class UINodeGraphView : IUIBase {
         public UINode Node;
         private static readonly uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
         private static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
@@ -28,7 +28,7 @@ namespace VFXEditor.AVFX.VFX {
             Node = node;
         }
 
-        public override void Draw( string parentId ) {
+        public void DrawInline( string parentId ) {
             if( Node.Graph == null || Node.Graph.Outdated ) {
                 Node.Graph = new UINodeGraph( Node );
             }

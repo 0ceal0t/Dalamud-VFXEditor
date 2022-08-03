@@ -34,11 +34,11 @@ namespace VFXEditor.AVFX.VFX {
             return currentPathValue;
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Texture";
-            NodeView.Draw( id );
+            NodeView.DrawInline( id );
             DrawRename( id );
-            Path.Draw( id );
+            Path.DrawInline( id );
 
             var currentPathValue = LoadTex();
 

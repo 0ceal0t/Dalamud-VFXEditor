@@ -1,10 +1,10 @@
 using ImGuiNET;
 
 namespace VFXEditor.AVFX.VFX {
-    public abstract class UIGenericSplitView : UIBase {
-
+    public abstract class UIGenericSplitView : IUIBase {
         public bool AllowNew;
         public bool AllowDelete;
+        private bool DrawOnce = false;
 
         public UIGenericSplitView( bool allowNew, bool allowDelete ) {
             AllowNew = allowNew;
@@ -15,8 +15,7 @@ namespace VFXEditor.AVFX.VFX {
         public abstract void DrawRightCol( string parentId );
         public abstract void DrawControls( string parentId );
 
-        private bool DrawOnce = false;
-        public override void Draw( string parentId = "" ) {
+        public void DrawInline( string parentId = "" ) {
             ImGui.Columns( 2, parentId + "/Cols", true );
             DrawControls( parentId );
 

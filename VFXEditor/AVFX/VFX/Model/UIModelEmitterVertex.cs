@@ -24,7 +24,7 @@ namespace VFXEditor.AVFX.VFX {
             Color = GLTFHelper.IntToColor( Vertex.C ) / 255;
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/VNum";
             if( ImGui.InputInt( "Order" + id, ref Order ) ) {
                 VertNumber.Num = Order;
@@ -41,7 +41,5 @@ namespace VFXEditor.AVFX.VFX {
         }
 
         public override string GetDefaultText() => $"{Idx}";
-
-        public override bool IsAssigned() => true;
     }
 }

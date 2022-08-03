@@ -6,7 +6,7 @@ using VFXEditor.AVFXLib.Particle;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIParticleSimple : UIItem {
+    public class UIParticleSimple : UIAssignableItem {
         public readonly AVFXParticleSimple Simple;
         public readonly UIParticle Particle;
 
@@ -85,7 +85,7 @@ namespace VFXEditor.AVFX.VFX {
             Color.Add( new UISimpleColor( Simple, 3 ) );
         }
 
-        public override void DrawUnAssigned( string parentId ) {
+        public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) {
                 AVFXBase.RecurseAssigned( Simple, true );
 
@@ -98,7 +98,7 @@ namespace VFXEditor.AVFX.VFX {
             }
         }
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Simple";
             if( UIHelper.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
@@ -116,7 +116,7 @@ namespace VFXEditor.AVFX.VFX {
         public override bool IsAssigned() => Simple.IsAssigned();
     }
 
-    internal class UISimpleColor : UIBase {
+    internal class UISimpleColor : IUIBase {
         private readonly AVFXParticleSimple Simple;
         private readonly int Idx;
         private Vector4 Color;
@@ -135,7 +135,7 @@ namespace VFXEditor.AVFX.VFX {
             Frame = Simple.Frames.Frames[Idx];
         }
 
-        public override void Draw( string parentId ) {
+        public void DrawInline( string parentId ) {
             if( ImGui.InputInt( "Frame " + Idx + parentId, ref Frame ) ) {
                 Simple.Frames.Frames[Idx] = Frame;
             }

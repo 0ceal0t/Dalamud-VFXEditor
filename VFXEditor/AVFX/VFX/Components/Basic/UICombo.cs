@@ -4,7 +4,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICombo<T> : UIBase {
+    public class UICombo<T> : IUIBase {
         public readonly string Name;
         public int ValueIdx;
         public readonly AVFXEnum<T> Literal;
@@ -17,7 +17,7 @@ namespace VFXEditor.AVFX.VFX {
             ValueIdx = Array.IndexOf( Literal.Options, Literal.GetValue().ToString() );
         }
 
-        public override void Draw( string id ) {
+        public void DrawInline( string id ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXEnum<T> literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -47,7 +47,7 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.EndCombo();
             }
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

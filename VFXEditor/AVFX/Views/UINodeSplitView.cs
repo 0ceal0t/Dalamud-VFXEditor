@@ -1,6 +1,7 @@
 using ImGuiNET;
 using System.IO;
 using VFXEditor.AVFXLib;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
@@ -9,20 +10,27 @@ namespace VFXEditor.AVFX.VFX {
         public readonly UINodeGroup<T> Group;
 
         public readonly string Id;
+        private readonly string DefaultText;
+        private readonly string DefaultPath;
 
         public T Selected = null;
 
-        public UINodeSplitView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<T> group, string name, bool allowNew, bool allowDelete ) : base( allowNew, allowDelete ) {
+        public UINodeSplitView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( allowNew, allowDelete ) {
             VfxFile = vfxFile;
             Avfx = avfx;
             Group = group;
+            AllowNew = allowNew;
+            AllowDelete = allowDelete;
+
             Id = $"##{name}";
+            DefaultText = $"Select {UIHelper.GetArticle( name )} {name}";
+            DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
-        public abstract T OnNew();
         public abstract void OnDelete( T item );
-        public virtual void OnSelect( T item ) { }
+        public abstract void OnSelect( T item );
         public abstract T OnImport( BinaryReader reader, int size, bool hasDependencies = false );
+        public void OnNew() => VfxFile.Import( DefaultPath );
 
         public void AddToGroup( T item ) {
             Group.Add( item );
@@ -44,14 +52,15 @@ namespace VFXEditor.AVFX.VFX {
 
         public override void DrawRightCol( string parentId ) {
             if( Selected != null ) {
-                Selected.DrawBody( Id );
+                Selected.DrawInline( Id );
+            }
+            else {
+                ImGui.Text( DefaultText );
             }
         }
 
         public void DeleteSelected() {
             Selected = null;
         }
-
-        public void CreateDefault() => Group.Add( OnNew() );
     }
 }

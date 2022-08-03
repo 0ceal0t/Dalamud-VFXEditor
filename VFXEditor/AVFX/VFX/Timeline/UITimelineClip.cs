@@ -30,7 +30,7 @@ namespace VFXEditor.AVFX.VFX {
             { "GRTR", "Random Trigger" }
         };
 
-        public override void DrawBody( string parentId ) {
+        public override void DrawInline( string parentId ) {
             var id = parentId + "/Clip";
             DrawRename( id );
 

@@ -36,10 +36,6 @@ namespace VFXEditor.TexTools {
     }
 
     public class TexToolsDialog : GenericDialog {
-        public TexToolsDialog() : base( "TexTools" ) {
-            Size = new Vector2( 400, 200 );
-        }
-
         private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";
@@ -47,6 +43,10 @@ namespace VFXEditor.TexTools {
         private bool ExportTex = true;
         private bool ExportTmb = true;
         private bool ExportPap = true;
+
+        public TexToolsDialog() : base( "TexTools" ) {
+            Size = new Vector2( 400, 200 );
+        }
 
         public override void DrawBody() {
             var id = "##Textools";

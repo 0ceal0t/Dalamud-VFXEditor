@@ -5,8 +5,7 @@ using VFXEditor.AVFXLib.Particle;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIParticleView : UINodeDropdownView<UIParticle> {
-        public UIParticleView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIParticle> group ) : base( vfxFile, avfx, group, "Particle", true, true, "particle_default.vfxedit" ) {
-        }
+        public UIParticleView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIParticle> group ) : base( vfxFile, avfx, group, "Particle", true, true, "default_particle.vfxedit" ) { }
 
         public override void OnDelete( UIParticle item ) => AVFX.RemoveParticle( item.Particle );
 
@@ -18,5 +17,7 @@ namespace VFXEditor.AVFX.VFX {
             AVFX.AddParticle( item );
             return new UIParticle( item, VfxFile.NodeGroupSet, has_dependencies );
         }
+
+        public override void OnSelect( UIParticle item ) { }
     }
 }

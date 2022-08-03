@@ -3,7 +3,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.Data;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UICheckbox : UIBase {
+    public class UICheckbox : IUIBase {
         public readonly string Name;
         public bool Value;
         public readonly AVFXBool Literal;
@@ -14,7 +14,7 @@ namespace VFXEditor.AVFX.VFX {
             Value = Literal.GetValue() == true; // can be null
         }
 
-        public override void Draw( string id ) {
+        public void DrawInline( string id ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXBool literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
                 Literal.SetValue( Value );
             }
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
         }
     }
 }

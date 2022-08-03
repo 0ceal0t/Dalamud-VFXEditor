@@ -5,7 +5,7 @@ using VFXEditor.Data;
 using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIString : UIBase {
+    public class UIString : IUIBase {
         public readonly string Name;
         public readonly AVFXString Literal;
         public string Value;
@@ -18,7 +18,7 @@ namespace VFXEditor.AVFX.VFX {
             ShowRemoveButton = showRemoveButton;
         }
 
-        public override void Draw( string id ) {
+        public void DrawInline( string id ) {
             if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXString literal ) {
                 Literal.SetValue( literal.GetValue() );
@@ -36,7 +36,7 @@ namespace VFXEditor.AVFX.VFX {
 
             ImGui.InputText( Name + id, ref Value, 256 );
 
-            if( DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
 
             ImGui.SameLine();
             if( ImGui.Button( $"Update{id}" ) ) {

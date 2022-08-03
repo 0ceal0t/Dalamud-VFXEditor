@@ -2,10 +2,11 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
+using VFXEditor.Helper;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIParameterView : UIBase {
-        private readonly List<UIBase> Parameters;
+    public class UIParameterView : IUIBase {
+        private readonly List<IUIBase> Parameters;
         private readonly int[] Version = new int[4];
         private readonly UIFloat3 RevisedScale;
         private float ScaleCombined = 1.0f;
@@ -18,7 +19,7 @@ namespace VFXEditor.AVFX.VFX {
             RevisedScale = new UIFloat3( "Revised Scale", avfx.RevisedValuesScaleX, avfx.RevisedValuesScaleY, avfx.RevisedValuesScaleZ );
             ScaleCombined = Math.Max( avfx.RevisedValuesScaleX.GetValue(), Math.Max( avfx.RevisedValuesScaleY.GetValue(), avfx.RevisedValuesScaleZ.GetValue() ) );
 
-            Parameters = new List<UIBase> {
+            Parameters = new List<IUIBase> {
                 new UIFloat3( "Revised Position", avfx.RevisedValuesPosX, avfx.RevisedValuesPosY, avfx.RevisedValuesPosZ ),
                 new UIFloat3( "Revised Rotation", avfx.RevisedValuesRotX, avfx.RevisedValuesRotY, avfx.RevisedValuesRotZ ),
                 new UIFloat3( "Revised Color", avfx.RevisedValuesR, avfx.RevisedValuesG, avfx.RevisedValuesB ),
@@ -57,7 +58,7 @@ namespace VFXEditor.AVFX.VFX {
             };
         }
 
-        public override void Draw( string parentId = "" ) {
+        public void DrawInline( string parentId = "" ) {
             var id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
             ImGui.Text( $"VFX Version: {Version[0]}.{Version[1]}.{Version[2]}.{Version[3]}" );
@@ -67,10 +68,10 @@ namespace VFXEditor.AVFX.VFX {
                 RevisedScale.Literal3.SetValue( ScaleCombined );
                 RevisedScale.Value = new System.Numerics.Vector3( ScaleCombined, ScaleCombined, ScaleCombined );
             }
-            RevisedScale.Draw( id );
+            RevisedScale.DrawInline( id );
             ImGui.Separator();
 
-            DrawList( Parameters, id );
+            IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }
     }
