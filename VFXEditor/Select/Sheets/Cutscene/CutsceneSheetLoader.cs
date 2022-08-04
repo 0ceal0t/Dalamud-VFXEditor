@@ -22,7 +22,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivCutsceneSelected( item, file );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error Reading CUTB file " + item.Path, e );
+                    PluginLog.Error( e, "Error Reading CUTB file " + item.Path );
                     return false;
                 }
             }

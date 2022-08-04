@@ -23,7 +23,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivZoneSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error reading LGB file " + lgbPath, e );
+                    PluginLog.Error( e, "Error reading LGB file " + lgbPath );
                     return false;
                 }
             }

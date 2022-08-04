@@ -28,7 +28,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivHousingSelected( item, file );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error loading SGB file " + sgbPath, e );
+                    PluginLog.Error( e, "Error loading SGB file " + sgbPath );
                     return false;
                 }
             }

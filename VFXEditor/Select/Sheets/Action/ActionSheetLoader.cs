@@ -32,7 +32,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error reading TMB " + tmbPath, e );
+                    PluginLog.Error( e, "Error reading TMB " + tmbPath);
                     return false;
                 }
             }

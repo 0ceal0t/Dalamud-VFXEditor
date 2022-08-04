@@ -346,7 +346,7 @@ namespace VFXEditor.AVFX.VFX {
                     Import( res );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Could not import data", e );
+                    PluginLog.Error( e, "Could not import data" );
                 }
             } );
         }

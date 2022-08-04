@@ -21,8 +21,7 @@ namespace VFXEditor.Select.Sheets {
                     OnLoad();
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error Loading: " + typeof( T ).Name);
-                    PluginLog.Error( e.ToString() );
+                    PluginLog.Error( e, "Error Loading: " + typeof( T ).Name);
                 }
                 Loaded = true;
             } );

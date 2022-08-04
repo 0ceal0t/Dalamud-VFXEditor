@@ -29,8 +29,7 @@ namespace VFXEditor.AVFX {
                     UIHelper.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error Reading File", e );
-                    PluginLog.Error( e.ToString() );
+                    PluginLog.Error(e, "Error Reading File", e );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
@@ -46,8 +45,7 @@ namespace VFXEditor.AVFX {
                     UIHelper.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error Reading File", e );
-                    PluginLog.Error( e.ToString() );
+                    PluginLog.Error( e, "Error Reading File" );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }

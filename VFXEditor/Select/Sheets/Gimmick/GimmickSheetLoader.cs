@@ -31,7 +31,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivGimmickSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error reading TMB file " + tmbPath, e );
+                    PluginLog.Error( e, "Error reading TMB file " + tmbPath);
                     return false;
                 }
             }

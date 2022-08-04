@@ -2,6 +2,7 @@ using Dalamud.Logging;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
+using SharpGLTF.Memory;
 using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
@@ -72,9 +73,9 @@ namespace VFXEditor.Helper {
             return ret;
         }
 
-        public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
-            vOut = new List<AVFXVertex>();
-            iOut = new List<AVFXIndex>();
+        public static bool ImportModel( string localPath, out List<AVFXVertex> verticesOut, out List<AVFXIndex> indexesOut ) {
+            verticesOut = new List<AVFXVertex>();
+            indexesOut = new List<AVFXIndex>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
             PluginLog.Log( "Importing GLTF from: " + localPath );
 
@@ -83,20 +84,28 @@ namespace VFXEditor.Helper {
                 if( mesh.Primitives.Count > 0 ) {
                     var primitive = mesh.Primitives[0];
 
+                    var properties = primitive.VertexAccessors;
+                    var hasColor = properties.ContainsKey( "COLOR_0" );
+                    var hasUv2 = properties.ContainsKey( "TEXCOORD_1" );
+                    PluginLog.Log( $"Color:{hasColor} UV2:{hasUv2}" );
+
                     var positions = primitive.GetVertices( "POSITION" ).AsVector3Array();
                     var normals = primitive.GetVertices( "NORMAL" ).AsVector3Array();
                     var tangents = primitive.GetVertices( "TANGENT" ).AsVector4Array();
-                    var colors = primitive.GetVertices( "COLOR_0" ).AsVector4Array();
+                    var colors = hasColor ? primitive.GetVertices( "COLOR_0" ).AsVector4Array() : new Vector4Array();
                     var tex1s = primitive.GetVertices( "TEXCOORD_0" ).AsVector2Array();
-                    var tex2s = primitive.GetVertices( "TEXCOORD_1" ).AsVector2Array();
+                    var tex2s = hasUv2 ? primitive.GetVertices( "TEXCOORD_1" ).AsVector2Array() : new Vector2Array();
 
                     var triangles = primitive.GetTriangleIndices();
 
                     for( var i = 0; i < positions.Count; i++ ) {
-                        vOut.Add( GetAVFXVert( positions[i], normals[i], tangents[i], colors[i], tex1s[i], tex2s[i] ) );
+                        var color = hasColor ? colors[i] : new Vector4( 1f, 1f, 1f, 1f ); // default white
+                        var uv2 = hasUv2 ? tex2s[i] : tex1s[i]; // default uv1;
+
+                        verticesOut.Add( GetAVFXVert( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
-                        iOut.Add( new AVFXIndex( A, B, C ) );
+                        indexesOut.Add( new AVFXIndex( A, B, C ) );
                     }
                     return true;
                 }

@@ -23,7 +23,7 @@ namespace VFXEditor.Select.Sheets {
                     selectedItem = new XivMountSelected( file, item );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Error loading IMC file " + imcPath, e );
+                    PluginLog.Error( e, "Error loading IMC file " + imcPath );
                     return false;
                 }
             }

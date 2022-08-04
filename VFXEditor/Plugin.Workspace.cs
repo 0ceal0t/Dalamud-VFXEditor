@@ -91,7 +91,7 @@ namespace VFXEditor {
                     }
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( "Could not load workspace", e );
+                    PluginLog.Error( e, "Could not load workspace" );
                 }
             } );
         }

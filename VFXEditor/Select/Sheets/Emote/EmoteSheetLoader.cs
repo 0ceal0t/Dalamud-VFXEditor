@@ -30,7 +30,7 @@ namespace VFXEditor.Select.Sheets {
                 selectedItem = new XivEmoteSelected( item, files );
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error reading emote file", e );
+                PluginLog.Error( e, "Error reading emote file" );
                 return false;
             }
             return true;

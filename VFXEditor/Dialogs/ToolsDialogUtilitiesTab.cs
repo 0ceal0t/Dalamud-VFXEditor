@@ -38,7 +38,7 @@ namespace VFXEditor.Dialogs {
                         UIHelper.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {
-                        PluginLog.Error( "Could not read file", e );
+                        PluginLog.Error( e, "Could not read file" );
                     }
                 }
             }
