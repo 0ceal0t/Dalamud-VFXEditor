@@ -35,6 +35,7 @@ namespace VFXEditor.Select.PAP {
                 }
                 else {
                     foreach( var subItem in action.Value ) {
+                        if( subItem.Value.Count == 0 ) continue;
                         if( ImGui.CollapsingHeader( subItem.Key ) ) {
                             ImGui.Indent();
                             DrawPapDict( subItem.Value, "", $"{loadedItem.EmotePap.Name} {action.Key} {subItem.Key}" );

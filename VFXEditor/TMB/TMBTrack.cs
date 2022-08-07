@@ -53,6 +53,7 @@ namespace VFXEditor.TMB {
             { "C173", new EntryType( C173.DisplayName, () => new C173(), ( br ) => new C173( br ) ) },
             { "C211", new EntryType( C211.DisplayName, () => new C211(), ( br ) => new C211( br ) ) },
             { "C187", new EntryType( C187.DisplayName, () => new C187(), ( br ) => new C187( br ) ) },
+            { "C124", new EntryType( C124.DisplayName, () => new C124(), ( br ) => new C124( br ) ) },
         };
 
         // =====================================

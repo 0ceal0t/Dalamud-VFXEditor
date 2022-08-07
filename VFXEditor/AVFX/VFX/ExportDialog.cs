@@ -113,15 +113,17 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
 
                 var count = Selected.Count;
-                var _visible = false;
+                var visible = false;
                 if( count > 0 ) {
                     ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
                 }
                 if( ImGui.CollapsingHeader( $"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}" ) ) {
                     if( count > 0 ) {
-                        _visible = true;
+                        visible = true;
                         ImGui.PopStyleColor();
                     }
+
+                    ImGui.Indent();
 
                     foreach( var item in Group.Items ) {
                         var _selected = Selected.Contains( item );
@@ -134,8 +136,11 @@ namespace VFXEditor.AVFX.VFX {
                             }
                         }
                     }
+
+
+                    ImGui.Unindent();
                 }
-                if( count > 0 && !_visible ) {
+                if( count > 0 && !visible ) {
                     ImGui.PopStyleColor();
                 }
             }
