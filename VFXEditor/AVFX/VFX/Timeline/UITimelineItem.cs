@@ -4,15 +4,16 @@ using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITimelineItem : UIWorkspaceItem {
-        public AVFXTimelineSubItem Item;
-        public UITimeline Timeline;
+        public readonly AVFXTimelineSubItem Item;
+        public readonly UITimeline Timeline;
         public bool ClipAssigned;
-        public UIInt ClipNumber;
-        public UINodeSelect<UIBinder> BinderSelect;
-        public UINodeSelect<UIEmitter> EmitterSelect;
-        public UINodeSelect<UIEffector> EffectorSelect;
-        public UIInt StartTime;
-        public UIInt EndTime;
+        public readonly UIInt ClipNumber;
+        public readonly UICheckbox Enabled;
+        public readonly UINodeSelect<UIBinder> BinderSelect;
+        public readonly UINodeSelect<UIEmitter> EmitterSelect;
+        public readonly UINodeSelect<UIEffector> EffectorSelect;
+        public readonly UIInt StartTime;
+        public readonly UIInt EndTime;
         private readonly List<IUIBase> Parameters;
 
         public UITimelineItem( AVFXTimelineSubItem item, UITimeline timeline ) {
@@ -27,7 +28,7 @@ namespace VFXEditor.AVFX.VFX {
             ClipAssigned = Item.ClipNumber.IsAssigned();
 
             Parameters = new List<IUIBase> {
-                new UICheckbox( "Enabled", Item.Enabled ),
+                ( Enabled = new UICheckbox( "Enabled", Item.Enabled ) ),
                 ( StartTime = new UIInt( "Start Time", Item.StartTime ) ),
                 ( EndTime = new UIInt( "End Time", Item.EndTime ) ),
                 new UIInt( "Platform", Item.Platform )

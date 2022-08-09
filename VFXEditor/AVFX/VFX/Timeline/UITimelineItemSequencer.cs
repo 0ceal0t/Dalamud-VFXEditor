@@ -40,5 +40,13 @@ namespace VFXEditor.AVFX.VFX {
             item.StartTime.Value = start;
             item.StartTime.Literal.SetValue( start );
         }
+
+        public override bool IsEnabled( UITimelineItem item ) => item.Enabled.Value;
+
+        public override void Toggle( UITimelineItem item ) {
+            var newValue = !IsEnabled(item);
+            item.Enabled.Value = newValue;
+            item.Enabled.Literal.SetValue( newValue );
+        }
     }
 }

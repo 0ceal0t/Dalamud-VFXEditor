@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -175,16 +176,25 @@ namespace VFXEditor.AVFX.Views {
             // ======= LEFT SIDE SELECT ======
 
             for( var i = 0; i < count; i++ ) {
+                var ignoreSelected = false;
                 var item = Items[i];
                 var itemPosBase = new Vector2( contentMin.X, contentMin.Y + i * ItemHeight );
                 var itemPos = new Vector2( contentMin.X + 3, contentMin.Y + i * ItemHeight + 2 );
 
-                if( !newItemAdded && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) Selected = item;
+                var overCheck = CheckBox( drawList, itemPos, IsEnabled(item) );
+                drawList.AddText( itemPos + new Vector2(25, -1), 0xFFFFFFFF, item.GetText() );
+                if( !newItemAdded && overCheck && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) {
+                    ignoreSelected = true;
+                    Toggle( item );
+                }
 
-                drawList.AddText( itemPos, 0xFFFFFFFF, item.GetText() );
+                var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y ), false );
+                if( !newItemAdded && overDelete && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) {
+                    ignoreSelected = true;
+                    deleteEntry = item;
+                }
 
-                var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y + 2 ), false );
-                if( !newItemAdded && overDelete && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) deleteEntry = item;
+                if( !newItemAdded && !ignoreSelected && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) Selected = item;
             }
 
             for( var i = 0; i < count; i++ ) {
@@ -435,6 +445,8 @@ namespace VFXEditor.AVFX.Views {
         public abstract void SetEnd( T item, int end );
         public abstract void OnDelete( T item );
         public abstract T OnNew();
+        public abstract bool IsEnabled( T item );
+        public abstract void Toggle( T item );
 
         private static bool AddDeleteButton( ImDrawListPtr drawList, Vector2 pos, bool add = true ) {
             var size = new Vector2( 16, 16 );
@@ -446,6 +458,16 @@ namespace VFXEditor.AVFX.Views {
             drawList.AddRect( pos, posMax, deleteColor, 4 );
             drawList.AddLine( new Vector2( pos.X + 3, midY ), new Vector2( posMax.X - 3, midY ), deleteColor, 2 );
             if( add ) drawList.AddLine( new Vector2( midX, pos.Y + 3 ), new Vector2( midX, posMax.Y - 3 ), deleteColor, 2 );
+            return overDelete;
+        }
+
+        private static bool CheckBox( ImDrawListPtr drawList, Vector2 pos, bool on ) {
+            var size = new Vector2( 16, 16 );
+            var posMax = pos + size;
+            var overDelete = MouseOver( pos, posMax );
+            var deleteColor = overDelete ? 0xFF1080FF : 0xFFBBBBBB;
+            drawList.AddRect( pos, posMax, deleteColor, 4 );
+            if( on ) drawList.AddRectFilled( pos + new Vector2(2), posMax - new Vector2(2), deleteColor, 4 );
             return overDelete;
         }
 
