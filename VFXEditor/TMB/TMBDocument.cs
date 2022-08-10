@@ -14,6 +14,14 @@ namespace VFXEditor.TMB {
         public TMBDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
         }
 
+        public override void Update() {
+            UpdateFile();
+            Reload();
+            Plugin.ResourceLoader.ReRender();
+        }
+
+        public override void CheckKeybinds() { }
+
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {
                 try {
@@ -47,12 +55,6 @@ namespace VFXEditor.TMB {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void Update() {
-            UpdateFile();
-            Reload();
-            Plugin.ResourceLoader.ReRender();
         }
 
         protected override void ExportRaw() {

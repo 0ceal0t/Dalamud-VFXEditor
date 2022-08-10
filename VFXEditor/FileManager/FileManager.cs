@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -25,19 +26,23 @@ namespace VFXEditor.FileManager {
 
         private T SelectedDocument = null; // for document selection dialog
         protected bool DocumentDialogVisible = false;
-        private readonly bool OnlyDocumentDialog = false;
 
-        public FileManager( string title, string id, string tempFilePrefix, string extension, string penumbaPath, bool onlyDocumentDialog = false ) : base( title, menuBar: true ) {
+        public FileManager( string title, string id, string tempFilePrefix, string extension, string penumbaPath ) : base( title, menuBar: true ) {
             Title = title;
             Id = id;
             TempFilePrefix = tempFilePrefix;
             Extension = extension;
             PenumbraPath = penumbaPath;
-            OnlyDocumentDialog = onlyDocumentDialog;
 
             Size = new Vector2( 800, 1000 );
             AddDocument();
         }
+
+        protected abstract T GetImportedDocument( string localPath, S data );
+
+        protected abstract void DrawMenu();
+
+        protected abstract T GetNewDocument();
 
         public void SetSource( SelectResult result ) => ActiveDocument?.SetSource( result );
 
@@ -64,8 +69,6 @@ namespace VFXEditor.FileManager {
             ActiveDocument = document;
         }
 
-        protected abstract T GetNewDocument();
-
         private bool RemoveDocument( T document ) {
             var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
@@ -80,33 +83,10 @@ namespace VFXEditor.FileManager {
             return false;
         }
 
-        public void ImportWorkspaceFile( string localPath, S data ) {
-            var newDocument = GetImportedDocument( localPath, data );
-            ActiveDocument = newDocument;
-            Documents.Add( newDocument );
-            if( HasDefault && Documents.Count > 1 ) {
-                HasDefault = false;
-                RemoveDocument( Documents[0] );
-            }
-        }
-
-        protected abstract T GetImportedDocument( string localPath, S data );
-
-        public virtual void Dispose() {
-            foreach( var document in Documents ) {
-                document.Dispose();
-            }
-            Documents = null;
-            ActiveDocument = null;
-        }
-
-        protected abstract void DrawMenu();
-
         public override void DrawBody() {
-            DrawDocumentSelect();
-            if( OnlyDocumentDialog ) return;
-
             Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
+            CheckKeybinds();
+            DrawDocumentSelect();
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawFileMenu();
@@ -121,11 +101,18 @@ namespace VFXEditor.FileManager {
             ActiveDocument?.Draw();
         }
 
+        private void CheckKeybinds() {
+            if( !ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows) ) return;
+            if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentDialogVisible = true;
+            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
+            ActiveDocument?.CheckKeybinds();
+        }
+
         protected void DrawDocumentSelect() {
-            if( !( OnlyDocumentDialog ? Visible : DocumentDialogVisible ) ) return;
+            if( !Visible || !DocumentDialogVisible ) return;
             ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
 
-            if( ImGui.Begin( $"{Name} Select", ref OnlyDocumentDialog ? ref Visible : ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( $"{Title} Select", ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
                 var id = $"##{Id}/Doc";
                 var footerHeight = ImGui.GetFrameHeightWithSpacing();
 
@@ -170,6 +157,16 @@ namespace VFXEditor.FileManager {
             ImGui.End();
         }
 
+        public void ImportWorkspaceFile( string localPath, S data ) {
+            var newDocument = GetImportedDocument( localPath, data );
+            ActiveDocument = newDocument;
+            Documents.Add( newDocument );
+            if( HasDefault && Documents.Count > 1 ) {
+                HasDefault = false;
+                RemoveDocument( Documents[0] );
+            }
+        }
+
         public virtual void PenumbraExport( string modFolder, bool doExport ) {
             if( !doExport ) return;
             foreach( var document in Documents ) {
@@ -196,6 +193,14 @@ namespace VFXEditor.FileManager {
                 document.WorkspaceExport( documentMeta, rootPath, newPath );
             }
             return documentMeta.ToArray();
+        }
+
+        public virtual void Dispose() {
+            foreach( var document in Documents ) {
+                document.Dispose();
+            }
+            Documents = null;
+            ActiveDocument = null;
         }
     }
 }

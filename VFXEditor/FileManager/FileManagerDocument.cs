@@ -83,8 +83,6 @@ namespace VFXEditor.FileManager {
 
         protected abstract void UpdateFile();
 
-        protected abstract void Update();
-
         protected abstract void ExportRaw();
 
         protected void Reload( List<string> papIds = null ) {
@@ -97,11 +95,15 @@ namespace VFXEditor.FileManager {
             File.Delete( WriteLocation );
         }
 
+        public abstract void Update();
+
         public abstract void PenumbraExport( string modFolder );
 
         public abstract void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset );
 
         public abstract void WorkspaceExport( List<S> meta, string rootPath, string newPath );
+
+        public abstract void CheckKeybinds();
 
         public virtual void Draw() {
             ImGui.Columns( 2, $"{Id}-Columns", false );

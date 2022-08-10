@@ -14,6 +14,7 @@ namespace VFXEditor {
             if( IsLoading ) return;
 
             CopyManager.PreDraw();
+            CheckWorkspaceKeybinds();
 
             TexToolsDialog.Draw();
             PenumbraDialog.Draw();
@@ -34,6 +35,12 @@ namespace VFXEditor {
                 LastAutoSave = DateTime.Now;
                 SaveWorkspace();
             }
+        }
+
+        private static void CheckWorkspaceKeybinds() {
+            if( Configuration.OpenKeybind.KeyPressed() ) OpenWorkspace();
+            if( Configuration.SaveKeybind.KeyPressed() ) SaveWorkspace();
+            if( Configuration.SaveAsKeybind.KeyPressed() ) SaveAsWorkspace();
         }
 
         public static void DrawFileMenu() {

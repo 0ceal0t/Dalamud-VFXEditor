@@ -16,6 +16,14 @@ namespace VFXEditor.PAP {
         public PAPDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
         }
 
+        public override void Update() {
+            UpdateFile();
+            Reload( CurrentFile.GetPapIds() );
+            Plugin.ResourceLoader.ReRender();
+        }
+
+        public override void CheckKeybinds() { }
+
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {
                 try {
@@ -50,12 +58,6 @@ namespace VFXEditor.PAP {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote PAP file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void Update() {
-            UpdateFile();
-            Reload( CurrentFile.GetPapIds() );
-            Plugin.ResourceLoader.ReRender();
         }
 
         protected override void ExportRaw() {

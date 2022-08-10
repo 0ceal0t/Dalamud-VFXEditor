@@ -6,12 +6,16 @@ using System.IO;
 using System.Numerics;
 
 using VFXEditor.AVFX.VFX;
+using VFXEditor.Data;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
+using VFXEditor.Interop;
 
 namespace VFXEditor.AVFX {
     public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {
         private DateTime LastUpdate = DateTime.Now;
+        private string SpawnPath => Replace.Path;
+        private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
         public AVFXDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) {
         }
@@ -19,6 +23,35 @@ namespace VFXEditor.AVFX {
         }
         public AVFXDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
+        }
+
+        public override void Update() {
+            if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
+                UpdateFile();
+                Reload();
+                Plugin.ResourceLoader.ReRender();
+                LastUpdate = DateTime.Now;
+            }
+        }
+
+        public override void CheckKeybinds() {
+            if( Plugin.Configuration.CopyVfxKeybind.KeyPressed() ) CopyManager.Copy();
+            if( Plugin.Configuration.PasteVfxKeybind.KeyPressed() ) CopyManager.Paste();
+
+            if( Plugin.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
+                Plugin.RemoveSpawn();
+                if( !SpawnDisabled ) Plugin.SpawnOnSelf( SpawnPath );
+            }
+            if( Plugin.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
+                Plugin.RemoveSpawn();
+                if( !SpawnDisabled ) Plugin.SpawnOnGround( SpawnPath );
+
+            }
+            if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
+                Plugin.RemoveSpawn();
+                if( !SpawnDisabled ) Plugin.SpawnOnTarget( SpawnPath );
+
+            }
         }
 
         protected override void LoadLocal( string localPath ) {
@@ -55,15 +88,6 @@ namespace VFXEditor.AVFX {
             if( CurrentFile == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void Update() {
-            if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                UpdateFile();
-                Reload();
-                Plugin.ResourceLoader.ReRender();
-                LastUpdate = DateTime.Now;
-            }
         }
 
         protected override void ExportRaw() {
@@ -104,27 +128,25 @@ namespace VFXEditor.AVFX {
             }
 
             // ======= SPAWN + EYE =========
-            var previewSpawn = Replace.Path;
-            var spawnDisabled = string.IsNullOrEmpty( previewSpawn );
             if( !Plugin.SpawnExists() ) {
-                if( spawnDisabled ) {
+                if( SpawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
                 }
-                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !spawnDisabled ) {
+                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) {
                     ImGui.OpenPopup( "Spawn_Popup" );
                 }
-                if( spawnDisabled ) {
+                if( SpawnDisabled ) {
                     ImGui.PopStyleVar();
                     UIHelper.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
                 }
             }
             else {
-                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawnVfx();
+                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
             }
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( previewSpawn );
-                if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( previewSpawn );
-                if( ImGui.Selectable( "On Taget" ) ) Plugin.SpawnOnTarget( previewSpawn );
+                if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
+                if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
+                if( ImGui.Selectable( "On Taget" ) ) Plugin.SpawnOnTarget( SpawnPath );
                 ImGui.EndPopup();
             }
 

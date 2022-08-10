@@ -2,8 +2,10 @@ using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -32,6 +34,7 @@ namespace VFXEditor {
         public static SigScanner SigScanner { get; private set; }
         public static DataManager DataManager { get; private set; }
         public static TargetManager TargetManager { get; private set; }
+        public static KeyState KeyState { get; private set; }
 
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
@@ -49,6 +52,8 @@ namespace VFXEditor {
         public static string RootLocation { get; private set; }
         private const string CommandName = "/vfxedit";
 
+        private static bool ClearKeyState = false;
+
         public Plugin(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
@@ -58,7 +63,8 @@ namespace VFXEditor {
                 ObjectTable objects,
                 SigScanner sigScanner,
                 DataManager dataManager,
-                TargetManager targetManager
+                TargetManager targetManager,
+                KeyState keyState
             ) {
             PluginInterface = pluginInterface;
             ClientState = clientState;
@@ -69,6 +75,7 @@ namespace VFXEditor {
             DataManager = dataManager;
             Framework = framework;
             TargetManager = targetManager;
+            KeyState = keyState;
 
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
@@ -107,6 +114,7 @@ namespace VFXEditor {
             ResourceLoader.Init();
             ResourceLoader.Enable();
 
+            Framework.Update += FrameworkOnUpdate;
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
@@ -114,7 +122,26 @@ namespace VFXEditor {
             //Data.SCD.ScdFile.Test();
         }
 
+        public static void CheckClearKeyState() {
+            if( ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) && Configuration.BlockGameInputsWhenFocused ) ClearKeyState = true;
+        }
+
+        private void FrameworkOnUpdate( Framework framework ) {
+            KeybindConfiguration.UpdateState();
+            if( ClearKeyState ) KeyState.ClearAll();
+            ClearKeyState = false;
+        }
+
+        private void DrawConfigUI() {
+            AvfxManager.Show();
+        }
+
+        private void OnCommand( string command, string rawArgs ) {
+            AvfxManager.Toggle();
+        }
+
         public void Dispose() {
+            Framework.Update -= FrameworkOnUpdate;
             PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.Draw -= Draw;
             PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
@@ -142,18 +169,10 @@ namespace VFXEditor {
             DirectXManager.Dispose();
             DirectXManager = null;
 
-            RemoveSpawnVfx();
+            RemoveSpawn();
 
             FileDialogManager.Dispose();
             CopyManager.Dispose();
-        }
-
-        private void DrawConfigUI() {
-            AvfxManager.Show();
-        }
-
-        private void OnCommand( string command, string rawArgs ) {
-            AvfxManager.Toggle();
         }
     }
 }

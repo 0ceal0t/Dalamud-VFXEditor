@@ -19,7 +19,7 @@ namespace VFXEditor.AVFX {
                 SetSourceGlobal,
                 showSpawn: true,
                 spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawnVfx,
+                removeSpawnVfx: Plugin.RemoveSpawn,
                 spawnOnGround: Plugin.SpawnOnGround,
                 spawnOnSelf: Plugin.SpawnOnSelf,
                 spawnOnTarget: Plugin.SpawnOnTarget
@@ -31,7 +31,7 @@ namespace VFXEditor.AVFX {
                 SetReplaceGlobal,
                 showSpawn: true,
                 spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawnVfx,
+                removeSpawnVfx: Plugin.RemoveSpawn,
                 spawnOnGround: Plugin.SpawnOnGround,
                 spawnOnSelf: Plugin.SpawnOnSelf,
                 spawnOnTarget: Plugin.SpawnOnTarget

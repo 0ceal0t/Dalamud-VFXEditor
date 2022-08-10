@@ -153,8 +153,8 @@ namespace VFXEditor.Interop {
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.SpawnVFX != null && vfx == ( IntPtr )Plugin.SpawnVFX.Vfx ) {
-                Plugin.ClearSpawnVfx();
+            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+                Plugin.ClearSpawn();
             }
             Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
@@ -169,8 +169,8 @@ namespace VFXEditor.Interop {
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.SpawnVFX != null && vfx == ( IntPtr )Plugin.SpawnVFX.Vfx ) {
-                Plugin.ClearSpawnVfx();
+            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+                Plugin.ClearSpawn();
             }
             Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
