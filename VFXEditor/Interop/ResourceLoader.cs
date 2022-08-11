@@ -1,5 +1,6 @@
 using Dalamud.Hooking;
 using Dalamud.Logging;
+using Dalamud;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -419,12 +420,8 @@ namespace VFXEditor.Interop {
             if( papIds == null ) return;
             var data = Marshal.ReadIntPtr( resource + 0xf0 );
             for( var i = 0; i < papIds.Count; i++ ) {
-                var loc = data + i * 40;
-                var bytes = Encoding.ASCII.GetBytes( papIds[i] );
-                for( var j = 0; j < 40; j++ ) {
-                    if( j < bytes.Length ) Marshal.WriteByte( loc + j, bytes[j] );
-                    else Marshal.WriteByte( loc + j, 0 );
-                }
+                SafeMemory.WriteString( data + ( i * 40 ), papIds[i], Encoding.ASCII );
+                Marshal.WriteByte( data + ( i * 40 ) + 34, (byte)i );
             }
         }
 
