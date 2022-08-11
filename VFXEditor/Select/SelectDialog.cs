@@ -1,10 +1,9 @@
-using Dalamud.Interface.Components;
 using ImGuiFileDialog;
 using ImGuiNET;
-
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VFXEditor.Dialogs;
 
 namespace VFXEditor {
     public enum SelectResultType {
@@ -37,51 +36,32 @@ namespace VFXEditor {
         };
     }
 
-    public abstract class SelectDialog {
+    public abstract class SelectDialog : GenericDialog {
         private readonly string Id;
-        private readonly string Ext;
+        private readonly string Extension;
         private readonly bool ShowLocal;
         private readonly List<SelectResult> RecentList;
-
-        private bool Visible = false;
 
         protected Action<SelectResult> OnSelect;
         protected abstract List<SelectTab> GetTabs();
         protected SelectResult RecentSelected;
         protected bool IsRecentSelected = false;
 
-        public SelectDialog( string id, string ext, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) {
+        public SelectDialog( string id, string extension, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( id, startingWidth:800, startingHeight:500 ) {
             Id = id;
-            Ext = ext;
+            Extension = extension;
             RecentList = recentList;
             ShowLocal = showLocal;
             OnSelect = onSelect;
         }
 
-        public void Show() {
-            Visible = true;
-        }
-
-        public void Hide() {
-            Visible = false;
-        }
-
-        public void Draw() {
-            if( !Visible ) return;
-            ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
-
-            if( !ImGui.Begin( Id + "##" + Id, ref Visible, ImGuiWindowFlags.NoDocking ) ) {
-                ImGui.End();
-                return;
-            }
-
+        public override void DrawBody() {
             ImGui.BeginTabBar( "Tabs##" + Id );
             DrawGame();
             DrawGamePath();
             if( ShowLocal ) DrawLocal();
             if( RecentList != null ) DrawRecent();
             ImGui.EndTabBar();
-            ImGui.End();
         }
 
         // =========== LOCAL ================
@@ -89,18 +69,17 @@ namespace VFXEditor {
         private string LocalPath = "";
         private void DrawLocal() {
             var ret = ImGui.BeginTabItem( "Local File##Select-" + Id );
-            if( !ret )
-                return;
+            if( !ret ) return;
 
             var id = "##Select/Local/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( $".{Ext} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Ext}" );
+            ImGui.Text( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText( id + "Input", ref LocalPath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", $".{Ext},.*", ( bool ok, string res ) => {
+                FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
                 } );
@@ -132,12 +111,11 @@ namespace VFXEditor {
         private string GamePath = "";
         public void DrawGamePath() {
             var ret = ImGui.BeginTabItem( "Game Path##Select/" + Id );
-            if( !ret )
-                return;
+            if( !ret ) return;
 
             var id = "##Select/GamePath/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( $"In-game .{Ext} file, eg: vfx/common/eff/wp_astro1h.{Ext}" );
+            ImGui.Text( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText( id + "Input", ref GamePath, 255 );
@@ -153,8 +131,7 @@ namespace VFXEditor {
 
         public void DrawRecent() {
             var ret = ImGui.BeginTabItem( "Recent##Select/" + Id );
-            if( !ret )
-                return;
+            if( !ret ) return;
             var id = "##Recent/" + Id;
 
             var footerHeight = ImGui.GetFrameHeightWithSpacing();
@@ -182,9 +159,7 @@ namespace VFXEditor {
             ImGui.EndTabItem();
         }
 
-        public void Invoke( SelectResult result ) {
-            OnSelect?.Invoke( result );
-        }
+        public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
 
         public virtual void Spawn( string spawnPath, string id = "" ) { }
     }

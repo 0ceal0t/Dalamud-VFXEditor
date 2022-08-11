@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib.Timeline;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITimelineView : UINodeDropdownView<UITimeline> {
-        public UITimelineView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UITimeline> group ) : base( vfxFile, avfx, group, "Timeline", true, true, "timeline_default.vfxedit" ) { }
+        public UITimelineView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UITimeline> group ) : base( vfxFile, avfx, group, "Timeline", true, true, "default_timeline.vfxedit" ) { }
 
         public override void OnDelete( UITimeline item ) => AVFX.RemoveTimeline( item.Timeline );
 

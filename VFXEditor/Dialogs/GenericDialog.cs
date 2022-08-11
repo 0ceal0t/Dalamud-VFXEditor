@@ -12,23 +12,17 @@ namespace VFXEditor.Dialogs {
 
         public bool IsVisible => Visible;
 
-        public GenericDialog( string name, bool menuBar = false, int startingHeight = 600, int startingWidth = 400 ) {
+        public GenericDialog( string name, bool menuBar = false, int startingWidth = 600, int startingHeight = 400 ) {
             Name = name;
             MenuBar = menuBar;
-            Size = new( startingHeight, startingWidth );
+            Size = new( startingWidth, startingHeight );
         }
 
-        public void Show() {
-            Visible = true;
-        }
+        public void Show() => SetVisible( true );
 
-        public void Hide() {
-            Visible = false;
-        }
+        public void Hide() => SetVisible( false );
 
-        public void Toggle() {
-            Visible = !Visible;
-        }
+        public void Toggle() => SetVisible( !Visible );
 
         public void SetVisible( bool visible ) {
             Visible = visible;

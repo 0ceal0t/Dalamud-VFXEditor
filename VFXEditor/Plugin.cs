@@ -109,7 +109,6 @@ namespace VFXEditor {
             VfxTracker = new VfxTracker();
 
             FileDialogManager.Initialize( PluginInterface );
-            CopyManager.Initialize();
 
             ResourceLoader.Init();
             ResourceLoader.Enable();

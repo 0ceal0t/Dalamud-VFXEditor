@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using VFXEditor.Select.Sheets;
 
 namespace VFXEditor.Select.PAP {
-    public abstract class PAPSelectTab<T, S> : SelectTab<T, S> {
+    public abstract class PAPSelectTab<T, S> : SelectTab<T, S> where T : class where S : class {
         protected readonly PAPSelectDialog Dialog;
 
         public PAPSelectTab( string parentId, string tabId, SheetLoader<T, S> loader, PAPSelectDialog dialog ) : base( parentId, tabId, loader ) {

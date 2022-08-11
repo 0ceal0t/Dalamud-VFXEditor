@@ -7,22 +7,15 @@ namespace VFXEditor.Data {
         public static bool IsCopying { get; private set; }
         public static bool IsPasting { get; private set; }
 
-        public static List<Vector4> CurveKeys { get; private set; }
-        public static Dictionary<string, AVFXBase> Copied { get; private set; }
-
-        public static void Initialize() {
-            CurveKeys = new();
-            Copied = new();
-        }
+        public static readonly List<Vector4> CurveKeys = new();
+        public static readonly Dictionary<string, AVFXBase> Copied = new();
 
         public static void Dispose() {
             CurveKeys.Clear();
             Copied.Clear();
         }
 
-        // ======== COPY ==============
-
-        public static void PreDraw() {
+        public static void Reset() {
             IsCopying = false;
             IsPasting = false;
         }
@@ -36,8 +29,6 @@ namespace VFXEditor.Data {
             IsPasting = true;
         }
 
-        // ======== CURVE KEYS ===============
-
         public static void ClearCurveKeys() {
             CurveKeys.Clear();
         }
@@ -46,8 +37,6 @@ namespace VFXEditor.Data {
             CurveKeys.Add( new Vector4( time, x, y, z ) );
         }
 
-        public static bool HasCurveKeys() {
-            return CurveKeys.Count > 0;
-        }
+        public static bool HasCurveKeys() => CurveKeys.Count > 0;
     }
 }

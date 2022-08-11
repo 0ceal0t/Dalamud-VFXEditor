@@ -13,7 +13,7 @@ namespace VFXEditor {
         public static void Draw() {
             if( IsLoading ) return;
 
-            CopyManager.PreDraw();
+            CopyManager.Reset();
             CheckWorkspaceKeybinds();
 
             TexToolsDialog.Draw();

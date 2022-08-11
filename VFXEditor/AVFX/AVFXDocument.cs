@@ -9,7 +9,6 @@ using VFXEditor.AVFX.VFX;
 using VFXEditor.Data;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
-using VFXEditor.Interop;
 
 namespace VFXEditor.AVFX {
     public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {

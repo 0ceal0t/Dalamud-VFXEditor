@@ -13,7 +13,7 @@ namespace VFXEditor {
         public abstract void Draw();
     }
 
-    public abstract class SelectTab<T, S> : SelectTab {
+    public abstract class SelectTab<T, S> : SelectTab where T : class where S : class {
         protected abstract bool CheckMatch( T item, string searchInput );
         protected abstract string UniqueRowTitle( T item );
         protected abstract void DrawSelected( S loadedItem );
@@ -84,6 +84,11 @@ namespace VFXEditor {
                 ResetScroll = true;
             }
 
+            // Navigate through items using the up and down arrow buttons
+            if (KeybindConfiguration.NavigateUpDown(Searched, Selected, out var newSelected)) {
+                Select( newSelected );
+            }
+
             ImGui.Columns( 2, Id + "Columns", true );
             ImGui.BeginChild( Id + "Tree" );
             DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
@@ -93,12 +98,8 @@ namespace VFXEditor {
             var idx = 0;
             foreach( var item in Searched ) {
                 if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
-                if( ImGui.Selectable( $"{UniqueRowTitle( item )}{idx}", EqualityComparer<T>.Default.Equals( Selected, item ) ) ) {
-                    if( !EqualityComparer<T>.Default.Equals( Selected, item ) ) {
-                        LoadItemAsync( item );
-                        Selected = item;
-                        OnSelect();
-                    }
+                if( ImGui.Selectable( $"{UniqueRowTitle( item )}{idx}", Selected == item ) ) {
+                    if( Selected != item ) Select( item ); // not what is currently selected
                 }
                 idx++;
             }
@@ -122,6 +123,12 @@ namespace VFXEditor {
             }
             ImGui.Columns( 1 );
             ImGui.EndTabItem();
+        }
+
+        private void Select( T item ) {
+            LoadItemAsync( item );
+            Selected = item;
+            OnSelect();
         }
 
         private async void LoadItemAsync( T item ) {
