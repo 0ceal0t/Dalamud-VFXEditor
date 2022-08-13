@@ -48,7 +48,7 @@ namespace VFXEditor.TMB.Items {
             DrawInfo( id );
             ImGui.InputInt( $"Duration{id}", ref Duration );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk_3 );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
+            ImGui.InputText( $"Path{id}", ref Path, 31 );
         }
 
         public override void PopulateStringList( List<string> stringList ) {

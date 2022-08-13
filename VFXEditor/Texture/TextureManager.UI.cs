@@ -15,21 +15,23 @@ namespace VFXEditor.Texture {
         public override void DrawBody() {
             var id = "##ImportTex";
 
-            ImGui.SetNextItemWidth( UIHelper.GetWindowContentRegionWidth() - 140 );
-            ImGui.InputText( $"Path{id}-Input", ref NewCustomPath, 255 );
+            ImGui.SetNextItemWidth( UIHelper.GetWindowContentRegionWidth() - 175 );
+            ImGui.InputText( $"Game path{id}-Input", ref NewCustomPath, 255 );
 
             ImGui.SameLine();
-            if( ImGui.Button( $"Import Texture{id}" ) ) {
-                var path = NewCustomPath.Trim().Trim( '\0' ).ToLower();
-                if( !string.IsNullOrEmpty( path ) && !PathToTextureReplace.ContainsKey( path ) ) {
-                    ImportDialog( path );
-                }
-            }
 
-            ImGui.SetNextItemWidth( 200 );
+            var path = NewCustomPath.Trim().Trim( '\0' ).ToLower();
+            var importDisabled = string.IsNullOrEmpty( path ) || PathToTexturePreview.ContainsKey( path );
+            if( importDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+            if( ImGui.Button( $"Import Texture{id}" ) && !importDisabled ) {
+                ImportDialog( path );
+            }
+            if( importDisabled ) ImGui.PopStyleVar();
+
+            ImGui.SetNextItemWidth( 150 );
             ImGui.InputInt( $"PNG Mip Levels{id}", ref PngMip );
             ImGui.SameLine();
-            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 200 );
+            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 175 );
             if( UIHelper.EnumComboBox( $"PNG Format{id}", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
                 PngFormat = newPngFormat;
             }

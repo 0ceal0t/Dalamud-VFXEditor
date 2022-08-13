@@ -58,9 +58,9 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsDialog.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    if( ImGui.MenuItem( "Guides##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
                     if( ImGui.MenuItem( "Github##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Wiki##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
                     ImGui.EndMenu();
                 }
 

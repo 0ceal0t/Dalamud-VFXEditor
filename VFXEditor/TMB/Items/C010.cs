@@ -65,7 +65,7 @@ namespace VFXEditor.TMB.Items {
             ImGui.InputInt( $"Unknown 4{id}", ref Unk_4 );
             ImGui.InputFloat( $"Unknown 5{id}", ref Unk_5 );
             ImGui.InputFloat( $"Unknown 6{id}", ref Unk_6 );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
+            ImGui.InputText( $"Path{id}", ref Path, 31 );
             ImGui.InputInt( $"Unknown 7{id}", ref Unk_7 );
         }
 
