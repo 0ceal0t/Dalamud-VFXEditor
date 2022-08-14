@@ -2,14 +2,16 @@ using Dalamud.Logging;
 using Lumina.Data.Files;
 using Lumina.Models.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using VFXEditor.AVFXLib.Model;
 
 namespace VFXEditor.Helper {
     public static class MDLHelper {
-        public static bool ImportModel( string localPath, out List<AVFXVertex> vOut, out List<AVFXIndex> iOut ) {
-            vOut = new List<AVFXVertex>();
-            iOut = new List<AVFXIndex>();
+        public static bool ImportModel( string localPath, out List<AVFXVertex> vertexesOut, out List<AVFXIndex> indexesOut ) {
+            vertexesOut = new List<AVFXVertex>();
+            indexesOut = new List<AVFXIndex>();
+            var d = File.ReadAllBytes( localPath );
             if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
@@ -18,18 +20,46 @@ namespace VFXEditor.Helper {
             var mdl = new Model( file );
 
             foreach( var mesh in mdl.GetMeshesByType( Mesh.MeshType.Main ) ) {
+                var idxStart = indexesOut.Count; // accounts for multiple meshes
                 foreach( var v in mesh.Vertices ) {
+                    var pos = v.Position;
+                    var normal = v.Normal;
+                    var tangent = v.Tangent1;
+                    var color = v.Color;
+                    var uv = v.UV;
 
-                }
-                foreach( var i in mesh.Indices ) {
+                    if (pos == null || normal == null || tangent == null || color == null || uv == null) {
+                        PluginLog.Error( "Missing model data" );
+                        return false;
+                    }
 
+                    vertexesOut.Add( GetAVFXVert(
+                        pos.Value,
+                        normal.Value,
+                        tangent.Value,
+                        color.Value,
+                        new Vector2(uv.Value.X, uv.Value.Y),
+                        new Vector2(uv.Value.Z, uv.Value.W)
+                    ) );
                 }
+                if (mesh.Indices.Length % 3 != 0) {
+                    PluginLog.Error( "Indices not multiples of 3" );
+                    return false;
+                }
+                for (var triangleIdx = 0; triangleIdx < (mesh.Indices.Length / 3); triangleIdx++ ) {
+                    var idx = triangleIdx * 3;
+                    indexesOut.Add( new AVFXIndex( 
+                        idxStart + mesh.Indices[idx],
+                        idxStart + mesh.Indices[idx + 1],
+                        idxStart + mesh.Indices[idx + 2] 
+                   ) );
+                }
+                PluginLog.Log( "Imported MDL mesh" );
             }
-
             return true;
         }
 
-        private static AVFXVertex GetAVFXVert( Vector4 pos, Vector4 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static AVFXVertex GetAVFXVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
             var ret = new AVFXVertex();
             color *= 255;
             normal *= 128;

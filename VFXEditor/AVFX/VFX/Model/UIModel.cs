@@ -140,12 +140,12 @@ namespace VFXEditor.AVFX.VFX {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( GLTFHelper.ImportModel( res, out var v_s, out var i_s ) ) {
+                    if( GLTFHelper.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
                         Model.Vertexes.Vertexes.Clear();
-                        Model.Vertexes.Vertexes.AddRange( v_s );
+                        Model.Vertexes.Vertexes.AddRange( newVertexes );
 
                         Model.Indexes.Indexes.Clear();
-                        Model.Indexes.Indexes.AddRange( i_s );
+                        Model.Indexes.Indexes.AddRange( newIndexes );
                         Refresh = true;
                     }
                 }

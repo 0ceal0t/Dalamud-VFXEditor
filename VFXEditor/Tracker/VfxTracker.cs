@@ -108,8 +108,8 @@ namespace VFXEditor.Tracker {
                 height = *( rawMatrix + 1 );
             }
 
-            var VfxsWithoutActor = new List<StaticVfxGroup>(); // static vfxs without an actor
-            var ActorIdToVfxPath = new Dictionary<int, HashSet<string>>(); // either one with an actor
+            var vfxsWithoutActor = new List<StaticVfxGroup>(); // static vfxs without an actor
+            var actorIdToVfxPath = new Dictionary<int, HashSet<string>>(); // either one with an actor
 
             // ====== STATIC =======
             foreach( var item in StaticVfxs ) {
@@ -131,14 +131,14 @@ namespace VFXEditor.Tracker {
                 }
 
                 if( vfx.ActorId > 0 ) {
-                    if( !ActorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
-                        ActorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
+                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
+                        actorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
                     }
-                    ActorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
+                    actorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
                 }
                 else { // add to groups
                     var pos = vfx.Vfx->Position;
-                    VfxsWithoutActor.Add( new StaticVfxGroup {
+                    vfxsWithoutActor.Add( new StaticVfxGroup {
                         path = vfx.Path,
                         position = new SharpDX.Vector3( pos.X, pos.Y, pos.Z )
                     } );
@@ -164,17 +164,17 @@ namespace VFXEditor.Tracker {
                 }
 
                 if( vfx.ActorId > 0 ) { // add to actor to vfxs
-                    if( !ActorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
-                        ActorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
+                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
+                        actorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
                     }
 
-                    ActorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
+                    actorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
                 }
             }
 
             // ====== DRAW GROUPS ======
             var idx = 0;
-            foreach( var group in VfxsWithoutActor.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
+            foreach( var group in vfxsWithoutActor.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
                 var paths = new HashSet<string>( group );
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
@@ -196,7 +196,7 @@ namespace VFXEditor.Tracker {
 
                 if( Plugin.ClientState.LocalPlayer == null ) continue;
 
-                var result = ActorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
+                var result = actorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;
 
                 var pos = new SharpDX.Vector3 {

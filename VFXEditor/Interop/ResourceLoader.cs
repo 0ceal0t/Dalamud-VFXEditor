@@ -150,6 +150,8 @@ namespace VFXEditor.Interop {
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
 
+            if (Plugin.Configuration?.LogVfxDebug == true) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
+
             return vfx;
         }
 
@@ -165,6 +167,8 @@ namespace VFXEditor.Interop {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
+
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
 
             return vfx;
         }

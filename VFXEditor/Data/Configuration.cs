@@ -17,6 +17,7 @@ namespace VFXEditor {
 
         public bool LogAllFiles = false;
         public bool LogDebug = false;
+        public bool LogVfxDebug = false;
 
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
@@ -103,6 +104,7 @@ namespace VFXEditor {
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
             if( ImGui.Checkbox( "Log all files##Settings", ref LogAllFiles ) ) Save();
             if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) Save();
+            if( ImGui.Checkbox( "Log vfx debug information##Settings", ref LogVfxDebug ) ) Save();
 
             if( ImGui.Checkbox( "Autosave Workspace##Settings", ref AutosaveEnabled ) ) Save();
             ImGui.Indent();
