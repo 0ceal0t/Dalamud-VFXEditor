@@ -36,13 +36,13 @@ namespace VFXEditor.Select.Sheets {
                 );
 
             // map B:0000000 -> N:0000000000
-            var npcNamesText = File.ReadAllText( SheetManager.NpcNames );
+            var npcNamesText = File.ReadAllText( SheetManager.NpcNamesPath );
             var npcNames = JsonConvert.DeserializeObject<Dictionary<string ,string>>( npcNamesText );
 
             // old method for keeping track of npc names, no longer updated
             // map modelId -> Name
             Dictionary<uint, string> oldBattleNpcNames = new();
-            fastCSV.ReadFile<NpcCsvRow>( SheetManager.NpcNamesOld, true, ',', ( o, c ) => {
+            fastCSV.ReadFile<NpcCsvRow>( SheetManager.NpcNamesOldPath, true, ',', ( o, c ) => {
                 o.Id = int.Parse( c[0] );
                 o.Name = c[1];
 
@@ -74,7 +74,7 @@ namespace VFXEditor.Select.Sheets {
                 AddNpcIfFound( item.ModelChara.Value, id, combinedNpcNames, oldBattleNpcNames, itemsAlreadyAdded );
             }
 
-            NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SheetManager.NpcFiles ) );
+            NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SheetManager.NpcFilesPath ) );
         }
 
         private void AddNpcIfFound(ModelChara model, string id, Dictionary<string, string> combinedNpcNames, Dictionary<uint, string> oldBattleNpcNames, HashSet<string> itemsAlreadyAdded ) {

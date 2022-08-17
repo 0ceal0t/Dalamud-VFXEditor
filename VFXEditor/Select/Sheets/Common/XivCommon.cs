@@ -2,12 +2,12 @@ namespace VFXEditor.Select.Rows {
     public class XivCommon {
         public string Name;
         public ushort Icon;
-        public string VfxPath;
+        public string Path;
         public int RowId;
 
-        public XivCommon( int rowId, string vfxPath, string name, ushort icon ) {
+        public XivCommon( int rowId, string path, string name, ushort icon ) {
             RowId = rowId;
-            VfxPath = vfxPath;
+            Path = path;
             Name = name;
             Icon = icon;
         }
@@ -16,7 +16,7 @@ namespace VFXEditor.Select.Rows {
             RowId = ( int )vfx.RowId;
             Icon = 0;
             Name = vfx.Location.ToString();
-            VfxPath = $"vfx/common/eff/{Name}.avfx";
+            Path = $"vfx/common/eff/{Name}.avfx";
         }
     }
 }

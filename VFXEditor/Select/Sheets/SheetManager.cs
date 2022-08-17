@@ -1,5 +1,3 @@
-using Dalamud.Data;
-using Dalamud.Plugin;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,10 +5,11 @@ using VFXEditor.Select.Sheets;
 
 namespace VFXEditor.Select {
     public class SheetManager {
-        public static string NpcNamesOld { get; private set; }
-        public static string NpcFiles { get; private set; }
-        public static string MiscVfx { get; private set; }
-        public static string NpcNames { get; private set; } 
+        public static string NpcNamesOldPath { get; private set; }
+        public static string NpcFilesPath { get; private set; }
+        public static string NpcNamesPath { get; private set; }
+        public static string MiscVfxPath { get; private set; }
+        public static string MiscTmbPath { get; private set; }
 
         public static ItemSheetLoader Items { get; private set; }
         public static ActionSheetLoader Actions { get; private set; }
@@ -24,12 +23,13 @@ namespace VFXEditor.Select {
         public static MountSheeetLoader Mounts { get; private set; }
         public static HousingSheetLoader Housing { get; private set; }
         public static CommonLoader Misc { get; private set; }
+        public static CommonTmbLoader MiscTmb { get; private set; }
         public static ActionTmbSheetLoader ActionTmb { get; private set; }
         public static ActionPapSheetLoader ActionPap { get; private set; }
         public static EmoteTmbSheetLoader EmoteTmb { get; private set; }
         public static EmotePapSheetLoader EmotePap { get; private set; }
 
-        public struct RaceStruct {
+    public struct RaceStruct {
             public string SkeletonId;
             public int MinFace;
             public int MaxFace;
@@ -86,10 +86,11 @@ namespace VFXEditor.Select {
         };
 
         public static void Initialize() {
-            NpcNamesOld = Path.Combine( Plugin.RootLocation, "Files", "npc_names_old.csv" );
-            NpcFiles = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
-            MiscVfx = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
-            NpcNames = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
+            NpcNamesOldPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names_old.csv" );
+            NpcFilesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
+            NpcNamesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
+            MiscVfxPath = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
+            MiscTmbPath = Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
 
             Items = new ItemSheetLoader();
             Actions = new ActionSheetLoader();
@@ -103,40 +104,27 @@ namespace VFXEditor.Select {
             Mounts = new MountSheeetLoader();
             Housing = new HousingSheetLoader();
             Misc = new CommonLoader();
+            MiscTmb = new CommonTmbLoader();
             ActionTmb = new ActionTmbSheetLoader();
             ActionPap = new ActionPapSheetLoader();
             EmoteTmb = new EmoteTmbSheetLoader();
             EmotePap = new EmotePapSheetLoader();
         }
 
-        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) {
-            return dict.Where( i => Plugin.DataManager.FileExists( i.Value ) ).ToDictionary( i => i.Key, i => i.Value );
-        }
+        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
         public static string GetSkeletonpath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
-            Dictionary<string, string> ret = new();
-            if( string.IsNullOrEmpty( path ) ) return ret;
-
-            foreach( var entry in RaceAnimationIds ) {
-                ret.Add( entry.Key, GetSkeletonpath( entry.Value.SkeletonId, path ) );
-            }
-
-            return ret;
+            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, string>();
+            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonpath( x.Value.SkeletonId, path ) );
         }
 
         public static Dictionary<string, string> GetAllJobSkeletonPaths( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
 
         public static Dictionary<string, Dictionary<string, string>> GetAllJobPaths( string path ) {
-            Dictionary<string, Dictionary<string, string>> ret = new();
-            if( string.IsNullOrEmpty( path ) ) return ret;
-
-            foreach( var entry in JobAnimationIds ) {
-                ret.Add( entry.Key, GetAllJobSkeletonPaths( entry.Value, path ) );
-            }
-
-            return ret;
+            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
+            return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobSkeletonPaths( x.Value, path ) );
         }
 
         public static Dictionary<string, string> GetAllModelFacePaths( string modelId, string path, int minFace, int maxFace ) {
@@ -149,15 +137,8 @@ namespace VFXEditor.Select {
         }
 
         public static Dictionary<string, Dictionary<string, string>> GetAllFacePaths( string path ) {
-            Dictionary<string, Dictionary<string, string>> ret = new();
-            if( string.IsNullOrEmpty( path ) ) return ret;
-
-            foreach( var entry in RaceAnimationIds ) {
-                var raceData = entry.Value;
-                ret.Add( entry.Key, GetAllModelFacePaths( raceData.SkeletonId, path, raceData.MinFace, raceData.MaxFace ) );
-            }
-
-            return ret;
+            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
+            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllModelFacePaths( x.Value.SkeletonId, path, x.Value.MinFace, x.Value.MaxFace ) );
         }
     }
 }

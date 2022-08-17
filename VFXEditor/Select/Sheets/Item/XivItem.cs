@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace VFXEditor.Select.Rows {
@@ -18,6 +19,15 @@ namespace VFXEditor.Select.Rows {
             PrimaryVar = BitConverter.ToInt16( b, 2 ); // primary variant (weapon if != 0)
             SecondaryId = BitConverter.ToInt16( b, 4 ); // secondary key
             SecondaryVar = BitConverter.ToInt16( b, 6 ); // secondary variant
+        }
+
+        public static ulong ToItemsId( int primaryId, int primaryVar, int secondaryId, int secondaryVar ) {
+            List<byte> bytes = new();
+            bytes.AddRange( BitConverter.GetBytes( (short)primaryId ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )primaryVar ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )secondaryId ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )secondaryVar ) );
+            return (ulong) BitConverter.ToInt64(bytes.ToArray());
         }
     }
 
@@ -54,6 +64,9 @@ namespace VFXEditor.Select.Rows {
             Variant = Ids.SecondaryId;
 
             if( HasSub ) {
+                var category = item.ItemUICategory.Value.RowId;
+                var doubleHand = ( category == 1 || category == 84 || category == 107 ); // MNK, NIN, DNC weapons
+
                 var sItem = new Lumina.Excel.GeneratedSheets.Item {
                     Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) ),
                     Icon = item.Icon,
@@ -63,15 +76,12 @@ namespace VFXEditor.Select.Rows {
                     ItemSortCategory = item.ItemSortCategory,
                     ClassJobCategory = item.ClassJobCategory,
                     ItemUICategory = item.ItemUICategory,
-                    ModelMain = item.ModelSub,
+                    ModelMain = doubleHand ? XivItemIds.ToItemsId(Ids.PrimaryId + 50, Ids.PrimaryVar, Ids.SecondaryId, Ids.SecondaryVar) : item.ModelSub, // not sure why this requires it. sometimes the +50 model isn't in the submodel
                     ModelSub = 0
                 };
                 SubItem = new XivItem( sItem );
 
-                var category = item.ItemUICategory.Value.RowId;
-                if( category == 1 || category == 84 || category == 107 ) { // MNK, NIN, DNC weapons
-                    SubItem.ImcPath = ImcPath;
-                }
+                if (doubleHand) SubItem.ImcPath = ImcPath;
             }
         }
 

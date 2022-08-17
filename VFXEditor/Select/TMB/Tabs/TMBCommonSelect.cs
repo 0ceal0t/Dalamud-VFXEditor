@@ -1,12 +1,12 @@
 using ImGuiNET;
 using VFXEditor.Select.Rows;
 
-namespace VFXEditor.Select.VFX {
-    public class VFXCommonSelect : VFXSelectTab<XivCommon, XivCommon> {
+namespace VFXEditor.Select.TMB {
+    public class TMBCommonSelect : TMBSelectTab<XivCommon, XivCommon> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VFXCommonSelect( string parentId, string tabId, VFXSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Misc, dialog ) {
+        public TMBCommonSelect( string parentId, string tabId, TMBSelectDialog dialog ) :
+            base( parentId, tabId, SheetManager.MiscTmb, dialog ) {
         }
 
         protected override bool CheckMatch( XivCommon item, string searchInput ) {
@@ -24,7 +24,7 @@ namespace VFXEditor.Select.VFX {
 
             DrawIcon( Icon );
 
-            DrawPath( "VFX Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, spawn: true );
+            DrawPath( "TMB Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivCommon item ) {

@@ -1,11 +1,12 @@
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using VFXEditor.Select.Rows;
 
 namespace VFXEditor.Select.Sheets {
     public class CommonLoader : SheetLoader<XivCommon, XivCommon> {
         public override void OnLoad() {
-            Items = new() {
+            Items.AddRange( new List<XivCommon>() {
                 new XivCommon( 0, "vfx/action/ab_swd_abl020/eff/abi_swd020c1t.avfx", "Passage of Arms", 2515 ),
                 new XivCommon( 1, "vfx/action/ab_2gn026/eff/ab_2gn026c0c.avfx", "Flamethrower", 3038 ),
                 new XivCommon( 2, "vfx/action/ab_2kt008/eff/ab_2kt008c1t.avfx", "Meditate", 3172 ),
@@ -22,7 +23,7 @@ namespace VFXEditor.Select.Sheets {
                 new XivCommon( 13, "vfx/common/eff/m7004sp_05d0t.avfx", "Earthen Fury", 2705 ),
                 new XivCommon( 14, "vfx/common/eff/m7005sp_32d0t.avfx", "Slipstream", 2716 ),
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
-            };
+            });
 
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) {
@@ -30,10 +31,9 @@ namespace VFXEditor.Select.Sheets {
             }
 
             var lineIdx = 0;
-            foreach( var line in File.ReadLines( SheetManager.MiscVfx ) ) {
+            foreach( var line in File.ReadLines( SheetManager.MiscVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
+                Items.Add( new XivCommon( lineIdx, line, line.Replace( ".avfx", "" ), 0 ) );
                 lineIdx++;
-                if( string.IsNullOrEmpty( line ) ) continue;
-                Items.Add( new XivCommon( lineIdx, line, line, 0 ) );
             }
         }
 
