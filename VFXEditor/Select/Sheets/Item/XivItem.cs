@@ -31,10 +31,7 @@ namespace VFXEditor.Select.Rows {
         }
     }
 
-    public class XivItem {
-        public bool HasSub;
-        public XivItem SubItem = null;
-
+    public abstract class XivItem {
         public string Name;
         public XivItemIds Ids;
         public XivItemIds SecondaryIds;
@@ -56,37 +53,8 @@ namespace VFXEditor.Select.Rows {
             Ids = new XivItemIds( item.ModelMain );
             SecondaryIds = new XivItemIds( item.ModelSub );
             HasModel = ( Ids.PrimaryId != 0 );
-            HasSub = ( SecondaryIds.PrimaryId != 0 );
-
-            RootPath = "chara/weapon/w" + Ids.PrimaryId.ToString().PadLeft( 4, '0' ) + "/obj/body/b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + "/";
-            VfxRootPath = RootPath + "vfx/eff/vw";
-            ImcPath = RootPath + "b" + Ids.PrimaryVar.ToString().PadLeft( 4, '0' ) + ".imc";
-            Variant = Ids.SecondaryId;
-
-            if( HasSub ) {
-                var category = item.ItemUICategory.Value.RowId;
-                var doubleHand = ( category == 1 || category == 84 || category == 107 ); // MNK, NIN, DNC weapons
-
-                var sItem = new Lumina.Excel.GeneratedSheets.Item {
-                    Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) ),
-                    Icon = item.Icon,
-                    EquipRestriction = item.EquipRestriction,
-                    EquipSlotCategory = item.EquipSlotCategory,
-                    ItemSearchCategory = item.ItemSearchCategory,
-                    ItemSortCategory = item.ItemSortCategory,
-                    ClassJobCategory = item.ClassJobCategory,
-                    ItemUICategory = item.ItemUICategory,
-                    ModelMain = doubleHand ? XivItemIds.ToItemsId(Ids.PrimaryId + 50, Ids.PrimaryVar, Ids.SecondaryId, Ids.SecondaryVar) : item.ModelSub, // not sure why this requires it. sometimes the +50 model isn't in the submodel
-                    ModelSub = 0
-                };
-                SubItem = new XivItem( sItem );
-
-                if (doubleHand) SubItem.ImcPath = ImcPath;
-            }
         }
 
-        public string GetVFXPath( int idx ) {
-            return VfxRootPath + idx.ToString().PadLeft( 4, '0' ) + ".avfx";
-        }
+        public string GetVfxPath( int idx ) => $"{VfxRootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";
     }
 }

@@ -7,14 +7,21 @@ using VFXEditor.Select.Rows;
 namespace VFXEditor.Select.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
         public override void OnLoad() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Item>().Where( x => x.EquipSlotCategory.Value?.MainHand == 1 || x.EquipSlotCategory.Value?.OffHand == 1 );
-            foreach( var item in sheet ) {
-                var i = new XivItem( item );
-                if( i.HasModel ) {
-                    Items.Add( i );
+            foreach( var row in Plugin.DataManager.GetExcelSheet<Item>() ) {
+                if( row.EquipSlotCategory.Value?.MainHand == 1 || row.EquipSlotCategory.Value?.OffHand == 1 ) {
+                    var item = new XivWeapon( row );
+                    if( item.HasModel ) Items.Add( item );
+                    if( item.HasSubModel ) Items.Add( item.SubItem );
                 }
-                if( i.HasSub ) {
-                    Items.Add( i.SubItem );
+                else if(
+                    row.EquipSlotCategory.Value?.Head == 1 ||
+                    row.EquipSlotCategory.Value?.Body == 1 ||
+                    row.EquipSlotCategory.Value?.Gloves == 1 ||
+                    row.EquipSlotCategory.Value?.Legs == 1 ||
+                    row.EquipSlotCategory.Value?.Feet == 1
+                ) {
+                    var i = new XivArmor( row );
+                    if( i.HasModel ) Items.Add( i );
                 }
             }
         }

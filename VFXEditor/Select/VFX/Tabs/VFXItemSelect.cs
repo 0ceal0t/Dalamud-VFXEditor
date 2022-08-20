@@ -25,14 +25,12 @@ namespace VFXEditor.Select.VFX {
             DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + loadedItem.Item.Variant );
-            ImGui.Text( "IMC Count: " + loadedItem.Count );
-            ImGui.Text( "VFX Id: " + loadedItem.VfxId );
 
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
             DisplayPath( loadedItem.ImcPath );
 
-            DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameItem, "ITEM", loadedItem.Item.Name, spawn: true );
+            DrawPath( "VFX Path", loadedItem.GetVfxPath(), Id, Dialog, SelectResultType.GameItem, "ITEM", loadedItem.Item.Name, spawn: true );
         }
 
         protected override string UniqueRowTitle( XivItem item ) {
