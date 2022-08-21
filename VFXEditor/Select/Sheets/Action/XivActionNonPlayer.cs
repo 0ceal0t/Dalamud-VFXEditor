@@ -13,10 +13,10 @@ namespace VFXEditor.Select.Rows {
             Icon = action.Icon;
 
             if( forceSelfKey == "" ) {
-                SelfVFXKey = action.AnimationEnd?.Value?.Key.ToString();
-                SelfVFXExists = !string.IsNullOrEmpty( SelfVFXKey );
-                if( SelfVFXExists ) {
-                    var selfMKey = new MonsterKey( SelfVFXKey );
+                SelfKey = action.AnimationEnd?.Value?.Key.ToString();
+                SelfKeyExists = !string.IsNullOrEmpty( SelfKey );
+                if( SelfKeyExists ) {
+                    var selfMKey = new MonsterKey( SelfKey );
                     if( selfMKey.isMonster && selfMKey.skeletonKey == "[SKL_ID]" ) {
                         IsPlaceholder = true;
                         return;
@@ -24,18 +24,18 @@ namespace VFXEditor.Select.Rows {
                 }
             }
             else { // Manually specified key
-                SelfVFXExists = true;
-                SelfVFXKey = forceSelfKey;
+                SelfKeyExists = true;
+                SelfKey = forceSelfKey;
             }
 
             if( !justSelf ) { // Just loading hit
-                CastVFX = action.VFX?.Value?.VFX.Value?.Location;
-                CastVFXExists = !string.IsNullOrEmpty( CastVFX );
+                Castvfx = action.VFX?.Value?.VFX.Value?.Location;
+                CastKeyExists = !string.IsNullOrEmpty( Castvfx );
 
                 // split this off into its own item
-                HitVFXKey = action.ActionTimelineHit?.Value?.Key.ToString();
-                HitVFXExists = !string.IsNullOrEmpty( HitVFXKey ) && !HitVFXKey.Contains( "normal_hit" );
-                if( HitVFXExists ) {
+                HitKey = action.ActionTimelineHit?.Value?.Key.ToString();
+                HitKeyExists = !string.IsNullOrEmpty( HitKey ) && !HitKey.Contains( "normal_hit" );
+                if( HitKeyExists ) {
                     var sAction = new Lumina.Excel.GeneratedSheets.Action {
                         Icon = action.Icon,
                         Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
@@ -47,7 +47,7 @@ namespace VFXEditor.Select.Rows {
                 }
             }
 
-            VfxExists = !IsPlaceholder && ( CastVFXExists || SelfVFXExists );
+            KeyExists = !IsPlaceholder && ( CastKeyExists || SelfKeyExists );
         }
     }
 

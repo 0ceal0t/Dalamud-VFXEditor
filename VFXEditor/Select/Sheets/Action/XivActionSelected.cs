@@ -16,7 +16,7 @@ namespace VFXEditor.Select.Rows {
 
         public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action ) {
             Action = action;
-            CastVfxExists = action.CastVFXExists;
+            CastVfxExists = action.CastKeyExists;
             CastVfxPath = action.GetCastVFXPath();
 
             if( file != null ) {

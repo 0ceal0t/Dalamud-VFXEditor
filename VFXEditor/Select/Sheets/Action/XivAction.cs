@@ -7,19 +7,19 @@ namespace VFXEditor.Select.Rows {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            SelfVFXKey = action.AnimationEnd?.Value?.Key.ToString();
-            SelfVFXExists = !string.IsNullOrEmpty( SelfVFXKey );
+            SelfKey = action.AnimationEnd?.Value?.Key.ToString();
+            SelfKeyExists = !string.IsNullOrEmpty( SelfKey );
 
             if( !justSelf ) {
-                CastVFX = action.VFX?.Value?.VFX.Value?.Location;
-                CastVFXExists = !string.IsNullOrEmpty( CastVFX );
+                Castvfx = action.VFX?.Value?.VFX.Value?.Location;
+                CastKeyExists = !string.IsNullOrEmpty( Castvfx );
 
                 //startVfx = action.AnimationStart.Value?.VFX.Value?.Location;
 
                 // split this off into its own item
-                HitVFXKey = action.ActionTimelineHit?.Value?.Key.ToString();
-                HitVFXExists = !string.IsNullOrEmpty( HitVFXKey );
-                if( HitVFXExists ) {
+                HitKey = action.ActionTimelineHit?.Value?.Key.ToString();
+                HitKeyExists = !string.IsNullOrEmpty( HitKey );
+                if( HitKeyExists ) {
                     var sAction = new Lumina.Excel.GeneratedSheets.Action {
                         Icon = action.Icon,
                         Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
@@ -31,7 +31,7 @@ namespace VFXEditor.Select.Rows {
                 }
             }
 
-            VfxExists = ( CastVFXExists || SelfVFXExists );
+            KeyExists = ( CastKeyExists || SelfKeyExists );
         }
     }
 }

@@ -9,10 +9,10 @@ namespace VFXEditor.Select.Sheets {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
                 var i = new XivAction( item );
-                if( i.VfxExists ) {
+                if( i.KeyExists ) {
                     Items.Add( i );
                 }
-                if( i.HitVFXExists ) {
+                if( i.HitKeyExists ) {
                     Items.Add( i.HitAction );
                 }
             }
@@ -20,7 +20,7 @@ namespace VFXEditor.Select.Sheets {
 
         public override bool SelectItem( XivActionBase item, out XivActionSelected selectedItem ) {
             selectedItem = null;
-            if( !item.SelfVFXExists ) { // no need to get the file
+            if( !item.SelfKeyExists ) { // no need to get the file
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }

@@ -8,10 +8,10 @@ namespace VFXEditor.Select.Sheets {
             foreach( var item in sheet ) {
                 var action = new XivActionNonPlayer( item );
                 if( !action.IsPlaceholder ) {
-                    if( action.HitVFXExists ) {
+                    if( action.HitKeyExists ) {
                         Items.Add( ( XivActionNonPlayer )action.HitAction );
                     }
-                    if( action.VfxExists ) {
+                    if( action.KeyExists ) {
                         Items.Add( action );
                     }
                 }

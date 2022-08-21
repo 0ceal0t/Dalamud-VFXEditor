@@ -4,26 +4,26 @@ namespace VFXEditor.Select.Rows {
         public int RowId;
         public ushort Icon;
 
-        public bool CastVFXExists = false;
-        public bool SelfVFXExists = false;
-        public bool HitVFXExists = false;
-        public bool VfxExists = false;
+        public bool CastKeyExists = false;
+        public bool SelfKeyExists = false;
+        public bool HitKeyExists = false;
+        public bool KeyExists = false;
 
         public XivActionBase HitAction = null;
 
-        public string CastVFX;
-        public string SelfVFXKey;
-        public string HitVFXKey;
+        public string Castvfx;
+        public string SelfKey;
+        public string HitKey;
 
         public static readonly string castPrefix = "vfx/common/eff/";
 
         public string GetCastVFXPath() {
-            if( !CastVFXExists ) return "";
-            return castPrefix + CastVFX + ".avfx";
+            if( !CastKeyExists ) return "";
+            return castPrefix + Castvfx + ".avfx";
         }
 
         public string GetTmbPath() {
-            return "chara/action/" + SelfVFXKey + ".tmb";
+            return "chara/action/" + SelfKey + ".tmb";
         }
     }
 }
