@@ -99,8 +99,10 @@ namespace VFXEditor.AVFX.VFX {
             ImGui.BeginChild( id );
             NodeView.DrawInline( id );
             EffectorSelect.DrawInline( id );
+
             SoundInput.DrawInline( id );
             SoundIndex.DrawInline( id );
+
             IUIBase.DrawList( Parameters, id );
             ImGui.EndChild();
         }

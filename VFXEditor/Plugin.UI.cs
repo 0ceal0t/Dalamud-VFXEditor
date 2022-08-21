@@ -69,7 +69,7 @@ namespace VFXEditor {
 
             if( ImGui.BeginMenu( "Export##Menu" ) ) {
                 if( ImGui.MenuItem( "Penumbra##Menu" ) ) PenumbraDialog.Show();
-                if( ImGui.MenuItem( "Textools##Menu" ) ) TexToolsDialog.Show();
+                if( ImGui.MenuItem( "TexTools##Menu" ) ) TexToolsDialog.Show();
                 ImGui.EndMenu();
             }
         }

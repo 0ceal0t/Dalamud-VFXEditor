@@ -49,7 +49,7 @@ namespace VFXEditor.TexTools {
         }
 
         public override void DrawBody() {
-            var id = "##Textools";
+            var id = "##TexTools";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
