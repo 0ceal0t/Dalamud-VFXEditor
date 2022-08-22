@@ -92,6 +92,8 @@ namespace VFXEditor.PAP {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
+            FileHelper.PadTo( writer, writer.BaseStream.Position, 16 );
+
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
             foreach( var tmb in tmbData ) {

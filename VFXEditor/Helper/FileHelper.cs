@@ -59,5 +59,10 @@ namespace VFXEditor.Helper {
             }
             return true;
         }
+
+        public static void PadTo( BinaryWriter writer, long position, long multiple ) {
+            var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
+            for( var j = 0; j < paddedBytes; j++ ) writer.Write( ( byte )0 );
+        }
     }
 }
