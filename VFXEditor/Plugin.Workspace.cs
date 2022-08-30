@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 using VFXEditor.AVFX;
 using VFXEditor.Helper;
-using VFXEditor.PAP;
+using VFXEditor.PapFormat;
 using VFXEditor.Texture;
-using VFXEditor.TMB;
+using VFXEditor.TmbFormat;
 
 namespace VFXEditor {
     public struct WorkspaceMeta {
@@ -127,7 +127,7 @@ namespace VFXEditor {
             }
 
             ResetTmbManager();
-            var tmbRootPath = Path.Combine( loadLocation, TMBManager.PenumbraPath );
+            var tmbRootPath = Path.Combine( loadLocation, TmbManager.PenumbraPath );
             if( meta.Tmb != null ) {
                 foreach( var tmb in meta.Tmb ) {
                     TmbManager.ImportWorkspaceFile( Path.Combine( tmbRootPath, tmb.RelativeLocation ), tmb );
@@ -135,7 +135,7 @@ namespace VFXEditor {
             }
 
             ResetPapManager();
-            var papRootPath = Path.Combine( loadLocation, PAPManager.PenumbraPath );
+            var papRootPath = Path.Combine( loadLocation, PapManager.PenumbraPath );
             if( meta.Pap != null ) {
                 foreach( var pap in meta.Pap ) {
                     PapManager.ImportWorkspaceFile( Path.Combine( papRootPath, pap.RelativeLocation ), pap );
@@ -202,14 +202,14 @@ namespace VFXEditor {
 
         private static void ResetTmbManager() {
             var oldManager = TmbManager;
-            TmbManager = new TMBManager();
+            TmbManager = new TmbManager();
             TmbManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
 
         private static void ResetPapManager() {
             var oldManager = PapManager;
-            PapManager = new PAPManager();
+            PapManager = new PapManager();
             PapManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }

@@ -7,13 +7,23 @@ using System.Text;
 
 namespace VFXEditor.Helper {
     public static class FileHelper {
-        public static string ReadString( BinaryReader input ) {
+        public static string ReadStringRelativeOffset( BinaryReader reader, long offset ) {
+            var savePos = reader.BaseStream.Position;
+            reader.BaseStream.Seek( savePos + offset, SeekOrigin.Begin );
+            var ret = ReadString( reader );
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            return ret;
+        }
+
+        public static string ReadString( BinaryReader reader ) {
             var strBytes = new List<byte>();
             int b;
-            while( ( b = input.ReadByte() ) != 0x00 )
+            while( ( b = reader.ReadByte() ) != 0x00 )
                 strBytes.Add( ( byte )b );
             return Encoding.ASCII.GetString( strBytes.ToArray() );
         }
+
+        public static string ReadString( BinaryReader reader, int size ) => Encoding.ASCII.GetString( reader.ReadBytes( size ) );
 
         public static void WriteString( BinaryWriter writer, string str, bool writeNull = false ) {
             writer.Write( Encoding.ASCII.GetBytes( str.Trim().Trim( '\0' ) ) );
@@ -38,6 +48,13 @@ namespace VFXEditor.Helper {
                 return true;
             }
             return false;
+        }
+
+        public static byte[] GetOriginal( BinaryReader reader ) {
+            var savePos = reader.BaseStream.Position;
+            var res = ReadAllBytes( reader );
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            return res;
         }
 
         public static byte[] ReadAllBytes( BinaryReader reader ) {

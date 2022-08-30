@@ -5,8 +5,8 @@ namespace VFXEditor.Select.PAP {
     public class PAPActionSelect : PAPSelectTab<XivActionPap, XivActionPapSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public PAPActionSelect( string parentId, string tabId, PAPSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.ActionPap, dialog ) {
+        public PAPActionSelect( string parentId, string tabId, PAPSelectDialog dialog, bool nonPlayer = false ) :
+            base( parentId, tabId, nonPlayer ? SheetManager.NonPlayerActionPap : SheetManager.ActionPap, dialog ) {
         }
 
         protected override bool CheckMatch( XivActionPap item, string searchInput ) {

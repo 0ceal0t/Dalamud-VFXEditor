@@ -7,7 +7,7 @@ using System.Numerics;
 using VFXEditor.Helper;
 using VFXEditor.TMB.Items;
 
-namespace VFXEditor.TMB {
+namespace VFXEditor.TMB.Parsing {
     public class TMBActor {
         public short Id { get; private set; }
 
@@ -28,6 +28,7 @@ namespace VFXEditor.TMB {
             TracksMaster = tracksMaster;
             EntriesMaster = entriesMaster;
         }
+
         public TMBActor( List<TMBTrack> tracksMaster, List<TMBItem> entriesMaster, BinaryReader reader ) : this( tracksMaster, entriesMaster ) {
             var startPos = reader.BaseStream.Position;
 
@@ -91,8 +92,9 @@ namespace VFXEditor.TMB {
             ImGui.BeginChild( $"{id}-ActorChild", new Vector2( -1, -1 ), true );
             ImGui.Columns( 2, $"{id}-ActorChild-Cols", true );
 
+            // Left column
+
             ImGui.BeginChild( $"{id}-ActorChild-Left" );
-            // ===========
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 var newTrack = new TMBTrack( EntriesMaster );
@@ -123,22 +125,19 @@ namespace VFXEditor.TMB {
                     selectedIndex = i;
                 }
             }
-            // ===========
             ImGui.EndChild();
-
             ImGui.SetColumnWidth( 0, 150 );
+
+            // Right column
 
             ImGui.NextColumn();
             ImGui.BeginChild( $"{id}-ActorChild-Right" );
-
-            // ===========
             if( SelectedTrack != null ) {
                 SelectedTrack.Draw( $"{id}{selectedIndex}" );
             }
             else {
                 ImGui.Text( "Select a timeline track..." );
             }
-            // ===========
             ImGui.EndChild();
 
             ImGui.Columns( 1 );

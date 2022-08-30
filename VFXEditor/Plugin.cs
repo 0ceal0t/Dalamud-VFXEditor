@@ -15,12 +15,12 @@ using VFXEditor.Data;
 using VFXEditor.Dialogs;
 using VFXEditor.DirectX;
 using VFXEditor.Interop;
-using VFXEditor.PAP;
+using VFXEditor.PapFormat;
 using VFXEditor.Penumbra;
 using VFXEditor.Select;
 using VFXEditor.TexTools;
 using VFXEditor.Texture;
-using VFXEditor.TMB;
+using VFXEditor.TmbFormat;
 using VFXEditor.Tracker;
 
 namespace VFXEditor {
@@ -40,8 +40,8 @@ namespace VFXEditor {
         public static DirectXManager DirectXManager { get; private set; }
         public static AVFXManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
-        public static TMBManager TmbManager { get; private set; }
-        public static PAPManager PapManager { get; private set; }
+        public static TmbManager TmbManager { get; private set; }
+        public static PapManager PapManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static VfxTracker VfxTracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
@@ -92,14 +92,14 @@ namespace VFXEditor {
             TextureManager.Setup();
             TextureManager = new TextureManager();
 
-            TMBManager.Setup();
-            TmbManager = new TMBManager();
+            TmbManager.Setup();
+            TmbManager = new TmbManager();
 
             AVFXManager.Setup();
             AvfxManager = new AVFXManager();
 
-            PAPManager.Setup();
-            PapManager = new PAPManager();
+            PapManager.Setup();
+            PapManager = new PapManager();
 
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();

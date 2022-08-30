@@ -1,11 +1,11 @@
 using VFXEditor.FileManager;
 using VFXEditor.Select.PAP;
 
-namespace VFXEditor.PAP {
-    public partial class PAPManager : FileManager<PAPDocument, WorkspaceMetaPap, PAPFile> {
+namespace VFXEditor.PapFormat {
+    public partial class PapManager : FileManager<PapDocument, WorkspaceMetaPap, PapFile> {
         public static PAPSelectDialog SourceSelect { get; private set; }
         public static PAPSelectDialog ReplaceSelect { get; private set; }
-        public static PAPSelectIndexDialog IndexDialog { get; private set; }
+        public static PapSelectIndexDialog IndexDialog { get; private set; }
 
         public static void Setup() {
             SourceSelect = new PAPSelectDialog(
@@ -22,7 +22,7 @@ namespace VFXEditor.PAP {
                 SetReplaceGlobal
             );
 
-            IndexDialog = new PAPSelectIndexDialog();
+            IndexDialog = new PapSelectIndexDialog();
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
@@ -39,11 +39,11 @@ namespace VFXEditor.PAP {
 
         // =====================
 
-        public PAPManager() : base( title: "Pap Editor", id: "Pap", tempFilePrefix: "PapTemp", extension: "pap", penumbaPath: PenumbraPath ) { }
+        public PapManager() : base( title: "Pap Editor", id: "Pap", tempFilePrefix: "PapTemp", extension: "pap", penumbaPath: PenumbraPath ) { }
 
-        protected override PAPDocument GetNewDocument() => new( LocalPath );
+        protected override PapDocument GetNewDocument() => new( LocalPath );
 
-        protected override PAPDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override PapDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         protected override void DrawMenu() {
         }

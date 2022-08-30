@@ -4,8 +4,8 @@ using System.IO;
 using VFXEditor.Helper;
 using VFXEditor.TexTools;
 
-namespace VFXEditor.PAP {
-    public partial class PAPDocument {
+namespace VFXEditor.PapFormat {
+    public partial class PapDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;

@@ -1,8 +1,8 @@
 using VFXEditor.FileManager;
 using VFXEditor.Select.TMB;
 
-namespace VFXEditor.TMB {
-    public partial class TMBManager : FileManager<TMBDocument, WorkspaceMetaTmb, TMBFile> {
+namespace VFXEditor.TmbFormat {
+    public partial class TmbManager : FileManager<TmbDocument, WorkspaceMetaTmb, TmbFile> {
         public static TMBSelectDialog SourceSelect { get; private set; }
         public static TMBSelectDialog ReplaceSelect { get; private set; }
 
@@ -34,11 +34,11 @@ namespace VFXEditor.TMB {
 
         public static readonly string PenumbraPath = "Tmb";
 
-        public TMBManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
+        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
 
-        protected override TMBDocument GetNewDocument() => new( LocalPath );
+        protected override TmbDocument GetNewDocument() => new( LocalPath );
 
-        protected override TMBDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         protected override void DrawMenu() { }
 

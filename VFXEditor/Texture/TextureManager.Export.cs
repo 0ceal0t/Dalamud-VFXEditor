@@ -6,8 +6,6 @@ using VFXEditor.TexTools;
 
 namespace VFXEditor.Texture {
     public partial class TextureManager {
-        // ========== PENUMBRA ==============
-
         public void PenumbraExport( string modFolder, bool exportTex ) {
             if( !exportTex ) return;
             foreach( var entry in PathToTextureReplace ) {
@@ -18,8 +16,6 @@ namespace VFXEditor.Texture {
                 PenumbraHelper.CopyFile( localPath, modFolder, path );
             }
         }
-
-        // ======== TEXTOOLS ===========
 
         public void TextoolsExport( BinaryWriter writer, bool exportTex, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
             if( !exportTex ) return;
@@ -39,8 +35,6 @@ namespace VFXEditor.Texture {
                 modOffset += modData.Length;
             }
         }
-
-        // ======== WORKSPACE ===========
 
         public WorkspaceMetaTex[] WorkspaceExport( string saveLocation ) {
             var texRootPath = Path.Combine( saveLocation, "Tex" );

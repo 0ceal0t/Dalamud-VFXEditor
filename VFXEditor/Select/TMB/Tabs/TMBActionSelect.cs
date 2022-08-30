@@ -5,8 +5,8 @@ namespace VFXEditor.Select.TMB {
     public class TMBActionSelect : TMBSelectTab<XivActionTmb, XivActionTmb> {
         private ImGuiScene.TextureWrap Icon;
 
-        public TMBActionSelect( string parentId, string tabId, TMBSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.ActionTmb, dialog ) {
+        public TMBActionSelect( string parentId, string tabId, TMBSelectDialog dialog, bool nonPlayer = false ) :
+            base( parentId, tabId, nonPlayer ? SheetManager.NonPlayerActionTmb : SheetManager.ActionTmb, dialog ) {
         }
 
         protected override bool CheckMatch( XivActionTmb item, string searchInput ) {

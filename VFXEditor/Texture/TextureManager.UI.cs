@@ -78,7 +78,6 @@ namespace VFXEditor.Texture {
                     ImGui.EndPopup();
                 }
 
-                // Imported texture
                 if( texOut.IsReplaced ) {
                     ImGui.SameLine();
                     if( UIHelper.RemoveButton( "Remove Replaced Texture" + id ) ) {

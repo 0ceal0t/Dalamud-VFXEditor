@@ -9,6 +9,7 @@ using System.Linq;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXEditor.TMB.Items;
+using VFXEditor.TMB.Parsing;
 
 namespace VFXEditor.TMB {
     public class TMBFile : FileDropdown<TMBActor> {
@@ -18,17 +19,14 @@ namespace VFXEditor.TMB {
             return new TMBFile( br );
         }
 
+        private readonly TMDH HeaderTMDH;
+        private readonly TMPP HeaderTMPP;
+
         private readonly List<TMBActor> Actors = new();
         private readonly List<TMBTrack> Tracks = new();
         private readonly List<TMBItem> Entries = new();
 
-        private short TMDH_Unk1 = 0;
-        private short TMDH_Unk2 = 0;
-        private short TMDH_Unk3 = 3;
-
-        private bool TMPP = false;
-        private string TMPP_String = "";
-        private int HeaderEntries => TMPP ? 3 : 2;
+        private int HeaderEntries => HeaderTMPP.Assigned ? 3 : 2;
 
         public bool Verified = true;
 
@@ -45,37 +43,18 @@ namespace VFXEditor.TMB {
             var size = reader.ReadInt32();
             var numEntries = reader.ReadInt32(); // entry count (not including TMLB)
 
-            reader.ReadInt32(); // TMDH
-            reader.ReadInt32(); // 0x10
-            reader.ReadInt16(); // id
-            TMDH_Unk1 = reader.ReadInt16();
-            TMDH_Unk2 = reader.ReadInt16(); // ?
-            TMDH_Unk3 = reader.ReadInt16(); // 3
+            HeaderTMDH = new TMDH( reader );
+            HeaderTMPP = new TMPP( reader );
 
-            var tmal_tmpp = reader.ReadInt32(); // TMAL or TMPP
-            if( tmal_tmpp == 0x50504D54 ) { // TMPP
-                TMPP = true;
-                reader.ReadInt32(); // 0x0C
-                var tmppOffset = reader.ReadInt32(); // offset from [TMPP] + 8 to strings
-
-                var savePos = reader.BaseStream.Position;
-                reader.BaseStream.Seek( savePos + tmppOffset - 4, SeekOrigin.Begin );
-                TMPP_String = FileHelper.ReadString( reader );
-                reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
-
-                reader.ReadInt32(); // TMAL
-            }
-
+            if( HeaderTMPP.Assigned ) reader.ReadInt32(); // TMAL
             reader.ReadInt32(); // 0x10
             reader.ReadInt32(); // offset from [TMAL] + 8 to timeline
-            var numActors = reader.ReadInt32(); // Number of TMAC
 
-            // ============ PARSE ================
+            var numActors = reader.ReadInt32(); // Number of TMAC
             for( var i = 0; i < numActors; i++ ) { // parse actors
                 Actors.Add( new TMBActor( Tracks, Entries, reader ) );
             }
             TMBTrack.ParseEntries( reader, Entries, Tracks, numEntries - HeaderEntries - Actors.Count, ref Verified );
-            // ===================================
 
             foreach( var track in Tracks ) track.PickEntries( Entries, 2 + Actors.Count + Tracks.Count ); // if 1 actor, 1 track => 1 = header, 2 = actor, 3 = track, 4 = entry...
             foreach( var actor in Actors ) actor.PickTracks( Tracks, 2 + Actors.Count );
@@ -88,13 +67,13 @@ namespace VFXEditor.TMB {
         }
 
         public byte[] ToBytes() {
-            var headerSize = 0x0C + 0x10 + 0x10 + ( TMPP ? 0x0C : 0 ) + Actors.Count * 0x1C;
+            var headerSize = 0x0C + TMDH.Size + 0x10 + HeaderTMPP.Size + Actors.Count * 0x1C;
             var entriesSize = 0x18 * Tracks.Count + Entries.Select( x => x.GetSize() ).Sum();
             var extraSize = Entries.Select( x => x.GetExtraSize() ).Sum() + Tracks.Select( x => x.GetExtraSize() ).Sum();
 
             var stringList = new List<string>();
             Entries.ForEach( x => x.PopulateStringList( stringList ) );
-            var stringSize = stringList.Select( x => x.Length + 1 ).Sum() + ( TMPP ? TMPP_String.Length + 1 : 0 );
+            var stringSize = stringList.Select( x => x.Length + 1 ).Sum() + HeaderTMPP.PathSize;
 
             var entryCount = Actors.Count + Tracks.Count + Entries.Count; // include TMTR + entries
             var timelineSize = 2 * ( Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum() );
@@ -116,14 +95,9 @@ namespace VFXEditor.TMB {
             headerWriter.Write( totalSize );
             headerWriter.Write( entryCount + HeaderEntries ); // + 2 for TMDH and TMAL
 
-            FileHelper.WriteString( headerWriter, "TMDH" );
-            headerWriter.Write( 0x10 );
-            headerWriter.Write( ( short )1 );
-            headerWriter.Write( TMDH_Unk1 );
-            headerWriter.Write( TMDH_Unk2 );
-            headerWriter.Write( TMDH_Unk3 );
+            HeaderTMDH.Write( headerWriter );
 
-            if( TMPP ) {
+            if( HeaderTMPP.Assigned ) {
                 FileHelper.WriteString( headerWriter, "TMPP" );
                 headerWriter.Write( 0x0C );
                 headerWriter.Write( stringPos - ( int )headerWriter.BaseStream.Position );
@@ -141,9 +115,9 @@ namespace VFXEditor.TMB {
 
             Dictionary<string, int> stringPositions = new();
             var currentStringPos = 0;
-            if( TMPP ) {
-                FileHelper.WriteString( stringWriter, TMPP_String, true );
-                currentStringPos += TMPP_String.Length + 1;
+            if( HeaderTMPP.Assigned ) {
+                FileHelper.WriteString( stringWriter, HeaderTMPP.Path, true );
+                currentStringPos += HeaderTMPP.PathSize;
             }
             foreach( var item in stringList ) {
                 stringPositions[item] = currentStringPos;
@@ -208,17 +182,8 @@ namespace VFXEditor.TMB {
         public void Draw( string id ) {
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    ImGui.Checkbox( $"Use face library{id}", ref TMPP );
-                    ImGui.SameLine();
-                    UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
-
-                    if( TMPP ) {
-                        ImGui.InputText( $"Face library path{id}", ref TMPP_String, 256 );
-                    }
-
-                    FileHelper.ShortInput( $"Unknown 1{id}", ref TMDH_Unk1 );
-                    FileHelper.ShortInput( $"Unknown 2{id}", ref TMDH_Unk2 );
-                    FileHelper.ShortInput( $"Unknown 3{id}", ref TMDH_Unk3 );
+                    HeaderTMPP.Draw( id );
+                    HeaderTMDH.Draw( id );
 
                     ImGui.EndTabItem();
                 }

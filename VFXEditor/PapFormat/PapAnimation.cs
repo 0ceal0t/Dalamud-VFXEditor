@@ -3,23 +3,23 @@ using ImGuiNET;
 using System.IO;
 using VFXEditor.Helper;
 using VFXEditor.Interop;
-using VFXEditor.TMB;
+using VFXEditor.TmbFormat;
 
-namespace VFXEditor.PAP {
-    public class PAPAnimation {
+namespace VFXEditor.PapFormat {
+    public class PapAnimation {
         public short HavokIndex = 0;
 
         private readonly string HkxTempLocation;
         private string Name = "cbbm_replace_this"; // padded to 32 bytes (INCLUDING NULL)
         private short Unknown1 = 0;
         private int Unknown2 = 0;
-        private TMBFile Tmb;
+        private TmbFile Tmb;
 
-        public PAPAnimation( string hkxPath ) {
+        public PapAnimation( string hkxPath ) {
             HkxTempLocation = hkxPath;
         }
 
-        public PAPAnimation( BinaryReader reader, string hkxPath ) {
+        public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
             Name = FileHelper.ReadString( reader );
             reader.ReadBytes( 32 - Name.Length - 1 );
@@ -39,11 +39,11 @@ namespace VFXEditor.PAP {
         }
 
         public void ReadTmb( BinaryReader reader ) {
-            Tmb = new TMBFile( reader, false );
+            Tmb = new TmbFile( reader, false );
         }
 
         public void ReadTmb( string path ) {
-            Tmb = TMBFile.FromLocalFile( path );
+            Tmb = TmbFile.FromLocalFile( path );
         }
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
@@ -64,21 +64,22 @@ namespace VFXEditor.PAP {
             if( ImGui.Button( $"Replace Havok data{id}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        PAPManager.IndexDialog.OnOk = ( int idx ) => {
+                        PapManager.IndexDialog.OnOk = ( int idx ) => {
                             HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
                             UIHelper.OkNotification( "Havok data replaced" );
                         };
-                        PAPManager.IndexDialog.Show();
+                        PapManager.IndexDialog.Show();
                     }
                 } );
             }
 
             // ===== TMB ========
+
             ImGui.SameLine();
             if( ImGui.Button( $"Import TMB{id}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        Tmb = TMBFile.FromLocalFile( res );
+                        Tmb = TmbFile.FromLocalFile( res );
                         UIHelper.OkNotification( "TMB data imported" );
                     }
                 } );

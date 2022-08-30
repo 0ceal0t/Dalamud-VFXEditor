@@ -10,18 +10,18 @@ using VFXEditor.FileManager;
 using VFXEditor.Helper;
 using VFXEditor.Interop;
 
-namespace VFXEditor.PAP {
-    public class PAPFile : FileDropdown<PAPAnimation> {
+namespace VFXEditor.PapFormat {
+    public class PapFile : FileDropdown<PapAnimation> {
         private readonly string HkxTempLocation;
 
         private short ModelId;
         private byte BaseId;
         private byte VariantId;
-        private readonly List<PAPAnimation> Animations = new();
+        private readonly List<PapAnimation> Animations = new();
 
         public bool Verified = true;
 
-        public PAPFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
             HkxTempLocation = hkxTemp;
 
             var startPos = reader.BaseStream.Position;
@@ -44,7 +44,7 @@ namespace VFXEditor.PAP {
             var footerPosition = reader.ReadInt32();
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations.Add( new PAPAnimation( reader, HkxTempLocation ) );
+                Animations.Add( new PapAnimation( reader, HkxTempLocation ) );
             }
 
             // ... do something about havok data ...
@@ -155,15 +155,15 @@ namespace VFXEditor.PAP {
             return 0;
         }
 
-        protected override List<PAPAnimation> GetOptions() => Animations;
+        protected override List<PapAnimation> GetOptions() => Animations;
 
-        protected override string GetName( PAPAnimation item, int idx ) => item.GetName();
+        protected override string GetName( PapAnimation item, int idx ) => item.GetName();
 
         protected override void OnNew() {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
-                    PAPManager.IndexDialog.OnOk = ( int idx ) => {
-                        var newAnim = new PAPAnimation( HkxTempLocation );
+                    PapManager.IndexDialog.OnOk = ( int idx ) => {
+                        var newAnim = new PapAnimation( HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
                         Animations.Add( newAnim );
                         RefreshHavokIndexes();
@@ -172,12 +172,12 @@ namespace VFXEditor.PAP {
 
                         UIHelper.OkNotification( "Havok data imported" );
                     };
-                    PAPManager.IndexDialog.Show();
+                    PapManager.IndexDialog.Show();
                 }
             } );
         }
 
-        protected override void OnDelete( PAPAnimation item ) {
+        protected override void OnDelete( PapAnimation item ) {
             var index = Animations.IndexOf( item );
             if( index == -1 ) return;
 

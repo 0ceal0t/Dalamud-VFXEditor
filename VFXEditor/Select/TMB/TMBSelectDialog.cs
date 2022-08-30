@@ -14,6 +14,7 @@ namespace VFXEditor.Select.TMB {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new TMBActionSelect( id, "Action", this ),
+                new TMBActionSelect( id, "Non-Player Action", this, nonPlayer:true ),
                 new TMBEmoteSelect( id, "Emote", this ),
                 new TMBNpcSelect( id, "Npc", this ),
                 new TMBCommonSelect( id, "Common", this )

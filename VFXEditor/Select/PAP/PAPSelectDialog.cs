@@ -14,6 +14,7 @@ namespace VFXEditor.Select.PAP {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new PAPActionSelect( id, "Action", this ),
+                new PAPActionSelect( id, "Non-Player Action", this, nonPlayer:true ),
                 new PAPEmoteSelect( id, "Emote", this ),
                 new PAPNpcSelect( id, "Npc", this )
             } );

@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
@@ -7,18 +6,16 @@ using System.Numerics;
 using VFXEditor.FileManager;
 using VFXEditor.Helper;
 
-namespace VFXEditor.PAP {
-    public partial class PAPDocument : FileManagerDocument<PAPFile, WorkspaceMetaPap> {
-        private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
-
-        public PAPDocument( string writeLocation ) : base( writeLocation, "Pap", "PAP" ) {
+namespace VFXEditor.TmbFormat {
+    public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
+        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
         }
-        public PAPDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
+        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
         }
 
         public override void Update() {
             UpdateFile();
-            Reload( CurrentFile.GetPapIds() );
+            Reload();
             Plugin.ResourceLoader.ReRender();
         }
 
@@ -27,12 +24,11 @@ namespace VFXEditor.PAP {
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {
                 try {
-                    using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
-                    CurrentFile = new( br, HkxTemp );
-                    UIHelper.OkNotification( "PAP file loaded" );
+                    CurrentFile = TmbFile.FromLocalFile( localPath );
+                    UIHelper.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error(e, "Error Reading File");
+                    PluginLog.Error( e, "Error Reading File", e );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
@@ -44,11 +40,11 @@ namespace VFXEditor.PAP {
                     var file = Plugin.DataManager.GetFile( gamePath );
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
-                    CurrentFile = new PAPFile( br, HkxTemp );
-                    UIHelper.OkNotification( "PAP file loaded" );
+                    CurrentFile = new TmbFile( br );
+                    UIHelper.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error(e, "Error Reading File");
+                    PluginLog.Error( e, "Error Reading File" );
                     UIHelper.ErrorNotification( "Error reading file" );
                 }
             }
@@ -56,12 +52,12 @@ namespace VFXEditor.PAP {
 
         protected override void UpdateFile() {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote PAP file to {0}", WriteLocation );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
         protected override void ExportRaw() {
-            UIHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
+            UIHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;
@@ -79,17 +75,12 @@ namespace VFXEditor.PAP {
                 DisplayFileControls();
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw( "##Pap" );
+                CurrentFile.Draw( "##Tmb" );
             }
         }
 
-        protected override void SourceShow() => PAPManager.SourceSelect.Show();
+        protected override void SourceShow() => TmbManager.SourceSelect.Show();
 
-        protected override void ReplaceShow() => PAPManager.ReplaceSelect.Show();
-
-        public override void Dispose() {
-            base.Dispose();
-            File.Delete( HkxTemp );
-        }
+        protected override void ReplaceShow() => TmbManager.ReplaceSelect.Show();
     }
 }

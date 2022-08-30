@@ -3,12 +3,12 @@ using System;
 using System.Numerics;
 using VFXEditor.Dialogs;
 
-namespace VFXEditor.PAP {
-    public class PAPSelectIndexDialog : GenericDialog {
+namespace VFXEditor.PapFormat {
+    public class PapSelectIndexDialog : GenericDialog {
         public Action<int> OnOk;
         public int Index;
 
-        public PAPSelectIndexDialog() : base( "Select Index" ) {
+        public PapSelectIndexDialog() : base( "Select Index" ) {
             Size = new Vector2( 400, 100 );
         }
 
