@@ -14,39 +14,39 @@ namespace VFXEditor.AVFX {
         public static void Setup() {
             SourceSelect = new VFXSelectDialog(
                 "File Select [SOURCE]",
-                Plugin.Configuration.RecentSelects,
+                VfxEditor.Configuration.RecentSelects,
                 true,
                 SetSourceGlobal,
                 showSpawn: true,
-                spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawn,
-                spawnOnGround: Plugin.SpawnOnGround,
-                spawnOnSelf: Plugin.SpawnOnSelf,
-                spawnOnTarget: Plugin.SpawnOnTarget
+                spawnVfxExists: VfxEditor.SpawnExists,
+                removeSpawnVfx: VfxEditor.RemoveSpawn,
+                spawnOnGround: VfxEditor.SpawnOnGround,
+                spawnOnSelf: VfxEditor.SpawnOnSelf,
+                spawnOnTarget: VfxEditor.SpawnOnTarget
             );
             ReplaceSelect = new VFXSelectDialog(
                 "File Select [TARGET]",
-                Plugin.Configuration.RecentSelects,
+                VfxEditor.Configuration.RecentSelects,
                 false,
                 SetReplaceGlobal,
                 showSpawn: true,
-                spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawn,
-                spawnOnGround: Plugin.SpawnOnGround,
-                spawnOnSelf: Plugin.SpawnOnSelf,
-                spawnOnTarget: Plugin.SpawnOnTarget
+                spawnVfxExists: VfxEditor.SpawnExists,
+                removeSpawnVfx: VfxEditor.RemoveSpawn,
+                spawnOnGround: VfxEditor.SpawnOnGround,
+                spawnOnSelf: VfxEditor.SpawnOnSelf,
+                spawnOnTarget: VfxEditor.SpawnOnTarget
             );
-            NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
+            NodeLibrary = new( VfxEditor.Configuration.VFXNodeLibraryItems, VfxEditor.Configuration.WriteLocation );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
-            Plugin.AvfxManager?.SetSource( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
+            VfxEditor.AvfxManager?.SetSource( result );
+            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelects, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
-            Plugin.AvfxManager?.SetReplace( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
+            VfxEditor.AvfxManager?.SetReplace( result );
+            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelects, result );
         }
 
         public static readonly string PenumbraPath = "VFX";

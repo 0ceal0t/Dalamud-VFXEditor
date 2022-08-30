@@ -47,7 +47,7 @@ namespace VFXEditor.TmbFormat.Utils {
                     return;
                 }
 
-                var type = TmbUtils.ItemTypes[magic];
+                var type = TmbUtils.ItemTypes[magic].Type;
                 var constructor = type.GetConstructor( new Type[] { typeof( TmbReader ) } );
                 if( constructor == null ) {
                     PluginLog.Log( $"TmbReader constructor failed for {magic}" );

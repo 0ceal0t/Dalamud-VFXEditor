@@ -16,7 +16,7 @@ namespace VFXEditor.TmbFormat {
         public override void Update() {
             UpdateFile();
             Reload();
-            Plugin.ResourceLoader.ReRender();
+            VfxEditor.ResourceLoader.ReRender();
         }
 
         public override void CheckKeybinds() { }
@@ -35,9 +35,9 @@ namespace VFXEditor.TmbFormat {
         }
 
         protected override void LoadGame( string gamePath ) {
-            if( Plugin.DataManager.FileExists( gamePath ) ) {
+            if( VfxEditor.DataManager.FileExists( gamePath ) ) {
                 try {
-                    var file = Plugin.DataManager.GetFile( gamePath );
+                    var file = VfxEditor.DataManager.GetFile( gamePath );
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new TmbFile( br );
@@ -52,7 +52,7 @@ namespace VFXEditor.TmbFormat {
 
         protected override void UpdateFile() {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
+            if( VfxEditor.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 

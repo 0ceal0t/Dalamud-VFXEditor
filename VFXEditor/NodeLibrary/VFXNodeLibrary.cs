@@ -86,6 +86,6 @@ namespace VFXEditor.NodeLibrary {
             return false;
         }
 
-        public static void Save() => Plugin.Configuration.Save();
+        public static void Save() => VfxEditor.Configuration.Save();
     }
 }

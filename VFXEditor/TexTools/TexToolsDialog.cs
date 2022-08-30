@@ -85,10 +85,10 @@ namespace VFXEditor.TexTools {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    Plugin.AvfxManager.TextoolsExport( writer, ExportVfx, simpleParts, ref modOffset );
-                    Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
-                    Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
-                    Plugin.PapManager.TextoolsExport( writer, ExportPap, simpleParts, ref modOffset );
+                    VfxEditor.AvfxManager.TextoolsExport( writer, ExportVfx, simpleParts, ref modOffset );
+                    VfxEditor.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
+                    VfxEditor.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
+                    VfxEditor.PapManager.TextoolsExport( writer, ExportPap, simpleParts, ref modOffset );
 
                     newData = ms.ToArray();
                 }

@@ -12,11 +12,11 @@ namespace VFXEditor.Utils {
             vertexesOut = new List<AVFXVertex>();
             indexesOut = new List<AVFXIndex>();
             var d = File.ReadAllBytes( localPath );
-            if( !Plugin.DataManager.FileExists( localPath ) ) return false;
+            if( !VfxEditor.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
 
-            var file = Plugin.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
+            var file = VfxEditor.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
 
             foreach( var mesh in mdl.GetMeshesByType( Mesh.MeshType.Main ) ) {
@@ -33,7 +33,7 @@ namespace VFXEditor.Utils {
                         return false;
                     }
 
-                    vertexesOut.Add( GetAVFXVert(
+                    vertexesOut.Add( GetAvfxVert(
                         pos.Value,
                         normal.Value,
                         tangent.Value,
@@ -59,7 +59,7 @@ namespace VFXEditor.Utils {
             return true;
         }
 
-        private static AVFXVertex GetAVFXVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static AVFXVertex GetAvfxVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
             var ret = new AVFXVertex();
             color *= 255;
             normal *= 128;

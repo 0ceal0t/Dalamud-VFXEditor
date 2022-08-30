@@ -5,7 +5,7 @@ using VFXEditor.Texture;
 
 namespace VFXEditor.Utils {
     public static class AtexUtils {
-        public static List<byte> CreateATEXHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
+        public static List<byte> CreateAtexHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
             short texFormatCode = 0;
             switch( format ) {
@@ -57,7 +57,7 @@ namespace VFXEditor.Utils {
             return headerData;
         }
 
-        public static byte[] CreateDDSHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
+        public static byte[] CreateDdsHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
             uint dwPitchOrLinearSize, dwFourCC;
             var header = new List<byte>();
 

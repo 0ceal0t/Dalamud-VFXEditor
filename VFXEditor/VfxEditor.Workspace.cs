@@ -53,7 +53,7 @@ namespace VFXEditor {
         public string RelativeLocation;
     }
 
-    public partial class Plugin {
+    public partial class VfxEditor {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         private static DateTime LastAutoSave = DateTime.Now;
         private static bool IsLoading = false;

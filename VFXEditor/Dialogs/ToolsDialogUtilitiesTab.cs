@@ -15,10 +15,10 @@ namespace VFXEditor.Dialogs {
             ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                var result = Plugin.DataManager.FileExists( RawInputValue );
+                var result = VfxEditor.DataManager.FileExists( RawInputValue );
                 if( result ) {
                     try {
-                        var file = Plugin.DataManager.GetFile( RawInputValue );
+                        var file = VfxEditor.DataManager.GetFile( RawInputValue );
                         UiUtils.WriteBytesDialog( ".avfx", file.Data, "avfx" );
                     }
                     catch( Exception e ) {
@@ -31,10 +31,10 @@ namespace VFXEditor.Dialogs {
             ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                var result = Plugin.DataManager.FileExists( RawTexInputValue );
+                var result = VfxEditor.DataManager.FileExists( RawTexInputValue );
                 if( result ) {
                     try {
-                        var file = Plugin.DataManager.GetFile( RawTexInputValue );
+                        var file = VfxEditor.DataManager.GetFile( RawTexInputValue );
                         UiUtils.WriteBytesDialog( ".atex", file.Data, "atex" );
                     }
                     catch( Exception e ) {

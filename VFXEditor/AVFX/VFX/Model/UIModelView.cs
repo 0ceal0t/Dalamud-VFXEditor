@@ -7,7 +7,7 @@ namespace VFXEditor.AVFX.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
         public UIModelView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIModel> group ) : base( vfxFile, avfx, group, "Model", true, true, "default_model.vfxedit2" ) { }
 
-        public override void OnSelect( UIModel item ) => Plugin.DirectXManager.ModelView.LoadModel( item.Model );
+        public override void OnSelect( UIModel item ) => VfxEditor.DirectXManager.ModelView.LoadModel( item.Model );
 
         public override void OnDelete( UIModel item ) => Avfx.RemoveModel( item.Model );
 

@@ -1,7 +1,7 @@
 using VFXEditor.Structs.Vfx;
 
 namespace VFXEditor {
-    public unsafe partial class Plugin {
+    public unsafe partial class VfxEditor {
         public static BaseVfx Spawn { get; private set; }
 
         public static void RemoveSpawn() {

@@ -7,7 +7,7 @@ using VFXEditor.Select.Rows;
 namespace VFXEditor.Select.Sheets {
     public class MountSheeetLoader : SheetLoader<XivMount, XivMountSelected> {
         public override void OnLoad() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
+            var sheet = VfxEditor.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivMount( item ) );
             }
@@ -16,10 +16,10 @@ namespace VFXEditor.Select.Sheets {
         public override bool SelectItem( XivMount item, out XivMountSelected selectedItem ) {
             selectedItem = null;
             var imcPath = item.GetImcPath();
-            var result = Plugin.DataManager.FileExists( imcPath );
+            var result = VfxEditor.DataManager.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = Plugin.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = VfxEditor.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivMountSelected( file, item );
                 }
                 catch( Exception e ) {

@@ -5,7 +5,7 @@ using VFXEditor.Select.Rows;
 namespace VFXEditor.Select.Sheets {
     public class StatusSheetLoader : SheetLoader<XivStatus, XivStatus> {
         public override void OnLoad() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = VfxEditor.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 var i = new XivStatus( item );
                 if( i.VfxExists ) {

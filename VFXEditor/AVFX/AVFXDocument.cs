@@ -28,27 +28,27 @@ namespace VFXEditor.AVFX {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
                 UpdateFile();
                 Reload();
-                Plugin.ResourceLoader.ReRender();
+                VfxEditor.ResourceLoader.ReRender();
                 LastUpdate = DateTime.Now;
             }
         }
 
         public override void CheckKeybinds() {
-            if( Plugin.Configuration.CopyVfxKeybind.KeyPressed() ) CopyManager.Copy();
-            if( Plugin.Configuration.PasteVfxKeybind.KeyPressed() ) CopyManager.Paste();
+            if( VfxEditor.Configuration.CopyVfxKeybind.KeyPressed() ) CopyManager.Copy();
+            if( VfxEditor.Configuration.PasteVfxKeybind.KeyPressed() ) CopyManager.Paste();
 
-            if( Plugin.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnSelf( SpawnPath );
+            if( VfxEditor.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
+                VfxEditor.RemoveSpawn();
+                if( !SpawnDisabled ) VfxEditor.SpawnOnSelf( SpawnPath );
             }
-            if( Plugin.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnGround( SpawnPath );
+            if( VfxEditor.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
+                VfxEditor.RemoveSpawn();
+                if( !SpawnDisabled ) VfxEditor.SpawnOnGround( SpawnPath );
 
             }
-            if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnTarget( SpawnPath );
+            if( VfxEditor.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
+                VfxEditor.RemoveSpawn();
+                if( !SpawnDisabled ) VfxEditor.SpawnOnTarget( SpawnPath );
 
             }
         }
@@ -68,9 +68,9 @@ namespace VFXEditor.AVFX {
         }
 
         protected override void LoadGame( string gamePath ) {
-            if( Plugin.DataManager.FileExists( gamePath ) ) {
+            if( VfxEditor.DataManager.FileExists( gamePath ) ) {
                 try {
-                    var file = Plugin.DataManager.GetFile( gamePath );
+                    var file = VfxEditor.DataManager.GetFile( gamePath );
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new AVFXFile( br );
@@ -85,7 +85,7 @@ namespace VFXEditor.AVFX {
 
         protected override void UpdateFile() {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
+            if( VfxEditor.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
@@ -127,7 +127,7 @@ namespace VFXEditor.AVFX {
             }
 
             // ======= SPAWN + EYE =========
-            if( !Plugin.SpawnExists() ) {
+            if( !VfxEditor.SpawnExists() ) {
                 if( SpawnDisabled ) {
                     ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
                 }
@@ -140,26 +140,26 @@ namespace VFXEditor.AVFX {
                 }
             }
             else {
-                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
+                if( ImGui.Button( "Remove" ) ) VfxEditor.RemoveSpawn();
             }
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
-                if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
-                if( ImGui.Selectable( "On Taget" ) ) Plugin.SpawnOnTarget( SpawnPath );
+                if( ImGui.Selectable( "On Ground" ) ) VfxEditor.SpawnOnGround( SpawnPath );
+                if( ImGui.Selectable( "On Self" ) ) VfxEditor.SpawnOnSelf( SpawnPath );
+                if( ImGui.Selectable( "On Taget" ) ) VfxEditor.SpawnOnTarget( SpawnPath );
                 ImGui.EndPopup();
             }
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !Plugin.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                Plugin.VfxTracker.Toggle();
-                if( !Plugin.VfxTracker.Enabled ) {
-                    Plugin.VfxTracker.Reset();
-                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
+            if( ImGui.Button( $"{( !VfxEditor.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
+                VfxEditor.VfxTracker.Toggle();
+                if( !VfxEditor.VfxTracker.Enabled ) {
+                    VfxEditor.VfxTracker.Reset();
+                    VfxEditor.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
                 }
                 else {
-                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+                    VfxEditor.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
                 }
             }
             ImGui.PopFont();
@@ -193,7 +193,7 @@ namespace VFXEditor.AVFX {
             var newResult = new SelectResult {
                 DisplayString = "[NEW]",
                 Type = SelectResultType.Local,
-                Path = Path.Combine( Plugin.RootLocation, "Files", path )
+                Path = Path.Combine( VfxEditor.RootLocation, "Files", path )
             };
             SetSource( newResult );
         }

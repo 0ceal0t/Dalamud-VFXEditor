@@ -7,7 +7,7 @@ using VFXEditor.Select.Rows;
 namespace VFXEditor.Select.Sheets {
     public class ZoneSheetLoader : SheetLoader<XivZone, XivZoneSelected> {
         public override void OnLoad() {
-            var sheet = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = VfxEditor.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivZone( item ) );
             }
@@ -16,10 +16,10 @@ namespace VFXEditor.Select.Sheets {
         public override bool SelectItem( XivZone item, out XivZoneSelected selectedItem ) {
             selectedItem = null;
             var lgbPath = item.GetLgbPath();
-            var result = Plugin.DataManager.FileExists( lgbPath );
+            var result = VfxEditor.DataManager.FileExists( lgbPath );
             if( result ) {
                 try {
-                    var file = Plugin.DataManager.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
+                    var file = VfxEditor.DataManager.GetFile<Lumina.Data.Files.LgbFile>( lgbPath );
                     selectedItem = new XivZoneSelected( file, item );
                 }
                 catch( Exception e ) {

@@ -24,7 +24,7 @@ using VFXEditor.TmbFormat;
 using VFXEditor.Tracker;
 
 namespace VFXEditor {
-    public partial class Plugin : IDalamudPlugin {
+    public partial class VfxEditor : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ClientState ClientState { get; private set; }
         public static Framework Framework { get; private set; }
@@ -54,7 +54,7 @@ namespace VFXEditor {
 
         private static bool ClearKeyState = false;
 
-        public Plugin(
+        public VfxEditor(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
                 CommandManager commandManager,
@@ -116,9 +116,9 @@ namespace VFXEditor {
             Framework.Update += FrameworkOnUpdate;
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
-            PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+            PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
 
-            //Data.SCD.ScdFile.Test();
+            //Data.Scd.ScdFile.Test();
         }
 
         public static void CheckClearKeyState() {
@@ -131,7 +131,7 @@ namespace VFXEditor {
             ClearKeyState = false;
         }
 
-        private void DrawConfigUI() {
+        private void DrawConfigUi() {
             AvfxManager.Show();
         }
 
@@ -143,7 +143,7 @@ namespace VFXEditor {
             Framework.Update -= FrameworkOnUpdate;
             PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
             PluginInterface.UiBuilder.Draw -= Draw;
-            PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
+            PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUi;
 
             ImPlot.DestroyContext();
 

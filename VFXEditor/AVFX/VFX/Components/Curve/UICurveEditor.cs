@@ -73,8 +73,8 @@ namespace VFXEditor.AVFX.VFX {
 
                     // ====== IMAGE ============
                     if( Color && SourceKeys.Count > 1 ) {
-                        if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) {
-                            Plugin.DirectXManager.GradientView.SetGradient( Curve );
+                        if( VfxEditor.DirectXManager.GradientView.CurrentCurve != Curve ) {
+                            VfxEditor.DirectXManager.GradientView.SetGradient( Curve );
                         }
 
                         var topLeft = new ImPlotPoint {
@@ -86,7 +86,7 @@ namespace VFXEditor.AVFX.VFX {
                             y = -1
                         };
 
-                        ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
+                        ImPlot.PlotImage( parentId + "gradient-image", VfxEditor.DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
 
                     // ====== POINTS ===========
@@ -176,7 +176,7 @@ namespace VFXEditor.AVFX.VFX {
                     SourceKeys[^1].Time++;
                     Points[^1].X++;
                 }
-                Plugin.DirectXManager.GradientView.SetGradient( Curve );
+                VfxEditor.DirectXManager.GradientView.SetGradient( Curve );
             }
         }
 

@@ -9,7 +9,7 @@ using VFXEditor.Texture;
 using VFXEditor.Tracker;
 
 namespace VFXEditor {
-    public partial class Plugin {
+    public partial class VfxEditor {
         public static void Draw() {
             if( IsLoading ) return;
 

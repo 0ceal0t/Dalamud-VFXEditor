@@ -100,9 +100,9 @@ namespace VFXEditor.Data.Scd {
         }
 
         public static void Test() {
-            Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
+            VfxEditor.DataManager.GetFile<ScdFile>( "sound/vfx/se_vfx_common.scd" );
             PluginLog.Log( "---------------------" );
-            Plugin.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
+            VfxEditor.DataManager.GetFile<ScdFile>( "sound/vfx/ability/se_vfx_abi_drk_bloodcontract_c.scd" );
         }
     }
 

@@ -53,7 +53,7 @@ namespace VFXEditor.Utils {
             return ret;
         }
 
-        private static AVFXVertex GetAVFXVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static AVFXVertex GetAvfxVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
             var ret = new AVFXVertex();
             color *= 255;
             normal *= 128;
@@ -102,7 +102,7 @@ namespace VFXEditor.Utils {
                         var color = hasColor ? colors[i] : new Vector4( 1f, 1f, 1f, 1f ); // default white
                         var uv2 = hasUv2 ? tex2s[i] : tex1s[i]; // default uv1;
 
-                        vertexesOut.Add( GetAVFXVert( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
+                        vertexesOut.Add( GetAvfxVert( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
                         indexesOut.Add( new AVFXIndex( A, B, C ) );

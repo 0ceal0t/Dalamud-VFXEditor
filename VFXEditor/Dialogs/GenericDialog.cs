@@ -33,7 +33,7 @@ namespace VFXEditor.Dialogs {
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
             if( ImGui.Begin( Name, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
-                Plugin.CheckClearKeyState();
+                VfxEditor.CheckClearKeyState();
                 DrawBody();
             }
             ImGui.End();

@@ -80,10 +80,10 @@ namespace VFXEditor.Penumbra {
                 var configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
-                Plugin.AvfxManager.PenumbraExport( modFolder, ExportVfx );
-                Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
-                Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
-                Plugin.PapManager.PenumbraExport( modFolder, ExportPap );
+                VfxEditor.AvfxManager.PenumbraExport( modFolder, ExportVfx );
+                VfxEditor.TextureManager.PenumbraExport( modFolder, ExportTex );
+                VfxEditor.TmbManager.PenumbraExport( modFolder, ExportTmb );
+                VfxEditor.PapManager.PenumbraExport( modFolder, ExportPap );
 
                 PluginLog.Log( "Exported To: " + modFolder );
             }

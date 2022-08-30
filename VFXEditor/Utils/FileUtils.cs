@@ -7,14 +7,6 @@ using System.Text;
 
 namespace VFXEditor.Utils {
     public static class FileUtils {
-        public static string ReadStringRelativeOffset( BinaryReader reader, long offset ) {
-            var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( savePos + offset, SeekOrigin.Begin );
-            var ret = ReadString( reader );
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
-            return ret;
-        }
-
         public static string ReadString( BinaryReader reader ) {
             var strBytes = new List<byte>();
             int b;
