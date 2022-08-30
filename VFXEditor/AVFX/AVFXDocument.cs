@@ -8,7 +8,7 @@ using System.Numerics;
 using VFXEditor.AVFX.VFX;
 using VFXEditor.Data;
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX {
     public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {
@@ -58,11 +58,11 @@ namespace VFXEditor.AVFX {
                 try {
                     using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                     CurrentFile = new AVFXFile( br );
-                    UIHelper.OkNotification( "VFX file loaded" );
+                    UiUtils.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error(e, "Error Reading File", e );
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -74,11 +74,11 @@ namespace VFXEditor.AVFX {
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new AVFXFile( br );
-                    UIHelper.OkNotification( "VFX file loaded" );
+                    UiUtils.OkNotification( "VFX file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Error Reading File" );
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace VFXEditor.AVFX {
         }
 
         protected override void ExportRaw() {
-            UIHelper.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
+            UiUtils.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;
@@ -103,10 +103,10 @@ namespace VFXEditor.AVFX {
             // ======== INPUT TEXT =========
             ImGui.SetColumnWidth( 0, 150 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            UIHelper.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the loaded VFX" ); ImGui.SameLine();
+            UiUtils.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the loaded VFX" ); ImGui.SameLine();
             ImGui.Text( "Loaded VFX" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            UIHelper.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the replaced VFX" ); ImGui.SameLine();
+            UiUtils.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the replaced VFX" ); ImGui.SameLine();
             ImGui.Text( "VFX Being Replaced" );
             ImGui.NextColumn();
 
@@ -136,7 +136,7 @@ namespace VFXEditor.AVFX {
                 }
                 if( SpawnDisabled ) {
                     ImGui.PopStyleVar();
-                    UIHelper.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
+                    UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
                 }
             }
             else {
@@ -163,7 +163,7 @@ namespace VFXEditor.AVFX {
                 }
             }
             ImGui.PopFont();
-            UIHelper.Tooltip( "VFX path overlay" );
+            UiUtils.Tooltip( "VFX path overlay" );
 
             ImGui.Columns( 1 );
             ImGui.Separator();

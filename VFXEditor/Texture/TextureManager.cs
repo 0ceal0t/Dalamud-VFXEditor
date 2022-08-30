@@ -6,7 +6,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VFXEditor.Dialogs;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.Texture {
     public struct PreviewTexture { // ImGui texture previews
@@ -185,7 +185,7 @@ namespace VFXEditor.Texture {
             replaceData.Depth = br.ReadInt32();
             replaceData.MipLevels = br.ReadInt32();
 
-            bw.Write( ATEXHelper.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
+            bw.Write( AtexUtils.CreateATEXHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
             br.BaseStream.Seek( 128, SeekOrigin.Begin );
             var uncompressedLength = ms.Length - 128;
             var data = new byte[uncompressedLength];

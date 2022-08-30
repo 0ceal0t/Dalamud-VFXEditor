@@ -1,11 +1,12 @@
 using ImGuiNET;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat.Entries {
     public class C043 : TmbEntry {
         public const string MAGIC = "C043";
-        public override string DisplayName => "Summon Weapon (C043)";
+        public const string DISPLAY_NAME = "Summon Weapon (C043)";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x20;
@@ -45,8 +46,8 @@ namespace VFXEditor.TmbFormat.Entries {
             ImGui.InputInt( $"Duration{id}", ref Duration );
             ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
             ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            FileHelper.ShortInput( $"Weapon Id{id}", ref WeaponId );
-            FileHelper.ShortInput( $"Body Id{id}", ref BodyId );
+            FileUtils.ShortInput( $"Weapon Id{id}", ref WeaponId );
+            FileUtils.ShortInput( $"Body Id{id}", ref BodyId );
             ImGui.InputInt( $"Variant Id{id}", ref VariantId );
         }
     }

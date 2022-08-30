@@ -3,7 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TexTools;
 
 namespace VFXEditor.FileManager {
@@ -134,7 +134,7 @@ namespace VFXEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveSource();
             }
@@ -155,7 +155,7 @@ namespace VFXEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UIHelper.RED_COLOR );
+            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
                 RemoveReplace();
             }
@@ -176,16 +176,16 @@ namespace VFXEditor.FileManager {
         }
 
         protected void DisplayFileControls() {
-            if( UIHelper.OkButton( "UPDATE" ) ) Update();
+            if( UiUtils.OkButton( "UPDATE" ) ) Update();
 
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) ExportRaw();
             ImGui.PopFont();
-            UIHelper.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
+            UiUtils.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
 
             ImGui.SameLine();
-            UIHelper.ShowVerifiedStatus( Verified );
+            UiUtils.ShowVerifiedStatus( Verified );
         }
 
         protected abstract void DrawBody();
@@ -203,7 +203,7 @@ namespace VFXEditor.FileManager {
             ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
             ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
 
-            UIHelper.CenteredText( "Welcome to VFXEditor" );
+            UiUtils.CenteredText( "Welcome to VFXEditor" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
             ImGui.TextWrapped( "To begin, select a file to load and one to replace using the magnifying glass icons above, then click \"Update\". For example, to edit the skill \"Fell Cleave,\" select it as both the loaded and replaced effect. For more information, please see any of the resources below." );
 
@@ -213,7 +213,7 @@ namespace VFXEditor.FileManager {
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
             if( ImGui.Button( "Github", new Vector2( buttonWidth, 0 ) ) ) {
-                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
             }
             ImGui.PopStyleColor();
 
@@ -221,7 +221,7 @@ namespace VFXEditor.FileManager {
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
             if( ImGui.Button( "Report an Issue", new Vector2( buttonWidth, 0 ) ) ) {
-                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }
             ImGui.PopStyleColor();
 
@@ -229,7 +229,7 @@ namespace VFXEditor.FileManager {
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
             if( ImGui.Button( "Wiki", new Vector2( buttonWidth, 0 ) ) ) {
-                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+                UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
             }
             ImGui.PopStyleColor();
 
@@ -237,7 +237,7 @@ namespace VFXEditor.FileManager {
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.33725490196f, 0.38431372549f, 0.96470588235f, 1 ) );
             if( ImGui.Button( "XIVLauncher Discord", new Vector2( buttonWidth, 0 ) ) ) {
-                UIHelper.OpenUrl( "https://discord.gg/3NMcUV5" );
+                UiUtils.OpenUrl( "https://discord.gg/3NMcUV5" );
             }
             ImGui.PopStyleColor();
 
@@ -260,7 +260,7 @@ namespace VFXEditor.FileManager {
             ), true );
 
             ImGui.TextWrapped( Text );
-            if( ImGui.SmallButton( "Guides##Pap" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            if( ImGui.SmallButton( "Guides##Pap" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
 
             ImGui.EndChild();
             ImGui.PopStyleColor( 2 );

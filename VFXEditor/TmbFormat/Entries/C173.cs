@@ -1,12 +1,13 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat.Entries {
     public class C173 : TmbEntry {
         public const string MAGIC = "C173";
-        public override string DisplayName => "VFX (C173)";
+        public const string DISPLAY_NAME = "VFX (C173)";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x44;
@@ -73,8 +74,8 @@ namespace VFXEditor.TmbFormat.Entries {
             ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
             ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            FileHelper.ShortInput( $"Bind Point 1{id}", ref Bindpoint1 );
-            FileHelper.ShortInput( $"Bind Point 2{id}", ref Bindpoint2 );
+            FileUtils.ShortInput( $"Bind Point 1{id}", ref Bindpoint1 );
+            FileUtils.ShortInput( $"Bind Point 2{id}", ref Bindpoint2 );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
             ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
             ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );

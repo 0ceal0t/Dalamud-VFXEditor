@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.AVFXLib.Model;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIModel : UINode {
@@ -58,7 +58,7 @@ namespace VFXEditor.AVFX.VFX {
             ImGui.Text( "Notes on exporting GLTF models:" );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Here" ) ) {
-                UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
+                UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
             }
 
             ImGui.BeginTabBar( "ModelTabs" );
@@ -140,7 +140,7 @@ namespace VFXEditor.AVFX.VFX {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( GLTFHelper.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
+                    if( GltfUtils.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
                         Model.Vertexes.Vertexes.Clear();
                         Model.Vertexes.Vertexes.AddRange( newVertexes );
 
@@ -158,7 +158,7 @@ namespace VFXEditor.AVFX.VFX {
         private void ExportDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                GLTFHelper.ExportModel( Model, res );
+                GltfUtils.ExportModel( Model, res );
             } );
         }
 

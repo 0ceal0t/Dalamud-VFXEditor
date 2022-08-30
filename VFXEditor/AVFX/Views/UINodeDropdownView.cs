@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.IO;
 using VFXEditor.AVFXLib;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UINodeDropdownView<T> : IUIBase, IUINodeView<T> where T : UINode {
@@ -25,7 +25,7 @@ namespace VFXEditor.AVFX.VFX {
             AllowDelete = allowDelete;
 
             Id = $"##{name}";
-            DefaultText = $"Select {UIHelper.GetArticle(name)} {name}";
+            DefaultText = $"Select {UiUtils.GetArticle(name)} {name}";
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 

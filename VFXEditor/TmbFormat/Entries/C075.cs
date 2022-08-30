@@ -6,7 +6,8 @@ using VFXEditor.TmbFormat.Utils;
 namespace VFXEditor.TmbFormat.Entries {
     public class C075 : TmbEntry {
         public const string MAGIC = "C075";
-        public override string DisplayName => "C075";
+        public const string DISPLAY_NAME = "C075";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x40;

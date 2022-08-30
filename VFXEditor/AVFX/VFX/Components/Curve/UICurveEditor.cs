@@ -6,7 +6,7 @@ using System.Numerics;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;
 using VFXEditor.Data;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UICurveEditor : IUIBase {
@@ -43,7 +43,7 @@ namespace VFXEditor.AVFX.VFX {
             }
 
             ImGui.SameLine();
-            if( UIHelper.DisabledButton( "Copy" + parentId, SourceKeys.Count > 0 ) ) {
+            if( UiUtils.DisabledButton( "Copy" + parentId, SourceKeys.Count > 0 ) ) {
                 CopyManager.ClearCurveKeys();
                 foreach( var key in SourceKeys ) {
                     CopyManager.AddCurveKey( key.Time, key.X, key.Y, key.Z );
@@ -51,7 +51,7 @@ namespace VFXEditor.AVFX.VFX {
             }
 
             ImGui.SameLine();
-            if( UIHelper.DisabledButton( "Paste" + parentId, CopyManager.HasCurveKeys() ) ) {
+            if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.HasCurveKeys() ) ) {
                 foreach( var key in CopyManager.CurveKeys ) {
                     InsertPoint( key.X, key.Y, key.Z, key.W );
                     UpdateColor();
@@ -317,7 +317,7 @@ namespace VFXEditor.AVFX.VFX {
 
             public void Draw() {
                 var id = "##CurveEdit";
-                if( UIHelper.RemoveButton( "Delete Key" + id, small: true ) ) {
+                if( UiUtils.RemoveButton( "Delete Key" + id, small: true ) ) {
                     Editor.Curve.Keys.Remove( Key );
                     Editor.Points.Remove( this );
                     if( Editor.Selected == this ) {
@@ -356,7 +356,7 @@ namespace VFXEditor.AVFX.VFX {
                     Editor.UpdateColor();
                 }
 
-                if (UIHelper.EnumComboBox( "Type" + id, KeyTypeOptions, Key.Type, out var newKeyType ) ) {
+                if (UiUtils.EnumComboBox( "Type" + id, KeyTypeOptions, Key.Type, out var newKeyType ) ) {
                     Key.Type = newKeyType;
                 }
 

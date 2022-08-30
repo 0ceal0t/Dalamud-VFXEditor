@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Entries;
 
 namespace VFXEditor.TmbFormat.Utils {
@@ -94,7 +94,7 @@ namespace VFXEditor.TmbFormat.Utils {
             var offset = Reader.ReadInt32();
             var savePos = Reader.BaseStream.Position;
             Reader.BaseStream.Seek( StartPosition + 8 + offset, SeekOrigin.Begin );
-            var res = FileHelper.ReadString( Reader );
+            var res = FileUtils.ReadString( Reader );
             Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
             return res;
         }
@@ -155,6 +155,6 @@ namespace VFXEditor.TmbFormat.Utils {
         public short ReadInt16() => Reader.ReadInt16();
         public byte ReadByte() => Reader.ReadByte();
         public float ReadSingle() => Reader.ReadSingle();
-        public string ReadString( int size ) => FileHelper.ReadString( Reader, size );
+        public string ReadString( int size ) => FileUtils.ReadString( Reader, size );
     }
 }

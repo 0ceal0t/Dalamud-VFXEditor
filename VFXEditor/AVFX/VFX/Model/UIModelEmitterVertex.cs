@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.Numerics;
 using VFXEditor.AVFXLib.Model;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIModelEmitterVertex : UIItem {
@@ -21,7 +21,7 @@ namespace VFXEditor.AVFX.VFX {
             Order = VertNumber.Num;
             Position = new Vector3( Vertex.Position[0], Vertex.Position[1], Vertex.Position[2] );
             Normal = new Vector3( Vertex.Normal[0], Vertex.Normal[1], Vertex.Normal[2] );
-            Color = GLTFHelper.IntToColor( Vertex.C ) / 255;
+            Color = GltfUtils.IntToColor( Vertex.C ) / 255;
         }
 
         public override void DrawInline( string parentId ) {
@@ -36,7 +36,7 @@ namespace VFXEditor.AVFX.VFX {
                 Vertex.Normal = new float[] { Normal.X, Normal.Y, Normal.Z };
             }
             if( ImGui.ColorEdit4( "Color" + id, ref Color ) ) {
-                Vertex.C = GLTFHelper.ColorToInt( Color * 255 );
+                Vertex.C = GltfUtils.ColorToInt( Color * 255 );
             }
         }
 

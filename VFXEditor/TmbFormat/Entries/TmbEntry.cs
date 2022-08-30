@@ -1,4 +1,4 @@
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat.Entries {
@@ -12,7 +12,7 @@ namespace VFXEditor.TmbFormat.Entries {
         public TmbEntry( TmbReader reader ) : base( reader ) { }
 
         protected void DrawHeader( string id ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            FileUtils.ShortInput( $"Time{id}", ref Time );
         }
     }
 }

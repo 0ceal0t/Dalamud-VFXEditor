@@ -2,7 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIString : IUIBase {
@@ -51,7 +51,7 @@ namespace VFXEditor.AVFX.VFX {
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
                 ImGui.PushFont( UiBuilder.IconFont );
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( false );

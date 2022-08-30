@@ -2,7 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Entries;
 using VFXEditor.TmbFormat.Utils;
 
@@ -55,7 +55,7 @@ namespace VFXEditor.TmbFormat {
         }
 
         public void Draw( string id, List<TmbEntry> entriesMaster ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            FileUtils.ShortInput( $"Time{id}", ref Time );
 
             // ==== Unknown Data ====
 
@@ -69,7 +69,7 @@ namespace VFXEditor.TmbFormat {
                     var itemId = $"{id}-Unk{unkExtraIdx}";
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
                         ImGui.Indent();
-                        if( UIHelper.RemoveButton( $"Delete{itemId}" ) ) {
+                        if( UiUtils.RemoveButton( $"Delete{itemId}" ) ) {
                             UnknownData.Remove( unknownItem );
                             ImGui.Unindent();
                             break;
@@ -87,7 +87,7 @@ namespace VFXEditor.TmbFormat {
             foreach( var entry in Entries ) {
                 if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
                     ImGui.Indent();
-                    if( UIHelper.RemoveButton( $"Delete{id}{entryIdx}" ) ) {
+                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}" ) ) {
                         Entries.Remove( entry );
                         entriesMaster.Remove( entry );
                         ImGui.Unindent();
@@ -102,9 +102,9 @@ namespace VFXEditor.TmbFormat {
             if( ImGui.Button( $"+ New{id}" ) ) ImGui.OpenPopup( "New_Entry_Tmb" );
 
             if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) {
-                foreach( var entryType in TmbUtils.ItemTypes ) {
-                    if( ImGui.Selectable( $"{entryType.Key}##New_Entry_Tmb" ) ) {
-                        var type = entryType.Value;
+                foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
+                    if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
+                        var type = entryOption.Type;
                         var constructor = type.GetConstructor( Array.Empty<Type>() );
                         var newEntry = (TmbEntry) constructor.Invoke( Array.Empty<object>() );
 

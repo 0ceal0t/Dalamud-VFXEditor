@@ -1,12 +1,13 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat.Entries {
     public class C012 : TmbEntry {
         public const string MAGIC = "C012";
-        public override string DisplayName => "VFX (C012)";
+        public const string DISPLAY_NAME = "VFX (C012)";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x48;
@@ -70,10 +71,10 @@ namespace VFXEditor.TmbFormat.Entries {
             ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            FileHelper.ShortInput( $"Bind Point 1{id}", ref BindPoint1 );
-            FileHelper.ShortInput( $"Bind Point 2{id}", ref BindPoint2 );
-            FileHelper.ShortInput( $"Bind Point 3{id}", ref BindPoint3 );
-            FileHelper.ShortInput( $"Bind Point 4{id}", ref BindPoint4 );
+            FileUtils.ShortInput( $"Bind Point 1{id}", ref BindPoint1 );
+            FileUtils.ShortInput( $"Bind Point 2{id}", ref BindPoint2 );
+            FileUtils.ShortInput( $"Bind Point 3{id}", ref BindPoint3 );
+            FileUtils.ShortInput( $"Bind Point 4{id}", ref BindPoint4 );
 
             ImGui.InputFloat3( $"Scale{id}", ref Scale );
             ImGui.InputFloat3( $"Rotation{id}", ref Rotation );

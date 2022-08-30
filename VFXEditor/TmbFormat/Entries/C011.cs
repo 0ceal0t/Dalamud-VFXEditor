@@ -4,7 +4,8 @@ using VFXEditor.TmbFormat.Utils;
 namespace VFXEditor.TmbFormat.Entries {
     public class C011 : TmbEntry {
         public const string MAGIC = "C011";
-        public override string DisplayName => "Fly Text (C011)";
+        public const string DISPLAY_NAME = "Fly Text (C011)";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x14;

@@ -3,7 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Entries;
 using VFXEditor.TmbFormat.Utils;
 
@@ -42,7 +42,7 @@ namespace VFXEditor.TmbFormat {
         }
 
         public void Draw( string id, List<Tmtr> tracksMaster, List<TmbEntry> entriesMaster ) {
-            FileHelper.ShortInput( $"Time{id}", ref Time );
+            FileUtils.ShortInput( $"Time{id}", ref Time );
             ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
             ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
 
@@ -69,7 +69,7 @@ namespace VFXEditor.TmbFormat {
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Tracks.Remove( SelectedTrack );
                     tracksMaster.Remove( SelectedTrack );
                     SelectedTrack = null;

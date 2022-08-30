@@ -1,7 +1,7 @@
 using System.IO;
 
-namespace VFXEditor.Helper {
-    public static class PenumbraHelper {
+namespace VFXEditor.Utils {
+    public static class PenumbraUtils {
         public static void WriteBytes( byte[] data, string modFolder, string path ) {
             var modFile = Path.Combine( modFolder, path );
             var modFileFolder = Path.GetDirectoryName( modFile );

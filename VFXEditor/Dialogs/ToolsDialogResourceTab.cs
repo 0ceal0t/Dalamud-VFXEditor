@@ -5,7 +5,7 @@ using FFXIVClientStructs.STD;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.Dialogs {
     public unsafe class ToolsDialogResourceTab {
@@ -98,7 +98,7 @@ namespace VFXEditor.Dialogs {
             ImGui.TableSetupColumn( "Hash", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Ptr", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Path", ImGuiTableColumnFlags.WidthFixed,
-                UIHelper.GetWindowContentRegionWidth() - 300 * ImGuiHelpers.GlobalScale );
+                UiUtils.GetWindowContentRegionWidth() - 300 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Refs", ImGuiTableColumnFlags.WidthFixed, 30 * ImGuiHelpers.GlobalScale );
             ImGui.TableHeadersRow();
 

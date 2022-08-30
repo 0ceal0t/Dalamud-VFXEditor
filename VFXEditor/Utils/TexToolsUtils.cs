@@ -5,8 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using VFXEditor.TexTools;
 
-namespace VFXEditor.Helper {
-    public static class TextoolsHelper {
+namespace VFXEditor.Utils {
+    public static class TexToolsUtils {
         public static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
             var simple = new TTMPL_Simple();
             var split = path.Split( '/' );

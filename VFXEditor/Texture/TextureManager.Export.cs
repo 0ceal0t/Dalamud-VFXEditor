@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TexTools;
 
 namespace VFXEditor.Texture {
@@ -13,7 +13,7 @@ namespace VFXEditor.Texture {
                 var path = entry.Key;
                 if( string.IsNullOrEmpty( localPath ) || string.IsNullOrEmpty( path ) ) continue;
 
-                PenumbraHelper.CopyFile( localPath, modFolder, path );
+                PenumbraUtils.CopyFile( localPath, modFolder, path );
             }
         }
 
@@ -28,9 +28,9 @@ namespace VFXEditor.Texture {
                 using var texReader = new BinaryReader( file );
                 using var texMs = new MemoryStream();
                 using var texWriter = new BinaryWriter( texMs );
-                texWriter.Write( TextoolsHelper.CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
+                texWriter.Write( TexToolsUtils.CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
                 var modData = texMs.ToArray();
-                simpleParts.Add( TextoolsHelper.CreateModResource( path, modOffset, modData.Length ) );
+                simpleParts.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
                 writer.Write( modData );
                 modOffset += modData.Length;
             }

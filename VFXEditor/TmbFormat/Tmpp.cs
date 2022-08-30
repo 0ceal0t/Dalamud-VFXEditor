@@ -1,6 +1,6 @@
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat {
@@ -36,7 +36,7 @@ namespace VFXEditor.TmbFormat {
         public void Draw( string id ) {
             ImGui.Checkbox( $"Use face library{id}", ref Assigned );
             ImGui.SameLine();
-            UIHelper.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
+            UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
             if( Assigned ) {
                 ImGui.InputText( $"Face library path{id}", ref Path, 256 );

@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Linq;
 using System.Text;
 using VFXEditor.AVFXLib;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class AVFXFile {
@@ -45,7 +45,7 @@ namespace VFXEditor.AVFX.VFX {
                 using var writer = new BinaryWriter( ms );
                 Avfx.Write( writer );
 
-                Verified = FileHelper.CompareFiles( original, ms.ToArray() );
+                Verified = FileUtils.CompareFiles( original, ms.ToArray() );
             }
 
             // ======================
@@ -124,7 +124,7 @@ namespace VFXEditor.AVFX.VFX {
         // ========= EXPORT ==============
 
         public void AddToNodeLibrary( UINode node ) {
-            var newId = UIHelper.RandomString( 12 );
+            var newId = UiUtils.RandomString( 12 );
             var newPath = AVFXManager.NodeLibrary.GetPath( newId );
             Export( node, newPath, true );
             AVFXManager.NodeLibrary.Add( node.GetText(), newId, newPath );
@@ -159,7 +159,7 @@ namespace VFXEditor.AVFX.VFX {
             var numberOfItems = finalNodes.Count;
 
             foreach(var renamed in renames) {
-                FileHelper.WriteString( writer, string.IsNullOrEmpty(renamed) ? "" : renamed, true );
+                FileUtils.WriteString( writer, string.IsNullOrEmpty(renamed) ? "" : renamed, true );
             }
             var finalPos = writer.BaseStream.Position;
 
@@ -270,7 +270,7 @@ namespace VFXEditor.AVFX.VFX {
                 List<string> renames = new();
 
                 for( var i = 0; i < numberOfItems; i++ ) {
-                    renames.Add( FileHelper.ReadString( reader ) );
+                    renames.Add( FileUtils.ReadString( reader ) );
                 }
 
                 reader.BaseStream.Seek( dataOffset, SeekOrigin.Begin );

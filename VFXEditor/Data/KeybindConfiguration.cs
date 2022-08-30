@@ -7,7 +7,7 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor {
     [Serializable]
@@ -32,7 +32,7 @@ namespace VFXEditor {
             var ret = false;
 
             ImGui.SetNextItemWidth( 100f );
-            if( UIHelper.EnumComboBox( $"{id}-Modifier", ValidKeybindModifiers, Modifier, out var newModifier ) ) {
+            if( UiUtils.EnumComboBox( $"{id}-Modifier", ValidKeybindModifiers, Modifier, out var newModifier ) ) {
                 Modifier = newModifier;
                 ret = true;
             }
@@ -53,7 +53,7 @@ namespace VFXEditor {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
+            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                 Modifier = KeybindModifierKeys.Ctrl;
                 Key = VirtualKey.NONCONVERT;
                 ret = true;

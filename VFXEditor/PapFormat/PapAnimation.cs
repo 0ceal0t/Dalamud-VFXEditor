@@ -1,7 +1,7 @@
 using ImGuiFileDialog;
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.Interop;
 using VFXEditor.TmbFormat;
 
@@ -21,7 +21,7 @@ namespace VFXEditor.PapFormat {
 
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
-            Name = FileHelper.ReadString( reader );
+            Name = FileUtils.ReadString( reader );
             reader.ReadBytes( 32 - Name.Length - 1 );
             Unknown1 = reader.ReadInt16();
             HavokIndex = reader.ReadInt16();
@@ -29,7 +29,7 @@ namespace VFXEditor.PapFormat {
         }
 
         public void Write( BinaryWriter writer ) {
-            FileHelper.WriteString( writer, Name, true );
+            FileUtils.WriteString( writer, Name, true );
             for( var i = 0; i < ( 32 - Name.Length - 1 ); i++ ) {
                 writer.Write( ( byte )0 );
             }
@@ -52,7 +52,7 @@ namespace VFXEditor.PapFormat {
 
         public void Draw( string id ) {
             ImGui.InputText( $"Name{id}", ref Name, 31 );
-            FileHelper.ShortInput( $"Unknown 1{id}", ref Unknown1 );
+            FileUtils.ShortInput( $"Unknown 1{id}", ref Unknown1 );
             ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );   
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -66,7 +66,7 @@ namespace VFXEditor.PapFormat {
                     if( ok ) {
                         PapManager.IndexDialog.OnOk = ( int idx ) => {
                             HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
-                            UIHelper.OkNotification( "Havok data replaced" );
+                            UiUtils.OkNotification( "Havok data replaced" );
                         };
                         PapManager.IndexDialog.Show();
                     }
@@ -80,14 +80,14 @@ namespace VFXEditor.PapFormat {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         Tmb = TmbFile.FromLocalFile( res );
-                        UIHelper.OkNotification( "TMB data imported" );
+                        UiUtils.OkNotification( "TMB data imported" );
                     }
                 } );
             }
 
             ImGui.SameLine();
             if( ImGui.Button( $"Export TMB{id}" ) ) {
-                UIHelper.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+                UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.Dialogs;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class ExportDialog : GenericDialog {
@@ -32,7 +32,7 @@ namespace VFXEditor.AVFX.VFX {
         public override void DrawBody() {
             ImGui.Checkbox( "Export Dependencies", ref ExportDependencies );
             ImGui.SameLine();
-            UIHelper.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
+            UiUtils.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
             ImGui.SameLine();
             if( ImGui.Button( "Reset##ExportDialog" ) ) {
                 Reset();

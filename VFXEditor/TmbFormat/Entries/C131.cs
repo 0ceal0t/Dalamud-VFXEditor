@@ -5,7 +5,8 @@ using VFXEditor.TmbFormat.Utils;
 namespace VFXEditor.TmbFormat.Entries {
     public class C131 : TmbEntry {
         public const string MAGIC = "C131";
-        public override string DisplayName => "Animation Cancelled by Movement (C131)";
+        public const string DISPLAY_NAME = "Animation Cancelled by Movement (C131)";
+        public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x14;

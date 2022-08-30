@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Entries;
 using VFXEditor.TmbFormat.Utils;
 
@@ -22,7 +22,7 @@ namespace VFXEditor.TmbFormat {
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : base( true) {
             var startPos = binaryReader.BaseStream.Position;
             var reader = new TmbReader( binaryReader );
-            var original = checkOriginal ? FileHelper.GetOriginal( binaryReader ) : null;
+            var original = checkOriginal ? FileUtils.GetOriginal( binaryReader ) : null;
 
             reader.ReadInt32(); // TMLB
             var size = reader.ReadInt32();
@@ -40,7 +40,7 @@ namespace VFXEditor.TmbFormat {
             Actors.ForEach( x => x.PickTracks( reader ) );
             Tracks.ForEach( x => x.PickEntries( reader ) );
 
-            if( checkOriginal ) Verified = FileHelper.CompareFiles( original, ToBytes() );
+            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes() );
 
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
         }
@@ -50,7 +50,7 @@ namespace VFXEditor.TmbFormat {
             using var writer = new BinaryWriter( ms );
 
             var startPos = writer.BaseStream.Position;
-            FileHelper.WriteString( writer, "TMLB" );
+            FileUtils.WriteString( writer, "TMLB" );
             writer.Write( 0 ); // placeholder for size
 
             short id = 2;

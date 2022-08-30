@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using VFXEditor.AVFXLib.Model;
 
-namespace VFXEditor.Helper {
-    public static class GLTFHelper {
+namespace VFXEditor.Utils {
+    public static class GltfUtils {
         public static void ExportModel( AVFXModel model, string path ) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );

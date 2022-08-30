@@ -1,4 +1,4 @@
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat {
@@ -26,9 +26,9 @@ namespace VFXEditor.TmbFormat {
         }
 
         public void Draw( string id ) {
-            FileHelper.ShortInput( $"Unknown 1{id}", ref Unk1 );
-            FileHelper.ShortInput( $"Unknown 2{id}", ref Unk2 );
-            FileHelper.ShortInput( $"Unknown 3{id}", ref Unk3 );
+            FileUtils.ShortInput( $"Unknown 1{id}", ref Unk1 );
+            FileUtils.ShortInput( $"Unknown 2{id}", ref Unk2 );
+            FileUtils.ShortInput( $"Unknown 3{id}", ref Unk3 );
         }
     }
 }

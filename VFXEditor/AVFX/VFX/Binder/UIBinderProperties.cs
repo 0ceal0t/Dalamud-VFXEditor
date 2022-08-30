@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Binder;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIBinderProperties : UIAssignableItem {
@@ -39,7 +39,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+            if( UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Prop.SetAssigned( false );
             }
             DrawListTabs( Tabs, id );

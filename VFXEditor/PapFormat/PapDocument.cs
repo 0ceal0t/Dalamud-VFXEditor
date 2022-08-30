@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.PapFormat {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
@@ -29,11 +29,11 @@ namespace VFXEditor.PapFormat {
                 try {
                     using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
                     CurrentFile = new( br, HkxTemp );
-                    UIHelper.OkNotification( "PAP file loaded" );
+                    UiUtils.OkNotification( "PAP file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error(e, "Error Reading File");
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -45,11 +45,11 @@ namespace VFXEditor.PapFormat {
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new PapFile( br, HkxTemp );
-                    UIHelper.OkNotification( "PAP file loaded" );
+                    UiUtils.OkNotification( "PAP file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error(e, "Error Reading File");
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace VFXEditor.PapFormat {
         }
 
         protected override void ExportRaw() {
-            UIHelper.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
+            UiUtils.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;

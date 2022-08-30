@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace VFXEditor.Helper {
-    public static class FileHelper {
+namespace VFXEditor.Utils {
+    public static class FileUtils {
         public static string ReadStringRelativeOffset( BinaryReader reader, long offset ) {
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( savePos + offset, SeekOrigin.Begin );

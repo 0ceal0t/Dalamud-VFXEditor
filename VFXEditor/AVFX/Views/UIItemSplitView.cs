@@ -2,7 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
@@ -37,7 +37,7 @@ namespace VFXEditor.AVFX.VFX {
             }
             if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     Items.Remove( Selected );
                     OnDelete( Selected );
                     SetupIdx();

@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Curve;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UICurveColor : UIAssignableItem {
@@ -41,7 +41,7 @@ namespace VFXEditor.AVFX.VFX {
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
             if( !Locked ) {
-                if( UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+                if( UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                     Curve.SetAssigned( false );
                     return;
                 }

@@ -1,4 +1,4 @@
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Utils;
 
 namespace VFXEditor.TmbFormat {
@@ -19,7 +19,7 @@ namespace VFXEditor.TmbFormat {
         }
 
         protected virtual void WriteHeader( TmbWriter writer ) {
-            FileHelper.WriteString( writer.Writer, Magic );
+            FileUtils.WriteString( writer.Writer, Magic );
             writer.Write( Size );
         }
 

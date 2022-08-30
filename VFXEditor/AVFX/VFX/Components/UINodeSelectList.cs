@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.Data;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UINodeSelectList<T> : UINodeSelect where T : UINode {
@@ -78,7 +78,7 @@ namespace VFXEditor.AVFX.VFX {
 
                 if( i > 0 ) {
                     ImGui.SameLine();
-                    if( UIHelper.RemoveButton( "- Remove" + _id, small: true ) ) {
+                    if( UiUtils.RemoveButton( "- Remove" + _id, small: true ) ) {
                         UnlinkFrom( Selected[i] );
                         Selected.RemoveAt( i );
                         return;
@@ -88,10 +88,10 @@ namespace VFXEditor.AVFX.VFX {
 
             if( Selected.Count == 0 ) {
                 ImGui.Text( Name );
-                ImGui.TextColored( UIHelper.RED_COLOR, "WARNING: Add an item!" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add an item!" );
             }
             if( Group.Items.Count == 0 ) {
-                ImGui.TextColored( UIHelper.RED_COLOR, "WARNING: Add a selectable item first!" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
             }
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) {

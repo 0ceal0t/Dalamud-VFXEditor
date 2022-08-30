@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public abstract class UIWorkspaceItem : UIItem {
@@ -56,7 +56,7 @@ namespace VFXEditor.AVFX.VFX {
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                     CurrentlyRenaming = false;
                 }
 

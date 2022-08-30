@@ -7,7 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.NodeLibrary {
     [Serializable]
@@ -39,7 +39,7 @@ namespace VFXEditor.NodeLibrary {
                 DragDrop( library, ref listModified );
                 ImGui.Indent();
 
-                if (UIHelper.DisabledButton($"Import{id}", Plugin.AvfxManager.HasCurrentFile)) {
+                if (UiUtils.DisabledButton($"Import{id}", Plugin.AvfxManager.HasCurrentFile)) {
                     Plugin.AvfxManager.Import( Path );
                 }
 
@@ -52,7 +52,7 @@ namespace VFXEditor.NodeLibrary {
                     }
                 }
                 ImGui.SameLine();
-                if( UIHelper.RemoveButton( $"Delete{id}" ) ) {
+                if( UiUtils.RemoveButton( $"Delete{id}" ) ) {
                     Delete();
                     library.Delete( this );
                     listModified = true;

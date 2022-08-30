@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.TmbFormat.Utils {
     public class TmbWriter {
@@ -64,7 +64,7 @@ namespace VFXEditor.TmbFormat.Utils {
                 var actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraSize + TimelineSize + stringOffset );
                 Writer.Write( actualPos );
 
-                FileHelper.WriteString( StringWriter, str, true );
+                FileUtils.WriteString( StringWriter, str, true );
                 WrittenStrings[str] = stringOffset;
             }
         }

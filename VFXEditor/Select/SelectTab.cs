@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.Select.Sheets;
 
 namespace VFXEditor {
@@ -218,7 +218,7 @@ namespace VFXEditor {
             ImGui.Text( "Thank you to Anamnesis/CMTools for compiling the list of NPC names" );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Github##Anamnesis" ) ) {
-                UIHelper.OpenUrl( "https://github.com/imchillin/Anamnesis" );
+                UiUtils.OpenUrl( "https://github.com/imchillin/Anamnesis" );
             }
         }
     }

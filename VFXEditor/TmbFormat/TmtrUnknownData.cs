@@ -1,6 +1,6 @@
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.TmbFormat {
     public class TmtrUnknownData {
@@ -32,8 +32,8 @@ namespace VFXEditor.TmbFormat {
 
         public void Draw( string id ) {
             ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            FileHelper.ShortInput( $"Unknown 2{id}", ref Unk2 );
-            FileHelper.ShortInput( $"Unknown 3{id}", ref Unk3 );
+            FileUtils.ShortInput( $"Unknown 2{id}", ref Unk2 );
+            FileUtils.ShortInput( $"Unknown 3{id}", ref Unk3 );
             ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
         }
     }

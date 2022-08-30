@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VFXEditor.Dialogs;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.TexTools;
 
 namespace VFXEditor.FileManager {
@@ -145,11 +145,11 @@ namespace VFXEditor.FileManager {
                 ImGui.Columns( 1 );
                 ImGui.EndChild();
 
-                if ( UIHelper.DisabledButton($"Open{id}", SelectedDocument != null) ) {
+                if ( UiUtils.DisabledButton($"Open{id}", SelectedDocument != null) ) {
                     SelectDocument( SelectedDocument );
                 }
                 ImGui.SameLine();
-                if ( UIHelper.DisabledRemoveButton($"Delete{id}", SelectedDocument != null && Documents.Count > 1 ) ) {
+                if ( UiUtils.DisabledRemoveButton($"Delete{id}", SelectedDocument != null && Documents.Count > 1 ) ) {
                     RemoveDocument( SelectedDocument );
                     SelectedDocument = ActiveDocument;
                 }

@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using static VFXEditor.AVFX.VFX.UINode;
 
 namespace VFXEditor.AVFX.VFX {
@@ -40,12 +40,12 @@ namespace VFXEditor.AVFX.VFX {
                 }
                 // Tooltip
                 ImGui.PopFont();
-                UIHelper.Tooltip( "Add to node library" );
+                UiUtils.Tooltip( "Add to node library" );
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
-                if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
                     group.Remove( selected );
                     selected.DeleteNode();
                     nodeView.OnDelete( selected );

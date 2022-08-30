@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using VFXEditor.AVFXLib.Texture;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITexture : UINode {

@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.FileManager {
     public abstract class FileDropdown<T> where T : class {
@@ -48,7 +48,7 @@ namespace VFXEditor.FileManager {
                 if( Selected != null ) {
                     ImGui.SameLine();
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
-                    if( UIHelper.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                         OnDelete( Selected );
                         Selected = null;
                     }

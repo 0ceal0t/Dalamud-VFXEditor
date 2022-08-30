@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UIParticleSimple : UIAssignableItem {
@@ -100,7 +100,7 @@ namespace VFXEditor.AVFX.VFX {
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Simple";
-            if( UIHelper.RemoveButton( "Delete" + id, small: true ) ) {
+            if( UiUtils.RemoveButton( "Delete" + id, small: true ) ) {
                 InjectionModelSelect.DeleteSelect();
                 InjectionVertexModelSelect.DeleteSelect();
 

@@ -2,7 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Particle;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
     public class UITextureColor2 : UIAssignableItem {
@@ -52,7 +52,7 @@ namespace VFXEditor.AVFX.VFX {
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
 
-            if( Tex.GetName() != "TC2" && UIHelper.RemoveButton( "Delete " + Name + id, small: true ) ) {
+            if( Tex.GetName() != "TC2" && UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Tex.SetAssigned( false );
 
                 TextureSelect.DeleteSelect();

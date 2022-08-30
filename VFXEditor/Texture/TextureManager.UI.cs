@@ -3,7 +3,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.Texture {
     public partial class TextureManager {
@@ -15,7 +15,7 @@ namespace VFXEditor.Texture {
         public override void DrawBody() {
             var id = "##ImportTex";
 
-            ImGui.SetNextItemWidth( UIHelper.GetWindowContentRegionWidth() - 175 );
+            ImGui.SetNextItemWidth( UiUtils.GetWindowContentRegionWidth() - 175 );
             ImGui.InputText( $"Game path{id}-Input", ref NewCustomPath, 255 );
 
             ImGui.SameLine();
@@ -32,7 +32,7 @@ namespace VFXEditor.Texture {
             ImGui.InputInt( $"PNG Mip Levels{id}", ref PngMip );
             ImGui.SameLine();
             ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 175 );
-            if( UIHelper.EnumComboBox( $"PNG Format{id}", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
+            if( UiUtils.EnumComboBox( $"PNG Format{id}", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
                 PngFormat = newPngFormat;
             }
 
@@ -80,7 +80,7 @@ namespace VFXEditor.Texture {
 
                 if( texOut.IsReplaced ) {
                     ImGui.SameLine();
-                    if( UIHelper.RemoveButton( "Remove Replaced Texture" + id ) ) {
+                    if( UiUtils.RemoveButton( "Remove Replaced Texture" + id ) ) {
                         RemoveReplaceTexture( path.Trim( '\0' ) );
                         RefreshPreviewTexture( path.Trim( '\0' ) );
                     }

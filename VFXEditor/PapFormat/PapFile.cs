@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.Interop;
 
 namespace VFXEditor.PapFormat {
@@ -28,7 +28,7 @@ namespace VFXEditor.PapFormat {
 
             byte[] original = null;
             if( checkOriginal ) {
-                original = FileHelper.ReadAllBytes( reader );
+                original = FileUtils.ReadAllBytes( reader );
                 reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
             }
 
@@ -60,7 +60,7 @@ namespace VFXEditor.PapFormat {
             }
 
             if( checkOriginal ) { // Check if output matches the original
-                Verified = FileHelper.CompareFiles( original, ToBytes() );
+                Verified = FileUtils.CompareFiles( original, ToBytes() );
             }
         }
 
@@ -92,7 +92,7 @@ namespace VFXEditor.PapFormat {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            FileHelper.PadTo( writer, writer.BaseStream.Position, 16 );
+            FileUtils.PadTo( writer, writer.BaseStream.Position, 16 );
 
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
@@ -117,9 +117,9 @@ namespace VFXEditor.PapFormat {
         public void Draw( string id ) {
             if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
                 if( ImGui.BeginTabItem($"Parameters{id}")) {
-                    FileHelper.ShortInput( $"Model Id{id}", ref ModelId );
-                    FileHelper.ByteInput( $"Base Id{id}", ref BaseId );
-                    FileHelper.ByteInput( $"Variant Id{id}", ref VariantId );
+                    FileUtils.ShortInput( $"Model Id{id}", ref ModelId );
+                    FileUtils.ByteInput( $"Base Id{id}", ref BaseId );
+                    FileUtils.ByteInput( $"Variant Id{id}", ref VariantId );
 
                     if( ImGui.Button( $"Export all Havok data{id}" ) ) {
                         FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
@@ -170,7 +170,7 @@ namespace VFXEditor.PapFormat {
 
                         HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
 
-                        UIHelper.OkNotification( "Havok data imported" );
+                        UiUtils.OkNotification( "Havok data imported" );
                     };
                     PapManager.IndexDialog.Show();
                 }
@@ -186,7 +186,7 @@ namespace VFXEditor.PapFormat {
 
             HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
 
-            UIHelper.OkNotification( "Havok data removed" );
+            UiUtils.OkNotification( "Havok data removed" );
         }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();

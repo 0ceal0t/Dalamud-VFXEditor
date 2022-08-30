@@ -9,7 +9,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 
 using VFXEditor.AVFX;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.PapFormat;
 using VFXEditor.Texture;
 using VFXEditor.TmbFormat;
@@ -142,7 +142,7 @@ namespace VFXEditor {
                 }
             }
 
-            UIHelper.OkNotification( "Opened workspace" );
+            UiUtils.OkNotification( "Opened workspace" );
 
             IsLoading = false;
         }
@@ -183,7 +183,7 @@ namespace VFXEditor {
             ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
             Directory.Delete( saveLocation, true );
 
-            UIHelper.OkNotification( "Saved workspace" );
+            UiUtils.OkNotification( "Saved workspace" );
         }
 
         private static void ResetTextureManager() {

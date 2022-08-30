@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using VFXEditor.FileManager;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 
 namespace VFXEditor.TmbFormat {
     public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
@@ -25,11 +25,11 @@ namespace VFXEditor.TmbFormat {
             if( File.Exists( localPath ) ) {
                 try {
                     CurrentFile = TmbFile.FromLocalFile( localPath );
-                    UIHelper.OkNotification( "TMB file loaded" );
+                    UiUtils.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Error Reading File", e );
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -41,11 +41,11 @@ namespace VFXEditor.TmbFormat {
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
                     CurrentFile = new TmbFile( br );
-                    UIHelper.OkNotification( "TMB file loaded" );
+                    UiUtils.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Error Reading File" );
-                    UIHelper.ErrorNotification( "Error reading file" );
+                    UiUtils.ErrorNotification( "Error reading file" );
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace VFXEditor.TmbFormat {
         }
 
         protected override void ExportRaw() {
-            UIHelper.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
+            UiUtils.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
         }
 
         protected override bool GetVerified() => CurrentFile.Verified;

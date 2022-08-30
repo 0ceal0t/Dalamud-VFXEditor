@@ -6,8 +6,8 @@ using System.IO;
 using System.Numerics;
 using VFXEditor.AVFXLib.Model;
 
-namespace VFXEditor.Helper {
-    public static class MDLHelper {
+namespace VFXEditor.Utils {
+    public static class MdlUtils {
         public static bool ImportModel( string localPath, out List<AVFXVertex> vertexesOut, out List<AVFXIndex> indexesOut ) {
             vertexesOut = new List<AVFXVertex>();
             indexesOut = new List<AVFXIndex>();

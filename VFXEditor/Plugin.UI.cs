@@ -2,7 +2,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using VFXEditor.Data;
-using VFXEditor.Helper;
+using VFXEditor.Utils;
 using VFXEditor.Penumbra;
 using VFXEditor.TexTools;
 using VFXEditor.Texture;
@@ -47,7 +47,7 @@ namespace VFXEditor {
             if( ImGui.BeginMenu( "File##Menu" ) ) {
                 ImGui.TextDisabled( "Workspace" );
                 ImGui.SameLine();
-                UIHelper.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
+                UiUtils.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
 
                 if( ImGui.MenuItem( "New##Menu" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "Open##Menu" ) ) OpenWorkspace();
@@ -58,9 +58,9 @@ namespace VFXEditor {
                 if( ImGui.MenuItem( "Settings##Menu" ) ) Configuration.Show();
                 if( ImGui.MenuItem( "Tools##Menu" ) ) ToolsDialog.Show();
                 if( ImGui.BeginMenu( "Help##Menu" ) ) {
-                    if( ImGui.MenuItem( "Github##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
-                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
-                    if( ImGui.MenuItem( "Wiki##Menu" ) ) UIHelper.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+                    if( ImGui.MenuItem( "Github##Menu" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    if( ImGui.MenuItem( "Report an Issue##Menu" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                    if( ImGui.MenuItem( "Wiki##Menu" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
                     ImGui.EndMenu();
                 }
 
