@@ -1,11 +1,12 @@
 using ImGuiNET;
 using System.Numerics;
 using VFXEditor.TmbFormat.Utils;
+using VFXEditor.Utils;
 
 namespace VFXEditor.TmbFormat.Entries {
     public class C198 : TmbEntry {
         public const string MAGIC = "C198";
-        public const string DISPLAY_NAME = "C198";
+        public const string DISPLAY_NAME = "Lemure (C198)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -17,8 +18,9 @@ namespace VFXEditor.TmbFormat.Entries {
         private int Unk2 = 0;
         private int Unk3 = 0;
         private int Unk4 = 0;
+        private short ModelId = 0;
+        private short BodyId = 0;
         private int Unk5 = 0;
-        private int Unk6 = 0;
 
         public C198() : base() { }
 
@@ -29,8 +31,9 @@ namespace VFXEditor.TmbFormat.Entries {
             Unk2 = reader.ReadInt32();
             Unk3 = reader.ReadInt32();
             Unk4 = reader.ReadInt32();
+            ModelId = reader.ReadInt16();
+            BodyId = reader.ReadInt16();
             Unk5 = reader.ReadInt32();
-            Unk6 = reader.ReadInt32();
         }
 
         public override void Write( TmbWriter writer ) {
@@ -40,8 +43,9 @@ namespace VFXEditor.TmbFormat.Entries {
             writer.Write( Unk2 );
             writer.Write( Unk3 );
             writer.Write( Unk4 );
+            writer.Write( ModelId );
+            writer.Write( BodyId );
             writer.Write( Unk5 );
-            writer.Write( Unk6 );
         }
 
         public override void Draw( string id ) {
@@ -50,8 +54,9 @@ namespace VFXEditor.TmbFormat.Entries {
             ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
             ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
             ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+            FileUtils.ShortInput( $"Model Id{id}", ref ModelId );
+            FileUtils.ShortInput( $"Body Id{id}", ref BodyId );
             ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
-            ImGui.InputInt( $"Unknown 6{id}", ref Unk6 );
         }
     }
 }

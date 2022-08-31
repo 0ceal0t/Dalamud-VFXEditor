@@ -210,6 +210,24 @@ namespace VFXEditor.AVFXLib {
         Default = 0,
         Mirror = 1
     }
+    public enum ParentInfluenceCoordOptions {
+        InitialPosition = 0,
+        // Uses the initial position regardless. Options control always
+        InitialPosition_WithOptions = 1,
+        AllAlways = 2,
+        AllInitial = 3,
+        AllAlways_NoPosition = 4,
+        AllInitial_NoPosition = 5,
+        None = 6,
+        WithOptions_NoPosition = 7,
+        Unknown = 8,
+        Unknown_NoPosition = 9
+    }
+    public enum ParentInfluenceColorOptions {
+        None = 0,
+        Initial = 1,
+        Always = 2
+    }
     /* BINDERS */
     public enum BinderRotation {
         Standard = 0,

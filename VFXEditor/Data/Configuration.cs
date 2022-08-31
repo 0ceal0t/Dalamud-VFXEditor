@@ -53,6 +53,9 @@ namespace VFXEditor {
 
         public List<VFXNodeLibraryItem> VFXNodeLibraryItems = new();
 
+        [NonSerialized]
+        public bool WriteLocationError = false;
+
         public Configuration() : base( "Settings" ) {
             Size = new Vector2( 300, 150 );
         }
@@ -60,7 +63,12 @@ namespace VFXEditor {
         public void Setup() {
             VfxEditor.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
-            Directory.CreateDirectory( WriteLocation );
+            try {
+                Directory.CreateDirectory( WriteLocation );
+            }
+            catch( Exception ) {
+                WriteLocationError = true;
+            }
             PluginLog.Log( "Write location: " + WriteLocation );
         }
 

@@ -106,6 +106,11 @@ namespace VFXEditor.FileManager {
         public abstract void CheckKeybinds();
 
         public virtual void Draw() {
+            if ( VfxEditor.Configuration.WriteLocationError ) {
+                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({VfxEditor.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
+                return;
+            }
+
             ImGui.Columns( 2, $"{Id}-Columns", false );
 
             // ======== INPUT TEXT =========

@@ -1,4 +1,6 @@
+using ImGuiNET;
 using System.Collections.Generic;
+using VFXEditor.AVFXLib;
 using VFXEditor.AVFXLib.Emitter;
 
 namespace VFXEditor.AVFX.VFX {
@@ -9,7 +11,11 @@ namespace VFXEditor.AVFX.VFX {
 
         public UINodeSelect<UIParticle> ParticleSelect;
         public UINodeSelect<UIEmitter> EmitterSelect;
+
         private readonly List<IUIBase> Parameters;
+        private readonly UICombo<ParentInfluenceCoordOptions> ParentInfluenceCoord;
+        private readonly List<IUIBase> CoordOptions;
+        private readonly List<IUIBase> Parameters2;
 
         public UIEmitterItem( AVFXEmitterItem iteration, bool isParticle, UIEmitter emitter ) {
             Iteration = iteration;
@@ -29,15 +35,22 @@ namespace VFXEditor.AVFX.VFX {
                 new UIInt( "Create Time", Iteration.CreateTime ),
                 new UIInt( "Create Count", Iteration.CreateCount ),
                 new UIInt( "Create Probability", Iteration.CreateProbability ),
-                new UIInt( "Parent Influence Coord", Iteration.ParentInfluenceCoord ),
-                new UIInt( "Parent Influence Color", Iteration.ParentInfluenceColor ),
-                new UIInt( "Influence Coord Scale", Iteration.InfluenceCoordScale ),
-                new UIInt( "Influence Coord Rotation", Iteration.InfluenceCoordRot ),
-                new UIInt( "Influence Coord Position", Iteration.InfluenceCoordPos ),
-                new UIInt( "Influence Coord Binder Position", Iteration.InfluenceCoordBinderPosition ),
-                new UIInt( "Influence Coord Unstickiness", Iteration.InfluenceCoordUnstickiness ),
-                new UIInt( "Inherit Parent Velocity", Iteration.InheritParentVelocity ),
-                new UIInt( "Inherit Parent Life", Iteration.InheritParentLife ),
+                new UICombo<ParentInfluenceColorOptions>( "Influence on Child Color", Iteration.ParentInfluenceColor )
+            };
+
+            ParentInfluenceCoord = new UICombo<ParentInfluenceCoordOptions>( "Influence on Child", Iteration.ParentInfluenceCoord );
+
+            CoordOptions = new List<IUIBase> {
+                new UICheckbox( "Influence on Scale", Iteration.InfluenceCoordScale ),
+                new UICheckbox( "Influence on Rotation", Iteration.InfluenceCoordRot ),
+                new UICheckbox( "Influence on Position", Iteration.InfluenceCoordPos )
+            };
+
+            Parameters2 = new List<IUIBase> {
+                new UICheckbox( "Influence on Binder Position", Iteration.InfluenceCoordBinderPosition ),
+                new UIInt( "Influence Coordinate Unstickiness", Iteration.InfluenceCoordUnstickiness ),
+                new UICheckbox( "Inherit Parent Velocity", Iteration.InheritParentVelocity ),
+                new UICheckbox( "Inherit Parent Life", Iteration.InheritParentLife ),
                 new UICheckbox( "Override Life", Iteration.OverrideLife ),
                 new UIInt( "Override Life Value", Iteration.OverrideLifeValue ),
                 new UIInt( "Override Life Random", Iteration.OverrideLifeRandom ),
@@ -53,13 +66,20 @@ namespace VFXEditor.AVFX.VFX {
         public override void DrawInline( string parentId ) {
             var id = parentId + "/Item";
             DrawRename( id );
-            if( IsParticle ) {
-                ParticleSelect.DrawInline( id );
-            }
-            else {
-                EmitterSelect.DrawInline( id );
-            }
+
+            if( IsParticle ) ParticleSelect.DrawInline( id );
+            else EmitterSelect.DrawInline( id );
+
             IUIBase.DrawList( Parameters, id );
+
+            ParentInfluenceCoord.DrawInline( id );
+            var influenceType = ParentInfluenceCoord.Literal.GetValue();
+            var allowOptions = influenceType == ParentInfluenceCoordOptions.InitialPosition_WithOptions || influenceType == ParentInfluenceCoordOptions.WithOptions_NoPosition;
+            if( !allowOptions ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+            IUIBase.DrawList( CoordOptions, id );
+            if( !allowOptions ) ImGui.PopStyleVar();
+
+            IUIBase.DrawList( Parameters2, id );
         }
 
         public override string GetDefaultText() {
