@@ -104,7 +104,7 @@ namespace VFXEditor.Texture {
 
                 if( Path.GetExtension( localPath ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( localPath );
-                    var format = VFXTexture.DXGItoTextureFormat( ddsFile.Format );
+                    var format = AtexFile.DXGItoTextureFormat( ddsFile.Format );
                     if( format == TextureFormat.Null ) return false;
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
@@ -114,7 +114,7 @@ namespace VFXEditor.Texture {
                 }
                 else if( Path.GetExtension( localPath ).ToLower() == ".atex" ) {
                     File.Copy( localPath, path, true );
-                    var tex = VFXTexture.LoadFromLocal( localPath );
+                    var tex = AtexFile.LoadFromLocal( localPath );
                     replaceData = new TextureReplace {
                         Height = tex.Header.Height,
                         Width = tex.Header.Width,
@@ -129,7 +129,7 @@ namespace VFXEditor.Texture {
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
-                    var compFormat = VFXTexture.TextureToCompressionFormat( pngFormat );
+                    var compFormat = AtexFile.TextureToCompressionFormat( pngFormat );
                     // use ETC1 to signify "NULL" because I'm not going to be using it
                     if( compFormat == CompressionFormat.ETC1 ) return false;
 
@@ -191,15 +191,15 @@ namespace VFXEditor.Texture {
             var data = new byte[uncompressedLength];
             br.Read( data, 0, ( int )uncompressedLength );
             if( convertToA8 ) { // scuffed way to handle png -> A8. Just load is as BGRA, then only keep the A channel
-                data = VFXTexture.CompressA8( data );
+                data = AtexFile.CompressA8( data );
             }
             bw.Write( data );
 
             return replaceData;
         }
 
-        public VFXTexture GetRawTexture( string path ) {
-            return PathToTextureReplace.TryGetValue( path, out var texturePreview ) ? VFXTexture.LoadFromLocal( texturePreview.LocalPath ) : VfxEditor.DataManager.GetFile<VFXTexture>( path );
+        public AtexFile GetRawTexture( string path ) {
+            return PathToTextureReplace.TryGetValue( path, out var texturePreview ) ? AtexFile.LoadFromLocal( texturePreview.LocalPath ) : VfxEditor.DataManager.GetFile<AtexFile>( path );
         }
 
         public void LoadPreviewTexture( string path ) {

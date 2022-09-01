@@ -7,6 +7,7 @@ using VFXEditor.Utils;
 using VFXEditor.TmbFormat.Entries;
 using VFXEditor.TmbFormat.Utils;
 
+// Rework based on https://github.com/AsgardXIV/XAT
 namespace VFXEditor.TmbFormat {
     public class TmbFile : FileDropdown<Tmac> {
         private readonly Tmdh HeaderTmdh;

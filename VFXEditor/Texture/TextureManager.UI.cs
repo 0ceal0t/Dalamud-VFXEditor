@@ -106,7 +106,7 @@ namespace VFXEditor.Texture {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = GetRawTexture( texPath );
-                texFile.SaveAsPNG( res );
+                texFile.SaveAsPng( res );
             } );
         }
 
@@ -114,7 +114,7 @@ namespace VFXEditor.Texture {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = GetRawTexture( texPath );
-                texFile.SaveAsDDS( res );
+                texFile.SaveAsDds( res );
             } );
         }
     }

@@ -48,8 +48,8 @@ namespace VFXEditor.Dialogs {
             if( ImGui.Button( "Browse##AtexToPNG" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
-                    var texFile = VFXTexture.LoadFromLocal( res );
-                    texFile.SaveAsPNG( res + ".png" );
+                    var texFile = AtexFile.LoadFromLocal( res );
+                    texFile.SaveAsPng( res + ".png" );
                 } );
             }
 
@@ -58,8 +58,8 @@ namespace VFXEditor.Dialogs {
             if( ImGui.Button( "Browse##AtexToDDS" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
-                    var texFile = VFXTexture.LoadFromLocal( res );
-                    texFile.SaveAsDDS( res + ".dds" );
+                    var texFile = AtexFile.LoadFromLocal( res );
+                    texFile.SaveAsDds( res + ".dds" );
                 } );
             }
         }

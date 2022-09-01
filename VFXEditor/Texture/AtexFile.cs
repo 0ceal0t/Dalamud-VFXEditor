@@ -10,8 +10,7 @@ using TeximpNet.DDS;
 using VFXEditor.Utils;
 
 namespace VFXEditor.Texture {
-
-    public class VFXTexture : Lumina.Data.FileResource {
+    public class AtexFile : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
         public unsafe struct TexHeader {
             public Attribute Type;
@@ -48,8 +47,8 @@ namespace VFXEditor.Texture {
             ValidFormat = ( ImageData.Length > 0 );
         }
 
-        public static VFXTexture LoadFromLocal( string path ) {
-            var tex = new VFXTexture();
+        public static AtexFile LoadFromLocal( string path ) {
+            var tex = new AtexFile();
             var file = File.Open( path, FileMode.Open );
             using( var reader = new BinaryReader( file ) ) {
                 tex.LoadFile( reader, ( int )file.Length );
@@ -58,9 +57,9 @@ namespace VFXEditor.Texture {
             return tex;
         }
 
-        public byte[] GetDDSData() => Local ? RawData : DataSpan[HeaderLength..].ToArray();
+        public byte[] GetDdsData() => Local ? RawData : DataSpan[HeaderLength..].ToArray();
 
-        public void SaveAsPNG( string path ) {
+        public void SaveAsPng( string path ) {
             var data = new RGBAQuad[Header.Height * Header.Width];
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
@@ -76,9 +75,9 @@ namespace VFXEditor.Texture {
             image.SaveToFile( ImageFormat.PNG, path );
         }
 
-        public void SaveAsDDS( string path ) {
+        public void SaveAsDds( string path ) {
             var header = AtexUtils.CreateDdsHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
-            var data = GetDDSData();
+            var data = GetDdsData();
             var writeData = new byte[header.Length + data.Length];
             Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
             Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );

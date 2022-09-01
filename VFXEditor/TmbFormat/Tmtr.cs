@@ -28,9 +28,7 @@ namespace VFXEditor.TmbFormat {
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
-                for( var i = 0; i < count; i++ ) {
-                    UnknownData.Add( new TmtrUnknownData( binaryReader ) );
-                }
+                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader ) );
             } );
         }
 
