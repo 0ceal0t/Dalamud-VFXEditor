@@ -5,7 +5,7 @@ using VFXEditor.AVFXLib;
 using VFXEditor.Utils;
 
 namespace VFXEditor.AVFX.VFX {
-    public class UIParameterView : IUIBase {
+    public unsafe class UIParameterView : IUIBase {
         private readonly List<IUIBase> Parameters;
         private readonly int[] Version = new int[4];
         private readonly UIFloat3 RevisedScale;
@@ -61,7 +61,11 @@ namespace VFXEditor.AVFX.VFX {
         public void DrawInline( string parentId = "" ) {
             var id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
-            ImGui.Text( $"VFX Version: {Version[0]}.{Version[1]}.{Version[2]}.{Version[3]}" );
+
+            ImGui.PushStyleColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) );
+            ImGui.TextWrapped( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
+            ImGui.PopStyleColor();
+
             if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
                 RevisedScale.Literal1.SetValue( ScaleCombined );
                 RevisedScale.Literal2.SetValue( ScaleCombined );
@@ -69,9 +73,9 @@ namespace VFXEditor.AVFX.VFX {
                 RevisedScale.Value = new System.Numerics.Vector3( ScaleCombined, ScaleCombined, ScaleCombined );
             }
             RevisedScale.DrawInline( id );
-            ImGui.Separator();
 
             IUIBase.DrawList( Parameters, id );
+            ImGui.Text( $"VFX Version: {Version[0]}.{Version[1]}.{Version[2]}.{Version[3]}" );
             ImGui.EndChild();
         }
     }

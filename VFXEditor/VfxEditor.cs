@@ -131,13 +131,9 @@ namespace VFXEditor {
             ClearKeyState = false;
         }
 
-        private void DrawConfigUi() {
-            AvfxManager.Show();
-        }
+        private void DrawConfigUi() => AvfxManager.Show();
 
-        private void OnCommand( string command, string rawArgs ) {
-            AvfxManager.Toggle();
-        }
+        private void OnCommand( string command, string rawArgs ) => AvfxManager.Toggle();
 
         public void Dispose() {
             Framework.Update -= FrameworkOnUpdate;

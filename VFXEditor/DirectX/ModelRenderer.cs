@@ -62,21 +62,17 @@ namespace VFXEditor.DirectX {
         }
 
         public void Resize( Vec2 size ) {
-            var w_ = ( int )size.X;
-            var h_ = ( int )size.Y;
-            if( w_ != Width || h_ != Height ) {
-                Width = w_;
-                Height = h_;
+            var width = ( int )size.X;
+            var height = ( int )size.Y;
+            if( width != Width || height != Height ) {
+                Width = width;
+                Height = height;
                 ResizeResources();
-                if( FirstModel ) {
-                    Draw();
-                }
+                if( FirstModel ) Draw();
             }
         }
 
-        protected static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) {
-            return span * ( faceIdx * pointsPer + pointIdx );
-        }
+        protected static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) => span * ( faceIdx * pointsPer + pointIdx );
 
         protected void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
@@ -115,9 +111,7 @@ namespace VFXEditor.DirectX {
             DepthView = new DepthStencilView( Device, DepthTex );
         }
 
-        protected static float Clamp( float value, float min, float max ) {
-            return value > max ? max : value < min ? min : value;
-        }
+        protected static float Clamp( float value, float min, float max ) => value > max ? max : value < min ? min : value;
 
         public void Drag( Vec2 newPos, bool rotate ) {
             if( IsDragging ) {

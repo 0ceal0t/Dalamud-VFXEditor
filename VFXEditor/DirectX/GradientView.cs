@@ -25,7 +25,7 @@ namespace VFXEditor.DirectX {
         private ShaderResourceView RenderShad;
         private RenderTargetView RenderView;
 
-        private static readonly int MODEL_SPAN = 2; // position, color
+        private static readonly int ModelSpan = 2; // position, color
         private int NumVerts;
         private Buffer Vertices;
         private readonly CompilationResult VertexShaderByteCode;
@@ -62,7 +62,7 @@ namespace VFXEditor.DirectX {
             }
             else {
                 // each set of 2 keys needs 6 points
-                var data = new Vector4[( numPoints - 1 ) * 6 * MODEL_SPAN];
+                var data = new Vector4[( numPoints - 1 ) * 6 * ModelSpan];
                 float startTime = curve.Keys.Keys[0].Time;
                 float endTime = curve.Keys.Keys[numPoints - 1].Time;
                 var timeDiff = ( endTime - startTime );
@@ -81,7 +81,7 @@ namespace VFXEditor.DirectX {
                     var bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
                     var bottomRight = new Vector4( rightPosition, -1, 0, 1 );
 
-                    var idx = i * 6 * MODEL_SPAN;
+                    var idx = i * 6 * ModelSpan;
                     data[idx + 0] = topLeft;
                     data[idx + 1] = leftColor;
 
@@ -178,7 +178,7 @@ namespace VFXEditor.DirectX {
                 Ctx.VertexShader.Set( VShader );
                 Ctx.InputAssembler.InputLayout = Layout;
                 Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * MODEL_SPAN, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
                 Ctx.Draw( NumVerts, 0 );
             }
 
