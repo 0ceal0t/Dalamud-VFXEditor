@@ -16,6 +16,7 @@ namespace VFXEditor.AVFXLib.Binder {
         public readonly AVFXBool FollowingTargetOrientation = new( "bFTO" );
         public readonly AVFXBool DocumentScaleEnabled = new( "bDSE" );
         public readonly AVFXBool AdjustToScreenEnabled = new( "bATS" );
+        public readonly AVFXBool BET_Unknown = new( "bBET" );
         public readonly AVFXInt Life = new( "Life" );
         public readonly AVFXEnum<BinderRotation> BinderRotationType = new( "RoTp" );
         public readonly AVFXEnum<BinderType> BinderVariety = new( "BnVr" );
@@ -42,6 +43,7 @@ namespace VFXEditor.AVFXLib.Binder {
                 FollowingTargetOrientation,
                 DocumentScaleEnabled,
                 AdjustToScreenEnabled,
+                BET_Unknown,
                 Life,
                 BinderRotationType,
                 BinderVariety,

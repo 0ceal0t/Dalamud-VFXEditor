@@ -36,6 +36,7 @@ namespace VFXEditor.AVFX.VFX {
                 new UICheckbox( "Following Target Orientation", Binder.FollowingTargetOrientation ),
                 new UICheckbox( "Document Scale Enabled", Binder.DocumentScaleEnabled ),
                 new UICheckbox( "Adjust to Screen", Binder.AdjustToScreenEnabled ),
+                new UICheckbox( "BET (Unknown)", Binder.BET_Unknown ),
                 new UIInt( "Life", Binder.Life ),
                 new UICombo<BinderRotation>( "Binder Rotation Type", Binder.BinderRotationType )
             };
