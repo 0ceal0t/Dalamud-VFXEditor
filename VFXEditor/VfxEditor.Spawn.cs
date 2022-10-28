@@ -11,7 +11,7 @@ namespace VFXEditor {
         }
 
         public static void SpawnOnGround( string path ) {
-            Spawn = new StaticVfx( path, ClientState.LocalPlayer.Position );
+            Spawn = new StaticVfx( path, ClientState.LocalPlayer.Position, ClientState.LocalPlayer.Rotation );
         }
 
         public static void SpawnOnSelf( string path ) {

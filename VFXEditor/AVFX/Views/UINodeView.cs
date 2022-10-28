@@ -2,7 +2,6 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System.IO;
 using VFXEditor.Utils;
-using static VFXEditor.AVFX.VFX.UINode;
 
 namespace VFXEditor.AVFX.VFX {
     public interface IUINodeView<T> where T : UINode {

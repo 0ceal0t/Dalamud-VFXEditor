@@ -41,7 +41,7 @@ namespace VFXEditor.FileManager {
             LoadLocal( localPath );
         }
 
-        protected abstract bool GetVerified();
+        protected abstract bool IsVerified();
 
         public void SetSource( SelectResult result ) {
             switch( result.Type ) {
@@ -54,7 +54,7 @@ namespace VFXEditor.FileManager {
             }
             Source = result;
             if( CurrentFile != null ) {
-                Verified = GetVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 UpdateFile();
             }
         }

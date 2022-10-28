@@ -118,7 +118,7 @@ namespace VFXEditor {
             }
 
             ResetAvfxManager();
-            var vfxRootPath = Path.Combine( loadLocation, AVFXManager.PenumbraPath );
+            var vfxRootPath = Path.Combine( loadLocation, AvfxManager.PenumbraPath );
             if( meta.Docs != null ) {
                 foreach( var doc in meta.Docs ) {
                     var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
@@ -195,7 +195,7 @@ namespace VFXEditor {
 
         private static void ResetAvfxManager() {
             var oldManager = AvfxManager;
-            AvfxManager = new AVFXManager();
+            AvfxManager = new AvfxManager();
             AvfxManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }

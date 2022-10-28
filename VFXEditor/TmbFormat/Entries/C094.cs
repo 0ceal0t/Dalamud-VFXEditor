@@ -10,7 +10,9 @@ namespace VFXEditor.TmbFormat.Entries {
         public override string Magic => MAGIC;
 
         public override int Size => 0x20;
-        public override int ExtraSize => 0x14;
+        public override int ExtraSize => UnkExtraData ? 0x14 : 0;
+
+        private bool UnkExtraData = true;
 
         private int Duration = 0;
         private int Unk1 = 0;
@@ -33,7 +35,7 @@ namespace VFXEditor.TmbFormat.Entries {
             StartVisibility = reader.ReadSingle();
             EndVisibility = reader.ReadSingle();
 
-            reader.ReadAtOffset( ( binaryReader ) => {
+            UnkExtraData = reader.ReadAtOffset( ( binaryReader ) => {
                 Unk2 = binaryReader.ReadInt32();
                 Unk3 = binaryReader.ReadInt32();
                 Unk4 = binaryReader.ReadInt32();
@@ -55,7 +57,7 @@ namespace VFXEditor.TmbFormat.Entries {
                 binaryWriter.Write( Unk4 );
                 binaryWriter.Write( Unk5 );
                 binaryWriter.Write( Unk6 );
-            } );
+            }, UnkExtraData );
         }
 
         public override void Draw( string id ) {
@@ -65,11 +67,14 @@ namespace VFXEditor.TmbFormat.Entries {
             ImGui.InputFloat( $"Start Visibility{id}", ref StartVisibility );
             ImGui.InputFloat( $"End Visibility{id}", ref EndVisibility );
 
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
-            ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
-            ImGui.InputInt( $"Unknown 6{id}", ref Unk6 );
+            ImGui.Checkbox( $"Unknown Extra Data{id}", ref UnkExtraData );
+            if( UnkExtraData ) {
+                ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
+                ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
+                ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+                ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
+                ImGui.InputInt( $"Unknown 6{id}", ref Unk6 );
+            }
         }
     }
 }

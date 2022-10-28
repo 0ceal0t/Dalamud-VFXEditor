@@ -38,7 +38,7 @@ namespace VFXEditor {
 
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
-        public static AVFXManager AvfxManager { get; private set; }
+        public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
         public static TmbManager TmbManager { get; private set; }
         public static PapManager PapManager { get; private set; }
@@ -95,8 +95,8 @@ namespace VFXEditor {
             TmbManager.Setup();
             TmbManager = new TmbManager();
 
-            AVFXManager.Setup();
-            AvfxManager = new AVFXManager();
+            AvfxManager.Setup();
+            AvfxManager = new AvfxManager();
 
             PapManager.Setup();
             PapManager = new PapManager();

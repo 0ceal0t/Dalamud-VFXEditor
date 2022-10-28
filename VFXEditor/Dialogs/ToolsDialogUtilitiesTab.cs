@@ -7,38 +7,23 @@ using VFXEditor.Texture;
 
 namespace VFXEditor.Dialogs {
     public class ToolsDialogUtilitiesTab {
-        private string RawInputValue = "";
-        private string RawTexInputValue = "";
+        private string ExtractPath = "";
 
         public void Draw() {
-            ImGui.Text( "Extract a raw .avfx file" );
-            ImGui.InputText( "Path##RawExtract", ref RawInputValue, 255 );
+            ImGui.Text( "Extract a raw game file" );
+            ImGui.InputText( "Path##RawExtract", ref ExtractPath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
-                var result = VfxEditor.DataManager.FileExists( RawInputValue );
+                var cleanedPath = ExtractPath.Replace( "\\", "/" );
+                var result = VfxEditor.DataManager.FileExists( cleanedPath );
                 if( result ) {
                     try {
-                        var file = VfxEditor.DataManager.GetFile( RawInputValue );
-                        UiUtils.WriteBytesDialog( ".avfx", file.Data, "avfx" );
+                        var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
+                        var file = VfxEditor.DataManager.GetFile( cleanedPath );
+                        UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
                     }
                     catch( Exception e ) {
                         PluginLog.Error( "Could not read file", e );
-                    }
-                }
-            }
-
-            ImGui.Text( "Extract an .atex file" );
-            ImGui.InputText( "Path##RawTexExtract", ref RawTexInputValue, 255 );
-            ImGui.SameLine();
-            if( ImGui.Button( "Extract##RawTexExtract" ) ) {
-                var result = VfxEditor.DataManager.FileExists( RawTexInputValue );
-                if( result ) {
-                    try {
-                        var file = VfxEditor.DataManager.GetFile( RawTexInputValue );
-                        UiUtils.WriteBytesDialog( ".atex", file.Data, "atex" );
-                    }
-                    catch( Exception e ) {
-                        PluginLog.Error( e, "Could not read file" );
                     }
                 }
             }

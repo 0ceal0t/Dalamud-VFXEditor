@@ -64,7 +64,7 @@ namespace VFXEditor.PapFormat {
             UiUtils.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
         }
 
-        protected override bool GetVerified() => CurrentFile.Verified;
+        protected override bool IsVerified() => CurrentFile.IsVerified;
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

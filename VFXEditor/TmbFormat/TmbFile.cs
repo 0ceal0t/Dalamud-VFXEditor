@@ -18,7 +18,8 @@ namespace VFXEditor.TmbFormat {
         private readonly List<Tmtr> Tracks = new();
         private readonly List<TmbEntry> Entries = new();
 
-        public bool Verified = true;
+        private bool Verified = true;
+        public bool IsVerified => Verified;
 
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : base( true) {
             var startPos = binaryReader.BaseStream.Position;
@@ -41,7 +42,7 @@ namespace VFXEditor.TmbFormat {
             Actors.ForEach( x => x.PickTracks( reader ) );
             Tracks.ForEach( x => x.PickEntries( reader ) );
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes() );
+            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
         }

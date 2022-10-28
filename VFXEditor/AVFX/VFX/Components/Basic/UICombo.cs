@@ -35,7 +35,7 @@ namespace VFXEditor.AVFX.VFX {
             var text = ValueIdx == -1 ? "[NONE]" : Literal.Options[ValueIdx];
             if( ImGui.BeginCombo( Name + id, text ) ) {
                 for( var i = 0; i < Literal.Options.Length; i++ ) {
-                    var isSelected = ( ValueIdx == i );
+                    var isSelected = ValueIdx == i;
                     if( ImGui.Selectable( Literal.Options[i], isSelected ) ) {
                         ValueIdx = i;
                         Literal.SetValue( Literal.Options[ValueIdx] );

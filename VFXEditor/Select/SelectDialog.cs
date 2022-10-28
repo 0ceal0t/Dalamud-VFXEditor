@@ -121,7 +121,8 @@ namespace VFXEditor {
             ImGui.InputText( id + "Input", ref GamePath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) ) {
-                Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + GamePath, GamePath ) );
+                var cleanedGamePath = GamePath.Replace( "\\", "" );
+                Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
 
             ImGui.EndTabItem();

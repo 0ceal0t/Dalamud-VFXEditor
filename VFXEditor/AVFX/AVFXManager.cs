@@ -6,7 +6,7 @@ using VFXEditor.NodeLibrary;
 using VFXEditor.Select.VFX;
 
 namespace VFXEditor.AVFX {
-    public class AVFXManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
+    public class AvfxManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
         public static VFXSelectDialog SourceSelect { get; private set; }
         public static VFXSelectDialog ReplaceSelect { get; private set; }
         public static VFXNodeLibrary NodeLibrary { get; private set; }
@@ -53,7 +53,7 @@ namespace VFXEditor.AVFX {
 
         // =================
 
-        public AVFXManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
+        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
 
         protected override AVFXDocument GetNewDocument() => new( LocalPath );
 

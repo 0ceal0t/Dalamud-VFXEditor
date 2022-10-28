@@ -28,7 +28,8 @@ namespace VFXEditor.AVFX.VFX {
 
         public readonly ExportDialog ExportUI;
 
-        public bool Verified { get; private set; } = true;
+        private readonly bool Verified = true;
+        public bool IsVerified => Verified;
 
         public AVFXFile( BinaryReader reader, bool checkOriginal = true ) {
             byte[] original = null;
@@ -45,7 +46,7 @@ namespace VFXEditor.AVFX.VFX {
                 using var writer = new BinaryWriter( ms );
                 Avfx.Write( writer );
 
-                Verified = FileUtils.CompareFiles( original, ms.ToArray() );
+                Verified = FileUtils.CompareFiles( original, ms.ToArray(), out var _ );
             }
 
             // ======================
@@ -125,9 +126,9 @@ namespace VFXEditor.AVFX.VFX {
 
         public void AddToNodeLibrary( UINode node ) {
             var newId = UiUtils.RandomString( 12 );
-            var newPath = AVFXManager.NodeLibrary.GetPath( newId );
+            var newPath = AvfxManager.NodeLibrary.GetPath( newId );
             Export( node, newPath, true );
-            AVFXManager.NodeLibrary.Add( node.GetText(), newId, newPath );
+            AvfxManager.NodeLibrary.Add( node.GetText(), newId, newPath );
         }
 
         public void Export( UINode node, string path, bool exportDependencies) => Export( new List<UINode> { node }, path, exportDependencies );

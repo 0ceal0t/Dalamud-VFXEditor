@@ -93,7 +93,7 @@ namespace VFXEditor.AVFX {
             UiUtils.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
         }
 
-        protected override bool GetVerified() => CurrentFile.Verified;
+        protected override bool IsVerified() => CurrentFile.IsVerified;
 
         protected override void DrawBody() { }
 
@@ -123,7 +123,7 @@ namespace VFXEditor.AVFX {
             ImGui.SetColumnWidth( 3, 150 );
 
             if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) {
-                AVFXManager.NodeLibrary.Show();
+                AvfxManager.NodeLibrary.Show();
             }
 
             // ======= SPAWN + EYE =========
@@ -185,9 +185,9 @@ namespace VFXEditor.AVFX {
 
         public void ShowExportDialog( UINode node ) => CurrentFile.ShowExportDialog( node );
 
-        protected override void SourceShow() => AVFXManager.SourceSelect.Show();
+        protected override void SourceShow() => AvfxManager.SourceSelect.Show();
 
-        protected override void ReplaceShow() => AVFXManager.ReplaceSelect.Show();
+        protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
 
         public void OpenTemplate( string path ) {
             var newResult = new SelectResult {

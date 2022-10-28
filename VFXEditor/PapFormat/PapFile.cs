@@ -19,7 +19,8 @@ namespace VFXEditor.PapFormat {
         private byte VariantId;
         private readonly List<PapAnimation> Animations = new();
 
-        public bool Verified = true;
+        private readonly bool Verified = true;
+        public bool IsVerified => Verified;
 
         public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
             HkxTempLocation = hkxTemp;
@@ -60,7 +61,8 @@ namespace VFXEditor.PapFormat {
             }
 
             if( checkOriginal ) { // Check if output matches the original
-                Verified = FileUtils.CompareFiles( original, ToBytes() );
+                var newBytes = ToBytes();
+                Verified = FileUtils.CompareFiles( original, newBytes, out var _ );
             }
         }
 

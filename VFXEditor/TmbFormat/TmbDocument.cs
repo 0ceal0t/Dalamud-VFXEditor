@@ -60,7 +60,7 @@ namespace VFXEditor.TmbFormat {
             UiUtils.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
         }
 
-        protected override bool GetVerified() => CurrentFile.Verified;
+        protected override bool IsVerified() => CurrentFile.IsVerified;
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

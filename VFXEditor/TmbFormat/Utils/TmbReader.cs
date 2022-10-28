@@ -81,13 +81,14 @@ namespace VFXEditor.TmbFormat.Utils {
             return ret;
         }
 
-        public void ReadAtOffset( Action<BinaryReader> func ) {
+        public bool ReadAtOffset( Action<BinaryReader> func ) {
             var offset = Reader.ReadInt32();
-            if( offset == 0 ) return;
+            if( offset == 0 ) return false; // nothing to read
             var savePos = Reader.BaseStream.Position;
             Reader.BaseStream.Seek( StartPosition + 8 + offset, SeekOrigin.Begin );
             func( Reader );
             Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            return true;
         }
 
         public string ReadOffsetString() {
