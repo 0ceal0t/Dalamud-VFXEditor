@@ -51,7 +51,7 @@ namespace VFXEditor {
         public KeybindConfiguration SpawnOnGroundKeybind = new();
         public KeybindConfiguration SpawnOnTargetKeybind = new();
 
-        public List<VFXNodeLibraryItem> VFXNodeLibraryItems = new();
+        public List<AvfxNodeLibraryItem> VFXNodeLibraryItems = new();
 
         [NonSerialized]
         public bool WriteLocationError = false;

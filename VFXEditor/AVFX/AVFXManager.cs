@@ -3,16 +3,16 @@ using VFXEditor.AVFX.VFX;
 using VFXEditor.Data;
 using VFXEditor.FileManager;
 using VFXEditor.NodeLibrary;
-using VFXEditor.Select.VFX;
+using VFXEditor.Select.VfxSelect;
 
 namespace VFXEditor.AVFX {
     public class AvfxManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
-        public static VFXSelectDialog SourceSelect { get; private set; }
-        public static VFXSelectDialog ReplaceSelect { get; private set; }
-        public static VFXNodeLibrary NodeLibrary { get; private set; }
+        public static VfxSelectDialog SourceSelect { get; private set; }
+        public static VfxSelectDialog ReplaceSelect { get; private set; }
+        public static AvfxNodeLibrary NodeLibrary { get; private set; }
 
         public static void Setup() {
-            SourceSelect = new VFXSelectDialog(
+            SourceSelect = new VfxSelectDialog(
                 "File Select [SOURCE]",
                 VfxEditor.Configuration.RecentSelects,
                 true,
@@ -24,7 +24,7 @@ namespace VFXEditor.AVFX {
                 spawnOnSelf: VfxEditor.SpawnOnSelf,
                 spawnOnTarget: VfxEditor.SpawnOnTarget
             );
-            ReplaceSelect = new VFXSelectDialog(
+            ReplaceSelect = new VfxSelectDialog(
                 "File Select [TARGET]",
                 VfxEditor.Configuration.RecentSelects,
                 false,

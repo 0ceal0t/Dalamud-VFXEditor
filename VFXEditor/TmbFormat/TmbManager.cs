@@ -1,20 +1,20 @@
 using VFXEditor.FileManager;
-using VFXEditor.Select.TMB;
+using VFXEditor.Select.TmbSelect;
 
 namespace VFXEditor.TmbFormat {
     public partial class TmbManager : FileManager<TmbDocument, WorkspaceMetaTmb, TmbFile> {
-        public static TMBSelectDialog SourceSelect { get; private set; }
-        public static TMBSelectDialog ReplaceSelect { get; private set; }
+        public static TmbSelectDialog SourceSelect { get; private set; }
+        public static TmbSelectDialog ReplaceSelect { get; private set; }
 
         public static void Setup() {
-            SourceSelect = new TMBSelectDialog(
+            SourceSelect = new TmbSelectDialog(
                 "Tmb Select [SOURCE]",
                 VfxEditor.Configuration.RecentSelectsTMB,
                 true,
                 SetSourceGlobal
             );
 
-            ReplaceSelect = new TMBSelectDialog(
+            ReplaceSelect = new TmbSelectDialog(
                 "Tmb Select [TARGET]",
                 VfxEditor.Configuration.RecentSelectsTMB,
                 false,

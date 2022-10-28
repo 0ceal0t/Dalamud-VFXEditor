@@ -1,21 +1,21 @@
 using VFXEditor.FileManager;
-using VFXEditor.Select.PAP;
+using VFXEditor.Select.PapSelect;
 
 namespace VFXEditor.PapFormat {
     public partial class PapManager : FileManager<PapDocument, WorkspaceMetaPap, PapFile> {
-        public static PAPSelectDialog SourceSelect { get; private set; }
-        public static PAPSelectDialog ReplaceSelect { get; private set; }
+        public static PapSelectDialog SourceSelect { get; private set; }
+        public static PapSelectDialog ReplaceSelect { get; private set; }
         public static PapSelectIndexDialog IndexDialog { get; private set; }
 
         public static void Setup() {
-            SourceSelect = new PAPSelectDialog(
+            SourceSelect = new PapSelectDialog(
                 "Pap Select [SOURCE]",
                 VfxEditor.Configuration.RecentSelectsPAP,
                 true,
                 SetSourceGlobal
             );
 
-            ReplaceSelect = new PAPSelectDialog(
+            ReplaceSelect = new PapSelectDialog(
                 "Pap Select [TARGET]",
                 VfxEditor.Configuration.RecentSelectsPAP,
                 false,
