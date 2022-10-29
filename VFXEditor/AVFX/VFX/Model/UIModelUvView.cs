@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VFXEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib.Model;
 
-namespace VFXEditor.AVFX.VFX.Model {
+namespace VfxEditor.AVFX.VFX.Model {
     public class UIModelUvView {
         private static readonly Vector4 LINE_COLOR = new( 0, 0.1f, 1, 1 );
 

@@ -1,7 +1,7 @@
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Entries {
     public abstract class TmbEntry : TmbItemWithTime {
         public abstract string DisplayName { get; }
 

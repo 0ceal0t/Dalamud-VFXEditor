@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Binder {
+namespace VfxEditor.AVFXLib.Binder {
     public class AVFXBinderDataLinear : AVFXGenericData {
         public readonly AVFXCurve CarryOverFactor = new( "COF" );
         public readonly AVFXCurve CarryOverFactorRandom = new( "COFR" );

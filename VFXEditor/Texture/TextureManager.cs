@@ -5,10 +5,10 @@ using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-using VFXEditor.Dialogs;
-using VFXEditor.Utils;
+using VfxEditor.Dialogs;
+using VfxEditor.Utils;
 
-namespace VFXEditor.Texture {
+namespace VfxEditor.Texture {
     public struct PreviewTexture { // ImGui texture previews
         public ushort Height;
         public ushort Width;

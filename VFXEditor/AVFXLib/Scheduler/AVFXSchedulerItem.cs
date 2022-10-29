@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Scheduler {
+namespace VfxEditor.AVFXLib.Scheduler {
     public class AVFXSchedulerItem : AVFXBase {
         public readonly List<AVFXSchedulerSubItem> Items = new();
 

@@ -1,7 +1,7 @@
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class EmoteTmbSheetLoader : SheetLoader<XivEmoteTmb, XivEmoteTmb> {
         public override void OnLoad() {
             var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );

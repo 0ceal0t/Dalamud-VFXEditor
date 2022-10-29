@@ -5,11 +5,11 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VFXEditor.DirectX {
+namespace VfxEditor.DirectX {
     public class GradientView : Renderer {
         public AVFXCurve CurrentCurve = null;
         public IntPtr Output => RenderShad.NativePointer;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataLine : AVFXGenericData {
         public readonly AVFXInt LineCount = new( "LnCT" );
         public readonly AVFXCurve Length = new( "Len" );

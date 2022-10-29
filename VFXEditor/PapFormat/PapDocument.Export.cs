@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public partial class PapDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;

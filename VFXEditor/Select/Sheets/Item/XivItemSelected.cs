@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivItemSelected {
         public XivItem Item;
         public bool VfxExists;

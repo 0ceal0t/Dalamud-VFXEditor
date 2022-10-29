@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace VFXEditor.Interop {
+namespace VfxEditor.Interop {
     /// <summary>
     /// Performs the 32-bit reversed variant of the cyclic redundancy check algorithm
     /// </summary>

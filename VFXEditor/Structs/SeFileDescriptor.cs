@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace VFXEditor.Structs {
+namespace VfxEditor.Structs {
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct SeFileDescriptor {
         [FieldOffset( 0x00 )]

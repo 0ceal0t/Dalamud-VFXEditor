@@ -7,9 +7,9 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor {
+namespace VfxEditor {
     [Serializable]
     public class KeybindConfiguration {
         public enum KeybindModifierKeys {

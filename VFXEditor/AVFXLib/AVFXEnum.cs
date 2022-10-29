@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXEnum<T> : AVFXBase {
         private int Size;
         private T Value = ( T )( object )0;

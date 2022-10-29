@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public static class PenumbraUtils {
         public static void WriteBytes( byte[] data, string modFolder, string path ) {
             var modFile = Path.Combine( modFolder, path );

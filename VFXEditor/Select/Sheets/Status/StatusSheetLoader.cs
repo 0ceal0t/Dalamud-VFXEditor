@@ -1,8 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class StatusSheetLoader : SheetLoader<XivStatus, XivStatus> {
         public override void OnLoad() {
             var sheet = VfxEditor.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );

@@ -4,10 +4,10 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
-using VFXEditor.FileManager;
-using VFXEditor.Utils;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 

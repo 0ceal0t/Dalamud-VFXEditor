@@ -1,7 +1,7 @@
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Emitter;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEmitterDataSphereModel : UIData {
         public UIParameters Parameters;
 

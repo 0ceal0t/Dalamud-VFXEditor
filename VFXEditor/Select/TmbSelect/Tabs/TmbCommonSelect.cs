@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.TmbSelect {
+namespace VfxEditor.Select.TmbSelect {
     public class TmbCommonSelect : TmbSelectTab<XivCommon, XivCommon> {
         private ImGuiScene.TextureWrap Icon;
 

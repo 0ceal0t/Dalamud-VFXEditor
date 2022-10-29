@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Entries {
     public class C002 : TmbEntry {
         public const string MAGIC = "C002";
         public const string DISPLAY_NAME = "TMB (C002)";

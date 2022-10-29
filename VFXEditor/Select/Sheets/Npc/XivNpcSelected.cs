@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using static VFXEditor.Select.Sheets.NpcSheetLoader;
+using static VfxEditor.Select.Sheets.NpcSheetLoader;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivNpcSelected {
         public readonly XivNpc Npc;
         public readonly List<string> VfxPaths;

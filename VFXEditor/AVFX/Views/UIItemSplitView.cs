@@ -2,9 +2,9 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIItemSplitView<T> : UIGenericSplitView where T : UIItem {
         public readonly List<T> Items;
         private T Selected = null;

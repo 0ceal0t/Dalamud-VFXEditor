@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataPolygon : AVFXGenericData {
         public readonly AVFXCurve Count = new( "Cnt" );
 

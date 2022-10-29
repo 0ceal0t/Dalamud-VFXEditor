@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleTextureNormal : AVFXBase {
         public readonly AVFXBool Enabled = new( "bEna" );
         public readonly AVFXInt UvSetIdx = new( "UvSN" );

@@ -1,7 +1,7 @@
-using VFXEditor.FileManager;
-using VFXEditor.Select.TmbSelect;
+using VfxEditor.FileManager;
+using VfxEditor.Select.TmbSelect;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public partial class TmbManager : FileManager<TmbDocument, WorkspaceMetaTmb, TmbFile> {
         public static TmbSelectDialog SourceSelect { get; private set; }
         public static TmbSelectDialog ReplaceSelect { get; private set; }

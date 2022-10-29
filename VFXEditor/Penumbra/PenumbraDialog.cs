@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Dialogs;
+using VfxEditor.Dialogs;
 
-namespace VFXEditor.Penumbra {
+namespace VfxEditor.Penumbra {
 
     public class PenumbraDialog : GenericDialog {
         private struct PenumbraMod {

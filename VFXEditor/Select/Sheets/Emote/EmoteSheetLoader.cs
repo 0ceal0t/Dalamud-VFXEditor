@@ -3,9 +3,9 @@ using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
         public override void OnLoad() {
             var sheet = VfxEditor.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );

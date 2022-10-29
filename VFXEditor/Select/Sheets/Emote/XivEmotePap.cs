@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivEmotePap {
         public readonly ushort Icon;
         public readonly int RowId;

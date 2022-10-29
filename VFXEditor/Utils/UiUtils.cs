@@ -9,9 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using VFXEditor.AVFX.VFX;
+using VfxEditor.AVFX.VFX;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public enum VerifiedStatus {
         ISSUE,
         UNKNOWN,

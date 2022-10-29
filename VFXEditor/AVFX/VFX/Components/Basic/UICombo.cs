@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System;
-using VFXEditor.AVFXLib;
-using VFXEditor.Data;
+using VfxEditor.AVFXLib;
+using VfxEditor.Data;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UICombo<T> : IUIBase {
         public readonly string Name;
         public int ValueIdx;

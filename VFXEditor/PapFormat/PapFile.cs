@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using VFXEditor.FileManager;
-using VFXEditor.Utils;
-using VFXEditor.Interop;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
+using VfxEditor.Interop;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public class PapFile : FileDropdown<PapAnimation> {
         private readonly string HkxTempLocation;
 

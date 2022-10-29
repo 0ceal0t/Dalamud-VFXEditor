@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VFXEditor.Select.Sheets;
+using VfxEditor.Select.Sheets;
 
-namespace VFXEditor.Select {
+namespace VfxEditor.Select {
     public class SheetManager {
         public static string NpcNamesOldPath { get; private set; }
         public static string NpcFilesPath { get; private set; }

@@ -1,6 +1,6 @@
-using VFXEditor.AVFXLib.Binder;
+using VfxEditor.AVFXLib.Binder;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIBinderDataSpline : UIData {
         public UIBinderDataSpline( AVFXBinderDataSpline data ) {
             Tabs.Add( new UICurve( data.CarryOverFactor, "Carry Over Factor" ) );

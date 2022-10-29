@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Emitter {
+namespace VfxEditor.AVFXLib.Emitter {
     public class AVFXEmitterCreate : AVFXBase {
         public readonly List<AVFXEmitterItem> Items = new();
 

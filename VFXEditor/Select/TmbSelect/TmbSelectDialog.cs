@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Select.TmbSelect {
+namespace VfxEditor.Select.TmbSelect {
     public class TmbSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 

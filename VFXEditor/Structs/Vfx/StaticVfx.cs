@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace VFXEditor.Structs.Vfx {
+namespace VfxEditor.Structs.Vfx {
     public unsafe class StaticVfx : BaseVfx {
 
         public StaticVfx( string path, Vector3 position, float rotation ) : base( path ) {

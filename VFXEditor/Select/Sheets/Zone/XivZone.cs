@@ -1,4 +1,4 @@
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
 
     public class XivZone {
         public string Name;

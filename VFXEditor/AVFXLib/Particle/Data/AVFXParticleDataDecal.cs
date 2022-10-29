@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataDecal : AVFXGenericData {
         public readonly AVFXFloat ScalingScale = new( "SS" );
 

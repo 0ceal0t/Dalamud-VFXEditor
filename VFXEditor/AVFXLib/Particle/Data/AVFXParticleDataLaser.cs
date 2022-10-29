@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataLaser : AVFXGenericData {
         public readonly AVFXCurve Length = new( "Len" );
         public readonly AVFXCurve Width = new( "Wdt" );

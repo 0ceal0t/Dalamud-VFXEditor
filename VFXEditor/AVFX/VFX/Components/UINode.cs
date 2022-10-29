@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UINode : UIWorkspaceItem {
         public uint Color;
         public List<UINode> Children = new();

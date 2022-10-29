@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXString : AVFXBase {
         private int Size;
         private readonly int FixedSize;

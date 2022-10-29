@@ -1,8 +1,8 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
+using VfxEditor.AVFXLib;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIScheduleView : UINodeDropdownView<UIScheduler> {
         public UIScheduleView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIScheduler> group ) : base( vfxFile, avfx, group, "Scheduler", false, false, "" ) { }
 

@@ -1,11 +1,11 @@
 using ImGuiFileDialog;
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Utils;
-using VFXEditor.Interop;
-using VFXEditor.TmbFormat;
+using VfxEditor.Utils;
+using VfxEditor.Interop;
+using VfxEditor.TmbFormat;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public class PapAnimation {
         public short HavokIndex = 0;
 

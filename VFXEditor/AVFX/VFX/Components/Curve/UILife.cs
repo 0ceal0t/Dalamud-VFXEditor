@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UILife : UIAssignableItem {
         public readonly AVFXLife Life;
         private readonly List<IUIBase> Parameters;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public abstract class AVFXBase {
         private readonly string Name;
         private bool Assigned = true;

@@ -3,10 +3,10 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Dialogs;
-using VFXEditor.Utils;
+using VfxEditor.Dialogs;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class ExportDialog : GenericDialog {
         private readonly AVFXFile VFXFile;
         private readonly List<ExportDialogCategory> Categories;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataWindmill : AVFXGenericData {
         public readonly AVFXEnum<WindmillUVType> WindmillUVType = new( "WUvT" );
 

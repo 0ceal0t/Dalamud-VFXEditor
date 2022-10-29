@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Diagnostics;
-using VFXEditor.Utils;
-using VFXEditor.Select.Rows;
+using VfxEditor.Utils;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.PapSelect {
+namespace VfxEditor.Select.PapSelect {
     public class PapNpcSelect : PapSelectTab<XivNpc, XivNpcSelected> {
         public PapNpcSelect( string parentId, string tabId, PapSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Npcs, dialog ) {

@@ -6,7 +6,7 @@ using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
 using TeximpNet.DDS;
-using VFXEditor.Texture;
+using VfxEditor.Texture;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {

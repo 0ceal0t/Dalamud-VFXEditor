@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.AVFX {
+namespace VfxEditor.AVFX {
     public partial class AVFXDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;

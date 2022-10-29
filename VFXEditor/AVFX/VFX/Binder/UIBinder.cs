@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Binder;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Binder;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIBinder : UINode {
         public readonly AVFXBinder Binder;
 

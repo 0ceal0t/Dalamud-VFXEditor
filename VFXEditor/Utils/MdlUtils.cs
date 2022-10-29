@@ -4,9 +4,9 @@ using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib.Model;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public static class MdlUtils {
         public static bool ImportModel( string localPath, out List<AVFXVertex> vertexesOut, out List<AVFXIndex> indexesOut ) {
             vertexesOut = new List<AVFXVertex>();

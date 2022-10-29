@@ -1,9 +1,9 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UIWorkspaceItem : UIItem {
 #nullable enable
         public string? Renamed;

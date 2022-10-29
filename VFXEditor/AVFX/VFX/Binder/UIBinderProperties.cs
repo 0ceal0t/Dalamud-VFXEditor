@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Binder;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Binder;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIBinderProperties : UIAssignableItem {
         private readonly AVFXBinderProperty Prop;
         private readonly string Name;

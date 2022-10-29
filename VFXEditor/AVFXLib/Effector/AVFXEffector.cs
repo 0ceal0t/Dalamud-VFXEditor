@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Effector {
+namespace VfxEditor.AVFXLib.Effector {
     public class AVFXEffector : AVFXBase {
         public const string NAME = "Efct";
 

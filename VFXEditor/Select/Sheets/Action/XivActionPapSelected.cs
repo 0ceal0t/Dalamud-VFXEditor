@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivActionPapSelected {
         public XivActionPap ActionPap;
 

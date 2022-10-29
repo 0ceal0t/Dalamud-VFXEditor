@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivGimmickSelected {
         public XivGimmick Gimmick;
         public List<string> VfxPaths = new();

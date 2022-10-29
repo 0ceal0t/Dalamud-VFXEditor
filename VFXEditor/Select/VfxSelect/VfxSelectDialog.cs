@@ -2,7 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Select.VfxSelect {
+namespace VfxEditor.Select.VfxSelect {
     public class VfxSelectDialog : SelectDialog {
         private readonly bool ShowSpawn = false;
         private readonly Func<bool> SpawnVfxExists;

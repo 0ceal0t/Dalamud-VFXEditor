@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Curve {
+namespace VfxEditor.AVFXLib.Curve {
     public class AVFXCurveKeys : AVFXBase {
         public readonly List<AVFXCurveKey> Keys = new();
 

@@ -2,7 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UIAssignableItem : UIItem {
         public abstract void DrawAssigned( string id );
         public abstract void DrawUnassigned( string id );

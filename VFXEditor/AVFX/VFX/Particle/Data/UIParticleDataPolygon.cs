@@ -1,6 +1,6 @@
-using VFXEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib.Particle;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIParticleDataPolygon : UIData {
         public UIParticleDataPolygon( AVFXParticleDataPolygon data ) {
             Tabs.Add( new UICurve( data.Count, "Count" ) );

@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Emitter;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEmitterItem : UIWorkspaceItem {
         public AVFXEmitterItem Iteration;
         public UIEmitter Emitter;

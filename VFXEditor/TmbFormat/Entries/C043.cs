@@ -1,8 +1,8 @@
 using ImGuiNET;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Entries {
     public class C043 : TmbEntry {
         public const string MAGIC = "C043";
         public const string DISPLAY_NAME = "Summon Weapon (C043)";

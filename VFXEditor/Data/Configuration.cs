@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Dialogs;
-using VFXEditor.NodeLibrary;
+using VfxEditor.Dialogs;
+using VfxEditor.NodeLibrary;
 
-namespace VFXEditor {
+namespace VfxEditor {
     [Serializable]
     public class Configuration : GenericDialog, IPluginConfiguration {
         public int Version { get; set; } = 0;

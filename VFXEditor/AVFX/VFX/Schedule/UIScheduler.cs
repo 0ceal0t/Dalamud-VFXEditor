@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Scheduler;
+using VfxEditor.AVFXLib.Scheduler;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIScheduler : UINode {
         public readonly AVFXScheduler Scheduler;
         public readonly UINodeGroupSet NodeGroups;

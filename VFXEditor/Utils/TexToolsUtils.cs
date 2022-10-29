@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using VFXEditor.TexTools;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public static class TexToolsUtils {
         public static TTMPL_Simple CreateModResource( string path, int modOffset, int modSize ) {
             var simple = new TTMPL_Simple();

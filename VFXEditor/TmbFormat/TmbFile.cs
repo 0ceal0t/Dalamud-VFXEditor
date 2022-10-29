@@ -2,13 +2,13 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VFXEditor.FileManager;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Entries;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Utils;
 
 // Rework based on https://github.com/AsgardXIV/XAT
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class TmbFile : FileDropdown<Tmac> {
         private readonly Tmdh HeaderTmdh;
         private readonly Tmpp HeaderTmpp;

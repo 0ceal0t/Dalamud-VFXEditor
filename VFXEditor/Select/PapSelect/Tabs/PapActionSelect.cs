@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.PapSelect {
+namespace VfxEditor.Select.PapSelect {
     public class PapActionSelect : PapSelectTab<XivActionPap, XivActionPapSelected> {
         private ImGuiScene.TextureWrap Icon;
 

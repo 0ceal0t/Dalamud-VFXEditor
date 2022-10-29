@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class Tmal : TmbItem {
         public override string Magic => "TMAL";
         public override int Size => 0x10;

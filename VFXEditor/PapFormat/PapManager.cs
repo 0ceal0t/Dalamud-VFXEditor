@@ -1,7 +1,7 @@
-using VFXEditor.FileManager;
-using VFXEditor.Select.PapSelect;
+using VfxEditor.FileManager;
+using VfxEditor.Select.PapSelect;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public partial class PapManager : FileManager<PapDocument, WorkspaceMetaPap, PapFile> {
         public static PapSelectDialog SourceSelect { get; private set; }
         public static PapSelectDialog ReplaceSelect { get; private set; }

@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Particle;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITextureDistortion : UIAssignableItem {
         public readonly AVFXParticleTextureDistortion Tex;
         public readonly UIParticle Particle;

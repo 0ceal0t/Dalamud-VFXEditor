@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataPolyline : AVFXGenericData {
         public readonly AVFXEnum<LineCreateType> CreateLineType = new( "LnCT" );
         public readonly AVFXEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new( "NBBA" );

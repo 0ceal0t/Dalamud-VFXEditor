@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Effector;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Effector;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEffectorView : UINodeDropdownView<UIEffector> {
         public UIEffectorView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIEffector> group ) : base( vfxFile, avfx, group, "Effector", true, true, "default_effector.vfxedit" ) { }
 

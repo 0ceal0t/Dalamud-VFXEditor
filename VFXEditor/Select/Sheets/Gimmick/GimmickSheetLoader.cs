@@ -3,9 +3,9 @@ using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class GimmickSheetLoader : SheetLoader<XivGimmick, XivGimmickSelected> {
         public override void OnLoad() {
             var territories = VfxEditor.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();

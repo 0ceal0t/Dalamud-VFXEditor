@@ -2,7 +2,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace VFXEditor.Structs.Vfx {
+namespace VfxEditor.Structs.Vfx {
 
     /*
         *(undefined4 *)(vfx + 0x50) = DAT_01bb2850;

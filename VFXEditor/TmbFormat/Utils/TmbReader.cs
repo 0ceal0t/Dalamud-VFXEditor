@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Entries;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Entries;
 
-namespace VFXEditor.TmbFormat.Utils {
+namespace VfxEditor.TmbFormat.Utils {
     public class TmbReader {
         public readonly BinaryReader Reader;
 

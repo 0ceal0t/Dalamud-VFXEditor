@@ -1,7 +1,7 @@
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class Tmdh : TmbItemWithId {
         public override string Magic => "TMDH";
         public override int Size => 0x10;

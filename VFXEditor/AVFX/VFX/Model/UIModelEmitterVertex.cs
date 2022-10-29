@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.AVFXLib.Model;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib.Model;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIModelEmitterVertex : UIItem {
         public UIModel Model;
         public AVFXVNum VertNumber;

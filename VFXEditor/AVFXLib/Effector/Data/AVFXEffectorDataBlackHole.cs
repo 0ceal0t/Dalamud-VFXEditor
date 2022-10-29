@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFXLib.Effector {
+namespace VfxEditor.AVFXLib.Effector {
     public class AVFXEffectorDataBlackHole : AVFXGenericData {
         // TODO: DON'T HAVE COMPLETE DATA
 

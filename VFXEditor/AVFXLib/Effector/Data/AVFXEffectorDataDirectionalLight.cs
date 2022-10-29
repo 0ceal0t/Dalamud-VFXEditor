@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Effector {
+namespace VfxEditor.AVFXLib.Effector {
     public class AVFXEffectorDataDirectionalLight : AVFXGenericData {
         public readonly AVFXCurveColor Ambient = new( "Amb" );
         public readonly AVFXCurveColor Color = new();

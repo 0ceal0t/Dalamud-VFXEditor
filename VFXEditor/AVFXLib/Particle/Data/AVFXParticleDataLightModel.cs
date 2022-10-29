@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataLightModel : AVFXGenericData {
         public readonly AVFXInt ModelIdx = new( "MNO", size: 1 );
 

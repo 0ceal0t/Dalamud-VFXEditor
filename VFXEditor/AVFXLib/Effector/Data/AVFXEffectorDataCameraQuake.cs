@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Effector {
+namespace VfxEditor.AVFXLib.Effector {
     public class AVFXEffectorDataCameraQuake : AVFXGenericData {
         public readonly AVFXCurve Attenuation = new( "Att" );
         public readonly AVFXCurve RadiusOut = new( "RdO" );

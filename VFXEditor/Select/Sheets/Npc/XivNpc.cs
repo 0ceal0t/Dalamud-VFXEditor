@@ -1,4 +1,4 @@
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public enum NpcType {
         Demihuman = 2,
         Monster = 3

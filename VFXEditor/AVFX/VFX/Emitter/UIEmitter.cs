@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Emitter;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEmitter : UINode {
         public readonly AVFXEmitter Emitter;
         public readonly UINodeGroupSet NodeGroups;

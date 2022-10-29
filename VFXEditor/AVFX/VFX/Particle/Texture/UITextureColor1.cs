@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Particle;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Particle;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITextureColor1 : UIAssignableItem {
         public readonly AVFXParticleTextureColor1 Tex;
         public readonly UIParticle Particle;

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXInt : AVFXBase {
         private int Size;
         private int Value = 0;

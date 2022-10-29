@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Binder {
+namespace VfxEditor.AVFXLib.Binder {
     public class AVFXBinder : AVFXBase {
         public const string NAME = "Bind";
 

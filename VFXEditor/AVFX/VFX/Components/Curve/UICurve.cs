@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Curve;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Curve;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UICurve : UIAssignableItem {
         public readonly string Name;
         private readonly AVFXCurve Curve;

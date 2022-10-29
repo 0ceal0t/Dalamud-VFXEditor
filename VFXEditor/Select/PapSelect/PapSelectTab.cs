@@ -1,8 +1,8 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.Select.Sheets;
+using VfxEditor.Select.Sheets;
 
-namespace VFXEditor.Select.PapSelect {
+namespace VfxEditor.Select.PapSelect {
     public abstract class PapSelectTab<T, S> : SelectTab<T, S> where T : class where S : class {
         protected readonly PapSelectDialog Dialog;
 

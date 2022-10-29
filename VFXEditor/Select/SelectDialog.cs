@@ -3,9 +3,9 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.Dialogs;
+using VfxEditor.Dialogs;
 
-namespace VFXEditor {
+namespace VfxEditor {
     public enum SelectResultType {
         Local,
         GamePath,

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public static class FileUtils {
         public static string ReadString( BinaryReader reader ) {
             var strBytes = new List<byte>();

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXGenericData : AVFXBase {
         protected List<AVFXBase> Children;
 

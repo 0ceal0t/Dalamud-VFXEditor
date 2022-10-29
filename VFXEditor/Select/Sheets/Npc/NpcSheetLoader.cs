@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class NpcSheetLoader : SheetLoader<XivNpc, XivNpcSelected> {
         public Dictionary<string, NpcFilesStruct> NpcFiles = new();
 

@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.TmbFormat.Utils;
-using VFXEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Entries {
     public class C198 : TmbEntry {
         public const string MAGIC = "C198";
         public const string DISPLAY_NAME = "Lemure (C198)";

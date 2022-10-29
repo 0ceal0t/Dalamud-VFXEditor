@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.Select.PapSelect {
+namespace VfxEditor.Select.PapSelect {
     public class PapSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 

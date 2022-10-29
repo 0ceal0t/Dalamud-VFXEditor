@@ -1,8 +1,8 @@
 using ImGuiNET;
-using VFXEditor.AVFXLib;
-using VFXEditor.Data;
+using VfxEditor.AVFXLib;
+using VfxEditor.Data;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIFloat : IUIBase {
         public readonly string Name;
         public float Value;

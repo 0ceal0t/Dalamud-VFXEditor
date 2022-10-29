@@ -1,6 +1,6 @@
-using VFXEditor.AVFXLib.Effector;
+using VfxEditor.AVFXLib.Effector;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEffectorDataDirectionalLight : UIData {
         public UIEffectorDataDirectionalLight( AVFXEffectorDataDirectionalLight data ) {
             Tabs.Add( new UICurveColor( data.Ambient, "Ambient" ) );

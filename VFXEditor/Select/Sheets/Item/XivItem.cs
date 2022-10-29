@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public struct XivItemIds {
         public int PrimaryId;
         public int PrimaryVar;

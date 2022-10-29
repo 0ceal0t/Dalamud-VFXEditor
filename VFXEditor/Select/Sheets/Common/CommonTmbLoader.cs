@@ -1,8 +1,8 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class CommonTmbLoader : SheetLoader<XivCommon, XivCommon> {
         public override void OnLoad() {
             var lineIdx = 0;

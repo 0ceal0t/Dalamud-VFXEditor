@@ -2,9 +2,9 @@ using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
         public override void OnLoad() {
             foreach( var row in VfxEditor.DataManager.GetExcelSheet<Item>() ) {

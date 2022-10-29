@@ -4,11 +4,11 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Dialogs;
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Dialogs;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.FileManager {
+namespace VfxEditor.FileManager {
     public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
         private int DocumentId = 0;
         private readonly string Extension; // tmb

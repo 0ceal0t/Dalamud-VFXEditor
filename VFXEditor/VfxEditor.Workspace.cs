@@ -8,13 +8,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-using VFXEditor.AVFX;
-using VFXEditor.Utils;
-using VFXEditor.PapFormat;
-using VFXEditor.Texture;
-using VFXEditor.TmbFormat;
+using VfxEditor.AVFX;
+using VfxEditor.Utils;
+using VfxEditor.PapFormat;
+using VfxEditor.Texture;
+using VfxEditor.TmbFormat;
 
-namespace VFXEditor {
+namespace VfxEditor {
     public struct WorkspaceMeta {
         public WorkspaceMetaTex[] Tex;
         public WorkspaceMetaAvfx[] Docs;

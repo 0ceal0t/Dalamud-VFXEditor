@@ -1,11 +1,11 @@
 using ImGuiNET;
-using VFXEditor.AVFX.VFX;
-using VFXEditor.Data;
-using VFXEditor.FileManager;
-using VFXEditor.NodeLibrary;
-using VFXEditor.Select.VfxSelect;
+using VfxEditor.AVFX.VFX;
+using VfxEditor.Data;
+using VfxEditor.FileManager;
+using VfxEditor.NodeLibrary;
+using VfxEditor.Select.VfxSelect;
 
-namespace VFXEditor.AVFX {
+namespace VfxEditor.AVFX {
     public class AvfxManager : FileManager<AVFXDocument, WorkspaceMetaAvfx, AVFXFile> {
         public static VfxSelectDialog SourceSelect { get; private set; }
         public static VfxSelectDialog ReplaceSelect { get; private set; }

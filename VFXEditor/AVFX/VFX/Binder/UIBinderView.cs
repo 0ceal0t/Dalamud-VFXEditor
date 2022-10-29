@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Binder;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Binder;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIBinderView : UINodeDropdownView<UIBinder> {
         public UIBinderView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIBinder> group ) : base( vfxFile, avfx, group, "Binder", true, true, "default_binder.vfxedit" ) { }
 

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXFloat : AVFXBase {
         private int Size;
         private float Value = 0.0f;

@@ -10,20 +10,20 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
-using VFXEditor.AVFX;
-using VFXEditor.Data;
-using VFXEditor.Dialogs;
-using VFXEditor.DirectX;
-using VFXEditor.Interop;
-using VFXEditor.PapFormat;
-using VFXEditor.Penumbra;
-using VFXEditor.Select;
-using VFXEditor.TexTools;
-using VFXEditor.Texture;
-using VFXEditor.TmbFormat;
-using VFXEditor.Tracker;
+using VfxEditor.AVFX;
+using VfxEditor.Data;
+using VfxEditor.Dialogs;
+using VfxEditor.DirectX;
+using VfxEditor.Interop;
+using VfxEditor.PapFormat;
+using VfxEditor.Penumbra;
+using VfxEditor.Select;
+using VfxEditor.TexTools;
+using VfxEditor.Texture;
+using VfxEditor.TmbFormat;
+using VfxEditor.Tracker;
 
-namespace VFXEditor {
+namespace VfxEditor {
     public partial class VfxEditor : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ClientState ClientState { get; private set; }

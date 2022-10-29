@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleTextureReflection : AVFXBase {
         public readonly AVFXBool Enabled = new( "bEna" );
         public readonly AVFXBool UseScreenCopy = new( "bUSC" );

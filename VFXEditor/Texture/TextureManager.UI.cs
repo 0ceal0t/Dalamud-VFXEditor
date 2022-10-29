@@ -3,9 +3,9 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.Texture {
+namespace VfxEditor.Texture {
     public partial class TextureManager {
         private string NewCustomPath = string.Empty;
         private int PngMip = 9;

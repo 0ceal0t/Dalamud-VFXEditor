@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.AVFX.VFX.Model;
-using VFXEditor.AVFXLib.Model;
-using VFXEditor.Utils;
+using VfxEditor.AVFX.VFX.Model;
+using VfxEditor.AVFXLib.Model;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIModel : UINode {
         public AVFXModel Model;
         public List<UIModelEmitterVertex> EmitterVerts;

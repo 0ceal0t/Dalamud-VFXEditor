@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Effector;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Effector;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEffector : UINode {
         public readonly AVFXEffector Effector;
         public readonly UICombo<EffectorType> Type;

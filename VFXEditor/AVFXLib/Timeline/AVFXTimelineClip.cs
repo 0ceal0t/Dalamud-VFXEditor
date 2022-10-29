@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace VFXEditor.AVFXLib.Timeline {
+namespace VfxEditor.AVFXLib.Timeline {
     public class AVFXTimelineClip : AVFXBase {
         public string UniqueId = "LLIK";
         public readonly int[] UnknownInts = new int[] { 0, 0, 0, 0 };

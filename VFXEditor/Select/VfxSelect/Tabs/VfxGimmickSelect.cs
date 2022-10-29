@@ -1,7 +1,7 @@
 using ImGuiNET;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.VfxSelect {
+namespace VfxEditor.Select.VfxSelect {
     public class VfxGimmickSelect : VfxSelectTab<XivGimmick, XivGimmickSelected> {
         public VfxGimmickSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Gimmicks, dialog ) {

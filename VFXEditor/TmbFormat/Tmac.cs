@@ -3,11 +3,11 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Entries;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class Tmac : TmbItemWithTime {
         public override string Magic => "TMAC";
         public override int Size => 0x1C;

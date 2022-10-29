@@ -7,11 +7,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using VFXEditor.Structs;
-using VFXEditor.Structs.Vfx;
-using FileMode = VFXEditor.Structs.FileMode;
+using VfxEditor.Structs;
+using VfxEditor.Structs.Vfx;
+using FileMode = VfxEditor.Structs.FileMode;
 
-namespace VFXEditor.Interop {
+namespace VfxEditor.Interop {
     public class ResourceLoader : IDisposable {
         private bool IsEnabled;
         private readonly Crc32 Crc32;

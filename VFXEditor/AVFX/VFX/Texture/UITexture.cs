@@ -4,10 +4,10 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
-using VFXEditor.AVFXLib.Texture;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib.Texture;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITexture : UINode {
         public readonly AVFXTexture Texture;
         public readonly UIString Path;

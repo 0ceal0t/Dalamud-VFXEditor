@@ -1,9 +1,9 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.FileManager {
+namespace VfxEditor.FileManager {
     public abstract class FileDropdown<T> where T : class {
         protected T Selected = null;
 

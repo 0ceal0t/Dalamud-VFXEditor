@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public partial class TmbDocument {
         public override void PenumbraExport( string modFolder ) {
             var path = Replace.Path;

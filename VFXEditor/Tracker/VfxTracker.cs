@@ -6,9 +6,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VFXEditor.Structs.Vfx;
+using VfxEditor.Structs.Vfx;
 
-namespace VFXEditor.Tracker {
+namespace VfxEditor.Tracker {
     public unsafe class VfxTracker {
         public bool Enabled { get; private set; }
 
@@ -262,12 +262,8 @@ namespace VFXEditor.Tracker {
         private static bool WatchingCutscene => VfxEditor.ClientState != null && VfxEditor.Condition[ConditionFlag.OccupiedInCutSceneEvent] || VfxEditor.Condition[ConditionFlag.WatchingCutscene78];
 
         private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
-            public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) {
-                return ( x - y ).Length() < 2;
-            }
-            public int GetHashCode( SharpDX.Vector3 obj ) {
-                return 0;
-            }
+            public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) => ( x - y ).Length() < 2;
+            public int GetHashCode( SharpDX.Vector3 obj ) => 0;
         }
 
         private static int ChooseId( int caster, int target ) => target > 0 ? target : ( caster > 0 ? caster : -1 );

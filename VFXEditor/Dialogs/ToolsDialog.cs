@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.Numerics;
 
-namespace VFXEditor.Dialogs {
+namespace VfxEditor.Dialogs {
     public partial class ToolsDialog : GenericDialog {
         private readonly ToolsDialogResourceTab ResourceTab;
         private readonly ToolsDialogUtilitiesTab UtilitiesTab;

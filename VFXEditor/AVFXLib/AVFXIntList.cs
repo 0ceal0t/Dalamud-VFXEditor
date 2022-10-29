@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXIntList : AVFXBase {
         private int Size;
         private readonly List<int> Value = new() { 0 };

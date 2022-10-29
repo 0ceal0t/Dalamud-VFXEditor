@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Curve {
+namespace VfxEditor.AVFXLib.Curve {
     public class AVFXCurveColor : AVFXBase {
         public readonly AVFXCurve RGB = new( "RGB" );
         public readonly AVFXCurve A = new( "A" );

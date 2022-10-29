@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivArmor : XivItem {
         public XivArmor( Lumina.Excel.GeneratedSheets.Item item ) : base(item) {
             RootPath = "chara/equipment/e" + Ids.PrimaryId.ToString().PadLeft( 4, '0' ) + "/";

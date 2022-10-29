@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Emitter {
+namespace VfxEditor.AVFXLib.Emitter {
     public class AVFXEmitterDataCylinderModel : AVFXGenericData {
         public readonly AVFXEnum<RotationOrder> RotationOrderType = new( "ROT" );
         public readonly AVFXEnum<GenerateMethod> GenerateMethodType = new( "GeMT" );

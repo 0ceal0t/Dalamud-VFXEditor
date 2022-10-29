@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System;
 using System.Numerics;
-using VFXEditor.Dialogs;
+using VfxEditor.Dialogs;
 
-namespace VFXEditor.PapFormat {
+namespace VfxEditor.PapFormat {
     public class PapSelectIndexDialog : GenericDialog {
         public Action<int> OnOk;
         public int Index;

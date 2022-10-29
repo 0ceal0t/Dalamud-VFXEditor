@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Curve {
+namespace VfxEditor.AVFXLib.Curve {
     public class AVFXLife : AVFXBase {
         public bool Enabled = true;
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT

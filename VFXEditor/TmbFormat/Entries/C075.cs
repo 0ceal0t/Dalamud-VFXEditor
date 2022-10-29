@@ -1,9 +1,9 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Entries {
     public class C075 : TmbEntry {
         public const string MAGIC = "C075";
         public const string DISPLAY_NAME = "C075";

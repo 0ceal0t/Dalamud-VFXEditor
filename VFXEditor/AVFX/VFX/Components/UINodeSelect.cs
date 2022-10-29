@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.Data;
+using VfxEditor.AVFXLib;
+using VfxEditor.Data;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UINodeSelect : IUIBase {
         public UINode Node;
 

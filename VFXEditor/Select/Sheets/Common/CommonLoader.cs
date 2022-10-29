@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class CommonLoader : SheetLoader<XivCommon, XivCommon> {
         public override void OnLoad() {
             Items.AddRange( new List<XivCommon>() {

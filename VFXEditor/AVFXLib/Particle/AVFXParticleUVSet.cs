@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleUVSet : AVFXBase {
         public readonly AVFXEnum<TextureCalculateUV> CalculateUVType = new( "CUvT" );
         public readonly AVFXCurve2Axis Scale = new( "Scl" );

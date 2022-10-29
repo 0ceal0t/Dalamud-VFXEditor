@@ -3,12 +3,12 @@ using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Curve;
-using VFXEditor.Data;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Curve;
+using VfxEditor.Data;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UICurveEditor : IUIBase {
         private CurvePoint Selected = null;
         private readonly AVFXCurve Curve;

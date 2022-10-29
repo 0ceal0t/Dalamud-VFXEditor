@@ -1,10 +1,10 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using VFXEditor.AVFXLib;
-using VFXEditor.Data;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.Data;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIString : IUIBase {
         public readonly string Name;
         public readonly AVFXString Literal;

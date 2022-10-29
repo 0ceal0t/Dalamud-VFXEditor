@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace VFXEditor.Select.Rows {
+namespace VfxEditor.Select.Rows {
     public class XivWeapon : XivItem {
         public bool HasSubModel;
         public XivWeapon SubItem = null;

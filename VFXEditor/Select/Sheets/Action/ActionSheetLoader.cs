@@ -1,9 +1,9 @@
 using Dalamud.Logging;
 using System;
 using System.Linq;
-using VFXEditor.Select.Rows;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.Sheets {
+namespace VfxEditor.Select.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
         public override void OnLoad() {
             var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()

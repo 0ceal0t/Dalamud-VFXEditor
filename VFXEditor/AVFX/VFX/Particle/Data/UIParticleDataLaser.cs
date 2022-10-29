@@ -1,6 +1,6 @@
-using VFXEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib.Particle;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIParticleDataLaser : UIData {
         public UIParticleDataLaser( AVFXParticleDataLaser data ) {
             Tabs.Add( new UICurve( data.Width, "Width" ) );

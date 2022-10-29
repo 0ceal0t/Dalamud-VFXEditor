@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Diagnostics;
-using VFXEditor.Utils;
-using VFXEditor.Select.Rows;
+using VfxEditor.Utils;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.VfxSelect {
+namespace VfxEditor.Select.VfxSelect {
     public class VfxNpcSelect : VfxSelectTab<XivNpc, XivNpcSelected> {
         public VfxNpcSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Npcs, dialog ) {

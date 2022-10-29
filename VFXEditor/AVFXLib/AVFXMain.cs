@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.IO;
 
-using VFXEditor.AVFXLib.Binder;
-using VFXEditor.AVFXLib.Effector;
-using VFXEditor.AVFXLib.Emitter;
-using VFXEditor.AVFXLib.Model;
-using VFXEditor.AVFXLib.Particle;
-using VFXEditor.AVFXLib.Scheduler;
-using VFXEditor.AVFXLib.Texture;
-using VFXEditor.AVFXLib.Timeline;
+using VfxEditor.AVFXLib.Binder;
+using VfxEditor.AVFXLib.Effector;
+using VfxEditor.AVFXLib.Emitter;
+using VfxEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib.Scheduler;
+using VfxEditor.AVFXLib.Texture;
+using VfxEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXMain : AVFXBase {
         public static AVFXMain FromStream( BinaryReader reader ) {
             var main = new AVFXMain();

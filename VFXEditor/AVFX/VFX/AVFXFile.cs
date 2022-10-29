@@ -7,10 +7,10 @@ using System.IO;
 using System.Numerics;
 using System.Linq;
 using System.Text;
-using VFXEditor.AVFXLib;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class AVFXFile {
         public readonly AVFXMain Avfx;
 

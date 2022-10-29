@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleDataDisc : AVFXGenericData {
         public readonly AVFXInt PartsCount = new( "PrtC" );
         public readonly AVFXInt PartsCountU = new( "PCnU" );

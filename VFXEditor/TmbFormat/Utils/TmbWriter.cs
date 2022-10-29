@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.TmbFormat.Utils {
+namespace VfxEditor.TmbFormat.Utils {
     public class TmbWriter {
         public const int BaseSize = 0x10;
         public int BodySize;

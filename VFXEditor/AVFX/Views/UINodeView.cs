@@ -1,9 +1,9 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public interface IUINodeView<T> where T : UINode {
         public void OnDelete( T item );
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );

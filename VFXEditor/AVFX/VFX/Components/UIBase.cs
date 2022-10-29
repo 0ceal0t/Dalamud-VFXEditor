@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public interface IUIBase {
         public abstract void DrawInline( string parentId );
 

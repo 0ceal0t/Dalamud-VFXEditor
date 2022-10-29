@@ -1,6 +1,6 @@
-using VFXEditor.Structs.Vfx;
+using VfxEditor.Structs.Vfx;
 
-namespace VFXEditor {
+namespace VfxEditor {
     public unsafe partial class VfxEditor {
         public static BaseVfx Spawn { get; private set; }
 

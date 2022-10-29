@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.AVFXLib;
+using VfxEditor.AVFXLib;
 
-namespace VFXEditor.Data {
+namespace VfxEditor.Data {
     public class CopyManager {
         public static bool IsCopying { get; private set; }
         public static bool IsPasting { get; private set; }

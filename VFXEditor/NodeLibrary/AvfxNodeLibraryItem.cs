@@ -7,9 +7,9 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.NodeLibrary {
+namespace VfxEditor.NodeLibrary {
     [Serializable]
     public class AvfxNodeLibraryItem {
         public string Name;

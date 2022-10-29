@@ -5,9 +5,9 @@ using FFXIVClientStructs.STD;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.Dialogs {
+namespace VfxEditor.Dialogs {
     public unsafe class ToolsDialogResourceTab {
         private struct ResourceItemStruct {
             public uint Hash;

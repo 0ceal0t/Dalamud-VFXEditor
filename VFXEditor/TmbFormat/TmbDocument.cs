@@ -3,10 +3,10 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
-using VFXEditor.FileManager;
-using VFXEditor.Utils;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
         public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
         }

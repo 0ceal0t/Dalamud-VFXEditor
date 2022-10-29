@@ -1,6 +1,6 @@
-using VFXEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib.Particle;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIParticleDataLine : UIData {
         public UIParameters Parameters;
 

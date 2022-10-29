@@ -6,7 +6,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
-namespace VFXEditor.DirectX {
+namespace VfxEditor.DirectX {
     public abstract class ModelRenderer : Renderer {
         public IntPtr Output => RenderShad.NativePointer;
 

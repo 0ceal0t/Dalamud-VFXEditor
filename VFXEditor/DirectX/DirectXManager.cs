@@ -2,7 +2,7 @@ using SharpDX.Direct3D11;
 using System.IO;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VFXEditor.DirectX {
+namespace VfxEditor.DirectX {
     public class DirectXManager {
         private Device Device;
         private DeviceContext Ctx;

@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.IO;
-using VFXEditor.AVFXLib;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UINodeSplitView<T> : UIGenericSplitView, IUINodeView<T> where T : UINode {
         public readonly AVFXFile VfxFile;
         public readonly AVFXMain Avfx;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Model {
+namespace VfxEditor.AVFXLib.Model {
     public class AVFXEmitVertexes : AVFXBase {
         public readonly List<AVFXEmitVertex> EmitVertexes = new();
 

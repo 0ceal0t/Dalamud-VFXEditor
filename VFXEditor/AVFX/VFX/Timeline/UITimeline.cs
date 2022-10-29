@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Timeline;
+using VfxEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITimeline : UINode {
         public readonly AVFXTimeline Timeline;
         public readonly UINodeGroupSet NodeGroups;

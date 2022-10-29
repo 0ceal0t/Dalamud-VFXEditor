@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Curve {
+namespace VfxEditor.AVFXLib.Curve {
     public class AVFXCurve : AVFXBase {
         public readonly AVFXEnum<CurveBehavior> PreBehavior = new( "BvPr" );
         public readonly AVFXEnum<CurveBehavior> PostBehavior = new( "BvPo" );

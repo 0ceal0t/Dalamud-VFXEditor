@@ -2,10 +2,10 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
-using VFXEditor.Utils;
-using VFXEditor.Texture;
+using VfxEditor.Utils;
+using VfxEditor.Texture;
 
-namespace VFXEditor.Dialogs {
+namespace VfxEditor.Dialogs {
     public class ToolsDialogUtilitiesTab {
         private string ExtractPath = "";
 

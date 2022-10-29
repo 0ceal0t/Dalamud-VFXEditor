@@ -1,7 +1,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace VFXEditor.Structs {
+namespace VfxEditor.Structs {
     [StructLayout( LayoutKind.Sequential )]
     public struct Quat {
         public float X;

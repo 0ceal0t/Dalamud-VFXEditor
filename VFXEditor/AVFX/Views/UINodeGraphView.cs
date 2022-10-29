@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System.Numerics;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UINodeGraphView : IUIBase {
         public UINode Node;
         private static readonly uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );

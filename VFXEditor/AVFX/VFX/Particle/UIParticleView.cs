@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Particle;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Particle;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIParticleView : UINodeDropdownView<UIParticle> {
         public UIParticleView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIParticle> group ) : base( vfxFile, avfx, group, "Particle", true, true, "default_particle.vfxedit" ) { }
 

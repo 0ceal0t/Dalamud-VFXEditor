@@ -1,6 +1,6 @@
 using System;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     [Flags]
     public enum DrawLayer {
         Screen = 0,

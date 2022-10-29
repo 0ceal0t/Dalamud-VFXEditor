@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace VFXEditor.AVFXLib.Texture {
+namespace VfxEditor.AVFXLib.Texture {
     public class AVFXTexture : AVFXBase {
         public const string NAME = "Tex";
 

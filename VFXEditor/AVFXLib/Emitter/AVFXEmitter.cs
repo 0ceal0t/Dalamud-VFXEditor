@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Emitter {
+namespace VfxEditor.AVFXLib.Emitter {
     public class AVFXEmitter : AVFXBase {
         public const string NAME = "Emit";
 

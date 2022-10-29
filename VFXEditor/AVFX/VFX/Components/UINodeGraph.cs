@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UINodeGraphItem {
         public int Level;
         public int Level2;

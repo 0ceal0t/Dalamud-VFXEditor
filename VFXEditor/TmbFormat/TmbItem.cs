@@ -1,7 +1,7 @@
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
         public abstract string Magic { get; }
         public abstract int Size { get; }

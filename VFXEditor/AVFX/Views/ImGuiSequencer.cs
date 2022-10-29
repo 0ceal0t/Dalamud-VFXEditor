@@ -4,9 +4,9 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.AVFX.VFX;
+using VfxEditor.AVFX.VFX;
 
-namespace VFXEditor.AVFX.Views {
+namespace VfxEditor.AVFX.Views {
     public abstract class ImGuiSequencer<T> : IUIBase where T : UIItem {
         private static readonly int ItemHeight = 20;
         private static readonly int LegendWidth = 200;

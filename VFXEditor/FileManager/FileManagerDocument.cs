@@ -3,10 +3,10 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.FileManager {
+namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : class {
         protected SelectResult Source = SelectResult.None();
         public string SourceDisplay => Source.DisplayString;

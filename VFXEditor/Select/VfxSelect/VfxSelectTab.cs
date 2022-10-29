@@ -1,6 +1,6 @@
-using VFXEditor.Select.Sheets;
+using VfxEditor.Select.Sheets;
 
-namespace VFXEditor.Select.VfxSelect {
+namespace VfxEditor.Select.VfxSelect {
     public abstract class VfxSelectTab<T, S> : SelectTab<T, S> where T : class where S : class {
         protected readonly VfxSelectDialog Dialog;
 

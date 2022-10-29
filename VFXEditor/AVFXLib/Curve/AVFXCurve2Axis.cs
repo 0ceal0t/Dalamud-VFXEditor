@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Curve {
+namespace VfxEditor.AVFXLib.Curve {
     public class AVFXCurve2Axis : AVFXBase {
         public readonly AVFXEnum<AxisConnect> AxisConnectType = new( "ACT" );
         public readonly AVFXEnum<RandomType> AxisConnectRandomType = new( "ACTR" );

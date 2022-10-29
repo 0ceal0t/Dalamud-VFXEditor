@@ -5,11 +5,11 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib.Model;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VFXEditor.DirectX {
+namespace VfxEditor.DirectX {
     public class ModelPreview : ModelRenderer {
         public bool ShowEdges = true;
         public bool ShowEmitter = true;

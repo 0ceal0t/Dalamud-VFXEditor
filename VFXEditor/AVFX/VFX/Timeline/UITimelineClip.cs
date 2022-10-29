@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.AVFXLib.Timeline;
+using VfxEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITimelineClip : UIWorkspaceItem {
         public AVFXTimelineClip Clip;
         public UITimeline Timeline;

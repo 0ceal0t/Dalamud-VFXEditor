@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.Diagnostics;
-using VFXEditor.Utils;
-using VFXEditor.Select.Rows;
+using VfxEditor.Utils;
+using VfxEditor.Select.Rows;
 
-namespace VFXEditor.Select.TmbSelect {
+namespace VfxEditor.Select.TmbSelect {
     public class TmbNpcSelect : TmbSelectTab<XivNpc, XivNpcSelected> {
         public TmbNpcSelect( string parentId, string tabId, TmbSelectDialog dialog ) :
             base( parentId, tabId, SheetManager.Npcs, dialog ) {

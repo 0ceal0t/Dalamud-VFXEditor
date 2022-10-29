@@ -1,14 +1,14 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
-using VFXEditor.Data;
-using VFXEditor.Utils;
-using VFXEditor.Penumbra;
-using VFXEditor.TexTools;
-using VFXEditor.Texture;
-using VFXEditor.Tracker;
+using VfxEditor.Data;
+using VfxEditor.Utils;
+using VfxEditor.Penumbra;
+using VfxEditor.TexTools;
+using VfxEditor.Texture;
+using VfxEditor.Tracker;
 
-namespace VFXEditor {
+namespace VfxEditor {
     public partial class VfxEditor {
         public static void Draw() {
             if( IsLoading ) return;

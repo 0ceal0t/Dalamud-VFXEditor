@@ -5,12 +5,12 @@ using System;
 using System.IO;
 using System.Numerics;
 
-using VFXEditor.AVFX.VFX;
-using VFXEditor.Data;
-using VFXEditor.FileManager;
-using VFXEditor.Utils;
+using VfxEditor.AVFX.VFX;
+using VfxEditor.Data;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX {
+namespace VfxEditor.AVFX {
     public partial class AVFXDocument : FileManagerDocument<AVFXFile, WorkspaceMetaAvfx> {
         private DateTime LastUpdate = DateTime.Now;
         private string SpawnPath => Replace.Path;

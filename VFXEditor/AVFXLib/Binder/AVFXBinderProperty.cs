@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Binder {
+namespace VfxEditor.AVFXLib.Binder {
     public class AVFXBinderProperty : AVFXBase {
         public readonly AVFXEnum<BindPoint> BindPointType = new( "BPT" );
         public readonly AVFXEnum<BindTargetPoint> BindTargetPointType = new( "BPTP" );

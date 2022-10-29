@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace VFXEditor.Interop {
+namespace VfxEditor.Interop {
     public class HavokInterop {
         public static void ReplaceHavokAnimation( string baseHkx, int indexToReplace, string newHkx, int indexToUse, string output ) {
             Run( $"1 {baseHkx} {indexToReplace} {newHkx} {indexToUse} {output}" );

@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Model;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIModelView : UINodeSplitView<UIModel> {
         public UIModelView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIModel> group ) : base( vfxFile, avfx, group, "Model", true, true, "default_model.vfxedit2" ) { }
 

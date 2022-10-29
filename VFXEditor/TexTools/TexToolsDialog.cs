@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Numerics;
-using VFXEditor.Dialogs;
+using VfxEditor.Dialogs;
 
-namespace VFXEditor.TexTools {
+namespace VfxEditor.TexTools {
     public struct TTMPL {
         public string TTMPVersion;
         public string Name;

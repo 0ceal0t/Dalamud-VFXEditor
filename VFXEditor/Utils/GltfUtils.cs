@@ -7,9 +7,9 @@ using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VFXEditor.AVFXLib.Model;
+using VfxEditor.AVFXLib.Model;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     public static class GltfUtils {
         public static void ExportModel( AVFXModel model, string path ) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );

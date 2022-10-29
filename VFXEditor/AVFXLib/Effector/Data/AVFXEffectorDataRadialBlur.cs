@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Effector {
+namespace VfxEditor.AVFXLib.Effector {
     public class AVFXEffectorDataRadialBlur : AVFXGenericData {
         public readonly AVFXCurve Length = new( "Len" );
         public readonly AVFXCurve Strength = new( "Str" );

@@ -1,6 +1,6 @@
 using ImGuiNET;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public abstract class UIGenericSplitView : IUIBase {
         public bool AllowNew;
         public bool AllowDelete;

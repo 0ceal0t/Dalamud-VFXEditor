@@ -8,10 +8,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.Dialogs;
-using VFXEditor.Utils;
+using VfxEditor.Dialogs;
+using VfxEditor.Utils;
 
-namespace VFXEditor.NodeLibrary {
+namespace VfxEditor.NodeLibrary {
     public class AvfxNodeLibrary : GenericDialog {
         private readonly List<AvfxNodeLibraryItem> Items;
         private readonly string RootPath;

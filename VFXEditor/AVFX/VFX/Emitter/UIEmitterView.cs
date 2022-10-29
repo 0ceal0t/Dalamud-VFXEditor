@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Emitter;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Emitter;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UIEmitterView : UINodeDropdownView<UIEmitter> {
         public UIEmitterView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UIEmitter> group ) : base( vfxFile, avfx, group, "Emitter", true, true, "default_emitter.vfxedit" ) { }
 

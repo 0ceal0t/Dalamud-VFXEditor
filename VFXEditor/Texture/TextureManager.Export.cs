@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 
-using VFXEditor.Utils;
-using VFXEditor.TexTools;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
 
-namespace VFXEditor.Texture {
+namespace VfxEditor.Texture {
     public partial class TextureManager {
         public void PenumbraExport( string modFolder, bool exportTex ) {
             if( !exportTex ) return;

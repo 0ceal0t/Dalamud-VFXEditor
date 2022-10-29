@@ -1,8 +1,8 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Timeline;
+using VfxEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITimelineItem : UIWorkspaceItem {
         public readonly AVFXTimelineSubItem Item;
         public readonly UITimeline Timeline;

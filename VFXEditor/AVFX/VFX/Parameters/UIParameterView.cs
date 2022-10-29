@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public unsafe class UIParameterView : IUIBase {
         private readonly List<IUIBase> Parameters;
         private readonly int[] Version = new int[4];

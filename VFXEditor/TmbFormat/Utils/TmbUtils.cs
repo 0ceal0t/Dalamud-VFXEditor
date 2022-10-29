@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VFXEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Entries;
 
-namespace VFXEditor.TmbFormat.Utils {
+namespace VfxEditor.TmbFormat.Utils {
     public struct ItemTypeStruct {
         public string DisplayName;
         public Type Type;

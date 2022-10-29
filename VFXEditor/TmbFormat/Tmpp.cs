@@ -1,9 +1,9 @@
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class Tmpp : TmbItem {
         public override string Magic => "TMPP";
         public override int Size => 0x0C;

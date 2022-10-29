@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using VFXEditor.AVFXLib;
-using VFXEditor.AVFXLib.Timeline;
+using VfxEditor.AVFXLib;
+using VfxEditor.AVFXLib.Timeline;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UITimelineView : UINodeDropdownView<UITimeline> {
         public UITimelineView( AVFXFile vfxFile, AVFXMain avfx, UINodeGroup<UITimeline> group ) : base( vfxFile, avfx, group, "Timeline", true, true, "default_timeline.vfxedit" ) { }
 

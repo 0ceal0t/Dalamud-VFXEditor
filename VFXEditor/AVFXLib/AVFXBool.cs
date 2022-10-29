@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VFXEditor.AVFXLib {
+namespace VfxEditor.AVFXLib {
     public class AVFXBool : AVFXBase {
         private int Size;
         private bool? Value = false;

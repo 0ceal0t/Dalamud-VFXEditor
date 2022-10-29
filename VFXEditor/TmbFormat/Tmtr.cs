@@ -2,11 +2,11 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.Utils;
-using VFXEditor.TmbFormat.Entries;
-using VFXEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
         public override string Magic => "TMTR";
         public override int Size => 0x18;

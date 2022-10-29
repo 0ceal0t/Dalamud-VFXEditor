@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VFXEditor.AVFXLib;
+using VfxEditor.AVFXLib;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UINodeGroupSet {
         public readonly UINodeGroup<UIBinder> Binders;
         public readonly UINodeGroup<UIEmitter> Emitters;

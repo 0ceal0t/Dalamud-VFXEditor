@@ -1,8 +1,8 @@
 using ImGuiNET;
 using System.IO;
-using VFXEditor.Utils;
+using VfxEditor.Utils;
 
-namespace VFXEditor.TmbFormat {
+namespace VfxEditor.TmbFormat {
     public class TmtrUnknownData {
         public int Unk1;
         public short Unk2;

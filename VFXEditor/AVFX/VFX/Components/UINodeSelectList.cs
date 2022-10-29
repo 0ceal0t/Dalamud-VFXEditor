@@ -1,10 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
-using VFXEditor.AVFXLib;
-using VFXEditor.Data;
-using VFXEditor.Utils;
+using VfxEditor.AVFXLib;
+using VfxEditor.Data;
+using VfxEditor.Utils;
 
-namespace VFXEditor.AVFX.VFX {
+namespace VfxEditor.AVFX.VFX {
     public class UINodeSelectList<T> : UINodeSelect where T : UINode {
         public List<T> Selected = new();
         public AVFXIntList Literal;

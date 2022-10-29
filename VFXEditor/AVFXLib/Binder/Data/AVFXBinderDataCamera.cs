@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VFXEditor.AVFXLib.Curve;
+using VfxEditor.AVFXLib.Curve;
 
-namespace VFXEditor.AVFXLib.Binder {
+namespace VfxEditor.AVFXLib.Binder {
     public class AVFXBinderDataCamera : AVFXGenericData {
         public readonly AVFXCurve Distance = new( "Dst" );
         public readonly AVFXCurve DistanceRandom = new( "DstR" );

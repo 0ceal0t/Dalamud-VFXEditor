@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Timeline {
+namespace VfxEditor.AVFXLib.Timeline {
     public class AVFXTimeline : AVFXBase {
         public const string NAME = "TmLn";
 

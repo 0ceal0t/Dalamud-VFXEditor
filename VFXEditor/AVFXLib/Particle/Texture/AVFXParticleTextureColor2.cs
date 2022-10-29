@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleTextureColor2 : AVFXBase {
         public readonly AVFXBool Enabled = new( "bEna" );
         public readonly AVFXBool ColorToAlpha = new( "bC2A" );

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VFXEditor.AVFXLib.Particle {
+namespace VfxEditor.AVFXLib.Particle {
     public class AVFXParticleSimple : AVFXBase {
         public readonly AVFXInt InjectionPositionType = new( "SIPT" );
         public readonly AVFXInt InjectionDirectionType = new( "SIDT" );
