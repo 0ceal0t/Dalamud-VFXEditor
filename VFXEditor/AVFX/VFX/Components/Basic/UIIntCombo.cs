@@ -33,12 +33,15 @@ namespace VFXEditor.AVFX.VFX {
                 return;
             }
 
+            var spacing = ImGui.GetStyle().ItemSpacing.X;
+            var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing; // have to do this calculation now
             ImGui.SetNextItemWidth( 100 );
             if( ImGui.InputInt( $"{id}-MainInput", ref Value ) ) {
                 Literal.SetValue( Value );
             }
 
-            ImGui.SameLine();
+            ImGui.SameLine(100 + spacing);
+            ImGui.SetNextItemWidth( comboWidth );
 
             var idx = 0;
             if( ImGui.BeginCombo( $"{Name}{id}", DisplayText ) ) {

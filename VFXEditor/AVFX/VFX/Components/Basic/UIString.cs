@@ -34,12 +34,23 @@ namespace VFXEditor.AVFX.VFX {
                 return;
             }
 
-            ImGui.InputText( Name + id, ref Value, 256 );
+            var style = ImGui.GetStyle();
+            var spacing = 2;
+            ImGui.PushFont( UiBuilder.IconFont );
+            var checkSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Check}" ).X + style.FramePadding.X * 2 + spacing;
+            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + spacing;
+            ImGui.PopFont();
+
+            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - checkSize - ( ShowRemoveButton ? removeSize : 0);
+            ImGui.SetNextItemWidth( inputSize );
+            ImGui.InputText( $"{id}-MainInput", ref Value, 256 );
 
             if( IUIBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
 
-            ImGui.SameLine();
-            if( ImGui.Button( $"Update{id}" ) ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+
+            ImGui.SameLine(inputSize + spacing );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                 Literal.SetValue( Value.Trim().Trim( '\0' ) + '\u0000' );
                 if( ShowRemoveButton && Literal.GetValue().Trim( '\0' ).Length == 0 ) {
                     Literal.SetAssigned( false );
@@ -47,17 +58,18 @@ namespace VFXEditor.AVFX.VFX {
             }
 
             if( ShowRemoveButton ) {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-
-                ImGui.PushFont( UiBuilder.IconFont );
+                ImGui.SameLine(inputSize + checkSize + spacing);
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
                     Value = "";
                     Literal.SetValue( "" );
                     Literal.SetAssigned( false );
                 }
-                ImGui.PopFont();
             }
+
+            ImGui.PopFont();
+
+            ImGui.SameLine();
+            ImGui.Text( Name );
         }
     }
 }
