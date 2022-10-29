@@ -70,16 +70,6 @@ namespace VFXEditor.AVFX.VFX.Model {
             if( ImPlot.BeginPlot( $"{parentId}-Plot", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 ImPlot.SetupAxes( "U", "V", ImPlotAxisFlags.None, ImPlotAxisFlags.None );
 
-                /*if( Points.Count > 0 ) {
-                    GetDrawLine( Points, Color, out var _xs, out var _ys );
-                    var xs = _xs.ToArray();
-                    var ys = _ys.ToArray();
-                    ImPlot.SetNextLineStyle( LINE_COLOR, 2 );
-
-                    ImPlot.PlotLine( Curve.GetName(), ref xs[0], ref ys[0], xs.Length );
-                    ImPlot.PlotLine();
-                }*/
-
                 ImPlot.PushStyleColor( ImPlotCol.Line, LINE_COLOR );
                 ImPlot.PushStyleVar( ImPlotStyleVar.LineWeight, 2 );
 
