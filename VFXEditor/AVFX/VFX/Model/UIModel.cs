@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VFXEditor.AVFX.VFX.Model;
 using VFXEditor.AVFXLib.Model;
 using VFXEditor.Utils;
 
@@ -14,13 +15,16 @@ namespace VFXEditor.AVFX.VFX {
         public List<UIModelEmitterVertex> EmitterVerts;
         public UIModelEmitSplitView EmitSplit;
         public UINodeGraphView NodeView;
+
         private int Mode = 1;
         private bool Refresh = false;
-        public bool Open = true;
+        private readonly UIModelUvView UvView;
 
         public UIModel( AVFXModel model ) : base( UINodeGroup.ModelColor, false ) {
             Model = model;
             NodeView = new UINodeGraphView( this );
+
+            UvView = new UIModelUvView(); // don't load until actually necessary
 
             EmitterVerts = new List<UIModelEmitterVertex>();
             for( var i = 0; i < Math.Min( Model.VNums.Nums.Count, Model.EmitVertexes.EmitVertexes.Count ); i++ ) {
@@ -63,8 +67,14 @@ namespace VFXEditor.AVFX.VFX {
 
             ImGui.BeginTabBar( "ModelTabs" );
             DrawModel3D( id );
+            DrawUvView( id );
             DrawEmitterVerts( id );
             ImGui.EndTabBar();
+        }
+
+        public void OnSelect() {
+            VfxEditor.DirectXManager.ModelView.LoadModel( Model );
+            UvView.LoadModel( Model );
         }
 
         private void DrawModel3D( string parentId ) {
@@ -72,6 +82,7 @@ namespace VFXEditor.AVFX.VFX {
             if( !ret ) return;
             if( Refresh ) {
                 VfxEditor.DirectXManager.ModelView.LoadModel( Model, mode: Mode );
+                UvView.LoadModel( Model );
                 Refresh = false;
             }
 
@@ -128,10 +139,16 @@ namespace VFXEditor.AVFX.VFX {
             ImGui.EndTabItem();
         }
 
+        private void DrawUvView( string parentId ) {
+            var ret = ImGui.BeginTabItem( "UV View" + parentId );
+            if( !ret ) return;
+            UvView.DrawInline( parentId );
+            ImGui.EndTabItem();
+        }
+
         private void DrawEmitterVerts( string parentId ) {
             var ret = ImGui.BeginTabItem( "Emitter Vertices" + parentId );
-            if( !ret )
-                return;
+            if( !ret ) return;
             EmitSplit.DrawInline( parentId );
             ImGui.EndTabItem();
         }
