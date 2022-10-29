@@ -112,7 +112,7 @@ namespace VfxEditor {
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
             if( ImGui.Checkbox( "Log all files##Settings", ref LogAllFiles ) ) Save();
             if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) Save();
-            if( ImGui.Checkbox( "Log vfx debug information##Settings", ref LogVfxDebug ) ) Save();
+            if( ImGui.Checkbox( "Log Vfx debug information##Settings", ref LogVfxDebug ) ) Save();
 
             if( ImGui.Checkbox( "Autosave Workspace##Settings", ref AutosaveEnabled ) ) Save();
             ImGui.Indent();
@@ -120,6 +120,7 @@ namespace VfxEditor {
                 var style = ImGui.GetStyle();
                 ImGui.PushStyleVar( ImGuiStyleVar.Alpha, style.Alpha * 0.5f );
             }
+            ImGui.SetNextItemWidth( 120 );
             if( ImGui.InputInt( "Autosave time (seconds)##Settings", ref AutosaveSeconds ) ) Save();
             if( !AutosaveEnabled ) ImGui.PopStyleVar();
             ImGui.Unindent();

@@ -14,14 +14,13 @@ namespace VfxEditor.AVFX.VFX.Model {
         private bool DrawOnce = false;
         private int UvMode = 1;
 
-        private float[] Uv1_X = new float[0];
-        private float[] Uv1_Y = new float[0];
-        private float[] Uv2_X = new float[0];
-        private float[] Uv2_Y = new float[0];
+        private float[] Uv1_X = Array.Empty<float>();
+        private float[] Uv1_Y = Array.Empty<float>();
+        private float[] Uv2_X = Array.Empty<float>();
+        private float[] Uv2_Y = Array.Empty<float>();
         private int NumPoints = 0;
 
         public UIModelUvView() {
-
         }
 
         public void LoadModel( AVFXModel model ) {
@@ -49,8 +48,6 @@ namespace VfxEditor.AVFX.VFX.Model {
             Uv1_Y = orderedVertexes.Select( x => x.UV1[1] ).ToArray();
             Uv2_X = orderedVertexes.Select( x => x.UV2[2] ).ToArray();
             Uv2_Y = orderedVertexes.Select( x => x.UV2[3] ).ToArray();
-
-            PluginLog.Log( $"Loaded {NumPoints} points" );
         }
 
         public void DrawInline(string parentId) {
