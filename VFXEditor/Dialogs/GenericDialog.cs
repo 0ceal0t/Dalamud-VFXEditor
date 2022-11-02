@@ -3,7 +3,6 @@ using ImGuiNET;
 using System.Numerics;
 
 namespace VfxEditor.Dialogs {
-
     public abstract class GenericDialog {
         protected bool Visible = false;
         protected string Name;

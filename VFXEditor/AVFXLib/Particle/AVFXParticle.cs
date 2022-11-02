@@ -56,7 +56,7 @@ namespace VfxEditor.AVFXLib.Particle {
         public readonly AVFXCurve RotVelZRandom = new( "VRZR" );
         public readonly AVFXCurveColor Color = new();
 
-        public readonly List<AVFXParticleUVSet> UVSets = new();
+        public readonly List<AVFXParticleUVSet> UvSets = new();
 
         public ParticleType Type;
         public AVFXBase Data;
@@ -151,7 +151,7 @@ namespace VfxEditor.AVFXLib.Particle {
                 else if( _name == "UvSt" ) {
                     var uvSet = new AVFXParticleUVSet();
                     uvSet.Read( _reader, _size );
-                    UVSets.Add( uvSet );
+                    UvSets.Add( uvSet );
                 }
             }, size );
         }
@@ -165,7 +165,7 @@ namespace VfxEditor.AVFXLib.Particle {
         protected override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Children );
 
-            foreach( var uvSet in UVSets ) {
+            foreach( var uvSet in UvSets ) {
                 uvSet.Write( writer );
             }
 
@@ -199,28 +199,28 @@ namespace VfxEditor.AVFXLib.Particle {
             Data?.SetAssigned( true );
         }
 
-        public AVFXParticleUVSet AddUVSet() {
-            if( UVSets.Count >= 4 ) return null;
+        public AVFXParticleUVSet AddUvSet() {
+            if( UvSets.Count >= 4 ) return null;
             var UvSet = new AVFXParticleUVSet();
-            UVSets.Add( UvSet );
-            UVSetCount.SetValue( UVSets.Count );
+            UvSets.Add( UvSet );
+            UVSetCount.SetValue( UvSets.Count );
             return UvSet;
         }
 
-        public void AddUVSet( AVFXParticleUVSet item ) {
-            if( UVSets.Count >= 4 ) return;
-            UVSets.Add( item );
-            UVSetCount.SetValue( UVSets.Count );
+        public void AddUvSet( AVFXParticleUVSet item ) {
+            if( UvSets.Count >= 4 ) return;
+            UvSets.Add( item );
+            UVSetCount.SetValue( UvSets.Count );
         }
 
-        public void RemoveUVSet( int idx ) {
-            UVSets.RemoveAt( idx );
-            UVSetCount.SetValue( UVSets.Count );
+        public void RemoveUvSet( int idx ) {
+            UvSets.RemoveAt( idx );
+            UVSetCount.SetValue( UvSets.Count );
         }
 
-        public void RemoveUVSet( AVFXParticleUVSet item ) {
-            UVSets.Remove( item );
-            UVSetCount.SetValue( UVSets.Count );
+        public void RemoveUvSet( AVFXParticleUVSet item ) {
+            UvSets.Remove( item );
+            UVSetCount.SetValue( UvSets.Count );
         }
     }
 }

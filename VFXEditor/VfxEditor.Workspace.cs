@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-using VfxEditor.AVFX;
+using VfxEditor.AvfxFormat;
 using VfxEditor.Utils;
 using VfxEditor.PapFormat;
 using VfxEditor.Texture;

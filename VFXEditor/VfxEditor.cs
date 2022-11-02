@@ -10,7 +10,7 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
-using VfxEditor.AVFX;
+using VfxEditor.AvfxFormat;
 using VfxEditor.Data;
 using VfxEditor.Dialogs;
 using VfxEditor.DirectX;
