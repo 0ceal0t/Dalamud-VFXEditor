@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Sheets {
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             });
 
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivCommon( item ) );
             }

@@ -42,7 +42,7 @@ namespace VfxEditor {
             ImGui.SameLine();
             ImGui.InputText( $"{id}-Input", ref inputPreview, 255, ImGuiInputTextFlags.ReadOnly );
             if( ImGui.IsItemActive() ) {
-                foreach( var key in VfxEditor.KeyState.GetValidVirtualKeys() ) {
+                foreach( var key in Plugin.KeyState.GetValidVirtualKeys() ) {
                     if( CheckState( key ) ) {
                         Key = key;
                         ret = true;
@@ -88,13 +88,13 @@ namespace VfxEditor {
 
         public static void UpdateState() {
             LastState.Clear();
-            foreach( var key in VfxEditor.KeyState.GetValidVirtualKeys() ) {
-                LastState[key] = VfxEditor.KeyState[key];
+            foreach( var key in Plugin.KeyState.GetValidVirtualKeys() ) {
+                LastState[key] = Plugin.KeyState[key];
             }
         }
 
         public static bool CheckState( VirtualKey key ) {
-            if( !VfxEditor.KeyState.IsVirtualKeyValid( key ) ) return false;
+            if( !Plugin.KeyState.IsVirtualKeyValid( key ) ) return false;
             return ImGui.IsKeyPressed( ImGuiHelpers.VirtualKeyToImGuiKey( key ) ) || CheckVirtualKeyState( key );
         }
 
@@ -102,7 +102,7 @@ namespace VfxEditor {
         private static bool CheckVirtualKeyState( VirtualKey key ) {
             if( !LastState.TryGetValue( key, out var lastKeyState ) ) return false;
             if( !lastKeyState ) return false;
-            if( VfxEditor.KeyState[key] ) return false;
+            if( Plugin.KeyState[key] ) return false;
             return true;
         }
 

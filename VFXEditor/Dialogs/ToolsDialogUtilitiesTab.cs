@@ -15,11 +15,11 @@ namespace VfxEditor.Dialogs {
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
                 var cleanedPath = ExtractPath.Replace( "\\", "/" );
-                var result = VfxEditor.DataManager.FileExists( cleanedPath );
+                var result = Plugin.DataManager.FileExists( cleanedPath );
                 if( result ) {
                     try {
                         var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
-                        var file = VfxEditor.DataManager.GetFile( cleanedPath );
+                        var file = Plugin.DataManager.GetFile( cleanedPath );
                         UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
                     }
                     catch( Exception e ) {

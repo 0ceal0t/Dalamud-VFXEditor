@@ -38,7 +38,7 @@ namespace VfxEditor.Texture {
         public static void Setup() {
             // Set paths manually since TexImpNet can be dumb sometimes
             // Using the 32-bit version in all cases because net6, I guess
-            var runtimeRoot = Path.Combine( VfxEditor.RootLocation, "runtimes" );
+            var runtimeRoot = Path.Combine( Plugin.RootLocation, "runtimes" );
 
             // ==============
 
@@ -82,7 +82,7 @@ namespace VfxEditor.Texture {
 
         // import replacement texture from atex
         public bool ImportTexture( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
-            var path = Path.Combine( VfxEditor.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+            var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
             File.Copy( localPath, path, true );
 
             var replaceData = new TextureReplace {
@@ -100,7 +100,7 @@ namespace VfxEditor.Texture {
         public bool ImportTexture( string localPath, string replacePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
             try {
                 TextureReplace replaceData;
-                var path = Path.Combine( VfxEditor.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+                var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
 
                 if( Path.GetExtension( localPath ).ToLower() == ".dds" ) { // a .dds, use the format that the file is already in
                     var ddsFile = DDSFile.Read( localPath );
@@ -199,7 +199,7 @@ namespace VfxEditor.Texture {
         }
 
         public AtexFile GetRawTexture( string path ) {
-            return PathToTextureReplace.TryGetValue( path, out var texturePreview ) ? AtexFile.LoadFromLocal( texturePreview.LocalPath ) : VfxEditor.DataManager.GetFile<AtexFile>( path );
+            return PathToTextureReplace.TryGetValue( path, out var texturePreview ) ? AtexFile.LoadFromLocal( texturePreview.LocalPath ) : Plugin.DataManager.GetFile<AtexFile>( path );
         }
 
         public void LoadPreviewTexture( string path ) {
@@ -225,7 +225,7 @@ namespace VfxEditor.Texture {
         public bool GetPreviewTexture( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
 
         public bool CreatePreviewTexture( string path, out PreviewTexture ret, bool loadImage = true ) {
-            var result = VfxEditor.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path) ;
+            var result = Plugin.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path) ;
             ret = new PreviewTexture();
             if( result ) {
                 try {
@@ -243,7 +243,7 @@ namespace VfxEditor.Texture {
                     }
 
                     if( loadImage ) {
-                        var texBind = VfxEditor.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
+                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
                         ret.Wrap = texBind;
                     }
                     return true;

@@ -7,7 +7,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class CutsceneSheetLoader : SheetLoader<XivCutscene, XivCutsceneSelected> {
         public override void OnLoad() {
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivCutscene( item ) );
             }
@@ -15,10 +15,10 @@ namespace VfxEditor.Select.Sheets {
 
         public override bool SelectItem( XivCutscene item, out XivCutsceneSelected selectedItem ) {
             selectedItem = null;
-            var result = VfxEditor.DataManager.FileExists( item.Path );
+            var result = Plugin.DataManager.FileExists( item.Path );
             if( result ) {
                 try {
-                    var file = VfxEditor.DataManager.GetFile( item.Path );
+                    var file = Plugin.DataManager.GetFile( item.Path );
                     selectedItem = new XivCutsceneSelected( item, file );
                 }
                 catch( Exception e ) {

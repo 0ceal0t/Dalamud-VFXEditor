@@ -45,12 +45,12 @@ namespace VfxEditor {
             if( iconId > 0 ) {
                 TexFile tex;
                 try {
-                    tex = VfxEditor.DataManager.GetIcon( iconId );
+                    tex = Plugin.DataManager.GetIcon( iconId );
                 }
                 catch( Exception ) {
-                    tex = VfxEditor.DataManager.GetIcon( 0 );
+                    tex = Plugin.DataManager.GetIcon( 0 );
                 }
-                texWrap = VfxEditor.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                texWrap = Plugin.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 

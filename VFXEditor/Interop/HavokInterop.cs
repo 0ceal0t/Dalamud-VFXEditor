@@ -15,12 +15,16 @@ namespace VfxEditor.Interop {
             Run( $"3 {baseHkx} {indexToUse} {newHkx} {indexToUse} {output}" );
         }
 
+        public static void HavokToBin( string animHkx, int animIndex, string sklHkx, string output ) {
+            Run( $"4 {animHkx} {animIndex} {sklHkx} 0 {output}" );
+        }
+
         public static void Run( string arguments ) {
             // Use ProcessStartInfo class
             var startInfo = new ProcessStartInfo {
                 CreateNoWindow = false,
                 UseShellExecute = false,
-                FileName = Path.Combine( VfxEditor.RootLocation, "Files", "animassist.exe" ),
+                FileName = Path.Combine( Plugin.RootLocation, "Files", "animassist.exe" ),
                 WindowStyle = ProcessWindowStyle.Hidden,
                 Arguments = arguments
             };

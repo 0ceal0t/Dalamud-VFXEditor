@@ -61,7 +61,7 @@ namespace VfxEditor {
         }
 
         public void Setup() {
-            VfxEditor.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
             try {
                 Directory.CreateDirectory( WriteLocation );
@@ -84,8 +84,8 @@ namespace VfxEditor {
         }
 
         public void Save() {
-            VfxEditor.PluginInterface.SavePluginConfig( this );
-            VfxEditor.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Plugin.PluginInterface.SavePluginConfig( this );
+            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
 
         public override void DrawBody() {

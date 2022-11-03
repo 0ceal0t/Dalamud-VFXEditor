@@ -87,7 +87,7 @@ namespace VfxEditor.FileManager {
 
         protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
-            VfxEditor.ResourceLoader.ReloadPath( Replace.Path, WriteLocation, papIds );
+            Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation, papIds );
         }
 
         public virtual void Dispose() {
@@ -106,8 +106,8 @@ namespace VfxEditor.FileManager {
         public abstract void CheckKeybinds();
 
         public virtual void Draw() {
-            if ( VfxEditor.Configuration.WriteLocationError ) {
-                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({VfxEditor.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
+            if ( Plugin.Configuration.WriteLocationError ) {
+                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
                 return;
             }
 

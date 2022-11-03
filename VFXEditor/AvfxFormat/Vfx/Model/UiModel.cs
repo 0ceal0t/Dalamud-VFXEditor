@@ -48,7 +48,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    VfxEditor.AvfxManager.ShowExportDialog( this );
+                    Plugin.AvfxManager.ShowExportDialog( this );
                 }
                 ImGui.EndPopup();
             }
@@ -73,7 +73,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void OnSelect() {
-            VfxEditor.DirectXManager.ModelView.LoadModel( Model );
+            Plugin.DirectXManager.ModelView.LoadModel( Model );
             UvView.LoadModel( Model );
         }
 
@@ -81,58 +81,58 @@ namespace VfxEditor.AvfxFormat.Vfx {
             var ret = ImGui.BeginTabItem( "3D View" + parentId );
             if( !ret ) return;
             if( Refresh ) {
-                VfxEditor.DirectXManager.ModelView.LoadModel( Model, mode: Mode );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: Mode );
                 UvView.LoadModel( Model );
                 Refresh = false;
             }
 
-            var wireframe = VfxEditor.DirectXManager.ModelView.IsWireframe;
+            var wireframe = Plugin.DirectXManager.ModelView.IsWireframe;
             if( ImGui.Checkbox( "Wireframe##3DModel", ref wireframe ) ) {
-                VfxEditor.DirectXManager.ModelView.IsWireframe = wireframe;
-                VfxEditor.DirectXManager.ModelView.RefreshRasterizeState();
-                VfxEditor.DirectXManager.ModelView.Draw();
+                Plugin.DirectXManager.ModelView.IsWireframe = wireframe;
+                Plugin.DirectXManager.ModelView.RefreshRasterizeState();
+                Plugin.DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Edges##3DModel", ref VfxEditor.DirectXManager.ModelView.ShowEdges ) ) {
-                VfxEditor.DirectXManager.ModelView.Draw();
+            if( ImGui.Checkbox( "Show Edges##3DModel", ref Plugin.DirectXManager.ModelView.ShowEdges ) ) {
+                Plugin.DirectXManager.ModelView.Draw();
             }
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref VfxEditor.DirectXManager.ModelView.ShowEmitter ) ) {
-                VfxEditor.DirectXManager.ModelView.Draw();
+            if( ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Plugin.DirectXManager.ModelView.ShowEmitter ) ) {
+                Plugin.DirectXManager.ModelView.Draw();
             }
             if( ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
-                VfxEditor.DirectXManager.ModelView.LoadModel( Model, mode: 1 );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: 1 );
             }
             ImGui.SameLine();
             if( ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
-                VfxEditor.DirectXManager.ModelView.LoadModel( Model, mode: 2 );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: 2 );
             }
             ImGui.SameLine();
             if( ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
-                VfxEditor.DirectXManager.ModelView.LoadModel( Model, mode: 3 );
+                Plugin.DirectXManager.ModelView.LoadModel( Model, mode: 3 );
             }
 
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.BeginChild( "3DViewChild" );
 
             var space = ImGui.GetContentRegionAvail();
-            VfxEditor.DirectXManager.ModelView.Resize( space );
+            Plugin.DirectXManager.ModelView.Resize( space );
 
-            ImGui.ImageButton( VfxEditor.DirectXManager.ModelView.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
+            ImGui.ImageButton( Plugin.DirectXManager.ModelView.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
 
             if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
-                VfxEditor.DirectXManager.ModelView.Drag( delta, true );
+                Plugin.DirectXManager.ModelView.Drag( delta, true );
             }
             else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                VfxEditor.DirectXManager.ModelView.Drag( ImGui.GetMousePos() - cursor, false );
+                Plugin.DirectXManager.ModelView.Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {
-                VfxEditor.DirectXManager.ModelView.IsDragging = false;
+                Plugin.DirectXManager.ModelView.IsDragging = false;
             }
 
             if( ImGui.IsItemHovered() ) {
-                VfxEditor.DirectXManager.ModelView.Zoom( ImGui.GetIO().MouseWheel );
+                Plugin.DirectXManager.ModelView.Zoom( ImGui.GetIO().MouseWheel );
             }
 
             ImGui.EndChild();

@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             Path = new UiString( "Path", Texture.Path );
             LastValue = Texture.Path.GetValue();
-            VfxEditor.TextureManager.LoadPreviewTexture( Texture.Path.GetValue() );
+            Plugin.TextureManager.LoadPreviewTexture( Texture.Path.GetValue() );
             HasDependencies = false; // if imported, all set now
         }
 
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             var currentPathValue = Path.Literal.GetValue();
             if( currentPathValue != LastValue ) {
                 LastValue = currentPathValue;
-                VfxEditor.TextureManager.LoadPreviewTexture( currentPathValue );
+                Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
             }
             return currentPathValue;
         }
@@ -42,13 +42,13 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             var currentPathValue = LoadTex();
 
-            VfxEditor.TextureManager.DrawTexture( currentPathValue, id );
+            Plugin.TextureManager.DrawTexture( currentPathValue, id );
         }
 
         public override void ShowTooltip() {
             var currentPathValue = LoadTex();
 
-            if( VfxEditor.TextureManager.GetPreviewTexture( currentPathValue, out var t ) ) {
+            if( Plugin.TextureManager.GetPreviewTexture( currentPathValue, out var t ) ) {
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();

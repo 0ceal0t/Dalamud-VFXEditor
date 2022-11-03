@@ -12,11 +12,11 @@ namespace VfxEditor.Utils {
             vertexesOut = new List<AVFXVertex>();
             indexesOut = new List<AVFXIndex>();
             var d = File.ReadAllBytes( localPath );
-            if( !VfxEditor.DataManager.FileExists( localPath ) ) return false;
+            if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
 
-            var file = VfxEditor.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
+            var file = Plugin.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
 
             foreach( var mesh in mdl.GetMeshesByType( Mesh.MeshType.Main ) ) {

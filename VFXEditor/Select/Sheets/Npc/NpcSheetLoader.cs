@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Sheets {
 
         public override void OnLoad() {
             // map N:0000000 -> "Moogle"
-            var bNpcNames = VfxEditor.DataManager.GetExcelSheet<BNpcName>()
+            var bNpcNames = Plugin.DataManager.GetExcelSheet<BNpcName>()
                 .Where( x => !string.IsNullOrEmpty( x.Singular ) )
                 .ToDictionary(
                     x => $"N:{x.RowId.ToString().PadLeft(7, '0')}",
@@ -59,7 +59,7 @@ namespace VfxEditor.Select.Sheets {
             );
 
             // add battle npcs
-            var battleNpcSheet = VfxEditor.DataManager.GetExcelSheet<BNpcBase>().Where( x => x.ModelChara.Value.Model != 0 && ( x.ModelChara.Value.Type == 2 || x.ModelChara.Value.Type == 3 ) );
+            var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>().Where( x => x.ModelChara.Value.Model != 0 && ( x.ModelChara.Value.Type == 2 || x.ModelChara.Value.Type == 3 ) );
             foreach( var item in battleNpcSheet ) {
                 var id = $"B:{item.RowId.ToString().PadLeft( 7, '0' )}";
 
@@ -67,7 +67,7 @@ namespace VfxEditor.Select.Sheets {
             }
 
             // add event npcs
-            var eventNpcSheet = VfxEditor.DataManager.GetExcelSheet<BNpcBase>().Where( x => x.ModelChara.Value.Model != 0 && ( x.ModelChara.Value.Type == 2 || x.ModelChara.Value.Type == 3 ) );
+            var eventNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>().Where( x => x.ModelChara.Value.Model != 0 && ( x.ModelChara.Value.Type == 2 || x.ModelChara.Value.Type == 3 ) );
             foreach( var item in eventNpcSheet ) {
                 var id = $"E:{item.RowId.ToString().PadLeft( 7, '0' )}";
 

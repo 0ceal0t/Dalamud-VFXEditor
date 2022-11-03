@@ -111,15 +111,15 @@ namespace VfxEditor.Utils {
 
 #nullable enable
         public static void OkNotification( string content, string? title = "VFXEditor" ) {
-            VfxEditor.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Success );
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Success );
         }
 
         public static void ErrorNotification( string content, string? title = "VFXEditor" ) {
-            VfxEditor.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Error );
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Error );
         }
 
         public static void WarningNotification( string content, string? title = "VFXEditor" ) {
-            VfxEditor.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Warning );
+            Plugin.PluginInterface.UiBuilder.AddNotification( content, title, Dalamud.Interface.Internal.Notifications.NotificationType.Warning );
         }
 #nullable disable
 

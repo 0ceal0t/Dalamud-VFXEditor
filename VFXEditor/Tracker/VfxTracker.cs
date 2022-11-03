@@ -80,7 +80,7 @@ namespace VfxEditor.Tracker {
 
         public void Draw() {
             if( !Enabled ) return;
-            var playPos = VfxEditor.ClientState?.LocalPlayer?.Position;
+            var playPos = Plugin.ClientState?.LocalPlayer?.Position;
             if( !playPos.HasValue ) return;
 
             var windowPos = ImGuiHelpers.MainViewport.Pos;
@@ -97,7 +97,7 @@ namespace VfxEditor.Tracker {
             }
 
             // ======== SET UP MATRIX, ONLY ONCE :) =====
-            var matrixSingleton = VfxEditor.ResourceLoader.GetMatrixSingleton();
+            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
             var viewProjectionMatrix = new SharpDX.Matrix();
             float width, height;
             unsafe {
@@ -179,7 +179,7 @@ namespace VfxEditor.Tracker {
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, group.Key );
-                if( d > 100f && VfxEditor.Configuration.OverlayLimit ) {
+                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
@@ -187,14 +187,14 @@ namespace VfxEditor.Tracker {
             }
 
             // ====== DRAW ACTORS ======
-            var actorTable = VfxEditor.Objects;
+            var actorTable = Plugin.Objects;
             if( actorTable == null ) {
                 return;
             }
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
 
-                if( VfxEditor.ClientState.LocalPlayer == null ) continue;
+                if( Plugin.ClientState.LocalPlayer == null ) continue;
 
                 var result = actorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;
@@ -207,7 +207,7 @@ namespace VfxEditor.Tracker {
 
                 if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
                 var d = Distance( playPos.Value, pos );
-                if( d > 100f && VfxEditor.Configuration.OverlayLimit ) {
+                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
                     continue;
                 }
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
@@ -259,7 +259,7 @@ namespace VfxEditor.Tracker {
             ImGui.End();
         }
 
-        private static bool WatchingCutscene => VfxEditor.ClientState != null && VfxEditor.Condition[ConditionFlag.OccupiedInCutSceneEvent] || VfxEditor.Condition[ConditionFlag.WatchingCutscene78];
+        private static bool WatchingCutscene => Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
         private class ClosenessComp : IEqualityComparer<SharpDX.Vector3> {
             public bool Equals( SharpDX.Vector3 x, SharpDX.Vector3 y ) => ( x - y ).Length() < 2;

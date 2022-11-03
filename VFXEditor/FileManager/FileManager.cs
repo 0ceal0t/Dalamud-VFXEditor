@@ -14,7 +14,7 @@ namespace VfxEditor.FileManager {
         private readonly string Extension; // tmb
         private readonly string TempFilePrefix; // TmbTemp
         private readonly string PenumbraPath; // Tmb
-        protected string LocalPath => Path.Combine( VfxEditor.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
+        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
 
         protected readonly string Title;
         protected readonly string Id;
@@ -84,16 +84,16 @@ namespace VfxEditor.FileManager {
         }
 
         public override void DrawBody() {
-            Name = Title + ( string.IsNullOrEmpty( VfxEditor.CurrentWorkspaceLocation ) ? "" : " - " + VfxEditor.CurrentWorkspaceLocation ) + "###" + Title;
+            Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
             CheckKeybinds();
             DrawDocumentSelect();
 
             if( ImGui.BeginMenuBar() ) {
-                VfxEditor.DrawFileMenu();
+                Plugin.DrawFileMenu();
                 DrawMenu();
                 if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
                 ImGui.Separator();
-                VfxEditor.DrawManagersMenu();
+                Plugin.DrawManagersMenu();
 
                 ImGui.EndMenuBar();
             }
@@ -103,8 +103,8 @@ namespace VfxEditor.FileManager {
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows) ) return;
-            if( VfxEditor.Configuration.DocumentsKeybind.KeyPressed() ) DocumentDialogVisible = true;
-            if( VfxEditor.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
+            if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentDialogVisible = true;
+            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
             ActiveDocument?.CheckKeybinds();
         }
 

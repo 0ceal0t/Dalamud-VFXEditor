@@ -8,7 +8,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
         public override void OnLoad() {
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 var i = new XivEmote( item );
                 if( i.PapFiles.Count > 0 ) {
@@ -22,9 +22,9 @@ namespace VfxEditor.Select.Sheets {
             var files = new List<Lumina.Data.FileResource>();
             try {
                 foreach( var path in item.PapFiles ) {
-                    var result = VfxEditor.DataManager.FileExists( path );
+                    var result = Plugin.DataManager.FileExists( path );
                     if( result ) {
-                        files.Add( VfxEditor.DataManager.GetFile( path ) );
+                        files.Add( Plugin.DataManager.GetFile( path ) );
                     }
                 }
                 selectedItem = new XivEmoteSelected( item, files );

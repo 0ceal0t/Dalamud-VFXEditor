@@ -99,7 +99,7 @@ namespace VfxEditor.Interop {
         }
 
         public unsafe void Init() {
-            var scanner = VfxEditor.SigScanner;
+            var scanner = Plugin.SigScanner;
 
             var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
 
@@ -139,36 +139,36 @@ namespace VfxEditor.Interop {
         private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            VfxEditor.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
+            Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
 
-            if (VfxEditor.Configuration?.LogVfxDebug == true) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
+            if (Plugin.Configuration?.LogVfxDebug == true) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
 
             return vfx;
         }
 
         private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( VfxEditor.Spawn != null && vfx == ( IntPtr )VfxEditor.Spawn.Vfx ) {
-                VfxEditor.ClearSpawn();
+            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+                Plugin.ClearSpawn();
             }
-            VfxEditor.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
+            Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            VfxEditor.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
+            Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
 
-            if( VfxEditor.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
 
             return vfx;
         }
 
         private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( VfxEditor.Spawn != null && vfx == ( IntPtr )VfxEditor.Spawn.Vfx ) {
-                VfxEditor.ClearSpawn();
+            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+                Plugin.ClearSpawn();
             }
-            VfxEditor.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
+            Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
@@ -225,11 +225,11 @@ namespace VfxEditor.Interop {
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None ) return;
             CurrentRedrawState = RedrawState.Start;
-            VfxEditor.Framework.Update += OnUpdateEvent;
+            Plugin.Framework.Update += OnUpdateEvent;
         }
 
         private unsafe void OnUpdateEvent( object framework ) {
-            var player = VfxEditor.ClientState.LocalPlayer;
+            var player = Plugin.ClientState.LocalPlayer;
             var renderPtr = player.Address + 0x104; // https://github.com/aers/FFXIVClientStructs/blob/fe20b24789a5b2c3eaae1e02b974187769615353/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs#L46
 
             switch( CurrentRedrawState ) {
@@ -250,7 +250,7 @@ namespace VfxEditor.Interop {
                 case RedrawState.Visible:
                 default:
                     CurrentRedrawState = RedrawState.None;
-                    VfxEditor.Framework.Update -= OnUpdateEvent;
+                    Plugin.Framework.Update -= OnUpdateEvent;
                     break;
             }
         }
@@ -298,13 +298,13 @@ namespace VfxEditor.Interop {
         ) {
             var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
 
-            if( VfxEditor.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
 
             var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
                 var value = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
-                if( VfxEditor.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value ).ToString( "X8" ) );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value ).ToString( "X8" ) );
                 return value;
             }
             var cleanPath = fsPath.Replace( '\\', '/' );
@@ -317,7 +317,7 @@ namespace VfxEditor.Interop {
             *pResourceHash = Crc32.Checksum;
 
             var value2 = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
-            if( VfxEditor.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ) );
             return value2;
         }
 
@@ -339,7 +339,7 @@ namespace VfxEditor.Interop {
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
-            if( VfxEditor.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Replaced with {0}", gameFsPath );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Replaced with {0}", gameFsPath );
 
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
@@ -363,19 +363,19 @@ namespace VfxEditor.Interop {
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
-            if( VfxEditor.AvfxManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
+            if( Plugin.AvfxManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
                 localPath = vfxFile;
                 return true;
             }
-            else if( VfxEditor.TextureManager?.GetReplacePath( gamePath, out var texFile ) == true ) {
+            else if( Plugin.TextureManager?.GetReplacePath( gamePath, out var texFile ) == true ) {
                 localPath = texFile;
                 return true;
             }
-            else if( VfxEditor.TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
+            else if( Plugin.TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
                 localPath = tmbFile;
                 return true;
             }
-            else if( VfxEditor.PapManager.GetReplacePath( gamePath, out var papFile ) == true ) {
+            else if( Plugin.PapManager.GetReplacePath( gamePath, out var papFile ) == true ) {
                 localPath = papFile;
                 return true;
             }
@@ -386,7 +386,7 @@ namespace VfxEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( VfxEditor.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
                 PrepPap( gameResource, papIds );
@@ -396,7 +396,7 @@ namespace VfxEditor.Interop {
 
             if( !string.IsNullOrEmpty( localPath ) ) {
                 var gameResource2 = GetResource( gamePath, false ); // get local path resource
-                if( VfxEditor.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource2.ToString( "X8" ) );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource2.ToString( "X8" ) );
 
                 if( gameResource2 != IntPtr.Zero ) {
                     PrepPap( gameResource2, papIds );

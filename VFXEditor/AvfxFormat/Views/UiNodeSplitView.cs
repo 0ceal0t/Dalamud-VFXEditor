@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             Id = $"##{name}";
             DefaultText = $"Select {UiUtils.GetArticle( name )} {name}";
-            DefaultPath = Path.Combine( VfxEditor.RootLocation, "Files", defaultPath );
+            DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
         public abstract void OnDelete( T item );

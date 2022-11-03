@@ -6,7 +6,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class ActionSheetLoader : SheetLoader<XivActionBase, XivActionSelected> {
         public override void OnLoad() {
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
                 var i = new XivAction( item );
@@ -26,10 +26,10 @@ namespace VfxEditor.Select.Sheets {
                 return true;
             }
             var tmbPath = item.GetTmbPath();
-            var result = VfxEditor.DataManager.FileExists( tmbPath );
+            var result = Plugin.DataManager.FileExists( tmbPath );
             if( result ) {
                 try {
-                    var file = VfxEditor.DataManager.GetFile( tmbPath );
+                    var file = Plugin.DataManager.GetFile( tmbPath );
                     selectedItem = new XivActionSelected( file, item );
                 }
                 catch( Exception e ) {

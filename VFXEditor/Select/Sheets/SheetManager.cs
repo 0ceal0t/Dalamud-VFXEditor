@@ -92,11 +92,11 @@ namespace VfxEditor.Select {
         };
 
         public static void Initialize() {
-            NpcNamesOldPath = Path.Combine( VfxEditor.RootLocation, "Files", "npc_names_old.csv" );
-            NpcFilesPath = Path.Combine( VfxEditor.RootLocation, "Files", "npc_files.json" );
-            NpcNamesPath = Path.Combine( VfxEditor.RootLocation, "Files", "npc_names.json" );
-            MiscVfxPath = Path.Combine( VfxEditor.RootLocation, "Files", "vfx_misc.txt" );
-            MiscTmbPath = Path.Combine( VfxEditor.RootLocation, "Files", "tmb_misc.txt" );
+            NpcNamesOldPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names_old.csv" );
+            NpcFilesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
+            NpcNamesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
+            MiscVfxPath = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
+            MiscTmbPath = Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
 
             Items = new ItemSheetLoader();
             Actions = new ActionSheetLoader();
@@ -122,7 +122,7 @@ namespace VfxEditor.Select {
             Misc = new CommonLoader();
         }
 
-        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => VfxEditor.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
+        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
         public static string GetSkeletonpath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 

@@ -10,14 +10,14 @@ namespace VfxEditor.PapFormat {
         public static void Setup() {
             SourceSelect = new PapSelectDialog(
                 "Pap Select [SOURCE]",
-                VfxEditor.Configuration.RecentSelectsPAP,
+                Plugin.Configuration.RecentSelectsPAP,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new PapSelectDialog(
                 "Pap Select [TARGET]",
-                VfxEditor.Configuration.RecentSelectsPAP,
+                Plugin.Configuration.RecentSelectsPAP,
                 false,
                 SetReplaceGlobal
             );
@@ -26,13 +26,13 @@ namespace VfxEditor.PapFormat {
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
-            VfxEditor.PapManager?.SetSource( result );
-            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelectsPAP, result );
+            Plugin.PapManager?.SetSource( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsPAP, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
-            VfxEditor.PapManager?.SetReplace( result );
-            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelectsPAP, result );
+            Plugin.PapManager?.SetReplace( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsPAP, result );
         }
 
         public static readonly string PenumbraPath = "Pap";

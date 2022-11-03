@@ -4,7 +4,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class EmoteTmbSheetLoader : SheetLoader<XivEmoteTmb, XivEmoteTmb> {
         public override void OnLoad() {
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivEmoteTmb( item ) );
             }

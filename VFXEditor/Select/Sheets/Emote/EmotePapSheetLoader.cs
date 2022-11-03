@@ -5,7 +5,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class EmotePapSheetLoader : SheetLoader<XivEmotePap, XivEmotePapSelected> {
         public override void OnLoad() {
-            var sheet = VfxEditor.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
                 Items.Add( new XivEmotePap( item ) );
             }

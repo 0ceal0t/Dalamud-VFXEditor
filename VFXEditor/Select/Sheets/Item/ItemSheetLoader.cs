@@ -7,7 +7,7 @@ using VfxEditor.Select.Rows;
 namespace VfxEditor.Select.Sheets {
     public class ItemSheetLoader : SheetLoader<XivItem, XivItemSelected> {
         public override void OnLoad() {
-            foreach( var row in VfxEditor.DataManager.GetExcelSheet<Item>() ) {
+            foreach( var row in Plugin.DataManager.GetExcelSheet<Item>() ) {
                 if( row.EquipSlotCategory.Value?.MainHand == 1 || row.EquipSlotCategory.Value?.OffHand == 1 ) {
                     var item = new XivWeapon( row );
                     if( item.HasModel ) Items.Add( item );
@@ -29,10 +29,10 @@ namespace VfxEditor.Select.Sheets {
         public override bool SelectItem( XivItem item, out XivItemSelected selectedItem ) {
             selectedItem = null;
             var imcPath = item.ImcPath;
-            var result = VfxEditor.DataManager.FileExists( imcPath );
+            var result = Plugin.DataManager.FileExists( imcPath );
             if( result ) {
                 try {
-                    var file = VfxEditor.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
+                    var file = Plugin.DataManager.GetFile<Lumina.Data.Files.ImcFile>( imcPath );
                     selectedItem = new XivItemSelected( file, item );
                 }
                 catch( Exception e ) {

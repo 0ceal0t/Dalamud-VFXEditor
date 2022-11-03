@@ -9,27 +9,27 @@ namespace VfxEditor.TmbFormat {
         public static void Setup() {
             SourceSelect = new TmbSelectDialog(
                 "Tmb Select [SOURCE]",
-                VfxEditor.Configuration.RecentSelectsTMB,
+                Plugin.Configuration.RecentSelectsTMB,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new TmbSelectDialog(
                 "Tmb Select [TARGET]",
-                VfxEditor.Configuration.RecentSelectsTMB,
+                Plugin.Configuration.RecentSelectsTMB,
                 false,
                 SetReplaceGlobal
             );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
-            VfxEditor.TmbManager?.SetSource( result );
-            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelectsTMB, result );
+            Plugin.TmbManager?.SetSource( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsTMB, result );
         }
 
         public static void SetReplaceGlobal( SelectResult result ) {
-            VfxEditor.TmbManager?.SetReplace( result );
-            VfxEditor.Configuration.AddRecent( VfxEditor.Configuration.RecentSelectsTMB, result );
+            Plugin.TmbManager?.SetReplace( result );
+            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsTMB, result );
         }
 
         public static readonly string PenumbraPath = "Tmb";

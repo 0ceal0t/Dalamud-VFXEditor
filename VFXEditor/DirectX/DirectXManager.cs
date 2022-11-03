@@ -11,8 +11,8 @@ namespace VfxEditor.DirectX {
         public readonly GradientView GradientView;
 
         public DirectXManager() {
-            var shaderPath = Path.Combine( VfxEditor.RootLocation, "Shaders" );
-            Device = VfxEditor.PluginInterface.UiBuilder.Device;
+            var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );
+            Device = Plugin.PluginInterface.UiBuilder.Device;
             Ctx = Device.ImmediateContext;
             ModelView = new ModelPreview( Device, Ctx, shaderPath );
             GradientView = new GradientView( Device, Ctx, shaderPath );
