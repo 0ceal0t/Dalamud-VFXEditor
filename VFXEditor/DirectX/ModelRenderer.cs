@@ -117,7 +117,7 @@ namespace VfxEditor.DirectX {
             if( IsDragging ) {
                 if( rotate ) {
                     Yaw += ( newPos.X - LastMousePos.X ) * 0.01f;
-                    Pitch += -( newPos.Y - LastMousePos.Y ) * 0.01f;
+                    Pitch += ( newPos.Y - LastMousePos.Y ) * 0.01f;
                     Pitch = Clamp( Pitch, -1.55f, 1.55f );
                 }
                 else {

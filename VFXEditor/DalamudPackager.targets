@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <Target Name="DeleteFile" AfterTargets="Build">
+        <Delete Files="$(TargetDir)\SharpDX.Direct2D1.dll" />
+        <Delete Files="$(TargetDir)\SharpDX.Direct3D11.dll" />
+        <Delete Files="$(TargetDir)\SharpDX.DXGI.dll" />
+        <Delete Files="$(TargetDir)\SharpDX.Mathematics.dll" />
         <Delete Files="$(TargetDir)\SharpDX.dll" />
     </Target>
     

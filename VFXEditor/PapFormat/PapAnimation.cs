@@ -50,18 +50,16 @@ namespace VfxEditor.PapFormat {
 
         public string GetName() => Name;
 
-        public void Draw( string id ) {
-            ImGui.InputText( $"Name{id}", ref Name, 31 );
-            FileUtils.ShortInput( $"Unknown 1{id}", ref Unknown1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unknown2 );   
+        public void Draw( string parentId, short modelId, byte baseId, byte variantId ) {
+            ImGui.InputText( $"Name{parentId}", ref Name, 31 );
+            FileUtils.ShortInput( $"Unknown 1{parentId}", ref Unknown1 );
+            ImGui.InputInt( $"Unknown 2{parentId}", ref Unknown2 );   
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            // ====== HAVOK ========
-
             ImGui.Text( $"This animation has Havok index: {HavokIndex}" );
 
-            if( ImGui.Button( $"Replace Havok data{id}" ) ) {
+            if( ImGui.Button( $"Replace Havok data{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         PapManager.IndexDialog.OnOk = ( int idx ) => {
@@ -73,10 +71,16 @@ namespace VfxEditor.PapFormat {
                 } );
             }
 
-            // ===== TMB ========
+            ImGui.BeginTabBar( "AnimationTabls" );
+            DrawTmb( parentId );
+            DrawAnimation3D( parentId, modelId, baseId, variantId );
+            ImGui.EndTabBar();
+        }
 
-            ImGui.SameLine();
-            if( ImGui.Button( $"Import TMB{id}" ) ) {
+        private void DrawTmb( string parentId ) {
+            if( !ImGui.BeginTabItem( "TMB" + parentId ) ) return;
+
+            if( ImGui.Button( $"Import TMB{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         Tmb = TmbFile.FromLocalFile( res );
@@ -86,14 +90,21 @@ namespace VfxEditor.PapFormat {
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( $"Export TMB{id}" ) ) {
+            if( ImGui.Button( $"Export TMB{parentId}" ) ) {
                 UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
-
             ImGui.TextDisabled( "Embedded TMB:" );
-            Tmb.Draw( id + "/Tmb" );
+            Tmb.Draw( parentId + "/Tmb" );
+
+            ImGui.EndTabItem();
+        }
+
+        private void DrawAnimation3D( string parentId, short modelId, byte baseId, byte variantId ) {
+            if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
+            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, baseId, variantId );
+            ImGui.EndTabItem();
         }
     }
 }

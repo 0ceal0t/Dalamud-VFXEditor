@@ -15,8 +15,7 @@ namespace VfxEditor.Dialogs {
             ImGui.SameLine();
             if( ImGui.Button( "Extract##RawExtract" ) ) {
                 var cleanedPath = ExtractPath.Replace( "\\", "/" );
-                var result = Plugin.DataManager.FileExists( cleanedPath );
-                if( result ) {
+                if( Plugin.DataManager.FileExists( cleanedPath ) ) {
                     try {
                         var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
                         var file = Plugin.DataManager.GetFile( cleanedPath );

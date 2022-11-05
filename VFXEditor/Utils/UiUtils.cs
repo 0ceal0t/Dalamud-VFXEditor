@@ -86,9 +86,9 @@ namespace VfxEditor.Utils {
             Tooltip( text );
         }
 
-        public static void IconText( FontAwesomeIcon icon, bool disabled = false) {
+        public static void IconText( FontAwesomeIcon icon, bool disabled = false ) {
             ImGui.PushFont( UiBuilder.IconFont );
-            if (disabled) ImGui.TextDisabled( $"{(char)icon}" );
+            if( disabled ) ImGui.TextDisabled( $"{( char )icon}" );
             else ImGui.Text( $"{( char )icon}" );
             ImGui.PopFont();
         }

@@ -136,7 +136,7 @@ namespace VfxEditor.PapFormat {
                     DrawDropDown( id, separatorBefore: false );
 
                     if( Selected != null ) {
-                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}" );
+                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId, BaseId, VariantId );
                     }
                     else {
                         ImGui.Text( "Select an animation..." );

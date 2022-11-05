@@ -178,7 +178,7 @@ namespace VfxEditor.DirectX {
                         else if( mode == 3 ) { // UV2
                             data[idx + 1] = new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f );
                         }
-                        data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 1.0f );
+                        data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 0 );
 
                         // ========= COPY OVER EDGE DATA ==========
                         var edgeIdx = GetIdx( index, j, EdgeSpan, 4 );
