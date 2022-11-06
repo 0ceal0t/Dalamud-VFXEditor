@@ -11,12 +11,25 @@ using VfxEditor.Utils;
 using VfxEditor.Interop;
 
 namespace VfxEditor.PapFormat {
+    public enum SkeletonType : byte {
+        Human = 0,
+        Monster = 1,
+        DemiHuman = 2,
+        ERROR = 99 // Don't actually use this
+    }
+
     public class PapFile : FileDropdown<PapAnimation> {
+        private static readonly SkeletonType[] SkeletonOptions = new[] {
+            SkeletonType.Human,
+            SkeletonType.Monster,
+            SkeletonType.DemiHuman
+        };
+
         private readonly string HkxTempLocation;
 
         private short ModelId;
-        private byte BaseId;
-        private byte VariantId;
+        private SkeletonType ModelType;
+        private byte Variant;
         private readonly List<PapAnimation> Animations = new();
 
         private readonly bool Verified = true;
@@ -37,8 +50,16 @@ namespace VfxEditor.PapFormat {
             reader.ReadInt32(); // version
             var numAnimations = reader.ReadInt16();
             ModelId = reader.ReadInt16();
-            BaseId = reader.ReadByte();
-            VariantId = reader.ReadByte();
+
+            ModelType = (SkeletonType) reader.ReadByte();
+            var modelType = reader.ReadByte();
+            if( modelType > 2 ) { // just in case
+                ModelType = SkeletonType.ERROR;
+                PluginLog.LogError( $"Invalid model type {modelType}" );
+            }
+            ModelType = ( SkeletonType )modelType;
+
+            Variant = reader.ReadByte();
 
             reader.ReadInt32(); // info offset
             var havokPosition = reader.ReadInt32(); // from beginning
@@ -80,8 +101,8 @@ namespace VfxEditor.PapFormat {
             writer.Write( 0x00020001 );
             writer.Write( ( short )Animations.Count );
             writer.Write( ModelId );
-            writer.Write( BaseId );
-            writer.Write( VariantId );
+            writer.Write( (byte)ModelType );
+            writer.Write( Variant );
 
             var offsetPos = writer.BaseStream.Position; // coming back here later
             writer.Write( 0 ); // placeholders, will come back later
@@ -120,8 +141,12 @@ namespace VfxEditor.PapFormat {
             if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
                 if( ImGui.BeginTabItem($"Parameters{id}")) {
                     FileUtils.ShortInput( $"Model Id{id}", ref ModelId );
-                    FileUtils.ByteInput( $"Base Id{id}", ref BaseId );
-                    FileUtils.ByteInput( $"Variant Id{id}", ref VariantId );
+
+                    if( UiUtils.EnumComboBox( $"Model Type{id}", SkeletonOptions, ModelType, out var newSkeletonType ) ) {
+                        ModelType = newSkeletonType;
+                    }
+
+                    FileUtils.ByteInput( $"Variant{id}", ref Variant );
 
                     if( ImGui.Button( $"Export all Havok data{id}" ) ) {
                         FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
@@ -136,7 +161,7 @@ namespace VfxEditor.PapFormat {
                     DrawDropDown( id, separatorBefore: false );
 
                     if( Selected != null ) {
-                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId, BaseId, VariantId );
+                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId, ModelType, Variant );
                     }
                     else {
                         ImGui.Text( "Select an animation..." );

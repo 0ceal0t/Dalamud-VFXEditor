@@ -13,15 +13,6 @@ using VfxEditor.Utils;
 
 namespace VFXEditor.Animation {
     public class AnimationManager {
-        public enum SkeletonType {
-            Human,
-            Monster,
-            DemiHuman
-        }
-
-        private SkeletonType SelectedSkeletonType = SkeletonType.Human;
-        private static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
-
         private bool Looping = true;
         private bool Playing = false;
 
@@ -58,7 +49,7 @@ namespace VFXEditor.Animation {
             AnimationLoaded = true;
         }
 
-        public void Draw( PapAnimation animation, string animationHkx, int animationIndex, short modelId, byte baseId, byte variantId ) {
+        public void Draw( PapAnimation animation, string animationHkx, int animationIndex, short modelId, SkeletonType modelType, byte variant ) {
             if( animation != SelectedAnimation ) {
                 // Selected a new animation, reset
                 SelectedAnimation = animation;
@@ -70,14 +61,9 @@ namespace VFXEditor.Animation {
             if( !AnimationLoaded ) {
                 ImGui.TextDisabled( "The 3D preview does not currently work with facial animations (smile, frown, etc.)" );
 
-                ImGui.SetNextItemWidth( 100f );
-                if (UiUtils.EnumComboBox("Type", SkeletonOptions, SelectedSkeletonType, out var newSkeletonType )) {
-                    SelectedSkeletonType= newSkeletonType;
-                }
-                ImGui.SameLine();
-                if( ImGui.Button( "Load" ) ) {
+                if( ImGui.Button( "Load Animation" ) ) {
                     Playing = false;
-                    Load( animationHkx, animationIndex, GetSklbPath( modelId, baseId, variantId) );
+                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType, variant) );
                 }
 
                 return;
@@ -85,7 +71,7 @@ namespace VFXEditor.Animation {
 
             if (ImGui.Button( "Refresh") ) {
                 Playing = false;
-                Load( animationHkx, animationIndex, GetSklbPath( modelId, baseId, variantId ) );
+                Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType, variant ) );
             }
 
             if( Playing ) {
@@ -167,18 +153,15 @@ namespace VFXEditor.Animation {
             ImGui.EndChild();
         }
 
-        // chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb
-        // chara/monster/m0101/skeleton/base/b0001/skl_m0101b0001.sklb <--- is there a way to tell these apart?
-
-        private string GetSklbPath( short modelId, byte baseId, byte variantId ) {
-            var format = SelectedSkeletonType switch {
+        private string GetSklbPath( short modelId, SkeletonType modelType, byte variantId ) {
+            var format = modelType switch {
                 SkeletonType.Monster => "chara/monster/m{0:D4}/skeleton/base/b{1:D4}/skl_m{0:D4}b{1:D4}.sklb",
                 SkeletonType.DemiHuman => "chara/demihuman/d{0:D4}/skeleton/base/b{1:D4}/skl_d{0:D4}b{1:D4}.sklb",
                 SkeletonType.Human => "chara/human/c{0:D4}/skeleton/base/b{1:D4}/skl_c{0:D4}b{1:D4}.sklb",
                 _ => ""
             };
 
-            return string.Format( format, modelId, 1 );
+            return string.Format( format, modelId, 1 ); // TODO: is this always 1?
         }
 
         public void Dispose() {

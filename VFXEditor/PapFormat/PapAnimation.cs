@@ -50,7 +50,7 @@ namespace VfxEditor.PapFormat {
 
         public string GetName() => Name;
 
-        public void Draw( string parentId, short modelId, byte baseId, byte variantId ) {
+        public void Draw( string parentId, short modelId, SkeletonType modelType, byte variant ) {
             ImGui.InputText( $"Name{parentId}", ref Name, 31 );
             FileUtils.ShortInput( $"Unknown 1{parentId}", ref Unknown1 );
             ImGui.InputInt( $"Unknown 2{parentId}", ref Unknown2 );   
@@ -73,7 +73,7 @@ namespace VfxEditor.PapFormat {
 
             ImGui.BeginTabBar( "AnimationTabls" );
             DrawTmb( parentId );
-            DrawAnimation3D( parentId, modelId, baseId, variantId );
+            DrawAnimation3D( parentId, modelId, modelType, variant );
             ImGui.EndTabBar();
         }
 
@@ -101,9 +101,9 @@ namespace VfxEditor.PapFormat {
             ImGui.EndTabItem();
         }
 
-        private void DrawAnimation3D( string parentId, short modelId, byte baseId, byte variantId ) {
+        private void DrawAnimation3D( string parentId, short modelId, SkeletonType modelType, byte variant ) {
             if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
-            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, baseId, variantId );
+            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, modelType, variant );
             ImGui.EndTabItem();
         }
     }

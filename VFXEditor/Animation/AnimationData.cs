@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Dalamud.Logging;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using SharpDX;
-using SharpDX.DXGI;
-using SharpGLTF.Schema2;
 
 namespace VFXEditor.Animation {
     public class AnimationData {
