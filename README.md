@@ -1,7 +1,7 @@
 # VFXEditor
 [![Download count](https://img.shields.io/endpoint?url=https%3A%2F%2Fvz32sgcoal.execute-api.us-east-1.amazonaws.com%2FVFXEditor)](https://github.com/0ceal0t/Dalamud-VFXEditor)
 
-A VFX editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
+A VFX, ability, and animation editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
@@ -37,28 +37,23 @@ If you have other questions, please open an [Issue](https://github.com/0ceal0t/D
 ## Features
 * Load and preview in-game VFXs (weapons, actions, status effects)
 * Live VFX overlay
-* Edit and export
+* Edit and export as `.avfx` or Textools/Penumbra Modpack
 * Preview, export, and replace textures
 * Add, remove, and edit particles, emitters, etc.
 * Export and replace models
-* Export as `.avfx` or Textools Modpack
+* Modify and replace abilities and animations
 
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 
-A lot of the data in `.avfx` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
+A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] .scd editor
-- [ ] .mdl import + export
+- [ ] `.scd` editor
 - [ ] Bind point ID research
 - [ ] Better PNG import support
-- [ ] Scale when spawning on ground (it looks like ground-targeted aoes are spawned on a dummy actor)
 - [ ] Investigate VFX flags, better structs
 - [ ] Weapons / footsteps / etc. in live view
-- [ ] Figure out splines (kinda done, need to add handle)
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Update "try on" preview
-- [ ] Auto-update npc csv file (kinda)
-- [ ] Show binders on model (would require getting skeleton, since the binder is a bone, I'm pretty sure)

@@ -51,7 +51,6 @@ namespace VfxEditor.PapFormat {
             var numAnimations = reader.ReadInt16();
             ModelId = reader.ReadInt16();
 
-            ModelType = (SkeletonType) reader.ReadByte();
             var modelType = reader.ReadByte();
             if( modelType > 2 ) { // just in case
                 ModelType = SkeletonType.ERROR;
