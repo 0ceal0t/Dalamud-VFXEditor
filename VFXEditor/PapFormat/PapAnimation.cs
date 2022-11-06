@@ -94,8 +94,8 @@ namespace VfxEditor.PapFormat {
                 UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
-            ImGui.TextDisabled( "Embedded TMB:" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             Tmb.Draw( parentId + "/Tmb" );
 
             ImGui.EndTabItem();

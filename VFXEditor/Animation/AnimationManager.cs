@@ -68,6 +68,8 @@ namespace VFXEditor.Animation {
             }
 
             if( !AnimationLoaded ) {
+                ImGui.TextDisabled( "The 3D preview does not currently work with facial animations (smile, frown, etc.)" );
+
                 ImGui.SetNextItemWidth( 100f );
                 if (UiUtils.EnumComboBox("Type", SkeletonOptions, SelectedSkeletonType, out var newSkeletonType )) {
                     SelectedSkeletonType= newSkeletonType;
