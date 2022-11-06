@@ -7,7 +7,7 @@ A VFX, ability, and animation editing plugin for Dalamud (**[Wiki](https://xiv.d
 
 Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
-![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/preview.png)
+![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/preview2.png)
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
