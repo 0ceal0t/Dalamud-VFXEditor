@@ -15,9 +15,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         private void SetupIdx() {
-            for( var i = 0; i < Items.Count; i++ ) {
-                Items[i].Idx = i;
-            }
+            for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i;
         }
 
         public virtual T OnNew() { return null; }

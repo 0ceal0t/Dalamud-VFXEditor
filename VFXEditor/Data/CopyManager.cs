@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.AVFXLib;
@@ -9,11 +10,6 @@ namespace VfxEditor.Data {
 
         public static readonly List<Vector4> CurveKeys = new();
         public static readonly Dictionary<string, AVFXBase> Copied = new();
-
-        public static void Dispose() {
-            CurveKeys.Clear();
-            Copied.Clear();
-        }
 
         public static void Reset() {
             IsCopying = false;
@@ -38,5 +34,10 @@ namespace VfxEditor.Data {
         }
 
         public static bool HasCurveKeys() => CurveKeys.Count > 0;
+
+        public static void Dispose() {
+            CurveKeys.Clear();
+            Copied.Clear();
+        }
     }
 }
