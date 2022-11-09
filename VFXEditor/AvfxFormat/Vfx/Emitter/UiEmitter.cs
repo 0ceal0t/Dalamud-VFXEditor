@@ -154,8 +154,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
-            EmitterList.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
-            ParticleList.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            EmitterList.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
+            ParticleList.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
         }
 
         public override void Write( BinaryWriter writer ) => Emitter.Write( writer );

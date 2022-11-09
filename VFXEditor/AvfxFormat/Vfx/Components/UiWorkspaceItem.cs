@@ -16,9 +16,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public abstract string GetWorkspaceId();
 
         public void PopulateWorkspaceMeta( Dictionary<string, string> RenameDict ) {
-            var path = GetWorkspaceId();
             if( !string.IsNullOrEmpty( Renamed ) ) {
-                RenameDict[path] = Renamed;
+                RenameDict[GetWorkspaceId()] = Renamed;
             }
             PopulateWorkspaceMetaChildren( RenameDict );
         }
@@ -26,8 +25,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
         public void ReadWorkspaceMeta( Dictionary<string, string> RenameDict ) {
-            var path = GetWorkspaceId();
-            if( RenameDict.TryGetValue( path, out var renamed ) ) {
+            if( RenameDict.TryGetValue( GetWorkspaceId(), out var renamed ) ) {
                 Renamed = renamed;
             }
             ReadWorkspaceMetaChildren( RenameDict );
@@ -35,8 +33,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public virtual void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
 
-        public void DrawRename( string _id ) {
-            var id = _id + "/Rename";
+        public void DrawRename( string parentId ) {
+            var id = parentId + "/Rename";
             if( CurrentlyRenaming ) {
                 ImGui.InputText( $"{id}-Input", ref RenamedTemp, 255 );
 

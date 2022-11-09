@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using System.Threading.Tasks;
 using VfxEditor;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
-using VfxEditor.Utils;
 
 namespace VFXEditor.Animation {
     public class AnimationManager {
@@ -77,18 +75,16 @@ namespace VFXEditor.Animation {
             if( Playing ) {
                 var time = DateTime.Now;
                 var diff = ( time - LastFrame ).TotalMilliseconds;
-                if( diff > 33.3f ) { // 30 fps
+                if( diff > 33.3f ) { // 30 fps (1000ms / 30)
                     LastFrame = time;
 
                     Frame++;
                     if( Frame >= Data.NumFrames ) {
-                        if( !Looping ) {
-                            // Stop
+                        if( !Looping ) { // Stop
                             Frame = Data.NumFrames - 1;
                             Playing = false;
                         }
-                        else {
-                            // Loop back around
+                        else { // Loop back around
                             Frame = 0;
                         }
                     }
@@ -125,32 +121,7 @@ namespace VFXEditor.Animation {
 
             ImGui.TextDisabled( LastSklbPath );
 
-            // ============
-
-            var cursor = ImGui.GetCursorScreenPos();
-            ImGui.BeginChild( "AnimationChild" );
-
-            var space = ImGui.GetContentRegionAvail();
-            Plugin.DirectXManager.AnimationPreview.Resize( space );
-
-            ImGui.ImageButton( Plugin.DirectXManager.AnimationPreview.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
-
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
-                var delta = ImGui.GetMouseDragDelta();
-                Plugin.DirectXManager.AnimationPreview.Drag( delta, true );
-            }
-            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                Plugin.DirectXManager.AnimationPreview.Drag( ImGui.GetMousePos() - cursor, false );
-            }
-            else {
-                Plugin.DirectXManager.AnimationPreview.IsDragging = false;
-            }
-
-            if( ImGui.IsItemHovered() ) {
-                Plugin.DirectXManager.AnimationPreview.Zoom( ImGui.GetIO().MouseWheel );
-            }
-
-            ImGui.EndChild();
+            Plugin.DirectXManager.AnimationPreview.DrawInline();
         }
 
         private string GetSklbPath( short modelId, SkeletonType modelType, byte variantId ) {

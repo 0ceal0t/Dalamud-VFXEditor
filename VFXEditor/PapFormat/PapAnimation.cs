@@ -22,7 +22,7 @@ namespace VfxEditor.PapFormat {
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
             Name = FileUtils.ReadString( reader );
-            reader.ReadBytes( 32 - Name.Length - 1 );
+            reader.ReadBytes( 32 - Name.Length - 1 ); // name padded to 32 bytes. also account for trailing null
             Unknown1 = reader.ReadInt16();
             HavokIndex = reader.ReadInt16();
             Unknown2 = reader.ReadInt32();

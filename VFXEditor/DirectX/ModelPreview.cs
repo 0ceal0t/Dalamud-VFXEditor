@@ -11,6 +11,12 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class ModelPreview : ModelRenderer {
+        public enum RenderMode : int {
+            Color = 1,
+            Uv1 = 2,
+            Uv2 = 3
+        }
+
         public bool ShowEdges = true;
         public bool ShowEmitter = true;
         public static readonly Vector4 LineColor = new( 1, 0, 0, 1 );
@@ -146,11 +152,9 @@ namespace VfxEditor.DirectX {
             } );
         }
 
-        public void LoadModel( AVFXModel model, int mode = 1 ) {
-            LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.EmitVertexes.EmitVertexes, mode );
-        }
+        public void LoadModel( AVFXModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.EmitVertexes.EmitVertexes, mode );
 
-        public void LoadModel( List<AVFXIndex> modelIndexes, List<AVFXVertex> modelVertexes, List<AVFXEmitVertex> modelEmitters, int mode ) {
+        public void LoadModel( List<AVFXIndex> modelIndexes, List<AVFXVertex> modelVertexes, List<AVFXEmitVertex> modelEmitters, RenderMode mode ) {
             if( modelIndexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
@@ -169,15 +173,12 @@ namespace VfxEditor.DirectX {
                         var v = modelVertexes[indexes[j]];
 
                         data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
-                        if( mode == 1 ) { // COLOR
-                            data[idx + 1] = new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f );
-                        }
-                        else if( mode == 2 ) { // UV1
-                            data[idx + 1] = new Vector4( v.UV1[0] + 0.5f, 0, v.UV1[1] + 0.5f, 1.0f );
-                        }
-                        else if( mode == 3 ) { // UV2
-                            data[idx + 1] = new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f );
-                        }
+                        data[idx + 1] = mode switch {
+                            RenderMode.Color => new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f ),
+                            RenderMode.Uv1 => new Vector4( v.UV1[0] + 0.5f, 0, v.UV1[1] + 0.5f, 1.0f ),
+                            RenderMode.Uv2 => new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f ),
+                            _ => throw new System.NotImplementedException()
+                        };
                         data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 0 );
 
                         // ========= COPY OVER EDGE DATA ==========

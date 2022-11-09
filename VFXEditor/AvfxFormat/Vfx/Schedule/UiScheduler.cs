@@ -53,8 +53,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
-            Items.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
-            Triggers.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            Items.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
+            Triggers.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
         }
 
         public override string GetDefaultText() => $"Scheduler {Idx}";

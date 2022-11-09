@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -76,8 +77,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) {
-            Items.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
-            Clips.ForEach( item => item.ReadWorkspaceMetaChildren( RenameDict ) );
+            Items.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
+            Clips.ForEach( item => item.ReadWorkspaceMeta( RenameDict ) );
         }
 
         public override string GetDefaultText() => $"Timeline {Idx}";

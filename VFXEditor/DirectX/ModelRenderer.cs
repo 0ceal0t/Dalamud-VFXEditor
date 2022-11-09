@@ -1,3 +1,4 @@
+using ImGuiNET;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -178,6 +179,31 @@ namespace VfxEditor.DirectX {
             Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+        }
+
+        public void DrawInline() {
+            var cursor = ImGui.GetCursorScreenPos();
+            ImGui.BeginChild( "3DViewChild" );
+
+            var space = ImGui.GetContentRegionAvail();
+            Resize( space );
+
+            ImGui.ImageButton( Output, space, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
+
+            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
+                var delta = ImGui.GetMouseDragDelta();
+                Drag( delta, true );
+            }
+            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
+                Drag( ImGui.GetMousePos() - cursor, false );
+            }
+            else {
+                IsDragging = false;
+            }
+
+            if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
+
+            ImGui.EndChild();
         }
 
         public abstract void OnDispose();

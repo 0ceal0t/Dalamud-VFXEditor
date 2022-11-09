@@ -38,8 +38,6 @@ namespace VFXEditor.Animation {
             HavokData = Reader.ReadBytes( ( int )( size - offsetToHavok ) );
         }
 
-        public void SaveHavokData( string path ) {
-            File.WriteAllBytes( path, HavokData );
-        }
+        public void SaveHavokData( string path ) => File.WriteAllBytes( path, HavokData );
     }
 }

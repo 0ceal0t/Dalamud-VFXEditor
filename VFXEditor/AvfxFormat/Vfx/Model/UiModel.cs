@@ -8,6 +8,7 @@ using System.Numerics;
 using VfxEditor.AvfxFormat.Vfx.Model;
 using VfxEditor.AVFXLib.Model;
 using VfxEditor.Utils;
+using static VfxEditor.DirectX.ModelPreview;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiModel : UiNode {
@@ -16,7 +17,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public UiModelEmitSplitView EmitSplit;
         public UiNodeGraphView NodeView;
 
-        private int Mode = 1;
+        private int Mode = (int)RenderMode.Color;
         private bool Refresh = false;
         private readonly UiModelUvView UvView;
 
@@ -55,15 +56,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             ImGui.SameLine();
 
-            if( ImGui.Button( "Replace" + id ) ) {
-                ImportDialog();
-            }
+            if( ImGui.Button( "Replace" + id ) ) ImportDialog();
 
             ImGui.Text( "Notes on exporting GLTF models:" );
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Here" ) ) {
-                UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
-            }
+            if( ImGui.SmallButton( "Here" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
 
             ImGui.BeginTabBar( "ModelTabs" );
             DrawModel3D( id );
@@ -73,14 +70,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void OnSelect() {
-            Plugin.DirectXManager.ModelPreview.LoadModel( Model );
+            Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
             UvView.LoadModel( Model );
         }
 
         private void DrawModel3D( string parentId ) {
             if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
             if( Refresh ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, mode: Mode );
+                Plugin.DirectXManager.ModelPreview.LoadModel( Model, (RenderMode)Mode );
                 UvView.LoadModel( Model );
                 Refresh = false;
             }
@@ -99,42 +96,20 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Plugin.DirectXManager.ModelPreview.ShowEmitter ) ) {
                 Plugin.DirectXManager.ModelPreview.Draw();
             }
-            if( ImGui.RadioButton( "Color", ref Mode, 1 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, mode: 1 );
+            if( ImGui.RadioButton( "Color", ref Mode, (int)RenderMode.Color ) ) {
+                Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
             }
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 1", ref Mode, 2 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, mode: 2 );
+            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) {
+                Plugin.DirectXManager.ModelPreview.LoadModel( Model,RenderMode.Uv1 );
             }
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 2", ref Mode, 3 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, mode: 3 );
+            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) {
+                Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Uv2 );
             }
 
-            var cursor = ImGui.GetCursorScreenPos();
-            ImGui.BeginChild( "3DViewChild" );
+            Plugin.DirectXManager.ModelPreview.DrawInline();
 
-            var space = ImGui.GetContentRegionAvail();
-            Plugin.DirectXManager.ModelPreview.Resize( space );
-
-            ImGui.ImageButton( Plugin.DirectXManager.ModelPreview.Output, space, new Vector2( 0, 0 ), new Vector2( 1, 1 ), 0 );
-
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
-                var delta = ImGui.GetMouseDragDelta();
-                Plugin.DirectXManager.ModelPreview.Drag( delta, true );
-            }
-            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
-                Plugin.DirectXManager.ModelPreview.Drag( ImGui.GetMousePos() - cursor, false );
-            }
-            else {
-                Plugin.DirectXManager.ModelPreview.IsDragging = false;
-            }
-
-            if( ImGui.IsItemHovered() ) {
-                Plugin.DirectXManager.ModelPreview.Zoom( ImGui.GetIO().MouseWheel );
-            }
-
-            ImGui.EndChild();
             ImGui.EndTabItem();
         }
 

@@ -10,44 +10,53 @@ using VfxEditor.Structs.Vfx;
 
 namespace VfxEditor.Tracker {
     public unsafe class VfxTracker {
-        public bool Enabled { get; private set; }
-
-        private struct TrackerData {
+        private class TrackerData {
             public string Path;
-            public bool IsChecked;
-            public int ActorId;
             public VfxStruct* Vfx;
+            public bool IsChecked = false;
+            public int ActorId = -1;
+            public bool Removed = false;
+            public DateTime RemovedTime;
+
+            public VfxDisplayItem ToDisplayItem() => new() {
+                Path = Path,
+                Removed = Removed
+            };
         }
 
         private struct StaticVfxGroup {
-            public string path;
-            public SharpDX.Vector3 position;
+            public VfxDisplayItem Path;
+            public SharpDX.Vector3 Position;
         }
 
-        private ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs;
-        private ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs;
+        private struct VfxDisplayItem {
+            public string Path;
+            public bool Removed;
+        }
 
         private static readonly ClosenessComp CloseComp = new();
 
+        public bool Enabled { get; private set; }
+        private readonly ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs = new();
+        private readonly ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs = new();
+
         public VfxTracker() {
-            Reset();
         }
 
         public void Reset() {
-            ActorVfxs = new();
-            StaticVfxs = new();
+            ActorVfxs.Clear();
+            StaticVfxs.Clear();
         }
 
         public void Toggle() {
             Enabled = !Enabled;
+            if( !Enabled ) Reset();
         }
 
         public void AddActor( VfxStruct* vfx, string path ) {
             if( !Enabled ) return;
             var data = new TrackerData() {
                 Path = path,
-                IsChecked = false,
-                ActorId = -1,
                 Vfx = vfx
             };
             ActorVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -55,8 +64,9 @@ namespace VfxEditor.Tracker {
 
         public void RemoveActor( VfxStruct* vfx ) {
             if( !Enabled ) return;
-            if( ActorVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
-                ActorVfxs.TryRemove( new IntPtr( vfx ), out var _ );
+            if( ActorVfxs.TryGetValue( new IntPtr( vfx ), out var item ) ) {
+                item.Removed = true;
+                item.RemovedTime = DateTime.Now;
             }
         }
 
@@ -64,8 +74,6 @@ namespace VfxEditor.Tracker {
             if( !Enabled ) return;
             var data = new TrackerData() {
                 Path = path,
-                IsChecked = false,
-                ActorId = -1,
                 Vfx = vfx
             };
             StaticVfxs.TryAdd( new IntPtr( vfx ), data );
@@ -73,8 +81,9 @@ namespace VfxEditor.Tracker {
 
         public void RemoveStatic( VfxStruct* vfx ) {
             if( !Enabled ) return;
-            if( StaticVfxs.ContainsKey( new IntPtr( vfx ) ) ) {
-                StaticVfxs.TryRemove( new IntPtr( vfx ), out var _ );
+            if( StaticVfxs.TryGetValue( new IntPtr( vfx ), out var item ) ) {
+                item.Removed = true;
+                item.RemovedTime = DateTime.Now;
             }
         }
 
@@ -82,118 +91,88 @@ namespace VfxEditor.Tracker {
             if( !Enabled ) return;
             var playPos = Plugin.ClientState?.LocalPlayer?.Position;
             if( !playPos.HasValue ) return;
-
             var windowPos = ImGuiHelpers.MainViewport.Pos;
 
-            // ======= IF IN A CUTSCENE, GIVE UP WITH POSITIONING ======
+            var removeTime = DateTime.Now.AddSeconds( -1 * Plugin.Configuration.OverlayRemoveDelay );
+            foreach( var item in StaticVfxs.Where( x => x.Value.Removed && x.Value.RemovedTime < removeTime ).ToList() ) StaticVfxs.Remove( item.Key, out var _ );
+            foreach( var item in ActorVfxs.Where( x => x.Value.Removed && x.Value.RemovedTime < removeTime ).ToList() ) ActorVfxs.Remove( item.Key, out var _ );
+
+            // Give up in positions in cutscene
             if( WatchingCutscene ) {
-                var paths = new HashSet<string>();
-                foreach( var item in ActorVfxs ) paths.Add( item.Value.Path );
-                foreach( var item in StaticVfxs ) paths.Add( item.Value.Path );
+                var paths = new HashSet<VfxDisplayItem>();
+                foreach( var item in ActorVfxs ) item.Value.ToDisplayItem();
+                foreach( var item in StaticVfxs ) item.Value.ToDisplayItem();
 
                 var pos = windowPos + new Vector2( 15, 15 );
                 DrawOverlayItems( pos, paths, 0 );
                 return;
             }
 
-            // ======== SET UP MATRIX, ONLY ONCE :) =====
-            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
-            var viewProjectionMatrix = new SharpDX.Matrix();
-            float width, height;
-            unsafe {
-                var rawMatrix = ( float* )( matrixSingleton + 0x1b4 + ( 0x13c * 0 ) ).ToPointer(); // 0 = projection idx
-                for( var i = 0; i < 16; i++, rawMatrix++ )
-                    viewProjectionMatrix[i] = *rawMatrix;
-                width = *rawMatrix;
-                height = *( rawMatrix + 1 );
-            }
+            // Setup the matrix
+            var matrix = GetMatrix(out var width, out var height);
 
             var vfxsWithoutActor = new List<StaticVfxGroup>(); // static vfxs without an actor
-            var actorIdToVfxPath = new Dictionary<int, HashSet<string>>(); // either one with an actor
+            var actorIdToVfxPath = new Dictionary<int, HashSet<VfxDisplayItem>>(); // either one with an actor
 
-            // ====== STATIC =======
+            // Static
             foreach( var item in StaticVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
 
                 var vfx = item.Value;
                 if( !vfx.IsChecked ) { // try to identify actor
-                    var casterId = vfx.Vfx->StaticCaster;
-                    var targetId = vfx.Vfx->StaticTarget;
-                    var actorId = ChooseId( casterId, targetId );
+                    var actorId = ChooseId( vfx.Vfx->StaticCaster, vfx.Vfx->StaticTarget );
 
-                    vfx = new TrackerData {
-                        Path = vfx.Path,
-                        IsChecked = true,
-                        ActorId = actorId,
-                        Vfx = vfx.Vfx
-                    };
-                    StaticVfxs[item.Key] = vfx;
+                    vfx.IsChecked = true;
+                    vfx.ActorId = actorId;
                 }
 
                 if( vfx.ActorId > 0 ) {
-                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
-                        actorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
-                    }
-                    actorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
+                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) actorIdToVfxPath[vfx.ActorId] = new HashSet<VfxDisplayItem>();
+                    actorIdToVfxPath[vfx.ActorId].Add( vfx.ToDisplayItem() );
                 }
                 else { // add to groups
                     var pos = vfx.Vfx->Position;
                     vfxsWithoutActor.Add( new StaticVfxGroup {
-                        path = vfx.Path,
-                        position = new SharpDX.Vector3( pos.X, pos.Y, pos.Z )
+                        Path = vfx.ToDisplayItem(),
+                        Position = new SharpDX.Vector3( pos.X, pos.Y, pos.Z )
                     } );
                 }
             }
 
-            // ======= ACTORS =========
+            // Actors
             foreach( var item in ActorVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
 
                 var vfx = item.Value;
                 if( !vfx.IsChecked ) {
-                    var casterId = vfx.Vfx->ActorCaster;
-                    var targetId = vfx.Vfx->ActorTarget;
-                    var actorId = ChooseId( casterId, targetId );
-                    vfx = new TrackerData {
-                        Path = vfx.Path,
-                        IsChecked = true,
-                        ActorId = actorId,
-                        Vfx = vfx.Vfx
-                    };
-                    ActorVfxs[item.Key] = vfx;
+                    var actorId = ChooseId( vfx.Vfx->ActorCaster, vfx.Vfx->ActorTarget );
+
+                    vfx.IsChecked = true;
+                    vfx.ActorId = actorId;
                 }
 
                 if( vfx.ActorId > 0 ) { // add to actor to vfxs
-                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) {
-                        actorIdToVfxPath[vfx.ActorId] = new HashSet<string>();
-                    }
-
-                    actorIdToVfxPath[vfx.ActorId].Add( vfx.Path );
+                    if( !actorIdToVfxPath.ContainsKey( vfx.ActorId ) ) actorIdToVfxPath[vfx.ActorId] = new HashSet<VfxDisplayItem>();
+                    actorIdToVfxPath[vfx.ActorId].Add( vfx.ToDisplayItem() );
                 }
             }
 
-            // ====== DRAW GROUPS ======
+            // Draw groups
             var idx = 0;
-            foreach( var group in vfxsWithoutActor.GroupBy( item => item.position, item => item.path, CloseComp ) ) {
-                var paths = new HashSet<string>( group );
+            foreach( var group in vfxsWithoutActor.GroupBy( item => item.Position, item => item.Path, CloseComp ) ) {
+                var paths = new HashSet<VfxDisplayItem>( group );
 
-                if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, group.Key, out var screenCoords ) ) continue;
-                var d = Distance( playPos.Value, group.Key );
-                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
-                    continue;
-                }
+                if( !WorldToScreen( height, width, ref matrix, windowPos, group.Key, out var screenCoords ) ) continue;
+                if( Distance( playPos.Value, group.Key ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
                 idx++;
             }
 
-            // ====== DRAW ACTORS ======
+            // Draw Actors
             var actorTable = Plugin.Objects;
-            if( actorTable == null ) {
-                return;
-            }
+            if( actorTable == null ) return;
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
-
                 if( Plugin.ClientState.LocalPlayer == null ) continue;
 
                 var result = actorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
@@ -205,22 +184,17 @@ namespace VfxEditor.Tracker {
                     Z = actor.Position.Z
                 };
 
-                if( !WorldToScreen( height, width, ref viewProjectionMatrix, windowPos, pos, out var screenCoords ) ) continue;
-                var d = Distance( playPos.Value, pos );
-                if( d > 100f && Plugin.Configuration.OverlayLimit ) {
-                    continue;
-                }
+                if( !WorldToScreen( height, width, ref matrix, windowPos, pos, out var screenCoords ) ) continue;
+                if( Distance( playPos.Value, pos ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
                 DrawOverlayItems( new Vector2( screenCoords.X, screenCoords.Y ), paths, idx );
                 idx++;
             }
         }
 
-        private static void DrawOverlayItems( Vector2 pos, HashSet<string> items, int idx ) {
+        private static void DrawOverlayItems( Vector2 pos, HashSet<VfxDisplayItem> items, int idx ) {
             var longestString = "";
             foreach( var item in items ) {
-                if( item.Length > longestString.Length ) {
-                    longestString = item;
-                }
+                if( item.Path.Length > longestString.Length ) longestString = item.Path;
             }
             var screenPos = ImGui.GetMainViewport().Pos;
             var screenSize = ImGui.GetMainViewport().Size;
@@ -245,14 +219,14 @@ namespace VfxEditor.Tracker {
                 ImGuiWindowFlags.NoFocusOnAppearing |
                 ImGuiWindowFlags.NoNav ) ) {
                 var i = 0;
-                foreach( var path in items ) {
+                foreach( var item in items ) {
                     if( i >= maxDisplay ) break;
 
-                    ImGui.Text( $"{path}" );
+                    if( item.Removed ) ImGui.TextDisabled( item.Path );
+                    else ImGui.Text( item.Path );
+
                     ImGui.SameLine( largestSize.X + 20 );
-                    if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) {
-                        ImGui.SetClipboardText( path );
-                    }
+                    if( ImGui.Button( $"COPY##vfx-{idx}-{i}" ) ) ImGui.SetClipboardText( item.Path );
                     i++;
                 }
             }
@@ -268,8 +242,20 @@ namespace VfxEditor.Tracker {
 
         private static int ChooseId( int caster, int target ) => target > 0 ? target : ( caster > 0 ? caster : -1 );
 
-        private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) {
-            return ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
+        private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) => ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
+
+        private static SharpDX.Matrix GetMatrix(out float width, out float height) {
+            // Setup the matrix
+            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
+            var viewProjectionMatrix = new SharpDX.Matrix();
+            unsafe {
+                var rawMatrix = ( float* )( matrixSingleton + 0x1b4 + ( 0x13c * 0 ) ).ToPointer(); // 0 = projection idx
+                for( var i = 0; i < 16; i++, rawMatrix++ )
+                    viewProjectionMatrix[i] = *rawMatrix;
+                width = *rawMatrix;
+                height = *( rawMatrix + 1 );
+            }
+            return viewProjectionMatrix;
         }
 
         private static bool WorldToScreen( float height, float width, ref SharpDX.Matrix viewProjectionMatrix, Vector2 windowPos, SharpDX.Vector3 worldPos, out SharpDX.Vector2 screenPos ) {

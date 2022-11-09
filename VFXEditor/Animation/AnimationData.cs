@@ -18,8 +18,6 @@ namespace VFXEditor.Animation {
         public int NumFrames { get; private set; } = 0;
 
         public AnimationData( string path ) {
-            
-
             using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
 
             var numBones = reader.ReadInt32();
@@ -187,11 +185,6 @@ namespace VFXEditor.Animation {
             builder = new MeshBuilder( true, false );
             for( var i = 0; i < bones.Count; ++i ) {
                 var currPos = builder.Positions.Count;
-
-                // on a human, generally less than 0.5
-                // 0 = small
-                // 0.5 = good size (size = 0.05)
-                // very large = don't make them toooooo big
 
                 var diff = boneScale[i];
 

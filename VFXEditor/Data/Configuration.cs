@@ -22,6 +22,7 @@ namespace VfxEditor {
         public bool HideWithUI = true;
         public int SaveRecentLimit = 10;
         public bool OverlayLimit = true;
+        public float OverlayRemoveDelay = 1;
         public string WriteLocation = Path.Combine( new[] {
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "XIVLauncher",
@@ -138,6 +139,8 @@ namespace VfxEditor {
                 Save();
             }
 
+            ImGui.SetNextItemWidth( 135 );
+            if( ImGui.InputFloat( "Live overlay remove delay time##Settings", ref OverlayRemoveDelay ) ) Save();
             if( ImGui.Checkbox( "Live overlay limit by distance##Settings", ref OverlayLimit ) ) Save();
 
             ImGui.Unindent();
