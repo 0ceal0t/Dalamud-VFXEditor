@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.AVFXLib;
 using VfxEditor.Data;
@@ -6,19 +7,16 @@ using VfxEditor.Data;
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiInt3 : IUiBase {
         public readonly string Name;
-        public Vector3 Value;
-
         public readonly AVFXInt Literal1;
         public readonly AVFXInt Literal2;
         public readonly AVFXInt Literal3;
+        private readonly List<AVFXBase> Literals = new();
 
         public UiInt3( string name, AVFXInt literal1, AVFXInt literal2, AVFXInt literal3 ) {
             Name = name;
-            Literal1 = literal1;
-            Literal2 = literal2;
-            Literal3 = literal3;
-
-            Value = new Vector3( Literal1.GetValue(), Literal2.GetValue(), Literal3.GetValue() );
+            Literals.Add( Literal1 = literal1 );
+            Literals.Add( Literal2 = literal2 );
+            Literals.Add( Literal3 = literal3 );
         }
 
         public void DrawInline( string id ) {
@@ -31,41 +29,26 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 if( CopyManager.Copied.TryGetValue( Name + "_1", out var _literal1 ) && _literal1 is AVFXInt literal1 ) {
                     Literal1.SetValue( literal1.GetValue() );
                     Literal1.SetAssigned( literal1.IsAssigned() );
-                    Value.X = Literal1.GetValue();
                 }
                 if( CopyManager.Copied.TryGetValue( Name + "_2", out var _literal2 ) && _literal2 is AVFXInt literal2 ) {
                     Literal2.SetValue( literal2.GetValue() );
                     Literal2.SetAssigned( literal2.IsAssigned() );
-                    Value.Y = Literal2.GetValue();
                 }
                 if( CopyManager.Copied.TryGetValue( Name + "_3", out var _literal3 ) && _literal3 is AVFXInt literal3 ) {
                     Literal3.SetValue( literal3.GetValue() );
                     Literal3.SetAssigned( literal3.IsAssigned() );
-                    Value.Z = Literal3.GetValue();
                 }
             }
 
             // Unassigned
-            if (!Literal1.IsAssigned()) {
-                if (ImGui.SmallButton($"+ {Name}{id}")) {
-                    Literal1.SetAssigned( true );
-                    Literal2.SetAssigned( true );
-                    Literal3.SetAssigned( true );
-                }
-                return;
+            if( IUiBase.DrawAddButton( Literals, Name, id ) ) return;
+
+            var value = new Vector3( Literal1.GetValue(), Literal2.GetValue(), Literal3.GetValue() );
+            if( ImGui.InputFloat3( Name + id, ref value ) ) {
+                CommandManager.Avfx.Add( new UiInt3Command( Literal1, Literal2, Literal3, value ) );
             }
 
-            if( ImGui.InputFloat3( Name + id, ref Value ) ) {
-                Literal1.SetValue( ( int )Value.X );
-                Literal2.SetValue( ( int )Value.Y );
-                Literal3.SetValue( ( int )Value.Z );
-            }
-
-            if( IUiBase.DrawUnassignContextMenu( id, Name ) ) {
-                Literal1.SetAssigned( false );
-                Literal2.SetAssigned( false );
-                Literal3.SetAssigned( false );
-            }
+            IUiBase.DrawRemoveContextMenu( Literals, Name, id );
         }
     }
 }

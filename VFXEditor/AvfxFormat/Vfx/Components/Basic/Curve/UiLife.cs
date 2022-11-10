@@ -23,9 +23,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string id ) {
-            if( ImGui.SmallButton( "+ Life" + id ) ) {
-                AVFXBase.RecurseAssigned( Life, true );
-            }
+            IUiBase.DrawAddButtonRecurse( Life, "Life", id );
         }
 
         public override string GetDefaultText() => "Life";

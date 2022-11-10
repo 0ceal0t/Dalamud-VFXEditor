@@ -32,19 +32,12 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                AVFXBase.RecurseAssigned( Curve, true );
-            }
+            IUiBase.DrawAddButtonRecurse( Curve, Name, parentId );
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
-            if( !Locked ) {
-                if( UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
-                    Curve.SetAssigned( false );
-                    return;
-                }
-            }
+            if( !Locked && IUiBase.DrawRemoveButton( Curve, Name, id ) ) return;
 
             UiCurve.DrawUnassignedCurves( Curves, id );
 

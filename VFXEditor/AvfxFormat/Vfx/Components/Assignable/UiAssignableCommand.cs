@@ -1,27 +1,26 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using VfxEditor.AVFXLib;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiAssignableCommandMultiple : ICommand {
-        private readonly List<AVFXBase> Item;
+    public class UiAssignableCommand : ICommand {
+        private readonly AVFXBase Item;
         private readonly bool State;
 
-        public UiAssignableCommandMultiple( List<AVFXBase> item, bool state ) {
+        public UiAssignableCommand( AVFXBase item, bool state ) {
             Item = item;
             State = state;
         }
 
         public void Execute() {
-            Item.ForEach( x => x.SetAssigned( State ) );
+            Item.SetAssigned( State );
         }
 
         public void Redo() {
-            Item.ForEach( x => x.SetAssigned( State ) );
+            Item.SetAssigned( State );
         }
 
         public void Undo() {
-            Item.ForEach( x => x.SetAssigned( !State ) );
+            Item.SetAssigned( !State );
         }
     }
 }

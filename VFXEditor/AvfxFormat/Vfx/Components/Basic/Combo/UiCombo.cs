@@ -27,14 +27,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
 
             // Unassigned
-            if( IUiBase.DrawCommandButton( Literal, Name, id ) ) return;
+            if( IUiBase.DrawAddButton( Literal, Name, id ) ) return;
 
             var text = Literal.Options.Contains( Literal.GetValue() ) ? Literal.GetValue().ToString() : "[NONE]";
             if( UiUtils.EnumComboBox( $"{Name}{id}", text, Literal.Options, Literal.GetValue(), out var newValue ) ) {
                 CommandManager.Avfx.Add( new UiComboCommand<T>( Literal, newValue, ExtraCommand?.Invoke() ) );
             }
 
-            IUiBase.DrawCommandContextMenu( Literal, Name, id );
+            IUiBase.DrawRemoveContextMenu( Literal, Name, id );
         }
     }
 }

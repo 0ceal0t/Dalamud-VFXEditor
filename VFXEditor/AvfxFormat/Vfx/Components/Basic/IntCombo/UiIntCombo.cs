@@ -6,17 +6,15 @@ using VfxEditor.Data;
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiIntCombo : IUiBase {
         public readonly string Name;
-        public int Value;
         public readonly AVFXInt Literal;
 
         private readonly Dictionary<int, string> Mapping;
-        private string DisplayText => Mapping.TryGetValue( Value, out var displayText ) ? displayText : "[UNKNOWN]";
+        private string DisplayText => Mapping.TryGetValue( Literal.GetValue(), out var displayText ) ? displayText : "[UNKNOWN]";
 
         public UiIntCombo( string name, AVFXInt literal, Dictionary<int, string> mapping ) {
             Name = name;
             Literal = literal;
             Mapping = mapping;
-            Value = Literal.GetValue();
         }
 
         public void DrawInline( string id ) {
@@ -24,20 +22,17 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXInt literal ) {
                 Literal.SetValue( literal.GetValue() );
                 Literal.SetAssigned( literal.IsAssigned() );
-                Value = Literal.GetValue();
             }
 
             // Unassigned
-            if( !Literal.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
-                return;
-            }
+            if( IUiBase.DrawAddButton( Literal, Name, id ) ) return;
 
+            var value = Literal.GetValue();
             var spacing = ImGui.GetStyle().ItemSpacing.X;
             var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing; // have to do this calculation now
             ImGui.SetNextItemWidth( 100 );
-            if( ImGui.InputInt( $"{id}-MainInput", ref Value ) ) {
-                Literal.SetValue( Value );
+            if( ImGui.InputInt( $"{id}-MainInput", ref value ) ) {
+                CommandManager.Avfx.Add( new UiIntCommand( Literal, value ) );
             }
 
             ImGui.SameLine(100 + spacing);
@@ -46,10 +41,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
             var idx = 0;
             if( ImGui.BeginCombo( $"{Name}{id}", DisplayText ) ) {
                 foreach( var entry in Mapping ) {
-                    var isSelected = entry.Key == Value;
+                    var isSelected = entry.Key == value;
                     if( ImGui.Selectable( $"{entry.Value}##{idx}", isSelected ) ) {
-                        Value = entry.Key;
-                        Literal.SetValue( Value );
+                        CommandManager.Avfx.Add( new UiIntCommand( Literal, entry.Key ) );
                     }
 
                     if( isSelected ) ImGui.SetItemDefaultFocus();
@@ -59,7 +53,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
 
 
-            if( IUiBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            IUiBase.DrawRemoveContextMenu( Literal, Name, id );
         }
     }
 }

@@ -34,14 +34,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
 
             // Unassigned
-            if( IUiBase.DrawCommandButton( Literals, Name, id ) ) return;
+            if( IUiBase.DrawAddButton( Literals, Name, id ) ) return;
 
             var value = new Vector2( Literal1.GetValue(), Literal2.GetValue() );
             if( ImGui.InputFloat2( Name + id, ref value ) ) {
                 CommandManager.Avfx.Add( new UiFloat2Command( Literal1, Literal2, value ) );
             }
 
-            IUiBase.DrawCommandContextMenu( Literals, Name, id );
+            IUiBase.DrawRemoveContextMenu( Literals, Name, id );
         }
     }
 }

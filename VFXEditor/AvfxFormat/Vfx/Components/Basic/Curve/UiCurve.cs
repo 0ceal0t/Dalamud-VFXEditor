@@ -2,7 +2,6 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Curve;
-using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiCurve : UiAssignableItem {
@@ -24,25 +23,16 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 new UiCombo<CurveBehavior>( "Pre Behavior", Curve.PreBehavior ),
                 new UiCombo<CurveBehavior>( "Post Behavior", Curve.PostBehavior )
             };
-            if( !Color ) {
-                Parameters.Add( new UiCombo<RandomType>( "Random Type", Curve.Random ) );
-            }
+            if( !Color ) Parameters.Add( new UiCombo<RandomType>( "Random Type", Curve.Random ) );
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                AVFXBase.RecurseAssigned( Curve, true );
-            }
+            IUiBase.DrawAddButtonRecurse( Curve, Name, parentId );
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
-            if( !Locked ) {
-                if( UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
-                    Curve.SetAssigned( false );
-                    return;
-                }
-            }
+            if( !Locked && IUiBase.DrawRemoveButton( Curve, Name, id ) ) return;
             IUiBase.DrawList( Parameters, id );
             CurveEdit.DrawInline( id );
         }
@@ -55,9 +45,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             var idx = 0;
             foreach( var curve in curves ) {
                 if( !curve.IsAssigned() ) {
-                    if( idx % 5 != 0 ) {
-                        ImGui.SameLine();
-                    }
+                    if( idx % 5 != 0 ) ImGui.SameLine();
                     curve.DrawInline( id );
                     idx++;
                 }

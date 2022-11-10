@@ -9,9 +9,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Timeline = timeline;
         }
 
-        public override int GetEnd( UiTimelineItem item ) => item.EndTime.Value;
+        public override int GetEnd( UiTimelineItem item ) => item.EndTime.Literal.GetValue();
 
-        public override int GetStart( UiTimelineItem item ) => item.StartTime.Value;
+        public override int GetStart( UiTimelineItem item ) => item.StartTime.Literal.GetValue();
 
         public override UiTimelineItem OnNew() {
             var newItem = Timeline.Timeline.AddItem();
@@ -32,12 +32,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void SetEnd( UiTimelineItem item, int end ) {
-            item.EndTime.Value = end;
             item.EndTime.Literal.SetValue( end );
         }
 
         public override void SetStart( UiTimelineItem item, int start ) {
-            item.StartTime.Value = start;
             item.StartTime.Literal.SetValue( start );
         }
 
