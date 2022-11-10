@@ -13,6 +13,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat.Vfx {
     public class AvfxFile {
         public readonly AVFXMain Avfx;
+        public readonly CommandManager Command = new();
 
         public readonly UiParameterView ParameterView;
         public readonly UiEffectorView EffectorView;

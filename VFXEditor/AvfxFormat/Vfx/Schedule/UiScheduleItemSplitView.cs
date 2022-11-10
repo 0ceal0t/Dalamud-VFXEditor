@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void OnDelete( UiSchedulerItem item ) {
-            item.TimelineSelect.DeleteSelect();
+            item.TimelineSelect.Disable();
             Sched.Scheduler.Remove( item.Item );
         }
     }

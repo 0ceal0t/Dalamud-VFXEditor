@@ -15,6 +15,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             SplitView.DrawInline( $"{parentId}/Data" );
         }
 
-        public virtual void Dispose() { }
+        public virtual void Enable() { }
+
+        public virtual void Disable() { }
     }
 }

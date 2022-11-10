@@ -26,8 +26,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Tabs.Add( new UiCurve( data.AnimationNumber, "Animation Number" ) );
         }
 
-        public override void Dispose() {
-            ModelSelect.DeleteSelect();
+        public override void Disable() {
+            ModelSelect.Disable();
         }
     }
 }

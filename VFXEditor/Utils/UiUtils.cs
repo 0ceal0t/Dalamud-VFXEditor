@@ -28,15 +28,21 @@ namespace VfxEditor.Utils {
         }
 
         public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) {
+            return EnumComboBox( label, $"{currentValue}", options, currentValue, out newValue );
+        }
+
+        public static bool EnumComboBox<T>( string label, string text, T[] options, T currentValue, out T newValue ) {
             newValue = currentValue;
-            if( ImGui.BeginCombo( label, $"{currentValue}" ) ) {
+            if( ImGui.BeginCombo( label, text ) ) {
                 foreach( var option in options ) {
+                    var selected = currentValue.Equals( option );
                     if( ImGui.Selectable( $"{option}", currentValue.Equals( option ) ) ) {
                         newValue = option;
-
                         ImGui.EndCombo();
                         return true;
                     }
+
+                    if( selected ) ImGui.SetItemDefaultFocus();
                 }
                 ImGui.EndCombo();
             }

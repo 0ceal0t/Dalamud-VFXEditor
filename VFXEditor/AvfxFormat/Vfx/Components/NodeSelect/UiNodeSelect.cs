@@ -23,11 +23,18 @@ namespace VfxEditor.AvfxFormat.Vfx {
             node.Graph?.NowOutdated();
         }
 
-        public abstract void DeleteSelect(); // when a selector is deleted. call this when deleting an item doesn't delete a node, like EmitterItem
-        public abstract void UnlinkChange();
+        // For when a select is modified, but not the underlying node
+        // Example: emitter item, or model data
+        public abstract void Enable();
+        public abstract void Disable();
+
+        public abstract void LinkEvent();
+        public abstract void UnlinkEvent();
+
         public abstract void DeleteNode( UiNode node ); // when the selected node is deleted
         public abstract void UpdateNode();
         public abstract void SetupNode();
+
         public abstract void DrawInline(string id);
     }
 
@@ -100,14 +107,21 @@ namespace VfxEditor.AvfxFormat.Vfx {
             UpdateNode();
         }
 
-        public override void DeleteSelect() {
-            UnlinkChange();
-            if( Selected != null ) {
-                UnlinkFrom( Selected );
-            }
+        public override void Enable() {
+            LinkEvent();
+            if( Selected != null ) LinkTo( Selected );
         }
 
-        public override void UnlinkChange() {
+        public override void Disable() {
+            UnlinkEvent();
+            if( Selected != null ) UnlinkFrom( Selected );
+        }
+
+        public override void LinkEvent() {
+            Group.OnChange += UpdateNode;
+        }
+
+        public override void UnlinkEvent() {
             Group.OnChange -= UpdateNode;
         }
 

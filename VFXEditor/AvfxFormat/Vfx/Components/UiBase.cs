@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Collections.Generic;
+using VfxEditor.AVFXLib;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public interface IUiBase {
@@ -29,6 +30,19 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 ImGui.EndPopup();
             }
             return ret;
+        }
+
+        public static bool DrawCommandButton( AVFXBase assignable, string name, string id ) {
+            if( !assignable.IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new UiAssignableCommand( assignable, true ) );
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void DrawCommandContextMenu( AVFXBase assignable, string name, string id ) {
+            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new UiAssignableCommand( assignable, false ) );
         }
     }
 }

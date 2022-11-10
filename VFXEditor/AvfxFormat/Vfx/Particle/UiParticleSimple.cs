@@ -101,8 +101,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Simple";
             if( UiUtils.RemoveButton( "Delete" + id, small: true ) ) {
-                InjectionModelSelect.DeleteSelect();
-                InjectionVertexModelSelect.DeleteSelect();
+                InjectionModelSelect.Disable();
+                InjectionVertexModelSelect.Disable();
 
                 Simple.SetAssigned( false );
                 return;

@@ -22,11 +22,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override void OnDelete( UiEmitterItem item ) {
             if( IsParticle ) {
                 Emitter.Emitter.RemoveParticle( item.Iteration );
-                item.ParticleSelect.DeleteSelect();
+                item.ParticleSelect.Disable();
             }
             else {
                 Emitter.Emitter.RemoveEmitter( item.Iteration );
-                item.EmitterSelect.DeleteSelect();
+                item.EmitterSelect.Disable();
             }
         }
     }

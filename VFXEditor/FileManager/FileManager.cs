@@ -10,19 +10,19 @@ using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
+        public T ActiveDocument { get; protected set; } = null;
+        public R CurrentFile => ActiveDocument?.CurrentFile;
+
         private int DocumentId = 0;
         private readonly string Extension; // tmb
         private readonly string TempFilePrefix; // TmbTemp
         private readonly string PenumbraPath; // Tmb
-        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
+        private bool HasDefault = true;
 
+        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
         protected readonly string Title;
         protected readonly string Id;
         protected List<T> Documents = new();
-        protected T ActiveDocument = null;
-        public bool HasCurrentFile => ActiveDocument != null && ActiveDocument.HasCurrentFile;
-
-        private bool HasDefault = true;
 
         private T SelectedDocument = null; // for document selection dialog
         protected bool DocumentDialogVisible = false;

@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
 
             foreach( var s in Selectors ) {
-                s.UnlinkChange();
+                s.UnlinkEvent();
             }
         }
 

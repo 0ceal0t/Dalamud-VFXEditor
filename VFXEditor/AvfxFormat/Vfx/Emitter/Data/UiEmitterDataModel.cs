@@ -18,8 +18,12 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Tabs.Add( new UiCurve( data.InjectionSpeedRandom, "Injection Speed Random" ) );
         }
 
-        public override void Dispose() {
-            ModelSelect.DeleteSelect();
+        public override void Enable() {
+            ModelSelect.Enable();
+        }
+
+        public override void Disable() {
+            ModelSelect.Disable();
         }
     }
 }

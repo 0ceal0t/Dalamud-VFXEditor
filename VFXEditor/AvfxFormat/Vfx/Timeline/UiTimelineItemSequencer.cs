@@ -25,9 +25,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void OnDelete( UiTimelineItem item ) {
-            item.BinderSelect.DeleteSelect();
-            item.EmitterSelect.DeleteSelect();
-            item.EffectorSelect.DeleteSelect();
+            item.BinderSelect.Disable();
+            item.EmitterSelect.Disable();
+            item.EffectorSelect.Disable();
             Timeline.Timeline.RemoveItem( item.Item );
         }
 
@@ -41,11 +41,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
             item.StartTime.Literal.SetValue( start );
         }
 
-        public override bool IsEnabled( UiTimelineItem item ) => item.Enabled.Value;
+        public override bool IsEnabled( UiTimelineItem item ) => item.Enabled.Literal.GetValue() == true;
 
         public override void Toggle( UiTimelineItem item ) {
             var newValue = !IsEnabled(item);
-            item.Enabled.Value = newValue;
             item.Enabled.Literal.SetValue( newValue );
         }
     }

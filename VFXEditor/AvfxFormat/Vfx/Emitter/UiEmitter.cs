@@ -39,9 +39,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             EmitterList = new List<UiEmitterItem>();
 
 
-            Type = new UiCombo<EmitterType>( "Type", Emitter.EmitterVariety, onChange: () => {
-                Emitter.SetType( Emitter.EmitterVariety.GetValue() );
-                SetType();
+            Type = new UiCombo<EmitterType>( "Type", Emitter.EmitterVariety, extraCommand: () => {
+                return new UiEmitterDataExtraCommand( this );
             } );
             SoundInput = new UiString( "Sound", Emitter.Sound, showRemoveButton: true );
             SoundIndex = new UiInt( "Sound Index (-1 if no sound)", Emitter.SoundNumber );
@@ -76,15 +75,16 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 EmitterList.Add( new UiEmitterItem( e, false, this ) );
             }
 
-            SetType();
+            UpdateDataType();
 
             AnimationSplit = new UiItemSplitView<UiItem>( Animation );
             EmitterSplit = new UiEmitterSplitView( EmitterList, this, false );
             ParticleSplit = new UiEmitterSplitView( ParticleList, this, true );
             HasDependencies = false; // if imported, all set now
         }
-        public void SetType() {
-            Data?.Dispose();
+
+        public void UpdateDataType() {
+            Data?.Disable();
             Data = Emitter.EmitterVariety.GetValue() switch {
                 EmitterType.SphereModel => new UiEmitterDataSphereModel( ( AVFXEmitterDataSphereModel )Emitter.Data ),
                 EmitterType.CylinderModel => new UiEmitterDataCylinderModel( ( AVFXEmitterDataCylinderModel )Emitter.Data ),

@@ -35,7 +35,7 @@ namespace VfxEditor.NodeLibrary {
                 DragDrop( library, ref listModified );
                 ImGui.Indent();
 
-                if (UiUtils.DisabledButton($"Import{id}", Plugin.AvfxManager.HasCurrentFile)) {
+                if (UiUtils.DisabledButton($"Import{id}", Plugin.AvfxManager.CurrentFile != null)) {
                     Plugin.AvfxManager.Import( Path );
                 }
 

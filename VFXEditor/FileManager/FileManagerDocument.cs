@@ -8,6 +8,8 @@ using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : class {
+        public T CurrentFile { get; protected set; }
+
         protected SelectResult Source = SelectResult.None();
         public string SourceDisplay => Source.DisplayString;
         public string SourcePath => Source.Path;
@@ -15,9 +17,6 @@ namespace VfxEditor.FileManager {
         protected SelectResult Replace = SelectResult.None();
         public string ReplaceDisplay => Replace.DisplayString;
         public string ReplacePath => Replace.Path;
-
-        protected T CurrentFile;
-        public bool HasCurrentFile => CurrentFile != null;
 
         protected VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
         protected string WriteLocation;

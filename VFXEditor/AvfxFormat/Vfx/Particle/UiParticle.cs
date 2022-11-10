@@ -38,9 +38,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Tex = new List<UiItem>();
             UvSets = new List<UiParticleUvSet>();
 
-            Type = new UiCombo<ParticleType>( "Type", Particle.ParticleVariety, onChange: () => {
-                Particle.SetType( Particle.ParticleVariety.GetValue() );
-                SetType();
+            Type = new UiCombo<ParticleType>( "Type", Particle.ParticleVariety, extraCommand: () => {
+                //Particle.SetType( Particle.ParticleVariety.GetValue() );
+                //SetType();
+                // TODO
+                return null;
             } );
             Parameters = new List<IUiBase> {
                 new UiInt( "Loop Start", Particle.LoopStart ),
@@ -113,7 +115,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void SetType() {
-            Data?.Dispose();
+            Data?.Disable();
             Data = Particle.ParticleVariety.GetValue() switch {
                 ParticleType.Model => new UiParticleDataModel( ( AVFXParticleDataModel )Particle.Data, this ),
                 ParticleType.LightModel => new UiParticleDataLightModel( ( AVFXParticleDataLightModel )Particle.Data, this ),

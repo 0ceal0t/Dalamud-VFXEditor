@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( UiUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
                 Tex.SetAssigned( false );
 
-                TextureSelect.DeleteSelect();
+                TextureSelect.Disable();
                 return;
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

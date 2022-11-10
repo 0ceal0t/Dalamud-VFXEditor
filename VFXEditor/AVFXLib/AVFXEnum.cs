@@ -5,7 +5,7 @@ namespace VfxEditor.AVFXLib {
     public class AVFXEnum<T> : AVFXBase {
         private int Size;
         private T Value = ( T )( object )0;
-        public readonly string[] Options = Enum.GetNames( typeof( T ) );
+        public readonly T[] Options = ( T[] )Enum.GetValues( typeof( T ) );
 
         public AVFXEnum( string name, int size = 4 ) : base( name ) {
             Size = size;
@@ -16,10 +16,6 @@ namespace VfxEditor.AVFXLib {
         public void SetValue( T value ) {
             SetAssigned( true );
             Value = value;
-        }
-
-        public void SetValue( string value ) {
-            SetValue( ( T )Enum.Parse( typeof( T ), value, true ) );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

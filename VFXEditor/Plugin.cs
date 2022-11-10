@@ -30,7 +30,7 @@ namespace VfxEditor {
         public static ClientState ClientState { get; private set; }
         public static Framework Framework { get; private set; }
         public static Condition Condition { get; private set; }
-        public static CommandManager CommandManager { get; private set; }
+        public static Dalamud.Game.Command.CommandManager CommandManager { get; private set; }
         public static ObjectTable Objects { get; private set; }
         public static SigScanner SigScanner { get; private set; }
         public static DataManager DataManager { get; private set; }
@@ -59,7 +59,7 @@ namespace VfxEditor {
         public Plugin(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
-                CommandManager commandManager,
+                Dalamud.Game.Command.CommandManager commandManager,
                 Framework framework,
                 Condition condition,
                 ObjectTable objects,

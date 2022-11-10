@@ -19,9 +19,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Binder = binder;
             NodeView = new UiNodeGraphView( this );
             Properties = new List<UiBinderProperties>();
-            Type = new UiCombo<BinderType>( "Type", Binder.BinderVariety, onChange: () => {
-                Binder.SetType( Binder.BinderVariety.GetValue() );
-                SetType();
+            Type = new UiCombo<BinderType>( "Type", Binder.BinderVariety, extraCommand: () => {
+                //Binder.SetType( Binder.BinderVariety.GetValue() );
+                //SetType();
+                // TODO
+                return null;
             } );
 
             Parameters = new List<IUiBase> {
@@ -53,7 +55,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         private void SetType() {
-            Data?.Dispose();
+            Data?.Disable();
             Data = Binder.BinderVariety.GetValue() switch {
                 BinderType.Point => new UiBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data ),
                 BinderType.Linear => new UiBinderDataLinear( ( AVFXBinderDataLinear )Binder.Data ),

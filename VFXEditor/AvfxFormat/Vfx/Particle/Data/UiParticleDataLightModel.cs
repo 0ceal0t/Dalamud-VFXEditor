@@ -10,8 +10,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Parameters.Add( ModelSelect = new UiNodeSelect<UiModel>( particle, "Model", particle.NodeGroups.Models, data.ModelIdx ) );
         }
 
-        public override void Dispose() {
-            ModelSelect.DeleteSelect();
+        public override void Disable() {
+            ModelSelect.Disable();
         }
     }
 }

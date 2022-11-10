@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Name = name;
             Group = group;
             Literal = literal;
-            Group.OnChange += UpdateNode;
+            LinkEvent();
             if( Group.IsInitialized ) {
                 SetupNode();
             }
@@ -103,14 +103,21 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public override void DeleteSelect() {
-            UnlinkChange();
-            foreach( var item in Selected ) {
-                UnlinkFrom( item );
-            }
+        public override void Enable() {
+            LinkEvent();
+            foreach( var item in Selected ) LinkTo( item );
         }
 
-        public override void UnlinkChange() {
+        public override void Disable() {
+            UnlinkEvent();
+            foreach( var item in Selected ) UnlinkFrom( item );
+        }
+
+        public override void LinkEvent() {
+            Group.OnChange += UpdateNode;
+        }
+
+        public override void UnlinkEvent() {
             Group.OnChange -= UpdateNode;
         }
 

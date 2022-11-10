@@ -17,9 +17,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Effector = effector;
             NodeView = new UiNodeGraphView( this );
 
-            Type = new UiCombo<EffectorType>( "Type", Effector.EffectorVariety, onChange: () => {
-                Effector.SetType( Effector.EffectorVariety.GetValue() );
-                SetType();
+            Type = new UiCombo<EffectorType>( "Type", Effector.EffectorVariety, extraCommand: () => {
+                //Effector.SetType( Effector.EffectorVariety.GetValue() );
+                //SetType();
+                // TODO
+                return null;
             } );
             Parameters = new List<IUiBase> {
                 new UiCombo<RotationOrder>( "Rotation Order", Effector.RotationOrder ),
@@ -35,7 +37,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         private void SetType() {
-            Data?.Dispose();
+            Data?.Disable();
             Data = Effector.EffectorVariety.GetValue() switch {
                 EffectorType.PointLight => new UiEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data ),
                 EffectorType.RadialBlur => new UiEffectorDataRadialBlur( ( AVFXEffectorDataRadialBlur )Effector.Data ),

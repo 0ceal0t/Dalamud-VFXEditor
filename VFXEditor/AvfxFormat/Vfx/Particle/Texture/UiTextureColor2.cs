@@ -55,7 +55,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( Tex.GetName() != "TC2" && UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Tex.SetAssigned( false );
 
-                TextureSelect.DeleteSelect();
+                TextureSelect.Disable();
                 return;
             }
 
