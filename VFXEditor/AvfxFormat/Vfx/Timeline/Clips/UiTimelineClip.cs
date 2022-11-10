@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             RawFloats = new Vector4( Clip.UnknownFloats[0], Clip.UnknownFloats[1], Clip.UnknownFloats[2], Clip.UnknownFloats[3] );
         }
 
-        public static Dictionary<string, string> IdOptions = new()
+        private static readonly Dictionary<string, string> IdOptions = new()
         {
             { "LLIK", "Kill" },
             { "TSER", "Reset" },

@@ -1,6 +1,8 @@
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using VfxEditor.AVFXLib;
 using VfxEditor.Utils;
 
@@ -70,6 +72,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 RevisedScale.Literal1.SetValue( ScaleCombined );
                 RevisedScale.Literal2.SetValue( ScaleCombined );
                 RevisedScale.Literal3.SetValue( ScaleCombined );
+
+                CommandManager.Avfx.Add(
+                    new UiFloat3Command( RevisedScale.Literal1, RevisedScale.Literal2, RevisedScale.Literal3, new Vector3( ScaleCombined ) ) 
+               );
             }
             RevisedScale.DrawInline( id );
 

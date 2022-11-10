@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
@@ -22,18 +23,6 @@ namespace VfxEditor {
 
         public bool CanRedo => CommandBuffer.Count > 0 && CommandIndex < ( CommandBuffer.Count - 1 );
 
-        /* 
-         * 0 1 [2]
-         *   undo 
-         * 0 [1] 2
-         *  undo 
-         * [0] 1 2
-         *  undo
-         * 0 1 2 (-1)
-         *  redo
-         * [0] 1 2
-         */
-
         public void Undo() {
             if( !CanUndo ) return;
             CommandBuffer[CommandIndex].Undo();
@@ -44,6 +33,19 @@ namespace VfxEditor {
             if( !CanRedo ) return;
             CommandIndex++;
             CommandBuffer[CommandIndex].Redo();
+        }
+
+        public unsafe void Draw() {
+            var dimUndo = !CanUndo;
+            var dimRedo = !CanRedo;
+
+            if( dimUndo ) ImGui.PushStyleColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
+            if( ImGui.MenuItem( "Undo##Menu" ) ) Undo();
+            if( dimUndo ) ImGui.PopStyleColor();
+
+            if( dimRedo ) ImGui.PushStyleColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
+            if( ImGui.MenuItem( "Redo##Menu" ) ) Redo();
+            if( dimRedo ) ImGui.PopStyleColor();
         }
     }
 }

@@ -44,9 +44,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             EffectorSelect.DrawInline( id );
             IUiBase.DrawList( Parameters, id );
 
-            if( ImGui.Checkbox( "Clip Enabled" + id, ref ClipAssigned ) ) {
-                Item.ClipNumber.SetAssigned( ClipAssigned );
-            }
+            if( ImGui.Checkbox( "Clip Enabled" + id, ref ClipAssigned ) ) CommandManager.Avfx.Add( new UiAssignableCommand( Item.ClipNumber, ClipAssigned ) );
             ClipNumber.DrawInline( id );
         }
 

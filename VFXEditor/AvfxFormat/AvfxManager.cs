@@ -63,8 +63,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
                 if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
                 if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
-                if( ImGui.MenuItem( "Undo##Menu" ) ) CommandManager.Avfx.Undo();
-                if( ImGui.MenuItem( "Redo##Menu" ) ) CommandManager.Avfx.Redo();
+                CommandManager.Avfx.Draw();
 
                 if( ImGui.BeginMenu( "Templates##Menu" ) ) {
                     if( ImGui.MenuItem( "Blank##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_vfx.avfx" );

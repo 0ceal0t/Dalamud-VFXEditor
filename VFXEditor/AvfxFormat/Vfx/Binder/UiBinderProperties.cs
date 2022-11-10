@@ -1,5 +1,7 @@
 using ImGuiNET;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Security.Cryptography;
 using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Binder;
 using VfxEditor.Utils;
@@ -61,16 +63,13 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ " + Name + parentId ) ) {
-                AVFXBase.RecurseAssigned( Prop, true );
-            }
+            IUiBase.DrawAddButtonRecurse( Prop, Name, parentId );
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
-            if( UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
-                Prop.SetAssigned( false );
-            }
+            IUiBase.DrawRemoveButton( Prop, Name, id );
+
             DrawListTabs( Tabs, id );
         }
 
