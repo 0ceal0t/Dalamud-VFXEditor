@@ -5,10 +5,12 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public interface IUiNodeView<T> where T : UiNode {
-        public void OnDelete( T item );
+        public void RemoveFromAvfx( T item );
+        public void AddToAvfx( T item, int idx );
+
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
         public void AddToGroup( T item );
-        public void DeleteSelected();
+        public void ResetSelected();
         public void OnNew();
 
         public void Import( BinaryReader reader, long position, int size, string renamed, bool hasDependencies) {
@@ -44,12 +46,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) {
-                    group.Remove( selected );
-                    selected.DeleteNode();
-                    nodeView.OnDelete( selected );
-                    nodeView.DeleteSelected();
-                }
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + Id ) ) CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( nodeView, group, selected ) );
             }
             ImGui.PopFont();
 
@@ -72,7 +69,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     var size = reader.ReadInt32();
                     var newNode = nodeView.OnImport( reader, size );
                     newNode.Renamed = selected.Renamed;
-                    group.Add( newNode );
+                    group.AddAndUpdate( newNode );
                 }
                 ImGui.EndPopup();
             }

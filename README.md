@@ -59,13 +59,15 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Update "try on" preview
 
 ## Undo/Redo
-- Basic components [int]
-- Texture string
-- Node select
+- [x] Basic components [int]
+- [x] Texture string
+- [x] Node select
 - Add / remove basic items (timeline items, emitter items, emitter vertexes, UVSet, TC1, simple particle)
 - Timeline sequencer
-- Add / remove big items (also stuff like effector select in emitters)
-- Import?
+- [x] Remove big items (also stuff like effector select in emitters)
+- Import + default big items?
+- Duplicate big items
+- Texture replacement
 - Copy / paste
 - TMB + PAP (not literals, Havok stuff)
 - Show when no undo/redo possible

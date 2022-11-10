@@ -16,25 +16,17 @@ namespace VfxEditor.AvfxFormat.Vfx {
             HasDependencies = hasDependencies;
         }
 
-        public void DeleteNode() {
+        public void DisableNode() {
             IsDeleted = true;
             foreach( var node in Children ) {
-                node.Parents.RemoveAll( x => x.Node == this );
-
+                node.Parents.RemoveAll( nodeSelect => nodeSelect.Node == this );
                 node.Graph?.NowOutdated();
             }
-            foreach( var node in Parents ) {
-                node.DeleteNode( this );
-                node.Node.Children.RemoveAll( x => x == this );
+            foreach( var nodeSelect in Parents ) {
+                nodeSelect.NodeDisabled( this );
+                nodeSelect.Node.Children.RemoveAll( node => node == this );
             }
-
-            foreach( var s in Selectors ) {
-                s.UnlinkEvent();
-            }
-        }
-
-        public void RefreshGraph() {
-            Graph = new UiNodeGraph( this );
+            foreach( var selector in Selectors ) selector.UnlinkEvent();
         }
 
         public virtual void ShowTooltip() { }

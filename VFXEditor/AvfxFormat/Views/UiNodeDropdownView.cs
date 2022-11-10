@@ -5,7 +5,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public abstract class UiNodeDropdownView<T> : IUiBase, IUiNodeView<T> where T : UiNode {
-        public readonly AVFXMain AVFX;
+        public readonly AVFXMain Avfx;
         public readonly AvfxFile VfxFile;
         public readonly UiNodeGroup<T> Group;
 
@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public UiNodeDropdownView( AvfxFile vfxFile, AVFXMain avfx, UiNodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
             VfxFile = vfxFile;
-            AVFX = avfx;
+            Avfx = avfx;
             Group = group;
             AllowNew = allowNew;
             AllowDelete = allowDelete;
@@ -29,13 +29,15 @@ namespace VfxEditor.AvfxFormat.Vfx {
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
-        public abstract void OnDelete( T item );
+        public abstract void RemoveFromAvfx( T item );
+        public abstract void AddToAvfx( T item, int idx );
+
         public abstract void OnExport( BinaryWriter writer, T item );
         public abstract void OnSelect( T item );
         public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
         public void OnNew() => VfxFile.Import( DefaultPath );
 
-        public void AddToGroup( T item ) => Group.Add( item );
+        public void AddToGroup( T item ) => Group.AddAndUpdate( item );
 
         public void DrawInline( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -67,7 +69,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public void DeleteSelected() {
+        public void ResetSelected() {
             Selected = null;
         }
     }

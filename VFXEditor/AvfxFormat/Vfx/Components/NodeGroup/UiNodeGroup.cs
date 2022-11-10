@@ -28,14 +28,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 ( Effectors = new UiNodeGroup<UiEffector>() )
             };
 
-            avfx.Binders.ForEach( item => Binders.Add( new UiBinder( item ) ) );
-            avfx.Emitters.ForEach( item => Emitters.Add( new UiEmitter( item, this ) ) );
-            avfx.Models.ForEach( item => Models.Add( new UiModel( item ) ) );
-            avfx.Particles.ForEach( item => Particles.Add( new UiParticle( item, this ) ) );
-            avfx.Schedulers.ForEach( item => Schedulers.Add( new UiScheduler( item, this ) ) );
-            avfx.Textures.ForEach( item => Textures.Add( new UiTexture( item ) ) );
-            avfx.Timelines.ForEach( item => Timelines.Add( new UiTimeline( item, this ) ) );
-            avfx.Effectors.ForEach( item => Effectors.Add( new UiEffector( item ) ) );
+            avfx.Binders.ForEach( item => Binders.AddInitial( new UiBinder( item ) ) );
+            avfx.Emitters.ForEach( item => Emitters.AddInitial( new UiEmitter( item, this ) ) );
+            avfx.Models.ForEach( item => Models.AddInitial( new UiModel( item ) ) );
+            avfx.Particles.ForEach( item => Particles.AddInitial( new UiParticle( item, this ) ) );
+            avfx.Schedulers.ForEach( item => Schedulers.AddInitial( new UiScheduler( item, this ) ) );
+            avfx.Textures.ForEach( item => Textures.AddInitial( new UiTexture( item ) ) );
+            avfx.Timelines.ForEach( item => Timelines.AddInitial( new UiTimeline( item, this ) ) );
+            avfx.Effectors.ForEach( item => Effectors.AddInitial( new UiEffector( item ) ) );
         }
 
         public void Init() => AllGroups.ForEach( group => group.Init() );
@@ -81,16 +81,28 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public bool IsInitialized { get; private set; } = false;
         public int PreImportSize { get; private set; } = 0;
 
-        public void Remove( T item ) {
+        public void RemoveAndUpdate( T item ) {
             item.Idx = -1;
             Items.Remove( item );
             UpdateIdx();
             Update();
         }
 
-        public void Add( T item ) {
+        public void AddInitial( T item ) {
             item.Idx = Items.Count;
             Items.Add( item );
+        }
+
+        public void AddAndUpdate( T item, int idx ) {
+            Items.Insert( idx, item );
+            UpdateIdx();
+            Update();
+        }
+
+        public void AddAndUpdate( T item ) {
+            Items.Add( item );
+            UpdateIdx();
+            Update();
         }
 
         public void Update() => OnChange?.Invoke();

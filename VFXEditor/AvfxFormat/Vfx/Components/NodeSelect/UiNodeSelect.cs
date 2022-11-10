@@ -31,7 +31,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public abstract void LinkEvent();
         public abstract void UnlinkEvent();
 
-        public abstract void DeleteNode( UiNode node ); // when the selected node is deleted
+        public abstract List<int> GetNodeIdx( UiNode node );
+        public abstract void NodeEnabled( UiNode node, int idx );
+        public abstract void NodeDisabled( UiNode node );
+
         public abstract void UpdateNode();
         public abstract void SetupNode();
 
@@ -50,12 +53,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Group = group;
             Literal = literal;
             Group.OnChange += UpdateNode;
-            if( Group.IsInitialized ) {
-                SetupNode();
-            }
-            else {
-                Group.OnInit += SetupNode;
-            }
+            if( Group.IsInitialized ) SetupNode();
+            else Group.OnInit += SetupNode;
             node.Selectors.Add( this );
         }
 
@@ -69,27 +68,27 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 else Selected = null;
             }
 
-            // ======= DRAW =========
             var id = parentId + "/Node";
 
             // Unassigned
-            if( !Literal.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
-                return;
-            }
+            if( IUiBase.DrawAddButton( Literal, Name, id ) ) return;
 
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
-                if( ImGui.Selectable( "[NONE]", Selected == null ) ) SelectNone();
-
+                if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) );
                 foreach( var item in Group.Items ) {
-                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) SelectItem( item );
+                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
                     if( ImGui.IsItemHovered() ) item.ShowTooltip();
                 }
-
                 ImGui.EndCombo();
             }
 
-            if( IUiBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            IUiBase.DrawRemoveContextMenu( Literal, Name, id );
+        }
+
+        // Internal selection
+        public void Select( T item ) {
+            if( item == null ) SelectNone();
+            else SelectItem( item );
         }
 
         private void SelectNone() {
@@ -139,7 +138,15 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public override void DeleteNode( UiNode node ) {
+        // External selection
+        public override List<int> GetNodeIdx( UiNode node ) => null;
+
+        public override void NodeEnabled( UiNode node, int _ ) {
+            Selected = ( T )node;
+            UpdateNode();
+        }
+
+        public override void NodeDisabled( UiNode node ) {
             Selected = null;
             UpdateNode();
         }

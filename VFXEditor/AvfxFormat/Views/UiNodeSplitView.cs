@@ -27,14 +27,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
 
-        public abstract void OnDelete( T item );
+        public abstract void RemoveFromAvfx( T item );
+        public abstract void AddToAvfx( T item, int idx );
+
         public abstract void OnSelect( T item );
         public abstract T OnImport( BinaryReader reader, int size, bool hasDependencies = false );
         public void OnNew() => VfxFile.Import( DefaultPath );
 
-        public void AddToGroup( T item ) {
-            Group.Add( item );
-        }
+        public void AddToGroup( T item ) => Group.AddAndUpdate( item );
 
         public override void DrawControls( string parentId ) {
             IUiNodeView<T>.DrawControls( this, VfxFile, Selected, Group, AllowNew, AllowDelete, parentId );
@@ -59,7 +59,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public void DeleteSelected() {
+        public void ResetSelected() {
             Selected = null;
         }
     }

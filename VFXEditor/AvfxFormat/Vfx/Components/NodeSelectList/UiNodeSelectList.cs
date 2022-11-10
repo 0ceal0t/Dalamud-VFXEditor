@@ -1,4 +1,5 @@
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 using VfxEditor.AVFXLib;
 using VfxEditor.Data;
@@ -17,12 +18,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Group = group;
             Literal = literal;
             LinkEvent();
-            if( Group.IsInitialized ) {
-                SetupNode();
-            }
-            else {
-                Group.OnInit += SetupNode;
-            }
+            if( Group.IsInitialized ) SetupNode();
+            else Group.OnInit += SetupNode;
             node.Selectors.Add( this );
         }
 
@@ -43,44 +40,29 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 }
             }
 
-            // ====== DRAW =================
             var id = parentId + "/Node";
 
-            if( !Literal.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
-                return;
-            }
+            // Unassigned
+            if( IUiBase.DrawAddButton( Literal, Name, id ) ) return;
 
-            for( var i = 0; i < Selected.Count; i++ ) {
-                var _id = id + i;
-                var text = ( i == 0 ) ? Name : "";
-                if( ImGui.BeginCombo( text + _id, Selected[i] == null ? "[NONE]" : Selected[i].GetText() ) ) {
-                    if( ImGui.Selectable( "[NONE]", Selected[i] == null ) ) {
-                        UnlinkFrom( Selected[i] );
-                        Selected[i] = null;
-                        UpdateNode();
-                    }
+            for( var idx = 0; idx < Selected.Count; idx++ ) {
+                var itemId = id + idx;
+                var text = ( idx == 0 ) ? Name : "";
+                if( ImGui.BeginCombo( text + itemId, Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
+                    if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) );
                     foreach( var item in Group.Items ) {
-                        if( ImGui.Selectable( item.GetText(), Selected[i] == item ) ) {
-                            UnlinkFrom( Selected[i] );
-                            LinkTo( item );
-                            Selected[i] = item;
-                            UpdateNode();
-                        }
-                        if( ImGui.IsItemHovered() ) {
-                            item.ShowTooltip();
-                        }
+                        if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
+                        if( ImGui.IsItemHovered() ) item.ShowTooltip();
                     }
                     ImGui.EndCombo();
                 }
 
-                if( IUiBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+                IUiBase.DrawRemoveContextMenu( Literal, Name, id );
 
-                if( i > 0 ) {
+                if( idx > 0 ) {
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( "- Remove" + _id, small: true ) ) {
-                        UnlinkFrom( Selected[i] );
-                        Selected.RemoveAt( i );
+                    if( UiUtils.RemoveButton( "- Remove" + itemId, small: true ) ) {
+                        CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
                         return;
                     }
                 }
@@ -90,17 +72,33 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 ImGui.Text( Name );
                 ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add an item!" );
             }
-            if( Group.Items.Count == 0 ) {
-                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
-            }
+            if( Group.Items.Count == 0 )ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
             if( Selected.Count < 4 ) {
-                if( ImGui.SmallButton( "+ " + Name + id ) ) {
-                    Selected.Add( Group.Items[0] );
-                    LinkTo( Group.Items[0] );
-                }
+                if( ImGui.SmallButton( "+ " + Name + id ) ) CommandManager.Avfx.Add( new UiNodeSelectListAddCommand<T>( this ) );
 
-                if( IUiBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+                IUiBase.DrawRemoveContextMenu( Literal, Name, id );
             }
+        }
+
+        // Internal selection
+        public void Select( T item, int idx ) {
+            if( item == null ) SelectNone( idx );
+            else SelectItem( item, idx );
+        }
+
+        private void SelectNone( int idx ) {
+            if( Selected == null ) return;
+            UnlinkFrom( Selected[idx] );
+            Selected[idx] = null;
+            UpdateNode();
+        }
+
+        private void SelectItem( T item, int idx ) {
+            if( Selected[idx] == item ) return;
+            UnlinkFrom( Selected[idx] );
+            LinkTo( item );
+            Selected[idx] = item;
+            UpdateNode();
         }
 
         public override void Enable() {
@@ -124,12 +122,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override void UpdateNode() {
             var idxs = new List<int>();
             foreach( var item in Selected ) {
-                if( item == null ) {
-                    idxs.Add( 255 );
-                }
-                else {
-                    idxs.Add( item.Idx );
-                }
+                if( item == null ) idxs.Add( 255 );
+                else idxs.Add( item.Idx );
             }
             Literal.SetValue( idxs );
         }
@@ -152,7 +146,21 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public override void DeleteNode( UiNode node ) {
+        // External selection
+        public override List<int> GetNodeIdx( UiNode node ) {
+            List<int> idx = new();
+            for( var i = 0; i < Selected.Count; i++ ) {
+                if( Selected[i] == node ) idx.Add( i );
+            }
+            return idx;
+        }
+
+        public override void NodeEnabled( UiNode node, int idx ) {
+            Selected.Insert( idx, ( T )node );
+            UpdateNode();
+        }
+
+        public override void NodeDisabled( UiNode node ) {
             Selected.RemoveAll( x => x == node );
             UpdateNode();
         }

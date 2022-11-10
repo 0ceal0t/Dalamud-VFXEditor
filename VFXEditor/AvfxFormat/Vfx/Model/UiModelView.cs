@@ -9,12 +9,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnSelect( UiModel item ) => item.OnSelect();
 
-        public override void OnDelete( UiModel item ) => Avfx.RemoveModel( item.Model );
+        public override void RemoveFromAvfx( UiModel item ) => Avfx.Models.Remove( item.Model );
+
+        public override void AddToAvfx( UiModel item, int idx ) => Avfx.Models.Insert( idx, item.Model );
 
         public override UiModel OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
             var mdl = new AVFXModel();
             mdl.Read( reader, size );
-            Avfx.AddModel( mdl );
+            Avfx.Models.Add( mdl );
             return new UiModel( mdl );
         }
     }
