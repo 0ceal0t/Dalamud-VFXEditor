@@ -59,17 +59,15 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Update "try on" preview
 
 ## Undo/Redo
-- Basic components
-- Unassign / assign
-- Change type (emitter, particle, etc.)
-- Add / remove
-- Import
-- Havok stuff
-- clear when opening new workspace
-- how to handle opening new file?
-- timeline seq
-- node select
-- tmb and pap (no AVFXLiteral)
-- separate file/document/manager commandmanagers
-- textures
-- copy / paste
+- Basic components [int]
+- Texture string
+- Node select
+- Add / remove basic items (timeline items, emitter items, emitter vertexes, UVSet, TC1, simple particle)
+- Timeline sequencer
+- Add / remove big items (also stuff like effector select in emitters)
+- Import?
+- Copy / paste
+- TMB + PAP (not literals, Havok stuff)
+- Show when no undo/redo possible
+- Keybinds
+- Customize MAX undo size

@@ -5,13 +5,11 @@ using VfxEditor.Data;
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiFloat : IUiBase {
         public readonly string Name;
-        public float Value;
         public readonly AVFXFloat Literal;
 
         public UiFloat( string name, AVFXFloat literal ) {
             Name = name;
             Literal = literal;
-            Value = Literal.GetValue();
         }
 
         public void DrawInline( string id ) {
@@ -19,20 +17,17 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXFloat literal ) {
                 Literal.SetValue( literal.GetValue() );
                 Literal.SetAssigned( literal.IsAssigned() );
-                Value = Literal.GetValue();
             }
 
             // Unassigned
-            if( !Literal.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {Name}{id}" ) ) Literal.SetAssigned( true );
-                return;
+            if( IUiBase.DrawCommandButton( Literal, Name, id ) ) return;
+
+            var value = Literal.GetValue();
+            if( ImGui.InputFloat( Name + id, ref value ) ) {
+                CommandManager.Avfx.Add( new UiFloatCommand( Literal, value ) );
             }
 
-            if( ImGui.InputFloat( Name + id, ref Value ) ) {
-                Literal.SetValue( Value );
-            }
-
-            if( IUiBase.DrawUnassignContextMenu( id, Name ) ) Literal.SetAssigned( false );
+            IUiBase.DrawCommandContextMenu( Literal, Name, id );
         }
     }
 }

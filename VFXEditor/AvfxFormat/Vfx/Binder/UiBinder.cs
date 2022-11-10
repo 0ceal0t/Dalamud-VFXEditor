@@ -13,17 +13,15 @@ namespace VfxEditor.AvfxFormat.Vfx {
         private readonly UiItemSplitView<UiBinderProperties> PropSplit;
         private readonly UiNodeGraphView NodeView;
         private readonly List<IUiBase> Parameters;
-        private UiData Data;
+
+        public UiData Data;
 
         public UiBinder( AVFXBinder binder, bool hasDependencies = false ) : base( UiNodeGroup.BinderColor, hasDependencies ) {
             Binder = binder;
             NodeView = new UiNodeGraphView( this );
             Properties = new List<UiBinderProperties>();
             Type = new UiCombo<BinderType>( "Type", Binder.BinderVariety, extraCommand: () => {
-                //Binder.SetType( Binder.BinderVariety.GetValue() );
-                //SetType();
-                // TODO
-                return null;
+                return new UiBinderDataExtraCommand( this );
             } );
 
             Parameters = new List<IUiBase> {
@@ -48,13 +46,13 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Properties.Add( new UiBinderProperties( "Properties 2", Binder.Prop2 ) );
             Properties.Add( new UiBinderProperties( "Properties Goal", Binder.PropGoal ) );
 
-            SetType();
+            UpdateDataType();
 
             PropSplit = new UiItemSplitView<UiBinderProperties>( Properties );
             HasDependencies = false; // if imported, all set now
         }
 
-        private void SetType() {
+        public void UpdateDataType() {
             Data?.Disable();
             Data = Binder.BinderVariety.GetValue() switch {
                 BinderType.Point => new UiBinderDataPoint( ( AVFXBinderDataPoint )Binder.Data ),

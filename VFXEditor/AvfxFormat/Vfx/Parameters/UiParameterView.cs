@@ -70,7 +70,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 RevisedScale.Literal1.SetValue( ScaleCombined );
                 RevisedScale.Literal2.SetValue( ScaleCombined );
                 RevisedScale.Literal3.SetValue( ScaleCombined );
-                RevisedScale.Value = new System.Numerics.Vector3( ScaleCombined, ScaleCombined, ScaleCombined );
             }
             RevisedScale.DrawInline( id );
 

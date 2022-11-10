@@ -12,12 +12,12 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Item = item;
             State = state;
             PrevState = item.GetValue();
-            ExtraCommand = extraCommand; // Save current data
+            ExtraCommand = extraCommand;
         }
 
         public void Execute() {
             Item.SetValue( State );
-            ExtraCommand?.Execute(); // Disable current data, replace it
+            ExtraCommand?.Execute();
         }
 
         public void Redo() {

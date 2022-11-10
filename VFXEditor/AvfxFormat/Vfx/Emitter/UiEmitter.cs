@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public readonly UiEmitterSplitView EmitterSplit;
         public readonly UiEmitterSplitView ParticleSplit;
         public readonly UiNodeSelect<UiEffector> EffectorSelect;
-        public UiNodeGraphView NodeView;
+        private UiNodeGraphView NodeView;
 
         public readonly UiString SoundInput;
         public readonly UiInt SoundIndex;

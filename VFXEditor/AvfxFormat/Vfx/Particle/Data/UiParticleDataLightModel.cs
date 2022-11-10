@@ -10,6 +10,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Parameters.Add( ModelSelect = new UiNodeSelect<UiModel>( particle, "Model", particle.NodeGroups.Models, data.ModelIdx ) );
         }
 
+        public override void Enable() {
+            ModelSelect.Enable();
+        }
+
         public override void Disable() {
             ModelSelect.Disable();
         }

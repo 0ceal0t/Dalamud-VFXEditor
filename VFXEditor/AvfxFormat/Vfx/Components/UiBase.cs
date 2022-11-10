@@ -44,5 +44,18 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public static void DrawCommandContextMenu( AVFXBase assignable, string name, string id ) {
             if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new UiAssignableCommand( assignable, false ) );
         }
+
+        public static bool DrawCommandButton( List<AVFXBase> assignable, string name, string id ) {
+            if( !assignable[0].IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new UiAssignableCommandMultiple( assignable, true ) );
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void DrawCommandContextMenu( List<AVFXBase> assignable, string name, string id ) {
+            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new UiAssignableCommandMultiple( assignable, false ) );
+        }
     }
 }

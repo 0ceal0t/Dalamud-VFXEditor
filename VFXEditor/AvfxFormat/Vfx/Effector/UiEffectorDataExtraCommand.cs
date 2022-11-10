@@ -1,38 +1,38 @@
 using VfxEditor.AVFXLib;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiEmitterDataExtraCommand : ICommand {
-        private readonly UiEmitter Item;
+    public class UiEffectorDataExtraCommand : ICommand {
+        private readonly UiEffector Item;
         private readonly AVFXBase OldData;
         private readonly UiData OldUi;
 
         private AVFXBase NewData;
         private UiData NewUi;
 
-        public UiEmitterDataExtraCommand( UiEmitter item ) {
+        public UiEffectorDataExtraCommand( UiEffector item ) {
             Item = item;
             OldUi = item.Data;
-            OldData = item.Emitter.Data;
+            OldData = item.Effector.Data;
         }
 
         public void Execute() {
-            Item.Emitter.SetType( Item.Emitter.EmitterVariety.GetValue() );
+            Item.Effector.SetType( Item.Effector.EffectorVariety.GetValue() );
             Item.UpdateDataType(); // already disables the old one
 
-            NewData = Item.Emitter.Data;
+            NewData = Item.Effector.Data;
             NewUi = Item.Data;
         }
 
         public void Redo() {
             OldUi?.Disable();
-            Item.Emitter.Data = NewData;
+            Item.Effector.Data = NewData;
             Item.Data = NewUi;
             NewUi?.Enable();
         }
 
         public void Undo() {
             NewUi?.Disable();
-            Item.Emitter.Data = OldData;
+            Item.Effector.Data = OldData;
             Item.Data = OldUi;
             OldUi?.Enable();
         }

@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
     public class UiEffector : UiNode {
         public readonly AVFXEffector Effector;
         public readonly UiCombo<EffectorType> Type;
-        public readonly UiNodeGraphView NodeView;
+        private readonly UiNodeGraphView NodeView;
         private readonly List<IUiBase> Parameters;
 
         public UiData Data;
@@ -18,10 +18,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             NodeView = new UiNodeGraphView( this );
 
             Type = new UiCombo<EffectorType>( "Type", Effector.EffectorVariety, extraCommand: () => {
-                //Effector.SetType( Effector.EffectorVariety.GetValue() );
-                //SetType();
-                // TODO
-                return null;
+                return new UiEffectorDataExtraCommand( this );
             } );
             Parameters = new List<IUiBase> {
                 new UiCombo<RotationOrder>( "Rotation Order", Effector.RotationOrder ),
@@ -32,11 +29,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 new UiInt( "Loop End", Effector.LoopPointEnd )
             };
 
-            SetType();
+            UpdateDataType();
             HasDependencies = false; // if imported, all set now
         }
 
-        private void SetType() {
+        public void UpdateDataType() {
             Data?.Disable();
             Data = Effector.EffectorVariety.GetValue() switch {
                 EffectorType.PointLight => new UiEffectorDataPointLight( ( AVFXEffectorDataPointLight )Effector.Data ),

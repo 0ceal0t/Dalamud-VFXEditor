@@ -26,6 +26,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Tabs.Add( new UiCurve( data.AnimationNumber, "Animation Number" ) );
         }
 
+        public override void Enable() {
+            ModelSelect.Enable();
+        }
+
         public override void Disable() {
             ModelSelect.Disable();
         }

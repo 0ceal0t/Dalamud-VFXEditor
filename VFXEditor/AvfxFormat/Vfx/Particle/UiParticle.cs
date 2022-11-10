@@ -39,10 +39,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             UvSets = new List<UiParticleUvSet>();
 
             Type = new UiCombo<ParticleType>( "Type", Particle.ParticleVariety, extraCommand: () => {
-                //Particle.SetType( Particle.ParticleVariety.GetValue() );
-                //SetType();
-                // TODO
-                return null;
+                return new UiParticleDataExtraCommand( this );
             } );
             Parameters = new List<IUiBase> {
                 new UiInt( "Loop Start", Particle.LoopStart ),
@@ -97,7 +94,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 UvSets.Add( new UiParticleUvSet( uvSet, this ) );
             }
 
-            SetType();
+            UpdateDataType();
 
             Tex.Add( TC1 = new UiTextureColor1( Particle.TC1, this ) );
             Tex.Add( TC2 = new UiTextureColor2( Particle.TC2, "Texture Color 2", this ) );
@@ -114,7 +111,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             HasDependencies = false; // if imported, all set now
         }
 
-        public void SetType() {
+        public void UpdateDataType() {
             Data?.Disable();
             Data = Particle.ParticleVariety.GetValue() switch {
                 ParticleType.Model => new UiParticleDataModel( ( AVFXParticleDataModel )Particle.Data, this ),
