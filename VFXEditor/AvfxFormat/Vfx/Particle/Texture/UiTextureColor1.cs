@@ -5,26 +5,12 @@ using VfxEditor.AVFXLib.Particle;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTextureColor1 : UiAssignableItem {
+    public class UiTextureColor1 : UiTextureItem {
         public readonly AVFXParticleTextureColor1 Tex;
-        public readonly UiParticle Particle;
 
-        public UiNodeSelectList<UiTexture> TextureSelect;
-
-        public readonly List<UiItem> Tabs;
-        public readonly UiParameters Parameters;
-
-        public UiTextureColor1( AVFXParticleTextureColor1 tex, UiParticle particle ) {
+        public UiTextureColor1( AVFXParticleTextureColor1 tex, UiParticle particle ) : base( particle ) {
             Tex = tex;
-            Particle = particle;
-
-            Tabs = new List<UiItem> {
-                ( Parameters = new UiParameters( "Parameters" ) )
-            };
-
-            if( IsAssigned() ) {
-                Parameters.Add( TextureSelect = new UiNodeSelectList<UiTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, Tex.MaskTextureIdx ) );
-            }
+            InitNodeSelects();
 
             Parameters.Add( new UiCheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UiCheckbox( "Color To Alpha", Tex.ColorToAlpha ) );
@@ -41,20 +27,13 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) {
-                AVFXBase.RecurseAssigned( Tex, true );
-
-                Parameters.Remove( TextureSelect );
-                Parameters.Prepend( TextureSelect = new UiNodeSelectList<UiTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, Tex.MaskTextureIdx ) );
-            }
+            if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) Assign( Tex );
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TC1";
             if( UiUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
-                Tex.SetAssigned( false );
-
-                TextureSelect.Disable();
+                Unassign( Tex );
                 return;
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -64,5 +43,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override string GetDefaultText() => "Texture Color 1";
 
         public override bool IsAssigned() => Tex.IsAssigned();
+
+        public override List<UiNodeSelect> GetNodeSelects() => new() {
+            new UiNodeSelectList<UiTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, Tex.MaskTextureIdx )
+        };
     }
 }

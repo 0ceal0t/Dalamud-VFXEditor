@@ -4,27 +4,12 @@ using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Particle;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTextureDistortion : UiAssignableItem {
+    public class UiTextureDistortion : UiTextureItem {
         public readonly AVFXParticleTextureDistortion Tex;
-        public readonly UiParticle Particle;
-        public readonly string Name;
 
-        public UiNodeSelect<UiTexture> TextureSelect;
-
-        public readonly List<UiItem> Tabs;
-        public readonly UiParameters Parameters;
-
-        public UiTextureDistortion( AVFXParticleTextureDistortion tex, UiParticle particle ) {
+        public UiTextureDistortion( AVFXParticleTextureDistortion tex, UiParticle particle ) : base( particle ) {
             Tex = tex;
-            Particle = particle;
-
-            Tabs = new List<UiItem> {
-                ( Parameters = new UiParameters( "Parameters" ) )
-            };
-
-            if( IsAssigned() ) {
-                Parameters.Add( TextureSelect = new UiNodeSelect<UiTexture>( Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx ) );
-            }
+            InitNodeSelects();
 
             Parameters.Add( new UiCheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UiCheckbox( "Distort UV1", Tex.TargetUV1 ) );
@@ -40,12 +25,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) {
-                AVFXBase.RecurseAssigned( Tex, true );
-
-                Parameters.Remove( TextureSelect );
-                Parameters.Prepend( TextureSelect = new UiNodeSelect<UiTexture>( Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx ) );
-            }
+            if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) Assign( Tex );
         }
 
         public override void DrawAssigned( string parentId ) {
@@ -56,5 +36,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override string GetDefaultText() => "Texture Distortion";
 
         public override bool IsAssigned() => Tex.IsAssigned();
+
+        public override List<UiNodeSelect> GetNodeSelects() => new() {
+            new UiNodeSelect<UiTexture>( Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx )
+        };
     }
 }

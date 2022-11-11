@@ -4,27 +4,13 @@ using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Particle;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTexturePalette : UiAssignableItem {
+    public class UiTexturePalette : UiTextureItem {
         public readonly AVFXParticleTexturePalette Tex;
-        public readonly UiParticle Particle;
         public readonly string Name;
 
-        public UiNodeSelect<UiTexture> TextureSelect;
-
-        public readonly List<UiItem> Tabs;
-        public readonly UiParameters Parameters;
-
-        public UiTexturePalette( AVFXParticleTexturePalette tex, UiParticle particle ) {
+        public UiTexturePalette( AVFXParticleTexturePalette tex, UiParticle particle ) : base( particle ) {
             Tex = tex;
-            Particle = particle;
-
-            Tabs = new List<UiItem> {
-                ( Parameters = new UiParameters( "Parameters" ) )
-            };
-
-            if( IsAssigned() ) {
-                Parameters.Add( TextureSelect = new UiNodeSelect<UiTexture>( Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx ) );
-            }
+            InitNodeSelects();
 
             Parameters.Add( new UiCheckbox( "Enabled", Tex.Enabled ) );
             Parameters.Add( new UiCombo<TextureFilterType>( "Texture Filter", Tex.TextureFilter ) );
@@ -34,12 +20,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawUnassigned( string parentId ) {
-            if( ImGui.SmallButton( "+ Texture Palette" + parentId ) ) {
-                AVFXBase.RecurseAssigned( Tex, true );
-
-                Parameters.Remove( TextureSelect );
-                Parameters.Prepend( TextureSelect = new UiNodeSelect<UiTexture>( Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx ) );
-            }
+            if( ImGui.SmallButton( "+ Texture Palette" + parentId ) ) Assign( Tex );
         }
 
         public override void DrawAssigned( string parentId ) {
@@ -50,5 +31,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override string GetDefaultText() => "Texture Palette";
 
         public override bool IsAssigned() => Tex.IsAssigned();
+
+        public override List<UiNodeSelect> GetNodeSelects() => new() {
+            new UiNodeSelect<UiTexture>(Particle, "Texture", Particle.NodeGroups.Textures, Tex.TextureIdx )
+        };
     }
 }
