@@ -68,3 +68,9 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size
+
+make sure to assign(true)
+- EmitVertexes
+- Indexes
+- Vertexes
+- VertexNumbers

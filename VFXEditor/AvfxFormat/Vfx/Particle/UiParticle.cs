@@ -23,8 +23,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public readonly UiTexturePalette TP;
         public readonly UiTextureReflection TR;
         public readonly List<UiItem> Tex;
-        public readonly UiItemSplitView<UiItem> AnimationSplit;
-        public readonly UiItemSplitView<UiItem> TexSplit;
+        public readonly UiDisplaySplitView<UiItem> AnimationSplit;
+        public readonly UiDisplaySplitView<UiItem> TexSplit;
         public readonly UiUvSetSplitView UvSet;
         public readonly UiNodeGraphView NodeView;
         private readonly List<IUiBase> Parameters;
@@ -105,8 +105,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Tex.Add( TD = new UiTextureDistortion( Particle.TD, this ) );
             Tex.Add( TP = new UiTexturePalette( Particle.TP, this ) );
 
-            AnimationSplit = new UiItemSplitView<UiItem>( Animation );
-            TexSplit = new UiItemSplitView<UiItem>( Tex );
+            AnimationSplit = new UiDisplaySplitView<UiItem>( Animation );
+            TexSplit = new UiDisplaySplitView<UiItem>( Tex );
             UvSet = new UiUvSetSplitView( UvSets, this );
             HasDependencies = false; // if imported, all set now
         }

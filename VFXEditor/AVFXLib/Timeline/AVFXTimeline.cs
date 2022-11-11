@@ -51,6 +51,8 @@ namespace VfxEditor.AVFXLib.Timeline {
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
+            TimelineCount.SetValue( Items.Count );
+            ClipCount.SetValue( Clips.Count );
             WriteNested( writer, Children );
 
             // Item
@@ -60,53 +62,7 @@ namespace VfxEditor.AVFXLib.Timeline {
                 item.Write( writer );
             }
 
-            foreach( var clip in Clips ) {
-                clip.Write( writer );
-            }
-        }
-
-        public AVFXTimelineSubItem AddItem() {
-            var item = new AVFXTimelineSubItem();
-            Items.Add( item );
-            TimelineCount.SetValue( Items.Count );
-            return item;
-        }
-
-        public void AddItem( AVFXTimelineSubItem item ) {
-            Items.Add( item );
-            TimelineCount.SetValue( Items.Count );
-        }
-
-        public void RemoveItem( int idx ) {
-            Items.RemoveAt( idx );
-            TimelineCount.SetValue( Items.Count );
-        }
-
-        public void RemoveItem( AVFXTimelineSubItem item ) {
-            Items.Remove( item );
-            TimelineCount.SetValue( Items.Count );
-        }
-
-        public AVFXTimelineClip AddClip() {
-            var clip = new AVFXTimelineClip();
-            Clips.Add( clip );
-            ClipCount.SetValue( Clips.Count );
-            return clip;
-        }
-
-        public void AddClip( AVFXTimelineClip clip ) {
-            Clips.Add( clip );
-            ClipCount.SetValue( Clips.Count );
-        }
-
-        public void RemoveClip( int idx ) {
-            Clips.RemoveAt( idx );
-            ClipCount.SetValue( Clips.Count );
-        }
-
-        public void RemoveClip( AVFXTimelineClip clip ) {
-            Clips.Remove( clip );
-            ClipCount.SetValue( Clips.Count );
+            foreach( var clip in Clips ) clip.Write( writer );
         }
     }
 }

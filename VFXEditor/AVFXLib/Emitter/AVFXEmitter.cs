@@ -129,6 +129,8 @@ namespace VfxEditor.AVFXLib.Emitter {
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
+            EmitterCount.SetValue( Emitters.Count );
+            ParticleCount.SetValue( Particles.Count );
             WriteNested( writer, Children );
 
             // ItPr
@@ -166,50 +168,6 @@ namespace VfxEditor.AVFXLib.Emitter {
             Type = type;
             SetData( type );
             Data?.SetAssigned( true );
-        }
-
-        public AVFXEmitterItem AddParticle() {
-            var ItPr = new AVFXEmitterItem();
-            Particles.Add( ItPr );
-            ParticleCount.SetValue( Particles.Count );
-            return ItPr;
-        }
-
-        public void AddParticle( AVFXEmitterItem item ) {
-            Particles.Add( item );
-            ParticleCount.SetValue( Particles.Count );
-        }
-
-        public void RemoveParticle( int idx ) {
-            Particles.RemoveAt( idx );
-            ParticleCount.SetValue( Particles.Count );
-        }
-
-        public void RemoveParticle( AVFXEmitterItem item ) {
-            Particles.Remove( item );
-            ParticleCount.SetValue( Particles.Count );
-        }
-
-        public AVFXEmitterItem AddEmitter() {
-            var ItEm = new AVFXEmitterItem();
-            Emitters.Add( ItEm );
-            EmitterCount.SetValue( Emitters.Count );
-            return ItEm;
-        }
-
-        public void AddEmitter( AVFXEmitterItem item ) {
-            Emitters.Add( item );
-            EmitterCount.SetValue( Emitters.Count );
-        }
-
-        public void RemoveEmitter( int idx ) {
-            Emitters.RemoveAt( idx );
-            EmitterCount.SetValue( Emitters.Count );
-        }
-
-        public void RemoveEmitter( AVFXEmitterItem item ) {
-            Emitters.Remove( item );
-            EmitterCount.SetValue( Emitters.Count );
         }
     }
 }

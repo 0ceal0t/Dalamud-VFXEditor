@@ -20,28 +20,6 @@ namespace VfxEditor.AVFXLib.Model {
         protected override void WriteContents( BinaryWriter writer ) {
             foreach( var vert in EmitVertexes ) vert.Write( writer );
         }
-
-        public AVFXEmitVertex Add() {
-            SetAssigned( true );
-            var vert = new AVFXEmitVertex();
-            EmitVertexes.Add( vert );
-            return vert;
-        }
-
-        public void Add( AVFXEmitVertex vert ) {
-            SetAssigned( true );
-            EmitVertexes.Add( vert );
-        }
-
-        public void Remove( int idx ) {
-            SetAssigned( true );
-            EmitVertexes.RemoveAt( idx );
-        }
-
-        public void Remove( AVFXEmitVertex vert ) {
-            SetAssigned( true );
-            EmitVertexes.Remove( vert );
-        }
     }
 
     public class AVFXEmitVertex {

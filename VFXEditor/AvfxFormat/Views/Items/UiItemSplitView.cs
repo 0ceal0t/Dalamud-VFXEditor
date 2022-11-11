@@ -5,22 +5,21 @@ using System.Linq;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiItemSplitView<T> : UiGenericSplitView where T : UiItem {
+    public abstract class UiItemSplitView<T> : UiGenericSplitView where T : UiItem {
         public readonly List<T> Items;
         private T Selected = null;
 
-        public UiItemSplitView( List<T> items, bool allowNew = false, bool allowDelete = false ) : base( allowNew, allowDelete ) {
+        public UiItemSplitView( List<T> items ) : base( true, true ) {
             Items = items;
-            SetupIdx();
-        }
-
-        private void SetupIdx() {
-            for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i;
+            UpdateIdx();
         }
 
         public virtual T OnNew() { return null; }
-        public virtual void OnDelete( T item ) { }
+
         public virtual void OnSelect( T item ) { }
+
+        public abstract void RemoveFromAvfx( T item );
+        public abstract void AddToAvfx( T item, int idx );
 
         public override void DrawControls( string parentId ) {
             ImGui.PushFont( UiBuilder.IconFont );
@@ -36,33 +35,27 @@ namespace VfxEditor.AvfxFormat.Vfx {
             if( Selected != null && AllowDelete ) {
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
-                    Items.Remove( Selected );
-                    OnDelete( Selected );
-                    SetupIdx();
-                    Selected = null;
+                    CommandManager.Avfx.Add( new UiItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }
             }
             ImGui.PopFont();
         }
 
         public override void DrawLeftCol( string parentId ) {
-            foreach( var item in Items.Where( UiItem.IsAssigned ) ) {
-                if( ImGui.Selectable( item.GetText() + parentId, Selected == item ) ) {
+            foreach( var item in Items ) {
+                if( ImGui.Selectable( $"{item.GetText()}{parentId}", Selected == item ) ) {
                     OnSelect( item );
                     Selected = item;
                 }
             }
-
-            // not assigned, can be added
-            foreach( var item in Items.Where( UiItem.IsUnassigned ) ) {
-                item.DrawInline( parentId );
-            }
         }
 
-        public override void DrawRightCol( string parentId ) {
-            if( Selected != null && UiItem.IsAssigned( Selected ) ) {
-                Selected.DrawInline( parentId );
-            }
+        public override void DrawRightCol( string parentId ) => Selected?.DrawInline( parentId );
+
+        public void UpdateIdx() {
+            for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i;
         }
+
+        public void ClearSelected() { Selected = null; }
     }
 }

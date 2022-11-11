@@ -50,6 +50,8 @@ namespace VfxEditor.AVFXLib.Scheduler {
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
+            ItemCount.SetValue( Items.Count );
+            TriggerCount.SetValue( Triggers.Count );
             WriteNested( writer, Children );
 
             // Item
@@ -66,28 +68,6 @@ namespace VfxEditor.AVFXLib.Scheduler {
                 trigger.Items.AddRange( Triggers.GetRange( 0, i + 1 ) ); // get 1, then 2, etc.
                 trigger.Write( writer );
             }
-        }
-
-        public AVFXSchedulerSubItem Add() {
-            var ItPr = new AVFXSchedulerSubItem();
-            Items.Add( ItPr );
-            ItemCount.SetValue( Items.Count );
-            return ItPr;
-        }
-
-        public void Add( AVFXSchedulerSubItem item ) {
-            Items.Add( item );
-            ItemCount.SetValue( Items.Count );
-        }
-
-        public void Remove( int idx ) {
-            Items.RemoveAt( idx );
-            ItemCount.SetValue( Items.Count );
-        }
-
-        public void Remove( AVFXSchedulerSubItem item ) {
-            Items.Remove( item );
-            ItemCount.SetValue( Items.Count );
         }
     }
 }

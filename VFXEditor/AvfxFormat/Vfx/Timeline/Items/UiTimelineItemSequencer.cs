@@ -14,21 +14,23 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override int GetStart( UiTimelineItem item ) => item.StartTime.Literal.GetValue();
 
         public override UiTimelineItem OnNew() {
-            var newItem = Timeline.Timeline.AddItem();
+            /*var newItem = Timeline.Timeline.AddItem();
             newItem.BinderIdx.SetValue( -1 );
             newItem.EffectorIdx.SetValue( -1 );
             newItem.EmitterIdx.SetValue( -1 );
             newItem.EndTime.SetValue( 1 );
             newItem.Platform.SetValue( 0 );
 
-            return new UiTimelineItem( newItem, Timeline );
+            return new UiTimelineItem( newItem, Timeline );*/
+
+            return null;
         }
 
         public override void OnDelete( UiTimelineItem item ) {
-            item.BinderSelect.Disable();
+            /*item.BinderSelect.Disable();
             item.EmitterSelect.Disable();
             item.EffectorSelect.Disable();
-            Timeline.Timeline.RemoveItem( item.Item );
+            Timeline.Timeline.RemoveItem( item.Item );*/
         }
 
         public override void SetEnd( UiTimelineItem item, int end ) {

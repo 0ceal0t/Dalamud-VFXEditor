@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public readonly UiCombo<EmitterType> Type;
         public readonly List<UiItem> Animation;
-        public readonly UiItemSplitView<UiItem> AnimationSplit;
+        public readonly UiDisplaySplitView<UiItem> AnimationSplit;
 
         public readonly List<UiEmitterItem> ParticleList;
         public readonly List<UiEmitterItem> EmitterList;
@@ -77,7 +77,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             UpdateDataType();
 
-            AnimationSplit = new UiItemSplitView<UiItem>( Animation );
+            AnimationSplit = new UiDisplaySplitView<UiItem>( Animation );
             EmitterSplit = new UiEmitterSplitView( EmitterList, this, false );
             ParticleSplit = new UiEmitterSplitView( ParticleList, this, true );
             HasDependencies = false; // if imported, all set now

@@ -28,8 +28,8 @@ namespace VfxEditor.AvfxFormat.Vfx {
             UvView = new UiModelUvView(); // don't load until actually necessary
 
             EmitterVerts = new List<UiModelEmitterVertex>();
-            for( var i = 0; i < Math.Min( Model.VNums.Nums.Count, Model.EmitVertexes.EmitVertexes.Count ); i++ ) {
-                EmitterVerts.Add( new UiModelEmitterVertex( Model.VNums.Nums[i], Model.EmitVertexes.EmitVertexes[i], this ) );
+            for( var i = 0; i < Math.Min( Model.VertexNumbers.VertexNumbers.Count, Model.EmitVertexes.EmitVertexes.Count ); i++ ) {
+                EmitterVerts.Add( new UiModelEmitterVertex( Model.VertexNumbers.VertexNumbers[i], Model.EmitVertexes.EmitVertexes[i], this ) );
             }
             EmitSplit = new UiModelEmitSplitView( EmitterVerts, this );
             HasDependencies = false; // if imported, all set now

@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public UiCurveEditorPoint Selected = null;
         public readonly List<UiCurveEditorPoint> Points = new();
 
-        private readonly AVFXCurve Curve;
+        public readonly AVFXCurve Curve;
         public List<AVFXCurveKey> Keys => Curve.Keys.Keys;
 
         private readonly bool Color;

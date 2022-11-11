@@ -163,6 +163,7 @@ namespace VfxEditor.AVFXLib.Particle {
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
+            UVSetCount.SetValue( UvSets.Count );
             WriteNested( writer, Children );
 
             foreach( var uvSet in UvSets ) {
@@ -197,30 +198,6 @@ namespace VfxEditor.AVFXLib.Particle {
             Type = type;
             SetData( type );
             Data?.SetAssigned( true );
-        }
-
-        public AVFXParticleUVSet AddUvSet() {
-            if( UvSets.Count >= 4 ) return null;
-            var UvSet = new AVFXParticleUVSet();
-            UvSets.Add( UvSet );
-            UVSetCount.SetValue( UvSets.Count );
-            return UvSet;
-        }
-
-        public void AddUvSet( AVFXParticleUVSet item ) {
-            if( UvSets.Count >= 4 ) return;
-            UvSets.Add( item );
-            UVSetCount.SetValue( UvSets.Count );
-        }
-
-        public void RemoveUvSet( int idx ) {
-            UvSets.RemoveAt( idx );
-            UVSetCount.SetValue( UvSets.Count );
-        }
-
-        public void RemoveUvSet( AVFXParticleUVSet item ) {
-            UvSets.Remove( item );
-            UVSetCount.SetValue( UvSets.Count );
         }
     }
 }

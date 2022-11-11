@@ -20,28 +20,6 @@ namespace VfxEditor.AVFXLib.Model {
         protected override void WriteContents( BinaryWriter writer ) {
             foreach( var index in Indexes ) index.Write( writer );
         }
-
-        public AVFXIndex Add() {
-            SetAssigned( true );
-            var index = new AVFXIndex( 0, 0, 0 );
-            Indexes.Add( index );
-            return index;
-        }
-
-        public void Add( AVFXIndex index ) {
-            SetAssigned( true );
-            Indexes.Add( index );
-        }
-
-        public void Remove( int idx ) {
-            SetAssigned( true );
-            Indexes.RemoveAt( idx );
-        }
-
-        public void Remove( AVFXIndex index ) {
-            SetAssigned( true );
-            Indexes.Remove( index );
-        }
     }
 
     public class AVFXIndex {

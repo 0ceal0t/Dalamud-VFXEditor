@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat.Vfx {
     public abstract class UiData : UiItem {
         public readonly List<UiItem> Tabs = new();
-        public readonly UiItemSplitView<UiItem> SplitView;
+        public readonly UiDisplaySplitView<UiItem> SplitView;
 
         public UiData() {
-            SplitView = new UiItemSplitView<UiItem>( Tabs );
+            SplitView = new UiDisplaySplitView<UiItem>( Tabs );
         }
 
         public override string GetDefaultText() => "Data";

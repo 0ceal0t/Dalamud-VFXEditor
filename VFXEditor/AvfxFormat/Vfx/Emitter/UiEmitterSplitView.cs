@@ -1,32 +1,42 @@
 using System.Collections.Generic;
+using VfxEditor.AVFXLib.Emitter;
 
 namespace VfxEditor.AvfxFormat.Vfx {
     public class UiEmitterSplitView : UiItemSplitView<UiEmitterItem> {
         public readonly UiEmitter Emitter;
         public readonly bool IsParticle;
 
-        public UiEmitterSplitView( List<UiEmitterItem> items, UiEmitter emitter, bool isParticle ) : base( items, true, true ) {
+        public UiEmitterSplitView( List<UiEmitterItem> items, UiEmitter emitter, bool isParticle ) : base( items ) {
             Emitter = emitter;
             IsParticle = isParticle;
         }
 
         public override UiEmitterItem OnNew() {
-            if( IsParticle ) {
-                return new UiEmitterItem( Emitter.Emitter.AddParticle(), true, Emitter );
-            }
-            else {
-                return new UiEmitterItem( Emitter.Emitter.AddEmitter(), false, Emitter );
-            }
+            return null;
+            //IsParticle ?
+            //new UiEmitterItem( Emitter.Emitter.AddParticle(), true, Emitter ) :
+            //new UiEmitterItem( Emitter.Emitter.AddEmitter(), false, Emitter );
         }
 
-        public override void OnDelete( UiEmitterItem item ) {
+        public override void RemoveFromAvfx( UiEmitterItem item ) {
             if( IsParticle ) {
-                Emitter.Emitter.RemoveParticle( item.Iteration );
+                Emitter.Emitter.Particles.Remove( item.Iteration );
                 item.ParticleSelect.Disable();
             }
             else {
-                Emitter.Emitter.RemoveEmitter( item.Iteration );
+                Emitter.Emitter.Emitters.Remove( item.Iteration );
                 item.EmitterSelect.Disable();
+            }
+        }
+
+        public override void AddToAvfx( UiEmitterItem item, int idx ) {
+            if( IsParticle ) {
+                Emitter.Emitter.Particles.Insert( idx, item.Iteration );
+                item.ParticleSelect.Enable();
+            }
+            else {
+                Emitter.Emitter.Emitters.Insert( idx, item.Iteration );
+                item.EmitterSelect.Enable();
             }
         }
     }

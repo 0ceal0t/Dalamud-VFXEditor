@@ -14,6 +14,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void Execute() {
+            Item.Curve.Keys.SetAssigned( true );
         }
 
         public void Redo() {

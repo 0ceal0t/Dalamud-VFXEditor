@@ -22,20 +22,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void Execute() {
-            /*
-             *             IsDeleted = true;
-            foreach( var node in Children ) {
-                node.Parents.RemoveAll( x => x.Node == this );
-                node.Graph?.NowOutdated();
-            }
-            foreach( var node in Parents ) {
-                node.DeleteNode( this );
-                node.Node.Children.RemoveAll( x => x == this );
-            }
-
-            foreach( var s in Selectors ) s.UnlinkEvent();
-             */
-
             foreach ( var node in Item.Children ) {
                 RemovedFromChildren[node] = node.Parents.Where( nodeSelect => nodeSelect.Node == Item ).ToList();
             }
@@ -46,9 +32,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Remove();
         }
 
-        public void Redo() {
-            Remove();
-        }
+        public void Redo() => Remove();
 
         public void Undo() {
             Group.AddAndUpdate( Item, Idx );

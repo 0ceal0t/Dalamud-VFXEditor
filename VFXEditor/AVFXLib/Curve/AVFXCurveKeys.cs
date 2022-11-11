@@ -20,28 +20,6 @@ namespace VfxEditor.AVFXLib.Curve {
         protected override void WriteContents( BinaryWriter writer ) {
             foreach( var key in Keys ) key.Write( writer );
         }
-
-        public AVFXCurveKey Add() {
-            SetAssigned( true );
-            var key = new AVFXCurveKey( KeyType.Linear, 0, 1, 1, 1 );
-            Keys.Add( key );
-            return key;
-        }
-
-        public void Add( AVFXCurveKey key ) {
-            SetAssigned( true );
-            Keys.Add( key );
-        }
-
-        public void Remove( int idx ) {
-            SetAssigned( true );
-            Keys.RemoveAt( idx );
-        }
-
-        public void Remove( AVFXCurveKey key ) {
-            SetAssigned( true );
-            Keys.Remove( key );
-        }
     }
 
     public class AVFXCurveKey {

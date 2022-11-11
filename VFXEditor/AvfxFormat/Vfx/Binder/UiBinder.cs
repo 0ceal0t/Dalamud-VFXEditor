@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         private readonly UiCombo<BinderType> Type;
         private readonly List<UiBinderProperties> Properties;
-        private readonly UiItemSplitView<UiBinderProperties> PropSplit;
+        private readonly UiDisplaySplitView<UiBinderProperties> PropSplit;
         private readonly UiNodeGraphView NodeView;
         private readonly List<IUiBase> Parameters;
 
@@ -48,7 +48,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
             UpdateDataType();
 
-            PropSplit = new UiItemSplitView<UiBinderProperties>( Properties );
+            PropSplit = new UiDisplaySplitView<UiBinderProperties>( Properties );
             HasDependencies = false; // if imported, all set now
         }
 

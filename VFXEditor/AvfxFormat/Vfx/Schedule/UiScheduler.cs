@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public readonly List<UiSchedulerItem> Items;
         public readonly List<UiSchedulerItem> Triggers;
         public readonly UiScheduleItemSplitView ItemSplit;
-        public readonly UiItemSplitView<UiSchedulerItem> TriggerSplit;
+        public readonly UiDisplaySplitView<UiSchedulerItem> TriggerSplit;
 
         public UiScheduler( AVFXScheduler scheduler, UiNodeGroupSet nodeGroups ) : base( UiNodeGroup.SchedColor, false ) {
             Scheduler = scheduler;
@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
 
             ItemSplit = new UiScheduleItemSplitView( Items, this );
-            TriggerSplit = new UiItemSplitView<UiSchedulerItem>( Triggers );
+            TriggerSplit = new UiDisplaySplitView<UiSchedulerItem>( Triggers );
             HasDependencies = false; // if imported, all set now
         }
 
