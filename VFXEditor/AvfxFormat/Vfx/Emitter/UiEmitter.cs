@@ -38,7 +38,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             ParticleList = new List<UiEmitterItem>();
             EmitterList = new List<UiEmitterItem>();
 
-
             Type = new UiCombo<EmitterType>( "Type", Emitter.EmitterVariety, extraCommand: () => {
                 return new UiEmitterDataExtraCommand( this );
             } );

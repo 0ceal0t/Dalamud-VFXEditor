@@ -9,11 +9,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Timeline = timeline;
         }
 
-        public override UiTimelineClip OnNew() {
-            //return new UiTimelineClip( Timeline.Timeline.AddClip(), Timeline );
-            return null;
-        }
-
         public override void RemoveFromAvfx( UiTimelineClip item ) {
             Timeline.Timeline.Clips.Remove( item.Clip );
         }
@@ -21,5 +16,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override void AddToAvfx( UiTimelineClip item, int idx ) {
             Timeline.Timeline.Clips.Insert( idx, item.Clip );
         }
+
+        public override UiTimelineClip CreateNewAvfx() => new( new AVFXTimelineClip(), Timeline );
     }
 }

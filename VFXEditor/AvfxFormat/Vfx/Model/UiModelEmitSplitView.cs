@@ -9,21 +9,20 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Model = model;
         }
 
-        public override UiModelEmitterVertex OnNew() {
-            //var vnum = Model.Model.VertexNumbers.Add();
-            //var emit = Model.Model.EmitVertexes.Add();
-            //return new UiModelEmitterVertex( vnum, emit, Model );
-            return null;
-        }
-
         public override void RemoveFromAvfx( UiModelEmitterVertex item ) {
+            Model.Model.EmitVertexes.SetAssigned( true );
+            Model.Model.VertexNumbers.SetAssigned( true );
             Model.Model.EmitVertexes.EmitVertexes.Remove( item.Vertex );
             Model.Model.VertexNumbers.VertexNumbers.Remove( item.VertexNumber );
         }
 
         public override void AddToAvfx( UiModelEmitterVertex item, int idx ) {
+            Model.Model.EmitVertexes.SetAssigned( true );
+            Model.Model.VertexNumbers.SetAssigned( true );
             Model.Model.EmitVertexes.EmitVertexes.Insert( idx, item.Vertex );
             Model.Model.VertexNumbers.VertexNumbers.Insert( idx, item.VertexNumber );
         }
+
+        public override UiModelEmitterVertex CreateNewAvfx() => new( new AVFXVertexNumber( 0 ), new AVFXEmitVertex(), Model );
     }
 }

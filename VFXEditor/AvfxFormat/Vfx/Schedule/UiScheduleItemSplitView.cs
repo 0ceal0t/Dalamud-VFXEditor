@@ -9,11 +9,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Scheduler = scheduler;
         }
 
-        public override UiSchedulerItem OnNew() {
-            // return new UiSchedulerItem( Scheduler.Scheduler.Add(), Scheduler, "Item" );
-            return null;
-        }
-
         public override void RemoveFromAvfx( UiSchedulerItem item ) {
             item.TimelineSelect.Disable();
             Scheduler.Scheduler.Items.Remove( item.Item );
@@ -23,5 +18,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             item.TimelineSelect.Enable();
             Scheduler.Scheduler.Items.Insert( idx, item.Item );
         }
+
+        public override UiSchedulerItem CreateNewAvfx() => new( new AVFXSchedulerSubItem(), Scheduler, "Item" );
     }
 }

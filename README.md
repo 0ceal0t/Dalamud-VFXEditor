@@ -59,7 +59,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Update "try on" preview
 
 ## Undo/Redo
-- Add / remove basic items (timeline items/clips, emitter items, model emitter vertexes, UVSet, TC1..., simple particle, scheduler items)
+- Add / remove basic items (timeline items, TC1..., simple particle)
 - Timeline sequencer
 - Import + default big items?
 - Duplicate big items
@@ -68,9 +68,3 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size
-
-make sure to assign(true)
-- EmitVertexes
-- Indexes
-- Vertexes
-- VertexNumbers

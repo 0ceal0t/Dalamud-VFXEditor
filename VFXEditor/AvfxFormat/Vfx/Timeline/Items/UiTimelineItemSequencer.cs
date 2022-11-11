@@ -33,19 +33,12 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Timeline.Timeline.RemoveItem( item.Item );*/
         }
 
-        public override void SetEnd( UiTimelineItem item, int end ) {
-            item.EndTime.Literal.SetValue( end );
-        }
+        public override void SetEnd( UiTimelineItem item, int end ) => CommandManager.Avfx.Add( new UiIntCommand( item.EndTime.Literal, end ) );
 
-        public override void SetStart( UiTimelineItem item, int start ) {
-            item.StartTime.Literal.SetValue( start );
-        }
+        public override void SetStart( UiTimelineItem item, int start ) => CommandManager.Avfx.Add( new UiIntCommand( item.StartTime.Literal, start ) );
 
         public override bool IsEnabled( UiTimelineItem item ) => item.Enabled.Literal.GetValue() == true;
 
-        public override void Toggle( UiTimelineItem item ) {
-            var newValue = !IsEnabled(item);
-            item.Enabled.Literal.SetValue( newValue );
-        }
+        public override void Toggle( UiTimelineItem item ) => CommandManager.Avfx.Add( new UiCheckboxCommand( item.Enabled.Literal, !IsEnabled( item ) ) );
     }
 }

@@ -9,12 +9,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Particle = particle;
         }
 
-        public override UiParticleUvSet OnNew() {
-            //var p = Particle.Particle.AddUvSet();
-            //if( p != null )  return new UiParticleUvSet( p, Particle );
-            return null;
-        }
-
         public override void DrawControls( string parentId ) {
             AllowNew = ( Items.Count < 4 );
             base.DrawControls( parentId );
@@ -27,5 +21,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public override void AddToAvfx( UiParticleUvSet item, int idx ) {
             Particle.Particle.UvSets.Insert( idx, item.UvSet );
         }
+
+        public override UiParticleUvSet CreateNewAvfx() => new( new AVFXParticleUVSet(), Particle );
     }
 }

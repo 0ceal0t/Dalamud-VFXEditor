@@ -11,13 +11,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             IsParticle = isParticle;
         }
 
-        public override UiEmitterItem OnNew() {
-            return null;
-            //IsParticle ?
-            //new UiEmitterItem( Emitter.Emitter.AddParticle(), true, Emitter ) :
-            //new UiEmitterItem( Emitter.Emitter.AddEmitter(), false, Emitter );
-        }
-
         public override void RemoveFromAvfx( UiEmitterItem item ) {
             if( IsParticle ) {
                 Emitter.Emitter.Particles.Remove( item.Iteration );
@@ -39,5 +32,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 item.EmitterSelect.Enable();
             }
         }
+
+        public override UiEmitterItem CreateNewAvfx() => new( new AVFXEmitterItem(), IsParticle, Emitter );
     }
 }

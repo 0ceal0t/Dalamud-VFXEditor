@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
-using System.Linq;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
@@ -14,10 +13,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
             UpdateIdx();
         }
 
-        public virtual T OnNew() { return null; }
-
         public virtual void OnSelect( T item ) { }
 
+        public abstract T CreateNewAvfx();
         public abstract void RemoveFromAvfx( T item );
         public abstract void AddToAvfx( T item, int idx );
 
@@ -25,11 +23,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             ImGui.PushFont( UiBuilder.IconFont );
             if( AllowNew ) {
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + parentId ) ) {
-                    var item = OnNew();
-                    if( item != null ) {
-                        item.Idx = Items.Count;
-                        Items.Add( item );
-                    }
+                    CommandManager.Avfx.Add( new UiItemSplitViewAddCommand<T>( this, Items ) );
                 }
             }
             if( Selected != null && AllowDelete ) {
@@ -52,9 +46,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void DrawRightCol( string parentId ) => Selected?.DrawInline( parentId );
 
-        public void UpdateIdx() {
-            for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i;
-        }
+        public void UpdateIdx() { for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i; }
 
         public void ClearSelected() { Selected = null; }
     }

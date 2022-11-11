@@ -9,9 +9,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public void AddToAvfx( T item, int idx );
 
         public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
+        public void OnNew();
+
         public void AddToGroup( T item );
         public void ResetSelected();
-        public void OnNew();
 
         public void Import( BinaryReader reader, long position, int size, string renamed, bool hasDependencies) {
             reader.BaseStream.Seek( position, SeekOrigin.Begin );
