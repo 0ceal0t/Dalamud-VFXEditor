@@ -13,6 +13,9 @@ namespace VfxEditor {
         private static readonly int MAX = 10;
 
         public void Add(ICommand command) {
+            var numberToRemove = CommandBuffer.Count - 1 - CommandIndex; // when a change is made, wipes out the previous undo
+            if (numberToRemove > 0 ) CommandBuffer.RemoveRange( CommandBuffer.Count - numberToRemove, numberToRemove );
+
             CommandBuffer.Add(command);
             while( CommandBuffer.Count > MAX ) CommandBuffer.RemoveAt( 0 );
             CommandIndex = CommandBuffer.Count - 1;

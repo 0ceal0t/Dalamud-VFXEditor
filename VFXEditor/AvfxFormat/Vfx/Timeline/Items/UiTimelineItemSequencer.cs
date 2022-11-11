@@ -13,32 +13,22 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override int GetStart( UiTimelineItem item ) => item.StartTime.Literal.GetValue();
 
-        public override UiTimelineItem OnNew() {
-            /*var newItem = Timeline.Timeline.AddItem();
-            newItem.BinderIdx.SetValue( -1 );
-            newItem.EffectorIdx.SetValue( -1 );
-            newItem.EmitterIdx.SetValue( -1 );
-            newItem.EndTime.SetValue( 1 );
-            newItem.Platform.SetValue( 0 );
+        public override void OnNew() => CommandManager.Avfx.Add( new UiTimelineItemAddCommand( this ) );
 
-            return new UiTimelineItem( newItem, Timeline );*/
-
-            return null;
-        }
-
-        public override void OnDelete( UiTimelineItem item ) {
-            /*item.BinderSelect.Disable();
-            item.EmitterSelect.Disable();
-            item.EffectorSelect.Disable();
-            Timeline.Timeline.RemoveItem( item.Item );*/
-        }
-
-        public override void SetEnd( UiTimelineItem item, int end ) => CommandManager.Avfx.Add( new UiIntCommand( item.EndTime.Literal, end ) );
-
-        public override void SetStart( UiTimelineItem item, int start ) => CommandManager.Avfx.Add( new UiIntCommand( item.StartTime.Literal, start ) );
+        public override void OnDelete( UiTimelineItem item ) => CommandManager.Avfx.Add( new UiTimelineItemRemoveCommand( this, item ) );
 
         public override bool IsEnabled( UiTimelineItem item ) => item.Enabled.Literal.GetValue() == true;
 
         public override void Toggle( UiTimelineItem item ) => CommandManager.Avfx.Add( new UiCheckboxCommand( item.Enabled.Literal, !IsEnabled( item ) ) );
+
+        public override void SetPos( UiTimelineItem item, int start, int end ) {
+            item.StartTime.Literal.SetValue( start );
+            item.EndTime.Literal.SetValue( end );
+        }
+
+        public override void OnDragEnd( UiTimelineItem item, int startBegin, int startFinish, int endBegin, int endFinish ) {
+            if( startBegin == startFinish && endBegin == endFinish ) return;
+            CommandManager.Avfx.Add( new UiTimelineItemDragCommand( item, startBegin, startFinish, endBegin, endFinish ) );
+        }
     }
 }

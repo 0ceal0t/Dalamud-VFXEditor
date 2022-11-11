@@ -29,7 +29,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             Group.Insert( Idx, Item );
             View.AddToAvfx( Item, Idx );
             View.UpdateIdx();
-            View.ClearSelected();
         }
     }
 }

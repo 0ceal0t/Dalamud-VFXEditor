@@ -59,8 +59,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Update "try on" preview
 
 ## Undo/Redo
-- Add / remove basic items (timeline items, TC1..., simple particle)
-- Timeline sequencer
+- Add / remove basic items (TC1..., simple particle)
 - Import + default big items?
 - Duplicate big items
 - Texture replacement

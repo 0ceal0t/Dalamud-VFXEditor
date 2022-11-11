@@ -8,6 +8,17 @@ using VfxEditor.AvfxFormat.Vfx;
 
 namespace VfxEditor.AvfxFormat.Views {
     public abstract class ImGuiSequencer<T> : IUiBase where T : UiItem {
+        private enum MovingType : int {
+            LeftHandle = 1,
+            RightHandle = 2,
+            Middle = 3
+        };
+
+        private struct Rect {
+            public Vector2 Min;
+            public Vector2 Max;
+        };
+
         private static readonly int ItemHeight = 20;
         private static readonly int LegendWidth = 200;
         private static readonly float MinBarWidth = 44f;
@@ -15,17 +26,17 @@ namespace VfxEditor.AvfxFormat.Views {
         private float FramePixelWidth = 10f;
         private float FramePixelWidthTarget = 10f;
 
-        private readonly List<T> Items;
-        private T Selected = null;
+        public readonly List<T> Items;
+        public T Selected = null;
 
         private T MovingEntry = null;
-        private int MovingPos;
-        private int MovingPart;
-
-        private int FirstFrame = 0;
-
+        private int MovingMousePos;
+        private MovingType MovingPart;
+        private int MovingStart;
+        private int MovingEnd;
         private bool MovingScrollBar = false;
 
+        private int FirstFrame = 0;
         private bool PanningView = false;
         private Vector2 PanningViewSource;
         private int PanningViewFrame;
@@ -33,20 +44,9 @@ namespace VfxEditor.AvfxFormat.Views {
         private bool SizingLBar = false;
         private bool SizingRBar = false;
 
-        private struct Rect {
-            public Vector2 Min;
-            public Vector2 Max;
-        }
-
         public ImGuiSequencer( List<T> items ) {
             Items = items;
-            SetupIdx();
-        }
-
-        private void SetupIdx() {
-            for( var i = 0; i < Items.Count; i++ ) {
-                Items[i].Idx = i;
-            }
+            UpdateIdx();
         }
 
         public void DrawInline( string parentId ) {
@@ -120,9 +120,7 @@ namespace VfxEditor.AvfxFormat.Views {
             drawList.AddRectFilled( canvasPos, new Vector2( canvasPos.X + canvasSize.X, canvasPos.Y + ItemHeight ), 0xFF3D3837, 0 );
 
             if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && MouseClicked() ) {
-                Selected = OnNew();
-                Selected.Idx = Items.Count;
-                Items.Add( Selected );
+                OnNew();
                 newItemAdded = true;
             }
 
@@ -274,10 +272,13 @@ namespace VfxEditor.AvfxFormat.Views {
                         var rect = rects[j];
                         if( !Contains( rect.Min, rect.Max, io.MousePos ) ) continue;
                         if( !Contains( childFramePos, childFramePos + childFrameSize, io.MousePos ) ) continue;
+                        // Start dragging an entry
                         if( MouseClicked() && !MovingScrollBar ) {
                             MovingEntry = item;
-                            MovingPos = cursorX;
-                            MovingPart = j + 1;
+                            MovingMousePos = cursorX;
+                            MovingPart = (MovingType) j + 1;
+                            MovingStart = GetStart( MovingEntry );
+                            MovingEnd = GetEnd( MovingEntry );
                             break;
                         }
                     }
@@ -287,8 +288,7 @@ namespace VfxEditor.AvfxFormat.Views {
             }
 
             if( MovingEntry != null ) {
-                // TODO: ImGui::CaptureMouseFromApp();
-                var diffFrame = ( int )( ( cursorX - MovingPos ) / FramePixelWidth );
+                var diffFrame = ( int )( ( cursorX - MovingMousePos ) / FramePixelWidth );
 
                 if( Math.Abs( diffFrame ) > 0 ) {
                     var l = GetStart( MovingEntry );
@@ -297,14 +297,14 @@ namespace VfxEditor.AvfxFormat.Views {
 
                     Selected = MovingEntry;
 
-                    var changeLeft = ( MovingPart == 1 || MovingPart == 3 );
+                    var changeLeft = ( MovingPart == MovingType.LeftHandle || MovingPart == MovingType.Middle );
                     if( changeLeft ) l += diffFrame;
 
                     if( isInfinite ) {
                         if( l < 0 ) l = 0;
                     }
                     else {
-                        var changeRight = ( MovingPart == 2 || MovingPart == 3 );
+                        var changeRight = ( MovingPart == MovingType.RightHandle || MovingPart == MovingType.Middle );
                         if( changeRight ) r += diffFrame;
 
                         if( l < 0 ) {
@@ -314,16 +314,14 @@ namespace VfxEditor.AvfxFormat.Views {
                         if( changeLeft && l > r ) l = r;
                         if( changeRight && r < l ) r = l;
                     }
-                    MovingPos += ( int )( diffFrame * FramePixelWidth );
+                    MovingMousePos += ( int )( diffFrame * FramePixelWidth );
 
-                    SetStart( MovingEntry, l );
-                    SetEnd( MovingEntry, r );
+                    SetPos( MovingEntry, l, r );
                 }
-                if( !ImGui.IsMouseDown( ImGuiMouseButton.Left ) ) {
-                    if( diffFrame == 0 && MovingPart > 0 ) {
-                        Selected = MovingEntry;
-                    }
 
+                if( !ImGui.IsMouseDown( ImGuiMouseButton.Left ) ) {
+                    if( diffFrame == 0 && MovingPart > 0 ) Selected = MovingEntry;
+                    OnDragEnd( MovingEntry, MovingStart, GetStart( MovingEntry ), MovingEnd, GetEnd( MovingEntry ) );
                     MovingEntry = null;
                 }
             }
@@ -425,9 +423,7 @@ namespace VfxEditor.AvfxFormat.Views {
 
             if( deleteEntry != null ) {
                 if( deleteEntry == Selected ) Selected = null;
-                Items.Remove( deleteEntry );
                 OnDelete( deleteEntry );
-                SetupIdx();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -439,12 +435,18 @@ namespace VfxEditor.AvfxFormat.Views {
             }
         }
 
+        public void UpdateIdx() {
+            for( var i = 0; i < Items.Count; i++ ) Items[i].Idx = i;
+        }
+
+        public void ClearSelected() { Selected = null; }
+
         public abstract int GetStart( T item );
         public abstract int GetEnd( T item );
-        public abstract void SetStart( T item, int start );
-        public abstract void SetEnd( T item, int end );
+        public abstract void SetPos( T item, int start, int end );
+        public abstract void OnDragEnd( T item, int startBegin, int startFinish, int endBegin, int endFinish );
         public abstract void OnDelete( T item );
-        public abstract T OnNew();
+        public abstract void OnNew();
         public abstract bool IsEnabled( T item );
         public abstract void Toggle( T item );
 
