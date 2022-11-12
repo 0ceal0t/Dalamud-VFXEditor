@@ -194,9 +194,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             OrderByType<UiModel>( nodes );
 
             UpdateAllNodes( nodes );
-            foreach( var n in nodes ) {
-                n.Write( bw );
-            }
+            foreach( var n in nodes ) n.Write( bw );
             foreach( var n in nodes ) { // reset index
                 n.Idx = IdxSave[n];
             }
@@ -321,19 +319,23 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 idx++;
             }, size );
 
+            CompoundCommand importCommand = new( false, true ); // remove in reverse order
             // Import items in a specific order
-            ImportGroup( models, reader, ModelView, hasDependencies );
-            ImportGroup( textures, reader, TextureView, hasDependencies );
-            ImportGroup( binders, reader, BinderView, hasDependencies );
-            ImportGroup( effectors, reader, EffectorView, hasDependencies );
-            ImportGroup( particles, reader, ParticleView, hasDependencies );
-            ImportGroup( emitters, reader, EmitterView, hasDependencies );
-            ImportGroup( timelines, reader, TimelineView, hasDependencies );
+            ImportGroup( models, reader, ModelView, NodeGroupSet.Models, importCommand, hasDependencies );
+            ImportGroup( textures, reader, TextureView, NodeGroupSet.Textures, importCommand, hasDependencies );
+            ImportGroup( binders, reader, BinderView, NodeGroupSet.Binders, importCommand, hasDependencies );
+            ImportGroup( effectors, reader, EffectorView, NodeGroupSet.Effectors, importCommand, hasDependencies );
+            ImportGroup( particles, reader, ParticleView, NodeGroupSet.Particles, importCommand, hasDependencies );
+            ImportGroup( emitters, reader, EmitterView, NodeGroupSet.Emitters, importCommand, hasDependencies );
+            ImportGroup( timelines, reader, TimelineView, NodeGroupSet.Timelines, importCommand, hasDependencies );
+
+            CommandManager.Avfx.Add( importCommand ); // doesn't actually execute anything
         }
 
-        private static void ImportGroup<T>(List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, bool hasDependencies) where T : UiNode {
+        private static void ImportGroup<T>(List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, UiNodeGroup<T> group, CompoundCommand command, bool hasDependencies) where T : UiNode {
             foreach( var pos in positions ) {
-                view.Import( reader, pos.Position, pos.Size, pos.Renamed, hasDependencies );
+                var node = view.AddToAvfxAndGroup( reader, pos.Position, pos.Size, pos.Renamed, hasDependencies );
+                command.Add( new UiNodeViewAddCommand<T>( view, group, node ) );
             }
         }
 

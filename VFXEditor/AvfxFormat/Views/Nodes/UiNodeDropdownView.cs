@@ -31,11 +31,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public abstract void RemoveFromAvfx( T item );
         public abstract void AddToAvfx( T item, int idx );
+        public abstract T AddToAvfx( BinaryReader reader, int size, bool has_dependencies = false );
 
         public abstract void OnExport( BinaryWriter writer, T item );
         public abstract void OnSelect( T item );
-        public abstract T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
-        public void OnNew() => VfxFile.Import( DefaultPath );
+        public void ImportDefault() => VfxFile.Import( DefaultPath );
 
         public void AddToGroup( T item ) => Group.AddAndUpdate( item );
 
@@ -50,9 +50,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
 
-            if( Selected != null ) {
-                Selected.DrawInline( Id );
-            }
+            if( Selected != null ) Selected.DrawInline( Id );
         }
 
         public void ViewSelect() {
@@ -69,8 +67,6 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        public void ResetSelected() {
-            Selected = null;
-        }
+        public void ResetSelected() { Selected = null; }
     }
 }

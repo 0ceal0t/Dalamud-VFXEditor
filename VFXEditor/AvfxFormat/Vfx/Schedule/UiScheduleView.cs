@@ -12,7 +12,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnExport( BinaryWriter writer, UiScheduler item ) { }
 
-        public override UiScheduler OnImport( BinaryReader reader, int size, bool has_dependencies = false ) => null;
+        public override UiScheduler AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) => null;
 
         public override void OnSelect( UiScheduler item ) { }
     }

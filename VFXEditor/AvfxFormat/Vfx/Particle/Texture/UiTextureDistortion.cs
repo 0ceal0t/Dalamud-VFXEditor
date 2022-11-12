@@ -4,7 +4,7 @@ using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Particle;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTextureDistortion : UiTextureItem {
+    public class UiTextureDistortion : UiParticleAttribute {
         public readonly AVFXParticleTextureDistortion Tex;
 
         public UiTextureDistortion( AVFXParticleTextureDistortion tex, UiParticle particle ) : base( particle ) {

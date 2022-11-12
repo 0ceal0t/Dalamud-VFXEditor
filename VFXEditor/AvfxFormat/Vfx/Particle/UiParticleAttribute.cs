@@ -5,14 +5,14 @@ using VfxEditor.AVFXLib.Particle;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public abstract class UiTextureItem : UiAssignableItem {
+    public abstract class UiParticleAttribute : UiAssignableItem {
         public readonly UiParticle Particle;
 
         public readonly List<UiNodeSelect> NodeSelects = new();
         public readonly List<UiItem> Tabs;
         public readonly UiParameters Parameters;
 
-        public UiTextureItem( UiParticle particle ) {
+        public UiParticleAttribute( UiParticle particle ) {
             Particle = particle;
 
             Tabs = new List<UiItem> {
@@ -26,9 +26,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
             NodeSelects.ForEach( Parameters.Add );
         }
 
-        protected void Assign( AVFXBase item ) => CommandManager.Avfx.Add( new UiTextureItemAssignCommand( item, NodeSelects, true ) );
+        protected void Assign( AVFXBase item ) => CommandManager.Avfx.Add( new UiParticleAttributeAssignCommand( item, NodeSelects, true ) );
 
-        protected void Unassign( AVFXBase item ) => CommandManager.Avfx.Add( new UiTextureItemAssignCommand( item, NodeSelects, false ) );
+        protected void Unassign( AVFXBase item ) => CommandManager.Avfx.Add( new UiParticleAttributeAssignCommand( item, NodeSelects, false ) );
 
         public abstract List<UiNodeSelect> GetNodeSelects();
     }

@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void AddToAvfx( UiTexture item, int idx ) => Avfx.Textures.Insert( idx, item.Texture );
 
-        public override UiTexture OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
+        public override UiTexture AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) {
             var tex = new AVFXTexture();
             tex.Read( reader, size );
             Avfx.Textures.Add( tex );

@@ -13,11 +13,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnExport( BinaryWriter writer, UiTimeline item ) => item.Write( writer );
 
-        public override UiTimeline OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
+        public override UiTimeline AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) {
             var item = new AVFXTimeline();
             item.Read( reader, size );
             Avfx.Timelines.Add( item );
-            return new UiTimeline( item, VfxFile.NodeGroupSet, has_dependencies );
+            return new UiTimeline( item, VfxFile.NodeGroupSet, hasDepdencies );
         }
 
         public override void OnSelect( UiTimeline item ) { }

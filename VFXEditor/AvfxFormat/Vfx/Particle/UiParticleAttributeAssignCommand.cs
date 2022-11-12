@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using VfxEditor.AVFXLib;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTextureItemAssignCommand : ICommand {
+    public class UiParticleAttributeAssignCommand : ICommand {
         private readonly AVFXBase Item;
         private readonly List<UiNodeSelect> NodeSelects;
         private readonly bool State;
 
-        public UiTextureItemAssignCommand( AVFXBase item, List<UiNodeSelect> nodeSelects, bool state ) {
+        public UiParticleAttributeAssignCommand( AVFXBase item, List<UiNodeSelect> nodeSelects, bool state ) {
             Item = item;
             NodeSelects = nodeSelects;
             State = state;

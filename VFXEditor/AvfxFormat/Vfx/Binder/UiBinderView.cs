@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnExport( BinaryWriter writer, UiBinder item ) => item.Write( writer );
 
-        public override UiBinder OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
+        public override UiBinder AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) {
             var item = new AVFXBinder();
             item.Read( reader, size );
             Avfx.Binders.Add( item );

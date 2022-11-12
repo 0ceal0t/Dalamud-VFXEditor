@@ -5,7 +5,7 @@ using VfxEditor.AVFXLib.Particle;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTextureColor1 : UiTextureItem {
+    public class UiTextureColor1 : UiParticleAttribute {
         public readonly AVFXParticleTextureColor1 Tex;
 
         public UiTextureColor1( AVFXParticleTextureColor1 tex, UiParticle particle ) : base( particle ) {

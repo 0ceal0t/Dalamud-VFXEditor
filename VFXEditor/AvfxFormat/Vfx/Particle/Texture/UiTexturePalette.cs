@@ -4,7 +4,7 @@ using VfxEditor.AVFXLib;
 using VfxEditor.AVFXLib.Particle;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiTexturePalette : UiTextureItem {
+    public class UiTexturePalette : UiParticleAttribute {
         public readonly AVFXParticleTexturePalette Tex;
         public readonly string Name;
 

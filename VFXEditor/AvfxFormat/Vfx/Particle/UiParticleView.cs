@@ -13,11 +13,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnExport( BinaryWriter writer, UiParticle item ) => item.Write( writer );
 
-        public override UiParticle OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
+        public override UiParticle AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) {
             var item = new AVFXParticle();
             item.Read( reader, size );
             Avfx.Particles.Add( item );
-            return new UiParticle( item, VfxFile.NodeGroupSet, has_dependencies );
+            return new UiParticle( item, VfxFile.NodeGroupSet, hasDepdencies );
         }
 
         public override void OnSelect( UiParticle item ) { }

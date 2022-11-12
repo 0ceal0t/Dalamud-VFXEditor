@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void AddToAvfx( UiModel item, int idx ) => Avfx.Models.Insert( idx, item.Model );
 
-        public override UiModel OnImport( BinaryReader reader, int size, bool has_dependencies = false ) {
+        public override UiModel AddToAvfx( BinaryReader reader, int size, bool hasDependencies ) {
             var mdl = new AVFXModel();
             mdl.Read( reader, size );
             Avfx.Models.Add( mdl );

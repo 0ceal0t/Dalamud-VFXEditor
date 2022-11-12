@@ -8,18 +8,19 @@ namespace VfxEditor.AvfxFormat.Vfx {
         public void RemoveFromAvfx( T item );
         public void AddToAvfx( T item, int idx );
 
-        public T OnImport( BinaryReader reader, int size, bool has_dependencies = false );
-        public void OnNew();
+        public T AddToAvfxAndGroup( BinaryReader reader, long position, int size, string renamed, bool hasDependencies ) {
+            reader.BaseStream.Seek( position, SeekOrigin.Begin );
+            var newItem = AddToAvfx( reader, size, hasDependencies );
+            if( !string.IsNullOrEmpty( renamed ) ) newItem.Renamed = renamed;
+            AddToGroup( newItem );
+            return newItem;
+        }
+        public T AddToAvfx( BinaryReader reader, int size, bool hasDependencies );
+
+        public void ImportDefault();
 
         public void AddToGroup( T item );
         public void ResetSelected();
-
-        public void Import( BinaryReader reader, long position, int size, string renamed, bool hasDependencies) {
-            reader.BaseStream.Seek( position, SeekOrigin.Begin );
-            var newItem = OnImport( reader, size, hasDependencies );
-            if( !string.IsNullOrEmpty( renamed ) ) newItem.Renamed = renamed;
-            AddToGroup( newItem );
-        }
 
         public static void DrawControls( IUiNodeView<T> nodeView, AvfxFile vfxFile, T selected, UiNodeGroup<T> group, bool allowNew, bool allowDelete, string Id ) {
             ImGui.PushFont( UiBuilder.IconFont );
@@ -54,11 +55,9 @@ namespace VfxEditor.AvfxFormat.Vfx {
             // ===== NEW =====
             if( ImGui.BeginPopup( "New_Popup" + Id ) ) {
                 if( ImGui.Selectable( "Default" + Id ) ) {
-                    nodeView.OnNew();
+                    nodeView.ImportDefault();
                 }
-                if( ImGui.Selectable( "Import" + Id ) ) {
-                    vfxFile.ShowImportDialog();
-                }
+                if( ImGui.Selectable( "Import" + Id ) ) vfxFile.ShowImportDialog();
                 if( selected != null && ImGui.Selectable( "Duplicate" + Id ) ) {
                     using var ms = new MemoryStream();
                     using var writer = new BinaryWriter( ms );
@@ -68,7 +67,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     reader.BaseStream.Seek( 0, SeekOrigin.Begin );
                     reader.ReadInt32(); // Name
                     var size = reader.ReadInt32();
-                    var newNode = nodeView.OnImport( reader, size );
+                    var newNode = nodeView.AddToAvfx( reader, size, false );
                     newNode.Renamed = selected.Renamed;
                     group.AddAndUpdate( newNode );
                 }

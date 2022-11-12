@@ -13,11 +13,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
         public override void OnExport( BinaryWriter writer, UiEffector item ) => item.Write( writer );
 
-        public override UiEffector OnImport( BinaryReader reader, int size, bool hasDependencies = false ) {
+        public override UiEffector AddToAvfx( BinaryReader reader, int size, bool hasDepdencies ) {
             var item = new AVFXEffector();
             item.Read( reader, size );
             Avfx.Effectors.Add( item );
-            return new UiEffector( item, hasDependencies );
+            return new UiEffector( item, hasDepdencies );
         }
 
         public override void OnSelect( UiEffector item ) { }
