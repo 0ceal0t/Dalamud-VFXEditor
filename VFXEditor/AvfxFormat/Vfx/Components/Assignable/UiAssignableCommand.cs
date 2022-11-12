@@ -5,10 +5,12 @@ namespace VfxEditor.AvfxFormat.Vfx {
     public class UiAssignableCommand : ICommand {
         private readonly AVFXBase Item;
         private readonly bool State;
+        private readonly bool PrevState;
 
         public UiAssignableCommand( AVFXBase item, bool state ) {
             Item = item;
             State = state;
+            PrevState = item.IsAssigned();
         }
 
         public void Execute() {
@@ -20,7 +22,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void Undo() {
-            Item.SetAssigned( !State );
+            Item.SetAssigned( PrevState );
         }
     }
 }

@@ -14,6 +14,8 @@ namespace VfxEditor {
 
         public void Add( ICommand command ) => Commands.Add( command );
 
+        public void Clear() => Commands.Clear();
+
         public void Execute() {
             for( var i = 0; i < Commands.Count; i++ ) Commands[ReverseRedo ? Commands.Count - 1 - i : i].Execute();
         }

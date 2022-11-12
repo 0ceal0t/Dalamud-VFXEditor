@@ -57,11 +57,9 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Update "try on" preview
+- [ ] Copy/paste is a bit of a disaster (so is undo/redo, tbh)
 
 ## Undo/Redo
-- Duplicate big items
-- Texture replacement
-- Copy / paste
 - TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size

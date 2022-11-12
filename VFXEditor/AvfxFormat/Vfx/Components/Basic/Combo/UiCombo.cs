@@ -7,7 +7,7 @@ using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Vfx {
-    public class UiCombo<T> : IUiBase {
+    public class UiCombo<T> : IUiBase where T : Enum {
         public readonly string Name;
         public readonly AVFXEnum<T> Literal;
         public readonly Func<ICommand> ExtraCommand;
@@ -19,11 +19,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void DrawInline( string id ) {
-            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXEnum<T> literal ) {
-                Literal.SetValue( literal.GetValue() );
-                Literal.SetAssigned( literal.IsAssigned() );
-                ExtraCommand?.Invoke()?.Execute();
+            // Copy/Paste
+            if( CopyManager.IsCopying ) {
+                CopyManager.Assigned[Name] = Literal.IsAssigned();
+                CopyManager.Strings[Name] = Literal.GetValue().ToString();
+            }
+            if( CopyManager.IsPasting ) {
+                if( CopyManager.Assigned.TryGetValue( Name, out var a ) ) CopyManager.PasteCommand.Add( new UiAssignableCommand( Literal, a ) );
+                if( CopyManager.Strings.TryGetValue( Name, out var l ) ) CopyManager.PasteCommand.Add( new UiComboCommand<T>( Literal, (T) Enum.Parse(typeof(T), l), ExtraCommand?.Invoke() ) );
             }
 
             // Unassigned

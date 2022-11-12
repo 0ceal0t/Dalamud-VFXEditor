@@ -18,19 +18,21 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void DrawInline( string id ) {
+            // Copy/Paste
             if( CopyManager.IsCopying ) {
-                CopyManager.Copied[Name + "_1"] = Literal1;
-                CopyManager.Copied[Name + "_2"] = Literal2;
+                CopyManager.Assigned[$"{Name}_1"] = Literal1.IsAssigned();
+                CopyManager.Assigned[$"{Name}_2"] = Literal2.IsAssigned();
+                CopyManager.Floats[$"{Name}_1"] = Literal1.GetValue();
+                CopyManager.Floats[$"{Name}_2"] = Literal2.GetValue();
             }
             if( CopyManager.IsPasting ) {
-                if( CopyManager.Copied.TryGetValue( Name + "_1", out var _literal1 ) && _literal1 is AVFXFloat literal1 ) {
-                    Literal1.SetValue( literal1.GetValue() );
-                    Literal1.SetAssigned( literal1.IsAssigned() );
-                }
-                if( CopyManager.Copied.TryGetValue( Name + "_2", out var _literal2 ) && _literal2 is AVFXFloat literal2 ) {
-                    Literal2.SetValue( literal2.GetValue() );
-                    Literal2.SetAssigned( literal2.IsAssigned() );
-                }
+                if( CopyManager.Assigned.TryGetValue( $"{Name}_1", out var a ) ) CopyManager.PasteCommand.Add( new UiAssignableCommand( Literal1, a ) );
+                if( CopyManager.Assigned.TryGetValue( $"{Name}_2", out var a2 ) ) CopyManager.PasteCommand.Add( new UiAssignableCommand( Literal2, a2 ) );
+
+                Vector2 val = new( Literal1.GetValue(), Literal2.GetValue() );
+                if( CopyManager.Floats.TryGetValue( $"{Name}_1", out var l ) ) val.X = l;
+                if( CopyManager.Floats.TryGetValue( $"{Name}_2", out var l2 ) ) val.Y = l2;
+                CopyManager.PasteCommand.Add( new UiFloat2Command( Literal1, Literal2, val ) );
             }
 
             // Unassigned

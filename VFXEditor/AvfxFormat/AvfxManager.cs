@@ -60,6 +60,8 @@ namespace VfxEditor.AvfxFormat {
         protected override AvfxDocument GetImportedDocument( string localPath, WorkspaceMetaAvfx data ) => new( LocalPath, localPath, data );
 
         protected override void DrawMenu() {
+            if( CurrentFile == null ) return;
+
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
                 if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
                 if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();

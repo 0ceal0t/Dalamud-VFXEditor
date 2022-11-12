@@ -14,10 +14,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void DrawInline( string id ) {
-            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var _literal ) && _literal is AVFXIntList literal ) {
-                Literal.GetValue()[0] = literal.GetValue()[0];
-                Literal.SetAssigned( literal.IsAssigned() );
+            // Copy/Paste
+            if( CopyManager.IsCopying ) {
+                CopyManager.Assigned[Name] = Literal.IsAssigned();
+                CopyManager.Ints[Name] = Literal.GetValue()[0];
+            }
+            if( CopyManager.IsPasting ) {
+                if( CopyManager.Assigned.TryGetValue( Name, out var a ) ) CopyManager.PasteCommand.Add( new UiAssignableCommand( Literal, a ) );
+                if( CopyManager.Ints.TryGetValue( Name, out var l ) ) CopyManager.PasteCommand.Add( new UiIntListCommand( Literal, l ) );
             }
 
             // Unassigned

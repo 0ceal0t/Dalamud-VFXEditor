@@ -59,10 +59,15 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public override void DrawInline( string parentId ) {
-            if( CopyManager.IsCopying ) CopyManager.Copied[Name] = Literal;
-            if( CopyManager.IsPasting && CopyManager.Copied.TryGetValue( Name, out var b ) && b is AVFXInt literal ) {
-                Literal.SetValue( literal.GetValue() );
-                Literal.SetAssigned( literal.IsAssigned() );
+            // Copy/Paste
+            if( CopyManager.IsCopying ) {
+                CopyManager.Assigned[Name] = Literal.IsAssigned();
+                CopyManager.Ints[Name] = Literal.GetValue();
+            }
+            if( CopyManager.IsPasting ) {
+                if( CopyManager.Assigned.TryGetValue( Name, out var a ) ) CopyManager.PasteCommand.Add( new UiAssignableCommand( Literal, a ) );
+                if( CopyManager.Ints.TryGetValue( Name, out var l ) ) CopyManager.PasteCommand.Add( new UiIntCommand( Literal, l ) );
+
                 UnlinkFrom( Selected );
                 if( Literal.GetValue() >= 0 && Literal.GetValue() < Group.Items.Count ) LinkTo( Selected = Group.Items[Literal.GetValue()] );
                 else Selected = null;

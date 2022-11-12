@@ -27,6 +27,8 @@ namespace VfxEditor {
             TmbManager.Draw();
             PapManager.Draw();
 
+            CopyManager.FinalizePaste();
+
             if ( Configuration.AutosaveEnabled && 
                  Configuration.AutosaveSeconds > 10 && 
                  !string.IsNullOrEmpty(CurrentWorkspaceLocation) && 
