@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
 
@@ -62,14 +63,11 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     using var ms = new MemoryStream();
                     using var writer = new BinaryWriter( ms );
                     using var reader = new BinaryReader( ms );
-
                     selected.Write( writer );
                     reader.BaseStream.Seek( 0, SeekOrigin.Begin );
-                    reader.ReadInt32(); // Name
-                    var size = reader.ReadInt32();
-                    var newNode = nodeView.AddToAvfx( reader, size, false );
-                    newNode.Renamed = selected.Renamed;
-                    group.AddAndUpdate( newNode );
+
+                    var size = ms.Length;
+                    vfxFile.Import( reader, (int) size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed }) );
                 }
                 ImGui.EndPopup();
             }

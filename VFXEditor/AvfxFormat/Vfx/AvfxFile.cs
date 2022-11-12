@@ -278,7 +278,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
             }
         }
 
-        private void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
+        public void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
             if( hasDependencies ) NodeGroupSet.PreImport();
 
             List<NodePosition> models = new();
