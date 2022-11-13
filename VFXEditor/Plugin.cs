@@ -10,7 +10,7 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
-using VfxEditor.AvfxFormat;
+using VfxEditor.AvfxFormat2;
 using VfxEditor.Data;
 using VfxEditor.Dialogs;
 using VfxEditor.DirectX;
@@ -22,7 +22,7 @@ using VfxEditor.TexTools;
 using VfxEditor.Texture;
 using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
-using VFXEditor.Animation;
+using VfxEditor.Animation;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {

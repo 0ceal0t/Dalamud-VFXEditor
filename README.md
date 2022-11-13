@@ -63,3 +63,10 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size
+
+- Gradient set curve
+- Model set model
+- Model import/export
+- Model undo/redo import
+- double-check import (HasDependencies)
+- clip rework

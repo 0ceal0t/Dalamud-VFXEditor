@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     ExportDialog();
                 }
                 if( ImGui.Selectable( "AVFX" + id ) ) {
-                    Plugin.AvfxManager.ShowExportDialog( this );
+                    //Plugin.AvfxManager.ShowExportDialog( this );
                 }
                 ImGui.EndPopup();
             }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VFXEditor.Animation {
+namespace VfxEditor.Animation {
     public class SklbFile : Lumina.Data.FileResource {
         private byte[] HavokData;
 

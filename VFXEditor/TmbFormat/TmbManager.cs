@@ -1,3 +1,4 @@
+using ImGuiNET;
 using VfxEditor.FileManager;
 using VfxEditor.Select.TmbSelect;
 
@@ -40,7 +41,13 @@ namespace VfxEditor.TmbFormat {
 
         protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
-        protected override void DrawMenu() { }
+        protected override void DrawMenu() {
+            if( CurrentFile == null ) return;
+            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                CommandManager.Tmb.Draw();
+                ImGui.EndMenu();
+            }
+        }
 
         public override void Dispose() {
             base.Dispose();

@@ -9,7 +9,7 @@ using VfxEditor;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
 
-namespace VFXEditor.Animation {
+namespace VfxEditor.Animation {
     public class AnimationManager {
         private bool Looping = true;
         private bool Playing = false;

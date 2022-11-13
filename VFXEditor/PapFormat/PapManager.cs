@@ -1,3 +1,5 @@
+using ImGuiNET;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.PapSelect;
 
@@ -46,6 +48,11 @@ namespace VfxEditor.PapFormat {
         protected override PapDocument GetImportedDocument( string localPath, WorkspaceMetaPap data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         protected override void DrawMenu() {
+            if( CurrentFile == null ) return;
+            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                CommandManager.Pap.Draw();
+                ImGui.EndMenu();
+            }
         }
 
         public override void Dispose() {

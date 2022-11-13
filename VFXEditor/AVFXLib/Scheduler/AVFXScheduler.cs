@@ -30,12 +30,10 @@ namespace VfxEditor.AVFXLib.Scheduler {
                 if( _name == "Item" ) {
                     lastItem = new AVFXSchedulerItem( "Item" );
                     lastItem.Read( _reader, _size );
-
                 }
                 else if( _name == "Trgr" ) {
                     lastTrigger = new AVFXSchedulerItem( "Trgr" );
                     lastTrigger.Read( _reader, _size );
-
                 }
             }, size );
 

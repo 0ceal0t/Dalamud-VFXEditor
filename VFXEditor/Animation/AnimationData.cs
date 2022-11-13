@@ -8,7 +8,7 @@ using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using SharpDX;
 
-namespace VFXEditor.Animation {
+namespace VfxEditor.Animation {
     public class AnimationData {
         private readonly List<int> BoneParents = new();
         private readonly List<Matrix> BoneRefPoses = new();
