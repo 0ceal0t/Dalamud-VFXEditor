@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for( var i = 0; i < size / 312; i++ ) Items.Add( new AvfxEmitterItem( IsParticle, Emitter, reader ) );
+            for( var i = 0; i < size / 312; i++ ) Items.Add( new AvfxEmitterItem( IsParticle, Emitter, false, reader ) );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }

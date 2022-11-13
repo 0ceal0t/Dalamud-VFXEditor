@@ -11,13 +11,13 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve Width = new( "Width", "Wdt" );
 
         public AvfxParticleDataLaser() : base() {
-            Children = new() {
+            Parsed = new() {
                 Length,
                 Width
             };
 
-            Tabs.Add( Width );
-            Tabs.Add( Length );
+            DisplayTabs.Add( Width );
+            DisplayTabs.Add( Length );
         }
     }
 }

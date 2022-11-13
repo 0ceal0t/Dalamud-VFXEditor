@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxEnum<RandomType> Random = new( "RandomType", "RanT" );
         public readonly AvfxCurveKeys Keys = new();
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
         private readonly List<IUiBase> Display;
         private readonly UiCurveEditor CurveEditor;
 
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat2 {
             Color = color;
             Locked = locked;
 
-            Children = new() {
+            Parsed = new() {
                 PreBehavior,
                 PostBehavior,
                 Random,
@@ -44,15 +44,15 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            ReadNested( reader, Children, size );
+            ReadNested( reader, Parsed, size );
             CurveEditor.Initialize();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
             WriteLeaf( writer, "KeyC", 4, Keys.Keys.Count );
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
         }
 
         public override void DrawUnassigned( string parentId ) => DrawAddButtonRecurse( this, Name, parentId );

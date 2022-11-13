@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt TimelineCount = new( "Item Count", "TICn" );
         public readonly AvfxInt ClipCount = new( "Clip Count", "CpCn" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         public readonly List<AvfxTimelineClip> Clips = new();
         public readonly List<AvfxTimelineSubItem> Items = new();
@@ -27,12 +27,12 @@ namespace VfxEditor.AvfxFormat2 {
 
         public readonly UiTimelineClipSplitView ClipSplit;
         public readonly UiTimelineItemSequencer ItemSplit;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxTimeline( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.TimelineColor, hasDependencies ) {
             NodeGroups = groupSet;
 
-            Children = new List<AvfxBase> {
+            Parsed = new List<AvfxBase> {
                 LoopStart,
                 LoopEnd,
                 BinderIdx,
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ClipCount
             };
 
-            Parameters = new() {
+            Display = new() {
                 LoopStart,
                 LoopEnd
             };
@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
+            Peek( reader, Parsed, size );
 
             AvfxTimelineItem lastItem = null;
 
@@ -69,18 +69,22 @@ namespace VfxEditor.AvfxFormat2 {
                     Clips.Add( clip );
                 }
             }, size );
-            if( lastItem != null ) Items.AddRange( lastItem.Items );
+
+            if( lastItem != null ) {
+                Items.AddRange( lastItem.Items );
+                Items.ForEach( x => x.InitializeNodeSelects() );
+            }
 
             ClipSplit.UpdateIdx();
             ItemSplit.UpdateIdx();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
             TimelineCount.SetValue( Items.Count );
             ClipCount.SetValue( Clips.Count );
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
 
             // Item
             for( var i = 0; i < Items.Count; i++ ) {
@@ -117,7 +121,7 @@ namespace VfxEditor.AvfxFormat2 {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             BinderSelect.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.EndChild();
         }
 

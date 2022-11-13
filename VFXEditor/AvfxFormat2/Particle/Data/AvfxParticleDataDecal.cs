@@ -9,15 +9,15 @@ namespace VfxEditor.AvfxFormat2 {
     public class AvfxParticleDataDecal : AvfxData {
         public readonly AvfxFloat ScalingScale = new( "Scaling Scale", "SS" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataDecal() : base() {
-            Children = new() {
+            Parsed = new() {
                 ScalingScale
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( ScalingScale );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( ScalingScale );
         }
     }
 }

@@ -15,10 +15,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEmitterDataSphereModel() : base() {
-            Children = new() {
+            Parsed = new() {
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -30,14 +30,14 @@ namespace VfxEditor.AvfxFormat2 {
             DivideX.SetValue( 1 );
             DivideY.SetValue( 1 );
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( RotationOrderType );
-            Parameters.Add( GenerateMethodType );
-            Parameters.Add( DivideX );
-            Parameters.Add( DivideY );
-            Tabs.Add( Radius );
-            Tabs.Add( InjectionSpeed );
-            Tabs.Add( InjectionSpeedRandom );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( RotationOrderType );
+            Display.Add( GenerateMethodType );
+            Display.Add( DivideX );
+            Display.Add( DivideY );
+            DisplayTabs.Add( Radius );
+            DisplayTabs.Add( InjectionSpeed );
+            DisplayTabs.Add( InjectionSpeedRandom );
         }
     }
 }

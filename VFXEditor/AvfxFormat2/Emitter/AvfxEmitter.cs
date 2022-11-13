@@ -37,9 +37,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
+        public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
         public AvfxData Data;
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         public readonly List<AvfxEmitterItem> Particles = new();
         public readonly List<AvfxEmitterItem> Emitters = new();
@@ -49,17 +50,16 @@ namespace VfxEditor.AvfxFormat2 {
 
         public readonly UiNodeSelect<AvfxEffector> EffectorSelect;
 
-        public readonly List<AvfxItem> Animation;
-        public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplit;
+        public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplitDisplay;
 
         public readonly UiEmitterSplitView EmitterSplit;
         public readonly UiEmitterSplitView ParticleSplit;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxEmitter( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.EmitterColor, hasDependencies ) {
             NodeGroups = groupSet;
 
-            Children = new() {
+            Parsed = new() {
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -85,11 +85,12 @@ namespace VfxEditor.AvfxFormat2 {
                 Color,
                 Position,
                 Rotation,
-                Scale
+                Scale,
+                VelocityRandomZ
             };
             Sound.SetAssigned( false );
 
-            Parameters = new() {
+            Display = new() {
                 LoopStart,
                 LoopEnd,
                 ChildLimit,
@@ -99,7 +100,7 @@ namespace VfxEditor.AvfxFormat2 {
                 RotationOrderType
             };
 
-            Animation = new() {
+            AnimationSplitDisplay = new( new() {
                 Life,
                 CreateCount,
                 CreateCountRandom,
@@ -113,8 +114,7 @@ namespace VfxEditor.AvfxFormat2 {
                 Position,
                 Rotation,
                 Scale
-            };
-            AnimationSplit = new( Animation );
+            } );
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
 
@@ -130,7 +130,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
+            Peek( reader, Parsed, size );
             var emitterType = EmitterVariety.GetValue();
 
             AvfxEmitterCreate lastParticle = null;
@@ -155,11 +155,14 @@ namespace VfxEditor.AvfxFormat2 {
 
             if( lastParticle != null ) {
                 Particles.AddRange( lastParticle.Items );
+                Particles.ForEach( x => x.InitializeNodeSelects() );
             }
+
             if( lastEmitter != null ) {
                 var startIndex = Particles.Count;
                 var emitterCount = lastEmitter.Items.Count - Particles.Count;
                 Emitters.AddRange( lastEmitter.Items.GetRange( startIndex, emitterCount ) ); // remove particles
+                Emitters.ForEach( x => x.InitializeNodeSelects() );
             }
 
             EmitterSplit.UpdateIdx();
@@ -167,14 +170,14 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Children, assigned );
+            RecurseAssigned( Parsed, assigned );
             RecurseAssigned( Data, assigned );
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
             EmitterCount.SetValue( Emitters.Count );
             ParticleCount.SetValue( Particles.Count );
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
 
             // ItPr
             for( var i = 0; i < Particles.Count; i++ ) {
@@ -215,7 +218,7 @@ namespace VfxEditor.AvfxFormat2 {
             Sound.Draw( id );
             SoundNumber.Draw( id );
 
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.EndChild();
         }
 
@@ -241,7 +244,7 @@ namespace VfxEditor.AvfxFormat2 {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplit.Draw( id + "/Anim" );
+                    AnimationSplitDisplay.Draw( id + "/Anim" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Create Particles" + id ) ) {

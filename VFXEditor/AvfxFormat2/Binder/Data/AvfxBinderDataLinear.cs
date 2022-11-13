@@ -10,13 +10,13 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve CarryOverFactorRandom = new( "Carry Over Factor Random", "COFR" );
 
         public AvfxBinderDataLinear() : base() {
-            Children = new() {
+            Parsed = new() {
                 CarryOverFactor,
                 CarryOverFactorRandom
             };
 
-            Tabs.Add( CarryOverFactor );
-            Tabs.Add( CarryOverFactorRandom );
+            DisplayTabs.Add( CarryOverFactor );
+            DisplayTabs.Add( CarryOverFactorRandom );
         }
     }
 }

@@ -24,10 +24,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat RingRadius = new( "Ring Radius", "RnRd" );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        private readonly UiParameters Parameters;
-        private readonly List<IUiItem> Tabs;
+        private readonly UiParameters Display;
+        private readonly List<IUiItem> DisplayTabs;
 
         private static readonly Dictionary<int, string> BinderIds = new() {
             { 0, "Not working" },
@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat2 {
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {
             Name = name;
 
-            Children = new() {
+            Parsed = new() {
                 BindPointType,
                 BindTargetPointType,
                 BinderName,
@@ -84,27 +84,27 @@ namespace VfxEditor.AvfxFormat2 {
             RingProgressTime.SetValue( 1 );
             Position.SetAssigned( true );
 
-            Tabs = new() {
-                ( Parameters = new UiParameters( "Parameters" ) ),
+            DisplayTabs = new() {
+                ( Display = new UiParameters( "Parameters" ) ),
                 Position
             };
-            Parameters.Add( BindPointType );
-            Parameters.Add( BindTargetPointType );
-            Parameters.Add( BinderName );
-            Parameters.Add( new UiIntCombo( "Bind Point Id", BindPointId, BinderIds) );
-            Parameters.Add( GenerateDelay );
-            Parameters.Add( CoordUpdateFrame );
-            Parameters.Add( RingEnable );
-            Parameters.Add( RingProgressTime );
-            Parameters.Add( new UiFloat3( "Ring Position", RingPositionX, RingPositionY, RingPositionZ ) );
-            Parameters.Add( RingRadius );
+            Display.Add( BindPointType );
+            Display.Add( BindTargetPointType );
+            Display.Add( BinderName );
+            Display.Add( new UiIntCombo( "Bind Point Id", BindPointId, BinderIds) );
+            Display.Add( GenerateDelay );
+            Display.Add( CoordUpdateFrame );
+            Display.Add( RingEnable );
+            Display.Add( RingProgressTime );
+            Display.Add( new UiFloat3( "Ring Position", RingPositionX, RingPositionY, RingPositionZ ) );
+            Display.Add( RingRadius );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Children, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) => DrawAddButtonRecurse( this, Name, parentId );
 
@@ -112,7 +112,7 @@ namespace VfxEditor.AvfxFormat2 {
             var id = parentId + "/" + Name;
             DrawRemoveButton( this, Name, id );
 
-            IUiItem.DrawListTabs( Tabs, id );
+            IUiItem.DrawListTabs( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => Name;

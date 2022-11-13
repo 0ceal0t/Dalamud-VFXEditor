@@ -12,17 +12,17 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot" );
 
         public AvfxEffectorDataDirectionalLight() : base() {
-            Children = new() {
+            Parsed = new() {
                 Ambient,
                 Color,
                 Power,
                 Rotation
             };
 
-            Tabs.Add( Ambient );
-            Tabs.Add( Color );
-            Tabs.Add( Power );
-            Tabs.Add( Rotation );
+            DisplayTabs.Add( Ambient );
+            DisplayTabs.Add( Color );
+            DisplayTabs.Add( Power );
+            DisplayTabs.Add( Rotation );
         }
     }
 }

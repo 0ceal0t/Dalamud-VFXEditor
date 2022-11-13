@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
 
         public AvfxEffectorDataCameraQuake() : base() {
-            Children = new() {
+            Parsed = new() {
                 Attenuation,
                 RadiusOut,
                 RadiusIn,
@@ -21,11 +21,11 @@ namespace VfxEditor.AvfxFormat2 {
                 Position
             };
 
-            Tabs.Add( Attenuation );
-            Tabs.Add( RadiusOut );
-            Tabs.Add( RadiusIn );
-            Tabs.Add( Rotation );
-            Tabs.Add( Position );
+            DisplayTabs.Add( Attenuation );
+            DisplayTabs.Add( RadiusOut );
+            DisplayTabs.Add( RadiusIn );
+            DisplayTabs.Add( Rotation );
+            DisplayTabs.Add( Position );
         }
     }
 }

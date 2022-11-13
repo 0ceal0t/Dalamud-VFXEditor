@@ -10,11 +10,11 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve Count = new( "Count", "Cnt" );
 
         public AvfxParticleDataPolygon() : base() {
-            Children = new() {
+            Parsed = new() {
                 Count
             };
 
-            Tabs.Add( Count );
+            DisplayTabs.Add( Count );
         }
     }
 }

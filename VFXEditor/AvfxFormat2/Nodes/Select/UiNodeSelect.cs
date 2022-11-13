@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,18 @@ using VfxEditor;
 namespace VfxEditor.AvfxFormat2 {
     public abstract class UiNodeSelect : IUiBase {
         public readonly AvfxNode Node;
+        protected bool ParentChildLinked = false;
+        protected bool OnChangeLinked = false;
 
         public UiNodeSelect( AvfxNode node ) {
             Node = node;
         }
 
-        public abstract void OnChange();
+        public abstract void UpdateLiteral();
         public abstract void Initialize();
 
-        public abstract void LinkOnChange();
-        public abstract void UnlinkOnChange();
+        public abstract void LinkOnIndexChange();
+        public abstract void UnlinkOnIndexChange();
 
         public abstract void Draw( string id );
 
@@ -35,17 +38,21 @@ namespace VfxEditor.AvfxFormat2 {
 
         public void UnlinkParentChild( AvfxNode node ) {
             if( node == null ) return;
+            if( !ParentChildLinked ) return;
+
+            ParentChildLinked = false;
             Node.ChildNodes.Remove( node );
             node.Parents.Remove( this );
-
             node.Graph?.NowOutdated();
         }
 
         public void LinkParentChild( AvfxNode node ) {
             if( node == null ) return;
+            if( ParentChildLinked ) return;
+
+            ParentChildLinked = true;
             Node.ChildNodes.Add( node );
             node.Parents.Add( this );
-
             node.Graph?.NowOutdated();
         }
     }
@@ -62,13 +69,13 @@ namespace VfxEditor.AvfxFormat2 {
             Name = name;
             Group = group;
             Literal = literal;
-            LinkOnChange();
+            LinkOnIndexChange();
             if( Group.IsInitialized ) Initialize(); // already good to go
             else Group.OnInit += Initialize;
             node.Selectors.Add( this );
         }
 
-        public override void OnChange() => Literal.SetValue( Selected != null ? Selected.GetIdx() : -1 ); // an item was removed from the group, for example
+        public override void UpdateLiteral() => Literal.SetValue( Selected != null ? Selected.GetIdx() : -1 ); // an item was removed from the group, for example
 
         public override void Initialize() {
             var value = Literal.GetValue();
@@ -91,7 +98,7 @@ namespace VfxEditor.AvfxFormat2 {
             if( Selected == null ) return;
             UnlinkParentChild( Selected );
             Selected = null;
-            OnChange();
+            UpdateLiteral();
         }
 
         private void SelectItem( T item ) {
@@ -99,26 +106,35 @@ namespace VfxEditor.AvfxFormat2 {
             UnlinkParentChild( Selected );
             LinkParentChild( item );
             Selected = item;
-            OnChange();
+            UpdateLiteral();
         }
 
-        public override void LinkOnChange() { Group.OnChange += OnChange; }
+        public override void LinkOnIndexChange() {
+            if( OnChangeLinked ) return;
+            OnChangeLinked = true;
+            Group.OnChange += UpdateLiteral;
+        }
 
-        public override void UnlinkOnChange() { Group.OnChange -= OnChange; }
+        public override void UnlinkOnIndexChange() {
+            if( !OnChangeLinked ) return;
+            OnChangeLinked = false;
+            Group.OnChange -= UpdateLiteral;
+        }
 
         // For when something happens to the selector
 
         public override void Enable() {
             if( Enabled ) return;
             Enabled = true;
-            LinkOnChange();
+            LinkOnIndexChange();
+
             if( Selected != null ) LinkParentChild( Selected );
         }
 
         public override void Disable() {
             if( !Enabled ) return;
             Enabled = false;
-            UnlinkOnChange();
+            UnlinkOnIndexChange();
             if( Selected != null ) UnlinkParentChild( Selected );
         }
 
@@ -128,12 +144,12 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void EnableNode( AvfxNode node, int _ ) {
             Selected = ( T )node;
-            OnChange();
+            UpdateLiteral();
         }
 
         public override void DisableNode( AvfxNode node ) {
             Selected = null;
-            OnChange();
+            UpdateLiteral();
         }
 
         public override void Draw( string parentId ) {

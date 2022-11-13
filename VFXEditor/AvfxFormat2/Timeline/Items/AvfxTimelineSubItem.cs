@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using VfxEditor;
+using static Lumina.Data.Parsing.Uld.UldRoot;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTimelineSubItem : GenericWorkspaceItem {
@@ -19,18 +20,18 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt Platform = new( "Platform", "Plfm" );
         public readonly AvfxInt ClipNumber = new( "Clip Index", "ClNo" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        public readonly UiNodeSelect<AvfxBinder> BinderSelect;
-        public readonly UiNodeSelect<AvfxEmitter> EmitterSelect;
-        public readonly UiNodeSelect<AvfxEffector> EffectorSelect;
+        public UiNodeSelect<AvfxBinder> BinderSelect;
+        public UiNodeSelect<AvfxEmitter> EmitterSelect;
+        public UiNodeSelect<AvfxEffector> EffectorSelect;
 
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
-        public AvfxTimelineSubItem( AvfxTimeline timeline ) {
+        public AvfxTimelineSubItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
 
-            Children = new List<AvfxBase> {
+            Parsed = new List<AvfxBase> {
                 Enabled,
                 StartTime,
                 EndTime,
@@ -40,13 +41,11 @@ namespace VfxEditor.AvfxFormat2 {
                 Platform,
                 ClipNumber
             };
-            AvfxBase.RecurseAssigned( Children, false );
+            AvfxBase.RecurseAssigned( Parsed, false );
 
-            BinderSelect = new UiNodeSelect<AvfxBinder>( timeline, "Target Binder", Timeline.NodeGroups.Binders, BinderIdx );
-            EmitterSelect = new UiNodeSelect<AvfxEmitter>( timeline, "Target Emitter", Timeline.NodeGroups.Emitters, EmitterIdx );
-            EffectorSelect = new UiNodeSelect<AvfxEffector>( timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
+            if( initNodeSelects ) InitializeNodeSelects();
 
-            Parameters = new() {
+            Display = new() {
                 Enabled,
                 StartTime,
                 EndTime,
@@ -54,14 +53,20 @@ namespace VfxEditor.AvfxFormat2 {
             };
         }
 
-        public AvfxTimelineSubItem( AvfxTimeline timeline, byte[] data ) : this( timeline ) {
+        public AvfxTimelineSubItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {
             using var buffer = new MemoryStream( data );
             using var reader = new BinaryReader( buffer );
-            AvfxBase.ReadNested( reader, Children, data.Length );
+            AvfxBase.ReadNested( reader, Parsed, data.Length );
+        }
+
+        public void InitializeNodeSelects() {
+            BinderSelect = new UiNodeSelect<AvfxBinder>( Timeline, "Target Binder", Timeline.NodeGroups.Binders, BinderIdx );
+            EmitterSelect = new UiNodeSelect<AvfxEmitter>( Timeline, "Target Emitter", Timeline.NodeGroups.Emitters, EmitterIdx );
+            EffectorSelect = new UiNodeSelect<AvfxEffector>( Timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
         }
 
         public void Write( BinaryWriter writer ) {
-            AvfxBase.WriteNested( writer, Children );
+            AvfxBase.WriteNested( writer, Parsed );
         }
 
         public override void Draw( string parentId ) {
@@ -71,7 +76,7 @@ namespace VfxEditor.AvfxFormat2 {
             BinderSelect.Draw( id );
             EmitterSelect.Draw( id );
             EffectorSelect.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
 
             var clipAssigned = ClipNumber.IsAssigned();
             if( ImGui.Checkbox( "Clip Enabled" + id, ref clipAssigned ) ) CommandManager.Avfx.Add( new UiAssignableCommand( ClipNumber, clipAssigned ) );

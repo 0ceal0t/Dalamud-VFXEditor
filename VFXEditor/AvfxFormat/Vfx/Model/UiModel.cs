@@ -70,14 +70,14 @@ namespace VfxEditor.AvfxFormat.Vfx {
         }
 
         public void OnSelect() {
-            Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
+            //Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
             UvView.LoadModel( Model );
         }
 
         private void DrawModel3D( string parentId ) {
             if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
             if( Refresh ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, (RenderMode)Mode );
+                //Plugin.DirectXManager.ModelPreview.LoadModel( Model, (RenderMode)Mode );
                 UvView.LoadModel( Model );
                 Refresh = false;
             }
@@ -97,15 +97,15 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 Plugin.DirectXManager.ModelPreview.Draw();
             }
             if( ImGui.RadioButton( "Color", ref Mode, (int)RenderMode.Color ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
+                //Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Color );
             }
             ImGui.SameLine();
             if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model,RenderMode.Uv1 );
+                //Plugin.DirectXManager.ModelPreview.LoadModel( Model,RenderMode.Uv1 );
             }
             ImGui.SameLine();
             if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Uv2 );
+                //Plugin.DirectXManager.ModelPreview.LoadModel( Model, RenderMode.Uv2 );
             }
 
             Plugin.DirectXManager.ModelPreview.DrawInline();
@@ -131,10 +131,10 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 try {
                     if( GltfUtils.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
                         Model.Vertexes.Vertexes.Clear();
-                        Model.Vertexes.Vertexes.AddRange( newVertexes );
+                        //Model.Vertexes.Vertexes.AddRange( newVertexes );
 
                         Model.Indexes.Indexes.Clear();
-                        Model.Indexes.Indexes.AddRange( newIndexes );
+                        //Model.Indexes.Indexes.AddRange( newIndexes );
                         Refresh = true;
                     }
                 }
@@ -147,7 +147,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
         private void ExportDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                GltfUtils.ExportModel( Model, res );
+                //GltfUtils.ExportModel( Model, res );
             } );
         }
 

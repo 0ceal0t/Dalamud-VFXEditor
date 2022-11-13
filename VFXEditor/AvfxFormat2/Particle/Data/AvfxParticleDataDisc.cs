@@ -23,10 +23,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEdgeInner = new( name: "Color Edge Inner", "CEI" );
         public readonly AvfxCurveColor ColorEdgeOuter = new( name: "Color Edge Outer", "CEO" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataDisc() : base() {
-            Children = new() {
+            Parsed = new() {
                 PartsCount,
                 PartsCountU,
                 PartsCountV,
@@ -44,22 +44,22 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEdgeOuter
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( PartsCount );
-            Parameters.Add( PartsCountU );
-            Parameters.Add( PartsCountV );
-            Parameters.Add( PointIntervalFactoryV );
-            Tabs.Add( Angle );
-            Tabs.Add( HeightBeginInner );
-            Tabs.Add( HeightEndInner );
-            Tabs.Add( HeightBeginOuter );
-            Tabs.Add( HeightEndOuter );
-            Tabs.Add( WidthBegin );
-            Tabs.Add( WidthEnd );
-            Tabs.Add( RadiusBegin );
-            Tabs.Add( RadiusEnd );
-            Tabs.Add( ColorEdgeInner );
-            Tabs.Add( ColorEdgeOuter );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( PartsCount );
+            Display.Add( PartsCountU );
+            Display.Add( PartsCountV );
+            Display.Add( PointIntervalFactoryV );
+            DisplayTabs.Add( Angle );
+            DisplayTabs.Add( HeightBeginInner );
+            DisplayTabs.Add( HeightEndInner );
+            DisplayTabs.Add( HeightBeginOuter );
+            DisplayTabs.Add( HeightEndOuter );
+            DisplayTabs.Add( WidthBegin );
+            DisplayTabs.Add( WidthEnd );
+            DisplayTabs.Add( RadiusBegin );
+            DisplayTabs.Add( RadiusEnd );
+            DisplayTabs.Add( ColorEdgeInner );
+            DisplayTabs.Add( ColorEdgeOuter );
         }
     }
 }

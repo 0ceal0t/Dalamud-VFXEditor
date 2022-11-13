@@ -11,19 +11,19 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxEnum<DirectionalLightType> DirectionalLightType = new( "Directional Light Type", "LgtT" );
         public readonly AvfxFloat CenterOffset = new( "Center Offset", "CnOf" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataPowder() : base() {
-            Children = new() {
+            Parsed = new() {
                 IsLightning,
                 DirectionalLightType,
                 CenterOffset
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( DirectionalLightType );
-            Parameters.Add( IsLightning );
-            Parameters.Add( CenterOffset );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( DirectionalLightType );
+            Display.Add( IsLightning );
+            Display.Add( CenterOffset );
         }
     }
 }

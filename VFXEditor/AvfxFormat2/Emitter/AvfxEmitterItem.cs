@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.AvfxFormat.Vfx;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -39,20 +40,20 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
         public readonly AvfxBool GenerateDelayByOne = new( "Generate Delay By One", "bGD" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        public readonly UiNodeSelect<AvfxParticle> ParticleSelect;
-        public readonly UiNodeSelect<AvfxEmitter> EmitterSelect;
+        public UiNodeSelect<AvfxParticle> ParticleSelect;
+        public UiNodeSelect<AvfxEmitter> EmitterSelect;
 
-        private readonly List<IUiBase> Parameters;
-        private readonly List<IUiBase> CoordOptions;
-        private readonly List<IUiBase> Parameters2;
+        private readonly List<IUiBase> Display;
+        private readonly List<IUiBase> CoordOptionsDisplay;
+        private readonly List<IUiBase> Display2;
 
-        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter ) {
+        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects ) {
             IsParticle = isParticle;
             Emitter = emitter;
 
-            Children = new() {
+            Parsed = new() {
                 Enabled,
                 TargetIdx,
                 LocalDirection,
@@ -108,10 +109,9 @@ namespace VfxEditor.AvfxFormat2 {
             GenerateDelay.SetValue( 0 );
             GenerateDelayByOne.SetValue( false );
 
-            if( IsParticle ) ParticleSelect = new UiNodeSelect<AvfxParticle>( emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
-            else EmitterSelect = new UiNodeSelect<AvfxEmitter>( emitter, "Target Emitter", Emitter.NodeGroups.Emitters, TargetIdx );
+            if( initNodeSelects ) InitializeNodeSelects();
 
-            Parameters = new() {
+            Display = new() {
                 Enabled,
                 LocalDirection,
                 CreateTime,
@@ -120,13 +120,13 @@ namespace VfxEditor.AvfxFormat2 {
                 ParentInfluenceColor
             };
 
-            CoordOptions = new() {
+            CoordOptionsDisplay = new() {
                 InfluenceCoordScale,
                 InfluenceCoordRot,
                 InfluenceCoordPos
             };
 
-            Parameters2 = new() {
+            Display2 = new() {
                 InfluenceCoordBinderPosition,
                 InfluenceCoordUnstickiness,
                 InheritParentVelocity,
@@ -143,9 +143,14 @@ namespace VfxEditor.AvfxFormat2 {
             };
         }
 
-        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, BinaryReader reader ) : this( isParticle, emitter ) => AvfxBase.ReadNested( reader, Children, 312 );
+        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );
 
-        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Children );
+        public void InitializeNodeSelects() {
+            if( IsParticle ) ParticleSelect = new UiNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
+            else EmitterSelect = new UiNodeSelect<AvfxEmitter>( Emitter, "Target Emitter", Emitter.NodeGroups.Emitters, TargetIdx );
+        }
+
+        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
         public override void Draw( string parentId ) {
             var id = parentId + "/Item";
@@ -154,16 +159,16 @@ namespace VfxEditor.AvfxFormat2 {
             if( IsParticle ) ParticleSelect.Draw( id );
             else EmitterSelect.Draw( id );
 
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
 
             ParentInfluenceCoord.Draw( id );
             var influenceType = ParentInfluenceCoord.GetValue();
             var allowOptions = influenceType == ParentInfluenceCoordOptions.InitialPosition_WithOptions || influenceType == ParentInfluenceCoordOptions.WithOptions_NoPosition;
             if( !allowOptions ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            IUiBase.DrawList( CoordOptions, id );
+            IUiBase.DrawList( CoordOptionsDisplay, id );
             if( !allowOptions ) ImGui.PopStyleVar();
 
-            IUiBase.DrawList( Parameters2, id );
+            IUiBase.DrawList( Display2, id );
         }
 
         public override string GetDefaultText() {

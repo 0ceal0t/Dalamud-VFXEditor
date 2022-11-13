@@ -14,10 +14,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
         public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEmitterDataCone() : base() {
-            Children = new() {
+            Parsed = new() {
                 RotationOrderType,
                 AngleY,
                 OuterSize,
@@ -26,13 +26,13 @@ namespace VfxEditor.AvfxFormat2 {
                 InjectionAngle
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( RotationOrderType );
-            Tabs.Add( AngleY );
-            Tabs.Add( OuterSize );
-            Tabs.Add( InjectionSpeed );
-            Tabs.Add( InjectionSpeedRandom );
-            Tabs.Add( InjectionAngle );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( RotationOrderType );
+            DisplayTabs.Add( AngleY );
+            DisplayTabs.Add( OuterSize );
+            DisplayTabs.Add( InjectionSpeed );
+            DisplayTabs.Add( InjectionSpeedRandom );
+            DisplayTabs.Add( InjectionAngle );
         }
     }
 }

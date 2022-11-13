@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using VfxEditor.AVFXLib.Model;
 
 namespace VfxEditor.AvfxFormat2 {
-    public class AvfxVertexNumbers : AvfxBase {
+    public class AvfxEmitVertexNumbers : AvfxBase {
         public readonly List<AvfxVertexNumber> VertexNumbers = new();
 
-        public AvfxVertexNumbers() : base( "VNum" ) { }
+        public AvfxEmitVertexNumbers() : base( "VNum" ) { }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             for( var i = 0; i < size / 2; i++ ) VertexNumbers.Add( new AvfxVertexNumber( reader ) );

@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace VfxEditor.AvfxFormat2 {
     public abstract class AvfxData : AvfxItem {
-        protected List<AvfxBase> Children;
+        protected List<AvfxBase> Parsed;
 
-        public readonly List<AvfxItem> Tabs = new();
+        public readonly List<AvfxItem> DisplayTabs = new();
         public readonly AvfxDisplaySplitView<AvfxItem> SplitView;
 
         public AvfxData() : base( "Data" ) {
-            SplitView = new AvfxDisplaySplitView<AvfxItem>( Tabs );
+            SplitView = new AvfxDisplaySplitView<AvfxItem>( DisplayTabs );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Children, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override string GetDefaultText() => "Data";
 

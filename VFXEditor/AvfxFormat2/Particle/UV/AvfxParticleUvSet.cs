@@ -15,12 +15,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve Rot = new( "Rotation", "Rot" );
         public readonly AvfxCurve RotRandom = new( "Rotation Random", "RotR" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxItem> Curves;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxParticleUvSet() : base( "UvSt" ) {
-            Children = new() {
+            Parsed = new() {
                 CalculateUVType,
                 Scale,
                 Scroll,
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat2 {
                 RotRandom
             };
 
-            Parameters = new() {
+            Display = new() {
                 CalculateUVType
             };
 
@@ -40,15 +40,15 @@ namespace VfxEditor.AvfxFormat2 {
             };
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Children, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void Draw( string parentId ) {
             var id = parentId + "/UV";
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             IUiItem.DrawListTabs( Curves, parentId );
         }

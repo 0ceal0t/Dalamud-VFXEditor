@@ -22,6 +22,6 @@ namespace VfxEditor.AvfxFormat2 {
             item.TimelineSelect.Enable();
         }
 
-        public override AvfxSchedulerSubItem CreateNewAvfx() => new( Scheduler, IsItem ? "Item" : "Trgr" );
+        public override AvfxSchedulerSubItem CreateNewAvfx() => new( Scheduler, IsItem ? "Item" : "Trgr", true );
     }
 }

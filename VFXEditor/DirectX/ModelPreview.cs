@@ -5,7 +5,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AVFXLib.Model;
+using VfxEditor.AvfxFormat2;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -152,9 +152,9 @@ namespace VfxEditor.DirectX {
             } );
         }
 
-        public void LoadModel( AVFXModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.EmitVertexes.EmitVertexes, mode );
+        public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, new(), mode );
 
-        public void LoadModel( List<AVFXIndex> modelIndexes, List<AVFXVertex> modelVertexes, List<AVFXEmitVertex> modelEmitters, RenderMode mode ) {
+        public void LoadModel( List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
             if( modelIndexes.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
@@ -211,7 +211,7 @@ namespace VfxEditor.DirectX {
                 var data = new Vector4[modelEmitters.Count * EmitInstanceSpan];
                 for( var index = 0; index < modelEmitters.Count; index++ ) {
                     var emitter = modelEmitters[index];
-                    data[index] = new Vector4( emitter.Position[0], emitter.Position[1], emitter.Position[2], 0 );
+                    data[index] = new Vector4( emitter.Vertex.Position.X, emitter.Vertex.Position.Y, emitter.Vertex.Position.Z, 0 );
                 }
 
                 EmitInstances?.Dispose();

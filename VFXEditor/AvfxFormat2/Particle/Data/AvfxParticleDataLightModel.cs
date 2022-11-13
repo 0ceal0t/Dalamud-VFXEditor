@@ -10,15 +10,15 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MNO", size: 1 );
 
         public readonly UiNodeSelect<AvfxModel> ModelSelect;
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataLightModel( AvfxParticle particle ) : base() {
-            Children = new() {
+            Parsed = new() {
                 ModelIdx
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UiNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( ModelSelect = new UiNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
         }
 
         public override void Enable() {

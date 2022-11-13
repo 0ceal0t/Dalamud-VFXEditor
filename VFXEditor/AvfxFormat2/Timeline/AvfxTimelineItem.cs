@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat2 {
                 }
 
                 if( ( idx == numElements - 1 ) || BENA_ahead ) { // split before bEna or when about to end
-                    var item = new AvfxTimelineSubItem( Timeline, split.ToArray() );
+                    var item = new AvfxTimelineSubItem( Timeline, false, split.ToArray() );
                     Items.Add( item );
                     split = new(); // reset split
                 }

@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             for( var i = 0; i < size / 36; i++ ) {
-                Items.Add( new AvfxSchedulerSubItem( Scheduler, reader, AvfxName ) );
+                Items.Add( new AvfxSchedulerSubItem( Scheduler, false, reader, AvfxName ) );
             }
         }
 

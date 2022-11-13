@@ -5,13 +5,13 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
 using System.IO;
-using VfxEditor.AVFXLib.Curve;
+using VfxEditor.AvfxFormat2;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class GradientView : Renderer {
-        public AVFXCurve CurrentCurve = null;
+        public AvfxCurve CurrentCurve = null;
         public IntPtr Output => RenderShad.NativePointer;
 
         private readonly int Width = 500;
@@ -53,7 +53,7 @@ namespace VfxEditor.DirectX {
             } );
         }
 
-        public void SetGradient( AVFXCurve curve ) {
+        public void SetGradient( AvfxCurve curve ) {
             CurrentCurve = curve;
             var numPoints = curve.Keys.Keys.Count;
             if( numPoints < 2 ) {

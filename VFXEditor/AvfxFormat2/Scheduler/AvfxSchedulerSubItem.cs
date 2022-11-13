@@ -14,17 +14,17 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
         public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        public readonly UiNodeSelect<AvfxTimeline> TimelineSelect;
+        public UiNodeSelect<AvfxTimeline> TimelineSelect;
 
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
-        public AvfxSchedulerSubItem( AvfxScheduler scheduler, string name ) {
+        public AvfxSchedulerSubItem( AvfxScheduler scheduler, string name, bool initNodeSelects ) {
             Scheduler = scheduler;
             Name = name;
 
-            Children = new List<AvfxBase> {
+            Parsed = new List<AvfxBase> {
                 Enabled,
                 StartTime,
                 TimelineIdx
@@ -34,23 +34,27 @@ namespace VfxEditor.AvfxFormat2 {
             StartTime.SetValue( 0 );
             TimelineIdx.SetValue( -1 );
 
-            TimelineSelect = new UiNodeSelect<AvfxTimeline>( scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
+            if( initNodeSelects ) InitializeNodeSelects();
 
-            Parameters = new() {
+            Display = new() {
                 Enabled,
                 StartTime
             };
         }
 
-        public AvfxSchedulerSubItem( AvfxScheduler scheduler, BinaryReader reader, string name ) : this( scheduler, name ) => AvfxBase.ReadNested( reader, Children, 36 );
+        public AvfxSchedulerSubItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );
 
-        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Children );
+        public void InitializeNodeSelects() {
+            TimelineSelect = new UiNodeSelect<AvfxTimeline>( Scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
+        }
+
+        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
         public override void Draw( string parentId ) {
             var id = parentId + "/" + Name;
             DrawRename( id );
             TimelineSelect.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
         }
 
         public override string GetDefaultText() => $"{GetIdx()}: Timeline {TimelineIdx.GetValue()}";

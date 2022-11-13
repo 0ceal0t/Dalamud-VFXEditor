@@ -88,7 +88,7 @@ namespace VfxEditor.AvfxFormat2 {
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
-        public AvfxMain() : base( "Avfx" ) {
+        public AvfxMain() : base( "AVFX" ) {
             Parsed = new List<AvfxBase> {
                 Version,
                 IsDelayFastParticle,

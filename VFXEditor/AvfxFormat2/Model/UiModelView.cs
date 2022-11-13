@@ -8,6 +8,6 @@ namespace VfxEditor.AvfxFormat2 {
     public class UiModelView : UiNodeSplitView<AvfxModel> {
         public UiModelView( AvfxFile file, UiNodeGroup<AvfxModel> group ) : base( file, group, "Model", true, true, "default_model.vfxedit2" ) { }
 
-        public override void OnSelect( AvfxModel item ) { }
+        public override void OnSelect( AvfxModel item ) => item.OnSelect();
     }
 }

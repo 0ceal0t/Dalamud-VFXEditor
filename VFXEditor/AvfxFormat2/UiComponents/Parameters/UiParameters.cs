@@ -10,21 +10,21 @@ namespace VfxEditor.AvfxFormat2{
 
     public class UiParameters : AvfxItem {
         public readonly string Name;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public UiParameters( string name ) : base( "" ) {
             Name = name;
-            Parameters = new List<IUiBase>();
+            Display = new List<IUiBase>();
             SetAssigned( true );
         }
 
-        public void Add( IUiBase item ) => Parameters.Add( item );
+        public void Add( IUiBase item ) => Display.Add( item );
 
-        public void Remove( IUiBase item ) => Parameters.Remove( item );
+        public void Remove( IUiBase item ) => Display.Remove( item );
 
-        public void Prepend( IUiBase item ) => Parameters.Insert( 0, item );
+        public void Prepend( IUiBase item ) => Display.Insert( 0, item );
 
-        public override void Draw( string id ) => IUiBase.DrawList( Parameters, id );
+        public override void Draw( string id ) => IUiBase.DrawList( Display, id );
 
         public override string GetDefaultText() => Name;
 

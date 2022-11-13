@@ -21,12 +21,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo" );
         public readonly AvfxCurve DPow = new( "Power", "DPow" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         public AvfxParticleTextureDistortion( AvfxParticle particle ) : base( "TD", particle ) {
             InitNodeSelects();
 
-            Children = new() {
+            Parsed = new() {
                 Enabled,
                 TargetUV1,
                 TargetUV2,
@@ -41,27 +41,27 @@ namespace VfxEditor.AvfxFormat2 {
             };
             TextureIdx.SetValue( -1 );
 
-            Parameters.Add( Enabled );
-            Parameters.Add( TargetUV1 );
-            Parameters.Add( TargetUV2 );
-            Parameters.Add( TargetUV3 );
-            Parameters.Add( TargetUV4 );
-            Parameters.Add( UvSetIdx );
-            Parameters.Add( TextureFilter );
-            Parameters.Add( TextureBorderU );
-            Parameters.Add( TextureBorderV );
+            Display.Add( Enabled );
+            Display.Add( TargetUV1 );
+            Display.Add( TargetUV2 );
+            Display.Add( TargetUV3 );
+            Display.Add( TargetUV4 );
+            Display.Add( UvSetIdx );
+            Display.Add( TextureFilter );
+            Display.Add( TextureBorderU );
+            Display.Add( TextureBorderV );
 
-            Tabs.Add( DPow );
+            DisplayTabs.Add( DPow );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            ReadNested( reader, Children, size );
+            ReadNested( reader, Parsed, size );
             EnableAllSelectors();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) Assign();
@@ -69,7 +69,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TD";
-            IUiItem.DrawListTabs( Tabs, id );
+            IUiItem.DrawListTabs( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Texture Distortion";

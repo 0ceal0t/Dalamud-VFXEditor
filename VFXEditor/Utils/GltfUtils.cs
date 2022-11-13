@@ -7,11 +7,11 @@ using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AVFXLib.Model;
+using VfxEditor.AvfxFormat2;
 
 namespace VfxEditor.Utils {
     public static class GltfUtils {
-        public static void ExportModel( AVFXModel model, string path ) {
+        public static void ExportModel( AvfxModel model, string path ) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
 
@@ -35,7 +35,7 @@ namespace VfxEditor.Utils {
             PluginLog.Log( "Saved GLTF to: " + path );
         }
 
-        private static GLTFVert GetVert( AVFXVertex vert ) {
+        private static GLTFVert GetVert( AvfxVertex vert ) {
             var Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
             var Normal = Vector3.Normalize( new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] ) );
             var Tangent = Vector4.Normalize( new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], 1 ) );
@@ -53,8 +53,8 @@ namespace VfxEditor.Utils {
             return ret;
         }
 
-        private static AVFXVertex GetAvfxVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
-            var ret = new AVFXVertex();
+        private static AvfxVertex GetAvfxVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+            var ret = new AvfxVertex();
             color *= 255;
             normal *= 128;
             tangent *= 128;
@@ -73,9 +73,9 @@ namespace VfxEditor.Utils {
             return ret;
         }
 
-        public static bool ImportModel( string localPath, out List<AVFXVertex> vertexesOut, out List<AVFXIndex> indexesOut ) {
-            vertexesOut = new List<AVFXVertex>();
-            indexesOut = new List<AVFXIndex>();
+        public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
+            vertexesOut = new List<AvfxVertex>();
+            indexesOut = new List<AvfxIndex>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
             PluginLog.Log( "Importing GLTF from: " + localPath );
 
@@ -105,7 +105,7 @@ namespace VfxEditor.Utils {
                         vertexesOut.Add( GetAvfxVert( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
-                        indexesOut.Add( new AVFXIndex( A, B, C ) );
+                        indexesOut.Add( new AvfxIndex( A, B, C ) );
                     }
                     return true;
                 }

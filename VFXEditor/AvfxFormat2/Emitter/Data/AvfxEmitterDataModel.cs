@@ -17,10 +17,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
         public readonly UiNodeSelect<AvfxModel> ModelSelect;
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
-            Children = new() {
+            Parsed = new() {
                 ModelIdx,
                 RotationOrderType,
                 GenerateMethodType,
@@ -32,15 +32,15 @@ namespace VfxEditor.AvfxFormat2 {
             };
             ModelIdx.SetValue( -1 );
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UiNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
-            Parameters.Add( RotationOrderType );
-            Parameters.Add( GenerateMethodType );
-            Tabs.Add( AX );
-            Tabs.Add( AY );
-            Tabs.Add( AZ );
-            Tabs.Add( InjectionSpeed );
-            Tabs.Add( InjectionSpeedRandom );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( ModelSelect = new UiNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
+            Display.Add( RotationOrderType );
+            Display.Add( GenerateMethodType );
+            DisplayTabs.Add( AX );
+            DisplayTabs.Add( AY );
+            DisplayTabs.Add( AZ );
+            DisplayTabs.Add( InjectionSpeed );
+            DisplayTabs.Add( InjectionSpeedRandom );
         }
 
         public override void Enable() {

@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat2 {
 
                 nodeSelect.Node.ChildNodes.AddRange( entry.Value );
             }
-            foreach( var selector in Item.Selectors ) selector.LinkOnChange();
+            foreach( var selector in Item.Selectors ) selector.LinkOnIndexChange();
         }
 
         public void Remove() {

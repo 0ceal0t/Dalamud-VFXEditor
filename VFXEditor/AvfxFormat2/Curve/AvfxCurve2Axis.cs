@@ -16,14 +16,14 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve RX = new( "Random X", "XR" );
         public readonly AvfxCurve RY = new( "Random Y", "YR" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxCurve> Curves;
 
         public AvfxCurve2Axis( string name, string avfxName, bool locked = false ) : base( avfxName ) {
             Name = name;
             Locked = locked;
 
-            Children = new() {
+            Parsed = new() {
                 AxisConnectType,
                 AxisConnectRandomType,
                 X,
@@ -40,11 +40,11 @@ namespace VfxEditor.AvfxFormat2 {
             };
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Children, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) => DrawAddButtonRecurse( this, Name, parentId );
 

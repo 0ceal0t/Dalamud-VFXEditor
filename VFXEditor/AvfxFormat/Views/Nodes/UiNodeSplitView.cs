@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using System.IO;
 using VfxEditor.AVFXLib;
@@ -45,6 +46,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                 var item = Group.Items[idx];
                 if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
                     Selected = item;
+                    PluginLog.Log( "here" );
                     OnSelect( item );
                 }
             }

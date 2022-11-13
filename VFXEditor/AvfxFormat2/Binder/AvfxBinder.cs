@@ -29,15 +29,14 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxBinderProperties PropGoal = new( "Properties Goal", "PrpG" );
         public AvfxData Data;
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        private readonly List<AvfxBinderProperties> Properties;
-        private readonly AvfxDisplaySplitView<AvfxBinderProperties> PropSplit;
+        private readonly AvfxDisplaySplitView<AvfxBinderProperties> PropSplitDisplay;
         private readonly UiNodeGraphView NodeView;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxBinder( bool hasDepdencies ) : base( NAME, UiNodeGroup.BinderColor, hasDepdencies ) {
-            Children = new() {
+            Parsed = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -59,7 +58,7 @@ namespace VfxEditor.AvfxFormat2 {
                 PropGoal
             };
 
-            Parameters = new() {
+            Display = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -76,12 +75,11 @@ namespace VfxEditor.AvfxFormat2 {
                 BinderRotationType
             };
 
-            Properties = new() {
+            PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( new() {
                 Prop1,
                 Prop2,
                 PropGoal
-            };
-            PropSplit = new AvfxDisplaySplitView<AvfxBinderProperties>( Properties );
+            } );
 
             BinderVariety.ExtraCommand = () => {
                 return new AvfxBinderDataExtraCommand( this );
@@ -92,7 +90,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
+            Peek( reader, Parsed, size );
             var binderType = BinderVariety.GetValue();
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
@@ -104,12 +102,12 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Children, assigned );
+            RecurseAssigned( Parsed, assigned );
             RecurseAssigned( Data, assigned );
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
             Data?.Write( writer );
         }
 
@@ -150,7 +148,7 @@ namespace VfxEditor.AvfxFormat2 {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.EndChild();
         }
 
@@ -160,7 +158,7 @@ namespace VfxEditor.AvfxFormat2 {
             ImGui.EndChild();
         }
 
-        private void DrawProperties( string id ) => PropSplit.Draw( id );
+        private void DrawProperties( string id ) => PropSplitDisplay.Draw( id );
 
         public override string GetDefaultText() => $"Binder {GetIdx()}({BinderVariety.GetValue()})";
 

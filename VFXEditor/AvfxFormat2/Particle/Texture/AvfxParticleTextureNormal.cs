@@ -17,12 +17,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo" );
         public readonly AvfxCurve NPow = new( "Power", "NPow" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         public AvfxParticleTextureNormal( AvfxParticle particle ) : base( "TN", particle ) {
             InitNodeSelects();
 
-            Children = new() {
+            Parsed = new() {
                 Enabled,
                 UvSetIdx,
                 TextureFilter,
@@ -33,23 +33,23 @@ namespace VfxEditor.AvfxFormat2 {
             };
             TextureIdx.SetValue( -1 );
 
-            Parameters.Add( Enabled );
-            Parameters.Add( UvSetIdx );
-            Parameters.Add( TextureFilter );
-            Parameters.Add( TextureBorderU );
-            Parameters.Add( TextureBorderV );
+            Display.Add( Enabled );
+            Display.Add( UvSetIdx );
+            Display.Add( TextureFilter );
+            Display.Add( TextureBorderU );
+            Display.Add( TextureBorderV );
 
-            Tabs.Add( NPow );
+            DisplayTabs.Add( NPow );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            ReadNested( reader, Children, size );
+            ReadNested( reader, Parsed, size );
             EnableAllSelectors();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Texture Normal" + parentId ) ) Assign();
@@ -57,7 +57,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TN";
-            IUiItem.DrawListTabs( Tabs, id );
+            IUiItem.DrawListTabs( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Texture Normal";

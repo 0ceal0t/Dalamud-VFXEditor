@@ -40,10 +40,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEdgeCenter = new( name: "Color Edge Center", "CoEC" );
         public readonly AvfxCurveColor ColorEdgeEnd = new( name: "Color Edge End", "CoEE" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataPolyline() : base() {
-            Children = new() {
+            Parsed = new() {
                 CreateLineType,
                 NotBillBoardBaseAxisType,
                 BindWeaponType,
@@ -77,40 +77,40 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEdgeEnd
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( CreateLineType );
-            Parameters.Add( NotBillBoardBaseAxisType );
-            Parameters.Add( BindWeaponType );
-            Parameters.Add( PointCount );
-            Parameters.Add( PointCountCenter );
-            Parameters.Add( PointCountEndDistortion );
-            Parameters.Add( UseEdge );
-            Parameters.Add( NotBillboard );
-            Parameters.Add( BindWeapon );
-            Parameters.Add( ConnectTarget );
-            Parameters.Add( ConnectTargetReverse );
-            Parameters.Add( TagNumber );
-            Parameters.Add( IsSpline );
-            Parameters.Add( IsLocal );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( CreateLineType );
+            Display.Add( NotBillBoardBaseAxisType );
+            Display.Add( BindWeaponType );
+            Display.Add( PointCount );
+            Display.Add( PointCountCenter );
+            Display.Add( PointCountEndDistortion );
+            Display.Add( UseEdge );
+            Display.Add( NotBillboard );
+            Display.Add( BindWeapon );
+            Display.Add( ConnectTarget );
+            Display.Add( ConnectTargetReverse );
+            Display.Add( TagNumber );
+            Display.Add( IsSpline );
+            Display.Add( IsLocal );
 
-            Tabs.Add( Width );
-            Tabs.Add( WidthBegin );
-            Tabs.Add( WidthCenter );
-            Tabs.Add( WidthEnd );
-            Tabs.Add( Length );
-            Tabs.Add( LengthRandom );
+            DisplayTabs.Add( Width );
+            DisplayTabs.Add( WidthBegin );
+            DisplayTabs.Add( WidthCenter );
+            DisplayTabs.Add( WidthEnd );
+            DisplayTabs.Add( Length );
+            DisplayTabs.Add( LengthRandom );
 
-            Tabs.Add( ColorBegin );
-            Tabs.Add( ColorCenter );
-            Tabs.Add( ColorEnd );
-            Tabs.Add( ColorEdgeBegin );
-            Tabs.Add( ColorEdgeCenter );
-            Tabs.Add( ColorEdgeEnd );
+            DisplayTabs.Add( ColorBegin );
+            DisplayTabs.Add( ColorCenter );
+            DisplayTabs.Add( ColorEnd );
+            DisplayTabs.Add( ColorEdgeBegin );
+            DisplayTabs.Add( ColorEdgeCenter );
+            DisplayTabs.Add( ColorEdgeEnd );
 
-            Tabs.Add( CF );
-            Tabs.Add( Softness );
-            Tabs.Add( SoftRandom );
-            Tabs.Add( PnDs );
+            DisplayTabs.Add( CF );
+            DisplayTabs.Add( Softness );
+            DisplayTabs.Add( SoftRandom );
+            DisplayTabs.Add( PnDs );
         }
     }
 }

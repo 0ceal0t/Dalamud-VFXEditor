@@ -74,7 +74,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
 
                     // Draw gradient image
                     if( Color && Keys.Count > 1 ) {
-                        if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) Plugin.DirectXManager.GradientView.SetGradient( Curve );
+                        //if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) Plugin.DirectXManager.GradientView.SetGradient( Curve );
 
                         var topLeft = new ImPlotPoint { x = Points[0].X, y = 1 };
                         var bottomRight = new ImPlotPoint { x = Points[^1].X, y = -1 };
@@ -158,7 +158,7 @@ namespace VfxEditor.AvfxFormat.Vfx {
                     Keys[^1].Time++;
                     Points[^1].X++;
                 }
-                Plugin.DirectXManager.GradientView.SetGradient( Curve );
+                //Plugin.DirectXManager.GradientView.SetGradient( Curve );
             }
         }
 

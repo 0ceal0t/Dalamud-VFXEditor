@@ -17,6 +17,7 @@ namespace VfxEditor.AvfxFormat2 {
         private string LastValue = "";
 
         public AvfxTexture() : base( NAME, UiNodeGroup.TextureColor, false ) {
+            NodeView = new( this );
             HasDependencies = false;
         }
 

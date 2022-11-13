@@ -17,11 +17,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
         public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA" );
+        public readonly AvfxCurve InjectionAngleRandom = new( "Injection Angle Random", "IjAR" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEmitterDataConeModel() : base() {
-            Children = new() {
+            Parsed = new() {
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -31,20 +32,22 @@ namespace VfxEditor.AvfxFormat2 {
                 Radius,
                 InjectionSpeed,
                 InjectionSpeedRandom,
-                InjectionAngle
+                InjectionAngle,
+                InjectionAngleRandom
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( RotationOrderType );
-            Parameters.Add( GenerateMethodType );
-            Parameters.Add( DivideX );
-            Parameters.Add( DivideY );
-            Tabs.Add( AX );
-            Tabs.Add( AY );
-            Tabs.Add( Radius );
-            Tabs.Add( InjectionSpeed );
-            Tabs.Add( InjectionSpeedRandom );
-            Tabs.Add( InjectionAngle );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( RotationOrderType );
+            Display.Add( GenerateMethodType );
+            Display.Add( DivideX );
+            Display.Add( DivideY );
+            DisplayTabs.Add( AX );
+            DisplayTabs.Add( AY );
+            DisplayTabs.Add( Radius );
+            DisplayTabs.Add( InjectionSpeed );
+            DisplayTabs.Add( InjectionSpeedRandom );
+            DisplayTabs.Add( InjectionAngle );
+            DisplayTabs.Add( InjectionAngleRandom );
         }
     }
 }

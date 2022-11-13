@@ -10,13 +10,13 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve DistanceRandom = new( "Distance Random", "DstR" );
 
         public AvfxBinderDataCamera() : base() {
-            Children = new() {
+            Parsed = new() {
                 Distance,
                 DistanceRandom
             };
 
-            Tabs.Add( Distance );
-            Tabs.Add( DistanceRandom );
+            DisplayTabs.Add( Distance );
+            DisplayTabs.Add( DistanceRandom );
         }
     }
 }

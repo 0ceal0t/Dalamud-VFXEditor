@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTimelineClip : AvfxWorkspaceItem {

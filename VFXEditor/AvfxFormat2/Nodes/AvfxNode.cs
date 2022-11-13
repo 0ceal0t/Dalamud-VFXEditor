@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat2 {
                 nodeSelect.DisableNode( this );
                 nodeSelect.Node.ChildNodes.RemoveAll( node => node == this );
             }
-            foreach( var selector in Selectors ) selector.UnlinkOnChange();
+            foreach( var selector in Selectors ) selector.UnlinkOnIndexChange();
         }
 
         public virtual void ShowTooltip() { }

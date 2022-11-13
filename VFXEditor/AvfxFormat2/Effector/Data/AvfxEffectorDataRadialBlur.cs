@@ -16,10 +16,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat FadeEndDistance = new( "Fade End Distance", "FEDc" );
         public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "Fade Base Point", "FaBP" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEffectorDataRadialBlur() : base() {
-            Children = new() {
+            Parsed = new() {
                 Length,
                 Strength,
                 Gradation,
@@ -30,16 +30,16 @@ namespace VfxEditor.AvfxFormat2 {
                 FadeBasePointType
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( FadeStartDistance );
-            Parameters.Add( FadeEndDistance );
-            Parameters.Add( FadeBasePointType );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( FadeStartDistance );
+            Display.Add( FadeEndDistance );
+            Display.Add( FadeBasePointType );
 
-            Tabs.Add( Length );
-            Tabs.Add( Strength );
-            Tabs.Add( Gradation );
-            Tabs.Add( InnerRadius );
-            Tabs.Add( OuterRadius );
+            DisplayTabs.Add( Length );
+            DisplayTabs.Add( Strength );
+            DisplayTabs.Add( Gradation );
+            DisplayTabs.Add( InnerRadius );
+            DisplayTabs.Add( OuterRadius );
         }
     }
 }

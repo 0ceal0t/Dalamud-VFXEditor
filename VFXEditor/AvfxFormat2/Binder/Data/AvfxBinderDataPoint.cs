@@ -9,11 +9,11 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurve SpringStrength = new( "Spring Strength", "SpS" );
 
         public AvfxBinderDataPoint() : base() {
-            Children = new() {
+            Parsed = new() {
                 SpringStrength
             };
 
-            Tabs.Add( SpringStrength );
+            DisplayTabs.Add( SpringStrength );
         }
     }
 }

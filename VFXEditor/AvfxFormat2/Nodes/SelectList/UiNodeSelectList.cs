@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat2 {
             Name = name;
             Group = group;
             Literal = literal;
-            LinkOnChange();
+            LinkOnIndexChange();
             if( Group.IsInitialized ) Initialize(); // already good to go
             else Group.OnInit += Initialize;
             node.Selectors.Add( this );
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         // an item was removed from the group, for example
         // 255 = -1 = nothing selected
-        public override void OnChange() => Literal.SetValue( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
+        public override void UpdateLiteral() => Literal.SetValue( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
 
         public override void Initialize() {
             for( var i = 0; i < Literal.GetValue().Count; i++ ) {
@@ -55,7 +55,7 @@ namespace VfxEditor.AvfxFormat2 {
             if( Selected[idx] == null ) return;
             UnlinkParentChild( Selected[idx] );
             Selected[idx] = null;
-            OnChange();
+            UpdateLiteral();
         }
 
         private void SelectItem( T item, int idx ) {
@@ -63,19 +63,27 @@ namespace VfxEditor.AvfxFormat2 {
             UnlinkParentChild( Selected[idx] );
             LinkParentChild( item );
             Selected[idx] = item;
-            OnChange();
+            UpdateLiteral();
         }
 
-        public override void LinkOnChange() { Group.OnChange += OnChange; }
+        public override void LinkOnIndexChange() {
+            if( OnChangeLinked ) return;
+            OnChangeLinked = true;
+            Group.OnChange += UpdateLiteral;
+        }
 
-        public override void UnlinkOnChange() { Group.OnChange -= OnChange; }
+        public override void UnlinkOnIndexChange() {
+            if( !OnChangeLinked ) return;
+            OnChangeLinked = false;
+            Group.OnChange -= UpdateLiteral;
+        }
 
         // For when something happens to the selector
 
         public override void Enable() {
             if( Enabled ) return;
             Enabled = true;
-            LinkOnChange();
+            LinkOnIndexChange();
             foreach( var item in Selected ) {
                 if( item != null ) LinkParentChild( item );
             }
@@ -84,7 +92,7 @@ namespace VfxEditor.AvfxFormat2 {
         public override void Disable() {
             if( !Enabled ) return;
             Enabled = false;
-            UnlinkOnChange();
+            UnlinkOnIndexChange();
             foreach( var item in Selected ) {
                 if( item != null ) UnlinkParentChild( item );
             }
@@ -102,12 +110,12 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void EnableNode( AvfxNode node, int idx ) {
             Selected.Insert( idx, ( T )node );
-            OnChange();
+            UpdateLiteral();
         }
 
         public override void DisableNode( AvfxNode node ) {
             Selected.RemoveAll( x => x == node );
-            OnChange();
+            UpdateLiteral();
         }
 
         public override void Draw( string parentId ) {

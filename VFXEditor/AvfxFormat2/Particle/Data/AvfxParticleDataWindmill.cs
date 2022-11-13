@@ -9,15 +9,15 @@ namespace VfxEditor.AvfxFormat2 {
     public class AvfxParticleDataWindmill : AvfxData {
         public readonly AvfxEnum<WindmillUVType> WindmillUVType = new( "Windmill UV Type", "WUvT" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataWindmill() : base() {
-            Children = new() {
+            Parsed = new() {
                 WindmillUVType
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( WindmillUVType );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( WindmillUVType );
         }
     }
 }

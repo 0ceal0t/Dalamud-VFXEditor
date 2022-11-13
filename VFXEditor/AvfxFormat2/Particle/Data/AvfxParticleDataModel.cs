@@ -24,10 +24,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
 
         public readonly UiNodeSelectList<AvfxModel> ModelSelect;
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
-            Children = new() {
+            Parsed = new() {
                 ModelNumberRandomValue,
                 ModelNumberRandomType,
                 ModelNumberRandomInterval,
@@ -45,23 +45,23 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEnd
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( ModelSelect = new UiNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
-            Parameters.Add( ModelNumberRandomValue );
-            Parameters.Add( ModelNumberRandomType );
-            Parameters.Add( ModelNumberRandomInterval );
-            Parameters.Add( FresnelType );
-            Parameters.Add( DirectionalLightType );
-            Parameters.Add( PointLightType );
-            Parameters.Add( IsLightning );
-            Parameters.Add( IsMorph );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( ModelSelect = new UiNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            Display.Add( ModelNumberRandomValue );
+            Display.Add( ModelNumberRandomType );
+            Display.Add( ModelNumberRandomInterval );
+            Display.Add( FresnelType );
+            Display.Add( DirectionalLightType );
+            Display.Add( PointLightType );
+            Display.Add( IsLightning );
+            Display.Add( IsMorph );
 
-            Tabs.Add( Morph );
-            Tabs.Add( FresnelCurve );
-            Tabs.Add( FresnelRotation );
-            Tabs.Add( ColorBegin );
-            Tabs.Add( ColorEnd );
-            Tabs.Add( AnimationNumber );
+            DisplayTabs.Add( Morph );
+            DisplayTabs.Add( FresnelCurve );
+            DisplayTabs.Add( FresnelRotation );
+            DisplayTabs.Add( ColorBegin );
+            DisplayTabs.Add( ColorEnd );
+            DisplayTabs.Add( AnimationNumber );
         }
 
         public override void Enable() {

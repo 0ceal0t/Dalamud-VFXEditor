@@ -76,16 +76,16 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxSimpleColors Colors = new();
         public readonly AvfxSimpleFrames Frames = new();
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
-        private readonly UiParameters Animation;
-        private readonly UiParameters Texture;
-        private readonly UiParameters Color;
+        private readonly UiParameters AnimationDisplay;
+        private readonly UiParameters TextureDisplay;
+        private readonly UiParameters ColorDisplay;
 
-        public AvfxParticleSimple( AvfxParticle particle ) : base( "TR", particle ) {
+        public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Children = new() {
+            Parsed = new() {
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -152,65 +152,65 @@ namespace VfxEditor.AvfxFormat2 {
                 Frames
             };
 
-            Parameters.Add( InjectionPositionType );
-            Parameters.Add( InjectionDirectionType );
-            Parameters.Add( BaseDirectionType );
-            Parameters.Add( CreateCount );
-            Parameters.Add( new UiFloat3( "Create Area", CreateAreaX, CreateAreaY, CreateAreaZ ) );
-            Parameters.Add( new UiFloat3( "Coord Accuracy", CoordAccuracyX, CoordAccuracyY, CoordAccuracyZ ) );
-            Parameters.Add( new UiFloat3( "Coord Gra", CoordGraX, CoordGraY, CoordGraZ ) );
-            Parameters.Add( InjectionRadialDir0 );
-            Parameters.Add( InjectionRadialDir1 );
-            Parameters.Add( BlockNum );
-            Parameters.Add( LineLengthMin );
-            Parameters.Add( LineLengthMax );
-            Parameters.Add( CreateIntervalVal );
-            Parameters.Add( CreateIntervalRandom );
-            Parameters.Add( CreateIntervalCount );
-            Parameters.Add( CreateIntervalLife );
-            Parameters.Add( CreateNewAfterDelete );
+            Display.Add( InjectionPositionType );
+            Display.Add( InjectionDirectionType );
+            Display.Add( BaseDirectionType );
+            Display.Add( CreateCount );
+            Display.Add( new UiFloat3( "Create Area", CreateAreaX, CreateAreaY, CreateAreaZ ) );
+            Display.Add( new UiFloat3( "Coord Accuracy", CoordAccuracyX, CoordAccuracyY, CoordAccuracyZ ) );
+            Display.Add( new UiFloat3( "Coord Gra", CoordGraX, CoordGraY, CoordGraZ ) );
+            Display.Add( InjectionRadialDir0 );
+            Display.Add( InjectionRadialDir1 );
+            Display.Add( BlockNum );
+            Display.Add( LineLengthMin );
+            Display.Add( LineLengthMax );
+            Display.Add( CreateIntervalVal );
+            Display.Add( CreateIntervalRandom );
+            Display.Add( CreateIntervalCount );
+            Display.Add( CreateIntervalLife );
+            Display.Add( CreateNewAfterDelete );
 
-            Tabs.Add( Animation = new UiParameters( "Animation" ) );
-            Animation.Add( new UiFloat2( "Scale Start", ScaleXStart, ScaleYStart ) );
-            Animation.Add( new UiFloat2( "Scale End", ScaleXEnd, ScaleYEnd ) );
-            Animation.Add( ScaleCurve );
-            Animation.Add( new UiFloat2( "Scale X Random", ScaleRandX0, ScaleRandX1 ) );
-            Animation.Add( new UiFloat2( "Scale Y Random", ScaleRandY0, ScaleRandY1 ) );
-            Animation.Add( new UiFloat3( "Rotation Add", RotXAdd, RotYAdd, RotZAdd ) );
-            Animation.Add( new UiFloat3( "Rotation Base", RotXBase, RotYBase, RotZBase ) );
-            Animation.Add( new UiFloat3( "Rotation Velocity", RotXVel, RotYVel, RotZVel ) );
-            Animation.Add( VelMin );
-            Animation.Add( VelMax );
-            Animation.Add( VelFlatteryRate );
-            Animation.Add( VelFlatterySpeed );
-            Animation.Add( ScaleRandomLink );
-            Animation.Add( BindParent );
-            Animation.Add( ScaleByParent );
-            Animation.Add( PolyLineTag );
+            DisplayTabs.Add( AnimationDisplay = new UiParameters( "Animation" ) );
+            AnimationDisplay.Add( new UiFloat2( "Scale Start", ScaleXStart, ScaleYStart ) );
+            AnimationDisplay.Add( new UiFloat2( "Scale End", ScaleXEnd, ScaleYEnd ) );
+            AnimationDisplay.Add( ScaleCurve );
+            AnimationDisplay.Add( new UiFloat2( "Scale X Random", ScaleRandX0, ScaleRandX1 ) );
+            AnimationDisplay.Add( new UiFloat2( "Scale Y Random", ScaleRandY0, ScaleRandY1 ) );
+            AnimationDisplay.Add( new UiFloat3( "Rotation Add", RotXAdd, RotYAdd, RotZAdd ) );
+            AnimationDisplay.Add( new UiFloat3( "Rotation Base", RotXBase, RotYBase, RotZBase ) );
+            AnimationDisplay.Add( new UiFloat3( "Rotation Velocity", RotXVel, RotYVel, RotZVel ) );
+            AnimationDisplay.Add( VelMin );
+            AnimationDisplay.Add( VelMax );
+            AnimationDisplay.Add( VelFlatteryRate );
+            AnimationDisplay.Add( VelFlatterySpeed );
+            AnimationDisplay.Add( ScaleRandomLink );
+            AnimationDisplay.Add( BindParent );
+            AnimationDisplay.Add( ScaleByParent );
+            AnimationDisplay.Add( PolyLineTag );
 
-            Tabs.Add( Texture = new UiParameters( "Texture" ) );
-            Texture.Add( UvCellU );
-            Texture.Add( UvCellV );
-            Texture.Add( UvInterval );
-            Texture.Add( UvNoRandom );
-            Texture.Add( UvNoLoopCount );
-            Texture.Add( UvReverse );
+            DisplayTabs.Add( TextureDisplay = new UiParameters( "Texture" ) );
+            TextureDisplay.Add( UvCellU );
+            TextureDisplay.Add( UvCellV );
+            TextureDisplay.Add( UvInterval );
+            TextureDisplay.Add( UvNoRandom );
+            TextureDisplay.Add( UvNoLoopCount );
+            TextureDisplay.Add( UvReverse );
 
-            Tabs.Add( Color = new UiParameters( "Color" ) );
-            Color.Add( new UiSimpleColor( this, 0 ) );
-            Color.Add( new UiSimpleColor( this, 1 ) );
-            Color.Add( new UiSimpleColor( this, 2 ) );
-            Color.Add( new UiSimpleColor( this, 3 ) );
+            DisplayTabs.Add( ColorDisplay = new UiParameters( "Color" ) );
+            ColorDisplay.Add( new UiSimpleColor( this, 0 ) );
+            ColorDisplay.Add( new UiSimpleColor( this, 1 ) );
+            ColorDisplay.Add( new UiSimpleColor( this, 2 ) );
+            ColorDisplay.Add( new UiSimpleColor( this, 3 ) );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            ReadNested( reader, Children, size );
+            ReadNested( reader, Parsed, size );
             EnableAllSelectors();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Children );
+        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) Assign();
@@ -223,7 +223,7 @@ namespace VfxEditor.AvfxFormat2 {
                 return;
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            IUiItem.DrawListTabs( Tabs, id );
+            IUiItem.DrawListTabs( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Simple Animation";

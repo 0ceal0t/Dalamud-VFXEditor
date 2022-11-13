@@ -88,8 +88,8 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Initialize() {
             if( IsInitialized ) return;
-            UpdateIdx();
             IsInitialized = true;
+            UpdateIdx();
             OnInit?.Invoke();
             OnInit = null;
         }

@@ -19,15 +19,15 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly UiSchedulerSplitView ItemSplit;
         public readonly UiSchedulerSplitView TriggerSplit;
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         public readonly UiNodeGroupSet NodeGroups;
 
         public AvfxScheduler( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.SchedColor, false ) {
             NodeGroups = groupSet;
 
-            Children = new() {
-                 ItemCount,
+            Parsed = new() {
+                ItemCount,
                 TriggerCount
             };
 
@@ -38,7 +38,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
+            Peek( reader, Parsed, size );
             AvfxSchedulerItem lastItem = null;
             AvfxSchedulerItem lastTrigger = null;
 
@@ -53,19 +53,26 @@ namespace VfxEditor.AvfxFormat2 {
                 }
             }, size );
 
-            if( lastItem != null ) Items.AddRange( lastItem.Items );
-            if( lastTrigger != null ) Triggers.AddRange( lastTrigger.Items.GetRange( lastTrigger.Items.Count - 12, 12 ) );
+            if( lastItem != null ) {
+                Items.AddRange( lastItem.Items );
+                Items.ForEach( x => x.InitializeNodeSelects() );
+            }
+
+            if( lastTrigger != null ) {
+                Triggers.AddRange( lastTrigger.Items.GetRange( lastTrigger.Items.Count - 12, 12 ) );
+                Triggers.ForEach( x => x.InitializeNodeSelects() );
+            }
 
             ItemSplit.UpdateIdx();
             TriggerSplit.UpdateIdx();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
             ItemCount.SetValue( Items.Count );
             TriggerCount.SetValue( Triggers.Count );
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
 
             // Item
             for( var i = 0; i < Items.Count; i++ ) {

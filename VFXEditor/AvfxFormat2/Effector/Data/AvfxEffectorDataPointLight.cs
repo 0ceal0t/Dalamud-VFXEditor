@@ -19,10 +19,10 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat ShadowCreateDistanceNear = new( "Create Distance Near", "SCDN" );
         public readonly AvfxFloat ShadowCreateDistanceFar = new( "Create Distance Far", "SCDF" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxEffectorDataPointLight() : base() {
-            Children = new() {
+            Parsed = new() {
                 Color,
                 DistanceScale,
                 Rotation,
@@ -36,19 +36,19 @@ namespace VfxEditor.AvfxFormat2 {
                 ShadowCreateDistanceFar
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( PointLightAttenuationType );
-            Parameters.Add( EnableShadow );
-            Parameters.Add( EnableCharShadow );
-            Parameters.Add( EnableMapShadow );
-            Parameters.Add( EnableMoveShadow );
-            Parameters.Add( ShadowCreateDistanceNear );
-            Parameters.Add( ShadowCreateDistanceFar );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( PointLightAttenuationType );
+            Display.Add( EnableShadow );
+            Display.Add( EnableCharShadow );
+            Display.Add( EnableMapShadow );
+            Display.Add( EnableMoveShadow );
+            Display.Add( ShadowCreateDistanceNear );
+            Display.Add( ShadowCreateDistanceFar );
 
-            Tabs.Add( Color );
-            Tabs.Add( DistanceScale ) ;
-            Tabs.Add( Rotation ) ;
-            Tabs.Add( Position ) ;
+            DisplayTabs.Add( Color );
+            DisplayTabs.Add( DistanceScale ) ;
+            DisplayTabs.Add( Rotation ) ;
+            DisplayTabs.Add( Position ) ;
         }
     }
 }

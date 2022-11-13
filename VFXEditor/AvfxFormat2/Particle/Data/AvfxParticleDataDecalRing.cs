@@ -11,19 +11,19 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat ScalingScale = new( "Scaling Scale", "SS" );
         public readonly AvfxFloat RingFan = new( "Ring Fan", "RF" );
 
-        public readonly UiParameters Parameters;
+        public readonly UiParameters Display;
 
         public AvfxParticleDataDecalRing() : base() {
-            Children = new() {
+            Parsed = new() {
                 Width,
                 ScalingScale,
                 RingFan
             };
 
-            Tabs.Add( Parameters = new UiParameters( "Parameters" ) );
-            Parameters.Add( ScalingScale );
-            Parameters.Add( RingFan );
-            Tabs.Add( Width );
+            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            Display.Add( ScalingScale );
+            Display.Add( RingFan );
+            DisplayTabs.Add( Width );
         }
     }
 }

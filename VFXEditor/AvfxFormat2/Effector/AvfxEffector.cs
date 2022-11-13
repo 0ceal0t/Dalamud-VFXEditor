@@ -20,13 +20,13 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxInt LoopPointEnd = new( "Loop End", "LpEd" );
         public AvfxData Data;
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
 
         private readonly UiNodeGraphView NodeView;
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxEffector( bool hasDepdencies ) : base( NAME, UiNodeGroup.EffectorColor, hasDepdencies ) {
-            Children = new() {
+            Parsed = new() {
                 EffectorVariety,
                 RotationOrder,
                 CoordComputeOrder,
@@ -36,7 +36,7 @@ namespace VfxEditor.AvfxFormat2 {
                 LoopPointEnd
             };
 
-            Parameters = new() {
+            Display = new() {
                 RotationOrder,
                 CoordComputeOrder,
                 AffectOtherVfx,
@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
+            Peek( reader, Parsed, size );
             var effectorType = EffectorVariety.GetValue();
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
@@ -66,12 +66,12 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Children, assigned );
+            RecurseAssigned( Parsed, assigned );
             RecurseAssigned( Data, assigned );
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
             Data?.Write( writer );
         }
 
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat2 {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.EndChild();
         }
 

@@ -12,12 +12,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat ValRandom = new( "Random Value", "ValR" );
         public readonly AvfxEnum<RandomType> ValRandomType = new( "Random Type", "Type" );
 
-        private readonly List<AvfxBase> Children;
+        private readonly List<AvfxBase> Parsed;
         private readonly List<IUiBase> Display;
 
         public AvfxLife() : base( "Life" ) {
             Value.SetValue( -1 );
-            Children = new() {
+            Parsed = new() {
                 Value,
                 ValRandom,
                 ValRandomType
@@ -33,20 +33,20 @@ namespace VfxEditor.AvfxFormat2 {
         public override void ReadContents( BinaryReader reader, int size ) {
             if( size > 4 ) {
                 Enabled = true;
-                ReadNested( reader, Children, size );
+                ReadNested( reader, Parsed, size );
                 return;
             }
             Enabled = false;
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Children, assigned );
+        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
         protected override void WriteContents( BinaryWriter writer ) {
             if( !Enabled ) {
                 writer.Write( -1 );
                 return;
             }
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
         }
 
         public override void DrawAssigned( string parentId ) {

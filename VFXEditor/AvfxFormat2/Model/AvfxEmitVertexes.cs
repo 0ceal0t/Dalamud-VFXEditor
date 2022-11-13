@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxEmitVertexes : AvfxBase {
@@ -23,34 +24,40 @@ namespace VfxEditor.AvfxFormat2 {
     }
 
     public class AvfxEmiterVertex {
-        public float[] Position = new float[3];
-        public float[] Normal = new float[3];
-        public int C = 0;
+        public Vector3 Position = new( 0 );
+        public Vector3 Normal = new( 0 );
+        public Vector4 Color = new( 0 );
 
         public AvfxEmiterVertex() { }
 
         public AvfxEmiterVertex( BinaryReader reader ) {
-            Position[0] = reader.ReadSingle();
-            Position[1] = reader.ReadSingle();
-            Position[2] = reader.ReadSingle();
+            Position.X = reader.ReadSingle();
+            Position.Y = reader.ReadSingle();
+            Position.Z = reader.ReadSingle();
 
-            Normal[0] = reader.ReadSingle();
-            Normal[1] = reader.ReadSingle();
-            Normal[2] = reader.ReadSingle();
+            Normal.X = reader.ReadSingle();
+            Normal.Y = reader.ReadSingle();
+            Normal.Z = reader.ReadSingle();
 
-            C = reader.ReadInt32();
+            Color.X = reader.ReadByte() / 255f;
+            Color.Y = reader.ReadByte() / 255f;
+            Color.Z = reader.ReadByte() / 255f;
+            Color.W = reader.ReadByte() / 255f;
         }
 
         public void Write( BinaryWriter writer ) {
-            writer.Write( Position[0] );
-            writer.Write( Position[1] );
-            writer.Write( Position[2] );
+            writer.Write( Position.X );
+            writer.Write( Position.Y );
+            writer.Write( Position.Z );
 
-            writer.Write( Normal[0] );
-            writer.Write( Normal[1] );
-            writer.Write( Normal[2] );
+            writer.Write( Normal.X );
+            writer.Write( Normal.Y );
+            writer.Write( Normal.Z );
 
-            writer.Write( C );
+            writer.Write( ( byte )( Color.X * 255f) );
+            writer.Write( ( byte )( Color.Y * 255f ) );
+            writer.Write( ( byte )( Color.Z * 255f ) );
+            writer.Write( ( byte )( Color.W * 255f ) );
         }
     }
 }

@@ -17,12 +17,13 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public void Execute() {
-            Item = new AvfxTimelineSubItem( View.Timeline );
+            Item = new AvfxTimelineSubItem( View.Timeline, true );
             Item.BinderSelect.Select( null );
             Item.EffectorSelect.Select( null );
             Item.EmitterSelect.Select( null );
             Item.EndTime.SetValue( 1 );
             Item.StartTime.SetValue( 0 );
+
             Add();
             View.Selected = Item;
         }

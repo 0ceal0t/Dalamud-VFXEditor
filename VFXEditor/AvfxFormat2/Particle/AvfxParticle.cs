@@ -75,19 +75,17 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly List<AvfxParticleUvSet> UvSets = new();
         public readonly UiUvSetSplitView UvView;
 
-        private readonly List<AvfxBase> Children;
-        private readonly List<AvfxBase> Children2;
+        private readonly List<AvfxBase> Parsed;
+        private readonly List<AvfxBase> Parsed2;
 
         private readonly UiNodeGraphView NodeView;
         public readonly UiNodeGroupSet NodeGroups;
 
-        public readonly List<AvfxItem> Animation;
-        public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplit;
+        public readonly AvfxDisplaySplitView<AvfxItem> AnimationDisplaySplit;
 
-        public readonly List<AvfxItem> Tex;
-        public readonly AvfxDisplaySplitView<AvfxItem> TexSplit;
+        public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
 
-        private readonly List<IUiBase> Parameters;
+        private readonly List<IUiBase> Display;
 
         public AvfxParticle( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.ParticleColor, hasDependencies ) {
             NodeGroups = groupSet;
@@ -106,7 +104,7 @@ namespace VfxEditor.AvfxFormat2 {
 
             // Parsing
 
-            Children = new() {
+            Parsed = new() {
                 LoopStart,
                 LoopEnd,
                 ParticleVariety,
@@ -158,7 +156,7 @@ namespace VfxEditor.AvfxFormat2 {
                 Color
             };
 
-            Children2 = new() {
+            Parsed2 = new() {
                 TC1,
                 TC2,
                 TC3,
@@ -171,7 +169,7 @@ namespace VfxEditor.AvfxFormat2 {
 
             // Drawing
 
-            Parameters = new() {
+            Display = new() {
                 LoopStart,
                 LoopEnd,
                 SimpleAnimEnable,
@@ -203,7 +201,7 @@ namespace VfxEditor.AvfxFormat2 {
                 DepthOffset
             };
 
-            Animation = new() {
+            AnimationDisplaySplit = new( new() {
                 Life,
                 Simple,
                 Gravity,
@@ -220,12 +218,11 @@ namespace VfxEditor.AvfxFormat2 {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            };
-            AnimationSplit = new( Animation );
+            } );
 
             UvView = new( UvSets );
 
-            Tex = new() {
+            TextureDisplaySplit = new( new() {
                 TC1,
                 TC2,
                 TC3,
@@ -234,8 +231,7 @@ namespace VfxEditor.AvfxFormat2 {
                 TR,
                 TD,
                 TP
-            };
-            TexSplit = new( Tex );
+            } );
 
             ParticleVariety.ExtraCommand = () => {
                 return new AvfxParticleDataExtraCommand( this );
@@ -246,8 +242,8 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Children, size );
-            Peek( reader, Children2, size );
+            Peek( reader, Parsed, size );
+            Peek( reader, Parsed2, size );
             var particleType = ParticleVariety.GetValue();
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
@@ -264,19 +260,19 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Children, assigned );
+            RecurseAssigned( Parsed, assigned );
             RecurseAssigned( Data, assigned );
-            RecurseAssigned( Children2, assigned );
+            RecurseAssigned( Parsed2, assigned );
         }
 
         protected override void WriteContents( BinaryWriter writer ) {
             UVSetCount.SetValue( UvSets.Count );
-            WriteNested( writer, Children );
+            WriteNested( writer, Parsed );
 
             foreach( var uvSet in UvSets ) uvSet.Write( writer );
 
             Data?.Write( writer );
-            WriteNested( writer, Children2 );
+            WriteNested( writer, Parsed2 );
         }
 
         public void SetData( ParticleType type ) {
@@ -315,7 +311,7 @@ namespace VfxEditor.AvfxFormat2 {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplit.Draw( id + "/Animation" );
+                    AnimationDisplaySplit.Draw( id + "/Animation" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "UV Sets" + id ) ) {
@@ -323,7 +319,7 @@ namespace VfxEditor.AvfxFormat2 {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( "Textures" + id ) ) {
-                    TexSplit.Draw( id + "/Tex" );
+                    TextureDisplaySplit.Draw( id + "/Tex" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -333,7 +329,7 @@ namespace VfxEditor.AvfxFormat2 {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
-            IUiBase.DrawList( Parameters, id );
+            IUiBase.DrawList( Display, id );
             ImGui.EndChild();
         }
 
