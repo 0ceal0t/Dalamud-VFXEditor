@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat2 {
             Number.Number.Draw( id, CommandManager.Avfx );
             Vertex.Position.Draw( id, CommandManager.Avfx );
             Vertex.Normal.Draw( id, CommandManager.Avfx );
-            ImGui.ColorEdit4( "Color" + id, ref Vertex.Color );
+            Vertex.Color.Draw( id, CommandManager.Avfx );
         }
 
         public override string GetDefaultText() => $"{GetIdx()}";

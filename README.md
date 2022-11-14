@@ -63,8 +63,5 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size
-- Clip rework
-- Model import undo/redo
 - Model emit vertex
-- Simple particle color/frames
 - Curve key

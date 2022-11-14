@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.AvfxFormat2.Model;
 using VfxEditor.Utils;
 using static VfxEditor.DirectX.ModelPreview;
 
@@ -165,12 +166,7 @@ namespace VfxEditor.AvfxFormat2 {
                 if( !ok ) return;
                 try {
                     if( GltfUtils.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
-                        Vertexes.Vertexes.Clear();
-                        Vertexes.Vertexes.AddRange( newVertexes );
-
-                        Indexes.Indexes.Clear();
-                        Indexes.Indexes.AddRange( newIndexes );
-                        Refresh = true;
+                        CommandManager.Avfx.Add( new AvfxModelImportCommand( this, newIndexes, newVertexes ) );
                     }
                 }
                 catch( Exception e ) {
@@ -185,6 +181,8 @@ namespace VfxEditor.AvfxFormat2 {
                 GltfUtils.ExportModel( this, res );
             } );
         }
+
+        public void RefreshModelPreview() { Refresh = true; }
 
         public override string GetDefaultText() => $"Model {GetIdx()}";
 
