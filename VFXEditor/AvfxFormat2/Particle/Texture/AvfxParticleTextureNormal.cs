@@ -49,14 +49,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
-            AssignedCopyPaste( this, "Texture Normal" );
+            AssignedCopyPaste( this, GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Normal" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TN";
 
-            AssignedCopyPaste( this, "Texture Normal" );
+            AssignedCopyPaste( this, GetDefaultText() );
             IUiItem.DrawListTabs( DisplayTabs, id );
         }
 

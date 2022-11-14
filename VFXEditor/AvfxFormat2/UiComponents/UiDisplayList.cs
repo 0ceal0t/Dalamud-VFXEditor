@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace VfxEditor.AvfxFormat2{
     // Dummy class
 
-    public class UiParameters : AvfxItem {
+    public class UiDisplayList : AvfxItem {
         public readonly string Name;
         private readonly List<IUiBase> Display;
 
-        public UiParameters( string name ) : base( "" ) {
+        public UiDisplayList( string name ) : base( "" ) {
             Name = name;
             Display = new List<IUiBase>();
             SetAssigned( true );

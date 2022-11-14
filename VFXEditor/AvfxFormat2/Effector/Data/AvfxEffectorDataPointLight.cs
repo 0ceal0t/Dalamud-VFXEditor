@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxFloat ShadowCreateDistanceNear = new( "Create Distance Near", "SCDN" );
         public readonly AvfxFloat ShadowCreateDistanceFar = new( "Create Distance Far", "SCDF" );
 
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxEffectorDataPointLight() : base() {
             Parsed = new() {
@@ -36,7 +36,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ShadowCreateDistanceFar
             };
 
-            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( PointLightAttenuationType );
             Display.Add( EnableShadow );
             Display.Add( EnableCharShadow );

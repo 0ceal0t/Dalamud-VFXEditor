@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -52,13 +51,13 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Life";
-            AssignedCopyPaste( this, "Life" );
+            AssignedCopyPaste( this, GetDefaultText() );
             IUiBase.DrawList( Display, id );
         }
 
         public override void DrawUnassigned( string id ) {
-            AssignedCopyPaste( this, "Life" );
-            DrawAddButtonRecurse( this, "Life", id );
+            AssignedCopyPaste( this, GetDefaultText() );
+            DrawAddButtonRecurse( this, GetDefaultText(), id );
         }
 
         public override string GetDefaultText() => "Life";

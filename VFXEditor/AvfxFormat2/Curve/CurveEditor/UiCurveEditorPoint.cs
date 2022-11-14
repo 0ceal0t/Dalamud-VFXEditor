@@ -39,7 +39,7 @@ namespace VfxEditor.AvfxFormat2 {
             };
         }
 
-        public void UpdatePosition() {
+        public void UpdateAvfxKeyPosition() {
             X = Math.Round( X ); // can only have integer time
             if( X < 0 ) X = 0;
             Key.Time = ( int )X;

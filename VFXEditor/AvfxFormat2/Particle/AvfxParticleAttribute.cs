@@ -10,12 +10,12 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxParticle Particle;
         public readonly List<UiNodeSelect> NodeSelects = new();
         public readonly List<AvfxItem> DisplayTabs;
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxParticleAttribute( string avfxName, AvfxParticle particle) : base( avfxName ) {
             Particle = particle;
             DisplayTabs = new List<AvfxItem> {
-                ( Display = new UiParameters( "Parameters" ) )
+                ( Display = new UiDisplayList( "Parameters" ) )
             };
         }
 

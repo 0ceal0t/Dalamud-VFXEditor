@@ -18,6 +18,8 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void DrawLeftCol( string parentId ) {
             foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
+                if( item is AvfxAssignable assignable ) AvfxBase.AssignedCopyPaste( assignable, assignable.GetDefaultText() );
+
                 if( ImGui.Selectable( item.GetText() + parentId, Selected == item ) ) {
                     Selected = item;
                 }

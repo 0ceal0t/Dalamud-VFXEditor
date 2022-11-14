@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
 
         public readonly UiNodeSelectList<AvfxModel> ModelSelect;
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
             Parsed = new() {
@@ -45,7 +45,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEnd
             };
 
-            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ModelSelect = new UiNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
             Display.Add( ModelNumberRandomValue );
             Display.Add( ModelNumberRandomType );

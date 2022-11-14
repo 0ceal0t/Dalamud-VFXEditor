@@ -257,6 +257,8 @@ namespace VfxEditor.AvfxFormat2 {
                 }
             }, size );
 
+            UvView.UpdateIdx();
+
             DepedencyImportInProgress = false; // if imported, all set now
         }
 

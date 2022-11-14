@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
 
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxParticleDataLine() : base() {
             Parsed = new() {
@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEnd
             };
 
-            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( LineCount );
             DisplayTabs.Add( Length );
             DisplayTabs.Add( LengthRandom );

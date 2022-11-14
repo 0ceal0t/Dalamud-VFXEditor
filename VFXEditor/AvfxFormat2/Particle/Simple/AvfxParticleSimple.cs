@@ -75,9 +75,9 @@ namespace VfxEditor.AvfxFormat2 {
 
         private readonly List<AvfxBase> Parsed;
 
-        private readonly UiParameters AnimationDisplay;
-        private readonly UiParameters TextureDisplay;
-        private readonly UiParameters ColorDisplay;
+        private readonly UiDisplayList AnimationDisplay;
+        private readonly UiDisplayList TextureDisplay;
+        private readonly UiDisplayList ColorDisplay;
 
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
@@ -167,7 +167,7 @@ namespace VfxEditor.AvfxFormat2 {
             Display.Add( CreateIntervalLife );
             Display.Add( CreateNewAfterDelete );
 
-            DisplayTabs.Add( AnimationDisplay = new UiParameters( "Animation" ) );
+            DisplayTabs.Add( AnimationDisplay = new UiDisplayList( "Animation" ) );
             AnimationDisplay.Add( new UiFloat2( "Scale Start", ScaleXStart, ScaleYStart ) );
             AnimationDisplay.Add( new UiFloat2( "Scale End", ScaleXEnd, ScaleYEnd ) );
             AnimationDisplay.Add( ScaleCurve );
@@ -185,7 +185,7 @@ namespace VfxEditor.AvfxFormat2 {
             AnimationDisplay.Add( ScaleByParent );
             AnimationDisplay.Add( PolyLineTag );
 
-            DisplayTabs.Add( TextureDisplay = new UiParameters( "Texture" ) );
+            DisplayTabs.Add( TextureDisplay = new UiDisplayList( "Texture" ) );
             TextureDisplay.Add( UvCellU );
             TextureDisplay.Add( UvCellV );
             TextureDisplay.Add( UvInterval );
@@ -193,11 +193,11 @@ namespace VfxEditor.AvfxFormat2 {
             TextureDisplay.Add( UvNoLoopCount );
             TextureDisplay.Add( UvReverse );
 
-            DisplayTabs.Add( ColorDisplay = new UiParameters( "Color" ) );
-            ColorDisplay.Add( new UiSimpleColor( this, 0 ) );
-            ColorDisplay.Add( new UiSimpleColor( this, 1 ) );
-            ColorDisplay.Add( new UiSimpleColor( this, 2 ) );
-            ColorDisplay.Add( new UiSimpleColor( this, 3 ) );
+            DisplayTabs.Add( ColorDisplay = new UiDisplayList( "Color" ) );
+            ColorDisplay.Add( new UiSimpleColor( Frames.Frame1, Colors.Color1 ) );
+            ColorDisplay.Add( new UiSimpleColor( Frames.Frame2, Colors.Color2 ) );
+            ColorDisplay.Add( new UiSimpleColor( Frames.Frame3, Colors.Color3 ) );
+            ColorDisplay.Add( new UiSimpleColor( Frames.Frame4, Colors.Color4 ) );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -210,13 +210,13 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
-            AssignedCopyPaste( this, "Simple" );
+            AssignedCopyPaste( this, GetDefaultText() );
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Simple";
-            AssignedCopyPaste( this, "Simple" );
+            AssignedCopyPaste( this, GetDefaultText() );
             if( UiUtils.RemoveButton( "Delete" + id, small: true ) ) {
                 Unassign();
                 return;

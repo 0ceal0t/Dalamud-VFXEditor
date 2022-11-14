@@ -32,7 +32,7 @@ namespace VfxEditor.AvfxFormat2 {
                 }
             }
             if( Selected != null && AllowDelete ) {
-                ImGui.SameLine();
+                if( AllowNew ) ImGui.SameLine();
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + parentId ) ) {
                     CommandManager.Avfx.Add( new UiItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }

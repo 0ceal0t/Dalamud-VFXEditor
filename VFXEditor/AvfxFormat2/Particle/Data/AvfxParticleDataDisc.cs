@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEdgeInner = new( name: "Color Edge Inner", "CEI" );
         public readonly AvfxCurveColor ColorEdgeOuter = new( name: "Color Edge Outer", "CEO" );
 
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxParticleDataDisc() : base() {
             Parsed = new() {
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEdgeOuter
             };
 
-            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( PartsCount );
             Display.Add( PartsCountU );
             Display.Add( PartsCountV );

@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat2 {
                             PointDragTime = DateTime.Now;
 
                             Selected = point;
-                            point.UpdatePosition();
+                            point.UpdateAvfxKeyPosition();
                             draggingAnyPoint = true;
                         }
 

@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat2 {
         public readonly AvfxCurveColor ColorEdgeCenter = new( name: "Color Edge Center", "CoEC" );
         public readonly AvfxCurveColor ColorEdgeEnd = new( name: "Color Edge End", "CoEE" );
 
-        public readonly UiParameters Display;
+        public readonly UiDisplayList Display;
 
         public AvfxParticleDataPolyline() : base() {
             Parsed = new() {
@@ -77,7 +77,7 @@ namespace VfxEditor.AvfxFormat2 {
                 ColorEdgeEnd
             };
 
-            DisplayTabs.Add( Display = new UiParameters( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( CreateLineType );
             Display.Add( NotBillBoardBaseAxisType );
             Display.Add( BindWeaponType );

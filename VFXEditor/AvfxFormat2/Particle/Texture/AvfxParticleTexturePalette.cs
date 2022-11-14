@@ -43,14 +43,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
-            AssignedCopyPaste( this, "Texture Palette" );
+            AssignedCopyPaste( this, GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Palette" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TP";
 
-            AssignedCopyPaste( this, "Texture Palette" );
+            AssignedCopyPaste( this, GetDefaultText() );
             IUiItem.DrawListTabs( DisplayTabs, id );
         }
 

@@ -61,14 +61,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
-            AssignedCopyPaste( this, "Texture Distortion" );
+            AssignedCopyPaste( this, GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Distortion" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TD";
 
-            AssignedCopyPaste( this, "Texture Distortion" );
+            AssignedCopyPaste( this, GetDefaultText() );
             IUiItem.DrawListTabs( DisplayTabs, id );
         }
 

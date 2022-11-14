@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat2 {
             }
 
             if( selected != null && allowDelete ) {
-                ImGui.SameLine();
+                if( allowNew ) ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + id ) ) {
                     file.ShowExportDialog( selected );

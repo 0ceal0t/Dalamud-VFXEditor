@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -255,9 +256,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public static void AssignedCopyPaste<T>( T assignable, string name ) where T : AvfxBase {
             var copyManager = CopyManager.Avfx;
-            if( copyManager.IsCopying ) {
-                copyManager.Assigned[name] = assignable.IsAssigned();
-            }
+            if( copyManager.IsCopying ) copyManager.Assigned[name] = assignable.IsAssigned();
             if( copyManager.IsPasting ) {
                 if( copyManager.Assigned.TryGetValue( name, out var a ) ) copyManager.PasteCommand.Add( new UiAssignableCommand( assignable, a ) );
             }

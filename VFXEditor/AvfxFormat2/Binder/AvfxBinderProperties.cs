@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         private readonly List<AvfxBase> Parsed;
 
-        private readonly UiParameters Display;
+        private readonly UiDisplayList Display;
         private readonly List<IUiItem> DisplayTabs;
 
         private static readonly Dictionary<int, string> BinderIds = new() {
@@ -82,7 +82,7 @@ namespace VfxEditor.AvfxFormat2 {
             Position.SetAssigned( true );
 
             DisplayTabs = new() {
-                ( Display = new UiParameters( "Parameters" ) ),
+                ( Display = new UiDisplayList( "Parameters" ) ),
                 Position
             };
             Display.Add( BindPointType );
