@@ -39,6 +39,7 @@
 
     <PropertyGroup>
         <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+        <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -180,5 +181,9 @@
 
     <ItemGroup>
       <Folder Include="Command\Components\" />
+      <Folder Include="Parsing\Enum\" />
+      <Folder Include="Parsing\Float2\" />
+      <Folder Include="Parsing\Float4\" />
+      <Folder Include="Parsing\Int3\" />
     </ItemGroup>
 </Project>

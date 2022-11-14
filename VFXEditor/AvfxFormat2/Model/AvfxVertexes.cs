@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VfxEditor.AVFXLib;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxVertexes : AvfxBase {
@@ -34,21 +33,21 @@ namespace VfxEditor.AvfxFormat2 {
         public AvfxVertex() { }
 
         public AvfxVertex( BinaryReader reader ) {
-            for( var i = 0; i < 4; i++ ) Position[i] = AVFXBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
+            for( var i = 0; i < 4; i++ ) Position[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
             for( var i = 0; i < 4; i++ ) Normal[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Tangent[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Color[i] = reader.ReadByte();
-            for( var i = 0; i < 4; i++ ) UV1[i] = AVFXBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
-            for( var i = 0; i < 4; i++ ) UV2[i] = AVFXBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
+            for( var i = 0; i < 4; i++ ) UV1[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
+            for( var i = 0; i < 4; i++ ) UV2[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
         }
 
         public void Write( BinaryWriter writer ) {
-            for( var i = 0; i < 4; i++ ) writer.Write( AVFXBase.FloatTo2Bytes( Position[i] ) );
+            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( Position[i] ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Normal[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Tangent[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )Color[i] );
-            for( var i = 0; i < 4; i++ ) writer.Write( AVFXBase.FloatTo2Bytes( UV1[i] ) );
-            for( var i = 0; i < 4; i++ ) writer.Write( AVFXBase.FloatTo2Bytes( UV2[i] ) );
+            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( UV1[i] ) );
+            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( UV2[i] ) );
         }
     }
 }

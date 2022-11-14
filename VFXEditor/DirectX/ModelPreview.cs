@@ -211,7 +211,7 @@ namespace VfxEditor.DirectX {
                 var data = new Vector4[modelEmitters.Count * EmitInstanceSpan];
                 for( var index = 0; index < modelEmitters.Count; index++ ) {
                     var emitter = modelEmitters[index];
-                    data[index] = new Vector4( emitter.Vertex.Position.X, emitter.Vertex.Position.Y, emitter.Vertex.Position.Z, 0 );
+                    data[index] = new Vector4( emitter.Position.X, emitter.Position.Y, emitter.Position.Z, 0 );
                 }
 
                 EmitInstances?.Dispose();

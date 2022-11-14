@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using VfxEditor.AvfxFormat.Vfx;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {

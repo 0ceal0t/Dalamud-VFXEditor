@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Numerics;
 
-using VfxEditor.AvfxFormat.Vfx;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;

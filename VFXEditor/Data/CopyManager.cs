@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AVFXLib;
 
 namespace VfxEditor.Data {
     public class CopyManager {

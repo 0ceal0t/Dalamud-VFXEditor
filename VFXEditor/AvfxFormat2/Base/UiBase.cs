@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public interface IUiBase {

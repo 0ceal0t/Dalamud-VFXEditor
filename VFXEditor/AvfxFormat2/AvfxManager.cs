@@ -1,5 +1,4 @@
 using ImGuiNET;
-using VfxEditor.AvfxFormat.Vfx;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.NodeLibrary;

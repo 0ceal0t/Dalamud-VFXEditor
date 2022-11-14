@@ -4,14 +4,14 @@ using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AVFXLib.Model;
+using VfxEditor.AvfxFormat2;
 
 namespace VfxEditor.Utils {
     public static class MdlUtils {
-        public static bool ImportModel( string localPath, out List<AVFXVertex> vertexesOut, out List<AVFXIndex> indexesOut ) {
-            vertexesOut = new List<AVFXVertex>();
-            indexesOut = new List<AVFXIndex>();
-            var d = File.ReadAllBytes( localPath );
+        public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
+            vertexesOut = new List<AvfxVertex>();
+            indexesOut = new List<AvfxIndex>();
+            //var d = File.ReadAllBytes( localPath );
             if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
@@ -48,7 +48,7 @@ namespace VfxEditor.Utils {
                 }
                 for (var triangleIdx = 0; triangleIdx < (mesh.Indices.Length / 3); triangleIdx++ ) {
                     var idx = triangleIdx * 3;
-                    indexesOut.Add( new AVFXIndex( 
+                    indexesOut.Add( new AvfxIndex( 
                         idxStart + mesh.Indices[idx],
                         idxStart + mesh.Indices[idx + 1],
                         idxStart + mesh.Indices[idx + 2] 
@@ -59,8 +59,8 @@ namespace VfxEditor.Utils {
             return true;
         }
 
-        private static AVFXVertex GetAvfxVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
-            var ret = new AVFXVertex();
+        private static AvfxVertex GetAvfxVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+            var ret = new AvfxVertex();
             color *= 255;
             normal *= 128;
             tangent *= 128;

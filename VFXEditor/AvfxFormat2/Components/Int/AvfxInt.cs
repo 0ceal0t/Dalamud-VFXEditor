@@ -1,47 +1,36 @@
 using ImGuiNET;
 using System.IO;
 using VfxEditor;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxInt : AvfxDrawable {
-        public readonly string Name;
-        private int Size;
-        private int Value = 0;
+        public readonly ParsedInt Parsed;
 
         public AvfxInt( string name, string avfxName, int size = 4 ) : base( avfxName ) {
-            Name = name;
-            Size = size;
+            Parsed = new( name, size );
         }
 
-        public int GetValue() => Value;
+        public int GetValue() => Parsed.Value;
 
         public void SetValue( int value ) {
             SetAssigned( true );
-            Value = value;
+            Parsed.Value = value;
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            Size = size;
-            Value = Size == 4 ? reader.ReadInt32() : reader.ReadByte();
-        }
+        public override void ReadContents( BinaryReader reader, int size ) => Parsed.Read( reader, size );
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            if( Size == 4 ) writer.Write( Value );
-            else writer.Write( ( byte )Value );
-        }
+        protected override void WriteContents( BinaryWriter writer ) => Parsed.Write( writer );
 
         public override void Draw( string id ) {
             // Unassigned
-            if( DrawAddButton( this, Name, id ) ) return;
+            if( DrawAddButton( this, Parsed.Name, id ) ) return;
 
-            var value = Value;
-            if( ImGui.InputInt( Name + id, ref value ) ) {
-                CommandManager.Avfx.Add( new AvfxIntCommand( this, value ) );
-            }
+            Parsed.Draw( id, CommandManager.Avfx );
 
-            DrawRemoveContextMenu( this, Name, id );
+            DrawRemoveContextMenu( this, Parsed.Name, id );
         }
     }
 }

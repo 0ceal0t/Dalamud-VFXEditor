@@ -12,6 +12,6 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Enable( UiEmitVertex item ) { }
 
-        public override UiEmitVertex CreateNewAvfx() => new UiEmitVertex( new AvfxEmitVertex(), new AvfxVertexNumber( 0 ) );
+        public override UiEmitVertex CreateNewAvfx() => new UiEmitVertex( new AvfxEmitVertex(), new AvfxVertexNumber() );
     }
 }

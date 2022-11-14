@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class UiTimelineItemSequencer : ImGuiSequencer<AvfxTimelineSubItem> {
@@ -23,7 +24,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override bool IsEnabled( AvfxTimelineSubItem item ) => item.Enabled.GetValue() == true;
 
-        public override void Toggle( AvfxTimelineSubItem item ) => CommandManager.Avfx.Add( new AvfxBoolCommand( item.Enabled, !IsEnabled( item ) ) );
+        public override void Toggle( AvfxTimelineSubItem item ) => CommandManager.Avfx.Add( new ParsedBoolCommand( item.Enabled.Parsed, !IsEnabled( item ) ) );
 
         public override void SetPos( AvfxTimelineSubItem item, int start, int end ) {
             item.StartTime.SetValue( start );

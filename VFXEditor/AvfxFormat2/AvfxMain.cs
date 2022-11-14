@@ -274,8 +274,10 @@ namespace VfxEditor.AvfxFormat2 {
             ImGui.PopStyleColor();
 
             if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
-                CommandManager.Avfx.Add( new UiFloat3Command( RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ, new Vector3( ScaleCombined ) ) );
-            }
+                RevisedValuesScaleX.SetValue( ScaleCombined );
+                RevisedValuesScaleY.SetValue( ScaleCombined );
+                RevisedValuesScaleZ.SetValue( ScaleCombined );
+            };
 
             IUiBase.DrawList( Display, id );
             ImGui.Text( $"VFX Version: {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );

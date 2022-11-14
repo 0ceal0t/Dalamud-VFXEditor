@@ -2,56 +2,36 @@ using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxBool : AvfxDrawable {
-        public readonly string Name;
-        private int Size;
-        private bool? Value = false;
+        public readonly ParsedBool Parsed;
 
         public AvfxBool( string name, string avfxName, int size = 4 ) : base( avfxName ) {
-            Name = name;
-            Size = size;
+            Parsed = new( name, size );
         }
 
-        public bool? GetValue() => Value;
+        public bool? GetValue() => Parsed.Value;
 
         public void SetValue( bool? value ) {
             SetAssigned( true );
-            Value = value;
+            Parsed.Value = value;
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            var b = reader.ReadByte();
-            Value = b switch {
-                0x00 => false,
-                0x01 => true,
-                0xff => null,
-                _ => null
-            };
-            Size = size;
-        }
+        public override void ReadContents( BinaryReader reader, int size ) => Parsed.Read( reader, size );
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            byte v = Value switch {
-                true => 0x01,
-                false => 0x00,
-                null => 0xff
-            };
-            writer.Write( v );
-            WritePad( writer, Size - 1 );
-        }
+        protected override void WriteContents( BinaryWriter writer ) => Parsed.Write( writer );
 
         public override void Draw( string id ) {
             // Unassigned
-            if( DrawAddButton( this, Name, id ) ) return;
+            if( DrawAddButton( this, Parsed.Name, id ) ) return;
 
-            var value = Value == true;
-            if( ImGui.Checkbox( Name + id, ref value ) ) CommandManager.Avfx.Add( new AvfxBoolCommand( this, value ) );
+            Parsed.Draw( id, CommandManager.Avfx );
 
-            DrawRemoveContextMenu( this, Name, id );
+            DrawRemoveContextMenu( this, Parsed.Name, id );
         }
     }
 }

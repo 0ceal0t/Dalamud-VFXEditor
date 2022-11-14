@@ -68,7 +68,3 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - Model emit vertex
 - Simple particle color/frames
 - Curve key
-
-
-- Import, export, node library
-- double-check import (HasDependencies)

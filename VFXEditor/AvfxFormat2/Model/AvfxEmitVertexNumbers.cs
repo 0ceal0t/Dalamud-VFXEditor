@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VfxEditor.AVFXLib.Model;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxEmitVertexNumbers : AvfxBase {
@@ -24,18 +24,12 @@ namespace VfxEditor.AvfxFormat2 {
     }
 
     public class AvfxVertexNumber {
-        public int Num;
+        public readonly ParsedInt Number = new( "Order", size: 2 );
 
-        public AvfxVertexNumber( int num ) {
-            Num = num;
-        }
+        public AvfxVertexNumber() { }
 
-        public AvfxVertexNumber( BinaryReader reader ) {
-            Num = reader.ReadInt16();
-        }
+        public AvfxVertexNumber( BinaryReader reader ) => Number.Read( reader, 2 );
 
-        public void Write( BinaryWriter writer ) {
-            writer.Write( ( short )Num );
-        }
+        public void Write( BinaryWriter writer ) => Number.Write( writer );
     }
 }

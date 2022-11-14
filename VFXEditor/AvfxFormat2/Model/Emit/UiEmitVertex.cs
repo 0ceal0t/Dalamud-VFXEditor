@@ -1,15 +1,15 @@
 using ImGuiNET;
-using SharpDX.Direct2D1.Effects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace VfxEditor.AvfxFormat2 {
     public class UiEmitVertex : GenericSelectableItem {
         public readonly AvfxEmitVertex Vertex;
         public readonly AvfxVertexNumber Number;
+
+        public Vector3 Position => Vertex.Position.Value;
+        public Vector3 Normal => Vertex.Normal.Value;
+        public int Order => Number.Number.Value;
 
         public UiEmitVertex( AvfxEmitVertex vertex, AvfxVertexNumber number ) {
             Vertex = vertex;
@@ -19,9 +19,9 @@ namespace VfxEditor.AvfxFormat2 {
         public override void Draw( string parentId ) {
             var id = parentId + "/Vnum";
 
-            ImGui.InputInt( "Order" + id, ref Number.Num );
-            ImGui.InputFloat3( "Position" + id, ref Vertex.Position );
-            ImGui.InputFloat3( "Normal" + id, ref Vertex.Normal );
+            Number.Number.Draw( id, CommandManager.Avfx );
+            Vertex.Position.Draw( id, CommandManager.Avfx );
+            Vertex.Normal.Draw( id, CommandManager.Avfx );
             ImGui.ColorEdit4( "Color" + id, ref Vertex.Color );
         }
 

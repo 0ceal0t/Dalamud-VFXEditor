@@ -6,44 +6,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxFloat : AvfxDrawable {
-        public readonly string Name;
-
-        private float Value = 0.0f;
+        public readonly ParsedFloat Parsed;
 
         public AvfxFloat( string name, string avfxName ) : base( avfxName ) {
-            Name = name;
+            Parsed = new( name );
         }
 
-        public float GetValue() => Value;
+        public float GetValue() => Parsed.Value;
 
         public void SetValue( float value ) {
             SetAssigned( true );
-            Value = value;
+            Parsed.Value = value;
         }
 
-        public override void ReadContents( BinaryReader reader, int _ ) {
-            Value = reader.ReadSingle();
-        }
+        public override void ReadContents( BinaryReader reader, int _ ) => Parsed.Read( reader, _ );
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            writer.Write( Value );
-        }
+        protected override void WriteContents( BinaryWriter writer ) => Parsed.Write( writer );
 
         public override void Draw( string id ) {
             // Unassigned
-            if( DrawAddButton( this, Name, id ) ) return;
+            if( DrawAddButton( this, Parsed.Name, id ) ) return;
 
-            var value = Value;
-            if( ImGui.InputFloat( Name + id, ref value ) ) {
-                CommandManager.Avfx.Add( new AvfxFloatCommand( this, value ) );
-            }
+            Parsed.Draw( id, CommandManager.Avfx );
 
-            DrawRemoveContextMenu( this, Name, id );
+            DrawRemoveContextMenu( this, Parsed.Name, id );
         }
     }
 }

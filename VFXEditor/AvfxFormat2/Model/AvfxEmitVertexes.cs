@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxEmitVertexes : AvfxBase {
@@ -24,20 +25,15 @@ namespace VfxEditor.AvfxFormat2 {
     }
 
     public class AvfxEmitVertex {
-        public Vector3 Position = new( 0 );
-        public Vector3 Normal = new( 0 );
+        public readonly ParsedFloat3 Position = new( "Position" );
+        public readonly ParsedFloat3 Normal = new( "Normal" );
         public Vector4 Color = new( 0 );
 
         public AvfxEmitVertex() { }
 
         public AvfxEmitVertex( BinaryReader reader ) {
-            Position.X = reader.ReadSingle();
-            Position.Y = reader.ReadSingle();
-            Position.Z = reader.ReadSingle();
-
-            Normal.X = reader.ReadSingle();
-            Normal.Y = reader.ReadSingle();
-            Normal.Z = reader.ReadSingle();
+            Position.Read( reader, 0 );
+            Normal.Read( reader, 0 );
 
             Color.X = reader.ReadByte() / 255f;
             Color.Y = reader.ReadByte() / 255f;
@@ -46,13 +42,8 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public void Write( BinaryWriter writer ) {
-            writer.Write( Position.X );
-            writer.Write( Position.Y );
-            writer.Write( Position.Z );
-
-            writer.Write( Normal.X );
-            writer.Write( Normal.Y );
-            writer.Write( Normal.Z );
+            Position.Write( writer );
+            Normal.Write( writer );
 
             writer.Write( ( byte )( Color.X * 255f) );
             writer.Write( ( byte )( Color.Y * 255f ) );
