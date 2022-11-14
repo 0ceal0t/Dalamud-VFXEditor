@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
-    public class AvfxFile {
+    public partial class AvfxFile {
         public readonly AvfxMain Main;
         public readonly CommandManager Command = new();
 
@@ -118,38 +118,6 @@ namespace VfxEditor.AvfxFormat2 {
         public Dictionary<string, string> GetRenamingMap() => NodeGroupSet.GetRenamingMap();
 
         public void ReadRenamingMap( Dictionary<string, string> renamingMap ) => NodeGroupSet.ReadRenamingMap( renamingMap );
-
-        // ========== EXPORT =================
-
-        public void AddToNodeLibrary( AvfxNode node ) {
-            var newId = UiUtils.RandomString( 12 );
-            var newPath = AvfxManager.NodeLibrary.GetPath( newId );
-            Export( node, newPath, true );
-            AvfxManager.NodeLibrary.Add( node.GetText(), newId, newPath );
-        }
-
-        public void Export( AvfxNode node, string path, bool exportDependencies ) => Export( new List<AvfxNode> { node }, path, exportDependencies );
-
-        public void Export( List<AvfxNode> nodes, string path, bool exportDependencies ) {
-            // TODO
-        }
-
-        public byte[] ToBytes() {
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-            Main.Write( writer );
-            return ms.ToArray();
-        }
-
-        // ========= IMPORT ===========
-
-        public void Import( string path ) {
-            // TODO
-        }
-
-        public void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
-            // TODO
-        }
 
         // =====================
 

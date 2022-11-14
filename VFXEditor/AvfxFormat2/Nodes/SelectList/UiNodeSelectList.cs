@@ -33,7 +33,7 @@ namespace VfxEditor.AvfxFormat2 {
         public override void Initialize() {
             for( var i = 0; i < Literal.GetValue().Count; i++ ) {
                 var value = Literal.GetValue()[i];
-                if( Node.HasDependencies && value != 255 && value >= 0 ) {
+                if( Node.DepedencyImportInProgress && value != 255 && value >= 0 ) {
                     value += Group.PreImportSize;
                     Literal.SetValue( value, i );
                 }

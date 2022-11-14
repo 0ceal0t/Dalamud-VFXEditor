@@ -41,8 +41,6 @@ namespace VfxEditor.AvfxFormat2 {
             NodeView = new( this );
             UvView = new UiModelUvView();
             EmitSplitDisplay = new( CombinedEmitVertexes );
-
-            HasDependencies = false;
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -54,6 +52,8 @@ namespace VfxEditor.AvfxFormat2 {
                 CombinedEmitVertexes.Add( new UiEmitVertex( EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
             }
             EmitSplitDisplay.UpdateIdx();
+
+            DepedencyImportInProgress = false;
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );

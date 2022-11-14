@@ -238,7 +238,6 @@ namespace VfxEditor.AvfxFormat2 {
             };
 
             NodeView = new UiNodeGraphView( this );
-            HasDependencies = false; // if imported, all set now
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -257,6 +256,8 @@ namespace VfxEditor.AvfxFormat2 {
                     UvSets.Add( uvSet );
                 }
             }, size );
+
+            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {

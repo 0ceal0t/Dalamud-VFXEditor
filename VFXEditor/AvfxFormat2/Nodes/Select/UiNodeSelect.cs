@@ -79,7 +79,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Initialize() {
             var value = Literal.GetValue();
-            if( Node.HasDependencies && value >= 0 ) {
+            if( Node.DepedencyImportInProgress && value >= 0 ) {
                 value += Group.PreImportSize;
                 Literal.SetValue( value );
             }

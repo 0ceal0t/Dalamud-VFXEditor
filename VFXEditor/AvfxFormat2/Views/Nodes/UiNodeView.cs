@@ -17,6 +17,8 @@ namespace VfxEditor.AvfxFormat2 {
         public bool IsAllowedNew();
         public bool IsAllowedDelete();
 
+        public T Read( BinaryReader reader, int size, bool hasDependencies );
+
         public void ResetSelected();
 
         public static void DrawControls( IUiNodeView<T> view, AvfxFile file, string id ) {

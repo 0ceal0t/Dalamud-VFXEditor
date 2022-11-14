@@ -31,6 +31,8 @@ namespace VfxEditor.AvfxFormat2 {
 
         public abstract void OnSelect( T item );
 
+        public abstract T Read( BinaryReader reader, int size, bool hasDependencies );
+
         public override void DrawControls( string parentId ) => IUiNodeView<T>.DrawControls( this, File, parentId );
 
         public override void DrawLeftCol( string parentId ) {

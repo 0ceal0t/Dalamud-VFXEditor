@@ -33,8 +33,6 @@ namespace VfxEditor.AvfxFormat2 {
 
             ItemSplit = new( Items, this, true );
             TriggerSplit = new( Triggers, this, false );
-
-            HasDependencies = false;
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -65,6 +63,8 @@ namespace VfxEditor.AvfxFormat2 {
 
             ItemSplit.UpdateIdx();
             TriggerSplit.UpdateIdx();
+
+            DepedencyImportInProgress = false;
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );

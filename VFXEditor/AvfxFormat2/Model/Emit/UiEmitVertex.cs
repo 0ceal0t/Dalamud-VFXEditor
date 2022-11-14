@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace VfxEditor.AvfxFormat2 {
     public class UiEmitVertex : GenericSelectableItem {
-        public readonly AvfxEmiterVertex Vertex;
+        public readonly AvfxEmitVertex Vertex;
         public readonly AvfxVertexNumber Number;
 
-        public UiEmitVertex( AvfxEmiterVertex vertex, AvfxVertexNumber number ) {
+        public UiEmitVertex( AvfxEmitVertex vertex, AvfxVertexNumber number ) {
             Vertex = vertex;
             Number = number;
         }

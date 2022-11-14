@@ -33,6 +33,8 @@ namespace VfxEditor.AvfxFormat2 {
 
         public abstract void OnSelect( T item );
 
+        public abstract T Read( BinaryReader reader, int size, bool hasDependencies );
+
         public void Draw( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();

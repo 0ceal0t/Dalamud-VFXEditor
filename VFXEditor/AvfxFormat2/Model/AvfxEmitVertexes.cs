@@ -8,12 +8,12 @@ using System.Numerics;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxEmitVertexes : AvfxBase {
-        public readonly List<AvfxEmiterVertex> EmitVertexes = new();
+        public readonly List<AvfxEmitVertex> EmitVertexes = new();
 
         public AvfxEmitVertexes() : base( "VEmt" ) { }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for( var i = 0; i < size / 28; i++ ) EmitVertexes.Add( new AvfxEmiterVertex( reader ) );
+            for( var i = 0; i < size / 28; i++ ) EmitVertexes.Add( new AvfxEmitVertex( reader ) );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
@@ -23,14 +23,14 @@ namespace VfxEditor.AvfxFormat2 {
         }
     }
 
-    public class AvfxEmiterVertex {
+    public class AvfxEmitVertex {
         public Vector3 Position = new( 0 );
         public Vector3 Normal = new( 0 );
         public Vector4 Color = new( 0 );
 
-        public AvfxEmiterVertex() { }
+        public AvfxEmitVertex() { }
 
-        public AvfxEmiterVertex( BinaryReader reader ) {
+        public AvfxEmitVertex( BinaryReader reader ) {
             Position.X = reader.ReadSingle();
             Position.Y = reader.ReadSingle();
             Position.Z = reader.ReadSingle();

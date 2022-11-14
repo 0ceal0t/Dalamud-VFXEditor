@@ -12,13 +12,13 @@ namespace VfxEditor.AvfxFormat2 {
         public List<AvfxNode> ChildNodes = new();
         public List<UiNodeSelect> Parents = new();
         public List<UiNodeSelect> Selectors = new();
-        public bool HasDependencies;
+        public bool DepedencyImportInProgress;
         public bool IsDeleted = false;
         public UiNodeGraph Graph = null;
 
         public AvfxNode( string avfxName, uint graphColor, bool hasDependencies ) : base( avfxName ) {
             GraphColor = graphColor;
-            HasDependencies = hasDependencies;
+            DepedencyImportInProgress = hasDependencies;
         }
 
         public void Disconnect() {
