@@ -25,7 +25,7 @@ namespace VfxEditor.PapFormat {
             SkeletonType.DemiHuman
         };
 
-        public readonly CommandManager Command = new();
+        public readonly CommandManager Command = new( Data.CopyManager.Pap );
         private readonly string HkxTempLocation;
 
         private short ModelId;

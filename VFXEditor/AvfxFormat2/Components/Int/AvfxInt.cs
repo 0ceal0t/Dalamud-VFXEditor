@@ -1,6 +1,5 @@
 using ImGuiNET;
 using System.IO;
-using VfxEditor;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -26,6 +25,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Draw( string id ) {
             // Unassigned
+            AssignedCopyPaste( this, Parsed.Name );
             if( DrawAddButton( this, Parsed.Name, id ) ) return;
 
             Parsed.Draw( id, CommandManager.Avfx );

@@ -2,7 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxIntList : AvfxDrawable {
@@ -60,6 +59,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Draw( string id ) {
             // Unassigned
+            AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
 
             var value = Value[0];

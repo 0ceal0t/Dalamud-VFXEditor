@@ -9,6 +9,7 @@ namespace VfxEditor.AvfxFormat2 {
         public static VfxSelectDialog SourceSelect { get; private set; }
         public static VfxSelectDialog ReplaceSelect { get; private set; }
         public static AvfxNodeLibrary NodeLibrary { get; private set; }
+        public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
             SourceSelect = new VfxSelectDialog(
@@ -62,8 +63,8 @@ namespace VfxEditor.AvfxFormat2 {
             if( CurrentFile == null ) return;
 
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Copy();
-                if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Paste();
+                if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Avfx.Copy();
+                if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Avfx.Paste();
                 CommandManager.Avfx.Draw();
 
                 if( ImGui.BeginMenu( "Templates##Menu" ) ) {

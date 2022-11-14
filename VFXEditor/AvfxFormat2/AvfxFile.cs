@@ -12,7 +12,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat2 {
     public partial class AvfxFile {
         public readonly AvfxMain Main;
-        public readonly CommandManager Command = new();
+        public readonly CommandManager Command = new( Data.CopyManager.Avfx );
 
         public readonly UiEffectorView EffectorView;
         public readonly UiEmitterView EmitterView;

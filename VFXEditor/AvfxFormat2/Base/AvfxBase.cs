@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using VfxEditor;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -60,7 +61,6 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         protected abstract void WriteContents( BinaryWriter writer );
-
 
         // ===== STATIC PARSING =====
 
@@ -251,6 +251,16 @@ namespace VfxEditor.AvfxFormat2 {
                 return true;
             }
             return false;
+        }
+
+        public static void AssignedCopyPaste<T>( T assignable, string name ) where T : AvfxBase {
+            var copyManager = CopyManager.Avfx;
+            if( copyManager.IsCopying ) {
+                copyManager.Assigned[name] = assignable.IsAssigned();
+            }
+            if( copyManager.IsPasting ) {
+                if( copyManager.Assigned.TryGetValue( name, out var a ) ) copyManager.PasteCommand.Add( new UiAssignableCommand( assignable, a ) );
+            }
         }
     }
 }

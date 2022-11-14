@@ -2,10 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -55,10 +51,14 @@ namespace VfxEditor.AvfxFormat2 {
             WriteNested( writer, Parsed );
         }
 
-        public override void DrawUnassigned( string parentId ) => DrawAddButtonRecurse( this, Name, parentId );
+        public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, Name );
+            DrawAddButtonRecurse( this, Name, parentId );
+        }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
+            AssignedCopyPaste( this, Name );
             if( !Locked && DrawRemoveButton( this, Name, id ) ) return;
             IUiBase.DrawList( Display, id );
             CurveEditor.Draw( id );

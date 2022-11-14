@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -52,11 +49,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, "Texture Normal" );
             if( ImGui.SmallButton( "+ Texture Normal" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TN";
+
+            AssignedCopyPaste( this, "Texture Normal" );
             IUiItem.DrawListTabs( DisplayTabs, id );
         }
 

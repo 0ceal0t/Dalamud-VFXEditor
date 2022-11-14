@@ -3,10 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -48,6 +45,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Draw( string id ) {
             // Unassigned
+            AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
 
             var style = ImGui.GetStyle();

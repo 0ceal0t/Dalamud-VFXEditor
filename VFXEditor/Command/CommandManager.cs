@@ -1,16 +1,24 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Data;
 
 namespace VfxEditor {
     public class CommandManager {
+        private static readonly int MAX = 10;
+
         public static CommandManager Avfx => Plugin.AvfxManager.CurrentFile?.Command;
         public static CommandManager Tmb => Plugin.TmbManager.CurrentFile?.Command;
         public static CommandManager Pap => Plugin.PapManager.CurrentFile?.Command;
 
         private readonly List<ICommand> CommandBuffer = new();
         private int CommandIndex;
-        private static readonly int MAX = 10;
+
+        public readonly CopyManager Copy;
+
+        public CommandManager( CopyManager copy ) {
+            Copy = copy;
+        }
 
         public void Add(ICommand command) {
             var numberToRemove = CommandBuffer.Count - 1 - CommandIndex; // when a change is made, wipes out the previous undo

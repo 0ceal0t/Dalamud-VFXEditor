@@ -33,8 +33,8 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public override void CheckKeybinds() {
-            if( Plugin.Configuration.CopyVfxKeybind.KeyPressed() ) CopyManager.Copy();
-            if( Plugin.Configuration.PasteVfxKeybind.KeyPressed() ) CopyManager.Paste();
+            if( Plugin.Configuration.CopyVfxKeybind.KeyPressed() ) CopyManager.Avfx.Copy();
+            if( Plugin.Configuration.PasteVfxKeybind.KeyPressed() ) CopyManager.Avfx.Paste();
 
             if( Plugin.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
                 Plugin.RemoveSpawn();

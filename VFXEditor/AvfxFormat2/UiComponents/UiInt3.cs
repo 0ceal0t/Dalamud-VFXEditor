@@ -16,6 +16,9 @@ namespace VfxEditor.AvfxFormat2 {
 
         public void Draw( string id ) {
             // Unassigned
+            AvfxBase.AssignedCopyPaste( Literals[0], $"{Parsed.Name}_1" );
+            AvfxBase.AssignedCopyPaste( Literals[1], $"{Parsed.Name}_2" );
+            AvfxBase.AssignedCopyPaste( Literals[2], $"{Parsed.Name}_3" );
             if( AvfxBase.DrawAddButton( Literals, Parsed.Name, id ) ) return;
 
             Parsed.Draw( id, CommandManager.Avfx );

@@ -67,12 +67,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, Name );
             if( ImGui.SmallButton( "+ " + Name + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
 
+            AssignedCopyPaste( this, Name );
             if( AvfxName != "TC2" && UiUtils.RemoveButton( "Delete " + Name + id, small: true ) ) {
                 Unassign();
                 return;

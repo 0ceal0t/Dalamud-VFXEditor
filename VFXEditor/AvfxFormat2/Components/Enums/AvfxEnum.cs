@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using VfxEditor;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -37,6 +36,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void Draw( string id ) {
             // Unassigned
+            AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
 
             var text = Options.Contains( Value ) ? Value.ToString() : "[NONE]";

@@ -59,6 +59,8 @@ namespace VfxEditor.AvfxFormat2 {
                 }
                 ImGui.EndCombo();
             }
+            
+            // ====== KILL ============
 
             if( type == "LLIK" ) {
                 var duration = UnknownInts[0];
@@ -89,6 +91,8 @@ namespace VfxEditor.AvfxFormat2 {
                     } ) );
                 }
             }
+
+            // ======================
 
             var rawInts = new Vector4( UnknownInts[0], UnknownInts[1], UnknownInts[2], UnknownInts[3] );
             if( ImGui.InputFloat4( "Raw Integers" + id, ref rawInts ) ) {

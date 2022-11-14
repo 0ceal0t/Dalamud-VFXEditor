@@ -2,7 +2,6 @@ using ImGuiNET;
 using ImPlotNET;
 using System;
 using System.Numerics;
-using VfxEditor;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 

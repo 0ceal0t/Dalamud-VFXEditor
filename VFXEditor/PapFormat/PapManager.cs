@@ -8,6 +8,7 @@ namespace VfxEditor.PapFormat {
         public static PapSelectDialog SourceSelect { get; private set; }
         public static PapSelectDialog ReplaceSelect { get; private set; }
         public static PapSelectIndexDialog IndexDialog { get; private set; }
+        public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
             SourceSelect = new PapSelectDialog(

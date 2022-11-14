@@ -20,6 +20,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         public void Draw( string id ) {
             // Unassigned
+            AvfxBase.AssignedCopyPaste( Literal, Name );
             if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
 
             var value = Literal.GetValue();

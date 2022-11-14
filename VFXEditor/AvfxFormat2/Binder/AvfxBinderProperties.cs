@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -106,10 +103,15 @@ namespace VfxEditor.AvfxFormat2 {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) => DrawAddButtonRecurse( this, Name, parentId );
+        public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, Name );
+            DrawAddButtonRecurse( this, Name, parentId );
+        }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/" + Name;
+
+            AssignedCopyPaste( this, Name );
             DrawRemoveButton( this, Name, id );
 
             IUiItem.DrawListTabs( DisplayTabs, id );

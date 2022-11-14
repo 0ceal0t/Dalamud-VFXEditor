@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 
@@ -213,11 +210,13 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, "Simple" );
             if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Simple";
+            AssignedCopyPaste( this, "Simple" );
             if( UiUtils.RemoveButton( "Delete" + id, small: true ) ) {
                 Unassign();
                 return;

@@ -120,8 +120,6 @@ namespace VfxEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
-
-            //Data.Scd.ScdFile.Test();
         }
 
         public static void CheckClearKeyState() {
@@ -173,7 +171,7 @@ namespace VfxEditor {
             RemoveSpawn();
 
             FileDialogManager.Dispose();
-            CopyManager.Dispose();
+            CopyManager.DisposeAll();
         }
     }
 }

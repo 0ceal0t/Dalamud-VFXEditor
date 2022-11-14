@@ -1,67 +1,90 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.AvfxFormat2;
+using VfxEditor.PapFormat;
+using VfxEditor.TmbFormat;
 
 namespace VfxEditor.Data {
     public class CopyManager {
-        public static bool IsCopying { get; private set; }
-        public static bool IsPasting { get; private set; }
+        public static CopyManager Avfx => AvfxManager.Copy;
+        public static CopyManager Tmb => TmbManager.Copy;
+        public static CopyManager Pap => PapManager.Copy;
 
-        public static readonly List<Vector4> CurveKeys = new();
+        public bool IsCopying { get; private set; }
+        public bool IsPasting { get; private set; }
 
-        public static readonly Dictionary<string, bool> Assigned = new();
-        public static readonly Dictionary<string, bool> Bools = new();
-        public static readonly Dictionary<string, int> Ints = new();
-        public static readonly Dictionary<string, float> Floats = new();
-        public static readonly Dictionary<string, string> Strings = new();
-        public static readonly Dictionary<string, string> Enums = new();
+        public readonly Dictionary<string, bool> Assigned = new();
+        public readonly Dictionary<string, bool> Bools = new();
+        public readonly Dictionary<string, int> Ints = new();
+        public readonly Dictionary<string, float> Floats = new();
+        public readonly Dictionary<string, string> Strings = new();
+        public readonly Dictionary<string, string> Enums = new();
+        public readonly List<Vector4> CurveKeys = new();
+        public CompoundCommand PasteCommand { get; private set; } = new( false, true );
 
-        public static CompoundCommand PasteCommand { get; private set; } = new(false, true);
+        public CopyManager() { }
 
-        public static void Reset() {
+        public void Reset() {
             IsCopying = false;
             IsPasting = false;
         }
 
-        public static void Copy() {
+        public void Copy() {
             Clear();
             IsCopying = true;
         }
 
-        public static void Paste() {
+        public void Paste() {
             IsPasting = true;
         }
 
-        public static void FinalizePaste() {
+        public void FinalizePaste( CommandManager manager ) {
             if( !IsPasting ) return;
             Clear();
-            CommandManager.Avfx?.Add( PasteCommand );
-            PasteCommand = new( false, true );
+            manager.Add( PasteCommand ); // execute
+            PasteCommand = new( false, true ); // reset
         }
 
-        public static void ClearCurveKeys() {
-            CurveKeys.Clear();
-        }
+        public void ClearCurveKeys() => CurveKeys.Clear();
 
-        public static void AddCurveKey( float time, float x, float y, float z ) {
-            CurveKeys.Add( new Vector4( time, x, y, z ) );
-        }
+        public void AddCurveKey( float time, float x, float y, float z ) => CurveKeys.Add( new Vector4( time, x, y, z ) );
 
-        public static bool HasCurveKeys() => CurveKeys.Count > 0;
+        public bool HasCurveKeys() => CurveKeys.Count > 0;
 
-        public static void Dispose() {
-            PasteCommand.Clear();
-            CurveKeys.Clear();
-            Clear();
-        }
-
-        private static void Clear() {
+        private void Clear() {
             Assigned.Clear();
             Bools.Clear();
             Ints.Clear();
             Floats.Clear();
             Strings.Clear();
             Enums.Clear();
+        }
+
+        public void Dispose() {
+            PasteCommand.Clear();
+            CurveKeys.Clear();
+            Clear();
+        }
+
+        //==================
+
+        public static void FinalizeAll() {
+            Avfx.FinalizePaste( CommandManager.Avfx );
+            Tmb.FinalizePaste( CommandManager.Tmb );
+            Pap.FinalizePaste( CommandManager.Pap );
+        }
+
+        public static void ResetAll() {
+            Avfx.Reset();
+            Tmb.Reset();
+            Pap.Reset();
+        }
+
+        public static void DisposeAll() {
+            Avfx.Dispose();
+            Tmb.Dispose();
+            Pap.Dispose();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace VfxEditor {
         public static void Draw() {
             if( IsLoading ) return;
 
-            CopyManager.Reset();
+            CopyManager.ResetAll();
             CheckWorkspaceKeybinds();
 
             TexToolsDialog.Draw();
@@ -27,7 +27,7 @@ namespace VfxEditor {
             TmbManager.Draw();
             PapManager.Draw();
 
-            CopyManager.FinalizePaste();
+            CopyManager.FinalizeAll();
 
             if ( Configuration.AutosaveEnabled && 
                  Configuration.AutosaveSeconds > 10 && 

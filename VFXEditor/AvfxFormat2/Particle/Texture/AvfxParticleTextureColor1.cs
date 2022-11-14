@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 
@@ -71,12 +68,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, "Texture Color 1" );
             if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TC1";
 
+            AssignedCopyPaste( this, "Texture Color 1" );
             if( UiUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
                 Unassign();
                 return;

@@ -10,7 +10,7 @@ using VfxEditor.TmbFormat.Utils;
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {
     public class TmbFile : FileDropdown<Tmac> {
-        public readonly CommandManager Command = new();
+        public readonly CommandManager Command = new( Data.CopyManager.Tmb );
 
         private readonly Tmdh HeaderTmdh;
         private readonly Tmpp HeaderTmpp;

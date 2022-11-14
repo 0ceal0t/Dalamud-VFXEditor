@@ -1,4 +1,5 @@
 using ImGuiNET;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.TmbSelect;
 
@@ -6,6 +7,7 @@ namespace VfxEditor.TmbFormat {
     public partial class TmbManager : FileManager<TmbDocument, WorkspaceMetaTmb, TmbFile> {
         public static TmbSelectDialog SourceSelect { get; private set; }
         public static TmbSelectDialog ReplaceSelect { get; private set; }
+        public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
             SourceSelect = new TmbSelectDialog(

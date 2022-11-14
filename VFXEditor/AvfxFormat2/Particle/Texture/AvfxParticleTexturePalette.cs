@@ -2,10 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -47,11 +43,14 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned( string parentId ) {
+            AssignedCopyPaste( this, "Texture Palette" );
             if( ImGui.SmallButton( "+ Texture Palette" + parentId ) ) Assign();
         }
 
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/TP";
+
+            AssignedCopyPaste( this, "Texture Palette" );
             IUiItem.DrawListTabs( DisplayTabs, id );
         }
 
