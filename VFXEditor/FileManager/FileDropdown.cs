@@ -21,7 +21,7 @@ namespace VfxEditor.FileManager {
 
         protected abstract void OnDelete( T item );
 
-        protected void DrawDropDown( string id, bool separatorBefore = true ) {
+        protected void DrawDropdown( string id, bool separatorBefore = true ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             if( separatorBefore) {
                 ImGui.Separator();

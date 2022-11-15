@@ -6,6 +6,7 @@ using System.Numerics;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public class Tmac : TmbItemWithTime {
@@ -13,8 +14,8 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private int Unk1 = 0;
-        private int Unk2 = 0;
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public readonly List<Tmtr> Tracks = new();
         private readonly List<int> TempIds;
@@ -25,8 +26,8 @@ namespace VfxEditor.TmbFormat {
 
         public Tmac( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
+            Unk1.Read( reader.Reader, 4 );
+            Unk2.Read( reader.Reader, 4 );
             TempIds = reader.ReadOffsetTimeline();
         }
 
@@ -36,15 +37,15 @@ namespace VfxEditor.TmbFormat {
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
+            Unk1.Write( writer.Writer );
+            Unk2.Write( writer.Writer );
             writer.WriteOffsetTimeline( Tracks );
         }
 
         public void Draw( string id, List<Tmtr> tracksMaster, List<TmbEntry> entriesMaster ) {
-            FileUtils.ShortInput( $"Time{id}", ref Time );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
+            DrawTime( id );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -91,12 +92,10 @@ namespace VfxEditor.TmbFormat {
 
             ImGui.NextColumn();
             ImGui.BeginChild( $"{id}-ActorChild-Right" );
-            if( SelectedTrack != null ) {
-                SelectedTrack.Draw( $"{id}{selectedIndex}", entriesMaster );
-            }
-            else {
-                ImGui.Text( "Select a timeline track..." );
-            }
+
+            if( SelectedTrack != null ) SelectedTrack.Draw( $"{id}{selectedIndex}", entriesMaster );
+            else ImGui.Text( "Select a timeline track..." );
+
             ImGui.EndChild();
 
             ImGui.Columns( 1 );

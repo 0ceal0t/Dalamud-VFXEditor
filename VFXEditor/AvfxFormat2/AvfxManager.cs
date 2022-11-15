@@ -63,8 +63,7 @@ namespace VfxEditor.AvfxFormat2 {
             if( CurrentFile == null ) return;
 
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                if( ImGui.MenuItem( "Copy##Menu" ) ) CopyManager.Avfx.Copy();
-                if( ImGui.MenuItem( "Paste##Menu" ) ) CopyManager.Avfx.Paste();
+                CopyManager.Avfx.Draw();
                 CommandManager.Avfx.Draw();
 
                 if( ImGui.BeginMenu( "Templates##Menu" ) ) {

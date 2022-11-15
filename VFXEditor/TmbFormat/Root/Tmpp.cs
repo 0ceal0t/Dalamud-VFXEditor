@@ -10,8 +10,9 @@ namespace VfxEditor.TmbFormat {
         public override int ExtraSize => 0;
 
         public bool IsAssigned => Assigned;
-
         private bool Assigned = false;
+
+        // TODO: here
         private string Path = "";
 
         public Tmpp( TmbReader reader ) : base( reader ) {

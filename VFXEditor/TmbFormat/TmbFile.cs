@@ -108,7 +108,7 @@ namespace VfxEditor.TmbFormat {
                 }
 
                 if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
-                    DrawDropDown( id, separatorBefore: false );
+                    DrawDropdown( id, separatorBefore: false );
 
                     if( Selected != null ) Selected.Draw( $"{id}{Actors.IndexOf( Selected )}", Tracks, Entries );
                     else ImGui.Text( "Select a timeline actor..." );

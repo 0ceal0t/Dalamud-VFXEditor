@@ -158,7 +158,7 @@ namespace VfxEditor.PapFormat {
                 }
 
                 if( ImGui.BeginTabItem( $"Animations{id}" ) ) {
-                    DrawDropDown( id, separatorBefore: false );
+                    DrawDropdown( id, separatorBefore: false );
 
                     if( Selected != null ) {
                         Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId, ModelType, Variant );

@@ -1,5 +1,6 @@
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
@@ -47,22 +48,22 @@ namespace VfxEditor.TmbFormat {
     }
 
     public abstract class TmbItemWithTime : TmbItemWithId {
-        public short Time;
+        public ParsedInt Time = new( "Time", size: 2 );
 
-        public TmbItemWithTime() : base() {
-            Time = 0;
-        }
+        public TmbItemWithTime() : base() { }
 
         public TmbItemWithTime( TmbReader reader ) : base( reader ) { }
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );
-            Time = reader.ReadInt16();
+            Time.Read( reader.Reader, 2 );
         }
 
         protected override void WriteHeader( TmbWriter writer ) {
             base.WriteHeader( writer );
-            writer.Write( Time );
+            Time.Write( writer.Writer );
         }
+
+        protected void DrawTime( string id ) => Time.Draw( id, CommandManager.Tmb );
     }
 }

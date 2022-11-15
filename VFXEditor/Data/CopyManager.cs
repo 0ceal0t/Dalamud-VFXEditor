@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -71,6 +72,11 @@ namespace VfxEditor.Data {
             PasteCommand.Clear();
             CurveKeys.Clear();
             Clear();
+        }
+
+        public void Draw() {
+            if( ImGui.MenuItem( "Copy##Menu" ) ) Copy();
+            if( ImGui.MenuItem( "Paste##Menu" ) ) Paste();
         }
 
         //==================

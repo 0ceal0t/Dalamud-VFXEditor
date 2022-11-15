@@ -50,7 +50,9 @@ namespace VfxEditor.PapFormat {
 
         protected override void DrawMenu() {
             if( CurrentFile == null ) return;
+
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                CopyManager.Pap.Draw();
                 CommandManager.Pap.Draw();
                 ImGui.EndMenu();
             }

@@ -1,5 +1,6 @@
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public class Tmdh : TmbItemWithId {
@@ -7,28 +8,28 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x10;
         public override int ExtraSize => 0;
 
-        private short Unk1;
-        private short Unk2;
-        private short Unk3;
+        private readonly ParsedInt Unk1 = new( "Unknown 1", size: 2 );
+        private readonly ParsedInt Unk2 = new( "Unknown 2", size: 2 );
+        private readonly ParsedInt Unk3 = new( "Unknown 3", size: 2 );
 
         public Tmdh( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1 = reader.ReadInt16();
-            Unk2 = reader.ReadInt16(); // ?
-            Unk3 = reader.ReadInt16(); // 3
+            Unk1.Read( reader.Reader, 2 );
+            Unk2.Read( reader.Reader, 2 );
+            Unk3.Read( reader.Reader, 2 );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( Unk3 );
+            Unk1.Write( writer.Writer );
+            Unk2.Write( writer.Writer );
+            Unk3.Write( writer.Writer );
         }
 
         public void Draw( string id ) {
-            FileUtils.ShortInput( $"Unknown 1{id}", ref Unk1 );
-            FileUtils.ShortInput( $"Unknown 2{id}", ref Unk2 );
-            FileUtils.ShortInput( $"Unknown 3{id}", ref Unk3 );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
         }
     }
 }
