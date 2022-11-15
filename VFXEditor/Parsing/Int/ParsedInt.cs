@@ -31,6 +31,13 @@ namespace VfxEditor.Parsing {
         }
 
         public void Draw( string id, CommandManager manager ) {
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Ints[Name] = Value;
+            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedIntCommand( this, val ) );
+            }
+
             var value = Value;
             if( ImGui.InputInt( Name + id, ref value ) ) {
                 manager.Add( new ParsedIntCommand( this, value ) );

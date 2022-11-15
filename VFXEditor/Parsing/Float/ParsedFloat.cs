@@ -1,10 +1,6 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat : IParsedBase {
@@ -19,11 +15,16 @@ namespace VfxEditor.Parsing {
             Value = reader.ReadSingle();
         }
 
-        public void Write( BinaryWriter writer ) {
-            writer.Write( Value );
-        }
+        public void Write( BinaryWriter writer ) => writer.Write( Value );
 
         public void Draw( string id, CommandManager manager ) {
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Floats[Name] = Value;
+            if( copy.IsPasting && copy.Floats.TryGetValue( Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedFloatCommand( this, val ) );
+            }
+
             var value = Value;
             if( ImGui.InputFloat( Name + id, ref value ) ) {
                 manager.Add( new ParsedFloatCommand( this, value ) );

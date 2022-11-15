@@ -178,8 +178,4 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Parsing\Float2\" />
-    </ItemGroup>
 </Project>

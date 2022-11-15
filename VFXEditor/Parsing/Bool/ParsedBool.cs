@@ -1,10 +1,6 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.AvfxFormat2;
 
 namespace VfxEditor.Parsing {
@@ -40,6 +36,13 @@ namespace VfxEditor.Parsing {
         }
 
         public void Draw( string id, CommandManager manager ) {
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Bools[Name] = Value == true;
+            if( copy.IsPasting && copy.Bools.TryGetValue( Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedBoolCommand( this, val ) );
+            }
+
             var value = Value == true;
             if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedBoolCommand( this, value ) );
         }

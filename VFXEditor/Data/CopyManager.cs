@@ -18,6 +18,9 @@ namespace VfxEditor.Data {
         public readonly Dictionary<string, bool> Bools = new();
         public readonly Dictionary<string, int> Ints = new();
         public readonly Dictionary<string, float> Floats = new();
+        public readonly Dictionary<string, Vector2> Vector2s = new();
+        public readonly Dictionary<string, Vector3> Vector3s = new();
+        public readonly Dictionary<string, Vector4> Vector4s = new();
         public readonly Dictionary<string, string> Strings = new();
         public readonly Dictionary<string, string> Enums = new();
         public readonly List<Vector4> CurveKeys = new();
@@ -57,6 +60,9 @@ namespace VfxEditor.Data {
             Bools.Clear();
             Ints.Clear();
             Floats.Clear();
+            Vector2s.Clear();
+            Vector3s.Clear();
+            Vector4s.Clear();
             Strings.Clear();
             Enums.Clear();
         }

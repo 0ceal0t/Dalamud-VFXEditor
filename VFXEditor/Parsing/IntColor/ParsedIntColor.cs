@@ -31,6 +31,13 @@ namespace VfxEditor.Parsing {
         }
 
         public void Draw( string id, CommandManager manager ) {
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Vector4s[Name] = Value;
+            if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedIntColorCommand( this, val ) );
+            }
+
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name + id, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                 if( !ColorDrag ) {

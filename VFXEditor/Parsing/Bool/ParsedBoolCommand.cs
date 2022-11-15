@@ -1,5 +1,4 @@
 using System;
-using VfxEditor;
 
 namespace VfxEditor.Parsing {
     public class ParsedBoolCommand : ICommand {

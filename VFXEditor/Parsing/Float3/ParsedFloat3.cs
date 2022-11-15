@@ -1,7 +1,6 @@
 using ImGuiNET;
 using System;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace VfxEditor.Parsing {
@@ -26,6 +25,13 @@ namespace VfxEditor.Parsing {
         }
 
         public void Draw( string id, CommandManager manager ) {
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Vector3s[Name] = Value;
+            if( copy.IsPasting && copy.Vector3s.TryGetValue( Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedFloat3Command( this, val ) );
+            }
+
             var value = Value;
             if( ImGui.InputFloat3( Name + id, ref value ) ) {
                 manager.Add( new ParsedFloat3Command( this, value ) );

@@ -12,6 +12,8 @@ namespace VfxEditor.Parsing {
         public readonly ParsedFloat P1;
         public readonly ParsedFloat P2;
 
+        private Vector2 Value => new( P1.Value, P2.Value );
+
         public UiParsedFloat2( string name, ParsedFloat p1, ParsedFloat p2 ) {
             Name = name;
             P1 = p1;
@@ -19,7 +21,17 @@ namespace VfxEditor.Parsing {
         }
 
         public void Draw( string id, CommandManager manager ) {
-            var value = new Vector2( P1.Value, P2.Value );
+            // Copy/Paste
+            var copy = manager.Copy;
+            if( copy.IsCopying ) copy.Vector2s[Name] = Value;
+            if( copy.IsPasting && copy.Vector2s.TryGetValue( Name, out var val ) ) {
+                var command = new CompoundCommand( false, true );
+                command.Add( new ParsedFloatCommand( P1, val.X ) );
+                command.Add( new ParsedFloatCommand( P2, val.Y ) );
+                manager.Add( command );
+            }
+
+            var value = Value;
             if( ImGui.InputFloat2( Name + id, ref value ) ) {
                 var command = new CompoundCommand( false, true );
                 command.Add( new ParsedFloatCommand( P1, value.X ) );
