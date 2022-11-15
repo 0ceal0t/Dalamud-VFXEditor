@@ -7,7 +7,7 @@ using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AvfxFormat2;
+using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Utils {
     public static class GltfUtils {

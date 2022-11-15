@@ -4,7 +4,7 @@ using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AvfxFormat2;
+using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Utils {
     public static class MdlUtils {

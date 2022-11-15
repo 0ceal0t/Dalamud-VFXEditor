@@ -65,3 +65,9 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - Customize MAX undo size
 - Model emit vertex
 - Curve key
+
+- TMB vector3 / vector4
+- TMB add/remove
+- TMB better parsing list
+- TMB string offset
+- parsing string (with delay-based edit for undo/redo)

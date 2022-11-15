@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System;
 using System.IO;
-using VfxEditor.AvfxFormat2;
+using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Parsing {
     public class ParsedBool : ParsedBase {

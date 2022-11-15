@@ -178,4 +178,8 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Parsing\String\" />
+    </ItemGroup>
 </Project>
