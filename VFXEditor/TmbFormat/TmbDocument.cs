@@ -8,10 +8,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
-        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) {
-        }
-        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
-        }
+        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) { }
+        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) { }
 
         public override void Update() {
             UpdateFile();

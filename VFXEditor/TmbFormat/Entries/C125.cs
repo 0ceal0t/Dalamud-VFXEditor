@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -12,29 +13,31 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x14;
         public override int ExtraSize => 0;
 
-        private int Duration = 1;
-        private int Unk1 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
 
-        public C125() : base() { }
+        public C125() : base() {
+            Duration.Value = 1;
+        }
 
         public C125( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
         }
 
         public override void Draw( string id ) {
             ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "Please don't do anything stupid with this" );
 
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
         }
     }
 }

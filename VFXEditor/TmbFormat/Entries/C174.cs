@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -12,47 +13,51 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private int Unk1 = 0;
-        private int Unk2 = 0;
-        private int ScabbardPosition = 5;
-        private int Unk3 = 1;
-        private int Unk4 = 1;
-        private int Unk5 = 0;
-        private int Unk6 = 0;
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt ScabbardPosition = new( "Scabbard Position" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
-        public C174() : base() { }
+        public C174() : base() {
+            Unk3.Value = 1;
+            Unk4.Value = 1;
+            ScabbardPosition.Value = 5;
+        }
 
         public C174( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            ScabbardPosition = reader.ReadInt32();
-            Unk3 = reader.ReadInt32();
-            Unk4 = reader.ReadInt32();
-            Unk5 = reader.ReadInt32();
-            Unk6 = reader.ReadInt32();
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            ScabbardPosition.Read( reader );
+            Unk3.Read( reader );
+            Unk4.Read( reader );
+            Unk5.Read( reader );
+            Unk6.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( ScabbardPosition );
-            writer.Write( Unk3 );
-            writer.Write( Unk4 );
-            writer.Write( Unk5 );
-            writer.Write( Unk6 );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            ScabbardPosition.Write( writer );
+            Unk3.Write( writer );
+            Unk4.Write( writer );
+            Unk5.Write( writer );
+            Unk6.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputInt( $"Scabbard Position{id}", ref ScabbardPosition );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
-            ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
-            ImGui.InputInt( $"Unknown 6{id}", ref Unk6 );
+            DrawTime( id );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            ScabbardPosition.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
+            Unk4.Draw( id, CommandManager.Tmb );
+            Unk5.Draw( id, CommandManager.Tmb );
+            Unk6.Draw( id, CommandManager.Tmb );
         }
     }
 }

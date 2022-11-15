@@ -2,6 +2,7 @@ using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C012 : TmbEntry {
@@ -13,73 +14,80 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x48;
         public override int ExtraSize => 4 * ( 3 + 3 + 3 + 4 );
 
-        private int Duration = 30;
-        private int Unk1 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private string Path = "";
-        private short BindPoint1 = 1;
-        private short BindPoint2 = 0xFF;
-        private short BindPoint3 = 2;
-        private short BindPoint4 = 0xFF;
-        private Vector3 Scale = new( 1 );
-        private Vector3 Rotation = new( 0 );
-        private Vector3 Position = new( 0 );
-        private Vector4 RGBA = new( 1 );
-        private int Unk2;
-        private int Unk3;
+        private readonly ParsedShort BindPoint1 = new( "Bind Point 1" );
+        private readonly ParsedShort BindPoint2 = new( "Bind Point 2" );
+        private readonly ParsedShort BindPoint3 = new( "Bind Point 3" );
+        private readonly ParsedShort BindPoint4 = new( "Bind Point 4" );
+        private readonly ParsedFloat3 Scale = new( "Scale" );
+        private readonly ParsedFloat3 Rotation = new( "Rotation" );
+        private readonly ParsedFloat3 Position = new( "Position" );
+        private readonly ParsedFloat4 RGBA = new( "RGBA" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        public C012() : base() { }
+        public C012() : base() {
+            Duration.Value = 30;
+            BindPoint1.Value = 1;
+            BindPoint2.Value = 0xFF;
+            BindPoint3.Value = 2;
+            BindPoint4.Value = 0xFF;
+            Scale.Value = new( 1 );
+            RGBA.Value = new( 1 );
+        }
 
         public C012( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
             Path = reader.ReadOffsetString();
-            BindPoint1 = reader.ReadInt16();
-            BindPoint2 = reader.ReadInt16();
-            BindPoint3 = reader.ReadInt16();
-            BindPoint4 = reader.ReadInt16();
-            Scale = reader.ReadOffsetVector3();
-            Rotation = reader.ReadOffsetVector3();
-            Position = reader.ReadOffsetVector3();
-            RGBA = reader.ReadOffsetVector4();
-            Unk2 = reader.ReadInt32();
-            Unk3 = reader.ReadInt32();
+            BindPoint1.Read( reader );
+            BindPoint2.Read( reader );
+            BindPoint3.Read( reader );
+            BindPoint4.Read( reader );
+            Scale.Value = reader.ReadOffsetVector3();
+            Rotation.Value = reader.ReadOffsetVector3();
+            Position.Value = reader.ReadOffsetVector3();
+            RGBA.Value = reader.ReadOffsetVector4();
+            Unk2.Read( reader );
+            Unk3.Read( reader );
 
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
             writer.WriteOffsetString( Path );
-            writer.Write( BindPoint1 );
-            writer.Write( BindPoint2 );
-            writer.Write( BindPoint3 );
-            writer.Write( BindPoint4 );
-            writer.WriteExtraVector3( Scale );
-            writer.WriteExtraVector3( Rotation );
-            writer.WriteExtraVector3( Position );
-            writer.WriteExtraVector4( RGBA );
-            writer.Write( Unk2 );
-            writer.Write( Unk3 );
+            BindPoint1.Write( writer );
+            BindPoint2.Write( writer );
+            BindPoint3.Write( writer );
+            BindPoint4.Write( writer );
+            writer.WriteExtraVector3( Scale.Value );
+            writer.WriteExtraVector3( Rotation.Value );
+            writer.WriteExtraVector3( Position.Value );
+            writer.WriteExtraVector4( RGBA.Value );
+            Unk2.Write( writer );
+            Unk3.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
-            FileUtils.ShortInput( $"Bind Point 1{id}", ref BindPoint1 );
-            FileUtils.ShortInput( $"Bind Point 2{id}", ref BindPoint2 );
-            FileUtils.ShortInput( $"Bind Point 3{id}", ref BindPoint3 );
-            FileUtils.ShortInput( $"Bind Point 4{id}", ref BindPoint4 );
-
-            ImGui.InputFloat3( $"Scale{id}", ref Scale );
-            ImGui.InputFloat3( $"Rotation{id}", ref Rotation );
-            ImGui.InputFloat3( $"Position{id}", ref Position );
-            ImGui.InputFloat4( $"RGBA{id}", ref RGBA );
+            BindPoint1.Draw( id, CommandManager.Tmb );
+            BindPoint2.Draw( id, CommandManager.Tmb );
+            BindPoint3.Draw( id, CommandManager.Tmb );
+            BindPoint4.Draw( id, CommandManager.Tmb );
+            Scale.Draw( id, CommandManager.Tmb );
+            Rotation.Draw( id, CommandManager.Tmb );
+            Position.Draw( id, CommandManager.Tmb );
+            RGBA.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
         }
     }
 }

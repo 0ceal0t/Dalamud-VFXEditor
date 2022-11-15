@@ -4,7 +4,7 @@ using System.IO;
 using VfxEditor.AvfxFormat2;
 
 namespace VfxEditor.Parsing {
-    public class ParsedBool : IParsedBase {
+    public class ParsedBool : ParsedBase {
         public readonly string Name;
         private int Size;
         public bool? Value = false;
@@ -14,7 +14,9 @@ namespace VfxEditor.Parsing {
             Size = size;
         }
 
-        public void Read( BinaryReader reader, int size ) {
+        public override void Read( BinaryReader reader ) => Read( reader, Size );
+
+        public override void Read( BinaryReader reader, int size ) {
             var b = reader.ReadByte();
             Value = b switch {
                 0x00 => false,
@@ -25,7 +27,7 @@ namespace VfxEditor.Parsing {
             Size = size;
         }
 
-        public void Write( BinaryWriter writer ) {
+        public override void Write( BinaryWriter writer ) {
             byte v = Value switch {
                 true => 0x01,
                 false => 0x00,
@@ -35,7 +37,7 @@ namespace VfxEditor.Parsing {
             AvfxBase.WritePad( writer, Size - 1 );
         }
 
-        public void Draw( string id, CommandManager manager ) {
+        public override void Draw( string id, CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Bools[Name] = Value == true;

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -11,27 +12,27 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x14;
         public override int ExtraSize => 0;
 
-        private int Unk1 = 0;
-        private int Unk2 = 0;
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public C011() : base() { }
 
         public C011( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
+            Unk1.Read( reader );
+            Unk2.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
+            DrawTime( id );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
         }
     }
 }

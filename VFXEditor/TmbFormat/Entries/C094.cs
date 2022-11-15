@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -14,15 +15,15 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private bool UnkExtraData = true;
 
-        private int Duration = 0;
-        private int Unk1 = 0;
-        private float StartVisibility = 0;
-        private float EndVisibility = 0;
-        private int Unk2 = 0;
-        private int Unk3 = 0;
-        private int Unk4 = 0;
-        private int Unk5 = 0;
-        private int Unk6 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedFloat StartVisibility = new( "Start Visibility" );
+        private readonly ParsedFloat EndVisibility = new( "End Visibility" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
         // Unk2 = 1, Unk3 = 8 -> ExtraSize = 0x14
 
@@ -30,50 +31,50 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C094( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            StartVisibility = reader.ReadSingle();
-            EndVisibility = reader.ReadSingle();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            StartVisibility.Read( reader );
+            EndVisibility.Read( reader );
 
             UnkExtraData = reader.ReadAtOffset( ( binaryReader ) => {
-                Unk2 = binaryReader.ReadInt32();
-                Unk3 = binaryReader.ReadInt32();
-                Unk4 = binaryReader.ReadInt32();
-                Unk5 = binaryReader.ReadInt32();
-                Unk6 = binaryReader.ReadInt32();
+                Unk2.Read( binaryReader );
+                Unk3.Read( binaryReader );
+                Unk4.Read( binaryReader );
+                Unk5.Read( binaryReader );
+                Unk6.Read( binaryReader );
             } );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.Write( StartVisibility );
-            writer.Write( EndVisibility );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            StartVisibility.Write( writer );
+            EndVisibility.Write( writer );
 
             writer.WriteExtra( ( binaryWriter ) => {
-                binaryWriter.Write( Unk2 );
-                binaryWriter.Write( Unk3 );
-                binaryWriter.Write( Unk4 );
-                binaryWriter.Write( Unk5 );
-                binaryWriter.Write( Unk6 );
+                Unk2.Write( binaryWriter );
+                Unk3.Write( binaryWriter );
+                Unk4.Write( binaryWriter );
+                Unk5.Write( binaryWriter );
+                Unk6.Write( binaryWriter );
             }, UnkExtraData );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputFloat( $"Start Visibility{id}", ref StartVisibility );
-            ImGui.InputFloat( $"End Visibility{id}", ref EndVisibility );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            StartVisibility.Draw( id, CommandManager.Tmb );
+            EndVisibility.Draw( id, CommandManager.Tmb );
 
             ImGui.Checkbox( $"Unknown Extra Data{id}", ref UnkExtraData );
             if( UnkExtraData ) {
-                ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-                ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
-                ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
-                ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
-                ImGui.InputInt( $"Unknown 6{id}", ref Unk6 );
+                Unk2.Draw( id, CommandManager.Tmb );
+                Unk3.Draw( id, CommandManager.Tmb );
+                Unk4.Draw( id, CommandManager.Tmb );
+                Unk5.Draw( id, CommandManager.Tmb );
+                Unk6.Draw( id, CommandManager.Tmb );
             }
         }
     }

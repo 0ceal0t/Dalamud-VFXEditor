@@ -1,5 +1,7 @@
 using ImGuiNET;
 using System.Numerics;
+using System.Reflection.PortableExecutable;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
@@ -13,50 +15,51 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private int Duration = 0;
-        private int Unk1 = 0;
-        private int Unk2 = 0;
-        private int Unk3 = 0;
-        private int Unk4 = 0;
-        private short ModelId = 0;
-        private short BodyId = 0;
-        private int Unk5 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedShort ModelId = new( "ModelId" );
+        private readonly ParsedShort BodyId = new( "BodyId" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
 
         public C198() : base() { }
 
         public C198( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            Unk3 = reader.ReadInt32();
-            Unk4 = reader.ReadInt32();
-            ModelId = reader.ReadInt16();
-            BodyId = reader.ReadInt16();
-            Unk5 = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            Unk3.Read( reader );
+            Unk4.Read( reader );
+            ModelId.Read( reader );
+            BodyId.Read( reader );
+            Unk5.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( Unk3 );
-            writer.Write( Unk4 );
-            writer.Write( ModelId );
-            writer.Write( BodyId );
-            writer.Write( Unk5 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            Unk3.Write( writer );
+            Unk4.Write( writer );
+            ModelId.Write( writer );
+            BodyId.Write( writer );
+            Unk5.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
-            FileUtils.ShortInput( $"Model Id{id}", ref ModelId );
-            FileUtils.ShortInput( $"Body Id{id}", ref BodyId );
-            ImGui.InputInt( $"Unknown 5{id}", ref Unk5 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
+            Unk4.Draw( id, CommandManager.Tmb );
+            ModelId.Draw( id, CommandManager.Tmb );
+            BodyId.Draw( id, CommandManager.Tmb );
+            Unk5.Draw( id, CommandManager.Tmb );
         }
     }
 }

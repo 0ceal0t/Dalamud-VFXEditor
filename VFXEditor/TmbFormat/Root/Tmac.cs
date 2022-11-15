@@ -1,8 +1,8 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Collections.Generic;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
@@ -18,6 +18,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public readonly List<Tmtr> Tracks = new();
+
         private readonly List<int> TempIds;
 
         private Tmtr SelectedTrack = null;
@@ -26,8 +27,8 @@ namespace VfxEditor.TmbFormat {
 
         public Tmac( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader.Reader, 4 );
-            Unk2.Read( reader.Reader, 4 );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
             TempIds = reader.ReadOffsetTimeline();
         }
 
@@ -37,8 +38,8 @@ namespace VfxEditor.TmbFormat {
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer.Writer );
-            Unk2.Write( writer.Writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
             writer.WriteOffsetTimeline( Tracks );
         }
 

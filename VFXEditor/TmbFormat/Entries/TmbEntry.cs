@@ -10,9 +10,5 @@ namespace VfxEditor.TmbFormat.Entries {
         public TmbEntry() : base() { }
 
         public TmbEntry( TmbReader reader ) : base( reader ) { }
-
-        protected void DrawHeader( string id ) {
-            FileUtils.ShortInput( $"Time{id}", ref Time );
-        }
     }
 }

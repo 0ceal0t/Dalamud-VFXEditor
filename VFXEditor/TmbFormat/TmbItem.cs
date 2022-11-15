@@ -48,7 +48,7 @@ namespace VfxEditor.TmbFormat {
     }
 
     public abstract class TmbItemWithTime : TmbItemWithId {
-        public ParsedInt Time = new( "Time", size: 2 );
+        public ParsedShort Time = new( "Time" );
 
         public TmbItemWithTime() : base() { }
 
@@ -56,7 +56,7 @@ namespace VfxEditor.TmbFormat {
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );
-            Time.Read( reader.Reader, 2 );
+            Time.Read( reader.Reader );
         }
 
         protected override void WriteHeader( TmbWriter writer ) {

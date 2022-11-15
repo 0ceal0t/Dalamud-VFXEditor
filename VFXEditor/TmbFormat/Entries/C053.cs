@@ -1,6 +1,7 @@
 using ImGuiNET;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C053 : TmbEntry {
@@ -12,39 +13,39 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private int Unk1 = 0;
-        private int Unk2 = 0;
-        private short SoundId1 = 0;
-        private short SoundId2 = 0;
-        private int Unk3 = 0;
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort SoundId1 = new( "Sound Id 1" );
+        private readonly ParsedShort SoundId2 = new( "Sound Id 2" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C053() : base() { }
 
         public C053( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            SoundId1 = reader.ReadInt16();
-            SoundId2 = reader.ReadInt16();
-            Unk3 = reader.ReadInt32();
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            SoundId1.Read( reader );
+            SoundId2.Read( reader );
+            Unk3.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( SoundId1 );
-            writer.Write( SoundId2 );
-            writer.Write( Unk3 );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            SoundId1.Write( writer );
+            SoundId2.Write( writer );
+            Unk3.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            FileUtils.ShortInput( $"Sound Id 1{id}", ref SoundId1 );
-            FileUtils.ShortInput( $"Sound Id 2{id}", ref SoundId2 );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
+            DrawTime( id );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            SoundId1.Draw( id, CommandManager.Tmb );
+            SoundId2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb ); ;
         }
     }
 }

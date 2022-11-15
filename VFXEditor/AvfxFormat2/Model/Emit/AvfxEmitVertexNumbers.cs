@@ -21,11 +21,11 @@ namespace VfxEditor.AvfxFormat2 {
     }
 
     public class AvfxVertexNumber {
-        public readonly ParsedInt Number = new( "Order", size: 2 );
+        public readonly ParsedShort Number = new( "Order" );
 
         public AvfxVertexNumber() { }
 
-        public AvfxVertexNumber( BinaryReader reader ) => Number.Read( reader, 2 );
+        public AvfxVertexNumber( BinaryReader reader ) => Number.Read( reader );
 
         public void Write( BinaryWriter writer ) => Number.Write( writer );
     }

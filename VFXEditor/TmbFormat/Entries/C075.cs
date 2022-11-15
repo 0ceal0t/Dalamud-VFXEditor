@@ -1,6 +1,6 @@
-using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -13,55 +13,58 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x40;
         public override int ExtraSize => 4 * ( 3 + 3 + 3 + 4 );
 
-        private int Duration;
-        private int Unk1;
-        private int Unk2;
-        private Vector3 Scale = new( 1 );
-        private Vector3 Rotation = new( 0 );
-        private Vector3 Position = new( 0 );
-        private Vector4 RGBA = new( 1 );
-        private int Unk3;
-        private int Unk4;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedFloat3 Scale = new( "Scale" );
+        private readonly ParsedFloat3 Rotation = new( "Rotation" );
+        private readonly ParsedFloat3 Position = new( "Position" );
+        private readonly ParsedFloat4 RGBA = new( "RGBA" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
-        public C075() : base() { }
+        public C075() : base() {
+            Scale.Value = new( 1 );
+            RGBA.Value = new( 1 );
+        }
 
         public C075( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            Scale = reader.ReadOffsetVector3();
-            Rotation = reader.ReadOffsetVector3();
-            Position = reader.ReadOffsetVector3();
-            RGBA = reader.ReadOffsetVector4();
-            Unk3 = reader.ReadInt32();
-            Unk4 = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            Scale.Value = reader.ReadOffsetVector3();
+            Rotation.Value = reader.ReadOffsetVector3();
+            Position.Value = reader.ReadOffsetVector3();
+            RGBA.Value = reader.ReadOffsetVector4();
+            Unk3.Read( reader );
+            Unk4.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.WriteExtraVector3( Scale );
-            writer.WriteExtraVector3( Rotation );
-            writer.WriteExtraVector3( Position );
-            writer.WriteExtraVector4( RGBA );
-            writer.Write( Unk3 );
-            writer.Write( Unk4 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            writer.WriteExtraVector3( Scale.Value );
+            writer.WriteExtraVector3( Rotation.Value );
+            writer.WriteExtraVector3( Position.Value );
+            writer.WriteExtraVector4( RGBA.Value );
+            Unk3.Write( writer );
+            Unk4.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputFloat3( $"Scale{id}", ref Scale );
-            ImGui.InputFloat3( $"Rotation{id}", ref Rotation );
-            ImGui.InputFloat3( $"Position{id}", ref Position );
-            ImGui.InputFloat4( $"RGBA{id}", ref RGBA );
-            ImGui.InputInt( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Scale.Draw( id, CommandManager.Tmb );
+            Rotation.Draw( id, CommandManager.Tmb );
+            Position.Draw( id, CommandManager.Tmb );
+            RGBA.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
+            Unk4.Draw( id, CommandManager.Tmb );
         }
     }
 }

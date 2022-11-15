@@ -31,14 +31,14 @@ namespace VfxEditor.AvfxFormat2 {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Type.Read( reader );
-            Unk1.Read( reader, 4 );
-            Unk2.Read( reader, 4 );
-            Unk3.Read( reader, 4 );
-            Unk4.Read( reader, 4 );
-            Unk5.Read( reader, 4 );
-            Unk6.Read( reader, 4 );
-            Unk7.Read( reader, 4 );
-            Unk8.Read( reader, 4 );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            Unk3.Read( reader );
+            Unk4.Read( reader );
+            Unk5.Read( reader );
+            Unk6.Read( reader );
+            Unk7.Read( reader );
+            Unk8.Read( reader );
             reader.ReadBytes( 4 * 32 );
         }
 

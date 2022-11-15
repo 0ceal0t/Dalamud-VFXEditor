@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -12,39 +13,43 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 4 * ( 4 + 4 );
 
-        private int Duration = 30;
-        private int Unk1 = 0;
-        private Vector4 Unk2 = new( 1 );
-        private Vector4 Unk3 = new( 1 );
-        private int Unk4 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedFloat4 Unk2 = new( "Unknown 2" );
+        private readonly ParsedFloat4 Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
-        public C093() : base() { }
+        public C093() : base() {
+            Duration.Value = 30;
+            Unk2.Value = new( 1 );
+            Unk3.Value = new( 1 );
+        }
 
         public C093( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadOffsetVector4();
-            Unk3 = reader.ReadOffsetVector4();
-            Unk4 = reader.Reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            Unk2.Value = reader.ReadOffsetVector4();
+            Unk3.Value = reader.ReadOffsetVector4();
+            Unk4.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.WriteExtraVector4( Unk2 );
-            writer.WriteExtraVector4( Unk3 );
-            writer.Write( Unk4 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            writer.WriteExtraVector4( Unk2.Value );
+            writer.WriteExtraVector4( Unk3.Value );
+            Unk4.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputFloat4( $"Unknown 2{id}", ref Unk2 );
-            ImGui.InputFloat4( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
+            Unk4.Draw( id, CommandManager.Tmb );
         }
     }
 }

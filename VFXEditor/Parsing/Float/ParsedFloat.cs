@@ -1,9 +1,8 @@
 using ImGuiNET;
-using System;
 using System.IO;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat : IParsedBase {
+    public class ParsedFloat : ParsedBase {
         public readonly string Name;
         public float Value = 0f;
 
@@ -11,13 +10,15 @@ namespace VfxEditor.Parsing {
             Name = name;
         }
 
-        public void Read( BinaryReader reader, int _ ) {
+        public override void Read( BinaryReader reader ) => Read( reader, 0 );
+
+        public override void Read( BinaryReader reader, int _ ) {
             Value = reader.ReadSingle();
         }
 
-        public void Write( BinaryWriter writer ) => writer.Write( Value );
+        public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public void Draw( string id, CommandManager manager ) {
+        public override void Draw( string id, CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Floats[Name] = Value;

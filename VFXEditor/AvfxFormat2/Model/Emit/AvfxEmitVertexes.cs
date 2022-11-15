@@ -28,9 +28,9 @@ namespace VfxEditor.AvfxFormat2 {
         public AvfxEmitVertex() { }
 
         public AvfxEmitVertex( BinaryReader reader ) {
-            Position.Read( reader, 0 );
-            Normal.Read( reader, 0 );
-            Color.Read( reader, 0 );
+            Position.Read( reader );
+            Normal.Read( reader );
+            Color.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {

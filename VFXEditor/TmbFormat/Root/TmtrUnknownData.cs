@@ -1,40 +1,34 @@
 using ImGuiNET;
 using System.IO;
-using VfxEditor.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public class TmtrUnknownData {
-        public int Unk1;
-        public short Unk2;
-        public short Unk3;
-        public int Unk4;
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedShort Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
-        public TmtrUnknownData() {
-            Unk1 = 0;
-            Unk2 = 0;
-            Unk3 = 0;
-            Unk4 = 0;
-        }
+        public TmtrUnknownData() { }
 
         public TmtrUnknownData( BinaryReader reader ) {
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt16();
-            Unk3 = reader.ReadInt16();
-            Unk4 = reader.ReadInt32();
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            Unk3.Read( reader );
+            Unk4.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( Unk3 );
-            writer.Write( Unk4 );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            Unk3.Write( writer );
+            Unk4.Write( writer );
         }
 
         public void Draw( string id ) {
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            FileUtils.ShortInput( $"Unknown 2{id}", ref Unk2 );
-            FileUtils.ShortInput( $"Unknown 3{id}", ref Unk3 );
-            ImGui.InputInt( $"Unknown 4{id}", ref Unk4 );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            Unk3.Draw( id, CommandManager.Tmb );
         }
     }
 }

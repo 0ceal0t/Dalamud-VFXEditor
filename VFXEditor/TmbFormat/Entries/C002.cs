@@ -1,4 +1,5 @@
 using ImGuiNET;
+using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -11,34 +12,36 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private int Duration = 50;
-        private int Unk1 = 0;
-        private int Unk2 = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private string Path = "";
 
-        public C002() : base() { }
+        public C002() : base() {
+            Duration.Value = 50;
+        }
 
         public C002( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
             Path = reader.ReadOffsetString();
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
             writer.WriteOffsetString( Path );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
             ImGui.InputText( $"Path{id}", ref Path, 255 );
         }
     }

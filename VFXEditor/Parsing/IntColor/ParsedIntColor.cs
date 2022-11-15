@@ -4,7 +4,7 @@ using System.Numerics;
 using System.IO;
 
 namespace VfxEditor.Parsing {
-    public class ParsedIntColor : IParsedBase {
+    public class ParsedIntColor : ParsedBase {
         public readonly string Name;
         public Vector4 Value = new(0);
 
@@ -16,21 +16,23 @@ namespace VfxEditor.Parsing {
             Name = name;
         }
 
-        public void Read( BinaryReader reader, int size ) {
+        public override void Read( BinaryReader reader ) => Read( reader, 0 );
+
+        public override void Read( BinaryReader reader, int size ) {
             Value.X = reader.ReadByte() / 255f;
             Value.Y = reader.ReadByte() / 255f;
             Value.Z = reader.ReadByte() / 255f;
             Value.W = reader.ReadByte() / 255f;
         }
 
-        public void Write( BinaryWriter writer ) {
+        public override void Write( BinaryWriter writer ) {
             writer.Write( ( byte )( int )( Value.X * 255f ) );
             writer.Write( ( byte )( int )( Value.Y * 255f ) );
             writer.Write( ( byte )( int )( Value.Z * 255f ) );
             writer.Write( ( byte )( int )( Value.W * 255f ) );
         }
 
-        public void Draw( string id, CommandManager manager ) {
+        public override void Draw( string id, CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;

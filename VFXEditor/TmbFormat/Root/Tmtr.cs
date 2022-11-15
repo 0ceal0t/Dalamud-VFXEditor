@@ -53,7 +53,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw( string id, List<TmbEntry> entriesMaster ) {
-            FileUtils.ShortInput( $"Time{id}", ref Time );
+            DrawTime( id );
 
             // ==== Unknown Data ====
 

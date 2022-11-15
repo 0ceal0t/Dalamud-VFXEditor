@@ -1,6 +1,7 @@
 using ImGuiNET;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C043 : TmbEntry {
@@ -12,43 +13,43 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x20;
         public override int ExtraSize => 0;
 
-        private int Duration = 0;
-        private int Unk1 = 0;
-        private int Unk2 = 8;
-        private short WeaponId = 0;
-        private short BodyId = 0;
-        private int VariantId = 0;
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort WeaponId = new( "Weapon Id" );
+        private readonly ParsedShort BodyId = new( "Body Id" );
+        private readonly ParsedInt VariantId = new( "Variant Id" );
 
         public C043() : base() { }
 
         public C043( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration = reader.ReadInt32();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            WeaponId = reader.ReadInt16();
-            BodyId = reader.ReadInt16();
-            VariantId = reader.ReadInt32();
+            Duration.Read( reader );
+            Unk1.Read( reader );
+            Unk2.Read( reader );
+            WeaponId.Read( reader );
+            BodyId.Read( reader );
+            VariantId.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.Write( Duration );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( WeaponId );
-            writer.Write( BodyId );
-            writer.Write( VariantId );
+            Duration.Write( writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            WeaponId.Write( writer );
+            BodyId.Write( writer );
+            VariantId.Write( writer );
         }
 
         public override void Draw( string id ) {
-            DrawHeader( id );
-            ImGui.InputInt( $"Duration{id}", ref Duration );
-            ImGui.InputInt( $"Unknown 1{id}", ref Unk1 );
-            ImGui.InputInt( $"Unknown 2{id}", ref Unk2 );
-            FileUtils.ShortInput( $"Weapon Id{id}", ref WeaponId );
-            FileUtils.ShortInput( $"Body Id{id}", ref BodyId );
-            ImGui.InputInt( $"Variant Id{id}", ref VariantId );
+            DrawTime( id );
+            Duration.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, CommandManager.Tmb );
+            Unk2.Draw( id, CommandManager.Tmb );
+            WeaponId.Draw( id, CommandManager.Tmb );
+            BodyId.Draw( id, CommandManager.Tmb );
+            VariantId.Draw( id, CommandManager.Tmb );
         }
     }
 }

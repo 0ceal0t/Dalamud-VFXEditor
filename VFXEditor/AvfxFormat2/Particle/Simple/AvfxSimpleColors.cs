@@ -13,10 +13,10 @@ namespace VfxEditor.AvfxFormat2 {
         public AvfxSimpleColors() : base( "Cols" ) { }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Color1.Read( reader, size );
-            Color2.Read( reader, size );
-            Color3.Read( reader, size );
-            Color4.Read( reader, size );
+            Color1.Read( reader );
+            Color2.Read( reader );
+            Color3.Read( reader );
+            Color4.Read( reader );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
@@ -30,18 +30,18 @@ namespace VfxEditor.AvfxFormat2 {
     }
 
     public class AvfxSimpleFrames : AvfxBase {
-        public readonly ParsedInt Frame1 = new( "Frame 1", size: 2 );
-        public readonly ParsedInt Frame2 = new( "Frame 2", size: 2 );
-        public readonly ParsedInt Frame3 = new( "Frame 3", size: 2 );
-        public readonly ParsedInt Frame4 = new( "Frame 4", size: 2 );
+        public readonly ParsedShort Frame1 = new( "Frame 1" );
+        public readonly ParsedShort Frame2 = new( "Frame 2" );
+        public readonly ParsedShort Frame3 = new( "Frame 3" );
+        public readonly ParsedShort Frame4 = new( "Frame 4" );
 
         public AvfxSimpleFrames() : base( "Frms" ) { }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Frame1.Read( reader, 2 );
-            Frame2.Read( reader, 2 );
-            Frame3.Read( reader, 2 );
-            Frame4.Read( reader, 2 );
+            Frame1.Read( reader );
+            Frame2.Read( reader );
+            Frame3.Read( reader );
+            Frame4.Read( reader );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
