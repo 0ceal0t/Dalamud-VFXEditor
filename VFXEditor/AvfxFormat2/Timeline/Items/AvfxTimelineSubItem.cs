@@ -2,10 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using VfxEditor;
-using static Lumina.Data.Parsing.Uld.UldRoot;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTimelineSubItem : GenericWorkspaceItem {
@@ -65,9 +61,7 @@ namespace VfxEditor.AvfxFormat2 {
             EffectorSelect = new UiNodeSelect<AvfxEffector>( Timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
         }
 
-        public void Write( BinaryWriter writer ) {
-            AvfxBase.WriteNested( writer, Parsed );
-        }
+        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
         public override void Draw( string parentId ) {
             var id = parentId + "/Item";

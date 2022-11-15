@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -21,12 +17,8 @@ namespace VfxEditor.AvfxFormat2 {
             Display.Add( ModelSelect = new UiNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
         }
 
-        public override void Enable() {
-            ModelSelect.Enable();
-        }
+        public override void Enable() => ModelSelect.Enable();
 
-        public override void Disable() {
-            ModelSelect.Disable();
-        }
+        public override void Disable() => ModelSelect.Disable();
     }
 }

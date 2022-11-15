@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VfxEditor.AvfxFormat2 {
-    public class AvfxEmitterCreate : AvfxBase {
+    public class AvfxEmitterItemContainer : AvfxBase {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
         public readonly List<AvfxEmitterItem> Items = new();
 
-        public AvfxEmitterCreate( string name, bool isParticle, AvfxEmitter emitter ) : base( name ) {
+        public AvfxEmitterItemContainer( string name, bool isParticle, AvfxEmitter emitter ) : base( name ) {
             IsParticle = isParticle;
             Emitter = emitter;
         }

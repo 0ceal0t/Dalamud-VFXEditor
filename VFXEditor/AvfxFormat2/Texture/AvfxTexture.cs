@@ -1,11 +1,8 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTexture : AvfxNode {
@@ -30,9 +27,7 @@ namespace VfxEditor.AvfxFormat2 {
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            writer.Write( Encoding.ASCII.GetBytes( Path.GetValue() ) );
-        }
+        protected override void WriteContents( BinaryWriter writer ) => writer.Write( Encoding.ASCII.GetBytes( Path.GetValue() ) );
 
         public string LoadTex() {
             var currentPathValue = Path.GetValue();

@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 

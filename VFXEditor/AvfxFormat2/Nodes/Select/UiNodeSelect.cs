@@ -2,10 +2,6 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public abstract class UiNodeSelect : IUiBase {

@@ -101,13 +101,9 @@ namespace VfxEditor.AvfxFormat2 {
                 Selected = new HashSet<AvfxNode>();
             }
 
-            public override bool Belongs( AvfxNode node ) {
-                return node is T;
-            }
+            public override bool Belongs( AvfxNode node ) => node is T;
 
-            public override void Select( AvfxNode node ) {
-                Selected.Add( node );
-            }
+            public override void Select( AvfxNode node ) => Selected.Add( node );
 
             public override void Draw() {
                 ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
@@ -140,9 +136,7 @@ namespace VfxEditor.AvfxFormat2 {
 
                     ImGui.Unindent();
                 }
-                if( count > 0 && !visible ) {
-                    ImGui.PopStyleColor();
-                }
+                if( count > 0 && !visible ) ImGui.PopStyleColor();
             }
         }
     }

@@ -11,17 +11,11 @@ namespace VfxEditor.AvfxFormat2 {
             State = state;
         }
 
-        public void Execute() {
-            SetState( State );
-        }
+        public void Execute() => SetState( State );
 
-        public void Redo() {
-            SetState( State );
-        }
+        public void Redo() => SetState( State );
 
-        public void Undo() {
-            SetState( !State );
-        }
+        public void Undo() => SetState( !State );
 
         private void SetState( bool state ) {
             if( state ) AvfxBase.RecurseAssigned( Item, state ); // true

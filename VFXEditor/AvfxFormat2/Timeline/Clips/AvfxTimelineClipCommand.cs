@@ -1,5 +1,4 @@
 using System;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTimelineClipCommand : ICommand {
@@ -19,12 +18,8 @@ namespace VfxEditor.AvfxFormat2 {
             State = Item.GetState();
         }
 
-        public void Redo() {
-            Item.SetState( State );
-        }
+        public void Redo() => Item.SetState( State );
 
-        public void Undo() {
-            Item.SetState( PrevState );
-        }
+        public void Undo() => Item.SetState( PrevState );
     }
 }

@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxIntList : AvfxDrawable {
@@ -24,9 +25,7 @@ namespace VfxEditor.AvfxFormat2 {
             Size = Value.Count;
         }
 
-        public void SetValue( int value ) {
-            SetValue( new List<int> { value } );
-        }
+        public void SetValue( int value ) => SetValue( new List<int> { value } );
 
         public void SetValue( int value, int idx ) {
             SetAssigned( true );
@@ -61,6 +60,11 @@ namespace VfxEditor.AvfxFormat2 {
             // Unassigned
             AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
+
+            // Copy/Paste
+            var manager = CopyManager.Avfx;
+            if( manager.IsCopying ) manager.Ints[Name] = Value[0];
+            if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxIntListCommand( this, val ) );
 
             var value = Value[0];
             if( ImGui.InputInt( Name + id, ref value ) ) {

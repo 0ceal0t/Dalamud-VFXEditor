@@ -1,9 +1,9 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -38,15 +38,18 @@ namespace VfxEditor.AvfxFormat2 {
         protected override void WriteContents( BinaryWriter writer ) {
             var bytes = Encoding.ASCII.GetBytes( Value );
             writer.Write( bytes );
-            if( FixedSize != -1 ) {
-                WritePad( writer, FixedSize - bytes.Length );
-            }
+            if( FixedSize != -1 ) WritePad( writer, FixedSize - bytes.Length );
         }
 
         public override void Draw( string id ) {
             // Unassigned
             AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
+
+            // Copy/Paste
+            var manager = CopyManager.Avfx;
+            if( manager.IsCopying ) manager.Strings[Name] = Value;
+            if( manager.IsPasting && manager.Strings.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxStringCommand( this, val, IsAssigned() ) );
 
             var style = ImGui.GetStyle();
             var spacing = 2;
@@ -55,6 +58,7 @@ namespace VfxEditor.AvfxFormat2 {
             var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + spacing;
             ImGui.PopFont();
 
+            // Input
             var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - checkSize - ( ShowRemoveButton ? removeSize : 0 );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( $"{id}-MainInput", ref InputString, 256 );
@@ -63,12 +67,13 @@ namespace VfxEditor.AvfxFormat2 {
 
             ImGui.PushFont( UiBuilder.IconFont );
 
+            // Check - update value
             ImGui.SameLine( inputSize + spacing );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                 var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
                 CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
             }
-
+            // Remove - unassign
             if( ShowRemoveButton ) {
                 ImGui.SameLine( inputSize + checkSize + spacing );
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );

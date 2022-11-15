@@ -224,14 +224,14 @@ namespace VfxEditor.AvfxFormat2 {
 
         public static bool DrawAddButton<T>( List<T> assignable, string name, string id ) where T : AvfxBase {
             if( !assignable[0].IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new UiAssignableCommandMultiple<T>( assignable, true ) );
+                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new UiAssignableCommandToggle<T>( assignable, true ) );
                 return true;
             }
             return false;
         }
 
         public static void DrawRemoveContextMenu<T>( List<T> assignable, string name, string id ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new UiAssignableCommandMultiple<T>( assignable, false ) );
+            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new UiAssignableCommandToggle<T>( assignable, false ) );
         }
 
         public static bool DrawAddButtonRecurse<T>( T assignable, string name, string id ) where T : AvfxBase {

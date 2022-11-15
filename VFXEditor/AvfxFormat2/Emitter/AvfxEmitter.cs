@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -121,7 +118,7 @@ namespace VfxEditor.AvfxFormat2 {
             EmitterSplit = new( Emitters, this, false );
             ParticleSplit = new( Particles, this, false );
 
-            EmitterVariety.ExtraCommand = () => {
+            EmitterVariety.ExtraCommandGenerator = () => {
                 return new AvfxEmitterDataExtraCommand( this );
             };
 
@@ -132,8 +129,8 @@ namespace VfxEditor.AvfxFormat2 {
             Peek( reader, Parsed, size );
             var emitterType = EmitterVariety.GetValue();
 
-            AvfxEmitterCreate lastParticle = null;
-            AvfxEmitterCreate lastEmitter = null;
+            AvfxEmitterItemContainer lastParticle = null;
+            AvfxEmitterItemContainer lastEmitter = null;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
@@ -141,12 +138,12 @@ namespace VfxEditor.AvfxFormat2 {
                     Data?.Read( _reader, _size );
                 }
                 else if( _name == "ItPr" ) {
-                    lastParticle = new AvfxEmitterCreate( "ItPr", true, this );
+                    lastParticle = new AvfxEmitterItemContainer( "ItPr", true, this );
                     lastParticle.Read( _reader, _size );
 
                 }
                 else if( _name == "ItEm" ) {
-                    lastEmitter = new AvfxEmitterCreate( "ItEm", false, this );
+                    lastEmitter = new AvfxEmitterItemContainer( "ItEm", false, this );
                     lastEmitter.Read( _reader, _size );
 
                 }
@@ -182,14 +179,14 @@ namespace VfxEditor.AvfxFormat2 {
 
             // ItPr
             for( var i = 0; i < Particles.Count; i++ ) {
-                var ItPr = new AvfxEmitterCreate( "ItPr", true, this );
+                var ItPr = new AvfxEmitterItemContainer( "ItPr", true, this );
                 ItPr.Items.AddRange( Particles.GetRange( 0, i + 1 ) );
                 ItPr.Write( writer );
             }
 
             // ItEm
             for( var i = 0; i < Emitters.Count; i++ ) {
-                var ItEm = new AvfxEmitterCreate( "ItEm", false, this );
+                var ItEm = new AvfxEmitterItemContainer( "ItEm", false, this );
                 ItEm.Items.AddRange( Particles );
                 ItEm.Items.AddRange( Emitters.GetRange( 0, i + 1 ) );
                 ItEm.Write( writer );

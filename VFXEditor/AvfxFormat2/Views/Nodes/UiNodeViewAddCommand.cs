@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
-
 namespace VfxEditor.AvfxFormat2 {
     public class UiNodeViewAddCommand<T> : ICommand where T : AvfxNode {
         private readonly UiNodeRemover<T> Remover;

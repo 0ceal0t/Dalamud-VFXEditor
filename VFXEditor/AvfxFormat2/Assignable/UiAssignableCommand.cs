@@ -12,16 +12,10 @@ namespace VfxEditor.AvfxFormat2 {
             PrevState = item.IsAssigned();
         }
 
-        public void Execute() {
-            Item.SetAssigned( State );
-        }
+        public void Execute() => Item.SetAssigned( State );
 
-        public void Redo() {
-            Item.SetAssigned( State );
-        }
+        public void Redo() => Item.SetAssigned( State );
 
-        public void Undo() {
-            Item.SetAssigned( PrevState );
-        }
+        public void Undo() => Item.SetAssigned( PrevState );
     }
 }

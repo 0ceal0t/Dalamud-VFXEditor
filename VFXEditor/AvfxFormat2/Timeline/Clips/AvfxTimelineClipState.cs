@@ -1,7 +1,3 @@
-using ImGuiNET;
-using System.Collections.Generic;
-using System.Numerics;
-
 namespace VfxEditor.AvfxFormat2 {
     public struct AvfxTimelineClipState {
         public string Type;

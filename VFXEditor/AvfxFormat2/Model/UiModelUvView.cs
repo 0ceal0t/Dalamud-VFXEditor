@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VfxEditor.AvfxFormat2 {
     public class UiModelUvView : IUiBase {
@@ -51,11 +49,9 @@ namespace VfxEditor.AvfxFormat2 {
         }
 
         public void Draw( string parentId ) {
-            if( ImGui.RadioButton( "UV 1", ref UvMode, 1 ) ) {
-            }
+            ImGui.RadioButton( "UV 1", ref UvMode, 1 );
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 2", ref UvMode, 2 ) ) {
-            }
+            ImGui.RadioButton( "UV 2", ref UvMode, 2 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

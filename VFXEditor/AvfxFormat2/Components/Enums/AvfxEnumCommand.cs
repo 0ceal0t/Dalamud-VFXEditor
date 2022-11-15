@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
-    public class AvfxEnumCommand<T> : ICommand {
+    public class AvfxEnumCommand<T> : ICommand where T : Enum {
         private readonly AvfxEnum<T> Item;
         private readonly T State;
         private readonly T PrevState;

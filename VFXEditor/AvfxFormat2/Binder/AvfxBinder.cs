@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat2 {
                 PropGoal
             } );
 
-            BinderVariety.ExtraCommand = () => {
+            BinderVariety.ExtraCommandGenerator = () => {
                 return new AvfxBinderDataExtraCommand( this );
             };
 

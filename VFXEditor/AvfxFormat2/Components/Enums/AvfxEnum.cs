@@ -1,19 +1,20 @@
 using System;
 using System.IO;
 using System.Linq;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat2 {
-    public class AvfxEnum<T> : AvfxDrawable {
+    public class AvfxEnum<T> : AvfxDrawable where T : Enum {
         private T Value = ( T )( object )0;
 
         public readonly string Name;
         public readonly T[] Options = ( T[] )Enum.GetValues( typeof( T ) );
-        public Func<ICommand> ExtraCommand; // can be changed later
+        public Func<ICommand> ExtraCommandGenerator; // can be changed later
 
-        public AvfxEnum( string name, string avfxName, Func<ICommand> extraCommand = null ) : base( avfxName ) {
+        public AvfxEnum( string name, string avfxName, Func<ICommand> extraCommandGenerator = null ) : base( avfxName ) {
             Name = name;
-            ExtraCommand = extraCommand;
+            ExtraCommandGenerator = extraCommandGenerator;
         }
 
         public T GetValue() => Value;
@@ -39,9 +40,16 @@ namespace VfxEditor.AvfxFormat2 {
             AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name, id ) ) return;
 
+            // Copy/Paste
+            var manager = CopyManager.Avfx;
+            if( manager.IsCopying ) manager.Ints[Name] = ( int )( object )Value;
+            if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) {
+                manager.PasteCommand.Add( new AvfxEnumCommand<T>( this, ( T )( object )val, ExtraCommandGenerator?.Invoke() ) );
+            }
+
             var text = Options.Contains( Value ) ? Value.ToString() : "[NONE]";
             if( UiUtils.EnumComboBox( $"{Name}{id}", text, Options, Value, out var newValue ) ) {
-                CommandManager.Avfx.Add( new AvfxEnumCommand<T>( this, newValue, ExtraCommand?.Invoke() ) );
+                CommandManager.Avfx.Add( new AvfxEnumCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
             }
 
             DrawRemoveContextMenu( this, Name, id );

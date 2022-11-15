@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using VfxEditor;
+using VfxEditor.Data;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -22,6 +22,13 @@ namespace VfxEditor.AvfxFormat2 {
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );
             if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
+
+            // Copy/Paste
+            var manager = CopyManager.Avfx;
+            if( manager.IsCopying ) manager.Ints[Name] = Literal.GetValue();
+            if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) {
+                manager.PasteCommand.Add( new ParsedIntCommand( Literal.Parsed, val ) );
+            }
 
             var value = Literal.GetValue();
             var spacing = ImGui.GetStyle().ItemSpacing.X;

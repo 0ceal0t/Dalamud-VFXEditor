@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxParticleDataExtraCommand : ICommand {

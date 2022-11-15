@@ -180,7 +180,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Command\Components\" />
       <Folder Include="Parsing\Float2\" />
     </ItemGroup>
 </Project>

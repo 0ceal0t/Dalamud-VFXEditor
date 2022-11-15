@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor;
-
 namespace VfxEditor.AvfxFormat2 {
     public class UiCurveEditorDragCommand : ICommand {
         private readonly UiCurveEditor Item;
@@ -17,16 +10,10 @@ namespace VfxEditor.AvfxFormat2 {
             State = state;
         }
 
-        public void Execute() {
-            Item.Curve.Keys.SetAssigned( true );
-        }
+        public void Execute() => Item.Curve.Keys.SetAssigned( true );
 
-        public void Redo() {
-            Item.SetState( State );
-        }
+        public void Redo() => Item.SetState( State );
 
-        public void Undo() {
-            Item.SetState( PrevState );
-        }
+        public void Undo() => Item.SetState( PrevState );
     }
 }

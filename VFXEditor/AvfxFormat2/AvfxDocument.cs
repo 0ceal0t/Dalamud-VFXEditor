@@ -4,7 +4,6 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
-
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
@@ -15,10 +14,8 @@ namespace VfxEditor.AvfxFormat2 {
         private string SpawnPath => Replace.Path;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
-        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) {
-        }
-        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) {
-        }
+        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) { }
+        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) { }
         public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }

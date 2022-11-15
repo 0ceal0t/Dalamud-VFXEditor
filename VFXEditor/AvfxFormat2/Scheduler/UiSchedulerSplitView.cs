@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VfxEditor.AvfxFormat2 {
     public class UiSchedulerSplitView : UiItemSplitView<AvfxSchedulerSubItem> {
@@ -14,13 +11,9 @@ namespace VfxEditor.AvfxFormat2 {
             IsItem = isItem;
         }
 
-        public override void Disable( AvfxSchedulerSubItem item ) {
-            item.TimelineSelect.Disable();
-        } 
+        public override void Disable( AvfxSchedulerSubItem item ) => item.TimelineSelect.Disable();
 
-        public override void Enable( AvfxSchedulerSubItem item ) {
-            item.TimelineSelect.Enable();
-        }
+        public override void Enable( AvfxSchedulerSubItem item ) => item.TimelineSelect.Enable();
 
         public override AvfxSchedulerSubItem CreateNewAvfx() => new( Scheduler, IsItem ? "Item" : "Trgr", true );
     }
