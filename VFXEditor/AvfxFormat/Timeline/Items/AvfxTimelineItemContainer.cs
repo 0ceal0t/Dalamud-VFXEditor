@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxTimelineItem : AvfxBase {
+    public class AvfxTimelineItemContainer : AvfxBase {
         public readonly AvfxTimeline Timeline;
-        public readonly List<AvfxTimelineSubItem> Items = new();
+        public readonly List<AvfxTimelineItem> Items = new();
 
-        public AvfxTimelineItem( AvfxTimeline timeline ) : base( "Item" ) {
+        public AvfxTimelineItemContainer( AvfxTimeline timeline ) : base( "Item" ) {
             Timeline = timeline;
         }
 
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 if( ( idx == numElements - 1 ) || BENA_ahead ) { // split before bEna or when about to end
-                    var item = new AvfxTimelineSubItem( Timeline, false, split.ToArray() );
+                    var item = new AvfxTimelineItem( Timeline, false, split.ToArray() );
                     Items.Add( item );
                     split = new(); // reset split
                 }

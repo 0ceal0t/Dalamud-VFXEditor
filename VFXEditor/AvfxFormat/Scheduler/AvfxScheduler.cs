@@ -10,8 +10,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ItemCount = new( "Item Count", "ItCn" );
         public readonly AvfxInt TriggerCount = new( "Trigger Count", "TrCn" );
 
-        public readonly List<AvfxSchedulerSubItem> Items = new();
-        public readonly List<AvfxSchedulerSubItem> Triggers = new();
+        public readonly List<AvfxSchedulerItem> Items = new();
+        public readonly List<AvfxSchedulerItem> Triggers = new();
 
         public readonly UiSchedulerSplitView ItemSplit;
         public readonly UiSchedulerSplitView TriggerSplit;
@@ -34,16 +34,16 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            AvfxSchedulerItem lastItem = null;
-            AvfxSchedulerItem lastTrigger = null;
+            AvfxSchedulerItemContainer lastItem = null;
+            AvfxSchedulerItemContainer lastTrigger = null;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Item" ) {
-                    lastItem = new AvfxSchedulerItem( "Item", this );
+                    lastItem = new AvfxSchedulerItemContainer( "Item", this );
                     lastItem.Read( _reader, _size );
                 }
                 else if( _name == "Trgr" ) {
-                    lastTrigger = new AvfxSchedulerItem( "Trgr", this );
+                    lastTrigger = new AvfxSchedulerItemContainer( "Trgr", this );
                     lastTrigger.Read( _reader, _size );
                 }
             }, size );
@@ -73,14 +73,14 @@ namespace VfxEditor.AvfxFormat {
 
             // Item
             for( var i = 0; i < Items.Count; i++ ) {
-                var item = new AvfxSchedulerItem( "Item", this );
+                var item = new AvfxSchedulerItemContainer( "Item", this );
                 item.Items.AddRange( Items.GetRange( 0, i + 1 ) );
                 item.Write( writer );
             }
 
             // Trgr
             for( var i = 0; i < Triggers.Count; i++ ) {
-                var trigger = new AvfxSchedulerItem( "Trgr", this );
+                var trigger = new AvfxSchedulerItemContainer( "Trgr", this );
                 trigger.Items.AddRange( Items );
                 trigger.Items.AddRange( Triggers.GetRange( 0, i + 1 ) ); // get 1, then 2, etc.
                 trigger.Write( writer );

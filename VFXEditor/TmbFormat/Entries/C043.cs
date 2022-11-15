@@ -20,36 +20,30 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort BodyId = new( "Body Id" );
         private readonly ParsedInt VariantId = new( "Variant Id" );
 
-        public C043() : base() { }
+        public C043() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Unk2,
+                WeaponId,
+                BodyId,
+                VariantId
+            };
+        }
 
         public C043( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            WeaponId.Read( reader );
-            BodyId.Read( reader );
-            VariantId.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            WeaponId.Write( writer );
-            BodyId.Write( writer );
-            VariantId.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            WeaponId.Draw( id, CommandManager.Tmb );
-            BodyId.Draw( id, CommandManager.Tmb );
-            VariantId.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

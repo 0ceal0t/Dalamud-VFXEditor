@@ -28,6 +28,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 NPow
             };
+            // Default
             TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );

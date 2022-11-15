@@ -40,6 +40,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureCalculateAlpha,
                 TextureIdx
             };
+            // Default
             TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );

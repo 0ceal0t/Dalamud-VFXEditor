@@ -15,34 +15,32 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path" );
 
         public C002() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Unk2,
+                Path
+            };
+
             Duration.Value = 50;
         }
 
         public C002( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Path = reader.ReadOffsetString();
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            writer.WriteOffsetString( Path );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
+            DrawParsed( id );
         }
     }
 }

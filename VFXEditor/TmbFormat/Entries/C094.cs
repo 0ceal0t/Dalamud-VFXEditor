@@ -19,6 +19,8 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedFloat StartVisibility = new( "Start Visibility" );
         private readonly ParsedFloat EndVisibility = new( "End Visibility" );
+
+        // these are parsed separately
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
@@ -27,14 +29,18 @@ namespace VfxEditor.TmbFormat.Entries {
 
         // Unk2 = 1, Unk3 = 8 -> ExtraSize = 0x14
 
-        public C094() : base() { }
+        public C094() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                StartVisibility,
+                EndVisibility
+            };
+        }
 
         public C094( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            StartVisibility.Read( reader );
-            EndVisibility.Read( reader );
+            ReadParsed( reader );
 
             UnkExtraData = reader.ReadAtOffset( ( binaryReader ) => {
                 Unk2.Read( binaryReader );
@@ -47,10 +53,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            StartVisibility.Write( writer );
-            EndVisibility.Write( writer );
+            WriteParsed( writer );
 
             writer.WriteExtra( ( binaryWriter ) => {
                 Unk2.Write( binaryWriter );
@@ -63,10 +66,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            StartVisibility.Draw( id, CommandManager.Tmb );
-            EndVisibility.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
 
             ImGui.Checkbox( $"Unknown Extra Data{id}", ref UnkExtraData );
             if( UnkExtraData ) {

@@ -18,29 +18,29 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C118() : base() {
+            Parsed = new() {
+                Unk1,
+                Unk2,
+                Unk3
+            };
+
             Unk1.Value = 1;
             Unk3.Value = 100;
         }
 
         public C118( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Unk3.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            Unk3.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

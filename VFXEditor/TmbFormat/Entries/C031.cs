@@ -19,31 +19,29 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort TargetType = new( "Target Type" );
 
         public C031() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                AnimationId,
+                TargetType
+            };
+
             TargetType.Value = 2;
         }
 
         public C031( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            AnimationId.Read( reader );
-            TargetType.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            AnimationId.Write( writer );
-            TargetType.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            AnimationId.Draw( id, CommandManager.Tmb );
-            TargetType.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

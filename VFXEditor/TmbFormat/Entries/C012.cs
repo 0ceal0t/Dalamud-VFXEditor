@@ -16,19 +16,35 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1" );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2" );
         private readonly ParsedShort BindPoint3 = new( "Bind Point 3" );
         private readonly ParsedShort BindPoint4 = new( "Bind Point 4" );
-        private readonly ParsedFloat3 Scale = new( "Scale" );
-        private readonly ParsedFloat3 Rotation = new( "Rotation" );
-        private readonly ParsedFloat3 Position = new( "Position" );
-        private readonly ParsedFloat4 RGBA = new( "RGBA" );
+        private readonly TmbOffsetFloat3 Scale = new( "Scale" );
+        private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
+        private readonly TmbOffsetFloat3 Position = new( "Position" );
+        private readonly TmbOffsetFloat4 RGBA = new( "RGBA" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C012() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Path,
+                BindPoint1,
+                BindPoint2,
+                BindPoint3,
+                BindPoint4,
+                Scale,
+                Rotation,
+                Position,
+                RGBA,
+                Unk2,
+                Unk3
+            };
+
             Duration.Value = 30;
             BindPoint1.Value = 1;
             BindPoint2.Value = 0xFF;
@@ -40,54 +56,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C012( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Path = reader.ReadOffsetString();
-            BindPoint1.Read( reader );
-            BindPoint2.Read( reader );
-            BindPoint3.Read( reader );
-            BindPoint4.Read( reader );
-            Scale.Value = reader.ReadOffsetVector3();
-            Rotation.Value = reader.ReadOffsetVector3();
-            Position.Value = reader.ReadOffsetVector3();
-            RGBA.Value = reader.ReadOffsetVector4();
-            Unk2.Read( reader );
-            Unk3.Read( reader );
-
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            writer.WriteOffsetString( Path );
-            BindPoint1.Write( writer );
-            BindPoint2.Write( writer );
-            BindPoint3.Write( writer );
-            BindPoint4.Write( writer );
-            writer.WriteExtraVector3( Scale.Value );
-            writer.WriteExtraVector3( Rotation.Value );
-            writer.WriteExtraVector3( Position.Value );
-            writer.WriteExtraVector4( RGBA.Value );
-            Unk2.Write( writer );
-            Unk3.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
-            BindPoint1.Draw( id, CommandManager.Tmb );
-            BindPoint2.Draw( id, CommandManager.Tmb );
-            BindPoint3.Draw( id, CommandManager.Tmb );
-            BindPoint4.Draw( id, CommandManager.Tmb );
-            Scale.Draw( id, CommandManager.Tmb );
-            Rotation.Draw( id, CommandManager.Tmb );
-            Position.Draw( id, CommandManager.Tmb );
-            RGBA.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

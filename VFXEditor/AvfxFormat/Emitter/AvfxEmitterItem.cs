@@ -81,6 +81,7 @@ namespace VfxEditor.AvfxFormat {
                 GenerateDelayByOne
             };
 
+            // Default Values
             TargetIdx.SetValue( -1 );
             Enabled.SetValue( false );
             LocalDirection.SetValue( 0 );

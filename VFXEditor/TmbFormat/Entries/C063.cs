@@ -14,40 +14,36 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedInt SoundIndex = new( "Sound Index" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C063() : base() {
+            Parsed = new() {
+                Unk1,
+                Unk2,
+                Path,
+                SoundIndex,
+                Unk3
+            };
+
             Unk1.Value = 1;
             SoundIndex.Value = 1;
         }
 
         public C063( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Path = reader.ReadOffsetString();
-            SoundIndex.Read( reader );
-            Unk3.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            writer.WriteOffsetString( Path );
-            SoundIndex.Write( writer );
-            Unk3.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
-            SoundIndex.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

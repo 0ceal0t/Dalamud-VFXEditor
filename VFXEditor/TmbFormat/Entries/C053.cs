@@ -19,33 +19,29 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort SoundId2 = new( "Sound Id 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        public C053() : base() { }
+        public C053() : base() {
+            Parsed = new() {
+                Unk1,
+                Unk2,
+                SoundId1,
+                SoundId2,
+                Unk3
+            };
+        }
 
         public C053( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            SoundId1.Read( reader );
-            SoundId2.Read( reader );
-            Unk3.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            SoundId1.Write( writer );
-            SoundId2.Write( writer );
-            Unk3.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            SoundId1.Draw( id, CommandManager.Tmb );
-            SoundId2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb ); ;
+            DrawParsed( id );
         }
     }
 }

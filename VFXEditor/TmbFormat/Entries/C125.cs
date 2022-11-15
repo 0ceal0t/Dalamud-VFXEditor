@@ -17,27 +17,29 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
 
         public C125() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1
+            };
+
             Duration.Value = 1;
         }
 
         public C125( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "Please don't do anything stupid with this" );
 
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

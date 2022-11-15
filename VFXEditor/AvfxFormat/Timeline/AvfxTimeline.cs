@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
 
         public readonly List<AvfxTimelineClip> Clips = new();
-        public readonly List<AvfxTimelineSubItem> Items = new();
+        public readonly List<AvfxTimelineItem> Items = new();
 
         public readonly UiNodeGroupSet NodeGroups;
 
@@ -51,11 +51,11 @@ namespace VfxEditor.AvfxFormat {
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
 
-            AvfxTimelineItem lastItem = null;
+            AvfxTimelineItemContainer lastItem = null;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Item" ) {
-                    lastItem = new AvfxTimelineItem( this );
+                    lastItem = new AvfxTimelineItemContainer( this );
                     lastItem.Read( _reader, _size );
                 }
                 else if( _name == "Clip" ) {
@@ -85,7 +85,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Item
             for( var i = 0; i < Items.Count; i++ ) {
-                var item = new AvfxTimelineItem( this );
+                var item = new AvfxTimelineItemContainer( this );
                 item.Items.AddRange( Items.GetRange( 0, i + 1 ) );
                 item.Write( writer );
             }

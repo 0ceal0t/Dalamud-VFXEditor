@@ -17,44 +17,36 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedFloat Unk3 = new( "Unknown 3" );
         private readonly ParsedFloat Unk4 = new( "Unknown 4" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path", maxSize:31 );
         private readonly ParsedInt Unk5 = new( "Unknown 1" );
 
         public C010() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Unk2,
+                Unk3,
+                Unk4,
+                Path,
+                Unk5
+            };
+
             Duration.Value = 50;
         }
 
         public C010( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Unk3.Read( reader );
-            Unk4.Read( reader );
-            Path = reader.ReadOffsetString();
-            Unk5.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            Unk3.Write( writer );
-            Unk4.Write( writer );
-            writer.WriteOffsetString( Path );
-            Unk5.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
-            Unk4.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 31 );
-            Unk5.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

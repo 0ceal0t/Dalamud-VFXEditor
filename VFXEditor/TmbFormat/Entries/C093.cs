@@ -15,11 +15,18 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedFloat4 Unk2 = new( "Unknown 2" );
-        private readonly ParsedFloat4 Unk3 = new( "Unknown 3" );
+        private readonly TmbOffsetFloat4 Unk2 = new( "Unknown 2" );
+        private readonly TmbOffsetFloat4 Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
         public C093() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Unk2,
+                Unk3
+            };
+
             Duration.Value = 30;
             Unk2.Value = new( 1 );
             Unk3.Value = new( 1 );
@@ -27,29 +34,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C093( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Unk2.Value = reader.ReadOffsetVector4();
-            Unk3.Value = reader.ReadOffsetVector4();
-            Unk4.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            writer.WriteExtraVector4( Unk2.Value );
-            writer.WriteExtraVector4( Unk3.Value );
-            Unk4.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
-            Unk4.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

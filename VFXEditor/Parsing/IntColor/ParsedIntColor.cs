@@ -8,9 +8,9 @@ namespace VfxEditor.Parsing {
         public readonly string Name;
         public Vector4 Value = new(0);
 
-        private bool ColorDrag = false;
-        private DateTime ColorDragTime = DateTime.Now;
-        private Vector4 ColorDragState;
+        private bool Editing = false;
+        private DateTime LastEditTime = DateTime.Now;
+        private Vector4 StateBeforeEdit;
 
         public ParsedIntColor( string name ) {
             Name = name;
@@ -37,20 +37,20 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
             if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedIntColorCommand( this, val ) );
+                copy.PasteCommand.Add( new ParsedIntColorCommand( this, val, Value ) );
             }
 
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name + id, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
-                if( !ColorDrag ) {
-                    ColorDrag = true;
-                    ColorDragState = prevValue;
+                if( !Editing ) {
+                    Editing = true;
+                    StateBeforeEdit = prevValue;
                 }
-                ColorDragTime = DateTime.Now;
+                LastEditTime = DateTime.Now;
             }
-            else if( ColorDrag && ( DateTime.Now - ColorDragTime ).TotalMilliseconds > 200 ) {
-                ColorDrag = false;
-                manager.Add( new ParsedIntColorCommand( this, ColorDragState ) );
+            else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
+                Editing = false;
+                manager.Add( new ParsedIntColorCommand( this, Value, StateBeforeEdit ) );
             }
         }
     }

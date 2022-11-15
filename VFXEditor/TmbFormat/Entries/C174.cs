@@ -22,6 +22,16 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
         public C174() : base() {
+            Parsed = new() {
+                Unk1,
+                Unk2,
+                ScabbardPosition,
+                Unk3,
+                Unk4,
+                Unk5,
+                Unk6
+            };
+
             Unk3.Value = 1;
             Unk4.Value = 1;
             ScabbardPosition.Value = 5;
@@ -29,35 +39,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C174( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            ScabbardPosition.Read( reader );
-            Unk3.Read( reader );
-            Unk4.Read( reader );
-            Unk5.Read( reader );
-            Unk6.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            ScabbardPosition.Write( writer );
-            Unk3.Write( writer );
-            Unk4.Write( writer );
-            Unk5.Write( writer );
-            Unk6.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            ScabbardPosition.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
-            Unk4.Draw( id, CommandManager.Tmb );
-            Unk5.Draw( id, CommandManager.Tmb );
-            Unk6.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

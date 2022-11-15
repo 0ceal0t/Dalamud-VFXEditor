@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxTimelineSubItem : GenericWorkspaceItem {
+    public class AvfxTimelineItem : GenericWorkspaceItem {
         public readonly AvfxTimeline Timeline;
 
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxTimelineSubItem( AvfxTimeline timeline, bool initNodeSelects ) {
+        public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
 
             Parsed = new List<AvfxBase> {
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
             };
         }
 
-        public AvfxTimelineSubItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {
+        public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {
             using var buffer = new MemoryStream( data );
             using var reader = new BinaryReader( buffer );
             AvfxBase.ReadNested( reader, Parsed, data.Length );

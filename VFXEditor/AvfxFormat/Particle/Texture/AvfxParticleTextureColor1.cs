@@ -43,6 +43,7 @@ namespace VfxEditor.AvfxFormat {
                 TexN,
                 TexNRandom
             };
+            // Default
             TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );

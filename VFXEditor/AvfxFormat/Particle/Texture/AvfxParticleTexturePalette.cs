@@ -24,6 +24,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 Offset
             };
+            // Default
             TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );

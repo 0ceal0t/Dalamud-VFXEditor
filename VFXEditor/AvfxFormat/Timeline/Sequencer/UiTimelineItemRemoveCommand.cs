@@ -1,10 +1,10 @@
 namespace VfxEditor.AvfxFormat {
     public class UiTimelineItemRemoveCommand : ICommand {
         private readonly UiTimelineItemSequencer View;
-        private readonly AvfxTimelineSubItem Item;
+        private readonly AvfxTimelineItem Item;
         private readonly int Idx;
 
-        public UiTimelineItemRemoveCommand( UiTimelineItemSequencer view, AvfxTimelineSubItem item ) {
+        public UiTimelineItemRemoveCommand( UiTimelineItemSequencer view, AvfxTimelineItem item ) {
             View = view;
             Item = item;
             Idx = view.Items.IndexOf( item );

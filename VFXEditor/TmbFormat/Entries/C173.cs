@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1" );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
@@ -30,6 +30,24 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk12 = new( "Unknown 12" );
 
         public C173() : base() {
+            Parsed = new() {
+                Unk1,
+                Unk2,
+                Path,
+                BindPoint1,
+                BindPoint2,
+                Unk3,
+                Unk4,
+                Unk5,
+                Unk6,
+                Unk7,
+                Unk8,
+                Unk9,
+                Unk10,
+                Unk11,
+                Unk12
+            };
+
             Unk1.Value = 30;
             BindPoint1.Value = 1;
             BindPoint2.Value = 0xFF;
@@ -37,59 +55,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C173( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Path = reader.ReadOffsetString();
-            BindPoint1.Read( reader );
-            BindPoint2.Read( reader );
-            Unk3.Read( reader );
-            Unk4.Read( reader );
-            Unk5.Read( reader );
-            Unk6.Read( reader );
-            Unk7.Read( reader );
-            Unk8.Read( reader );
-            Unk9.Read( reader );
-            Unk10.Read( reader );
-            Unk11.Read( reader );
-            Unk12.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            writer.WriteOffsetString( Path );
-            BindPoint1.Write( writer );
-            BindPoint2.Write( writer );
-            Unk3.Write( writer );
-            Unk4.Write( writer );
-            Unk5.Write( writer );
-            Unk6.Write( writer );
-            Unk7.Write( writer );
-            Unk8.Write( writer );
-            Unk9.Write( writer );
-            Unk10.Write( writer );
-            Unk11.Write( writer );
-            Unk12.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 255 );
-            BindPoint1.Draw( id, CommandManager.Tmb );
-            BindPoint2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
-            Unk4.Draw( id, CommandManager.Tmb );
-            Unk5.Draw( id, CommandManager.Tmb );
-            Unk6.Draw( id, CommandManager.Tmb );
-            Unk7.Draw( id, CommandManager.Tmb );
-            Unk8.Draw( id, CommandManager.Tmb );
-            Unk9.Draw( id, CommandManager.Tmb );
-            Unk10.Draw( id, CommandManager.Tmb );
-            Unk11.Draw( id, CommandManager.Tmb );
-            Unk12.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

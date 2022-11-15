@@ -3,24 +3,63 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxSchedulerItem : AvfxBase {
+    public class AvfxSchedulerItem : GenericWorkspaceItem {
         public readonly AvfxScheduler Scheduler;
-        public readonly List<AvfxSchedulerSubItem> Items = new();
+        public readonly string Name;
 
-        public AvfxSchedulerItem( string name, AvfxScheduler scheduler ) : base( name ) {
+        public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
+        public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
+        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo" );
+
+        private readonly List<AvfxBase> Parsed;
+
+        public UiNodeSelect<AvfxTimeline> TimelineSelect;
+
+        private readonly List<IAvfxUiBase> Display;
+
+        public AvfxSchedulerItem( AvfxScheduler scheduler, string name, bool initNodeSelects ) {
             Scheduler = scheduler;
+            Name = name;
+
+            Parsed = new List<AvfxBase> {
+                Enabled,
+                StartTime,
+                TimelineIdx
+            };
+
+            // Default
+            Enabled.SetValue( true );
+            StartTime.SetValue( 0 );
+            TimelineIdx.SetValue( -1 );
+
+            if( initNodeSelects ) InitializeNodeSelects();
+
+            Display = new() {
+                Enabled,
+                StartTime
+            };
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            for( var i = 0; i < size / 36; i++ ) {
-                Items.Add( new AvfxSchedulerSubItem( Scheduler, false, reader, AvfxName ) );
-            }
+        public AvfxSchedulerItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );
+
+        public void InitializeNodeSelects() {
+            TimelineSelect = new UiNodeSelect<AvfxTimeline>( Scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
+        public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            foreach( var item in Items ) item.Write( writer );
+        public override void Draw( string parentId ) {
+            var id = parentId + "/" + Name;
+            DrawRename( id );
+            TimelineSelect.Draw( id );
+            IAvfxUiBase.DrawList( Display, id );
+        }
+
+        public override string GetDefaultText() => $"{GetIdx()}: Timeline {TimelineIdx.GetValue()}";
+
+        public override string GetWorkspaceId() {
+            var Type = ( Name == "Item" ) ? "Item" : "Trigger";
+            return $"{Scheduler.GetWorkspaceId()}/{Type}{GetIdx()}";
         }
     }
 }

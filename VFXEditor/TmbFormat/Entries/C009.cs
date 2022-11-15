@@ -14,31 +14,31 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private string Path = "";
+        private readonly TmbOffsetString Path = new( "Path", maxSize:31 );
 
         public C009() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Path
+            };
+
             Duration.Value = 50;
         }
 
         public C009( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Path = reader.ReadOffsetString();
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            writer.WriteOffsetString( Path );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            ImGui.InputText( $"Path{id}", ref Path, 31 );
+            DrawParsed( id );
         }
     }
 }

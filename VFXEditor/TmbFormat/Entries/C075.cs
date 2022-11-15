@@ -16,55 +16,43 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedFloat3 Scale = new( "Scale" );
-        private readonly ParsedFloat3 Rotation = new( "Rotation" );
-        private readonly ParsedFloat3 Position = new( "Position" );
-        private readonly ParsedFloat4 RGBA = new( "RGBA" );
+        private readonly TmbOffsetFloat3 Scale = new( "Scale" );
+        private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
+        private readonly TmbOffsetFloat3 Position = new( "Position" );
+        private readonly TmbOffsetFloat4 RGBA = new( "RGBA" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
         public C075() : base() {
+            Parsed = new() {
+                Duration,
+                Unk1,
+                Unk2,
+                Scale,
+                Rotation,
+                Position,
+                RGBA,
+                Unk3,
+                Unk4
+            };
+
             Scale.Value = new( 1 );
             RGBA.Value = new( 1 );
         }
 
         public C075( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
-            Duration.Read( reader );
-            Unk1.Read( reader );
-            Unk2.Read( reader );
-            Scale.Value = reader.ReadOffsetVector3();
-            Rotation.Value = reader.ReadOffsetVector3();
-            Position.Value = reader.ReadOffsetVector3();
-            RGBA.Value = reader.ReadOffsetVector4();
-            Unk3.Read( reader );
-            Unk4.Read( reader );
+            ReadParsed( reader );
         }
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Duration.Write( writer );
-            Unk1.Write( writer );
-            Unk2.Write( writer );
-            writer.WriteExtraVector3( Scale.Value );
-            writer.WriteExtraVector3( Rotation.Value );
-            writer.WriteExtraVector3( Position.Value );
-            writer.WriteExtraVector4( RGBA.Value );
-            Unk3.Write( writer );
-            Unk4.Write( writer );
+            WriteParsed( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            Duration.Draw( id, CommandManager.Tmb );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Scale.Draw( id, CommandManager.Tmb );
-            Rotation.Draw( id, CommandManager.Tmb );
-            Position.Draw( id, CommandManager.Tmb );
-            RGBA.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
-            Unk4.Draw( id, CommandManager.Tmb );
+            DrawParsed( id );
         }
     }
 }

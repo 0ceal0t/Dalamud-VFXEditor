@@ -2,7 +2,7 @@ namespace VfxEditor.AvfxFormat {
     public class UiTimelineItemAddCommand : ICommand {
         private readonly UiTimelineItemSequencer View;
         private readonly int Idx;
-        private AvfxTimelineSubItem Item;
+        private AvfxTimelineItem Item;
 
         public UiTimelineItemAddCommand( UiTimelineItemSequencer view ) {
             View = view;
@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Execute() {
-            Item = new AvfxTimelineSubItem( View.Timeline, true );
+            Item = new AvfxTimelineItem( View.Timeline, true );
             Item.BinderSelect.Select( null );
             Item.EffectorSelect.Select( null );
             Item.EmitterSelect.Select( null );
