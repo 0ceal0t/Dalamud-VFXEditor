@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor;
+using VfxEditor.Data;
+using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat2.Enums;
 
 namespace VfxEditor.AvfxFormat2 {
@@ -43,6 +45,20 @@ namespace VfxEditor.AvfxFormat2 {
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
                 ImPlot.SetNextAxesToFit();
                 DrawOnce = true;
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.DisabledButton( "Copy" + parentId, Keys.Count > 0 ) ) {
+                CopyManager.Avfx.ClearCurveKeys();
+                foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key.Time, key.X, key.Y, key.Z );
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.Avfx.HasCurveKeys() ) ) {
+                CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
+                    foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
+                    UpdateColor();
+                } ) );
             }
 
             if( Selected != null && !Points.Contains( Selected ) ) Selected = null;
