@@ -1,46 +1,59 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat2 {
     public class AvfxTimelineClip : AvfxWorkspaceItem {
-        private static readonly Dictionary<string, string> IdOptions = new() {
-            { "LLIK", "Kill" },
-            { "TSER", "Reset" },
-            { " DNE", "End" },
-            { "IDAF", "Fade In" },
-            { "PLLU", "Unlock Loop Point" },
-            { " GRT", "Trigger" },
-            { "GRTR", "Random Trigger" }
-        };
-
         public readonly AvfxTimeline Timeline;
 
-        public string UniqueId = "LLIK";
-        public readonly int[] UnknownInts = new int[] { 0, 0, 0, 0 };
-        public readonly float[] UnknownFloats = new float[] { -1, 0, 0, 0 };
+        public readonly AvfxTimelineClipType Type = new();
+
+        public readonly ParsedInt Unk1 = new( "Raw Int 1" );
+        public readonly ParsedInt Unk2 = new( "Raw Int 2" );
+        public readonly ParsedInt Unk3 = new( "Raw Int 3" );
+        public readonly ParsedInt Unk4 = new( "Raw Int 4" );
+        public readonly UiParsedInt4 RawInts;
+
+        public readonly ParsedFloat Unk5 = new( "Raw Float 1" );
+        public readonly ParsedFloat Unk6 = new( "Raw Float 2" );
+        public readonly ParsedFloat Unk7 = new( "Raw Float 3" );
+        public readonly ParsedFloat Unk8 = new( "Raw Float 4" );
+        public readonly UiParsedFloat4 RawFloats;
 
         public AvfxTimelineClip( AvfxTimeline timeline ) : base( "Clip" ) {
             Timeline = timeline;
+            Unk5.Value = -1f;
+
+            RawInts = new( "Raw Ints", Unk1, Unk2, Unk3, Unk4 );
+            RawFloats = new( "Raw Flaots", Unk5, Unk6, Unk7, Unk8 );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            UniqueId = Encoding.ASCII.GetString( reader.ReadBytes( 4 ) );
-            for( var i = 0; i < 4; i++ ) UnknownInts[i] = reader.ReadInt32();
-            for( var i = 0; i < 4; i++ ) UnknownFloats[i] = reader.ReadSingle();
+            Type.Read( reader );
+            Unk1.Read( reader, 4 );
+            Unk2.Read( reader, 4 );
+            Unk3.Read( reader, 4 );
+            Unk4.Read( reader, 4 );
+            Unk5.Read( reader, 4 );
+            Unk6.Read( reader, 4 );
+            Unk7.Read( reader, 4 );
+            Unk8.Read( reader, 4 );
             reader.ReadBytes( 4 * 32 );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) {
-            writer.Write( Encoding.ASCII.GetBytes( UniqueId ) );
-            for( var i = 0; i < 4; i++ ) writer.Write( UnknownInts[i] );
-            for( var i = 0; i < 4; i++ ) writer.Write( UnknownFloats[i] );
+            Type.Write( writer );
+            Unk1.Write( writer );
+            Unk2.Write( writer );
+            Unk3.Write( writer );
+            Unk4.Write( writer );
+            Unk5.Write( writer );
+            Unk6.Write( writer );
+            Unk7.Write( writer );
+            Unk8.Write( writer );
             WritePad( writer, 4 * 32 );
         }
 
@@ -48,99 +61,40 @@ namespace VfxEditor.AvfxFormat2 {
             var id = parentId + "/Clip";
             DrawRename( id );
 
-            var type = UniqueId;
-            if( ImGui.BeginCombo( "Type" + id, IdOptions[type] ) ) {
-                foreach( var key in IdOptions.Keys ) {
-                    if( ImGui.Selectable( IdOptions[key], type == key ) ) {
-                        CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                            UniqueId = key;
-                        } ) );
-                    }
-                }
-                ImGui.EndCombo();
-            }
+            Type.Draw( id );
             
             // ====== KILL ============
 
-            if( type == "LLIK" ) {
-                var duration = UnknownInts[0];
+            if( Type.Value == "LLIK" ) {
+                var duration = Unk1.Value;
                 if( ImGui.InputInt( "Fade Out Duration" + id, ref duration ) ) {
-                    CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                        UnknownInts[0] = duration;
-                    } ) );
+                    CommandManager.Avfx.Add( new ParsedIntCommand( Unk1, duration ) );
                 }
 
-                var hide = UnknownInts[3] == 1;
+                var hide = Unk4.Value == 1;
                 if( ImGui.Checkbox( "Hide" + id, ref hide ) ) {
-                    CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                        UnknownInts[3] = hide ? 1 : 0;
-                    } ) );
+                    CommandManager.Avfx.Add( new ParsedIntCommand( Unk4, hide ? 1 : 0 ) );
                 }
 
-                var allowShow = UnknownFloats[0] != -1f;
+                var allowShow = Unk5.Value != -1f;
                 if( ImGui.Checkbox( "Allow Show" + id, ref allowShow ) ) {
-                    CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                        UnknownFloats[0] = allowShow ? 0f : -1f;
-                    } ) );
+                    CommandManager.Avfx.Add( new ParsedFloatCommand( Unk5, allowShow ? 0 : -1f ) );
                 }
 
-                var startHidden = UnknownFloats[1] != -1f;
+                var startHidden = Unk6.Value != -1f;
                 if( ImGui.Checkbox( "Start Hidden" + id, ref startHidden ) ) {
-                    CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                        UnknownFloats[1] = startHidden ? 0f : -1f;
-                    } ) );
+                    CommandManager.Avfx.Add( new ParsedFloatCommand( Unk6, startHidden ? 0 : -1f ) );
                 }
             }
 
             // ======================
 
-            var rawInts = new Vector4( UnknownInts[0], UnknownInts[1], UnknownInts[2], UnknownInts[3] );
-            if( ImGui.InputFloat4( "Raw Integers" + id, ref rawInts ) ) {
-                CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                    UnknownInts[0] = ( int )rawInts.X;
-                    UnknownInts[1] = ( int )rawInts.Y;
-                    UnknownInts[2] = ( int )rawInts.Z;
-                    UnknownInts[3] = ( int )rawInts.W;
-                } ) );
-            }
-
-            var rawFloats = new Vector4( UnknownFloats[0], UnknownFloats[1], UnknownFloats[2], UnknownFloats[3] );
-            if( ImGui.InputFloat4( "Raw Floats" + id, ref rawFloats ) ) {
-                CommandManager.Avfx.Add( new AvfxTimelineClipCommand( this, () => {
-                    UnknownFloats[0] = rawFloats.X;
-                    UnknownFloats[1] = rawFloats.Y;
-                    UnknownFloats[2] = rawFloats.Z;
-                    UnknownFloats[3] = rawFloats.W;
-                } ) );
-            }
+            RawInts.Draw( id, CommandManager.Avfx );
+            RawFloats.Draw( id, CommandManager.Avfx );
         }
 
-        public override string GetDefaultText() => $"{GetIdx()}: {IdOptions[UniqueId]}";
+        public override string GetDefaultText() => $"{GetIdx()}: {Type.Text}";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Clip{GetIdx()}";
-
-        public AvfxTimelineClipState GetState() => new() {
-            Type = UniqueId,
-            Unk1 = UnknownInts[0],
-            Unk2 = UnknownInts[1],
-            Unk3 = UnknownInts[2],
-            Unk4 = UnknownInts[3],
-            Unk5 = UnknownFloats[0],
-            Unk6 = UnknownFloats[1],
-            Unk7 = UnknownFloats[2],
-            Unk8 = UnknownFloats[3]
-        };
-
-        public void SetState( AvfxTimelineClipState state ) {
-            UniqueId = state.Type;
-            UnknownInts[0] = state.Unk1;
-            UnknownInts[1] = state.Unk2;
-            UnknownInts[2] = state.Unk3;
-            UnknownInts[3] = state.Unk4;
-            UnknownFloats[0] = state.Unk5;
-            UnknownFloats[1] = state.Unk6;
-            UnknownFloats[2] = state.Unk7;
-            UnknownFloats[3] = state.Unk8;
-        }
     }
 }
