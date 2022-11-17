@@ -10,7 +10,7 @@ namespace VfxEditor.TmbFormat {
         public readonly List<Tmac> Actors = new();
         private readonly List<int> TempIds;
 
-        public Tmal( TmbReader reader ) : base( reader ) {
+        public Tmal( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             TempIds = reader.ReadOffsetTimeline();
         }

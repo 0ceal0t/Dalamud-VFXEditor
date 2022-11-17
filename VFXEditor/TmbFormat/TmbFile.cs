@@ -10,7 +10,8 @@ using VfxEditor.TmbFormat.Utils;
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {
     public class TmbFile : FileDropdown<Tmac> {
-        public readonly CommandManager Command = new( Data.CopyManager.Tmb );
+        public readonly CommandManager Command;
+        public readonly bool PapEmbedded;
 
         private readonly Tmdh HeaderTmdh;
         private readonly Tmpp HeaderTmpp;
@@ -20,10 +21,13 @@ namespace VfxEditor.TmbFormat {
         private readonly List<Tmtr> Tracks = new();
         private readonly List<TmbEntry> Entries = new();
 
-        private bool Verified = true;
+        private readonly bool Verified = true;
         public bool IsVerified => Verified;
 
-        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : base( true) {
+        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) : base( true) {
+            PapEmbedded = papEmbedded;
+            Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
+
             var startPos = binaryReader.BaseStream.Position;
             var reader = new TmbReader( binaryReader );
             var original = checkOriginal ? FileUtils.GetOriginal( binaryReader ) : null;
@@ -32,12 +36,12 @@ namespace VfxEditor.TmbFormat {
             var size = reader.ReadInt32();
             var numEntries = reader.ReadInt32(); // entry count (not including TMLB)
 
-            HeaderTmdh = new Tmdh( reader );
-            HeaderTmpp = new Tmpp( reader );
-            HeaderTmal = new Tmal( reader );
+            HeaderTmdh = new Tmdh( reader, papEmbedded );
+            HeaderTmpp = new Tmpp( reader, papEmbedded );
+            HeaderTmal = new Tmal( reader, papEmbedded );
 
             for(var i = 0; i < numEntries - (HeaderTmpp.IsAssigned ? 3 : 2); i++ ) {
-                reader.ParseItem( Actors, Tracks, Entries, ref Verified );
+                reader.ParseItem( Actors, Tracks, Entries, papEmbedded, ref Verified );
             }
 
             HeaderTmal.PickActors( reader );
@@ -124,14 +128,14 @@ namespace VfxEditor.TmbFormat {
 
         protected override string GetName( Tmac item, int idx ) => $"Actor {idx}";
 
-        protected override void OnNew() => CommandManager.Tmb.Add( new GenericAddCommand<Tmac>( Actors, new Tmac() ) );
+        protected override void OnNew() => Command.Add( new GenericAddCommand<Tmac>( Actors, new Tmac( PapEmbedded ) ) );
 
-        protected override void OnDelete( Tmac item ) => CommandManager.Tmb.Add( new GenericRemoveCommand<Tmac>( Actors, item ) );
+        protected override void OnDelete( Tmac item ) => Command.Add( new GenericRemoveCommand<Tmac>( Actors, item ) );
 
-        public static TmbFile FromLocalFile( string path ) {
+        public static TmbFile FromLocalFile( string path, bool papEmbedded ) {
             if( !File.Exists( path ) ) return null;
             using BinaryReader br = new( File.Open( path, FileMode.Open ) );
-            return new TmbFile( br );
+            return new TmbFile( br, papEmbedded );
         }
     }
 }

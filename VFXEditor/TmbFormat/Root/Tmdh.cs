@@ -11,7 +11,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedShort Unk2 = new( "Unknown 2" );
         private readonly ParsedShort Unk3 = new( "Unknown 3" );
 
-        public Tmdh( TmbReader reader ) : base( reader ) {
+        public Tmdh( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             Unk1.Read( reader );
             Unk2.Read( reader );
@@ -26,9 +26,9 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw( string id ) {
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
-            Unk3.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, Command );
+            Unk2.Draw( id, Command );
+            Unk3.Draw( id, Command );
         }
     }
 }

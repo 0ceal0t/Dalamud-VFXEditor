@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedBool Assigned = new( "Use Face Library", defaultValue: false );
         private readonly TmbOffsetString Path = new( "Face Library Path" );
 
-        public Tmpp( TmbReader reader ) : base( reader ) {
+        public Tmpp( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             var savePos = reader.Reader.BaseStream.Position;
             var magic = reader.ReadString( 4 );// TMAL or TMPP
 
@@ -34,11 +34,11 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw( string id ) {
-            Assigned.Draw( id, CommandManager.Tmb );
+            Assigned.Draw( id, Command );
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
-            if( IsAssigned ) Path.Draw( id, CommandManager.Tmb );
+            if( IsAssigned ) Path.Draw( id, Command );
         }
     }
 }

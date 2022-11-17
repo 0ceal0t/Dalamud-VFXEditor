@@ -30,9 +30,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         // Unk2 = 1, Unk3 = 8 -> ExtraSize = 0x14
 
-        public C094() : base() { }
+        public C094( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public C094( TmbReader reader ) : base( reader ) {
+        public C094( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             ReadParsed( reader );
 
@@ -71,11 +71,11 @@ namespace VfxEditor.TmbFormat.Entries {
 
             ImGui.Checkbox( $"Unknown Extra Data{id}", ref UnkExtraData );
             if( UnkExtraData ) {
-                Unk2.Draw( id, CommandManager.Tmb );
-                Unk3.Draw( id, CommandManager.Tmb );
-                Unk4.Draw( id, CommandManager.Tmb );
-                Unk5.Draw( id, CommandManager.Tmb );
-                Unk6.Draw( id, CommandManager.Tmb );
+                Unk2.Draw( id, Command );
+                Unk3.Draw( id, Command );
+                Unk4.Draw( id, Command );
+                Unk5.Draw( id, Command );
+                Unk6.Draw( id, Command );
             }
         }
     }

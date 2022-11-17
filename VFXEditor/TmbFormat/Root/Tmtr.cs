@@ -21,9 +21,9 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
         private readonly List<TmtrUnknownData> UnknownData = new();
 
-        public Tmtr() { }
+        public Tmtr( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public Tmtr( TmbReader reader ) : base( reader ) {
+        public Tmtr( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             TempIds = reader.ReadOffsetTimeline();
             reader.ReadAtOffset( ( binaryReader ) => {
@@ -31,25 +31,20 @@ namespace VfxEditor.TmbFormat {
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
-                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader ) );
+                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader, papEmbedded ) );
             } );
         }
 
-        public void PickEntries( TmbReader reader ) {
-            Entries.AddRange( reader.Pick<TmbEntry>( TempIds ) );
-        }
+        public void PickEntries( TmbReader reader ) => Entries.AddRange( reader.Pick<TmbEntry>( TempIds ) );
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
             writer.WriteOffsetTimeline( Entries );
-            if ( !UseUnknownExtra ) {
-                writer.Write( 0 );
-            }
+            if ( !UseUnknownExtra ) writer.Write( 0 );
             else {
                 writer.WriteExtra( ( binaryWriter ) => {
                     binaryWriter.Write( 8 );
                     binaryWriter.Write( UnknownData.Count );
-
                     UnknownData.ForEach( x => x.Write( binaryWriter ) );
                 } );
             }
@@ -60,10 +55,10 @@ namespace VfxEditor.TmbFormat {
 
             // ==== Unknown Data ====
 
-            UnknownExtraAssigned.Draw( id, CommandManager.Tmb );
+            UnknownExtraAssigned.Draw( id, Command );
             if( UseUnknownExtra ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"+ New{id}-Unk" ) ) CommandManager.Tmb.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData() ) );
+                if( ImGui.Button( $"+ New{id}-Unk" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
 
                 var unkExtraIdx = 0;
                 foreach( var unknownItem in UnknownData ) {
@@ -71,7 +66,7 @@ namespace VfxEditor.TmbFormat {
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
                         ImGui.Indent();
                         if( UiUtils.RemoveButton( $"Delete{itemId}" ) ) {
-                            CommandManager.Tmb.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
+                            Command.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
                             ImGui.Unindent();
                             break;
                         }
@@ -94,7 +89,7 @@ namespace VfxEditor.TmbFormat {
                         CompoundCommand command = new( false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( entriesMaster, entry ) );
-                        CommandManager.Tmb.Add( command );
+                        Command.Add( command );
 
                         ImGui.Unindent();
                         break;
@@ -112,14 +107,14 @@ namespace VfxEditor.TmbFormat {
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
                     if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
                         var type = entryOption.Type;
-                        var constructor = type.GetConstructor( Array.Empty<Type>() );
-                        var newEntry = (TmbEntry) constructor.Invoke( Array.Empty<object>() );
+                        var constructor = type.GetConstructor( new Type[] { typeof( bool ) } );
+                        var newEntry = (TmbEntry) constructor.Invoke( new object[] { PapEmbedded } );
 
                         var idx = Entries.Count == 0 ? 0 : entriesMaster.IndexOf( Entries.Last() ) + 1;
                         CompoundCommand command = new( false, true );
                         command.Add( new GenericAddCommand<TmbEntry>( entriesMaster, newEntry, idx ) );
                         command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
-                        CommandManager.Tmb.Add( command );
+                        Command.Add( command );
                     }
                 }
                 ImGui.EndPopup();

@@ -9,11 +9,11 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly List<ParsedBase> Parsed;
 
-        public TmbEntry() : base() {
+        public TmbEntry( bool papEmbedded ) : base( papEmbedded ) {
             Parsed = GetParsed();
         }
 
-        public TmbEntry( TmbReader reader ) : base( reader ) {
+        public TmbEntry( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             Parsed = GetParsed();
         }
 
@@ -28,7 +28,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected void DrawParsed( string id ) {
-            foreach( var item in Parsed ) item.Draw( id, CommandManager.Tmb );
+            foreach( var item in Parsed ) item.Draw( id, Command );
         }
 
         protected abstract List<ParsedBase> GetParsed();

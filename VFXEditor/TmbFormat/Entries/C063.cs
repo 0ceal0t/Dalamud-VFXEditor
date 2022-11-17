@@ -19,9 +19,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt SoundIndex = new( "Sound Index", defaultValue: 1 );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        public C063() : base() { }
+        public C063( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public C063( TmbReader reader ) : base( reader ) {
+        public C063( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

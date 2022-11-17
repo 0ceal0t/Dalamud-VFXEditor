@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Utils {
             StartPosition = Reader.BaseStream.Position;
         }
 
-        public void ParseItem( List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, ref bool ok ) {
+        public void ParseItem( List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, bool papEmbedded, ref bool ok ) {
             var savePos = Reader.BaseStream.Position;
             var magic = ReadString( 4 );
             var size = ReadInt32();
@@ -30,12 +30,12 @@ namespace VfxEditor.TmbFormat.Utils {
             TmbItem entry;
 
             if( magic == "TMAC" ) {
-                var actor = new Tmac( this );
+                var actor = new Tmac( this, papEmbedded );
                 actors.Add( actor );
                 entry = actor;
             }
             else if( magic == "TMTR" ) {
-                var track = new Tmtr( this );
+                var track = new Tmtr( this, papEmbedded );
                 tracks.Add( track );
                 entry = track;
             }
@@ -48,7 +48,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 }
 
                 var type = TmbUtils.ItemTypes[magic].Type;
-                var constructor = type.GetConstructor( new Type[] { typeof( TmbReader ) } );
+                var constructor = type.GetConstructor( new Type[] { typeof( TmbReader ), typeof( bool ) } );
                 if( constructor == null ) {
                     PluginLog.Log( $"TmbReader constructor failed for {magic}" );
                     ok = false;
@@ -56,7 +56,7 @@ namespace VfxEditor.TmbFormat.Utils {
                     return;
                 }
 
-                var item = constructor.Invoke( new object[] { this } );
+                var item = constructor.Invoke( new object[] { this, papEmbedded } );
                 if( item == null ) {
                     PluginLog.Log( $"Constructor failed for {magic}" );
                     ok = false;

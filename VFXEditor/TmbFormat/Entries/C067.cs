@@ -16,9 +16,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
-        public C067() : base() { }
+        public C067( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public C067( TmbReader reader ) : base( reader ) {
+        public C067( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

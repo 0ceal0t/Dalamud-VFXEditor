@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -46,13 +47,6 @@ namespace VfxEditor.AvfxFormat {
         public void Select( T item, int idx ) {
             if( item == null ) SelectNone( idx );
             else SelectItem( item, idx );
-        }
-
-        public void Select( int itemIdx, int idx ) {
-            if( itemIdx == -1 ) SelectNone( idx );
-            else if( idx < Group.Items.Count ) {
-                SelectItem( Group.Items[itemIdx], idx );
-            }
         }
 
         private void SelectNone( int idx ) {
@@ -129,10 +123,25 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.AssignedCopyPaste( Literal, Name );
             if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
 
+            // Copy/Paste
+            var copy = CopyManager.Avfx;
+            if( copy.IsCopying ) {
+                for( var idx = 0; idx < Selected.Count; idx++ ) copy.Ints[$"{Name}_{idx}"] = Literal.GetValue()[idx];
+            }
+            if( copy.IsPasting ) {
+                for(var idx = 0; idx < Selected.Count; idx++ ) {
+                    if (copy.Ints.TryGetValue("", out var val ) ) {
+                        var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
+                        copy.PasteCommand.Add( new UiNodeSelectListCommand<T>( this, newSelected, idx ) );
+                    }
+                }
+            }
+
+            // Draw
             for( var idx = 0; idx < Selected.Count; idx++ ) {
                 var itemId = id + idx;
                 var text = ( idx == 0 ) ? Name : "";
-                if( ImGui.BeginCombo( text + itemId, Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
+                if( ImGui.BeginCombo( $"{text}{itemId}", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
                     if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) );
                     foreach( var item in Group.Items ) {
                         if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );

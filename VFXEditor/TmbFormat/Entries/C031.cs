@@ -19,9 +19,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort AnimationId = new( "Animation Id" );
         private readonly ParsedShort TargetType = new( "Target Type", defaultValue: 2 );
 
-        public C031() : base() { }
+        public C031( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public C031( TmbReader reader ) : base( reader ) {
+        public C031( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

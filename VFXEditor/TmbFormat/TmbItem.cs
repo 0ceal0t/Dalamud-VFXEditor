@@ -4,13 +4,19 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
+        public readonly bool PapEmbedded;
+
         public abstract string Magic { get; }
         public abstract int Size { get; }
         public abstract int ExtraSize { get; }
 
-        public TmbItem() { }
+        public CommandManager Command => PapEmbedded ? CommandManager.Pap : CommandManager.Tmb;
 
-        public TmbItem( TmbReader reader ) {
+        public TmbItem( bool papEmbedded ) {
+            PapEmbedded = papEmbedded;
+        }
+
+        public TmbItem( TmbReader reader, bool papEmbedded ) : this( papEmbedded ) {
             reader.UpdateStartPosition();
         }
 
@@ -30,11 +36,11 @@ namespace VfxEditor.TmbFormat {
     public abstract class TmbItemWithId : TmbItem {
         public short Id;
 
-        public TmbItemWithId() : base() {
+        public TmbItemWithId( bool papEmbedded ) : base( papEmbedded ) {
             Id = 0;
         }
 
-        protected TmbItemWithId( TmbReader reader ) : base( reader ) { }
+        protected TmbItemWithId( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) { }
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );
@@ -50,9 +56,9 @@ namespace VfxEditor.TmbFormat {
     public abstract class TmbItemWithTime : TmbItemWithId {
         public ParsedShort Time = new( "Time" );
 
-        public TmbItemWithTime() : base() { }
+        public TmbItemWithTime( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public TmbItemWithTime( TmbReader reader ) : base( reader ) { }
+        public TmbItemWithTime( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) { }
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );
@@ -64,6 +70,6 @@ namespace VfxEditor.TmbFormat {
             Time.Write( writer.Writer );
         }
 
-        protected void DrawTime( string id ) => Time.Draw( id, CommandManager.Tmb );
+        protected void DrawTime( string id ) => Time.Draw( id, Command );
     }
 }

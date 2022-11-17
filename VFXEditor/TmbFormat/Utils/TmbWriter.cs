@@ -93,7 +93,7 @@ namespace VfxEditor.TmbFormat.Utils {
         }
 
         public void WriteExtraVector4( Vector4 input ) {
-            int actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraWriter.BaseStream.Position );
+            var actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraWriter.BaseStream.Position );
             Writer.Write( actualPos );
             Writer.Write( 4 );
             ExtraWriter.Write( input.X );
@@ -103,7 +103,7 @@ namespace VfxEditor.TmbFormat.Utils {
         }
 
         public void WriteExtraVector3( Vector3 input ) {
-            int actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraWriter.BaseStream.Position );
+            var actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraWriter.BaseStream.Position );
             Writer.Write( actualPos );
             Writer.Write( 3 );
             ExtraWriter.Write( input.X );

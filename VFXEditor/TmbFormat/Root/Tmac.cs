@@ -8,7 +8,6 @@ using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.FileManager;
-using static HelixToolkit.SharpDX.Core.Model.Metadata;
 
 namespace VfxEditor.TmbFormat {
     public class Tmac : TmbItemWithTime {
@@ -24,9 +23,9 @@ namespace VfxEditor.TmbFormat {
 
         private readonly List<int> TempIds;
 
-        public Tmac() { }
+        public Tmac( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public Tmac( TmbReader reader ) : base( reader ) {
+        public Tmac( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             Unk1.Read( reader );
             Unk2.Read( reader );
@@ -46,8 +45,8 @@ namespace VfxEditor.TmbFormat {
 
         public void Draw( string id, List<Tmtr> tracksMaster, List<TmbEntry> entriesMaster ) {
             DrawTime( id );
-            Unk1.Draw( id, CommandManager.Tmb );
-            Unk2.Draw( id, CommandManager.Tmb );
+            Unk1.Draw( id, Command );
+            Unk2.Draw( id, Command );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -61,12 +60,12 @@ namespace VfxEditor.TmbFormat {
 
             // New
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                var newTrack = new Tmtr();
+                var newTrack = new Tmtr( PapEmbedded );
                 var idx = Tracks.Count == 0 ? 0 : tracksMaster.IndexOf( Tracks.Last() ) + 1;
                 CompoundCommand command = new( false, true );
                 command.Add( new GenericAddCommand<Tmtr>( tracksMaster, newTrack, idx ) );
                 command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
-                CommandManager.Tmb.Add( command );
+                Command.Add( command );
             }
 
             // Remove
@@ -77,7 +76,7 @@ namespace VfxEditor.TmbFormat {
                     CompoundCommand command = new( false, true );
                     command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                     command.Add( new GenericRemoveCommand<Tmtr>( tracksMaster, SelectedTrack ) );
-                    CommandManager.Tmb.Add( command );
+                    Command.Add( command );
 
                     SelectedTrack = null;
                 }

@@ -2,6 +2,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Data;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class UiNodeSelect : IAvfxUiBase {
@@ -90,13 +91,6 @@ namespace VfxEditor.AvfxFormat {
             else SelectItem( item );
         }
 
-        public void Select( int idx ) {
-            if( idx == - 1 ) SelectNone();
-            else if( idx < Group.Items.Count ) {
-                SelectItem( Group.Items[idx] );
-            }
-        }
-
         private void SelectNone() {
             if( Selected == null ) return;
             UnlinkParentChild( Selected );
@@ -162,6 +156,15 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.AssignedCopyPaste( Literal, Name );
             if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
 
+            // Copy/Paste
+            var copy = CopyManager.Avfx;
+            if( copy.IsCopying ) copy.Ints[Name] = Literal.GetValue();
+            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
+                var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
+                copy.PasteCommand.Add( new UiNodeSelectCommand<T>( this, newSelected ) );
+            }
+
+            // Draw
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
                 // "None" selector
                 if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) );

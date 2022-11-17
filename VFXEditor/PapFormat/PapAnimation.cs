@@ -39,11 +39,11 @@ namespace VfxEditor.PapFormat {
         }
 
         public void ReadTmb( BinaryReader reader ) {
-            Tmb = new TmbFile( reader, false );
+            Tmb = new TmbFile( reader, true );
         }
 
         public void ReadTmb( string path ) {
-            Tmb = TmbFile.FromLocalFile( path );
+            Tmb = TmbFile.FromLocalFile( path, true );
         }
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
@@ -83,7 +83,7 @@ namespace VfxEditor.PapFormat {
             if( ImGui.Button( $"Import TMB{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        Tmb = TmbFile.FromLocalFile( res );
+                        Tmb = TmbFile.FromLocalFile( res, true );
                         UiUtils.OkNotification( "TMB data imported" );
                     }
                 } );

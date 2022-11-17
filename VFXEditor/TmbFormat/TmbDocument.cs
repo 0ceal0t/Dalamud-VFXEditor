@@ -22,7 +22,7 @@ namespace VfxEditor.TmbFormat {
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {
                 try {
-                    CurrentFile = TmbFile.FromLocalFile( localPath );
+                    CurrentFile = TmbFile.FromLocalFile( localPath, false );
                     UiUtils.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
@@ -38,7 +38,7 @@ namespace VfxEditor.TmbFormat {
                     var file = Plugin.DataManager.GetFile( gamePath );
                     using var ms = new MemoryStream( file.Data );
                     using var br = new BinaryReader( ms );
-                    CurrentFile = new TmbFile( br );
+                    CurrentFile = new TmbFile( br, false );
                     UiUtils.OkNotification( "TMB file loaded" );
                 }
                 catch( Exception e ) {
