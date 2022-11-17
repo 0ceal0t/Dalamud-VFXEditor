@@ -7,6 +7,8 @@ using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.FileManager;
+using static HelixToolkit.SharpDX.Core.Model.Metadata;
 
 namespace VfxEditor.TmbFormat {
     public class Tmac : TmbItemWithTime {
@@ -18,10 +20,9 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public readonly List<Tmtr> Tracks = new();
+        private Tmtr SelectedTrack = null;
 
         private readonly List<int> TempIds;
-
-        private Tmtr SelectedTrack = null;
 
         public Tmac() { }
 
@@ -57,23 +58,27 @@ namespace VfxEditor.TmbFormat {
 
             ImGui.BeginChild( $"{id}-ActorChild-Left" );
             ImGui.PushFont( UiBuilder.IconFont );
+
+            // New
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 var newTrack = new Tmtr();
-                if( Tracks.Count == 0 ) {
-                    tracksMaster.Add( newTrack );
-                }
-                else {
-                    var idx = tracksMaster.IndexOf( Tracks.Last() );
-                    tracksMaster.Insert( idx + 1, newTrack );
-                }
-                Tracks.Add( newTrack );
+                var idx = Tracks.Count == 0 ? 0 : tracksMaster.IndexOf( Tracks.Last() ) + 1;
+                CompoundCommand command = new( false, true );
+                command.Add( new GenericAddCommand<Tmtr>( tracksMaster, newTrack, idx ) );
+                command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
+                CommandManager.Tmb.Add( command );
             }
+
+            // Remove
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                    Tracks.Remove( SelectedTrack );
-                    tracksMaster.Remove( SelectedTrack );
+                    CompoundCommand command = new( false, true );
+                    command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
+                    command.Add( new GenericRemoveCommand<Tmtr>( tracksMaster, SelectedTrack ) );
+                    CommandManager.Tmb.Add( command );
+
                     SelectedTrack = null;
                 }
             }
@@ -86,6 +91,8 @@ namespace VfxEditor.TmbFormat {
                     selectedIndex = i;
                 }
             }
+            if( selectedIndex == -1 ) SelectedTrack = null;
+
             ImGui.EndChild();
             ImGui.SetColumnWidth( 0, 150 );
 

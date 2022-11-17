@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "Texture Border V", "TBVT" );
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo" );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -40,8 +40,6 @@ namespace VfxEditor.AvfxFormat {
                 TextureCalculateAlpha,
                 TextureIdx
             };
-            // Default
-            TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );

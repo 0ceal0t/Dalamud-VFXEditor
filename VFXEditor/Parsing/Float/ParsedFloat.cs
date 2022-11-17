@@ -6,6 +6,10 @@ namespace VfxEditor.Parsing {
         public readonly string Name;
         public float Value = 0f;
 
+        public ParsedFloat( string name, float defaultValue ) : this( name ) {
+            Value = defaultValue;
+        }
+
         public ParsedFloat( string name ) {
             Name = name;
         }

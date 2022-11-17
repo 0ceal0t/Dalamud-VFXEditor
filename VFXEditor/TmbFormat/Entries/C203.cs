@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
@@ -22,22 +23,23 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk7 = new( "Unknown 7" );
         private readonly ParsedFloat Unk8 = new( "Unknown 8" );
 
-        public C203() : base() {
-            Parsed = new() {
-                Unk1,
-                Unk2,
-                Unk3,
-                Unk4,
-                Unk5,
-                Unk6,
-                Unk7
-            };
-        }
+        public C203() : base() { }
 
         public C203( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }
+
+        protected override List<ParsedBase> GetParsed() => new() {
+            Unk1,
+            Unk2,
+            Unk3,
+            Unk4,
+            Unk5,
+            Unk6,
+            Unk7,
+            Unk8
+        };
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );

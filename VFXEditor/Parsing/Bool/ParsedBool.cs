@@ -9,6 +9,10 @@ namespace VfxEditor.Parsing {
         private int Size;
         public bool? Value = false;
 
+        public ParsedBool( string name, bool defaultValue, int size = 4) : this( name, size ) {
+            Value = defaultValue;
+        }
+
         public ParsedBool( string name, int size = 4 ) {
             Name = name;
             Size = size;

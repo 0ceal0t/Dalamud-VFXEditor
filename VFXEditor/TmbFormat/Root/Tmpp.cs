@@ -2,6 +2,7 @@ using ImGuiNET;
 using System.IO;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public class Tmpp : TmbItem {
@@ -9,19 +10,18 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x0C;
         public override int ExtraSize => 0;
 
-        public bool IsAssigned => Assigned;
-        private bool Assigned = false;
-
-        private string Path = "";
+        public bool IsAssigned => Assigned.Value == true;
+        private readonly ParsedBool Assigned = new( "Use Face Library", defaultValue: false );
+        private readonly TmbOffsetString Path = new( "Face Library Path" );
 
         public Tmpp( TmbReader reader ) : base( reader ) {
             var savePos = reader.Reader.BaseStream.Position;
             var magic = reader.ReadString( 4 );// TMAL or TMPP
 
             if( magic == "TMPP" ) { // TMPP
-                Assigned = true;
+                Assigned.Value = true;
                 reader.ReadInt32(); // 0x0C
-                Path = reader.ReadOffsetString();
+                Path.Read( reader );
             }
             else { // TMAL, reset
                 reader.Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
@@ -30,17 +30,15 @@ namespace VfxEditor.TmbFormat {
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            writer.WriteOffsetString( Path );
+            Path.Write( writer );
         }
 
         public void Draw( string id ) {
-            ImGui.Checkbox( $"Use face library{id}", ref Assigned );
+            Assigned.Draw( id, CommandManager.Tmb );
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
-            if( Assigned ) {
-                ImGui.InputText( $"Face library path{id}", ref Path, 256 );
-            }
+            if( IsAssigned ) Path.Draw( id, CommandManager.Tmb );
         }
     }
 }

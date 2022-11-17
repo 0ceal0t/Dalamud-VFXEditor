@@ -11,6 +11,10 @@ namespace VfxEditor.AvfxFormat {
         private int Size;
         private readonly List<int> Value = new() { 0 };
 
+        public AvfxIntList( string name, string avfxName, int defaultValue, int size = 1 ) : this( name, avfxName, size ) {
+            SetValue( defaultValue );
+        }
+
         public AvfxIntList( string name, string avfxName, int size = 1 ) : base( avfxName ) {
             Name = name;
             Size = size;

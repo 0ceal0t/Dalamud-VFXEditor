@@ -120,13 +120,13 @@ namespace VfxEditor.TmbFormat {
             }
         }
 
-        protected override List<Tmac> GetOptions() => Actors;
+        public override List<Tmac> GetItems() => Actors;
 
         protected override string GetName( Tmac item, int idx ) => $"Actor {idx}";
 
-        protected override void OnNew() => Actors.Add( new Tmac() );
+        protected override void OnNew() => CommandManager.Tmb.Add( new GenericAddCommand<Tmac>( Actors, new Tmac() ) );
 
-        protected override void OnDelete( Tmac item ) => Actors.Remove( item );
+        protected override void OnDelete( Tmac item ) => CommandManager.Tmb.Add( new GenericRemoveCommand<Tmac>( Actors, item ) );
 
         public static TmbFile FromLocalFile( string path ) {
             if( !File.Exists( path ) ) return null;

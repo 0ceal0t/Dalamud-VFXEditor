@@ -5,6 +5,10 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxFloat : AvfxDrawable {
         public readonly ParsedFloat Parsed;
 
+        public AvfxFloat( string name, string avfxName, float defaultValue ) : this( name, avfxName ) {
+            SetValue( defaultValue );
+        }
+
         public AvfxFloat( string name, string avfxName ) : base( avfxName ) {
             Parsed = new( name );
         }

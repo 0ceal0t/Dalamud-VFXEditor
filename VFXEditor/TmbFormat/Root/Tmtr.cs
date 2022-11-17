@@ -5,6 +5,8 @@ using System.Linq;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.FileManager;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
@@ -15,7 +17,8 @@ namespace VfxEditor.TmbFormat {
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
 
-        private bool UseUnknownExtra = false;
+        private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
+        private readonly ParsedBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
         private readonly List<TmtrUnknownData> UnknownData = new();
 
         public Tmtr() { }
@@ -24,7 +27,7 @@ namespace VfxEditor.TmbFormat {
             ReadHeader( reader );
             TempIds = reader.ReadOffsetTimeline();
             reader.ReadAtOffset( ( binaryReader ) => {
-                UseUnknownExtra = true;
+                UnknownExtraAssigned.Value = true;
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
@@ -57,10 +60,10 @@ namespace VfxEditor.TmbFormat {
 
             // ==== Unknown Data ====
 
-            ImGui.Checkbox( $"Unknown Extra Data{id}", ref UseUnknownExtra );
+            UnknownExtraAssigned.Draw( id, CommandManager.Tmb );
             if( UseUnknownExtra ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"+ New{id}-Unk" ) ) UnknownData.Add( new TmtrUnknownData() );
+                if( ImGui.Button( $"+ New{id}-Unk" ) ) CommandManager.Tmb.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData() ) );
 
                 var unkExtraIdx = 0;
                 foreach( var unknownItem in UnknownData ) {
@@ -68,7 +71,7 @@ namespace VfxEditor.TmbFormat {
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
                         ImGui.Indent();
                         if( UiUtils.RemoveButton( $"Delete{itemId}" ) ) {
-                            UnknownData.Remove( unknownItem );
+                            CommandManager.Tmb.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
                             ImGui.Unindent();
                             break;
                         }
@@ -85,9 +88,14 @@ namespace VfxEditor.TmbFormat {
             foreach( var entry in Entries ) {
                 if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
                     ImGui.Indent();
+
+                    // Remove
                     if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}" ) ) {
-                        Entries.Remove( entry );
-                        entriesMaster.Remove( entry );
+                        CompoundCommand command = new( false, true );
+                        command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
+                        command.Add( new GenericRemoveCommand<TmbEntry>( entriesMaster, entry ) );
+                        CommandManager.Tmb.Add( command );
+
                         ImGui.Unindent();
                         break;
                     }
@@ -99,6 +107,7 @@ namespace VfxEditor.TmbFormat {
 
             if( ImGui.Button( $"+ New{id}" ) ) ImGui.OpenPopup( "New_Entry_Tmb" );
 
+            // New
             if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) {
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
                     if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
@@ -106,14 +115,11 @@ namespace VfxEditor.TmbFormat {
                         var constructor = type.GetConstructor( Array.Empty<Type>() );
                         var newEntry = (TmbEntry) constructor.Invoke( Array.Empty<object>() );
 
-                        if( Entries.Count == 0 ) {
-                            entriesMaster.Add( newEntry );
-                        }
-                        else {
-                            var idx = entriesMaster.IndexOf( Entries.Last() );
-                            entriesMaster.Insert( idx + 1, newEntry );
-                        }
-                        Entries.Add( newEntry );
+                        var idx = Entries.Count == 0 ? 0 : entriesMaster.IndexOf( Entries.Last() ) + 1;
+                        CompoundCommand command = new( false, true );
+                        command.Add( new GenericAddCommand<TmbEntry>( entriesMaster, newEntry, idx ) );
+                        command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
+                        CommandManager.Tmb.Add( command );
                     }
                 }
                 ImGui.EndPopup();

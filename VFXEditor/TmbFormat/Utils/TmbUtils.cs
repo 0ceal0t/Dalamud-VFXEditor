@@ -54,6 +54,7 @@ namespace VfxEditor.TmbFormat.Utils {
             { C212.MAGIC, new ItemTypeStruct( C212.DISPLAY_NAME, typeof(C212) ) },
 
             // TODO: C117 and TMFC in chara/action/mon_sp/m0109/mon_sp014.tmb (Exdeath #14)
+            // TODO: C021 (Starcall ned)
         };
     }
 }

@@ -5,6 +5,10 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxInt : AvfxDrawable {
         public readonly ParsedInt Parsed;
 
+        public AvfxInt( string name, string avfxName, int defaultValue, int size = 4 ) : this( name, avfxName, size ) {
+            SetValue( defaultValue );
+        }
+
         public AvfxInt( string name, string avfxName, int size = 4 ) : base( avfxName ) {
             Parsed = new( name, size );
         }

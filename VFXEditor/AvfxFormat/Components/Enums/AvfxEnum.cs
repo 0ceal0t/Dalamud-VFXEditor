@@ -12,6 +12,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly T[] Options = ( T[] )Enum.GetValues( typeof( T ) );
         public Func<ICommand> ExtraCommandGenerator; // can be changed later
 
+        public AvfxEnum( string name, string avfxName, T defaultValue, Func<ICommand> extraCommandGenerator = null ) : this( name, avfxName, extraCommandGenerator ) {
+            SetValue( defaultValue );
+        }
+
         public AvfxEnum( string name, string avfxName, Func<ICommand> extraCommandGenerator = null ) : base( avfxName ) {
             Name = name;
             ExtraCommandGenerator = extraCommandGenerator;

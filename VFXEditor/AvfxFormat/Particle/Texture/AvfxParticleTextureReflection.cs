@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool UseScreenCopy = new( "Use Screen Copy", "bUSC" );
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColorType = new( "Calculate Color", "TCCT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo" );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
         public readonly AvfxCurve Rate = new( "Rate", "Rate" );
         public readonly AvfxCurve RPow = new( "Power", "RPow" );
 
@@ -28,8 +28,6 @@ namespace VfxEditor.AvfxFormat {
                 Rate,
                 RPow
             };
-            // Default
-            TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );

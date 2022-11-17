@@ -182,7 +182,7 @@ namespace VfxEditor.PapFormat {
             return 0;
         }
 
-        protected override List<PapAnimation> GetOptions() => Animations;
+        public override List<PapAnimation> GetItems() => Animations;
 
         protected override string GetName( PapAnimation item, int idx ) => item.GetName();
 

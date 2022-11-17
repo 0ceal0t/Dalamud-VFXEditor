@@ -14,6 +14,12 @@ namespace VfxEditor.AvfxFormat {
             Item.BinderSelect.Select( null );
             Item.EffectorSelect.Select( null );
             Item.EmitterSelect.Select( null );
+
+            Item.Enabled.SetValue( false );
+            Item.EmitterIdx.SetValue( -1 );
+            Item.EffectorIdx.SetValue( -1 );
+            Item.BinderIdx.SetValue( -1 );
+            Item.Platform.SetValue( 0 );
             Item.EndTime.SetValue( 1 );
             Item.StartTime.SetValue( 0 );
 

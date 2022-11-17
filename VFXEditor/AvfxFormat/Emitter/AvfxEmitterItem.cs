@@ -12,32 +12,32 @@ namespace VfxEditor.AvfxFormat {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEnb" );
-        public readonly AvfxInt TargetIdx = new( "Target Index", "TgtB" );
-        public readonly AvfxInt LocalDirection = new( "Local Direction", "LoDr" );
-        public readonly AvfxInt CreateTime = new( "Create Time", "CrTm" );
-        public readonly AvfxInt CreateCount = new( "Create Count", "CrCn" );
-        public readonly AvfxInt CreateProbability = new( "Create Probability", "CrPr" );
-        public readonly AvfxEnum<ParentInfluenceCoordOptions> ParentInfluenceCoord = new( "Influence on Child", "PICd" );
-        public readonly AvfxEnum<ParentInfluenceColorOptions> ParentInfluenceColor = new( "Influence on Child Color", "PICo" );
-        public readonly AvfxBool InfluenceCoordScale = new( "Influence on Scale", "ICbS" );
-        public readonly AvfxBool InfluenceCoordRot = new( "Influence on Rotation", "ICbR" );
-        public readonly AvfxBool InfluenceCoordPos = new( "Influence on Position", "ICbP" );
-        public readonly AvfxBool InfluenceCoordBinderPosition = new( "Influence on Binder Position", "ICbB" );
-        public readonly AvfxInt InfluenceCoordUnstickiness = new( "Influence Coordinate Unstickiness", "ICSK" );
-        public readonly AvfxBool InheritParentVelocity = new( "Inherit Parent Velocity", "IPbV" );
-        public readonly AvfxBool InheritParentLife = new( "Inherit Parent Life", "IPbL" );
-        public readonly AvfxBool OverrideLife = new( "Override Life", "bOvr" );
-        public readonly AvfxInt OverrideLifeValue = new( "Override Life Value", "OvrV" );
-        public readonly AvfxInt OverrideLifeRandom = new( "Override Life Random", "OvrR" );
-        public readonly AvfxInt ParameterLink = new( "Parameter Link","PrLk" );
-        public readonly AvfxInt StartFrame = new( "Start Frame", "StFr" );
-        public readonly AvfxBool StartFrameNullUpdate = new( "Start Frame Null Update", "bStN" );
-        public readonly AvfxFloat ByInjectionAngleX = new( "By Injection Angle X", "BIAX" );
-        public readonly AvfxFloat ByInjectionAngleY = new( "By Injection Angle Y", "BIAY" );
-        public readonly AvfxFloat ByInjectionAngleZ = new( "By Injection Angle Z", "BIAZ" );
-        public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
-        public readonly AvfxBool GenerateDelayByOne = new( "Generate Delay By One", "bGD" );
+        public readonly AvfxBool Enabled = new( "Enabled", "bEnb", defaultValue: false );
+        public readonly AvfxInt TargetIdx = new( "Target Index", "TgtB", defaultValue: -1 );
+        public readonly AvfxInt LocalDirection = new( "Local Direction", "LoDr", defaultValue: 0 );
+        public readonly AvfxInt CreateTime = new( "Create Time", "CrTm", defaultValue: 1 );
+        public readonly AvfxInt CreateCount = new( "Create Count", "CrCn", defaultValue: 1 );
+        public readonly AvfxInt CreateProbability = new( "Create Probability", "CrPr", defaultValue: 100 );
+        public readonly AvfxEnum<ParentInfluenceCoordOptions> ParentInfluenceCoord = new( "Influence on Child", "PICd", defaultValue: ParentInfluenceCoordOptions.InitialPosition_WithOptions );
+        public readonly AvfxEnum<ParentInfluenceColorOptions> ParentInfluenceColor = new( "Influence on Child Color", "PICo", defaultValue: ParentInfluenceColorOptions.Initial );
+        public readonly AvfxBool InfluenceCoordScale = new( "Influence on Scale", "ICbS", defaultValue: false );
+        public readonly AvfxBool InfluenceCoordRot = new( "Influence on Rotation", "ICbR", defaultValue: false );
+        public readonly AvfxBool InfluenceCoordPos = new( "Influence on Position", "ICbP", defaultValue: true );
+        public readonly AvfxBool InfluenceCoordBinderPosition = new( "Influence on Binder Position", "ICbB", defaultValue: false );
+        public readonly AvfxInt InfluenceCoordUnstickiness = new( "Influence Coordinate Unstickiness", "ICSK", defaultValue: 0 );
+        public readonly AvfxBool InheritParentVelocity = new( "Inherit Parent Velocity", "IPbV", defaultValue: false );
+        public readonly AvfxBool InheritParentLife = new( "Inherit Parent Life", "IPbL", defaultValue: false );
+        public readonly AvfxBool OverrideLife = new( "Override Life", "bOvr", defaultValue: false );
+        public readonly AvfxInt OverrideLifeValue = new( "Override Life Value", "OvrV", defaultValue: 60 );
+        public readonly AvfxInt OverrideLifeRandom = new( "Override Life Random", "OvrR", defaultValue: 0 );
+        public readonly AvfxInt ParameterLink = new( "Parameter Link","PrLk", defaultValue: -1 );
+        public readonly AvfxInt StartFrame = new( "Start Frame", "StFr", defaultValue: 0 );
+        public readonly AvfxBool StartFrameNullUpdate = new( "Start Frame Null Update", "bStN", defaultValue: false );
+        public readonly AvfxFloat ByInjectionAngleX = new( "By Injection Angle X", "BIAX", defaultValue: 0 );
+        public readonly AvfxFloat ByInjectionAngleY = new( "By Injection Angle Y", "BIAY", defaultValue: 0 );
+        public readonly AvfxFloat ByInjectionAngleZ = new( "By Injection Angle Z", "BIAZ", defaultValue: 0 );
+        public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD", 0 );
+        public readonly AvfxBool GenerateDelayByOne = new( "Generate Delay By One", "bGD", false );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -80,34 +80,6 @@ namespace VfxEditor.AvfxFormat {
                 GenerateDelay,
                 GenerateDelayByOne
             };
-
-            // Default Values
-            TargetIdx.SetValue( -1 );
-            Enabled.SetValue( false );
-            LocalDirection.SetValue( 0 );
-            CreateTime.SetValue( 1 );
-            CreateCount.SetValue( 1 );
-            CreateProbability.SetValue( 100 );
-            ParentInfluenceCoord.SetValue( ParentInfluenceCoordOptions.InitialPosition_WithOptions );
-            ParentInfluenceColor.SetValue( ParentInfluenceColorOptions.Initial );
-            InfluenceCoordScale.SetValue( false );
-            InfluenceCoordRot.SetValue( false );
-            InfluenceCoordPos.SetValue( true );
-            InfluenceCoordBinderPosition.SetValue( false );
-            InfluenceCoordUnstickiness.SetValue( 0 );
-            InheritParentVelocity.SetValue( false );
-            InheritParentLife.SetValue( false );
-            OverrideLife.SetValue( false );
-            OverrideLifeValue.SetValue( 60 );
-            OverrideLifeRandom.SetValue( 0 );
-            ParameterLink.SetValue( -1 );
-            StartFrame.SetValue( 0 );
-            StartFrameNullUpdate.SetValue( false );
-            ByInjectionAngleX.SetValue( 0 );
-            ByInjectionAngleY.SetValue( 0 );
-            ByInjectionAngleZ.SetValue( 0 );
-            GenerateDelay.SetValue( 0 );
-            GenerateDelayByOne.SetValue( false );
 
             if( initNodeSelects ) InitializeNodeSelects();
 

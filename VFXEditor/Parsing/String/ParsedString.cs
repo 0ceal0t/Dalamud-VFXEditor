@@ -13,6 +13,10 @@ namespace VfxEditor.Parsing {
         private DateTime LastEditTime = DateTime.Now;
         private string StateBeforeEdit = "";
 
+        public ParsedString( string name, string defaultValue, uint maxSize = 255 ) : this( name, maxSize ) {
+            Value = defaultValue;
+        }
+
         public ParsedString( string name, uint maxSize = 255 ) {
             Name = name;
             MaxSize = maxSize;

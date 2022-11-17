@@ -7,11 +7,15 @@ namespace VfxEditor.TmbFormat.Entries {
     public abstract class TmbEntry : TmbItemWithTime {
         public abstract string DisplayName { get; }
 
-        protected List<ParsedBase> Parsed;
+        private readonly List<ParsedBase> Parsed;
 
-        public TmbEntry() : base() { }
+        public TmbEntry() : base() {
+            Parsed = GetParsed();
+        }
 
-        public TmbEntry( TmbReader reader ) : base( reader ) { }
+        public TmbEntry( TmbReader reader ) : base( reader ) {
+            Parsed = GetParsed();
+        }
 
         public abstract void Draw( string id );
 
@@ -26,5 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected void DrawParsed( string id ) {
             foreach( var item in Parsed ) item.Draw( id, CommandManager.Tmb );
         }
+
+        protected abstract List<ParsedBase> GetParsed();
     }
 }

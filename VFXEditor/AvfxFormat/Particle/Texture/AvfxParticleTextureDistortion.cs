@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderU = new( "Texture Border U", "TBUT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "Texture Border V", "TBVT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo" );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
         public readonly AvfxCurve DPow = new( "Power", "DPow" );
 
         private readonly List<AvfxBase> Parsed;
@@ -36,8 +36,6 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 DPow
             };
-            // Default
-            TextureIdx.SetValue( -1 );
 
             Display.Add( Enabled );
             Display.Add( TargetUV1 );

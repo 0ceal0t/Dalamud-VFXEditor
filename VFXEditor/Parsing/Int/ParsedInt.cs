@@ -7,6 +7,10 @@ namespace VfxEditor.Parsing {
         private int Size;
         public int Value = 0;
 
+        public ParsedInt( string name, int defaultValue, int size = 4 ) : this( name, size ) {
+            Value = defaultValue;
+        }
+
         public ParsedInt( string name, int size = 4 ) {
             Name = name;
             Size = size;

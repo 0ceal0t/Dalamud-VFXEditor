@@ -8,13 +8,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
 
         public readonly AvfxEnum<BindPoint> BindPointType = new( "Bind Point Type", "BPT" );
-        public readonly AvfxEnum<BindTargetPoint> BindTargetPointType = new( "Bind Target Point Type", "BPTP" );
+        public readonly AvfxEnum<BindTargetPoint> BindTargetPointType = new( "Bind Target Point Type", "BPTP", defaultValue: BindTargetPoint.ByName );
         public readonly AvfxString BinderName = new( "Name", "Name", showRemoveButton: true );
-        public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID" );
+        public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID", defaultValue: 3 );
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
-        public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF" );
+        public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF", defaultValue: -1 );
         public readonly AvfxBool RingEnable = new( "Ring Enabled", "bRng" );
-        public readonly AvfxInt RingProgressTime = new( "Ring Progress Time", "RnPT" );
+        public readonly AvfxInt RingProgressTime = new( "Ring Progress Time", "RnPT", defaultValue: 1 );
         public readonly AvfxFloat RingPositionX = new( "Ring Position X", "RnPX" );
         public readonly AvfxFloat RingPositionY = new( "Ring Position Y", "RnPY" );
         public readonly AvfxFloat RingPositionZ = new( "Ring Position Z", "RnPZ" );
@@ -73,12 +73,7 @@ namespace VfxEditor.AvfxFormat {
                 RingRadius,
                 Position
             };
-
             BinderName.SetAssigned( false );
-            BindTargetPointType.SetValue( BindTargetPoint.ByName );
-            BindPointId.SetValue( 3 );
-            CoordUpdateFrame.SetValue( -1 );
-            RingProgressTime.SetValue( 1 );
             Position.SetAssigned( true );
 
             DisplayTabs = new() {

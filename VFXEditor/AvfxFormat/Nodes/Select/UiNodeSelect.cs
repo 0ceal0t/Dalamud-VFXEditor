@@ -90,6 +90,13 @@ namespace VfxEditor.AvfxFormat {
             else SelectItem( item );
         }
 
+        public void Select( int idx ) {
+            if( idx == - 1 ) SelectNone();
+            else if( idx < Group.Items.Count ) {
+                SelectItem( Group.Items[idx] );
+            }
+        }
+
         private void SelectNone() {
             if( Selected == null ) return;
             UnlinkParentChild( Selected );
@@ -152,6 +159,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/Node";
 
             // Unassigned
+            AvfxBase.AssignedCopyPaste( Literal, Name );
             if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
 
             if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {

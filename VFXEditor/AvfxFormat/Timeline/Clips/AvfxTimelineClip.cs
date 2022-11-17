@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly ParsedInt Unk4 = new( "Raw Int 4" );
         public readonly UiParsedInt4 RawInts;
 
-        public readonly ParsedFloat Unk5 = new( "Raw Float 1" );
+        public readonly ParsedFloat Unk5 = new( "Raw Float 1", defaultValue: -1 );
         public readonly ParsedFloat Unk6 = new( "Raw Float 2" );
         public readonly ParsedFloat Unk7 = new( "Raw Float 3" );
         public readonly ParsedFloat Unk8 = new( "Raw Float 4" );
@@ -23,8 +23,6 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxTimelineClip( AvfxTimeline timeline ) : base( "Clip" ) {
             Timeline = timeline;
-            Unk5.Value = -1f;
-
             RawInts = new( "Raw Ints", Unk1, Unk2, Unk3, Unk4 );
             RawFloats = new( "Raw Flaots", Unk5, Unk6, Unk7, Unk8 );
         }

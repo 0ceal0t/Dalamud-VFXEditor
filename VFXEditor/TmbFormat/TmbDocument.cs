@@ -54,9 +54,7 @@ namespace VfxEditor.TmbFormat {
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected override void ExportRaw() {
-            UiUtils.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
-        }
+        protected override void ExportRaw() => UiUtils.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
 
         protected override bool IsVerified() => CurrentFile.IsVerified;
 

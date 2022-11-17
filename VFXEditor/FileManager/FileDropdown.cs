@@ -13,7 +13,7 @@ namespace VfxEditor.FileManager {
             AllowNew = allowNew;
         }
 
-        protected abstract List<T> GetOptions();
+        public abstract List<T> GetItems();
 
         protected abstract string GetName( T item, int idx );
 
@@ -28,13 +28,13 @@ namespace VfxEditor.FileManager {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             }
 
-            var options = GetOptions();
-            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, options.IndexOf( Selected ) ) ) ) {
-                for( var i = 0; i < options.Count; i++ ) {
-                    var option = options[i];
-                    if( ImGui.Selectable( $"{GetName( option, i )}{id}{i}", option == Selected ) ) {
-                        Selected = option;
-                    }
+            var items = GetItems();
+            if( Selected != null && !items.Contains( Selected ) ) Selected = null;
+
+            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, items.IndexOf( Selected ) ) ) ) {
+                for( var idx = 0; idx < items.Count; idx++ ) {
+                    var item = items[idx];
+                    if( ImGui.Selectable( $"{GetName( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
                 }
                 ImGui.EndCombo();
             }
@@ -42,9 +42,8 @@ namespace VfxEditor.FileManager {
             if( AllowNew ) {
                 ImGui.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                    OnNew();
-                }
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) OnNew();
+
                 if( Selected != null ) {
                     ImGui.SameLine();
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
@@ -16,34 +17,31 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly TmbOffsetFloat3 Scale = new( "Scale" );
+        private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
         private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
-        private readonly TmbOffsetFloat4 RGBA = new( "RGBA" );
+        private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
-        public C075() : base() {
-            Parsed = new() {
-                Duration,
-                Unk1,
-                Unk2,
-                Scale,
-                Rotation,
-                Position,
-                RGBA,
-                Unk3,
-                Unk4
-            };
-
-            Scale.Value = new( 1 );
-            RGBA.Value = new( 1 );
-        }
+        public C075() : base() { }
 
         public C075( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }
+
+        protected override List<ParsedBase> GetParsed() => new() {
+            Duration,
+            Unk1,
+            Unk2,
+            Scale,
+            Rotation,
+            Position,
+            RGBA,
+            Unk3,
+            Unk4
+        };
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );

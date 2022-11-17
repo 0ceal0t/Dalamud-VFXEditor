@@ -2,6 +2,7 @@ using ImGuiNET;
 using System.Numerics;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using System.Collections.Generic;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C173 : TmbEntry {
@@ -13,11 +14,11 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x44;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path" );
-        private readonly ParsedShort BindPoint1 = new( "Bind Point 1" );
-        private readonly ParsedShort BindPoint2 = new( "Bind Point 2" );
+        private readonly ParsedShort BindPoint1 = new( "Bind Point 1", defaultValue: 1 );
+        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", defaultValue: 0xFF );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
@@ -29,34 +30,30 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk11 = new( "Unknown 11" );
         private readonly ParsedInt Unk12 = new( "Unknown 12" );
 
-        public C173() : base() {
-            Parsed = new() {
-                Unk1,
-                Unk2,
-                Path,
-                BindPoint1,
-                BindPoint2,
-                Unk3,
-                Unk4,
-                Unk5,
-                Unk6,
-                Unk7,
-                Unk8,
-                Unk9,
-                Unk10,
-                Unk11,
-                Unk12
-            };
-
-            Unk1.Value = 30;
-            BindPoint1.Value = 1;
-            BindPoint2.Value = 0xFF;
-        }
+        public C173() : base() { }
 
         public C173( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }
+
+        protected override List<ParsedBase> GetParsed() => new() {
+            Unk1,
+            Unk2,
+            Path,
+            BindPoint1,
+            BindPoint2,
+            Unk3,
+            Unk4,
+            Unk5,
+            Unk6,
+            Unk7,
+            Unk8,
+            Unk9,
+            Unk10,
+            Unk11,
+            Unk12
+        };
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );

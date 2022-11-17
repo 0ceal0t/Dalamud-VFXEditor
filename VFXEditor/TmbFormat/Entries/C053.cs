@@ -2,6 +2,7 @@ using ImGuiNET;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using System.Collections.Generic;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C053 : TmbEntry {
@@ -19,20 +20,20 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort SoundId2 = new( "Sound Id 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        public C053() : base() {
-            Parsed = new() {
-                Unk1,
-                Unk2,
-                SoundId1,
-                SoundId2,
-                Unk3
-            };
-        }
+        public C053() : base() { }
 
         public C053( TmbReader reader ) : base( reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }
+
+        protected override List<ParsedBase> GetParsed() => new() {
+            Unk1,
+            Unk2,
+            SoundId1,
+            SoundId2,
+            Unk3
+        };
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );

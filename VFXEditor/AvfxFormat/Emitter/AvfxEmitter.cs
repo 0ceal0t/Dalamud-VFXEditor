@@ -116,7 +116,7 @@ namespace VfxEditor.AvfxFormat {
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
 
             EmitterSplit = new( Emitters, this, false );
-            ParticleSplit = new( Particles, this, false );
+            ParticleSplit = new( Particles, this, true );
 
             EmitterVariety.ExtraCommandGenerator = () => {
                 return new AvfxEmitterDataExtraCommand( this );

@@ -7,6 +7,10 @@ namespace VfxEditor.Parsing {
         public readonly string Name;
         public Vector4 Value = new(0);
 
+        public ParsedFloat4( string name, Vector4 defaultValue ) : this( name ) {
+            Value = defaultValue;
+        }
+
         public ParsedFloat4( string name ) {
             Name = name;
         }

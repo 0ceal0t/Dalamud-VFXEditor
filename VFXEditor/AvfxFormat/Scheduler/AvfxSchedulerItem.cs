@@ -7,9 +7,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxScheduler Scheduler;
         public readonly string Name;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
-        public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
-        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo" );
+        public readonly AvfxBool Enabled = new( "Enabled", "bEna", defaultValue: true );
+        public readonly AvfxInt StartTime = new( "Start Time", "StTm", defaultValue: 0 );
+        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo", defaultValue: -1 );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -26,11 +26,6 @@ namespace VfxEditor.AvfxFormat {
                 StartTime,
                 TimelineIdx
             };
-
-            // Default
-            Enabled.SetValue( true );
-            StartTime.SetValue( 0 );
-            TimelineIdx.SetValue( -1 );
 
             if( initNodeSelects ) InitializeNodeSelects();
 
