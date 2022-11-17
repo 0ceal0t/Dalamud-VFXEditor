@@ -9,28 +9,25 @@ using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 using VfxEditor.Interop;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.PapFormat {
-    public enum SkeletonType : byte {
+    public enum SkeletonType {
         Human = 0,
         Monster = 1,
-        DemiHuman = 2,
-        ERROR = 99 // Don't actually use this
+        DemiHuman = 2
     }
 
     public class PapFile : FileDropdown<PapAnimation> {
-        private static readonly SkeletonType[] SkeletonOptions = new[] {
-            SkeletonType.Human,
-            SkeletonType.Monster,
-            SkeletonType.DemiHuman
-        };
+        private static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
 
         public readonly CommandManager Command = new( Data.CopyManager.Pap );
         private readonly string HkxTempLocation;
 
-        private short ModelId;
-        private SkeletonType ModelType;
-        private byte Variant;
+        private readonly ParsedShort ModelId = new( "Model Id" );
+        private readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
+        private readonly ParsedInt Variant = new( "Varient", size: 1 );
+
         private readonly List<PapAnimation> Animations = new();
 
         private readonly bool Verified = true;
@@ -50,16 +47,10 @@ namespace VfxEditor.PapFormat {
             reader.ReadInt32(); // magic
             reader.ReadInt32(); // version
             var numAnimations = reader.ReadInt16();
-            ModelId = reader.ReadInt16();
 
-            var modelType = reader.ReadByte();
-            if( modelType > 2 ) { // just in case
-                ModelType = SkeletonType.ERROR;
-                PluginLog.LogError( $"Invalid model type {modelType}" );
-            }
-            ModelType = ( SkeletonType )modelType;
-
-            Variant = reader.ReadByte();
+            ModelId.Read( reader );
+            ModelType.Read( reader );
+            Variant.Read( reader );
 
             reader.ReadInt32(); // info offset
             var havokPosition = reader.ReadInt32(); // from beginning
@@ -100,9 +91,9 @@ namespace VfxEditor.PapFormat {
             writer.Write( 0x20706170 );
             writer.Write( 0x00020001 );
             writer.Write( ( short )Animations.Count );
-            writer.Write( ModelId );
-            writer.Write( (byte)ModelType );
-            writer.Write( Variant );
+            ModelId.Write( writer );
+            ModelType.Write( writer );
+            Variant.Write( writer );
 
             var offsetPos = writer.BaseStream.Position; // coming back here later
             writer.Write( 0 ); // placeholders, will come back later
@@ -140,13 +131,9 @@ namespace VfxEditor.PapFormat {
         public void Draw( string id ) {
             if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
                 if( ImGui.BeginTabItem($"Parameters{id}")) {
-                    FileUtils.ShortInput( $"Model Id{id}", ref ModelId );
-
-                    if( UiUtils.EnumComboBox( $"Model Type{id}", SkeletonOptions, ModelType, out var newSkeletonType ) ) {
-                        ModelType = newSkeletonType;
-                    }
-
-                    FileUtils.ByteInput( $"Variant{id}", ref Variant );
+                    ModelId.Draw( id, CommandManager.Pap );
+                    ModelType.Draw( id, CommandManager.Pap );
+                    Variant.Draw( id, CommandManager.Pap );
 
                     if( ImGui.Button( $"Export all Havok data{id}" ) ) {
                         FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
@@ -161,11 +148,9 @@ namespace VfxEditor.PapFormat {
                     DrawDropdown( id, separatorBefore: false );
 
                     if( Selected != null ) {
-                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId, ModelType, Variant );
+                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId.Value, ModelType.GetValue(), Variant.Value );
                     }
-                    else {
-                        ImGui.Text( "Select an animation..." );
-                    }
+                    else ImGui.Text( "Select an animation..." );
 
                     ImGui.EndTabItem();
                 }

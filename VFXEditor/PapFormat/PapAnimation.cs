@@ -4,15 +4,16 @@ using System.IO;
 using VfxEditor.Utils;
 using VfxEditor.Interop;
 using VfxEditor.TmbFormat;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
         public short HavokIndex = 0;
 
         private readonly string HkxTempLocation;
-        private string Name = "cbbm_replace_this"; // padded to 32 bytes (INCLUDING NULL)
-        private short Unknown1 = 0;
-        private int Unknown2 = 0;
+        private readonly ParsedString Name = new( "Name", "cbbm_replace_this", 31 );
+        private readonly ParsedShort Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private TmbFile Tmb;
 
         public PapAnimation( string hkxPath ) {
@@ -21,21 +22,21 @@ namespace VfxEditor.PapFormat {
 
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
-            Name = FileUtils.ReadString( reader );
-            reader.ReadBytes( 32 - Name.Length - 1 ); // name padded to 32 bytes. also account for trailing null
-            Unknown1 = reader.ReadInt16();
+            Name.Read( reader );
+            reader.ReadBytes( 32 - Name.Value.Length - 1 ); // name padded to 32 bytes. also account for trailing null
+            Unk1.Read( reader );
             HavokIndex = reader.ReadInt16();
-            Unknown2 = reader.ReadInt32();
+            Unk2.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            FileUtils.WriteString( writer, Name, true );
-            for( var i = 0; i < ( 32 - Name.Length - 1 ); i++ ) {
+            Name.Write( writer );
+            for( var i = 0; i < ( 32 - Name.Value.Length - 1 ); i++ ) {
                 writer.Write( ( byte )0 );
             }
-            writer.Write( Unknown1 );
+            Unk1.Write( writer );
             writer.Write( HavokIndex );
-            writer.Write( Unknown2 );
+            Unk2.Write( writer );
         }
 
         public void ReadTmb( BinaryReader reader ) {
@@ -48,12 +49,12 @@ namespace VfxEditor.PapFormat {
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
 
-        public string GetName() => Name;
+        public string GetName() => Name.Value;
 
-        public void Draw( string parentId, short modelId, SkeletonType modelType, byte variant ) {
-            ImGui.InputText( $"Name{parentId}", ref Name, 31 );
-            FileUtils.ShortInput( $"Unknown 1{parentId}", ref Unknown1 );
-            ImGui.InputInt( $"Unknown 2{parentId}", ref Unknown2 );   
+        public void Draw( string parentId, int modelId, SkeletonType modelType, int variant ) {
+            Name.Draw( parentId, CommandManager.Pap );
+            Unk1.Draw( parentId, CommandManager.Pap );
+            Unk2.Draw( parentId, CommandManager.Pap );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -101,7 +102,7 @@ namespace VfxEditor.PapFormat {
             ImGui.EndTabItem();
         }
 
-        private void DrawAnimation3D( string parentId, short modelId, SkeletonType modelType, byte variant ) {
+        private void DrawAnimation3D( string parentId, int modelId, SkeletonType modelType, int variant ) {
             if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
             Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, modelType, variant );
             ImGui.EndTabItem();
