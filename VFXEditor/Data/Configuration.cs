@@ -46,13 +46,17 @@ namespace VfxEditor {
         public KeybindConfiguration OpenKeybind = new();
         public KeybindConfiguration DocumentsKeybind = new();
         public KeybindConfiguration UpdateKeybind = new();
-        public KeybindConfiguration CopyVfxKeybind = new();
-        public KeybindConfiguration PasteVfxKeybind = new();
+        public KeybindConfiguration CopyKeybind = new();
+        public KeybindConfiguration PasteKeybind = new();
+        public KeybindConfiguration UndoKeybind = new();
+        public KeybindConfiguration RedoKeybind = new();
         public KeybindConfiguration SpawnOnSelfKeybind = new();
         public KeybindConfiguration SpawnOnGroundKeybind = new();
         public KeybindConfiguration SpawnOnTargetKeybind = new();
 
         public List<AvfxNodeLibraryItem> VFXNodeLibraryItems = new();
+
+        public int MaxUndoSize = 10;
 
         [NonSerialized]
         public bool WriteLocationError = false;
@@ -143,6 +147,9 @@ namespace VfxEditor {
             if( ImGui.InputFloat( "Live overlay remove delay time##Settings", ref OverlayRemoveDelay ) ) Save();
             if( ImGui.Checkbox( "Live overlay limit by distance##Settings", ref OverlayLimit ) ) Save();
 
+            ImGui.SetNextItemWidth( 135 );
+            if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
+
             ImGui.Unindent();
             ImGui.EndChild();
         }
@@ -152,16 +159,18 @@ namespace VfxEditor {
 
             ImGui.BeginChild( "##Settings-Keybinds", new Vector2(-1), true );
 
-            if( SaveKeybind.Draw( "Save", "##Settings-SaveKeybind" ) ) Save();
-            if( SaveAsKeybind.Draw( "Save as", "##Settings-SaveAsKeybind" ) ) Save();
-            if( OpenKeybind.Draw( "Open", "##Settings-OpenKeybind" ) ) Save();
-            if( CopyVfxKeybind.Draw( "Copy (VFX only)", "##Settings-CopyKeybind" ) ) Save();
-            if( PasteVfxKeybind.Draw( "Paste (VFX only)", "##Settings-PasteKeybind" ) ) Save();
-            if( DocumentsKeybind.Draw( "Documents", "##Settings-DocumentsKeybind" ) ) Save();
-            if( UpdateKeybind.Draw( "Update", "##Settings-UpdateKeybind" ) ) Save();
-            if( SpawnOnSelfKeybind.Draw( "Spawn on self (VFX only)", "##Settings-SpawnSelfKeybind" ) ) Save();
-            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (VFX only)", "##Settings-SpawnGroundKeybind" ) ) Save();
-            if( SpawnOnTargetKeybind.Draw( "Spawn on target (VFX only)", "##Settings-SpawnTargetKeybind" ) ) Save();
+            if( SaveKeybind.Draw( "Save", "##SaveKeybind" ) ) Save();
+            if( SaveAsKeybind.Draw( "Save as", "##SaveAsKeybind" ) ) Save();
+            if( OpenKeybind.Draw( "Open", "##OpenKeybind" ) ) Save();
+            if( CopyKeybind.Draw( "Copy", "##CopyKeybind" ) ) Save();
+            if( PasteKeybind.Draw( "Paste ", "##PasteKeybind" ) ) Save();
+            if( UndoKeybind.Draw( "Undo", "##UndoKeybind" ) ) Save();
+            if( RedoKeybind.Draw( "Redo ", "##RedoKeybind" ) ) Save();
+            if( DocumentsKeybind.Draw( "Documents", "##DocumentsKeybind" ) ) Save();
+            if( UpdateKeybind.Draw( "Update", "##UpdateKeybind" ) ) Save();
+            if( SpawnOnSelfKeybind.Draw( "Spawn on self (VFX only)", "##SpawnSelfKeybind" ) ) Save();
+            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (VFX only)", "##SpawnGroundKeybind" ) ) Save();
+            if( SpawnOnTargetKeybind.Draw( "Spawn on target (VFX only)", "##SpawnTargetKeybind" ) ) Save();
 
             ImGui.EndChild();
         }

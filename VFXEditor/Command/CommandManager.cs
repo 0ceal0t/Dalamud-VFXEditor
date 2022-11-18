@@ -1,22 +1,26 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using VfxEditor.Data;
 
 namespace VfxEditor {
     public class CommandManager {
-        private static readonly int MAX = 10;
+        public static readonly List<CommandManager> Managers = new();
+        public static readonly List<string> FilesToCleanup = new();
 
         public static CommandManager Avfx => Plugin.AvfxManager.CurrentFile?.Command;
         public static CommandManager Tmb => Plugin.TmbManager.CurrentFile?.Command;
         public static CommandManager Pap => Plugin.PapManager.CurrentFile?.Command;
 
+        public int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();
         private int CommandIndex;
 
         public readonly CopyManager Copy;
 
         public CommandManager( CopyManager copy ) {
+            Managers.Add( this );
             Copy = copy;
         }
 
@@ -25,7 +29,7 @@ namespace VfxEditor {
             if (numberToRemove > 0 ) CommandBuffer.RemoveRange( CommandBuffer.Count - numberToRemove, numberToRemove );
 
             CommandBuffer.Add(command);
-            while( CommandBuffer.Count > MAX ) CommandBuffer.RemoveAt( 0 );
+            while( CommandBuffer.Count > Max ) CommandBuffer.RemoveAt( 0 );
             CommandIndex = CommandBuffer.Count - 1;
             command.Execute();
         }
@@ -57,6 +61,18 @@ namespace VfxEditor {
             if( dimRedo ) ImGui.PushStyleColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
             if( ImGui.MenuItem( "Redo##Menu" ) ) Redo();
             if( dimRedo ) ImGui.PopStyleColor();
+        }
+
+        public void Dispose() {
+            CommandBuffer.Clear();
+        }
+
+        public static void DisposeAll() {
+            Managers.ForEach( x => x.Dispose() );
+            foreach( var file in FilesToCleanup ) {
+                if( File.Exists( file ) ) File.Delete( file );
+            }
+            FilesToCleanup.Clear();
         }
     }
 }

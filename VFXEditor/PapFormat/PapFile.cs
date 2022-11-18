@@ -177,10 +177,13 @@ namespace VfxEditor.PapFormat {
                     PapManager.IndexDialog.OnOk = ( int idx ) => {
                         var newAnim = new PapAnimation( HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
-                        Animations.Add( newAnim );
-                        RefreshHavokIndexes();
 
-                        HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
+                        CompoundCommand command = new( false, true );
+                        command.Add( new PapAnimationAddCommand( this, Animations, newAnim ) );
+                        command.Add( new PapHavokFileCommand( HkxTempLocation, () => {
+                            HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
+                        } ) );
+                        CommandManager.Pap.Add( command );
 
                         UiUtils.OkNotification( "Havok data imported" );
                     };
@@ -193,17 +196,19 @@ namespace VfxEditor.PapFormat {
             var index = Animations.IndexOf( item );
             if( index == -1 ) return;
 
-            Animations.RemoveAt( index );
-            RefreshHavokIndexes();
-
-            HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
+            CompoundCommand command = new( false, true );
+            command.Add( new PapAnimationRemoveCommand( this, Animations, item ) );
+            command.Add( new PapHavokFileCommand( HkxTempLocation, () => {
+                HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
+            } ) );
+            CommandManager.Pap.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );
         }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
 
-        private void RefreshHavokIndexes() {
+        public void RefreshHavokIndexes() {
             for( var i = 0; i < Animations.Count; i++ ) {
                 Animations[i].HavokIndex = ( short )i;
             }

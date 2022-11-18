@@ -14,7 +14,7 @@ namespace VfxEditor.PapFormat {
         private readonly ParsedString Name = new( "Name", "cbbm_replace_this", 31 );
         private readonly ParsedShort Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private TmbFile Tmb;
+        public TmbFile Tmb;
 
         public PapAnimation( string hkxPath ) {
             HkxTempLocation = hkxPath;
@@ -64,7 +64,9 @@ namespace VfxEditor.PapFormat {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         PapManager.IndexDialog.OnOk = ( int idx ) => {
-                            HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
+                            CommandManager.Pap.Add( new PapHavokFileCommand( HkxTempLocation, () => {
+                                HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
+                            } ) );
                             UiUtils.OkNotification( "Havok data replaced" );
                         };
                         PapManager.IndexDialog.Show();
@@ -81,22 +83,19 @@ namespace VfxEditor.PapFormat {
         private void DrawTmb( string parentId ) {
             if( !ImGui.BeginTabItem( "TMB" + parentId ) ) return;
 
-            if( ImGui.Button( $"Import TMB{parentId}" ) ) {
+            if( ImGui.Button( $"Replace TMB{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        Tmb = TmbFile.FromLocalFile( res, true );
+                        CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromLocalFile( res, true ) ) );
                         UiUtils.OkNotification( "TMB data imported" );
                     }
                 } );
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( $"Export TMB{parentId}" ) ) {
-                UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
-            }
+            if( ImGui.Button( $"Export TMB{parentId}" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
             Tmb.Draw( parentId + "/Tmb" );
 
             ImGui.EndTabItem();

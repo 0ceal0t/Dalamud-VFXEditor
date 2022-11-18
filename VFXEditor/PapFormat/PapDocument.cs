@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
@@ -22,7 +23,12 @@ namespace VfxEditor.PapFormat {
             Plugin.ResourceLoader.ReRender();
         }
 
-        public override void CheckKeybinds() { }
+        public override void CheckKeybinds() {
+            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Pap.Copy();
+            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Pap.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Pap?.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Pap?.Redo();
+        }
 
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {

@@ -172,6 +172,7 @@ namespace VfxEditor {
 
             FileDialogManager.Dispose();
             CopyManager.DisposeAll();
+            VfxEditor.CommandManager.DisposeAll();
         }
     }
 }

@@ -59,5 +59,7 @@ namespace VfxEditor.FileManager {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
         }
+
+        public void ClearSelected() { Selected = null; }
     }
 }

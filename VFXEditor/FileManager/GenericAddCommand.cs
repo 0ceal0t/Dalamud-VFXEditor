@@ -15,10 +15,10 @@ namespace VfxEditor.FileManager {
             Idx = idx;
         }
 
-        public void Execute() => Group.Insert( Idx, Item );
+        public virtual void Execute() => Group.Insert( Idx, Item );
 
-        public void Redo() => Group.Insert( Idx, Item );
+        public virtual void Redo() => Group.Insert( Idx, Item );
 
-        public void Undo() => Group.Remove( Item );
+        public virtual void Undo() => Group.Remove( Item );
     }
 }

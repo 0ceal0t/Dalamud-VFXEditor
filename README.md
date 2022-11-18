@@ -60,9 +60,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - node graph cutoff text and make color larger
 
 ## Undo/Redo
-- TMB + PAP (not literals, Havok stuff)
 - Keybinds
 - Customize MAX undo size
-- test TMB add/remove
 - CO21 (starstorm end)
 - NodeSelect copy/paste + undo/redo

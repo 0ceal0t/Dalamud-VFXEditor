@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
@@ -17,7 +18,12 @@ namespace VfxEditor.TmbFormat {
             Plugin.ResourceLoader.ReRender();
         }
 
-        public override void CheckKeybinds() { }
+        public override void CheckKeybinds() {
+            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Tmb.Copy();
+            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Tmb.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Tmb?.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Tmb?.Redo();
+        }
 
         protected override void LoadLocal( string localPath ) {
             if( File.Exists( localPath ) ) {

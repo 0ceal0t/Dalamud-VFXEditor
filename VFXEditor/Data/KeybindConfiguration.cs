@@ -30,6 +30,7 @@ namespace VfxEditor {
 
         public bool Draw( string label, string id ) {
             var ret = false;
+            var unassigned = Key == VirtualKey.NONCONVERT;
 
             ImGui.SetNextItemWidth( 100f );
             if( UiUtils.EnumComboBox( $"{id}-Modifier", ValidKeybindModifiers, Modifier, out var newModifier ) ) {
@@ -37,7 +38,7 @@ namespace VfxEditor {
                 ret = true;
             }
 
-            var inputPreview = Key == VirtualKey.NONCONVERT ? "[NONE]" : $"{Key.GetFancyName()}";
+            var inputPreview = unassigned ? "[NONE]" : $"{Key.GetFancyName()}";
             ImGui.SetNextItemWidth( 100f );
             ImGui.SameLine();
             ImGui.InputText( $"{id}-Input", ref inputPreview, 255, ImGuiInputTextFlags.ReadOnly );
@@ -53,18 +54,22 @@ namespace VfxEditor {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+
+            if( unassigned ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
             if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                 Modifier = KeybindModifierKeys.Ctrl;
                 Key = VirtualKey.NONCONVERT;
                 ret = true;
             }
+            if( unassigned ) ImGui.PopStyleVar();
+
             ImGui.PopFont();
 
 
             ImGui.SameLine();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() - 1 );
 
-            if( Key == VirtualKey.NONCONVERT ) ImGui.TextDisabled( label );
+            if( unassigned ) ImGui.TextDisabled( label );
             else ImGui.Text( label );
 
             return ret;
