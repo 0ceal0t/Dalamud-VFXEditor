@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
@@ -30,6 +31,12 @@ namespace VfxEditor.AvfxFormat {
         public override void OnDragEnd( AvfxTimelineItem item, int startBegin, int startFinish, int endBegin, int endFinish ) {
             if( startBegin == startFinish && endBegin == endFinish ) return;
             CommandManager.Avfx.Add( new UiTimelineItemDragCommand( item, startBegin, startFinish, endBegin, endFinish ) );
+        }
+
+        public override void OnDoubleClick( AvfxTimelineItem item ) {
+            if( !Plugin.Configuration.DoubleClickNavigate ) return;
+            var file = Plugin.AvfxManager.CurrentFile;
+            file.SelectItem( file.EmitterView, item.Emitter );
         }
     }
 }

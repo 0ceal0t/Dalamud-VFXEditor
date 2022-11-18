@@ -270,5 +270,7 @@ namespace VfxEditor.AvfxFormat {
             Emitters.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
             Particles.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
         }
+
+        public bool HasSound => Sound.IsAssigned() && SoundNumber.GetValue() > 0 && Sound.GetValue().Trim( '\0' ).Length > 0;
     }
 }

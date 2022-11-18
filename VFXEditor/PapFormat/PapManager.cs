@@ -12,14 +12,14 @@ namespace VfxEditor.PapFormat {
 
         public static void Setup() {
             SourceSelect = new PapSelectDialog(
-                "Pap Select [SOURCE]",
+                "Pap Select [ORIGINAL]",
                 Plugin.Configuration.RecentSelectsPAP,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new PapSelectDialog(
-                "Pap Select [TARGET]",
+                "Pap Select [MODIFIED]",
                 Plugin.Configuration.RecentSelectsPAP,
                 false,
                 SetReplaceGlobal

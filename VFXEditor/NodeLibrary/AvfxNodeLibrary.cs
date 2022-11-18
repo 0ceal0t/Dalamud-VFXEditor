@@ -46,8 +46,8 @@ namespace VfxEditor.NodeLibrary {
 
         public string GetPath( string id ) => Path.Combine( RootPath, $"VFX_NodeLibrary_{id}.vfxedit2" );
 
-        public unsafe void Add( string name, string id, string path ) {
-            Items.Add( new AvfxNodeLibraryItem( name, id, path, "", *ImGui.GetStyleColorVec4( ImGuiCol.Header ) ) );
+        public unsafe void Add( string name, string id, string description, string path ) {
+            Items.Add( new AvfxNodeLibraryItem( name, id, path, description, *ImGui.GetStyleColorVec4( ImGuiCol.Header ) ) );
             Save();
         }
 

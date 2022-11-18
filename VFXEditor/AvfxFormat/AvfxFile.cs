@@ -4,6 +4,9 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -26,6 +29,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly bool Verified = true;
         public bool IsVerified => Verified;
+        private readonly HashSet<IAvfxUiBase> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool checkOriginal = true ) {
             byte[] original = null;
@@ -64,46 +68,49 @@ namespace VfxEditor.AvfxFormat {
 
         public void Draw() {
             if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters##Main" ) ) {
-                    Main.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Scheduler##Main" ) ) {
-                    ScheduleView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Timelines##Main" ) ) {
-                    TimelineView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Emitters##Main" ) ) {
-                    EmitterView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Particles##Main" ) ) {
-                    ParticleView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Effectors##Main" ) ) {
-                    EffectorView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Binders##Main" ) ) {
-                    BinderView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Textures##Main" ) ) {
-                    TextureView.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Models##Main" ) ) {
-                    ModelView.Draw();
-                    ImGui.EndTabItem();
-                }
+                DrawView( Main, "Parametersn" );
+                DrawView( ScheduleView, "Scheduler" );
+                DrawView( TimelineView, "Timelines" );
+                DrawView( EmitterView, "Emitters" );
+                DrawView( ParticleView, "Particles" );
+                DrawView( EffectorView, "Effectors" );
+                DrawView( BinderView, "Binders" );
+                DrawView( TextureView, "Textures" );
+                DrawView( ModelView, "Models" );
                 ImGui.EndTabBar();
             }
+            ForceOpenTabs.Clear();
 
             ExportUi.Draw();
+        }
+
+        private unsafe void DrawView( IAvfxUiBase view, string label ) {
+            var labelBytes = Encoding.UTF8.GetBytes( label + "##Main" );
+            var labelRef = stackalloc byte[labelBytes.Length + 1];
+            Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
+
+            var flags = ForceOpenTabs.Contains( view ) ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            if( ImGuiNative.igBeginTabItem( labelRef, null, flags ) == 1 ) {
+                view.Draw( "" );
+                ImGuiNative.igEndTabItem();
+            }
+        }
+
+        public void SelectItem( AvfxNode item ) {
+            if( item is AvfxScheduler sched ) SelectItem( ScheduleView, sched );
+            else if( item is AvfxTimeline timeline ) SelectItem( TimelineView, timeline );
+            else if( item is AvfxEmitter emitter ) SelectItem( EmitterView, emitter );
+            else if( item is AvfxParticle particle ) SelectItem( ParticleView, particle );
+            else if( item is AvfxEffector effector ) SelectItem( EffectorView, effector );
+            else if( item is AvfxBinder binder ) SelectItem( BinderView, binder );
+            else if( item is AvfxTexture texture ) SelectItem( TextureView, texture );
+            else if( item is AvfxModel model ) SelectItem( ModelView, model );
+        }
+
+        public void SelectItem<T>( IUiNodeView<T> view, T item ) where T : AvfxNode {
+            if( item == null ) return;
+            view.SetSelected( item );
+            ForceOpenTabs.Add( view );
         }
 
         public void Write( BinaryWriter writer ) => Main?.Write( writer );

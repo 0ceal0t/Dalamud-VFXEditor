@@ -11,14 +11,14 @@ namespace VfxEditor.TmbFormat {
 
         public static void Setup() {
             SourceSelect = new TmbSelectDialog(
-                "Tmb Select [SOURCE]",
+                "Tmb Select [ORIGINAL]",
                 Plugin.Configuration.RecentSelectsTMB,
                 true,
                 SetSourceGlobal
             );
 
             ReplaceSelect = new TmbSelectDialog(
-                "Tmb Select [TARGET]",
+                "Tmb Select [MODIFIED]",
                 Plugin.Configuration.RecentSelectsTMB,
                 false,
                 SetReplaceGlobal

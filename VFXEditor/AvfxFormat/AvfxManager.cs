@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
 
         public static void Setup() {
             SourceSelect = new VfxSelectDialog(
-                "File Select [SOURCE]",
+                "File Select [ORIGINAL]",
                 Plugin.Configuration.RecentSelects,
                 true,
                 SetSourceGlobal,
@@ -25,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
                 spawnOnTarget: Plugin.SpawnOnTarget
             );
             ReplaceSelect = new VfxSelectDialog(
-                "File Select [TARGET]",
+                "File Select [MODIFIED]",
                 Plugin.Configuration.RecentSelects,
                 false,
                 SetReplaceGlobal,

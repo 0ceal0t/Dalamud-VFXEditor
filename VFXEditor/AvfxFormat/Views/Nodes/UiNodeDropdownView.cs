@@ -42,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
 
-            if( Selected != null ) Selected.Draw( Id );
+            Selected?.Draw( Id );
         }
 
         public void ViewSelect() {
@@ -70,5 +70,10 @@ namespace VfxEditor.AvfxFormat {
         public bool IsAllowedNew() => AllowNew;
 
         public bool IsAllowedDelete() => AllowDelete;
+
+        public void SetSelected( T selected ) {
+            Selected = selected;
+            OnSelect( selected );
+        }
     }
 }

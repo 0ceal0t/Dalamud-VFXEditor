@@ -57,6 +57,7 @@ namespace VfxEditor {
         public List<AvfxNodeLibraryItem> VFXNodeLibraryItems = new();
 
         public int MaxUndoSize = 10;
+        public bool DoubleClickNavigate = true;
 
         [NonSerialized]
         public bool WriteLocationError = false;
@@ -149,6 +150,8 @@ namespace VfxEditor {
 
             ImGui.SetNextItemWidth( 135 );
             if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
+
+            if( ImGui.Checkbox( "Double-click to navigate to items", ref DoubleClickNavigate ) ) Save();
 
             ImGui.Unindent();
             ImGui.EndChild();

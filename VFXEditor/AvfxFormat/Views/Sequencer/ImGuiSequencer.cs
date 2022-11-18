@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -190,7 +191,10 @@ namespace VfxEditor.AvfxFormat {
                     deleteEntry = item;
                 }
 
-                if( !newItemAdded && !ignoreSelected && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && MouseClicked() && MouseOver( childFramePos, childFramePosMax ) ) Selected = item;
+                if( !newItemAdded && !ignoreSelected && Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && MouseOver( childFramePos, childFramePosMax ) ) {
+                    if( MouseClicked()  ) Selected = item; // Select from left side
+                    if( DoubleClicked() ) OnDoubleClick( item );
+                }
             }
 
             for( var i = 0; i < count; i++ ) {
@@ -275,6 +279,7 @@ namespace VfxEditor.AvfxFormat {
                         var rect = rects[j];
                         if( !Contains( rect.Min, rect.Max, io.MousePos ) ) continue;
                         if( !Contains( childFramePos, childFramePos + childFrameSize, io.MousePos ) ) continue;
+
                         // Start dragging an entry
                         if( MouseClicked() && !MovingScrollBar ) {
                             MovingEntry = item;
@@ -298,7 +303,7 @@ namespace VfxEditor.AvfxFormat {
                     var r = GetEnd( MovingEntry );
                     var isInfinite = r == -1;
 
-                    Selected = MovingEntry;
+                    Selected = MovingEntry; // Select by dragging bar
 
                     var changeLeft = ( MovingPart == MovingType.LeftHandle || MovingPart == MovingType.Middle );
                     if( changeLeft ) l += diffFrame;
@@ -322,8 +327,10 @@ namespace VfxEditor.AvfxFormat {
                     SetPos( MovingEntry, l, r );
                 }
 
+                if( DoubleClicked() ) OnDoubleClick( MovingEntry );
+
                 if( !ImGui.IsMouseDown( ImGuiMouseButton.Left ) ) {
-                    if( diffFrame == 0 && MovingPart > 0 ) Selected = MovingEntry;
+                    if( diffFrame == 0 && MovingPart > 0 ) Selected = MovingEntry; // Select by clicking bar
                     OnDragEnd( MovingEntry, MovingStart, GetStart( MovingEntry ), MovingEnd, GetEnd( MovingEntry ) );
                     MovingEntry = null;
                 }
@@ -452,6 +459,7 @@ namespace VfxEditor.AvfxFormat {
         public abstract void OnNew();
         public abstract bool IsEnabled( T item );
         public abstract void Toggle( T item );
+        public abstract void OnDoubleClick( T item );
 
         private static bool AddDeleteButton( ImDrawListPtr drawList, Vector2 pos, bool add = true ) {
             var size = new Vector2( 16, 16 );
@@ -482,6 +490,8 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private static bool MouseClicked() => ImGui.IsMouseClicked( ImGuiMouseButton.Left );
+
+        private static bool DoubleClicked() => ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left );
 
         private static bool Contains( Vector2 min, Vector2 max, Vector2 point ) {
             return point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;

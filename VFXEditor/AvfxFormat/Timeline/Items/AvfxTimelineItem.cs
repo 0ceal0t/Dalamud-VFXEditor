@@ -80,5 +80,9 @@ namespace VfxEditor.AvfxFormat {
         public override string GetDefaultText() => $"{GetIdx()}: Emitter {EmitterIdx.GetValue()}";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Item{GetIdx()}";
+
+        public AvfxEmitter Emitter => EmitterSelect.Selected;
+
+        public bool HasSound => EmitterSelect.Selected != null && EmitterSelect.Selected.HasSound;
     }
 }

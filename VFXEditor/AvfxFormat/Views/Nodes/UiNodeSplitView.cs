@@ -57,5 +57,10 @@ namespace VfxEditor.AvfxFormat {
         public bool IsAllowedNew() => AllowNew;
 
         public bool IsAllowedDelete() => AllowDelete;
+
+        public void SetSelected( T selected ) {
+            Selected = selected;
+            OnSelect( selected );
+        }
     }
 }

@@ -6,16 +6,18 @@ using System.IO;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public interface IUiNodeView<T> where T : AvfxNode  {
+    public interface IUiNodeView<T> : IAvfxUiBase where T : AvfxNode  {
         public UiNodeGroup<T> GetGroup();
         public string GetDefaultPath();
-        public T GetSelected();
+
         public bool IsAllowedNew();
         public bool IsAllowedDelete();
 
         public T Read( BinaryReader reader, int size, bool hasDependencies );
 
+        public T GetSelected();
         public void ResetSelected();
+        public void SetSelected( T selected );
 
         public static void DrawControls( IUiNodeView<T> view, AvfxFile file, string id ) {
             var allowNew = view.IsAllowedNew();
