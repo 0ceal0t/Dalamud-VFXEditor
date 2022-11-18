@@ -57,10 +57,4 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Update "try on" preview
-- node graph cutoff text and make color larger
-
-## Undo/Redo
-- Keybinds
-- Customize MAX undo size
-- CO21 (starstorm end)
-- NodeSelect copy/paste + undo/redo
+- [ ] Node graph cutoff text and make color larger
