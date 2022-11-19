@@ -76,6 +76,7 @@ namespace VfxEditor.AvfxFormat {
             };
 
             PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( new() {
+                PropStart,
                 Prop1,
                 Prop2,
                 PropGoal

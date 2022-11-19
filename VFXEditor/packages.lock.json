@@ -47,6 +47,21 @@
         "resolved": "2.0.9",
         "contentHash": "AOFqanoVebasDk/X1qm7X9/q/UwTz6/fpNFfqsEh6K1euTV9CxknPIhlLpo6CHlhiyMUs1/vv+g+KE8C8VYGcg=="
       },
+      "NAudio.Core": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "0iowfmolibU4KxjaC/s7lox/BeDg76UVvXtCuCzRiNpylVndqsxXxp+bVWFrpv0KzQDIKLxZrnDmYENlAI0u9g=="
+      },
+      "NAudio.Wasapi": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "Zp/8l79aYQEu7/HfzXWVpqyIwRUPgsvCj/Qx+pR6ykJxvwjqOoUfMiEG9US1wW4d7PEzT5ZBIL+cp90t6HNNiw==",
+        "dependencies": {
+          "NAudio.Core": "2.1.0"
+        }
+      },
       "SharpDX.D3DCompiler": {
         "type": "Direct",
         "requested": "[4.2.0, )",

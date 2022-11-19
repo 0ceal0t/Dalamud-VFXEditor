@@ -23,6 +23,7 @@ using VfxEditor.Texture;
 using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Animation;
+using VfxEditor.Data.Scd;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -122,6 +123,8 @@ namespace VfxEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
+
+            //ScdFile.Test();
         }
 
         public static void CheckClearKeyState() {
