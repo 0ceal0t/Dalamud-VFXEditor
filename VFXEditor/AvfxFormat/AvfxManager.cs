@@ -16,25 +16,13 @@ namespace VfxEditor.AvfxFormat {
                 "File Select [ORIGINAL]",
                 Plugin.Configuration.RecentSelects,
                 true,
-                SetSourceGlobal,
-                showSpawn: true,
-                spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawn,
-                spawnOnGround: Plugin.SpawnOnGround,
-                spawnOnSelf: Plugin.SpawnOnSelf,
-                spawnOnTarget: Plugin.SpawnOnTarget
+                SetSourceGlobal
             );
             ReplaceSelect = new VfxSelectDialog(
                 "File Select [MODIFIED]",
                 Plugin.Configuration.RecentSelects,
                 false,
-                SetReplaceGlobal,
-                showSpawn: true,
-                spawnVfxExists: Plugin.SpawnExists,
-                removeSpawnVfx: Plugin.RemoveSpawn,
-                spawnOnGround: Plugin.SpawnOnGround,
-                spawnOnSelf: Plugin.SpawnOnSelf,
-                spawnOnTarget: Plugin.SpawnOnTarget
+                SetReplaceGlobal
             );
             NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }

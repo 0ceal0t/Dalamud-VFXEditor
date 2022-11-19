@@ -230,7 +230,8 @@ namespace VfxEditor.Interop {
 
         private unsafe void OnUpdateEvent( object framework ) {
             var player = Plugin.ClientState.LocalPlayer;
-            var renderPtr = player.Address + 0x104; // https://github.com/aers/FFXIVClientStructs/blob/fe20b24789a5b2c3eaae1e02b974187769615353/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs#L46
+            var renderPtr = player.Address + 0x104;
+            // https://github.com/aers/FFXIVClientStructs/blob/fe20b24789a5b2c3eaae1e02b974187769615353/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs#L46
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:

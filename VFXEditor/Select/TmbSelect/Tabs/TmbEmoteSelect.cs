@@ -24,7 +24,7 @@ namespace VfxEditor.Select.TmbSelect {
 
             DrawIcon( Icon );
 
-            DrawPath( "Tmb Path", loadedItem.TmbFiles, Id, Dialog, SelectResultType.GameEmote, "EMOTE", loadedItem.Name );
+            DrawPath( "Tmb Path", loadedItem.TmbFiles, Id, Dialog, SelectResultType.GameEmote, "EMOTE", loadedItem.Name, true );
         }
 
         protected override string UniqueRowTitle( XivEmoteTmb item ) {

@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,18 @@ namespace VfxEditor.Select.TmbSelect {
                 new TmbNpcSelect( id, "Npc", this ),
                 new TmbCommonSelect( id, "Common", this )
             } );
+        }
+
+        public override void Play( string playPath, string id = "" ) {
+            var reset = Plugin.ActorAnimationManager.CanReset;
+
+            ImGui.SameLine();
+            if (reset ) {
+                if( ImGui.Button( "Reset##" + id ) ) Plugin.ActorAnimationManager.Reset();
+            }
+            else {
+                if( ImGui.Button( "Play##" + id ) ) Plugin.ActorAnimationManager.Apply( playPath );
+            }
         }
 
         protected override List<SelectTab> GetTabs() => GameTabs;

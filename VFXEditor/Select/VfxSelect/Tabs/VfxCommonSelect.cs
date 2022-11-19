@@ -24,7 +24,7 @@ namespace VfxEditor.Select.VfxSelect {
 
             DrawIcon( Icon );
 
-            DrawPath( "VFX Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, spawn: true );
+            DrawPath( "VFX Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, play: true );
         }
 
         protected override string UniqueRowTitle( XivCommon item ) {

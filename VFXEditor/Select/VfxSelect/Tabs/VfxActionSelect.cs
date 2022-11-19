@@ -24,7 +24,7 @@ namespace VfxEditor.Select.VfxSelect {
 
             DrawIcon( Icon );
 
-            DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", spawn: true );
+            DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", play: true );
 
             if( loadedItem.SelfVfxExists ) {
                 ImGui.Text( "TMB Path: " );

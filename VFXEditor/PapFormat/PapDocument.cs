@@ -93,6 +93,8 @@ namespace VfxEditor.PapFormat {
 
         protected override void ReplaceShow() => PapManager.ReplaceSelect.Show();
 
+        protected override bool ExtraInputColumn() => false;
+
         public override void Dispose() {
             base.Dispose();
             File.Delete( HkxTemp );

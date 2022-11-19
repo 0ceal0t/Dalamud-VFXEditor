@@ -24,7 +24,7 @@ namespace VfxEditor.Select.TmbSelect {
 
             DrawIcon( Icon );
 
-            DrawPath( "TMB Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, spawn: true );
+            DrawPath( "TMB Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, true );
         }
 
         protected override string UniqueRowTitle( XivCommon item ) {

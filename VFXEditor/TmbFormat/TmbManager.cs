@@ -1,4 +1,6 @@
+using Dalamud.Logging;
 using ImGuiNET;
+using VfxEditor.Animation;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.TmbSelect;
@@ -32,6 +34,9 @@ namespace VfxEditor.TmbFormat {
 
         public static void SetReplaceGlobal( SelectResult result ) {
             Plugin.TmbManager?.SetReplace( result );
+            if( Plugin.TmbManager?.ActiveDocument != null ) {
+                Plugin.TmbManager.ActiveDocument.AnimationId = ActorAnimationManager.GetIdFromTmbPath( result.Path );
+            }
             Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsTMB, result );
         }
 

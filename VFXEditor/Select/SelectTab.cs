@@ -195,7 +195,7 @@ namespace VfxEditor {
             }
         }
 
-        public static void DrawPath( string label, string path, string id, SelectDialog dialog, SelectResultType resultType, string resultPrefix, string resultName, bool spawn = false ) {
+        public static void DrawPath( string label, string path, string id, SelectDialog dialog, SelectResultType resultType, string resultPrefix, string resultName, bool play = false ) {
             if( !string.IsNullOrEmpty( path ) ) {
                 if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
                     ImGui.Text( $"{label}: " );
@@ -208,8 +208,8 @@ namespace VfxEditor {
                 }
                 ImGui.SameLine();
                 Copy( path, id: id + "Copy" );
-                if( spawn ) {
-                    dialog.Spawn( path, id: id + "Spawn" );
+                if( play ) {
+                    dialog.Play( path, id: id + "Spawn" );
                 }
             }
         }

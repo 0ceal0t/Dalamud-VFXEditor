@@ -1,6 +1,4 @@
 using ImGuiNET;
-using System.Diagnostics;
-using VfxEditor.Utils;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.TmbSelect {
@@ -21,11 +19,9 @@ namespace VfxEditor.Select.TmbSelect {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( "Variant: " + loadedItem.Npc.Variant );
 
-            DrawPath( "TMB", loadedItem.TmbPaths, Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Npc.Name );
+            DrawPath( "TMB", loadedItem.TmbPaths, Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Npc.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivNpc item ) {
-            return item.Name + Id + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivNpc item ) => item.Name + Id + item.RowId;
     }
 }

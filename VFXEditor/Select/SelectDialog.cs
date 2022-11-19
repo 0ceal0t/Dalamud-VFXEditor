@@ -162,6 +162,6 @@ namespace VfxEditor {
 
         public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
 
-        public virtual void Spawn( string spawnPath, string id = "" ) { }
+        public virtual void Play( string playPath, string id = "" ) { }
     }
 }

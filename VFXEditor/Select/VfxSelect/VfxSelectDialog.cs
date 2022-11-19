@@ -4,32 +4,9 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select.VfxSelect {
     public class VfxSelectDialog : SelectDialog {
-        private readonly bool ShowSpawn = false;
-        private readonly Func<bool> SpawnVfxExists;
-        private readonly Action RemoveSpawnVfx;
-        private readonly Action<string> SpawnOnGround;
-        private readonly Action<string> SpawnOnSelf;
-        private readonly Action<string> SpawnOnTarget;
         private readonly List<SelectTab> GameTabs;
 
-        public VfxSelectDialog(
-            string id,
-            List<SelectResult> recentList,
-            bool showLocal,
-            Action<SelectResult> onSelect,
-            bool showSpawn = false,
-            Func<bool> spawnVfxExists = null,
-            Action removeSpawnVfx = null,
-            Action<string> spawnOnGround = null,
-            Action<string> spawnOnSelf = null,
-            Action<string> spawnOnTarget = null ) : base( id, "avfx", recentList, showLocal, onSelect ) {
-
-            ShowSpawn = showSpawn;
-            SpawnVfxExists = spawnVfxExists;
-            RemoveSpawnVfx = removeSpawnVfx;
-            SpawnOnGround = spawnOnGround;
-            SpawnOnSelf = spawnOnSelf;
-            SpawnOnTarget = spawnOnTarget;
+        public VfxSelectDialog( string id, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( id, "avfx", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new VfxItemSelect( id, "Item", this ),
@@ -47,28 +24,18 @@ namespace VfxEditor.Select.VfxSelect {
             } );
         }
 
-        public override void Spawn( string spawnPath, string id = "" ) {
-            if( !ShowSpawn ) return;
+        public override void Play( string playPath, string id = "" ) {
             ImGui.SameLine();
-            if( SpawnVfxExists() ) {
-                if( ImGui.Button( "Remove##" + id ) ) {
-                    RemoveSpawnVfx();
-                }
+            if( Plugin.SpawnExists() ) {
+                if( ImGui.Button( "Remove##" + id ) ) Plugin.RemoveSpawn();
             }
             else {
-                if( ImGui.Button( "Spawn##" + id ) ) {
-                    ImGui.OpenPopup( "Spawn_Popup##" + id );
-                }
+                if( ImGui.Button( "Spawn##" + id ) ) ImGui.OpenPopup( "Spawn_Popup##" + id );
+
                 if( ImGui.BeginPopup( "Spawn_Popup##" + id ) ) {
-                    if( ImGui.Selectable( "On Ground" ) ) {
-                        SpawnOnGround( spawnPath );
-                    }
-                    if( ImGui.Selectable( "On Self" ) ) {
-                        SpawnOnSelf( spawnPath );
-                    }
-                    if( ImGui.Selectable( "On Target" ) ) {
-                        SpawnOnTarget( spawnPath );
-                    }
+                    if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( playPath );
+                    if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( playPath );
+                    if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( playPath );
                     ImGui.EndPopup();
                 }
             }

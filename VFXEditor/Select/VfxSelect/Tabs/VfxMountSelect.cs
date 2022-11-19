@@ -32,7 +32,7 @@ namespace VfxEditor.Select.VfxSelect {
             ImGui.SameLine();
             DisplayPath( loadedItem.ImcPath );
 
-            DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Mount.Name, spawn: true );
+            DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Mount.Name, play: true );
         }
 
         protected override string UniqueRowTitle( XivMount item ) {

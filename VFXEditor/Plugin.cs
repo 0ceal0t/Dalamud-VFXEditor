@@ -39,6 +39,7 @@ namespace VfxEditor {
 
         public static ResourceLoader ResourceLoader { get; private set; }
         public static AnimationManager AnimationManager { get; private set; }
+        public static ActorAnimationManager ActorAnimationManager { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
@@ -108,6 +109,7 @@ namespace VfxEditor {
             TexToolsDialog = new TexToolsDialog();
             ResourceLoader = new ResourceLoader();
             AnimationManager = new AnimationManager();
+            ActorAnimationManager = new ActorAnimationManager();
             DirectXManager = new DirectXManager();
             VfxTracker = new VfxTracker();
 
@@ -164,6 +166,9 @@ namespace VfxEditor {
 
             AnimationManager.Dispose();
             AnimationManager = null;
+
+            ActorAnimationManager.Dispose();
+            ActorAnimationManager = null;
 
             DirectXManager.Dispose();
             DirectXManager = null;

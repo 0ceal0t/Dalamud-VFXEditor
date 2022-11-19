@@ -104,33 +104,48 @@ namespace VfxEditor.FileManager {
 
         public abstract void CheckKeybinds();
 
-        public virtual void Draw() {
+        protected abstract bool ExtraInputColumn();
+
+        public void Draw() {
             if ( Plugin.Configuration.WriteLocationError ) {
                 ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
                 return;
             }
 
-            ImGui.Columns( 2, $"{Id}-Columns", false );
+            var threeColumns = ExtraInputColumn();
 
-            // ======== INPUT TEXT =========
+            ImGui.Columns( threeColumns ? 3 : 2, $"{Id}-Columns", false );
+
+            DrawInputTextColumn();
+            ImGui.NextColumn();
+
+            DrawSearchBarsColumn();
+            if( threeColumns ) {
+                ImGui.NextColumn();
+                DrawExtraColumn();
+            }
+
+            ImGui.Columns( 1 );
+
+            DrawBody();
+        }
+
+        protected virtual void DrawInputTextColumn() {
             ImGui.SetColumnWidth( 0, 140 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Text( $"Loaded {FileType}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $"{FileType} Being Replaced" );
-            ImGui.NextColumn();
+        }
 
-            // ======= SEARCH BARS =========
+        protected virtual void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 140 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-
             DisplaySearchBars();
-
             ImGui.PopItemWidth();
-            ImGui.Columns( 1 );
-
-            DrawBody();
         }
+
+        protected virtual void DrawExtraColumn() { }
 
         protected void DisplaySearchBars() {
             var sourceString = SourceDisplay;

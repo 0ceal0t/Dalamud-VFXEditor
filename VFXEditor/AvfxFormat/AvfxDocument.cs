@@ -87,18 +87,34 @@ namespace VfxEditor.AvfxFormat {
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected override void ExportRaw() {
-            UiUtils.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
-        }
+        protected override void ExportRaw() => UiUtils.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
 
         protected override bool IsVerified() => CurrentFile.IsVerified;
 
-        protected override void DrawBody() { }
+        public void Import( string path ) {
+            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
+        }
 
-        public override void Draw() {
-            ImGui.Columns( 3, "MainInterfaceFileColumns", false );
+        public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
 
-            // ======== INPUT TEXT =========
+        protected override void SourceShow() => AvfxManager.SourceSelect.Show();
+
+        protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
+
+        public void OpenTemplate( string path ) {
+            var newResult = new SelectResult {
+                DisplayString = "[NEW]",
+                Type = SelectResultType.Local,
+                Path = Path.Combine( Plugin.RootLocation, "Files", path )
+            };
+            SetSource( newResult );
+        }
+
+        // ========= DRAWING =============
+
+        protected override bool ExtraInputColumn() => true;
+
+        protected override void DrawInputTextColumn() {
             ImGui.SetColumnWidth( 0, 150 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             UiUtils.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the loaded VFX" ); ImGui.SameLine();
@@ -106,32 +122,24 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             UiUtils.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the replaced VFX" ); ImGui.SameLine();
             ImGui.Text( "VFX Being Replaced" );
-            ImGui.NextColumn();
+        }
 
-            // ======= SEARCH BARS =========
+        protected override void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-
             DisplaySearchBars();
-
             ImGui.PopItemWidth();
+        }
 
-            // ======= TEMPLATES =========
-            ImGui.NextColumn();
+        protected override void DrawExtraColumn() {
             ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) {
-                AvfxManager.NodeLibrary.Show();
-            }
+            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) AvfxManager.NodeLibrary.Show();
 
-            // ======= SPAWN + EYE =========
+            // Spawn + eye
             if( !Plugin.SpawnExists() ) {
-                if( SpawnDisabled ) {
-                    ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-                }
-                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) {
-                    ImGui.OpenPopup( "Spawn_Popup" );
-                }
+                if( SpawnDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "Spawn_Popup" );
                 if( SpawnDisabled ) {
                     ImGui.PopStyleVar();
                     UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
@@ -140,6 +148,7 @@ namespace VfxEditor.AvfxFormat {
             else {
                 if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
             }
+
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
                 if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
@@ -162,8 +171,9 @@ namespace VfxEditor.AvfxFormat {
             }
             ImGui.PopFont();
             UiUtils.Tooltip( "VFX path overlay" );
+        }
 
-            ImGui.Columns( 1 );
+        protected override void DrawBody() {
             ImGui.Separator();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -171,29 +181,9 @@ namespace VfxEditor.AvfxFormat {
             if( CurrentFile == null ) DisplayBeginHelpText();
             else {
                 DisplayFileControls();
-
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 CurrentFile.Draw();
             }
-        }
-
-        public void Import( string path ) {
-            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
-        }
-
-        public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
-
-        protected override void SourceShow() => AvfxManager.SourceSelect.Show();
-
-        protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
-
-        public void OpenTemplate( string path ) {
-            var newResult = new SelectResult {
-                DisplayString = "[NEW]",
-                Type = SelectResultType.Local,
-                Path = Path.Combine( Plugin.RootLocation, "Files", path )
-            };
-            SetSource( newResult );
         }
     }
 }
