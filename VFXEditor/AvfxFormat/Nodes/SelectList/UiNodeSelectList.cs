@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -138,11 +139,17 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
+            var style = ImGui.GetStyle();
+            ImGui.PushFont( UiBuilder.IconFont );
+            var goSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Share}" ).X + style.FramePadding.X * 2 + 2;
+            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + 2;
+            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - goSize;
+            ImGui.PopFont();
+
             for( var idx = 0; idx < Selected.Count; idx++ ) {
-                var itemId = id + idx;
-                var text = ( idx == 0 ) ? Name : "";
-                if( ImGui.BeginCombo( $"{text}{itemId}", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
-                    if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) );
+                ImGui.SetNextItemWidth( inputSize );
+                if( ImGui.BeginCombo( $"{id}{idx}-MainInput", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
+                    if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
                     foreach( var item in Group.Items ) {
                         if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
                         if( ImGui.IsItemHovered() ) item.ShowTooltip();
@@ -152,14 +159,31 @@ namespace VfxEditor.AvfxFormat {
 
                 AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
-                if( idx > 0 ) {
+                // Draw go button
+                ImGui.SameLine( inputSize + 2 );
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( Selected[idx] == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id + idx ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
+                if( Selected[idx] == null ) ImGui.PopStyleVar();
+                ImGui.PopFont();
+
+                if( idx == 0 ) {
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( "- Remove" + itemId, small: true ) ) {
+                    ImGui.Text( Name );
+                }
+                else {
+                    // Remove button
+                    ImGui.SameLine( inputSize + goSize + 2 );
+                    ImGui.PushFont( UiBuilder.IconFont );
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
+                        ImGui.PopFont();
                         return;
                     }
+                    ImGui.PopFont();
                 }
             }
+
 
             if( Selected.Count == 0 ) {
                 ImGui.Text( Name );

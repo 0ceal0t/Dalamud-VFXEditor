@@ -52,10 +52,9 @@ namespace VfxEditor.AvfxFormat {
             if( manager.IsPasting && manager.Strings.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxStringCommand( this, val, IsAssigned() ) );
 
             var style = ImGui.GetStyle();
-            var spacing = 2;
             ImGui.PushFont( UiBuilder.IconFont );
-            var checkSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Check}" ).X + style.FramePadding.X * 2 + spacing;
-            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + spacing;
+            var checkSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Check}" ).X + style.FramePadding.X * 2 + 2;
+            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + 2;
             ImGui.PopFont();
 
             // Input
@@ -68,14 +67,14 @@ namespace VfxEditor.AvfxFormat {
             ImGui.PushFont( UiBuilder.IconFont );
 
             // Check - update value
-            ImGui.SameLine( inputSize + spacing );
+            ImGui.SameLine( inputSize + 2 );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                 var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
                 CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
             }
             // Remove - unassign
             if( ShowRemoveButton ) {
-                ImGui.SameLine( inputSize + checkSize + spacing );
+                ImGui.SameLine( inputSize + checkSize + 2 );
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
             }
 

@@ -438,7 +438,9 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {
+                ImGui.BeginChild( $"{parentId}-Child" );
                 Selected.Draw( parentId );
+                ImGui.EndChild();
             }
             else {
                 ImGui.Text( "Select an item..." );

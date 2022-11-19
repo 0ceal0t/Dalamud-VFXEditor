@@ -68,7 +68,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void Draw() {
             if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                DrawView( Main, "Parametersn" );
+                DrawView( Main, "Parameters" );
                 DrawView( ScheduleView, "Scheduler" );
                 DrawView( TimelineView, "Timelines" );
                 DrawView( EmitterView, "Emitters" );

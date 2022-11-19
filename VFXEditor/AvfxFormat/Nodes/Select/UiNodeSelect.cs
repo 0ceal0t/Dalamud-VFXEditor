@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
@@ -165,10 +166,15 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            if( ImGui.BeginCombo( Name + id, Selected == null ? "[NONE]" : Selected.GetText() ) ) {
-                // "None" selector
-                if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) );
+            var style = ImGui.GetStyle();
+            ImGui.PushFont( UiBuilder.IconFont );
+            var goSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Share}" ).X + style.FramePadding.X * 2 + 2;
+            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - goSize;
+            ImGui.PopFont();
 
+            ImGui.SetNextItemWidth( inputSize );
+            if( ImGui.BeginCombo( $"{id}-MainInput", Selected == null ? "[NONE]" : Selected.GetText() ) ) {
+                if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector
                 foreach( var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText(), Selected == item ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
                     if( ImGui.IsItemHovered() ) item.ShowTooltip();
@@ -177,6 +183,17 @@ namespace VfxEditor.AvfxFormat {
             }
 
             AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+
+            // Draw go button
+            ImGui.SameLine( inputSize + 2 );
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( Selected == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
+            if( Selected == null ) ImGui.PopStyleVar();
+            ImGui.PopFont();
+
+            ImGui.SameLine();
+            ImGui.Text( Name );
         }
     }
 }
