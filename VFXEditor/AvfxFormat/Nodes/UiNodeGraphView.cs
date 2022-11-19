@@ -1,5 +1,8 @@
+using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class UiNodeGraphView : IAvfxUiBase {
@@ -8,13 +11,14 @@ namespace VfxEditor.AvfxFormat {
         private static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
         private static readonly uint BorderColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
         private static readonly uint TextColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
-        private static readonly uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );
+        //private static readonly uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );
         private static readonly uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
-        private static Vector2 HeaderSize = new( 160, 20 );
-        private static Vector2 BoxSize = new( 160, 40 );
-        private static Vector2 Spacing = new( 200, 100 );
-        private static Vector2 TextOffset = new( 5, 2 );
-        private static Vector2 LineOffset = new( 0, 25 );
+        //private static readonly Vector2 HeaderSize = new( 160, 20 );
+        private static readonly Vector2 BoxSize = new( 160, 30 );
+        private static readonly Vector2 Spacing = new( 200, 100 );
+        //private static readonly float TextSize = 20;
+        private static readonly Vector2 TextOffset = new( 10, 5 );
+        private static readonly Vector2 LineOffset = new( 0, 15 );
 
         private static readonly uint GridColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
         private static readonly int GridSmall = 10;
@@ -95,9 +99,20 @@ namespace VfxEditor.AvfxFormat {
             foreach( var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
                 var Pos = CanvasBottomRight - GetPos( item );
-                DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
-                DrawList.AddRectFilled( Pos, Pos + HeaderSize, node.GraphColor, 5, ImDrawFlags.RoundCornersTop ); // header
-                DrawList.AddText( Pos + TextOffset, TextColor, node.GetText() );
+                DrawList.AddRectFilled( Pos, Pos + BoxSize, node.GraphColor, 5 );
+                //DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
+                //DrawList.AddRectFilled( Pos, Pos + HeaderSize, node.GraphColor, 5, ImDrawFlags.RoundCornersTop );
+
+                DrawList.AddText( Pos + TextOffset, TextColor, TrimText(node.GetText()) );
+                //DrawList.AddText( ImGui.GetFont(), TextSize, Pos + TextOffset, TextColor, node.GetText() );
+
+                var buttonPos = Pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
+                var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ));
+
+                DrawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BGColor : 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Share}" );
+                if( buttonOver && UiUtils.MouseClicked() ) {
+                    Plugin.AvfxManager.CurrentFile.SelectItem( node ); // navigate to node
+                }
 
                 if( item.Level > 0 ) { // right node
                     var Pos2 = CanvasBottomRight - GetPos( item ) + BoxSize - LineOffset;
@@ -129,6 +144,8 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndGroup();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
+
+        private static string TrimText( string text ) => text.Length <= 20 ? text : text.Substring( 0, 20 ) + "...";
 
         public Vector2 GetPos( UiNodeGraphItem item ) => new Vector2( Spacing.X * ( item.Level + 1 ), Spacing.Y * ( item.Level2 + 1 ) ) + OFFSET;
     }

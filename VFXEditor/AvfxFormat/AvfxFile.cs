@@ -79,8 +79,6 @@ namespace VfxEditor.AvfxFormat {
                 DrawView( ModelView, "Models" );
                 ImGui.EndTabBar();
             }
-            ForceOpenTabs.Clear();
-
             ExportUi.Draw();
         }
 
@@ -89,7 +87,9 @@ namespace VfxEditor.AvfxFormat {
             var labelRef = stackalloc byte[labelBytes.Length + 1];
             Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
 
-            var flags = ForceOpenTabs.Contains( view ) ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            var forceOpen = ForceOpenTabs.Contains( view );
+            if( forceOpen ) ForceOpenTabs.Remove( view );
+            var flags = forceOpen ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
             if( ImGuiNative.igBeginTabItem( labelRef, null, flags ) == 1 ) {
                 view.Draw( "" );
                 ImGuiNative.igEndTabItem();
@@ -115,7 +115,10 @@ namespace VfxEditor.AvfxFormat {
 
         public void Write( BinaryWriter writer ) => Main?.Write( writer );
 
-        public void Dispose() => NodeGroupSet?.Dispose();
+        public void Dispose() {
+            NodeGroupSet?.Dispose();
+            ForceOpenTabs.Clear();
+        }
 
         // ========== WORKSPACE ==============
 
