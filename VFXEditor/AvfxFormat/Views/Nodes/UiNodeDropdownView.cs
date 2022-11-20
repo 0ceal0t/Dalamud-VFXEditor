@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract void OnSelect( T item );
 
-        public abstract T Read( BinaryReader reader, int size, bool hasDependencies );
+        public abstract T Read( BinaryReader reader, int size );
 
         public void Draw( string parentId = "" ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

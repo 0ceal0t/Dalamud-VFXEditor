@@ -11,8 +11,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override void OnSelect( AvfxParticle item ) { }
 
-        public override AvfxParticle Read( BinaryReader reader, int size, bool hasDependencies ) {
-            var item = new AvfxParticle( File.NodeGroupSet, hasDependencies );
+        public override AvfxParticle Read( BinaryReader reader, int size ) {
+            var item = new AvfxParticle( File.NodeGroupSet );
             item.Read( reader, size );
             return item;
         }

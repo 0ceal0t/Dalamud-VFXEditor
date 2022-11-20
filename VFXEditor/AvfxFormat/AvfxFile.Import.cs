@@ -106,12 +106,14 @@ namespace VfxEditor.AvfxFormat {
             ImportGroup( timelines, reader, TimelineView, NodeGroupSet.Timelines, importCommand, hasDependencies );
 
             CommandManager.Avfx.Add( importCommand ); // doesn't actually execute anything
+
+            if( hasDependencies ) NodeGroupSet.PostImport();
         }
 
         private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, UiNodeGroup<T> group, CompoundCommand command, bool hasDependencies ) where T : AvfxNode {
             foreach( var pos in positions ) {
                 reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
-                var item = view.Read( reader, pos.Size, hasDependencies );
+                var item = view.Read( reader, pos.Size );
                 if( !string.IsNullOrEmpty( pos.Renamed ) ) item.Renamed = pos.Renamed;
                 group.AddAndUpdate( item ); // triggers Idx update as well
                 command.Add( new UiNodeViewAddCommand<T>( view, group, item ) );

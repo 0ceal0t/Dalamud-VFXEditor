@@ -8,13 +8,11 @@ namespace VfxEditor.AvfxFormat {
         public List<AvfxNode> ChildNodes = new();
         public List<UiNodeSelect> Parents = new();
         public List<UiNodeSelect> Selectors = new();
-        public bool DepedencyImportInProgress;
         public bool IsDeleted = false;
         public UiNodeGraph Graph = null;
 
-        public AvfxNode( string avfxName, uint graphColor, bool hasDependencies ) : base( avfxName ) {
+        public AvfxNode( string avfxName, uint graphColor ) : base( avfxName ) {
             GraphColor = graphColor;
-            DepedencyImportInProgress = hasDependencies;
         }
 
         public void Disconnect() {

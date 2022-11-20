@@ -12,6 +12,6 @@ namespace VfxEditor.AvfxFormat {
         public override void OnSelect( AvfxScheduler item ) { }
 
         // Should never be called
-        public override AvfxScheduler Read( BinaryReader reader, int size, bool hasDependencies ) => null;
+        public override AvfxScheduler Read( BinaryReader reader, int size ) => null;
     }
 }

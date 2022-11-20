@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract void OnSelect( T item );
 
-        public abstract T Read( BinaryReader reader, int size, bool hasDependencies );
+        public abstract T Read( BinaryReader reader, int size );
 
         public override void DrawControls( string parentId ) => IUiNodeView<T>.DrawControls( this, File, parentId );
 

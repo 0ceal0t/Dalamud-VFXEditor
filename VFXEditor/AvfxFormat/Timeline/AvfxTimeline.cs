@@ -26,7 +26,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiTimelineItemSequencer ItemSplit;
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxTimeline( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.TimelineColor, hasDependencies ) {
+        public AvfxTimeline( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.TimelineColor ) {
             NodeGroups = groupSet;
 
             Parsed = new List<AvfxBase> {
@@ -72,8 +72,6 @@ namespace VfxEditor.AvfxFormat {
 
             ClipSplit.UpdateIdx();
             ItemSplit.UpdateIdx();
-
-            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );

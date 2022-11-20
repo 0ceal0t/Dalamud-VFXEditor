@@ -7,8 +7,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override void OnSelect( AvfxEffector item ) { }
 
-        public override AvfxEffector Read( BinaryReader reader, int size, bool hasDependencies ) {
-            var item = new AvfxEffector( hasDependencies );
+        public override AvfxEffector Read( BinaryReader reader, int size ) {
+            var item = new AvfxEffector();
             item.Read( reader, size );
             return item;
         }

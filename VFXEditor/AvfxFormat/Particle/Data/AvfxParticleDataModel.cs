@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<PointLightType> PointLightType = new( "Point Light Type", "PLT" );
         public readonly AvfxBool IsLightning = new( "Is Lightning", "bLgt" );
         public readonly AvfxBool IsMorph = new( "Is Morph", "bShp" );
-        public AvfxIntList ModelIdx = new( "Model Index", "MdNo" );
+        public AvfxIntList ModelIdx = new( "Model Index", "MdNo", defaultValue: -1 );
         public readonly AvfxCurve AnimationNumber = new( "Animation Number", "NoAn" );
         public readonly AvfxCurve Morph = new( "Morph", "Moph" );
         public readonly AvfxCurve FresnelCurve = new( "Fresnel Curve", "FrC" );

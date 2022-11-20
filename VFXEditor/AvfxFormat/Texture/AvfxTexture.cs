@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
 
         private string LastValue = "";
 
-        public AvfxTexture() : base( NAME, UiNodeGroup.TextureColor, false ) {
+        public AvfxTexture() : base( NAME, UiNodeGroup.TextureColor ) {
             NodeView = new( this );
         }
 
@@ -21,8 +21,6 @@ namespace VfxEditor.AvfxFormat {
             Path.SetValue( Encoding.ASCII.GetString( reader.ReadBytes( size ) ) );
             LastValue = Path.GetValue();
             Plugin.TextureManager.LoadPreviewTexture( Path.GetValue() );
-
-            DepedencyImportInProgress = false;
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }

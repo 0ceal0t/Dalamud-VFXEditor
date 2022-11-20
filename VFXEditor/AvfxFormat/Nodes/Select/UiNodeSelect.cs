@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
@@ -41,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
             ParentChildLinked = false;
             Node.ChildNodes.Remove( node );
             node.Parents.Remove( this );
-            node.Graph?.NowOutdated();
+            OutdatedGraph( node );
         }
 
         public void LinkParentChild( AvfxNode node ) {
@@ -51,7 +52,12 @@ namespace VfxEditor.AvfxFormat {
             ParentChildLinked = true;
             Node.ChildNodes.Add( node );
             node.Parents.Add( this );
+            OutdatedGraph( node );
+        }
+
+        private void OutdatedGraph( AvfxNode node ) {
             node.Graph?.NowOutdated();
+            node.ChildNodes.ForEach( OutdatedGraph ); // children are also outdated
         }
     }
 
@@ -67,9 +73,12 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Group = group;
             Literal = literal;
-            LinkOnIndexChange();
-            if( Group.IsInitialized ) Initialize(); // already good to go
-            else Group.OnInit += Initialize;
+            if( Group.ImportInProgress ) group.OnImportFinish += ImportFinished;
+            else {
+                LinkOnIndexChange();
+                if( Group.IsInitialized ) Initialize(); // already good to go
+                else Group.OnInit += Initialize;
+            }
             node.Selectors.Add( this );
         }
 
@@ -77,14 +86,16 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Initialize() {
             var value = Literal.GetValue();
-            if( Node.DepedencyImportInProgress && value >= 0 ) {
-                value += Group.PreImportSize;
-                Literal.SetValue( value );
-            }
             if( value >= 0 && value < Group.Items.Count ) {
                 Selected = Group.Items[value];
                 LinkParentChild( Selected );
             }
+        }
+
+        public void ImportFinished() {
+            if( Literal.GetValue() >= 0 ) Literal.SetValue( Literal.GetValue() + Group.PreImportSize );
+            LinkOnIndexChange();
+            Initialize();
         }
 
         public void Select( T item ) {
@@ -151,7 +162,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw( string parentId ) {
-            var id = parentId + "/Node";
+            var id = parentId + "/Node/" + Name;
 
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );

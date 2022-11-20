@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
         private bool Refresh = false;
         private readonly UiModelUvView UvView;
 
-        public AvfxModel() : base( NAME, UiNodeGroup.ModelColor, false ) {
+        public AvfxModel() : base( NAME, UiNodeGroup.ModelColor ) {
             Parsed = new() {
                 EmitVertexNumbers,
                 EmitVertexes,
@@ -51,8 +51,6 @@ namespace VfxEditor.AvfxFormat {
                 CombinedEmitVertexes.Add( new UiEmitVertex( EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
             }
             EmitSplitDisplay.UpdateIdx();
-
-            DepedencyImportInProgress = false;
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );

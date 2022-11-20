@@ -18,7 +18,9 @@ namespace VfxEditor.ScdFormat {
 
         protected override string GetExtensionWithoutDot() => "scd";
 
-        protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override ScdFile FileFromReader( BinaryReader reader ) {
+            return new( reader );
+        }
 
         public override void CheckKeybinds() { }
 

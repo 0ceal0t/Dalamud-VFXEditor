@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
-        public readonly AvfxIntList MaskTextureIdx = new( "Mask Index", "TLst" );
+        public readonly AvfxIntList MaskTextureIdx = new( "Mask Index", "TLst", defaultValue: -1 );
         public readonly AvfxCurve TexN = new( "TexN", "TxN" );
         public readonly AvfxCurve TexNRandom = new( "TexN Random", "TxNR" );
 

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using NAudio.Wave;
 using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 

@@ -95,6 +95,7 @@ namespace VfxEditor {
         // ============= GAME =================
 
         public void DrawGame() {
+            if( GetTabs().Count == 0 ) return;
             var ret = ImGui.BeginTabItem( "Game Items##Select/" + Id );
             if( !ret ) return;
 
@@ -121,7 +122,7 @@ namespace VfxEditor {
             ImGui.InputText( id + "Input", ref GamePath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) ) {
-                var cleanedGamePath = GamePath.Replace( "\\", "" );
+                var cleanedGamePath = GamePath.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
 

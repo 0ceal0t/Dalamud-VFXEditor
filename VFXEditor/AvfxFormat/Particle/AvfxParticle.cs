@@ -84,7 +84,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxParticle( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.ParticleColor, hasDependencies ) {
+        public AvfxParticle( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.ParticleColor ) {
             NodeGroups = groupSet;
 
             // Initialize the remaining ones
@@ -255,8 +255,6 @@ namespace VfxEditor.AvfxFormat {
             }, size );
 
             UvView.UpdateIdx();
-
-            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {

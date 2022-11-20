@@ -50,8 +50,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt UvInterval = new( "UV Interval", "UvIv" );
         public readonly AvfxInt UvNoRandom = new( "UV Random", "UvNR" );
         public readonly AvfxInt UvNoLoopCount = new( "UV Loop Count", "UvLC" );
-        public readonly AvfxInt InjectionModelIdx = new( "Injection Model Index", "IJMN" );
-        public readonly AvfxInt InjectionVertexBindModelIdx = new( "Injection Model Bind Index", "VBMN" );
+        public readonly AvfxInt InjectionModelIdx = new( "Injection Model Index", "IJMN", defaultValue: -1 );
+        public readonly AvfxInt InjectionVertexBindModelIdx = new( "Injection Model Bind Index", "VBMN", defaultValue: -1 );
         public readonly AvfxFloat InjectionRadialDir0 = new( "Injection Radial Direction 0", "IRD0" );
         public readonly AvfxFloat InjectionRadialDir1 = new( "Injection Radial Direction 1", "IRD1" );
         public readonly AvfxFloat PivotX = new( "Pivot X", "PvtX" );

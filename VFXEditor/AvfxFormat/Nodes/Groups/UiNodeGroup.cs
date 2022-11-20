@@ -50,6 +50,8 @@ namespace VfxEditor.AvfxFormat {
 
         public void PreImport() => AllGroups.ForEach( group => group.PreImport() );
 
+        public void PostImport() => AllGroups.ForEach( group => group.PostImport() );
+
         public void Dispose() => AllGroups.ForEach( group => group.Dispose() );
     }
 
@@ -65,6 +67,7 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract void Initialize();
         public abstract void PreImport();
+        public abstract void PostImport();
         public abstract void Dispose();
         public abstract void PopulateWorkspaceMeta( Dictionary<string, string> meta );
         public abstract void ReadWorkspaceMeta( Dictionary<string, string> meta );
@@ -75,9 +78,11 @@ namespace VfxEditor.AvfxFormat {
 
         public Action OnInit;
         public Action OnChange;
+        public Action OnImportFinish;
 
         public bool IsInitialized { get; private set; } = false;
         public int PreImportSize { get; private set; } = 0;
+        public bool ImportInProgress { get; private set; } = false;
 
         public UiNodeGroup( List<T> items ) {
             Items = items;
@@ -98,7 +103,14 @@ namespace VfxEditor.AvfxFormat {
         public void TriggerOnChange() => OnChange?.Invoke();
 
         public override void PreImport() {
+            ImportInProgress = true;
             PreImportSize = Items.Count;
+        }
+
+        public override void PostImport() {
+            OnImportFinish?.Invoke();
+            ImportInProgress = false;
+            OnImportFinish = null;
         }
 
         public override void PopulateWorkspaceMeta( Dictionary<string, string> meta ) {
@@ -130,6 +142,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Dispose() {
             OnInit = null;
             OnChange = null;
+            OnImportFinish = null;
         }
     }
 }

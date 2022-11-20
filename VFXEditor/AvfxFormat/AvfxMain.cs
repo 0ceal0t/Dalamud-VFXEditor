@@ -198,27 +198,27 @@ namespace VfxEditor.AvfxFormat {
                         Schedulers.Add( Scheduler );
                         break;
                     case AvfxTimeline.NAME:
-                        var Timeline = new AvfxTimeline( NodeGroupSet, false );
+                        var Timeline = new AvfxTimeline( NodeGroupSet );
                         Timeline.Read( _reader, _size );
                         Timelines.Add( Timeline );
                         break;
                     case AvfxEmitter.NAME:
-                        var Emitter = new AvfxEmitter( NodeGroupSet, false );
+                        var Emitter = new AvfxEmitter( NodeGroupSet );
                         Emitter.Read( _reader, _size );
                         Emitters.Add( Emitter );
                         break;
                     case AvfxParticle.NAME:
-                        var Particle = new AvfxParticle( NodeGroupSet, false );
+                        var Particle = new AvfxParticle( NodeGroupSet );
                         Particle.Read( _reader, _size );
                         Particles.Add( Particle );
                         break;
                     case AvfxEffector.NAME:
-                        var Effector = new AvfxEffector( false );
+                        var Effector = new AvfxEffector();
                         Effector.Read( _reader, _size );
                         Effectors.Add( Effector );
                         break;
                     case AvfxBinder.NAME:
-                        var Binder = new AvfxBinder( false );
+                        var Binder = new AvfxBinder();
                         Binder.Read( _reader, _size );
                         Binders.Add( Binder );
                         break;

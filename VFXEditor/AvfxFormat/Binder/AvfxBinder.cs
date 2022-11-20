@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiNodeGraphView NodeView;
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxBinder( bool hasDepdencies ) : base( NAME, UiNodeGroup.BinderColor, hasDepdencies ) {
+        public AvfxBinder() : base( NAME, UiNodeGroup.BinderColor ) {
             Parsed = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
@@ -99,8 +99,6 @@ namespace VfxEditor.AvfxFormat {
                     Data?.Read( _reader, _size );
                 }
             }, size );
-
-            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {

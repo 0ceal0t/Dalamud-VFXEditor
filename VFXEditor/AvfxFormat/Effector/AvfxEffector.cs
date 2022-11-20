@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiNodeGraphView NodeView;
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxEffector( bool hasDepdencies ) : base( NAME, UiNodeGroup.EffectorColor, hasDepdencies ) {
+        public AvfxEffector() : base( NAME, UiNodeGroup.EffectorColor ) {
             Parsed = new() {
                 EffectorVariety,
                 RotationOrder,
@@ -59,8 +59,6 @@ namespace VfxEditor.AvfxFormat {
                     Data?.Read( _reader, _size );
                 }
             }, size );
-
-            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {

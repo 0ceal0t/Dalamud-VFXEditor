@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void OnSelect( AvfxTexture item ) { }
 
-        public override AvfxTexture Read( BinaryReader reader, int size, bool hasDependencies ) {
+        public override AvfxTexture Read( BinaryReader reader, int size ) {
             var item = new AvfxTexture();
             item.Read( reader, size );
             return item;

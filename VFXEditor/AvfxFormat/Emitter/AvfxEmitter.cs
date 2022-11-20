@@ -53,7 +53,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiEmitterSplitView ParticleSplit;
         private readonly List<IAvfxUiBase> Display;
 
-        public AvfxEmitter( UiNodeGroupSet groupSet, bool hasDependencies ) : base( NAME, UiNodeGroup.EmitterColor, hasDependencies ) {
+        public AvfxEmitter( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.EmitterColor ) {
             NodeGroups = groupSet;
 
             Parsed = new() {
@@ -163,8 +163,6 @@ namespace VfxEditor.AvfxFormat {
 
             EmitterSplit.UpdateIdx();
             ParticleSplit.UpdateIdx();
-
-            DepedencyImportInProgress = false; // if imported, all set now
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) {

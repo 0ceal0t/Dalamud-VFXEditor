@@ -19,9 +19,12 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Group = group;
             Literal = literal;
-            LinkOnIndexChange();
-            if( Group.IsInitialized ) Initialize(); // already good to go
-            else Group.OnInit += Initialize;
+            if( Group.ImportInProgress ) group.OnImportFinish += ImportFinished;
+            else {
+                LinkOnIndexChange();
+                if( Group.IsInitialized ) Initialize(); // already good to go
+                else Group.OnInit += Initialize;
+            }
             node.Selectors.Add( this );
         }
 
@@ -30,12 +33,8 @@ namespace VfxEditor.AvfxFormat {
         public override void UpdateLiteral() => Literal.SetValue( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
 
         public override void Initialize() {
-            for( var i = 0; i < Literal.GetValue().Count; i++ ) {
-                var value = Literal.GetValue()[i];
-                if( Node.DepedencyImportInProgress && value != 255 && value >= 0 ) {
-                    value += Group.PreImportSize;
-                    Literal.SetValue( value, i );
-                }
+            for( var idx = 0; idx < Literal.GetValue().Count; idx++ ) {
+                var value = Literal.GetValue()[idx];
                 if( value != 255 && value >= 0 && value < Group.Items.Count ) {
                     var item = Group.Items[value];
                     Selected.Add( item );
@@ -43,6 +42,15 @@ namespace VfxEditor.AvfxFormat {
                 }
                 else Selected.Add( null );
             }
+        }
+
+        public void ImportFinished() {
+            for( var idx = 0; idx < Literal.GetValue().Count; idx++ ) {
+                var value = Literal.GetValue()[idx];
+                if( value != 255 && value >= 0 ) Literal.SetValue( value + Group.PreImportSize, idx );
+            }
+            LinkOnIndexChange();
+            Initialize();
         }
 
         public void Select( T item, int idx ) {

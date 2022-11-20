@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly UiNodeGroupSet NodeGroups;
 
-        public AvfxScheduler( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.SchedColor, false ) {
+        public AvfxScheduler( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.SchedColor ) {
             NodeGroups = groupSet;
 
             Parsed = new() {
@@ -60,8 +60,6 @@ namespace VfxEditor.AvfxFormat {
 
             ItemSplit.UpdateIdx();
             TriggerSplit.UpdateIdx();
-
-            DepedencyImportInProgress = false;
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );

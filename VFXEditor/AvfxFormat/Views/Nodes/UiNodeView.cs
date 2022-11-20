@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public bool IsAllowedNew();
         public bool IsAllowedDelete();
 
-        public T Read( BinaryReader reader, int size, bool hasDependencies );
+        public T Read( BinaryReader reader, int size );
 
         public T GetSelected();
         public void ResetSelected();

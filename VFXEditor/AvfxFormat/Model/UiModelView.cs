@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void OnSelect( AvfxModel item ) => item.OnSelect();
 
-        public override AvfxModel Read( BinaryReader reader, int size, bool hasDependencies ) {
+        public override AvfxModel Read( BinaryReader reader, int size ) {
             var item = new AvfxModel();
             item.Read( reader, size );
             return item;
