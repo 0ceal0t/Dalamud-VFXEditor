@@ -26,6 +26,7 @@ namespace VfxEditor {
             TextureManager.Draw();
             TmbManager.Draw();
             PapManager.Draw();
+            ScdManager.Draw();
 
             CopyManager.FinalizeAll();
 
@@ -81,6 +82,7 @@ namespace VfxEditor {
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
             if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();
             if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
+            if( ImGui.MenuItem( "Scd##Menu" ) ) ScdManager.Show();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileDropdown<T> where T : class {
+    public abstract class FileDropdown<T> : FileManagerFile where T : class {
         protected T Selected = null;
 
         private readonly bool AllowNew;

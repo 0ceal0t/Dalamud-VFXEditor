@@ -9,7 +9,7 @@ using VfxEditor.Utils;
 using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : class { // S = workspace document
+    public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 

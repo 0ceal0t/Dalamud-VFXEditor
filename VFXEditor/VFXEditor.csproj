@@ -103,7 +103,9 @@
         <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.22.0" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
         <PackageReference Include="NAudio.Core" Version="2.1.0" />
+        <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
         <PackageReference Include="NAudio.Wasapi" Version="2.1.0" />
+        <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0027" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />

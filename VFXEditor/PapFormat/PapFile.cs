@@ -30,9 +30,6 @@ namespace VfxEditor.PapFormat {
 
         private readonly List<PapAnimation> Animations = new();
 
-        private readonly bool Verified = true;
-        public bool IsVerified => Verified;
-
         public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
             HkxTempLocation = hkxTemp;
 
@@ -78,12 +75,10 @@ namespace VfxEditor.PapFormat {
             }
         }
 
-        public byte[] ToBytes() {
+        public override void Write( BinaryWriter writer ) {
             var havokData = File.ReadAllBytes( HkxTempLocation );
             var tmbData = Animations.Select( x => x.GetTmbBytes() );
 
-            using MemoryStream dataMs = new();
-            using BinaryWriter writer = new( dataMs );
             writer.BaseStream.Seek( 0, SeekOrigin.Begin );
 
             var startPos = writer.BaseStream.Position;
@@ -124,11 +119,9 @@ namespace VfxEditor.PapFormat {
             writer.Write( ( int )( infoPos - startPos ) );
             writer.Write( ( int )( havokPos - startPos ) );
             writer.Write( ( int )( timelinePos - startPos ) );
-
-            return dataMs.ToArray();
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
             if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
                 if( ImGui.BeginTabItem($"Parameters{id}")) {
                     ModelId.Draw( id, CommandManager.Pap );

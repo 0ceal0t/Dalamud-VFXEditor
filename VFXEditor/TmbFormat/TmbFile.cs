@@ -21,9 +21,6 @@ namespace VfxEditor.TmbFormat {
         private readonly List<Tmtr> Tracks = new();
         private readonly List<TmbEntry> Entries = new();
 
-        private readonly bool Verified = true;
-        public bool IsVerified => Verified;
-
         public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) : base( true) {
             PapEmbedded = papEmbedded;
             Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
@@ -53,10 +50,7 @@ namespace VfxEditor.TmbFormat {
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
         }
 
-        public byte[] ToBytes() {
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-
+        public override void Write( BinaryWriter writer ) {
             var startPos = writer.BaseStream.Position;
             FileUtils.WriteString( writer, "TMLB" );
             writer.Write( 0 ); // placeholder for size
@@ -97,11 +91,9 @@ namespace VfxEditor.TmbFormat {
             writer.BaseStream.Seek( startPos + 4, SeekOrigin.Begin );
             writer.Write( ( int )( endPos - startPos ) );
             writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
-
-            return ms.ToArray();
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
                     HeaderTmdh.Draw( id );

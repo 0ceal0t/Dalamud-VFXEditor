@@ -53,6 +53,12 @@ namespace VfxEditor {
         public string RelativeLocation;
     }
 
+    public struct WorkspaceMetaScd {
+        public SelectResult Source;
+        public SelectResult Replace;
+        public string RelativeLocation;
+    }
+
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         private static DateTime LastAutoSave = DateTime.Now;

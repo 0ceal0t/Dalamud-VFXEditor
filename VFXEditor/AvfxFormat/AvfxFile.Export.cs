@@ -115,12 +115,5 @@ namespace VfxEditor.AvfxFormat {
                 }
             }
         }
-
-        public byte[] ToBytes() {
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-            Main.Write( writer );
-            return ms.ToArray();
-        }
     }
 }

@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.IO;
@@ -6,15 +5,14 @@ using System.Numerics;
 using VfxEditor.Animation;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
-using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
-        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb", "TMB" ) { }
-        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb", "TMB" ) {
+        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb" ) { }
+        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb" ) {
             AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
         }
 
@@ -24,6 +22,10 @@ namespace VfxEditor.TmbFormat {
             Plugin.ResourceLoader.ReRender();
         }
 
+        protected override string GetExtensionWithoutDot() => "tmb";
+
+        protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader, false );
+
         public override void CheckKeybinds() {
             if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Tmb.Copy();
             if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Tmb.Paste();
@@ -31,44 +33,11 @@ namespace VfxEditor.TmbFormat {
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Tmb?.Redo();
         }
 
-        protected override void LoadLocal( string localPath ) {
-            if( File.Exists( localPath ) ) {
-                try {
-                    CurrentFile = TmbFile.FromLocalFile( localPath, false );
-                    UiUtils.OkNotification( "TMB file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Error Reading File", e );
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
-
-        protected override void LoadGame( string gamePath ) {
-            if( Plugin.DataManager.FileExists( gamePath ) ) {
-                try {
-                    var file = Plugin.DataManager.GetFile( gamePath );
-                    using var ms = new MemoryStream( file.Data );
-                    using var br = new BinaryReader( ms );
-                    CurrentFile = new TmbFile( br, false );
-                    UiUtils.OkNotification( "TMB file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Error Reading File" );
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
-
-        protected override void UpdateFile() {
-            if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote TMB file to {0}", WriteLocation );
-            File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void ExportRaw() => UiUtils.WriteBytesDialog( ".tmb", CurrentFile.ToBytes(), "tmb" );
-
-        protected override bool IsVerified() => CurrentFile.IsVerified;
+        public override WorkspaceMetaTmb GetWorkspaceMeta( string newPath ) => new() {
+            RelativeLocation = newPath,
+            Replace = Replace,
+            Source = Source
+        };
 
         protected override void SourceShow() => TmbManager.SourceSelect.Show();
 

@@ -4,13 +4,13 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public partial class AvfxFile {
+    public partial class AvfxFile : FileManagerFile {
         public readonly AvfxMain Main;
         public readonly CommandManager Command = new( Data.CopyManager.Avfx );
 
@@ -27,8 +27,6 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly ExportDialog ExportUi;
 
-        private readonly bool Verified = true;
-        public bool IsVerified => Verified;
         private readonly HashSet<IAvfxUiBase> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool checkOriginal = true ) {
@@ -66,7 +64,7 @@ namespace VfxEditor.AvfxFormat {
             ExportUi = new ExportDialog( this );
         }
 
-        public void Draw() {
+        public override void Draw( string id ) {
             if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 DrawView( Main, "Parameters" );
                 DrawView( ScheduleView, "Scheduler" );
@@ -113,20 +111,20 @@ namespace VfxEditor.AvfxFormat {
             ForceOpenTabs.Add( view );
         }
 
-        public void Write( BinaryWriter writer ) => Main?.Write( writer );
+        public override void Write( BinaryWriter writer ) => Main?.Write( writer );
 
         public void Dispose() {
             NodeGroupSet?.Dispose();
             ForceOpenTabs.Clear();
         }
 
-        // ========== WORKSPACE ==============
+        // ========== WORKSPACE ======
 
         public Dictionary<string, string> GetRenamingMap() => NodeGroupSet.GetRenamingMap();
 
         public void ReadRenamingMap( Dictionary<string, string> renamingMap ) => NodeGroupSet.ReadRenamingMap( renamingMap );
 
-        // =====================
+        // =======================
 
         public void ShowExportDialog( AvfxNode node ) => ExportUi.ShowDialog( node );
 

@@ -11,19 +11,19 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
 using VfxEditor.AvfxFormat;
+using VfxEditor.PapFormat;
+using VfxEditor.TmbFormat;
+using VfxEditor.ScdFormat;
 using VfxEditor.Data;
 using VfxEditor.Dialogs;
 using VfxEditor.DirectX;
 using VfxEditor.Interop;
-using VfxEditor.PapFormat;
 using VfxEditor.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.TexTools;
 using VfxEditor.Texture;
-using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Animation;
-using VfxEditor.Data.Scd;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -42,15 +42,17 @@ namespace VfxEditor {
         public static AnimationManager AnimationManager { get; private set; }
         public static ActorAnimationManager ActorAnimationManager { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
-        public static AvfxManager AvfxManager { get; private set; }
-        public static TextureManager TextureManager { get; private set; }
-        public static TmbManager TmbManager { get; private set; }
-        public static PapManager PapManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static VfxTracker VfxTracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
         public static TexToolsDialog TexToolsDialog { get; private set; }
         public static PenumbraDialog PenumbraDialog { get; private set; }
+
+        public static AvfxManager AvfxManager { get; private set; }
+        public static TextureManager TextureManager { get; private set; }
+        public static TmbManager TmbManager { get; private set; }
+        public static PapManager PapManager { get; private set; }
+        public static ScdManager ScdManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -105,6 +107,9 @@ namespace VfxEditor {
             PapManager.Setup();
             PapManager = new PapManager();
 
+            ScdManager.Setup();
+            ScdManager = new ScdManager();
+
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();
             TexToolsDialog = new TexToolsDialog();
@@ -123,8 +128,6 @@ namespace VfxEditor {
             PluginInterface.UiBuilder.Draw += Draw;
             PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
-
-            //ScdFile.Test();
         }
 
         public static void CheckClearKeyState() {
@@ -154,14 +157,17 @@ namespace VfxEditor {
             ResourceLoader.Dispose();
             ResourceLoader = null;
 
+            AvfxManager.Dispose();
+            AvfxManager = null;
+
             TmbManager.Dispose();
             TmbManager = null;
 
             PapManager.Dispose();
             PapManager = null;
 
-            AvfxManager.Dispose();
-            AvfxManager = null;
+            ScdManager.Dispose();
+            ScdManager = null;
 
             TextureManager.BreakDown();
             TextureManager.Dispose();

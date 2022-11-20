@@ -57,7 +57,4 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Add pre and post behavior to curve editor
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Update "try on" preview
-- [ ] Node graph cutoff text and make color larger
 - [ ] Sound icon on timelne
-- [ ] Open emitter on timeline
-- [ ] `TARGET` and `SOURCE` in dialog names

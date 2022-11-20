@@ -1,21 +1,15 @@
-using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.IO;
-using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
-using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
-        public PapDocument( string writeLocation ) : base( writeLocation, "Pap", "PAP" ) {
-        }
-        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap", "PAP" ) {
-        }
+        public PapDocument( string writeLocation ) : base( writeLocation, "Pap" ) { }
+        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap" ) { }
 
         public override void Update() {
             UpdateFile();
@@ -23,54 +17,22 @@ namespace VfxEditor.PapFormat {
             Plugin.ResourceLoader.ReRender();
         }
 
+        protected override string GetExtensionWithoutDot() => "pap";
+
+        protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
+
+        public override WorkspaceMetaPap GetWorkspaceMeta( string newPath ) => new() {
+            RelativeLocation = newPath,
+            Replace = Replace,
+            Source = Source
+        };
+
         public override void CheckKeybinds() {
             if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Pap.Copy();
             if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Pap.Paste();
             if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Pap?.Undo();
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Pap?.Redo();
         }
-
-        protected override void LoadLocal( string localPath ) {
-            if( File.Exists( localPath ) ) {
-                try {
-                    using BinaryReader br = new( File.Open( localPath, FileMode.Open ) );
-                    CurrentFile = new( br, HkxTemp );
-                    UiUtils.OkNotification( "PAP file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error(e, "Error Reading File");
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
-
-        protected override void LoadGame( string gamePath ) {
-            if( Plugin.DataManager.FileExists( gamePath ) ) {
-                try {
-                    var file = Plugin.DataManager.GetFile( gamePath );
-                    using var ms = new MemoryStream( file.Data );
-                    using var br = new BinaryReader( ms );
-                    CurrentFile = new PapFile( br, HkxTemp );
-                    UiUtils.OkNotification( "PAP file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error(e, "Error Reading File");
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
-
-        protected override void UpdateFile() {
-            if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote PAP file to {0}", WriteLocation );
-            File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void ExportRaw() {
-            UiUtils.WriteBytesDialog( ".pap", CurrentFile.ToBytes(), "pap" );
-        }
-
-        protected override bool IsVerified() => CurrentFile.IsVerified;
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

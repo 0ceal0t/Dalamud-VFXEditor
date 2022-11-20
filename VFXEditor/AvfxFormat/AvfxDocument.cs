@@ -14,19 +14,18 @@ namespace VfxEditor.AvfxFormat {
         private string SpawnPath => Replace.Path;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
-        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx", "VFX" ) { }
-        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx", "VFX" ) { }
+        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx" ) { }
+        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx" ) { }
         public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }
 
         public override void Update() {
-            if( ( DateTime.Now - LastUpdate ).TotalSeconds > 0.5 ) { // only allow updates every 1/2 second
-                UpdateFile();
-                Reload();
-                Plugin.ResourceLoader.ReRender();
-                LastUpdate = DateTime.Now;
-            }
+            if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.5 ) return;
+            UpdateFile();
+            Reload();
+            Plugin.ResourceLoader.ReRender();
+            LastUpdate = DateTime.Now;
         }
 
         public override void CheckKeybinds() {
@@ -47,59 +46,20 @@ namespace VfxEditor.AvfxFormat {
             if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
                 Plugin.RemoveSpawn();
                 if( !SpawnDisabled ) Plugin.SpawnOnTarget( SpawnPath );
-
             }
         }
 
-        protected override void LoadLocal( string localPath ) {
-            if( File.Exists( localPath ) ) {
-                try {
-                    using var br = new BinaryReader( File.Open( localPath, FileMode.Open ) );
-                    CurrentFile = new AvfxFile( br );
-                    UiUtils.OkNotification( "VFX file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error(e, "Error Reading File", e );
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
+        protected override string GetExtensionWithoutDot() => "avfx";
 
-        protected override void LoadGame( string gamePath ) {
-            if( Plugin.DataManager.FileExists( gamePath ) ) {
-                try {
-                    var file = Plugin.DataManager.GetFile( gamePath );
-                    using var ms = new MemoryStream( file.Data );
-                    using var br = new BinaryReader( ms );
-                    CurrentFile = new AvfxFile( br );
-                    UiUtils.OkNotification( "VFX file loaded" );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Error Reading File" );
-                    UiUtils.ErrorNotification( "Error reading file" );
-                }
-            }
-        }
-
-        protected override void UpdateFile() {
-            if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote VFX file to {0}", WriteLocation );
-            File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
-        }
-
-        protected override void ExportRaw() => UiUtils.WriteBytesDialog( ".avfx", CurrentFile.ToBytes(), "avfx" );
-
-        protected override bool IsVerified() => CurrentFile.IsVerified;
-
-        public void Import( string path ) {
-            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
-        }
-
-        public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
+        protected override AvfxFile FileFromReader( BinaryReader reader ) => new( reader );
 
         protected override void SourceShow() => AvfxManager.SourceSelect.Show();
 
         protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
+
+        public void Import( string path ) { if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path ); }
+
+        public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
 
         public void OpenTemplate( string path ) {
             var newResult = new SelectResult {
@@ -109,6 +69,13 @@ namespace VfxEditor.AvfxFormat {
             };
             SetSource( newResult );
         }
+
+        public override WorkspaceMetaAvfx GetWorkspaceMeta( string newPath ) => new() {
+            RelativeLocation = newPath,
+            Replace = Replace,
+            Source = Source,
+            Renaming = CurrentFile.GetRenamingMap()
+        };
 
         // ========= DRAWING =============
 
@@ -182,7 +149,7 @@ namespace VfxEditor.AvfxFormat {
             else {
                 DisplayFileControls();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw();
+                CurrentFile.Draw( "##Avfx" );
             }
         }
     }

@@ -5,9 +5,13 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 using VfxEditor.TexTools;
+using Dalamud.Logging;
+using System;
+using VfxEditor.AvfxFormat;
+using Lumina;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerDocument<T, S> where T : class {
+    public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
         public T CurrentFile { get; protected set; }
 
         protected SelectResult Source = SelectResult.None();
@@ -25,22 +29,19 @@ namespace VfxEditor.FileManager {
         private readonly string Id; // Tmb
         private readonly string FileType; // TMB
 
-        public FileManagerDocument( string writeLocation, string id, string fileType ) {
+        public FileManagerDocument( string writeLocation, string id ) {
             Id = id;
-            FileType = fileType;
+            FileType = id.ToUpper();
             WriteLocation = writeLocation;
         }
 
-        public FileManagerDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string fileType ) {
-            Id = id;
-            FileType = fileType;
-            WriteLocation = writeLocation;
+        public FileManagerDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace, string id ) : this( writeLocation, id) {
             Source = source;
             Replace = replace;
             LoadLocal( localPath );
         }
 
-        protected abstract bool IsVerified();
+        protected bool IsVerified() => CurrentFile.IsVerified();
 
         public void SetSource( SelectResult result ) {
             switch( result.Type ) {
@@ -63,26 +64,54 @@ namespace VfxEditor.FileManager {
             Source = SelectResult.None();
         }
 
-        public void SetReplace( SelectResult result ) {
-            Replace = result;
-        }
+        public void SetReplace( SelectResult result ) { Replace = result; }
 
-        protected void RemoveReplace() {
-            Replace = SelectResult.None();
-        }
+        protected void RemoveReplace() { Replace = SelectResult.None(); }
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = Replace.Path.Equals( path ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        protected abstract void LoadLocal( string localPath );
+        protected abstract T FileFromReader( BinaryReader reader );
 
-        protected abstract void LoadGame( string localPath );
+        protected void LoadLocal( string localPath ) {
+            if( !File.Exists( localPath ) ) return;
+            try {
+                using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
+                CurrentFile = FileFromReader( reader );
+                UiUtils.OkNotification( $"{FileType} file loaded" );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, "Error Reading File", e );
+                UiUtils.ErrorNotification( "Error reading file" );
+            }
+        }
 
-        protected abstract void UpdateFile();
+        protected void LoadGame( string gamePath ) {
+            if( !Plugin.DataManager.FileExists( gamePath ) ) return;
+            try {
+                var file = Plugin.DataManager.GetFile( gamePath );
+                using var ms = new MemoryStream( file.Data );
+                using var reader = new BinaryReader( ms );
+                CurrentFile = FileFromReader( reader );
+                UiUtils.OkNotification( $"{FileType} file loaded" );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, "Error Reading File" );
+                UiUtils.ErrorNotification( "Error reading file" );
+            }
+        }
 
-        protected abstract void ExportRaw();
+        protected void UpdateFile() {
+            if( CurrentFile == null ) return;
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", WriteLocation, FileType );
+            File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
+        }
+
+        protected abstract string GetExtensionWithoutDot();
+
+        protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + GetExtensionWithoutDot(), CurrentFile.ToBytes(), GetExtensionWithoutDot() );
 
         protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
@@ -96,15 +125,37 @@ namespace VfxEditor.FileManager {
 
         public abstract void Update();
 
-        public abstract void PenumbraExport( string modFolder );
+        public void PenumbraExport( string modFolder ) {
+            var path = Replace.Path;
+            if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
+            var data = CurrentFile.ToBytes();
+            PenumbraUtils.WriteBytes( data, modFolder, path );
+        }
 
-        public abstract void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset );
+        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+            var path = Replace.Path;
+            if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
+            var modData = TexToolsUtils.CreateType2Data( CurrentFile.ToBytes() );
+            simpleParts.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
+            writer.Write( modData );
+            modOffset += modData.Length;
+        }
 
-        public abstract void WorkspaceExport( List<S> meta, string rootPath, string newPath );
+        public abstract S GetWorkspaceMeta( string newPath );
+
+        public void WorkspaceExport( List<S> tmbMeta, string rootPath, string newPath ) {
+            if( CurrentFile != null ) {
+                var newFullPath = Path.Combine( rootPath, newPath );
+                File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
+                tmbMeta.Add( GetWorkspaceMeta( newPath ) );
+            }
+        }
 
         public abstract void CheckKeybinds();
 
         protected abstract bool ExtraInputColumn();
+
+        // ====== DRAWING ==========
 
         public void Draw() {
             if ( Plugin.Configuration.WriteLocationError ) {

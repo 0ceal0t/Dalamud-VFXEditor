@@ -33,6 +33,7 @@ namespace VfxEditor {
         public List<SelectResult> RecentSelects = new();
         public List<SelectResult> RecentSelectsTMB = new();
         public List<SelectResult> RecentSelectsPAP = new();
+        public List<SelectResult> RecentSelectsScd = new();
 
         public bool FilepickerImagePreview = true;
 
