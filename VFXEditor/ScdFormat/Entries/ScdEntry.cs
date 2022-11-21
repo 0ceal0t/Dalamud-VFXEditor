@@ -19,5 +19,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         protected abstract void Read( BinaryReader reader );
+
+        public abstract void Write( BinaryWriter writer );
     }
 }

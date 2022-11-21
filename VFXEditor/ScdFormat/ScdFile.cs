@@ -1,28 +1,41 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
+        private readonly byte[] PreSoundData;
+
         public List<ScdSoundEntry> Music = new();
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
+            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
+
             Header = new( reader );
             OffsetsHeader = new( reader );
 
-            // offsets lists 0/1/2/3/4
-            // offset lists also padded to 16 bytes
+            var savePos = reader.BaseStream.Position;
 
-            // In the file, table data is in order: 3, 0, 1, 4, 2
-            // padded to 16 bytes between each table data (such as between 3/0)
             reader.BaseStream.Seek( OffsetsHeader.OffsetSound, SeekOrigin.Begin );
+            List<int> soundOffsets = new();
             for( var i = 0; i < OffsetsHeader.CountSound; i++ ) {
-                Music.Add( new ScdSoundEntry( reader, reader.ReadInt32() ) );
+                var offset = reader.ReadInt32();
+                if( offset == 0 ) continue;
+                soundOffsets.Add( offset );
+                Music.Add( new ScdSoundEntry( reader, offset ) );
             }
+
+            reader.BaseStream.Seek(savePos, SeekOrigin.Begin );
+            PreSoundData = reader.ReadBytes( ( int )( soundOffsets[0] - savePos ) );
+
+            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
 
         public override void Draw( string id ) {
@@ -46,7 +59,23 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            // TODO
+            Header.Write( writer );
+            OffsetsHeader.Write( writer );
+            writer.Write( PreSoundData );
+
+            List<int> musicPositions = new();
+            foreach( var  music in Music ) {
+                musicPositions.Add( ( int )writer.BaseStream.Position );
+                music.Write( writer );
+            }
+
+            writer.BaseStream.Seek( OffsetsHeader.OffsetSound, SeekOrigin.Begin );
+            foreach( var position in musicPositions ) {
+                writer.Write( position );
+            }
+
+            var noDataMusicCount = Music.Where( x => x.DataLength == 0 ).Count();
+            ScdHeader.UpdateFileSize( writer, noDataMusicCount ); // end with this
         }
 
         public void Dispose() => Music.ForEach( x => x.Dispose() );

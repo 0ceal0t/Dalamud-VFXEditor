@@ -3,6 +3,7 @@ using NAudio.Wave;
 using System;
 using Dalamud.Logging;
 using Dalamud.Interface;
+using ImGuiFileDialog;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -21,24 +22,25 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw( string id ) {
+            // Controls
             ImGui.PushFont( UiBuilder.IconFont );
             if( State == PlaybackState.Stopped ) {
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) {
                     Reset();
-                    var stream = Entry.Data.GetStream();
-                    CurrentStream = stream.WaveFormat.Encoding switch {
-                        WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                        WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                        _ => stream
-                    };
-
-                    CurrentChannel = new WaveChannel32( CurrentStream ) {
-                        Volume = 1f,
-                        PadWithZeroes = false,
-                    };
-                    CurrentOutput = new WasapiOut();
-
                     try {
+                        var stream = Entry.Data.GetStream();
+                        CurrentStream = stream.WaveFormat.Encoding switch {
+                            WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+                            WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+                            _ => stream
+                        };
+
+                        CurrentChannel = new WaveChannel32( CurrentStream ) {
+                            Volume = 1f,
+                            PadWithZeroes = false,
+                        };
+                        CurrentOutput = new WasapiOut();
+
                         CurrentOutput.Init( CurrentChannel );
                         CurrentOutput.Play();
                     }
@@ -60,13 +62,27 @@ namespace VfxEditor.ScdFormat {
             var selectedTime = ( float )CurrentTime;
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 150f );
-            if( ImGui.DragFloat( $"{id}-Drag", ref selectedTime, 0.25f, 0, ( float )TotalTime ) ) {
+            if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime) ) {
                 if( State != PlaybackState.Stopped ) {
                     CurrentOutput.Pause();
                     CurrentStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
                 }
             }
+
             if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
+
+            // Save
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SameLine();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
+                FileDialogManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
+                    if( ok ) {
+                        using var stream = Entry.Data.GetStream();
+                        WaveFileWriter.CreateWaveFile( res, stream );
+                    }
+                } );
+            }
+            ImGui.PopFont();
 
             ImGui.Indent();
             ImGui.TextDisabled( $"Format: {Entry.Format}   Channels: {Entry.NumChannels}   Frequency: {Entry.Frequency}" );
