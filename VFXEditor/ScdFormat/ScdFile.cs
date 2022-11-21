@@ -1,6 +1,7 @@
+using ImGuiNET;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using VfxEditor.Data.ScdFormat;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.ScdFormat {
@@ -25,11 +26,29 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw( string id ) {
-            foreach( var item in Music ) item.Draw( id );
+            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Sounds{id}" ) ) {
+                    DrawSounds( id );
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
+            }
+        }
+
+        private void DrawSounds( string id ) {
+            ImGui.BeginChild( $"{id}-Child" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            for( var idx = 0; idx < Music.Count; idx++ ) {
+                Music[idx].Draw( id + idx );
+            }
+            ImGui.EndChild();
         }
 
         public override void Write( BinaryWriter writer ) {
             // TODO
         }
+
+        public void Dispose() => Music.ForEach( x => x.Dispose() );
     }
 }

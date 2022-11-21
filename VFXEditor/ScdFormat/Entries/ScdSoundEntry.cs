@@ -3,7 +3,6 @@ using ImGuiNET;
 using NAudio.Wave;
 using System;
 using System.IO;
-using System.Reflection.PortableExecutable;
 using System.Threading;
 
 namespace VfxEditor.ScdFormat {
@@ -27,10 +26,15 @@ namespace VfxEditor.ScdFormat {
         public int FirstFrame;
         public short AuxCount;
 
-        public ScdSoundEntry( BinaryReader reader ) : base( reader ) { }
-        public ScdSoundEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
-
         public ScdSoundData Data;
+        private readonly AudioPlayer Player;
+
+        public ScdSoundEntry( BinaryReader reader ) : base( reader ) {
+            Player = new( this );
+        }
+        public ScdSoundEntry( BinaryReader reader, int offset ) : base( reader, offset ) {
+            Player = new( this );
+        }
 
         protected override void Read( BinaryReader reader ) {
             var startOffset = reader.BaseStream.Position;
@@ -57,42 +61,16 @@ namespace VfxEditor.ScdFormat {
 
             Data = Format switch {
                 SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, startOffset, this ),
+                SscfWaveFormat.Vorbis => new ScdVorbis( reader, chunkEndPos, this ),
                 _ => null
             };
         }
 
         public void Draw( string id ) {
-            if( ImGui.Button( $"Play{id}" ) ) {
-                new Thread( () => {
-                    var stream = Data.GetStream();
-                    var converted = stream.WaveFormat.Encoding switch {
-                        WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                        WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                        _ => stream
-                    };
-                    using var channel = new WaveChannel32( converted ) {
-                        Volume = 1f,
-                        PadWithZeroes = false,
-                    };
-
-                    using( converted ) {
-                        using var output = new WasapiOut();
-
-                        try {
-                            output.Init( channel );
-                            output.Play();
-
-                            while( output.PlaybackState == PlaybackState.Playing ) {
-                                Thread.Sleep( 500 );
-                            }
-                        }
-                        catch( Exception e ) {
-                            PluginLog.LogError( e, "Error playing sound" );
-                        }
-                    }
-
-                } ).Start();
-            }
+            if( DataLength == 0 ) return;
+            Player.Draw( id );
         }
+
+        public void Dispose() => Player.Dispose();
     }
 }

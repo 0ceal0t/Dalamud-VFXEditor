@@ -31,9 +31,6 @@ namespace VfxEditor.ScdFormat {
         };
 
         protected override void DrawBody() {
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DisplayAnimationWarning();
-
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

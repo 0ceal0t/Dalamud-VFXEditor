@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace VfxEditor.ScdFormat {
     public static class ScdUtils {
-        private static void XorDecode( byte[] vorbisHeader, byte encodeByte ) {
+        public static void XorDecode( byte[] vorbisHeader, byte encodeByte ) {
             for( var i = 0; i < vorbisHeader.Length; i++ ) {
                 vorbisHeader[i] ^= encodeByte;
             }
         }
 
-        private static void XorDecodeFromTable( byte[] dataFile, int dataLength ) {
+        public static void XorDecodeFromTable( byte[] dataFile, int dataLength ) {
             var byte1 = dataLength & 0xFF & 0x7F;
             var byte2 = byte1 & 0x3F;
             for( var i = 0; i < dataFile.Length; i++ ) {
@@ -24,7 +24,7 @@ namespace VfxEditor.ScdFormat {
             }
         }
 
-        private static readonly int[] XORTABLE = {0x003A, 0x0032, 0x0032, 0x0032, 0x0003, 0x007E, 0x0012,
+        public static readonly int[] XORTABLE = {0x003A, 0x0032, 0x0032, 0x0032, 0x0003, 0x007E, 0x0012,
             0x00F7, 0x00B2, 0x00E2, 0x00A2, 0x0067, 0x0032, 0x0032, 0x0022, 0x0032, 0x0032, 0x0052,
             0x0016, 0x001B, 0x003C, 0x00A1, 0x0054, 0x007B, 0x001B, 0x0097, 0x00A6, 0x0093, 0x001A,
             0x004B, 0x00AA, 0x00A6, 0x007A, 0x007B, 0x001B, 0x0097, 0x00A6, 0x00F7, 0x0002, 0x00BB,

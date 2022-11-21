@@ -49,6 +49,7 @@ namespace VfxEditor.ScdFormat {
             base.Dispose();
             SourceSelect.Hide();
             ReplaceSelect.Hide();
+            CurrentFile?.Dispose();
         }
 
         public override void DrawBody() {
