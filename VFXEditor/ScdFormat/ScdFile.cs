@@ -81,11 +81,15 @@ namespace VfxEditor.ScdFormat {
             ScdHeader.UpdateFileSize( writer, noDataMusicCount ); // end with this
         }
 
-        public void Dispose() => Music.ForEach( x => x.Dispose() );
+        public override void Dispose() => Music.ForEach( x => x.Dispose() );
 
         public static void Import( string path, ScdSoundEntry music ) {
             if( music.Format == SscfWaveFormat.Vorbis ) {
-
+                var ext = Path.GetExtension( path );
+                if( ext == ".wav" ) ScdVorbis.ImportWav( path, music );
+                else {
+                    // TODO
+                }
             }
             else ScdAdpcm.Import( path, music );
         }

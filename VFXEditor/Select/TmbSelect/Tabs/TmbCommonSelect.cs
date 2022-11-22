@@ -9,9 +9,7 @@ namespace VfxEditor.Select.TmbSelect {
             base( parentId, tabId, SheetManager.MiscTmb, dialog ) {
         }
 
-        protected override bool CheckMatch( XivCommon item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivCommon item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -27,8 +25,6 @@ namespace VfxEditor.Select.TmbSelect {
             DrawPath( "TMB Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivCommon item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivCommon item ) => $"{item.Name}##{item.RowId}";
     }
 }

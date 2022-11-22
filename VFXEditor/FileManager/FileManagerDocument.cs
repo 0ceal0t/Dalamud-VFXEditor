@@ -60,6 +60,7 @@ namespace VfxEditor.FileManager {
         }
 
         protected void RemoveSource() {
+            CurrentFile?.Dispose();
             CurrentFile = null;
             Source = SelectResult.None();
         }
@@ -79,6 +80,7 @@ namespace VfxEditor.FileManager {
             if( !File.Exists( localPath ) ) return;
             try {
                 using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
+                CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
                 UiUtils.OkNotification( $"{FileType} file loaded" );
             }
@@ -94,6 +96,7 @@ namespace VfxEditor.FileManager {
                 var file = Plugin.DataManager.GetFile( gamePath );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
+                CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
                 UiUtils.OkNotification( $"{FileType} file loaded" );
             }
@@ -119,6 +122,7 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
+            CurrentFile?.Dispose();
             CurrentFile = null;
             File.Delete( WriteLocation );
         }

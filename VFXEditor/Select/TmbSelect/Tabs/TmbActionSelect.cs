@@ -9,9 +9,7 @@ namespace VfxEditor.Select.TmbSelect {
             base( parentId, tabId, nonPlayer ? SheetManager.NonPlayerActionTmb : SheetManager.ActionTmb, dialog ) {
         }
 
-        protected override bool CheckMatch( XivActionTmb item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivActionTmb item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -33,8 +31,6 @@ namespace VfxEditor.Select.TmbSelect {
             DrawPath( "Weapon Tmb Path", loadedItem.WeaponTmb, Id + "Weapon", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Weapon", true );
         }
 
-        protected override string UniqueRowTitle( XivActionTmb item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivActionTmb item ) => $"{item.Name}##{item.RowId}";
     }
 }

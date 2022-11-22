@@ -9,9 +9,7 @@ namespace VfxEditor.Select.PapSelect {
             base( parentId, tabId, nonPlayer ? SheetManager.NonPlayerActionPap : SheetManager.ActionPap, dialog ) {
         }
 
-        protected override bool CheckMatch( XivActionPap item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivActionPap item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -31,8 +29,6 @@ namespace VfxEditor.Select.PapSelect {
             DrawPapDict( loadedItem.HitAnimations, "Hit", loadedItem.ActionPap.Name );
         }
 
-        protected override string UniqueRowTitle( XivActionPap item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivActionPap item ) => $"{item.Name}##{item.RowId}";
     }
 }

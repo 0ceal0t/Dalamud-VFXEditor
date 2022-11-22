@@ -13,9 +13,7 @@ namespace VfxEditor.Select.VfxSelect {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override bool CheckMatch( XivHousing item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivHousing item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void DrawSelected( XivHousingSelected loadedItem ) {
             if( loadedItem == null ) { return; }
@@ -26,13 +24,11 @@ namespace VfxEditor.Select.VfxSelect {
 
             ImGui.Text( "SGB Path: " );
             ImGui.SameLine();
-            DisplayPath( loadedItem.Housing.sgbPath );
+            DisplayPath( loadedItem.Housing.SgbPath );
 
             DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameItem, "HOUSING", loadedItem.Housing.Name, spawn: true );
         }
 
-        protected override string UniqueRowTitle( XivHousing item ) {
-            return item.Name + Id;
-        }
+        protected override string UniqueRowTitle( XivHousing item ) => $"{item.Name}##{item.RowId}";
     }
 }

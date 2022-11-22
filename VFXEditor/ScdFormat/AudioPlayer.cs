@@ -85,7 +85,7 @@ namespace VfxEditor.ScdFormat {
             // Import
             ImGui.SameLine();
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) {
-                var text = Entry.Format == SscfWaveFormat.Vorbis ? "Audio files{.ogg},.*" : "Audio files{.wav},.*";
+                var text = Entry.Format == SscfWaveFormat.Vorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*";
                 FileDialogManager.OpenFileDialog( "Import File", text, ( bool ok, string res ) => {
                     if( ok ) ScdFile.Import( res, Entry );
                 } );
@@ -93,7 +93,11 @@ namespace VfxEditor.ScdFormat {
             ImGui.PopFont();
 
             ImGui.Indent();
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Channels / Loop {Entry.LoopStart} - {Entry.LoopEnd}" );
+            var frequency = Entry.Frequency;
+            var loopStartSeconds = frequency == 0 ? 0 : Entry.LoopStart / frequency;
+            var loopEndSeconds = frequency == 0 ? 0 : Entry.LoopEnd / frequency;
+
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Channels / Loop [{loopStartSeconds}, {loopEndSeconds}] seconds" );
             ImGui.Unindent();
         }
 

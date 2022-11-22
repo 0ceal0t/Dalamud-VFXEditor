@@ -113,7 +113,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Write( BinaryWriter writer ) => Main?.Write( writer );
 
-        public void Dispose() {
+        public override void Dispose() {
             NodeGroupSet?.Dispose();
             ForceOpenTabs.Clear();
         }

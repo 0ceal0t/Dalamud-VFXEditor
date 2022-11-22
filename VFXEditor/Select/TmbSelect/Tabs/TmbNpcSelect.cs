@@ -7,9 +7,7 @@ namespace VfxEditor.Select.TmbSelect {
             base( parentId, tabId, SheetManager.Npcs, dialog ) {
         }
 
-        protected override bool CheckMatch( XivNpc item, string searchInput ) {
-            return Matches( item.Name, searchInput ) || Matches( item.Id, searchInput );
-        }
+        protected override bool CheckMatch( XivNpc item, string searchInput ) => Matches( item.Name, searchInput ) || Matches( item.Id, searchInput );
 
         protected override void DrawExtra() => DrawThankYou();
 
@@ -22,6 +20,6 @@ namespace VfxEditor.Select.TmbSelect {
             DrawPath( "TMB", loadedItem.TmbPaths, Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Npc.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivNpc item ) => item.Name + Id + item.RowId;
+        protected override string UniqueRowTitle( XivNpc item )  => $"{item.Name}{Id}{item.RowId}";
     }
 }

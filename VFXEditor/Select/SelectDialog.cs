@@ -16,7 +16,9 @@ namespace VfxEditor {
         GameEmote,
         GameGimmick,
         GameCutscene,
-        GameNpc
+        GameNpc,
+        GameMusic,
+        GameQuest
     }
 
     public struct SelectResult {

@@ -10,9 +10,7 @@ namespace VfxEditor.Select.PapSelect {
             base( parentId, tabId, SheetManager.EmotePap, dialog ) {
         }
 
-        protected override bool CheckMatch( XivEmotePap item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivEmotePap item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -50,8 +48,6 @@ namespace VfxEditor.Select.PapSelect {
             ImGui.EndTabBar();
         }
 
-        protected override string UniqueRowTitle( XivEmotePap item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivEmotePap item ) => $"{item.Name}##{item.RowId}";
     }
 }

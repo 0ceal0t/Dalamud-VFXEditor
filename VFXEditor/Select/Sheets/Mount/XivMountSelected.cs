@@ -1,16 +1,13 @@
 namespace VfxEditor.Select.Rows {
     public class XivMountSelected {
-        public XivMount Mount;
-
-        public int Count;
-        public int VfxId;
-        public string ImcPath;
-
-        public bool VfxExists;
+        public readonly XivMount Mount;
+        public readonly int Count;
+        public readonly int VfxId;
+        public readonly string ImcPath;
+        public readonly bool VfxExists;
 
         public XivMountSelected( Lumina.Data.Files.ImcFile file, XivMount mount ) {
             Mount = mount;
-
             Count = file.Count;
             var imcData = file.GetVariant( mount.Variant - 1 );
             ImcPath = file.FilePath;
@@ -18,9 +15,6 @@ namespace VfxEditor.Select.Rows {
             VfxExists = !( VfxId == 0 );
         }
 
-        public string GetVFXPath() {
-            if( !VfxExists ) return "";
-            return Mount.GetVfxPath( VfxId );
-        }
+        public string GetVFXPath() => VfxExists ? Mount.GetVfxPath( VfxId ) : "";
     }
 }

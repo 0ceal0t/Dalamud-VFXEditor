@@ -9,9 +9,7 @@ namespace VfxEditor.Select.VfxSelect {
             base( parentId, tabId, SheetManager.Statuses, dialog ) {
         }
 
-        protected override bool CheckMatch( XivStatus item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivStatus item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -30,8 +28,6 @@ namespace VfxEditor.Select.VfxSelect {
             DrawPath( "Loop VFX 3", loadedItem.LoopVFXPath3, Id + "Loop3", Dialog, SelectResultType.GameStatus, "STATUS", loadedItem.Name + " Loop 3", play: true );
         }
 
-        protected override string UniqueRowTitle( XivStatus item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivStatus item ) => $"{item.Name}##{item.RowId}";
     }
 }

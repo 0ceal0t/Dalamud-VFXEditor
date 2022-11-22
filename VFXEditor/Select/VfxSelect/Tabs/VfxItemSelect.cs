@@ -13,9 +13,7 @@ namespace VfxEditor.Select.VfxSelect {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override bool CheckMatch( XivItem item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivItem item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void DrawSelected( XivItemSelected loadedItem ) {
             if( loadedItem == null ) { return; }
@@ -33,8 +31,6 @@ namespace VfxEditor.Select.VfxSelect {
             DrawPath( "VFX Path", loadedItem.GetVfxPath(), Id, Dialog, SelectResultType.GameItem, "ITEM", loadedItem.Item.Name, spawn: true );
         }
 
-        protected override string UniqueRowTitle( XivItem item ) {
-            return item.Name + Id;
-        }
+        protected override string UniqueRowTitle( XivItem item ) => $"{item.Name}##{item.RowId}";
     }
 }

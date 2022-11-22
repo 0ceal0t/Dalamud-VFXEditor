@@ -21,5 +21,7 @@ namespace VfxEditor.FileManager {
             Write( writer );
             return ms.ToArray();
         }
+
+        public virtual void Dispose() { }
     }
 }

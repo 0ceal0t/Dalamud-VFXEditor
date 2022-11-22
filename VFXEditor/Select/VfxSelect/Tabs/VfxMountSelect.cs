@@ -13,9 +13,7 @@ namespace VfxEditor.Select.VfxSelect {
             LoadIcon( Selected.Icon, ref Icon );
         }
 
-        protected override bool CheckMatch( XivMount item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivMount item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void DrawSelected( XivMountSelected loadedItem ) {
             if( loadedItem == null ) { return; }
@@ -35,8 +33,6 @@ namespace VfxEditor.Select.VfxSelect {
             DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Mount.Name, play: true );
         }
 
-        protected override string UniqueRowTitle( XivMount item ) {
-            return item.Name + Id;
-        }
+        protected override string UniqueRowTitle( XivMount item ) => $"{item.Name}##{item.RowId}";
     }
 }

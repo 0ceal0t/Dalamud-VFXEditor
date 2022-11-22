@@ -4,7 +4,6 @@ namespace VfxEditor.Select.Rows {
     public class XivGimmick {
         public string Name;
         public int RowId;
-
         public string TmbPath;
 
         public XivGimmick( Lumina.Excel.GeneratedSheets.ActionTimeline timeline, Dictionary<string, string> suffixToName ) {
@@ -20,10 +19,6 @@ namespace VfxEditor.Select.Rows {
                     Name = "(" + suffixToName[suffix] + ") " + Name;
                 }
             }
-        }
-
-        public string GetTmbPath() {
-            return TmbPath;
         }
     }
 }

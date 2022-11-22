@@ -7,9 +7,7 @@ namespace VfxEditor.Select.VfxSelect {
             base( parentId, tabId, SheetManager.Cutscenes, dialog ) {
         }
 
-        protected override bool CheckMatch( XivCutscene item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivCutscene item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void DrawSelected( XivCutsceneSelected loadedItem ) {
             if( loadedItem == null ) { return; }
@@ -23,8 +21,6 @@ namespace VfxEditor.Select.VfxSelect {
             DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameCutscene, "CUT", loadedItem.Cutscene.Name, spawn: true );
         }
 
-        protected override string UniqueRowTitle( XivCutscene item ) {
-            return item.Name + Id + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivCutscene item ) => $"{item.Name}{Id}{item.RowId}";
     }
 }

@@ -71,8 +71,8 @@ namespace VfxEditor.ScdFormat {
             AuxChunkData = GetDataRange( chunkStartPos, chunkEndPos, reader );
 
             Data = Format switch {
-                SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, startOffset, this ),
-                SscfWaveFormat.Vorbis => new ScdVorbis( reader, chunkEndPos, this ),
+                SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, this ),
+                SscfWaveFormat.Vorbis => new ScdVorbis( reader, this ),
                 _ => null
             };
         }

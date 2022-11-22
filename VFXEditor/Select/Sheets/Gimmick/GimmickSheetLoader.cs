@@ -1,8 +1,8 @@
 using Dalamud.Logging;
 using Lumina.Excel.GeneratedSheets;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.Sheets {
@@ -23,7 +23,7 @@ namespace VfxEditor.Select.Sheets {
 
         public override bool SelectItem( XivGimmick item, out XivGimmickSelected selectedItem ) {
             selectedItem = null;
-            var tmbPath = item.GetTmbPath();
+            var tmbPath = item.TmbPath;
             var result = Plugin.DataManager.FileExists( tmbPath );
             if( result ) {
                 try {

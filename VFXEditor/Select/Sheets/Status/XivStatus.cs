@@ -1,14 +1,14 @@
 namespace VfxEditor.Select.Rows {
     public class XivStatus {
-        public string Name;
-        public int RowId;
-        public ushort Icon;
+        public readonly string Name;
+        public readonly int RowId;
+        public readonly ushort Icon;
 
-        public string HitVFXPath;
-        public string LoopVFXPath1;
-        public string LoopVFXPath2;
-        public string LoopVFXPath3;
-        public bool VfxExists = false;
+        public readonly string HitVFXPath;
+        public readonly string LoopVFXPath1;
+        public readonly string LoopVFXPath2;
+        public readonly string LoopVFXPath3;
+        public readonly bool VfxExists = false;
 
         public static readonly string statusPrefix = "vfx/common/eff/";
 

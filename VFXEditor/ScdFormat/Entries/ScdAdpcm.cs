@@ -7,7 +7,7 @@ namespace VfxEditor.ScdFormat {
         public byte[] Data;
         public WaveFormat Format;
 
-        public ScdAdpcm( BinaryReader reader, long startOffset, ScdSoundEntry entry ) {
+        public ScdAdpcm( BinaryReader reader, ScdSoundEntry entry ) {
             WaveHeader = reader.ReadBytes( entry.FirstFrame - entry.AuxChunkData.Length );
             Data = reader.ReadBytes( entry.DataLength );
 
@@ -29,9 +29,9 @@ namespace VfxEditor.ScdFormat {
         public static void Import( string path, ScdSoundEntry entry ) {
             ScdUtils.ConvertToAdpcm( path );
             var data = ( ScdAdpcm )entry.Data;
-            using var waveFile = new WaveFileReader( ScdManager.ConvertOut );
+            using var waveFile = new WaveFileReader( ScdManager.ConvertWav );
 
-            var rawData = File.ReadAllBytes( ScdManager.ConvertOut );
+            var rawData = File.ReadAllBytes( ScdManager.ConvertWav );
             var waveFormat = waveFile.WaveFormat;
 
             using var ms = new MemoryStream( rawData );

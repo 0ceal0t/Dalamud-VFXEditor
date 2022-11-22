@@ -7,10 +7,8 @@ namespace VfxEditor.Select.Sheets {
         public override void OnLoad() {
             var sheet = Plugin.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) {
-                var i = new XivStatus( item );
-                if( i.VfxExists ) {
-                    Items.Add( i );
-                }
+                var status = new XivStatus( item );
+                if( status.VfxExists ) Items.Add( status );
             }
         }
 

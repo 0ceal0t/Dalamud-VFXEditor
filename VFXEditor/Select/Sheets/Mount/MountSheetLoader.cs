@@ -8,9 +8,7 @@ namespace VfxEditor.Select.Sheets {
     public class MountSheeetLoader : SheetLoader<XivMount, XivMountSelected> {
         public override void OnLoad() {
             var sheet = Plugin.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
-            foreach( var item in sheet ) {
-                Items.Add( new XivMount( item ) );
-            }
+            foreach( var item in sheet ) Items.Add( new XivMount( item ) );
         }
 
         public override bool SelectItem( XivMount item, out XivMountSelected selectedItem ) {

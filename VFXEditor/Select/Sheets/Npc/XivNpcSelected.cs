@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using static VfxEditor.Select.Sheets.NpcSheetLoader;
 
 namespace VfxEditor.Select.Rows {
     public class XivNpcSelected {

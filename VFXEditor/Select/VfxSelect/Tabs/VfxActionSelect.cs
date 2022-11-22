@@ -9,9 +9,7 @@ namespace VfxEditor.Select.VfxSelect {
             base( parentId, tabId, !nonPlayer ? SheetManager.Actions : SheetManager.NonPlayerActions, dialog ) {
         }
 
-        protected override bool CheckMatch( XivActionBase item, string searchInput ) {
-            return Matches( item.Name, searchInput );
-        }
+        protected override bool CheckMatch( XivActionBase item, string searchInput ) => Matches( item.Name, searchInput );
 
         protected override void OnSelect() {
             LoadIcon( Selected.Icon, ref Icon );
@@ -36,8 +34,6 @@ namespace VfxEditor.Select.VfxSelect {
             }
         }
 
-        protected override string UniqueRowTitle( XivActionBase item ) {
-            return item.Name + "##" + item.RowId;
-        }
+        protected override string UniqueRowTitle( XivActionBase item ) => $"{item.Name}##{item.RowId}";
     }
 }

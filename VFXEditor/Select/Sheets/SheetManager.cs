@@ -21,7 +21,7 @@ namespace VfxEditor.Select {
         public static ZoneSheetLoader Zones { get; private set; }
         public static MountSheeetLoader Mounts { get; private set; }
         public static HousingSheetLoader Housing { get; private set; }
-        public static CommonLoader Misc { get; private set; }
+        public static CommonLoader Common { get; private set; }
 
         public static ActionTmbSheetLoader ActionTmb { get; private set; }
         public static NonPlayerActionTmbSheetLoader NonPlayerActionTmb { get; private set; }
@@ -31,6 +31,11 @@ namespace VfxEditor.Select {
         public static ActionPapSheetLoader ActionPap { get; private set; }
         public static NonPlayerActionPapSheetLoader NonPlayerActionPap { get; private set; }
         public static EmotePapSheetLoader EmotePap { get; private set; }
+
+        public static OrchestrionSheeetLoader Orchestrions { get; private set; }
+        public static ZoneScdSheetLoader ZoneScd { get; private set; }
+        public static BgmSheetLoader Bgm { get; private set; }
+        public static BgmQuestSheetLoader BgmQuest { get; private set; }
 
         // Contains vfx, tmb, and paps
         public static NpcSheetLoader Npcs { get; private set; }
@@ -109,6 +114,7 @@ namespace VfxEditor.Select {
             Zones = new ZoneSheetLoader();
             Mounts = new MountSheeetLoader();
             Housing = new HousingSheetLoader();
+            Common = new CommonLoader();
 
             ActionTmb = new ActionTmbSheetLoader();
             NonPlayerActionTmb = new NonPlayerActionTmbSheetLoader();
@@ -119,7 +125,10 @@ namespace VfxEditor.Select {
             NonPlayerActionPap = new NonPlayerActionPapSheetLoader();
             EmotePap = new EmotePapSheetLoader();
 
-            Misc = new CommonLoader();
+            Orchestrions = new OrchestrionSheeetLoader();
+            ZoneScd = new ZoneScdSheetLoader();
+            Bgm = new BgmSheetLoader();
+            BgmQuest = new BgmQuestSheetLoader();
         }
 
         public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
