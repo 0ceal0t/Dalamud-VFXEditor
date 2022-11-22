@@ -19,25 +19,6 @@ namespace VfxEditor.Interop {
             Run( $"4 {animHkx} {animIndex} {sklHkx} 0 {output}" );
         }
 
-        public static void Run( string arguments ) {
-            // Use ProcessStartInfo class
-            var startInfo = new ProcessStartInfo {
-                CreateNoWindow = false,
-                UseShellExecute = false,
-                FileName = Path.Combine( Plugin.RootLocation, "Files", "animassist.exe" ),
-                WindowStyle = ProcessWindowStyle.Hidden,
-                Arguments = arguments
-            };
-
-            try {
-                // Start the process with the info we specified.
-                // Call WaitForExit and then the using statement will close.
-                using var exeProcess = Process.Start( startInfo );
-                exeProcess.WaitForExit();
-            }
-            catch {
-                // Log error.
-            }
-        }
+        public static void Run( string arguments ) => InteropUtils.Run( "animassist.exe", arguments );
     }
 }

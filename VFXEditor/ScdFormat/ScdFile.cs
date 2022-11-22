@@ -1,5 +1,8 @@
 using Dalamud.Logging;
 using ImGuiNET;
+using NAudio.Vorbis;
+using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -79,5 +82,12 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Dispose() => Music.ForEach( x => x.Dispose() );
+
+        public static void Import( string path, ScdSoundEntry music ) {
+            if( music.Format == SscfWaveFormat.Vorbis ) {
+
+            }
+            else ScdAdpcm.Import( path, music );
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace VfxEditor.ScdFormat {
         public int LoopEnd;
         public int FirstFrame;
         public short AuxCount;
-        public short Unk;
+        public short BitsPerSample;
 
         public byte[] AuxChunkData;
         public byte[] RawData; // aux chunks and data
@@ -53,7 +53,7 @@ namespace VfxEditor.ScdFormat {
             LoopEnd = reader.ReadInt32();
             FirstFrame = reader.ReadInt32();
             AuxCount = reader.ReadInt16();
-            Unk = reader.ReadInt16(); // padding
+            BitsPerSample = reader.ReadInt16(); // padding
 
             if( DataLength == 0 ) {
                 AuxChunkData = Array.Empty<byte>();
@@ -68,16 +68,13 @@ namespace VfxEditor.ScdFormat {
                 chunkEndPos += reader.ReadInt32(); // data, skip for now
                 reader.BaseStream.Seek( chunkEndPos, SeekOrigin.Begin );
             }
+            AuxChunkData = GetDataRange( chunkStartPos, chunkEndPos, reader );
 
             Data = Format switch {
                 SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, startOffset, this ),
                 SscfWaveFormat.Vorbis => new ScdVorbis( reader, chunkEndPos, this ),
                 _ => null
             };
-            var dataEndPos = reader.BaseStream.Position;
-
-            AuxChunkData = GetDataRange( chunkStartPos, chunkEndPos, reader );
-            RawData = GetDataRange( chunkEndPos, dataEndPos, reader );
         }
 
         public void Draw( string id ) {
@@ -96,15 +93,15 @@ namespace VfxEditor.ScdFormat {
             writer.Write( LoopEnd );
             writer.Write( FirstFrame );
             writer.Write( AuxCount );
-            writer.Write( Unk );
+            writer.Write( BitsPerSample );
 
             writer.Write( AuxChunkData );
-            writer.Write( RawData );
+            Data?.Write( writer );
 
             FileUtils.PadTo( writer, 16 );
         }
 
-        private static byte[] GetDataRange( long start, long end, BinaryReader reader ) {
+        public static byte[] GetDataRange( long start, long end, BinaryReader reader ) {
             var savePos = reader.BaseStream.Position;
             reader.BaseStream.Seek( start, SeekOrigin.Begin );
             var ret = reader.ReadBytes( ( int )( end - start ) );

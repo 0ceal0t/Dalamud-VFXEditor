@@ -112,6 +112,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="Files\adpcmencode3.exe">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Files\animassist.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -153,6 +156,9 @@
         </None>
         <None Update="Files\default_timeline.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\oggenc2.exe">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\tmb_misc.txt">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

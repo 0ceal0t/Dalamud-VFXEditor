@@ -1,11 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.Interop;
 
 namespace VfxEditor.ScdFormat {
     public static class ScdUtils {
+        public static void ConvertToOgg( string wavPath ) {
+            Cleanup();
+            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 48000 -o \"{ScdManager.ConvertOut}\" \"{wavPath}\"" );
+        }
+
+        public static void ConvertToAdpcm( string wavPath ) {
+            Cleanup();
+            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManager.ConvertOut}\"" );
+        }
+
+        public static void Cleanup() {
+            if( File.Exists( ScdManager.ConvertOut ) ) File.Delete( ScdManager.ConvertOut );
+        }
+
         public static void XorDecode( byte[] vorbisHeader, byte encodeByte ) {
             for( var i = 0; i < vorbisHeader.Length; i++ ) {
                 vorbisHeader[i] ^= encodeByte;

@@ -1,3 +1,4 @@
+using HelixToolkit.SharpDX.Core.Helper;
 using Lumina.Extensions;
 using NAudio.Vorbis;
 using NAudio.Wave;
@@ -11,8 +12,13 @@ namespace VfxEditor.ScdFormat {
         public int VorbisHeaderSize;
 
         public byte[] Data;
+        public byte[] RawData;
+
+        // TODO: download as OGG?
 
         public ScdVorbis( BinaryReader reader, long chunkEndPos, ScdSoundEntry entry ) {
+            var startPos = reader.BaseStream.Position;
+
             EncodeMode = reader.ReadInt16();
             EncodeByte = reader.ReadInt16();
             reader.ReadInt32();
@@ -39,11 +45,18 @@ namespace VfxEditor.ScdFormat {
             Data = ms.ToArray();
 
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( Data, oggData.Length );
+
+            var endPos = reader.BaseStream.Position;
+            RawData = ScdSoundEntry.GetDataRange( startPos, endPos, reader );
         }
 
         public override WaveStream GetStream() {
             var ms = new MemoryStream( Data, 0, Data.Length, false );
             return new VorbisWaveReader( ms );
+        }
+
+        public override void Write( BinaryWriter writer ) {
+            writer.Write( RawData );
         }
     }
 }

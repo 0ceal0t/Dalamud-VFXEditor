@@ -2,10 +2,7 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
-using VfxEditor;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
 

@@ -82,10 +82,18 @@ namespace VfxEditor.ScdFormat {
                     }
                 } );
             }
+            // Import
+            ImGui.SameLine();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) {
+                var text = Entry.Format == SscfWaveFormat.Vorbis ? "Audio files{.ogg},.*" : "Audio files{.wav},.*";
+                FileDialogManager.OpenFileDialog( "Import File", text, ( bool ok, string res ) => {
+                    if( ok ) ScdFile.Import( res, Entry );
+                } );
+            }
             ImGui.PopFont();
 
             ImGui.Indent();
-            ImGui.TextDisabled( $"Format: {Entry.Format}   Channels: {Entry.NumChannels}   Frequency: {Entry.Frequency}" );
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Channels / Loop {Entry.LoopStart} - {Entry.LoopEnd}" );
             ImGui.Unindent();
         }
 

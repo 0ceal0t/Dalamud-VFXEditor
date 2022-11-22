@@ -380,6 +380,10 @@ namespace VfxEditor.Interop {
                 localPath = papFile;
                 return true;
             }
+            else if( Plugin.ScdManager.GetReplacePath( gamePath, out var scdFile ) == true ) {
+                localPath = scdFile;
+                return true;
+            }
             return false;
         }
 
@@ -444,6 +448,7 @@ namespace VfxEditor.Interop {
                 "vfx" => BitConverter.GetBytes( 8u ),
                 "chara" => BitConverter.GetBytes( 4u ),
                 "bgcommon" => BitConverter.GetBytes( 1u ),
+                "sound" => BitConverter.GetBytes( 7u ),
                 "bg" => GetBGCategory( split[1], split[2] ),
                 _ => BitConverter.GetBytes( 0u )
             };

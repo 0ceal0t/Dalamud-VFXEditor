@@ -1,5 +1,6 @@
 using ImGuiNET;
 using NAudio.Wave;
+using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 
@@ -8,6 +9,8 @@ namespace VfxEditor.ScdFormat {
     public class ScdManager : FileManager<ScdDocument, WorkspaceMetaScd, ScdFile> {
         public static ScdSelectDialog SourceSelect { get; private set; }
         public static ScdSelectDialog ReplaceSelect { get; private set; }
+
+        public static string ConvertOut => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.wav" ).Replace( '\\', '/' );
 
         public static void Setup() {
             SourceSelect = new ScdSelectDialog(
@@ -50,6 +53,7 @@ namespace VfxEditor.ScdFormat {
             SourceSelect.Hide();
             ReplaceSelect.Hide();
             CurrentFile?.Dispose();
+            ScdUtils.Cleanup();
         }
 
         public override void DrawBody() {
