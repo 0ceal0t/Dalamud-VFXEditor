@@ -15,7 +15,7 @@ namespace VfxEditor.ScdFormat {
         private WaveChannel32 CurrentChannel;
         private WasapiOut CurrentOutput;
 
-        private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds;
+        private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds - 0.1;
         private double CurrentTime => CurrentStream == null ? 0 : CurrentStream.CurrentTime.TotalSeconds;
 
         public AudioPlayer( ScdSoundEntry entry ) {
@@ -64,7 +64,7 @@ namespace VfxEditor.ScdFormat {
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 150f );
             if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime) ) {
-                if( State != PlaybackState.Stopped ) {
+                if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
                     CurrentOutput.Pause();
                     CurrentStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
                 }

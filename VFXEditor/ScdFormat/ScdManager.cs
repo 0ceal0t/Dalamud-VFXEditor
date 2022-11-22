@@ -5,7 +5,6 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 
 namespace VfxEditor.ScdFormat {
-    // TODO: workspace import
     public class ScdManager : FileManager<ScdDocument, WorkspaceMetaScd, ScdFile> {
         public static ScdSelectDialog SourceSelect { get; private set; }
         public static ScdSelectDialog ReplaceSelect { get; private set; }

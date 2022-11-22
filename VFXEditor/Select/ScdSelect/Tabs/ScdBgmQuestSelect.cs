@@ -13,10 +13,10 @@ namespace VfxEditor.Select.ScdSelect {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( loadedItem.IsSituation ) {
-                DrawPath( "Daytime BGM Path", loadedItem.SituationDay, Id, Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Day" );
-                DrawPath( "Nighttime BGM Path", loadedItem.SituationNight, Id, Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Night" );
-                DrawPath( "Battle BGM Path", loadedItem.SituationBattle, Id, Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Battle" );
-                DrawPath( "Daybreak BGM Path", loadedItem.SituationDaybreak, Id, Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Daybreak" );
+                DrawPath( "Daytime BGM Path", loadedItem.SituationDay, Id + "-Day", Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Day" );
+                DrawPath( "Nighttime BGM Path", loadedItem.SituationNight, Id + "-Night", Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Night" );
+                DrawPath( "Battle BGM Path", loadedItem.SituationBattle, Id + "-Battle", Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Battle" );
+                DrawPath( "Daybreak BGM Path", loadedItem.SituationDaybreak, Id + "-Break", Dialog, SelectResultType.GameQuest, "QUEST", loadedItem.BgmQuest.Name + " / Daybreak" );
             }
             else {
                 DrawPath( "BGM Path", loadedItem.Path, Id, Dialog, SelectResultType.GameZone, "QUEST", loadedItem.BgmQuest.Name );

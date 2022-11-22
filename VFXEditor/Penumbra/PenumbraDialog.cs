@@ -29,6 +29,7 @@ namespace VfxEditor.Penumbra {
         private bool ExportTex = true;
         private bool ExportTmb = true;
         private bool ExportPap = true;
+        private bool ExportScd = true;
 
         public PenumbraDialog() : base( "Penumbra" ) {
             Size = new Vector2( 400, 200 );
@@ -48,12 +49,11 @@ namespace VfxEditor.Penumbra {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
             ImGui.Checkbox( "Export Pap", ref ExportPap );
+            ImGui.Checkbox( "Export Scd", ref ExportScd );
 
             ImGui.EndChild();
 
-            if( ImGui.Button( "Export" + id ) ) {
-                SaveDialog();
-            }
+            if( ImGui.Button( "Export" + id ) ) SaveDialog();
         }
 
         private void SaveDialog() {
@@ -84,6 +84,7 @@ namespace VfxEditor.Penumbra {
                 Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
                 Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
                 Plugin.PapManager.PenumbraExport( modFolder, ExportPap );
+                Plugin.ScdManager.PenumbraExport( modFolder, ExportScd );
 
                 PluginLog.Log( "Exported To: " + modFolder );
             }

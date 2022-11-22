@@ -77,7 +77,10 @@ namespace VfxEditor.FileManager {
         protected abstract T FileFromReader( BinaryReader reader );
 
         protected void LoadLocal( string localPath ) {
-            if( !File.Exists( localPath ) ) return;
+            if( !File.Exists( localPath ) ) {
+                PluginLog.Error( $"Local file: [{localPath}] does not exist" );
+                return;
+            }
             try {
                 using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                 CurrentFile?.Dispose();
@@ -91,7 +94,10 @@ namespace VfxEditor.FileManager {
         }
 
         protected void LoadGame( string gamePath ) {
-            if( !Plugin.DataManager.FileExists( gamePath ) ) return;
+            if( !Plugin.DataManager.FileExists( gamePath ) ) {
+                PluginLog.Error( $"Game file: [{gamePath}] does not exist" );
+                return;
+            }
             try {
                 var file = Plugin.DataManager.GetFile( gamePath );
                 using var ms = new MemoryStream( file.Data );

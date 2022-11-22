@@ -13,6 +13,7 @@ using VfxEditor.Utils;
 using VfxEditor.PapFormat;
 using VfxEditor.Texture;
 using VfxEditor.TmbFormat;
+using VfxEditor.ScdFormat;
 
 namespace VfxEditor {
     public struct WorkspaceMeta {
@@ -20,6 +21,7 @@ namespace VfxEditor {
         public WorkspaceMetaAvfx[] Docs;
         public WorkspaceMetaTmb[] Tmb;
         public WorkspaceMetaPap[] Pap;
+        public WorkspaceMetaScd[] Scd;
     }
 
     public struct WorkspaceMetaAvfx {
@@ -73,6 +75,7 @@ namespace VfxEditor {
                 ResetAvfxManager();
                 ResetTmbManager();
                 ResetPapManager();
+                ResetScdManager();
 
                 IsLoading = false;
             } );
@@ -115,36 +118,39 @@ namespace VfxEditor {
             IsLoading = true;
 
             ResetTextureManager();
-            var texRootPath = Path.Combine( loadLocation, TextureManager.PenumbraPath );
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
-                    var fullPath = Path.Combine( texRootPath, tex.RelativeLocation );
+                    var fullPath = Path.Combine( Path.Combine( loadLocation, TextureManager.PenumbraPath ), tex.RelativeLocation );
                     TextureManager.ImportTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
                 }
             }
 
             ResetAvfxManager();
-            var vfxRootPath = Path.Combine( loadLocation, AvfxManager.PenumbraPath );
             if( meta.Docs != null ) {
                 foreach( var doc in meta.Docs ) {
-                    var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( vfxRootPath, doc.RelativeLocation );
+                    var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, AvfxManager.PenumbraPath ), doc.RelativeLocation );
                     AvfxManager.ImportWorkspaceFile( fullPath, doc );
                 }
             }
 
             ResetTmbManager();
-            var tmbRootPath = Path.Combine( loadLocation, TmbManager.PenumbraPath );
             if( meta.Tmb != null ) {
                 foreach( var tmb in meta.Tmb ) {
-                    TmbManager.ImportWorkspaceFile( Path.Combine( tmbRootPath, tmb.RelativeLocation ), tmb );
+                    TmbManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, TmbManager.PenumbraPath ), tmb.RelativeLocation ), tmb );
                 }
             }
 
             ResetPapManager();
-            var papRootPath = Path.Combine( loadLocation, PapManager.PenumbraPath );
             if( meta.Pap != null ) {
                 foreach( var pap in meta.Pap ) {
-                    PapManager.ImportWorkspaceFile( Path.Combine( papRootPath, pap.RelativeLocation ), pap );
+                    PapManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, PapManager.PenumbraPath ), pap.RelativeLocation ), pap );
+                }
+            }
+
+            ResetScdManager();
+            if( meta.Scd != null ) {
+                foreach( var scd in meta.Scd ) {
+                    ScdManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, ScdManager.PenumbraPath ), scd.RelativeLocation ), scd );
                 }
             }
 
@@ -154,9 +160,7 @@ namespace VfxEditor {
         }
 
         private static async void SaveWorkspace() {
-            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
-                SaveAsWorkspace();
-            }
+            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
             else {
                 await Task.Run( ExportWorkspace );
             }
@@ -179,6 +183,7 @@ namespace VfxEditor {
                 Tex = TextureManager.WorkspaceExport( saveLocation ),
                 Tmb = TmbManager.WorkspaceExport( saveLocation ),
                 Pap = PapManager.WorkspaceExport( saveLocation ),
+                Scd = ScdManager.WorkspaceExport( saveLocation ),
             };
 
             var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
@@ -217,6 +222,13 @@ namespace VfxEditor {
             var oldManager = PapManager;
             PapManager = new PapManager();
             PapManager.SetVisible( oldManager.IsVisible );
+            oldManager?.Dispose();
+        }
+
+        private static void ResetScdManager() {
+            var oldManager = ScdManager;
+            ScdManager = new ScdManager();
+            ScdManager.SetVisible( oldManager.IsVisible );
             oldManager?.Dispose();
         }
     }

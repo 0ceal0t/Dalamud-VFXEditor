@@ -43,6 +43,7 @@ namespace VfxEditor.TexTools {
         private bool ExportTex = true;
         private bool ExportTmb = true;
         private bool ExportPap = true;
+        private bool ExportScd = true;
 
         public TexToolsDialog() : base( "TexTools" ) {
             Size = new Vector2( 400, 200 );
@@ -61,12 +62,11 @@ namespace VfxEditor.TexTools {
             ImGui.Checkbox( "Export Textures", ref ExportTex );
             ImGui.Checkbox( "Export Tmb", ref ExportTmb );
             ImGui.Checkbox( "Export Pap", ref ExportPap );
+            ImGui.Checkbox( "Export Scd", ref ExportScd );
 
             ImGui.EndChild();
 
-            if( ImGui.Button( "Export" + id ) ) {
-                SaveDialog();
-            }
+            if( ImGui.Button( "Export" + id ) ) SaveDialog();
         }
 
         private void SaveDialog() {
@@ -89,6 +89,7 @@ namespace VfxEditor.TexTools {
                     Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
                     Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
                     Plugin.PapManager.TextoolsExport( writer, ExportPap, simpleParts, ref modOffset );
+                    Plugin.ScdManager.TextoolsExport( writer, ExportScd, simpleParts, ref modOffset );
 
                     newData = ms.ToArray();
                 }

@@ -23,11 +23,8 @@ namespace VfxEditor.Select.TmbSelect {
             DrawIcon( Icon );
 
             DrawPath( "Start Tmb Path", loadedItem.StartTmb, Id + "Start", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Start", true );
-
             DrawPath( "End Tmb Path", loadedItem.EndTmb, Id + "End", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " End", true );
-
             DrawPath( "Hit Tmb Path", loadedItem.HitTmb, Id + "Hit", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Hit", true );
-
             DrawPath( "Weapon Tmb Path", loadedItem.WeaponTmb, Id + "Weapon", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Weapon", true );
         }
 
