@@ -196,22 +196,21 @@ namespace VfxEditor {
         }
 
         public static void DrawPath( string label, string path, string id, SelectDialog dialog, SelectResultType resultType, string resultPrefix, string resultName, bool play = false ) {
-            if( !string.IsNullOrEmpty( path ) ) {
-                if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
-                    ImGui.Text( $"{label}: " );
-                    ImGui.SameLine();
-                    DisplayPath( path );
-                }
+            if( string.IsNullOrEmpty( path ) ) return;
+            if( path.Contains( "BGM_Null" ) ) return;
 
-                if( ImGui.Button( $"SELECT{id}" ) ) {
-                    dialog.Invoke( new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path ) );
-                }
+            if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
+                ImGui.Text( $"{label}: " );
                 ImGui.SameLine();
-                Copy( path, id: id + "Copy" );
-                if( play ) {
-                    dialog.Play( path, id: id + "Spawn" );
-                }
+                DisplayPath( path );
             }
+
+            if( ImGui.Button( $"SELECT{id}" ) ) {
+                dialog.Invoke( new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path ) );
+            }
+            ImGui.SameLine();
+            Copy( path, id: id + "Copy" );
+            if( play ) dialog.Play( path, id: id + "Spawn" );
         }
 
         public static void DrawThankYou() {

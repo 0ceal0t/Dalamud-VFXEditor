@@ -14,16 +14,15 @@ namespace VfxEditor.Select.Rows {
         public XivBgmQuestSelected( XivBgmQuest zone ) {
             BgmQuest = zone;
             IsSituation = zone.BgmId >= 1000;
-            PluginLog.Log( $"{IsSituation} {zone.BgmId}" );
             if( !IsSituation ) {
-                Path = Plugin.DataManager.GetExcelSheet<BGM>().GetRow( zone.BgmId ).File.ToString();
+                Path = Plugin.DataManager.GetExcelSheet<BGM>().GetRow( zone.BgmId )?.File.ToString();
             }
             else {
                 var situation = Plugin.DataManager.GetExcelSheet<BGMSituation>().GetRow( zone.BgmId );
-                SituationDay = situation.DaytimeID?.Value.File.ToString();
-                SituationNight = situation.NightID?.Value.File.ToString();
-                SituationBattle = situation.BattleID?.Value.File.ToString();
-                SituationDaybreak = situation.DaybreakID?.Value.File.ToString();
+                SituationDay = situation?.DaytimeID?.Value.File.ToString();
+                SituationNight = situation?.NightID?.Value.File.ToString();
+                SituationBattle = situation?.BattleID?.Value.File.ToString();
+                SituationDaybreak = situation?.DaybreakID?.Value.File.ToString();
             }
         }
     }

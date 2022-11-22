@@ -20,7 +20,7 @@ namespace VfxEditor.ScdFormat {
     public class ScdSoundEntry : ScdEntry {
         public int DataLength;
         public int NumChannels;
-        public int Frequency;
+        public int SampleRate;
         public SscfWaveFormat Format;
         public int LoopStart;
         public int LoopEnd;
@@ -29,7 +29,6 @@ namespace VfxEditor.ScdFormat {
         public short BitsPerSample;
 
         public byte[] AuxChunkData;
-        public byte[] RawData; // aux chunks and data
 
         public ScdSoundData Data;
         private readonly AudioPlayer Player;
@@ -42,12 +41,10 @@ namespace VfxEditor.ScdFormat {
         }
 
         protected override void Read( BinaryReader reader ) {
-            var startOffset = reader.BaseStream.Position;
-
             // Datalength = 0, 0x20
             DataLength = reader.ReadInt32();
             NumChannels = reader.ReadInt32();
-            Frequency = reader.ReadInt32();
+            SampleRate = reader.ReadInt32();
             Format = ( SscfWaveFormat )reader.ReadInt32();
             LoopStart = reader.ReadInt32();
             LoopEnd = reader.ReadInt32();
@@ -57,7 +54,6 @@ namespace VfxEditor.ScdFormat {
 
             if( DataLength == 0 ) {
                 AuxChunkData = Array.Empty<byte>();
-                RawData = Array.Empty<byte>();
                 return;
             }
 
@@ -87,7 +83,7 @@ namespace VfxEditor.ScdFormat {
         public override void Write( BinaryWriter writer ) {
             writer.Write( DataLength );
             writer.Write( NumChannels );
-            writer.Write( Frequency );
+            writer.Write( SampleRate );
             writer.Write( ( int )Format );
             writer.Write( LoopStart );
             writer.Write( LoopEnd );

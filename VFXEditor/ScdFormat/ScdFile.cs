@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
@@ -47,7 +48,6 @@ namespace VfxEditor.ScdFormat {
                     DrawSounds( id );
                     ImGui.EndTabItem();
                 }
-
                 ImGui.EndTabBar();
             }
         }
@@ -81,17 +81,24 @@ namespace VfxEditor.ScdFormat {
             ScdHeader.UpdateFileSize( writer, noDataMusicCount ); // end with this
         }
 
+        public void Replace( ScdSoundEntry old, ScdSoundEntry newEntry ) {
+            var index = Music.IndexOf( old );
+            if( index == -1 ) return;
+            Music.Remove( old );
+            Music.Insert( index, newEntry );
+        }
+
         public override void Dispose() => Music.ForEach( x => x.Dispose() );
 
-        public static void Import( string path, ScdSoundEntry music ) {
-            if( music.Format == SscfWaveFormat.Vorbis ) {
-                var ext = Path.GetExtension( path );
-                if( ext == ".wav" ) ScdVorbis.ImportWav( path, music );
-                else {
-                    // TODO
+        public async static void Import( string path, ScdSoundEntry music ) {
+            await Task.Run( () => {
+                if( music.Format == SscfWaveFormat.Vorbis ) {
+                    var ext = Path.GetExtension( path );
+                    if( ext == ".wav" ) ScdVorbis.ImportWav( path, music );
+                    else ScdVorbis.ImportOgg( path, music );
                 }
-            }
-            else ScdAdpcm.Import( path, music );
+                else ScdAdpcm.Import( path, music );
+            } );
         }
     }
 }

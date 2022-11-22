@@ -449,7 +449,8 @@ namespace VfxEditor.Interop {
                 "chara" => BitConverter.GetBytes( 4u ),
                 "bgcommon" => BitConverter.GetBytes( 1u ),
                 "sound" => BitConverter.GetBytes( 7u ),
-                "bg" => GetBGCategory( split[1], split[2] ),
+                "bg" => GetBgCategory( split[1], split[2] ),
+                "music" => GetMusicCategory( split[1] ),
                 _ => BitConverter.GetBytes( 0u )
             };
             var bCategory = stackalloc byte[categoryBytes.Length + 1];
@@ -470,7 +471,7 @@ namespace VfxEditor.Interop {
             return resource;
         }
 
-        private static byte[] GetBGCategory( string expansion, string zone ) {
+        private static byte[] GetBgCategory( string expansion, string zone ) {
             var ret = BitConverter.GetBytes( 2u );
             if( expansion == "ffxiv" ) return ret;
             // ex1/03_abr_a2/fld/a2f1/level/a2f1 -> [02 00 03 01]
@@ -479,6 +480,16 @@ namespace VfxEditor.Interop {
             var expansionTrimmed = expansion.Replace( "ex", "" );
             var zoneTrimmed = zone.Split( '_' )[0];
             ret[2] = byte.Parse( zoneTrimmed );
+            ret[3] = byte.Parse( expansionTrimmed );
+            return ret;
+        }
+
+        private static byte[] GetMusicCategory( string expansion ) {
+            var ret = BitConverter.GetBytes( 12u );
+            if( expansion == "ffxiv" ) return ret;
+            // music/ex4/BGM_EX4_Field_Ult_Day03.scd
+            // 04 00 00 0C
+            var expansionTrimmed = expansion.Replace( "ex", "" );
             ret[3] = byte.Parse( expansionTrimmed );
             return ret;
         }

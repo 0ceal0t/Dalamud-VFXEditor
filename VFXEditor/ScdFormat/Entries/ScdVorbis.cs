@@ -1,12 +1,14 @@
 using Dalamud.Logging;
 using NAudio.Vorbis;
 using NAudio.Wave;
-using NVorbis;
+using SharpDX.Text;
 using System;
 using System.IO;
 
 namespace VfxEditor.ScdFormat {
     public class ScdVorbis : ScdSoundData {
+        private readonly bool Imported = false;
+
         public short EncodeMode;
         public short EncodeByte;
         public int Unk1;
@@ -33,6 +35,17 @@ namespace VfxEditor.ScdFormat {
             Unk2 = reader.ReadInt32();
             Unk3 = reader.ReadSingle();
             SeekTableSize = reader.ReadInt32();
+
+            // ==== IMPORTED =====
+            var seekTableString = Encoding.ASCII.GetString( BitConverter.GetBytes( SeekTableSize ) );
+            if( seekTableString.EndsWith("vor") ) { // "vorbis"
+                Imported = true;
+                VorbisHeaderData = reader.ReadBytes( 0x35C );
+                OggData = reader.ReadBytes( entry.DataLength + 0x10 );
+                DecodedData = OggData;
+                return;
+            }
+
             VorbisHeaderSize = reader.ReadInt32();
             Unk4 = reader.ReadInt32();
             Unk5 = reader.ReadInt32();
@@ -70,19 +83,58 @@ namespace VfxEditor.ScdFormat {
             writer.Write( Unk2 );
             writer.Write( Unk3 );
             writer.Write( SeekTableSize );
+
+            if( Imported ) {
+                writer.Write( VorbisHeaderData );
+                writer.Write( OggData );
+                return;
+            }
+
             writer.Write( VorbisHeaderSize );
             writer.Write( Unk4 );
             writer.Write( Unk5 );
-
             writer.Write( SeekTableData );
             writer.Write( VorbisHeaderData );
             writer.Write( OggData );
         }
 
+        // Giga-scuffed
+        public static void ImportOgg( string path, ScdSoundEntry entry ) {
+            using var waveFile = new VorbisWaveReader( path );
+
+            var oggData = File.ReadAllBytes( path );
+            var waveFormat = waveFile.WaveFormat;
+
+            var rawHeader = File.ReadAllBytes( ScdUtils.VorbisHeader );
+
+            using var writerMs = new MemoryStream();
+            using var writer = new BinaryWriter( writerMs );
+            writer.Write( rawHeader );
+            writer.Write( oggData );
+
+            writer.BaseStream.Seek( 0, SeekOrigin.Begin );
+            writer.Write( oggData.Length - 0x10 ); // update data length
+            writer.Write( waveFormat.Channels );
+            writer.Write( waveFormat.SampleRate );
+
+            writer.BaseStream.Seek( 0x10, SeekOrigin.Begin );
+            writer.Write( 0 ); // loop start
+            writer.Write( oggData.Length ); // loop end
+
+            var newEntryData = writerMs.ToArray();
+
+            using var readerMs = new MemoryStream( newEntryData );
+            using var reader = new BinaryReader( readerMs );
+
+            var newEntry = new ScdSoundEntry( reader );
+
+            Plugin.ScdManager.CurrentFile.Replace( entry, newEntry );
+            entry.Dispose();
+        }
+
         public static void ImportWav( string path, ScdSoundEntry entry ) {
             ScdUtils.ConvertToOgg( path );
-            var data = ( ScdVorbis )entry.Data;
-            using var waveFile = new VorbisWaveReader( ScdManager.ConvertOgg );
+            ImportOgg( ScdManager.ConvertOgg, entry );
         }
     }
 }

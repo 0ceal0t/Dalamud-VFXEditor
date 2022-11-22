@@ -49,7 +49,7 @@ namespace VfxEditor.ScdFormat {
             data.Format = waveFormat;
             entry.DataLength = dataLength;
             entry.FirstFrame = headerLength + entry.AuxChunkData.Length;
-            entry.Frequency = waveFormat.SampleRate;
+            entry.SampleRate = waveFormat.SampleRate;
             entry.NumChannels = waveFormat.Channels;
             entry.BitsPerSample = ( short )waveFormat.BitsPerSample;
         }
