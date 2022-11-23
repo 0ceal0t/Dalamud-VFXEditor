@@ -1,5 +1,7 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using VfxEditor.Select.Rows;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.ScdSelect {
     public class ScdZoneSelect : SelectTab<XivZone, XivZoneScdSelected> {
@@ -15,6 +17,11 @@ namespace VfxEditor.Select.ScdSelect {
             else {
                 DrawPath( "BGM Path", Loaded.Path, parentId, SelectResultType.GameZone, Loaded.Zone.Name );
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 20 );
+            UiUtils.IconText( FontAwesomeIcon.InfoCircle, true );
+            ImGui.SameLine();
+            DisplayPath( "Note: some zones only get their final music after a certain quest. Check the \"Quest BGM\" tab if this is the case." );
         }
 
         protected override string GetName( XivZone item ) => item.Name;
