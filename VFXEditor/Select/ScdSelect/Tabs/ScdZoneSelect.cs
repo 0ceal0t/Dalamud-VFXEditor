@@ -2,27 +2,21 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.ScdSelect {
-    public class ScdZoneSelect : ScdSelectTab<XivZone, XivZoneScdSelected> {
-        public ScdZoneSelect( string parentId, string tabId, ScdSelectDialog dialog ) : base( parentId, tabId, SheetManager.ZoneScd, dialog ) { }
+    public class ScdZoneSelect : SelectTab<XivZone, XivZoneScdSelected> {
+        public ScdZoneSelect( string tabId, ScdSelectDialog dialog ) : base( tabId, SheetManager.ZoneScd, dialog ) { }
 
-        protected override bool CheckMatch( XivZone item, string searchInput ) => Matches( item.Name, searchInput );
-
-        protected override void DrawSelected( XivZoneScdSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Zone.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            if( loadedItem.IsSituation ) {
-                DrawPath( "Daytime BGM Path", loadedItem.SituationDay, Id + "-Day", Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name + " / Day" );
-                DrawPath( "Nighttime BGM Path", loadedItem.SituationNight, Id + "-Night", Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name + " / Night" );
-                DrawPath( "Battle BGM Path", loadedItem.SituationBattle, Id + "-Battle", Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name + " / Battle" );
-                DrawPath( "Daybreak BGM Path", loadedItem.SituationDaybreak, Id + "-Break", Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name + " / Daybreak" );
+        protected override void DrawSelected( string parentId ) {
+            if( Loaded.IsSituation ) {
+                DrawPath( "Daytime BGM Path", Loaded.SituationDay, $"{parentId}/Day", SelectResultType.GameZone,  $"{Loaded.Zone.Name} / Day" );
+                DrawPath( "Nighttime BGM Path", Loaded.SituationNight, $"{parentId}/Night", SelectResultType.GameZone, $"{Loaded.Zone.Name} / Night" );
+                DrawPath( "Battle BGM Path", Loaded.SituationBattle, $"{parentId}/Battle", SelectResultType.GameZone, $"{Loaded.Zone.Name} / Battle" );
+                DrawPath( "Daybreak BGM Path", Loaded.SituationDaybreak, $"{parentId}/Break", SelectResultType.GameZone, $"{Loaded.Zone.Name} / Break" );
             }
             else {
-                DrawPath( "BGM Path", loadedItem.Path, Id, Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name );
+                DrawPath( "BGM Path", Loaded.Path, parentId, SelectResultType.GameZone, Loaded.Zone.Name );
             }
         }
 
-        protected override string UniqueRowTitle( XivZone item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivZone item ) => item.Name;
     }
 }

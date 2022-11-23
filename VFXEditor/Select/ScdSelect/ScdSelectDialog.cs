@@ -14,11 +14,11 @@ namespace VfxEditor.Select.ScdSelect {
             ) : base( id, "scd", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new ScdMountSelect( id, "Mount", this ),
-                new ScdOrchestrionSelect( id, "Orchestrion", this ),
-                new ScdZoneSelect( id, "Zone", this ),
-                new ScdBgmSelect( id, "BGM", this ),
-                new ScdBgmQuestSelect( id, "Quest BGM", this )
+                new ScdMountSelect( "Mount", this ),
+                new ScdOrchestrionSelect( "Orchestrion", this ),
+                new ScdZoneSelect( "Zone", this ),
+                new ScdBgmSelect( "BGM", this ),
+                new ScdBgmQuestSelect( "Quest BGM", this )
             } );
         }
 

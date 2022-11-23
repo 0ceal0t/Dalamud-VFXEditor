@@ -2,37 +2,27 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxMountSelect : VfxSelectTab<XivMount, XivMountSelected> {
+    public class VfxMountSelect : SelectTab<XivMount, XivMountSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VfxMountSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Mounts, dialog ) {
-        }
+        public VfxMountSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Mounts, dialog ) { }
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override bool CheckMatch( XivMount item, string searchInput ) => Matches( item.Name, searchInput );
-
-        protected override void DrawSelected( XivMountSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Mount.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
 
-            ImGui.Text( "Variant: " + loadedItem.Mount.Variant );
-            ImGui.Text( "IMC Count: " + loadedItem.Count );
-            ImGui.Text( "VFX Id: " + loadedItem.VfxId );
+            ImGui.Text( "Variant: " + Loaded.Mount.Variant );
+            ImGui.Text( "IMC Count: " + Loaded.Count );
+            ImGui.Text( "VFX Id: " + Loaded.VfxId );
 
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
-            DisplayPath( loadedItem.ImcPath );
+            DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX Path", loadedItem.GetVFXPath(), Id, Dialog, SelectResultType.GameNpc, "NPC", loadedItem.Mount.Name, play: true );
+            DrawPath( "VFX Path", Loaded.GetVFXPath(), parentId, SelectResultType.GameNpc, Loaded.Mount.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivMount item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivMount item ) => item.Name;
     }
 }

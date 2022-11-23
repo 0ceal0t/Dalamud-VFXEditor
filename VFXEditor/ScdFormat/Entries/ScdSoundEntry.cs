@@ -73,9 +73,9 @@ namespace VfxEditor.ScdFormat {
             };
         }
 
-        public void Draw( string id ) {
+        public void Draw( string id, int idx ) {
             if( DataLength == 0 ) return;
-            Player.Draw( id );
+            Player.Draw( id, idx );
         }
 
         public void Dispose() => Player.Dispose();

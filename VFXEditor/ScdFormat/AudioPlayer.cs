@@ -5,6 +5,7 @@ using Dalamud.Logging;
 using Dalamud.Interface;
 using ImGuiFileDialog;
 using System.IO;
+using SharpDX.Direct2D1;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -22,7 +23,7 @@ namespace VfxEditor.ScdFormat {
             Entry = entry;
         }
 
-        public void Draw( string id ) {
+        public void Draw( string id, int idx ) {
             // Controls
             ImGui.PushFont( UiBuilder.IconFont );
             if( State == PlaybackState.Stopped ) {
@@ -98,6 +99,8 @@ namespace VfxEditor.ScdFormat {
             var loopStartSeconds = frequency == 0 ? 0 : Entry.LoopStart / frequency;
             var loopEndSeconds = frequency == 0 ? 0 : Entry.LoopEnd / frequency;
 
+            ImGui.Text( $"Index {idx}" );
+            ImGui.SameLine();
             ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Channels / Loop [{loopStartSeconds}, {loopEndSeconds}] seconds" );
             ImGui.Unindent();
         }

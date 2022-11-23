@@ -56,7 +56,7 @@ namespace VfxEditor.ScdFormat {
             ImGui.BeginChild( $"{id}-Child" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             for( var idx = 0; idx < Music.Count; idx++ ) {
-                Music[idx].Draw( id + idx );
+                Music[idx].Draw( id + idx, idx );
             }
             ImGui.EndChild();
         }

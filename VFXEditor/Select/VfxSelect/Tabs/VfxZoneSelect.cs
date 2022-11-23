@@ -2,25 +2,17 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxZoneSelect : VfxSelectTab<XivZone, XivZoneSelected> {
-        public VfxZoneSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Zones, dialog ) {
-        }
+    public class VfxZoneSelect : SelectTab<XivZone, XivZoneSelected> {
+        public VfxZoneSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Zones, dialog ) { }
 
-        protected override bool CheckMatch( XivZone item, string searchInput ) => Matches( item.Name, searchInput );
-
-        protected override void DrawSelected( XivZoneSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Zone.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             ImGui.Text( "LGB Path: " );
             ImGui.SameLine();
-            DisplayPath( loadedItem.Zone.LgbPath );
+            DisplayPath( Loaded.Zone.LgbPath );
 
-            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameZone, "ZONE", loadedItem.Zone.Name, spawn: true );
+            DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameZone, Loaded.Zone.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivZone item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivZone item ) => item.Name;
     }
 }

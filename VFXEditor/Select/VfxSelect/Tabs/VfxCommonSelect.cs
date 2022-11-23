@@ -3,29 +3,18 @@ using System;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxCommonSelect : VfxSelectTab<XivCommon, XivCommon> {
+    public class VfxCommonSelect : SelectTab<XivCommon, XivCommon> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VfxCommonSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Common, dialog ) {
-        }
+        public VfxCommonSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Common, dialog ) { }
 
-        protected override bool CheckMatch( XivCommon item, string searchInput ) => Matches( item.Name, searchInput );
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
-
-        protected override void DrawSelected( XivCommon loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-
-            DrawPath( "VFX Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, play: true );
+            DrawPath( "VFX Path", Loaded.Path, parentId, SelectResultType.GameAction, Loaded.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivCommon item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivCommon item ) => item.Name;
     }
 }

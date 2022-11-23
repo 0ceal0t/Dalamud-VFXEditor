@@ -2,29 +2,18 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.TmbSelect {
-    public class TmbCommonSelect : TmbSelectTab<XivCommon, XivCommon> {
+    public class TmbCommonSelect : SelectTab<XivCommon, XivCommon> {
         private ImGuiScene.TextureWrap Icon;
 
-        public TmbCommonSelect( string parentId, string tabId, TmbSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.MiscTmb, dialog ) {
-        }
+        public TmbCommonSelect( string tabId, TmbSelectDialog dialog ) : base( tabId, SheetManager.MiscTmb, dialog ) { }
 
-        protected override bool CheckMatch( XivCommon item, string searchInput ) => Matches( item.Name, searchInput );
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
-
-        protected override void DrawSelected( XivCommon loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-
-            DrawPath( "TMB Path", loadedItem.Path, Id, Dialog, SelectResultType.GameAction, "COMMON", loadedItem.Name, true );
+            DrawPath( "TMB Path", Loaded.Path, parentId, SelectResultType.GameAction, Loaded.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivCommon item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivCommon item ) => item.Name;
     }
 }

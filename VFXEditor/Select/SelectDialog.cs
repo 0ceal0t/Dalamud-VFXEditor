@@ -39,7 +39,7 @@ namespace VfxEditor {
     }
 
     public abstract class SelectDialog : GenericDialog {
-        private readonly string Id;
+        private readonly string Name;
         private readonly string Extension;
         private readonly bool ShowLocal;
         private readonly List<SelectResult> RecentList;
@@ -49,8 +49,8 @@ namespace VfxEditor {
         protected SelectResult RecentSelected;
         protected bool IsRecentSelected = false;
 
-        public SelectDialog( string id, string extension, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( id, startingWidth:800, startingHeight:500 ) {
-            Id = id;
+        public SelectDialog( string name, string extension, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( name, startingWidth:800, startingHeight:500 ) {
+            Name = name;
             Extension = extension;
             RecentList = recentList;
             ShowLocal = showLocal;
@@ -58,27 +58,29 @@ namespace VfxEditor {
         }
 
         public override void DrawBody() {
-            ImGui.BeginTabBar( "Tabs##" + Id );
-            DrawGame();
-            DrawGamePath();
-            if( ShowLocal ) DrawLocal();
-            if( RecentList != null ) DrawRecent();
+            var id = $"##{Name}";
+            ImGui.BeginTabBar( $"Tabs{id}" );
+            DrawGame( id );
+            DrawGamePath( id );
+            if( ShowLocal ) DrawLocal( id );
+            if( RecentList != null ) DrawRecent( id );
             ImGui.EndTabBar();
         }
 
         // =========== LOCAL ================
 
         private string LocalPath = "";
-        private void DrawLocal() {
-            var ret = ImGui.BeginTabItem( "Local File##Select-" + Id );
+        private void DrawLocal( string parentId ) {
+            var id = $"{parentId}/Local";
+
+            var ret = ImGui.BeginTabItem( "Local File" + id );
             if( !ret ) return;
 
-            var id = "##Select/Local/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( id + "Input", ref LocalPath, 255 );
+            ImGui.InputText( id + "-Input", ref LocalPath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
@@ -87,24 +89,22 @@ namespace VfxEditor {
                 } );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT" + id ) ) {
-                Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPath, LocalPath ) );
-            }
+            if( ImGui.Button( "SELECT" + id ) ) Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPath, LocalPath ) );
 
             ImGui.EndTabItem();
         }
 
         // ============= GAME =================
 
-        public void DrawGame() {
+        public void DrawGame( string parentId ) {
+            var id = $"{parentId}/Game";
+
             if( GetTabs().Count == 0 ) return;
-            var ret = ImGui.BeginTabItem( "Game Items##Select/" + Id );
+            var ret = ImGui.BeginTabItem( "Game Items" + id );
             if( !ret ) return;
 
-            ImGui.BeginTabBar( "GameSelectTabs##" + Id );
-            foreach( var tab in GetTabs() ) {
-                tab.Draw();
-            }
+            ImGui.BeginTabBar( "Tabs" + id );
+            foreach( var tab in GetTabs() ) tab.Draw( id );
             ImGui.EndTabBar();
             ImGui.EndTabItem();
         }
@@ -112,16 +112,17 @@ namespace VfxEditor {
         // ============== GAME FILE =============
 
         private string GamePath = "";
-        public void DrawGamePath() {
-            var ret = ImGui.BeginTabItem( "Game Path##Select/" + Id );
+        public void DrawGamePath( string parentId ) {
+            var id = $"{parentId}/Path";
+
+            var ret = ImGui.BeginTabItem( "Game Path" + id );
             if( !ret ) return;
 
-            var id = "##Select/GamePath/" + Id;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( id + "Input", ref GamePath, 255 );
+            ImGui.InputText( id + "-Input", ref GamePath, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) ) {
                 var cleanedGamePath = GamePath.Replace( "\\", "/" );
@@ -133,10 +134,11 @@ namespace VfxEditor {
 
         // ======== RECENT ========
 
-        public void DrawRecent() {
-            var ret = ImGui.BeginTabItem( "Recent##Select/" + Id );
+        public void DrawRecent( string parentId ) {
+            var id = $"{parentId}/Recent";
+
+            var ret = ImGui.BeginTabItem( "Recent##Select/" + Name );
             if( !ret ) return;
-            var id = "##Recent/" + Id;
 
             var footerHeight = ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
@@ -155,9 +157,7 @@ namespace VfxEditor {
 
             // Disable button if nothing selected
             if( !IsRecentSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( ImGui.Button( "SELECT" + id ) && IsRecentSelected ) {
-                Invoke( RecentSelected );
-            }
+            if( ImGui.Button( "SELECT" + id ) && IsRecentSelected ) Invoke( RecentSelected );
             if( !IsRecentSelected ) ImGui.PopStyleVar();
 
             ImGui.EndTabItem();
@@ -165,6 +165,6 @@ namespace VfxEditor {
 
         public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
 
-        public virtual void Play( string playPath, string id = "" ) { }
+        public virtual void Play( string playPath, string id ) { }
     }
 }

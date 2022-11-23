@@ -2,29 +2,18 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.TmbSelect {
-    public class TmbEmoteSelect : TmbSelectTab<XivEmoteTmb, XivEmoteTmb> {
+    public class TmbEmoteSelect : SelectTab<XivEmoteTmb, XivEmoteTmb> {
         private ImGuiScene.TextureWrap Icon;
 
-        public TmbEmoteSelect( string parentId, string tabId, TmbSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.EmoteTmb, dialog ) {
-        }
+        public TmbEmoteSelect( string tabId, TmbSelectDialog dialog ) : base( tabId, SheetManager.EmoteTmb, dialog ) { }
 
-        protected override bool CheckMatch( XivEmoteTmb item, string searchInput ) => Matches( item.Name, searchInput );
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
-
-        protected override void DrawSelected( XivEmoteTmb loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-
-            DrawPath( "Tmb Path", loadedItem.TmbFiles, Id, Dialog, SelectResultType.GameEmote, "EMOTE", loadedItem.Name, true );
+            DrawPath( "Tmb Path", Loaded.TmbFiles, parentId, SelectResultType.GameEmote, Loaded.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivEmoteTmb item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivEmoteTmb item ) => item.Name;
     }
 }

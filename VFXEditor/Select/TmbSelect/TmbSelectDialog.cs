@@ -14,23 +14,23 @@ namespace VfxEditor.Select.TmbSelect {
             ) : base( id, "tmb", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new TmbActionSelect( id, "Action", this ),
-                new TmbActionSelect( id, "Non-Player Action", this, nonPlayer:true ),
-                new TmbEmoteSelect( id, "Emote", this ),
-                new TmbNpcSelect( id, "Npc", this ),
-                new TmbCommonSelect( id, "Common", this )
+                new TmbActionSelect( "Action", this ),
+                new TmbActionSelect( "Non-Player Action", this, nonPlayer:true ),
+                new TmbEmoteSelect( "Emote", this ),
+                new TmbNpcSelect( "Npc", this ),
+                new TmbCommonSelect( "Common", this )
             } );
         }
 
-        public override void Play( string playPath, string id = "" ) {
+        public override void Play( string playPath, string parentId ) {
             var reset = Plugin.ActorAnimationManager.CanReset;
 
             ImGui.SameLine();
             if (reset ) {
-                if( ImGui.Button( "Reset##" + id ) ) Plugin.ActorAnimationManager.Reset();
+                if( ImGui.Button( "Reset##" + parentId ) ) Plugin.ActorAnimationManager.Reset();
             }
             else {
-                if( ImGui.Button( "Play##" + id ) ) Plugin.ActorAnimationManager.Apply( playPath );
+                if( ImGui.Button( "Play##" + parentId ) ) Plugin.ActorAnimationManager.Apply( playPath );
             }
         }
 

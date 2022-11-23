@@ -2,32 +2,22 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.TmbSelect {
-    public class TmbActionSelect : TmbSelectTab<XivActionTmb, XivActionTmb> {
+    public class TmbActionSelect : SelectTab<XivActionTmb, XivActionTmb> {
         private ImGuiScene.TextureWrap Icon;
 
-        public TmbActionSelect( string parentId, string tabId, TmbSelectDialog dialog, bool nonPlayer = false ) :
-            base( parentId, tabId, nonPlayer ? SheetManager.NonPlayerActionTmb : SheetManager.ActionTmb, dialog ) {
-        }
+        public TmbActionSelect( string tabId, TmbSelectDialog dialog, bool nonPlayer = false ) : base( tabId, nonPlayer ? SheetManager.NonPlayerActionTmb : SheetManager.ActionTmb, dialog ) { }
 
-        protected override bool CheckMatch( XivActionTmb item, string searchInput ) => Matches( item.Name, searchInput );
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
-
-        protected override void DrawSelected( XivActionTmb loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
 
-            DrawPath( "Start Tmb Path", loadedItem.StartTmb, Id + "Start", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Start", true );
-            DrawPath( "End Tmb Path", loadedItem.EndTmb, Id + "End", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " End", true );
-            DrawPath( "Hit Tmb Path", loadedItem.HitTmb, Id + "Hit", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Hit", true );
-            DrawPath( "Weapon Tmb Path", loadedItem.WeaponTmb, Id + "Weapon", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Name + " Weapon", true );
+            DrawPath( "Start Tmb Path", Loaded.StartTmb, $"{parentId}/Start", SelectResultType.GameAction, $"{Loaded.Name} Start", true );
+            DrawPath( "End Tmb Path", Loaded.EndTmb, $"{parentId}/End", SelectResultType.GameAction, $"{Loaded.Name} End", true );
+            DrawPath( "Hit Tmb Path", Loaded.HitTmb, $"{parentId}/Hit", SelectResultType.GameAction, $"{Loaded.Name} Hit", true );
+            DrawPath( "Weapon Tmb Path", Loaded.WeaponTmb, $"{parentId}/Weapon", SelectResultType.GameAction, $"{Loaded.Name} Weapon", true );
         }
 
-        protected override string UniqueRowTitle( XivActionTmb item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivActionTmb item ) => item.Name;
     }
 }

@@ -2,28 +2,20 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxGimmickSelect : VfxSelectTab<XivGimmick, XivGimmickSelected> {
-        public VfxGimmickSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Gimmicks, dialog ) {
-        }
+    public class VfxGimmickSelect : SelectTab<XivGimmick, XivGimmickSelected> {
+        public VfxGimmickSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Gimmicks, dialog ) { }
 
-        protected override bool CheckMatch( XivGimmick item, string searchInput ) => Matches( item.Name, searchInput );
-
-        protected override void DrawSelected( XivGimmickSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Gimmick.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            if( loadedItem.VfxExists ) {
+        protected override void DrawSelected( string parentId ) {
+            if( Loaded.VfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
-                DisplayPath( loadedItem.TmbPath );
-                Copy( loadedItem.TmbPath, id: Id + "CopyTmb" );
+                DisplayPath( Loaded.TmbPath );
+                Copy( Loaded.TmbPath, id: $"{parentId}/CopyTmb" );
 
-                DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameGimmick, "GIMMICK", loadedItem.Gimmick.Name, spawn: true );
+                DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameGimmick, Loaded.Gimmick.Name, true );
             }
         }
 
-        protected override string UniqueRowTitle( XivGimmick item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivGimmick item ) => item.Name;
     }
 }

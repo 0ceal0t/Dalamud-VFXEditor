@@ -2,38 +2,27 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxActionSelect : VfxSelectTab<XivActionBase, XivActionSelected> {
+    public class VfxActionSelect : SelectTab<XivActionBase, XivActionSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VfxActionSelect( string parentId, string tabId, VfxSelectDialog dialog, bool nonPlayer = false ) :
-            base( parentId, tabId, !nonPlayer ? SheetManager.Actions : SheetManager.NonPlayerActions, dialog ) {
-        }
+        public VfxActionSelect( string tabId, VfxSelectDialog dialog, bool nonPlayer = false ) : base( tabId, !nonPlayer ? SheetManager.Actions : SheetManager.NonPlayerActions, dialog ) { }
 
-        protected override bool CheckMatch( XivActionBase item, string searchInput ) => Matches( item.Name, searchInput );
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
-
-        protected override void DrawSelected( XivActionSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Action.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
+            DrawPath( "Cast VFX Path", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
 
-            DrawPath( "Cast VFX Path", loadedItem.CastVfxPath, Id + "Cast", Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name + " Cast", play: true );
-
-            if( loadedItem.SelfVfxExists ) {
+            if( Loaded.SelfVfxExists ) {
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
-                DisplayPath( loadedItem.SelfTmbPath );
-                Copy( loadedItem.SelfTmbPath, id: Id + "CopyTmb" );
+                DisplayPath( Loaded.SelfTmbPath );
+                Copy( Loaded.SelfTmbPath, $"{parentId}/CopyTmb" );
 
-                DrawPath( "VFX", loadedItem.SelfVfxPaths, Id, Dialog, SelectResultType.GameAction, "ACTION", loadedItem.Action.Name, spawn: true );
+                DrawPath( "VFX", Loaded.SelfVfxPaths, parentId, SelectResultType.GameAction, Loaded.Action.Name, true );
             }
         }
 
-        protected override string UniqueRowTitle( XivActionBase item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivActionBase item ) => item.Name;
     }
 }

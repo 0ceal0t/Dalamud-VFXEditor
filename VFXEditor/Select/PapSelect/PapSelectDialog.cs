@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 
@@ -13,10 +14,10 @@ namespace VfxEditor.Select.PapSelect {
             ) : base( id, "pap", recentList, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new PapActionSelect( id, "Action", this ),
-                new PapActionSelect( id, "Non-Player Action", this, nonPlayer:true ),
-                new PapEmoteSelect( id, "Emote", this ),
-                new PapNpcSelect( id, "Npc", this )
+                new PapActionSelect( "Action", this ),
+                new PapActionSelect( "Non-Player Action", this, nonPlayer:true ),
+                new PapEmoteSelect( "Emote", this ),
+                new PapNpcSelect( "Npc", this )
             } );
         }
 

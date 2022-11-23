@@ -2,33 +2,22 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxHousingSelect : VfxSelectTab<XivHousing, XivHousingSelected> {
+    public class VfxHousingSelect : SelectTab<XivHousing, XivHousingSelected> {
         private ImGuiScene.TextureWrap Icon;
 
-        public VfxHousingSelect( string parentId, string tabId, VfxSelectDialog dialog ) :
-            base( parentId, tabId, SheetManager.Housing, dialog ) {
-        }
+        public VfxHousingSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Housing, dialog ) { }
 
-        protected override void OnSelect() {
-            LoadIcon( Selected.Icon, ref Icon );
-        }
+        protected override void OnSelect() => LoadIcon( Selected.Icon, ref Icon );
 
-        protected override bool CheckMatch( XivHousing item, string searchInput ) => Matches( item.Name, searchInput );
-
-        protected override void DrawSelected( XivHousingSelected loadedItem ) {
-            if( loadedItem == null ) { return; }
-            ImGui.Text( loadedItem.Housing.Name );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
+        protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-
             ImGui.Text( "SGB Path: " );
             ImGui.SameLine();
-            DisplayPath( loadedItem.Housing.SgbPath );
+            DisplayPath( Loaded.Housing.SgbPath );
 
-            DrawPath( "VFX", loadedItem.VfxPaths, Id, Dialog, SelectResultType.GameItem, "HOUSING", loadedItem.Housing.Name, spawn: true );
+            DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Loaded.Housing.Name, true );
         }
 
-        protected override string UniqueRowTitle( XivHousing item ) => $"{item.Name}##{item.RowId}";
+        protected override string GetName( XivHousing item ) => item.Name;
     }
 }
