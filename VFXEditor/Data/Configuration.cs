@@ -35,6 +35,11 @@ namespace VfxEditor {
         public List<SelectResult> RecentSelectsPAP = new();
         public List<SelectResult> RecentSelectsScd = new();
 
+        public List<SelectResult> FavoriteVfx = new();
+        public List<SelectResult> FavoriteTmb = new();
+        public List<SelectResult> FavoritePap = new();
+        public List<SelectResult> FavoriteScd = new();
+
         public bool FilepickerImagePreview = true;
 
         public bool AutosaveEnabled = false;

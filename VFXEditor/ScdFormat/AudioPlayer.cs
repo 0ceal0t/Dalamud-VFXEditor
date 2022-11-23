@@ -5,7 +5,7 @@ using Dalamud.Logging;
 using Dalamud.Interface;
 using ImGuiFileDialog;
 using System.IO;
-using SharpDX.Direct2D1;
+using System.Numerics;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -62,7 +62,7 @@ namespace VfxEditor.ScdFormat {
 
             if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
             var selectedTime = ( float )CurrentTime;
-            ImGui.SameLine();
+            ImGui.SameLine( 30f );
             ImGui.SetNextItemWidth( 150f );
             if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime) ) {
                 if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
@@ -78,43 +78,53 @@ namespace VfxEditor.ScdFormat {
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
                 if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
-                else SaveWaveDialog( id );
+                else SaveWaveDialog();
             }
             ImGui.PopFont();
 
             if( ImGui.BeginPopup( "SavePopup" + id ) ) {
-                if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog( id );
-                if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog( id );
+                if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
+                if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
                 ImGui.EndPopup();
             }
 
             // Import
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog( id );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
             ImGui.PopFont();
 
-            ImGui.Indent();
-            var frequency = Entry.SampleRate;
-            var loopStartSeconds = frequency == 0 ? 0 : Entry.LoopStart / frequency;
-            var loopEndSeconds = frequency == 0 ? 0 : Entry.LoopEnd / frequency;
+            ImGui.Indent( 30f );
+            var loopStartEnd = new Vector2( Convert( Entry.LoopStart ), Convert( Entry.LoopEnd ) );
+            ImGui.SetNextItemWidth( 150f );
+            if( ImGui.InputFloat2( $"Loop{id}", ref loopStartEnd ) ) {
+                Entry.LoopStart = ( int )Math.Clamp( loopStartEnd.X, 0, Convert( Entry.DataLength ) ) * Entry.SampleRate;
+                Entry.LoopEnd = ( int )Math.Clamp( loopStartEnd.Y, 0, Convert( Entry.DataLength ) ) * Entry.SampleRate;
+            }
+
+            var totalTimeSpan = TimeSpan.FromSeconds( Entry.DataLength / Entry.SampleRate ).ToString( "c" );
 
             ImGui.Text( $"Index {idx}" );
             ImGui.SameLine();
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Channels / Loop [{loopStartSeconds}, {loopEndSeconds}] seconds" );
-            ImGui.Unindent();
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch [{totalTimeSpan}]" );
+
+            ImGui.Unindent( 30f );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
-        private void ImportDialog( string id ) {
+        private float Convert( int byteValue ) => Entry.SampleRate == 0 ? 0 : byteValue / Entry.SampleRate;
+
+        private void ImportDialog() {
             var text = IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*";
             FileDialogManager.OpenFileDialog( "Import File", text, ( bool ok, string res ) => {
                 if( ok ) ScdFile.Import( res, Entry );
             } );
         }
 
-        private void SaveWaveDialog( string id ) {
+        private void SaveWaveDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
                 if( ok ) {
                     using var stream = Entry.Data.GetStream();
@@ -123,7 +133,7 @@ namespace VfxEditor.ScdFormat {
             } );
         }
 
-        private void SaveOggDialog( string id ) {
+        private void SaveOggDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;

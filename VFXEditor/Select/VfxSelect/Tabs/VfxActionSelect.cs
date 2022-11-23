@@ -11,14 +11,18 @@ namespace VfxEditor.Select.VfxSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "Cast VFX Path", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
 
             if( Loaded.SelfVfxExists ) {
+                Copy( Loaded.SelfTmbPath, $"{parentId}/CopyTmb" );
+                ImGui.SameLine();
                 ImGui.Text( "TMB Path: " );
                 ImGui.SameLine();
                 DisplayPath( Loaded.SelfTmbPath );
-                Copy( Loaded.SelfTmbPath, $"{parentId}/CopyTmb" );
+            }
 
+            DrawPath( "Cast VFX Path", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
+
+            if( Loaded.SelfVfxExists ) {
                 DrawPath( "VFX", Loaded.SelfVfxPaths, parentId, SelectResultType.GameAction, Loaded.Action.Name, true );
             }
         }

@@ -11,7 +11,7 @@ namespace VfxEditor.Select.TmbSelect {
                 List<SelectResult> recentList,
                 bool showLocal,
                 Action<SelectResult> onSelect
-            ) : base( id, "tmb", recentList, showLocal, onSelect ) {
+            ) : base( id, "tmb", recentList, Plugin.Configuration.FavoriteTmb, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new TmbActionSelect( "Action", this ),

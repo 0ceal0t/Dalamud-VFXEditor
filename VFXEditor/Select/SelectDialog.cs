@@ -1,9 +1,11 @@
+using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Dialogs;
+using VfxEditor.Select;
 
 namespace VfxEditor {
     public enum SelectResultType {
@@ -32,6 +34,12 @@ namespace VfxEditor {
             Path = path;
         }
 
+        public override bool Equals( object obj ) => obj is SelectResult other && Equals( other );
+        public bool Equals( SelectResult p ) => p.Type == Type && p.DisplayString == DisplayString && p.Path == Path;
+        public override int GetHashCode() => ( Type, DisplayString, Path ).GetHashCode();
+        public static bool operator ==( SelectResult lhs, SelectResult rhs ) => lhs.Equals( rhs );
+        public static bool operator !=( SelectResult lhs, SelectResult rhs ) => !( lhs == rhs );
+
         public static SelectResult None() => new() {
             DisplayString = "[NONE]",
             Path = ""
@@ -39,23 +47,44 @@ namespace VfxEditor {
     }
 
     public abstract class SelectDialog : GenericDialog {
-        private readonly string Name;
+        public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
+        public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
+
         private readonly string Extension;
-        private readonly bool ShowLocal;
-        private readonly List<SelectResult> RecentList;
+        public readonly bool ShowLocal;
 
         protected Action<SelectResult> OnSelect;
         protected abstract List<SelectTab> GetTabs();
-        protected SelectResult RecentSelected;
-        protected bool IsRecentSelected = false;
 
-        public SelectDialog( string name, string extension, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( name, startingWidth:800, startingHeight:500 ) {
-            Name = name;
+        private readonly List<SelectResult> Favorites;
+        protected readonly SelectDialogList RecentTab;
+        protected readonly SelectDialogList FavoritesTab;
+
+        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool showLocal, Action<SelectResult> onSelect ) : base( name, startingWidth:800, startingHeight:500 ) {
             Extension = extension;
-            RecentList = recentList;
+            Favorites = favorites;
             ShowLocal = showLocal;
             OnSelect = onSelect;
+
+            RecentTab = new( this, "Recent", recentList );
+            FavoritesTab = new( this, "Favorites", favorites);
         }
+
+        public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
+
+        public bool IsFavorite( SelectResult result ) => Favorites.Contains( result );
+
+        public void AddFavorite( SelectResult result ) {
+            Favorites.Add( result );
+            Plugin.Configuration.Save();
+        }
+
+        public void RemoveFavorite( SelectResult result ) {
+            Favorites.Remove( result );
+            Plugin.Configuration.Save();
+        }
+
+        public virtual void Play( string playPath, string id ) { }
 
         public override void DrawBody() {
             var id = $"##{Name}";
@@ -63,7 +92,8 @@ namespace VfxEditor {
             DrawGame( id );
             DrawGamePath( id );
             if( ShowLocal ) DrawLocal( id );
-            if( RecentList != null ) DrawRecent( id );
+            RecentTab.Draw( id );
+            FavoritesTab.Draw( id );
             ImGui.EndTabBar();
         }
 
@@ -73,9 +103,7 @@ namespace VfxEditor {
         private void DrawLocal( string parentId ) {
             var id = $"{parentId}/Local";
 
-            var ret = ImGui.BeginTabItem( "Local File" + id );
-            if( !ret ) return;
-
+            if( !ImGui.BeginTabItem( "Local File" + id ) ) return;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.Text( "Path" );
@@ -90,7 +118,6 @@ namespace VfxEditor {
             }
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) ) Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPath, LocalPath ) );
-
             ImGui.EndTabItem();
         }
 
@@ -100,8 +127,7 @@ namespace VfxEditor {
             var id = $"{parentId}/Game";
 
             if( GetTabs().Count == 0 ) return;
-            var ret = ImGui.BeginTabItem( "Game Items" + id );
-            if( !ret ) return;
+            if( !ImGui.BeginTabItem( "Game Items" + id ) ) return;
 
             ImGui.BeginTabBar( "Tabs" + id );
             foreach( var tab in GetTabs() ) tab.Draw( id );
@@ -114,9 +140,7 @@ namespace VfxEditor {
         private string GamePath = "";
         public void DrawGamePath( string parentId ) {
             var id = $"{parentId}/Path";
-
-            var ret = ImGui.BeginTabItem( "Game Path" + id );
-            if( !ret ) return;
+            if( !ImGui.BeginTabItem( "Game Path" + id ) ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Text( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
@@ -128,43 +152,25 @@ namespace VfxEditor {
                 var cleanedGamePath = GamePath.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
-
             ImGui.EndTabItem();
         }
 
-        // ======== RECENT ========
+        public void DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTab.GetSelectResult( path, resultType, resultName ) );
 
-        public void DrawRecent( string parentId ) {
-            var id = $"{parentId}/Recent";
+        public void DrawFavorite( SelectResult selectResult ) {
+            var isFavorite = IsFavorite( selectResult );
+            if( isFavorite ) ImGui.PushStyleColor( ImGuiCol.Text, FavoriteColor );
+            ImGui.PushFont( UiBuilder.IconFont );
 
-            var ret = ImGui.BeginTabItem( "Recent##Select/" + Name );
-            if( !ret ) return;
-
-            var footerHeight = ImGui.GetFrameHeightWithSpacing();
-            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
-
-            var idx = 0;
-            foreach( var item in RecentList ) {
-                if( item.Type == SelectResultType.Local && !ShowLocal ) continue;
-
-                if( ImGui.Selectable( item.DisplayString + id + idx, RecentSelected.Equals( item ) ) ) {
-                    IsRecentSelected = true;
-                    RecentSelected = item;
-                }
-                idx++;
+            ImGui.Text( $"{( char )FontAwesomeIcon.Star}" );
+            if( ImGui.IsItemClicked()) {
+                if( isFavorite ) RemoveFavorite( selectResult );
+                else AddFavorite( selectResult );
             }
-            ImGui.EndChild();
-
-            // Disable button if nothing selected
-            if( !IsRecentSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( ImGui.Button( "SELECT" + id ) && IsRecentSelected ) Invoke( RecentSelected );
-            if( !IsRecentSelected ) ImGui.PopStyleVar();
-
-            ImGui.EndTabItem();
+            ImGui.PopFont();
+            if( isFavorite ) ImGui.PopStyleColor();
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 2 );
         }
-
-        public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
-
-        public virtual void Play( string playPath, string id ) { }
     }
 }

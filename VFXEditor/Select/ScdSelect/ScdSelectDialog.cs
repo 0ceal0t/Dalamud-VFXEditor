@@ -11,7 +11,7 @@ namespace VfxEditor.Select.ScdSelect {
                 List<SelectResult> recentList,
                 bool showLocal,
                 Action<SelectResult> onSelect
-            ) : base( id, "scd", recentList, showLocal, onSelect ) {
+            ) : base( id, "scd", recentList, Plugin.Configuration.FavoriteScd, showLocal, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new ScdMountSelect( "Mount", this ),

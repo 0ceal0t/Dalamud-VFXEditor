@@ -7,8 +7,8 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat {
     public class UiNodeGraphView : IAvfxUiBase {
         public AvfxNode Node;
-        private static readonly uint BGColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
-        private static readonly uint BGColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
+        private static readonly uint BgColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
+        private static readonly uint BgColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
         private static readonly uint BorderColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
         private static readonly uint TextColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
         //private static readonly uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );
@@ -55,7 +55,7 @@ namespace VfxEditor.AvfxFormat {
             var CanvasBottomRight = ImGui.GetItemRectMax();
             DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
 
-            DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BGColor );
+            DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BgColor );
             // ========= GRID =========
             for( var i = 0; i < Size.X / GridSmall; i++ ) {
                 DrawList.AddLine( new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasTopLeft.Y ), new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasBottomRight.Y ), GridColor, 1.0f );
@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
                 DrawList.AddLine( new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + i * GridLarge ), new Vector2( CanvasBottomRight.X, CanvasTopLeft.Y + i * GridLarge ), GridColor, 2.0f );
             }
 
-            DrawList.AddRect( CanvasTopLeft, CanvasBottomRight, BGColor2 );
+            DrawList.AddRect( CanvasTopLeft, CanvasBottomRight, BgColor2 );
 
             foreach( var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
                 var buttonPos = Pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
                 var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ));
 
-                DrawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BGColor : 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Share}" );
+                DrawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Share}" );
                 if( buttonOver && UiUtils.MouseClicked() ) {
                     Plugin.AvfxManager.CurrentFile.SelectItem( node ); // navigate to node
                 }

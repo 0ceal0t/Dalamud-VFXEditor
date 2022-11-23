@@ -1,8 +1,10 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -23,6 +25,7 @@ namespace VfxEditor {
                 var skeleton = item.Key;
                 var path = item.Value;
 
+                Dialog.DrawFavorite( path, SelectResultType.GameAction, $"{name} {label} ({skeleton})" );
                 ImGui.Text( $"{label} ({skeleton}): " );
                 ImGui.SameLine();
                 if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
@@ -45,19 +48,25 @@ namespace VfxEditor {
             if( path.Contains( "BGM_Null" ) ) return;
 
             if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
+                Dialog.DrawFavorite( path, resultType, resultName );
                 ImGui.Text( $"{label}: " );
                 ImGui.SameLine();
                 DisplayPath( path );
             }
 
-            if( ImGui.Button( $"SELECT{id}" ) ) {
-                var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
-                PluginLog.Log( id );
-                Dialog.Invoke( new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path ) );
-            }
+            ImGui.Indent( 25f );
+
+            if( ImGui.Button( $"SELECT{id}" ) ) Dialog.Invoke( GetSelectResult( path, resultType, resultName ) );
             ImGui.SameLine();
             Copy( path, id + "Copy" );
-            if( play ) Dialog.Play( path, id: id + "Spawn" );
+            if( play ) Dialog.Play( path, id + "/Spawn" );
+
+            ImGui.Unindent( 25f );
+        }
+
+        public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
+            var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
+            return new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path );
         }
 
         public static bool Matches( string item, string query ) => item.ToLower().Contains( query.ToLower() );
@@ -99,7 +108,10 @@ namespace VfxEditor {
         }
 
         public static void DrawIcon( ImGuiScene.TextureWrap icon ) {
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            }
         }
 
         public static void DrawThankYou() {

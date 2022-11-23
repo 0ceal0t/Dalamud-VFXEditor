@@ -6,7 +6,13 @@ namespace VfxEditor.Select.VfxSelect {
     public class VfxSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public VfxSelectDialog( string id, List<SelectResult> recentList, bool showLocal, Action<SelectResult> onSelect ) : base( id, "avfx", recentList, showLocal, onSelect ) {
+        public VfxSelectDialog(
+            string id,
+            List<SelectResult> recentList,
+            bool showLocal,
+            Action<SelectResult> onSelect
+         ) : base( id, "avfx", recentList, Plugin.Configuration.FavoriteVfx, showLocal, onSelect ) {
+
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new VfxItemSelect( "Item", this ),
                 new VfxStatusSelect( "Status", this ),
