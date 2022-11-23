@@ -27,16 +27,23 @@ namespace VfxEditor.Utils {
                 case "bgcommon":
                     simple.DatFile = "010000";
                     break;
+                case "sound":
+                    simple.DatFile = "070000";
+                    break;
+                case "music":
+                    simple.DatFile = "0c";
+                    if( split[1] == "ffxiv" ) simple.DatFile += "0000";
+                    else {
+                        simple.DatFile += split[1].Replace( "ex", "" ).PadLeft( 2, '0' ); // expansion
+                        simple.DatFile += "00";
+                    }
+                    break;
                 case "bg":
                     simple.DatFile = "02";
-                    if( split[1] == "ffxiv" ) {
-                        simple.DatFile += "0000"; // ok, good to go
-                    }
-                    else { // like ex1      bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
-                        var exNumber = split[1].Replace( "ex", "" ).PadLeft( 2, '0' );
-                        var zoneNumber = split[2].Split( '_' )[0].PadLeft( 2, '0' );
-                        simple.DatFile += exNumber;
-                        simple.DatFile += zoneNumber;
+                    if( split[1] == "ffxiv" )simple.DatFile += "0000";
+                    else { // bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
+                        simple.DatFile += split[1].Replace( "ex", "" ).PadLeft( 2, '0' ); // expansion
+                        simple.DatFile += split[2].Split( '_' )[0].PadLeft( 2, '0' ); // zone
                     }
                     break;
                 default:
