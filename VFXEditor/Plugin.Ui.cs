@@ -78,8 +78,9 @@ namespace VfxEditor {
         }
 
         public static void DrawManagersMenu() {
-            if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
+            ImGui.Separator();
+            if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
             if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();
             if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
             if( ImGui.MenuItem( "Scd##Menu" ) ) ScdManager.Show();

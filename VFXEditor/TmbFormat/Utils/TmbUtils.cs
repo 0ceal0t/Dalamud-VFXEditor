@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.TmbFormat.Entries;
 
 namespace VfxEditor.TmbFormat.Utils {
@@ -52,6 +49,8 @@ namespace VfxEditor.TmbFormat.Utils {
             { C034.MAGIC, new ItemTypeStruct( C034.DISPLAY_NAME, typeof(C034) ) },
             { C088.MAGIC, new ItemTypeStruct( C088.DISPLAY_NAME, typeof(C088) ) },
             { C212.MAGIC, new ItemTypeStruct( C212.DISPLAY_NAME, typeof(C212) ) },
+            { C013.MAGIC, new ItemTypeStruct( C013.DISPLAY_NAME, typeof(C013) ) },
+            { Tmfc.MAGIC, new ItemTypeStruct( Tmfc.DISPLAY_NAME, typeof(Tmfc) ) },
 
             // TODO: C117 and TMFC in chara/action/mon_sp/m0109/mon_sp014.tmb (Exdeath #14)
             // TODO: C021 (Starcall ned)
