@@ -7,25 +7,19 @@ using System.Text;
 namespace VfxEditor.Select.Rows {
     public class XivZoneScdSelected {
         public readonly XivZone Zone;
-        public readonly bool IsSituation;
-        public readonly string Path;
-        public readonly string SituationDay;
-        public readonly string SituationNight;
-        public readonly string SituationBattle;
-        public readonly string SituationDaybreak;
+        public readonly BgmSituationStruct Situation;
+        public readonly Dictionary<string, BgmSituationStruct> Quests = new();
 
         public XivZoneScdSelected( XivZone zone ) {
             Zone = zone;
-            IsSituation = zone.BgmId >= 1000;
-            if( !IsSituation ) {
-                Path = Plugin.DataManager.GetExcelSheet<BGM>().GetRow( zone.BgmId )?.File.ToString();
-            }
-            else {
-                var situation = Plugin.DataManager.GetExcelSheet<BGMSituation>().GetRow( zone.BgmId );
-                SituationDay = situation?.DaytimeID?.Value.File.ToString();
-                SituationNight = situation?.NightID?.Value.File.ToString();
-                SituationBattle = situation?.BattleID?.Value.File.ToString();
-                SituationDaybreak = situation?.DaybreakID?.Value.File.ToString();
+            Situation = XivBgmQuestSelected.GetBgmSituation( zone.BgmId );
+
+            if( zone.BgmId <= 50000 ) return;
+
+            foreach( var bgmSwitch in Plugin.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == zone.BgmId ) ) {
+                var questName = bgmSwitch.Quest.Value?.Name.ToString();
+                var situation = XivBgmQuestSelected.GetBgmSituation( bgmSwitch.BGM );
+                Quests[ string.IsNullOrEmpty(questName) ? "Start" : questName ] = situation;
             }
         }
     }

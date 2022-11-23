@@ -1,11 +1,13 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Select.Rows;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -62,6 +64,16 @@ namespace VfxEditor {
             if( play ) Dialog.Play( path, id + "/Spawn" );
 
             ImGui.Unindent( 25f );
+        }
+
+        public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
+            if( situation.IsSituation ) {
+                DrawPath( "Daytime BGM Path", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
+                DrawPath( "Nighttime BGM Path", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
+                DrawPath( "Battle BGM Path", situation.BattlePath, $"{parentId}/Battle", SelectResultType.GameMusic, $"{name} / Battle" );
+                DrawPath( "Daybreak BGM Path", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
+            }
+            else DrawPath( "BGM Path", situation.Path, parentId, SelectResultType.GameZone, name );
         }
 
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
