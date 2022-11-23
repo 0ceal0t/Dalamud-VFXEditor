@@ -9,12 +9,12 @@ namespace VfxEditor.Select.Sheets {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
-                var i = new XivAction( item );
-                if( i.KeyExists ) {
-                    Items.Add( i );
+                var actionItem = new XivAction( item );
+                if( actionItem.KeyExists ) {
+                    Items.Add( actionItem );
                 }
-                if( i.HitKeyExists ) {
-                    Items.Add( i.HitAction );
+                if( actionItem.HitKeyExists ) {
+                    Items.Add( actionItem.HitAction );
                 }
             }
         }
@@ -25,6 +25,7 @@ namespace VfxEditor.Select.Sheets {
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }
+
             var tmbPath = item.GetTmbPath();
             var result = Plugin.DataManager.FileExists( tmbPath );
             if( result ) {
@@ -37,9 +38,7 @@ namespace VfxEditor.Select.Sheets {
                     return false;
                 }
             }
-            else {
-                PluginLog.Error( tmbPath + " does not exist" );
-            }
+            else PluginLog.Error( tmbPath + " does not exist" );
             return result;
         }
     }

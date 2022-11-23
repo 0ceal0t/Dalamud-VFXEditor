@@ -49,11 +49,19 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Favorites in the select menu
+- [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
+- [ ] Sound icon on timeline
+
+Change loopstart and loopend
+Show total time: datalenght / sampling
+Favorites
+Double click recents
+Nuget readme 
+
 - [ ] Bind point ID research
 - [ ] Better PNG import support
 - [ ] Investigate VFX flags, better structs
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Add pre and post behavior to curve editor
-- [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Update "try on" preview
-- [ ] Sound icon on timelne

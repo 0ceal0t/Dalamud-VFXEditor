@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.Sheets {
-    public class CommonLoader : SheetLoader<XivCommon, XivCommon> {
+    public class CommonLoader : SheetLoader<XivCommon> {
         public override void OnLoad() {
             Items.AddRange( new List<XivCommon>() {
                 new XivCommon( 0, "vfx/action/ab_swd_abl020/eff/abi_swd020c1t.avfx", "Passage of Arms", 2515 ),
@@ -35,11 +35,6 @@ namespace VfxEditor.Select.Sheets {
                 Items.Add( new XivCommon( lineIdx, line, line.Replace( ".avfx", "" ), 0 ) );
                 lineIdx++;
             }
-        }
-
-        public override bool SelectItem( XivCommon item, out XivCommon selectedItem ) {
-            selectedItem = item;
-            return true;
         }
     }
 }

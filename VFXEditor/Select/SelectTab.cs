@@ -9,20 +9,19 @@ using VfxEditor.Utils;
 using VfxEditor.Select.Sheets;
 
 namespace VfxEditor {
-    public abstract class SelectTab<T, S> : SelectTab where T : class where S : class {
+    public abstract class SelectTab<T> : SelectTab where T : class {
         protected abstract void DrawSelected( string parentId );
 
         protected virtual void DrawExtra() { }
         protected virtual void OnSelect() { }
-        protected readonly SheetLoader<T, S> Loader;
+        private readonly SheetLoader<T> Loader;
 
         protected string SearchInput = "";
         protected T Selected = default;
-        protected S Loaded = default;
 
         protected List<T> Searched;
 
-        public SelectTab( string name, SheetLoader<T, S> loader, SelectDialog dialog ) : base( dialog, name ) {
+        public SelectTab( string name, SheetLoader<T> loader, SelectDialog dialog ) : base( dialog, name ) {
             Loader = loader;
         }
 
@@ -73,23 +72,48 @@ namespace VfxEditor {
 
             if( Selected == null ) ImGui.Text( "Select an item..." );
             else {
-                if( Loaded != null ) {
-                    ImGui.BeginChild( id + "-Selected" );
-                    ImGui.Text( GetName( Selected ) );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                    DrawSelected( id );
-                    ImGui.EndChild();
-                }
-                else ImGui.Text( "No data found" );
+                DrawInner( id );
             }
             ImGui.Columns( 1 );
             ImGui.EndTabItem();
         }
 
-        private void Select( T item ) {
-            LoadItemAsync( item );
+        protected virtual void DrawInner( string id ) {
+            ImGui.BeginChild( id + "-Selected" );
+            ImGui.Text( GetName( Selected ) );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawSelected( id );
+            ImGui.EndChild();
+        }
+
+        protected virtual void Select( T item ) {
             Selected = item;
             OnSelect();
+        }
+    }
+
+    public abstract class SelectTab<T,S> : SelectTab<T> where T : class where S : class {
+        protected S Loaded;
+        private readonly SheetLoader<T, S> Loader;
+
+        protected SelectTab( string name, SheetLoader<T, S> loader, SelectDialog dialog ) : base( name, loader, dialog ) {
+            Loader = loader;
+        }
+
+        protected override void Select( T item ) {
+            LoadItemAsync( item );
+            base.Select( item );
+        }
+
+        protected override void DrawInner( string id ) {
+            if( Loaded != null ) {
+                ImGui.BeginChild( id + "-Selected" );
+                ImGui.Text( GetName( Selected ) );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                DrawSelected( id );
+                ImGui.EndChild();
+            }
+            else ImGui.Text( "No data found" );
         }
 
         private async void LoadItemAsync( T item ) {

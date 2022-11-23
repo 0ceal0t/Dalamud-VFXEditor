@@ -2,7 +2,7 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.TmbSelect {
-    public class TmbEmoteSelect : SelectTab<XivEmoteTmb, XivEmoteTmb> {
+    public class TmbEmoteSelect : SelectTab<XivEmoteTmb> {
         private ImGuiScene.TextureWrap Icon;
 
         public TmbEmoteSelect( string tabId, TmbSelectDialog dialog ) : base( tabId, SheetManager.EmoteTmb, dialog ) { }
@@ -11,7 +11,7 @@ namespace VfxEditor.Select.TmbSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "Tmb Path", Loaded.TmbFiles, parentId, SelectResultType.GameEmote, Loaded.Name, true );
+            DrawPath( "Tmb Path", Selected.TmbFiles, parentId, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( XivEmoteTmb item ) => item.Name;
