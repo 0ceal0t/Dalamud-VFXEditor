@@ -95,18 +95,16 @@ namespace VfxEditor.ScdFormat {
             ImGui.PopFont();
 
             ImGui.Indent( 30f );
-            var loopStartEnd = new Vector2( Convert( Entry.LoopStart ), Convert( Entry.LoopEnd ) );
+            var loopStartEnd = new Vector2( ( float )Entry.LoopStart / Entry.DataLength, ( float )Entry.LoopEnd / Entry.DataLength ) * 100f;
             ImGui.SetNextItemWidth( 150f );
-            if( ImGui.InputFloat2( $"Loop{id}", ref loopStartEnd ) ) {
-                Entry.LoopStart = ( int )Math.Clamp( loopStartEnd.X, 0, Convert( Entry.DataLength ) ) * Entry.SampleRate;
-                Entry.LoopEnd = ( int )Math.Clamp( loopStartEnd.Y, 0, Convert( Entry.DataLength ) ) * Entry.SampleRate;
+            if( ImGui.InputFloat2( $"Loop Start/End %{id}", ref loopStartEnd ) ) {
+                Entry.LoopStart = ( int )( Math.Clamp( loopStartEnd.X, 0, 100 ) / 100f * Entry.DataLength );
+                Entry.LoopEnd = ( int )( Math.Clamp( loopStartEnd.Y, 0, 100 ) / 100f * Entry.DataLength );
             }
-
-            var totalTimeSpan = TimeSpan.FromSeconds( Entry.DataLength / Entry.SampleRate ).ToString( "c" );
 
             ImGui.Text( $"Index {idx}" );
             ImGui.SameLine();
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch [{totalTimeSpan}]" );
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / 0x{Entry.DataLength:X8} bytes" );
 
             ImGui.Unindent( 30f );
 
@@ -114,8 +112,6 @@ namespace VfxEditor.ScdFormat {
         }
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
-
-        private float Convert( int byteValue ) => Entry.SampleRate == 0 ? 0 : byteValue / Entry.SampleRate;
 
         private void ImportDialog() {
             var text = IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*";
