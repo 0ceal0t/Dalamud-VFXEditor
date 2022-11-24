@@ -23,6 +23,7 @@ namespace VfxEditor.Select.Sheets {
 
         public override bool SelectItem( XivGimmick item, out XivGimmickSelected selectedItem ) {
             selectedItem = null;
+
             var tmbPath = item.TmbPath;
             var result = Plugin.DataManager.FileExists( tmbPath );
             if( result ) {

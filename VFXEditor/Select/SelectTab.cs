@@ -117,6 +117,7 @@ namespace VfxEditor {
         }
 
         private async void LoadItemAsync( T item ) {
+            Loaded = null;
             await Task.Run( () => {
                 Loader.SelectItem( item, out Loaded );
             } );
