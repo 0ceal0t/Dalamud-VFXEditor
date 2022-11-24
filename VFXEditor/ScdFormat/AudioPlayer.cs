@@ -11,6 +11,7 @@ namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
         private readonly ScdSoundEntry Entry;
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;
+        private PlaybackState PrevState = PlaybackState.Stopped;
 
         private WaveStream CurrentStream;
         private WaveChannel32 CurrentChannel;
@@ -27,29 +28,7 @@ namespace VfxEditor.ScdFormat {
             // Controls
             ImGui.PushFont( UiBuilder.IconFont );
             if( State == PlaybackState.Stopped ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) {
-                    Reset();
-                    try {
-                        var stream = Entry.Data.GetStream();
-                        CurrentStream = stream.WaveFormat.Encoding switch {
-                            WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                            WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                            _ => stream
-                        };
-
-                        CurrentChannel = new WaveChannel32( CurrentStream ) {
-                            Volume = 1f,
-                            PadWithZeroes = false,
-                        };
-                        CurrentOutput = new WasapiOut();
-
-                        CurrentOutput.Init( CurrentChannel );
-                        CurrentOutput.Play();
-                    }
-                    catch( Exception e ) {
-                        PluginLog.LogError( e, "Error playing sound" );
-                    }
-                }
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
             }
             else if( State == PlaybackState.Playing ) {
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
@@ -109,6 +88,39 @@ namespace VfxEditor.ScdFormat {
             ImGui.Unindent( 30f );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            var currentState = State;
+            if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
+                ( ( Entry.Format == SscfWaveFormat.Vorbis && Plugin.Configuration.LoopMusic ) ||
+                  ( Entry.Format != SscfWaveFormat.Vorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
+                PluginLog.Log( "Looping..." );
+                Play();
+            }
+            PrevState = currentState;
+        }
+
+        private void Play() {
+            Reset();
+            try {
+                var stream = Entry.Data.GetStream();
+                CurrentStream = stream.WaveFormat.Encoding switch {
+                    WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+                    WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+                    _ => stream
+                };
+
+                CurrentChannel = new WaveChannel32( CurrentStream ) {
+                    Volume = 1f,
+                    PadWithZeroes = false,
+                };
+                CurrentOutput = new WasapiOut();
+
+                CurrentOutput.Init( CurrentChannel );
+                CurrentOutput.Play();
+            }
+            catch( Exception e ) {
+                PluginLog.LogError( e, "Error playing sound" );
+            }
         }
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;

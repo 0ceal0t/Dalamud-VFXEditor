@@ -65,6 +65,9 @@ namespace VfxEditor {
         public int MaxUndoSize = 10;
         public bool DoubleClickNavigate = true;
 
+        public bool LoopMusic = true;
+        public bool LoopSoundEffects = false;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 

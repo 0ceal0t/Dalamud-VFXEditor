@@ -53,6 +53,9 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawSounds( string id ) {
+            if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
+            ImGui.Separator();
             ImGui.BeginChild( $"{id}-Child" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             for( var idx = 0; idx < Music.Count; idx++ ) {
