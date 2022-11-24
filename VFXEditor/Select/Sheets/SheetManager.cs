@@ -36,6 +36,7 @@ namespace VfxEditor.Select {
         public static ZoneScdSheetLoader ZoneScd { get; private set; }
         public static BgmSheetLoader Bgm { get; private set; }
         public static BgmQuestSheetLoader BgmQuest { get; private set; }
+        public static InstanceContentSheetLoader Content { get; private set; }
 
         // Contains vfx, tmb, and paps
         public static NpcSheetLoader Npcs { get; private set; }
@@ -103,32 +104,33 @@ namespace VfxEditor.Select {
             MiscVfxPath = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
             MiscTmbPath = Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
 
-            Items = new ItemSheetLoader();
-            Actions = new ActionSheetLoader();
-            NonPlayerActions = new NonPlayerActionSheetLoader();
-            Cutscenes = new CutsceneSheetLoader();
-            Emotes = new EmoteSheetLoader();
-            Gimmicks = new GimmickSheetLoader();
-            Npcs = new NpcSheetLoader();
-            Statuses = new StatusSheetLoader();
-            Zones = new ZoneSheetLoader();
-            Mounts = new MountSheeetLoader();
-            Housing = new HousingSheetLoader();
-            Common = new CommonLoader();
+            Items = new();
+            Actions = new();
+            NonPlayerActions = new();
+            Cutscenes = new();
+            Emotes = new();
+            Gimmicks = new();
+            Npcs = new();
+            Statuses = new();
+            Zones = new();
+            Mounts = new();
+            Housing = new();
+            Common = new();
 
-            ActionTmb = new ActionTmbSheetLoader();
-            NonPlayerActionTmb = new NonPlayerActionTmbSheetLoader();
-            EmoteTmb = new EmoteTmbSheetLoader();
-            MiscTmb = new CommonTmbLoader();
+            ActionTmb = new();
+            NonPlayerActionTmb = new();
+            EmoteTmb = new();
+            MiscTmb = new();
 
-            ActionPap = new ActionPapSheetLoader();
-            NonPlayerActionPap = new NonPlayerActionPapSheetLoader();
-            EmotePap = new EmotePapSheetLoader();
+            ActionPap = new();
+            NonPlayerActionPap = new();
+            EmotePap = new();
 
-            Orchestrions = new OrchestrionSheeetLoader();
-            ZoneScd = new ZoneScdSheetLoader();
-            Bgm = new BgmSheetLoader();
-            BgmQuest = new BgmQuestSheetLoader();
+            Orchestrions = new();
+            ZoneScd = new();
+            Bgm = new();
+            BgmQuest = new();
+            Content = new();
         }
 
         public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );

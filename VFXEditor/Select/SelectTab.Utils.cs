@@ -132,7 +132,7 @@ namespace VfxEditor {
             if( ImGui.SmallButton( "Github##Anamnesis" ) ) UiUtils.OpenUrl( "https://github.com/imchillin/Anamnesis" );
         }
 
-        protected static void LoadIcon( ushort iconId, ref ImGuiScene.TextureWrap texWrap ) {
+        protected static void LoadIcon( uint iconId, ref ImGuiScene.TextureWrap texWrap ) {
             texWrap?.Dispose();
             texWrap = null;
             if( iconId > 0 ) {

@@ -18,7 +18,8 @@ namespace VfxEditor.Select.ScdSelect {
                 new ScdOrchestrionSelect( "Orchestrion", this ),
                 new ScdZoneSelect( "Zone", this ),
                 new ScdBgmSelect( "BGM", this ),
-                new ScdBgmQuestSelect( "Quest BGM", this )
+                new ScdBgmQuestSelect( "Quest BGM", this ),
+                new ScdContentSelect( "Instance", this )
             } );
         }
 
