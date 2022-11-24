@@ -1,37 +1,30 @@
+using Lumina.Excel.GeneratedSheets;
+using Lumina.Text;
 using System.Text;
 
 namespace VfxEditor.Select.Rows {
     public class XivAction : XivActionBase {
-        public XivAction( Lumina.Excel.GeneratedSheets.Action action, bool justSelf = false ) {
+        public XivAction( Action action, bool justSelf = false ) {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            SelfKey = action.AnimationEnd?.Value?.Key.ToString();
-            SelfKeyExists = !string.IsNullOrEmpty( SelfKey );
+            SelfTmbKey = action.AnimationEnd?.Value?.Key.ToString();
+            if( justSelf ) return;
 
-            if( !justSelf ) {
-                Castvfx = action.VFX?.Value?.VFX.Value?.Location;
-                CastKeyExists = !string.IsNullOrEmpty( Castvfx );
+            CastVfxKey = action.VFX?.Value?.VFX.Value?.Location;
 
-                //startVfx = action.AnimationStart.Value?.VFX.Value?.Location;
-
-                // split this off into its own item
-                HitKey = action.ActionTimelineHit?.Value?.Key.ToString();
-                HitKeyExists = !string.IsNullOrEmpty( HitKey );
-                if( HitKeyExists ) {
-                    var sAction = new Lumina.Excel.GeneratedSheets.Action {
-                        Icon = action.Icon,
-                        Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
-                        IsPlayerAction = action.IsPlayerAction,
-                        RowId = action.RowId,
-                        AnimationEnd = action.ActionTimelineHit
-                    };
-                    HitAction = new XivAction( sAction, justSelf: true );
-                }
-            }
-
-            KeyExists = ( CastKeyExists || SelfKeyExists );
+            // split this off into its own item
+            var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
+            if( string.IsNullOrEmpty( hitKey ) ) return;
+            var hitAction = new Action {
+                Icon = action.Icon,
+                Name = new SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
+                IsPlayerAction = action.IsPlayerAction,
+                RowId = action.RowId,
+                AnimationEnd = action.ActionTimelineHit
+            };
+            HitAction = new XivAction( hitAction, justSelf: true );
         }
     }
 }

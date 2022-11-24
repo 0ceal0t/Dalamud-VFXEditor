@@ -5,31 +5,23 @@ using System.Text.RegularExpressions;
 namespace VfxEditor.Select.Rows {
     public class XivActionSelected {
         public XivActionBase Action;
-        public bool CastVfxExists = false;
         public string CastVfxPath;
-
-        public bool SelfVfxExists = false;
         public string SelfTmbPath;
         public List<string> SelfVfxPaths = new();
 
-        public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static readonly Regex Rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public XivActionSelected( Lumina.Data.FileResource file, XivActionBase action ) {
             Action = action;
-            CastVfxExists = action.CastKeyExists;
-            CastVfxPath = action.GetCastVFXPath();
+            CastVfxPath = action.CastVfxPath;
 
-            if( file != null ) {
-                var data = file.Data;
-                SelfVfxExists = true;
-                SelfTmbPath = file.FilePath.Path;
+            if( file == null ) return;
+            var data = file.Data;
+            SelfTmbPath = file.FilePath.Path;
 
-                var stringData = Encoding.UTF8.GetString( data );
-                var matches = rx.Matches( stringData );
-                foreach( Match m in matches ) {
-                    SelfVfxPaths.Add( m.Value.Trim( '\u0000' ) );
-                }
-            }
+            var stringData = Encoding.UTF8.GetString( data );
+            var matches = Rx.Matches( stringData );
+            foreach( Match m in matches ) SelfVfxPaths.Add( m.Value.Trim( '\u0000' ) );
         }
     }
 }

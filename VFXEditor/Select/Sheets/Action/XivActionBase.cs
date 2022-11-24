@@ -1,29 +1,16 @@
 namespace VfxEditor.Select.Rows {
     public abstract class XivActionBase {
+        public static readonly string CastPrefix = "vfx/common/eff/";
+
         public string Name;
         public int RowId;
         public ushort Icon;
-
-        public bool CastKeyExists = false;
-        public bool SelfKeyExists = false;
-        public bool HitKeyExists = false;
-        public bool KeyExists = false;
-
         public XivActionBase HitAction = null;
+        public string CastVfxKey;
+        public string SelfTmbKey;
 
-        public string Castvfx;
-        public string SelfKey;
-        public string HitKey;
-
-        public static readonly string castPrefix = "vfx/common/eff/";
-
-        public string GetCastVFXPath() {
-            if( !CastKeyExists ) return "";
-            return castPrefix + Castvfx + ".avfx";
-        }
-
-        public string GetTmbPath() {
-            return "chara/action/" + SelfKey + ".tmb";
-        }
+        public string CastVfxPath => string.IsNullOrEmpty( CastVfxKey ) ? "" : $"{CastPrefix}{CastVfxKey}.avfx";
+        public bool HasVfx => !string.IsNullOrEmpty( CastVfxKey ) || !string.IsNullOrEmpty( SelfTmbKey );
+        public string TmbPath => $"chara/action/{SelfTmbKey}.tmb";
     }
 }

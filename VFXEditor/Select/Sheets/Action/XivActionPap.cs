@@ -45,12 +45,8 @@ namespace VfxEditor.Select.Rows {
                 var weapon = split[1];
                 return $"{weapon}/{key}.pap";
             }
-            else if( loadType == 1 ) {
-                return $"bt_common/{key}.pap";
-            }
-            else if( loadType == 0 ) {
-                return $"bt_common/resident/action.pap";
-            }
+            else if( loadType == 1 ) return $"bt_common/{key}.pap";
+            else if( loadType == 0 ) return $"bt_common/resident/action.pap";
             return "";
         }
     }

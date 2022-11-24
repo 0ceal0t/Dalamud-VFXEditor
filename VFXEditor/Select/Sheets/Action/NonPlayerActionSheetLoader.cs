@@ -9,12 +9,8 @@ namespace VfxEditor.Select.Sheets {
             foreach( var item in sheet ) {
                 var action = new XivActionNonPlayer( item );
                 if( !action.IsPlaceholder ) {
-                    if( action.HitKeyExists ) {
-                        Items.Add( ( XivActionNonPlayer )action.HitAction );
-                    }
-                    if( action.KeyExists ) {
-                        Items.Add( action );
-                    }
+                    if( action.HasVfx ) Items.Add( action );
+                    if( action.HitAction != null ) Items.Add( ( XivActionNonPlayer )action.HitAction );
                 }
             }
         }

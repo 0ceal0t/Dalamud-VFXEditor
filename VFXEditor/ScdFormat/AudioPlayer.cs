@@ -6,6 +6,7 @@ using Dalamud.Interface;
 using ImGuiFileDialog;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -60,6 +61,7 @@ namespace VfxEditor.ScdFormat {
                 else SaveWaveDialog();
             }
             ImGui.PopFont();
+            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
 
             if( ImGui.BeginPopup( "SavePopup" + id ) ) {
                 if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
@@ -72,6 +74,7 @@ namespace VfxEditor.ScdFormat {
             ImGui.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
             ImGui.PopFont();
+            UiUtils.Tooltip( "Replace sound file" );
 
             ImGui.Indent( 30f );
             var loopStartEnd = new Vector2( ( float )Entry.LoopStart / Entry.DataLength, ( float )Entry.LoopEnd / Entry.DataLength ) * 100f;

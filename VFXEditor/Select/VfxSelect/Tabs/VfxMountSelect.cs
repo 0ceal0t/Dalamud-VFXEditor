@@ -11,11 +11,7 @@ namespace VfxEditor.Select.VfxSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-
             ImGui.Text( "Variant: " + Loaded.Mount.Variant );
-            ImGui.Text( "IMC Count: " + Loaded.Count );
-            ImGui.Text( "VFX Id: " + Loaded.VfxId );
-
             ImGui.Text( "IMC Path: " );
             ImGui.SameLine();
             DisplayPath( Loaded.ImcPath );

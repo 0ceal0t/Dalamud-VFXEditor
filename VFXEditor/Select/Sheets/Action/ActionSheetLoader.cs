@@ -10,23 +10,19 @@ namespace VfxEditor.Select.Sheets {
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
                 var actionItem = new XivAction( item );
-                if( actionItem.KeyExists ) {
-                    Items.Add( actionItem );
-                }
-                if( actionItem.HitKeyExists ) {
-                    Items.Add( actionItem.HitAction );
-                }
+                if( actionItem.HasVfx ) Items.Add( actionItem );
+                if( actionItem.HitAction != null )  Items.Add( actionItem.HitAction );
             }
         }
 
         public override bool SelectItem( XivActionBase item, out XivActionSelected selectedItem ) {
             selectedItem = null;
-            if( !item.SelfKeyExists ) { // no need to get the file
+            if( string.IsNullOrEmpty( item.SelfTmbKey) ) { // no need to get the file
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }
 
-            var tmbPath = item.GetTmbPath();
+            var tmbPath = item.TmbPath;
             var result = Plugin.DataManager.FileExists( tmbPath );
             if( result ) {
                 try {

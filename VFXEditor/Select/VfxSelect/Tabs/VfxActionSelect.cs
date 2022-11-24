@@ -12,7 +12,7 @@ namespace VfxEditor.Select.VfxSelect {
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
 
-            if( Loaded.SelfVfxExists ) {
+            if( !string.IsNullOrEmpty( Loaded.SelfTmbPath ) ) {
                 Copy( Loaded.SelfTmbPath, $"{parentId}/CopyTmb" );
                 ImGui.SameLine();
                 ImGui.Text( "TMB Path: " );
@@ -22,7 +22,7 @@ namespace VfxEditor.Select.VfxSelect {
 
             DrawPath( "Cast VFX Path", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
 
-            if( Loaded.SelfVfxExists ) {
+            if( !string.IsNullOrEmpty( Loaded.SelfTmbPath ) ) {
                 DrawPath( "VFX", Loaded.SelfVfxPaths, parentId, SelectResultType.GameAction, Loaded.Action.Name, true );
             }
         }

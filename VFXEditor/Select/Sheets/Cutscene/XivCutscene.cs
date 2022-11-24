@@ -6,10 +6,10 @@ namespace VfxEditor.Select.Rows {
 
         public XivCutscene( Lumina.Excel.GeneratedSheets.Cutscene cutscene ) {
             RowId = ( int )cutscene.RowId;
-            var _path = cutscene.Path.ToString();
-            var splitPath = _path.Split( '/' );
-            Name = splitPath[0] + "/" + splitPath[^1]; // ffxiv/anvwil/anvwil00500/anvwil00500 -> ffxiv/anvwil00500
-            Path = "cut/" + _path + ".cutb";
+            var path = cutscene.Path.ToString();
+            var splitPath = path.Split( '/' );
+            Name = $"{splitPath[0]}/{splitPath[^1]}"; // ffxiv/anvwil/anvwil00500/anvwil00500 -> ffxiv/anvwil00500
+            Path = $"cut/{path}.cutb";
         }
     }
 }

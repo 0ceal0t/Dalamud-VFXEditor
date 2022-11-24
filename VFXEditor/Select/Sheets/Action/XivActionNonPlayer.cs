@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace VfxEditor.Select.Rows {
     public class XivActionNonPlayer : XivActionBase {
@@ -12,64 +11,31 @@ namespace VfxEditor.Select.Rows {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            if( forceSelfKey == "" ) {
-                SelfKey = action.AnimationEnd?.Value?.Key.ToString();
-                SelfKeyExists = !string.IsNullOrEmpty( SelfKey );
-                if( SelfKeyExists ) {
-                    var selfMKey = new MonsterKey( SelfKey );
-                    if( selfMKey.isMonster && selfMKey.skeletonKey == "[SKL_ID]" ) {
-                        IsPlaceholder = true;
-                        return;
-                    }
+            if( string.IsNullOrEmpty( forceSelfKey ) ) {
+                SelfTmbKey = action.AnimationEnd?.Value?.Key.ToString();
+                if( string.IsNullOrEmpty( SelfTmbKey ) || SelfTmbKey.Contains( "[SKL_ID]" ) ) {
+                    SelfTmbKey = string.Empty;
+                    return;
                 }
             }
-            else { // Manually specified key
-                SelfKeyExists = true;
-                SelfKey = forceSelfKey;
-            }
+            else SelfTmbKey = forceSelfKey; // Manually specified key
 
-            if( !justSelf ) { // Just loading hit
-                Castvfx = action.VFX?.Value?.VFX.Value?.Location;
-                CastKeyExists = !string.IsNullOrEmpty( Castvfx );
+            if( justSelf ) return;
 
-                // split this off into its own item
-                HitKey = action.ActionTimelineHit?.Value?.Key.ToString();
-                HitKeyExists = !string.IsNullOrEmpty( HitKey ) && !HitKey.Contains( "normal_hit" );
-                if( HitKeyExists ) {
-                    var sAction = new Lumina.Excel.GeneratedSheets.Action {
-                        Icon = action.Icon,
-                        Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
-                        IsPlayerAction = action.IsPlayerAction,
-                        RowId = action.RowId,
-                        AnimationEnd = action.ActionTimelineHit
-                    };
-                    HitAction = new XivActionNonPlayer( sAction, justSelf: true );
-                }
-            }
+            CastVfxKey = action.VFX?.Value?.VFX.Value?.Location;
 
-            KeyExists = !IsPlaceholder && ( CastKeyExists || SelfKeyExists );
-        }
-    }
-
-    public struct MonsterKey {
-        public static readonly Regex rx = new( @"mon_sp\/(.*?)\/(.*)", RegexOptions.Compiled );
-
-        public bool isMonster;
-        public string skeletonKey;
-        public string actionId;
-
-        public MonsterKey( string key ) {
-            var match = rx.Match( key );
-            if( match.Success ) {
-                isMonster = true;
-                skeletonKey = match.Groups[1].Value;
-                actionId = match.Groups[2].Value;
-            }
-            else {
-                isMonster = false;
-                skeletonKey = "";
-                actionId = "";
-            }
+            // split this off into its own item
+            var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
+            if( hitKey.Contains( "normal_hit" ) ) hitKey = string.Empty;
+            if( string.IsNullOrEmpty( hitKey ) ) return;
+            var hitAction = new Lumina.Excel.GeneratedSheets.Action {
+                Icon = action.Icon,
+                Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
+                IsPlayerAction = action.IsPlayerAction,
+                RowId = action.RowId,
+                AnimationEnd = action.ActionTimelineHit
+            };
+            HitAction = new XivActionNonPlayer( hitAction, justSelf: true );
         }
     }
 }

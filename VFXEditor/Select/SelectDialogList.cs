@@ -34,8 +34,12 @@ namespace VfxEditor {
                 if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ) ) ) {
                     IsSelected = true;
                     Selected = item;
+                    break;
                 }
-                if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) Dialog.Invoke( Selected );
+                if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) {
+                    Dialog.Invoke( Selected );
+                    break;
+                }
                 idx++;
             }
             ImGui.EndChild();
