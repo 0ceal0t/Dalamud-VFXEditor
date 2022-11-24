@@ -49,9 +49,7 @@ namespace VfxEditor.Dialogs {
 
         private void DrawCategoryContainer( ResourceCategory category, ResourceGraph.CategoryContainer container ) {
             var map = container.MainMap;
-            if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}###{( uint )category}Debug" ) ) {
-                return;
-            }
+            if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}###{( uint )category}Debug" ) ) return;
 
             var node = map->SmallestValue;
             while( !node->IsNil ) {
@@ -86,9 +84,7 @@ namespace VfxEditor.Dialogs {
 
             if( itemList.Count == 0 && !string.IsNullOrEmpty( Search ) ) return; // all filtered out
 
-            if( !ImGui.TreeNodeEx( label ) ) {
-                return;
-            }
+            if( !ImGui.TreeNodeEx( label ) ) return;
 
             if( itemList.Count == 0 || !ImGui.BeginTable( $"##{label}_table", 4, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.RowBg ) ) {
                 ImGui.TreePop();
@@ -110,9 +106,7 @@ namespace VfxEditor.Dialogs {
                 ImGui.TableNextColumn();
                 var address = $"0x{item.Address:X}";
                 ImGui.Text( address );
-                if( ImGui.IsItemClicked() ) {
-                    ImGui.SetClipboardText( address );
-                }
+                if( ImGui.IsItemClicked() ) ImGui.SetClipboardText( address );
 
                 ImGui.TableNextColumn();
                 ImGui.Text( item.Path );

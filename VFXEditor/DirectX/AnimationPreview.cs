@@ -40,7 +40,6 @@ namespace VfxEditor.DirectX {
             if( boneMesh.Positions.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();
-
                 return;
             }
 

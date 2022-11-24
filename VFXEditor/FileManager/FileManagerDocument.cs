@@ -7,8 +7,6 @@ using VfxEditor.Utils;
 using VfxEditor.TexTools;
 using Dalamud.Logging;
 using System;
-using VfxEditor.AvfxFormat;
-using Lumina;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {

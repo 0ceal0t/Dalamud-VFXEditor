@@ -161,9 +161,7 @@ namespace VfxEditor {
 
         private static async void SaveWorkspace() {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
-            else {
-                await Task.Run( ExportWorkspace );
-            }
+            else await Task.Run( ExportWorkspace );
         }
 
         private static void SaveAsWorkspace() {

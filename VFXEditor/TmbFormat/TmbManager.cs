@@ -39,7 +39,6 @@ namespace VfxEditor.TmbFormat {
 
         protected override void DrawMenu() {
             if( CurrentFile == null ) return;
-
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
                 CopyManager.Tmb.Draw();
                 CommandManager.Tmb.Draw();

@@ -143,9 +143,7 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
-            foreach( var document in Documents ) {
-                document.Dispose();
-            }
+            foreach( var document in Documents ) document.Dispose();
             Documents.Clear();
             ActiveDocument = null;
         }
