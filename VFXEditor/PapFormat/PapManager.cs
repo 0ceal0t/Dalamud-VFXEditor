@@ -4,27 +4,15 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.PapSelect;
 
 namespace VfxEditor.PapFormat {
-    public partial class PapManager : FileManager<PapDocument, WorkspaceMetaPap, PapFile> {
+    public partial class PapManager : FileManagerWindow<PapDocument, WorkspaceMetaPap, PapFile> {
         public static PapSelectDialog SourceSelect { get; private set; }
         public static PapSelectDialog ReplaceSelect { get; private set; }
         public static PapSelectIndexDialog IndexDialog { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
-            SourceSelect = new PapSelectDialog(
-                "Pap Select [ORIGINAL]",
-                Plugin.Configuration.RecentSelectsPAP,
-                true,
-                SetSourceGlobal
-            );
-
-            ReplaceSelect = new PapSelectDialog(
-                "Pap Select [MODIFIED]",
-                Plugin.Configuration.RecentSelectsPAP,
-                false,
-                SetReplaceGlobal
-            );
-
+            SourceSelect = new PapSelectDialog( "Pap Select [ORIGINAL]", Plugin.Configuration.RecentSelectsPAP, true, SetSourceGlobal );
+            ReplaceSelect = new PapSelectDialog( "Pap Select [MODIFIED]", Plugin.Configuration.RecentSelectsPAP, false, SetReplaceGlobal );
             IndexDialog = new PapSelectIndexDialog();
         }
 

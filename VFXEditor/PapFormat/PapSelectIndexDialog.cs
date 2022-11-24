@@ -8,9 +8,7 @@ namespace VfxEditor.PapFormat {
         public Action<int> OnOk;
         public int Index;
 
-        public PapSelectIndexDialog() : base( "Select Index" ) {
-            Size = new Vector2( 400, 100 );
-        }
+        public PapSelectIndexDialog() : base( "Select Index", false, 400, 100 ) { }
 
         public override void DrawBody() {
             ImGui.SetNextItemWidth( 100f );

@@ -11,7 +11,7 @@ namespace VfxEditor.Dialogs {
 
         public bool IsVisible => Visible;
 
-        public GenericDialog( string name, bool menuBar = false, int startingWidth = 600, int startingHeight = 400 ) {
+        public GenericDialog( string name, bool menuBar, int startingWidth, int startingHeight ) {
             Name = name;
             MenuBar = menuBar;
             Size = new( startingWidth, startingHeight );
@@ -23,9 +23,7 @@ namespace VfxEditor.Dialogs {
 
         public void Toggle() => SetVisible( !Visible );
 
-        public void SetVisible( bool visible ) {
-            Visible = visible;
-        }
+        public void SetVisible( bool visible ) { Visible = visible; }
 
         public void Draw() {
             if( !Visible ) return;

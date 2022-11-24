@@ -6,8 +6,7 @@ namespace VfxEditor.Dialogs {
         private readonly ToolsDialogResourceTab ResourceTab;
         private readonly ToolsDialogUtilitiesTab UtilitiesTab;
 
-        public ToolsDialog() : base( "Tools" ) {
-            Size = new Vector2( 300, 400 );
+        public ToolsDialog() : base( "Tools", false, 300, 400 ) {
             ResourceTab = new ToolsDialogResourceTab();
             UtilitiesTab = new ToolsDialogUtilitiesTab();
         }

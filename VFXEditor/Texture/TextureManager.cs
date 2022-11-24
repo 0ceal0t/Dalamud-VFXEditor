@@ -72,8 +72,7 @@ namespace VfxEditor.Texture {
             PluginLog.Log( $"NVTT Library loaded: { TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
 
-        public TextureManager() : base( "Imported Textures" ) {
-        }
+        public TextureManager() : base( "Imported Textures", false, 600, 400 ) { }
 
         public bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = PathToTextureReplace.TryGetValue( gamePath, out var textureReplace ) ? textureReplace.LocalPath : null;

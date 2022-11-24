@@ -5,7 +5,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdManager : FileManager<ScdDocument, WorkspaceMetaScd, ScdFile> {
+    public class ScdManager : FileManagerWindow<ScdDocument, WorkspaceMetaScd, ScdFile> {
         public static ScdSelectDialog SourceSelect { get; private set; }
         public static ScdSelectDialog ReplaceSelect { get; private set; }
 
@@ -13,19 +13,8 @@ namespace VfxEditor.ScdFormat {
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.ogg" ).Replace( '\\', '/' );
 
         public static void Setup() {
-            SourceSelect = new ScdSelectDialog(
-               "Scd Select [ORIGINAL]",
-               Plugin.Configuration.RecentSelectsScd,
-               true,
-               SetSourceGlobal
-            );
-
-            ReplaceSelect = new ScdSelectDialog(
-               "Scd Select [MODIFIED]",
-               Plugin.Configuration.RecentSelectsScd,
-               false,
-               SetReplaceGlobal
-            );
+            SourceSelect = new ScdSelectDialog( "Scd Select [ORIGINAL]", Plugin.Configuration.RecentSelectsScd, true, SetSourceGlobal );
+            ReplaceSelect = new ScdSelectDialog( "Scd Select [MODIFIED]", Plugin.Configuration.RecentSelectsScd, false, SetReplaceGlobal );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {

@@ -8,20 +8,20 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class ExportDialog : GenericDialog {
-        private readonly AvfxFile VFXFile;
+        private readonly AvfxFile VfxFile;
         private readonly List<ExportDialogCategory> Categories;
         private bool ExportDependencies = true;
 
-        public ExportDialog( AvfxFile main ) : base("Export") {
-            VFXFile = main;
+        public ExportDialog( AvfxFile vfxFile ) : base( "Export", false, 600, 400 ) {
+            VfxFile = vfxFile;
             Categories = new List<ExportDialogCategory> {
-                new ExportDialogCategory<AvfxTimeline>( main.NodeGroupSet.Timelines, "Timelines" ),
-                new ExportDialogCategory<AvfxEmitter>( main.NodeGroupSet.Emitters, "Emitters" ),
-                new ExportDialogCategory<AvfxParticle>( main.NodeGroupSet.Particles, "Particles" ),
-                new ExportDialogCategory<AvfxEffector>( main.NodeGroupSet.Effectors, "Effectors" ),
-                new ExportDialogCategory<AvfxBinder>( main.NodeGroupSet.Binders, "Binders" ),
-                new ExportDialogCategory<AvfxTexture>( main.NodeGroupSet.Textures, "Textures" ),
-                new ExportDialogCategory<AvfxModel>( main.NodeGroupSet.Models, "Models" )
+                new ExportDialogCategory<AvfxTimeline>( vfxFile.NodeGroupSet.Timelines, "Timelines" ),
+                new ExportDialogCategory<AvfxEmitter>( vfxFile.NodeGroupSet.Emitters, "Emitters" ),
+                new ExportDialogCategory<AvfxParticle>( vfxFile.NodeGroupSet.Particles, "Particles" ),
+                new ExportDialogCategory<AvfxEffector>( vfxFile.NodeGroupSet.Effectors, "Effectors" ),
+                new ExportDialogCategory<AvfxBinder>( vfxFile.NodeGroupSet.Binders, "Binders" ),
+                new ExportDialogCategory<AvfxTexture>( vfxFile.NodeGroupSet.Textures, "Textures" ),
+                new ExportDialogCategory<AvfxModel>( vfxFile.NodeGroupSet.Models, "Models" )
             };
         }
 
@@ -71,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
         public void SaveDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
-                VFXFile.Export( GetSelected(), res, ExportDependencies );
+                VfxFile.Export( GetSelected(), res, ExportDependencies );
                 Visible = false;
             } );
         }
@@ -122,17 +122,12 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.Indent();
 
                     foreach( var item in Group.Items ) {
-                        var _selected = Selected.Contains( item );
-                        if( ImGui.Checkbox( item.GetText() + Id, ref _selected ) ) {
-                            if( _selected ) {
-                                Selected.Add( item );
-                            }
-                            else {
-                                Selected.Remove( item );
-                            }
+                        var isSelected = Selected.Contains( item );
+                        if( ImGui.Checkbox( item.GetText() + Id, ref isSelected ) ) {
+                            if( isSelected ) Selected.Add( item );
+                            else Selected.Remove( item );
                         }
                     }
-
 
                     ImGui.Unindent();
                 }

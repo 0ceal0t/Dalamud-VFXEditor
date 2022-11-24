@@ -45,9 +45,7 @@ namespace VfxEditor.TexTools {
         private bool ExportPap = true;
         private bool ExportScd = true;
 
-        public TexToolsDialog() : base( "TexTools" ) {
-            Size = new Vector2( 400, 200 );
-        }
+        public TexToolsDialog() : base( "TexTools", false, 400, 300 ) { }
 
         public override void DrawBody() {
             var id = "##TexTools";

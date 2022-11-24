@@ -5,25 +5,15 @@ using VfxEditor.NodeLibrary;
 using VfxEditor.Select.VfxSelect;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxManager : FileManager<AvfxDocument, WorkspaceMetaAvfx, AvfxFile> {
+    public class AvfxManager : FileManagerWindow<AvfxDocument, WorkspaceMetaAvfx, AvfxFile> {
         public static VfxSelectDialog SourceSelect { get; private set; }
         public static VfxSelectDialog ReplaceSelect { get; private set; }
         public static AvfxNodeLibrary NodeLibrary { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
-            SourceSelect = new VfxSelectDialog(
-                "File Select [ORIGINAL]",
-                Plugin.Configuration.RecentSelects,
-                true,
-                SetSourceGlobal
-            );
-            ReplaceSelect = new VfxSelectDialog(
-                "File Select [MODIFIED]",
-                Plugin.Configuration.RecentSelects,
-                false,
-                SetReplaceGlobal
-            );
+            SourceSelect = new VfxSelectDialog( "File Select [ORIGINAL]", Plugin.Configuration.RecentSelects, true, SetSourceGlobal );
+            ReplaceSelect = new VfxSelectDialog( "File Select [MODIFIED]", Plugin.Configuration.RecentSelects, false, SetReplaceGlobal );
             NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 

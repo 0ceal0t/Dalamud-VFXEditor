@@ -15,8 +15,7 @@ namespace VfxEditor.NodeLibrary {
         private string SearchInput = string.Empty;
         private AvfxNodeLibraryItem DraggingItem = null;
 
-        public AvfxNodeLibrary( List<AvfxNodeLibraryItem> items, string rootPath ) : base( "Node Library" ) {
-            Size = new( 580, 750 );
+        public AvfxNodeLibrary( List<AvfxNodeLibraryItem> items, string rootPath ) : base( "Node Library", false, 500, 750 ) {
             Items = items;
             RootPath = rootPath;
         }

@@ -60,7 +60,7 @@ namespace VfxEditor {
         protected readonly SelectDialogList RecentTab;
         protected readonly SelectDialogList FavoritesTab;
 
-        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool showLocal, Action<SelectResult> onSelect ) : base( name, startingWidth:800, startingHeight:500 ) {
+        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool showLocal, Action<SelectResult> onSelect ) : base( name, false, 800, 500 ) {
             Extension = extension;
             Favorites = favorites;
             ShowLocal = showLocal;

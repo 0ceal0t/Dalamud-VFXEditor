@@ -3,13 +3,11 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using VfxEditor.Dialogs;
-using VfxEditor.Utils;
 using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManager<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
+    public abstract class FileManagerWindow<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
@@ -22,20 +20,18 @@ namespace VfxEditor.FileManager {
         protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
         protected readonly string Title;
         protected readonly string Id;
-        protected List<T> Documents = new();
+        public readonly List<T> Documents = new();
 
-        private T SelectedDocument = null; // for document selection dialog
-        protected bool DocumentDialogVisible = false;
+        private readonly FileManagerDocumentWindow<T, S, R> DocumentWindow;
 
-        public FileManager( string title, string id, string tempFilePrefix, string extension, string penumbaPath ) : base( title, menuBar: true ) {
+        public FileManagerWindow( string title, string id, string tempFilePrefix, string extension, string penumbaPath ) : base( title, true, 800, 1000 ) {
             Title = title;
             Id = id;
             TempFilePrefix = tempFilePrefix;
             Extension = extension;
             PenumbraPath = penumbaPath;
-
-            Size = new Vector2( 800, 1000 );
             AddDocument();
+            DocumentWindow = new( title, this );
         }
 
         protected abstract T GetImportedDocument( string localPath, S data );
@@ -59,17 +55,17 @@ namespace VfxEditor.FileManager {
             return false;
         }
 
-        private void AddDocument() {
+        public void AddDocument() {
             var newDocument = GetNewDocument();
             ActiveDocument = newDocument;
             Documents.Add( newDocument );
         }
 
-        private void SelectDocument( T document ) {
+        public void SelectDocument( T document ) {
             ActiveDocument = document;
         }
 
-        private bool RemoveDocument( T document ) {
+        public bool RemoveDocument( T document ) {
             var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
 
@@ -86,12 +82,12 @@ namespace VfxEditor.FileManager {
         public override void DrawBody() {
             Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
             CheckKeybinds();
-            DrawDocumentSelect();
+            DocumentWindow.Draw();
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawFileMenu();
                 DrawMenu();
-                if( ImGui.MenuItem( $"Documents##{Id}/Menu" ) ) DocumentDialogVisible = true;
+                if( ImGui.MenuItem( $"Documents##{Title}/Menu" ) ) DocumentWindow.Show();
                 ImGui.Separator();
                 Plugin.DrawManagersMenu();
 
@@ -103,58 +99,9 @@ namespace VfxEditor.FileManager {
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows) ) return;
-            if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentDialogVisible = true;
+            if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentWindow.Show();
             if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
             ActiveDocument?.CheckKeybinds();
-        }
-
-        protected void DrawDocumentSelect() {
-            if( !Visible || !DocumentDialogVisible ) return;
-            ImGui.SetNextWindowSize( new( 600, 400 ), ImGuiCond.FirstUseEver );
-
-            if( ImGui.Begin( $"{Title} Select", ref DocumentDialogVisible, ImGuiWindowFlags.NoDocking ) ) {
-                var id = $"##{Id}/Doc";
-                var footerHeight = ImGui.GetFrameHeightWithSpacing();
-
-                if( ImGui.Button( "+ NEW" + id ) ) AddDocument();
-                ImGui.SameLine();
-                ImGui.Text( "Create documents in order to replace multiple files simultaneously" );
-
-                ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
-                ImGui.Columns( 2, id + "/Columns", false );
-
-                var idx = 0;
-                foreach( var document in Documents ) {
-                    if( ImGui.Selectable( document.SourceDisplay + id + idx, document == SelectedDocument, ImGuiSelectableFlags.SpanAllColumns ) ) {
-                        SelectedDocument = document;
-                    }
-                    if( ImGui.IsItemHovered() ) {
-                        ImGui.BeginTooltip();
-                        ImGui.Text( "Replace path: " + document.ReplaceDisplay );
-                        ImGui.Text( "Write path: " + document.WritePath );
-                        ImGui.EndTooltip();
-                    }
-                    idx++;
-                }
-                ImGui.NextColumn();
-
-                foreach( var document in Documents ) {
-                    ImGui.Text( document.ReplaceDisplay );  
-                }
-
-                ImGui.Columns( 1 );
-                ImGui.EndChild();
-
-                if ( UiUtils.DisabledButton($"Open{id}", SelectedDocument != null) ) {
-                    SelectDocument( SelectedDocument );
-                }
-                ImGui.SameLine();
-                if ( UiUtils.DisabledRemoveButton($"Delete{id}", SelectedDocument != null && Documents.Count > 1 ) ) {
-                    RemoveDocument( SelectedDocument );
-                    SelectedDocument = ActiveDocument;
-                }
-            }
-            ImGui.End();
         }
 
         public void ImportWorkspaceFile( string localPath, S data ) {
@@ -199,7 +146,7 @@ namespace VfxEditor.FileManager {
             foreach( var document in Documents ) {
                 document.Dispose();
             }
-            Documents = null;
+            Documents.Clear();
             ActiveDocument = null;
         }
     }

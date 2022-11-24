@@ -9,7 +9,6 @@ using System.Numerics;
 using VfxEditor.Dialogs;
 
 namespace VfxEditor.Penumbra {
-
     public class PenumbraDialog : GenericDialog {
         private struct PenumbraMod {
             public string Name;
@@ -31,9 +30,7 @@ namespace VfxEditor.Penumbra {
         private bool ExportPap = true;
         private bool ExportScd = true;
 
-        public PenumbraDialog() : base( "Penumbra" ) {
-            Size = new Vector2( 400, 200 );
-        }
+        public PenumbraDialog() : base( "Penumbra", false, 400, 300 ) { }
 
         public override void DrawBody() {
             var id = "##Penumbra";

@@ -71,9 +71,7 @@ namespace VfxEditor {
         [NonSerialized]
         public bool WriteLocationError = false;
 
-        public Configuration() : base( "Settings" ) {
-            Size = new Vector2( 300, 150 );
-        }
+        public Configuration() : base( "Settings", false, 300, 200 ) { }
 
         public void Setup() {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
@@ -105,8 +103,8 @@ namespace VfxEditor {
 
         public override void DrawBody() {
             var id = "##Settings";
-            if (ImGui.BeginTabBar($"{id}-TabBar")) {
-                if (ImGui.BeginTabItem($"Configuration{id}")) {
+            if( ImGui.BeginTabBar( $"{id}-TabBar" ) ) {
+                if( ImGui.BeginTabItem( $"Configuration{id}" ) ) {
                     DrawConfiguration();
                     ImGui.EndTabItem();
                 }
@@ -169,7 +167,7 @@ namespace VfxEditor {
         private void DrawKeybinds() {
             if( ImGui.Checkbox( "Block game inputs when VFXEditor is focused##Settings", ref BlockGameInputsWhenFocused ) ) Save();
 
-            ImGui.BeginChild( "##Settings-Keybinds", new Vector2(-1), true );
+            ImGui.BeginChild( "##Settings-Keybinds", new Vector2( -1 ), true );
 
             if( SaveKeybind.Draw( "Save", "##SaveKeybind" ) ) Save();
             if( SaveAsKeybind.Draw( "Save as", "##SaveAsKeybind" ) ) Save();

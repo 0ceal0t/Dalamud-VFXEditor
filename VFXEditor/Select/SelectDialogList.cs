@@ -35,13 +35,13 @@ namespace VfxEditor {
                     IsSelected = true;
                     Selected = item;
                 }
+                if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) Dialog.Invoke( Selected );
                 idx++;
             }
             ImGui.EndChild();
             // Disable button if nothing selected
             if( !IsSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
             if( ImGui.Button( "SELECT" + id ) && IsSelected ) Dialog.Invoke( Selected );
-            if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) Dialog.Invoke( Selected );
             if( !IsSelected ) ImGui.PopStyleVar();
 
             ImGui.EndTabItem();
