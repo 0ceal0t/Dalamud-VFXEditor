@@ -491,6 +491,6 @@ namespace VfxEditor.Interop {
             return ret;
         }
 
-        private static bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" );
+        private static bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" ) || path.Contains( ".scd" );
     }
 }

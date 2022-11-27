@@ -26,71 +26,69 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw( string id, int idx ) {
-            // Controls
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( State == PlaybackState.Stopped ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
-            }
-            else if( State == PlaybackState.Playing ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
-            }
-            else if( State == PlaybackState.Paused ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) CurrentOutput.Play();
-            }
+            if( ImGui.CollapsingHeader( $"Index {idx}{id}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                ImGui.Indent();
 
-            ImGui.PopFont();
-
-            if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            var selectedTime = ( float )CurrentTime;
-            ImGui.SameLine( 30f );
-            ImGui.SetNextItemWidth( 150f );
-            if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime) ) {
-                if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
-                    CurrentOutput.Pause();
-                    CurrentStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                // Controls
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( State == PlaybackState.Stopped ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
                 }
+                else if( State == PlaybackState.Playing ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
+                }
+                else if( State == PlaybackState.Paused ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) CurrentOutput.Play();
+                }
+
+                ImGui.PopFont();
+
+                if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+                var selectedTime = ( float )CurrentTime;
+                ImGui.SameLine( 50f );
+                ImGui.SetNextItemWidth( 150f );
+                if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
+                    if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
+                        CurrentOutput.Pause();
+                        CurrentStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                    }
+                }
+                if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
+
+                // Save
+                ImGui.SameLine();
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
+                    if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
+                    else SaveWaveDialog();
+                }
+                ImGui.PopFont();
+                UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
+
+                if( ImGui.BeginPopup( "SavePopup" + id ) ) {
+                    if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
+                    if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
+                    ImGui.EndPopup();
+                }
+
+                // Import
+                ImGui.SameLine();
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
+                ImGui.PopFont();
+                UiUtils.Tooltip( "Replace sound file" );
+
+                var loopStartEnd = new Vector2( ( float )Entry.LoopStart / Entry.DataLength, ( float )Entry.LoopEnd / Entry.DataLength ) * 100f;
+                ImGui.SetNextItemWidth( 180f );
+                if( ImGui.InputFloat2( $"Loop Start/End %{id}", ref loopStartEnd ) ) {
+                    Entry.LoopStart = ( int )( Math.Clamp( loopStartEnd.X, 0, 100 ) / 100f * Entry.DataLength );
+                    Entry.LoopEnd = ( int )( Math.Clamp( loopStartEnd.Y, 0, 100 ) / 100f * Entry.DataLength );
+                }
+
+                ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / 0x{Entry.DataLength:X8} bytes" );
+
+                ImGui.Unindent();
             }
-
-            if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
-
-            // Save
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
-                if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
-                else SaveWaveDialog();
-            }
-            ImGui.PopFont();
-            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
-
-            if( ImGui.BeginPopup( "SavePopup" + id ) ) {
-                if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
-                if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
-                ImGui.EndPopup();
-            }
-
-            // Import
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
-            ImGui.PopFont();
-            UiUtils.Tooltip( "Replace sound file" );
-
-            ImGui.Indent( 30f );
-            var loopStartEnd = new Vector2( ( float )Entry.LoopStart / Entry.DataLength, ( float )Entry.LoopEnd / Entry.DataLength ) * 100f;
-            ImGui.SetNextItemWidth( 150f );
-            if( ImGui.InputFloat2( $"Loop Start/End %{id}", ref loopStartEnd ) ) {
-                Entry.LoopStart = ( int )( Math.Clamp( loopStartEnd.X, 0, 100 ) / 100f * Entry.DataLength );
-                Entry.LoopEnd = ( int )( Math.Clamp( loopStartEnd.Y, 0, 100 ) / 100f * Entry.DataLength );
-            }
-
-            ImGui.Text( $"Index {idx}" );
-            ImGui.SameLine();
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / 0x{Entry.DataLength:X8} bytes" );
-
-            ImGui.Unindent( 30f );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             var currentState = State;
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&

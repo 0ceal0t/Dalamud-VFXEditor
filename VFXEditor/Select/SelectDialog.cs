@@ -155,9 +155,10 @@ namespace VfxEditor {
             ImGui.EndTabItem();
         }
 
-        public void DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTab.GetSelectResult( path, resultType, resultName ) );
+        public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTab.GetSelectResult( path, resultType, resultName ) );
 
-        public void DrawFavorite( SelectResult selectResult ) {
+        public bool DrawFavorite( SelectResult selectResult ) {
+            var res = false;
             var isFavorite = IsFavorite( selectResult );
             if( isFavorite ) ImGui.PushStyleColor( ImGuiCol.Text, FavoriteColor );
             ImGui.PushFont( UiBuilder.IconFont );
@@ -166,11 +167,13 @@ namespace VfxEditor {
             if( ImGui.IsItemClicked()) {
                 if( isFavorite ) RemoveFavorite( selectResult );
                 else AddFavorite( selectResult );
+                res = true;
             }
             ImGui.PopFont();
             if( isFavorite ) ImGui.PopStyleColor();
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 2 );
+            return res;
         }
     }
 }

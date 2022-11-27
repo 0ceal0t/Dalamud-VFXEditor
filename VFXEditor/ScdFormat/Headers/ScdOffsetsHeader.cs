@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdOffsetsHeader {
@@ -16,7 +17,12 @@ namespace VfxEditor.ScdFormat {
         public int Unk2; // 0
         // padded to 0x20
 
-        public int UnkOffsetDiff;
+        public long StartOffset;
+        public readonly List<int> StartOffsetList = new();
+        public readonly List<int> OffsetList1 = new();
+        public readonly List<int> OffsetListSound = new();
+        public readonly List<int> OffsetList2 = new();
+        public readonly List<int> OffsetList4 = new();
 
         public ScdOffsetsHeader( BinaryReader reader ) {
             Count1 = reader.ReadInt16();
@@ -30,12 +36,23 @@ namespace VfxEditor.ScdFormat {
             Offset4 = reader.ReadInt32();
             Unk2 = reader.ReadInt32();
 
-            // 4: first short is the length -- 0x80
-            // 1: first short like [0A 01] 32 + 4*second byte. In this example 32 + 4*0x01 = 36
-            // 2: 0x60 - last 3C bytes don't matter? (probably not)
-            // 5: 0x80
+            StartOffset = reader.BaseStream.Position;
+            ReadOffsets( StartOffsetList, reader, Count1 );
+            ReadOffsets( OffsetList1, reader, Count2 );
+            ReadOffsets( OffsetListSound, reader, CountSound );
+            ReadOffsets( OffsetList2, reader, Count1 );
+            // TODO: what if count = 0?
+            var countTable4 = ( OffsetList2[0] - Offset4 ) / 4;
+            ReadOffsets( OffsetList4, reader, countTable4 );
 
-            // 4 1 2 5 sound
+            // o2: first short is the length -- 0x80
+            // start: first short like [0A 01] 32 + 4*second byte. In this example 32 + 4*0x01 = 36
+            // o1: ??
+            // o4: ??
+
+            // [o2] [start] [o1] [o4] [os]
+
+            // padded to 16 between each set of offsets
 
             /*
              * c1 = 156  624
@@ -49,13 +66,14 @@ namespace VfxEditor.ScdFormat {
              * 2240 = o4
              * 2051 = unk
              * 
+             * --- OFFSETS
              * 
-             * pos
-             * - c1
+             * [start]
+             * - # c1
              * o1
-             * - c2
+             * - # c2
              * os
-             * - cs
+             * - # cs
              * o2
              * - c1
              * o4
@@ -81,6 +99,24 @@ namespace VfxEditor.ScdFormat {
             writer.Write( Padding );
             writer.Write( Offset4 );
             writer.Write( Unk2 );
+
+            WriteOffsets( StartOffsetList, writer );
+            WriteOffsets( OffsetList1, writer );
+            WriteOffsets( OffsetListSound, writer );
+            WriteOffsets( OffsetList2, writer );
+            WriteOffsets( OffsetList4, writer );
+        }
+
+        public static void ReadOffsets( List<int> offsets, BinaryReader reader, int count ) {
+            // TODO: what if count = 0?
+            for( var i = 0; i < count; i++ ) offsets.Add( reader.ReadInt32() );
+            FileUtils.PadTo( reader, 16 );
+        }
+
+        public static void WriteOffsets( List<int> offsets, BinaryWriter writer ) {
+            // TODO: what if count = 0?
+            foreach( var offset in offsets ) writer.Write( offset );
+            FileUtils.PadTo( writer, 16 );
         }
     }
 }

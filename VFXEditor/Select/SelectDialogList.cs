@@ -30,7 +30,7 @@ namespace VfxEditor {
             var idx = 0;
             foreach( var item in Items ) {
                 if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
-                Dialog.DrawFavorite( item );
+                if( Dialog.DrawFavorite( item ) ) break;
                 if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ) ) ) {
                     IsSelected = true;
                     Selected = item;

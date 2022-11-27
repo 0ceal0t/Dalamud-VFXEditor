@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using NAudio.Wave;
 using System.IO;
 
@@ -27,6 +28,13 @@ namespace VfxEditor.ScdFormat {
         }
 
         public static void Import( string path, ScdSoundEntry entry ) {
+            var waveFileCheck = new WaveFileReader( path );
+            if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
+                PluginLog.Log( "Already Adpcm, skipping conversion" );
+                File.Copy( path, ScdManager.ConvertWav, true );
+            }
+            waveFileCheck.Close();
+
             ScdUtils.ConvertToAdpcm( path );
             var data = ( ScdAdpcm )entry.Data;
             using var waveFile = new WaveFileReader( ScdManager.ConvertWav );

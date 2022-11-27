@@ -36,10 +36,8 @@ namespace VfxEditor.ScdFormat {
                 Music.Add( new ScdSoundEntry( reader, offset ) );
             }
 
-            reader.BaseStream.Seek(savePos, SeekOrigin.Begin );
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
             PreSoundData = reader.ReadBytes( ( int )( soundOffsets[0] - savePos ) );
-
-            PluginLog.Log( $"Diff: {reader.BaseStream.Length - Header.FileSize:X8}" );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
@@ -71,20 +69,12 @@ namespace VfxEditor.ScdFormat {
             OffsetsHeader.Write( writer );
             writer.Write( PreSoundData );
 
-            List<int> musicPositions = new();
             long paddingSubtract = 0;
-            foreach( var  music in Music ) {
-                musicPositions.Add( ( int )writer.BaseStream.Position );
+            UpdateOffsets( writer, Music, OffsetsHeader.OffsetSound, ( BinaryWriter bw, ScdSoundEntry music ) => {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
-            }
+            } );
 
-            writer.BaseStream.Seek( OffsetsHeader.OffsetSound, SeekOrigin.Begin );
-            foreach( var position in musicPositions ) {
-                writer.Write( position );
-            }
-
-            PluginLog.Log( $"Padding: {paddingSubtract:X8}" );
             var paddingMod = paddingSubtract % 16;
             if( paddingMod > 0 ) paddingSubtract -= paddingMod;
 
@@ -109,6 +99,19 @@ namespace VfxEditor.ScdFormat {
                 }
                 else ScdAdpcm.Import( path, music );
             } );
+        }
+
+        private static void UpdateOffsets<T>( BinaryWriter writer, List<T> items, int offsetLocation, Action<BinaryWriter, T> action ) where T : ScdEntry {
+            List<int> positions = new();
+            foreach( var item in items ) {
+                positions.Add( ( int )writer.BaseStream.Position );
+                action.Invoke( writer, item );
+            }
+
+            writer.BaseStream.Seek( offsetLocation, SeekOrigin.Begin );
+            foreach( var position in positions ) {
+                writer.Write( position );
+            }
         }
     }
 }
