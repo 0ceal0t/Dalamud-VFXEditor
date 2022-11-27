@@ -45,6 +45,13 @@ namespace VfxEditor.ScdFormat {
             var countTable4 = ( OffsetList2[0] - Offset4 ) / 4;
             ReadOffsets( OffsetList4, reader, countTable4 );
 
+            //foreach( var a in StartOffsetList ) {
+            //    PluginLog.Log( $"start: {a:X8}" );
+            //}
+            //foreach( var a in OffsetList1 ) {
+            //    PluginLog.Log( $"1: {a:X8}" );
+            //}
+
             // o2: first short is the length -- 0x80
             // start: first short like [0A 01] 32 + 4*second byte. In this example 32 + 4*0x01 = 36
             // o1: ??

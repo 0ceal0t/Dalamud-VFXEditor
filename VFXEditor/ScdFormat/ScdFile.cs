@@ -13,11 +13,15 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
+        public readonly CommandManager Command = new( Data.CopyManager.Scd );
+
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
         private readonly byte[] PreSoundData;
 
         public List<ScdSoundEntry> Music = new();
+        public List<ScdTable2Entry> Table2 = new();
+        public ScdSimpleSplitView<ScdTable2Entry> Table2View;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -25,19 +29,19 @@ namespace VfxEditor.ScdFormat {
             Header = new( reader );
             OffsetsHeader = new( reader );
 
-            var savePos = reader.BaseStream.Position;
-
-            reader.BaseStream.Seek( OffsetsHeader.OffsetSound, SeekOrigin.Begin );
-            List<int> soundOffsets = new();
-            for( var i = 0; i < OffsetsHeader.CountSound; i++ ) {
-                var offset = reader.ReadInt32();
-                if( offset == 0 ) continue;
-                soundOffsets.Add( offset );
+            // Sounds
+            foreach( var offset in OffsetsHeader.OffsetListSound.Where( x => x != 0 ) ) {
                 Music.Add( new ScdSoundEntry( reader, offset ) );
             }
 
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
-            PreSoundData = reader.ReadBytes( ( int )( soundOffsets[0] - savePos ) );
+            // Table 2
+            foreach( var offset in OffsetsHeader.OffsetList2.Where( x => x != 0 ) ) {
+                Table2.Add( new ScdTable2Entry( reader, offset ) );
+            }
+            Table2View = new( Table2 );
+
+            reader.BaseStream.Seek( OffsetsHeader.StartOffsetList[0], SeekOrigin.Begin );
+            PreSoundData = reader.ReadBytes( ( int )( OffsetsHeader.OffsetListSound[0] - OffsetsHeader.StartOffsetList[0] ) );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
@@ -46,6 +50,10 @@ namespace VfxEditor.ScdFormat {
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Sounds{id}" ) ) {
                     DrawSounds( id );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Table 2{id}" ) ) {
+                    Table2View.Draw( $"{id}/Table2" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -67,16 +75,21 @@ namespace VfxEditor.ScdFormat {
         public override void Write( BinaryWriter writer ) {
             Header.Write( writer );
             OffsetsHeader.Write( writer );
-            writer.Write( PreSoundData );
 
+            // Table2
+            UpdateOffsets( writer, Table2, OffsetsHeader.Offset2, ( BinaryWriter bw, ScdTable2Entry item ) => {
+                item.Write( writer );
+            } );
+
+            writer.Write( PreSoundData ); // Everything else
+
+            // Sounds
             long paddingSubtract = 0;
             UpdateOffsets( writer, Music, OffsetsHeader.OffsetSound, ( BinaryWriter bw, ScdSoundEntry music ) => {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
             } );
-
-            var paddingMod = paddingSubtract % 16;
-            if( paddingMod > 0 ) paddingSubtract -= paddingMod;
+            if( ( paddingSubtract % 16 ) > 0 ) paddingSubtract -=  paddingSubtract % 16 ;
 
             ScdHeader.UpdateFileSize( writer, paddingSubtract ); // end with this
         }
@@ -107,11 +120,14 @@ namespace VfxEditor.ScdFormat {
                 positions.Add( ( int )writer.BaseStream.Position );
                 action.Invoke( writer, item );
             }
+            var savePos = writer.BaseStream.Position;
 
             writer.BaseStream.Seek( offsetLocation, SeekOrigin.Begin );
             foreach( var position in positions ) {
                 writer.Write( position );
             }
+
+            writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
         }
     }
 }

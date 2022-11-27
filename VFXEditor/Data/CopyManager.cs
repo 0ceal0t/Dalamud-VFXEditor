@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.AvfxFormat;
 using VfxEditor.PapFormat;
+using VfxEditor.ScdFormat;
 using VfxEditor.TmbFormat;
 
 namespace VfxEditor.Data {
@@ -11,6 +12,7 @@ namespace VfxEditor.Data {
         public static CopyManager Avfx => AvfxManager.Copy;
         public static CopyManager Tmb => TmbManager.Copy;
         public static CopyManager Pap => PapManager.Copy;
+        public static CopyManager Scd => ScdManager.Copy;
 
         public bool IsCopying { get; private set; }
         public bool IsPasting { get; private set; }

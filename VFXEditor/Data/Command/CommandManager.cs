@@ -12,8 +12,9 @@ namespace VfxEditor {
         public static CommandManager Avfx => Plugin.AvfxManager.CurrentFile?.Command;
         public static CommandManager Tmb => Plugin.TmbManager.CurrentFile?.Command;
         public static CommandManager Pap => Plugin.PapManager.CurrentFile?.Command;
+        public static CommandManager Scd => Plugin.ScdManager.CurrentFile?.Command;
 
-        public int Max => Plugin.Configuration.MaxUndoSize;
+        public static int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();
         private int CommandIndex;
 
