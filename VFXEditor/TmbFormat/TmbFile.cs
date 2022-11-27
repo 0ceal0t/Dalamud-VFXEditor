@@ -16,6 +16,7 @@ namespace VfxEditor.TmbFormat {
         private readonly Tmdh HeaderTmdh;
         private readonly Tmpp HeaderTmpp;
         private readonly Tmal HeaderTmal;
+        private readonly Tmfc FooterTmfc = null;
 
         private readonly List<Tmac> Actors = new();
         private readonly List<Tmtr> Tracks = new();
@@ -38,7 +39,7 @@ namespace VfxEditor.TmbFormat {
             HeaderTmal = new Tmal( reader, papEmbedded );
 
             for(var i = 0; i < numEntries - (HeaderTmpp.IsAssigned ? 3 : 2); i++ ) {
-                reader.ParseItem( Actors, Tracks, Entries, papEmbedded, ref Verified );
+                reader.ParseItem( Actors, Tracks, Entries, ref FooterTmfc, papEmbedded, ref Verified );
             }
 
             HeaderTmal.PickActors( reader );
@@ -99,16 +100,18 @@ namespace VfxEditor.TmbFormat {
                     HeaderTmdh.Draw( id );
                     HeaderTmpp.Draw( id );
                     // Don't need to draw TMAL
-
                     ImGui.EndTabItem();
                 }
 
                 if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
                     DrawDropdown( id, separatorBefore: false );
-
                     if( Selected != null ) Selected.Draw( $"{id}{Actors.IndexOf( Selected )}", Tracks, Entries );
                     else ImGui.Text( "Select a timeline actor..." );
+                    ImGui.EndTabItem();
+                }
 
+                if( FooterTmfc != null && ImGui.BeginTabItem( $"TMFC{id}" ) ) {
+                    FooterTmfc.Draw( id );
                     ImGui.EndTabItem();
                 }
 

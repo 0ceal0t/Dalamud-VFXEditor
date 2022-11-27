@@ -37,10 +37,10 @@ namespace VfxEditor.ScdFormat {
             writer.Write( UnkPadding );
         }
 
-        public static void UpdateFileSize( BinaryWriter writer, int noDataMusicCount ) {
+        public static void UpdateFileSize( BinaryWriter writer, long subtract ) {
             var totalSize = writer.BaseStream.Length;
             writer.BaseStream.Seek( FileSizeOffset, SeekOrigin.Begin );
-            writer.Write( ( int )totalSize - ( 30 * noDataMusicCount ) );
+            writer.Write( ( int )( totalSize - subtract ) );
         }
     }
 }

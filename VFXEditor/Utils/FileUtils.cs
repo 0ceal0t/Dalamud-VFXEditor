@@ -71,18 +71,20 @@ namespace VfxEditor.Utils {
             return true;
         }
 
-        public static void PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );
+        public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );
 
-        public static void PadTo( BinaryWriter writer, long position, long multiple ) {
+        public static long PadTo( BinaryWriter writer, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
             for( var j = 0; j < paddedBytes; j++ ) writer.Write( ( byte )0 );
+            return paddedBytes;
         }
 
-        public static void PadTo( BinaryReader reader, long multiple ) => PadTo( reader, reader.BaseStream.Position, multiple );
+        public static long PadTo( BinaryReader reader, long multiple ) => PadTo( reader, reader.BaseStream.Position, multiple );
 
-        public static void PadTo( BinaryReader reader, long position, long multiple ) {
+        public static long PadTo( BinaryReader reader, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
             for( var j = 0; j < paddedBytes; j++ ) reader.ReadByte();
+            return paddedBytes;
         }
     }
 }

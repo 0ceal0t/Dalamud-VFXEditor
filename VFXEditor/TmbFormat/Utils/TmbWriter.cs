@@ -77,19 +77,20 @@ namespace VfxEditor.TmbFormat.Utils {
             foreach( var entry in entries ) TimelineWriter.Write( entry.Id );
         }
 
-        public void WriteExtra( Action<BinaryWriter> func, bool writeData ) {
+        public int WriteExtra( Action<BinaryWriter> func, bool writeData ) {
             if( !writeData ) {
                 Writer.Write( 0 );
-                return;
+                return -1;
             }
-            WriteExtra( func );
+            return WriteExtra( func );
         }
 
-        public void WriteExtra( Action<BinaryWriter> func ) {
-            var actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraWriter.BaseStream.Position );
+        public int WriteExtra( Action<BinaryWriter> func, int modifyOffset = 0 ) {
+            var actualPos = ( int )( ( BodySize - ( StartPosition + 8 + modifyOffset ) ) + ExtraWriter.BaseStream.Position );
             Writer.Write( actualPos );
 
             func( ExtraWriter );
+            return actualPos;
         }
 
         public void WriteExtraVector4( Vector4 input ) {

@@ -39,6 +39,8 @@ namespace VfxEditor.ScdFormat {
             reader.BaseStream.Seek(savePos, SeekOrigin.Begin );
             PreSoundData = reader.ReadBytes( ( int )( soundOffsets[0] - savePos ) );
 
+            PluginLog.Log( $"Diff: {reader.BaseStream.Length - Header.FileSize:X8}" );
+
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
 
@@ -70,9 +72,11 @@ namespace VfxEditor.ScdFormat {
             writer.Write( PreSoundData );
 
             List<int> musicPositions = new();
+            long paddingSubtract = 0;
             foreach( var  music in Music ) {
                 musicPositions.Add( ( int )writer.BaseStream.Position );
-                music.Write( writer );
+                music.Write( writer, out var padding );
+                paddingSubtract += padding;
             }
 
             writer.BaseStream.Seek( OffsetsHeader.OffsetSound, SeekOrigin.Begin );
@@ -80,8 +84,11 @@ namespace VfxEditor.ScdFormat {
                 writer.Write( position );
             }
 
-            var noDataMusicCount = Music.Where( x => x.DataLength == 0 ).Count();
-            ScdHeader.UpdateFileSize( writer, noDataMusicCount ); // end with this
+            PluginLog.Log( $"Padding: {paddingSubtract:X8}" );
+            var paddingMod = paddingSubtract % 16;
+            if( paddingMod > 0 ) paddingSubtract -= paddingMod;
+
+            ScdHeader.UpdateFileSize( writer, paddingSubtract ); // end with this
         }
 
         public void Replace( ScdSoundEntry old, ScdSoundEntry newEntry ) {

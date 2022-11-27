@@ -80,7 +80,9 @@ namespace VfxEditor.ScdFormat {
 
         public void Dispose() => Player.Dispose();
 
-        public override void Write( BinaryWriter writer ) {
+        public override void Write( BinaryWriter writer ) => Write( writer, out var _ );
+
+        public void Write( BinaryWriter writer, out long padding ) {
             writer.Write( DataLength );
             writer.Write( NumChannels );
             writer.Write( SampleRate );
@@ -94,7 +96,7 @@ namespace VfxEditor.ScdFormat {
             writer.Write( AuxChunkData );
             Data?.Write( writer );
 
-            FileUtils.PadTo( writer, 16 );
+            padding = FileUtils.PadTo( writer, 16 );
         }
 
         public static byte[] GetDataRange( long start, long end, BinaryReader reader ) {
