@@ -6,7 +6,7 @@ using System;
 using System.IO;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdVorbis : ScdSoundData {
+    public class ScdVorbis : ScdAudioData {
         private readonly bool Imported = false;
 
         public short EncodeMode;
@@ -28,7 +28,7 @@ namespace VfxEditor.ScdFormat {
         // https://github.com/CrimsonOrion/CS-FFXIV-Data-Worker/blob/af126fd74139f54722b4dd8feea87c54077caeb7/FFXIV%20Data%20Worker/OggToScd.cs
         // https://github.com/Soreepeong/XivAlexander/blob/0b1077ebbcd2bf13955169fddc2bc38c218d19fe/XivAlexanderCommon/Sqex/Sound/Writer.cpp#L63
 
-        public ScdVorbis( BinaryReader reader, ScdSoundEntry entry ) {
+        public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) {
             EncodeMode = reader.ReadInt16();
             EncodeByte = reader.ReadInt16();
             Unk1 = reader.ReadInt32();
@@ -99,7 +99,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         // Giga-scuffed
-        public static void ImportOgg( string path, ScdSoundEntry entry ) {
+        public static void ImportOgg( string path, ScdAudioEntry entry ) {
             using var waveFile = new VorbisWaveReader( path );
 
             var oggData = File.ReadAllBytes( path );
@@ -126,13 +126,13 @@ namespace VfxEditor.ScdFormat {
             using var readerMs = new MemoryStream( newEntryData );
             using var reader = new BinaryReader( readerMs );
 
-            var newEntry = new ScdSoundEntry( reader );
+            var newEntry = new ScdAudioEntry( reader );
 
             Plugin.ScdManager.CurrentFile.Replace( entry, newEntry );
             entry.Dispose();
         }
 
-        public static void ImportWav( string path, ScdSoundEntry entry ) {
+        public static void ImportWav( string path, ScdAudioEntry entry ) {
             ScdUtils.ConvertToOgg( path );
             ImportOgg( ScdManager.ConvertOgg, entry );
         }

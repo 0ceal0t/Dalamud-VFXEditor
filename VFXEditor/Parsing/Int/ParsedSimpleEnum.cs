@@ -2,16 +2,16 @@ using System;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedEnum<T> : ParsedInt where T : Enum {
+    public class ParsedSimpleEnum<T> : ParsedInt where T : Enum {
         private readonly T[] Options;
 
         public T GetValue() => ToEnum( Value );
 
-        public ParsedEnum( string name, T[] options, int size = 4 ) : base( name, size ) {
+        public ParsedSimpleEnum( string name, T[] options, int size = 4 ) : base( name, size ) {
             Options = options;
         }
 
-        public ParsedEnum( string name, T[] options, int defaultValue, int size = 4 ) : base( name, defaultValue, size ) {
+        public ParsedSimpleEnum( string name, T[] options, int defaultValue, int size = 4 ) : base( name, defaultValue, size ) {
             Options = options;
         }
 

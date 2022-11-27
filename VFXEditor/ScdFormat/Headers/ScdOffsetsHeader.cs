@@ -5,112 +5,88 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdOffsetsHeader {
-        public short Count1;
-        public short Count2;
-        public short CountSound;
+        public short SoundCount;
+        public short TrackCount;
+        public short AudioCount;
         public short UnkOffset;
-        public int Offset1;
-        public int OffsetSound;
-        public int Offset2;
-        public int Padding;
-        public int Offset4;
-        public int Unk2; // 0
+        public int TrackOffset;
+        public int AudioOffset;
+        public int LayoutOffset;
+        public int RoutingOffset;
+        public int AttributeOffset;
+        public int EofPaddingSize; // 0
         // padded to 0x20
 
-        public long StartOffset;
-        public readonly List<int> StartOffsetList = new();
-        public readonly List<int> OffsetList1 = new();
-        public readonly List<int> OffsetListSound = new();
-        public readonly List<int> OffsetList2 = new();
+        public long SoundOffset;
+        public readonly List<int> SoundOffsets = new();
+        public readonly List<int> TrackOffsets = new();
+        public readonly List<int> AudioOffsets = new();
+        public readonly List<int> LayoutOffsets = new();
         public readonly List<int> OffsetList4 = new();
 
         public ScdOffsetsHeader( BinaryReader reader ) {
-            Count1 = reader.ReadInt16();
-            Count2 = reader.ReadInt16();
-            CountSound = reader.ReadInt16();
+            SoundCount = reader.ReadInt16();
+            TrackCount = reader.ReadInt16();
+            AudioCount = reader.ReadInt16();
             UnkOffset = reader.ReadInt16();
-            Offset1 = reader.ReadInt32();
-            OffsetSound = reader.ReadInt32();
-            Offset2 = reader.ReadInt32();
-            Padding = reader.ReadInt32();
-            Offset4 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
+            TrackOffset = reader.ReadInt32();
+            AudioOffset = reader.ReadInt32();
+            LayoutOffset = reader.ReadInt32();
+            RoutingOffset = reader.ReadInt32();
+            AttributeOffset = reader.ReadInt32();
+            EofPaddingSize = reader.ReadInt32();
 
-            StartOffset = reader.BaseStream.Position;
-            ReadOffsets( StartOffsetList, reader, Count1 );
-            ReadOffsets( OffsetList1, reader, Count2 );
-            ReadOffsets( OffsetListSound, reader, CountSound );
-            ReadOffsets( OffsetList2, reader, Count1 );
+            SoundOffset = reader.BaseStream.Position;
+            ReadOffsets( SoundOffsets, reader, SoundCount );
+            ReadOffsets( TrackOffsets, reader, TrackCount );
+            ReadOffsets( AudioOffsets, reader, AudioCount );
+
+            ReadOffsets( LayoutOffsets, reader, SoundCount );
             // TODO: what if count = 0?
-            var countTable4 = ( OffsetList2[0] - Offset4 ) / 4;
+            var countTable4 = ( LayoutOffsets[0] - AttributeOffset ) / 4;
             ReadOffsets( OffsetList4, reader, countTable4 );
 
-            //foreach( var a in StartOffsetList ) {
-            //    PluginLog.Log( $"start: {a:X8}" );
-            //}
-            //foreach( var a in OffsetList1 ) {
-            //    PluginLog.Log( $"1: {a:X8}" );
-            //}
-
-            // o2: first short is the length -- 0x80
-            // start: first short like [0A 01] 32 + 4*second byte. In this example 32 + 4*0x01 = 36
-            // o1: ??
-            // o4: ??
-
-            // [o2] [start] [o1] [o4] [os]
-
-            // padded to 16 between each set of offsets
+            PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} diff: {countTable4} cs: {SoundCount}" );
 
             /*
-             * c1 = 156  624
-             * c2 = 107  428
-             * cs = 119  476
-             * 
-             * 80 = pos
-             * 704 = o1
-             * 1136 = os
-             * 1616 = o2
-             * 2240 = o4
-             * 2051 = unk
-             * 
-             * --- OFFSETS
-             * 
-             * [start]
-             * - # c1
-             * o1
-             * - # c2
-             * os
-             * - # cs
-             * o2
-             * - c1
-             * o4
-             * - ....
-             * ... first of o4
+            if( scdHeader.LayoutOffset != 0 )
+            {
+                Reader.Position = scdHeader.LayoutOffset;
+                _layoutOffset = Reader.ReadUInt32();
+            }
+
+            if( scdHeader.RoutingOffset != 0 )
+            {
+                Reader.Position = scdHeader.RoutingOffset;
+                _routingOffset = Reader.ReadUInt32();
+            }
+
+            if( scdHeader.AttributeOffset != 0 )
+            {
+                Reader.Position = scdHeader.AttributeOffset;
+                _attributeOffset = Reader.ReadUInt32();
+            }
              */
 
-            // offsets lists 0/1/2/3/4
-            // offset lists also padded to 16 bytes
-
-            // In the file, table data is in order: 3, 0, 1, 4, 2
-            // padded to 16 bytes between each table data (such as between 3/0)
+            // [o2] [start] [o1] [o4] [os]
         }
 
         public void Write( BinaryWriter writer ) {
-            writer.Write( Count1 );
-            writer.Write( Count2 );
-            writer.Write( CountSound );
+            writer.Write( SoundCount );
+            writer.Write( TrackCount );
+            writer.Write( AudioCount );
             writer.Write( UnkOffset );
-            writer.Write( Offset1 );
-            writer.Write( OffsetSound );
-            writer.Write( Offset2 );
-            writer.Write( Padding );
-            writer.Write( Offset4 );
-            writer.Write( Unk2 );
+            writer.Write( TrackOffset );
+            writer.Write( AudioOffset );
+            writer.Write( LayoutOffset );
+            writer.Write( RoutingOffset );
+            writer.Write( AttributeOffset );
+            writer.Write( EofPaddingSize );
 
-            WriteOffsets( StartOffsetList, writer );
-            WriteOffsets( OffsetList1, writer );
-            WriteOffsets( OffsetListSound, writer );
-            WriteOffsets( OffsetList2, writer );
+            WriteOffsets( SoundOffsets, writer );
+            WriteOffsets( TrackOffsets, writer );
+            WriteOffsets( AudioOffsets, writer );
+            WriteOffsets( LayoutOffsets, writer );
             WriteOffsets( OffsetList4, writer );
         }
 

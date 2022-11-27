@@ -42,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
                 LoopPointEnd
             };
 
-            EffectorVariety.ExtraCommandGenerator = () => {
+            EffectorVariety.Parsed.ExtraCommandGenerator = () => {
                 return new AvfxEffectorDataExtraCommand( this );
             };
 

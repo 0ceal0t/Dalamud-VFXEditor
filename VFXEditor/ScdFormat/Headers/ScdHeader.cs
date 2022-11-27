@@ -7,7 +7,7 @@ namespace VfxEditor.ScdFormat {
         public int SectionType;
         public int SedbVersion;
         public byte Endian;
-        public byte SscfVersion;
+        public byte AlignmentBits;
         public short HeaderSize; // always 0x30
         public int FileSize; // the ENTIRE file, including the header
         public byte[] UnkPadding;
@@ -20,7 +20,7 @@ namespace VfxEditor.ScdFormat {
             SectionType = reader.ReadInt32();
             SedbVersion = reader.ReadInt32();
             Endian = reader.ReadByte();
-            SscfVersion = reader.ReadByte();
+            AlignmentBits = reader.ReadByte();
             HeaderSize = reader.ReadInt16();
             FileSize = reader.ReadInt32();
             UnkPadding = reader.ReadBytes( 28 );
@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
             writer.Write( SectionType );
             writer.Write( SedbVersion );
             writer.Write( Endian );
-            writer.Write( SscfVersion );
+            writer.Write( AlignmentBits );
             writer.Write( HeaderSize );
             writer.Write( FileSize ); // placeholder
             writer.Write( UnkPadding );

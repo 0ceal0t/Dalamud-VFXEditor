@@ -3,12 +3,12 @@ using NAudio.Wave;
 using System.IO;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdAdpcm : ScdSoundData {
+    public class ScdAdpcm : ScdAudioData {
         public byte[] WaveHeader;
         public byte[] Data;
         public WaveFormat Format;
 
-        public ScdAdpcm( BinaryReader reader, ScdSoundEntry entry ) {
+        public ScdAdpcm( BinaryReader reader, ScdAudioEntry entry ) {
             WaveHeader = reader.ReadBytes( entry.FirstFrame - entry.AuxChunkData.Length );
             Data = reader.ReadBytes( entry.DataLength );
 
@@ -27,7 +27,7 @@ namespace VfxEditor.ScdFormat {
             writer.Write( Data );
         }
 
-        public static void Import( string path, ScdSoundEntry entry ) {
+        public static void Import( string path, ScdAudioEntry entry ) {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
                 PluginLog.Log( "Already Adpcm, skipping conversion" );

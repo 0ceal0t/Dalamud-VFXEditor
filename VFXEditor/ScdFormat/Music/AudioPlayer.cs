@@ -10,7 +10,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
-        private readonly ScdSoundEntry Entry;
+        private readonly ScdAudioEntry Entry;
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;
         private PlaybackState PrevState = PlaybackState.Stopped;
 
@@ -21,7 +21,7 @@ namespace VfxEditor.ScdFormat {
         private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds - 0.1;
         private double CurrentTime => CurrentStream == null ? 0 : CurrentStream.CurrentTime.TotalSeconds;
 
-        public AudioPlayer( ScdSoundEntry entry ) {
+        public AudioPlayer( ScdAudioEntry entry ) {
             Entry = entry;
         }
 

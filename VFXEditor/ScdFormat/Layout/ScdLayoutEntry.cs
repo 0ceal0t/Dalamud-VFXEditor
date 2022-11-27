@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdTable2Entry : ScdEntry, IScdSimpleUiBase {
+    public class ScdLayoutEntry : ScdEntry, IScdSimpleUiBase {
         // Size = 0x80
         public readonly ParsedShort Unk1 = new( "Unknown 1" );
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
@@ -27,31 +27,7 @@ namespace VfxEditor.ScdFormat {
 
         private List<ParsedBase> Parsed;
 
-        // short size - 0x80
-        // short
-        // int
-        // int
-        // int
-
-        // float x4
-
-        // float x4
-
-        // float x4
-
-        // float x4
-
-        // float x4
-
-        // ?
-
-        // int
-        // short
-        // short
-        // int
-        // int
-
-        public ScdTable2Entry( BinaryReader reader, int offset ) : base( reader, offset ) { }
+        public ScdLayoutEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
 
         protected override void Read( BinaryReader reader ) {
             Parsed = new() {

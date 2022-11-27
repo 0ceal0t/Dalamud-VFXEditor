@@ -19,9 +19,10 @@ namespace VfxEditor.ScdFormat {
         private readonly ScdOffsetsHeader OffsetsHeader;
         private readonly byte[] PreSoundData;
 
-        public List<ScdSoundEntry> Music = new();
-        public List<ScdTable2Entry> Table2 = new();
-        public ScdSimpleSplitView<ScdTable2Entry> Table2View;
+        public List<ScdAudioEntry> Audio = new();
+        public List<ScdLayoutEntry> Layouts = new();
+        public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
+        public List<ScdSoundEntry> Sound = new();
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -29,19 +30,22 @@ namespace VfxEditor.ScdFormat {
             Header = new( reader );
             OffsetsHeader = new( reader );
 
-            // Sounds
-            foreach( var offset in OffsetsHeader.OffsetListSound.Where( x => x != 0 ) ) {
-                Music.Add( new ScdSoundEntry( reader, offset ) );
+            // The acutal sound effect/music data
+            foreach( var offset in OffsetsHeader.AudioOffsets.Where( x => x != 0 ) ) {
+                Audio.Add( new ScdAudioEntry( reader, offset ) );
             }
 
-            // Table 2
-            foreach( var offset in OffsetsHeader.OffsetList2.Where( x => x != 0 ) ) {
-                Table2.Add( new ScdTable2Entry( reader, offset ) );
+            foreach( var offset in OffsetsHeader.LayoutOffsets.Where( x => x != 0 ) ) {
+                Layouts.Add( new ScdLayoutEntry( reader, offset ) );
             }
-            Table2View = new( Table2 );
+            LayoutView = new( Layouts );
 
-            reader.BaseStream.Seek( OffsetsHeader.StartOffsetList[0], SeekOrigin.Begin );
-            PreSoundData = reader.ReadBytes( ( int )( OffsetsHeader.OffsetListSound[0] - OffsetsHeader.StartOffsetList[0] ) );
+            foreach( var offset in OffsetsHeader.SoundOffsets.Where( x => x != 0 ) ) {
+                Sound.Add( new ScdSoundEntry( reader, offset ) );
+            }
+
+            reader.BaseStream.Seek( OffsetsHeader.TrackOffsets[0], SeekOrigin.Begin );
+            PreSoundData = reader.ReadBytes( OffsetsHeader.AudioOffsets[0] - OffsetsHeader.TrackOffsets[0] );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
@@ -53,7 +57,7 @@ namespace VfxEditor.ScdFormat {
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Table 2{id}" ) ) {
-                    Table2View.Draw( $"{id}/Table2" );
+                    LayoutView.Draw( $"{id}/Table2" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -66,8 +70,8 @@ namespace VfxEditor.ScdFormat {
             ImGui.Separator();
             ImGui.BeginChild( $"{id}-Child" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            for( var idx = 0; idx < Music.Count; idx++ ) {
-                Music[idx].Draw( id + idx, idx );
+            for( var idx = 0; idx < Audio.Count; idx++ ) {
+                Audio[idx].Draw( id + idx, idx );
             }
             ImGui.EndChild();
         }
@@ -76,16 +80,20 @@ namespace VfxEditor.ScdFormat {
             Header.Write( writer );
             OffsetsHeader.Write( writer );
 
-            // Table2
-            UpdateOffsets( writer, Table2, OffsetsHeader.Offset2, ( BinaryWriter bw, ScdTable2Entry item ) => {
+            UpdateOffsets( writer, Layouts, OffsetsHeader.LayoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
                 item.Write( writer );
             } );
+
+            UpdateOffsets( writer, Sound, ( int )OffsetsHeader.SoundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
+                item.Write( writer );
+            } );
+            FileUtils.PadTo( writer, 16 );
 
             writer.Write( PreSoundData ); // Everything else
 
             // Sounds
             long paddingSubtract = 0;
-            UpdateOffsets( writer, Music, OffsetsHeader.OffsetSound, ( BinaryWriter bw, ScdSoundEntry music ) => {
+            UpdateOffsets( writer, Audio, OffsetsHeader.AudioOffset, ( BinaryWriter bw, ScdAudioEntry music ) => {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
             } );
@@ -94,16 +102,16 @@ namespace VfxEditor.ScdFormat {
             ScdHeader.UpdateFileSize( writer, paddingSubtract ); // end with this
         }
 
-        public void Replace( ScdSoundEntry old, ScdSoundEntry newEntry ) {
-            var index = Music.IndexOf( old );
+        public void Replace( ScdAudioEntry old, ScdAudioEntry newEntry ) {
+            var index = Audio.IndexOf( old );
             if( index == -1 ) return;
-            Music.Remove( old );
-            Music.Insert( index, newEntry );
+            Audio.Remove( old );
+            Audio.Insert( index, newEntry );
         }
 
-        public override void Dispose() => Music.ForEach( x => x.Dispose() );
+        public override void Dispose() => Audio.ForEach( x => x.Dispose() );
 
-        public async static void Import( string path, ScdSoundEntry music ) {
+        public async static void Import( string path, ScdAudioEntry music ) {
             await Task.Run( () => {
                 if( music.Format == SscfWaveFormat.Vorbis ) {
                     var ext = Path.GetExtension( path );

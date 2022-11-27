@@ -25,7 +25,7 @@ namespace VfxEditor.PapFormat {
         private readonly string HkxTempLocation;
 
         private readonly ParsedShort ModelId = new( "Model Id" );
-        private readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
+        private readonly ParsedSimpleEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
         private readonly ParsedInt Variant = new( "Varient", size: 1 );
 
         private readonly List<PapAnimation> Animations = new();

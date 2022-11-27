@@ -22,6 +22,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 5" );
 
         private byte[] Data;
+        // TODO
         // int (0)
         // * count
             // float short short int int (0x10)

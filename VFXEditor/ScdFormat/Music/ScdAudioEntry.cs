@@ -17,7 +17,7 @@ namespace VfxEditor.ScdFormat {
         Atrac3Too = 0x0D
     }
 
-    public class ScdSoundEntry : ScdEntry {
+    public class ScdAudioEntry : ScdEntry {
         public int DataLength;
         public int NumChannels;
         public int SampleRate;
@@ -30,13 +30,13 @@ namespace VfxEditor.ScdFormat {
 
         public byte[] AuxChunkData;
 
-        public ScdSoundData Data;
+        public ScdAudioData Data;
         private readonly AudioPlayer Player;
 
-        public ScdSoundEntry( BinaryReader reader ) : base( reader ) {
+        public ScdAudioEntry( BinaryReader reader ) : base( reader ) {
             Player = new( this );
         }
-        public ScdSoundEntry( BinaryReader reader, int offset ) : base( reader, offset ) {
+        public ScdAudioEntry( BinaryReader reader, int offset ) : base( reader, offset ) {
             Player = new( this );
         }
 
