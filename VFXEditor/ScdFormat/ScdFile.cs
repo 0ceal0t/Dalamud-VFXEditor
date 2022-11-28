@@ -22,9 +22,11 @@ namespace VfxEditor.ScdFormat {
         public List<ScdAudioEntry> Audio = new();
         public List<ScdLayoutEntry> Layouts = new();
         public List<ScdSoundEntry> Sounds = new();
+        public List<ScdTrackEntry> Tracks = new();
 
         public ScdSimpleSplitView<ScdSoundEntry> SoundView;
         public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
+        public ScdSimpleSplitView<ScdTrackEntry> TrackView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -41,17 +43,22 @@ namespace VfxEditor.ScdFormat {
                 Layouts.Add( new ScdLayoutEntry( reader, offset ) );
             }
 
+            foreach( var offset in OffsetsHeader.TrackOffsets.Where( x => x != 0 ) ) {
+                Tracks.Add( new ScdTrackEntry( reader, offset ) );
+            }
+
             foreach( var offset in OffsetsHeader.SoundOffsets.Where( x => x != 0 ) ) {
                 Sounds.Add( new ScdSoundEntry( reader, offset ) );
             }
 
-            reader.BaseStream.Seek( OffsetsHeader.TrackOffsets[0], SeekOrigin.Begin );
-            PreSoundData = reader.ReadBytes( OffsetsHeader.AudioOffsets[0] - OffsetsHeader.TrackOffsets[0] );
+            reader.BaseStream.Seek( OffsetsHeader.AttributeOffsets[0], SeekOrigin.Begin );
+            PreSoundData = reader.ReadBytes( OffsetsHeader.AudioOffsets[0] - OffsetsHeader.AttributeOffsets[0] );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             LayoutView = new( Layouts );
             SoundView = new( Sounds );
+            TrackView = new( Tracks );
         }
 
         public override void Draw( string id ) {
@@ -66,6 +73,10 @@ namespace VfxEditor.ScdFormat {
                 }
                 if( ImGui.BeginTabItem( $"Layouts{id}" ) ) {
                     LayoutView.Draw( $"{id}/Layouts" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Tracks{id}" ) ) {
+                    TrackView.Draw( $"{id}/Tacks" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -98,6 +109,11 @@ namespace VfxEditor.ScdFormat {
             } );
             FileUtils.PadTo( writer, 16 );
 
+            UpdateOffsets( writer, Tracks, OffsetsHeader.TrackOffset, ( BinaryWriter bw, ScdTrackEntry item ) => {
+                item.Write( writer );
+            } );
+            FileUtils.PadTo( writer, 16 );
+
             writer.Write( PreSoundData ); // Everything else
 
             // Sounds
@@ -120,7 +136,7 @@ namespace VfxEditor.ScdFormat {
 
         public override void Dispose() => Audio.ForEach( x => x.Dispose() );
 
-        public async static void Import( string path, ScdAudioEntry music ) {
+        public static async void Import( string path, ScdAudioEntry music ) {
             await Task.Run( () => {
                 if( music.Format == SscfWaveFormat.Vorbis ) {
                     var ext = Path.GetExtension( path );

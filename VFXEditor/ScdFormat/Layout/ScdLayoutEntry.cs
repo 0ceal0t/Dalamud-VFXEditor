@@ -1,4 +1,5 @@
 using Dalamud.Logging;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -122,6 +123,11 @@ namespace VfxEditor.ScdFormat {
 
         public void Draw( string id ) {
             Parsed.ForEach( x => x.Draw( id, CommandManager.Scd ) );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
             Data?.Draw( $"{id}/Data" );
         }
     }

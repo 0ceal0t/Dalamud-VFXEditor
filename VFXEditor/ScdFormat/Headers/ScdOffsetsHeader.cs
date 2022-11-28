@@ -22,7 +22,7 @@ namespace VfxEditor.ScdFormat {
         public readonly List<int> TrackOffsets = new();
         public readonly List<int> AudioOffsets = new();
         public readonly List<int> LayoutOffsets = new();
-        public readonly List<int> OffsetList4 = new();
+        public readonly List<int> AttributeOffsets = new();
 
         public ScdOffsetsHeader( BinaryReader reader ) {
             SoundCount = reader.ReadInt16();
@@ -41,12 +41,15 @@ namespace VfxEditor.ScdFormat {
             ReadOffsets( TrackOffsets, reader, TrackCount );
             ReadOffsets( AudioOffsets, reader, AudioCount );
 
-            ReadOffsets( LayoutOffsets, reader, SoundCount );
-            // TODO: what if count = 0?
-            var countTable4 = ( LayoutOffsets[0] - AttributeOffset ) / 4;
-            ReadOffsets( OffsetList4, reader, countTable4 );
+            if( LayoutOffset != 0 ) {
+                ReadOffsets( LayoutOffsets, reader, SoundCount );
+            }
+            if( AttributeOffset != 0 ) {
+                var attributeCount = ( LayoutOffsets[0] - AttributeOffset ) / 4;
+                ReadOffsets( AttributeOffsets, reader, attributeCount );
+            }
 
-            PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} diff: {countTable4} cs: {SoundCount}" );
+            PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} cs: {SoundCount}" );
             PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
 
             /*
@@ -88,17 +91,15 @@ namespace VfxEditor.ScdFormat {
             WriteOffsets( TrackOffsets, writer );
             WriteOffsets( AudioOffsets, writer );
             WriteOffsets( LayoutOffsets, writer );
-            WriteOffsets( OffsetList4, writer );
+            WriteOffsets( AttributeOffsets, writer );
         }
 
         public static void ReadOffsets( List<int> offsets, BinaryReader reader, int count ) {
-            // TODO: what if count = 0?
             for( var i = 0; i < count; i++ ) offsets.Add( reader.ReadInt32() );
             FileUtils.PadTo( reader, 16 );
         }
 
         public static void WriteOffsets( List<int> offsets, BinaryWriter writer ) {
-            // TODO: what if count = 0?
             foreach( var offset in offsets ) writer.Write( offset );
             FileUtils.PadTo( writer, 16 );
         }
