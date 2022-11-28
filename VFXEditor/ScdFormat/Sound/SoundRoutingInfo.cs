@@ -34,7 +34,7 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class SoundRoutingInfo {
-        public uint DataSize;
+        public uint DataSize = 0x10;
         public byte SendCount;
         private readonly ParsedReserve Reserve1 = new( 11 );
         // Send Info
@@ -59,10 +59,12 @@ namespace VfxEditor.ScdFormat {
             writer.Write( DataSize );
             writer.Write( SendCount );
             Reserve1.Write( writer );
-
             SendInfo.ForEach( x => x.Write( writer ) );
-
             EffectParam.Write( writer );
+        }
+
+        public void Draw( string parentId ) {
+            
         }
     }
 

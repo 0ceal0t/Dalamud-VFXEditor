@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,11 @@ namespace VfxEditor.ScdFormat {
             TrackIdx.Write( writer );
             AudioIdx.Write( writer );
         }
+
+        public void Draw( string parentId ) {
+            TrackIdx.Draw( parentId, CommandManager.Scd );
+            AudioIdx.Draw( parentId, CommandManager.Scd );
+        }
     }
 
     public class SoundTracks {
@@ -35,6 +41,19 @@ namespace VfxEditor.ScdFormat {
 
         public void Write( BinaryWriter writer ) {
             Tracks.ForEach( x => x.Write( writer ) );
+        }
+
+        public void Draw( string parentId ) {
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
+            for( var idx = 0; idx < Tracks.Count; idx++ ) {
+                if( ImGui.CollapsingHeader( $"Track #{idx}{parentId}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    ImGui.Indent();
+                    Tracks[idx].Draw( $"{parentId}{idx}" );
+                    ImGui.Unindent();
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+                }
+            }
         }
     }
 
@@ -67,6 +86,25 @@ namespace VfxEditor.ScdFormat {
                 CycleRange.Write( writer );
             }
         }
+
+        public void Draw( string parentId, SoundType type ) {
+            if( type == SoundType.Cycle ) {
+                CycleInterval.Draw( parentId, CommandManager.Scd );
+                CycleNumPlayTrack.Draw( parentId, CommandManager.Scd );
+                CycleRange.Draw( parentId, CommandManager.Scd );
+            }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
+            for( var idx = 0; idx < Tracks.Count; idx++ ) {
+                if( ImGui.CollapsingHeader( $"Track #{idx}{parentId}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    ImGui.Indent();
+                    Tracks[idx].Draw( $"{parentId}{idx}" );
+                    ImGui.Unindent();
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+                }
+            }
+        }
     }
 
     public class RandomTrackInfo {
@@ -81,6 +119,11 @@ namespace VfxEditor.ScdFormat {
         public void Write( BinaryWriter writer ) {
             Track.Write( writer );
             UpperLimit.Write( writer );
+        }
+
+        public void Draw( string parentId ) {
+            Track.Draw( parentId );
+            UpperLimit.Draw( parentId, CommandManager.Scd );
         }
     }
 }

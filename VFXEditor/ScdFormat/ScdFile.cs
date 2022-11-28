@@ -21,8 +21,10 @@ namespace VfxEditor.ScdFormat {
 
         public List<ScdAudioEntry> Audio = new();
         public List<ScdLayoutEntry> Layouts = new();
+        public List<ScdSoundEntry> Sounds = new();
+
+        public ScdSimpleSplitView<ScdSoundEntry> SoundView;
         public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
-        public List<ScdSoundEntry> Sound = new();
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -38,26 +40,32 @@ namespace VfxEditor.ScdFormat {
             foreach( var offset in OffsetsHeader.LayoutOffsets.Where( x => x != 0 ) ) {
                 Layouts.Add( new ScdLayoutEntry( reader, offset ) );
             }
-            LayoutView = new( Layouts );
 
             foreach( var offset in OffsetsHeader.SoundOffsets.Where( x => x != 0 ) ) {
-                Sound.Add( new ScdSoundEntry( reader, offset ) );
+                Sounds.Add( new ScdSoundEntry( reader, offset ) );
             }
 
             reader.BaseStream.Seek( OffsetsHeader.TrackOffsets[0], SeekOrigin.Begin );
             PreSoundData = reader.ReadBytes( OffsetsHeader.AudioOffsets[0] - OffsetsHeader.TrackOffsets[0] );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+
+            LayoutView = new( Layouts );
+            SoundView = new( Sounds );
         }
 
         public override void Draw( string id ) {
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Sounds{id}" ) ) {
+                if( ImGui.BeginTabItem( $"Audio{id}" ) ) {
                     DrawSounds( id );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( $"Table 2{id}" ) ) {
-                    LayoutView.Draw( $"{id}/Table2" );
+                if( ImGui.BeginTabItem( $"Sounds{id}" ) ) {
+                    SoundView.Draw( $"{id}/Sounds" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Layouts{id}" ) ) {
+                    LayoutView.Draw( $"{id}/Layouts" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -83,8 +91,9 @@ namespace VfxEditor.ScdFormat {
             UpdateOffsets( writer, Layouts, OffsetsHeader.LayoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
                 item.Write( writer );
             } );
+            FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Sound, ( int )OffsetsHeader.SoundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
+            UpdateOffsets( writer, Sounds, ( int )OffsetsHeader.SoundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );

@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.IO;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.ScdFormat {
@@ -20,7 +21,12 @@ namespace VfxEditor.ScdFormat {
 
         protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader );
 
-        public override void CheckKeybinds() { }
+        public override void CheckKeybinds() {
+            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Scd.Copy();
+            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Scd.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Scd?.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Scd?.Redo();
+        }
 
         public override WorkspaceMetaScd GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,

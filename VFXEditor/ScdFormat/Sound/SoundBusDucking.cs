@@ -8,7 +8,7 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class SoundBusDucking {
-        private byte Size;
+        private byte Size = 0x10;
         public readonly ParsedByte Number = new( "Number" );
         private readonly ParsedReserve Reserve1 = new( 2 );
         public readonly ParsedInt FadeTime = new( "Fade Time" );
@@ -31,6 +31,12 @@ namespace VfxEditor.ScdFormat {
             FadeTime.Write( writer );
             Volume.Write( writer );
             writer.Write( Reserve2 );
+        }
+
+        public void Draw( string parentId ) {
+            Number.Draw( parentId, CommandManager.Scd );
+            FadeTime.Draw( parentId, CommandManager.Scd );
+            Volume.Draw( parentId, CommandManager.Scd );
         }
     }
 }

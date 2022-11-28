@@ -47,6 +47,7 @@ namespace VfxEditor.ScdFormat {
             ReadOffsets( OffsetList4, reader, countTable4 );
 
             PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} diff: {countTable4} cs: {SoundCount}" );
+            PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
 
             /*
             if( scdHeader.LayoutOffset != 0 )
@@ -68,7 +69,7 @@ namespace VfxEditor.ScdFormat {
             }
              */
 
-            // [o2] [start] [o1] [o4] [os]
+            // [layout] [sound] [o1] [o4] [audio]
         }
 
         public void Write( BinaryWriter writer ) {

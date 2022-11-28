@@ -11,7 +11,7 @@ namespace VfxEditor.ScdFormat {
     public class SoundExtra {
         public readonly ParsedByte Version = new( "Version" );
         private byte Reserved1;
-        private ushort Size;
+        private ushort Size = 0x10;
         public readonly ParsedInt PlayTimeLength = new( "Play Time Length" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
@@ -19,7 +19,6 @@ namespace VfxEditor.ScdFormat {
             Version.Read( reader );
             Reserved1 = reader.ReadByte();
             Size = reader.ReadUInt16();
-            PluginLog.Log( $"{Size}" );
             PlayTimeLength.Read( reader );
             Reserve2.Read( reader );
         }
@@ -30,6 +29,11 @@ namespace VfxEditor.ScdFormat {
             writer.Write( Size );
             PlayTimeLength.Write( writer );
             Reserve2.Write( writer );
+        }
+
+        public void Draw( string parentId ) {
+            Version.Draw( parentId, CommandManager.Scd );
+            PlayTimeLength.Draw( parentId, CommandManager.Scd );
         }
     }
 }

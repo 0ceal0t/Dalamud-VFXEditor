@@ -10,7 +10,7 @@ namespace VfxEditor.ScdFormat {
     public class SoundAtomos {
         public readonly ParsedByte Version = new( "Version" );
         private byte Reserved1;
-        private ushort Size;
+        private ushort Size = 0x10;
         public readonly ParsedShort MinPeople = new( "Minimum Number of People" );
         public readonly ParsedShort MaxPeople = new( "Maximum Number of People" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
@@ -31,6 +31,12 @@ namespace VfxEditor.ScdFormat {
             MinPeople.Write( writer );
             MaxPeople.Write( writer );
             Reserve2.Write( writer );
+        }
+
+        public void Draw( string parentId ) {
+            Version.Draw( parentId, CommandManager.Scd );
+            MinPeople.Draw( parentId, CommandManager.Scd );
+            MaxPeople.Draw( parentId, CommandManager.Scd );
         }
     }
 }

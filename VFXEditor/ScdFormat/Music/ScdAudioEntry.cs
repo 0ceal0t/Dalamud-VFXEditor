@@ -40,7 +40,7 @@ namespace VfxEditor.ScdFormat {
             Player = new( this );
         }
 
-        protected override void Read( BinaryReader reader ) {
+        public override void Read( BinaryReader reader ) {
             // Datalength = 0, 0x20
             DataLength = reader.ReadInt32();
             NumChannels = reader.ReadInt32();

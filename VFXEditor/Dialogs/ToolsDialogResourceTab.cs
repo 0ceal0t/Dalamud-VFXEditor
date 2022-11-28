@@ -110,6 +110,8 @@ namespace VfxEditor.Dialogs {
 
                 ImGui.TableNextColumn();
                 ImGui.Text( item.Path );
+                if( ImGui.IsItemClicked() ) ImGui.SetClipboardText( item.Path );
+
                 ImGui.TableNextColumn();
                 ImGui.Text( item.Refs.ToString() );
             }

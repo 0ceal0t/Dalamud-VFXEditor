@@ -37,7 +37,14 @@ namespace VfxEditor.ScdFormat {
 
         protected override ScdDocument GetImportedDocument( string localPath, WorkspaceMetaScd data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
-        protected override void DrawMenu() { }
+        protected override void DrawMenu() {
+            if( CurrentFile == null ) return;
+            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                CopyManager.Scd.Draw();
+                CommandManager.Scd.Draw();
+                ImGui.EndMenu();
+            }
+        }
 
         public override void Dispose() {
             base.Dispose();
