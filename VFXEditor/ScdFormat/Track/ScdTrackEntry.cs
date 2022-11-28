@@ -11,8 +11,6 @@ namespace VfxEditor.ScdFormat {
     public class ScdTrackEntry : ScdEntry, IScdSimpleUiBase {
         public readonly List<ScdTrackItem> Items = new();
 
-        public ScdTrackEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
-
         public override void Read( BinaryReader reader ) {
             while( true ) {
                 var newItem = new ScdTrackItem();

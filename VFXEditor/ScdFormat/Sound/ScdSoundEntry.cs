@@ -74,8 +74,6 @@ namespace VfxEditor.ScdFormat {
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.ExtraDesc );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom;
 
-        public ScdSoundEntry( BinaryReader reader, int offset ) : base( reader, offset ) { }
-
         public override void Read( BinaryReader reader ) {
             var trackCount = reader.ReadByte();
             BusNumber.Read( reader );

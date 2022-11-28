@@ -66,17 +66,9 @@ namespace VfxEditor.ScdFormat {
 
         public ScdLayoutData Data = null;
 
-        private List<ParsedBase> Parsed;
+        private readonly List<ParsedBase> Parsed;
 
-        public ScdLayoutEntry( BinaryReader reader, int offset ) : base( reader, offset ) {
-            Type.ExtraCommandGenerator = () => {
-                return new ScdLayoutEntryExtraCommand( this );
-            };
-        }
-
-        public override void Read( BinaryReader reader ) {
-            Size = reader.ReadUInt16();
-
+        public ScdLayoutEntry() {
             Parsed = new() {
                 Type,
                 Version,
@@ -89,6 +81,14 @@ namespace VfxEditor.ScdFormat {
                 AbGroupNumber,
                 Volume
             };
+            
+            Type.ExtraCommandGenerator = () => {
+                return new ScdLayoutEntryExtraCommand( this );
+            };
+        }
+
+        public override void Read( BinaryReader reader ) {
+            Size = reader.ReadUInt16();
             Parsed.ForEach( x => x.Read( reader ) );
 
             UpdateData();

@@ -17,16 +17,17 @@ namespace VfxEditor.ScdFormat {
 
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
-        private readonly byte[] PreSoundData;
 
         public List<ScdAudioEntry> Audio = new();
         public List<ScdLayoutEntry> Layouts = new();
         public List<ScdSoundEntry> Sounds = new();
         public List<ScdTrackEntry> Tracks = new();
+        public List<ScdAttributeEntry> Attributes = new();
 
         public ScdSimpleSplitView<ScdSoundEntry> SoundView;
         public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
         public ScdSimpleSplitView<ScdTrackEntry> TrackView;
+        public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -36,29 +37,41 @@ namespace VfxEditor.ScdFormat {
 
             // The acutal sound effect/music data
             foreach( var offset in OffsetsHeader.AudioOffsets.Where( x => x != 0 ) ) {
-                Audio.Add( new ScdAudioEntry( reader, offset ) );
+                var newAudio = new ScdAudioEntry();
+                newAudio.Read( reader, offset );
+                Audio.Add( newAudio );
             }
 
             foreach( var offset in OffsetsHeader.LayoutOffsets.Where( x => x != 0 ) ) {
-                Layouts.Add( new ScdLayoutEntry( reader, offset ) );
+                var newLayout = new ScdLayoutEntry();
+                newLayout.Read( reader, offset );
+                Layouts.Add( newLayout );
             }
 
             foreach( var offset in OffsetsHeader.TrackOffsets.Where( x => x != 0 ) ) {
-                Tracks.Add( new ScdTrackEntry( reader, offset ) );
+                var newTrack = new ScdTrackEntry();
+                newTrack.Read( reader, offset );
+                Tracks.Add( newTrack );
+            }
+
+            foreach( var offset in OffsetsHeader.AttributeOffsets.Where( x => x != 0 ) ) {
+                var newAttribute = new ScdAttributeEntry();
+                newAttribute.Read( reader, offset );
+                Attributes.Add( newAttribute );
             }
 
             foreach( var offset in OffsetsHeader.SoundOffsets.Where( x => x != 0 ) ) {
-                Sounds.Add( new ScdSoundEntry( reader, offset ) );
+                var newSound = new ScdSoundEntry();
+                newSound.Read( reader, offset );
+                Sounds.Add( newSound );
             }
-
-            reader.BaseStream.Seek( OffsetsHeader.AttributeOffsets[0], SeekOrigin.Begin );
-            PreSoundData = reader.ReadBytes( OffsetsHeader.AudioOffsets[0] - OffsetsHeader.AttributeOffsets[0] );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            LayoutView = new( Layouts );
-            SoundView = new( Sounds );
-            TrackView = new( Tracks );
+            LayoutView = new( "Layout", Layouts );
+            SoundView = new( "Sound", Sounds );
+            TrackView = new( "Track", Tracks );
+            AttributeView = new( "Attribute", Attributes );
         }
 
         public override void Draw( string id ) {
@@ -77,6 +90,10 @@ namespace VfxEditor.ScdFormat {
                 }
                 if( ImGui.BeginTabItem( $"Tracks{id}" ) ) {
                     TrackView.Draw( $"{id}/Tacks" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Attributes{id}" ) ) {
+                    AttributeView.Draw( $"{id}/Attributes" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -114,7 +131,10 @@ namespace VfxEditor.ScdFormat {
             } );
             FileUtils.PadTo( writer, 16 );
 
-            writer.Write( PreSoundData ); // Everything else
+            UpdateOffsets( writer, Attributes, OffsetsHeader.AttributeOffset, ( BinaryWriter bw, ScdAttributeEntry item ) => {
+                item.Write( writer );
+            } );
+            FileUtils.PadTo( writer, 16 );
 
             // Sounds
             long paddingSubtract = 0;

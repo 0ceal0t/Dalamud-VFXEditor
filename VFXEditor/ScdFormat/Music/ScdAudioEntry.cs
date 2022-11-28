@@ -33,10 +33,7 @@ namespace VfxEditor.ScdFormat {
         public ScdAudioData Data;
         private readonly AudioPlayer Player;
 
-        public ScdAudioEntry( BinaryReader reader ) : base( reader ) {
-            Player = new( this );
-        }
-        public ScdAudioEntry( BinaryReader reader, int offset ) : base( reader, offset ) {
+        public ScdAudioEntry() {
             Player = new( this );
         }
 

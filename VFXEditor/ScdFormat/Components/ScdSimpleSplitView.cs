@@ -10,9 +10,11 @@ namespace VfxEditor.ScdFormat {
     public class ScdSimpleSplitView<T> where T : class, IScdSimpleUiBase {
         private readonly List<T> Items;
         private T Selected = null;
+        private readonly string ItemName;
 
-        public ScdSimpleSplitView( List<T> items ) {
+        public ScdSimpleSplitView( string itemName, List<T> items ) {
             Items = items;
+            ItemName = itemName;
         }
 
         public void Draw( string id ) {
@@ -24,7 +26,7 @@ namespace VfxEditor.ScdFormat {
 
             var selectedIndex = Selected == null ? -1 : Items.IndexOf( Selected );
             for( var i = 0; i < Items.Count; i++ ) {
-                if( ImGui.Selectable( $"Entry {i}{id}{i}", Items[i] == Selected ) ) {
+                if( ImGui.Selectable( $"{ItemName} {i}{id}{i}", Items[i] == Selected ) ) {
                     Selected = Items[i];
                     selectedIndex = i;
                 }

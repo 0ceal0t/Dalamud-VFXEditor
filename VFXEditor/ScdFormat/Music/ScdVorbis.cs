@@ -126,7 +126,8 @@ namespace VfxEditor.ScdFormat {
             using var readerMs = new MemoryStream( newEntryData );
             using var reader = new BinaryReader( readerMs );
 
-            var newEntry = new ScdAudioEntry( reader );
+            var newEntry = new ScdAudioEntry();
+            newEntry.Read( reader );
 
             Plugin.ScdManager.CurrentFile.Replace( entry, newEntry );
             entry.Dispose();

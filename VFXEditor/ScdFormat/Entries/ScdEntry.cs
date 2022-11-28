@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace VfxEditor.ScdFormat {
     public abstract class ScdEntry : ScdData {
-        protected ScdEntry( BinaryReader reader, int offset ) {
+        public void Read( BinaryReader reader, int offset ) {
             var oldPosition = reader.BaseStream.Position;
             reader.BaseStream.Position = offset;
             Read( reader );
             reader.BaseStream.Position = oldPosition;
-        }
-
-        protected ScdEntry( BinaryReader reader ) {
-            Read( reader );
         }
     }
 }
