@@ -42,6 +42,7 @@ If you have other questions, please open an [Issue](https://github.com/0ceal0t/D
 * Add, remove, and edit particles, emitters, etc.
 * Export and replace models
 * Modify and replace abilities and animations
+* Export, play, and modify music and sound effects
 
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).

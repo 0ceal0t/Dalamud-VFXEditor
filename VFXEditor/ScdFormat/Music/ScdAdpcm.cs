@@ -33,9 +33,11 @@ namespace VfxEditor.ScdFormat {
                 PluginLog.Log( "Already Adpcm, skipping conversion" );
                 File.Copy( path, ScdManager.ConvertWav, true );
             }
+            else {
+                ScdUtils.ConvertToAdpcm( path );
+            }
             waveFileCheck.Close();
 
-            ScdUtils.ConvertToAdpcm( path );
             var data = ( ScdAdpcm )entry.Data;
             using var waveFile = new WaveFileReader( ScdManager.ConvertWav );
 

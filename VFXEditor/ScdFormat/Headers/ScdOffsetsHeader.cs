@@ -53,7 +53,6 @@ namespace VfxEditor.ScdFormat {
             PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
 
             /*
-            
             if( scdHeader.LayoutOffset != 0 ) {
                 Reader.Position = scdHeader.LayoutOffset;
                 _layoutOffset = Reader.ReadUInt32();
@@ -68,10 +67,7 @@ namespace VfxEditor.ScdFormat {
                 Reader.Position = scdHeader.AttributeOffset;
                 _attributeOffset = Reader.ReadUInt32();
             }
-
             */
-
-            // [layout] [sound] [o1] [o4] [audio]
         }
 
         public void Write( BinaryWriter writer ) {
