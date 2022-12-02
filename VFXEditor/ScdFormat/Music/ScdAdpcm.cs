@@ -38,6 +38,11 @@ namespace VfxEditor.ScdFormat {
             }
             waveFileCheck.Close();
 
+            if( !File.Exists( ScdManager.ConvertWav ) ) {
+                PluginLog.Error( "Could not conver to ADPCM" );
+                return;
+            }
+
             var data = ( ScdAdpcm )entry.Data;
             using var waveFile = new WaveFileReader( ScdManager.ConvertWav );
 
@@ -52,7 +57,13 @@ namespace VfxEditor.ScdFormat {
             br.ReadInt32(); // fmt
             var headerLength = br.ReadInt32();
             data.WaveHeader = br.ReadBytes( headerLength );
-            br.ReadInt32(); // data
+
+            var magic = br.ReadInt32();
+            while( magic != 0x61746164 ) { // data
+                var size = br.ReadInt32();
+                br.ReadBytes( size );
+                magic = br.ReadInt32();
+            }
             var dataLength = br.ReadInt32();
             data.Data = br.ReadBytes( dataLength );
 

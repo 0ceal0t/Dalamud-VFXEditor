@@ -1,3 +1,5 @@
+using Dalamud.Logging;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -19,8 +21,8 @@ namespace VfxEditor.Interop {
                 using var exeProcess = Process.Start( startInfo );
                 exeProcess.WaitForExit();
             }
-            catch {
-                // Log error.
+            catch (Exception e) {
+                PluginLog.LogError( e, "Error executing" );
             }
         }
     }
