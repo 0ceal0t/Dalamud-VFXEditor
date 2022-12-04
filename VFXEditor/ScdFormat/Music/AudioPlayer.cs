@@ -18,8 +18,10 @@ namespace VfxEditor.ScdFormat {
         private WaveChannel32 CurrentChannel;
         private WasapiOut CurrentOutput;
 
-        private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds - 0.1;
+        private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds - 0.01f;
         private double CurrentTime => CurrentStream == null ? 0 : CurrentStream.CurrentTime.TotalSeconds;
+
+        private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
         public AudioPlayer( ScdAudioEntry entry ) {
             Entry = entry;
@@ -46,7 +48,7 @@ namespace VfxEditor.ScdFormat {
                 if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
                 var selectedTime = ( float )CurrentTime;
                 ImGui.SameLine( 50f );
-                ImGui.SetNextItemWidth( 150f );
+                ImGui.SetNextItemWidth( 220f );
                 if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
                     if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
                         CurrentOutput.Pause();
@@ -78,11 +80,11 @@ namespace VfxEditor.ScdFormat {
                 ImGui.PopFont();
                 UiUtils.Tooltip( "Replace sound file" );
 
-                var loopStartEnd = new Vector2( ( float )Entry.LoopStart / Entry.DataLength, ( float )Entry.LoopEnd / Entry.DataLength ) * 100f;
-                ImGui.SetNextItemWidth( 180f );
-                if( ImGui.InputFloat2( $"Loop Start/End %{id}", ref loopStartEnd ) ) {
-                    Entry.LoopStart = ( int )( Math.Clamp( loopStartEnd.X, 0, 100 ) / 100f * Entry.DataLength );
-                    Entry.LoopEnd = ( int )( Math.Clamp( loopStartEnd.Y, 0, 100 ) / 100f * Entry.DataLength );
+                var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
+                ImGui.SetNextItemWidth( 250f );
+                if( ImGui.InputInt2( $"Loop Start/End (Bytes)", ref loopStartEnd[0] ) ) {
+                    Entry.LoopStart = loopStartEnd[0];
+                    Entry.LoopEnd = loopStartEnd[1];
                 }
 
                 ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / 0x{Entry.DataLength:X8} bytes" );
@@ -92,8 +94,8 @@ namespace VfxEditor.ScdFormat {
 
             var currentState = State;
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
-                ( ( Entry.Format == SscfWaveFormat.Vorbis && Plugin.Configuration.LoopMusic ) ||
-                  ( Entry.Format != SscfWaveFormat.Vorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
+                ( ( IsVorbis && Plugin.Configuration.LoopMusic ) ||
+                  ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
                 PluginLog.Log( "Looping..." );
                 Play();
             }
@@ -104,6 +106,7 @@ namespace VfxEditor.ScdFormat {
             Reset();
             try {
                 var stream = Entry.Data.GetStream();
+
                 CurrentStream = stream.WaveFormat.Encoding switch {
                     WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
                     WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
@@ -123,8 +126,6 @@ namespace VfxEditor.ScdFormat {
                 PluginLog.LogError( e, "Error playing sound" );
             }
         }
-
-        private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
         private void ImportDialog() {
             var text = IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*";

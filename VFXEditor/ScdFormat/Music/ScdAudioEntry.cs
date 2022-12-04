@@ -47,7 +47,7 @@ namespace VfxEditor.ScdFormat {
             LoopEnd = reader.ReadInt32();
             FirstFrame = reader.ReadInt32();
             AuxCount = reader.ReadInt16();
-            BitsPerSample = reader.ReadInt16(); // padding
+            BitsPerSample = reader.ReadInt16();
 
             if( DataLength == 0 ) {
                 AuxChunkData = Array.Empty<byte>();
