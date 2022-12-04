@@ -49,8 +49,8 @@ namespace VfxEditor.ScdFormat {
                 ReadOffsets( AttributeOffsets, reader, attributeCount );
             }
 
-            PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} cs: {SoundCount}" );
-            PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
+            //PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} cs: {SoundCount}" );
+            //PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
 
             /*
             if( scdHeader.LayoutOffset != 0 ) {

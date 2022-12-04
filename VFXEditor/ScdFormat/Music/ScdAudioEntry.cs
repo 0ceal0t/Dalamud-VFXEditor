@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
         public byte[] AuxChunkData;
 
         public ScdAudioData Data;
-        private readonly AudioPlayer Player;
+        public readonly AudioPlayer Player;
 
         public ScdAudioEntry() {
             Player = new( this );
@@ -47,7 +47,7 @@ namespace VfxEditor.ScdFormat {
             LoopEnd = reader.ReadInt32();
             FirstFrame = reader.ReadInt32();
             AuxCount = reader.ReadInt16();
-            BitsPerSample = reader.ReadInt16(); // padding
+            BitsPerSample = reader.ReadInt16();
 
             if( DataLength == 0 ) {
                 AuxChunkData = Array.Empty<byte>();
