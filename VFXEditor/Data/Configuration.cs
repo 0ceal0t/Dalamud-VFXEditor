@@ -67,6 +67,7 @@ namespace VfxEditor {
 
         public bool LoopMusic = true;
         public bool LoopSoundEffects = false;
+        public float ScdVolume = 1f;
 
         [NonSerialized]
         public bool WriteLocationError = false;

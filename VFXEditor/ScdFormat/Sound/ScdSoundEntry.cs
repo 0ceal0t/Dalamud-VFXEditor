@@ -72,7 +72,7 @@ namespace VfxEditor.ScdFormat {
         private bool AccelerationEnabled => Attributes.Value.HasFlag( SoundAttribute.Acceleration );
         private bool AtomosEnabled => Attributes.Value.HasFlag( SoundAttribute.Atomosgear );
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.ExtraDesc );
-        private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom;
+        private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
         public override void Read( BinaryReader reader ) {
             var trackCount = reader.ReadByte();

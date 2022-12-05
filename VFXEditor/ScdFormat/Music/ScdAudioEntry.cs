@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
         public byte[] AuxChunkData;
 
         public ScdAudioData Data;
-        private readonly AudioPlayer Player;
+        public readonly AudioPlayer Player;
 
         public ScdAudioEntry() {
             Player = new( this );

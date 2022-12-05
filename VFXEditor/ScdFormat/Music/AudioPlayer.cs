@@ -114,7 +114,7 @@ namespace VfxEditor.ScdFormat {
                 };
 
                 CurrentChannel = new WaveChannel32( CurrentStream ) {
-                    Volume = 1f,
+                    Volume = Plugin.Configuration.ScdVolume,
                     PadWithZeroes = false,
                 };
                 CurrentOutput = new WasapiOut();
@@ -125,6 +125,11 @@ namespace VfxEditor.ScdFormat {
             catch( Exception e ) {
                 PluginLog.LogError( e, "Error playing sound" );
             }
+        }
+
+        public void UpdateVolume() {
+            if( CurrentOutput == null ) return;
+            CurrentOutput.Volume = Plugin.Configuration.ScdVolume;
         }
 
         private void ImportDialog() {
