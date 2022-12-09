@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
-using VfxEditor.Interop;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.PapFormat {
@@ -18,19 +16,21 @@ namespace VfxEditor.PapFormat {
         DemiHuman = 2
     }
 
-    public class PapFile : FileDropdown<PapAnimation> {
-        private static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
+    public class PapFile : FileManagerFile {
+        public static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
 
         public readonly CommandManager Command = new( Data.CopyManager.Pap );
-        private readonly string HkxTempLocation;
+        public readonly string HkxTempLocation;
 
-        private readonly ParsedShort ModelId = new( "Model Id" );
-        private readonly ParsedSimpleEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
-        private readonly ParsedInt Variant = new( "Varient", size: 1 );
+        public readonly ParsedShort ModelId = new( "Model Id" );
+        public readonly ParsedSimpleEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
+        public readonly ParsedInt Variant = new( "Varient", size: 1 );
 
-        private readonly List<PapAnimation> Animations = new();
+        public readonly List<PapAnimation> Animations = new();
+        public readonly PapAnimationDropdown AnimationsDropdown;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( true ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) {
+            AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 
             var startPos = reader.BaseStream.Position;
@@ -138,17 +138,19 @@ namespace VfxEditor.PapFormat {
                 }
 
                 if( ImGui.BeginTabItem( $"Animations{id}" ) ) {
-                    DrawDropdown( id, separatorBefore: false );
-
-                    if( Selected != null ) {
-                        Selected.Draw( $"{id}{Animations.IndexOf( Selected )}", ModelId.Value, ModelType.GetValue(), Variant.Value );
-                    }
-                    else ImGui.Text( "Select an animation..." );
-
+                    AnimationsDropdown.Draw( id );
                     ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
+            }
+        }
+
+        public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+
+        public void RefreshHavokIndexes() {
+            for( var i = 0; i < Animations.Count; i++ ) {
+                Animations[i].HavokIndex = ( short )i;
             }
         }
 
@@ -158,53 +160,6 @@ namespace VfxEditor.PapFormat {
                 return ( int )( leftOver == 0 ? 0 : 4 - leftOver );
             }
             return 0;
-        }
-
-        public override List<PapAnimation> GetItems() => Animations;
-
-        protected override string GetName( PapAnimation item, int idx ) => item.GetName();
-
-        protected override void OnNew() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                if( ok ) {
-                    PapManager.IndexDialog.OnOk = ( int idx ) => {
-                        var newAnim = new PapAnimation( HkxTempLocation );
-                        newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
-
-                        CompoundCommand command = new( false, true );
-                        command.Add( new PapAnimationAddCommand( this, Animations, newAnim ) );
-                        command.Add( new PapHavokFileCommand( HkxTempLocation, () => {
-                            HavokInterop.AddHavokAnimation( HkxTempLocation, res, idx, HkxTempLocation );
-                        } ) );
-                        CommandManager.Pap.Add( command );
-
-                        UiUtils.OkNotification( "Havok data imported" );
-                    };
-                    PapManager.IndexDialog.Show();
-                }
-            } );
-        }
-
-        protected override void OnDelete( PapAnimation item ) {
-            var index = Animations.IndexOf( item );
-            if( index == -1 ) return;
-
-            CompoundCommand command = new( false, true );
-            command.Add( new PapAnimationRemoveCommand( this, Animations, item ) );
-            command.Add( new PapHavokFileCommand( HkxTempLocation, () => {
-                HavokInterop.RemoveHavokAnimation( HkxTempLocation, index, HkxTempLocation );
-            } ) );
-            CommandManager.Pap.Add( command );
-
-            UiUtils.OkNotification( "Havok data removed" );
-        }
-
-        public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
-
-        public void RefreshHavokIndexes() {
-            for( var i = 0; i < Animations.Count; i++ ) {
-                Animations[i].HavokIndex = ( short )i;
-            }
         }
     }
 }

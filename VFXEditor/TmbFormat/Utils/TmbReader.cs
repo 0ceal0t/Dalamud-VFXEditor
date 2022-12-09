@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Utils {
             StartPosition = Reader.BaseStream.Position;
         }
 
-        public void ParseItem( List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, ref Tmfc tmfc, bool papEmbedded, ref bool ok ) {
+        public void ParseItem( List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, List<Tmfc> tmfcs, bool papEmbedded, ref bool ok ) {
             var savePos = Reader.BaseStream.Position;
             var magic = ReadString( 4 );
             var size = ReadInt32();
@@ -40,8 +40,9 @@ namespace VfxEditor.TmbFormat.Utils {
                 entry = track;
             }
             else if( magic == "TMFC" ) {
-                tmfc = new Tmfc( this, papEmbedded );
-                entries.Add( tmfc ); // will be the last entry
+                var tmfc = new Tmfc( this, papEmbedded );
+                entries.Add( tmfc );
+                tmfcs.Add( tmfc );
                 entry = tmfc;
             }
             else {

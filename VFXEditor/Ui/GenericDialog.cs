@@ -2,7 +2,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
 
-namespace VfxEditor.Dialogs {
+namespace VfxEditor.Ui {
     public abstract class GenericDialog {
         protected bool Visible = false;
         protected string Name;

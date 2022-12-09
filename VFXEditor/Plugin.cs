@@ -15,7 +15,7 @@ using VfxEditor.PapFormat;
 using VfxEditor.TmbFormat;
 using VfxEditor.ScdFormat;
 using VfxEditor.Data;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.DirectX;
 using VfxEditor.Interop;
 using VfxEditor.Penumbra;

@@ -5,7 +5,7 @@ using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Texture {

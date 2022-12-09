@@ -3,7 +3,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {

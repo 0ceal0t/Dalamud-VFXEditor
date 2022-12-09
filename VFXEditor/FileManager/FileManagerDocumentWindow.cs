@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
@@ -30,10 +30,18 @@ namespace VfxEditor.FileManager {
 
             var idx = 0;
             foreach( var document in Manager.Documents ) {
+                var showGreen = document == Manager.ActiveDocument;
+                if( showGreen ) ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.GREEN_COLOR );
+
                 if( ImGui.Selectable( document.SourceDisplay + id + idx, document == SelectedDocument, ImGuiSelectableFlags.SpanAllColumns ) ) {
                     SelectedDocument = document;
                 }
+
+                if( showGreen ) ImGui.PopStyleColor();
+
                 if( ImGui.IsItemHovered() ) {
+                    if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) Manager.SelectDocument( SelectedDocument );
+
                     ImGui.BeginTooltip();
                     ImGui.Text( "Replace path: " + document.ReplaceDisplay );
                     ImGui.Text( "Write path: " + document.WritePath );
@@ -44,7 +52,12 @@ namespace VfxEditor.FileManager {
             ImGui.NextColumn();
 
             foreach( var document in Manager.Documents ) {
+                var showGreen = document == Manager.ActiveDocument;
+                if( showGreen ) ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.GREEN_COLOR );
+
                 ImGui.Text( document.ReplaceDisplay );
+
+                if( showGreen ) ImGui.PopStyleColor();
             }
 
             ImGui.Columns( 1 );

@@ -4,7 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.Select;
 
 namespace VfxEditor {

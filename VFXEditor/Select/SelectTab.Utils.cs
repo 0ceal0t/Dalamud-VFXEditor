@@ -81,6 +81,14 @@ namespace VfxEditor {
             return new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path );
         }
 
+        public static void DisplayNoVfx() {
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.984375f, 0.7265625f, 0.01176470f, 1 ) );
+            ImGui.TextWrapped( $"This item does not have a VFX. See the link below for information on adding one" );
+            ImGui.PopStyleColor();
+            if( ImGui.SmallButton( "Guide##NoVfx" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Adding-a-VFX-to-an-Item-Without-One" );
+        }
+
         public static bool Matches( string item, string query ) => item.ToLower().Contains( query.ToLower() );
 
         public static void DisplayPath( string path ) {

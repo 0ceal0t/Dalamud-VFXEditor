@@ -5,7 +5,7 @@ using System;
 using VfxEditor.Utils;
 using VfxEditor.Texture;
 
-namespace VfxEditor.Dialogs {
+namespace VfxEditor.Ui {
     public class ToolsDialogUtilitiesTab {
         private string ExtractPath = "";
 

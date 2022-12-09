@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 
 namespace VfxEditor.Penumbra {
     public class PenumbraDialog : GenericDialog {
