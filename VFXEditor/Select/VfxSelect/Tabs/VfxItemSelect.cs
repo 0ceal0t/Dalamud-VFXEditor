@@ -16,7 +16,9 @@ namespace VfxEditor.Select.VfxSelect {
             ImGui.SameLine();
             DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX Path", Loaded.GetVfxPath(), parentId, SelectResultType.GameItem, Loaded.Item.Name, true );
+            DrawPath( "VFX Path", Loaded.GetVfxPaths(), parentId, SelectResultType.GameItem, Loaded.Item.Name, true );
+
+            if( !Loaded.VfxExists ) DisplayNoVfx();
         }
 
         protected override string GetName( XivItem item ) => item.Name;

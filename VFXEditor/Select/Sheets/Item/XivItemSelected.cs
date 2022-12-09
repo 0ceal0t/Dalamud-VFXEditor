@@ -4,7 +4,7 @@ using System.Linq;
 namespace VfxEditor.Select.Rows {
     public class XivItemSelected {
         public XivItem Item;
-        public bool VfxExists;
+        public bool VfxExists => VfxIds.Count > 0;
         public List<int> VfxIds;
         public string ImcPath;
 
@@ -13,10 +13,9 @@ namespace VfxEditor.Select.Rows {
             ImcPath = file.FilePath;
 
             VfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => (int) x.VfxId ).ToList();
-            VfxExists = VfxIds.Count > 0;
         }
 
-        public List<string> GetVfxPath() {
+        public List<string> GetVfxPaths() {
             if( !VfxExists ) return new List<string>();
             return VfxIds.Select( Item.GetVfxPath ).ToList();
         }

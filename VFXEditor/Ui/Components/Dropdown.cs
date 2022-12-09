@@ -1,40 +1,38 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FileManager {
-    public abstract class FileDropdown<T> : FileManagerFile where T : class {
+namespace VfxEditor.Ui.Components {
+    public abstract class Dropdown<T> where T : class {
         protected T Selected = null;
+        protected readonly bool AllowNew;
+        protected readonly List<T> Items;
 
-        private readonly bool AllowNew;
-
-        public FileDropdown( bool allowNew ) {
+        public Dropdown( List<T> items, bool allowNew ) {
+            Items = items;
             AllowNew = allowNew;
         }
 
-        public abstract List<T> GetItems();
-
-        protected abstract string GetName( T item, int idx );
+        protected abstract string GetText( T item, int idx );
 
         protected abstract void OnNew();
 
         protected abstract void OnDelete( T item );
 
-        protected void DrawDropdown( string id, bool separatorBefore = true ) {
+        public void ClearSelected() { Selected = null; }
+
+        public virtual void Draw( string id ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            if( separatorBefore) {
-                ImGui.Separator();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            }
 
-            var items = GetItems();
-            if( Selected != null && !items.Contains( Selected ) ) Selected = null;
+            if( Selected != null && !Items.Contains( Selected ) ) Selected = null;
 
-            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetName( Selected, items.IndexOf( Selected ) ) ) ) {
-                for( var idx = 0; idx < items.Count; idx++ ) {
-                    var item = items[idx];
-                    if( ImGui.Selectable( $"{GetName( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
+            if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetText( Selected, Items.IndexOf( Selected ) ) ) ) {
+                for( var idx = 0; idx < Items.Count; idx++ ) {
+                    var item = Items[idx];
+                    if( ImGui.Selectable( $"{GetText( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
                 }
                 ImGui.EndCombo();
             }
@@ -59,7 +57,5 @@ namespace VfxEditor.FileManager {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
         }
-
-        public void ClearSelected() { Selected = null; }
     }
 }

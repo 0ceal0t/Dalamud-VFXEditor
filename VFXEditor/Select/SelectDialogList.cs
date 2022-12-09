@@ -27,26 +27,43 @@ namespace VfxEditor {
             var footerHeight = ImGui.GetFrameHeightWithSpacing();
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
 
-            var idx = 0;
-            foreach( var item in Items ) {
-                if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
-                if( Dialog.DrawFavorite( item ) ) break;
-                if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ) ) ) {
-                    IsSelected = true;
-                    Selected = item;
-                    break;
+            if( ImGui.BeginTable( $"{id}/Table", 2, ImGuiTableFlags.RowBg ) ) {
+                ImGui.TableSetupColumn( $"{id}/Col1", ImGuiTableColumnFlags.WidthFixed, 20 );
+                ImGui.TableSetupColumn( $"{id}/Col2", ImGuiTableColumnFlags.WidthStretch );
+
+                var idx = 0;
+                foreach( var item in Items ) {
+                    if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
+
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+
+                    if( Dialog.DrawFavorite( item ) ) break;
+                    ImGui.TableNextColumn();
+
+                    if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ) ) ) {
+                        IsSelected = true;
+                        Selected = item;
+                        break;
+                    }
+                    if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) {
+                        Dialog.Invoke( Selected );
+                        break;
+                    }
+                    idx++;
                 }
-                if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) {
-                    Dialog.Invoke( Selected );
-                    break;
-                }
-                idx++;
+
+                ImGui.EndTable();
             }
+
             ImGui.EndChild();
             // Disable button if nothing selected
             if( !IsSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
             if( ImGui.Button( "SELECT" + id ) && IsSelected ) Dialog.Invoke( Selected );
             if( !IsSelected ) ImGui.PopStyleVar();
+
+            ImGui.SameLine();
+            ImGui.TextDisabled( "Double-clicking can also be used to select items" );
 
             ImGui.EndTabItem();
         }

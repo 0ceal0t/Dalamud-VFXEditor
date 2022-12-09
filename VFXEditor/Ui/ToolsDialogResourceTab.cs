@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Dialogs {
+namespace VfxEditor.Ui {
     public unsafe class ToolsDialogResourceTab {
         private struct ResourceItemStruct {
             public uint Hash;

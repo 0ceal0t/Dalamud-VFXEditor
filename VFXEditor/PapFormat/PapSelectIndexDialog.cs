@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System;
 using System.Numerics;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 
 namespace VfxEditor.PapFormat {
     public class PapSelectIndexDialog : GenericDialog {

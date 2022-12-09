@@ -4,7 +4,7 @@ using System.IO;
 using VfxEditor.Utils;
 using VfxEditor.TexTools;
 
-namespace VfxEditor.Texture {
+namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
         public void PenumbraExport( string modFolder, bool exportTex ) {
             if( !exportTex ) return;

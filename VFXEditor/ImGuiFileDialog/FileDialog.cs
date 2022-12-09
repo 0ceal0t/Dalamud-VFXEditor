@@ -107,9 +107,7 @@ namespace ImGuiFileDialog {
             Visible = false;
         }
 
-        public bool GetIsOk() {
-            return IsOk;
-        }
+        public bool GetIsOk() => IsOk;
 
         public string GetResult() {
             if( !Flags.HasFlag( ImGuiFileDialogFlags.SelectOnly ) ) return GetFilePathName();
@@ -121,19 +119,14 @@ namespace ImGuiFileDialog {
             return string.Join( ",", fullPaths.ToArray() );
         }
 
-        public void Dispose() {
-            PreviewWrap?.Dispose();
-        }
+        public void Dispose() => PreviewWrap?.Dispose();
 
         // the full path, specified by the text input box and the current path
         private string GetFilePathName() {
             var path = GetCurrentPath();
             var fileName = GetCurrentFileName();
 
-            if( !string.IsNullOrEmpty( fileName ) ) {
-                return Path.Combine( path, fileName );
-            }
-
+            if( !string.IsNullOrEmpty( fileName ) ) return Path.Combine( path, fileName );
             return path;
         }
 
@@ -155,9 +148,7 @@ namespace ImGuiFileDialog {
 
             var result = FileNameBuffer;
             // a collection like {.cpp, .h}, so can't decide on an extension
-            if( SelectedFilter.CollectionFilters != null && SelectedFilter.CollectionFilters.Count > 0 ) {
-                return result;
-            }
+            if( SelectedFilter.CollectionFilters != null && SelectedFilter.CollectionFilters.Count > 0 ) return result;
 
             // a single one, like .cpp
             if( !SelectedFilter.Filter.Contains( '*' ) && result != SelectedFilter.Filter ) {
@@ -197,9 +188,7 @@ namespace ImGuiFileDialog {
             PathDecomposition = new List<string>( CurrentPath.Split( Path.DirectorySeparatorChar ) );
         }
 
-        private bool IsDirectoryMode() {
-            return Filters.Count == 0;
-        }
+        private bool IsDirectoryMode() => Filters.Count == 0;
 
         private void ResetEvents() {
             PathClicked = false;

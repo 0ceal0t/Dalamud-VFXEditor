@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace VfxEditor.Utils {
@@ -59,12 +60,14 @@ namespace VfxEditor.Utils {
             return ms.ToArray();
         }
 
-        public static bool CompareFiles( byte[] original, byte[] data, out int diffIndex ) {
-            diffIndex = -1;
-            for( var i = 0; i < Math.Min( data.Length, original.Length ); i++ ) {
-                if( data[i] != original[i] ) {
-                    diffIndex = i;
-                    PluginLog.Log( $"Warning: files do not match at {i} {data[i]} {original[i]}" );
+        public static bool CompareFiles( byte[] original, byte[] data, out int diffIdx ) => CompareFiles( original, data, -1, out diffIdx );
+
+        public static bool CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
+            diffIdx = -1;
+            for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
+                if( idx > minIdx && data[idx] != original[idx] ) {
+                    diffIdx = idx;
+                    PluginLog.Log( $"Warning: files do not match at {idx} {data[idx]} {original[idx]}" );
                     return false;
                 }
             }
@@ -75,16 +78,24 @@ namespace VfxEditor.Utils {
 
         public static long PadTo( BinaryWriter writer, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
-            for( var j = 0; j < paddedBytes; j++ ) writer.Write( ( byte )0 );
+            Pad( writer, paddedBytes );
             return paddedBytes;
+        }
+
+        public static void Pad( BinaryWriter writer, long bytes ) {
+            for( var j = 0; j < bytes; j++ ) writer.Write( ( byte )0 );
         }
 
         public static long PadTo( BinaryReader reader, long multiple ) => PadTo( reader, reader.BaseStream.Position, multiple );
 
         public static long PadTo( BinaryReader reader, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
-            for( var j = 0; j < paddedBytes; j++ ) reader.ReadByte();
+            Pad( reader, paddedBytes );
             return paddedBytes;
+        }
+
+        public static void Pad( BinaryReader reader, long bytes ) {
+            for( var j = 0; j < bytes; j++ ) reader.ReadByte();
         }
     }
 }

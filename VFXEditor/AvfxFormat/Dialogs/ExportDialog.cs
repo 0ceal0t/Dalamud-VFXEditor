@@ -3,7 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Dialogs;
+using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {

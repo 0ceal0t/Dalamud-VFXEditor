@@ -3,9 +3,9 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using VfxEditor.Utils;
-using VfxEditor.Texture;
+using VfxEditor.TextureFormat;
 
-namespace VfxEditor.Dialogs {
+namespace VfxEditor.Ui {
     public class ToolsDialogUtilitiesTab {
         private string ExtractPath = "";
 

@@ -5,7 +5,7 @@ using VfxEditor.Data;
 using VfxEditor.Utils;
 using VfxEditor.Penumbra;
 using VfxEditor.TexTools;
-using VfxEditor.Texture;
+using VfxEditor.TextureFormat;
 using VfxEditor.Tracker;
 
 namespace VfxEditor {

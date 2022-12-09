@@ -11,8 +11,8 @@ namespace VfxEditor.PapFormat {
         public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
-            SourceSelect = new PapSelectDialog( "Pap Select [ORIGINAL]", Plugin.Configuration.RecentSelectsPAP, true, SetSourceGlobal );
-            ReplaceSelect = new PapSelectDialog( "Pap Select [MODIFIED]", Plugin.Configuration.RecentSelectsPAP, false, SetReplaceGlobal );
+            SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", Plugin.Configuration.RecentSelectsPAP, true, SetSourceGlobal );
+            ReplaceSelect = new PapSelectDialog( "Pap Select [REPLACED]", Plugin.Configuration.RecentSelectsPAP, false, SetReplaceGlobal );
             IndexDialog = new PapSelectIndexDialog();
         }
 

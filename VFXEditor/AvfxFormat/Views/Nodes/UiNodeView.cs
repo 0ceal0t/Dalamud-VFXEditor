@@ -59,6 +59,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.PopFont();
 
             // ===== NEW =====
+
             if( ImGui.BeginPopup( "New_Popup" + id ) ) {
                 if( ImGui.Selectable( "Default" + id ) ) {
                     file.Import( view.GetDefaultPath() );

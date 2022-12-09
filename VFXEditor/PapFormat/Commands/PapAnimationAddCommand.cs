@@ -30,7 +30,7 @@ namespace VfxEditor.PapFormat {
         public override void Undo() {
             base.Undo();
             File.RefreshHavokIndexes();
-            File.ClearSelected();
+            File.AnimationsDropdown.ClearSelected();
         }
     }
 }
