@@ -19,9 +19,9 @@ namespace VfxEditor {
         }
 
         public static void SpawnOnTarget( string path ) {
-            var t = TargetManager.Target;
-            if( t != null ) {
-                Spawn = new ActorVfx( t, t, path );
+            var target = TargetManager.Target;
+            if( target != null ) {
+                Spawn = new ActorVfx( target, target, path );
             }
         }
 

@@ -212,11 +212,8 @@ namespace VfxEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveSource();
-            }
-            ImGui.PopStyleColor();
+            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveSource();
+
             ImGui.PopFont();
             // Input
             ImGui.SameLine();
@@ -226,18 +223,13 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect", new Vector2( 30, 23 ) ) ) {
-                SourceShow();
-            }
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect" ) ) SourceShow();
             ImGui.PopFont();
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
-                RemoveReplace();
-            }
-            ImGui.PopStyleColor();
+            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveReplace();
+
             ImGui.PopFont();
             // Input
             ImGui.SameLine();
@@ -247,9 +239,7 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect", new Vector2( 30, 23 ) ) ) {
-                ReplaceShow();
-            }
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect" ) ) ReplaceShow();
             ImGui.PopFont();
         }
 

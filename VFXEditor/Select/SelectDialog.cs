@@ -60,6 +60,9 @@ namespace VfxEditor {
         protected readonly SelectDialogList RecentTab;
         protected readonly SelectDialogList FavoritesTab;
 
+        private string LocalPathInput = "";
+        private string GamePathInput = "";
+
         public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool showLocal, Action<SelectResult> onSelect ) : base( name, false, 800, 500 ) {
             Extension = extension;
             Favorites = favorites;
@@ -99,7 +102,6 @@ namespace VfxEditor {
 
         // =========== LOCAL ================
 
-        private string LocalPath = "";
         private void DrawLocal( string parentId ) {
             var id = $"{parentId}/Local";
 
@@ -108,7 +110,7 @@ namespace VfxEditor {
             ImGui.Text( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( id + "-Input", ref LocalPath, 255 );
+            ImGui.InputText( id + "-Input", ref LocalPathInput, 255 );
             ImGui.SameLine();
             if( ImGui.Button( ( "Browse" + id ) ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
@@ -117,7 +119,7 @@ namespace VfxEditor {
                 } );
             }
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT" + id ) ) Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPath, LocalPath ) );
+            if( ImGui.Button( "SELECT" + id ) ) Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
             ImGui.EndTabItem();
         }
 
@@ -137,7 +139,6 @@ namespace VfxEditor {
 
         // ============== GAME FILE =============
 
-        private string GamePath = "";
         public void DrawGamePath( string parentId ) {
             var id = $"{parentId}/Path";
             if( !ImGui.BeginTabItem( "Game Path" + id ) ) return;
@@ -146,10 +147,10 @@ namespace VfxEditor {
             ImGui.Text( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( id + "-Input", ref GamePath, 255 );
+            ImGui.InputText( id + "-Input", ref GamePathInput, 255 );
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" + id ) ) {
-                var cleanedGamePath = GamePath.Replace( "\\", "/" );
+                var cleanedGamePath = GamePathInput.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
             ImGui.EndTabItem();

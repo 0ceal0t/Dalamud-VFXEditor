@@ -63,6 +63,7 @@ namespace VfxEditor {
 
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
+
         private static DateTime LastAutoSave = DateTime.Now;
         private static bool IsLoading = false;
 
@@ -120,44 +121,38 @@ namespace VfxEditor {
             ResetTextureManager();
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
-                    var fullPath = Path.Combine( Path.Combine( loadLocation, TextureManager.PenumbraPath ), tex.RelativeLocation );
+                    var fullPath = ResolveWorkspacePath( tex.RelativeLocation, loadLocation, TextureManager.PenumbraPath );
                     TextureManager.ImportTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
                 }
             }
 
             ResetAvfxManager();
             if( meta.Docs != null ) {
-                foreach( var doc in meta.Docs ) {
-                    var fullPath = ( doc.RelativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, AvfxManager.PenumbraPath ), doc.RelativeLocation );
-                    AvfxManager.ImportWorkspaceFile( fullPath, doc );
-                }
+                foreach( var doc in meta.Docs ) AvfxManager.ImportWorkspaceFile( ResolveWorkspacePath( doc.RelativeLocation, loadLocation, AvfxManager.PenumbraPath ), doc );
             }
 
             ResetTmbManager();
             if( meta.Tmb != null ) {
-                foreach( var tmb in meta.Tmb ) {
-                    TmbManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, TmbManager.PenumbraPath ), tmb.RelativeLocation ), tmb );
-                }
+                foreach( var tmb in meta.Tmb ) TmbManager.ImportWorkspaceFile( ResolveWorkspacePath( tmb.RelativeLocation, loadLocation, TmbManager.PenumbraPath ), tmb );
             }
 
             ResetPapManager();
             if( meta.Pap != null ) {
-                foreach( var pap in meta.Pap ) {
-                    PapManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, PapManager.PenumbraPath ), pap.RelativeLocation ), pap );
-                }
+                foreach( var pap in meta.Pap ) PapManager.ImportWorkspaceFile( ResolveWorkspacePath( pap.RelativeLocation, loadLocation, PapManager.PenumbraPath ), pap );
             }
 
             ResetScdManager();
             if( meta.Scd != null ) {
-                foreach( var scd in meta.Scd ) {
-                    ScdManager.ImportWorkspaceFile( Path.Combine( Path.Combine( loadLocation, ScdManager.PenumbraPath ), scd.RelativeLocation ), scd );
-                }
+                foreach( var scd in meta.Scd ) ScdManager.ImportWorkspaceFile( ResolveWorkspacePath( scd.RelativeLocation, loadLocation, ScdManager.PenumbraPath ), scd );
             }
 
             UiUtils.OkNotification( "Opened workspace" );
 
             IsLoading = false;
         }
+
+        private static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) => 
+            ( relativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, penumbraPath ), relativeLocation );
 
         private static async void SaveWorkspace() {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
