@@ -5,7 +5,7 @@ using System;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Texture {
+namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
         private string NewCustomPath = string.Empty;
         private int PngMip = 9;
@@ -73,7 +73,7 @@ namespace VfxEditor.Texture {
                         SavePngDialog( path.Trim( '\0' ) );
                     }
                     if( ImGui.Selectable( "DDS" + id ) ) {
-                        SaveDDSDialog( path.Trim( '\0' ) );
+                        SaverDdsDialog( path.Trim( '\0' ) );
                     }
                     ImGui.EndPopup();
                 }
@@ -108,7 +108,7 @@ namespace VfxEditor.Texture {
             } );
         }
 
-        private void SaveDDSDialog( string texPath ) {
+        private void SaverDdsDialog( string texPath ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = GetRawTexture( texPath );

@@ -8,7 +8,7 @@ using TeximpNet.DDS;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Texture {
+namespace VfxEditor.TextureFormat {
     public struct PreviewTexture { // ImGui texture previews
         public ushort Height;
         public ushort Width;
@@ -107,7 +107,7 @@ namespace VfxEditor.Texture {
                     if( format == TextureFormat.Null ) return false;
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( format, ddsFile, writer );
+                        replaceData = CreateAtex( format, File.ReadAllBytes( localPath ), writer );
                     }
                     ddsFile.Dispose();
                 }
@@ -123,7 +123,7 @@ namespace VfxEditor.Texture {
                         LocalPath = path
                     };
                 }
-                else {
+                else { // .png
                     using var surface = Surface.LoadFromFile( localPath );
                     surface.FlipVertically();
 
@@ -138,8 +138,12 @@ namespace VfxEditor.Texture {
                     compressor.Compression.SetBGRAPixelFormat();
                     compressor.Process( out var ddsContainer );
 
+                    using var ms = new MemoryStream();
+                    ddsContainer.Write( ms );
+                    var ddsData = ms.ToArray();
+
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( pngFormat, ddsContainer, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
+                        replaceData = CreateAtex( pngFormat, ddsData, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
                     }
                     ddsContainer.Dispose();
                 }
@@ -163,16 +167,11 @@ namespace VfxEditor.Texture {
         }
 
         public void RemoveReplaceTexture( string path ) {
-            if( PathToTextureReplace.ContainsKey( path ) ) {
-                if( PathToTextureReplace.TryRemove( path, out var oldValue ) ) {
-                    File.Delete( oldValue.LocalPath );
-                }
-            }
+            if( PathToTextureReplace.ContainsKey( path ) && PathToTextureReplace.TryRemove( path, out var oldValue ) ) File.Delete( oldValue.LocalPath );
         }
 
-        private static TextureReplace CreateAtex( TextureFormat format, DDSContainer dds, BinaryWriter bw, bool convertToA8 = false ) {
-            using var ms = new MemoryStream();
-            dds.Write( ms );
+        private static TextureReplace CreateAtex( TextureFormat format, byte[] ddsData, BinaryWriter bw, bool convertToA8 = false ) {
+            using var ms = new MemoryStream( ddsData );
             using var br = new BinaryReader( ms );
             var replaceData = new TextureReplace {
                 Format = format

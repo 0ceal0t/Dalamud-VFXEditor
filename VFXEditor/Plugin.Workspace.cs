@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Utils;
 using VfxEditor.PapFormat;
-using VfxEditor.Texture;
+using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
 using VfxEditor.ScdFormat;
 
@@ -37,7 +37,7 @@ namespace VfxEditor {
         public int Width;
         public int Depth;
         public int MipLevels;
-        public TextureFormat Format;
+        public TextureFormat.TextureFormat Format;
 
         public string RelativeLocation;
         public string ReplacePath;

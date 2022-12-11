@@ -3,7 +3,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using VfxEditor.Utils;
-using VfxEditor.Texture;
+using VfxEditor.TextureFormat;
 
 namespace VfxEditor.Ui {
     public class ToolsDialogUtilitiesTab {

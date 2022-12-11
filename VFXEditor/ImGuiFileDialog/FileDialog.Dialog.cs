@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
 using TeximpNet.DDS;
-using VfxEditor.Texture;
+using VfxEditor.TextureFormat;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
@@ -268,10 +269,14 @@ namespace ImGuiFileDialog {
             if( PreviewWrap != null ) {
                 var width = size.X;
                 var previewSize = new Vector2( PreviewWrap.Width, PreviewWrap.Height );
+                if( previewSize.X == 0 || previewSize.Y == 0 ) return;
+
                 var ratio = Math.Min( width / previewSize.X, width / previewSize.Y );
                 var newSize = previewSize *= ratio;
                 var padding = ( new Vector2( width ) - newSize ) / 2;
                 ImGui.SetCursorPos( ImGui.GetCursorPos() + padding );
+
+                if( newSize.X <= 0 || newSize.Y <= 0 || PreviewWrap == null || PreviewWrap.ImGuiHandle == IntPtr.Zero ) return;
                 ImGui.Image( PreviewWrap.ImGuiHandle, newSize );
             }
         }
@@ -452,8 +457,7 @@ namespace ImGuiFileDialog {
                             var ddsFile = DDSFile.Read( path );
                             if( ddsFile == null ) return;
 
-                            using( var ms = new MemoryStream() ) {
-                                ddsFile.Write( ms );
+                            using( var ms = new MemoryStream( File.ReadAllBytes( path ) ) ) {
                                 using var br = new BinaryReader( ms );
 
                                 br.BaseStream.Seek( 12, SeekOrigin.Begin );
