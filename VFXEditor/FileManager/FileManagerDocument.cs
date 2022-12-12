@@ -212,7 +212,7 @@ namespace VfxEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveSource();
+            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", UiUtils.RED_COLOR ) ) RemoveSource();
 
             ImGui.PopFont();
             // Input
@@ -228,7 +228,7 @@ namespace VfxEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveReplace();
+            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-ReplaceRemove", UiUtils.RED_COLOR ) ) RemoveReplace();
 
             ImGui.PopFont();
             // Input

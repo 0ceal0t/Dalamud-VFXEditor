@@ -5,6 +5,7 @@ using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+using VfxEditor.TextureFormat.CustomTeximpNet;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
 
@@ -139,7 +140,10 @@ namespace VfxEditor.TextureFormat {
                     compressor.Process( out var ddsContainer );
 
                     using var ms = new MemoryStream();
-                    ddsContainer.Write( ms );
+
+                    // lord have mercy
+                    CustomDDSFile.Write( ms, ddsContainer.MipChains, ddsContainer.Format, ddsContainer.Dimension );
+
                     var ddsData = ms.ToArray();
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
