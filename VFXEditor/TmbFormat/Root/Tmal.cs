@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using System.Collections.Generic;
 using VfxEditor.TmbFormat.Utils;
 

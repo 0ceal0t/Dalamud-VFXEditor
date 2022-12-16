@@ -12,8 +12,8 @@ namespace VfxEditor.AvfxFormat {
         public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
-            SourceSelect = new VfxSelectDialog( "File Select [ORIGINAL]", Plugin.Configuration.RecentSelects, true, SetSourceGlobal );
-            ReplaceSelect = new VfxSelectDialog( "File Select [MODIFIED]", Plugin.Configuration.RecentSelects, false, SetReplaceGlobal );
+            SourceSelect = new VfxSelectDialog( "File Select [LOADED]", Plugin.Configuration.RecentSelects, true, SetSourceGlobal );
+            ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", Plugin.Configuration.RecentSelects, false, SetReplaceGlobal );
             NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 

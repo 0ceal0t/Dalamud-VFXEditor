@@ -59,12 +59,14 @@ namespace VfxEditor.Utils {
             return ms.ToArray();
         }
 
-        public static bool CompareFiles( byte[] original, byte[] data, out int diffIndex ) {
-            diffIndex = -1;
-            for( var i = 0; i < Math.Min( data.Length, original.Length ); i++ ) {
-                if( data[i] != original[i] ) {
-                    diffIndex = i;
-                    PluginLog.Log( $"Warning: files do not match at {i} {data[i]} {original[i]}" );
+        public static bool CompareFiles( byte[] original, byte[] data, out int diffIdx ) => CompareFiles( original, data, -1, out diffIdx );
+
+        public static bool CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
+            diffIdx = -1;
+            for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
+                if( idx > minIdx && data[idx] != original[idx] ) {
+                    diffIdx = idx;
+                    PluginLog.Log( $"Warning: files do not match at {idx} {data[idx]} {original[idx]}" );
                     return false;
                 }
             }

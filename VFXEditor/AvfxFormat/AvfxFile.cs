@@ -43,7 +43,7 @@ namespace VfxEditor.AvfxFormat {
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter( ms );
                 Main.Write( writer );
-                Verified = FileUtils.CompareFiles( original, ms.ToArray(), out var _ );
+                Verified = FileUtils.CompareFiles( original, ms.ToArray(), 8, out var _ );
             }
 
             // ================
