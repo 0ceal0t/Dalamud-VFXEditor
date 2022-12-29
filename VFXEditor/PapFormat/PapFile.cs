@@ -24,10 +24,13 @@ namespace VfxEditor.PapFormat {
 
         public readonly ParsedShort ModelId = new( "Model Id" );
         public readonly ParsedSimpleEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
-        public readonly ParsedInt Variant = new( "Varient", size: 1 );
+        public readonly ParsedInt Variant = new( "Variant", size: 1 );
 
         public readonly List<PapAnimation> Animations = new();
         public readonly PapAnimationDropdown AnimationsDropdown;
+
+        // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
+        private readonly int ModdedTmbOffset4 = 0;
 
         public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) {
             AnimationsDropdown = new( this, Animations );
@@ -64,9 +67,11 @@ namespace VfxEditor.PapFormat {
             File.WriteAllBytes( HkxTempLocation, havokData );
 
             reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
+            ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
+
             for( var i = 0; i < numAnimations; i++ ) {
                 Animations[i].ReadTmb( reader );
-                reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations ) );
+                reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
 
             if( checkOriginal ) { // Check if output matches the original
@@ -101,16 +106,13 @@ namespace VfxEditor.PapFormat {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            FileUtils.PadTo( writer, writer.BaseStream.Position, 16 );
+            // turns out that padding isn't really a big deal
 
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
             foreach( var tmb in tmbData ) {
                 writer.Write( tmb );
-
-                var padding = Padding( writer.BaseStream.Position, idx, tmbData.Count() );
-                for( var j = 0; j < padding; j++ ) writer.Write( ( byte )0 );
-
+                FileUtils.Pad( writer, Padding( writer.BaseStream.Position, idx, tmbData.Count(), ModdedTmbOffset4 ) );
                 idx++;
             }
 
@@ -154,9 +156,9 @@ namespace VfxEditor.PapFormat {
             }
         }
 
-        private static int Padding( long position, int idx, int max ) { // Don't pad the last element
-            if( max > 1 && idx < max - 1 ) {
-                var leftOver = position % 4;
+        private static int Padding( long position, int itemIdx, int numItems, int customOffset ) { // Don't pad the last element
+            if( numItems > 1 && itemIdx < numItems - 1 ) {
+                var leftOver = ( position - customOffset ) % 4;
                 return ( int )( leftOver == 0 ? 0 : 4 - leftOver );
             }
             return 0;

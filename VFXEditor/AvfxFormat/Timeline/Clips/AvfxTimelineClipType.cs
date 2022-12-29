@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.BeginCombo( "Type" + id, Text ) ) {
                 foreach( var key in IdOptions.Keys ) {
                     if( ImGui.Selectable( IdOptions[key], Value == key ) ) {
-                        CommandManager.Avfx.Add( new AvfxTimelineClipTypeCommand( this, IdOptions[key] ) );
+                        CommandManager.Avfx.Add( new AvfxTimelineClipTypeCommand( this, key ) );
                     }
                 }
                 ImGui.EndCombo();

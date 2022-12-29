@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace VfxEditor.Utils {
@@ -77,16 +78,24 @@ namespace VfxEditor.Utils {
 
         public static long PadTo( BinaryWriter writer, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
-            for( var j = 0; j < paddedBytes; j++ ) writer.Write( ( byte )0 );
+            Pad( writer, paddedBytes );
             return paddedBytes;
+        }
+
+        public static void Pad( BinaryWriter writer, long bytes ) {
+            for( var j = 0; j < bytes; j++ ) writer.Write( ( byte )0 );
         }
 
         public static long PadTo( BinaryReader reader, long multiple ) => PadTo( reader, reader.BaseStream.Position, multiple );
 
         public static long PadTo( BinaryReader reader, long position, long multiple ) {
             var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
-            for( var j = 0; j < paddedBytes; j++ ) reader.ReadByte();
+            Pad( reader, paddedBytes );
             return paddedBytes;
+        }
+
+        public static void Pad( BinaryReader reader, long bytes ) {
+            for( var j = 0; j < bytes; j++ ) reader.ReadByte();
         }
     }
 }
