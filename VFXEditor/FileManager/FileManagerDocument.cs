@@ -166,11 +166,6 @@ namespace VfxEditor.FileManager {
         // ====== DRAWING ==========
 
         public void Draw() {
-            if ( Plugin.Configuration.WriteLocationError ) {
-                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
-                return;
-            }
-
             var threeColumns = ExtraInputColumn();
 
             ImGui.Columns( threeColumns ? 3 : 2, $"{Id}-Columns", false );

@@ -69,32 +69,12 @@ namespace VfxEditor {
         public bool LoopSoundEffects = false;
         public float ScdVolume = 1f;
 
-        [NonSerialized]
-        public bool WriteLocationError = false;
-
         public Configuration() : base( "Settings", false, 300, 200 ) { }
 
         public void Setup() {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
-            WriteLocationError = !GetWriteLocationOk();
             PluginLog.Log( "Write location: " + WriteLocation );
-        }
-
-        private bool GetWriteLocationOk() {
-            try {
-                Directory.CreateDirectory( WriteLocation );
-                var testFilePath = Path.Combine( WriteLocation, "vfx_write_location_test.txt" );
-                if( File.Exists( testFilePath ) ) File.Delete( testFilePath );
-                if( File.Exists( testFilePath ) ) return false; // couldn't delete
-                File.Create( testFilePath );
-                if( !File.Exists( testFilePath ) ) return false; // couldn't create
-            }
-            catch( Exception ) {
-                return false;
-            }
-
-            return true;
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {
