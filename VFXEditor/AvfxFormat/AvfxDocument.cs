@@ -141,8 +141,6 @@ namespace VfxEditor.AvfxFormat {
         }
 
         protected override void DrawBody() {
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
             ImGui.Separator();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

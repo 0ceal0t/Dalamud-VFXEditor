@@ -9,7 +9,7 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TextureFormat {
+namespace VfxEditor.Texture {
     public class AtexFile : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
         public unsafe struct TexHeader {

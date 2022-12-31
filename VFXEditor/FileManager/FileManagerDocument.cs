@@ -166,6 +166,11 @@ namespace VfxEditor.FileManager {
         // ====== DRAWING ==========
 
         public void Draw() {
+            if ( Plugin.Configuration.WriteLocationError ) {
+                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
+                return;
+            }
+
             var threeColumns = ExtraInputColumn();
 
             ImGui.Columns( threeColumns ? 3 : 2, $"{Id}-Columns", false );
@@ -207,8 +212,11 @@ namespace VfxEditor.FileManager {
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", UiUtils.RED_COLOR ) ) RemoveSource();
-
+            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", new Vector2( 30, 23 ) ) ) {
+                RemoveSource();
+            }
+            ImGui.PopStyleColor();
             ImGui.PopFont();
             // Input
             ImGui.SameLine();
@@ -218,13 +226,18 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect" ) ) SourceShow();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect", new Vector2( 30, 23 ) ) ) {
+                SourceShow();
+            }
             ImGui.PopFont();
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-ReplaceRemove", UiUtils.RED_COLOR ) ) RemoveReplace();
-
+            ImGui.PushStyleColor( ImGuiCol.Button, UiUtils.RED_COLOR );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Times}##{Id}-PreviewRemove", new Vector2( 30, 23 ) ) ) {
+                RemoveReplace();
+            }
+            ImGui.PopStyleColor();
             ImGui.PopFont();
             // Input
             ImGui.SameLine();
@@ -234,7 +247,9 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect" ) ) ReplaceShow();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect", new Vector2( 30, 23 ) ) ) {
+                ReplaceShow();
+            }
             ImGui.PopFont();
         }
 

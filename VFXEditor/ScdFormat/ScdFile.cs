@@ -98,21 +98,9 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawSounds( string id ) {
-            ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
             if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
-            ImGui.SameLine();
             if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
-            ImGui.SetNextItemWidth( 50 );
-            ImGui.SameLine();
-            if( ImGui.InputFloat( $"Volume{id}", ref Plugin.Configuration.ScdVolume ) ) {
-                Plugin.Configuration.Save();
-                Audio.ForEach( x => x.Player.UpdateVolume() );
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
             ImGui.BeginChild( $"{id}-Child" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             for( var idx = 0; idx < Audio.Count; idx++ ) {

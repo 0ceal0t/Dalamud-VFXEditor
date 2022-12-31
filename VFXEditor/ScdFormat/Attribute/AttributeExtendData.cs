@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,8 +13,7 @@ namespace VfxEditor.ScdFormat {
         Label = 0x02,
         Equal = 0x04,
         Bank = 0x08,
-        ExternalId1st = 0x10,
-        Unknown = 0x40
+        ExternalId1st = 0x10
     }
 
     public enum ConditionType2nd {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Numerics;
-using VfxEditor.Ui;
+using VfxEditor.Dialogs;
 
 namespace VfxEditor.TexTools {
     public struct TTMPL {

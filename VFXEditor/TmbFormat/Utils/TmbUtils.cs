@@ -51,9 +51,6 @@ namespace VfxEditor.TmbFormat.Utils {
             { C212.MAGIC, new ItemTypeStruct( C212.DISPLAY_NAME, typeof(C212) ) },
             { C013.MAGIC, new ItemTypeStruct( C013.DISPLAY_NAME, typeof(C013) ) },
             { C117.MAGIC, new ItemTypeStruct( C117.DISPLAY_NAME, typeof(C117) ) },
-            { C168.MAGIC, new ItemTypeStruct( C168.DISPLAY_NAME, typeof(C168) ) },
-            { C188.MAGIC, new ItemTypeStruct( C188.DISPLAY_NAME, typeof(C188) ) },
-            { C142.MAGIC, new ItemTypeStruct( C142.DISPLAY_NAME, typeof(C142) ) },
 
             // TODO: C117 and TMFC in chara/action/mon_sp/m0109/mon_sp014.tmb (Exdeath #14)
             // TODO: C021 (Starcall end)

@@ -5,11 +5,10 @@ using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-using VfxEditor.TextureFormat.CustomTeximpNet;
-using VfxEditor.Ui;
+using VfxEditor.Dialogs;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TextureFormat {
+namespace VfxEditor.Texture {
     public struct PreviewTexture { // ImGui texture previews
         public ushort Height;
         public ushort Width;
@@ -108,7 +107,7 @@ namespace VfxEditor.TextureFormat {
                     if( format == TextureFormat.Null ) return false;
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( format, File.ReadAllBytes( localPath ), writer );
+                        replaceData = CreateAtex( format, ddsFile, writer );
                     }
                     ddsFile.Dispose();
                 }
@@ -124,7 +123,7 @@ namespace VfxEditor.TextureFormat {
                         LocalPath = path
                     };
                 }
-                else { // .png
+                else {
                     using var surface = Surface.LoadFromFile( localPath );
                     surface.FlipVertically();
 
@@ -139,15 +138,8 @@ namespace VfxEditor.TextureFormat {
                     compressor.Compression.SetBGRAPixelFormat();
                     compressor.Process( out var ddsContainer );
 
-                    using var ms = new MemoryStream();
-
-                    // lord have mercy
-                    CustomDDSFile.Write( ms, ddsContainer.MipChains, ddsContainer.Format, ddsContainer.Dimension );
-
-                    var ddsData = ms.ToArray();
-
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateAtex( pngFormat, ddsData, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
+                        replaceData = CreateAtex( pngFormat, ddsContainer, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
                     }
                     ddsContainer.Dispose();
                 }
@@ -171,11 +163,16 @@ namespace VfxEditor.TextureFormat {
         }
 
         public void RemoveReplaceTexture( string path ) {
-            if( PathToTextureReplace.ContainsKey( path ) && PathToTextureReplace.TryRemove( path, out var oldValue ) ) File.Delete( oldValue.LocalPath );
+            if( PathToTextureReplace.ContainsKey( path ) ) {
+                if( PathToTextureReplace.TryRemove( path, out var oldValue ) ) {
+                    File.Delete( oldValue.LocalPath );
+                }
+            }
         }
 
-        private static TextureReplace CreateAtex( TextureFormat format, byte[] ddsData, BinaryWriter bw, bool convertToA8 = false ) {
-            using var ms = new MemoryStream( ddsData );
+        private static TextureReplace CreateAtex( TextureFormat format, DDSContainer dds, BinaryWriter bw, bool convertToA8 = false ) {
+            using var ms = new MemoryStream();
+            dds.Write( ms );
             using var br = new BinaryReader( ms );
             var replaceData = new TextureReplace {
                 Format = format

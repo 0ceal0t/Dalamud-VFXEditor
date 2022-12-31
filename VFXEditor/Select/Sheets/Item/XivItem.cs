@@ -4,38 +4,29 @@ using System.Text;
 
 namespace VfxEditor.Select.Rows {
     public struct XivItemIds {
-        public ulong Raw;
-
-        public int Id1;
-        public int Id2;
-        public int Id3;
-        public int Id4;
-
-        public int Id => Id1;
-        public int GearVariant => Id2;
-        public int WeaponBody => Id2;
-        public int WeaponVariant => Id3;
+        public int PrimaryId;
+        public int PrimaryVar;
+        public int SecondaryId;
+        public int SecondaryVar;
 
         public XivItemIds( ulong modelDataRaw ) {
-            Raw = modelDataRaw;
             /*
              * Gear: [Id, Var, -, -] / [-,-,-,-]
-             * Weapon: [Id, Body, Var, -] / [Id, Body, Var, -]
+             * Weapon: [Id, Var, Id, -] / [Id, Var, Id, -]
              */
-            var bytes = BitConverter.GetBytes( modelDataRaw );
-            Id1 = BitConverter.ToInt16( bytes, 0 );
-            Id2 = BitConverter.ToInt16( bytes, 2 );
-            Id3 = BitConverter.ToInt16( bytes, 4 );
-            Id4 = BitConverter.ToInt16( bytes, 6 );
+            var b = BitConverter.GetBytes( modelDataRaw );
+            PrimaryId = BitConverter.ToInt16( b, 0 ); // primary key
+            PrimaryVar = BitConverter.ToInt16( b, 2 ); // primary variant (weapon if != 0)
+            SecondaryId = BitConverter.ToInt16( b, 4 ); // secondary key
+            SecondaryVar = BitConverter.ToInt16( b, 6 ); // secondary variant
         }
 
-
-        public static ulong ToItemsId( int id1, int id2, int id3, int id4 ) {
+        public static ulong ToItemsId( int primaryId, int primaryVar, int secondaryId, int secondaryVar ) {
             List<byte> bytes = new();
-            bytes.AddRange( BitConverter.GetBytes( (short)id1 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id2 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id3 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id4 ) );
+            bytes.AddRange( BitConverter.GetBytes( (short)primaryId ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )primaryVar ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )secondaryId ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )secondaryVar ) );
             return (ulong) BitConverter.ToInt64(bytes.ToArray());
         }
     }
@@ -61,7 +52,7 @@ namespace VfxEditor.Select.Rows {
 
             Ids = new XivItemIds( item.ModelMain );
             SecondaryIds = new XivItemIds( item.ModelSub );
-            HasModel = ( Ids.Id1 != 0 );
+            HasModel = ( Ids.PrimaryId != 0 );
         }
 
         public string GetVfxPath( int idx ) => $"{VfxRootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";

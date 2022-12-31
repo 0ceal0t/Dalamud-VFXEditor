@@ -20,12 +20,15 @@ namespace VfxEditor.Utils {
     public static class UiUtils {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
-        public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
-        public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
+        public static string GetArticle( string input ) {
+            var isVowel = "aeiouAEIOU".Contains( input[0] );
+            return isVowel ? "an" : "a";
+        }
 
-        public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) =>
-            EnumComboBox( label, $"{currentValue}", options, currentValue, out newValue );
+        public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) {
+            return EnumComboBox( label, $"{currentValue}", options, currentValue, out newValue );
+        }
 
         public static bool EnumComboBox<T>( string label, string text, T[] options, T currentValue, out T newValue ) {
             newValue = currentValue;
@@ -63,18 +66,15 @@ namespace VfxEditor.Utils {
 
         public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
 
-        public static bool TransparentButton( string label, Vector4 color ) {
-            ImGui.PushStyleColor( ImGuiCol.Text, color );
-            ImGui.PushStyleColor( ImGuiCol.ButtonHovered, new Vector4( 0 ) );
-            ImGui.PushStyleColor( ImGuiCol.ButtonActive, new Vector4( 0 ) );
-            var ret = ColorButton( label, new Vector4( 0 ), false );
-            ImGui.PopStyleColor(3);
-            return ret;
-        }
-
         public static bool ColorButton( string label, Vector4 color, bool small ) {
+            var ret = false;
             ImGui.PushStyleColor( ImGuiCol.Button, color );
-            var ret = small ? ImGui.SmallButton( label ) : ImGui.Button( label );
+            if( small ) {
+                if( ImGui.SmallButton( label ) ) ret = true;
+            }
+            else {
+                if( ImGui.Button( label ) ) ret = true;
+            }
             ImGui.PopStyleColor();
             return ret;
         }
@@ -109,7 +109,9 @@ namespace VfxEditor.Utils {
         }
 
         public static void WikiButton( string url ) {
-            if( ImGui.SmallButton( $"Wiki" ) ) OpenUrl( url );
+            if( ImGui.SmallButton( $"Wiki" ) ) {
+                OpenUrl( url );
+            }
         }
 
 #nullable enable
@@ -179,19 +181,29 @@ namespace VfxEditor.Utils {
 
         private static readonly Random random = new();
 
-        public static string RandomString( int length ) => 
-            new( Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[ random.Next( x.Length ) ] ).ToArray() );
+        public static string RandomString( int length ) {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string( Enumerable.Repeat( chars, length )
+                .Select( s => s[random.Next( s.Length )] ).ToArray() );
+        }
 
         public static float GetWindowContentRegionWidth() => ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
 
-        public static bool MouseOver( Vector2 start, Vector2 end ) => Contains( start, end, ImGui.GetIO().MousePos );
+        public static bool MouseOver( Vector2 start, Vector2 end ) {
+            var io = ImGui.GetIO();
+            return Contains( start, end, io.MousePos );
+        }
 
         public static bool MouseClicked() => ImGui.IsMouseClicked( ImGuiMouseButton.Left );
 
         public static bool DoubleClicked() => ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left );
 
-        public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
+        public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) {
+            return point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
+        }
 
-        public static float Lerp( float firstFloat, float secondFloat, float by ) => firstFloat * ( 1 - by ) + secondFloat * by;
+        public static float Lerp( float firstFloat, float secondFloat, float by ) {
+            return firstFloat * ( 1 - by ) + secondFloat * by;
+        }
     }
 }

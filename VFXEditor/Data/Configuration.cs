@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Ui;
+using VfxEditor.Dialogs;
 using VfxEditor.NodeLibrary;
 
 namespace VfxEditor {
@@ -67,13 +67,21 @@ namespace VfxEditor {
 
         public bool LoopMusic = true;
         public bool LoopSoundEffects = false;
-        public float ScdVolume = 1f;
+
+        [NonSerialized]
+        public bool WriteLocationError = false;
 
         public Configuration() : base( "Settings", false, 300, 200 ) { }
 
         public void Setup() {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
+            try {
+                Directory.CreateDirectory( WriteLocation );
+            }
+            catch( Exception ) {
+                WriteLocationError = true;
+            }
             PluginLog.Log( "Write location: " + WriteLocation );
         }
 

@@ -12,8 +12,8 @@ namespace VfxEditor.TmbFormat {
         public static CopyManager Copy { get; private set; } = new();
 
         public static void Setup() {
-            SourceSelect = new TmbSelectDialog( "Tmb Select [LOADED]", Plugin.Configuration.RecentSelectsTMB, true, SetSourceGlobal );
-            ReplaceSelect = new TmbSelectDialog( "Tmb Select [REPLACED]", Plugin.Configuration.RecentSelectsTMB, false, SetReplaceGlobal );
+            SourceSelect = new TmbSelectDialog( "Tmb Select [ORIGINAL]", Plugin.Configuration.RecentSelectsTMB, true, SetSourceGlobal );
+            ReplaceSelect = new TmbSelectDialog( "Tmb Select [MODIFIED]", Plugin.Configuration.RecentSelectsTMB, false, SetReplaceGlobal );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {

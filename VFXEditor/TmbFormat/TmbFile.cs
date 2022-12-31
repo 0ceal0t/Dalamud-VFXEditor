@@ -9,23 +9,20 @@ using VfxEditor.TmbFormat.Utils;
 
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {
-    public class TmbFile : FileManagerFile {
+    public class TmbFile : FileDropdown<Tmac> {
         public readonly CommandManager Command;
         public readonly bool PapEmbedded;
 
-        public readonly Tmdh HeaderTmdh;
-        public readonly Tmpp HeaderTmpp;
-        public readonly Tmal HeaderTmal;
-        public readonly List<Tmfc> Tmfcs = new();
+        private readonly Tmdh HeaderTmdh;
+        private readonly Tmpp HeaderTmpp;
+        private readonly Tmal HeaderTmal;
+        private readonly Tmfc FooterTmfc = null;
 
-        public readonly List<Tmac> Actors = new();
-        public readonly List<Tmtr> Tracks = new();
-        public readonly List<TmbEntry> Entries = new();
+        private readonly List<Tmac> Actors = new();
+        private readonly List<Tmtr> Tracks = new();
+        private readonly List<TmbEntry> Entries = new();
 
-        public readonly TmbActorDropdown ActorsDropdown;
-
-        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) {
-            ActorsDropdown = new( this, Actors );
+        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) : base( true) {
             PapEmbedded = papEmbedded;
             Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
 
@@ -42,7 +39,7 @@ namespace VfxEditor.TmbFormat {
             HeaderTmal = new Tmal( reader, papEmbedded );
 
             for(var i = 0; i < numEntries - (HeaderTmpp.IsAssigned ? 3 : 2); i++ ) {
-                reader.ParseItem( Actors, Tracks, Entries, Tmfcs, papEmbedded, ref Verified );
+                reader.ParseItem( Actors, Tracks, Entries, ref FooterTmfc, papEmbedded, ref Verified );
             }
 
             HeaderTmal.PickActors( reader );
@@ -107,13 +104,28 @@ namespace VfxEditor.TmbFormat {
                 }
 
                 if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
-                    ActorsDropdown.Draw( id );
+                    DrawDropdown( id, separatorBefore: false );
+                    if( Selected != null ) Selected.Draw( $"{id}{Actors.IndexOf( Selected )}", Tracks, Entries );
+                    else ImGui.Text( "Select a timeline actor..." );
+                    ImGui.EndTabItem();
+                }
+
+                if( FooterTmfc != null && ImGui.BeginTabItem( $"TMFC{id}" ) ) {
+                    FooterTmfc.Draw( id );
                     ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
             }
         }
+
+        public override List<Tmac> GetItems() => Actors;
+
+        protected override string GetName( Tmac item, int idx ) => $"Actor {idx}";
+
+        protected override void OnNew() => Command.Add( new GenericAddCommand<Tmac>( Actors, new Tmac( PapEmbedded ) ) );
+
+        protected override void OnDelete( Tmac item ) => Command.Add( new GenericRemoveCommand<Tmac>( Actors, item ) );
 
         public static TmbFile FromLocalFile( string path, bool papEmbedded ) {
             if( !File.Exists( path ) ) return null;

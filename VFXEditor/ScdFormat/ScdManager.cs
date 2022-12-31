@@ -15,8 +15,8 @@ namespace VfxEditor.ScdFormat {
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.ogg" ).Replace( '\\', '/' );
 
         public static void Setup() {
-            SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", Plugin.Configuration.RecentSelectsScd, true, SetSourceGlobal );
-            ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", Plugin.Configuration.RecentSelectsScd, false, SetReplaceGlobal );
+            SourceSelect = new ScdSelectDialog( "Scd Select [ORIGINAL]", Plugin.Configuration.RecentSelectsScd, true, SetSourceGlobal );
+            ReplaceSelect = new ScdSelectDialog( "Scd Select [MODIFIED]", Plugin.Configuration.RecentSelectsScd, false, SetReplaceGlobal );
         }
 
         public static void SetSourceGlobal( SelectResult result ) {
