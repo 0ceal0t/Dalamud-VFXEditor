@@ -77,24 +77,14 @@ namespace VfxEditor {
         public void Setup() {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
-            WriteLocationError = !GetWriteLocationOk();
-            PluginLog.Log( "Write location: " + WriteLocation );
-        }
 
-        private bool GetWriteLocationOk() {
             try {
                 Directory.CreateDirectory( WriteLocation );
-                var testFilePath = Path.Combine( WriteLocation, "vfx_write_location_test.txt" );
-                if( File.Exists( testFilePath ) ) File.Delete( testFilePath );
-                if( File.Exists( testFilePath ) ) return false; // couldn't delete
-                File.Create( testFilePath );
-                if( !File.Exists( testFilePath ) ) return false; // couldn't create
             }
             catch( Exception ) {
-                return false;
+                WriteLocationError = true;
             }
-
-            return true;
+            PluginLog.Log( "Write location: " + WriteLocation );
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {

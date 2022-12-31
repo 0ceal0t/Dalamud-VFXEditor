@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimelineClip( AvfxTimeline timeline ) : base( "Clip" ) {
             Timeline = timeline;
             RawInts = new( "Raw Ints", Unk1, Unk2, Unk3, Unk4 );
-            RawFloats = new( "Raw Flaots", Unk5, Unk6, Unk7, Unk8 );
+            RawFloats = new( "Raw Floats", Unk5, Unk6, Unk7, Unk8 );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
