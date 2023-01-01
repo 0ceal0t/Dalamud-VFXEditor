@@ -184,7 +184,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.PopFont();
 
             ImGui.SetNextItemWidth( inputSize );
-            if( ImGui.BeginCombo( $"{id}-MainInput", Selected == null ? "[NONE]" : Selected.GetText() ) ) {
+            if( ImGui.BeginCombo( $"{id}-MainInput", GetText() ) ) {
                 if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector
                 foreach( var item in Group.Items ) {
                     if( ImGui.Selectable( item.GetText(), Selected == item ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
@@ -206,5 +206,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             ImGui.Text( Name );
         }
+
+        public string GetText() => Selected == null ? "[NONE]" : Selected.GetText();
     }
 }

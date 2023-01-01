@@ -91,7 +91,7 @@ namespace VfxEditor.AvfxFormat {
             RawFloats.Draw( id, CommandManager.Avfx );
         }
 
-        public override string GetDefaultText() => $"{GetIdx()}: {Type.Text}";
+        public override string GetDefaultText() => $"Clip {GetIdx()}({Type.Text})";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Clip{GetIdx()}";
     }

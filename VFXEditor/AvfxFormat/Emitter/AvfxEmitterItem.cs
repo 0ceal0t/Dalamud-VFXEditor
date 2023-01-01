@@ -1,3 +1,4 @@
+using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -143,10 +144,7 @@ namespace VfxEditor.AvfxFormat {
             IAvfxUiBase.DrawList( Display2, id );
         }
 
-        public override string GetDefaultText() {
-            var type = IsParticle ? "Particle" : "Emitter";
-            return GetIdx() + ": " + type + " " + TargetIdx.GetValue();
-        }
+        public override string GetDefaultText() => IsParticle ? ParticleSelect.GetText() : EmitterSelect.GetText();
 
         public override string GetWorkspaceId() {
             var type = IsParticle ? "Ptcl" : "Emit";

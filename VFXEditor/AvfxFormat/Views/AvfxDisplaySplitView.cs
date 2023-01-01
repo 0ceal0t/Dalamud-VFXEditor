@@ -15,12 +15,13 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawControls( string parentId ) { }
 
         public override void DrawLeftCol( string parentId ) {
+            var idx = 0;
             foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
                 if( item is AvfxOptional assignable ) AvfxBase.AssignedCopyPaste( assignable, assignable.GetDefaultText() );
-
-                if( ImGui.Selectable( item.GetText() + parentId, Selected == item ) ) {
+                if( ImGui.Selectable( $"{item.GetText()}{parentId}{idx}", Selected == item ) ) {
                     Selected = item;
                 }
+                idx++;
             }
 
             // not assigned, can be added

@@ -50,11 +50,11 @@ namespace VfxEditor.AvfxFormat {
             IAvfxUiBase.DrawList( Display, id );
         }
 
-        public override string GetDefaultText() => $"{GetIdx()}: Timeline {TimelineIdx.GetValue()}";
+        public override string GetDefaultText() => TimelineSelect.GetText();
 
         public override string GetWorkspaceId() {
-            var Type = ( Name == "Item" ) ? "Item" : "Trigger";
-            return $"{Scheduler.GetWorkspaceId()}/{Type}{GetIdx()}";
+            var type = ( Name == "Item" ) ? "Item" : "Trigger";
+            return $"{Scheduler.GetWorkspaceId()}/{type}{GetIdx()}";
         }
     }
 }

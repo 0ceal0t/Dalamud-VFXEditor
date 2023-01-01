@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo" );
         public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo" );
         public readonly AvfxInt Platform = new( "Platform", "Plfm" );
-        public readonly AvfxInt ClipNumber = new( "Clip Index", "ClNo" );
+        public readonly AvfxInt ClipIdx = new( "Clip Index", "ClNo" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
                 EffectorIdx,
                 EmitterIdx,
                 Platform,
-                ClipNumber
+                ClipIdx
             };
             AvfxBase.RecurseAssigned( Parsed, false );
 
@@ -72,12 +72,21 @@ namespace VfxEditor.AvfxFormat {
             EffectorSelect.Draw( id );
             IAvfxUiBase.DrawList( Display, id );
 
-            var clipAssigned = ClipNumber.IsAssigned();
-            if( ImGui.Checkbox( "Clip Enabled" + id, ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipNumber, clipAssigned ) );
-            ClipNumber.Draw( id );
+            var clipAssigned = ClipIdx.IsAssigned();
+            if( ImGui.Checkbox( "Clip Enabled" + id, ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
+            ClipIdx.Draw( id );
         }
 
-        public override string GetDefaultText() => $"{GetIdx()}: Emitter {EmitterIdx.GetValue()}";
+        public override string GetDefaultText() {
+            if(EmitterIdx.GetValue() != -1 ) return EmitterSelect.GetText();
+
+            if(ClipIdx.IsAssigned() && ClipIdx.GetValue() != -1 ) {
+                if( ClipIdx.GetValue() < Timeline.Clips.Count ) return Timeline.Clips[ClipIdx.GetValue()].GetText();
+                return $"Clip {ClipIdx.GetValue()}";
+            }
+
+            return "[NONE]";
+        }
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Item{GetIdx()}";
 

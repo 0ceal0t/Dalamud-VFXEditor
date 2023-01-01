@@ -37,8 +37,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void DrawLeftCol( string parentId ) {
-            foreach( var item in Items ) {
-                if( ImGui.Selectable( $"{item.GetText()}{parentId}", Selected == item ) ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
+                var item = Items[idx];
+                if( ImGui.Selectable( $"{item.GetText()}{parentId}{idx}", Selected == item ) ) {
                     OnSelect( item );
                     Selected = item;
                 }
