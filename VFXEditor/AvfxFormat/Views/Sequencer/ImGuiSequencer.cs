@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -180,7 +179,9 @@ namespace VfxEditor.AvfxFormat {
                 var itemPos = new Vector2( contentMin.X + 3, contentMin.Y + i * ItemHeight + 2 );
 
                 var overCheck = CheckBox( drawList, itemPos, IsEnabled(item) );
-                drawList.AddText( itemPos + new Vector2(25, -1), 0xFFFFFFFF, item.GetText() );
+                var text = item.GetText().Length < 22 ? item.GetText() : item.GetText()[..19] + "...";
+                var textColor = item == Selected ? UiUtils.YELLOW_COLOR : new Vector4(1);
+                drawList.AddText( itemPos + new Vector2(25, -1), ImGui.GetColorU32(textColor), text );
                 if( !newItemAdded && overCheck && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
                     ignoreSelected = true;
                     Toggle( item );
@@ -222,7 +223,7 @@ namespace VfxEditor.AvfxFormat {
                 drawList.AddRectFilled( 
                     new Vector2( contentMin.X, contentMin.Y + ItemHeight * Selected.GetIdx() ),
                     new Vector2( contentMin.X + canvasSize.X, contentMin.Y + ItemHeight * ( Selected.GetIdx() + 1 ) ),
-                    0x801080FF,
+                    0x8003BAFC,
                     1
                 );
             }

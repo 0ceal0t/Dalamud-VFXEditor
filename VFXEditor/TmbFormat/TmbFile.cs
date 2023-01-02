@@ -16,16 +16,19 @@ namespace VfxEditor.TmbFormat {
         public readonly Tmdh HeaderTmdh;
         public readonly Tmpp HeaderTmpp;
         public readonly Tmal HeaderTmal;
-        public readonly List<Tmfc> Tmfcs = new();
 
+        public readonly List<Tmfc> Tmfcs = new();
         public readonly List<Tmac> Actors = new();
         public readonly List<Tmtr> Tracks = new();
         public readonly List<TmbEntry> Entries = new();
 
         public readonly TmbActorDropdown ActorsDropdown;
+        public readonly TmfcDropdown TmfcDropdown;
 
         public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) {
             ActorsDropdown = new( this, Actors );
+            TmfcDropdown = new( this, Tmfcs );
+
             PapEmbedded = papEmbedded;
             Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
 
@@ -108,6 +111,11 @@ namespace VfxEditor.TmbFormat {
 
                 if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
                     ActorsDropdown.Draw( id );
+                    ImGui.EndTabItem();
+                }
+
+                if( ImGui.BeginTabItem( $"TMFC{id}" ) ) {
+                    TmfcDropdown.Draw( id );
                     ImGui.EndTabItem();
                 }
 

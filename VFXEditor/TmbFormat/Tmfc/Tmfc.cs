@@ -4,6 +4,7 @@ using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using System.Collections.Generic;
 using System.IO;
+using Dalamud.Logging;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class Tmfc : TmbEntry {
@@ -15,14 +16,13 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x20;
         public override int ExtraSize => Data.Length;
 
-        private readonly ParsedInt StartOffset = new( "Unknown 1" );
-        private readonly ParsedInt UnkCount = new( "Unknown 2" );
-        private readonly ParsedInt Unk1 = new( "Unknown 3" );
-        private readonly ParsedInt EndOffset = new( "Unknown 4" );
-        private readonly ParsedInt Unk2 = new( "Unknown 5" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
+        private int Count = 0;
         private byte[] Data;
         // TODO
+
         // int (0)
         // * count
             // float short short int int (0x10)
@@ -34,16 +34,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public Tmfc( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
-            StartOffset.Read( reader );
-            UnkCount.Read( reader );
+            var startOffset = reader.ReadInt32();
+            Count = reader.ReadInt32();
             Unk1.Read( reader );
-            EndOffset.Read( reader );
+            var endOffset = reader.ReadInt32();
             Unk2.Read( reader );
 
-            var diff = EndOffset.Value - StartOffset.Value;
+            var diff = endOffset - startOffset;
             // need to add an extra 4 bytes to account for id+time
-            reader.ReadAtOffset( StartOffset.Value + 4, ( BinaryReader br ) => {
+            reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
                 Data = br.ReadBytes( diff );
+                PluginLog.Log( $"{Data.Length}" );
             } );
         }
 
@@ -55,16 +56,14 @@ namespace VfxEditor.TmbFormat.Entries {
                 bw.Write( Data );
             }, modifyOffset: 4 );
 
-            UnkCount.Write( writer );
+            writer.Write( Count );
             Unk1.Write( writer );
-            EndOffset.Value = offset + Data.Length;
-            EndOffset.Write( writer );
+            writer.Write( offset + Data.Length );
             Unk2.Write( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
-            UnkCount.Draw( id, Command );
             Unk1.Draw( id, Command );
             Unk2.Draw( id, Command );
         }
