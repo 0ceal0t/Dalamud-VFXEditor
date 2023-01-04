@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly List<UiCurveEditorPoint> Points = new();
 
         public readonly AvfxCurve Curve;
-        public List<AVFXCurveKey> Keys => Curve.Keys.Keys;
+        public List<AvfxCurveKey> Keys => Curve.Keys.Keys;
 
         private readonly bool Color;
         private bool DrawOnce = false;
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
         public void Draw( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            ImGui.Text( "Left-Click to select a point on the graph, Right-Click to add a new keyframe" );
+            ImGui.TextDisabled( "Left-click to select a point on the graph, Right-click to add a new keyframe" );
 
             if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
                 ImPlot.SetNextAxesToFit();
@@ -58,6 +58,16 @@ namespace VfxEditor.AvfxFormat {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                     foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
                     UpdateColor();
+                } ) );
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.RemoveButton( "Clear" + parentId ) ) {
+                CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
+                    Points.Clear();
+                    Keys.Clear();
+                    UpdateColor();
+                    Selected = null;
                 } ) );
             }
 
@@ -182,7 +192,7 @@ namespace VfxEditor.AvfxFormat {
             Keys.Clear();
             Points.Clear();
             foreach( var point in state.Points ) {
-                var newKey = new AVFXCurveKey( point.Type, point.Time, point.X, point.Y, point.Z );
+                var newKey = new AvfxCurveKey( point.Type, point.Time, point.X, point.Y, point.Z );
                 Keys.Add( newKey );
                 Points.Add( new UiCurveEditorPoint( this, newKey, Color ) );
             }
@@ -195,7 +205,7 @@ namespace VfxEditor.AvfxFormat {
                 if( p.X > Math.Round( time ) ) break;
                 insertIdx++;
             }
-            var newKey = new AVFXCurveKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
+            var newKey = new AvfxCurveKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
             Keys.Insert( insertIdx, newKey );
             Points.Insert( insertIdx, new UiCurveEditorPoint( this, newKey, Color ) );
         }

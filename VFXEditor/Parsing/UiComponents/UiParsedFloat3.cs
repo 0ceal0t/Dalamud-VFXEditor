@@ -9,7 +9,7 @@ namespace VfxEditor.Parsing {
         public readonly ParsedFloat P2;
         public readonly ParsedFloat P3;
 
-        private Vector3 Value => new( P1.Value, P2.Value, P3.Value );
+        public Vector3 Value => new( P1.Value, P2.Value, P3.Value );
 
         public UiParsedFloat3( string name, ParsedFloat p1, ParsedFloat p2, ParsedFloat p3 ) {
             Name = name;

@@ -5,13 +5,13 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveKeys : AvfxBase {
-        public readonly List<AVFXCurveKey> Keys = new();
+        public readonly List<AvfxCurveKey> Keys = new();
 
         public AvfxCurveKeys() : base( "Keys" ) { }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             var count = size / 16;
-            for( var i = 0; i < count; i++ ) Keys.Add( new AVFXCurveKey( reader ) );
+            for( var i = 0; i < count; i++ ) Keys.Add( new AvfxCurveKey( reader ) );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
         }
     }
 
-    public class AVFXCurveKey {
+    public class AvfxCurveKey {
         public KeyType Type;
         public int Time;
 
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
         public float Y;
         public float Z;
 
-        public AVFXCurveKey( KeyType type, int time, float x, float y, float z ) {
+        public AvfxCurveKey( KeyType type, int time, float x, float y, float z ) {
             Type = type;
             Time = time;
             X = x;
@@ -37,7 +37,7 @@ namespace VfxEditor.AvfxFormat {
             Z = z;
         }
 
-        public AVFXCurveKey( BinaryReader reader ) {
+        public AvfxCurveKey( BinaryReader reader ) {
             Time = reader.ReadInt16();
             Type = ( KeyType )reader.ReadInt16();
             X = reader.ReadSingle();

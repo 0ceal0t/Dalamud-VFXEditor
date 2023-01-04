@@ -119,7 +119,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
                 if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
-                if( ImGui.Selectable( "On Taget" ) ) Plugin.SpawnOnTarget( SpawnPath );
+                if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( SpawnPath );
                 ImGui.EndPopup();
             }
 

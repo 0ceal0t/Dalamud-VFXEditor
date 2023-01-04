@@ -44,7 +44,7 @@ namespace VfxEditor.TmbFormat.Entries {
             // need to add an extra 4 bytes to account for id+time
             reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
                 Data = br.ReadBytes( diff );
-                PluginLog.Log( $"{Data.Length}" );
+                PluginLog.Log( $"{Data.Length} / {Count}" );
             } );
         }
 

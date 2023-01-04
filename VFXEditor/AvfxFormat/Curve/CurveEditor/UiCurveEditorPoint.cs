@@ -13,14 +13,14 @@ namespace VfxEditor.AvfxFormat {
         public double Y;
         public bool Color;
         public Vector3 ColorData;
-        public AVFXCurveKey Key;
+        public AvfxCurveKey Key;
         public UiCurveEditor Editor;
 
         private bool ColorDrag = false;
         private DateTime ColorDragTime = DateTime.Now;
         private UiCurveEditorState ColorDragState;
 
-        public UiCurveEditorPoint( UiCurveEditor editor, AVFXCurveKey key, bool color = false ) {
+        public UiCurveEditorPoint( UiCurveEditor editor, AvfxCurveKey key, bool color = false ) {
             Editor = editor;
             Key = key;
             Color = color;

@@ -10,9 +10,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
         public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
         public readonly AvfxInt EndTime = new( "End Time", "EdTm" );
-        public readonly AvfxInt BinderIdx = new( "Binder Index", "BdNo" );
-        public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo" );
-        public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo" );
+        public readonly AvfxInt BinderIdx = new( "Binder Index", "BdNo", defaultValue: -1 );
+        public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo", defaultValue: -1 );
+        public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo", defaultValue: -1 );
         public readonly AvfxInt Platform = new( "Platform", "Plfm" );
         public readonly AvfxInt ClipIdx = new( "Clip Index", "ClNo" );
 

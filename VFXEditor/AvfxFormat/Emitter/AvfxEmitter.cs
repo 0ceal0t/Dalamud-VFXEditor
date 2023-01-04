@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
         public readonly AvfxInt ChildLimit = new( "Child Limit", "ClCn" );
-        public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo" );
+        public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo", defaultValue: -1 );
         public readonly AvfxBool AnyDirection = new( "Any Direction", "bAD", size: 1 );
         public readonly AvfxEnum<EmitterType> EmitterVariety = new( "Type", "EVT" );
         public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
