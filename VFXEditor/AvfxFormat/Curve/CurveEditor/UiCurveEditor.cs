@@ -1,10 +1,10 @@
+using Dalamud.Logging;
 using ImGuiNET;
 using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VfxEditor;
 using VfxEditor.Data;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
@@ -21,20 +21,21 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve Curve;
         public List<AvfxCurveKey> Keys => Curve.Keys.Keys;
 
-        private readonly bool Color;
+        private readonly CurveType Type;
+        private bool IsColor => Type == CurveType.Color;
         private bool DrawOnce = false;
 
-        private bool PointDrag = false;
-        private DateTime PointDragTime = DateTime.Now;
-        private UiCurveEditorState PointDragState;
+        private bool IsPointDragged = false;
+        private DateTime PointDragStartTime = DateTime.Now;
+        private UiCurveEditorState PrePointDragState;
 
-        public UiCurveEditor( AvfxCurve curve, bool color ) {
+        public UiCurveEditor( AvfxCurve curve, CurveType type ) {
             Curve = curve;
-            Color = color;
+            Type = type;
         }
 
         public void Initialize() { // Keys finished reading
-            foreach( var key in Keys ) Points.Add( new UiCurveEditorPoint( this, key, Color ) );
+            foreach( var key in Keys ) Points.Add( new UiCurveEditorPoint( this, key, Type ) );
         }
 
         public void Draw( string parentId ) {
@@ -57,7 +58,7 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.Avfx.HasCurveKeys() ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                     foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
-                    UpdateColor();
+                    UpdateGradient();
                 } ) );
             }
 
@@ -66,19 +67,31 @@ namespace VfxEditor.AvfxFormat {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                     Points.Clear();
                     Keys.Clear();
-                    UpdateColor();
+                    UpdateGradient();
                     Selected = null;
                 } ) );
+            }
+
+            if( Type == CurveType.Angle ) {
+                if( ImGui.RadioButton( $"Radians##{parentId}1", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = false;
+                    Plugin.Configuration.Save();
+                }
+                ImGui.SameLine();
+                if( ImGui.RadioButton( $"Degrees##{parentId}2", Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = true;
+                    Plugin.Configuration.Save();
+                }
             }
 
             if( Selected != null && !Points.Contains( Selected ) ) Selected = null;
 
             var wrongOrder = false;
-            if( Color ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+            if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
             if( ImPlot.BeginPlot( $"{parentId}Plot", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
-                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, Color ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
+                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 if( Points.Count > 0 ) {
-                    GetDrawLine( Points, Color, out var _xs, out var _ys );
+                    GetDrawLine( Points, IsColor, out var _xs, out var _ys );
                     var xs = _xs.ToArray();
                     var ys = _ys.ToArray();
 
@@ -86,37 +99,40 @@ namespace VfxEditor.AvfxFormat {
                     ImPlot.PlotLine( Curve.GetAvfxName(), ref xs[0], ref ys[0], xs.Length );
 
                     // Draw gradient image
-                    if( Color && Keys.Count > 1 ) {
+                    if( IsColor && Keys.Count > 1 ) {
                         if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) Plugin.DirectXManager.GradientView.SetGradient( Curve );
 
-                        var topLeft = new ImPlotPoint { x = Points[0].X, y = 1 };
-                        var bottomRight = new ImPlotPoint { x = Points[^1].X, y = -1 };
+                        var topLeft = new ImPlotPoint { x = Points[0].DisplayX, y = 1 };
+                        var bottomRight = new ImPlotPoint { x = Points[^1].DisplayX, y = -1 };
                         ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
 
                     var idx = 0;
                     var draggingAnyPoint = false;
                     foreach( var point in Points ) {
-                        if( Color ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( point.GetImPlotPoint() ), Selected == point ? 15 : 10, Invert( point.ColorData ) );
+                        if( IsColor ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( point.GetImPlotPoint() ), Selected == point ? 15 : 10, Invert( point.RawData ) );
 
-                        if( ImPlot.DragPoint( idx, ref point.X, ref point.Y, Color ? new Vector4( point.ColorData, 1 ) : POINT_COLOR, Selected == point ? 12 : 7, ImPlotDragToolFlags.Delayed ) ) {
-                            if( !PointDrag ) {
-                                PointDrag = true;
-                                PointDragState = GetState();
+                        var tempX = point.DisplayX;
+                        var tempY = point.DisplayY;
+                        if( ImPlot.DragPoint( idx, ref tempX, ref tempY, IsColor ? new Vector4( point.RawData, 1 ) : POINT_COLOR, Selected == point ? 12 : 7, ImPlotDragToolFlags.Delayed ) ) {
+                            if( !IsPointDragged ) {
+                                IsPointDragged = true;
+                                PrePointDragState = GetState();
                             }
-                            PointDragTime = DateTime.Now;
+                            PointDragStartTime = DateTime.Now;
 
                             Selected = point;
-                            point.UpdateAvfxKeyPosition();
+                            point.DisplayX = tempX;
+                            point.DisplayY = tempY;
                             draggingAnyPoint = true;
                         }
 
-                        if( idx > 0 && point.X < Points[idx - 1].X ) wrongOrder = true;
+                        if( idx > 0 && point.DisplayX < Points[idx - 1].DisplayX ) wrongOrder = true;
                         idx++;
                     }
-                    if( PointDrag && !draggingAnyPoint && ( DateTime.Now - PointDragTime ).TotalMilliseconds > 200 ) {
-                        PointDrag = false;
-                        CommandManager.Avfx.Add( new UiCurveEditorDragCommand( this, PointDragState, GetState() ) );
+                    if( IsPointDragged && !draggingAnyPoint && ( DateTime.Now - PointDragStartTime ).TotalMilliseconds > 200 ) {
+                        IsPointDragged = false;
+                        CommandManager.Avfx.Add( new UiCurveEditorDragCommand( this, PrePointDragState, GetState() ) );
                     }
 
                     if( !draggingAnyPoint && ImGui.IsMouseDown( ImGuiMouseButton.Left ) && IsHovering() ) {
@@ -132,11 +148,11 @@ namespace VfxEditor.AvfxFormat {
 
                 if( ImGui.IsMouseClicked( ImGuiMouseButton.Right ) && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
-                    var z = Color ? 1.0f : ( float )pos.y;
+                    var z = IsColor ? 1.0f : ( float )pos.y;
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => { // Insert point
                         InsertPoint( ( float )pos.x, 1, 1, z );
                     } ) );
-                    UpdateColor();
+                    UpdateGradient();
                 }
 
                 ImPlot.EndPlot();
@@ -148,9 +164,9 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.Button( "Sort" + parentId ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => { // Sort
                         Keys.Sort( ( x, y ) => x.Time.CompareTo( y.Time ) );
-                        Points.Sort( ( x, y ) => x.X.CompareTo( y.X ) );
+                        Points.Sort( ( x, y ) => x.DisplayX.CompareTo( y.DisplayX ) );
                     } ) );
-                    UpdateColor();
+                    UpdateGradient();
                 }
             }
 
@@ -158,31 +174,28 @@ namespace VfxEditor.AvfxFormat {
             Selected?.Draw();
         }
 
-        public void UpdateColor() {
-            if( Color && Keys.Count > 1 ) {
-                var sameTime = true;
+        public void UpdateGradient() {
+            if( IsColor && Keys.Count > 1 ) {
+                var allSameTime = true;
                 foreach( var key in Keys ) {
                     if( key.Time != Keys[0].Time ) {
-                        sameTime = false;
+                        allSameTime = false;
                         break;
                     }
                 }
-                if( sameTime ) {
-                    Keys[^1].Time++;
-                    Points[^1].X++;
-                }
+                if( allSameTime ) Points[^1].DisplayX++;
                 Plugin.DirectXManager.GradientView.SetGradient( Curve );
             }
         }
 
         public UiCurveEditorState GetState() {
             return new UiCurveEditorState {
-                Points = Keys.Select( x => new UiCurveEditorPointState {
-                    Type = x.Type,
-                    Time = x.Time,
-                    X = x.X,
-                    Y = x.Y,
-                    Z = x.Z
+                Points = Keys.Select( key => new UiCurveEditorPointState {
+                    Type = key.Type,
+                    Time = key.Time,
+                    X = key.X,
+                    Y = key.Y,
+                    Z = key.Z
                 } ).ToArray()
             };
         }
@@ -194,20 +207,20 @@ namespace VfxEditor.AvfxFormat {
             foreach( var point in state.Points ) {
                 var newKey = new AvfxCurveKey( point.Type, point.Time, point.X, point.Y, point.Z );
                 Keys.Add( newKey );
-                Points.Add( new UiCurveEditorPoint( this, newKey, Color ) );
+                Points.Add( new UiCurveEditorPoint( this, newKey, Type ) );
             }
-            UpdateColor();
+            UpdateGradient();
         }
 
         private void InsertPoint( float time, float x, float y, float z ) {
             var insertIdx = 0;
             foreach( var p in Points ) {
-                if( p.X > Math.Round( time ) ) break;
+                if( p.DisplayX > Math.Round( time ) ) break;
                 insertIdx++;
             }
-            var newKey = new AvfxCurveKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
+            var newKey = new AvfxCurveKey( KeyType.Linear, ( int ) Math.Round( time ), x, y, z );
             Keys.Insert( insertIdx, newKey );
-            Points.Insert( insertIdx, new UiCurveEditorPoint( this, newKey, Color ) );
+            Points.Insert( insertIdx, new UiCurveEditorPoint( this, newKey, Type ) );
         }
 
         // ==========================
@@ -226,27 +239,27 @@ namespace VfxEditor.AvfxFormat {
                 var p1 = points[idx - 1];
                 var p2 = points[idx];
 
-                if( p1.Key.Type == KeyType.Linear || color ) {
+                if( p1.KeyType == KeyType.Linear || color ) {
                     // p1 should already be added
                     var pos = p2.GetPosition();
                     xs.Add( pos.X );
                     ys.Add( pos.Y );
                 }
-                else if( p1.Key.Type == KeyType.Step ) {
+                else if( p1.KeyType == KeyType.Step ) {
                     // p1 should already be added
-                    xs.Add( ( float )p2.X );
-                    ys.Add( ( float )p1.Y );
+                    xs.Add( ( float )p2.DisplayX );
+                    ys.Add( ( float )p1.DisplayY );
 
                     var pos = p2.GetPosition();
                     xs.Add( pos.X );
                     ys.Add( pos.Y );
                 }
-                else if( p1.Key.Type == KeyType.Spline ) {
+                else if( p1.KeyType == KeyType.Spline ) {
                     var p1_ = p1.GetPosition();
                     var p2_ = p2.GetPosition();
                     var midX = ( p2_.X - p1_.X ) / 2;
-                    var handle1 = new Vector2( p1_.X + p1.Key.X * midX, p1_.Y );
-                    var handle2 = new Vector2( p2_.X - p1.Key.Y * midX, p2_.Y );
+                    var handle1 = new Vector2( p1_.X + p1.RawData.X * midX, p1_.Y );
+                    var handle2 = new Vector2( p2_.X - p1.RawData.Y * midX, p2_.Y );
                     for( var i = 0; i < 100; i++ ) {
                         var t = i / 99.0f;
 

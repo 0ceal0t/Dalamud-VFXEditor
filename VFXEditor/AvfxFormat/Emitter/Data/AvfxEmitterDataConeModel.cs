@@ -7,13 +7,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
         public readonly AvfxInt DivideX = new( "Divide X", "DivX" );
         public readonly AvfxInt DivideY = new( "Divide Y", "DivY" );
-        public readonly AvfxCurve AX = new( "Angle X", "AnX" );
-        public readonly AvfxCurve AY = new( "Angle Y", "AnY" );
+        public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
+        public readonly AvfxCurve AY = new( "Angle Y", "AnY", CurveType.Angle );
         public readonly AvfxCurve Radius = new( "Radius", "Rad" );
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
-        public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA" );
-        public readonly AvfxCurve InjectionAngleRandom = new( "Injection Angle Random", "IjAR" );
+        public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandom = new( "Injection Angle Random", "IjAR", CurveType.Angle );
 
         public readonly UiDisplayList Display;
 

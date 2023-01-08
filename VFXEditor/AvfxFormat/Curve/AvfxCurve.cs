@@ -5,6 +5,12 @@ using System.IO;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
+    public enum CurveType {
+        Color,
+        Angle,
+        Base
+    }
+
     public class AvfxCurve : AvfxOptional {
         public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "Pre Behavior", "BvPr" );
         public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "Post Behavior", "BvPo" );
@@ -16,12 +22,10 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiCurveEditor CurveEditor;
 
         private readonly string Name;
-        private readonly bool Color;
         private readonly bool Locked;
 
-        public AvfxCurve( string name, string avfxName, bool color = false, bool locked = false ) : base( avfxName ) {
+        public AvfxCurve( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
             Name = name;
-            Color = color;
             Locked = locked;
 
             Parsed = new() {
@@ -31,12 +35,12 @@ namespace VfxEditor.AvfxFormat {
                 Keys
             };
 
-            CurveEditor = new UiCurveEditor( this, Color );
+            CurveEditor = new UiCurveEditor( this, type );
             Display = new() {
                 PreBehavior,
                 PostBehavior
             };
-            if( !Color ) Display.Add( Random );
+            if( type != CurveType.Color ) Display.Add( Random );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

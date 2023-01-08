@@ -18,8 +18,8 @@ namespace VfxEditor.AvfxFormat {
         public void Undo() => SetState( !State );
 
         private void SetState( bool state ) {
-            if( state ) AvfxBase.RecurseAssigned( Item, state ); // true
-            else Item.SetAssigned( state ); // false
+            if( state ) AvfxBase.RecurseAssigned( Item, true );
+            else Item.SetAssigned( false );
         }
     }
 }

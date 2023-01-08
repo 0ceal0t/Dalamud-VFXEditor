@@ -5,7 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor Ambient = new( "Ambient", "Amb" );
         public readonly AvfxCurveColor Color = new( "Color" );
         public readonly AvfxCurve Power = new( "Power", "Pow" );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot" );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
 
         public AvfxEffectorDataDirectionalLight() : base() {
             Parsed = new() {

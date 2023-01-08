@@ -65,7 +65,7 @@ namespace VfxEditor.TmbFormat {
                     var itemId = $"{id}-Unk{unkExtraIdx}";
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
                         ImGui.Indent();
-                        if( UiUtils.RemoveButton( $"Delete{itemId}" ) ) {
+                        if( UiUtils.RemoveButton( $"Delete{itemId}", true ) ) {
                             Command.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
                             ImGui.Unindent();
                             break;
@@ -85,7 +85,7 @@ namespace VfxEditor.TmbFormat {
                     ImGui.Indent();
 
                     // Remove
-                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}" ) ) {
+                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) {
                         CompoundCommand command = new( false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( entriesMaster, entry ) );

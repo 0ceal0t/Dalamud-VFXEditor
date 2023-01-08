@@ -98,9 +98,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.8" />
-        <PackageReference Include="HelixToolkit" Version="2.22.0" />
-        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.22.0" />
+        <PackageReference Include="DalamudPackager" Version="2.1.10" />
+        <PackageReference Include="HelixToolkit" Version="2.23.0" />
+        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.23.0" />
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
         <PackageReference Include="NAudio.Core" Version="2.1.0" />
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />

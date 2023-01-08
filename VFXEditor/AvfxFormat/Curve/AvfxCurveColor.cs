@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
         public readonly bool Locked;
 
-        public readonly AvfxCurve RGB = new( "RGB", "RGB", color: true );
+        public readonly AvfxCurve RGB = new( "RGB", "RGB", type:CurveType.Color );
         public readonly AvfxCurve A = new( "A", "A" );
         public readonly AvfxCurve SclR = new( "Scale R", "SclR" );
         public readonly AvfxCurve SclG = new( "Scale G", "SclG" );

@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -25,21 +26,18 @@ namespace VfxEditor.AvfxFormat {
             var selected = view.GetSelected();
             var group = view.GetGroup();
 
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
             ImGui.PushFont( UiBuilder.IconFont );
 
-            if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + id ) ) {
-                ImGui.OpenPopup( "New_Popup" + id );
-            }
+            if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + id ) ) ImGui.OpenPopup( "New_Popup" + id );
 
             if( selected != null && allowDelete ) {
                 if( allowNew ) ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + id ) ) {
                     file.ShowExportDialog( selected );
                 }
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" + id ) ) {
                     file.AddToNodeLibrary( selected );
                 }
@@ -50,13 +48,13 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
                     CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
                 }
             }
 
             ImGui.PopFont();
+            ImGui.PopStyleVar( 1 );
 
             // ===== NEW =====
 

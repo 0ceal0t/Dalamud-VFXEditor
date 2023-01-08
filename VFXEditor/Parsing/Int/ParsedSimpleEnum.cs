@@ -15,6 +15,10 @@ namespace VfxEditor.Parsing {
             Options = options;
         }
 
+        public ParsedSimpleEnum( string name, T[] options, T defaultValue, int size = 4 ) : base( name, ToInt( defaultValue ), size ) {
+            Options = options;
+        }
+
         private static T ToEnum( int value ) => ( T )(object)value;
 
         private static int ToInt( T value ) => ( int )(object)value;

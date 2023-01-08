@@ -4,27 +4,27 @@
     "net6.0-windows7.0": {
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[2.1.8, )",
-        "resolved": "2.1.8",
-        "contentHash": "YqagNXs9InxmqkXzq7kLveImxnodkBEicAhydMXVp7dFjC7xb76U6zGgAax4/BWIWfZeWzr5DJyQSev31kj81A=="
+        "requested": "[2.1.10, )",
+        "resolved": "2.1.10",
+        "contentHash": "S6NrvvOnLgT4GDdgwuKVJjbFo+8ZEj+JsEYk9ojjOR/MMfv1dIFpT8aRJQfI24rtDcw1uF+GnSSMN4WW1yt7fw=="
       },
       "HelixToolkit": {
         "type": "Direct",
-        "requested": "[2.22.0, )",
-        "resolved": "2.22.0",
-        "contentHash": "nNj48FSGZvS9yzCC0dE0alpcRIpHQ5Dz5A/EhHjFJHhFo/xaoZ8u4OkP7v0ypSpV48M5X9qYtecN3p/ooIRyLg==",
+        "requested": "[2.23.0, )",
+        "resolved": "2.23.0",
+        "contentHash": "qjNdihQ3KuOpZo7KciAHd3NvHVQ6pMy00ymf3irs/0srTiZBa1+iCgTJkF9reSr9sCybFUKOTw7L7BCJC2dHMg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "HelixToolkit.SharpDX.Core": {
         "type": "Direct",
-        "requested": "[2.22.0, )",
-        "resolved": "2.22.0",
-        "contentHash": "8FGO233j3Y7dI397YDtTzzB6rHmQ/62Hb/0ZnXnVJSI/jdPe4dKVyUELKgB59tfqf7GPMeRLm2eRkTxpYo0CqQ==",
+        "requested": "[2.23.0, )",
+        "resolved": "2.23.0",
+        "contentHash": "IS1n9XhsdTZ78TG3qVn0ABzrAW29Yjr9fhdJekMPmvphnhnlCWbRAeRoH8Ngtt7Xv3SZnZRV4i4CRvwpUaBicA==",
         "dependencies": {
           "Cyotek.Drawing.BitmapFont": "2.0.0",
-          "HelixToolkit": "[2.22.0]",
+          "HelixToolkit": "[2.23.0]",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "SharpDX": "4.2.0",
           "SharpDX.D3DCompiler": "4.2.0",

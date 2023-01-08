@@ -87,7 +87,7 @@ namespace VfxEditor.ScdFormat {
                     Entry.LoopEnd = loopStartEnd[1];
                 }
 
-                ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / 0x{Entry.DataLength:X8} bytes" );
+                ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
 
                 ImGui.Unindent();
             }
@@ -106,6 +106,7 @@ namespace VfxEditor.ScdFormat {
             Reset();
             try {
                 var stream = Entry.Data.GetStream();
+                PluginLog.Log($"Playing @ {stream.WaveFormat.SampleRate} / {stream.WaveFormat.BitsPerSample}");
 
                 CurrentStream = stream.WaveFormat.Encoding switch {
                     WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),

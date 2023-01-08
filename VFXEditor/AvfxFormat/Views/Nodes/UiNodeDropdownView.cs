@@ -1,6 +1,10 @@
+using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
+using ImPlotNET;
 using System;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -40,23 +44,47 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             Selected?.Draw( Id );
         }
 
         public void ViewSelect() {
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
+
+            var leftRightSize = UiUtils.GetIconSize( FontAwesomeIcon.ChevronLeft ) - 5;
+            var inputSize = UiUtils.GetOffsetInputSize( leftRightSize * 2 );
+
+            ImGui.PushFont( UiBuilder.IconFont );
+
+            var index = Selected == null ? - 1 : Group.Items.IndexOf( Selected );
+            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}{Id}-Left", new Vector4(1), Selected != null && index > 0 ) ) {
+                Selected = Group.Items[ index - 1 ];
+                OnSelect( Selected );
+            }
+            ImGui.SameLine();
+            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronRight}{Id}-Right", new Vector4( 1 ), Selected != null && index < ( Group.Items.Count - 1 ) ) ) {
+                Selected = Group.Items[index + 1];
+                OnSelect( Selected );
+            }
+            ImGui.PopFont();
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( inputSize );
+
             var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
             if( ImGui.BeginCombo( Id + "-Select", selectedString ) ) {
                 for( var idx = 0; idx < Group.Items.Count; idx++ ) {
                     var item = Group.Items[idx];
                     if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
                         Selected = item;
-                        OnSelect( item );
+                        OnSelect( Selected );
                     }
                 }
                 ImGui.EndCombo();
             }
+
+            ImGui.PopStyleVar( 1 );
         }
 
         public void ResetSelected() { Selected = null; }

@@ -11,19 +11,25 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
         public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
-        public readonly AvfxCurve X = new( "X", "X" );
-        public readonly AvfxCurve Y = new( "Y", "Y" );
-        public readonly AvfxCurve Z = new( "Z", "Z" );
-        public readonly AvfxCurve RX = new( "Random X", "XR" );
-        public readonly AvfxCurve RY = new( "Random Y", "YR" );
-        public readonly AvfxCurve RZ = new( "Random Z", "ZR" );
+        public readonly AvfxCurve X;
+        public readonly AvfxCurve Y;
+        public readonly AvfxCurve Z;
+        public readonly AvfxCurve RX;
+        public readonly AvfxCurve RY;
+        public readonly AvfxCurve RZ;
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxCurve> Curves;
 
-        public AvfxCurve3Axis( string name, string avfxName, bool locked = false ) : base( avfxName ) {
+        public AvfxCurve3Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
             Name = name;
             Locked = locked;
+            X = new( "X", "X", type );
+            Y = new( "Y", "Y", type );
+            Z = new( "Z", "Z", type );
+            RX = new( "Random X", "XR", type );
+            RY = new( "Random Y", "YR", type );
+            RZ = new( "Random Z", "ZR", type );
 
             Parsed = new() {
                 AxisConnectType,

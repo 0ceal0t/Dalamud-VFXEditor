@@ -6,9 +6,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MdNo", defaultValue: -1 );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
-        public readonly AvfxCurve AX = new( "Angle X", "AnX" );
-        public readonly AvfxCurve AY = new( "Angle Y", "AnY" );
-        public readonly AvfxCurve AZ = new( "Angle Z", "AnZ" );
+        public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
+        public readonly AvfxCurve AY = new( "Angle Y", "AnY", CurveType.Angle );
+        public readonly AvfxCurve AZ = new( "Angle Z", "AnZ", CurveType.Angle );
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 

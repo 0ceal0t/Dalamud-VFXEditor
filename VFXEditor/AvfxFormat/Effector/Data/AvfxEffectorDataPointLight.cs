@@ -5,7 +5,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataPointLight : AvfxData {
         public readonly AvfxCurveColor Color = new( "Color" );
         public readonly AvfxCurve DistanceScale = new( "Distance Scale", "DstS" );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot" );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
         public readonly AvfxEnum<PointLightAttenuation> PointLightAttenuationType = new( "Point Light Attenuation", "Attn" );
         public readonly AvfxBool EnableShadow = new( "Enable Shadow", "bSdw" );

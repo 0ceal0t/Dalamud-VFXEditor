@@ -59,13 +59,20 @@ namespace VfxEditor.Utils {
             return false;
         }
 
+        public static bool DisabledTransparentButton( string label, Vector4 color, bool enabled ) {
+            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
+            if( TransparentButton( label, color ) && enabled ) return true;
+            if( !enabled ) ImGui.PopStyleVar();
+            return false;
+        }
+
         public static bool RemoveButton( string label, bool small = false ) => ColorButton( label, RED_COLOR, small );
 
         public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
 
         public static bool TransparentButton( string label, Vector4 color ) {
             ImGui.PushStyleColor( ImGuiCol.Text, color );
-            ImGui.PushStyleColor( ImGuiCol.ButtonHovered, new Vector4( 0 ) );
+            ImGui.PushStyleColor( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
             ImGui.PushStyleColor( ImGuiCol.ButtonActive, new Vector4( 0 ) );
             var ret = ColorButton( label, new Vector4( 0 ), false );
             ImGui.PopStyleColor(3);
@@ -138,13 +145,13 @@ namespace VfxEditor.Utils {
             var icon = verified switch {
                 VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
                 VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
-                _ => $"{( char )FontAwesomeIcon.Question}"
+                _ => $"{( char )FontAwesomeIcon.Circle}"
             };
 
             var text = verified switch {
                 VerifiedStatus.OK => "Verified",
                 VerifiedStatus.ISSUE => "Parsing Issues",
-                _ => "Unverified"
+                _ => "Workspace"
             };
 
             ImGui.TextColored( color, icon );
@@ -193,5 +200,17 @@ namespace VfxEditor.Utils {
         public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
 
         public static float Lerp( float firstFloat, float secondFloat, float by ) => firstFloat * ( 1 - by ) + secondFloat * by;
+
+        public static float GetOffsetInputSize( FontAwesomeIcon icon ) => GetOffsetInputSize( GetIconSize( icon ) );
+
+        public static float GetOffsetInputSize( float size ) => ImGui.GetContentRegionAvail().X * 0.65f - size;
+
+        public static float GetIconSize( FontAwesomeIcon icon ) {
+            var style = ImGui.GetStyle();
+            ImGui.PushFont( UiBuilder.IconFont );
+            var iconSize = ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + 2;
+            ImGui.PopFont();
+            return iconSize;
+        }
     }
 }

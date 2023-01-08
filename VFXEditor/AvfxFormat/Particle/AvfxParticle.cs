@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve AirResistance = new( "Air Resistance", "ARs", locked: true );
         public readonly AvfxCurve AirResistanceRandom = new( "Air Resistance Random", "ARsR", locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", locked: true );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve RotVelX = new( "Rotation Velocity X", "VRX" );
         public readonly AvfxCurve RotVelY = new( "Rotation Velocity Y", "VRY" );

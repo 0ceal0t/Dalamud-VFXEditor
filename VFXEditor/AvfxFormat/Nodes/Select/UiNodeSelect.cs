@@ -5,6 +5,7 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
+using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class UiNodeSelect : IAvfxUiBase {
@@ -177,11 +178,7 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            var style = ImGui.GetStyle();
-            ImGui.PushFont( UiBuilder.IconFont );
-            var goSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Share}" ).X + style.FramePadding.X * 2 + 2;
-            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - goSize;
-            ImGui.PopFont();
+            var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
 
             ImGui.SetNextItemWidth( inputSize );
             if( ImGui.BeginCombo( $"{id}-MainInput", GetText() ) ) {

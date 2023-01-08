@@ -11,17 +11,21 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
         public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
-        public readonly AvfxCurve X = new( "X", "X" );
-        public readonly AvfxCurve Y = new( "Y", "Y" );
-        public readonly AvfxCurve RX = new( "Random X", "XR" );
-        public readonly AvfxCurve RY = new( "Random Y", "YR" );
+        public readonly AvfxCurve X;
+        public readonly AvfxCurve Y;
+        public readonly AvfxCurve RX;
+        public readonly AvfxCurve RY;
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxCurve> Curves;
 
-        public AvfxCurve2Axis( string name, string avfxName, bool locked = false ) : base( avfxName ) {
+        public AvfxCurve2Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
             Name = name;
             Locked = locked;
+            X = new( "X", "X", type );
+            Y = new( "Y", "Y", type );
+            RX = new( "Random X", "XR", type );
+            RY = new( "Random Y", "YR", type );
 
             Parsed = new() {
                 AxisConnectType,

@@ -149,9 +149,7 @@ namespace VfxEditor.AvfxFormat {
             // Draw
             var style = ImGui.GetStyle();
             ImGui.PushFont( UiBuilder.IconFont );
-            var goSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Share}" ).X + style.FramePadding.X * 2 + 2;
-            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + 2;
-            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - goSize;
+            var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
             ImGui.PopFont();
 
             for( var idx = 0; idx < Selected.Count; idx++ ) {
@@ -181,7 +179,8 @@ namespace VfxEditor.AvfxFormat {
                 }
                 else {
                     // Remove button
-                    ImGui.SameLine( inputSize + goSize + 2 );
+                    ImGui.SameLine();
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                     ImGui.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );

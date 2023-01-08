@@ -71,7 +71,6 @@ namespace VfxEditor.TmbFormat {
             // Remove
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 20 );
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     CompoundCommand command = new( false, true );
                     command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );

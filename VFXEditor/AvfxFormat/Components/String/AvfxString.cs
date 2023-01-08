@@ -51,14 +51,11 @@ namespace VfxEditor.AvfxFormat {
             if( manager.IsCopying ) manager.Strings[Name] = Value;
             if( manager.IsPasting && manager.Strings.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxStringCommand( this, val, IsAssigned() ) );
 
-            var style = ImGui.GetStyle();
-            ImGui.PushFont( UiBuilder.IconFont );
-            var checkSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Check}" ).X + style.FramePadding.X * 2 + 2;
-            var removeSize = ImGui.CalcTextSize( $"{( char )FontAwesomeIcon.Trash}" ).X + style.FramePadding.X * 2 + 2;
-            ImGui.PopFont();
+            var checkSize = UiUtils.GetIconSize( FontAwesomeIcon.Check );
+            var removeSize = UiUtils.GetIconSize( FontAwesomeIcon.Trash );
 
             // Input
-            var inputSize = ImGui.GetContentRegionAvail().X * 0.65f - checkSize - ( ShowRemoveButton ? removeSize : 0 );
+            var inputSize = UiUtils.GetOffsetInputSize( checkSize + ( ShowRemoveButton ? removeSize : 0 ) );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( $"{id}-MainInput", ref InputString, 256 );
 
