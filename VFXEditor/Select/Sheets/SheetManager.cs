@@ -5,9 +5,8 @@ using VfxEditor.Select.Sheets;
 
 namespace VfxEditor.Select {
     public class SheetManager {
-        public static string NpcNamesOldPath { get; private set; }
+        public static string BnpcPath { get; private set; }
         public static string NpcFilesPath { get; private set; }
-        public static string NpcNamesPath { get; private set; }
         public static string MiscVfxPath { get; private set; }
         public static string MiscTmbPath { get; private set; }
 
@@ -98,9 +97,8 @@ namespace VfxEditor.Select {
         };
 
         public static void Initialize() {
-            NpcNamesOldPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names_old.csv" );
+            BnpcPath = Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
             NpcFilesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
-            NpcNamesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_names.json" );
             MiscVfxPath = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
             MiscTmbPath = Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
 

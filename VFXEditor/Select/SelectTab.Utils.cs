@@ -134,10 +134,10 @@ namespace VfxEditor {
             }
         }
 
-        public static void DrawThankYou() {
-            ImGui.Text( "Thank you to Anamnesis/CMTools for compiling the list of NPC names" );
+        public static void NpcThankYou() {
+            ImGui.TextDisabled( "NPC file list provided by ResLogger" );
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Github##Anamnesis" ) ) UiUtils.OpenUrl( "https://github.com/imchillin/Anamnesis" );
+            if( ImGui.SmallButton( "Github##ResLogger" ) ) UiUtils.OpenUrl( "https://github.com/lmcintyre/ResLogger2" );
         }
 
         protected static void LoadIcon( uint iconId, ref ImGuiScene.TextureWrap texWrap ) {

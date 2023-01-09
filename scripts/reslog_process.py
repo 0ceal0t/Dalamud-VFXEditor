@@ -13,24 +13,26 @@ import json
 
 npc_output = {}
 
-with open("export.csv") as f:
+with open("CurrentPathList") as f:
     for line in f:
-        split = line.split(',')
-        path = split[2].strip()
+        path = line.strip()
 
         _id = ""
         _type = ""
 
-        if ('monster' in path or 'demihuman' in path) and '.avfx' in path:
+        if ('vfx/monster' in path or 'vfx/demihuman' in path) and '.avfx' in path:
             _id = path.split("/")[2]
             _type = "vfx"
-        elif ('monster' in path or 'demihuman' in path) and '.pap' in path:
+        elif ('chara/monster' in path or 'chara/demihuman' in path) and '.pap' in path:
             _id = path.split("/")[2]
             _type = "pap"
-        elif 'mon_sp' in path and '.tmb' in path:
+        elif 'chara/action/mon_sp' in path and '.tmb' in path:
             _id = path.split("/")[3]
             _type = "tmb"
         else:
+            continue
+
+        if 'gimmick' in _id:
             continue
 
         if _id not in npc_output:

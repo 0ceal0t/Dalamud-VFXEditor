@@ -48,6 +48,8 @@ namespace VfxEditor {
                 ResetScroll = true;
             }
 
+            ImGui.Separator();
+
             // Navigate through items using the up and down arrow buttons
             if( KeybindConfiguration.NavigateUpDown( Searched, Selected, out var newSelected ) ) Select( newSelected );
 

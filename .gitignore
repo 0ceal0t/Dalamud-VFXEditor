@@ -4,3 +4,4 @@ bin/
 *.user
 backup*/
 *.xlsx
+scripts/CurrentPathList

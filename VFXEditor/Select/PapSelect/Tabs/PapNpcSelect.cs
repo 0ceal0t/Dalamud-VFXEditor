@@ -9,7 +9,7 @@ namespace VfxEditor.Select.PapSelect {
 
         protected override bool CheckMatch( XivNpc item, string searchInput ) => Matches( item.Name, searchInput ) || Matches( item.Id, searchInput );
 
-        protected override void DrawExtra() => DrawThankYou();
+        protected override void DrawExtra() => NpcThankYou();
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "Variant: " + Loaded.Npc.Variant );

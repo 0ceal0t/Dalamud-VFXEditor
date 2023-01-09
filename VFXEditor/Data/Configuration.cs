@@ -90,9 +90,8 @@ namespace VfxEditor {
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {
-            if( recentList.Contains( result ) ) {
-                recentList.Remove( result ); // want to move it to the top
-            }
+            if( recentList.Contains( result ) ) recentList.Remove( result ); // want to move it to the top
+
             recentList.Add( result );
             if( recentList.Count > SaveRecentLimit ) {
                 recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
@@ -121,48 +120,50 @@ namespace VfxEditor {
         }
 
         private void DrawConfiguration() {
-            ImGui.BeginChild( "##Settings-Config" );
+            var id = $"##Settings";
+
+            ImGui.BeginChild( $"{id}-Config" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Indent( 5 );
 
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
-            if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
-            if( ImGui.Checkbox( "Log all files##Settings", ref LogAllFiles ) ) Save();
-            if( ImGui.Checkbox( "Log debug information##Settings", ref LogDebug ) ) Save();
-            if( ImGui.Checkbox( "Log Vfx debug information##Settings", ref LogVfxDebug ) ) Save();
+            if( ImGui.InputText( $"Temp file location{id}", ref WriteLocation, 255 ) ) Save();
+            if( ImGui.Checkbox( $"Log all files{id}", ref LogAllFiles ) ) Save();
+            if( ImGui.Checkbox( $"Log debug information{id}", ref LogDebug ) ) Save();
+            if( ImGui.Checkbox( $"Log Vfx debug information{id}", ref LogVfxDebug ) ) Save();
 
-            if( ImGui.Checkbox( "Autosave Workspace##Settings", ref AutosaveEnabled ) ) Save();
+            if( ImGui.Checkbox( $"Autosave Workspace{id}", ref AutosaveEnabled ) ) Save();
             ImGui.Indent();
             if( !AutosaveEnabled ) {
                 var style = ImGui.GetStyle();
                 ImGui.PushStyleVar( ImGuiStyleVar.Alpha, style.Alpha * 0.5f );
             }
             ImGui.SetNextItemWidth( 120 );
-            if( ImGui.InputInt( "Autosave time (seconds)##Settings", ref AutosaveSeconds ) ) Save();
+            if( ImGui.InputInt( $"Autosave time (seconds){id}", ref AutosaveSeconds ) ) Save();
             if( !AutosaveEnabled ) ImGui.PopStyleVar();
             ImGui.Unindent();
 
-            if( ImGui.Checkbox( "Hide with UI##Settings", ref HideWithUI ) ) Save();
+            if( ImGui.Checkbox( $"Hide with UI{id}", ref HideWithUI ) ) Save();
 
-            if( ImGui.Checkbox( "File picker image preview##Settings", ref FilepickerImagePreview ) ) {
+            if( ImGui.Checkbox( $"File picker image preview{id}", ref FilepickerImagePreview ) ) {
                 FileDialogManager.ImagePreview = FilepickerImagePreview;
                 Save();
             }
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( "Recent file limit##Settings", ref SaveRecentLimit ) ) {
+            if( ImGui.InputInt( $"Recent file limit{id}", ref SaveRecentLimit ) ) {
                 SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
                 Save();
             }
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputFloat( "Live overlay remove delay time##Settings", ref OverlayRemoveDelay ) ) Save();
-            if( ImGui.Checkbox( "Live overlay limit by distance##Settings", ref OverlayLimit ) ) Save();
+            if( ImGui.InputFloat( $"Live overlay remove delay time{id}", ref OverlayRemoveDelay ) ) Save();
+            if( ImGui.Checkbox( $"Live overlay limit by distance{id}", ref OverlayLimit ) ) Save();
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
+            if( ImGui.InputInt( $"Undo history size{id}", ref MaxUndoSize ) ) Save();
 
-            if( ImGui.Checkbox( "Double-click to navigate to items", ref DoubleClickNavigate ) ) Save();
+            if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
 
             ImGui.Unindent();
             ImGui.EndChild();
