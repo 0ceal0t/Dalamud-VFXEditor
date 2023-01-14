@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.7.1.8</FileVersion>
-        <AssemblyVersion>1.7.1.8</AssemblyVersion>
+        <FileVersion>1.7.1.9</FileVersion>
+        <AssemblyVersion>1.7.1.9</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -109,6 +109,10 @@
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0027" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Penumbra.String\Penumbra.String.csproj" />
     </ItemGroup>
 
     <ItemGroup>
