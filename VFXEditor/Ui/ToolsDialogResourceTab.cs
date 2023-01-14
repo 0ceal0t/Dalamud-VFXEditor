@@ -1,10 +1,12 @@
 using Dalamud.Interface;
 using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
+using FFXIVClientStructs.Interop;
 using FFXIVClientStructs.STD;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Interop;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui {
@@ -20,7 +22,7 @@ namespace VfxEditor.Ui {
 
         // Adapted from https://github.com/xivdev/Penumbra/blob/7e7e74a5346857328ee161d571c1f1ead6524e9a/Penumbra/UI/MenuTabs/TabResourceManager.cs
         public void Draw() {
-            var resourceHandler = *( ResourceManager** )Plugin.SigScanner.GetStaticAddressFromSig( "48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 32 C0" );
+            var resourceHandler = *( ResourceManager** )Plugin.SigScanner.GetStaticAddressFromSig( Constants.ResourceManagerSig );
 
             if( resourceHandler == null ) return;
 

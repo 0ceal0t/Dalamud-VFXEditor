@@ -76,6 +76,8 @@ namespace VfxEditor {
             else DrawPath( "BGM Path", situation.Path, parentId, SelectResultType.GameZone, name );
         }
 
+        // ========================
+
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
             var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
             return new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path );
@@ -124,7 +126,6 @@ namespace VfxEditor {
             preItems = ( int )Math.Floor( scrollY / itemHeight );
             showItems = ( int )Math.Ceiling( childHeight / itemHeight );
             postItems = count - showItems - preItems;
-
         }
 
         public static void DrawIcon( ImGuiScene.TextureWrap icon ) {
@@ -151,11 +152,11 @@ namespace VfxEditor {
                 catch( Exception ) {
                     tex = Plugin.DataManager.GetIcon( 0 );
                 }
-                texWrap = Plugin.PluginInterface.UiBuilder.LoadImageRaw( BGRA_to_RGBA( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                texWrap = Plugin.PluginInterface.UiBuilder.LoadImageRaw( BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
 
-        protected static byte[] BGRA_to_RGBA( byte[] data ) {
+        protected static byte[] BgraToRgba( byte[] data ) {
             var ret = new byte[data.Length];
             for( var i = 0; i < data.Length / 4; i++ ) {
                 var idx = i * 4;

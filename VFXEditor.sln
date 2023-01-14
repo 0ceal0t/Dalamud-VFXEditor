@@ -16,6 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VFXEditor", "VFXEditor\VFXEditor.csproj", "{F6806E83-137E-47D8-AD35-5E89501570B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{77895120-9D50-43F0-A908-41B66F47B736} = {77895120-9D50-43F0-A908-41B66F47B736}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Penumbra.String", "Penumbra.String\Penumbra.String.csproj", "{77895120-9D50-43F0-A908-41B66F47B736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +38,14 @@ Global
 		{F6806E83-137E-47D8-AD35-5E89501570B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6806E83-137E-47D8-AD35-5E89501570B3}.Release|x64.ActiveCfg = Release|x64
 		{F6806E83-137E-47D8-AD35-5E89501570B3}.Release|x64.Build.0 = Release|x64
+		{77895120-9D50-43F0-A908-41B66F47B736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Debug|x64.Build.0 = Debug|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Release|x64.ActiveCfg = Release|Any CPU
+		{77895120-9D50-43F0-A908-41B66F47B736}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

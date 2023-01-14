@@ -263,7 +263,13 @@ namespace VfxEditor.TextureFormat {
 
         public void Dispose() {
             foreach( var entry in PathToTexturePreview ) {
-                entry.Value.Wrap?.Dispose();
+                if( entry.Value.Wrap?.ImGuiHandle == null ) continue;
+                try {
+                    entry.Value.Wrap?.Dispose();
+                }
+                catch( Exception ) {
+                    // Already disposed
+                }
             }
             foreach( var entry in PathToTextureReplace ) {
                 File.Delete( entry.Value.LocalPath );

@@ -154,32 +154,32 @@ namespace VfxEditor {
 
             CommandManager.RemoveHandler( CommandName );
 
-            ResourceLoader.Dispose();
+            ResourceLoader?.Dispose();
             ResourceLoader = null;
 
-            AvfxManager.Dispose();
+            AvfxManager?.Dispose();
             AvfxManager = null;
 
-            TmbManager.Dispose();
+            TmbManager?.Dispose();
             TmbManager = null;
 
-            PapManager.Dispose();
+            PapManager?.Dispose();
             PapManager = null;
 
-            ScdManager.Dispose();
+            ScdManager?.Dispose();
             ScdManager = null;
 
             TextureManager.BreakDown();
-            TextureManager.Dispose();
+            TextureManager?.Dispose();
             TextureManager = null;
 
-            AnimationManager.Dispose();
+            AnimationManager?.Dispose();
             AnimationManager = null;
 
-            ActorAnimationManager.Dispose();
+            ActorAnimationManager?.Dispose();
             ActorAnimationManager = null;
 
-            DirectXManager.Dispose();
+            DirectXManager?.Dispose();
             DirectXManager = null;
 
             RemoveSpawn();

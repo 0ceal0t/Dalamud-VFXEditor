@@ -10,12 +10,12 @@ using System.Threading;
 using VfxEditor.Structs;
 using VfxEditor.Structs.Vfx;
 using FileMode = VfxEditor.Structs.FileMode;
+using Penumbra.String;
+using Penumbra.String.Classes;
 
 namespace VfxEditor.Interop {
-    public class ResourceLoader : IDisposable {
+    public unsafe class ResourceLoader : IDisposable {
         private bool IsEnabled;
-        private readonly Crc32 Crc32;
-        private readonly Crc32 Crc32_Reload;
 
         private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
 
@@ -30,15 +30,15 @@ namespace VfxEditor.Interop {
         private int WaitFrames = 0;
 
         // ===== FILES =========
-        public unsafe delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+        public delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
 
-        public unsafe delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+        public delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
 
-        public unsafe delegate void* GetResourceSyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
-            uint* pResourceHash, char* pPath, void* pUnknown );
+        public delegate void* GetResourceSyncPrototype( IntPtr fileManager, uint* categoryId, char* resourceType,
+            int* resourceHash, byte* path, GetResourceParameters* resParams );
 
-        public unsafe delegate void* GetResourceAsyncPrototype( IntPtr pFileManager, uint* pCategoryId, char* pResourceType,
-            uint* pResourceHash, char* pPath, void* pUnknown, bool isUnknown );
+        public delegate void* GetResourceAsyncPrototype( IntPtr fileManager, uint* categoryId, char* resourceType,
+            int* resourceHash, byte* path, GetResourceParameters* resParams, bool isUnknown );
 
         // ====== FILES HOOKS ========
         public Hook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
@@ -47,78 +47,73 @@ namespace VfxEditor.Interop {
         public ReadFilePrototype ReadFile { get; private set; }
 
         //====== STATIC ===========
-        public unsafe delegate IntPtr StaticVfxCreateDelegate( string path, string pool );
+        public delegate IntPtr StaticVfxCreateDelegate( string path, string pool );
         public StaticVfxCreateDelegate StaticVfxCreate;
 
-        public unsafe delegate IntPtr StaticVfxRunDelegate( IntPtr vfx, float a1, uint a2 );
+        public delegate IntPtr StaticVfxRunDelegate( IntPtr vfx, float a1, uint a2 );
         public StaticVfxRunDelegate StaticVfxRun;
 
-        public unsafe delegate IntPtr StaticVfxRemoveDelegate( IntPtr vfx );
+        public delegate IntPtr StaticVfxRemoveDelegate( IntPtr vfx );
         public StaticVfxRemoveDelegate StaticVfxRemove;
 
         // ======= STATIC HOOKS ========
-        public unsafe delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
+        public delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
         public Hook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
 
-        public unsafe delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
+        public delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
         public Hook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
-        public unsafe delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public ActorVfxCreateDelegate ActorVfxCreate;
 
-        public unsafe delegate IntPtr ActorVfxRemoveDelegate( IntPtr vfx, char a2 );
+        public delegate IntPtr ActorVfxRemoveDelegate( IntPtr vfx, char a2 );
         public ActorVfxRemoveDelegate ActorVfxRemove;
 
         // ======== ACTOR HOOKS =============
-        public unsafe delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
         public Hook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
 
-        public unsafe delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
+        public delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
         public Hook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
         public delegate IntPtr GetMatrixSingletonDelegate();
         public GetMatrixSingletonDelegate GetMatrixSingleton { get; private set; }
 
-        public unsafe delegate IntPtr GetFileManagerDelegate();
+        public delegate IntPtr GetFileManagerDelegate();
         private GetFileManagerDelegate GetFileManager;
         private GetFileManagerDelegate GetFileManager2;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
-        public unsafe delegate byte DecRefDelegate( IntPtr resource );
+        public delegate byte DecRefDelegate( IntPtr resource );
         private DecRefDelegate DecRef;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
-        private unsafe delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
+        private delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
         private RequestFileDelegate RequestFile;
 
-        public ResourceLoader() {
-            Crc32 = new();
-            Crc32_Reload = new();
-        }
-
-        public unsafe void Init() {
+        public void Init() {
             var scanner = Plugin.SigScanner;
 
-            var readFileAddress = scanner.ScanText( "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3 BA 05" );
+            var readFileAddress = scanner.ScanText( Constants.ReadFileSig );
 
-            ReadSqpackHook = Hook<ReadSqpackPrototype>.FromAddress( scanner.ScanText( "E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 84 C0 0F 84 ?? 00 00 00 4C 8B C3" ), ReadSqpackHandler );
-            GetResourceSyncHook = Hook<GetResourceSyncPrototype>.FromAddress( scanner.ScanText( "E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00" ), GetResourceSyncHandler );
-            GetResourceAsyncHook = Hook<GetResourceAsyncPrototype>.FromAddress( scanner.ScanText( "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00" ), GetResourceAsyncHandler );
+            ReadSqpackHook = Hook<ReadSqpackPrototype>.FromAddress( scanner.ScanText( Constants.ReadSqpackSig ), ReadSqpackHandler );
+            GetResourceSyncHook = Hook<GetResourceSyncPrototype>.FromAddress( scanner.ScanText( Constants.GetResourceSyncSig ), GetResourceSyncHandler );
+            GetResourceAsyncHook = Hook<GetResourceAsyncPrototype>.FromAddress( scanner.ScanText( Constants.GetResourceAsyncSig ), GetResourceAsyncHandler );
 
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( readFileAddress );
 
-            var staticVfxCreateAddress = scanner.ScanText( "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08" );
-            var staticVfxRemoveAddress = scanner.ScanText( "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9" );
-            var actorVfxCreateAddress = scanner.ScanText( "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8" );
-            var actorVfxRemoveAddress_1 = scanner.ScanText( "0F 11 48 10 48 8D 05" ) + 7;
+            var staticVfxCreateAddress = scanner.ScanText( Constants.StaticVfxCreateSig );
+            var staticVfxRemoveAddress = scanner.ScanText( Constants.StaticVfxRemoveSig );
+            var actorVfxCreateAddress = scanner.ScanText( Constants.ActorVfxCreateSig );
+            var actorVfxRemoveAddress_1 = scanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
             var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
 
             ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
-            StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 8B 4B 7C 85 C9" ) );
+            StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( scanner.ScanText( Constants.StaticVfxRunSig ) );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
             StaticVfxCreateHook = Hook<StaticVfxCreateDelegate2>.FromAddress( staticVfxCreateAddress, StaticVfxNewHandler );
@@ -126,14 +121,14 @@ namespace VfxEditor.Interop {
             ActorVfxCreateHook = Hook<ActorVfxCreateDelegate2>.FromAddress( actorVfxCreateAddress, ActorVfxNewHandler );
             ActorVfxRemoveHook = Hook<ActorVfxRemoveDelegate2>.FromAddress( actorVfxRemoveAddress, ActorVfxRemoveHandler );
 
-            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??" ) );
-            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01" ) );
-            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 4C 8B 2D ?? ?? ?? ?? 49 8B CD" ) );
-            DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? 48 C7 03 ?? ?? ?? ?? C6 83" ) );
-            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( "E8 ?? ?? ?? ?? F0 FF 4F 5C 48 8D 4F 30" ) );
+            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( scanner.ScanText( Constants.GetMatrixSig ) );
+            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManagerSig ) );
+            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManager2Sig ) );
+            DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( Constants.DecRefSig ) );
+            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( Constants.RequestFileSig ) );
         }
 
-        private unsafe IntPtr StaticVfxNewHandler( char* path, char* pool ) {
+        private IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
@@ -143,7 +138,7 @@ namespace VfxEditor.Interop {
             return vfx;
         }
 
-        private unsafe IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
+        private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
             if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
                 Plugin.ClearSpawn();
             }
@@ -151,7 +146,7 @@ namespace VfxEditor.Interop {
             return StaticVfxRemoveHook.Original( vfx );
         }
 
-        private unsafe IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
+        private IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
@@ -161,7 +156,7 @@ namespace VfxEditor.Interop {
             return vfx;
         }
 
-        private unsafe IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
+        private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
             if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
                 Plugin.ClearSpawn();
             }
@@ -225,10 +220,9 @@ namespace VfxEditor.Interop {
             Plugin.Framework.Update += OnUpdateEvent;
         }
 
-        private unsafe void OnUpdateEvent( object framework ) {
+        private void OnUpdateEvent( object framework ) {
             var player = Plugin.ClientState.LocalPlayer;
-            var renderPtr = player.Address + 0x104;
-            // https://github.com/aers/FFXIVClientStructs/blob/fe20b24789a5b2c3eaae1e02b974187769615353/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs#L46
+            var renderPtr = player.Address + Constants.RenderOffset;
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
@@ -253,73 +247,81 @@ namespace VfxEditor.Interop {
             }
         }
 
-        private unsafe void* GetResourceSyncHandler(
+        private void* GetResourceSyncHandler(
             IntPtr pFileManager,
             uint* pCategoryId,
             char* pResourceType,
-            uint* pResourceHash,
-            char* pPath,
-            void* pUnknown
+            int* pResourceHash,
+            byte* pPath,
+            GetResourceParameters* pUnknown
         ) => GetResourceHandler( true, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, false );
 
-        private unsafe void* GetResourceAsyncHandler(
+        private void* GetResourceAsyncHandler(
             IntPtr pFileManager,
             uint* pCategoryId,
             char* pResourceType,
-            uint* pResourceHash,
-            char* pPath,
-            void* pUnknown,
+            int* pResourceHash,
+            byte* pPath,
+            GetResourceParameters* pUnknown,
             bool isUnknown
         ) => GetResourceHandler( false, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
 
-        private unsafe void* CallOriginalHandler(
+        private void* CallOriginalHandler(
             bool isSync,
             IntPtr pFileManager,
             uint* pCategoryId,
             char* pResourceType,
-            uint* pResourceHash,
-            char* pPath,
-            void* pUnknown,
+            int* pResourceHash,
+            byte* pPath,
+            GetResourceParameters* pUnknown,
             bool isUnknown
         ) => isSync
             ? GetResourceSyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown )
             : GetResourceAsyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
 
-        private unsafe void* GetResourceHandler(
-            bool isSync, IntPtr pFileManager,
-            uint* pCategoryId,
-            char* pResourceType,
-            uint* pResourceHash,
-            char* pPath,
-            void* pUnknown,
+        private void* GetResourceHandler(
+            bool isSync, IntPtr fileManager,
+            uint* categoryId,
+            char* resourceType,
+            int* resourceHash,
+            byte* path,
+            GetResourceParameters* resParams,
             bool isUnknown
         ) {
-            var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( pPath ) );
+            var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( path ) );
 
             if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
 
             var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
-                var value = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+                var value = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
                 if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value ).ToString( "X8" ) );
                 return value;
             }
-            var cleanPath = fsPath.Replace( '\\', '/' );
-            var path = Encoding.ASCII.GetBytes( cleanPath );
-            var bPath = stackalloc byte[path.Length + 1];
-            Marshal.Copy( path, 0, new IntPtr( bPath ), path.Length );
-            pPath = ( char* )bPath;
-            Crc32.Init();
-            Crc32.Update( path );
-            *pResourceHash = Crc32.Checksum;
 
-            var value2 = CallOriginalHandler( isSync, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ) );
+            var resolvedPath = new FullPath( fsPath );
+
+            *resourceHash = ComputeHash( resolvedPath.InternalName, resParams );
+            path = resolvedPath.InternalName.Path;
+
+            var value2 = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2} / {3}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ), Marshal.PtrToStringAnsi( new IntPtr( path ) ) );
             return value2;
         }
 
-        private unsafe byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
+        private static int ComputeHash( ByteString path, GetResourceParameters* resParams ) {
+            if( resParams == null || !resParams->IsPartialRead ) return path.Crc32;
+
+            return ByteString.Join(
+                ( byte )'.',
+                path,
+                ByteString.FromStringUnsafe( resParams->SegmentOffset.ToString( "x" ), true ),
+                ByteString.FromStringUnsafe( resParams->SegmentLength.ToString( "x" ), true )
+            ).Crc32;
+        }
+
+        private byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
             var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
@@ -351,7 +353,7 @@ namespace VfxEditor.Interop {
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
         }
 
-        private static unsafe string GetString( StdString str ) {
+        private static string GetString( StdString str ) {
             var len = ( int )str.Size;
             if( len > 15 ) {
                 return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
@@ -384,7 +386,7 @@ namespace VfxEditor.Interop {
             return false;
         }
 
-        public unsafe void ReloadPath( string gamePath, string localPath, List<string> papIds = null ) {
+        public void ReloadPath( string gamePath, string localPath, List<string> papIds = null ) {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
@@ -392,7 +394,7 @@ namespace VfxEditor.Interop {
 
             if( gameResource != IntPtr.Zero ) {
                 PrepPap( gameResource, papIds );
-                RequestFile( GetFileManager2(), gameResource + 0x38, gameResource, 1 );
+                RequestFile( GetFileManager2(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
                 WritePapIds( gameResource, papIds );
             }
 
@@ -402,7 +404,7 @@ namespace VfxEditor.Interop {
 
                 if( gameResource2 != IntPtr.Zero ) {
                     PrepPap( gameResource2, papIds );
-                    RequestFile( GetFileManager2(), gameResource2 + 0x38, gameResource2, 1 );
+                    RequestFile( GetFileManager2(), gameResource2 + Constants.GameResourceOffset, gameResource2, 1 );
                     WritePapIds( gameResource2, papIds );
                 }
             }
@@ -415,19 +417,14 @@ namespace VfxEditor.Interop {
 
         private static void WritePapIds( IntPtr resource, List<string> papIds ) {
             if( papIds == null ) return;
-            var data = Marshal.ReadIntPtr( resource + 0xf0 );
+            var data = Marshal.ReadIntPtr( resource + Constants.PapIdsOffset );
             for( var i = 0; i < papIds.Count; i++ ) {
                 SafeMemory.WriteString( data + ( i * 40 ), papIds[i], Encoding.ASCII );
                 Marshal.WriteByte( data + ( i * 40 ) + 34, (byte)i );
             }
         }
 
-        private unsafe IntPtr GetResource( string path, bool original ) {
-            var pathBytes = Encoding.ASCII.GetBytes( path );
-            var bPath = stackalloc byte[pathBytes.Length + 1];
-            Marshal.Copy( pathBytes, 0, new IntPtr( bPath ), pathBytes.Length );
-            var pPath = ( char* )bPath;
-
+        private IntPtr GetResource( string path, bool original ) {
             // File type extension
             var ext = path.Split( '.' )[1];
             var charArray = ext.ToCharArray();
@@ -454,15 +451,16 @@ namespace VfxEditor.Interop {
             Marshal.Copy( categoryBytes, 0, new IntPtr( bCategory ), categoryBytes.Length );
             var pCategoryId = ( uint* )bCategory;
 
-            Crc32_Reload.Init();
-            Crc32_Reload.Update( pathBytes );
-            var hashBytes = BitConverter.GetBytes( Crc32_Reload.Checksum );
+            ByteString.FromString( path, out var resolvedPath );
+            var hash = resolvedPath.GetHashCode();
+
+            var hashBytes = BitConverter.GetBytes( hash );
             var bHash = stackalloc byte[hashBytes.Length + 1];
             Marshal.Copy( hashBytes, 0, new IntPtr( bHash ), hashBytes.Length );
-            var pResourceHash = ( uint* )bHash;
+            var pResourceHash = ( int* )bHash;
 
-            var resource = original ? new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) ) :
-                new IntPtr( GetResourceSyncHandler( GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, ( void* )IntPtr.Zero ) );
+            var resource = original ? new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) ) :
+                new IntPtr( GetResourceSyncHandler( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) );
             DecRef( resource );
 
             return resource;

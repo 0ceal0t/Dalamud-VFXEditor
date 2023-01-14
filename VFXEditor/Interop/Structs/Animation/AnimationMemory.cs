@@ -25,11 +25,13 @@ namespace VfxEditor.Structs.Animation {
         Overlay = 12,
     }
 
+    // https://github.com/imchillin/Anamnesis/blob/340ae29d9cc6825c270842c7404d9fd8ea3cf208/Anamnesis/Memory/AnimationMemory.cs
+
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct ActorMemoryStruct {
-        [FieldOffset( 0x1AD4 )] public byte CharacterMode;
-        [FieldOffset( 0x1AD5 )] public byte CharacterModeInput;
-        [FieldOffset( 0x09C0 )] public AnimationMemory Animation;
+        [FieldOffset( 0x1B00 )] public byte CharacterMode;
+        [FieldOffset( 0x1B01 )] public byte CharacterModeInput;
+        [FieldOffset( 0x0900 )] public AnimationMemory Animation;
 
         public bool CanAnimate => ( CharacterModes)CharacterMode == CharacterModes.Normal || ( CharacterModes)CharacterMode == CharacterModes.AnimLock;
         public bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
@@ -37,10 +39,10 @@ namespace VfxEditor.Structs.Animation {
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct AnimationMemory {
-        [FieldOffset( 0x000 )] public fixed ushort AnimationIds[13];
-        [FieldOffset( 0x074 )] public fixed float Speeds[13];
-        [FieldOffset( 0x102 )] public byte SpeedTrigger;
-        [FieldOffset( 0x1EC )] public ushort BaseOverride;
-        [FieldOffset( 0x1EE )] public ushort LipsOverride;
+        [FieldOffset( 0x0E0 )] public fixed ushort AnimationIds[13];
+        [FieldOffset( 0x154 )] public fixed float Speeds[13];
+        [FieldOffset( 0x1E2 )] public byte SpeedTrigger;
+        [FieldOffset( 0x2CC )] public ushort BaseOverride;
+        [FieldOffset( 0x2CE )] public ushort LipsOverride;
     }
 }

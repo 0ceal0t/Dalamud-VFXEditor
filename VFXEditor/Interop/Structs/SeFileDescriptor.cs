@@ -7,13 +7,24 @@ namespace VfxEditor.Structs {
         public FileMode FileMode;
 
         [FieldOffset( 0x30 )]
-        public void* FileDescriptor; //
+        public void* FileDescriptor;
 
         [FieldOffset( 0x50 )]
-        public ResourceHandle* ResourceHandle; //
-
+        public ResourceHandle* ResourceHandle;
 
         [FieldOffset( 0x70 )]
-        public byte UtfFileName; //
+        public byte UtfFileName;
+    }
+
+    [StructLayout( LayoutKind.Explicit )]
+    public struct GetResourceParameters {
+        [FieldOffset( 16 )]
+        public uint SegmentOffset;
+
+        [FieldOffset( 20 )]
+        public uint SegmentLength;
+
+        public bool IsPartialRead
+            => SegmentLength != 0;
     }
 }

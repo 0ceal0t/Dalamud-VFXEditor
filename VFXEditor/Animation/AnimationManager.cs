@@ -44,7 +44,7 @@ namespace VfxEditor.Animation {
             AnimationLoaded = true;
         }
 
-        public void Draw( PapAnimation animation, string animationHkx, int animationIndex, int modelId, SkeletonType modelType, int variant ) {
+        public void Draw( PapAnimation animation, string animationHkx, int animationIndex, int modelId, SkeletonType modelType ) {
             if( animation != SelectedAnimation ) {
                 // Selected a new animation, reset
                 SelectedAnimation = animation;
@@ -58,7 +58,7 @@ namespace VfxEditor.Animation {
 
                 if( ImGui.Button( "Load Animation" ) ) {
                     Playing = false;
-                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType, variant) );
+                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType) );
                 }
 
                 return;
@@ -66,7 +66,7 @@ namespace VfxEditor.Animation {
 
             if (ImGui.Button( "Refresh") ) {
                 Playing = false;
-                Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType, variant ) );
+                Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType ) );
             }
 
             if( Playing ) {
@@ -121,7 +121,7 @@ namespace VfxEditor.Animation {
             Plugin.DirectXManager.AnimationPreview.DrawInline();
         }
 
-        private static string GetSklbPath( int modelId, SkeletonType modelType, int variantId ) {
+        private static string GetSklbPath( int modelId, SkeletonType modelType ) {
             var format = modelType switch {
                 SkeletonType.Monster => "chara/monster/m{0:D4}/skeleton/base/b{1:D4}/skl_m{0:D4}b{1:D4}.sklb",
                 SkeletonType.DemiHuman => "chara/demihuman/d{0:D4}/skeleton/base/b{1:D4}/skl_d{0:D4}b{1:D4}.sklb",
