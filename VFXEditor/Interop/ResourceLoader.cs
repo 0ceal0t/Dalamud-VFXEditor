@@ -248,36 +248,36 @@ namespace VfxEditor.Interop {
         }
 
         private void* GetResourceSyncHandler(
-            IntPtr pFileManager,
-            uint* pCategoryId,
-            char* pResourceType,
-            int* pResourceHash,
-            byte* pPath,
-            GetResourceParameters* pUnknown
-        ) => GetResourceHandler( true, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, false );
+            IntPtr fileManager,
+            uint* categoryId,
+            char* resourceType,
+            int* resourceHash,
+            byte* path,
+            GetResourceParameters* resParams
+        ) => GetResourceHandler( true, fileManager, categoryId, resourceType, resourceHash, path, resParams, false );
 
         private void* GetResourceAsyncHandler(
-            IntPtr pFileManager,
-            uint* pCategoryId,
-            char* pResourceType,
-            int* pResourceHash,
-            byte* pPath,
-            GetResourceParameters* pUnknown,
+            IntPtr fileManager,
+            uint* categoryId,
+            char* resourceType,
+            int* resourceHash,
+            byte* path,
+            GetResourceParameters* resParams,
             bool isUnknown
-        ) => GetResourceHandler( false, pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+        ) => GetResourceHandler( false, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
 
         private void* CallOriginalHandler(
             bool isSync,
-            IntPtr pFileManager,
-            uint* pCategoryId,
-            char* pResourceType,
-            int* pResourceHash,
-            byte* pPath,
-            GetResourceParameters* pUnknown,
+            IntPtr fileManager,
+            uint* categoryId,
+            char* resourceType,
+            int* resourceHash,
+            byte* path,
+            GetResourceParameters* resParams,
             bool isUnknown
         ) => isSync
-            ? GetResourceSyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown )
-            : GetResourceAsyncHook.Original( pFileManager, pCategoryId, pResourceType, pResourceHash, pPath, pUnknown, isUnknown );
+            ? GetResourceSyncHook.Original( fileManager, categoryId, resourceType, resourceHash, path, resParams )
+            : GetResourceAsyncHook.Original( fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
 
         private void* GetResourceHandler(
             bool isSync, IntPtr fileManager,
@@ -302,7 +302,7 @@ namespace VfxEditor.Interop {
 
             var resolvedPath = new FullPath( fsPath );
 
-            *resourceHash = ComputeHash( resolvedPath.InternalName, resParams );
+            *resourceHash = InteropUtils.ComputeHash( resolvedPath.InternalName, resParams );
             path = resolvedPath.InternalName.Path;
 
             var value2 = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
@@ -310,19 +310,8 @@ namespace VfxEditor.Interop {
             return value2;
         }
 
-        private static int ComputeHash( ByteString path, GetResourceParameters* resParams ) {
-            if( resParams == null || !resParams->IsPartialRead ) return path.Crc32;
-
-            return ByteString.Join(
-                ( byte )'.',
-                path,
-                ByteString.FromStringUnsafe( resParams->SegmentOffset.ToString( "x" ), true ),
-                ByteString.FromStringUnsafe( resParams->SegmentLength.ToString( "x" ), true )
-            ).Crc32;
-        }
-
         private byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
-            var gameFsPath = GetString( pFileDesc->ResourceHandle->File );
+            var gameFsPath = InteropUtils.GetString( pFileDesc->ResourceHandle->File );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
 
@@ -351,14 +340,6 @@ namespace VfxEditor.Interop {
             pFileDesc->FileDescriptor = fd;
 
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
-        }
-
-        private static string GetString( StdString str ) {
-            var len = ( int )str.Size;
-            if( len > 15 ) {
-                return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
-            }
-            return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
         }
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
@@ -393,9 +374,9 @@ namespace VfxEditor.Interop {
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
-                PrepPap( gameResource, papIds );
+                InteropUtils.PrepPap( gameResource, papIds );
                 RequestFile( GetFileManager2(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
-                WritePapIds( gameResource, papIds );
+                InteropUtils.WritePapIds( gameResource, papIds );
             }
 
             if( !string.IsNullOrEmpty( localPath ) ) {
@@ -403,24 +384,10 @@ namespace VfxEditor.Interop {
                 if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource2.ToString( "X8" ) );
 
                 if( gameResource2 != IntPtr.Zero ) {
-                    PrepPap( gameResource2, papIds );
+                    InteropUtils.PrepPap( gameResource2, papIds );
                     RequestFile( GetFileManager2(), gameResource2 + Constants.GameResourceOffset, gameResource2, 1 );
-                    WritePapIds( gameResource2, papIds );
+                    InteropUtils.WritePapIds( gameResource2, papIds );
                 }
-            }
-        }
-
-        private static void PrepPap( IntPtr resource, List<string> papIds ) {
-            if( papIds == null ) return;
-            Marshal.WriteByte( resource + 105, 0xec );
-        }
-
-        private static void WritePapIds( IntPtr resource, List<string> papIds ) {
-            if( papIds == null ) return;
-            var data = Marshal.ReadIntPtr( resource + Constants.PapIdsOffset );
-            for( var i = 0; i < papIds.Count; i++ ) {
-                SafeMemory.WriteString( data + ( i * 40 ), papIds[i], Encoding.ASCII );
-                Marshal.WriteByte( data + ( i * 40 ) + 34, (byte)i );
             }
         }
 
@@ -443,8 +410,8 @@ namespace VfxEditor.Interop {
                 "chara" => BitConverter.GetBytes( 4u ),
                 "bgcommon" => BitConverter.GetBytes( 1u ),
                 "sound" => BitConverter.GetBytes( 7u ),
-                "bg" => GetBgCategory( split[1], split[2] ),
-                "music" => GetMusicCategory( split[1] ),
+                "bg" => InteropUtils.GetBgCategory( split[1], split[2] ),
+                "music" => InteropUtils.GetMusicCategory( split[1] ),
                 _ => BitConverter.GetBytes( 0u )
             };
             var bCategory = stackalloc byte[categoryBytes.Length + 1];
@@ -464,29 +431,6 @@ namespace VfxEditor.Interop {
             DecRef( resource );
 
             return resource;
-        }
-
-        private static byte[] GetBgCategory( string expansion, string zone ) {
-            var ret = BitConverter.GetBytes( 2u );
-            if( expansion == "ffxiv" ) return ret;
-            // ex1/03_abr_a2/fld/a2f1/level/a2f1 -> [02 00 03 01]
-            // expansion = ex1
-            // zone = 03_abr_a2
-            var expansionTrimmed = expansion.Replace( "ex", "" );
-            var zoneTrimmed = zone.Split( '_' )[0];
-            ret[2] = byte.Parse( zoneTrimmed );
-            ret[3] = byte.Parse( expansionTrimmed );
-            return ret;
-        }
-
-        private static byte[] GetMusicCategory( string expansion ) {
-            var ret = BitConverter.GetBytes( 12u );
-            if( expansion == "ffxiv" ) return ret;
-            // music/ex4/BGM_EX4_Field_Ult_Day03.scd
-            // 04 00 00 0C
-            var expansionTrimmed = expansion.Replace( "ex", "" );
-            ret[3] = byte.Parse( expansionTrimmed );
-            return ret;
         }
 
         private static bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" ) || path.Contains( ".scd" );
