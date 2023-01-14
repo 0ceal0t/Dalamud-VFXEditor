@@ -13,8 +13,6 @@ namespace VfxEditor.Structs.Vfx {
             Update();
         }
 
-        public override void Remove() {
-            Plugin.ResourceLoader.StaticVfxRemove( ( IntPtr )Vfx );
-        }
+        public override void Remove() => Plugin.ResourceLoader.StaticVfxRemove( ( IntPtr )Vfx );
     }
 }

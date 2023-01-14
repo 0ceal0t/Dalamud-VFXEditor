@@ -26,5 +26,8 @@ namespace VfxEditor.Interop {
         public static readonly int GameResourceOffset = 0x38;
 
         public static readonly int PapIdsOffset = 0xf0;
+
+        // https://github.com/imchillin/Anamnesis/blob/c092a5e7e224d45694a484ba2cd86155203960d2/Anamnesis/Memory/ActorMemory.cs
+        public static readonly int ActorAnimationOffset = 0x0900;
     }
 }

@@ -107,8 +107,8 @@ namespace VfxEditor.Interop {
             var staticVfxCreateAddress = scanner.ScanText( Constants.StaticVfxCreateSig );
             var staticVfxRemoveAddress = scanner.ScanText( Constants.StaticVfxRemoveSig );
             var actorVfxCreateAddress = scanner.ScanText( Constants.ActorVfxCreateSig );
-            var actorVfxRemoveAddress_1 = scanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
-            var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddress_1 + Marshal.ReadInt32( actorVfxRemoveAddress_1 ) + 4 );
+            var actorVfxRemoveAddresTemp = scanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
+            var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddresTemp + Marshal.ReadInt32( actorVfxRemoveAddresTemp ) + 4 );
 
             ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
@@ -221,7 +221,7 @@ namespace VfxEditor.Interop {
         }
 
         private void OnUpdateEvent( object framework ) {
-            var player = Plugin.ClientState.LocalPlayer;
+            var player = Plugin.PlayerObject;
             var renderPtr = player.Address + Constants.RenderOffset;
 
             switch( CurrentRedrawState ) {
@@ -295,9 +295,9 @@ namespace VfxEditor.Interop {
             var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
 
             if( fsPath == null || fsPath.Length >= 260 ) {
-                var value = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-                if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( value ).ToString( "X8" ) );
-                return value;
+                var unreplaced = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( unreplaced ).ToString( "X8" ) );
+                return unreplaced;
             }
 
             var resolvedPath = new FullPath( fsPath );
@@ -305,9 +305,9 @@ namespace VfxEditor.Interop {
             *resourceHash = InteropUtils.ComputeHash( resolvedPath.InternalName, resParams );
             path = resolvedPath.InternalName.Path;
 
-            var value2 = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2} / {3}", gameFsPath, fsPath, new IntPtr( value2 ).ToString( "X8" ), Marshal.PtrToStringAnsi( new IntPtr( path ) ) );
-            return value2;
+            var replaced = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( replaced ).ToString( "X8" ) );
+            return replaced;
         }
 
         private byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {

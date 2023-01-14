@@ -89,7 +89,7 @@ namespace VfxEditor.Tracker {
 
         public void Draw() {
             if( !Enabled ) return;
-            var playPos = Plugin.ClientState?.LocalPlayer?.Position;
+            var playPos = Plugin.PlayerObject?.Position;
             if( !playPos.HasValue ) return;
             var windowPos = ImGuiHelpers.MainViewport.Pos;
 
@@ -173,7 +173,7 @@ namespace VfxEditor.Tracker {
             if( actorTable == null ) return;
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;
-                if( Plugin.ClientState.LocalPlayer == null ) continue;
+                if( Plugin.PlayerObject == null ) continue;
 
                 var result = actorIdToVfxPath.TryGetValue( ( int )actor.ObjectId, out var paths );
                 if( !result ) continue;

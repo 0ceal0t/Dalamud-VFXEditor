@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using VfxEditor.Interop;
 using VfxEditor.Structs.Animation;
 
 namespace VfxEditor.Animation {
@@ -72,9 +73,9 @@ namespace VfxEditor.Animation {
             if( new IntPtr( actor ).Equals(ActorToReset)) ResetAnimationOverride( actor );
         }
 
-        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + 0x09C0 );
+        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.ActorAnimationOffset );
 
-        private static ActorMemoryStruct* GetActor() => ( ActorMemoryStruct* )Plugin.ClientState.LocalPlayer?.Address;
+        private static ActorMemoryStruct* GetActor() => ( ActorMemoryStruct* )Plugin.PlayerObject?.Address;
 
         public static uint GetIdFromTmbPath( string path ) {
             if( string.IsNullOrEmpty( path ) ) return 0;
