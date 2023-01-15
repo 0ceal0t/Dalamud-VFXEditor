@@ -26,6 +26,7 @@ namespace VfxEditor.Interop {
             Invisible,
             Visible
         }
+
         private RedrawState CurrentRedrawState = RedrawState.None;
         private int WaitFrames = 0;
 
@@ -83,7 +84,7 @@ namespace VfxEditor.Interop {
 
         public delegate IntPtr GetFileManagerDelegate();
         private GetFileManagerDelegate GetFileManager;
-        private GetFileManagerDelegate GetFileManager2;
+        private GetFileManagerDelegate GetFileManagerAlt;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
         public delegate byte DecRefDelegate( IntPtr resource );
@@ -123,7 +124,7 @@ namespace VfxEditor.Interop {
 
             GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( scanner.ScanText( Constants.GetMatrixSig ) );
             GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManagerSig ) );
-            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManager2Sig ) );
+            GetFileManagerAlt = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManager2Sig ) );
             DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( Constants.DecRefSig ) );
             RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( Constants.RequestFileSig ) );
         }
@@ -139,7 +140,7 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) {
                 Plugin.ClearSpawn();
             }
             Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
@@ -157,7 +158,7 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.Spawn != null && vfx == ( IntPtr )Plugin.Spawn.Vfx ) {
+            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) {
                 Plugin.ClearSpawn();
             }
             Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
@@ -352,15 +353,15 @@ namespace VfxEditor.Interop {
                 localPath = texFile;
                 return true;
             }
-            else if( Plugin.TmbManager.GetReplacePath( gamePath, out var tmbFile ) == true ) {
+            else if( Plugin.TmbManager?.GetReplacePath( gamePath, out var tmbFile ) == true ) {
                 localPath = tmbFile;
                 return true;
             }
-            else if( Plugin.PapManager.GetReplacePath( gamePath, out var papFile ) == true ) {
+            else if( Plugin.PapManager?.GetReplacePath( gamePath, out var papFile ) == true ) {
                 localPath = papFile;
                 return true;
             }
-            else if( Plugin.ScdManager.GetReplacePath( gamePath, out var scdFile ) == true ) {
+            else if( Plugin.ScdManager?.GetReplacePath( gamePath, out var scdFile ) == true ) {
                 localPath = scdFile;
                 return true;
             }
@@ -375,19 +376,19 @@ namespace VfxEditor.Interop {
 
             if( gameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( gameResource, papIds );
-                RequestFile( GetFileManager2(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
+                RequestFile( GetFileManagerAlt(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
                 InteropUtils.WritePapIds( gameResource, papIds );
             }
 
-            if( !string.IsNullOrEmpty( localPath ) ) {
-                var gameResource2 = GetResource( gamePath, false ); // get local path resource
-                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource2.ToString( "X8" ) );
+            if( string.IsNullOrEmpty( localPath  ) ) return;
 
-                if( gameResource2 != IntPtr.Zero ) {
-                    InteropUtils.PrepPap( gameResource2, papIds );
-                    RequestFile( GetFileManager2(), gameResource2 + Constants.GameResourceOffset, gameResource2, 1 );
-                    InteropUtils.WritePapIds( gameResource2, papIds );
-                }
+            var localGameResource = GetResource( gamePath, false ); // get local path resource
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, localGameResource.ToString( "X8" ) );
+
+            if( localGameResource != IntPtr.Zero ) {
+                InteropUtils.PrepPap( localGameResource, papIds );
+                RequestFile( GetFileManagerAlt(), localGameResource + Constants.GameResourceOffset, localGameResource, 1 );
+                InteropUtils.WritePapIds( localGameResource, papIds );
             }
         }
 

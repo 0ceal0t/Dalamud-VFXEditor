@@ -11,7 +11,6 @@ namespace VfxEditor.Utils {
         public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
             vertexesOut = new List<AvfxVertex>();
             indexesOut = new List<AvfxIndex>();
-            //var d = File.ReadAllBytes( localPath );
             if( !Plugin.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );

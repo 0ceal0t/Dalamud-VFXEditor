@@ -11,7 +11,7 @@ using VfxEditor.Tracker;
 namespace VfxEditor {
     public partial class Plugin {
         public static void Draw() {
-            if( IsLoading ) return;
+            if( Loading ) return;
 
             CopyManager.ResetAll();
             CheckWorkspaceKeybinds();

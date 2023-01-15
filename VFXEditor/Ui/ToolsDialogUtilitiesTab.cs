@@ -10,10 +10,13 @@ namespace VfxEditor.Ui {
         private string ExtractPath = "";
 
         public void Draw() {
-            ImGui.Text( "Extract a raw game file" );
-            ImGui.InputText( "Path##RawExtract", ref ExtractPath, 255 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.TextDisabled( "Extract Raw Game File" );
+            ImGui.Indent();
+
+            ImGui.InputText( "Path##Extract", ref ExtractPath, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "Extract##RawExtract" ) ) {
+            if( ImGui.Button( "Extract" ) ) {
                 var cleanedPath = ExtractPath.Replace( "\\", "/" );
                 if( Plugin.DataManager.FileExists( cleanedPath ) ) {
                     try {
@@ -27,9 +30,13 @@ namespace VfxEditor.Ui {
                 }
             }
 
-            ImGui.Text( ".atex to PNG" );
-            ImGui.SameLine();
-            if( ImGui.Button( "Browse##AtexToPNG" ) ) {
+            ImGui.Unindent();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.TextDisabled( "Image Conversion" );
+            ImGui.Indent();
+
+            if( ImGui.Button( ".atex to PNG" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     var texFile = AtexFile.LoadFromLocal( res );
@@ -37,15 +44,41 @@ namespace VfxEditor.Ui {
                 } );
             }
 
-            ImGui.Text( ".atex to DDS" );
             ImGui.SameLine();
-            if( ImGui.Button( "Browse##AtexToDDS" ) ) {
+            if( ImGui.Button( ".atex to DDS" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     var texFile = AtexFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );
                 } );
             }
+
+            ImGui.Unindent();
         }
+
+        /*
+         * Skill Swapping
+         * 
+         * Get TMB and PAP for both
+         *  - split into end/start/hit
+         *  - skip basic destinations (normal_hit, etc)
+         *  
+         *  get unique animation ids (intersection of animation ids in pap and animation ids used in tmb)
+         *  
+         *  in TMB, replace C010 with new placeholders (only replace the ones from modified .pap files)
+         *  
+         *  race edge case
+         *  - source exists / dest doesn't -> skip
+         *  - dest exists / source doesn't -> use closest available (midlander m?)
+         *  
+         *  action.pap
+         *  - both in action.pap -> do nothing (don't even need unique animation ids)
+         *  - neither in action.pap -> normal
+         *  - source in action.pap, dest not
+         *      - don't need to do anything, can just use them
+         *  - source not in action.pap dest is [RISK OF MULTIPLE MODIFYING ACTION.PAP]
+         *      - just add them to the end
+         *      - what about TMFC?
+         */
     }
 }

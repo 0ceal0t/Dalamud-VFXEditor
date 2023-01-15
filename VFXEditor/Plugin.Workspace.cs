@@ -65,11 +65,11 @@ namespace VfxEditor {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
 
         private static DateTime LastAutoSave = DateTime.Now;
-        private static bool IsLoading = false;
+        private static bool Loading = false;
 
         private static async void NewWorkspace() {
             await Task.Run( () => {
-                IsLoading = true;
+                Loading = true;
                 CurrentWorkspaceLocation = "";
 
                 ResetTextureManager();
@@ -78,7 +78,7 @@ namespace VfxEditor {
                 ResetPapManager();
                 ResetScdManager();
 
-                IsLoading = false;
+                Loading = false;
             } );
         }
 
@@ -116,7 +116,7 @@ namespace VfxEditor {
             }
             var meta = JsonConvert.DeserializeObject<WorkspaceMeta>( File.ReadAllText( metaPath ) );
 
-            IsLoading = true;
+            Loading = true;
 
             ResetTextureManager();
             if( meta.Tex != null ) {
@@ -148,7 +148,7 @@ namespace VfxEditor {
 
             UiUtils.OkNotification( "Opened workspace" );
 
-            IsLoading = false;
+            Loading = false;
         }
 
         private static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) => 

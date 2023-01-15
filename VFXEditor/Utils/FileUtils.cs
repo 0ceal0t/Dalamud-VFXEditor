@@ -67,7 +67,7 @@ namespace VfxEditor.Utils {
             for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
                 if( idx > minIdx && data[idx] != original[idx] ) {
                     diffIdx = idx;
-                    PluginLog.Log( $"Warning: files do not match at {idx} {data[idx]} {original[idx]}" );
+                    PluginLog.Log( $"Warning: files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
                     return false;
                 }
             }

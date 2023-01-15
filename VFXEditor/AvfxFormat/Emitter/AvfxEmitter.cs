@@ -34,6 +34,12 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
+        public readonly AvfxCurve InjectionAngleX = new( "Injection Angle X", "IAX", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomX = new( "Injection Angle X Random", "IAXR", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleY = new( "Injection Angle Y", "IAY", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomY = new( "Injection Angle Y Random", "IAYR", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleZ = new( "Injection Angle Z", "IAX", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
         public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
         public AvfxData Data;
 
@@ -83,6 +89,12 @@ namespace VfxEditor.AvfxFormat {
                 Position,
                 Rotation,
                 Scale,
+                InjectionAngleX,
+                InjectionAngleRandomX,
+                InjectionAngleY,
+                InjectionAngleRandomY,
+                InjectionAngleZ,
+                InjectionAngleRandomZ,
                 VelocityRandomZ
             };
             Sound.SetAssigned( false );
@@ -110,7 +122,14 @@ namespace VfxEditor.AvfxFormat {
                 Color,
                 Position,
                 Rotation,
-                Scale
+                Scale,
+                InjectionAngleX,
+                InjectionAngleRandomX,
+                InjectionAngleY,
+                InjectionAngleRandomY,
+                InjectionAngleZ,
+                InjectionAngleRandomZ,
+                VelocityRandomZ
             } );
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
