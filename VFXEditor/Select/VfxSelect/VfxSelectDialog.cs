@@ -9,9 +9,9 @@ namespace VfxEditor.Select.VfxSelect {
         public VfxSelectDialog(
             string id,
             List<SelectResult> recentList,
-            bool showLocal,
+            bool isSourceDialog,
             Action<SelectResult> onSelect
-         ) : base( id, "avfx", recentList, Plugin.Configuration.FavoriteVfx, showLocal, onSelect ) {
+         ) : base( id, "avfx", recentList, Plugin.Configuration.FavoriteVfx, isSourceDialog, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new VfxItemSelect( "Item", this ),
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.VfxSelect {
 
                 if( ImGui.BeginPopup( "Spawn_Popup##" + parentId ) ) {
                     if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( playPath );
-                    if( ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( playPath );
+                    if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( playPath );
                     if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( playPath );
                     ImGui.EndPopup();
                 }

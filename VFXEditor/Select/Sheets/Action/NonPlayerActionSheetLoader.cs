@@ -6,12 +6,11 @@ namespace VfxEditor.Select.Sheets {
         public override void OnLoad() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && !( x.IsPlayerAction || x.ClassJob.Value != null ) );
+
             foreach( var item in sheet ) {
-                var action = new XivActionNonPlayer( item );
-                if( !action.IsPlaceholder ) {
-                    if( action.HasVfx ) Items.Add( action );
-                    if( action.HitAction != null ) Items.Add( ( XivActionNonPlayer )action.HitAction );
-                }
+                var action = new XivAction( item, false );
+                if( action.HasVfx ) Items.Add( action );
+                if( action.HitAction != null ) Items.Add( action.HitAction );
             }
         }
     }

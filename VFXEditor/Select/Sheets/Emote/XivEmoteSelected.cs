@@ -3,12 +3,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace VfxEditor.Select.Rows {
-    public class XivEmoteSelected {
-        public XivEmote Emote;
+    public partial class XivEmoteSelected {
+        public readonly XivEmote Emote;
+        public readonly HashSet<string> VfxPaths = new();
 
-        public HashSet<string> VfxPaths = new();
-
-        public static readonly Regex Rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+        public static readonly Regex Rx = MyRegex();
+        [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
+        private static partial Regex MyRegex();
 
         public XivEmoteSelected( XivEmote emote, List<Lumina.Data.FileResource> files ) {
             Emote = emote;

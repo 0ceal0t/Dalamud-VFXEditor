@@ -1,25 +1,23 @@
+using Lumina.Excel.GeneratedSheets;
+
 namespace VfxEditor.Select.Rows {
     public class XivActionPap {
         public readonly ushort Icon;
         public readonly int RowId;
         public readonly string Name;
 
-        public readonly string StartPap;
-        public readonly string EndPap;
-        public readonly string HitPap;
+        public readonly string Start;
+        public readonly string End;
+        public readonly string Hit;
 
-        public XivActionPap( Lumina.Excel.GeneratedSheets.Action action ) {
+        public XivActionPap( Action action ) {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
             Name = action.Name.ToString();
 
-            var startKey = action.AnimationStart?.Value?.Name?.Value;
-            var endKey = action.AnimationEnd?.Value;
-            var hitKey = action.ActionTimelineHit?.Value;
-
-            StartPap = ToPap( startKey );
-            EndPap = ToPap( endKey );
-            HitPap = ToPap( hitKey );
+            Start = ToPap( action.AnimationStart.Value?.Name.Value );
+            End = ToPap( action.AnimationEnd.Value );
+            Hit = ToPap( action.ActionTimelineHit.Value );
         }
 
         // chara/human/c0101/animation/a0001/bt_common/ability/2bw_bard/abl001.pap
@@ -30,7 +28,7 @@ namespace VfxEditor.Select.Rows {
         // chara/human/c0101/animation/a0001/bt_common/limitbreak/lbk_dancer_start.pap
         // timline -> loadType = 1 (not in action.pap)
 
-        private static string ToPap( Lumina.Excel.GeneratedSheets.ActionTimeline timeline ) {
+        private static string ToPap( ActionTimeline timeline ) {
             if( timeline == null ) return "";
             var key = timeline?.Key.ToString();
             if( string.IsNullOrEmpty( key ) ) return "";

@@ -8,9 +8,8 @@ namespace VfxEditor.Select.Sheets {
     public class CutsceneSheetLoader : SheetLoader<XivCutscene, XivCutsceneSelected> {
         public override void OnLoad() {
             var sheet = Plugin.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
-            foreach( var item in sheet ) {
-                Items.Add( new XivCutscene( item ) );
-            }
+
+            foreach( var item in sheet ) Items.Add( new XivCutscene( item ) );
         }
 
         public override bool SelectItem( XivCutscene item, out XivCutsceneSelected selectedItem ) {

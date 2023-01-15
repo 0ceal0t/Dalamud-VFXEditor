@@ -26,9 +26,7 @@ namespace VfxEditor.Select.Sheets {
             });
 
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
-            foreach( var item in sheet ) {
-                Items.Add( new XivCommon( item ) );
-            }
+            foreach( var item in sheet ) Items.Add( new XivCommon( item ) );
 
             var lineIdx = 0;
             foreach( var line in File.ReadLines( SheetManager.MiscVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {

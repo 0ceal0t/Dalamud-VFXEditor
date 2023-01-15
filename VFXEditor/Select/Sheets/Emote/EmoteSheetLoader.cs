@@ -9,6 +9,7 @@ namespace VfxEditor.Select.Sheets {
     public class EmoteSheetLoader : SheetLoader<XivEmote, XivEmoteSelected> {
         public override void OnLoad() {
             var sheet = Plugin.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+
             foreach( var item in sheet ) {
                 var emoteItem = new XivEmote( item );
                 if( emoteItem.PapFiles.Count > 0 ) Items.Add( emoteItem );

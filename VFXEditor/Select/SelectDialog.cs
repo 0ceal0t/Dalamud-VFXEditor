@@ -51,7 +51,7 @@ namespace VfxEditor {
         public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
 
         private readonly string Extension;
-        public readonly bool ShowLocal;
+        public readonly bool IsSourceDialog; // as opposed to replaced
 
         protected Action<SelectResult> OnSelect;
         protected abstract List<SelectTab> GetTabs();
@@ -63,10 +63,10 @@ namespace VfxEditor {
         private string LocalPathInput = "";
         private string GamePathInput = "";
 
-        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool showLocal, Action<SelectResult> onSelect ) : base( name, false, 800, 500 ) {
+        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool isSourceDialog, Action<SelectResult> onSelect ) : base( name, false, 800, 500 ) {
             Extension = extension;
             Favorites = favorites;
-            ShowLocal = showLocal;
+            IsSourceDialog = isSourceDialog;
             OnSelect = onSelect;
 
             RecentTab = new( this, "Recent", recentList );
@@ -94,7 +94,7 @@ namespace VfxEditor {
             ImGui.BeginTabBar( $"Tabs{id}" );
             DrawGame( id );
             DrawGamePath( id );
-            if( ShowLocal ) DrawLocal( id );
+            if( IsSourceDialog ) DrawLocal( id );
             RecentTab.Draw( id );
             FavoritesTab.Draw( id );
             ImGui.EndTabBar();

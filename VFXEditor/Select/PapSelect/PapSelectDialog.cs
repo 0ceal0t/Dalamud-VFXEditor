@@ -9,9 +9,9 @@ namespace VfxEditor.Select.PapSelect {
         public PapSelectDialog(
                 string id,
                 List<SelectResult> recentList,
-                bool showLocal,
+                bool isSourceDialog,
                 Action<SelectResult> onSelect
-            ) : base( id, "pap", recentList, Plugin.Configuration.FavoritePap, showLocal, onSelect ) {
+            ) : base( id, "pap", recentList, Plugin.Configuration.FavoritePap, isSourceDialog, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new PapActionSelect( "Action", this ),

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select.Rows {
     public class XivEmotePapSelected {
-        public XivEmotePap EmotePap;
+        public readonly XivEmotePap EmotePap;
 
         public readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> AllPaps;
 

@@ -7,10 +7,10 @@ using static VfxEditor.AvfxFormat.Enums;
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleTextureDistortion : AvfxParticleAttribute {
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
-        public readonly AvfxBool TargetUV1 = new( "Distort UV1", "bT1" );
-        public readonly AvfxBool TargetUV2 = new( "Distort UV2", "bT2" );
-        public readonly AvfxBool TargetUV3 = new( "Distort UV3", "bT3" );
-        public readonly AvfxBool TargetUV4 = new( "Distort UV4", "bT4" );
+        public readonly AvfxBool TargetUv1 = new( "Distort UV 1", "bT1" );
+        public readonly AvfxBool TargetUv2 = new( "Distort UV 2", "bT2" );
+        public readonly AvfxBool TargetUv3 = new( "Distort UV 3", "bT3" );
+        public readonly AvfxBool TargetUv4 = new( "Distort UV 4", "bT4" );
         public readonly AvfxInt UvSetIdx = new( "UV Set Index", "UvSN" );
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderU = new( "Texture Border U", "TBUT" );
@@ -25,10 +25,10 @@ namespace VfxEditor.AvfxFormat {
 
             Parsed = new() {
                 Enabled,
-                TargetUV1,
-                TargetUV2,
-                TargetUV3,
-                TargetUV4,
+                TargetUv1,
+                TargetUv2,
+                TargetUv3,
+                TargetUv4,
                 UvSetIdx,
                 TextureFilter,
                 TextureBorderU,
@@ -38,10 +38,10 @@ namespace VfxEditor.AvfxFormat {
             };
 
             Display.Add( Enabled );
-            Display.Add( TargetUV1 );
-            Display.Add( TargetUV2 );
-            Display.Add( TargetUV3 );
-            Display.Add( TargetUV4 );
+            Display.Add( TargetUv1 );
+            Display.Add( TargetUv2 );
+            Display.Add( TargetUv3 );
+            Display.Add( TargetUv4 );
             Display.Add( UvSetIdx );
             Display.Add( TextureFilter );
             Display.Add( TextureBorderU );

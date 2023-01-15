@@ -1,34 +1,46 @@
+using Lumina.Excel.GeneratedSheets;
+
 namespace VfxEditor.Select.Rows {
     public class XivActionTmb {
+        public readonly struct ActionTmbData {
+            public readonly string Path;
+            public readonly bool IsMotionDisabled;
+
+            public ActionTmbData( ActionTimeline timeline ) {
+                IsMotionDisabled = timeline?.IsMotionCanceledByMoving ?? false;
+                Path = ToTmb( timeline?.Key.ToString() );
+            }
+
+            public ActionTmbData( WeaponTimeline timeline ) {
+                IsMotionDisabled = false;
+                Path = ToTmb( timeline?.File.ToString() );
+            }
+
+            private static string ToTmb( string key ) {
+                if( string.IsNullOrEmpty( key ) ) return "";
+                if( key.Contains( "[SKL_ID]" ) ) return "";
+                return $"chara/action/{key}.tmb";
+            }
+        }
+
         public readonly ushort Icon;
         public readonly int RowId;
         public readonly string Name;
 
-        public readonly string StartTmb;
-        public readonly string EndTmb;
-        public readonly string HitTmb;
-        public readonly string WeaponTmb;
+        public readonly ActionTmbData Start;
+        public readonly ActionTmbData End;
+        public readonly ActionTmbData Hit;
+        public readonly ActionTmbData Weapon;
 
-        public XivActionTmb( Lumina.Excel.GeneratedSheets.Action action ) {
+        public XivActionTmb( Action action ) {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
             Name = action.Name.ToString();
 
-            var startKey = action.AnimationStart?.Value?.Name?.Value?.Key.ToString();
-            var endKey = action.AnimationEnd?.Value?.Key.ToString();
-            var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
-            var weaponKey = action.AnimationEnd?.Value?.WeaponTimeline?.Value?.File.ToString();
-
-            StartTmb = ToTmb( startKey );
-            EndTmb = ToTmb( endKey );
-            HitTmb = ToTmb( hitKey );
-            WeaponTmb = ToTmb( weaponKey );
-        }
-
-        private static string ToTmb( string key ) {
-            if( string.IsNullOrEmpty( key ) ) return "";
-            if( key.Contains( "[SKL_ID]" ) ) return "";
-            return $"chara/action/{key}.tmb";
+            Start = new ActionTmbData( action.AnimationStart.Value?.Name.Value );
+            End = new ActionTmbData( action.AnimationEnd.Value );
+            Hit = new ActionTmbData( action.ActionTimelineHit.Value );
+            Weapon = new ActionTmbData( action.AnimationEnd.Value?.WeaponTimeline.Value );
         }
     }
 }

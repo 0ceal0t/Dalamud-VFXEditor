@@ -9,9 +9,9 @@ namespace VfxEditor.Select.ScdSelect {
         public ScdSelectDialog(
                 string id,
                 List<SelectResult> recentList,
-                bool showLocal,
+                bool isSourceDialog,
                 Action<SelectResult> onSelect
-            ) : base( id, "scd", recentList, Plugin.Configuration.FavoriteScd, showLocal, onSelect ) {
+            ) : base( id, "scd", recentList, Plugin.Configuration.FavoriteScd, isSourceDialog, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new ScdMountSelect( "Mount", this ),

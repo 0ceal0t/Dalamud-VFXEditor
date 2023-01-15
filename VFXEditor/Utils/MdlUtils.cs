@@ -7,6 +7,8 @@ using System.Numerics;
 using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Utils {
+    // WIP, Not currently being used
+
     public static class MdlUtils {
         public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
             vertexesOut = new List<AvfxVertex>();

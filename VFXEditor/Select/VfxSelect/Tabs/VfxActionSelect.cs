@@ -2,7 +2,7 @@ using ImGuiNET;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.VfxSelect {
-    public class VfxActionSelect : SelectTab<XivActionBase, XivActionSelected> {
+    public class VfxActionSelect : SelectTab<XivAction, XivActionSelected> {
         private ImGuiScene.TextureWrap Icon;
 
         public VfxActionSelect( string tabId, VfxSelectDialog dialog, bool nonPlayer = false ) : base( tabId, !nonPlayer ? SheetManager.Actions : SheetManager.NonPlayerActions, dialog ) { }
@@ -27,6 +27,6 @@ namespace VfxEditor.Select.VfxSelect {
             }
         }
 
-        protected override string GetName( XivActionBase item ) => item.Name;
+        protected override string GetName( XivAction item ) => item.Name;
     }
 }

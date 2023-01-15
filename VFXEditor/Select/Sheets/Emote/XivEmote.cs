@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select.Rows {
     public class XivEmote {
-        public string Name;
-        public int RowId;
-        public ushort Icon;
-        public List<string> PapFiles = new();
+        public readonly string Name;
+        public readonly int RowId;
+        public readonly ushort Icon;
+        public readonly List<string> PapFiles = new();
 
         public static readonly string RootPath = "chara/human/c1101/animation/a0001/bt_common/";
 

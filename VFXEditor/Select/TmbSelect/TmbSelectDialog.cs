@@ -9,9 +9,9 @@ namespace VfxEditor.Select.TmbSelect {
         public TmbSelectDialog(
                 string id,
                 List<SelectResult> recentList,
-                bool showLocal,
+                bool isSourceDialog,
                 Action<SelectResult> onSelect
-            ) : base( id, "tmb", recentList, Plugin.Configuration.FavoriteTmb, showLocal, onSelect ) {
+            ) : base( id, "tmb", recentList, Plugin.Configuration.FavoriteTmb, isSourceDialog, onSelect ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new TmbActionSelect( "Action", this ),

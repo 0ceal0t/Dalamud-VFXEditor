@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select.Rows {
     public class XivActionPapSelected {
-        public XivActionPap ActionPap;
+        public readonly XivActionPap ActionPap;
 
         public readonly Dictionary<string, string> StartAnimations;
         public readonly Dictionary<string, string> EndAnimations;
