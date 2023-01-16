@@ -12,11 +12,11 @@ namespace VfxEditor.Select.VfxSelect {
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
             ImGui.Text( "Variant: " + Loaded.Item.Variant );
-            ImGui.Text( "IMC Path: " );
+            ImGui.Text( "IMC: " );
             ImGui.SameLine();
             DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX Path", Loaded.GetVfxPaths(), parentId, SelectResultType.GameItem, Loaded.Item.Name, true );
+            DrawPath( "VFX", Loaded.GetVfxPaths(), parentId, SelectResultType.GameItem, Loaded.Item.Name, true );
 
             if( !Loaded.VfxExists ) DisplayNoVfx();
         }

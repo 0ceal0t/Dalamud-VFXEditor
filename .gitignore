@@ -5,3 +5,4 @@ bin/
 backup*/
 *.xlsx
 scripts/CurrentPathList
+scripts/hashlist.db

@@ -15,12 +15,12 @@ namespace VfxEditor.Select.VfxSelect {
             if( !string.IsNullOrEmpty( Loaded.SelfTmbPath ) ) {
                 Copy( Loaded.SelfTmbPath, $"{parentId}/CopyTmb" );
                 ImGui.SameLine();
-                ImGui.Text( "TMB Path: " );
+                ImGui.Text( "TMB:" );
                 ImGui.SameLine();
                 DisplayPath( Loaded.SelfTmbPath );
             }
 
-            DrawPath( "Cast VFX Path", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
+            DrawPath( "Cast", Loaded.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, Loaded.Action.Name + " Cast", true );
 
             if( !string.IsNullOrEmpty( Loaded.SelfTmbPath ) ) {
                 DrawPath( "VFX", Loaded.SelfVfxPaths, parentId, SelectResultType.GameAction, Loaded.Action.Name, true );

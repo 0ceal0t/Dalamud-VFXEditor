@@ -7,7 +7,7 @@ namespace VfxEditor.Select.VfxSelect {
 
         protected override void DrawSelected( string parentId ) {
             if( Loaded.VfxExists ) {
-                ImGui.Text( "TMB Path: " );
+                ImGui.Text( "TMB:" );
                 ImGui.SameLine();
                 DisplayPath( Loaded.TmbPath );
                 Copy( Loaded.TmbPath, id: $"{parentId}/CopyTmb" );

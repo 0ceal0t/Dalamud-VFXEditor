@@ -11,7 +11,7 @@ namespace VfxEditor.Select.VfxSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            ImGui.Text( "SGB Path: " );
+            ImGui.Text( "SGB:" );
             ImGui.SameLine();
             DisplayPath( Loaded.Housing.SgbPath );
 

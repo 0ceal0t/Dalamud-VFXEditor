@@ -11,7 +11,7 @@ namespace VfxEditor.Select.TmbSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "Tmb Path", Selected.TmbFiles, parentId, SelectResultType.GameEmote, Selected.Name, true );
+            DrawPath( "Path", Selected.TmbFiles, parentId, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( XivEmoteTmb item ) => item.Name;

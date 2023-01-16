@@ -12,7 +12,7 @@ namespace VfxEditor.Select.VfxSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "VFX Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
+            DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
         }
 
         protected override string GetName( XivCommon item ) => item.Name;

@@ -11,7 +11,7 @@ namespace VfxEditor.Select.ScdSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "BGM Path", Loaded.Mount.Bgm, parentId, SelectResultType.GameNpc, Loaded.Mount.Name );
+            DrawPath( "Bgm", Loaded.Mount.Bgm, parentId, SelectResultType.GameNpc, Loaded.Mount.Name );
         }
 
         protected override string GetName( XivMount item ) => item.Name;

@@ -12,10 +12,10 @@ namespace VfxEditor.Select.TmbSelect {
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
 
-            DrawPath( "Start Tmb Path", Selected.Start.Path, $"{parentId}/Start", SelectResultType.GameAction, $"{Selected.Name} Start", true );
-            DrawPath( "End Tmb Path", Selected.End.Path, $"{parentId}/End", SelectResultType.GameAction, $"{Selected.Name} End", true );
-            DrawPath( "Hit Tmb Path", Selected.Hit.Path, $"{parentId}/Hit", SelectResultType.GameAction, $"{Selected.Name} Hit", true );
-            DrawPath( "Weapon Tmb Path", Selected.Weapon.Path, $"{parentId}/Weapon", SelectResultType.GameAction, $"{Selected.Name} Weapon", true );
+            DrawPath( "Start", Selected.Start.Path, $"{parentId}/Start", SelectResultType.GameAction, $"{Selected.Name} Start", true );
+            DrawPath( "End", Selected.End.Path, $"{parentId}/End", SelectResultType.GameAction, $"{Selected.Name} End", true );
+            DrawPath( "Hit", Selected.Hit.Path, $"{parentId}/Hit", SelectResultType.GameAction, $"{Selected.Name} Hit", true );
+            DrawPath( "Weapon", Selected.Weapon.Path, $"{parentId}/Weapon", SelectResultType.GameAction, $"{Selected.Name} Weapon", true );
         }
 
         protected override string GetName( XivActionTmb item ) => item.Name;

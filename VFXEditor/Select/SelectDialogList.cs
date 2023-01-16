@@ -25,6 +25,7 @@ namespace VfxEditor {
             if( !ImGui.BeginTabItem( $"{Name}{id}" ) ) return;
 
             var footerHeight = ImGui.GetFrameHeightWithSpacing();
+            ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 0, 2 ) );
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
 
             if( ImGui.BeginTable( $"{id}/Table", 2, ImGuiTableFlags.RowBg ) ) {
@@ -38,10 +39,11 @@ namespace VfxEditor {
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
 
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
                     if( Dialog.DrawFavorite( item ) ) break;
                     ImGui.TableNextColumn();
 
-                    if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ) ) ) {
+                    if( ImGui.Selectable( item.DisplayString + id + idx, Selected.Equals( item ), ImGuiSelectableFlags.SpanAllColumns ) ) {
                         IsSelected = true;
                         Selected = item;
                         break;
@@ -57,6 +59,7 @@ namespace VfxEditor {
             }
 
             ImGui.EndChild();
+            ImGui.PopStyleVar();
             // Disable button if nothing selected
             if( !IsSelected ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
             if( ImGui.Button( "SELECT" + id ) && IsSelected ) Dialog.Invoke( Selected );

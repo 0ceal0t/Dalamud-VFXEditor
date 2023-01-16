@@ -11,7 +11,7 @@ namespace VfxEditor.Select.TmbSelect {
 
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
-            DrawPath( "TMB Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
+            DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
         }
 
         protected override string GetName( XivCommon item ) => item.Name;

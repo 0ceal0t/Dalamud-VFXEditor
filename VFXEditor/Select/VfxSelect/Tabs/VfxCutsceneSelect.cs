@@ -6,7 +6,7 @@ namespace VfxEditor.Select.VfxSelect {
         public VfxCutsceneSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Cutscenes, dialog ) { }
 
         protected override void DrawSelected( string parentId ) {
-            ImGui.Text( "CUTB Path: " );
+            ImGui.Text( "CUTB:" );
             ImGui.SameLine();
             DisplayPath( Loaded.Cutscene.Path );
 

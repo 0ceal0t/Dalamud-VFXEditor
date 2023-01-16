@@ -6,7 +6,7 @@ namespace VfxEditor.Select.VfxSelect {
         public VfxZoneSelect( string tabId, VfxSelectDialog dialog ) : base( tabId, SheetManager.Zones, dialog ) { }
 
         protected override void DrawSelected( string parentId ) {
-            ImGui.Text( "LGB Path: " );
+            ImGui.Text( "LGB: " );
             ImGui.SameLine();
             DisplayPath( Loaded.Zone.LgbPath );
 

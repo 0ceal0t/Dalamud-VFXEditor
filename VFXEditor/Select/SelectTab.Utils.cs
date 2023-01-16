@@ -51,7 +51,7 @@ namespace VfxEditor {
 
             if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
                 Dialog.DrawFavorite( path, resultType, resultName );
-                ImGui.Text( $"{label}: " );
+                ImGui.Text( $"{label}:" );
                 ImGui.SameLine();
                 DisplayPath( path );
             }
@@ -68,12 +68,12 @@ namespace VfxEditor {
 
         public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
             if( situation.IsSituation ) {
-                DrawPath( "Daytime BGM Path", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
-                DrawPath( "Nighttime BGM Path", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
-                DrawPath( "Battle BGM Path", situation.BattlePath, $"{parentId}/Battle", SelectResultType.GameMusic, $"{name} / Battle" );
-                DrawPath( "Daybreak BGM Path", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
+                DrawPath( "Daytime Bgm", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
+                DrawPath( "Nighttime Bgm", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
+                DrawPath( "Battle Bgm", situation.BattlePath, $"{parentId}/Battle", SelectResultType.GameMusic, $"{name} / Battle" );
+                DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
             }
-            else DrawPath( "BGM Path", situation.Path, parentId, SelectResultType.GameZone, name );
+            else DrawPath( "Bgm", situation.Path, parentId, SelectResultType.GameZone, name );
         }
 
         // ========================
@@ -136,7 +136,7 @@ namespace VfxEditor {
         }
 
         public static void NpcThankYou() {
-            ImGui.TextDisabled( "NPC file list provided by ResLogger" );
+            ImGui.TextDisabled( "Npc file list provided by ResLogger" );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Github##ResLogger" ) ) UiUtils.OpenUrl( "https://github.com/lmcintyre/ResLogger2" );
         }
