@@ -77,6 +77,8 @@ for fullpath in fullpaths:
             f = folderdict[_f1] + b'/' + filedict[_f2]
         _fullPaths.append(f)
 
+delta = []
+
 for fullpath in _fullPaths:
     _id = "" # d1024 or something
     _type = "" # vfx, tmp, pap
@@ -93,6 +95,9 @@ for fullpath in _fullPaths:
     else:
         continue
 
+    if 'gimmick' in _id:
+            continue
+
     if _id not in npc_output:
         npc_output[_id] = { # default for row
             "vfx": [],
@@ -102,6 +107,7 @@ for fullpath in _fullPaths:
 
     finalpath = fullpath.decode("utf-8")
     if finalpath not in npc_output[_id][_type]:
+        delta.append(finalpath + "\n")
         npc_output[_id][_type].append(finalpath)
 
 cursor.close()
@@ -111,3 +117,6 @@ db.close()
 
 with open("npc_files.json", "w") as outfile: 
     json.dump(npc_output, outfile)
+
+with open("delta.txt", "w") as outfile: 
+    outfile.writelines(delta)

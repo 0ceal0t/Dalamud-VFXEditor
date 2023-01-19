@@ -6,3 +6,4 @@ backup*/
 *.xlsx
 scripts/CurrentPathList
 scripts/hashlist.db
+scripts/delta.txt

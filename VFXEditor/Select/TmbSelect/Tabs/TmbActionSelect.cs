@@ -27,8 +27,9 @@ namespace VfxEditor.Select.TmbSelect {
 
         protected override string GetName( XivActionTmb item ) => item.Name;
 
-        private static void DrawMovementCancel( ActionTmbData data ) {
+        private void DrawMovementCancel( ActionTmbData data ) {
             if( !data.IsMotionDisabled ) return;
+            if( Dialog.IsSourceDialog ) return;
             ImGui.Indent( 25f );
             UiUtils.IconText( FontAwesomeIcon.QuestionCircle, true );
             UiUtils.Tooltip( "This parameter is set in the game's Excel sheet, and cannot be removed with VFXEditor" );
