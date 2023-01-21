@@ -29,6 +29,9 @@ namespace VfxEditor.AvfxFormat {
         private DateTime PointDragStartTime = DateTime.Now;
         private UiCurveEditorState PrePointDragState;
 
+        private bool PrevClickState = false;
+        private DateTime PrevClickTime = DateTime.Now;
+
         public UiCurveEditor( AvfxCurve curve, CurveType type ) {
             Curve = curve;
             Type = type;
@@ -40,10 +43,122 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Draw( string parentId ) {
+            DrawControls( parentId );
+
+            Selected.RemoveAll( x => !Points.Contains( x ) );
+
+            var wrongOrder = false;
+            if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+            if( ImPlot.BeginPlot( $"{parentId}-Plot-{EditorId}", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
+                var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
+
+                if( Points.Count > 0 ) {
+                    GetDrawLine( Points, IsColor, out var lineXs, out var lineYs );
+                    var xs = lineXs.ToArray();
+                    var ys = lineYs.ToArray();
+
+                    ImPlot.SetNextLineStyle( Plugin.Configuration.CurveEditorLineColor, Plugin.Configuration.CurveEditorLineWidth );
+                    ImPlot.PlotLine( Curve.GetAvfxName(), ref xs[0], ref ys[0], xs.Length );
+
+                    // Draw gradient image
+                    if( IsColor && Keys.Count > 1 ) {
+                        if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) Plugin.DirectXManager.GradientView.SetGradient( Curve );
+
+                        var topLeft = new ImPlotPoint { x = Points[0].DisplayX, y = 1 };
+                        var bottomRight = new ImPlotPoint { x = Points[^1].DisplayX, y = -1 };
+                        ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
+                    }
+
+                    var idx = 0;
+                    var draggingAnyPoint = false;
+                    foreach( var point in Points ) {
+                        var pointSelected = Selected.Contains( point );
+                        var primaryPointSelected = pointSelected && PrimarySelected == point;
+                        var pointColor = primaryPointSelected ? Plugin.Configuration.CurveEditorPrimarySelectedColor : ( pointSelected ? Plugin.Configuration.CurveEditorSelectedColor : Plugin.Configuration.CurveEditorPointColor );
+                        var pointSize = primaryPointSelected ? Plugin.Configuration.CurveEditorPrimarySelectedSize : ( pointSelected ? Plugin.Configuration.CurveEditorSelectedSize : Plugin.Configuration.CurveEditorPointSize );
+
+                        if( IsColor ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( point.GetImPlotPoint() ), pointSize + Plugin.Configuration.CurveEditorColorRingSize, Invert( point.RawData ) );
+
+                        var tempX = point.DisplayX;
+                        var tempY = point.DisplayY;
+
+                        // Dragging point
+                        if( ImPlot.DragPoint( idx, ref tempX, ref tempY, IsColor ? new Vector4( point.RawData, 1 ) : pointColor, pointSize, ImPlotDragToolFlags.Delayed ) ) {
+                            if( !IsPointDragged ) {
+                                IsPointDragged = true;
+                                PrePointDragState = GetState();
+                            }
+                            PointDragStartTime = DateTime.Now;
+
+                            if( !pointSelected ) {
+                                Selected.Clear();
+                                Selected.Add( point );
+                            }
+
+                            var diffX = tempX - point.DisplayX;
+                            var diffY = tempY - point.DisplayY;
+                            foreach( var selected in Selected ) {
+                                selected.DisplayX += diffX;
+                                selected.DisplayY += diffY;
+                            }
+
+                            draggingAnyPoint = true;
+                        }
+
+                        if( idx > 0 && point.DisplayX < Points[idx - 1].DisplayX ) wrongOrder = true;
+                        idx++;
+                    }
+
+                    if( IsPointDragged && !draggingAnyPoint && ( DateTime.Now - PointDragStartTime ).TotalMilliseconds > 200 ) {
+                        IsPointDragged = false;
+                        CommandManager.Avfx.Add( new UiCurveEditorDragCommand( this, PrePointDragState, GetState() ) );
+                    }
+
+                    // Selecting point [Left Click]
+                    // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
+                    var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
+                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() ) {
+                        var mousePos = ImGui.GetMousePos();
+                        foreach( var point in Points ) {
+                            if( ( ImPlot.PlotToPixels( point.GetImPlotPoint() ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
+                                if( !ImGui.GetIO().KeyShift ) Selected.Clear();
+                                if( !Selected.Contains( point ) ) Selected.Add( point );
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Inserting point [Ctrl + Left Click]
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) {
+                    var pos = ImPlot.GetPlotMousePos();
+                    var z = IsColor ? 1.0f : ( float )pos.y;
+                    CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
+                        InsertPoint( ( float )pos.x, 1, 1, z );
+                    } ) );
+                    UpdateGradient();
+                }
+
+                if( clickState && !PrevClickState ) {
+                    PrevClickTime = DateTime.Now;
+                }
+                PrevClickState = clickState;
+
+                ImPlot.EndPlot();
+            }
+
+            if( wrongOrder ) DrawWrongOrder( parentId );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            PrimarySelected?.Draw();
+        }
+
+        private void DrawControls( string parentId ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             ImGui.TextDisabled( "Curve editor controls (?)" );
-            UiUtils.Tooltip( "Ctrl + left-click to add a new point\nLeft-click to select a point, hold shift to select multiple\nWith multiple points selected, hold shift when dragging to move all of them" );
+            UiUtils.Tooltip( "Ctrl + left-click to add a new point\nLeft-click to select a point, hold shift to select multiple" );
 
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
 
@@ -78,8 +193,6 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.PopStyleVar( 1 );
 
-            // =================
-
             if( Type == CurveType.Angle ) {
                 if( ImGui.RadioButton( $"Radians##{parentId}1", !Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = false;
@@ -91,114 +204,18 @@ namespace VfxEditor.AvfxFormat {
                     Plugin.Configuration.Save();
                 }
             }
+        }
 
-            Selected.RemoveAll( x => !Points.Contains( x ) );
-
-            var wrongOrder = false;
-            if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
-            if( ImPlot.BeginPlot( $"{parentId}-Plot-{EditorId}", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
-                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
-                if( Points.Count > 0 ) {
-                    GetDrawLine( Points, IsColor, out var _xs, out var _ys );
-                    var xs = _xs.ToArray();
-                    var ys = _ys.ToArray();
-
-                    ImPlot.SetNextLineStyle( Plugin.Configuration.CurveEditorLineColor, Plugin.Configuration.CurveEditorLineWidth );
-                    ImPlot.PlotLine( Curve.GetAvfxName(), ref xs[0], ref ys[0], xs.Length );
-
-                    // Draw gradient image
-                    if( IsColor && Keys.Count > 1 ) {
-                        if( Plugin.DirectXManager.GradientView.CurrentCurve != Curve ) Plugin.DirectXManager.GradientView.SetGradient( Curve );
-
-                        var topLeft = new ImPlotPoint { x = Points[0].DisplayX, y = 1 };
-                        var bottomRight = new ImPlotPoint { x = Points[^1].DisplayX, y = -1 };
-                        ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
-                    }
-
-                    var idx = 0;
-                    var draggingAnyPoint = false;
-                    foreach( var point in Points ) {
-                        var pointSelected = Selected.Contains( point );
-                        var primaryPointSelected = pointSelected && PrimarySelected == point;
-                        var pointColor = primaryPointSelected ? Plugin.Configuration.CurveEditorPrimarySelectedColor : ( pointSelected ? Plugin.Configuration.CurveEditorSelectedColor : Plugin.Configuration.CurveEditorPointColor );
-                        var pointSize = primaryPointSelected ? Plugin.Configuration.CurveEditorPrimarySelectedSize : ( pointSelected ? Plugin.Configuration.CurveEditorSelectedSize : Plugin.Configuration.CurveEditorPointSize );
-
-                        if( IsColor ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( point.GetImPlotPoint() ), pointSize + Plugin.Configuration.CurveEditorColorRingSize, Invert( point.RawData ) );
-
-                        var tempX = point.DisplayX;
-                        var tempY = point.DisplayY;
-                        if( ImPlot.DragPoint( idx, ref tempX, ref tempY, IsColor ? new Vector4( point.RawData, 1 ) : pointColor, pointSize, ImPlotDragToolFlags.Delayed ) ) {
-                            if( !IsPointDragged ) {
-                                IsPointDragged = true;
-                                PrePointDragState = GetState();
-                            }
-                            PointDragStartTime = DateTime.Now;
-
-                            if( !pointSelected ) {
-                                Selected.Clear();
-                                Selected.Add( point );
-                            }
-
-                            // Dragging point around
-                            var diffX = tempX - point.DisplayX;
-                            var diffY = tempY - point.DisplayY;
-                            foreach( var selected in Selected ) {
-                                selected.DisplayX += diffX;
-                                selected.DisplayY += diffY;
-                            }
-
-                            draggingAnyPoint = true;
-                        }
-
-                        if( idx > 0 && point.DisplayX < Points[idx - 1].DisplayX ) wrongOrder = true;
-                        idx++;
-                    }
-
-                    if( IsPointDragged && !draggingAnyPoint && ( DateTime.Now - PointDragStartTime ).TotalMilliseconds > 200 ) {
-                        IsPointDragged = false;
-                        CommandManager.Avfx.Add( new UiCurveEditorDragCommand( this, PrePointDragState, GetState() ) );
-                    }
-
-                    // Selecting point [Left Click]
-                    if( !draggingAnyPoint && ImGui.IsMouseDown( ImGuiMouseButton.Left ) && !ImGui.GetIO().KeyCtrl && IsHovering() ) {
-                        var mousePos = ImGui.GetMousePos();
-                        foreach( var point in Points ) {
-                            if( ( ImPlot.PlotToPixels( point.GetImPlotPoint() ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
-                                if( !ImGui.GetIO().KeyShift ) Selected.Clear();
-                                if( !Selected.Contains( point ) ) Selected.Add( point );
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // Inserting point [Ctrl + Left Click]
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) {
-                    var pos = ImPlot.GetPlotMousePos();
-                    var z = IsColor ? 1.0f : ( float )pos.y;
-                    CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
-                        InsertPoint( ( float )pos.x, 1, 1, z );
-                    } ) );
-                    UpdateGradient();
-                }
-
-                ImPlot.EndPlot();
+        private void DrawWrongOrder( string parentId ) {
+            ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINTS ARE IN THE WRONG ORDER" );
+            ImGui.SameLine();
+            if( UiUtils.RemoveButton( $"Sort{parentId}", true ) ) {
+                CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => { // Sort
+                    Keys.Sort( ( x, y ) => x.Time.CompareTo( y.Time ) );
+                    Points.Sort( ( x, y ) => x.DisplayX.CompareTo( y.DisplayX ) );
+                } ) );
+                UpdateGradient();
             }
-
-            if( wrongOrder ) {
-                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINTS ARE IN THE WRONG ORDER" );
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"Sort{parentId}", true ) ) {
-                    CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => { // Sort
-                        Keys.Sort( ( x, y ) => x.Time.CompareTo( y.Time ) );
-                        Points.Sort( ( x, y ) => x.DisplayX.CompareTo( y.DisplayX ) );
-                    } ) );
-                    UpdateGradient();
-                }
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            PrimarySelected?.Draw();
         }
 
         public void UpdateGradient() {
