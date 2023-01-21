@@ -128,6 +128,20 @@ namespace VfxEditor.AvfxFormat {
                             }
                         }
                     }
+                    
+                    // Box selection [Right-click, drag, then left-click]
+                    if( ImPlot.IsPlotSelected() ) {
+                        var selection = ImPlot.GetPlotSelection();
+                        if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
+                            ImPlot.CancelPlotSelection();
+
+                            Selected.Clear();
+                            foreach( var point in Points ) {
+                                var pos = point.GetImPlotPoint();
+                                if( pos.x <= selection.X.Max && pos.x >= selection.X.Min && pos.y <= selection.Y.Max && pos.y >= selection.Y.Min ) Selected.Add( point );
+                            }
+                        }
+                    }
                 }
 
                 // Inserting point [Ctrl + Left Click]
@@ -158,7 +172,9 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             ImGui.TextDisabled( "Curve editor controls (?)" );
-            UiUtils.Tooltip( "Ctrl + left-click to add a new point\nLeft-click to select a point, hold shift to select multiple" );
+            UiUtils.Tooltip( "Ctrl + left-click to add a new point\n" +
+                "Left-click to select a point, hold shift to select multiple\n" +
+                "Right-click, drag, then left-click to perform a box selection" );
 
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
 
