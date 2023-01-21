@@ -57,8 +57,6 @@ namespace VfxEditor.TmbFormat.Utils {
             { C177.MAGIC, new ItemTypeStruct( C177.DISPLAY_NAME, typeof(C177) ) },
             { C021.MAGIC, new ItemTypeStruct( C021.DISPLAY_NAME, typeof(C021) ) },
             { C139.MAGIC, new ItemTypeStruct( C139.DISPLAY_NAME, typeof(C139) ) },
-
-            // TODO: TMFC in chara/action/mon_sp/m0109/mon_sp014.tmb (Exdeath #14)
         };
     }
 }

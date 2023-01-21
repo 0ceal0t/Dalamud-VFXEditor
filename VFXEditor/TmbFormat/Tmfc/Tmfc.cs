@@ -18,8 +18,8 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        private int Count = 0;
         private byte[] Data;
         // TODO
 
@@ -35,16 +35,17 @@ namespace VfxEditor.TmbFormat.Entries {
         public Tmfc( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             var startOffset = reader.ReadInt32();
-            Count = reader.ReadInt32();
             Unk1.Read( reader );
-            var endOffset = reader.ReadInt32();
             Unk2.Read( reader );
+            var endOffset = reader.ReadInt32();
+            Unk3.Read( reader );
 
             var diff = endOffset - startOffset;
             // need to add an extra 4 bytes to account for id+time
             reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
+                var dataPos = br.BaseStream.Position;
                 Data = br.ReadBytes( diff );
-                PluginLog.Log( $"{Data.Length} / {Count}" );
+                PluginLog.Log( $"{dataPos:X8} / {Data.Length}" );
             } );
         }
 
@@ -56,16 +57,17 @@ namespace VfxEditor.TmbFormat.Entries {
                 bw.Write( Data );
             }, modifyOffset: 4 );
 
-            writer.Write( Count );
             Unk1.Write( writer );
-            writer.Write( offset + Data.Length );
             Unk2.Write( writer );
+            writer.Write( offset + Data.Length );
+            Unk3.Write( writer );
         }
 
         public override void Draw( string id ) {
             DrawTime( id );
             Unk1.Draw( id, Command );
             Unk2.Draw( id, Command );
+            Unk3.Draw( id, Command );
         }
     }
 }

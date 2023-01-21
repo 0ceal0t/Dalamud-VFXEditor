@@ -19,6 +19,6 @@ namespace VfxEditor.Interop {
             Run( $"4 {animHkx} {animIndex} {sklHkx} 0 {output}" );
         }
 
-        public static void Run( string arguments ) => InteropUtils.Run( "animassist.exe", arguments );
+        public static void Run( string arguments ) => InteropUtils.Run( "animassist_custom.exe", arguments );
     }
 }

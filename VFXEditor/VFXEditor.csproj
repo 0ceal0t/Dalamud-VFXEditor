@@ -123,8 +123,8 @@
         <None Update="Files\adpcmencode3.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\animassist.exe">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <None Update="Files\animassist_custom.exe">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\bnpc.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

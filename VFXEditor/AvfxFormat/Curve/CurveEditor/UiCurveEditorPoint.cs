@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using ImPlotNET;
@@ -65,21 +66,27 @@ namespace VfxEditor.AvfxFormat {
         public void Draw() {
             var id = "##CurveEdit";
 
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
+            ImGui.PushFont( UiBuilder.IconFont );
+
             // Delete
-            if( UiUtils.RemoveButton( "Delete Key" + id, small: true ) ) {
+            if( UiUtils.RemoveButton( $"{(char)FontAwesomeIcon.Trash}{id}" ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Editor.Keys.Remove( Key );
                     Editor.Points.Remove( this );
-                    if( Editor.Selected == this ) Editor.Selected = null;
+                    if( Editor.Selected.Contains( this ) ) Editor.Selected.Remove( this );
                     Editor.UpdateGradient();
                 } ) );
+
+                ImGui.PopStyleVar( 1 );
+                ImGui.PopFont();
                 return;
             }
 
             // Shift over left/right
             if( Editor.Points[0] != this ) {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Shift Left" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowLeft}{id}" ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                         var idx = Editor.Points.IndexOf( this );
                         var swap = Editor.Points[idx - 1];
@@ -91,7 +98,7 @@ namespace VfxEditor.AvfxFormat {
             }
             if( Editor.Points[^1] != this ) {
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Shift Right" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowRight}{id}" ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                         var idx = Editor.Points.IndexOf( this );
                         var swap = Editor.Points[idx + 1];
@@ -101,6 +108,11 @@ namespace VfxEditor.AvfxFormat {
                     } ) );
                 }
             }
+
+            ImGui.PopStyleVar( 1 );
+            ImGui.PopFont();
+
+            // ====================
 
             var tempTime = Key.Time;
             if( ImGui.InputInt( "Time" + id, ref tempTime ) ) {

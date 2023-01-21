@@ -71,6 +71,18 @@ namespace VfxEditor {
 
         public bool UseDegreesForAngles = false;
 
+        public Vector4 CurveEditorLineColor = new( 0, 0.1f, 1, 1 );
+        public Vector4 CurveEditorPointColor = new( 1 );
+        public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
+        public Vector4 CurveEditorPrimarySelectedColor = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
+
+        public int CurveEditorLineWidth = 2;
+        public int CurveEditorColorRingSize = 3;
+        public int CurveEditorGrabbingDistance = 25;
+        public int CurveEditorPointSize = 7;
+        public int CurveEditorSelectedSize = 10;
+        public int CurveEditorPrimarySelectedSize = 12;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -115,6 +127,11 @@ namespace VfxEditor {
                     DrawKeybinds();
                     ImGui.EndTabItem();
                 }
+                if( ImGui.BeginTabItem( $"Curve Editor{id}" ) ) {
+                    DrawCurveEditor();
+                    ImGui.EndTabItem();
+                }
+
                 ImGui.EndTabBar();
             }
         }
@@ -187,6 +204,29 @@ namespace VfxEditor {
             if( SpawnOnGroundKeybind.Draw( "Spawn on ground (VFX only)", "##SpawnGroundKeybind" ) ) Save();
             if( SpawnOnTargetKeybind.Draw( "Spawn on target (VFX only)", "##SpawnTargetKeybind" ) ) Save();
 
+            ImGui.EndChild();
+        }
+
+        private void DrawCurveEditor() {
+            var id = $"##CurveEditorConfig";
+
+            ImGui.BeginChild( $"{id}-Config" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Indent( 5 );
+
+            if( ImGui.ColorEdit4( $"Line color{id}", ref CurveEditorLineColor ) ) Save();
+            if( ImGui.ColorEdit4( $"Point color{id}", ref CurveEditorPointColor ) ) Save();
+            if( ImGui.ColorEdit4( $"Primary selected color{id}", ref CurveEditorPrimarySelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( $"Selected color{id}", ref CurveEditorSelectedColor ) ) Save();
+
+            if( ImGui.InputInt( $"Line width{id}", ref CurveEditorLineWidth ) ) Save();
+            if( ImGui.InputInt( $"Color ring width{id}", ref CurveEditorColorRingSize ) ) Save();
+            if( ImGui.InputInt( $"Point size{id}", ref CurveEditorPointSize ) ) Save();
+            if( ImGui.InputInt( $"Primary selected size{id}", ref CurveEditorPrimarySelectedSize ) ) Save();
+            if( ImGui.InputInt( $"Selected size{id}", ref CurveEditorSelectedSize ) ) Save();
+            if( ImGui.InputInt( $"Grab distance{id}", ref CurveEditorGrabbingDistance ) ) Save();
+
+            ImGui.Unindent();
             ImGui.EndChild();
         }
     }

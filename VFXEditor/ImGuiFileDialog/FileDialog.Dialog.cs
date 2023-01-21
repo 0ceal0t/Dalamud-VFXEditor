@@ -97,7 +97,6 @@ namespace ImGuiFileDialog {
         }
 
         private void DrawHeader() {
-
             DrawPathComposer();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );

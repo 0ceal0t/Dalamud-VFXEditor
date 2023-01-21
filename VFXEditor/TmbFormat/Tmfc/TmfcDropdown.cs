@@ -23,6 +23,7 @@ namespace VfxEditor.TmbFormat {
 
         public override void Draw( string id ) {
             base.Draw( id );
+            ImGui.TextDisabled( "[WORK IN PROGRESS]" );
             if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
             else ImGui.Text( "Select a TMFC..." );
         }
