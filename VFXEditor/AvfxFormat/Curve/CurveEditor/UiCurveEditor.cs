@@ -333,6 +333,15 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
+        /*
+         * X and Y are multiplied by 15, then converted to int, and then stored in a signed byte, so can only be -128 to 128
+         * need more research into how they actually work, and what impact "linear" vs "spline" actually has
+         * 
+         * E8 ? ? ? ? EB 3C 8B 46 04
+         * ffxiv_dx11.exe.text+402BE7
+         * readFloatLocal(debug_getXMMPointer(1)) == 60.0
+         */
+
         private static bool IsHovering() {
             var mousePos = ImGui.GetMousePos();
             var topLeft = ImPlot.GetPlotPos();
