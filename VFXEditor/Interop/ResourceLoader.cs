@@ -136,7 +136,7 @@ namespace VfxEditor.Interop {
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
 
-            if (Plugin.Configuration?.LogVfxDebug == true) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
+            if (Plugin.Configuration?.LogVfxDebug == true) PluginLog.Log( $"New Static: {vfxPath} {vfx:X8}" );
 
             return vfx;
         }
@@ -152,7 +152,7 @@ namespace VfxEditor.Interop {
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
             Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
 
-            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"{vfxPath} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {vfxPath} {vfx:X8}" );
 
             return vfx;
         }
@@ -327,7 +327,7 @@ namespace VfxEditor.Interop {
 
             var isRooted = Path.IsPathRooted( gameFsPath );
 
-            // looking for refreshed paths
+            // looking for refreshed paths, could also be like |default_1|path.avfx
             if( gameFsPath != null && !isRooted ) {
                 var replacementPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
                 if( replacementPath != null && Path.IsPathRooted( replacementPath ) && replacementPath.Length < 260 ) {

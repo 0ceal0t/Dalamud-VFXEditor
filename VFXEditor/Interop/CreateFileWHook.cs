@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+// https://github.com/xivdev/Penumbra/blob/master/Penumbra/Interop/Loader/CreateFileWHook.cs
 namespace VfxEditor.Interop {
     public unsafe class CreateFileWHook : IDisposable {
         public const int RequiredSize = 28;
@@ -18,12 +19,6 @@ namespace VfxEditor.Interop {
         private const char Prefix = ( char )( ( byte )'P' | ( ( '?' & 0x00FF ) << 8 ) );
         private const int BufferSize = Utf8GamePath.MaxGamePathLength;
 
-        [DllImport( "kernel32.dll" )]
-        private static extern nint LoadLibrary( string dllName );
-
-        [DllImport( "kernel32.dll" )]
-        private static extern nint GetProcAddress( nint hModule, string procName );
-
         private delegate nint CreateFileWDelegate( char* fileName, uint access, uint shareMode, nint security, uint creation, uint flags, nint template );
 
         private readonly Hook<CreateFileWDelegate> _createFileWHook;
@@ -31,11 +26,8 @@ namespace VfxEditor.Interop {
         /// <summary> Some storage to skip repeated allocations. </summary>
         private readonly ThreadLocal<nint> _fileNameStorage = new( SetupStorage, true );
 
-        public CreateFileWHook() {
-            var userApi = LoadLibrary( "kernel32.dll" );
-            var createFileAddress = GetProcAddress( userApi, "CreateFileW" );
-            _createFileWHook = Hook<CreateFileWDelegate>.FromAddress( createFileAddress, CreateFileWDetour );
-        }
+        public CreateFileWHook()
+            => _createFileWHook = Hook<CreateFileWDelegate>.FromImport( null, "KERNEL32.dll", "CreateFileW", 0, CreateFileWDetour );
 
         /// <remarks> Long paths in windows need to start with "\\?\", so we keep this static in the pointers. </remarks>
         private static nint SetupStorage() {
@@ -152,5 +144,20 @@ namespace VfxEditor.Interop {
             fileName = new ReadOnlySpan<byte>( ( void* )address, ( int )length );
             return true;
         }
+
+        // ***** Old method *****
+
+        //[DllImport( "kernel32.dll" )]
+        //private static extern nint LoadLibrary( string dllName );
+        //
+        //[DllImport( "kernel32.dll" )]
+        //private static extern nint GetProcAddress( nint hModule, string procName );
+        //
+        //public CreateFileWHookOld()
+        //{
+        //    var userApi           = LoadLibrary( "kernel32.dll" );
+        //    var createFileAddress = GetProcAddress( userApi, "CreateFileW" );
+        //    _createFileWHook = Hook<CreateFileWDelegate>.FromAddress( createFileAddress, CreateFileWDetour );
+        //}
     }
 }
