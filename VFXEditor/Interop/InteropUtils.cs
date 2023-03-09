@@ -10,7 +10,7 @@ using System.Text;
 using VfxEditor.Structs;
 
 namespace VfxEditor.Interop {
-    public unsafe static class InteropUtils {
+    public static unsafe class InteropUtils {
         public static void Run( string exePath, string arguments ) {
             // Use ProcessStartInfo class
             var startInfo = new ProcessStartInfo {
@@ -41,14 +41,6 @@ namespace VfxEditor.Interop {
                 ByteString.FromStringUnsafe( resParams->SegmentOffset.ToString( "x" ), true ),
                 ByteString.FromStringUnsafe( resParams->SegmentLength.ToString( "x" ), true )
             ).Crc32;
-        }
-
-        public static string GetString( StdString str ) {
-            var len = ( int )str.Size;
-            if( len > 15 ) {
-                return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( str.BufferPtr ), Encoding.ASCII, len );
-            }
-            return Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( &str.BufferPtr ), Encoding.ASCII, len );
         }
 
         public static byte[] GetBgCategory( string expansion, string zone ) {

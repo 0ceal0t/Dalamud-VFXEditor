@@ -340,6 +340,22 @@ namespace VfxEditor.AvfxFormat {
          * E8 ? ? ? ? EB 3C 8B 46 04
          * ffxiv_dx11.exe.text+402BE7
          * readFloatLocal(debug_getXMMPointer(1)) == 60.0
+         * 
+         *  v5[2 * i + 1] = Z;
+            LOWORD(v5[2 * i + 2]) ^= (Time ^ LOWORD(v5[2 * i + 2])) & 0x3FFF;
+            LOWORD(v5[2 * i + 2]) = v5[2 * i + 2] & 0x3FFF | (Type << 14);
+            BYTE2(v5[2 * i + 2]) = (X * 15.0);
+            HIBYTE(v5[2 * i + 2]) = (Y * 15.0);
+
+            // Time (0)
+            // Type (2)
+            // X (4)
+            // Y (8)
+            // Z (12)
+
+            // Spline = 0
+            // Linear = 1
+            // Step = 2
          */
 
         private static bool IsHovering() {
@@ -352,15 +368,15 @@ namespace VfxEditor.AvfxFormat {
 
         private static uint Invert( Vector3 color ) => color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
 
-        private static Vector2 Bezier( Vector2 p1_, Vector2 p2_, Vector2 handle1, Vector2 handle2, float t ) {
+        private static Vector2 Bezier( Vector2 p1, Vector2 p2, Vector2 handle1, Vector2 handle2, float t ) {
             var u = 1 - t;
             var w1 = u * u * u;
             var w2 = 3 * u * u * t;
             var w3 = 3 * u * t * t;
             var w4 = t * t * t;
             return new Vector2(
-                w1 * p1_.X + w2 * handle1.X + w3 * handle2.X + w4 * p2_.X,
-                w1 * p1_.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2_.Y
+                w1 * p1.X + w2 * handle1.X + w3 * handle2.X + w4 * p2.X,
+                w1 * p1.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2.Y
             );
         }
     }

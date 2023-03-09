@@ -9,5 +9,5 @@
     "ApplicableVersion": "any",
     "Tags": [ "VFX", "AVFX" ],
     "DalamudApiLevel": 8,
-    "LoadPriority": 69421
+    "LoadPriority": 69
 }

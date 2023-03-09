@@ -15,7 +15,9 @@ using Penumbra.String.Classes;
 
 namespace VfxEditor.Interop {
     public unsafe class ResourceLoader : IDisposable {
-        private bool IsEnabled;
+        public bool IsEnabled { get; private set; } = false;
+
+        private readonly CreateFileWHook CreateFileHook = new();
 
         private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
 
@@ -58,11 +60,11 @@ namespace VfxEditor.Interop {
         public StaticVfxRemoveDelegate StaticVfxRemove;
 
         // ======= STATIC HOOKS ========
-        public delegate IntPtr StaticVfxCreateDelegate2( char* path, char* pool );
-        public Hook<StaticVfxCreateDelegate2> StaticVfxCreateHook { get; private set; }
+        public delegate IntPtr StaticVfxCreateHookDelegate( char* path, char* pool );
+        public Hook<StaticVfxCreateHookDelegate> StaticVfxCreateHook { get; private set; }
 
-        public delegate IntPtr StaticVfxRemoveDelegate2( IntPtr vfx );
-        public Hook<StaticVfxRemoveDelegate2> StaticVfxRemoveHook { get; private set; }
+        public delegate IntPtr StaticVfxRemoveHookDelegate( IntPtr vfx );
+        public Hook<StaticVfxRemoveHookDelegate> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
         public delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
@@ -72,11 +74,11 @@ namespace VfxEditor.Interop {
         public ActorVfxRemoveDelegate ActorVfxRemove;
 
         // ======== ACTOR HOOKS =============
-        public delegate IntPtr ActorVfxCreateDelegate2( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
-        public Hook<ActorVfxCreateDelegate2> ActorVfxCreateHook { get; private set; }
+        public delegate IntPtr ActorVfxCreateHookDelegate( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public Hook<ActorVfxCreateHookDelegate> ActorVfxCreateHook { get; private set; }
 
-        public delegate IntPtr ActorVfxRemoveDelegate2( IntPtr vfx, char a2 );
-        public Hook<ActorVfxRemoveDelegate2> ActorVfxRemoveHook { get; private set; }
+        public delegate IntPtr ActorVfxRemoveHookDelegate( IntPtr vfx, char a2 );
+        public Hook<ActorVfxRemoveHookDelegate> ActorVfxRemoveHook { get; private set; }
 
         // ========= MISC ==============
         public delegate IntPtr GetMatrixSingletonDelegate();
@@ -117,10 +119,10 @@ namespace VfxEditor.Interop {
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( scanner.ScanText( Constants.StaticVfxRunSig ) );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
-            StaticVfxCreateHook = Hook<StaticVfxCreateDelegate2>.FromAddress( staticVfxCreateAddress, StaticVfxNewHandler );
-            StaticVfxRemoveHook = Hook<StaticVfxRemoveDelegate2>.FromAddress( staticVfxRemoveAddress, StaticVfxRemoveHandler );
-            ActorVfxCreateHook = Hook<ActorVfxCreateDelegate2>.FromAddress( actorVfxCreateAddress, ActorVfxNewHandler );
-            ActorVfxRemoveHook = Hook<ActorVfxRemoveDelegate2>.FromAddress( actorVfxRemoveAddress, ActorVfxRemoveHandler );
+            StaticVfxCreateHook = Hook<StaticVfxCreateHookDelegate>.FromAddress( staticVfxCreateAddress, StaticVfxNewHandler );
+            StaticVfxRemoveHook = Hook<StaticVfxRemoveHookDelegate>.FromAddress( staticVfxRemoveAddress, StaticVfxRemoveHandler );
+            ActorVfxCreateHook = Hook<ActorVfxCreateHookDelegate>.FromAddress( actorVfxCreateAddress, ActorVfxNewHandler );
+            ActorVfxRemoveHook = Hook<ActorVfxRemoveHookDelegate>.FromAddress( actorVfxRemoveAddress, ActorVfxRemoveHandler );
 
             GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( scanner.ScanText( Constants.GetMatrixSig ) );
             GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManagerSig ) );
@@ -140,9 +142,7 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) {
-                Plugin.ClearSpawn();
-            }
+            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
             Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
@@ -158,16 +158,14 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) {
-                Plugin.ClearSpawn();
-            }
+            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
             Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
         public void Enable() {
             if( IsEnabled ) return;
-
+            CreateFileHook.Enable();
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
@@ -186,6 +184,7 @@ namespace VfxEditor.Interop {
 
         public void Disable() {
             if( !IsEnabled ) return;
+            CreateFileHook.Disable();
             ReadSqpackHook.Disable();
             GetResourceSyncHook.Disable();
             GetResourceAsyncHook.Disable();
@@ -196,6 +195,7 @@ namespace VfxEditor.Interop {
 
             Thread.Sleep( 500 );
 
+            CreateFileHook.Dispose();
             ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
@@ -289,30 +289,41 @@ namespace VfxEditor.Interop {
             GetResourceParameters* resParams,
             bool isUnknown
         ) {
-            var gameFsPath = Marshal.PtrToStringAnsi( new IntPtr( path ) );
+            if( !Utf8GamePath.FromPointer( path, out var gamePath ) ) {
+                return CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            }
 
-            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gameFsPath );
+            var gamePathString = gamePath.ToString();
 
-            var fsPath = GetReplacePath( gameFsPath, out var localPath ) ? localPath : null;
+            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gamePathString );
 
-            if( fsPath == null || fsPath.Length >= 260 ) {
+            var replacedPath = GetReplacePath( gamePathString, out var localPath ) ? localPath : null;
+
+            if( replacedPath == null || replacedPath.Length >= 260 ) {
                 var unreplaced = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-                if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( unreplaced ).ToString( "X8" ) );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) PluginLog.Log( "[GetResourceHandler] Original {0} -> {1} -> {2}", gamePathString, replacedPath, new IntPtr( unreplaced ).ToString( "X8" ) );
                 return unreplaced;
             }
 
-            var resolvedPath = new FullPath( fsPath );
+            var resolvedPath = new FullPath( replacedPath );
 
             *resourceHash = InteropUtils.ComputeHash( resolvedPath.InternalName, resParams );
             path = resolvedPath.InternalName.Path;
 
             var replaced = CallOriginalHandler( isSync, fileManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gameFsPath ) ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gameFsPath, fsPath, new IntPtr( replaced ).ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gamePathString, replacedPath, new IntPtr( replaced ).ToString( "X8" ) );
             return replaced;
         }
 
         private byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
-            var gameFsPath = InteropUtils.GetString( pFileDesc->ResourceHandle->File );
+            if( !pFileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
+                return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
+            }
+
+            var originalPath = originalGamePath.ToString();
+            var isPenumbra = ProcessPenumbraPath( originalPath, out var gameFsPath );
+
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] {0}", gameFsPath );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
 
@@ -322,10 +333,13 @@ namespace VfxEditor.Interop {
                 if( replacementPath != null && Path.IsPathRooted( replacementPath ) && replacementPath.Length < 260 ) {
                     gameFsPath = replacementPath;
                     isRooted = true;
+                    isPenumbra = false;
                 }
             }
 
-            if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted ) {
+            // call the original if it's a penumbra path that doesn't need replacement as well
+            if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted || isPenumbra ) {
+                if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Calling Original With {0}", originalPath );
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
@@ -333,14 +347,24 @@ namespace VfxEditor.Interop {
 
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 
-            // note: must be utf16
-            var utfPath = Encoding.Unicode.GetBytes( gameFsPath );
-            Marshal.Copy( utfPath, 0, new IntPtr( &pFileDesc->UtfFileName ), utfPath.Length );
-            var fd = stackalloc byte[0x20 + utfPath.Length + 0x16];
-            Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
-            pFileDesc->FileDescriptor = fd;
+            ByteString.FromString( gameFsPath, out var gamePath );
 
+            var fd = stackalloc char[0x11 + 0x0B + 14];
+            pFileDesc->FileDescriptor = ( byte* )fd + 1;
+            CreateFileWHook.WritePtr( fd + 0x11, gamePath.Path, gamePath.Length );
+            CreateFileWHook.WritePtr( &pFileDesc->Utf16FileName, gamePath.Path, gamePath.Length );
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
+        }
+
+        private static bool ProcessPenumbraPath( string path, out string outPath ) {
+            outPath = path;
+            if( !path.StartsWith("|") ) return false;
+
+            var split = path.Split( "|" );
+            if( split.Length != 3 ) return false;
+
+            outPath = split[2];
+            return true;
         }
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {

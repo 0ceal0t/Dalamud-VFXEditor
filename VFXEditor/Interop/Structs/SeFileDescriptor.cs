@@ -7,13 +7,14 @@ namespace VfxEditor.Structs {
         public FileMode FileMode;
 
         [FieldOffset( 0x30 )]
-        public void* FileDescriptor;
+        public void* FileDescriptor; //
 
         [FieldOffset( 0x50 )]
-        public ResourceHandle* ResourceHandle;
+        public ResourceHandle* ResourceHandle; //
+
 
         [FieldOffset( 0x70 )]
-        public byte UtfFileName;
+        public char Utf16FileName; //
     }
 
     [StructLayout( LayoutKind.Explicit )]

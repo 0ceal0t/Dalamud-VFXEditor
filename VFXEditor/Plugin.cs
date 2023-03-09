@@ -24,6 +24,7 @@ using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Animation;
+using System;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {
