@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
@@ -183,6 +184,48 @@ namespace ImGuiFileDialog {
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
                 Text = "Videos"
             } );
+
+            if( GetQuickAccessFolders( out var folders ) ) {
+                for( var idx = 0; idx < folders.Count; idx++ ) {
+                    var (name, path) = folders[idx];
+                    Favorites.Add( new SideBarItem {
+                        Icon = ( char )FontAwesomeIcon.Folder,
+                        Location = path,
+                        Text = $"{name}"
+                    } );
+                }
+            }
+        }
+
+        private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
+            folders = new List<(string Name, string Path)>();
+            try {
+                var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
+                if( shellAppType == null )
+                    return false;
+
+                var shell = Activator.CreateInstance( shellAppType );
+
+                var obj = shellAppType.InvokeMember( "NameSpace", BindingFlags.InvokeMethod, null, shell, new object[]
+                {
+                "shell:::{679f85cb-0220-4080-b29b-5540cc05aab6}",
+                } );
+                if( obj == null )
+                    return false;
+
+
+                foreach( var fi in ( ( dynamic )obj ).Items() ) {
+                    if( !fi.IsLink && !fi.IsFolder )
+                        continue;
+
+                    folders.Add( (fi.Name, fi.Path) );
+                }
+
+                return true;
+            }
+            catch {
+                return false;
+            }
         }
 
         // TODO: ascending or descending icons

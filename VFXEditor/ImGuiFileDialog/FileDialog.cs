@@ -59,6 +59,7 @@ namespace ImGuiFileDialog {
         private string SelectedSideBar = "";
         private readonly List<SideBarItem> Drives = new();
         private readonly List<SideBarItem> QuickAccess = new();
+        private readonly List<SideBarItem> Favorites = new();
         private readonly List<SideBarItem> Recent;
 
         private ImGuiScene.TextureWrap PreviewWrap = null;

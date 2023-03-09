@@ -28,6 +28,8 @@ namespace ImGuiFileDialog {
 
         private static Dictionary<string, IconColorItem> ICON_MAP;
 
+        private bool SideBarDrawn = false;
+
         public bool Draw() {
             if( !Visible ) return false;
 
@@ -229,9 +231,13 @@ namespace ImGuiFileDialog {
                 ImGui.BeginChild( "##FileDialog_ColumnChild", size );
                 ImGui.Columns( 2, "##FileDialog_Columns" );
 
-                DrawSideBar( new Vector2( 150, size.Y ) );
+                if( !SideBarDrawn ) {
+                    SideBarDrawn = true;
+                    ImGui.SetColumnWidth( 0, 150 );
+                }
 
-                ImGui.SetColumnWidth( 0, 150 );
+                DrawSideBar( new Vector2( ImGui.GetColumnWidth( 0 ), size.Y ) );
+
                 ImGui.NextColumn();
 
                 DrawFileListView( size - new Vector2( 160, 0 ) );
@@ -248,18 +254,25 @@ namespace ImGuiFileDialog {
             ImGui.BeginChild( "##FileDialog_SideBar", ( PreviewWrap != null ) ? size - new Vector2( 0, size.X + 5 ) : size );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
+            var idx = 0;
+
             foreach( var drive in Drives ) {
-                DrawSideBarItem( drive );
+                DrawSideBarItem( drive, ref idx );
             }
 
             foreach( var quick in QuickAccess ) {
-                DrawSideBarItem( quick );
+                DrawSideBarItem( quick, ref idx );
+            }
+
+            if( Favorites.Count > 0 ) ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+            foreach( var favorite in Favorites ) {
+                DrawSideBarItem( favorite, ref idx );
             }
 
             if( Recent != null ) {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
                 foreach( var recent in Recent ) {
-                    DrawSideBarItem( recent );
+                    DrawSideBarItem( recent, ref idx );
                 }
             }
 
@@ -280,9 +293,9 @@ namespace ImGuiFileDialog {
             }
         }
 
-        private void DrawSideBarItem( SideBarItem item ) {
+        private void DrawSideBarItem( SideBarItem item, ref int idx ) {
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Selectable( $"{item.Icon}##{item.Text}", item.Text == SelectedSideBar ) ) {
+            if( ImGui.Selectable( $"{item.Icon}##{idx}", item.Text == SelectedSideBar ) ) {
                 PreviewWrap?.Dispose();
                 PreviewWrap = null;
 
@@ -293,6 +306,8 @@ namespace ImGuiFileDialog {
 
             ImGui.SameLine( 25 );
             ImGui.Text( item.Text );
+
+            idx++;
         }
 
         private unsafe void DrawFileListView( Vector2 size ) {
