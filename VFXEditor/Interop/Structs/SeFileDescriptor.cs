@@ -12,7 +12,6 @@ namespace VfxEditor.Structs {
         [FieldOffset( 0x50 )]
         public ResourceHandle* ResourceHandle; //
 
-
         [FieldOffset( 0x70 )]
         public char Utf16FileName; //
     }
