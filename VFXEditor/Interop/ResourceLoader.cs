@@ -17,8 +17,6 @@ namespace VfxEditor.Interop {
     public unsafe class ResourceLoader : IDisposable {
         public bool IsEnabled { get; private set; } = false;
 
-        private readonly CreateFileWHook CreateFileHook = new();
-
         private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
 
         // ====== REDRAW =======
@@ -165,7 +163,6 @@ namespace VfxEditor.Interop {
 
         public void Enable() {
             if( IsEnabled ) return;
-            CreateFileHook.Enable();
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
@@ -184,7 +181,6 @@ namespace VfxEditor.Interop {
 
         public void Disable() {
             if( !IsEnabled ) return;
-            CreateFileHook.Disable();
             ReadSqpackHook.Disable();
             GetResourceSyncHook.Disable();
             GetResourceAsyncHook.Disable();
@@ -195,7 +191,6 @@ namespace VfxEditor.Interop {
 
             Thread.Sleep( 500 );
 
-            CreateFileHook.Dispose();
             ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
@@ -349,10 +344,13 @@ namespace VfxEditor.Interop {
 
             ByteString.FromString( gameFsPath, out var gamePath );
 
-            var fd = stackalloc char[0x11 + 0x0B + 14];
-            pFileDesc->FileDescriptor = ( byte* )fd + 1;
-            CreateFileWHook.WritePtr( fd + 0x11, gamePath.Path, gamePath.Length );
-            CreateFileWHook.WritePtr( &pFileDesc->Utf16FileName, gamePath.Path, gamePath.Length );
+            // note: must be utf16
+            var utfPath = Encoding.Unicode.GetBytes( gameFsPath );
+            Marshal.Copy( utfPath, 0, new IntPtr( &pFileDesc->Utf16FileName ), utfPath.Length );
+            var fd = stackalloc byte[0x20 + utfPath.Length + 0x16];
+            Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
+            pFileDesc->FileDescriptor = fd;
+
             return ReadFile( pFileHandler, pFileDesc, priority, isSync );
         }
 
