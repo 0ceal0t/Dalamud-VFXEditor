@@ -31,8 +31,12 @@ namespace VfxEditor.NodeLibrary {
             var listModified = false;
             // return true if list modified
             ImGui.PushStyleColor( ImGuiCol.Header, Color );
-            if( ImGui.CollapsingHeader( $"{Name}{uniqueId}" ) ) {
-                DragDrop( library, ref listModified );
+            ImGui.PushStyleColor( ImGuiCol.HeaderHovered, Color * 0.75f );
+            var open = ImGui.CollapsingHeader( $"{Name}{uniqueId}" );
+            DragDrop( library, ref listModified );
+            ImGui.PopStyleColor( 2 );
+
+            if( open ) {
                 ImGui.Indent();
 
                 if (UiUtils.DisabledButton($"Import{id}", Plugin.AvfxManager.CurrentFile != null)) {
@@ -72,10 +76,6 @@ namespace VfxEditor.NodeLibrary {
 
                 ImGui.Unindent();
             }
-            else {
-                DragDrop( library, ref listModified );
-            }
-            ImGui.PopStyleColor();
 
             return listModified;
         }

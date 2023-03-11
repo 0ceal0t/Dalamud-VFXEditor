@@ -97,20 +97,20 @@ namespace VfxEditor.AvfxFormat {
 
             CompoundCommand importCommand = new( false, true ); // remove in reverse order
             // Import items in a specific order
-            ImportGroup( models, reader, ModelView, NodeGroupSet.Models, importCommand, hasDependencies );
-            ImportGroup( textures, reader, TextureView, NodeGroupSet.Textures, importCommand, hasDependencies );
-            ImportGroup( binders, reader, BinderView, NodeGroupSet.Binders, importCommand, hasDependencies );
-            ImportGroup( effectors, reader, EffectorView, NodeGroupSet.Effectors, importCommand, hasDependencies );
-            ImportGroup( particles, reader, ParticleView, NodeGroupSet.Particles, importCommand, hasDependencies );
-            ImportGroup( emitters, reader, EmitterView, NodeGroupSet.Emitters, importCommand, hasDependencies );
-            ImportGroup( timelines, reader, TimelineView, NodeGroupSet.Timelines, importCommand, hasDependencies );
+            ImportGroup( models, reader, ModelView, NodeGroupSet.Models, importCommand );
+            ImportGroup( textures, reader, TextureView, NodeGroupSet.Textures, importCommand );
+            ImportGroup( binders, reader, BinderView, NodeGroupSet.Binders, importCommand );
+            ImportGroup( effectors, reader, EffectorView, NodeGroupSet.Effectors, importCommand );
+            ImportGroup( particles, reader, ParticleView, NodeGroupSet.Particles, importCommand );
+            ImportGroup( emitters, reader, EmitterView, NodeGroupSet.Emitters, importCommand );
+            ImportGroup( timelines, reader, TimelineView, NodeGroupSet.Timelines, importCommand );
 
             CommandManager.Avfx.Add( importCommand ); // doesn't actually execute anything
 
             if( hasDependencies ) NodeGroupSet.PostImport();
         }
 
-        private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, UiNodeGroup<T> group, CompoundCommand command, bool hasDependencies ) where T : AvfxNode {
+        private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, UiNodeGroup<T> group, CompoundCommand command ) where T : AvfxNode {
             foreach( var pos in positions ) {
                 reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
                 var item = view.Read( reader, pos.Size );
