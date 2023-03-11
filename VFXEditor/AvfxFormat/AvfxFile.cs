@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.FileManager;
@@ -110,6 +111,52 @@ namespace VfxEditor.AvfxFormat {
             view.SetSelected( item );
             ForceOpenTabs.Add( view );
         }
+
+        // ====== CLEANUP UNUSED =======
+
+        public void Cleanup() {
+            var removedNodes = new List<AvfxNode>();
+            var command = new CompoundCommand( false, true );
+            CleanupInternalView( TimelineView, command, removedNodes );
+            CleanupInternalView( EmitterView, command, removedNodes );
+            CleanupInternalView( ParticleView, command, removedNodes );
+            CleanupInternalView( EffectorView, command, removedNodes );
+            CleanupInternalView( BinderView, command, removedNodes );
+            CleanupInternalView( TextureView, command, removedNodes );
+            CleanupInternalView( ModelView, command, removedNodes );
+            CommandManager.Avfx.Add( command );
+        }
+
+        private void CleanupInternalView<T>( IUiNodeView<T> view, CompoundCommand command, List<AvfxNode> removedNodes ) where T : AvfxNode {
+            foreach( var node in view.GetGroup().Items ) {
+                CleanupInternal( node, command, removedNodes );
+            }
+        }
+
+        private void CleanupInternal( AvfxNode node, CompoundCommand command, List<AvfxNode> removedNodes ) {
+            if( removedNodes.Contains( node ) ) return;
+
+            if( !node.Parents.Select( x => x.Node ).Where( x => !removedNodes.Contains( x ) ).Any() ) {
+                removedNodes.Add( node );
+                command.Add( GetRemoveCommand( node ) );
+                foreach( var child in node.ChildNodes ) {
+                    CleanupInternal( child, command, removedNodes );
+                }
+            }
+        }
+
+        private ICommand GetRemoveCommand( AvfxNode node ) {
+            if( node is AvfxTimeline timeline ) return new UiNodeViewRemoveCommand<AvfxTimeline>( TimelineView, TimelineView.GetGroup(), timeline );
+            if( node is AvfxEmitter emitter ) return new UiNodeViewRemoveCommand<AvfxEmitter>( EmitterView, EmitterView.GetGroup(), emitter );
+            if( node is AvfxParticle particle ) return new UiNodeViewRemoveCommand<AvfxParticle>( ParticleView, ParticleView.GetGroup(), particle );
+            if( node is AvfxEffector effector ) return new UiNodeViewRemoveCommand<AvfxEffector>( EffectorView, EffectorView.GetGroup(), effector );
+            if( node is AvfxBinder binder ) return new UiNodeViewRemoveCommand<AvfxBinder>( BinderView, BinderView.GetGroup(), binder );
+            if( node is AvfxTexture texture ) return new UiNodeViewRemoveCommand<AvfxTexture>( TextureView, TextureView.GetGroup(), texture );
+            if( node is AvfxModel model ) return new UiNodeViewRemoveCommand<AvfxModel>( ModelView, ModelView.GetGroup(), model );
+            return null;
+        }
+
+        // ====================
 
         public override void Write( BinaryWriter writer ) => Main?.Write( writer );
 
