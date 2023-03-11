@@ -27,7 +27,7 @@ namespace VfxEditor.TmbFormat {
 
         public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) {
             ActorsDropdown = new( this, Actors );
-            TmfcDropdown = new( this, Tmfcs );
+            TmfcDropdown = new( this, Tmfcs, Entries );
 
             PapEmbedded = papEmbedded;
             Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );

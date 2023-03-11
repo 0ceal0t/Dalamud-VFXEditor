@@ -8,15 +8,21 @@ using VfxEditor.TmbFormat.Entries;
 namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {
         private readonly TmbFile File;
+        private readonly List<TmbEntry> Entries;
 
-        public TmfcDropdown( TmbFile file, List<Tmfc> items ) : base( items, true ) {
+        public TmfcDropdown( TmbFile file, List<Tmfc> items, List<TmbEntry> entries ) : base( items, true ) {
             File = file;
+            Entries = entries;
         }
 
         protected override string GetText( Tmfc item, int idx ) => $"TMFC {idx}";
 
-        // TODO: remove from entries as well
-        protected override void OnDelete( Tmfc item ) => File.Command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
+        protected override void OnDelete( Tmfc item ) {
+            var command = new CompoundCommand( false, true );
+            command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
+            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, item ) );
+            File.Command.Add( command );
+        }
 
         // TODO: add to entries as well
         protected override void OnNew() => File.Command.Add( new GenericAddCommand<Tmfc>( Items, new Tmfc( File.PapEmbedded ) ) );

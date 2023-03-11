@@ -7,6 +7,7 @@ using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
+using Dalamud.Logging;
 
 namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
