@@ -60,7 +60,7 @@ namespace VfxEditor {
         public KeybindConfiguration SpawnOnGroundKeybind = new();
         public KeybindConfiguration SpawnOnTargetKeybind = new();
 
-        public List<AvfxNodeLibraryItem> VFXNodeLibraryItems = new();
+        public List<AvfxNodeLibraryProps> VFXNodeLibraryItems = new();
 
         public int MaxUndoSize = 10;
         public bool DoubleClickNavigate = true;
