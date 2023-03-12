@@ -8,7 +8,7 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.NodeLibrary {
-    public class AvfxNodeLibraryFolder : AvfxNodeLibraryGeneric {
+    public unsafe class AvfxNodeLibraryFolder : AvfxNodeLibraryGeneric {
         public readonly List<AvfxNodeLibraryGeneric> Children = new();
         public bool IsRoot => Parent == null;
         private string Name;
@@ -48,6 +48,19 @@ namespace VfxEditor.NodeLibrary {
 
             var open = true;
             if( !IsRoot ) {
+                // So that you can drag an item BEFORE a folder, rather than only inside of it
+
+                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
+                ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
+                if( ImGui.BeginChild( $"{id}-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false ) ) ImGui.EndChild();
+                if( ImGui.BeginDragDropTarget() ) {
+                    if( library.StopDragging( this, overridePosition: true ) ) listModified = true;
+                    ImGui.EndDragDropTarget();
+                }
+                ImGui.PopStyleVar( 2 );
+
+                // Main folder item
+
                 ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
                 open = ImGui.TreeNodeEx( $"{uniqueId}", 
                     ( Editing ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.SpanAvailWidth ) | 
@@ -119,34 +132,17 @@ namespace VfxEditor.NodeLibrary {
                     }
                 }
 
-                if( !IsRoot ) ImGui.TreePop();
-            }
-
-            if( IsRoot && library.DragState != AvfxNodeLibrary.DraggingState.NotDragging ) {
-                ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
-                if( ImGui.TreeNodeEx( $"##NodeLibrary-Root",
-                    ImGuiTreeNodeFlags.SpanAvailWidth |
-                    ImGuiTreeNodeFlags.FramePadding |
-                    ImGuiTreeNodeFlags.Framed |
-                    ImGuiTreeNodeFlags.Leaf
-                ) ) {
-                    ImGui.TreePop();
-                }
-
+                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
+                ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
+                if( ImGui.BeginChild( $"{id}-end-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false ) ) ImGui.EndChild();
                 if( ImGui.BeginDragDropTarget() ) {
                     if( library.StopDragging( this ) ) listModified = true;
                     ImGui.EndDragDropTarget();
                 }
+                ImGui.PopStyleVar( 2 );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-                ImGui.PopStyleColor( 1 );
-
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.Text( $"{( char )FontAwesomeIcon.Tree}" );
-                ImGui.PopFont();
-
-                ImGui.SameLine();
-                ImGui.Text( "Root" );
+                if( !IsRoot ) ImGui.TreePop();
             }
 
             return listModified;

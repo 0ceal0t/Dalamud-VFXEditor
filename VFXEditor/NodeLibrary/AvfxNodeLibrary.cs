@@ -74,7 +74,7 @@ namespace VfxEditor.NodeLibrary {
             DraggingItem = item;
         }
 
-        public bool StopDragging( AvfxNodeLibraryGeneric destination ) {
+        public bool StopDragging( AvfxNodeLibraryGeneric destination, bool overridePosition = false ) {
             if( DraggingItem == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( $"NODE_LIBRARY" );
             unsafe {
@@ -86,7 +86,7 @@ namespace VfxEditor.NodeLibrary {
                         }
                         else {
                             DraggingItem.Parent.Remove( DraggingItem );
-                            if( destination is AvfxNodeLibraryFolder folder ) {
+                            if( destination is AvfxNodeLibraryFolder folder && !overridePosition ) {
                                 folder.Add( DraggingItem );
                             }
                             else {

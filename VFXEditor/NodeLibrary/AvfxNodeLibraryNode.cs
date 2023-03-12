@@ -1,9 +1,5 @@
 using System;
 using System.Numerics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using ImGuiNET;
 using VfxEditor.Utils;
@@ -41,6 +37,8 @@ namespace VfxEditor.NodeLibrary {
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}-context" );
 
             if( ImGui.BeginPopup( $"{id}-context" ) ) {
+                if( ImGui.Selectable( $"Import{id}" ) && Plugin.AvfxManager.CurrentFile != null ) Plugin.AvfxManager.Import( Path );
+
                 if( ImGui.Selectable( $"Edit{id}" ) ) {
                     Editing = true;
                 }
@@ -56,9 +54,7 @@ namespace VfxEditor.NodeLibrary {
             if( open ) {
                 ImGui.Indent();
 
-                if( UiUtils.DisabledButton( $"Import{id}", Plugin.AvfxManager.CurrentFile != null ) ) {
-                    Plugin.AvfxManager.Import( Path );
-                }
+                if( UiUtils.DisabledButton( $"Import{id}", Plugin.AvfxManager.CurrentFile != null ) ) Plugin.AvfxManager.Import( Path );
 
                 ImGui.SameLine();
                 if( ImGui.Button( Editing ? $"Save{id}" : $"Edit{id}" ) ) {
