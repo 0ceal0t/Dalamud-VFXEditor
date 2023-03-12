@@ -9,7 +9,7 @@ namespace VfxEditor.Structs.Vfx {
             Plugin.ResourceLoader.StaticVfxRun( ( IntPtr )Vfx, 0.0f, 0xFFFFFFFF );
 
             UpdatePosition( position );
-            UpdateRotation( new Vector3(0, 0, rotation ) );
+            UpdateRotation( new Vector3( 0, 0, rotation ) );
             Update();
         }
 

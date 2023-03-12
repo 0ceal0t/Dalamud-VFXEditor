@@ -5,9 +5,9 @@ using System.Numerics;
 namespace VfxEditor.Parsing {
     public class ParsedFloat3 : ParsedBase {
         public readonly string Name;
-        public Vector3 Value = new(0);
+        public Vector3 Value = new( 0 );
 
-        public ParsedFloat3( string name, Vector3 defaultValue) : this( name ) {
+        public ParsedFloat3( string name, Vector3 defaultValue ) : this( name ) {
             Value = defaultValue;
         }
 

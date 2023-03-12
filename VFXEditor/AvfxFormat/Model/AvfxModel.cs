@@ -71,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/Model";
             NodeView.Draw( id );
             DrawRename( id );
-            ImGui.Text( "Vertices: " +Vertexes.Vertexes.Count + " " + "Indexes: " + Indexes.Indexes.Count );
+            ImGui.Text( "Vertices: " + Vertexes.Vertexes.Count + " " + "Indexes: " + Indexes.Indexes.Count );
             if( ImGui.Button( "Export" + id ) ) {
                 ImGui.OpenPopup( "Save_Popup" + id );
             }

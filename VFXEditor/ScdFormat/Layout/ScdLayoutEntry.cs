@@ -81,7 +81,7 @@ namespace VfxEditor.ScdFormat {
                 AbGroupNumber,
                 Volume
             };
-            
+
             Type.ExtraCommandGenerator = () => {
                 return new ScdLayoutEntryExtraCommand( this );
             };

@@ -52,7 +52,7 @@ namespace VfxEditor.ScdFormat {
     public class ScdSoundEntry : ScdEntry, IScdSimpleUiBase {
         public readonly ParsedByte BusNumber = new( "Bus Number" );
         public readonly ParsedByte Priority = new( "Priority" );
-        public readonly ParsedEnum<SoundType> Type = new( "Type", size:1 );
+        public readonly ParsedEnum<SoundType> Type = new( "Type", size: 1 );
         public readonly ParsedFlag<SoundAttribute> Attributes = new( "Attributes" );
         public readonly ParsedFloat Volume = new( "Volume" );
         public readonly ParsedShort LocalNumber = new( "Local Number" ); // TODO: ushort
@@ -133,7 +133,7 @@ namespace VfxEditor.ScdFormat {
                     ImGui.EndTabItem();
                 }
 
-                if( RoutingEnabled && ImGui.BeginTabItem($"Routing{id}" ) ) {
+                if( RoutingEnabled && ImGui.BeginTabItem( $"Routing{id}" ) ) {
                     RoutingInfo.Draw( $"{id}/Routing" );
                     ImGui.EndTabItem();
                 }

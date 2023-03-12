@@ -33,7 +33,7 @@ namespace VfxEditor.FileManager {
             WriteLocation = writeLocation;
         }
 
-        public FileManagerDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace, string id ) : this( writeLocation, id) {
+        public FileManagerDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace, string id ) : this( writeLocation, id ) {
             Source = source;
             Replace = replace;
             LoadLocal( localPath );
@@ -166,7 +166,7 @@ namespace VfxEditor.FileManager {
         // ====== DRAWING ==========
 
         public void Draw() {
-            if ( Plugin.Configuration.WriteLocationError ) {
+            if( Plugin.Configuration.WriteLocationError ) {
                 ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
                 return;
             }

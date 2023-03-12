@@ -32,11 +32,11 @@ namespace VfxEditor.Select.Rows {
 
         public static ulong ToItemsId( int id1, int id2, int id3, int id4 ) {
             List<byte> bytes = new();
-            bytes.AddRange( BitConverter.GetBytes( (short)id1 ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )id1 ) );
             bytes.AddRange( BitConverter.GetBytes( ( short )id2 ) );
             bytes.AddRange( BitConverter.GetBytes( ( short )id3 ) );
             bytes.AddRange( BitConverter.GetBytes( ( short )id4 ) );
-            return (ulong) BitConverter.ToInt64(bytes.ToArray());
+            return ( ulong )BitConverter.ToInt64( bytes.ToArray() );
         }
     }
 

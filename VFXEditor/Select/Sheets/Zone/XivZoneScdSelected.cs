@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Rows {
             foreach( var bgmSwitch in Plugin.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == zone.BgmId ) ) {
                 var questName = bgmSwitch.Quest.Value?.Name.ToString();
                 var situation = XivBgmQuestSelected.GetBgmSituation( bgmSwitch.BGM );
-                Quests[ string.IsNullOrEmpty(questName) ? Zone.Name : questName ] = situation;
+                Quests[string.IsNullOrEmpty( questName ) ? Zone.Name : questName] = situation;
             }
         }
     }

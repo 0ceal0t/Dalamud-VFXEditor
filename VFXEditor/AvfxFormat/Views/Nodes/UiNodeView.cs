@@ -7,7 +7,7 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public interface IUiNodeView<T> : IAvfxUiBase where T : AvfxNode  {
+    public interface IUiNodeView<T> : IAvfxUiBase where T : AvfxNode {
         public UiNodeGroup<T> GetGroup();
         public string GetDefaultPath();
 

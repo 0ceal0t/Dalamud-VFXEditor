@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Rows {
             Item = item;
             ImcPath = file.FilePath;
 
-            VfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => (int) x.VfxId ).ToList();
+            VfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
         }
 
         public List<string> GetVfxPaths() {

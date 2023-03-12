@@ -18,7 +18,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedFloat Unk3 = new( "Unknown 3" );
         private readonly ParsedFloat Unk4 = new( "Unknown 4" );
-        private readonly TmbOffsetString Path = new( "Path", maxSize:31 );
+        private readonly TmbOffsetString Path = new( "Path", maxSize: 31 );
         private readonly ParsedInt Unk5 = new( "Unknown 1" );
 
         public C010( bool papEmbedded ) : base( papEmbedded ) { }

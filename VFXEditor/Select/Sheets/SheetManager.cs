@@ -45,7 +45,7 @@ namespace VfxEditor.Select {
             public int MinFace;
             public int MaxFace;
 
-            public RaceStruct(string skeletonId, int minFace, int maxFace) {
+            public RaceStruct( string skeletonId, int minFace, int maxFace ) {
                 SkeletonId = skeletonId;
                 MinFace = minFace;
                 MaxFace = maxFace;

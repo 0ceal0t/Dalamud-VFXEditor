@@ -67,7 +67,7 @@ namespace VfxEditor.ScdFormat {
             Version.Write( writer );
             writer.Write( Size );
             NumAcceleration.Write( writer );
-            Reserve1 .Write( writer );
+            Reserve1.Write( writer );
 
             Acceleration.ForEach( x => x.Write( writer ) );
         }

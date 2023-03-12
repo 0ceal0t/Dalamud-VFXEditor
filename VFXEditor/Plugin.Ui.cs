@@ -30,10 +30,10 @@ namespace VfxEditor {
 
             CopyManager.FinalizeAll();
 
-            if ( Configuration.AutosaveEnabled && 
-                 Configuration.AutosaveSeconds > 10 && 
-                 !string.IsNullOrEmpty(CurrentWorkspaceLocation) && 
-                 (DateTime.Now - LastAutoSave).TotalSeconds > Configuration.AutosaveSeconds
+            if( Configuration.AutosaveEnabled &&
+                 Configuration.AutosaveSeconds > 10 &&
+                 !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
+                 ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds
             ) {
                 LastAutoSave = DateTime.Now;
                 SaveWorkspace();

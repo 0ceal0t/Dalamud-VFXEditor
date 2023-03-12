@@ -92,7 +92,7 @@ namespace VfxEditor.TextureFormat {
             FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( !ImportTexture( res, newPath, pngMip: (ushort) PngMip, pngFormat: PngFormat ) ) PluginLog.Error( $"Could not import" );
+                    if( !ImportTexture( res, newPath, pngMip: ( ushort )PngMip, pngFormat: PngFormat ) ) PluginLog.Error( $"Could not import" );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Could not import data" );

@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat {
         public override void Draw( string parentId ) {
             Version.Draw( parentId, CommandManager.Scd );
 
-            for( var idx = 0; idx <  Channels.Count; idx++ ) {
+            for( var idx = 0; idx < Channels.Count; idx++ ) {
                 Channels[idx].Draw( $"{parentId}{idx}" );
             }
         }

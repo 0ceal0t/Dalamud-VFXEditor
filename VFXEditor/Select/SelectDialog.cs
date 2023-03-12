@@ -36,7 +36,7 @@ namespace VfxEditor {
 
         public override bool Equals( object obj ) => obj is SelectResult other && Equals( other );
         public bool Equals( SelectResult p ) => p.Type == Type && p.DisplayString == DisplayString && p.Path == Path;
-        public override int GetHashCode() => ( Type, DisplayString, Path ).GetHashCode();
+        public override int GetHashCode() => (Type, DisplayString, Path).GetHashCode();
         public static bool operator ==( SelectResult lhs, SelectResult rhs ) => lhs.Equals( rhs );
         public static bool operator !=( SelectResult lhs, SelectResult rhs ) => !( lhs == rhs );
 
@@ -70,7 +70,7 @@ namespace VfxEditor {
             OnSelect = onSelect;
 
             RecentTab = new( this, "Recent", recentList );
-            FavoritesTab = new( this, "Favorites", favorites);
+            FavoritesTab = new( this, "Favorites", favorites );
         }
 
         public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
@@ -165,7 +165,7 @@ namespace VfxEditor {
             ImGui.PushFont( UiBuilder.IconFont );
 
             ImGui.Text( $"{( char )FontAwesomeIcon.Star}" );
-            if( ImGui.IsItemClicked()) {
+            if( ImGui.IsItemClicked() ) {
                 if( isFavorite ) RemoveFavorite( selectResult );
                 else AddFavorite( selectResult );
                 res = true;

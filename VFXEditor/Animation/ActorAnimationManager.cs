@@ -39,11 +39,11 @@ namespace VfxEditor.Animation {
 
             // LinkSpeeds = true
             var speed = animation->Speeds[0];
-            for(var i = 0; i < 13; i++) {
+            for( var i = 0; i < 13; i++ ) {
                 animation->Speeds[i] = speed;
             }
 
-            animation->Speeds![(int)AnimationSlots.FullBody] = 1.0f;
+            animation->Speeds![( int )AnimationSlots.FullBody] = 1.0f;
         }
 
         private void ApplyBaseAnimationInternal( ActorMemoryStruct* memory, ushort animationId, bool interrupt, CharacterModes mode, byte modeInput ) {
@@ -70,7 +70,7 @@ namespace VfxEditor.Animation {
             if( ActorToReset == IntPtr.Zero ) return;
             var actor = GetActor();
             if( actor == null ) return; // local player no longer exists
-            if( new IntPtr( actor ).Equals(ActorToReset)) ResetAnimationOverride( actor );
+            if( new IntPtr( actor ).Equals( ActorToReset ) ) ResetAnimationOverride( actor );
         }
 
         private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.ActorAnimationOffset );

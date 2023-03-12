@@ -83,7 +83,7 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( BindPointType );
             Display.Add( BindTargetPointType );
             Display.Add( BinderName );
-            Display.Add( new UiIntCombo( "Bind Point Id", BindPointId, BinderIds) );
+            Display.Add( new UiIntCombo( "Bind Point Id", BindPointId, BinderIds ) );
             Display.Add( GenerateDelay );
             Display.Add( CoordUpdateFrame );
             Display.Add( RingEnable );

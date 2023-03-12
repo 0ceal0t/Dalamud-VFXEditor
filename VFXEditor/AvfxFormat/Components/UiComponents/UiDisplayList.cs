@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace VfxEditor.AvfxFormat{
+namespace VfxEditor.AvfxFormat {
     // Dummy class
 
     public class UiDisplayList : AvfxItem {

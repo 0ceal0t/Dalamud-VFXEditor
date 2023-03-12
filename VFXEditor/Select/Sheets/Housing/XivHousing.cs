@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Rows {
             Icon = item.Item.Value.Icon;
 
             var model = item.ModelKey;
-            SgbPath = $"bgcommon/hou/outdoor/general/{ model.ToString().PadLeft( 4, '0' ) }/asset/gar_b0_m{ model.ToString().PadLeft( 4, '0' ) }.sgb";
+            SgbPath = $"bgcommon/hou/outdoor/general/{model.ToString().PadLeft( 4, '0' )}/asset/gar_b0_m{model.ToString().PadLeft( 4, '0' )}.sgb";
         }
 
         public XivHousing( Lumina.Excel.GeneratedSheets.HousingFurniture item ) {
@@ -23,7 +23,7 @@ namespace VfxEditor.Select.Rows {
             Icon = item.Item.Value.Icon;
 
             var model = item.ModelKey;
-            SgbPath = $"bgcommon/hou/indoor/general/{ model.ToString().PadLeft( 4, '0' ) }/asset/fun_b0_m{ model.ToString().PadLeft( 4, '0' ) }.sgb";
+            SgbPath = $"bgcommon/hou/indoor/general/{model.ToString().PadLeft( 4, '0' )}/asset/fun_b0_m{model.ToString().PadLeft( 4, '0' )}.sgb";
         }
     }
 }

@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -62,9 +63,9 @@ namespace VfxEditor.NodeLibrary {
                 // Main folder item
 
                 ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
-                open = ImGui.TreeNodeEx( $"{uniqueId}", 
-                    ( Editing ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.SpanAvailWidth ) | 
-                    ImGuiTreeNodeFlags.FramePadding | 
+                open = ImGui.TreeNodeEx( $"{uniqueId}",
+                    ( Editing ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.SpanAvailWidth ) |
+                    ImGuiTreeNodeFlags.FramePadding |
                     ImGuiTreeNodeFlags.Framed
                 );
                 DragDrop( library, ref listModified );
@@ -75,6 +76,12 @@ namespace VfxEditor.NodeLibrary {
                     if( ImGui.Selectable( $"Rename{id}" ) ) {
                         EditingName = Name;
                         Editing = true;
+                    }
+                    if( ImGui.Selectable( $"New sub-folder{id}" ) ) {
+                        var newFolder = new AvfxNodeLibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
+                        Add( newFolder );
+                        library.Save();
+                        listModified = true;
                     }
                     if( ImGui.Selectable( $"Delete{id}" ) ) {
                         Cleanup();

@@ -64,7 +64,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw( string parentId ) {
-            
+
         }
     }
 
@@ -116,9 +116,9 @@ namespace VfxEditor.ScdFormat {
             Reserve1.Write( writer );
 
             Filters.ForEach( x => x.Write( writer ) );
-            
-            NumFilters .Write( writer );
-            Reserve2 .Write( writer );
+
+            NumFilters.Write( writer );
+            Reserve2.Write( writer );
         }
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxWorkspaceItem : AvfxSelectableItem, IUiWorkspaceItem {
         public string Renamed;
+
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;
 

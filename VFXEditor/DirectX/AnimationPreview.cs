@@ -35,8 +35,8 @@ namespace VfxEditor.DirectX {
                 new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
             } );
         }
-        
-        public void LoadAnimation( BoneSkinnedMeshGeometry3D boneMesh) {
+
+        public void LoadAnimation( BoneSkinnedMeshGeometry3D boneMesh ) {
             if( boneMesh.Positions.Count == 0 ) {
                 NumVerts = 0;
                 Vertices?.Dispose();

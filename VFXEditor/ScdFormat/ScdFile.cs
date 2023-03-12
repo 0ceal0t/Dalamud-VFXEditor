@@ -151,7 +151,7 @@ namespace VfxEditor.ScdFormat {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
             } );
-            if( ( paddingSubtract % 16 ) > 0 ) paddingSubtract -=  paddingSubtract % 16 ;
+            if( ( paddingSubtract % 16 ) > 0 ) paddingSubtract -= paddingSubtract % 16;
 
             ScdHeader.UpdateFileSize( writer, paddingSubtract ); // end with this
         }

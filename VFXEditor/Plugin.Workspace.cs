@@ -151,7 +151,7 @@ namespace VfxEditor {
             Loading = false;
         }
 
-        private static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) => 
+        private static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) =>
             ( relativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, penumbraPath ), relativeLocation );
 
         private static async void SaveWorkspace() {

@@ -5,6 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxSelectableItem( string avfxName ) : base( avfxName ) { }
 
         public int GetIdx() => Idx;
+
         public void SetIdx( int idx ) { Idx = idx; }
     }
 }

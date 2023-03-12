@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat {
 
             // ==== IMPORTED =====
             var seekTableString = Encoding.ASCII.GetString( BitConverter.GetBytes( SeekTableSize ) );
-            if( seekTableString.EndsWith("vor") ) { // "vorbis"
+            if( seekTableString.EndsWith( "vor" ) ) { // "vorbis"
                 Imported = true;
                 VorbisHeaderData = reader.ReadBytes( 0x35C );
                 OggData = reader.ReadBytes( entry.DataLength + 0x10 );

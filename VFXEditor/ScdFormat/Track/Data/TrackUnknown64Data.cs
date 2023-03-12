@@ -37,7 +37,7 @@ namespace VfxEditor.ScdFormat {
             Version.Draw( parentId, CommandManager.Scd );
             Unk1.Draw( parentId, CommandManager.Scd );
 
-            for( var idx = 0; idx <  Items.Count; idx++ ) {
+            for( var idx = 0; idx < Items.Count; idx++ ) {
                 Items[idx].Draw( $"{parentId}{idx}" );
             }
         }

@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Rows {
         public string RootPath;
         public string Id;
 
-        public XivNpc( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null) { }
+        public XivNpc( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null ) { }
 
         public XivNpc( Lumina.Excel.GeneratedSheets.ModelChara npc, string name ) {
             Name = name;

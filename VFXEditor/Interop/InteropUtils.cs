@@ -27,7 +27,7 @@ namespace VfxEditor.Interop {
                 using var exeProcess = Process.Start( startInfo );
                 exeProcess.WaitForExit();
             }
-            catch (Exception e) {
+            catch( Exception e ) {
                 PluginLog.LogError( e, "Error executing" );
             }
         }

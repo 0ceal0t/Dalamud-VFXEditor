@@ -23,7 +23,7 @@ namespace VfxEditor.Select.Rows {
             Icon = action.Icon;
 
             var selfKey = action.AnimationEnd.Value?.Key.ToString();
-            SelfTmbKey = ( string.IsNullOrEmpty( selfKey ) || selfKey.Contains("[SKL_ID]") ) ? string.Empty : selfKey;
+            SelfTmbKey = ( string.IsNullOrEmpty( selfKey ) || selfKey.Contains( "[SKL_ID]" ) ) ? string.Empty : selfKey;
 
             if( justSelf ) {
                 HitAction = null;

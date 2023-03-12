@@ -38,7 +38,7 @@ namespace VfxEditor.NodeLibrary {
             UiUtils.IconText( FontAwesomeIcon.BookMedical, true );
 
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{ ( char )FontAwesomeIcon.FolderPlus }##NodeLibrary" ) ) {
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.FolderPlus}##NodeLibrary" ) ) {
                 var newFolder = new AvfxNodeLibraryFolder( Root, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
                 Root.Add( newFolder );
                 Save();
@@ -81,17 +81,17 @@ namespace VfxEditor.NodeLibrary {
                 if( payload.NativePtr != null ) {
                     // Move them here
                     if( DraggingItem != destination ) {
-                        if( DraggingItem is AvfxNodeLibraryFolder folderCheck && folderCheck.Contains( destination) ) {
+                        if( DraggingItem is AvfxNodeLibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
                             PluginLog.Log( "Tried to put folder into itself" );
                         }
                         else {
-                            DraggingItem.Parent.Remove( DraggingItem );
+                            DraggingItem.Parent?.Remove( DraggingItem );
                             if( destination is AvfxNodeLibraryFolder folder && !overridePosition ) {
                                 folder.Add( DraggingItem );
                             }
                             else {
                                 var idx = destination.Parent.Children.IndexOf( destination );
-                                if( idx != - 1 ) {
+                                if( idx != -1 ) {
                                     DraggingItem.Parent = destination.Parent;
                                     destination.Parent.Children.Insert( idx, DraggingItem );
                                 }

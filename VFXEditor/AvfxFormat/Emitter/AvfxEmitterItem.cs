@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool OverrideLife = new( "Override Life", "bOvr", defaultValue: false );
         public readonly AvfxInt OverrideLifeValue = new( "Override Life Value", "OvrV", defaultValue: 60 );
         public readonly AvfxInt OverrideLifeRandom = new( "Override Life Random", "OvrR", defaultValue: 0 );
-        public readonly AvfxInt ParameterLink = new( "Parameter Link","PrLk", defaultValue: -1 );
+        public readonly AvfxInt ParameterLink = new( "Parameter Link", "PrLk", defaultValue: -1 );
         public readonly AvfxInt StartFrame = new( "Start Frame", "StFr", defaultValue: 0 );
         public readonly AvfxBool StartFrameNullUpdate = new( "Start Frame Null Update", "bStN", defaultValue: false );
         public readonly AvfxFloat ByInjectionAngleX = new( "By Injection Angle X", "BIAX", defaultValue: 0 );

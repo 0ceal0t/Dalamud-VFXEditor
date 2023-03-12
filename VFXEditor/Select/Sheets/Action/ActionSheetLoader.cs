@@ -12,13 +12,13 @@ namespace VfxEditor.Select.Sheets {
             foreach( var item in sheet ) {
                 var actionItem = new XivAction( item, false );
                 if( actionItem.HasVfx ) Items.Add( actionItem );
-                if( actionItem.HitAction != null )  Items.Add( actionItem.HitAction );
+                if( actionItem.HitAction != null ) Items.Add( actionItem.HitAction );
             }
         }
 
         public override bool SelectItem( XivAction item, out XivActionSelected selectedItem ) {
             selectedItem = null;
-            if( string.IsNullOrEmpty( item.SelfTmbKey) ) { // no need to get the file
+            if( string.IsNullOrEmpty( item.SelfTmbKey ) ) { // no need to get the file
                 selectedItem = new XivActionSelected( null, item );
                 return true;
             }
@@ -30,7 +30,7 @@ namespace VfxEditor.Select.Sheets {
                     selectedItem = new XivActionSelected( Plugin.DataManager.GetFile( tmbPath ), item );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Error reading TMB " + tmbPath);
+                    PluginLog.Error( e, "Error reading TMB " + tmbPath );
                     return false;
                 }
             }

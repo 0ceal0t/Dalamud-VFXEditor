@@ -75,7 +75,7 @@ namespace VfxEditor.Utils {
             ImGui.PushStyleColor( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
             ImGui.PushStyleColor( ImGuiCol.ButtonActive, new Vector4( 0 ) );
             var ret = ColorButton( label, new Vector4( 0 ), false );
-            ImGui.PopStyleColor(3);
+            ImGui.PopStyleColor( 3 );
             return ret;
         }
 
@@ -186,8 +186,8 @@ namespace VfxEditor.Utils {
 
         private static readonly Random random = new();
 
-        public static string RandomString( int length ) => 
-            new( Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[ random.Next( x.Length ) ] ).ToArray() );
+        public static string RandomString( int length ) =>
+            new( Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[random.Next( x.Length )] ).ToArray() );
 
         public static float GetWindowContentRegionWidth() => ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
 

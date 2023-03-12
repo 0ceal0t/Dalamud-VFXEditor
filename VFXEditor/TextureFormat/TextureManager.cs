@@ -70,7 +70,7 @@ namespace VfxEditor.TextureFormat {
             TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
             TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
             PluginLog.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
-            PluginLog.Log( $"NVTT Library loaded: { TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
+            PluginLog.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
 
         public TextureManager() : base( "Imported Textures", false, 600, 400 ) { }
@@ -160,7 +160,7 @@ namespace VfxEditor.TextureFormat {
             return false;
         }
 
-        private bool ReplaceAndRefreshTexture(TextureReplace data, string path) {
+        private bool ReplaceAndRefreshTexture( TextureReplace data, string path ) {
             // if there is already a replacement for the same file, delete the old file
             RemoveReplaceTexture( path );
             if( !PathToTextureReplace.TryAdd( path, data ) ) return false;
@@ -227,7 +227,7 @@ namespace VfxEditor.TextureFormat {
         public bool GetPreviewTexture( string path, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( path, out data );
 
         public bool CreatePreviewTexture( string path, out PreviewTexture ret, bool loadImage = true ) {
-            var result = Plugin.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path) ;
+            var result = Plugin.DataManager.FileExists( path ) || PathToTextureReplace.ContainsKey( path );
             ret = new PreviewTexture();
             if( result ) {
                 try {

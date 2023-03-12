@@ -128,7 +128,7 @@ namespace VfxEditor.AvfxFormat {
                             }
                         }
                     }
-                    
+
                     // Box selection [Right-click, drag, then left-click]
                     if( ImPlot.IsPlotSelected() ) {
                         var selection = ImPlot.GetPlotSelection();
@@ -278,7 +278,7 @@ namespace VfxEditor.AvfxFormat {
                 if( p.DisplayX > Math.Round( time ) ) break;
                 insertIdx++;
             }
-            var newKey = new AvfxCurveKey( KeyType.Linear, ( int ) Math.Round( time ), x, y, z );
+            var newKey = new AvfxCurveKey( KeyType.Linear, ( int )Math.Round( time ), x, y, z );
             Keys.Insert( insertIdx, newKey );
             Points.Insert( insertIdx, new UiCurveEditorPoint( this, newKey, Type ) );
         }

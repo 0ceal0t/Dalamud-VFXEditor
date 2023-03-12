@@ -178,10 +178,10 @@ namespace VfxEditor.AvfxFormat {
                 var itemPosBase = new Vector2( contentMin.X, contentMin.Y + i * ItemHeight );
                 var itemPos = new Vector2( contentMin.X + 3, contentMin.Y + i * ItemHeight + 2 );
 
-                var overCheck = CheckBox( drawList, itemPos, IsEnabled(item) );
+                var overCheck = CheckBox( drawList, itemPos, IsEnabled( item ) );
                 var text = item.GetText().Length < 22 ? item.GetText() : item.GetText()[..19] + "...";
-                var textColor = item == Selected ? UiUtils.YELLOW_COLOR : new Vector4(1);
-                drawList.AddText( itemPos + new Vector2(25, -1), ImGui.GetColorU32(textColor), text );
+                var textColor = item == Selected ? UiUtils.YELLOW_COLOR : new Vector4( 1 );
+                drawList.AddText( itemPos + new Vector2( 25, -1 ), ImGui.GetColorU32( textColor ), text );
                 if( !newItemAdded && overCheck && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
                     ignoreSelected = true;
                     Toggle( item );
@@ -194,7 +194,7 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 if( !newItemAdded && !ignoreSelected && UiUtils.Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
-                    if( UiUtils.MouseClicked()  ) Selected = item; // Select from left side
+                    if( UiUtils.MouseClicked() ) Selected = item; // Select from left side
                     if( UiUtils.DoubleClicked() ) OnDoubleClick( item );
                 }
             }
@@ -220,7 +220,7 @@ namespace VfxEditor.AvfxFormat {
             DrawVerticalLine( frameMax );
 
             if( Selected != null ) {
-                drawList.AddRectFilled( 
+                drawList.AddRectFilled(
                     new Vector2( contentMin.X, contentMin.Y + ItemHeight * Selected.GetIdx() ),
                     new Vector2( contentMin.X + canvasSize.X, contentMin.Y + ItemHeight * ( Selected.GetIdx() + 1 ) ),
                     0x8003BAFC,
@@ -286,7 +286,7 @@ namespace VfxEditor.AvfxFormat {
                         if( UiUtils.MouseClicked() && !MovingScrollBar ) {
                             MovingEntry = item;
                             MovingMousePos = cursorX;
-                            MovingPart = (MovingType) j + 1;
+                            MovingPart = ( MovingType )j + 1;
                             MovingStart = GetStart( MovingEntry );
                             MovingEnd = GetEnd( MovingEntry );
                             break;
@@ -484,7 +484,7 @@ namespace VfxEditor.AvfxFormat {
             var overDelete = UiUtils.MouseOver( pos, posMax );
             var deleteColor = overDelete ? 0xFF1080FF : 0xFFBBBBBB;
             drawList.AddRect( pos, posMax, deleteColor, 4 );
-            if( on ) drawList.AddRectFilled( pos + new Vector2(2), posMax - new Vector2(2), deleteColor, 4 );
+            if( on ) drawList.AddRectFilled( pos + new Vector2( 2 ), posMax - new Vector2( 2 ), deleteColor, 4 );
             return overDelete;
         }
     }

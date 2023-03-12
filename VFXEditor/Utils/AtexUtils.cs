@@ -125,45 +125,45 @@ namespace VfxEditor.Utils {
 
             switch( format ) {
                 case TextureFormat.TextureFormat.A8R8G8B8: {
-                    const uint dwRGBBitCount = 32;
-                    header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
-                    const uint dwRBitMask = 16711680;
-                    header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
-                    const uint dwGBitMask = 65280;
-                    header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
-                    const uint dwBBitMask = 255;
-                    header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
-                    const uint dwABitMask = 4278190080;
-                    header.AddRange( BitConverter.GetBytes( dwABitMask ) );
-                    const uint dwCaps = 4096;
-                    header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                    var blank1 = new byte[16];
-                    header.AddRange( blank1 );
+                        const uint dwRGBBitCount = 32;
+                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
+                        const uint dwRBitMask = 16711680;
+                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
+                        const uint dwGBitMask = 65280;
+                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
+                        const uint dwBBitMask = 255;
+                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
+                        const uint dwABitMask = 4278190080;
+                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
+                        const uint dwCaps = 4096;
+                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
+                        var blank1 = new byte[16];
+                        header.AddRange( blank1 );
 
-                    break;
+                        break;
                     }
                 case TextureFormat.TextureFormat.A8: {
-                    const uint dwRGBBitCount = 8;
-                    header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
-                    const uint dwRBitMask = 0;
-                    header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
-                    const uint dwGBitMask = 0;
-                    header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
-                    const uint dwBBitMask = 0;
-                    header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
-                    const uint dwABitMask = 255;
-                    header.AddRange( BitConverter.GetBytes( dwABitMask ) );
-                    const uint dwCaps = 4096;
-                    header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                    var blank1 = new byte[16];
-                    header.AddRange( blank1 );
-                    break;
+                        const uint dwRGBBitCount = 8;
+                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
+                        const uint dwRBitMask = 0;
+                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
+                        const uint dwGBitMask = 0;
+                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
+                        const uint dwBBitMask = 0;
+                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
+                        const uint dwABitMask = 255;
+                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
+                        const uint dwCaps = 4096;
+                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
+                        var blank1 = new byte[16];
+                        header.AddRange( blank1 );
+                        break;
                     }
                 default: {
-                    var blank1 = new byte[40];
-                    header.AddRange( blank1 );
-                    break;
-                }
+                        var blank1 = new byte[40];
+                        header.AddRange( blank1 );
+                        break;
+                    }
             }
 
             if( depth > 1 ) {

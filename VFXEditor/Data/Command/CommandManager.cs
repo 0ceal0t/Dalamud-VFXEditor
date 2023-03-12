@@ -25,11 +25,11 @@ namespace VfxEditor {
             Copy = copy;
         }
 
-        public void Add(ICommand command) {
+        public void Add( ICommand command ) {
             var numberToRemove = CommandBuffer.Count - 1 - CommandIndex; // when a change is made, wipes out the previous undo
-            if (numberToRemove > 0 ) CommandBuffer.RemoveRange( CommandBuffer.Count - numberToRemove, numberToRemove );
+            if( numberToRemove > 0 ) CommandBuffer.RemoveRange( CommandBuffer.Count - numberToRemove, numberToRemove );
 
-            CommandBuffer.Add(command);
+            CommandBuffer.Add( command );
             while( CommandBuffer.Count > Max ) CommandBuffer.RemoveAt( 0 );
             CommandIndex = CommandBuffer.Count - 1;
             command.Execute();

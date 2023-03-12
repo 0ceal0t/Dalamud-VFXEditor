@@ -25,9 +25,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         // int (0)
         // * count
-            // float short short int int (0x10)
+        // float short short int int (0x10)
         // * count
-            // float float float int int int (0x18)
+        // float float float int int int (0x18)
         // float float float int int (0x14)
 
         public Tmfc( bool papEmbedded ) : base( papEmbedded ) { }

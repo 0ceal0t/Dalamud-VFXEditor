@@ -124,8 +124,8 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Draw( string id ) {
-            if( ImGui.BeginTabBar($"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton) ) {
-                if( ImGui.BeginTabItem($"Parameters{id}")) {
+            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
                     ModelId.Draw( id, CommandManager.Pap );
                     ModelType.Draw( id, CommandManager.Pap );
                     Variant.Draw( id, CommandManager.Pap );

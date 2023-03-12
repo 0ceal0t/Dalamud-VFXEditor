@@ -6,7 +6,7 @@ namespace VfxEditor {
         private readonly List<ICommand> Commands = new();
         private readonly bool ReverseRedo;
         private readonly bool ReverseUndo;
-        
+
         public CompoundCommand( bool reverseRedo, bool reverseUndo ) {
             ReverseRedo = reverseRedo;
             ReverseUndo = reverseUndo;

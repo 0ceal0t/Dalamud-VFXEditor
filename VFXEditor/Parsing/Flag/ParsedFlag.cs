@@ -2,10 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using VfxEditor.AvfxFormat;
-using VfxEditor.Data;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFlag<T> : ParsedBase where T : Enum {
@@ -57,7 +53,7 @@ namespace VfxEditor.Parsing {
                 var intFlagValue = ( int )( object )option;
                 if( intFlagValue == 0 ) continue;
                 var hasFlag = Value.HasFlag( option );
-                if( ImGui.Checkbox($"{option}{id}", ref hasFlag ) ) {
+                if( ImGui.Checkbox( $"{option}{id}", ref hasFlag ) ) {
                     var intValue = ( int )( object )Value;
                     if( hasFlag ) intValue |= intFlagValue;
                     else intValue &= ~intFlagValue;

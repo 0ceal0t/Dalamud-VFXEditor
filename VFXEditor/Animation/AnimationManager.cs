@@ -33,7 +33,7 @@ namespace VfxEditor.Animation {
                     file.SaveHavokData( SklHkxTemp );
                     HavokInterop.HavokToBin( animationHkx, animationIndex, SklHkxTemp, BinTemp );
                     Data = new AnimationData( BinTemp );
-                    Plugin.DirectXManager.AnimationPreview.LoadAnimation( Data.GetBoneMesh( 0) );
+                    Plugin.DirectXManager.AnimationPreview.LoadAnimation( Data.GetBoneMesh( 0 ) );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, $"Could not read file: {sklbPath}" );
@@ -58,13 +58,13 @@ namespace VfxEditor.Animation {
 
                 if( ImGui.Button( "Load Animation" ) ) {
                     Playing = false;
-                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType) );
+                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType ) );
                 }
 
                 return;
             }
 
-            if (ImGui.Button( "Refresh") ) {
+            if( ImGui.Button( "Refresh" ) ) {
                 Playing = false;
                 Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType ) );
             }
@@ -95,7 +95,7 @@ namespace VfxEditor.Animation {
             ImGui.PushFont( UiBuilder.IconFont );
 
             ImGui.SameLine();
-            if( ImGui.Button(Playing ? $"{( char )FontAwesomeIcon.Stop}" : $"{( char )FontAwesomeIcon.Play}" ) ) Playing = !Playing;
+            if( ImGui.Button( Playing ? $"{( char )FontAwesomeIcon.Stop}" : $"{( char )FontAwesomeIcon.Play}" ) ) Playing = !Playing;
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );

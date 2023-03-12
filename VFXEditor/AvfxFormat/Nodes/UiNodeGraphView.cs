@@ -103,11 +103,11 @@ namespace VfxEditor.AvfxFormat {
                 //DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
                 //DrawList.AddRectFilled( Pos, Pos + HeaderSize, node.GraphColor, 5, ImDrawFlags.RoundCornersTop );
 
-                DrawList.AddText( Pos + TextOffset, TextColor, TrimText(node.GetText()) );
+                DrawList.AddText( Pos + TextOffset, TextColor, TrimText( node.GetText() ) );
                 //DrawList.AddText( ImGui.GetFont(), TextSize, Pos + TextOffset, TextColor, node.GetText() );
 
                 var buttonPos = Pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
-                var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ));
+                var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );
 
                 DrawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Share}" );
                 if( buttonOver && UiUtils.MouseClicked() ) {

@@ -10,7 +10,7 @@ using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxBase  {
+    public abstract class AvfxBase {
         protected readonly string AvfxName;
         protected bool Assigned = true;
 

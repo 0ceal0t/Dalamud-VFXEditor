@@ -30,7 +30,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Value = Encoding.ASCII.GetString( reader.ReadBytes( size ) );
-            InputString = (Value ?? "").Trim( '\0' );
+            InputString = ( Value ?? "" ).Trim( '\0' );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }

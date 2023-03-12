@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Rows {
             if( loadType == 2 ) return new XivEmotePapItem( XivEmotePapType.PerJob, key );
             else if( loadType == 1 ) return new XivEmotePapItem( XivEmotePapType.Normal, key );
             else if( loadType == 0 ) {
-                if( key.StartsWith( "facial/pose/" ) )return new XivEmotePapItem( XivEmotePapType.Facial, key.Replace( "facial/pose/", "" ) );
+                if( key.StartsWith( "facial/pose/" ) ) return new XivEmotePapItem( XivEmotePapType.Facial, key.Replace( "facial/pose/", "" ) );
                 return new XivEmotePapItem( XivEmotePapType.Normal, key );
             }
 

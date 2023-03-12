@@ -22,7 +22,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void PickActors( TmbReader reader ) {
-            Actors.AddRange(reader.Pick<Tmac>( TempIds ));
+            Actors.AddRange( reader.Pick<Tmac>( TempIds ) );
         }
     }
 }

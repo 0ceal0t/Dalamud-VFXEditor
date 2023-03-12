@@ -98,7 +98,7 @@ namespace VfxEditor.FileManager {
         }
 
         private void CheckKeybinds() {
-            if( !ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows) ) return;
+            if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
             if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentWindow.Show();
             if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
             ActiveDocument?.CheckKeybinds();

@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.PushFont( UiBuilder.IconFont );
 
             // Delete
-            if( UiUtils.RemoveButton( $"{(char)FontAwesomeIcon.Trash}{id}" ) ) {
+            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Editor.Keys.Remove( Key );
                     Editor.Points.Remove( this );

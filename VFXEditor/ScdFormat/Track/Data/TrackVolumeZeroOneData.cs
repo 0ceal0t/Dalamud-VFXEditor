@@ -39,7 +39,7 @@ namespace VfxEditor.ScdFormat {
         public override void Draw( string parentId ) {
             Version.Draw( parentId, CommandManager.Scd );
 
-            for( var idx = 0; idx <  Points.Count; idx++ ) {
+            for( var idx = 0; idx < Points.Count; idx++ ) {
                 Points[idx].Draw( $"{parentId}{idx}" );
             }
         }

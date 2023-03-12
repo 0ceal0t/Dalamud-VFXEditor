@@ -41,7 +41,7 @@ namespace VfxEditor.TmbFormat {
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
             writer.WriteOffsetTimeline( Entries );
-            if ( !UseUnknownExtra ) writer.Write( 0 );
+            if( !UseUnknownExtra ) writer.Write( 0 );
             else {
                 writer.WriteExtra( ( binaryWriter ) => {
                     binaryWriter.Write( 8 );
@@ -109,7 +109,7 @@ namespace VfxEditor.TmbFormat {
                     if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
                         var type = entryOption.Type;
                         var constructor = type.GetConstructor( new Type[] { typeof( bool ) } );
-                        var newEntry = (TmbEntry) constructor.Invoke( new object[] { PapEmbedded } );
+                        var newEntry = ( TmbEntry )constructor.Invoke( new object[] { PapEmbedded } );
 
                         var idx = Entries.Count == 0 ? 0 : entriesMaster.IndexOf( Entries.Last() ) + 1;
                         CompoundCommand command = new( false, true );

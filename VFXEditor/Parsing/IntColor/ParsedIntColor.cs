@@ -6,7 +6,7 @@ using System.IO;
 namespace VfxEditor.Parsing {
     public class ParsedIntColor : ParsedBase {
         public readonly string Name;
-        public Vector4 Value = new(0);
+        public Vector4 Value = new( 0 );
 
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;

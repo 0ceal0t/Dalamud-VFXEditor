@@ -109,7 +109,7 @@ namespace VfxEditor.Tracker {
             }
 
             // Setup the matrix
-            var matrix = GetMatrix(out var width, out var height);
+            var matrix = GetMatrix( out var width, out var height );
 
             var vfxsWithoutActor = new List<StaticVfxGroup>(); // static vfxs without an actor
             var actorIdToVfxPath = new Dictionary<int, HashSet<VfxDisplayItem>>(); // either one with an actor
@@ -244,7 +244,7 @@ namespace VfxEditor.Tracker {
 
         private static float Distance( Vector3 p1, SharpDX.Vector3 p2 ) => ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
 
-        private static SharpDX.Matrix GetMatrix(out float width, out float height) {
+        private static SharpDX.Matrix GetMatrix( out float width, out float height ) {
             // Setup the matrix
             var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
             var viewProjectionMatrix = new SharpDX.Matrix();

@@ -19,10 +19,10 @@ namespace VfxEditor.AvfxFormat {
             Emitters = new UiNodeGroup<AvfxEmitter>( main.Emitters );
             Textures = new UiNodeGroup<AvfxTexture>( main.Textures );
             Models = new UiNodeGroup<AvfxModel>( main.Models );
-            Particles = new UiNodeGroup<AvfxParticle> ( main.Particles );
+            Particles = new UiNodeGroup<AvfxParticle>( main.Particles );
             Binders = new UiNodeGroup<AvfxBinder>( main.Binders );
             Timelines = new UiNodeGroup<AvfxTimeline>( main.Timelines );
-            Schedulers = new UiNodeGroup<AvfxScheduler> ( main.Schedulers );
+            Schedulers = new UiNodeGroup<AvfxScheduler>( main.Schedulers );
 
             AllGroups = new() {
                 Binders,
@@ -97,7 +97,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void UpdateIdx() {
-            for( var i = 0; i < Items.Count; i++ ) Items[i].SetIdx(i);
+            for( var i = 0; i < Items.Count; i++ ) Items[i].SetIdx( i );
         }
 
         public void TriggerOnChange() => OnChange?.Invoke();

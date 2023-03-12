@@ -138,8 +138,8 @@ namespace VfxEditor.AvfxFormat {
                 for( var idx = 0; idx < Selected.Count; idx++ ) copy.Ints[$"{Name}_{idx}"] = Literal.GetValue()[idx];
             }
             if( copy.IsPasting ) {
-                for(var idx = 0; idx < Selected.Count; idx++ ) {
-                    if (copy.Ints.TryGetValue("", out var val ) ) {
+                for( var idx = 0; idx < Selected.Count; idx++ ) {
+                    if( copy.Ints.TryGetValue( "", out var val ) ) {
                         var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                         copy.PasteCommand.Add( new UiNodeSelectListCommand<T>( this, newSelected, idx ) );
                     }

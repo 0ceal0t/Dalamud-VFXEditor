@@ -121,7 +121,7 @@ namespace VfxEditor {
 
         public static bool DownState() => CheckState( VirtualKey.DOWN );
 
-        public static bool NavigateUpDown<T>(List<T> items, T selected, out T newSelected) where T : class {
+        public static bool NavigateUpDown<T>( List<T> items, T selected, out T newSelected ) where T : class {
             newSelected = selected;
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return false;
             if( items == null ) return false;
@@ -140,12 +140,12 @@ namespace VfxEditor {
             var idx = items.IndexOf( selected );
             if( idx == -1 ) return false;
 
-            if (up) {
+            if( up ) {
                 if( idx == 0 ) return false; // alread the first item
                 newSelected = items[idx - 1];
                 return true;
             }
-            else if (down) {
+            else if( down ) {
                 if( idx == ( items.Count - 1 ) ) return false; // already at the end
                 newSelected = items[idx + 1];
                 return true;

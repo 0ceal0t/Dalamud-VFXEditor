@@ -21,7 +21,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw( string parentId ) {
-            
+
         }
     }
 }

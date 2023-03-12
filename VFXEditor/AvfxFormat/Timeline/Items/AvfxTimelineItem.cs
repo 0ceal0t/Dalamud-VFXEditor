@@ -78,9 +78,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override string GetDefaultText() {
-            if(EmitterIdx.GetValue() != -1 ) return EmitterSelect.GetText();
+            if( EmitterIdx.GetValue() != -1 ) return EmitterSelect.GetText();
 
-            if(ClipIdx.IsAssigned() && ClipIdx.GetValue() != -1 ) {
+            if( ClipIdx.IsAssigned() && ClipIdx.GetValue() != -1 ) {
                 if( ClipIdx.GetValue() < Timeline.Clips.Count ) return Timeline.Clips[ClipIdx.GetValue()].GetText();
                 return $"Clip {ClipIdx.GetValue()}";
             }

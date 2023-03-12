@@ -110,7 +110,7 @@ namespace ImGuiFileDialog {
 
         private void DrawPathComposer() {
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{ ( PathInputActivated ? ( char )FontAwesomeIcon.Times : ( char )FontAwesomeIcon.Edit )}" ) ) {
+            if( ImGui.Button( $"{( PathInputActivated ? ( char )FontAwesomeIcon.Times : ( char )FontAwesomeIcon.Edit )}" ) ) {
                 PathInputActivated = !PathInputActivated;
             }
             ImGui.PopFont();

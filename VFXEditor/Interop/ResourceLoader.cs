@@ -134,7 +134,7 @@ namespace VfxEditor.Interop {
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
 
-            if (Plugin.Configuration?.LogVfxDebug == true) PluginLog.Log( $"New Static: {vfxPath} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {vfxPath} {vfx:X8}" );
 
             return vfx;
         }
@@ -356,7 +356,7 @@ namespace VfxEditor.Interop {
 
         private static bool ProcessPenumbraPath( string path, out string outPath ) {
             outPath = path;
-            if( !path.StartsWith("|") ) return false;
+            if( !path.StartsWith( "|" ) ) return false;
 
             var split = path.Split( "|" );
             if( split.Length != 3 ) return false;
@@ -402,7 +402,7 @@ namespace VfxEditor.Interop {
                 InteropUtils.WritePapIds( gameResource, papIds );
             }
 
-            if( string.IsNullOrEmpty( localPath  ) ) return;
+            if( string.IsNullOrEmpty( localPath ) ) return;
 
             var localGameResource = GetResource( gamePath, false ); // get local path resource
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, localGameResource.ToString( "X8" ) );

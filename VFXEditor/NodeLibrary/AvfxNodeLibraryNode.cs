@@ -3,6 +3,7 @@ using System.Numerics;
 using System.IO;
 using ImGuiNET;
 using VfxEditor.Utils;
+using Dalamud.Interface;
 
 namespace VfxEditor.NodeLibrary {
     public class AvfxNodeLibraryNode : AvfxNodeLibraryGeneric {
@@ -54,10 +55,15 @@ namespace VfxEditor.NodeLibrary {
             if( open ) {
                 ImGui.Indent();
 
-                if( UiUtils.DisabledButton( $"Import{id}", Plugin.AvfxManager.CurrentFile != null ) ) Plugin.AvfxManager.Import( Path );
+                ImGui.PushFont( UiBuilder.IconFont );
+                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
+
+                if( UiUtils.DisabledButton( $"{( char )FontAwesomeIcon.Download}{id}", Plugin.AvfxManager.CurrentFile != null ) ) {
+                    Plugin.AvfxManager.Import( Path );
+                }
 
                 ImGui.SameLine();
-                if( ImGui.Button( Editing ? $"Save{id}" : $"Edit{id}" ) ) {
+                if( ImGui.Button( Editing ? $"{( char )FontAwesomeIcon.Save}{id}" : $"{( char )FontAwesomeIcon.Edit}{id}" ) ) {
                     Editing = !Editing;
                     if( !Editing ) { // done editing
                         library.Save();
@@ -65,12 +71,15 @@ namespace VfxEditor.NodeLibrary {
                     }
                 }
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"Delete{id}" ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     Cleanup();
                     Parent.Remove( this );
                     library.Save();
                     listModified = true;
                 }
+
+                ImGui.PopStyleVar( 1 );
+                ImGui.PopFont();
 
                 if( !Editing ) {
                     if( string.IsNullOrEmpty( Description ) ) ImGui.TextDisabled( "No description" );

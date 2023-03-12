@@ -63,8 +63,8 @@ namespace VfxEditor.ScdFormat {
             Parsed.ForEach( x => x.Draw( id, CommandManager.Scd ) );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            if( ImGui.BeginTabBar($"{id}/Tabs" ) ) {
-                if( ImGui.BeginTabItem($"Result{id}") ) {
+            if( ImGui.BeginTabBar( $"{id}/Tabs" ) ) {
+                if( ImGui.BeginTabItem( $"Result{id}" ) ) {
                     ResultFirst.Draw( $"{id}/Result" );
                     ImGui.EndTabItem();
                 }

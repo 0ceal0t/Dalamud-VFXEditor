@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Rows {
         public bool HasSubModel;
         public XivWeapon SubItem = null;
 
-        public XivWeapon( Lumina.Excel.GeneratedSheets.Item item ) : base(item) {
+        public XivWeapon( Lumina.Excel.GeneratedSheets.Item item ) : base( item ) {
             HasSubModel = ( SecondaryIds.Id1 != 0 );
 
             RootPath = $"chara/weapon/w" + Ids.Id.ToString().PadLeft( 4, '0' ) + "/obj/body/b" + Ids.WeaponBody.ToString().PadLeft( 4, '0' ) + "/";

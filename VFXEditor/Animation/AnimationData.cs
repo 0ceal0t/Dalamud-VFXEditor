@@ -33,7 +33,7 @@ namespace VfxEditor.Animation {
             var numTracks = reader.ReadInt32();
             for( var trackIdx = 0; trackIdx < numTracks; trackIdx++ ) {
                 var boneIdx = reader.ReadInt16();
-                if (boneIdx > 0) {
+                if( boneIdx > 0 ) {
                     BoneTrack[boneIdx] = trackIdx;
                 }
             }
@@ -72,7 +72,7 @@ namespace VfxEditor.Animation {
             return Matrix.AffineTransformation( scaleX, rot, pos );
         }
 
-        public BoneSkinnedMeshGeometry3D GetBoneMesh(int frame) {
+        public BoneSkinnedMeshGeometry3D GetBoneMesh( int frame ) {
             List<Matrix> bindPoses = new();
 
             for( var idx = 0; idx < BoneParents.Count; idx++ ) {
@@ -81,7 +81,7 @@ namespace VfxEditor.Animation {
 
             for( var target = 0; target < BoneParents.Count; target++ ) {
                 var current = target;
-                while ( current >= 0 ) {
+                while( current >= 0 ) {
                     var targetPose = bindPoses[target];
 
                     var trackIdx = BoneTrack[current];
@@ -96,7 +96,7 @@ namespace VfxEditor.Animation {
             List<Bone> bones = new();
             for( var idx = 0; idx < BoneParents.Count; idx++ ) {
                 bones.Add( new Bone {
-                    BindPose = CleanMatrix( bindPoses[idx]),
+                    BindPose = CleanMatrix( bindPoses[idx] ),
                     ParentIndex = BoneParents[idx]
                 } );
             }
@@ -149,12 +149,12 @@ namespace VfxEditor.Animation {
                     var length = ( endPos - startPos ).Length();
                     boneScale[i] = length;
                     if( length > boneScale[parent] ) boneScale[parent] = length;
-                    
+
                 }
             }
             for( var i = 0; i < bones.Count; i++ ) {
                 var scale = boneScale[i];
-                boneScale[i] = scale == -1 ? 0.02f : (float) (Math.Sqrt( scale ) / 15f);
+                boneScale[i] = scale == -1 ? 0.02f : ( float )( Math.Sqrt( scale ) / 15f );
             }
 
             for( var i = 0; i < bones.Count; ++i ) {

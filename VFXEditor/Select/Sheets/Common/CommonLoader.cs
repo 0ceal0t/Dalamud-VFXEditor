@@ -23,7 +23,7 @@ namespace VfxEditor.Select.Sheets {
                 new XivCommon( 13, "vfx/common/eff/m7004sp_05d0t.avfx", "Earthen Fury", 2705 ),
                 new XivCommon( 14, "vfx/common/eff/m7005sp_32d0t.avfx", "Slipstream", 2716 ),
                 new XivCommon( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
-            });
+            } );
 
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) Items.Add( new XivCommon( item ) );

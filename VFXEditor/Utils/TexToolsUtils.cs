@@ -40,7 +40,7 @@ namespace VfxEditor.Utils {
                     break;
                 case "bg":
                     simple.DatFile = "02";
-                    if( split[1] == "ffxiv" )simple.DatFile += "0000";
+                    if( split[1] == "ffxiv" ) simple.DatFile += "0000";
                     else { // bg/ex1/03_abr_a2/dun/a2d1/texture/a2d1_b0_silv02_n.tex
                         simple.DatFile += split[1].Replace( "ex", "" ).PadLeft( 2, '0' ); // expansion
                         simple.DatFile += split[2].Split( '_' )[0].PadLeft( 2, '0' ); // zone

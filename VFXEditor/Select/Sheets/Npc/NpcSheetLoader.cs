@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Sheets {
 
             var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
 
-            foreach( var entry in baseToName  ) {
+            foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.bnpcName, out var name ) ) continue;
                 var bnpcRow = battleNpcSheet.GetRow( entry.bnpcBase );
                 if( bnpcRow == null || bnpcRow.ModelChara.Value == null || bnpcRow.ModelChara.Value.Model == 0 ) continue;

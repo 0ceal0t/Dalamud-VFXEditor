@@ -19,9 +19,9 @@ namespace VfxEditor.Parsing {
             Options = options;
         }
 
-        private static T ToEnum( int value ) => ( T )(object)value;
+        private static T ToEnum( int value ) => ( T )( object )value;
 
-        private static int ToInt( T value ) => ( int )(object)value;
+        private static int ToInt( T value ) => ( int )( object )value;
 
         public override void Draw( string id, CommandManager manager ) {
             // Copy/Paste - same as regular int

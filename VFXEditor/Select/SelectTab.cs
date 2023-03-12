@@ -94,7 +94,7 @@ namespace VfxEditor {
         }
     }
 
-    public abstract class SelectTab<T,S> : SelectTab<T> where T : class where S : class {
+    public abstract class SelectTab<T, S> : SelectTab<T> where T : class where S : class {
         protected S Loaded;
         private readonly SheetLoader<T, S> Loader;
 

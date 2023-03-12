@@ -106,7 +106,7 @@ namespace VfxEditor.ScdFormat {
             Reset();
             try {
                 var stream = Entry.Data.GetStream();
-                PluginLog.Log($"Playing @ {stream.WaveFormat.SampleRate} / {stream.WaveFormat.BitsPerSample}");
+                PluginLog.Log( $"Playing @ {stream.WaveFormat.SampleRate} / {stream.WaveFormat.BitsPerSample}" );
 
                 CurrentStream = stream.WaveFormat.Encoding switch {
                     WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),

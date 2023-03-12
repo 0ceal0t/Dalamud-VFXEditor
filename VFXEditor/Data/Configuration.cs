@@ -149,7 +149,7 @@ namespace VfxEditor {
             if( ImGui.Checkbox( $"Log debug information{id}", ref LogDebug ) ) Save();
             if( ImGui.Checkbox( $"Log Vfx debug information{id}", ref LogVfxDebug ) ) Save();
 
-            if( ImGui.Checkbox( $"Autosave Workspace{id}", ref AutosaveEnabled ) ) Save();
+            if( ImGui.Checkbox( $"Autosave workspace{id}", ref AutosaveEnabled ) ) Save();
             ImGui.Indent();
             if( !AutosaveEnabled ) {
                 var style = ImGui.GetStyle();

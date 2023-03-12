@@ -44,7 +44,7 @@ namespace VfxEditor.TmbFormat {
             HeaderTmpp = new Tmpp( reader, papEmbedded );
             HeaderTmal = new Tmal( reader, papEmbedded );
 
-            for(var i = 0; i < numEntries - (HeaderTmpp.IsAssigned ? 3 : 2); i++ ) {
+            for( var i = 0; i < numEntries - ( HeaderTmpp.IsAssigned ? 3 : 2 ); i++ ) {
                 reader.ParseItem( Actors, Tracks, Entries, Tmfcs, papEmbedded, ref Verified );
             }
 

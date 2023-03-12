@@ -295,26 +295,26 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
 
         public static bool IsCompressed( DXGIFormat format ) {
             return format switch {
-                DXGIFormat.BC1_Typeless or 
-                DXGIFormat.BC1_UNorm or 
-                DXGIFormat.BC1_UNorm_SRGB or 
-                DXGIFormat.BC2_Typeless or 
-                DXGIFormat.BC2_UNorm or 
-                DXGIFormat.BC2_UNorm_SRGB or 
-                DXGIFormat.BC3_Typeless or 
-                DXGIFormat.BC3_UNorm or 
-                DXGIFormat.BC3_UNorm_SRGB or 
-                DXGIFormat.BC4_Typeless or 
-                DXGIFormat.BC4_UNorm or 
-                DXGIFormat.BC4_SNorm or 
-                DXGIFormat.BC5_Typeless or 
-                DXGIFormat.BC5_UNorm or 
-                DXGIFormat.BC5_SNorm or 
-                DXGIFormat.BC6H_Typeless or 
-                DXGIFormat.BC6H_UF16 or 
-                DXGIFormat.BC6H_SF16 or 
-                DXGIFormat.BC7_Typeless or 
-                DXGIFormat.BC7_UNorm or 
+                DXGIFormat.BC1_Typeless or
+                DXGIFormat.BC1_UNorm or
+                DXGIFormat.BC1_UNorm_SRGB or
+                DXGIFormat.BC2_Typeless or
+                DXGIFormat.BC2_UNorm or
+                DXGIFormat.BC2_UNorm_SRGB or
+                DXGIFormat.BC3_Typeless or
+                DXGIFormat.BC3_UNorm or
+                DXGIFormat.BC3_UNorm_SRGB or
+                DXGIFormat.BC4_Typeless or
+                DXGIFormat.BC4_UNorm or
+                DXGIFormat.BC4_SNorm or
+                DXGIFormat.BC5_Typeless or
+                DXGIFormat.BC5_UNorm or
+                DXGIFormat.BC5_SNorm or
+                DXGIFormat.BC6H_Typeless or
+                DXGIFormat.BC6H_UF16 or
+                DXGIFormat.BC6H_SF16 or
+                DXGIFormat.BC7_Typeless or
+                DXGIFormat.BC7_UNorm or
                 DXGIFormat.BC7_UNorm_SRGB => true,
                 _ => false,
             };

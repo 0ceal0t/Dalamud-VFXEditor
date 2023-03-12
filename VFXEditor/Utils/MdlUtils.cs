@@ -29,7 +29,7 @@ namespace VfxEditor.Utils {
                     var color = v.Color;
                     var uv = v.UV;
 
-                    if (pos == null || normal == null || tangent == null || color == null || uv == null) {
+                    if( pos == null || normal == null || tangent == null || color == null || uv == null ) {
                         PluginLog.Error( "Missing model data" );
                         return false;
                     }
@@ -39,20 +39,20 @@ namespace VfxEditor.Utils {
                         normal.Value,
                         tangent.Value,
                         color.Value,
-                        new Vector2(uv.Value.X, uv.Value.Y),
-                        new Vector2(uv.Value.Z, uv.Value.W)
+                        new Vector2( uv.Value.X, uv.Value.Y ),
+                        new Vector2( uv.Value.Z, uv.Value.W )
                     ) );
                 }
-                if (mesh.Indices.Length % 3 != 0) {
+                if( mesh.Indices.Length % 3 != 0 ) {
                     PluginLog.Error( "Indices not multiples of 3" );
                     return false;
                 }
-                for (var triangleIdx = 0; triangleIdx < (mesh.Indices.Length / 3); triangleIdx++ ) {
+                for( var triangleIdx = 0; triangleIdx < ( mesh.Indices.Length / 3 ); triangleIdx++ ) {
                     var idx = triangleIdx * 3;
-                    indexesOut.Add( new AvfxIndex( 
+                    indexesOut.Add( new AvfxIndex(
                         idxStart + mesh.Indices[idx],
                         idxStart + mesh.Indices[idx + 1],
-                        idxStart + mesh.Indices[idx + 2] 
+                        idxStart + mesh.Indices[idx + 2]
                    ) );
                 }
                 PluginLog.Log( "Imported MDL mesh" );

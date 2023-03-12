@@ -26,7 +26,7 @@ namespace VfxEditor.Select.TmbSelect {
             var reset = Plugin.ActorAnimationManager.CanReset;
 
             ImGui.SameLine();
-            if (reset ) {
+            if( reset ) {
                 if( ImGui.Button( "Reset##" + parentId ) ) Plugin.ActorAnimationManager.Reset();
             }
             else {

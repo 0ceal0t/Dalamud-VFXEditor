@@ -42,9 +42,9 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( ShadowCreateDistanceFar );
 
             DisplayTabs.Add( Color );
-            DisplayTabs.Add( DistanceScale ) ;
-            DisplayTabs.Add( Rotation ) ;
-            DisplayTabs.Add( Position ) ;
+            DisplayTabs.Add( DistanceScale );
+            DisplayTabs.Add( Rotation );
+            DisplayTabs.Add( Position );
         }
     }
 }

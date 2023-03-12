@@ -33,7 +33,7 @@ namespace VfxEditor.Structs.Animation {
         [FieldOffset( 0x1B01 )] public byte CharacterModeInput;
         [FieldOffset( 0x0900 )] public AnimationMemory Animation;
 
-        public bool CanAnimate => ( CharacterModes)CharacterMode == CharacterModes.Normal || ( CharacterModes)CharacterMode == CharacterModes.AnimLock;
+        public bool CanAnimate => ( CharacterModes )CharacterMode == CharacterModes.Normal || ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
         public bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
     }
 

@@ -60,7 +60,7 @@ namespace VfxEditor.AvfxFormat {
             DrawRename( id );
 
             Type.Draw( id );
-            
+
             // ====== KILL ============
 
             if( Type.Value == "LLIK" ) {

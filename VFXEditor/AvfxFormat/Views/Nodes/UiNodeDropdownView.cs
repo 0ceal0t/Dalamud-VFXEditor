@@ -57,9 +57,9 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.PushFont( UiBuilder.IconFont );
 
-            var index = Selected == null ? - 1 : Group.Items.IndexOf( Selected );
-            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}{Id}-Left", new Vector4(1), Selected != null && index > 0 ) ) {
-                Selected = Group.Items[ index - 1 ];
+            var index = Selected == null ? -1 : Group.Items.IndexOf( Selected );
+            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}{Id}-Left", new Vector4( 1 ), Selected != null && index > 0 ) ) {
+                Selected = Group.Items[index - 1];
                 OnSelect( Selected );
             }
             ImGui.SameLine();

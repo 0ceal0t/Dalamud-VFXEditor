@@ -15,7 +15,7 @@ namespace VfxEditor.Select.ScdSelect {
             var idx = 0;
             foreach( var entry in quests ) {
                 var id = $"{parentId}{idx}";
-                if( ImGui.CollapsingHeader($"{entry.Key}{id}") ) {
+                if( ImGui.CollapsingHeader( $"{entry.Key}{id}" ) ) {
                     ImGui.Indent();
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                     DrawBgmSituation( entry.Key, id, entry.Value );

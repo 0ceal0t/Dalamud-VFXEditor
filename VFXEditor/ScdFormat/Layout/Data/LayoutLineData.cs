@@ -19,7 +19,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedFloat DopplerFac = new( "Doppler FAC" );
         public readonly ParsedFloat InteriorFac = new( "Interior FAC" );
         public readonly ParsedFloat Direction = new( "Direction" );
-        public readonly ParsedReserve Reserved1 = new(  4 );
+        public readonly ParsedReserve Reserved1 = new( 4 );
 
         public LayoutLineData() {
             Parsed = new() {
