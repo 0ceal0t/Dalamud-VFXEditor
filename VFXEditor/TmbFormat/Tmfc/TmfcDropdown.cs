@@ -4,28 +4,34 @@ using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
 using VfxEditor.TmbFormat.Entries;
+using Lumina.Excel.GeneratedSheets;
 
 namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {
         private readonly TmbFile File;
-        private readonly List<TmbEntry> Entries;
 
-        public TmfcDropdown( TmbFile file, List<Tmfc> items, List<TmbEntry> entries ) : base( items, true ) {
+        public TmfcDropdown( TmbFile file ) : base( file.Tmfcs, true ) {
             File = file;
-            Entries = entries;
         }
 
         protected override string GetText( Tmfc item, int idx ) => $"TMFC {idx}";
 
         protected override void OnDelete( Tmfc item ) {
-            var command = new CompoundCommand( false, true );
+            CompoundCommand command = new( false, false );
             command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
-            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, item ) );
+            command.Add( new GenericRemoveCommand<TmbEntry>( File.Entries, item ) );
+            command.Add( File.GetRefreshIdsCommand() );
             File.Command.Add( command );
         }
 
-        // TODO: add to entries as well
-        protected override void OnNew() => File.Command.Add( new GenericAddCommand<Tmfc>( Items, new Tmfc( File.PapEmbedded ) ) );
+        protected override void OnNew() {
+            var newTmfc = new Tmfc( File.PapEmbedded );
+            CompoundCommand command = new( false, false );
+            command.Add( new GenericAddCommand<Tmfc>( Items, newTmfc ) );
+            command.Add( new GenericAddCommand<TmbEntry>( File.Entries, newTmfc ) );
+            command.Add( File.GetRefreshIdsCommand() );
+            File.Command.Add( command );
+        }
 
         public override void Draw( string id ) {
             base.Draw( id );

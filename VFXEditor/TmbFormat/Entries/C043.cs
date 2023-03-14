@@ -43,7 +43,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            DrawTime( id );
+            DrawHeader( id );
             DrawParsed( id );
         }
     }

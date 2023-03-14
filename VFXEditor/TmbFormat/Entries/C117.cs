@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk3 = new( "TMFC Entry Id" );
 
         public C117( bool papEmbedded ) : base( papEmbedded ) { }
 
@@ -37,7 +37,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            DrawTime( id );
+            DrawHeader( id );
             DrawParsed( id );
         }
     }

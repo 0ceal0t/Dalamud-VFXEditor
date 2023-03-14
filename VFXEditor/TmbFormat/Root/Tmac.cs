@@ -43,8 +43,8 @@ namespace VfxEditor.TmbFormat {
             writer.WriteOffsetTimeline( Tracks );
         }
 
-        public void Draw( string id, List<Tmtr> tracksMaster, List<TmbEntry> entriesMaster ) {
-            DrawTime( id );
+        public void Draw( string id, TmbFile file ) {
+            DrawHeader( id );
             Unk1.Draw( id, Command );
             Unk2.Draw( id, Command );
 
@@ -58,23 +58,26 @@ namespace VfxEditor.TmbFormat {
             ImGui.BeginChild( $"{id}-ActorChild-Left" );
             ImGui.PushFont( UiBuilder.IconFont );
 
-            // New
+            // ======== New  ===========
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
                 var newTrack = new Tmtr( PapEmbedded );
-                var idx = Tracks.Count == 0 ? 0 : tracksMaster.IndexOf( Tracks.Last() ) + 1;
-                CompoundCommand command = new( false, true );
-                command.Add( new GenericAddCommand<Tmtr>( tracksMaster, newTrack, idx ) );
+                var idx = Tracks.Count == 0 ? 0 : file.Tracks.IndexOf( Tracks.Last() ) + 1;
+
+                CompoundCommand command = new( false, false );
                 command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
+                command.Add( new GenericAddCommand<Tmtr>( file.Tracks, newTrack, idx ) );
+                command.Add( file.GetRefreshIdsCommand() );
                 Command.Add( command );
             }
 
-            // Remove
+            // ====== Remove ======
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                    CompoundCommand command = new( false, true );
+                    CompoundCommand command = new( false, false );
                     command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
-                    command.Add( new GenericRemoveCommand<Tmtr>( tracksMaster, SelectedTrack ) );
+                    command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, SelectedTrack ) );
+                    command.Add( file.GetRefreshIdsCommand() );
                     Command.Add( command );
 
                     SelectedTrack = null;
@@ -99,7 +102,7 @@ namespace VfxEditor.TmbFormat {
             ImGui.NextColumn();
             ImGui.BeginChild( $"{id}-ActorChild-Right" );
 
-            if( SelectedTrack != null ) SelectedTrack.Draw( $"{id}{selectedIndex}", entriesMaster );
+            if( SelectedTrack != null ) SelectedTrack.Draw( $"{id}{selectedIndex}", file );
             else ImGui.Text( "Select a timeline track..." );
 
             ImGui.EndChild();

@@ -66,7 +66,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            DrawTime( id );
+            DrawHeader( id );
             DrawParsed( id );
 
             ImGui.Checkbox( $"Unknown Extra Data{id}", ref UnkExtraData );

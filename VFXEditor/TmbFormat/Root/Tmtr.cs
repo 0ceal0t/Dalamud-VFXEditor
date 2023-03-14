@@ -51,8 +51,8 @@ namespace VfxEditor.TmbFormat {
             }
         }
 
-        public void Draw( string id, List<TmbEntry> entriesMaster ) {
-            DrawTime( id );
+        public void Draw( string id, TmbFile file ) {
+            DrawHeader( id );
 
             // ==== Unknown Data ====
 
@@ -87,9 +87,10 @@ namespace VfxEditor.TmbFormat {
 
                     // Remove
                     if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) {
-                        CompoundCommand command = new( false, true );
+                        CompoundCommand command = new( false, false );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
-                        command.Add( new GenericRemoveCommand<TmbEntry>( entriesMaster, entry ) );
+                        command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
+                        command.Add( file.GetRefreshIdsCommand() );
                         Command.Add( command );
 
                         ImGui.Unindent();
@@ -110,11 +111,12 @@ namespace VfxEditor.TmbFormat {
                         var type = entryOption.Type;
                         var constructor = type.GetConstructor( new Type[] { typeof( bool ) } );
                         var newEntry = ( TmbEntry )constructor.Invoke( new object[] { PapEmbedded } );
+                        var idx = Entries.Count == 0 ? 0 : file.Entries.IndexOf( Entries.Last() ) + 1;
 
-                        var idx = Entries.Count == 0 ? 0 : entriesMaster.IndexOf( Entries.Last() ) + 1;
-                        CompoundCommand command = new( false, true );
-                        command.Add( new GenericAddCommand<TmbEntry>( entriesMaster, newEntry, idx ) );
+                        CompoundCommand command = new( false, false );
                         command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
+                        command.Add( new GenericAddCommand<TmbEntry>( file.Entries, newEntry, idx ) );
+                        command.Add( file.GetRefreshIdsCommand() );
                         Command.Add( command );
                     }
                 }

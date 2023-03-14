@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.EndMenu();
                 }
 
-                if( ImGui.MenuItem( "Cleanup unused##Menu" ) ) CurrentFile.Cleanup();
+                if( ImGui.MenuItem( "Clean up##Menu" ) ) CurrentFile.Cleanup();
 
                 ImGui.EndMenu();
             }

@@ -1,6 +1,7 @@
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using ImGuiNET;
 
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
@@ -70,6 +71,9 @@ namespace VfxEditor.TmbFormat {
             Time.Write( writer.Writer );
         }
 
-        protected void DrawTime( string id ) => Time.Draw( id, Command );
+        protected void DrawHeader( string id ) {
+            ImGui.TextDisabled( $"Entry Id: {Id}" );
+            Time.Draw( id, Command );
+        }
     }
 }

@@ -26,8 +26,8 @@ namespace VfxEditor.TmbFormat {
         public readonly TmfcDropdown TmfcDropdown;
 
         public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) {
-            ActorsDropdown = new( this, Actors );
-            TmfcDropdown = new( this, Tmfcs, Entries );
+            ActorsDropdown = new( this );
+            TmfcDropdown = new( this );
 
             PapEmbedded = papEmbedded;
             Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
@@ -52,6 +52,8 @@ namespace VfxEditor.TmbFormat {
             Actors.ForEach( x => x.PickTracks( reader ) );
             Tracks.ForEach( x => x.PickEntries( reader ) );
 
+            RefreshIds();
+
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
@@ -62,10 +64,7 @@ namespace VfxEditor.TmbFormat {
             FileUtils.WriteString( writer, "TMLB" );
             writer.Write( 0 ); // placeholder for size
 
-            short id = 2;
-            foreach( var actor in Actors ) actor.Id = id++;
-            foreach( var track in Tracks ) track.Id = id++;
-            foreach( var entry in Entries ) entry.Id = id++;
+            RefreshIds();
 
             var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum();
 
@@ -122,6 +121,17 @@ namespace VfxEditor.TmbFormat {
                 ImGui.EndTabBar();
             }
         }
+
+        public void RefreshIds() {
+            short id = 2;
+            foreach( var actor in Actors ) actor.Id = id++;
+            foreach( var track in Tracks ) track.Id = id++;
+            foreach( var entry in Entries ) entry.Id = id++;
+        }
+
+        public ICommand GetRefreshIdsCommand() => new TmbRefreshIdsCommand( this );
+
+        // ===============
 
         public static TmbFile FromLocalFile( string path, bool papEmbedded ) {
             if( !File.Exists( path ) ) return null;

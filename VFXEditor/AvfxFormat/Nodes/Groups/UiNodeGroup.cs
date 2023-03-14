@@ -25,14 +25,14 @@ namespace VfxEditor.AvfxFormat {
             Schedulers = new UiNodeGroup<AvfxScheduler>( main.Schedulers );
 
             AllGroups = new() {
-                Binders,
-                Emitters,
-                Models,
-                Particles,
                 Schedulers,
-                Textures,
                 Timelines,
-                Effectors
+                Emitters,
+                Particles,
+                Effectors,
+                Binders,
+                Textures,
+                Models
             };
         }
 

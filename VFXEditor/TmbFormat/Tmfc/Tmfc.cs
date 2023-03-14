@@ -45,7 +45,7 @@ namespace VfxEditor.TmbFormat.Entries {
             reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
                 var dataPos = br.BaseStream.Position;
                 Data = br.ReadBytes( diff );
-                PluginLog.Log( $"{dataPos:X8} / {Data.Length}" );
+                PluginLog.Log( $"{dataPos:X8} / {Data.Length:X8}" );
             } );
         }
 
@@ -64,7 +64,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            DrawTime( id );
+            DrawHeader( id );
             Unk1.Draw( id, Command );
             Unk2.Draw( id, Command );
             Unk3.Draw( id, Command );

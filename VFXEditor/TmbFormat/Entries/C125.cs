@@ -37,7 +37,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override void Draw( string id ) {
             ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "Please don't do anything stupid with this" );
 
-            DrawTime( id );
+            DrawHeader( id );
             DrawParsed( id );
         }
     }
