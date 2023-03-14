@@ -8,15 +8,15 @@ using VfxEditor;
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataExtraCommand : ICommand {
         private readonly AvfxEffector Item;
-        private readonly AvfxData OldData;
+        private AvfxData OldData;
         private AvfxData NewData;
 
         public AvfxEffectorDataExtraCommand( AvfxEffector item ) {
             Item = item;
-            OldData = item.Data;
         }
 
         public void Execute() {
+            OldData = Item.Data;
             OldData?.Disable();
             Item.SetData( Item.EffectorVariety.GetValue() );
             NewData = Item.Data;

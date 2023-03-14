@@ -45,15 +45,15 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTimelineClipTypeCommand : ICommand {
         private readonly AvfxTimelineClipType Item;
         private readonly string State;
-        private readonly string PrevState;
+        private string PrevState;
 
         public AvfxTimelineClipTypeCommand( AvfxTimelineClipType item, string state ) {
             Item = item;
             State = state;
-            PrevState = item.Value;
         }
 
         public void Execute() {
+            PrevState = Item.Value;
             Item.Value = State;
         }
 

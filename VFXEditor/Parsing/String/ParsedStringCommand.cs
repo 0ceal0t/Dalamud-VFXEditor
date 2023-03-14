@@ -6,15 +6,15 @@ namespace VfxEditor.Parsing {
     public class ParsedStringCommand : ICommand {
         private readonly ParsedString Item;
         private readonly string State;
-        private readonly string PrevState;
+        private string PrevState;
 
         public ParsedStringCommand( ParsedString item, string state, string prevState ) {
             Item = item;
             State = state;
-            PrevState = prevState;
         }
 
         public void Execute() {
+            PrevState = Item.Value;
             Item.Value = State;
         }
 

@@ -4,15 +4,15 @@ namespace VfxEditor.Parsing {
     public class ParsedFloatCommand : ICommand {
         private readonly ParsedFloat Item;
         private readonly float State;
-        private readonly float PrevState;
+        private float PrevState;
 
         public ParsedFloatCommand( ParsedFloat item, float state ) {
             Item = item;
             State = state;
-            PrevState = item.Value;
         }
 
         public void Execute() {
+            PrevState = Item.Value;
             Item.Value = State;
         }
 

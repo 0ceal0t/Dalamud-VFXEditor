@@ -3,15 +3,15 @@ using System;
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataExtraCommand : ICommand {
         private readonly AvfxParticle Item;
-        private readonly AvfxData OldData;
+        private AvfxData OldData;
         private AvfxData NewData;
 
         public AvfxParticleDataExtraCommand( AvfxParticle item ) {
             Item = item;
-            OldData = item.Data;
         }
 
         public void Execute() {
+            OldData = Item.Data;
             OldData?.Disable();
             Item.SetData( Item.ParticleVariety.GetValue() );
             NewData = Item.Data;

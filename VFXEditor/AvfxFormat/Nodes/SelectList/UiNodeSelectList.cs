@@ -147,7 +147,6 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            var style = ImGui.GetStyle();
             ImGui.PushFont( UiBuilder.IconFont );
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
             ImGui.PopFont();

@@ -1,10 +1,6 @@
-using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.AvfxFormat;
-using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {

@@ -4,15 +4,15 @@ namespace VfxEditor.Parsing {
     public class ParsedBoolCommand : ICommand {
         private readonly ParsedBool Item;
         private readonly bool State;
-        private readonly bool? PrevState;
+        private bool? PrevState;
 
         public ParsedBoolCommand( ParsedBool item, bool state ) {
             Item = item;
             State = state;
-            PrevState = item.Value;
         }
 
         public void Execute() {
+            PrevState = Item.Value;
             Item.Value = State;
         }
 

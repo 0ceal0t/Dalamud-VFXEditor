@@ -6,7 +6,10 @@ namespace VfxEditor.AvfxFormat {
             Remover = new( view, group, item );
         }
 
-        public void Execute() => Remover.Remove();
+        public void Execute() {
+            Remover.Execute();
+            Remover.Remove();
+        }
 
         public void Redo() => Remover.Remove();
 
