@@ -2,10 +2,12 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdTrackEntry : ScdEntry, IScdSimpleUiBase {
@@ -29,9 +31,19 @@ namespace VfxEditor.ScdFormat {
                 var item = Items[idx];
                 if( ImGui.CollapsingHeader( $"Item #{idx} ({item.Type.Value}){id}{idx}" ) ) {
                     ImGui.Indent();
+
+                    if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
+                        CommandManager.Scd.Add( new GenericRemoveCommand<ScdTrackItem>( Items, item ) );
+                        ImGui.Unindent(); break;
+                    }
+
                     item.Draw( $"{id}{idx}" );
                     ImGui.Unindent();
                 }
+            }
+
+            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
+                CommandManager.Scd.Add( new GenericAddCommand<ScdTrackItem>( Items, new ScdTrackItem() ) );
             }
         }
     }

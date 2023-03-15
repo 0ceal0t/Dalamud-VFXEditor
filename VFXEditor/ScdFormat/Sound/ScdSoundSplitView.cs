@@ -4,7 +4,7 @@ using VfxEditor.FileManager;
 
 namespace VfxEditor.ScdFormat.Sound {
     public class ScdSoundSplitView : ScdSimpleSplitView<ScdSoundEntry> {
-        public ScdSoundSplitView( string itemName, List<ScdSoundEntry> items, bool allowNew = false ) : base( itemName, items, true ) {
+        public ScdSoundSplitView( string itemName, List<ScdSoundEntry> items ) : base( itemName, items, true ) {
         }
 
         protected override void OnNew() {

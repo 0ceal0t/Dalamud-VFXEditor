@@ -41,7 +41,7 @@ namespace VfxEditor.ScdFormat {
                 }
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) {
+            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
                 CommandManager.Scd.Add( new GenericAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
             }
         }

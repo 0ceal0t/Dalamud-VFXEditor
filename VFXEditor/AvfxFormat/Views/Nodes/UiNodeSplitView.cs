@@ -4,7 +4,7 @@ using System.IO;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeSplitView<T> : UiGenericSplitView, IUiNodeView<T> where T : AvfxNode {
+    public abstract class UiNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly UiNodeGroup<T> Group;
 
@@ -12,13 +12,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly string DefaultText;
         public readonly string DefaultPath;
 
-        public T Selected = null;
-
-        public UiNodeSplitView( AvfxFile file, UiNodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( allowNew, allowDelete ) {
+        public UiNodeSplitView( AvfxFile file, UiNodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( group.Items, allowNew, allowDelete ) {
             File = file;
             Group = group;
-            AllowNew = allowNew;
-            AllowDelete = allowDelete;
 
             Id = $"##{name}";
             DefaultText = $"Select {UiUtils.GetArticle( name )} {name}";
@@ -29,22 +25,16 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract T Read( BinaryReader reader, int size );
 
-        public override void DrawControls( string parentId ) => IUiNodeView<T>.DrawControls( this, File, parentId );
+        protected override void DrawControls( string id ) => IUiNodeView<T>.DrawControls( this, File, id );
 
-        public override void DrawLeftCol( string parentId ) {
-            for( var idx = 0; idx < Group.Items.Count; idx++ ) {
-                var item = Group.Items[idx];
-                if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
-                    Selected = item;
-                    OnSelect( item );
-                }
+        protected override void DrawLeftItem( T item, int idx, string id ) {
+            if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
+                Selected = item;
+                OnSelect( item );
             }
         }
 
-        public override void DrawRightCol( string parentId ) {
-            if( Selected != null ) Selected.Draw( Id );
-            else ImGui.Text( DefaultText );
-        }
+        protected override void DrawSelected( string id ) => Selected.Draw( Id );
 
         public void ResetSelected() { Selected = null; }
 

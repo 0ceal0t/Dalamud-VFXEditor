@@ -4,32 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxDisplaySplitView<T> : UiGenericSplitView where T : AvfxItem {
-        public readonly List<T> Items;
-        private T Selected = null;
-
-        public AvfxDisplaySplitView( List<T> items ) : base( false, false ) {
-            Items = items;
+    public class AvfxDisplaySplitView<T> : AvfxGenericSplitView<T> where T : AvfxItem {
+        public AvfxDisplaySplitView( List<T> items ) : base( items, false, false ) {
         }
 
-        public override void DrawControls( string parentId ) { }
+        protected override void DrawControls( string id ) { }
 
-        public override void DrawLeftCol( string parentId ) {
+        protected override void DrawLeftColumn( string id ) {
             var idx = 0;
             foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
                 if( item is AvfxOptional assignable ) AvfxBase.AssignedCopyPaste( assignable, assignable.GetDefaultText() );
-                if( ImGui.Selectable( $"{item.GetText()}{parentId}{idx}", Selected == item ) ) {
+                if( ImGui.Selectable( $"{item.GetText()}{id}{idx}", Selected == item ) ) {
                     Selected = item;
                 }
                 idx++;
             }
 
             // not assigned, can be added
-            foreach( var item in Items.Where( x => !x.IsAssigned() ) ) item.Draw( parentId );
+            foreach( var item in Items.Where( x => !x.IsAssigned() ) ) item.Draw( id );
         }
 
-        public override void DrawRightCol( string parentId ) {
-            if( Selected != null && Selected.IsAssigned() ) Selected.Draw( parentId );
+        protected override void DrawLeftItem( T item, int idx, string id ) { }
+
+        protected override void DrawSelected( string id ) {
+            if( Selected.IsAssigned() ) Selected.Draw( id );
         }
     }
 }
