@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
+using VfxEditor.ScdFormat.Sound.Data;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public class TrackFilterData : ScdTrackData {
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
         public readonly ParsedFloat Frequency = new( "Frequency" );

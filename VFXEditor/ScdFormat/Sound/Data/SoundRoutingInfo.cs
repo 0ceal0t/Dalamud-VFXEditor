@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
-    public enum InsertEffectName {
+namespace VfxEditor.ScdFormat.Sound.Data
+{
+    public enum InsertEffectName
+    {
         NoEffect,
         LowPassFilter,
         HighPassFilter,
@@ -22,7 +24,8 @@ namespace VfxEditor.ScdFormat {
         SimpleMeter
     }
 
-    public enum FilterType {
+    public enum FilterType
+    {
         Bypass,
         LowPass,
         HighPass,
@@ -33,7 +36,8 @@ namespace VfxEditor.ScdFormat {
         Peaking
     }
 
-    public class SoundRoutingInfo {
+    public class SoundRoutingInfo
+    {
         public uint DataSize = 0x10;
         public byte SendCount;
         private readonly ParsedReserve Reserve1 = new( 11 );
@@ -41,12 +45,14 @@ namespace VfxEditor.ScdFormat {
         public readonly List<SoundSendInfo> SendInfo = new();
         public readonly SoundEffectParam EffectParam = new();
 
-        public void Read( BinaryReader reader ) {
+        public void Read( BinaryReader reader )
+        {
             DataSize = reader.ReadUInt32();
             SendCount = reader.ReadByte();
             Reserve1.Read( reader );
 
-            for( var i = 0; i < SendCount; i++ ) {
+            for( var i = 0; i < SendCount; i++ )
+            {
                 var newInfo = new SoundSendInfo();
                 newInfo.Read( reader );
                 SendInfo.Add( newInfo );
@@ -55,7 +61,8 @@ namespace VfxEditor.ScdFormat {
             EffectParam.Read( reader );
         }
 
-        public void Write( BinaryWriter writer ) {
+        public void Write( BinaryWriter writer )
+        {
             writer.Write( DataSize );
             writer.Write( SendCount );
             Reserve1.Write( writer );
@@ -63,25 +70,29 @@ namespace VfxEditor.ScdFormat {
             EffectParam.Write( writer );
         }
 
-        public void Draw( string parentId ) {
+        public void Draw( string parentId )
+        {
 
         }
     }
 
-    public class SoundSendInfo {
+    public class SoundSendInfo
+    {
         public readonly ParsedByte Target = new( "Target" );
         private readonly ParsedReserve Reserve1 = new( 3 );
         public readonly ParsedFloat Volume = new( "Volume" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
-        public void Read( BinaryReader reader ) {
+        public void Read( BinaryReader reader )
+        {
             Target.Read( reader );
             Reserve1.Read( reader );
             Volume.Read( reader );
             Reserve2.Read( reader );
         }
 
-        public void Write( BinaryWriter writer ) {
+        public void Write( BinaryWriter writer )
+        {
             Target.Write( writer );
             Reserve1.Write( writer );
             Volume.Write( writer );
@@ -89,7 +100,8 @@ namespace VfxEditor.ScdFormat {
         }
     }
 
-    public class SoundEffectParam {
+    public class SoundEffectParam
+    {
         public readonly ParsedEnum<InsertEffectName> Type = new( "Type", size: 1 );
         private readonly ParsedReserve Reserve1 = new( 3 );
         // Equalizer Effect
@@ -97,11 +109,13 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedInt NumFilters = new( "Filter Count" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
-        public void Read( BinaryReader reader ) {
+        public void Read( BinaryReader reader )
+        {
             Type.Read( reader );
             Reserve1.Read( reader );
 
-            for( var i = 0; i < 8; i++ ) {
+            for( var i = 0; i < 8; i++ )
+            {
                 var newFilter = new SoundFilterParam();
                 newFilter.Read( reader );
                 Filters.Add( newFilter );
@@ -111,7 +125,8 @@ namespace VfxEditor.ScdFormat {
             Reserve2.Read( reader );
         }
 
-        public void Write( BinaryWriter writer ) {
+        public void Write( BinaryWriter writer )
+        {
             Type.Write( writer );
             Reserve1.Write( writer );
 
@@ -122,20 +137,23 @@ namespace VfxEditor.ScdFormat {
         }
     }
 
-    public class SoundFilterParam {
+    public class SoundFilterParam
+    {
         public readonly ParsedFloat Frequency = new( "Frequency" );
         public readonly ParsedFloat Invq = new( "Invq" );
         public readonly ParsedFloat Gain = new( "Gain" );
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
 
-        public void Read( BinaryReader reader ) {
+        public void Read( BinaryReader reader )
+        {
             Frequency.Read( reader );
             Invq.Read( reader );
             Gain.Read( reader );
             Type.Read( reader );
         }
 
-        public void Write( BinaryWriter writer ) {
+        public void Write( BinaryWriter writer )
+        {
             Frequency.Write( writer );
             Invq.Write( writer );
             Gain.Write( writer );

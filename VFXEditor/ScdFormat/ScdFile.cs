@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
+using VfxEditor.ScdFormat.Layout;
 using VfxEditor.ScdFormat.Sound;
+using VfxEditor.ScdFormat.Track;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
@@ -23,8 +25,8 @@ namespace VfxEditor.ScdFormat {
         public List<ScdAttributeEntry> Attributes = new();
 
         public ScdSoundSplitView SoundView;
-        public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
-        public ScdSimpleSplitView<ScdTrackEntry> TrackView;
+        public ScdLayoutSplitView LayoutView;
+        public ScdTrackSplitView TrackView;
         public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
@@ -66,9 +68,9 @@ namespace VfxEditor.ScdFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            LayoutView = new( "Layout", Layouts );
-            SoundView = new( "Sound", Sounds );
-            TrackView = new( "Track", Tracks );
+            LayoutView = new( Layouts );
+            SoundView = new( Sounds );
+            TrackView = new( Tracks );
             AttributeView = new( "Attribute", Attributes );
         }
 

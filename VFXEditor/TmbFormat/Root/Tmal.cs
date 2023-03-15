@@ -1,8 +1,10 @@
 using Dalamud.Logging;
 using System.Collections.Generic;
+using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat
+{
     public class Tmal : TmbItem {
         public override string Magic => "TMAL";
         public override int Size => 0x10;

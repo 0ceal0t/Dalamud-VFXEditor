@@ -8,7 +8,7 @@ using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.FileManager;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat.Actor {
     public class Tmac : TmbItemWithTime {
         public override string Magic => "TMAC";
         public override int Size => 0x1C;

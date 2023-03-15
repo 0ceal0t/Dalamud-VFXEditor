@@ -6,9 +6,11 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.TmbFormat.Actor;
 
 // Rework based on https://github.com/AsgardXIV/XAT
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat
+{
     public class TmbFile : FileManagerFile {
         public readonly CommandManager Command;
         public readonly bool PapEmbedded;

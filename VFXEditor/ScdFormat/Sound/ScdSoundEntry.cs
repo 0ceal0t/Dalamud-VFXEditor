@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
+using VfxEditor.ScdFormat.Sound.Data;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public enum SoundType {
         Invalid = 0,
         Normal = 1,

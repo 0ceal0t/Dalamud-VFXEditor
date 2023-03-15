@@ -3,7 +3,7 @@ using VfxEditor.FileManager;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
         private readonly TmbFile File;
 
