@@ -9,7 +9,7 @@ namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {
         private readonly TmbFile File;
 
-        public TmfcDropdown( TmbFile file ) : base( file.Tmfcs, true ) {
+        public TmfcDropdown( TmbFile file ) : base( file.Tmfcs, false ) {
             File = file;
         }
 

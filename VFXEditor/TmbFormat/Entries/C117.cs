@@ -39,6 +39,8 @@ namespace VfxEditor.TmbFormat.Entries {
         public override void Draw( string id ) {
             DrawHeader( id );
             DrawParsed( id );
+
+            TmbFile.TmfcWarning();
         }
     }
 }

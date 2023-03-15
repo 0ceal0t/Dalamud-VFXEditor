@@ -84,7 +84,7 @@ namespace VfxEditor.TmbFormat {
                 if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
                     ImGui.Indent();
 
-                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
+                    if( entry is not C117 && UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
                         TmbRefreshIdsCommand command = new( file, false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );

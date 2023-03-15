@@ -102,6 +102,8 @@ namespace VfxEditor.TmbFormat
         }
 
         public override void Draw( string id ) {
+            if( Tmfcs.Count > 0 || Entries.Where( x => x is C117 ).Any() ) TmfcWarning();
+
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
                     HeaderTmdh.Draw( id );
@@ -137,6 +139,14 @@ namespace VfxEditor.TmbFormat
             if( !File.Exists( path ) ) return null;
             using BinaryReader br = new( File.Open( path, FileMode.Open ) );
             return new TmbFile( br, papEmbedded );
+        }
+
+        public static void TmfcWarning() {
+            ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+            ImGui.TextWrapped( "Changes to this file are potentially detectable" );
+            ImGui.PopStyleColor();
+            ImGui.SameLine();
+            if( ImGui.SmallButton( "Guide" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Notes-on-TMFC" );
         }
     }
 }

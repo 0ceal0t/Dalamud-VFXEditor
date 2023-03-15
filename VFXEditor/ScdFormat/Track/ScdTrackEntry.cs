@@ -2,10 +2,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
