@@ -1,15 +1,24 @@
 namespace VfxEditor.TmbFormat.Utils {
-    public class TmbRefreshIdsCommand : ICommand {
+    public class TmbRefreshIdsCommand : CompoundCommand {
         private readonly TmbFile File;
 
-        public TmbRefreshIdsCommand( TmbFile file ) {
+        public TmbRefreshIdsCommand( TmbFile file, bool reverseRedo, bool reverseUndo ) : base( reverseRedo, reverseUndo ) {
             File = file;
         }
 
-        public void Execute() => File.RefreshIds();
+        public override void Execute() {
+            base.Execute();
+            File.RefreshIds();
+        }
 
-        public void Redo() => File.RefreshIds();
+        public override void Redo() {
+            base.Redo();
+            File.RefreshIds();
+        }
 
-        public void Undo() => File.RefreshIds();
+        public override void Undo() {
+            base.Undo();
+            File.RefreshIds();
+        }
     }
 }

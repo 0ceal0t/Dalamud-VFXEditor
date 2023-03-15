@@ -7,7 +7,6 @@ using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
-using Dalamud.Logging;
 
 namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
@@ -85,12 +84,10 @@ namespace VfxEditor.TmbFormat {
                 if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
                     ImGui.Indent();
 
-                    // Remove
-                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) {
-                        CompoundCommand command = new( false, false );
+                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
+                        TmbRefreshIdsCommand command = new( file, false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
-                        command.Add( file.GetRefreshIdsCommand() );
                         Command.Add( command );
 
                         ImGui.Unindent();
@@ -104,8 +101,7 @@ namespace VfxEditor.TmbFormat {
 
             if( ImGui.Button( $"+ New{id}" ) ) ImGui.OpenPopup( "New_Entry_Tmb" );
 
-            // New
-            if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) {
+            if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) { // NEW
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
                     if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
                         var type = entryOption.Type;
@@ -113,14 +109,20 @@ namespace VfxEditor.TmbFormat {
                         var newEntry = ( TmbEntry )constructor.Invoke( new object[] { PapEmbedded } );
                         var idx = Entries.Count == 0 ? 0 : file.Entries.IndexOf( Entries.Last() ) + 1;
 
-                        CompoundCommand command = new( false, false );
+                        TmbRefreshIdsCommand command = new( file, false, true );
                         command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
                         command.Add( new GenericAddCommand<TmbEntry>( file.Entries, newEntry, idx ) );
-                        command.Add( file.GetRefreshIdsCommand() );
                         Command.Add( command );
                     }
                 }
                 ImGui.EndPopup();
+            }
+        }
+
+        public void DeleteChildren( TmbRefreshIdsCommand command, TmbFile file ) {
+            foreach( var entry in Entries ) {
+                command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
+                command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
             }
         }
     }

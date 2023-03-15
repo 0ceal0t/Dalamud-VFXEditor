@@ -4,7 +4,6 @@ using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.FileManager;
@@ -58,26 +57,23 @@ namespace VfxEditor.TmbFormat {
             ImGui.BeginChild( $"{id}-ActorChild-Left" );
             ImGui.PushFont( UiBuilder.IconFont );
 
-            // ======== New  ===========
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) { // NEW
                 var newTrack = new Tmtr( PapEmbedded );
                 var idx = Tracks.Count == 0 ? 0 : file.Tracks.IndexOf( Tracks.Last() ) + 1;
 
-                CompoundCommand command = new( false, false );
+                TmbRefreshIdsCommand command = new( file, false, true );
                 command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
                 command.Add( new GenericAddCommand<Tmtr>( file.Tracks, newTrack, idx ) );
-                command.Add( file.GetRefreshIdsCommand() );
                 Command.Add( command );
             }
 
-            // ====== Remove ======
             if( SelectedTrack != null ) {
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                    CompoundCommand command = new( false, false );
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) { // REMOVE
+                    TmbRefreshIdsCommand command = new( file, false, true );
                     command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                     command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, SelectedTrack ) );
-                    command.Add( file.GetRefreshIdsCommand() );
+                    SelectedTrack.DeleteChildren( command, file );
                     Command.Add( command );
 
                     SelectedTrack = null;
@@ -109,6 +105,14 @@ namespace VfxEditor.TmbFormat {
 
             ImGui.Columns( 1 );
             ImGui.EndChild();
+        }
+
+        public void DeleteChildren( TmbRefreshIdsCommand command, TmbFile file ) {
+            foreach( var track in Tracks ) {
+                command.Add( new GenericRemoveCommand<Tmtr>( Tracks, track ) );
+                command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, track ) );
+                track.DeleteChildren( command, file );
+            }
         }
     }
 }

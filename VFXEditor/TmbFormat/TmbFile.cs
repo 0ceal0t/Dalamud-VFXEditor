@@ -129,8 +129,6 @@ namespace VfxEditor.TmbFormat {
             foreach( var entry in Entries ) entry.Id = id++;
         }
 
-        public ICommand GetRefreshIdsCommand() => new TmbRefreshIdsCommand( this );
-
         // ===============
 
         public static TmbFile FromLocalFile( string path, bool papEmbedded ) {

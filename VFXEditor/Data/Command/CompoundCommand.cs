@@ -16,15 +16,15 @@ namespace VfxEditor {
 
         public void Clear() => Commands.Clear();
 
-        public void Execute() {
+        public virtual void Execute() {
             for( var i = 0; i < Commands.Count; i++ ) Commands[ReverseRedo ? Commands.Count - 1 - i : i].Execute();
         }
 
-        public void Redo() {
+        public virtual void Redo() {
             for( var i = 0; i < Commands.Count; i++ ) Commands[ReverseRedo ? Commands.Count - 1 - i : i].Redo();
         }
 
-        public void Undo() {
+        public virtual void Undo() {
             for( var i = 0; i < Commands.Count; i++ ) Commands[ReverseUndo ? Commands.Count - 1 - i : i].Undo();
         }
     }

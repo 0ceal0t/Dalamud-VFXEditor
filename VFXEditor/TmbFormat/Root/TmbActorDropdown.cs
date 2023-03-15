@@ -1,5 +1,6 @@
 using ImGuiNET;
 using VfxEditor.FileManager;
+using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.TmbFormat {
@@ -13,16 +14,15 @@ namespace VfxEditor.TmbFormat {
         protected override string GetText( Tmac item, int idx ) => $"Actor {idx}";
 
         protected override void OnDelete( Tmac item ) {
-            CompoundCommand command = new( false, false );
+            TmbRefreshIdsCommand command = new( File, false, true );
             command.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
-            command.Add( File.GetRefreshIdsCommand() );
+            item.DeleteChildren( command, File );
             File.Command.Add( command );
         }
 
         protected override void OnNew() {
-            CompoundCommand command = new( false, false );
+            TmbRefreshIdsCommand command = new( File, false, true );
             command.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File.PapEmbedded ) ) );
-            command.Add( File.GetRefreshIdsCommand() );
             File.Command.Add( command );
         }
 
