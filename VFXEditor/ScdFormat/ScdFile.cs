@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
+using VfxEditor.ScdFormat.Sound;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
@@ -21,7 +22,7 @@ namespace VfxEditor.ScdFormat {
         public List<ScdTrackEntry> Tracks = new();
         public List<ScdAttributeEntry> Attributes = new();
 
-        public ScdSimpleSplitView<ScdSoundEntry> SoundView;
+        public ScdSoundSplitView SoundView;
         public ScdSimpleSplitView<ScdLayoutEntry> LayoutView;
         public ScdSimpleSplitView<ScdTrackEntry> TrackView;
         public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;

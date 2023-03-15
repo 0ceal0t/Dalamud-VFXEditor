@@ -49,12 +49,12 @@ namespace VfxEditor.TmbFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            ImGui.BeginChild( $"{id}-ActorChild", new Vector2( -1, -1 ), true );
-            ImGui.Columns( 2, $"{id}-ActorChild-Cols", true );
+            ImGui.BeginChild( $"{id}/Child", new Vector2( -1, -1 ), true );
+            ImGui.Columns( 2, $"{id}/ChildCols", true );
 
             // Left column
 
-            ImGui.BeginChild( $"{id}-ActorChild-Left" );
+            ImGui.BeginChild( $"{id}/Left" );
             ImGui.PushFont( UiBuilder.IconFont );
 
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) { // NEW
@@ -96,7 +96,7 @@ namespace VfxEditor.TmbFormat {
             // Right column
 
             ImGui.NextColumn();
-            ImGui.BeginChild( $"{id}-ActorChild-Right" );
+            ImGui.BeginChild( $"{id}/Right" );
 
             if( SelectedTrack != null ) SelectedTrack.Draw( $"{id}{selectedIndex}", file );
             else ImGui.Text( "Select a timeline track..." );

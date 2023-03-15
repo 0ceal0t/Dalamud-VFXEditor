@@ -117,6 +117,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw( string id ) {
+            ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
+
             BusNumber.Draw( id, CommandManager.Scd );
             Priority.Draw( id, CommandManager.Scd );
             Type.Draw( id, CommandManager.Scd );

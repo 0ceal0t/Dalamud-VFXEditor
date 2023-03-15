@@ -90,9 +90,9 @@ namespace VfxEditor.TmbFormat {
                         command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
                         Command.Add( command );
 
-                        ImGui.Unindent();
-                        break;
+                        ImGui.Unindent(); break;
                     }
+
                     entry.Draw( $"{id}{entryIdx}" );
                     ImGui.Unindent();
                 }

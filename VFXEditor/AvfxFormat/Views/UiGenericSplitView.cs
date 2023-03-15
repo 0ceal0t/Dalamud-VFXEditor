@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.Columns( 2, parentId + "/Cols", true );
             DrawControls( parentId );
 
-            ImGui.BeginChild( parentId + "/Tree" );
+            ImGui.BeginChild( parentId + "/Left" );
             DrawLeftCol( parentId );
             ImGui.EndChild();
 
@@ -30,7 +30,7 @@ namespace VfxEditor.AvfxFormat {
             }
             ImGui.NextColumn();
 
-            ImGui.BeginChild( parentId + "/Split" );
+            ImGui.BeginChild( parentId + "/Right" );
             DrawRightCol( parentId );
             ImGui.EndChild();
 

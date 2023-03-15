@@ -1,20 +1,21 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
-using System.Text;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdSimpleSplitView<T> where T : class, IScdSimpleUiBase {
-        private readonly List<T> Items;
-        private T Selected = null;
+        protected readonly List<T> Items;
+        protected T Selected = null;
         private readonly string ItemName;
+        private readonly bool AllowNew;
 
-        public ScdSimpleSplitView( string itemName, List<T> items ) {
+        public ScdSimpleSplitView( string itemName, List<T> items, bool allowNew = false ) {
             Items = items;
             ItemName = itemName;
+            AllowNew = allowNew;
         }
 
         public void Draw( string id ) {
@@ -23,6 +24,18 @@ namespace VfxEditor.ScdFormat {
 
             // Left column
             ImGui.BeginChild( $"{id}/Left" );
+            if( AllowNew ) {
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) OnNew();
+                if( Selected != null ) {
+                    ImGui.SameLine();
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                        OnDelete( Selected );
+                        Selected = null;
+                    }
+                }
+                ImGui.PopFont();
+            }
 
             var selectedIndex = Selected == null ? -1 : Items.IndexOf( Selected );
             for( var i = 0; i < Items.Count; i++ ) {
@@ -49,5 +62,9 @@ namespace VfxEditor.ScdFormat {
             ImGui.Columns( 1 );
             ImGui.EndChild();
         }
+
+        protected virtual void OnNew() { }
+
+        protected virtual void OnDelete( T item ) { }
     }
 }
