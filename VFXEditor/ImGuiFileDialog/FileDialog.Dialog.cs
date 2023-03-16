@@ -295,12 +295,12 @@ namespace ImGuiFileDialog {
 
         private void DrawSideBarItem( SideBarItem item, ref int idx ) {
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Selectable( $"{item.Icon}##{idx}", item.Text == SelectedSideBar ) ) {
+            if( ImGui.Selectable( $"{item.Icon}##{idx}", item == SelectedSideBar ) ) {
                 PreviewWrap?.Dispose();
                 PreviewWrap = null;
 
                 SetPath( item.Location );
-                SelectedSideBar = item.Text;
+                SelectedSideBar = item;
             }
             ImGui.PopFont();
 

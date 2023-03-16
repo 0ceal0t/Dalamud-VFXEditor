@@ -74,5 +74,13 @@ namespace VfxEditor.ScdFormat {
             entry.NumChannels = waveFormat.Channels;
             entry.BitsPerSample = ( short )waveFormat.BitsPerSample;
         }
+
+        public override int SamplesToBytes( int samples ) {
+            return Format.BitsPerSample * samples / 8;
+        }
+
+        public override int TimeToBytes( float time ) {
+            return ( int )( Format.AverageBytesPerSecond * time );
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace ImGuiFileDialog {
         LoadPreview = 32,
     }
 
-    public struct SideBarItem {
+    public class SideBarItem {
         public char Icon;
         public string Text;
         public string Location;
@@ -56,7 +56,7 @@ namespace ImGuiFileDialog {
 
         private float FooterHeight = 0;
 
-        private string SelectedSideBar = "";
+        private SideBarItem SelectedSideBar = null;
         private readonly List<SideBarItem> Drives = new();
         private readonly List<SideBarItem> QuickAccess = new();
         private readonly List<SideBarItem> Favorites = new();
@@ -167,7 +167,7 @@ namespace ImGuiFileDialog {
         }
 
         private void SetPath( string path ) {
-            SelectedSideBar = "";
+            SelectedSideBar = null;
             CurrentPath = path;
             Files.Clear();
             PathDecomposition.Clear();

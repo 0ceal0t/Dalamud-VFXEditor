@@ -23,6 +23,12 @@ namespace VfxEditor.ScdFormat {
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
+        private int ConverterSamplesOut = 0;
+        private int ConverterSecondsOut = 0;
+        private int ConverterSamples = 0;
+        private float ConverterSeconds = 0f;
+        private bool ConverterOpen = false;
+
         public AudioPlayer( ScdAudioEntry entry ) {
             Entry = entry;
         }
@@ -48,7 +54,7 @@ namespace VfxEditor.ScdFormat {
                 if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
                 var selectedTime = ( float )CurrentTime;
                 ImGui.SameLine( 50f );
-                ImGui.SetNextItemWidth( 220f );
+                ImGui.SetNextItemWidth( 221f );
                 if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
                     if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
                         CurrentOutput.Pause();
@@ -82,9 +88,45 @@ namespace VfxEditor.ScdFormat {
 
                 var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
                 ImGui.SetNextItemWidth( 250f );
-                if( ImGui.InputInt2( $"Loop Start/End (Bytes)", ref loopStartEnd[0] ) ) {
+                if( ImGui.InputInt2( $"{id}/LoopStartEnd", ref loopStartEnd[0] ) ) {
                     Entry.LoopStart = loopStartEnd[0];
                     Entry.LoopEnd = loopStartEnd[1];
+                }
+
+                // Convert
+                ImGui.SameLine();
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Sync}" + id ) ) ConverterOpen = !ConverterOpen;
+                ImGui.PopFont();
+                UiUtils.Tooltip( "Open converter" );
+                ImGui.SameLine();
+                ImGui.Text( "Loop Start/End (Bytes)" );
+
+                if( ConverterOpen ) {
+                    ImGui.Indent();
+                    // Bytes
+                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
+                    ImGui.SameLine();
+                    ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"Samples to Bytes{id}") ) {
+                        ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
+                    }
+
+                    // Time
+                    ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( $"{id}/SecondsIn", ref ConverterSeconds, 0, 0 );
+                    ImGui.SameLine();
+                    ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"Seconds to Bytes{id}" ) ) {
+                        ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
+                    }
+
+                    ImGui.Unindent();
                 }
 
                 ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
