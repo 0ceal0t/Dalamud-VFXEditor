@@ -198,7 +198,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         // Giga-scuffed
-        public static void ImportOgg( string path, ScdAudioEntry entry ) {
+        public static void ImportOgg( string path, ScdAudioEntry oldEntry ) {
             using var waveFile = new VorbisWaveReader( path );
             using var oggReader = new VorbisReader( path );
 
@@ -233,15 +233,15 @@ namespace VfxEditor.ScdFormat {
             newEntry.Read( reader );
 
             if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) ) {
-                newEntry.LoopStart = entry.Data.SamplesToBytes( loopStartSamples );
+                newEntry.LoopStart = newEntry.Data.SamplesToBytes( loopStartSamples );
             }
 
             if( !string.IsNullOrEmpty( loopEndTag ) && int.TryParse( loopEndTag, out var loopEndSamples ) ) {
-                newEntry.LoopEnd = entry.Data.SamplesToBytes( loopEndSamples );
+                newEntry.LoopEnd = newEntry.Data.SamplesToBytes( loopEndSamples );
             }
 
-            Plugin.ScdManager.CurrentFile.Replace( entry, newEntry );
-            entry.Dispose();
+            Plugin.ScdManager.CurrentFile.Replace( oldEntry, newEntry );
+            oldEntry.Dispose();
         }
 
         public static void ImportWav( string path, ScdAudioEntry entry ) {
