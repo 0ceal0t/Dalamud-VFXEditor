@@ -7,6 +7,7 @@ using ImGuiFileDialog;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
+using System.Threading.Tasks;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -28,6 +29,13 @@ namespace VfxEditor.ScdFormat {
         private int ConverterSamples = 0;
         private float ConverterSeconds = 0f;
         private bool ConverterOpen = false;
+
+        private bool LoopTimeInitialized = false;
+        private bool LoopTimeRefreshing = false;
+        private double LoopStartTime = 0;
+        private double LoopEndTime = 0;
+
+        private double QueueSeek = -1;
 
         public AudioPlayer( ScdAudioEntry entry ) {
             Entry = entry;
@@ -55,6 +63,7 @@ namespace VfxEditor.ScdFormat {
                 var selectedTime = ( float )CurrentTime;
                 ImGui.SameLine( 50f );
                 ImGui.SetNextItemWidth( 221f );
+                var drawPos = ImGui.GetCursorScreenPos();
                 if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
                     if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
                         CurrentOutput.Pause();
@@ -62,6 +71,20 @@ namespace VfxEditor.ScdFormat {
                     }
                 }
                 if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
+
+                if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
+                    var startX = 221f * ( LoopStartTime / TotalTime );
+                    var endX = 221f * ( LoopEndTime / TotalTime );
+
+                    var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
+                    var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
+
+                    var height = ImGui.GetFrameHeight();
+
+                    var drawList = ImGui.GetWindowDrawList();
+                    drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                    drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                }
 
                 // Save
                 ImGui.SameLine();
@@ -91,6 +114,7 @@ namespace VfxEditor.ScdFormat {
                 if( ImGui.InputInt2( $"{id}/LoopStartEnd", ref loopStartEnd[0] ) ) {
                     Entry.LoopStart = loopStartEnd[0];
                     Entry.LoopEnd = loopStartEnd[1];
+                    RefreshLoopStartEndTime();
                 }
 
                 // Convert
@@ -103,7 +127,9 @@ namespace VfxEditor.ScdFormat {
                 ImGui.Text( "Loop Start/End (Bytes)" );
 
                 if( ConverterOpen ) {
-                    ImGui.Indent();
+                    var style = ImGui.GetStyle();
+                    ImGui.BeginChild( $"{id}/Child", new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetFrameHeight() * 2 + style.FramePadding.Y * 4 + style.ItemSpacing.Y * 2 ), true );
+
                     // Bytes
                     ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
                     ImGui.SameLine();
@@ -125,8 +151,7 @@ namespace VfxEditor.ScdFormat {
                     if( ImGui.Button( $"Seconds to Bytes{id}" ) ) {
                         ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
                     }
-
-                    ImGui.Unindent();
+                    ImGui.EndChild();
                 }
 
                 ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
@@ -135,18 +160,39 @@ namespace VfxEditor.ScdFormat {
             }
 
             var currentState = State;
+            var justQueued = false;
+
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
-                ( ( IsVorbis && Plugin.Configuration.LoopMusic ) ||
-                  ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
+                ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
                 PluginLog.Log( "Looping..." );
                 Play();
+                if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopStartTime > 0 ) {
+                    if( QueueSeek == -1 ) {
+                        QueueSeek = LoopStartTime;
+                        justQueued = true;
+                    }
+                }
             }
+            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopEndTime - CurrentTime ) < 0.03f ) {
+                if( QueueSeek == -1 ) {
+                    QueueSeek = LoopStartTime;
+                    justQueued = true;
+                }
+            }
+
+            if( currentState == PlaybackState.Playing && QueueSeek != -1 && !justQueued ) {
+                CurrentStream.CurrentTime = TimeSpan.FromSeconds( QueueSeek );
+                QueueSeek = -1;
+            }
+
             PrevState = currentState;
         }
 
         private void Play() {
             Reset();
             try {
+                if( !LoopTimeInitialized ) RefreshLoopStartEndTime();
+
                 var stream = Entry.Data.GetStream();
                 PluginLog.Log( $"Playing @ {stream.WaveFormat.SampleRate} / {stream.WaveFormat.BitsPerSample}" );
 
@@ -197,6 +243,16 @@ namespace VfxEditor.ScdFormat {
                     var data = ( ScdVorbis )Entry.Data;
                     File.WriteAllBytes( res, data.DecodedData );
                 }
+            } );
+        }
+
+        private async void RefreshLoopStartEndTime() {
+            if( LoopTimeRefreshing ) return;
+            LoopTimeRefreshing = true;
+            await Task.Run( () => {
+                Entry.Data.BytesToLoopStartEnd( Entry.LoopStart, Entry.LoopEnd, out LoopStartTime, out LoopEndTime );
+                LoopTimeInitialized = true;
+                LoopTimeRefreshing = false;
             } );
         }
 

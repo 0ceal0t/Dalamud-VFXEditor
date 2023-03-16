@@ -1,9 +1,9 @@
 using Dalamud.Logging;
+using Lumina.Data.Parsing;
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
 using SharpDX.Text;
-using SharpGLTF.Memory;
 using System;
 using System.IO;
 
@@ -118,6 +118,56 @@ namespace VfxEditor.ScdFormat {
             totalBits += reader.StreamStats.OverheadBits;
 
             return ( int )( totalBits / 8L );
+        }
+
+        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
+            if( loopStart == 0 && loopEnd == 0 ) {
+                startTime = 0;
+                endTime = 0;
+                return;
+            }
+
+            var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
+            var reader = new VorbisReader( ms );
+
+            startTime = 0;
+            endTime = reader.TotalTime.TotalSeconds;
+
+            var buffer = new float[reader.Channels];
+            reader.StreamStats.ResetStats();
+
+            var prevBytes = 0;
+            var startFound = false;
+            var endFound = false;
+
+            for( var i = 0; i < reader.TotalSamples; i++ ) {
+                reader.ReadSamples( buffer, 0, buffer.Length );
+
+                var currentBits = 0L;
+                currentBits += reader.StreamStats.AudioBits;
+                currentBits += reader.StreamStats.ContainerBits;
+                currentBits += reader.StreamStats.WasteBits;
+                currentBits += reader.StreamStats.OverheadBits;
+
+                var currentBytes = ( int )( currentBits / 8L );
+                var currentTime = reader.TimePosition.TotalSeconds;
+
+                if( !startFound && prevBytes < loopStart && currentBytes >= loopStart ) {
+                    startFound = true;
+                    startTime = currentTime;
+                }
+
+                if( !endFound && prevBytes < loopEnd && currentBytes >= loopEnd ) {
+                    endFound = true;
+                    endTime = currentTime;
+                }
+
+                if( startFound && endFound ) break;
+                prevBytes = currentBytes;
+            }
+
+            reader.Dispose();
+            ms.Dispose();
         }
 
         public override WaveStream GetStream() {

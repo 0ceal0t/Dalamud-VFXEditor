@@ -50,7 +50,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Scd loop
+- [ ] Scd preview loop
 - [ ] Make it so node names don't change when others are deleted (Particle 1, etc.)
 - [ ] More accurate spline curve calculations
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
@@ -61,3 +61,8 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Add pre and post behavior to curve editor
 - [ ] Update "try on" preview
+
+
+```
+chara/human/c1401/skeleton/base/b0001/eid_c1401b0001.eid
+```

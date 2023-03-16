@@ -33,6 +33,8 @@ namespace VfxEditor.ScdFormat {
         public ScdAudioData Data;
         public readonly AudioPlayer Player;
 
+        public bool NoLoop => LoopStart == 0 && LoopEnd == 0;
+
         public ScdAudioEntry() {
             Player = new( this );
         }

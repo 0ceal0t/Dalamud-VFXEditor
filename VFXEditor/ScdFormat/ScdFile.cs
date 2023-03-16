@@ -105,8 +105,9 @@ namespace VfxEditor.ScdFormat {
             if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
             ImGui.SameLine();
             if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
-            ImGui.SetNextItemWidth( 50 );
             ImGui.SameLine();
+            if( ImGui.Checkbox( $"Simulate Loop Start/End{id}", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
+            ImGui.SetNextItemWidth( 50 );
             if( ImGui.InputFloat( $"Volume{id}", ref Plugin.Configuration.ScdVolume ) ) {
                 Plugin.Configuration.Save();
                 Audio.ForEach( x => x.Player.UpdateVolume() );

@@ -75,12 +75,13 @@ namespace VfxEditor.ScdFormat {
             entry.BitsPerSample = ( short )waveFormat.BitsPerSample;
         }
 
-        public override int SamplesToBytes( int samples ) {
-            return Format.BitsPerSample * samples / 8;
-        }
+        public override int SamplesToBytes( int samples ) => Format.BitsPerSample * samples / 8;
 
-        public override int TimeToBytes( float time ) {
-            return ( int )( Format.AverageBytesPerSecond * time );
+        public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
+
+        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
+            startTime = ( double )loopStart / Format.AverageBytesPerSecond;
+            endTime = ( double )loopEnd / Format.AverageBytesPerSecond;
         }
     }
 }

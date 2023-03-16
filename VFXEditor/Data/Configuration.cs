@@ -68,6 +68,7 @@ namespace VfxEditor {
         public bool LoopMusic = true;
         public bool LoopSoundEffects = false;
         public float ScdVolume = 1f;
+        public bool SimulateScdLoop = false;
 
         public bool UseDegreesForAngles = false;
 

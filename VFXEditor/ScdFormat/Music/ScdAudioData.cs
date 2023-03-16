@@ -9,6 +9,8 @@ namespace VfxEditor.ScdFormat {
 
         public abstract int TimeToBytes( float time );
 
+        public abstract void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime );
+
         public abstract void Write( BinaryWriter writer );
     }
 }
