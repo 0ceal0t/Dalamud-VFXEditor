@@ -11,6 +11,7 @@ namespace VfxEditor.PapFormat {
         public PapDocument( string writeLocation ) : base( writeLocation, "Pap" ) { }
         public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap" ) { }
 
+        // Need to pass PapIds
         public override void Update() {
             UpdateFile();
             Reload( CurrentFile.GetPapIds() );

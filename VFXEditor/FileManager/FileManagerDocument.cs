@@ -131,7 +131,11 @@ namespace VfxEditor.FileManager {
             File.Delete( WriteLocation );
         }
 
-        public abstract void Update();
+        public virtual void Update() {
+            UpdateFile();
+            Reload();
+            Plugin.ResourceLoader.ReRender();
+        }
 
         public void PenumbraExport( string modFolder ) {
             var path = Replace.Path;

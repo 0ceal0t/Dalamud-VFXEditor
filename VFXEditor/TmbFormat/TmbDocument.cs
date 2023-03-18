@@ -7,19 +7,13 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.TmbFormat {
-    public partial class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
+    public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
         public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb" ) { }
         public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb" ) {
             AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
-        }
-
-        public override void Update() {
-            UpdateFile();
-            Reload();
-            Plugin.ResourceLoader.ReRender();
         }
 
         protected override string GetExtensionWithoutDot() => "tmb";

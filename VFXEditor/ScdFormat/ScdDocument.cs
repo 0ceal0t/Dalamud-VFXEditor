@@ -7,15 +7,9 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.ScdFormat {
-    public partial class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaScd> {
+    public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaScd> {
         public ScdDocument( string writeLocation ) : base( writeLocation, "Scd" ) { }
         public ScdDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Scd" ) { }
-
-        public override void Update() {
-            UpdateFile();
-            Reload();
-            Plugin.ResourceLoader.ReRender();
-        }
 
         protected override string GetExtensionWithoutDot() => "scd";
 

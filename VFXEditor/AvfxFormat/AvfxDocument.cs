@@ -9,7 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public partial class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaAvfx> {
+    public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaAvfx> {
         private DateTime LastUpdate = DateTime.Now;
         private string SpawnPath => Replace.Path;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
@@ -22,9 +22,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.5 ) return;
-            UpdateFile();
-            Reload();
-            Plugin.ResourceLoader.ReRender();
+            base.Update();
             LastUpdate = DateTime.Now;
         }
 
