@@ -5,6 +5,7 @@ using System.IO;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+using VfxEditor.FileManager;
 using VfxEditor.TextureFormat.CustomTeximpNet;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -29,7 +30,7 @@ namespace VfxEditor.TextureFormat {
         public TextureFormat Format;
     }
 
-    public partial class TextureManager : GenericDialog {
+    public partial class TextureManager : GenericDialog, IFileManager {
         public static readonly string PenumbraPath = "Tex";
 
         private int TEX_ID = 0;
@@ -277,5 +278,7 @@ namespace VfxEditor.TextureFormat {
             PathToTexturePreview.Clear();
             PathToTextureReplace.Clear();
         }
+
+        public bool DoDebug( string path ) => path.Contains( ".atex" );
     }
 }

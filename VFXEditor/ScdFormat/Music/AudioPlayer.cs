@@ -217,8 +217,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void UpdateVolume() {
-            if( CurrentOutput == null ) return;
-            CurrentOutput.Volume = Plugin.Configuration.ScdVolume;
+            if( CurrentChannel == null ) return;
+            CurrentChannel.Volume = Plugin.Configuration.ScdVolume;
         }
 
         private void ImportDialog() {

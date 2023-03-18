@@ -23,6 +23,7 @@ namespace VfxEditor.Select.VfxSelect {
                 new VfxEmoteSelect( "Emote", this ),
                 new VfxGimmickSelect( "Gimmick", this ),
                 new VfxCutsceneSelect( "Cutscene", this ),
+                new VfxJournalCutsceneSelect( "Journal Cutscene", this ),
                 new VfxMountSelect( "Mount", this),
                 new VfxHousingSelect( "Housing", this),
                 new VfxCommonSelect( "Common", this)

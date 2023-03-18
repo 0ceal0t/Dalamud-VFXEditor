@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using VfxEditor.Select.Sheets;
 
 namespace VfxEditor.Select {
@@ -14,6 +15,7 @@ namespace VfxEditor.Select {
         public static ActionSheetLoader Actions { get; private set; }
         public static NonPlayerActionSheetLoader NonPlayerActions { get; private set; }
         public static CutsceneSheetLoader Cutscenes { get; private set; }
+        public static JournalCutsceneSheetLoader JournalCutscenes { get; private set; }
         public static EmoteSheetLoader Emotes { get; private set; }
         public static GimmickSheetLoader Gimmicks { get; private set; }
         public static StatusSheetLoader Statuses { get; private set; }
@@ -39,6 +41,8 @@ namespace VfxEditor.Select {
 
         // Contains vfx, tmb, and paps
         public static NpcSheetLoader Npcs { get; private set; }
+
+        public static readonly Regex AvfxRegex = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
 
         public struct RaceStruct {
             public string SkeletonId;
@@ -106,6 +110,7 @@ namespace VfxEditor.Select {
             Actions = new();
             NonPlayerActions = new();
             Cutscenes = new();
+            JournalCutscenes = new();
             Emotes = new();
             Gimmicks = new();
             Npcs = new();

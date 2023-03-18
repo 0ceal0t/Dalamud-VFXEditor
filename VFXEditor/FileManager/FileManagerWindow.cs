@@ -7,7 +7,7 @@ using VfxEditor.Ui;
 using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerWindow<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
+    public abstract class FileManagerWindow<T, S, R> : GenericDialog, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
@@ -19,7 +19,7 @@ namespace VfxEditor.FileManager {
 
         protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
         protected readonly string Title;
-        protected readonly string Id;
+        public readonly string Id;
         public readonly List<T> Documents = new();
 
         private readonly FileManagerDocumentWindow<T, S, R> DocumentWindow;
@@ -147,5 +147,7 @@ namespace VfxEditor.FileManager {
             Documents.Clear();
             ActiveDocument = null;
         }
+
+        public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
     }
 }

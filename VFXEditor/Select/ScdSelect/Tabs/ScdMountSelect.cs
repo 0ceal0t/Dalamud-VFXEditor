@@ -1,9 +1,10 @@
 using ImGuiNET;
+using ImGuiScene;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.ScdSelect {
     public class ScdMountSelect : SelectTab<XivMount, XivMountSelected> {
-        private ImGuiScene.TextureWrap Icon;
+        private TextureWrap Icon;
 
         public ScdMountSelect( string tabId, ScdSelectDialog dialog ) : base( tabId, SheetManager.Mounts, dialog ) { }
 

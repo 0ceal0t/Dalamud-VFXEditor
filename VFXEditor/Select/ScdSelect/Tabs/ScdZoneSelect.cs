@@ -1,7 +1,5 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using VfxEditor.Select.Rows;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Select.ScdSelect {
     public class ScdZoneSelect : SelectTab<XivZone, XivZoneScdSelected> {

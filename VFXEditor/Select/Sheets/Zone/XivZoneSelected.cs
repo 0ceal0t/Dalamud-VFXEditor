@@ -8,8 +8,6 @@ namespace VfxEditor.Select.Rows {
         public readonly XivZone Zone;
         public readonly List<string> VfxPaths = new();
 
-        private static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
-
         public XivZoneSelected( Lumina.Data.Files.LgbFile file, XivZone zone ) {
             Zone = zone;
 
@@ -17,7 +15,7 @@ namespace VfxEditor.Select.Rows {
                 var data = file.Data;
 
                 var stringData = Encoding.UTF8.GetString( data );
-                var matches = rx.Matches( stringData );
+                var matches = SheetManager.AvfxRegex.Matches( stringData );
                 foreach( var m in matches.Cast<Match>() ) {
                     VfxPaths.Add( m.Value.Trim( '\u0000' ) );
                 }

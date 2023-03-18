@@ -1,6 +1,4 @@
 using ImGuiNET;
-using System.Diagnostics;
-using VfxEditor.Utils;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.PapSelect {

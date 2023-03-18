@@ -9,8 +9,6 @@ namespace VfxEditor.Select.Rows {
         public string TmbPath;
         public bool VfxExists = false;
 
-        public static readonly Regex rx = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
-
         public XivGimmickSelected( Lumina.Data.FileResource file, XivGimmick gimmick ) {
             Gimmick = gimmick;
 
@@ -20,7 +18,7 @@ namespace VfxEditor.Select.Rows {
                 VfxExists = true;
 
                 var stringData = Encoding.UTF8.GetString( data );
-                var matches = rx.Matches( stringData );
+                var matches = SheetManager.AvfxRegex.Matches( stringData );
                 foreach( Match m in matches ) {
                     VfxPaths.Add( m.Value.Trim( '\u0000' ) );
                 }

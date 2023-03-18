@@ -1,10 +1,11 @@
 using ImGuiNET;
+using ImGuiScene;
 using System.Numerics;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.PapSelect {
     public class PapEmoteSelect : SelectTab<XivEmotePap, XivEmotePapSelected> {
-        private ImGuiScene.TextureWrap Icon;
+        private TextureWrap Icon;
 
         public PapEmoteSelect( string tabId, PapSelectDialog dialog ) : base( tabId, SheetManager.EmotePap, dialog ) { }
 

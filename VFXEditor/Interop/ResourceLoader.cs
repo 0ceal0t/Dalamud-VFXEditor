@@ -12,6 +12,7 @@ using VfxEditor.Structs.Vfx;
 using FileMode = VfxEditor.Structs.FileMode;
 using Penumbra.String;
 using Penumbra.String.Classes;
+using System.Linq;
 
 namespace VfxEditor.Interop {
     public unsafe class ResourceLoader : IDisposable {
@@ -367,25 +368,12 @@ namespace VfxEditor.Interop {
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
-            if( Plugin.AvfxManager?.GetReplacePath( gamePath, out var vfxFile ) == true ) {
-                localPath = vfxFile;
-                return true;
-            }
-            else if( Plugin.TextureManager?.GetReplacePath( gamePath, out var texFile ) == true ) {
-                localPath = texFile;
-                return true;
-            }
-            else if( Plugin.TmbManager?.GetReplacePath( gamePath, out var tmbFile ) == true ) {
-                localPath = tmbFile;
-                return true;
-            }
-            else if( Plugin.PapManager?.GetReplacePath( gamePath, out var papFile ) == true ) {
-                localPath = papFile;
-                return true;
-            }
-            else if( Plugin.ScdManager?.GetReplacePath( gamePath, out var scdFile ) == true ) {
-                localPath = scdFile;
-                return true;
+            foreach( var manager in Plugin.Managers ) {
+                if(  manager == null ) continue;
+                if( manager.GetReplacePath( gamePath, out var localFile ) ) {
+                    localPath = localFile;
+                    return true;
+                }
             }
             return false;
         }
@@ -456,6 +444,6 @@ namespace VfxEditor.Interop {
             return resource;
         }
 
-        private static bool DoDebug( string path ) => path.Contains( ".avfx" ) || path.Contains( ".pap" ) || path.Contains( ".tmb" ) || path.Contains( ".scd" );
+        private bool DoDebug( string path ) => Plugin.Managers.Where( x => x.DoDebug( path ) ).Any();
     }
 }

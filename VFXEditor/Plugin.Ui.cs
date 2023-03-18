@@ -22,11 +22,7 @@ namespace VfxEditor {
             VfxTracker.Draw();
             Configuration.Draw();
 
-            AvfxManager.Draw();
-            TextureManager.Draw();
-            TmbManager.Draw();
-            PapManager.Draw();
-            ScdManager.Draw();
+            Managers.ForEach( x => x.Draw() );
 
             CopyManager.FinalizeAll();
 

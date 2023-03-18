@@ -1,9 +1,9 @@
-using ImGuiNET;
+using ImGuiScene;
 using VfxEditor.Select.Rows;
 
 namespace VfxEditor.Select.PapSelect {
     public class PapActionSelect : SelectTab<XivActionPap, XivActionPapSelected> {
-        private ImGuiScene.TextureWrap Icon;
+        private TextureWrap Icon;
 
         public PapActionSelect( string tabId, PapSelectDialog dialog, bool nonPlayer = false ) : base( tabId, nonPlayer ? SheetManager.NonPlayerActionPap : SheetManager.ActionPap, dialog ) { }
 

@@ -11,10 +11,6 @@ namespace VfxEditor.Select.Rows {
         public readonly string SelfTmbPath;
         public readonly List<string> SelfVfxPaths = new();
 
-        public static readonly Regex Rx = MyRegex();
-        [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
-        private static partial Regex MyRegex();
-
         public XivActionSelected( FileResource file, XivAction action ) {
             Action = action;
             CastVfxPath = action.CastVfxPath;
@@ -23,7 +19,7 @@ namespace VfxEditor.Select.Rows {
             var data = file.Data;
             SelfTmbPath = file.FilePath.Path;
 
-            var matches = Rx.Matches( Encoding.UTF8.GetString( data ) );
+            var matches = SheetManager.AvfxRegex.Matches( Encoding.UTF8.GetString( data ) );
             foreach( var m in matches.Cast<Match>() ) SelfVfxPaths.Add( m.Value.Trim( '\u0000' ) );
         }
     }
