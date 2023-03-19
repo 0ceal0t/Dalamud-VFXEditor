@@ -6,7 +6,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdManager : FileManagerWindow<ScdDocument, WorkspaceMetaScd, ScdFile> {
+    public class ScdManager : FileManagerWindow<ScdDocument, WorkspaceMetaBasic, ScdFile> {
         public static ScdSelectDialog SourceSelect { get; private set; }
         public static ScdSelectDialog ReplaceSelect { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
@@ -35,7 +35,7 @@ namespace VfxEditor.ScdFormat {
 
         protected override ScdDocument GetNewDocument() => new( LocalPath );
 
-        protected override ScdDocument GetImportedDocument( string localPath, WorkspaceMetaScd data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override ScdDocument GetImportedDocument( string localPath, WorkspaceMetaBasic data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         protected override void DrawMenu() {
             if( CurrentFile == null ) return;

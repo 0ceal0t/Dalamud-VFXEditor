@@ -19,9 +19,9 @@ namespace VfxEditor {
     public struct WorkspaceMeta {
         public WorkspaceMetaTex[] Tex;
         public WorkspaceMetaAvfx[] Docs;
-        public WorkspaceMetaTmb[] Tmb;
-        public WorkspaceMetaPap[] Pap;
-        public WorkspaceMetaScd[] Scd;
+        public WorkspaceMetaBasic[] Tmb;
+        public WorkspaceMetaBasic[] Pap;
+        public WorkspaceMetaBasic[] Scd;
     }
 
     public struct WorkspaceMetaAvfx {
@@ -43,19 +43,7 @@ namespace VfxEditor {
         public string ReplacePath;
     }
 
-    public struct WorkspaceMetaTmb {
-        public SelectResult Source;
-        public SelectResult Replace;
-        public string RelativeLocation;
-    }
-
-    public struct WorkspaceMetaPap {
-        public SelectResult Source;
-        public SelectResult Replace;
-        public string RelativeLocation;
-    }
-
-    public struct WorkspaceMetaScd {
+    public struct WorkspaceMetaBasic {
         public SelectResult Source;
         public SelectResult Replace;
         public string RelativeLocation;

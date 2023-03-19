@@ -7,7 +7,7 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaScd> {
+    public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaBasic> {
         public ScdDocument( string writeLocation ) : base( writeLocation, "Scd" ) { }
         public ScdDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Scd" ) { }
 
@@ -22,7 +22,7 @@ namespace VfxEditor.ScdFormat {
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Scd?.Redo();
         }
 
-        public override WorkspaceMetaScd GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source

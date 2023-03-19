@@ -7,7 +7,7 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.TmbFormat {
-    public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaTmb> {
+    public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaBasic> {
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
@@ -27,7 +27,7 @@ namespace VfxEditor.TmbFormat {
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Tmb?.Redo();
         }
 
-        public override WorkspaceMetaTmb GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source

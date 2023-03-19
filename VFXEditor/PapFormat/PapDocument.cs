@@ -5,7 +5,7 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 
 namespace VfxEditor.PapFormat {
-    public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaPap> {
+    public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaBasic> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
         public PapDocument( string writeLocation ) : base( writeLocation, "Pap" ) { }
@@ -22,7 +22,7 @@ namespace VfxEditor.PapFormat {
 
         protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
 
-        public override WorkspaceMetaPap GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source

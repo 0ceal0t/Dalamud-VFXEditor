@@ -199,14 +199,12 @@ namespace VfxEditor.ScdFormat {
 
         // Giga-scuffed
         public static void ImportOgg( string path, ScdAudioEntry oldEntry ) {
-            using var waveFile = new VorbisWaveReader( path );
             using var oggReader = new VorbisReader( path );
 
             var loopStartTag = oggReader.Tags.GetTagSingle( "LoopStart" );
             var loopEndTag = oggReader.Tags.GetTagSingle( "LoopEnd" );
 
             var oggData = File.ReadAllBytes( path );
-            var waveFormat = waveFile.WaveFormat;
 
             var rawHeader = File.ReadAllBytes( ScdUtils.VorbisHeader );
 
@@ -217,8 +215,8 @@ namespace VfxEditor.ScdFormat {
 
             writer.BaseStream.Seek( 0, SeekOrigin.Begin );
             writer.Write( oggData.Length - 0x10 ); // update data length
-            writer.Write( waveFormat.Channels );
-            writer.Write( waveFormat.SampleRate );
+            writer.Write( oggReader.Channels );
+            writer.Write( oggReader.SampleRate );
 
             writer.BaseStream.Seek( 0x10, SeekOrigin.Begin );
             writer.Write( 0 ); // loop start

@@ -6,7 +6,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.TmbSelect;
 
 namespace VfxEditor.TmbFormat {
-    public partial class TmbManager : FileManagerWindow<TmbDocument, WorkspaceMetaTmb, TmbFile> {
+    public partial class TmbManager : FileManagerWindow<TmbDocument, WorkspaceMetaBasic, TmbFile> {
         public static TmbSelectDialog SourceSelect { get; private set; }
         public static TmbSelectDialog ReplaceSelect { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
@@ -35,7 +35,7 @@ namespace VfxEditor.TmbFormat {
 
         protected override TmbDocument GetNewDocument() => new( LocalPath );
 
-        protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaTmb data ) => new( LocalPath, localPath, data.Source, data.Replace );
+        protected override TmbDocument GetImportedDocument( string localPath, WorkspaceMetaBasic data ) => new( LocalPath, localPath, data.Source, data.Replace );
 
         protected override void DrawMenu() {
             if( CurrentFile == null ) return;

@@ -87,18 +87,21 @@ namespace VfxEditor.Data {
             Avfx.FinalizePaste( CommandManager.Avfx );
             Tmb.FinalizePaste( CommandManager.Tmb );
             Pap.FinalizePaste( CommandManager.Pap );
+            Scd.FinalizePaste( CommandManager.Scd );
         }
 
         public static void ResetAll() {
             Avfx.Reset();
             Tmb.Reset();
             Pap.Reset();
+            Scd.Reset();
         }
 
         public static void DisposeAll() {
             Avfx.Dispose();
             Tmb.Dispose();
             Pap.Dispose();
+            Scd.Dispose();
         }
     }
 }
