@@ -4,60 +4,27 @@ using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdManager : FileManagerWindow<ScdDocument, ScdFile, WorkspaceMetaBasic> {
-        public static ScdSelectDialog SourceSelect { get; private set; }
-        public static ScdSelectDialog ReplaceSelect { get; private set; }
-        public static CopyManager Copy { get; private set; } = new();
-
         public static string ConvertWav => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.wav" ).Replace( '\\', '/' );
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.ogg" ).Replace( '\\', '/' );
 
-        public static void Setup() {
-            SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", Plugin.Configuration.RecentSelectsScd, true, SetSourceGlobal );
-            ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", Plugin.Configuration.RecentSelectsScd, false, SetReplaceGlobal );
+        public ScdManager() : base( "Scd Editor", "Scd", "scd", "Scd", "Scd" ) {
+            SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", this, true );
+            ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", this, false );
         }
 
-        public static void SetSourceGlobal( SelectResult result ) {
-            Plugin.ScdManager?.SetSource( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsScd, result );
-        }
+        protected override ScdDocument GetNewDocument() => new( this, LocalPath );
 
-        public static void SetReplaceGlobal( SelectResult result ) {
-            Plugin.ScdManager?.SetReplace( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelectsScd, result );
-        }
-
-        public static readonly string PenumbraPath = "Scd";
-
-        public ScdManager() : base( title: "Scd Editor", id: "Scd", extension: "scd", penumbaPath: PenumbraPath ) { }
-
-        protected override ScdDocument GetNewDocument() => new( LocalPath );
-
-        protected override ScdDocument GetImportedDocument( string localPath, WorkspaceMetaBasic data ) => new( LocalPath, localPath, data.Source, data.Replace );
-
-        protected override void DrawMenu() {
-            if( CurrentFile == null ) return;
-            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                CopyManager.Scd.Draw();
-                CommandManager.Scd.Draw();
-                ImGui.EndMenu();
-            }
-        }
+        protected override ScdDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => 
+            new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
 
         public override void Dispose() {
             base.Dispose();
-            SourceSelect.Hide();
-            ReplaceSelect.Hide();
             CurrentFile?.Dispose();
             ScdUtils.Cleanup();
-        }
-
-        public override void DrawBody() {
-            SourceSelect.Draw();
-            ReplaceSelect.Draw();
-            base.DrawBody();
         }
     }
 }

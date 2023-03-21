@@ -2,17 +2,13 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
-using VfxEditor.PapFormat;
-using VfxEditor.ScdFormat;
-using VfxEditor.TmbFormat;
 
 namespace VfxEditor.Data {
     public class CopyManager {
-        public static CopyManager Avfx => AvfxManager.Copy;
-        public static CopyManager Tmb => TmbManager.Copy;
-        public static CopyManager Pap => PapManager.Copy;
-        public static CopyManager Scd => ScdManager.Copy;
+        public static CopyManager Avfx => Plugin.AvfxManager.Copy;
+        public static CopyManager Tmb => Plugin.TmbManager.Copy;
+        public static CopyManager Pap => Plugin.PapManager.Copy;
+        public static CopyManager Scd => Plugin.ScdManager.Copy;
 
         public bool IsCopying { get; private set; }
         public bool IsPasting { get; private set; }
@@ -46,6 +42,7 @@ namespace VfxEditor.Data {
         }
 
         public void FinalizePaste( CommandManager manager ) {
+            if( manager == null ) return;
             if( !IsPasting ) return;
             Clear();
             manager.Add( PasteCommand ); // execute
@@ -83,25 +80,10 @@ namespace VfxEditor.Data {
 
         //==================
 
-        public static void FinalizeAll() {
-            Avfx.FinalizePaste( CommandManager.Avfx );
-            Tmb.FinalizePaste( CommandManager.Tmb );
-            Pap.FinalizePaste( CommandManager.Pap );
-            Scd.FinalizePaste( CommandManager.Scd );
-        }
+        public static void FinalizeAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.FinalizePaste( x?.GetCommandManager() ) );
 
-        public static void ResetAll() {
-            Avfx.Reset();
-            Tmb.Reset();
-            Pap.Reset();
-            Scd.Reset();
-        }
+        public static void ResetAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.Reset() );
 
-        public static void DisposeAll() {
-            Avfx.Dispose();
-            Tmb.Dispose();
-            Pap.Dispose();
-            Scd.Dispose();
-        }
+        public static void DisposeAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.Dispose() );
     }
 }

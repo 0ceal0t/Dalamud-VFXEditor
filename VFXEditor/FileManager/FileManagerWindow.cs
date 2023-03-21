@@ -5,55 +5,86 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui;
 using VfxEditor.TexTools;
+using VfxEditor.Utils;
+using Newtonsoft.Json.Linq;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerWindow<T, R, S> : GenericDialog, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
+    public abstract class FileManagerWindow : GenericDialog {
+        protected FileManagerWindow( string name, bool menuBar, int startingWidth, int startingHeight ) : 
+            base( name, menuBar, startingWidth, startingHeight ) {
+        }
+
+        public abstract ManagerConfiguration GetConfig();
+
+        public abstract void SetSource( SelectResult result );
+        public abstract void ShowSource();
+
+        public abstract void SetReplace( SelectResult result );
+        public abstract void ShowReplace();
+    }
+
+    public abstract class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
-        private int DocumentId = 0;
-        private readonly string Extension; // tmb
-        private readonly string TempFilePrefix;
-        private readonly string PenumbraPath; // Tmb
-        private bool HasDefault = true;
-
-        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DocumentId++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
-        protected readonly string Title;
+        private int DOC_ID = 0;
         public readonly string Id;
-        public readonly List<T> Documents = new();
+        protected readonly string WindowTitle;
+        private readonly string Extension;
+        private readonly string TempFilePrefix;
+        private readonly string WorkspaceKey;
+        private readonly string WorkspacePath;
 
+        public readonly ManagerConfiguration Configuration;
+        public readonly CopyManager Copy = new();
+
+        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
+
+        public readonly List<T> Documents = new();
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
 
-        public FileManagerWindow( string title, string id, string extension, string penumbaPath ) : base( title, true, 800, 1000 ) {
-            Title = title;
+        public SelectDialog SourceSelect { get; protected set; }
+        public SelectDialog ReplaceSelect { get; protected set; }
+
+        public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, true, 800, 1000 ) {
+            WindowTitle = windowTitle;
             Id = id;
             TempFilePrefix = id + "Temp";
             Extension = extension;
-            PenumbraPath = penumbaPath;
+            WorkspaceKey = workspaceKey;
+            WorkspacePath = workspacePath;
+
+            if( !Plugin.Configuration.ManagerConfigs.TryGetValue( Id, out Configuration ) ) {
+                Configuration = new ManagerConfiguration();
+                Plugin.Configuration.ManagerConfigs.Add( Id, Configuration );
+            }
+
             AddDocument();
-            DocumentWindow = new( title, this );
+            DocumentWindow = new( windowTitle, this );
         }
 
-        protected abstract T GetImportedDocument( string localPath, S data );
+        public CopyManager GetCopyManager() => Copy;
+        public CommandManager GetCommandManager() => CurrentFile?.Command;
+        public string GetExportName() => Id;
 
-        protected abstract void DrawMenu();
+        public override ManagerConfiguration GetConfig() => Configuration;
+
+        public override void SetSource( SelectResult result ) {
+            ActiveDocument?.SetSource( result );
+            Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
+        }
+
+        public override void ShowSource() => SourceSelect?.Show();
+
+        public override void SetReplace( SelectResult result ) {
+            ActiveDocument?.SetReplace( result );
+            Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
+        }
+
+        public override void ShowReplace() => ReplaceSelect?.Show();
 
         protected abstract T GetNewDocument();
-
-        public void SetSource( SelectResult result ) => ActiveDocument?.SetSource( result );
-
-        public void SetReplace( SelectResult result ) => ActiveDocument?.SetReplace( result );
-
-        public bool GetReplacePath( string path, out string replacePath ) {
-            replacePath = null;
-            foreach( var document in Documents ) {
-                if( document.GetReplacePath( path, out var documentReplacePath ) ) {
-                    replacePath = documentReplacePath;
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public void AddDocument() {
             var newDocument = GetNewDocument();
@@ -79,15 +110,28 @@ namespace VfxEditor.FileManager {
             return false;
         }
 
+        protected virtual void DrawMenu() {
+            if( CurrentFile == null ) return;
+
+            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
+                GetCopyManager().Draw();
+                GetCommandManager().Draw();
+                ImGui.EndMenu();
+            }
+        }
+
         public override void DrawBody() {
-            Name = Title + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + Title;
+            SourceSelect?.Draw();
+            ReplaceSelect?.Draw();
+
+            Name = WindowTitle + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + WindowTitle;
             CheckKeybinds();
             DocumentWindow.Draw();
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawFileMenu();
                 DrawMenu();
-                if( ImGui.MenuItem( $"Documents##{Title}/Menu" ) ) DocumentWindow.Show();
+                if( ImGui.MenuItem( $"Documents##{WindowTitle}/Menu" ) ) DocumentWindow.Show();
                 ImGui.Separator();
                 Plugin.DrawManagersMenu();
 
@@ -104,50 +148,71 @@ namespace VfxEditor.FileManager {
             ActiveDocument?.CheckKeybinds();
         }
 
-        public virtual void PenumbraExport( string modFolder, bool doExport ) {
-            if( !doExport ) return;
-            foreach( var document in Documents ) {
-                document.PenumbraExport( modFolder );
+        public void WorkspaceImport( JObject meta, string loadLocation ) {
+            var items = WorkspaceUtils.ReadFromMeta<S>( meta, WorkspaceKey );
+            if( items == null ) return;
+            foreach( var item in items ) {
+                var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
+                ActiveDocument = newDocument;
+                Documents.Add( newDocument );
             }
+            if( Documents.Count == 0 ) AddDocument();
         }
 
-        public virtual void TextoolsExport( BinaryWriter writer, bool doExport, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            if( !doExport ) return;
-            foreach( var document in Documents ) {
-                document.TextoolsExport( writer, simpleParts, ref modOffset );
-            }
-        }
+        protected abstract T GetWorkspaceDocument( S data, string localPath );
 
-        public virtual S[] WorkspaceExport( string saveLocation ) {
-            var rootPath = Path.Combine( saveLocation, PenumbraPath );
+        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
+            var rootPath = Path.Combine( saveLocation, WorkspacePath );
             Directory.CreateDirectory( rootPath );
 
             var documentIdx = 0;
             List<S> documentMeta = new();
 
             foreach( var document in Documents ) {
-                var newPath = $"{TempFilePrefix}{documentIdx++}.{Extension}";
-                document.WorkspaceExport( documentMeta, rootPath, newPath );
+                document.WorkspaceExport( documentMeta, rootPath, $"{TempFilePrefix}{documentIdx++}.{Extension}" );
             }
-            return documentMeta.ToArray();
+
+            WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
         }
 
-        public void ImportWorkspaceFile( string localPath, S data ) {
-            var newDocument = GetImportedDocument( localPath, data );
-            ActiveDocument = newDocument;
-            Documents.Add( newDocument );
-            if( HasDefault && Documents.Count > 1 ) {
-                HasDefault = false;
-                RemoveDocument( Documents[0] );
+        public virtual void PenumbraExport( string modFolder ) {
+            foreach( var document in Documents ) {
+                document.PenumbraExport( modFolder );
             }
+        }
+
+        public virtual void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+            foreach( var document in Documents ) {
+                document.TextoolsExport( writer, simpleParts, ref modOffset );
+            }
+        }
+
+        public bool GetReplacePath( string path, out string replacePath ) {
+            replacePath = null;
+            foreach( var document in Documents ) {
+                if( document.GetReplacePath( path, out var documentReplacePath ) ) {
+                    replacePath = documentReplacePath;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
+
+        public void ToDefault() {
+            Dispose();
+            AddDocument(); // Default Document
         }
 
         public virtual void Dispose() {
             foreach( var document in Documents ) document.Dispose();
             Documents.Clear();
             ActiveDocument = null;
-        }
+            DOC_ID = 0;
 
-        public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
+            SourceSelect?.Hide();
+            ReplaceSelect?.Hide();
+        }
     }
 }

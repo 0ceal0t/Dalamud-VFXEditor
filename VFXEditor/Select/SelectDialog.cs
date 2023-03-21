@@ -4,8 +4,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.FileManager;
 using VfxEditor.Ui;
-using VfxEditor.Select;
 
 namespace VfxEditor {
     public enum SelectResultType {
@@ -34,9 +34,9 @@ namespace VfxEditor {
             Path = path;
         }
 
-        public override bool Equals( object obj ) => obj is SelectResult other && Equals( other );
-        public bool Equals( SelectResult p ) => p.Type == Type && p.DisplayString == DisplayString && p.Path == Path;
-        public override int GetHashCode() => (Type, DisplayString, Path).GetHashCode();
+        public override readonly bool Equals( object obj ) => obj is SelectResult other && Equals( other );
+        public readonly bool Equals( SelectResult p ) => p.Type == Type && p.DisplayString == DisplayString && p.Path == Path;
+        public override readonly int GetHashCode() => (Type, DisplayString, Path).GetHashCode();
         public static bool operator ==( SelectResult lhs, SelectResult rhs ) => lhs.Equals( rhs );
         public static bool operator !=( SelectResult lhs, SelectResult rhs ) => !( lhs == rhs );
 
@@ -50,30 +50,33 @@ namespace VfxEditor {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
 
+        private readonly FileManagerWindow Manager;
         private readonly string Extension;
-        public readonly bool IsSourceDialog; // as opposed to replaced
+        public readonly bool IsSource; // as opposed to replaced
 
-        protected Action<SelectResult> OnSelect;
         protected abstract List<SelectTab> GetTabs();
 
-        private readonly List<SelectResult> Favorites;
+        protected readonly List<SelectResult> Favorites;
         protected readonly SelectDialogList RecentTab;
         protected readonly SelectDialogList FavoritesTab;
 
         private string LocalPathInput = "";
         private string GamePathInput = "";
 
-        public SelectDialog( string name, string extension, List<SelectResult> recentList, List<SelectResult> favorites, bool isSourceDialog, Action<SelectResult> onSelect ) : base( name, false, 800, 500 ) {
+        public SelectDialog( string name, string extension, FileManagerWindow manager, bool isSource ) : base( name, false, 800, 500 ) {
+            Manager = manager;
             Extension = extension;
-            Favorites = favorites;
-            IsSourceDialog = isSourceDialog;
-            OnSelect = onSelect;
+            Favorites = manager.GetConfig().Favorites;
+            IsSource = isSource;
 
-            RecentTab = new( this, "Recent", recentList );
-            FavoritesTab = new( this, "Favorites", favorites );
+            RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
+            FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
         }
 
-        public void Invoke( SelectResult result ) => OnSelect?.Invoke( result );
+        public void Invoke( SelectResult result ) {
+            if( IsSource ) Manager.SetSource( result );
+            else Manager.SetReplace( result );
+        }
 
         public bool IsFavorite( SelectResult result ) => Favorites.Contains( result );
 
@@ -94,7 +97,7 @@ namespace VfxEditor {
             ImGui.BeginTabBar( $"Tabs{id}" );
             DrawGame( id );
             DrawGamePath( id );
-            if( IsSourceDialog ) DrawLocal( id );
+            if( IsSource ) DrawLocal( id );
             RecentTab.Draw( id );
             FavoritesTab.Draw( id );
             ImGui.EndTabBar();

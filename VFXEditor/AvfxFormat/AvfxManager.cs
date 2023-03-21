@@ -3,49 +3,29 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.NodeLibrary;
 using VfxEditor.Select.VfxSelect;
+using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaAvfx> {
-        // TODO
-        // since no longer re-creating managers, these don't have to be static
+        public readonly AvfxNodeLibrary NodeLibrary;
 
-        public static VfxSelectDialog SourceSelect { get; private set; }
-        public static VfxSelectDialog ReplaceSelect { get; private set; }
-        public static AvfxNodeLibrary NodeLibrary { get; private set; }
-        public static CopyManager Copy { get; private set; } = new();
-
-        public static void Setup() {
-            SourceSelect = new VfxSelectDialog( "File Select [LOADED]", Plugin.Configuration.RecentSelects, true, SetSourceGlobal );
-            ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", Plugin.Configuration.RecentSelects, false, SetReplaceGlobal );
+        public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
+            SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
+            ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );
             NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 
-        public static void SetSourceGlobal( SelectResult result ) {
-            Plugin.AvfxManager?.SetSource( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
-        }
+        protected override AvfxDocument GetNewDocument() => new( this, LocalPath );
 
-        public static void SetReplaceGlobal( SelectResult result ) {
-            Plugin.AvfxManager?.SetReplace( result );
-            Plugin.Configuration.AddRecent( Plugin.Configuration.RecentSelects, result );
-        }
-
-        public static readonly string PenumbraPath = "VFX";
-
-        // =================
-
-        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", extension: "avfx", penumbaPath: PenumbraPath ) { }
-
-        protected override AvfxDocument GetNewDocument() => new( LocalPath );
-
-        protected override AvfxDocument GetImportedDocument( string localPath, WorkspaceMetaAvfx data ) => new( LocalPath, localPath, data );
+        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaAvfx data, string localPath ) => 
+            new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
 
         protected override void DrawMenu() {
             if( CurrentFile == null ) return;
 
             if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                CopyManager.Avfx.Draw();
-                CommandManager.Avfx.Draw();
+                GetCopyManager().Draw();
+                GetCommandManager().Draw();
 
                 if( ImGui.BeginMenu( "Templates##Menu" ) ) {
                     if( ImGui.MenuItem( "Blank##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_vfx.avfx" );
@@ -59,15 +39,7 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public override void Dispose() {
-            base.Dispose();
-            SourceSelect.Hide();
-            ReplaceSelect.Hide();
-        }
-
         public override void DrawBody() {
-            SourceSelect.Draw();
-            ReplaceSelect.Draw();
             NodeLibrary.Draw();
             base.DrawBody();
         }

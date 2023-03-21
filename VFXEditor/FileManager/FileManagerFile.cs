@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerFile {
+        public readonly CommandManager Command;
         protected bool Verified = true;
+
+        public FileManagerFile( CommandManager command ) {
+            Command = command;
+        }
 
         public bool IsVerified() => Verified;
 

@@ -34,7 +34,7 @@ namespace VfxEditor.PapFormat {
         protected override void OnNew() {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
-                    PapManager.IndexDialog.OnOk = ( int idx ) => {
+                    Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
                         var newAnim = new PapAnimation( File.HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
 
@@ -47,7 +47,7 @@ namespace VfxEditor.PapFormat {
 
                         UiUtils.OkNotification( "Havok data imported" );
                     };
-                    PapManager.IndexDialog.Show();
+                    Plugin.PapManager.IndexDialog.Show();
                 }
             } );
         }

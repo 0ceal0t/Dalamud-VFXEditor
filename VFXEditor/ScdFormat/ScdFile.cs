@@ -13,8 +13,6 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
-        public readonly CommandManager Command = new( Data.CopyManager.Scd );
-
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
 
@@ -29,7 +27,7 @@ namespace VfxEditor.ScdFormat {
         public ScdTrackSplitView TrackView;
         public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;
 
-        public ScdFile( BinaryReader reader, bool checkOriginal = true ) {
+        public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Data.CopyManager.Scd ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             Header = new( reader );

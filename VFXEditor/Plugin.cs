@@ -51,8 +51,8 @@ namespace VfxEditor {
         public static PenumbraDialog PenumbraDialog { get; private set; }
 
         public static List<IFileManager> Managers => new( new IFileManager[]{
-            AvfxManager,
             TextureManager,
+            AvfxManager,
             TmbManager,
             PapManager,
             ScdManager
@@ -107,13 +107,9 @@ namespace VfxEditor {
 
             TextureManager.Setup();
             TextureManager = new TextureManager();
-            TmbManager.Setup();
             TmbManager = new TmbManager();
-            AvfxManager.Setup();
             AvfxManager = new AvfxManager();
-            PapManager.Setup();
             PapManager = new PapManager();
-            ScdManager.Setup();
             ScdManager = new ScdManager();
 
             ToolsDialog = new ToolsDialog();
@@ -163,6 +159,9 @@ namespace VfxEditor {
             ResourceLoader?.Dispose();
             ResourceLoader = null;
 
+            CopyManager.DisposeAll();
+            VfxEditor.CommandManager.DisposeAll();
+
             TextureManager.BreakDown();
             Managers.ForEach( x => x?.Dispose() );
             AvfxManager = null;
@@ -183,8 +182,6 @@ namespace VfxEditor {
             RemoveSpawn();
 
             FileDialogManager.Dispose();
-            CopyManager.DisposeAll();
-            VfxEditor.CommandManager.DisposeAll();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace VfxEditor.TextureFormat {
 
             ImGui.BeginChild( id + "/Child", new Vector2( -1, -1 ), true );
 
-            if( PathToTextureReplace.IsEmpty ) {
+            if( PathToTextureReplace.Count == 0 ) {
                 ImGui.Text( "No textures have been imported..." );
             }
 

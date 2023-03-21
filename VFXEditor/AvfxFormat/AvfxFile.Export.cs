@@ -8,10 +8,10 @@ namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile {
         public void AddToNodeLibrary( AvfxNode node ) {
             var newId = UiUtils.RandomString( 12 );
-            var newPath = AvfxManager.NodeLibrary.GetPath( newId );
+            var newPath = Plugin.AvfxManager.NodeLibrary.GetPath( newId );
             Export( node, newPath, true );
             UiUtils.OkNotification( "Saved item to VFX library" );
-            AvfxManager.NodeLibrary.AddToRoot( node.GetText(), newId, Plugin.AvfxManager.ActiveDocument.SourceDisplay, newPath );
+            Plugin.AvfxManager.NodeLibrary.AddToRoot( node.GetText(), newId, Plugin.AvfxManager.ActiveDocument.SourceDisplay, newPath );
         }
 
         public void Export( AvfxNode node, string path, bool exportDependencies ) => Export( new List<AvfxNode> { node }, path, exportDependencies );

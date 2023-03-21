@@ -1,17 +1,13 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.FileManager;
 
 namespace VfxEditor.Select.TmbSelect {
     public class TmbSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public TmbSelectDialog(
-                string id,
-                List<SelectResult> recentList,
-                bool isSourceDialog,
-                Action<SelectResult> onSelect
-            ) : base( id, "tmb", recentList, Plugin.Configuration.FavoriteTmb, isSourceDialog, onSelect ) {
+        public TmbSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
 
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new TmbActionSelect( "Action", this ),

@@ -24,13 +24,14 @@ namespace VfxEditor.Penumbra {
         private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";
-        private bool ExportVfx = true;
-        private bool ExportTex = true;
-        private bool ExportTmb = true;
-        private bool ExportPap = true;
-        private bool ExportScd = true;
+        private readonly Dictionary<string, bool> ToExport = new();
 
-        public PenumbraDialog() : base( "Penumbra", false, 400, 300 ) { }
+        public PenumbraDialog() : base( "Penumbra", false, 400, 300 ) {
+            foreach( var manager in Plugin.Managers ) {
+                if( manager == null ) continue;
+                ToExport[manager.GetExportName()] = false;
+            }
+        }
 
         public override void DrawBody() {
             var id = "##Penumbra";
@@ -42,11 +43,10 @@ namespace VfxEditor.Penumbra {
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
-            ImGui.Checkbox( "Export Vfx", ref ExportVfx );
-            ImGui.Checkbox( "Export Textures", ref ExportTex );
-            ImGui.Checkbox( "Export Tmb", ref ExportTmb );
-            ImGui.Checkbox( "Export Pap", ref ExportPap );
-            ImGui.Checkbox( "Export Scd", ref ExportScd );
+            foreach( var entry in ToExport ) {
+                var exportItem = entry.Value;
+                if( ImGui.Checkbox( $"Export {entry.Key}{id}", ref exportItem ) ) ToExport[entry.Key] = exportItem;
+            }
 
             ImGui.EndChild();
 
@@ -77,11 +77,11 @@ namespace VfxEditor.Penumbra {
                 var configString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( modConfig, configString );
 
-                Plugin.AvfxManager.PenumbraExport( modFolder, ExportVfx );
-                Plugin.TextureManager.PenumbraExport( modFolder, ExportTex );
-                Plugin.TmbManager.PenumbraExport( modFolder, ExportTmb );
-                Plugin.PapManager.PenumbraExport( modFolder, ExportPap );
-                Plugin.ScdManager.PenumbraExport( modFolder, ExportScd );
+                foreach( var manager in Plugin.Managers ) {
+                    if( manager == null ) continue;
+                    if( !ToExport.TryGetValue( manager.GetExportName(), out var exportItem ) || !exportItem ) continue;
+                    manager.PenumbraExport( modFolder );
+                }
 
                 PluginLog.Log( "Exported To: " + modFolder );
             }

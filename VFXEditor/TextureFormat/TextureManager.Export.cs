@@ -6,8 +6,7 @@ using VfxEditor.TexTools;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
-        public void PenumbraExport( string modFolder, bool exportTex ) {
-            if( !exportTex ) return;
+        public void PenumbraExport( string modFolder ) {
             foreach( var entry in PathToTextureReplace ) {
                 var localPath = entry.Value.LocalPath;
                 var path = entry.Key;
@@ -17,8 +16,7 @@ namespace VfxEditor.TextureFormat {
             }
         }
 
-        public void TextoolsExport( BinaryWriter writer, bool exportTex, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            if( !exportTex ) return;
+        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
             foreach( var entry in PathToTextureReplace ) {
                 var localPath = entry.Value.LocalPath;
                 var path = entry.Key;
@@ -36,7 +34,7 @@ namespace VfxEditor.TextureFormat {
             }
         }
 
-        public WorkspaceMetaTex[] WorkspaceExport( string saveLocation ) {
+        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
             var texRootPath = Path.Combine( saveLocation, "Tex" );
             Directory.CreateDirectory( texRootPath );
 
@@ -47,6 +45,7 @@ namespace VfxEditor.TextureFormat {
                 var newPath = $"VFX_{texId++}.atex";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.Copy( entry.Value.LocalPath, newFullPath, true );
+
                 texMeta.Add( new WorkspaceMetaTex {
                     Height = entry.Value.Height,
                     Width = entry.Value.Width,
@@ -58,7 +57,7 @@ namespace VfxEditor.TextureFormat {
                 } );
             }
 
-            return texMeta.ToArray();
+            WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), "Tex" );
         }
     }
 }

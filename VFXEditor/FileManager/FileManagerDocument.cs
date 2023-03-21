@@ -25,15 +25,21 @@ namespace VfxEditor.FileManager {
         public string WritePath => WriteLocation;
 
         private readonly string Id; // Tmb
-        private readonly string FileType; // TMB
+        private readonly string IdUpperCase; // TMB
+        private readonly string Extension;
+        private readonly FileManagerWindow Manager;
 
-        public FileManagerDocument( string writeLocation, string id ) {
+        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string id, string extension ) {
             Id = id;
-            FileType = id.ToUpper();
+            Extension = extension;
+            IdUpperCase = id.ToUpper();
             WriteLocation = writeLocation;
+            Manager = manager;
         }
 
-        public FileManagerDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace, string id ) : this( writeLocation, id ) {
+        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string extension ) : 
+            this( manager, writeLocation, id, extension ) {
+
             Source = source;
             Replace = replace;
             LoadLocal( localPath );
@@ -83,7 +89,7 @@ namespace VfxEditor.FileManager {
                 using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                 CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{FileType} file loaded" );
+                UiUtils.OkNotification( $"{IdUpperCase} file loaded" );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File", e );
@@ -102,7 +108,7 @@ namespace VfxEditor.FileManager {
                 using var reader = new BinaryReader( ms );
                 CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{FileType} file loaded" );
+                UiUtils.OkNotification( $"{IdUpperCase} file loaded" );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File" );
@@ -112,13 +118,11 @@ namespace VfxEditor.FileManager {
 
         protected void UpdateFile() {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", WriteLocation, FileType );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", WriteLocation, IdUpperCase );
             File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
         }
 
-        protected abstract string GetExtensionWithoutDot();
-
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + GetExtensionWithoutDot(), CurrentFile.ToBytes(), GetExtensionWithoutDot() );
+        protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + Extension, CurrentFile.ToBytes(), Extension );
 
         protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
@@ -196,9 +200,9 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawInputTextColumn() {
             ImGui.SetColumnWidth( 0, 140 );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            ImGui.Text( $"Loaded {FileType}" );
+            ImGui.Text( $"Loaded {IdUpperCase}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( $"{FileType} Being Replaced" );
+            ImGui.Text( $"{IdUpperCase} Being Replaced" );
         }
 
         protected virtual void DrawSearchBarsColumn() {
@@ -227,7 +231,7 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect" ) ) SourceShow();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect" ) ) Manager.ShowSource();
             ImGui.PopFont();
 
             // Remove
@@ -243,7 +247,7 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect" ) ) ReplaceShow();
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect" ) ) Manager.ShowReplace();
             ImGui.PopFont();
         }
 
@@ -261,10 +265,6 @@ namespace VfxEditor.FileManager {
         }
 
         protected abstract void DrawBody();
-
-        protected abstract void SourceShow();
-
-        protected abstract void ReplaceShow();
 
         protected static void DisplayBeginHelpText() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 15 );

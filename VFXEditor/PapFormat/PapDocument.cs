@@ -3,13 +3,15 @@ using System;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaBasic> {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
-        public PapDocument( string writeLocation ) : base( writeLocation, "Pap" ) { }
-        public PapDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation, "Pap", "pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
+            base( manager, writeLocation, localPath, source, replace, "Pap", "pap" ) { }
 
         // Need to pass PapIds
         public override void Update() {
@@ -17,8 +19,6 @@ namespace VfxEditor.PapFormat {
             Reload( CurrentFile.GetPapIds() );
             Plugin.ResourceLoader.ReRender();
         }
-
-        protected override string GetExtensionWithoutDot() => "pap";
 
         protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
 
@@ -51,10 +51,6 @@ namespace VfxEditor.PapFormat {
                 CurrentFile.Draw( "##Pap" );
             }
         }
-
-        protected override void SourceShow() => PapManager.SourceSelect.Show();
-
-        protected override void ReplaceShow() => PapManager.ReplaceSelect.Show();
 
         protected override bool ExtraInputColumn() => false;
 

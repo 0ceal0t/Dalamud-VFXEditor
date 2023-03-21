@@ -39,28 +39,29 @@ namespace VfxEditor.TexTools {
         private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";
-        private bool ExportVfx = true;
-        private bool ExportTex = true;
-        private bool ExportTmb = true;
-        private bool ExportPap = true;
-        private bool ExportScd = true;
+        private readonly Dictionary<string, bool> ToExport = new();
 
-        public TexToolsDialog() : base( "TexTools", false, 400, 300 ) { }
+        public TexToolsDialog() : base( "TexTools", false, 400, 300 ) {
+            foreach( var manager in Plugin.Managers ) {
+                if( manager == null ) continue;
+                ToExport[manager.GetExportName()] = false;
+            }
+        }
 
         public override void DrawBody() {
             var id = "##TexTools";
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
+
             ImGui.InputText( "Mod Name" + id, ref ModName, 255 );
             ImGui.InputText( "Author" + id, ref Author, 255 );
             ImGui.InputText( "Version" + id, ref Version, 255 );
 
-            ImGui.Checkbox( "Export Vfx", ref ExportVfx );
-            ImGui.Checkbox( "Export Textures", ref ExportTex );
-            ImGui.Checkbox( "Export Tmb", ref ExportTmb );
-            ImGui.Checkbox( "Export Pap", ref ExportPap );
-            ImGui.Checkbox( "Export Scd", ref ExportScd );
+            foreach( var entry in ToExport ) {
+                var exportItem = entry.Value;
+                if( ImGui.Checkbox( $"Export {entry.Key}{id}", ref exportItem ) ) ToExport[entry.Key] = exportItem;
+            }
 
             ImGui.EndChild();
 
@@ -83,11 +84,11 @@ namespace VfxEditor.TexTools {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    Plugin.AvfxManager.TextoolsExport( writer, ExportVfx, simpleParts, ref modOffset );
-                    Plugin.TextureManager.TextoolsExport( writer, ExportTex, simpleParts, ref modOffset );
-                    Plugin.TmbManager.TextoolsExport( writer, ExportTmb, simpleParts, ref modOffset );
-                    Plugin.PapManager.TextoolsExport( writer, ExportPap, simpleParts, ref modOffset );
-                    Plugin.ScdManager.TextoolsExport( writer, ExportScd, simpleParts, ref modOffset );
+                    foreach( var manager in Plugin.Managers ) {
+                        if( manager == null ) continue;
+                        if( !ToExport.TryGetValue( manager.GetExportName(), out var exportItem ) || !exportItem ) continue;
+                        manager.TextoolsExport( writer, simpleParts, ref modOffset );
+                    }
 
                     newData = ms.ToArray();
                 }

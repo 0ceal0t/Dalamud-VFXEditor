@@ -8,7 +8,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
-    public class EidFile : FileManagerFile {
+    /*public class EidFile : FileManagerFile {
        // public readonly CommandManager Command = new( Data.CopyManager.Eid );
 
         public EidFile( BinaryReader reader, bool checkOriginal = true ) {
@@ -26,5 +26,5 @@ namespace VfxEditor.EidFormat {
         public override void Write( BinaryWriter writer ) {
             // ...
         }
-    }
+    }*/
 }

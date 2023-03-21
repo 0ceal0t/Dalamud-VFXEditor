@@ -12,7 +12,6 @@ using VfxEditor.TmbFormat.Actor;
 namespace VfxEditor.TmbFormat
 {
     public class TmbFile : FileManagerFile {
-        public readonly CommandManager Command;
         public readonly bool PapEmbedded;
 
         public readonly Tmdh HeaderTmdh;
@@ -27,12 +26,11 @@ namespace VfxEditor.TmbFormat
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
 
-        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) {
+        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) : base( papEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb ) ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 
             PapEmbedded = papEmbedded;
-            Command = PapEmbedded ? CommandManager.Pap : new( Data.CopyManager.Tmb );
 
             var startPos = binaryReader.BaseStream.Position;
             var reader = new TmbReader( binaryReader );

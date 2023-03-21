@@ -19,7 +19,6 @@ namespace VfxEditor.PapFormat {
     public class PapFile : FileManagerFile {
         public static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
 
-        public readonly CommandManager Command = new( Data.CopyManager.Pap );
         public readonly string HkxTempLocation;
 
         public readonly ParsedShort ModelId = new( "Model Id" );
@@ -32,7 +31,7 @@ namespace VfxEditor.PapFormat {
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Data.CopyManager.Pap ) ) {
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 

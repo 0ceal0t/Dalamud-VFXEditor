@@ -63,13 +63,13 @@ namespace VfxEditor.PapFormat {
             if( ImGui.Button( $"Replace Havok data{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        PapManager.IndexDialog.OnOk = ( int idx ) => {
+                        Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
                             CommandManager.Pap.Add( new PapHavokFileCommand( HkxTempLocation, () => {
                                 HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
                             } ) );
                             UiUtils.OkNotification( "Havok data replaced" );
                         };
-                        PapManager.IndexDialog.Show();
+                        Plugin.PapManager.IndexDialog.Show();
                     }
                 } );
             }

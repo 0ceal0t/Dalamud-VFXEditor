@@ -1,18 +1,13 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.FileManager;
 
 namespace VfxEditor.Select.VfxSelect {
     public class VfxSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public VfxSelectDialog(
-            string id,
-            List<SelectResult> recentList,
-            bool isSourceDialog,
-            Action<SelectResult> onSelect
-         ) : base( id, "avfx", recentList, Plugin.Configuration.FavoriteVfx, isSourceDialog, onSelect ) {
-
+        public VfxSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new VfxItemSelect( "Item", this ),
                 new VfxStatusSelect( "Status", this ),

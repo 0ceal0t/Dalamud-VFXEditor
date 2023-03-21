@@ -1,50 +1,15 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using VfxEditor.AvfxFormat;
-using VfxEditor.PapFormat;
-using VfxEditor.ScdFormat;
-using VfxEditor.TextureFormat;
-using VfxEditor.TmbFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
-    public struct WorkspaceMeta {
-        public WorkspaceMetaTex[] Tex;
-        public WorkspaceMetaAvfx[] Docs;
-        public WorkspaceMetaBasic[] Tmb;
-        public WorkspaceMetaBasic[] Pap;
-        public WorkspaceMetaBasic[] Scd;
-    }
-
-    public struct WorkspaceMetaAvfx {
-        public SelectResult Source;
-        public SelectResult Replace;
-        public Dictionary<string, string> Renaming;
-        public string RelativeLocation; // can be empty if no avfx file
-    }
-
-    public struct WorkspaceMetaTex {
-        public int Height;
-        public int Width;
-        public int Depth;
-        public int MipLevels;
-        public TextureFormat.TextureFormat Format;
-        public string RelativeLocation;
-        public string ReplacePath;
-    }
-
-    public struct WorkspaceMetaBasic {
-        public SelectResult Source;
-        public SelectResult Replace;
-        public string RelativeLocation;
-    }
-
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
 
@@ -55,13 +20,7 @@ namespace VfxEditor {
             await Task.Run( () => {
                 Loading = true;
                 CurrentWorkspaceLocation = "";
-
-                ResetTextureManager();
-                ResetAvfxManager();
-                ResetTmbManager();
-                ResetPapManager();
-                ResetScdManager();
-
+                Managers.ForEach( x => x?.ToDefault() );
                 Loading = false;
             } );
         }
@@ -98,52 +57,21 @@ namespace VfxEditor {
                 PluginLog.Error( "vfx_workspace.json does not exist" );
                 return;
             }
-            var meta = JsonConvert.DeserializeObject<WorkspaceMeta>( File.ReadAllText( metaPath ) );
+
+            var meta = JObject.Parse( File.ReadAllText( metaPath ) );
 
             Loading = true;
 
-            //foreach( var manager in Managers ) {
-            //    if( manager == null ) continue;
-            //    manager.Dispose(); // clean up
-            //    // TODO
-            //
-            //}
-
-            ResetTextureManager();
-            if( meta.Tex != null ) {
-                foreach( var tex in meta.Tex ) {
-                    var fullPath = ResolveWorkspacePath( tex.RelativeLocation, loadLocation, TextureManager.PenumbraPath );
-                    TextureManager.ImportTexture( fullPath, tex.ReplacePath, tex.Height, tex.Width, tex.Depth, tex.MipLevels, tex.Format );
-                }
-            }
-
-            ResetAvfxManager();
-            if( meta.Docs != null ) {
-                foreach( var doc in meta.Docs ) AvfxManager.ImportWorkspaceFile( ResolveWorkspacePath( doc.RelativeLocation, loadLocation, AvfxManager.PenumbraPath ), doc );
-            }
-
-            ResetTmbManager();
-            if( meta.Tmb != null ) {
-                foreach( var tmb in meta.Tmb ) TmbManager.ImportWorkspaceFile( ResolveWorkspacePath( tmb.RelativeLocation, loadLocation, TmbManager.PenumbraPath ), tmb );
-            }
-
-            ResetPapManager();
-            if( meta.Pap != null ) {
-                foreach( var pap in meta.Pap ) PapManager.ImportWorkspaceFile( ResolveWorkspacePath( pap.RelativeLocation, loadLocation, PapManager.PenumbraPath ), pap );
-            }
-
-            ResetScdManager();
-            if( meta.Scd != null ) {
-                foreach( var scd in meta.Scd ) ScdManager.ImportWorkspaceFile( ResolveWorkspacePath( scd.RelativeLocation, loadLocation, ScdManager.PenumbraPath ), scd );
+            foreach( var manager in Managers ) {
+                if( manager == null ) continue;
+                manager.Dispose(); // clean up
+                manager.WorkspaceImport( meta, loadLocation );
             }
 
             UiUtils.OkNotification( "Opened workspace" );
 
             Loading = false;
         }
-
-        public static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) =>
-            ( relativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, penumbraPath ), relativeLocation );
 
         private static async void SaveWorkspace() {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
@@ -162,19 +90,8 @@ namespace VfxEditor {
             var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
             Directory.CreateDirectory( saveLocation );
 
-            //foreach( var manager in Managers ) {
-            //    if( manager == null ) continue;
-            //    // TODO
-            //
-            //}
-
-            var meta = new WorkspaceMeta {
-                Docs = AvfxManager.WorkspaceExport( saveLocation ),
-                Tex = TextureManager.WorkspaceExport( saveLocation ),
-                Tmb = TmbManager.WorkspaceExport( saveLocation ),
-                Pap = PapManager.WorkspaceExport( saveLocation ),
-                Scd = ScdManager.WorkspaceExport( saveLocation ),
-            };
+            var meta = new Dictionary<string, string>();
+            Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
 
             var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
             var metaString = JsonConvert.SerializeObject( meta );
@@ -185,41 +102,6 @@ namespace VfxEditor {
             Directory.Delete( saveLocation, true );
 
             UiUtils.OkNotification( "Saved workspace" );
-        }
-
-        private static void ResetTextureManager() {
-            var oldManager = TextureManager;
-            TextureManager = new TextureManager();
-            TextureManager.SetVisible( oldManager.IsVisible );
-            oldManager?.Dispose();
-        }
-
-        private static void ResetAvfxManager() {
-            var oldManager = AvfxManager;
-            AvfxManager = new AvfxManager();
-            AvfxManager.SetVisible( oldManager.IsVisible );
-            oldManager?.Dispose();
-        }
-
-        private static void ResetTmbManager() {
-            var oldManager = TmbManager;
-            TmbManager = new TmbManager();
-            TmbManager.SetVisible( oldManager.IsVisible );
-            oldManager?.Dispose();
-        }
-
-        private static void ResetPapManager() {
-            var oldManager = PapManager;
-            PapManager = new PapManager();
-            PapManager.SetVisible( oldManager.IsVisible );
-            oldManager?.Dispose();
-        }
-
-        private static void ResetScdManager() {
-            var oldManager = ScdManager;
-            ScdManager = new ScdManager();
-            ScdManager.SetVisible( oldManager.IsVisible );
-            oldManager?.Dispose();
         }
     }
 }

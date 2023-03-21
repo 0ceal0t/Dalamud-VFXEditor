@@ -11,6 +11,12 @@ using VfxEditor.NodeLibrary;
 
 namespace VfxEditor {
     [Serializable]
+    public class ManagerConfiguration {
+        public List<SelectResult> RecentItems = new();
+        public List<SelectResult> Favorites = new();
+    }
+
+    [Serializable]
     public class Configuration : GenericDialog, IPluginConfiguration {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
@@ -30,18 +36,18 @@ namespace VfxEditor {
             "VFXEditor",
         } );
 
-        // TODO
-        // combine RecentSelectsTmb, Favorite Tmb make it a generic map
-
+        // ===== [ OBSOLETE ] =======
         public List<SelectResult> RecentSelects = new();
         public List<SelectResult> RecentSelectsTMB = new();
         public List<SelectResult> RecentSelectsPAP = new();
         public List<SelectResult> RecentSelectsScd = new();
-
         public List<SelectResult> FavoriteVfx = new();
         public List<SelectResult> FavoriteTmb = new();
         public List<SelectResult> FavoritePap = new();
         public List<SelectResult> FavoriteScd = new();
+        // ===========================
+
+        public Dictionary<string, ManagerConfiguration> ManagerConfigs = new();
 
         public bool FilepickerImagePreview = true;
 
@@ -96,6 +102,12 @@ namespace VfxEditor {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
 
+            // Move old configurations over to new
+            ProcessOldManagerConfigs( RecentSelects, FavoriteVfx, "Vfx" );
+            ProcessOldManagerConfigs( RecentSelectsTMB, FavoriteTmb, "Tmb" );
+            ProcessOldManagerConfigs( RecentSelectsPAP, FavoritePap, "Pap" );
+            ProcessOldManagerConfigs( RecentSelectsScd, FavoriteScd, "Scd" );
+
             try {
                 Directory.CreateDirectory( WriteLocation );
             }
@@ -103,6 +115,17 @@ namespace VfxEditor {
                 WriteLocationError = true;
             }
             PluginLog.Log( "Write location: " + WriteLocation );
+        }
+
+        private void ProcessOldManagerConfigs( List<SelectResult> recent, List<SelectResult> favorites, string key ) {
+            if( recent.Count == 0 && favorites.Count == 0 ) return;
+
+            if( !ManagerConfigs.ContainsKey( key ) ) ManagerConfigs[key] = new();
+            ManagerConfigs[key].RecentItems.AddRange( recent );
+            ManagerConfigs[key].Favorites.AddRange( favorites );
+
+            recent.Clear();
+            favorites.Clear();
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {

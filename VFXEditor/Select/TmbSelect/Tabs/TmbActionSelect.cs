@@ -29,7 +29,7 @@ namespace VfxEditor.Select.TmbSelect {
 
         private void DrawMovementCancel( ActionTmbData data ) {
             if( !data.IsMotionDisabled ) return;
-            if( Dialog.IsSourceDialog ) return;
+            if( Dialog.IsSource ) return;
             ImGui.Indent( 25f );
             UiUtils.IconText( FontAwesomeIcon.QuestionCircle, true );
             UiUtils.Tooltip( "This parameter is set in the game's Excel sheet, and cannot be removed with VFXEditor" );

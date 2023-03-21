@@ -5,13 +5,13 @@ using System;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaBasic> {
-        public ScdDocument( string writeLocation ) : base( writeLocation, "Scd" ) { }
-        public ScdDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Scd" ) { }
-
-        protected override string GetExtensionWithoutDot() => "scd";
+        public ScdDocument( ScdManager manager, string writeLocation ) : base( manager, writeLocation, "Scd", "scd" ) { }
+        public ScdDocument( ScdManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
+            base( manager, writeLocation, localPath, source, replace, "Scd", "scd" ) { }
 
         protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader );
 
@@ -41,10 +41,6 @@ namespace VfxEditor.ScdFormat {
                 CurrentFile.Draw( "##Scd" );
             }
         }
-
-        protected override void SourceShow() => ScdManager.SourceSelect.Show();
-
-        protected override void ReplaceShow() => ScdManager.ReplaceSelect.Show();
 
         protected override bool ExtraInputColumn() => false;
     }

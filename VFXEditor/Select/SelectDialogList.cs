@@ -34,7 +34,7 @@ namespace VfxEditor {
 
                 var idx = 0;
                 foreach( var item in Items ) {
-                    if( item.Type == SelectResultType.Local && !Dialog.IsSourceDialog ) continue;
+                    if( item.Type == SelectResultType.Local && !Dialog.IsSource ) continue;
 
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();

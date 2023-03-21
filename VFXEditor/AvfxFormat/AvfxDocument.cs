@@ -14,10 +14,18 @@ namespace VfxEditor.AvfxFormat {
         private string SpawnPath => Replace.Path;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
-        public AvfxDocument( string writeLocation ) : base( writeLocation, "Vfx" ) { }
-        public AvfxDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Vfx" ) { }
-        public AvfxDocument( string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( writeLocation, localPath, data.Source, data.Replace ) {
+        private readonly AvfxManager AvfxManager;
+
+        public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) {
+            AvfxManager = manager;
+        }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
+            base( manager, writeLocation, localPath, source, replace, "Vfx", "avfx" ) {
+            AvfxManager = manager;
+        }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( manager, writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
+            AvfxManager = manager;
         }
 
         public override void Update() {
@@ -47,13 +55,7 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        protected override string GetExtensionWithoutDot() => "avfx";
-
         protected override AvfxFile FileFromReader( BinaryReader reader ) => new( reader );
-
-        protected override void SourceShow() => AvfxManager.SourceSelect.Show();
-
-        protected override void ReplaceShow() => AvfxManager.ReplaceSelect.Show();
 
         public void Import( string path ) { if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path ); }
 

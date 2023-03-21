@@ -5,18 +5,18 @@ using System.Numerics;
 using VfxEditor.Animation;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaBasic> {
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
-        public TmbDocument( string writeLocation ) : base( writeLocation, "Tmb" ) { }
-        public TmbDocument( string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( writeLocation, localPath, source, replace, "Tmb" ) {
+        public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation, "Tmb", "tmb" ) { }
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, 
+            writeLocation, localPath, source, replace, "Tmb", "tmb" ) {
             AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
         }
-
-        protected override string GetExtensionWithoutDot() => "tmb";
 
         protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader, false );
 
@@ -32,10 +32,6 @@ namespace VfxEditor.TmbFormat {
             Replace = Replace,
             Source = Source
         };
-
-        protected override void SourceShow() => TmbManager.SourceSelect.Show();
-
-        protected override void ReplaceShow() => TmbManager.ReplaceSelect.Show();
 
         protected override bool ExtraInputColumn() => true;
 

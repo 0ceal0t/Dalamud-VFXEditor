@@ -1,18 +1,13 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.FileManager;
 
 namespace VfxEditor.Select.ScdSelect {
     public class ScdSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 
-        public ScdSelectDialog(
-                string id,
-                List<SelectResult> recentList,
-                bool isSourceDialog,
-                Action<SelectResult> onSelect
-            ) : base( id, "scd", recentList, Plugin.Configuration.FavoriteScd, isSourceDialog, onSelect ) {
-
+        public ScdSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new ScdMountSelect( "Mount", this ),
                 new ScdOrchestrionSelect( "Orchestrion", this ),

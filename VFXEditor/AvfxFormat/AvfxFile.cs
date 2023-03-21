@@ -13,7 +13,6 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile : FileManagerFile {
         public readonly AvfxMain Main;
-        public readonly CommandManager Command = new( Data.CopyManager.Avfx );
 
         public readonly UiEffectorView EffectorView;
         public readonly UiEmitterView EmitterView;
@@ -30,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly HashSet<IAvfxUiBase> ForceOpenTabs = new();
 
-        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) {
+        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Data.CopyManager.Avfx ) ) {
             byte[] original = null;
             if( checkOriginal ) {
                 var startPos = reader.BaseStream.Position;
