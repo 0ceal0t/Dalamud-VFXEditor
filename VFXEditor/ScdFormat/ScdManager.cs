@@ -1,7 +1,5 @@
 using ImGuiNET;
-using NAudio.Wave;
 using System.IO;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 using VfxEditor.Utils;

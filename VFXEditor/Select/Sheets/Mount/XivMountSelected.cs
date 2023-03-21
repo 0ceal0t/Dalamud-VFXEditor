@@ -15,6 +15,6 @@ namespace VfxEditor.Select.Rows {
             VfxExists = VfxId > 0;
         }
 
-        public string GetVFXPath() => VfxExists ? Mount.GetVfxPath( VfxId ) : "";
+        public string GetVfxPath() => VfxExists ? Mount.GetVfxPath( VfxId ) : "";
     }
 }

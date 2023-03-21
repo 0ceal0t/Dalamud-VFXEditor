@@ -15,8 +15,8 @@ namespace VfxEditor.Select.Rows {
             var split = Name.Split( '_' );
             if( split.Length > 0 ) {
                 var suffix = split[0];
-                if( suffixToName.ContainsKey( suffix ) ) {
-                    Name = "(" + suffixToName[suffix] + ") " + Name;
+                if( suffixToName.TryGetValue( suffix, out var value ) ) {
+                    Name = "(" + value + ") " + Name;
                 }
             }
         }

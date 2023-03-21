@@ -27,7 +27,7 @@ namespace VfxEditor.ScdFormat {
         public ScdTrackSplitView TrackView;
         public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;
 
-        public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Data.CopyManager.Scd ) ) {
+        public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager.GetCopyManager() ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             Header = new( reader );

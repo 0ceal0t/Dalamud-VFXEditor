@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 using VfxEditor.Select.Sheets;
 
 namespace VfxEditor.Select {
-    public class SheetManager {
-        public static string BnpcPath { get; private set; }
-        public static string NpcFilesPath { get; private set; }
-        public static string MiscVfxPath { get; private set; }
-        public static string MiscTmbPath { get; private set; }
+    public partial class SheetManager {
+        public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
+        public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
+        public static string MiscVfxPath => Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
+        public static string MiscTmbPath => Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
 
         public static ItemSheetLoader Items { get; private set; }
         public static ActionSheetLoader Actions { get; private set; }
@@ -39,10 +39,16 @@ namespace VfxEditor.Select {
         public static BgmQuestSheetLoader BgmQuest { get; private set; }
         public static InstanceContentSheetLoader Content { get; private set; }
 
+        public static CharacterEidLoader CharacterEid { get; private set; }
+
         // Contains vfx, tmb, and paps
         public static NpcSheetLoader Npcs { get; private set; }
 
-        public static readonly Regex AvfxRegex = new( @"\u0000([a-zA-Z0-9\/_]*?)\.avfx", RegexOptions.Compiled );
+
+        [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
+        private static partial Regex AvfxRegexPattern();
+
+        public static readonly Regex AvfxRegex = AvfxRegexPattern();
 
         public struct RaceStruct {
             public string SkeletonId;
@@ -101,11 +107,7 @@ namespace VfxEditor.Select {
         };
 
         public static void Initialize() {
-            BnpcPath = Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
-            NpcFilesPath = Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
-            MiscVfxPath = Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
-            MiscTmbPath = Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
-
+            // VFX
             Items = new();
             Actions = new();
             NonPlayerActions = new();
@@ -119,21 +121,23 @@ namespace VfxEditor.Select {
             Mounts = new();
             Housing = new();
             Common = new();
-
+            // TMP
             ActionTmb = new();
             NonPlayerActionTmb = new();
             EmoteTmb = new();
             MiscTmb = new();
-
+            // PAP
             ActionPap = new();
             NonPlayerActionPap = new();
             EmotePap = new();
-
+            // SCD
             Orchestrions = new();
             ZoneScd = new();
             Bgm = new();
             BgmQuest = new();
             Content = new();
+            // EID
+            CharacterEid = new();
         }
 
         public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );

@@ -31,7 +31,7 @@ namespace VfxEditor.PapFormat {
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Data.CopyManager.Pap ) ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager.GetCopyManager() ) ) {
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 

@@ -9,10 +9,11 @@ namespace VfxEditor {
         public static readonly List<CommandManager> Managers = new();
         public static readonly List<string> FilesToCleanup = new();
 
-        public static CommandManager Avfx => Plugin.AvfxManager.CurrentFile?.Command;
-        public static CommandManager Tmb => Plugin.TmbManager.CurrentFile?.Command;
-        public static CommandManager Pap => Plugin.PapManager.CurrentFile?.Command;
-        public static CommandManager Scd => Plugin.ScdManager.CurrentFile?.Command;
+        public static CommandManager Avfx => Plugin.AvfxManager?.GetCommandManager();
+        public static CommandManager Tmb => Plugin.TmbManager?.GetCommandManager();
+        public static CommandManager Pap => Plugin.PapManager?.GetCommandManager();
+        public static CommandManager Scd => Plugin.ScdManager?.GetCommandManager();
+        public static CommandManager Eid => Plugin.EidManager?.GetCommandManager();
 
         public static int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();

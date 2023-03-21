@@ -4,10 +4,10 @@ namespace VfxEditor.Select.Rows {
         public readonly int RowId;
         public readonly ushort Icon;
 
-        public readonly string HitVFXPath;
-        public readonly string LoopVFXPath1;
-        public readonly string LoopVFXPath2;
-        public readonly string LoopVFXPath3;
+        public readonly string HitVfxPath;
+        public readonly string LoopVfxPath1;
+        public readonly string LoopVfxPath2;
+        public readonly string LoopVfxPath3;
         public readonly bool VfxExists = false;
 
         public static readonly string statusPrefix = "vfx/common/eff/";
@@ -17,12 +17,12 @@ namespace VfxEditor.Select.Rows {
             RowId = ( int )status.RowId;
             Icon = status.Icon;
 
-            HitVFXPath = GetVFXPath( status.HitEffect.Value?.Location.Value?.Location );
-            LoopVFXPath1 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
-            LoopVFXPath2 = GetVFXPath( status.VFX.Value?.VFX2?.Value.Location );
-            LoopVFXPath3 = GetVFXPath( status.VFX.Value?.VFX3?.Value.Location );
+            HitVfxPath = GetVFXPath( status.HitEffect.Value?.Location.Value?.Location );
+            LoopVfxPath1 = GetVFXPath( status.VFX.Value?.VFX?.Value.Location );
+            LoopVfxPath2 = GetVFXPath( status.VFX.Value?.VFX2?.Value.Location );
+            LoopVfxPath3 = GetVFXPath( status.VFX.Value?.VFX3?.Value.Location );
 
-            VfxExists = !string.IsNullOrEmpty( LoopVFXPath1 ) || !string.IsNullOrEmpty( LoopVFXPath2 ) || !string.IsNullOrEmpty( LoopVFXPath3 ) || !string.IsNullOrEmpty( HitVFXPath );
+            VfxExists = !string.IsNullOrEmpty( LoopVfxPath1 ) || !string.IsNullOrEmpty( LoopVfxPath2 ) || !string.IsNullOrEmpty( LoopVfxPath3 ) || !string.IsNullOrEmpty( HitVfxPath );
         }
 
         private static string GetVFXPath( string path ) {

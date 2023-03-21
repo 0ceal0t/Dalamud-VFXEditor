@@ -15,9 +15,7 @@ namespace VfxEditor.TmbFormat {
 
         public override void SetReplace( SelectResult result ) {
             base.SetReplace( result );
-            if( ActiveDocument != null ) {
-                ActiveDocument.AnimationId = ActorAnimationManager.GetIdFromTmbPath( result.Path );
-            }
+            if( ActiveDocument != null ) ActiveDocument.AnimationId = ActorAnimationManager.GetIdFromTmbPath( result.Path );
         }
 
         protected override TmbDocument GetNewDocument() => new( this, LocalPath );

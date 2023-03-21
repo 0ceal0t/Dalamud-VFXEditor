@@ -5,10 +5,7 @@ using System.Numerics;
 
 namespace VfxEditor.Data {
     public class CopyManager {
-        public static CopyManager Avfx => Plugin.AvfxManager.Copy;
-        public static CopyManager Tmb => Plugin.TmbManager.Copy;
-        public static CopyManager Pap => Plugin.PapManager.Copy;
-        public static CopyManager Scd => Plugin.ScdManager.Copy;
+        public static CopyManager Avfx => Plugin.AvfxManager?.GetCopyManager();
 
         public bool IsCopying { get; private set; }
         public bool IsPasting { get; private set; }

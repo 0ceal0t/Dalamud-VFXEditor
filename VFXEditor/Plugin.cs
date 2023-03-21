@@ -26,6 +26,7 @@ using VfxEditor.Tracker;
 using VfxEditor.Animation;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
+using VfxEditor.EidFormat;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -55,7 +56,8 @@ namespace VfxEditor {
             AvfxManager,
             TmbManager,
             PapManager,
-            ScdManager
+            ScdManager,
+            EidManager
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -63,6 +65,7 @@ namespace VfxEditor {
         public static TmbManager TmbManager { get; private set; }
         public static PapManager PapManager { get; private set; }
         public static ScdManager ScdManager { get; private set; }
+        public static EidManager EidManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -111,6 +114,7 @@ namespace VfxEditor {
             AvfxManager = new AvfxManager();
             PapManager = new PapManager();
             ScdManager = new ScdManager();
+            EidManager = new EidManager();
 
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();
@@ -164,11 +168,12 @@ namespace VfxEditor {
 
             TextureManager.BreakDown();
             Managers.ForEach( x => x?.Dispose() );
+            TextureManager = null;
             AvfxManager = null;
             TmbManager = null;
             PapManager = null;
             ScdManager = null;
-            TextureManager = null;
+            EidManager = null;
 
             AnimationManager?.Dispose();
             AnimationManager = null;

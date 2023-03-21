@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Animation;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
@@ -19,13 +18,6 @@ namespace VfxEditor.TmbFormat {
         }
 
         protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader, false );
-
-        public override void CheckKeybinds() {
-            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Tmb.Copy();
-            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Tmb.Paste();
-            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Tmb?.Undo();
-            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Tmb?.Redo();
-        }
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,

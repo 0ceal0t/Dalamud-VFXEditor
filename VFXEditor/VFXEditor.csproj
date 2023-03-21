@@ -196,4 +196,12 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Select2\Eid\" />
+      <Folder Include="Select2\Scd\" />
+      <Folder Include="Select2\Pap\" />
+      <Folder Include="Select2\Tmb\" />
+      <Folder Include="Select2\Vfx\Zone\" />
+    </ItemGroup>
 </Project>

@@ -16,6 +16,8 @@ namespace VfxEditor.FileManager {
         }
 
         public abstract ManagerConfiguration GetConfig();
+        public abstract CopyManager GetCopyManager();
+        public abstract CommandManager GetCommandManager();
 
         public abstract void SetSource( SelectResult result );
         public abstract void ShowSource();
@@ -50,7 +52,7 @@ namespace VfxEditor.FileManager {
         public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, true, 800, 1000 ) {
             WindowTitle = windowTitle;
             Id = id;
-            TempFilePrefix = id + "Temp";
+            TempFilePrefix = $"{id}Temp";
             Extension = extension;
             WorkspaceKey = workspaceKey;
             WorkspacePath = workspacePath;
@@ -64,11 +66,10 @@ namespace VfxEditor.FileManager {
             DocumentWindow = new( windowTitle, this );
         }
 
-        public CopyManager GetCopyManager() => Copy;
-        public CommandManager GetCommandManager() => CurrentFile?.Command;
-        public string GetExportName() => Id;
-
+        public override CopyManager GetCopyManager() => Copy;
+        public override CommandManager GetCommandManager() => CurrentFile?.Command;
         public override ManagerConfiguration GetConfig() => Configuration;
+        public string GetExportName() => Id;
 
         public override void SetSource( SelectResult result ) {
             ActiveDocument?.SetSource( result );

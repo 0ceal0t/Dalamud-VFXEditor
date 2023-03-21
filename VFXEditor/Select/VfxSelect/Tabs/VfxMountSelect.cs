@@ -16,7 +16,7 @@ namespace VfxEditor.Select.VfxSelect {
             ImGui.SameLine();
             DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX", Loaded.GetVFXPath(), parentId, SelectResultType.GameNpc, Loaded.Mount.Name, true );
+            DrawPath( "VFX", Loaded.GetVfxPath(), parentId, SelectResultType.GameNpc, Loaded.Mount.Name, true );
         }
 
         protected override string GetName( XivMount item ) => item.Name;

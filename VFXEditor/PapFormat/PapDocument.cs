@@ -28,13 +28,6 @@ namespace VfxEditor.PapFormat {
             Source = Source
         };
 
-        public override void CheckKeybinds() {
-            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Pap.Copy();
-            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Pap.Paste();
-            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Pap?.Undo();
-            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Pap?.Redo();
-        }
-
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DisplayAnimationWarning();

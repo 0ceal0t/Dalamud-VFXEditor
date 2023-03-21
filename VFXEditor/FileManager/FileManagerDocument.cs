@@ -7,6 +7,7 @@ using VfxEditor.Utils;
 using VfxEditor.TexTools;
 using Dalamud.Logging;
 using System;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
@@ -24,17 +25,17 @@ namespace VfxEditor.FileManager {
         protected string WriteLocation;
         public string WritePath => WriteLocation;
 
-        private readonly string Id; // Tmb
-        private readonly string IdUpperCase; // TMB
-        private readonly string Extension;
-        private readonly FileManagerWindow Manager;
+        protected readonly string Id; // Tmb
+        protected readonly string IdUpperCase; // TMB
+        protected readonly string Extension;
+        protected readonly FileManagerWindow Manager;
 
         public FileManagerDocument( FileManagerWindow manager, string writeLocation, string id, string extension ) {
-            Id = id;
-            Extension = extension;
-            IdUpperCase = id.ToUpper();
-            WriteLocation = writeLocation;
             Manager = manager;
+            WriteLocation = writeLocation;
+            Id = id;
+            IdUpperCase = id.ToUpper();
+            Extension = extension;
         }
 
         public FileManagerDocument( FileManagerWindow manager, string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string extension ) : 
@@ -129,12 +130,6 @@ namespace VfxEditor.FileManager {
             Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation, papIds );
         }
 
-        public virtual void Dispose() {
-            CurrentFile?.Dispose();
-            CurrentFile = null;
-            File.Delete( WriteLocation );
-        }
-
         public virtual void Update() {
             UpdateFile();
             Reload();
@@ -167,7 +162,12 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        public abstract void CheckKeybinds();
+        public virtual void CheckKeybinds() {
+            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
+            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Redo();
+        }
 
         protected abstract bool ExtraInputColumn();
 
@@ -265,6 +265,14 @@ namespace VfxEditor.FileManager {
         }
 
         protected abstract void DrawBody();
+
+        public virtual void Dispose() {
+            CurrentFile?.Dispose();
+            CurrentFile = null;
+            File.Delete( WriteLocation );
+        }
+
+        // ========================
 
         protected static void DisplayBeginHelpText() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 15 );

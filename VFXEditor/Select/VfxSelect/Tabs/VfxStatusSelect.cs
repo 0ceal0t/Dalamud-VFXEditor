@@ -12,10 +12,10 @@ namespace VfxEditor.Select.VfxSelect {
         protected override void DrawSelected( string parentId ) {
             DrawIcon( Icon );
 
-            DrawPath( "Hit", Selected.HitVFXPath, $"{parentId}/Hit", SelectResultType.GameStatus, $"{Selected.Name} Hit", true );
-            DrawPath( "Loop 1", Selected.LoopVFXPath1, $"{parentId}/Loop1", SelectResultType.GameStatus, $"{Selected.Name} Loop 1", true );
-            DrawPath( "Loop 2", Selected.LoopVFXPath2, $"{parentId}/Loop2", SelectResultType.GameStatus, $"{Selected.Name} Loop 2", true );
-            DrawPath( "Loop 3", Selected.LoopVFXPath3, $"{parentId}/Loop3", SelectResultType.GameStatus, $"{Selected.Name} Loop 3", true );
+            DrawPath( "Hit", Selected.HitVfxPath, $"{parentId}/Hit", SelectResultType.GameStatus, $"{Selected.Name} Hit", true );
+            DrawPath( "Loop 1", Selected.LoopVfxPath1, $"{parentId}/Loop1", SelectResultType.GameStatus, $"{Selected.Name} Loop 1", true );
+            DrawPath( "Loop 2", Selected.LoopVfxPath2, $"{parentId}/Loop2", SelectResultType.GameStatus, $"{Selected.Name} Loop 2", true );
+            DrawPath( "Loop 3", Selected.LoopVfxPath3, $"{parentId}/Loop3", SelectResultType.GameStatus, $"{Selected.Name} Loop 3", true );
         }
 
         protected override string GetName( XivStatus item ) => item.Name;
