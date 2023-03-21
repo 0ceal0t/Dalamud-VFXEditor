@@ -24,7 +24,6 @@ using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Animation;
-using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 
@@ -51,7 +50,14 @@ namespace VfxEditor {
         public static TexToolsDialog TexToolsDialog { get; private set; }
         public static PenumbraDialog PenumbraDialog { get; private set; }
 
-        public static readonly List<IFileManager> Managers = new();
+        public static List<IFileManager> Managers => new( new IFileManager[]{
+            AvfxManager,
+            TextureManager,
+            TmbManager,
+            PapManager,
+            ScdManager
+        } );
+
         public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
         public static TmbManager TmbManager { get; private set; }
@@ -75,7 +81,7 @@ namespace VfxEditor {
                 DataManager dataManager,
                 TargetManager targetManager,
                 KeyState keyState
-            ) {
+         ) {
             PluginInterface = pluginInterface;
             ClientState = clientState;
             Condition = condition;
@@ -109,13 +115,6 @@ namespace VfxEditor {
             PapManager = new PapManager();
             ScdManager.Setup();
             ScdManager = new ScdManager();
-
-            Managers.Clear();
-            Managers.Add( TextureManager );
-            Managers.Add( TmbManager );
-            Managers.Add( AvfxManager );
-            Managers.Add( PapManager );
-            Managers.Add( ScdManager );
 
             ToolsDialog = new ToolsDialog();
             PenumbraDialog = new PenumbraDialog();
@@ -161,25 +160,15 @@ namespace VfxEditor {
 
             CommandManager.RemoveHandler( CommandName );
 
-            Managers.Clear();
-
             ResourceLoader?.Dispose();
             ResourceLoader = null;
 
-            AvfxManager?.Dispose();
-            AvfxManager = null;
-
-            TmbManager?.Dispose();
-            TmbManager = null;
-
-            PapManager?.Dispose();
-            PapManager = null;
-
-            ScdManager?.Dispose();
-            ScdManager = null;
-
             TextureManager.BreakDown();
-            TextureManager?.Dispose();
+            Managers.ForEach( x => x?.Dispose() );
+            AvfxManager = null;
+            TmbManager = null;
+            PapManager = null;
+            ScdManager = null;
             TextureManager = null;
 
             AnimationManager?.Dispose();

@@ -1,19 +1,17 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-
 using VfxEditor.AvfxFormat;
-using VfxEditor.Utils;
 using VfxEditor.PapFormat;
+using VfxEditor.ScdFormat;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
-using VfxEditor.ScdFormat;
+using VfxEditor.Utils;
 
 namespace VfxEditor {
     public struct WorkspaceMeta {
@@ -28,7 +26,6 @@ namespace VfxEditor {
         public SelectResult Source;
         public SelectResult Replace;
         public Dictionary<string, string> Renaming;
-
         public string RelativeLocation; // can be empty if no avfx file
     }
 
@@ -38,7 +35,6 @@ namespace VfxEditor {
         public int Depth;
         public int MipLevels;
         public TextureFormat.TextureFormat Format;
-
         public string RelativeLocation;
         public string ReplacePath;
     }
@@ -106,6 +102,13 @@ namespace VfxEditor {
 
             Loading = true;
 
+            //foreach( var manager in Managers ) {
+            //    if( manager == null ) continue;
+            //    manager.Dispose(); // clean up
+            //    // TODO
+            //
+            //}
+
             ResetTextureManager();
             if( meta.Tex != null ) {
                 foreach( var tex in meta.Tex ) {
@@ -139,7 +142,7 @@ namespace VfxEditor {
             Loading = false;
         }
 
-        private static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) =>
+        public static string ResolveWorkspacePath( string relativeLocation, string loadLocation, string penumbraPath ) =>
             ( relativeLocation == "" ) ? "" : Path.Combine( Path.Combine( loadLocation, penumbraPath ), relativeLocation );
 
         private static async void SaveWorkspace() {
@@ -158,6 +161,12 @@ namespace VfxEditor {
         private static void ExportWorkspace() {
             var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
             Directory.CreateDirectory( saveLocation );
+
+            //foreach( var manager in Managers ) {
+            //    if( manager == null ) continue;
+            //    // TODO
+            //
+            //}
 
             var meta = new WorkspaceMeta {
                 Docs = AvfxManager.WorkspaceExport( saveLocation ),

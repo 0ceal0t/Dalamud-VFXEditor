@@ -5,7 +5,10 @@ using VfxEditor.NodeLibrary;
 using VfxEditor.Select.VfxSelect;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxManager : FileManagerWindow<AvfxDocument, WorkspaceMetaAvfx, AvfxFile> {
+    public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaAvfx> {
+        // TODO
+        // since no longer re-creating managers, these don't have to be static
+
         public static VfxSelectDialog SourceSelect { get; private set; }
         public static VfxSelectDialog ReplaceSelect { get; private set; }
         public static AvfxNodeLibrary NodeLibrary { get; private set; }
@@ -31,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
 
         // =================
 
-        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", tempFilePrefix: "VfxTemp", extension: "avfx", penumbaPath: PenumbraPath ) { }
+        public AvfxManager() : base( title: "VFXEditor", id: "Vfx", extension: "avfx", penumbaPath: PenumbraPath ) { }
 
         protected override AvfxDocument GetNewDocument() => new( LocalPath );
 

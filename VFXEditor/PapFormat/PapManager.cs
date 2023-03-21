@@ -4,7 +4,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.PapSelect;
 
 namespace VfxEditor.PapFormat {
-    public partial class PapManager : FileManagerWindow<PapDocument, WorkspaceMetaBasic, PapFile> {
+    public partial class PapManager : FileManagerWindow<PapDocument, PapFile, WorkspaceMetaBasic> {
         public static PapSelectDialog SourceSelect { get; private set; }
         public static PapSelectDialog ReplaceSelect { get; private set; }
         public static PapSelectIndexDialog IndexDialog { get; private set; }
@@ -30,7 +30,7 @@ namespace VfxEditor.PapFormat {
 
         // =====================
 
-        public PapManager() : base( title: "Pap Editor", id: "Pap", tempFilePrefix: "PapTemp", extension: "pap", penumbaPath: PenumbraPath ) { }
+        public PapManager() : base( title: "Pap Editor", id: "Pap", extension: "pap", penumbaPath: PenumbraPath ) { }
 
         protected override PapDocument GetNewDocument() => new( LocalPath );
 

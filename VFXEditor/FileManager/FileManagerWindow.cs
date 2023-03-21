@@ -7,13 +7,13 @@ using VfxEditor.Ui;
 using VfxEditor.TexTools;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerWindow<T, S, R> : GenericDialog, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile { // S = workspace document
+    public abstract class FileManagerWindow<T, R, S> : GenericDialog, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
         private int DocumentId = 0;
         private readonly string Extension; // tmb
-        private readonly string TempFilePrefix; // TmbTemp
+        private readonly string TempFilePrefix;
         private readonly string PenumbraPath; // Tmb
         private bool HasDefault = true;
 
@@ -22,12 +22,12 @@ namespace VfxEditor.FileManager {
         public readonly string Id;
         public readonly List<T> Documents = new();
 
-        private readonly FileManagerDocumentWindow<T, S, R> DocumentWindow;
+        private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
 
-        public FileManagerWindow( string title, string id, string tempFilePrefix, string extension, string penumbaPath ) : base( title, true, 800, 1000 ) {
+        public FileManagerWindow( string title, string id, string extension, string penumbaPath ) : base( title, true, 800, 1000 ) {
             Title = title;
             Id = id;
-            TempFilePrefix = tempFilePrefix;
+            TempFilePrefix = id + "Temp";
             Extension = extension;
             PenumbraPath = penumbaPath;
             AddDocument();
@@ -47,8 +47,8 @@ namespace VfxEditor.FileManager {
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = null;
             foreach( var document in Documents ) {
-                if( document.GetReplacePath( path, out var _replacePath ) ) {
-                    replacePath = _replacePath;
+                if( document.GetReplacePath( path, out var documentReplacePath ) ) {
+                    replacePath = documentReplacePath;
                     return true;
                 }
             }
@@ -104,16 +104,6 @@ namespace VfxEditor.FileManager {
             ActiveDocument?.CheckKeybinds();
         }
 
-        public void ImportWorkspaceFile( string localPath, S data ) {
-            var newDocument = GetImportedDocument( localPath, data );
-            ActiveDocument = newDocument;
-            Documents.Add( newDocument );
-            if( HasDefault && Documents.Count > 1 ) {
-                HasDefault = false;
-                RemoveDocument( Documents[0] );
-            }
-        }
-
         public virtual void PenumbraExport( string modFolder, bool doExport ) {
             if( !doExport ) return;
             foreach( var document in Documents ) {
@@ -140,6 +130,16 @@ namespace VfxEditor.FileManager {
                 document.WorkspaceExport( documentMeta, rootPath, newPath );
             }
             return documentMeta.ToArray();
+        }
+
+        public void ImportWorkspaceFile( string localPath, S data ) {
+            var newDocument = GetImportedDocument( localPath, data );
+            ActiveDocument = newDocument;
+            Documents.Add( newDocument );
+            if( HasDefault && Documents.Count > 1 ) {
+                HasDefault = false;
+                RemoveDocument( Documents[0] );
+            }
         }
 
         public virtual void Dispose() {

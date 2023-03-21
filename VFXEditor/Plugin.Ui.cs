@@ -22,14 +22,14 @@ namespace VfxEditor {
             VfxTracker.Draw();
             Configuration.Draw();
 
-            Managers.ForEach( x => x.Draw() );
+            Managers.ForEach( x => x?.Draw() );
 
             CopyManager.FinalizeAll();
 
             if( Configuration.AutosaveEnabled &&
-                 Configuration.AutosaveSeconds > 10 &&
-                 !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
-                 ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds
+                Configuration.AutosaveSeconds > 10 &&
+                !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
+                ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds
             ) {
                 LastAutoSave = DateTime.Now;
                 SaveWorkspace();

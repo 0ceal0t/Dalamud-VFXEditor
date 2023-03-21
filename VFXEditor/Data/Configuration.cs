@@ -30,6 +30,9 @@ namespace VfxEditor {
             "VFXEditor",
         } );
 
+        // TODO
+        // combine RecentSelectsTmb, Favorite Tmb make it a generic map
+
         public List<SelectResult> RecentSelects = new();
         public List<SelectResult> RecentSelectsTMB = new();
         public List<SelectResult> RecentSelectsPAP = new();

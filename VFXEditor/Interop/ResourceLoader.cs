@@ -444,6 +444,6 @@ namespace VfxEditor.Interop {
             return resource;
         }
 
-        private bool DoDebug( string path ) => Plugin.Managers.Where( x => x.DoDebug( path ) ).Any();
+        private static bool DoDebug( string path ) => Plugin.Managers.Where( x => x != null && x.DoDebug( path ) ).Any();
     }
 }

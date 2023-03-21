@@ -5,5 +5,7 @@ namespace VfxEditor.FileManager {
         public bool GetReplacePath( string gamePath, out string replacePath );
 
         public void Draw();
+
+        public void Dispose();
     }
 }

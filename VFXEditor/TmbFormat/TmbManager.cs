@@ -6,7 +6,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.TmbSelect;
 
 namespace VfxEditor.TmbFormat {
-    public partial class TmbManager : FileManagerWindow<TmbDocument, WorkspaceMetaBasic, TmbFile> {
+    public partial class TmbManager : FileManagerWindow<TmbDocument, TmbFile, WorkspaceMetaBasic> {
         public static TmbSelectDialog SourceSelect { get; private set; }
         public static TmbSelectDialog ReplaceSelect { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
@@ -31,7 +31,7 @@ namespace VfxEditor.TmbFormat {
 
         public static readonly string PenumbraPath = "Tmb";
 
-        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", tempFilePrefix: "TmbTemp", extension: "tmb", penumbaPath: PenumbraPath ) { }
+        public TmbManager() : base( title: "Tmb Editor", id: "Tmb", extension: "tmb", penumbaPath: PenumbraPath ) { }
 
         protected override TmbDocument GetNewDocument() => new( LocalPath );
 

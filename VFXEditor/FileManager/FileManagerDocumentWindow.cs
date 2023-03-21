@@ -9,11 +9,11 @@ using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public class FileManagerDocumentWindow<T, S, R> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        private FileManagerWindow<T, S, R> Manager;
+    public class FileManagerDocumentWindow<T, R, S> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile {
+        private readonly FileManagerWindow<T, R, S> Manager;
         private T SelectedDocument = null;
 
-        public FileManagerDocumentWindow( string name, FileManagerWindow<T, S, R> manager ) : base( $"{name} [DOCUMENTS]", false, 600, 400 ) {
+        public FileManagerDocumentWindow( string name, FileManagerWindow<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, 600, 400 ) {
             Manager = manager;
         }
 

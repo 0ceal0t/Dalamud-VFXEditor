@@ -6,7 +6,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.ScdSelect;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdManager : FileManagerWindow<ScdDocument, WorkspaceMetaBasic, ScdFile> {
+    public class ScdManager : FileManagerWindow<ScdDocument, ScdFile, WorkspaceMetaBasic> {
         public static ScdSelectDialog SourceSelect { get; private set; }
         public static ScdSelectDialog ReplaceSelect { get; private set; }
         public static CopyManager Copy { get; private set; } = new();
@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
 
         public static readonly string PenumbraPath = "Scd";
 
-        public ScdManager() : base( title: "Scd Editor", id: "Scd", tempFilePrefix: "ScdTemp", extension: "scd", penumbaPath: PenumbraPath ) { }
+        public ScdManager() : base( title: "Scd Editor", id: "Scd", extension: "scd", penumbaPath: PenumbraPath ) { }
 
         protected override ScdDocument GetNewDocument() => new( LocalPath );
 
