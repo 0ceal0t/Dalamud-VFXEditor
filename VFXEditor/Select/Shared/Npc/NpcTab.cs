@@ -56,7 +56,7 @@ namespace VfxEditor.Select.Shared.Npc {
         }
 
         public override void LoadSelection( NpcRow item, out NpcRowSelected loaded ) {
-            var files = NpcFiles.TryGetValue( item.MonsterId, out var paths ) ? paths : new NpcFilesStruct();
+            var files = NpcFiles.TryGetValue( item.ModelString, out var paths ) ? paths : new NpcFilesStruct();
             FilesToSelected( files, out loaded );
         }
 
@@ -65,7 +65,7 @@ namespace VfxEditor.Select.Shared.Npc {
         // ===== DRAWING ======
 
         protected override bool CheckMatch( NpcRow item, string searchInput ) =>
-            SelectTabUtils.Matches( item.Name, searchInput ) || SelectTabUtils.Matches( item.MonsterId, searchInput );
+            SelectTabUtils.Matches( item.Name, searchInput ) || SelectTabUtils.Matches( item.ModelString, searchInput );
 
         protected override void DrawExtra() => SelectTabUtils.NpcThankYou();
 

@@ -74,8 +74,7 @@ namespace VfxEditor.PapFormat {
             }
 
             if( checkOriginal ) { // Check if output matches the original
-                var newBytes = ToBytes();
-                Verified = FileUtils.CompareFiles( original, newBytes, out var _ );
+                Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
             }
         }
 

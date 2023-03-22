@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Scd {
 
         public ScdSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new MountTab( this, "Mount" ),
+                new MountScdTab( this, "Mount" ),
                 new OrchestrionTab( this, "Orchestrion" ),
                 new ZoneTab( this, "Zone" ),
                 new BgmTab( this, "BGM" ),

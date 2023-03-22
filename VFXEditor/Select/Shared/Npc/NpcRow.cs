@@ -14,7 +14,8 @@ namespace VfxEditor.Select.Shared.Npc {
         public readonly int Variant;
         public readonly NpcType Type;
 
-        public readonly string MonsterId;
+        public readonly string ModelString;
+        public readonly string BaseIdString;
         public readonly string RootPath;
 
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null ) { }
@@ -26,38 +27,28 @@ namespace VfxEditor.Select.Shared.Npc {
             BaseId = npc.Base;
             Variant = npc.Variant;
             Type = ( NpcType )npc.Type;
+            BaseIdString = BaseId.ToString().PadLeft( 4, '0' );
 
             if( Type == NpcType.Monster ) {
-                MonsterId = "m" + ModelId.ToString().PadLeft( 4, '0' );
-                RootPath = "chara/monster/" + MonsterId + "/obj/body/b" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
+                ModelString = "m" + ModelId.ToString().PadLeft( 4, '0' );
+                RootPath = "chara/monster/" + ModelString + "/obj/body/b" + BaseIdString + "/";
             }
             else { // demihuman
-                MonsterId = "d" + ModelId.ToString().PadLeft( 4, '0' );
-                RootPath = "chara/demihuman/" + MonsterId + "/obj/equipment/e" + BaseId.ToString().PadLeft( 4, '0' ) + "/";
+                ModelString = "d" + ModelId.ToString().PadLeft( 4, '0' );
+                RootPath = "chara/demihuman/" + ModelString + "/obj/equipment/e" + BaseIdString + "/";
             }
         }
 
-        public string GetImcPath() {
-            if( Type == NpcType.Monster ) {
-                return RootPath + "b" + BaseId.ToString().PadLeft( 4, '0' ) + ".imc";
-            }
-            else { // demihuman
-                return RootPath + "e" + BaseId.ToString().PadLeft( 4, '0' ) + ".imc";
-            }
-        }
+        // chara/monster/m0519/skeleton/base/b0001/eid_m0519b0001.eid
+        // chara/demihuman/d0002/skeleton/base/b0001/eid_d0002b0001.eid
+        public string GetEidPath() => 
+            "chara/" + ( Type == NpcType.Monster ? "monster/" : "demihuman/" ) + ModelString + 
+            "/skeleton/base/b" + BaseIdString + "/eid_" + ModelString + "b" + BaseIdString + ".eid";
 
-        public string GetTmbPath() {
-            var prefix = Type == NpcType.Monster ? "m" : "d";
-            return "chara/action/mon_sp/" + prefix + ModelId.ToString().PadLeft( 4, '0' ) + "/";
-        }
+        public string GetImcPath() => RootPath + ( Type == NpcType.Monster ? "b" : "e" ) + BaseIdString + ".imc";
 
-        public string GetVfxPath( int vfxId ) {
-            if( Type == NpcType.Monster ) { // chara/monster/m0624/obj/body/b0001/vfx/eff/vm0001.avfx
-                return RootPath + "vfx/eff/vm" + vfxId.ToString().PadLeft( 4, '0' ) + ".avfx";
-            }
-            else { // demihuman chara/demihuman/d1003/obj/equipment/e0006/vfx/eff/ve0006.avfx
-                return RootPath + "vfx/eff/ve" + vfxId.ToString().PadLeft( 4, '0' ) + ".avfx";
-            }
-        }
+        // chara/monster/m0624/obj/body/b0001/vfx/eff/vm0001.avfx
+        // chara/demihuman/d1003/obj/equipment/e0006/vfx/eff/ve0006.avfx
+        public string GetVfxPath( int vfxId ) => RootPath + "vfx/eff/v" + ( Type == NpcType.Monster ? "m" : "e" ) + vfxId.ToString().PadLeft( 4, '0' ) + ".avfx";
     }
 }

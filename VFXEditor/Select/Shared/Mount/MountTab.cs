@@ -1,8 +1,7 @@
 using System.Linq;
-using VfxEditor.Select.Shared.Mount;
 
-namespace VfxEditor.Select.Scd.Mount {
-    public class MountTab : SelectTab<MountRow> {
+namespace VfxEditor.Select.Shared.Mount {
+    public abstract class MountTab : SelectTab<MountRow> {
         public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount" ) { }
 
         // ===== LOADING =====
@@ -16,12 +15,6 @@ namespace VfxEditor.Select.Scd.Mount {
         // ===== DRAWING ======
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
-
-        protected override void DrawSelected( string parentId ) {
-            SelectTabUtils.DrawIcon( Icon );
-
-            Dialog.DrawPath( "Bgm", Selected.Bgm, parentId, SelectResultType.GameNpc, Selected.Name );
-        }
 
         protected override string GetName( MountRow item ) => item.Name;
     }

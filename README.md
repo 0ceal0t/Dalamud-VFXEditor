@@ -61,8 +61,3 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Add pre and post behavior to curve editor
 - [ ] Update "try on" preview
-
-
-```
-chara/human/c1401/skeleton/base/b0001/eid_c1401b0001.eid
-```
