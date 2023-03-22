@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Select.Scd.BgmQuest;
 using VfxEditor.Ui;
 
-namespace VfxEditor {
+namespace VfxEditor.Select {
     public enum SelectResultType {
         Local,
         GamePath,
@@ -53,12 +54,11 @@ namespace VfxEditor {
         private readonly FileManagerWindow Manager;
         private readonly string Extension;
         public readonly bool IsSource; // as opposed to replaced
-
         protected abstract List<SelectTab> GetTabs();
 
         protected readonly List<SelectResult> Favorites;
-        protected readonly SelectDialogList RecentTab;
-        protected readonly SelectDialogList FavoritesTab;
+        protected readonly SelectListTab RecentTab;
+        protected readonly SelectListTab FavoritesTab;
 
         private string LocalPathInput = "";
         private string GamePathInput = "";
@@ -159,7 +159,7 @@ namespace VfxEditor {
             ImGui.EndTabItem();
         }
 
-        public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTab.GetSelectResult( path, resultType, resultName ) );
+        public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
 
         public bool DrawFavorite( SelectResult selectResult ) {
             var res = false;
@@ -178,6 +178,60 @@ namespace VfxEditor {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 2 );
             return res;
+        }
+
+        public void DrawPapDict( Dictionary<string, string> items, string label, string name, string id ) {
+            foreach( var item in items ) {
+                var skeleton = item.Key;
+                var path = item.Value;
+
+                DrawFavorite( path, SelectResultType.GameAction, $"{name} {label} ({skeleton})" );
+                ImGui.Text( $"{label} ({skeleton}): " );
+                ImGui.SameLine();
+                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
+                else SelectTabUtils.DisplayPath( path );
+
+                DrawPath( "", path, $"{id}{skeleton}", SelectResultType.GameAction, $"{name} {label} ({skeleton})" );
+            }
+        }
+
+        public void DrawPath( string label, IEnumerable<string> paths, string id, SelectResultType resultType, string resultName, bool play = false ) {
+            var idx = 0;
+            foreach( var path in paths ) {
+                DrawPath( $"{label} #{idx}", path, $"{id}-{idx}", resultType, $"{resultName} #{idx}", play );
+                idx++;
+            }
+        }
+
+        public void DrawPath( string label, string path, string id, SelectResultType resultType, string resultName, bool play = false ) {
+            if( string.IsNullOrEmpty( path ) ) return;
+            if( path.Contains( "BGM_Null" ) ) return;
+
+            if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
+                DrawFavorite( path, resultType, resultName );
+                ImGui.Text( $"{label}:" );
+                ImGui.SameLine();
+                SelectTabUtils.DisplayPath( path );
+            }
+
+            ImGui.Indent( 25f );
+
+            if( ImGui.Button( $"SELECT{id}" ) ) Invoke( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
+            ImGui.SameLine();
+            SelectTabUtils.Copy( path, id + "Copy" );
+            if( play ) Play( path, id + "/Spawn" );
+
+            ImGui.Unindent( 25f );
+        }
+
+        public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
+            if( situation.IsSituation ) {
+                DrawPath( "Daytime Bgm", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
+                DrawPath( "Nighttime Bgm", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
+                DrawPath( "Battle Bgm", situation.BattlePath, $"{parentId}/Battle", SelectResultType.GameMusic, $"{name} / Battle" );
+                DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
+            }
+            else DrawPath( "Bgm", situation.Path, parentId, SelectResultType.GameZone, name );
         }
     }
 }

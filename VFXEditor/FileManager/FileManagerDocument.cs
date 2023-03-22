@@ -3,11 +3,11 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Utils;
-using VfxEditor.TexTools;
 using Dalamud.Logging;
 using System;
-using VfxEditor.Data;
+using VfxEditor.Utils;
+using VfxEditor.TexTools;
+using VfxEditor.Select;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {

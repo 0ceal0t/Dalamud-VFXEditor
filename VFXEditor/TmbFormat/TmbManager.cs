@@ -1,9 +1,9 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using VfxEditor.Animation;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
-using VfxEditor.Select.TmbSelect;
+using VfxEditor.Select;
+using VfxEditor.Select.Tmb;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {

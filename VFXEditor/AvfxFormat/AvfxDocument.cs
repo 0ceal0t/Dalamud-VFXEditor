@@ -4,8 +4,8 @@ using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {

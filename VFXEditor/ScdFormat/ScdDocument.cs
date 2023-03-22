@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {

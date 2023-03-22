@@ -1,50 +1,87 @@
+using Dalamud.Logging;
 using ImGuiNET;
+using ImGuiScene;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
-using VfxEditor.Utils;
-using VfxEditor.Select.Sheets;
 
-namespace VfxEditor {
-    public abstract class SelectTab<T> : SelectTab where T : class {
-        protected abstract void DrawSelected( string parentId );
+namespace VfxEditor.Select {
+    // ==== BASE =======
 
-        protected virtual void DrawExtra() { }
-        protected virtual void OnSelect() { }
-        private readonly SheetLoader<T> Loader;
+    public abstract class SelectTab {
+        protected readonly SelectDialog Dialog;
+        protected readonly string Name;
 
-        protected string SearchInput = "";
-        protected T Selected = default;
-
-        protected List<T> Searched;
-
-        public SelectTab( string name, SheetLoader<T> loader, SelectDialog dialog ) : base( dialog, name ) {
-            Loader = loader;
+        public SelectTab( SelectDialog dialog, string name ) {
+            Dialog = dialog;
+            Name = name;
         }
 
+        public abstract void Draw( string parentId );
+    }
+
+    public class SelectTabState<T> {
+        public List<T> Items = new();
+        public bool ItemsLoaded = false;
+        public bool WaitingForItems = false;
+    }
+
+    // ===== LOAD SINGLE ========
+
+    public abstract class SelectTab<T> : SelectTab where T : class {
+        // Using this so that we don't have to query for tab entries multiple times
+        private static readonly Dictionary<string, object> States = new();
+
+        private readonly string StateId;
+
+        protected readonly SelectTabState<T> State;
+        protected bool ItemsLoaded => State.ItemsLoaded;
+        protected bool WaitingForItems => State.WaitingForItems;
+        protected List<T> Items => State.Items;
+
+        protected T Selected = default;
+        protected string SearchInput = "";
+        protected List<T> Searched;
+        protected TextureWrap Icon; // Not used by every tab
+
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name ) {
+            StateId = stateId;
+            if( States.TryGetValue( StateId, out var existingState ) ) {
+                State = ( SelectTabState<T> )existingState;
+            }
+            else {
+                State = new SelectTabState<T>();
+                States.Add( StateId, State );
+            }
+        }
+
+        // Drawing
         protected abstract string GetName( T item );
-        protected virtual bool CheckMatch( T item, string searchInput ) => Matches( GetName( item ), searchInput );
+        protected virtual bool CheckMatch( T item, string searchInput ) => SelectTabUtils.Matches( GetName( item ), searchInput );
+
+        protected abstract void DrawSelected( string parentId );
+        protected virtual void DrawExtra() { }
+        protected virtual void OnSelect() { }
 
         public override void Draw( string parentId ) {
             var id = $"{parentId}/{Name}";
 
-            var ret = ImGui.BeginTabItem( $"{Name}{id}" );
-            if( !ret ) return;
-            Loader.Load();
-            if( !Loader.Loaded ) {
+            if( !ImGui.BeginTabItem( $"{Name}{id}" ) ) return;
+            Load();
+            if( !ItemsLoaded ) {
                 ImGui.EndTabItem();
                 return;
             }
 
-            if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Loader.Items ); }
+            if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var ResetScroll = false;
             DrawExtra();
             if( ImGui.InputText( "Search" + id, ref SearchInput, 255 ) ) {
-                Searched = Loader.Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
+                Searched = Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
                 ResetScroll = true;
             }
 
@@ -55,7 +92,7 @@ namespace VfxEditor {
 
             ImGui.Columns( 2, id + "-Columns", true );
             ImGui.BeginChild( id + "-Tree" );
-            DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+            SelectTabUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
             if( ResetScroll ) { ImGui.SetScrollHereY(); };
 
@@ -92,15 +129,44 @@ namespace VfxEditor {
             Selected = item;
             OnSelect();
         }
+
+        protected void LoadIcon( uint iconId ) {
+            Icon?.Dispose();
+            Icon = null;
+            if( iconId > 0 ) {
+                TexFile tex;
+                try { tex = Plugin.DataManager.GetIcon( iconId ); }
+                catch( Exception ) { tex = Plugin.DataManager.GetIcon( 0 ); }
+                Icon = Plugin.PluginInterface.UiBuilder.LoadImageRaw( SelectTabUtils.BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+            }
+        }
+
+        // Loading
+
+        public virtual async void Load() {
+            if( WaitingForItems || ItemsLoaded ) return;
+            State.WaitingForItems = true;
+            PluginLog.Log( "Loading " + StateId );
+            await Task.Run( () => {
+                try {
+                    LoadData();
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( e, "Error Loading: " + StateId );
+                }
+                State.ItemsLoaded = true;
+            } );
+        }
+
+        public abstract void LoadData();
     }
+
+    // ======= LOAD DOUBLE ========
 
     public abstract class SelectTab<T, S> : SelectTab<T> where T : class where S : class {
         protected S Loaded;
-        private readonly SheetLoader<T, S> Loader;
 
-        protected SelectTab( string name, SheetLoader<T, S> loader, SelectDialog dialog ) : base( name, loader, dialog ) {
-            Loader = loader;
-        }
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         protected override void Select( T item ) {
             LoadItemAsync( item );
@@ -121,8 +187,10 @@ namespace VfxEditor {
         private async void LoadItemAsync( T item ) {
             Loaded = null;
             await Task.Run( () => {
-                Loader.SelectItem( item, out Loaded );
+                LoadSelection( item, out Loaded );
             } );
         }
+
+        public abstract void LoadSelection( T item, out S loaded );
     }
 }

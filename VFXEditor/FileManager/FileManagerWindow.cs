@@ -8,6 +8,7 @@ using VfxEditor.TexTools;
 using VfxEditor.Utils;
 using Newtonsoft.Json.Linq;
 using VfxEditor.Data;
+using VfxEditor.Select;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerWindow : GenericDialog {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Animation;
 using VfxEditor.FileManager;
+using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {

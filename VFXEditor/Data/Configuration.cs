@@ -8,6 +8,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Ui;
 using VfxEditor.NodeLibrary;
+using VfxEditor.Select;
 
 namespace VfxEditor {
     [Serializable]

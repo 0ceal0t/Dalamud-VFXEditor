@@ -1,8 +1,7 @@
 using ImGuiNET;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.NodeLibrary;
-using VfxEditor.Select.VfxSelect;
+using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {

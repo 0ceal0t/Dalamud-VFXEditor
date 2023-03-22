@@ -103,8 +103,6 @@ namespace VfxEditor {
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            SheetManager.Initialize();
-
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
 
