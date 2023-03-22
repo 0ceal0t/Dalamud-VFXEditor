@@ -33,7 +33,9 @@ namespace VfxEditor.Select2 {
 
     public abstract class SelectTab<T> : SelectTab where T : class {
         // Using this so that we don't have to query for tab entries multiple times
-        private static readonly Dictionary<Type, object> States = new();
+        private static readonly Dictionary<string, object> States = new();
+
+        private readonly string StateId;
 
         protected readonly SelectTabState<T> State;
         protected bool ItemsLoaded => State.ItemsLoaded;
@@ -45,13 +47,14 @@ namespace VfxEditor.Select2 {
         protected List<T> Searched;
         protected TextureWrap Icon; // Not used by every tab
 
-        protected SelectTab( SelectDialog dialog, string name ) : base( dialog, name ) {
-            if( States.TryGetValue( typeof( T ), out var existingState ) ) {
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name ) {
+            StateId = stateId;
+            if( States.TryGetValue( StateId, out var existingState ) ) {
                 State = ( SelectTabState<T> )existingState;
             }
             else {
                 State = new SelectTabState<T>();
-                States.Add( typeof( T ), State );
+                States.Add( StateId, State );
             }
         }
 
@@ -143,19 +146,19 @@ namespace VfxEditor.Select2 {
         public virtual async void Load() {
             if( WaitingForItems || ItemsLoaded ) return;
             State.WaitingForItems = true;
-            PluginLog.Log( "Loading " + typeof( T ).Name );
+            PluginLog.Log( "Loading " + StateId );
             await Task.Run( () => {
                 try {
-                    OnLoad();
+                    LoadData();
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Error Loading: " + typeof( T ).Name );
+                    PluginLog.Error( e, "Error Loading: " + StateId );
                 }
                 State.ItemsLoaded = true;
             } );
         }
 
-        public abstract void OnLoad();
+        public abstract void LoadData();
     }
 
     // ======= LOAD DOUBLE ========
@@ -163,7 +166,7 @@ namespace VfxEditor.Select2 {
     public abstract class SelectTab<T, S> : SelectTab<T> where T : class where S : class {
         protected S Loaded;
 
-        protected SelectTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         protected override void Select( T item ) {
             LoadItemAsync( item );
@@ -184,10 +187,10 @@ namespace VfxEditor.Select2 {
         private async void LoadItemAsync( T item ) {
             Loaded = null;
             await Task.Run( () => {
-                SelectItem( item, out Loaded );
+                LoadSelection( item, out Loaded );
             } );
         }
 
-        public abstract void SelectItem( T item, out S loaded );
+        public abstract void LoadSelection( T item, out S loaded );
     }
 }

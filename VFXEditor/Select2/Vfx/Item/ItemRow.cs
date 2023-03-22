@@ -40,18 +40,18 @@ namespace VfxEditor.Select2.Vfx.Item {
     }
 
     public class ItemRow {
-        public string Name;
-        public ItemIds Ids;
-        public ItemIds SecondaryIds;
-        public bool HasModel;
-        public int Variant;
+        public readonly string Name;
+        public readonly int RowId;
+        public readonly ushort Icon;
+
+        public readonly ItemIds Ids;
+        public readonly ItemIds SecondaryIds;
+        public readonly bool HasModel;
 
         public string RootPath;
         public string VfxRootPath;
         public string ImcPath;
-
-        public int RowId;
-        public ushort Icon;
+        public int Variant;
 
         public ItemRow( Lumina.Excel.GeneratedSheets.Item item ) {
             Name = item.Name.ToString();

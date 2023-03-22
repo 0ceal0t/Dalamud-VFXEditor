@@ -6,11 +6,12 @@ using VfxEditor.Select2.Shared;
 
 namespace VfxEditor.Select2.Vfx.Action {
     public class ActionTab : SelectTab<ActionRow, ParseAvfxFromFile> {
-        public ActionTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
+        public ActionTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Action" ) { }
 
         // ===== LOADING =====
 
-        public override void OnLoad() {
+        public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
 
@@ -21,7 +22,7 @@ namespace VfxEditor.Select2.Vfx.Action {
             }
         }
 
-        public override void SelectItem( ActionRow item, out ParseAvfxFromFile loaded ) {
+        public override void LoadSelection( ActionRow item, out ParseAvfxFromFile loaded ) {
             if( string.IsNullOrEmpty( item.SelfTmbKey ) ) { // no need to get the file
                 loaded = new ParseAvfxFromFile();
                 return;

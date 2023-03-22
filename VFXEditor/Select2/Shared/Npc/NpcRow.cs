@@ -1,21 +1,21 @@
 namespace VfxEditor.Select2.Shared.Npc {
-    public enum NpcType {
-        Demihuman = 2,
-        Monster = 3
-    }
-
     public class NpcRow {
+        public enum NpcType {
+            Demihuman = 2,
+            Monster = 3
+        }
+
         public string Name;
-        public int RowId;
+        public readonly int RowId;
 
-        public int Key;
-        public int ModelId;
-        public int BaseId;
-        public int Variant;
-        public NpcType Type;
+        public readonly int Key;
+        public readonly int ModelId;
+        public readonly int BaseId;
+        public readonly int Variant;
+        public readonly NpcType Type;
 
-        public string MonsterId;
-        public string RootPath;
+        public readonly string MonsterId;
+        public readonly string RootPath;
 
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null ) { }
 

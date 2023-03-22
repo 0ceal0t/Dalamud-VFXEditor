@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Select2.Scd.BgmQuest;
 using VfxEditor.Ui;
 
 namespace VfxEditor.Select2 {
@@ -185,7 +186,7 @@ namespace VfxEditor.Select2 {
             ImGui.Unindent( 25f );
         }
 
-        /*public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
+        public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
             if( situation.IsSituation ) {
                 DrawPath( "Daytime Bgm", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
                 DrawPath( "Nighttime Bgm", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
@@ -193,6 +194,6 @@ namespace VfxEditor.Select2 {
                 DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
             }
             else DrawPath( "Bgm", situation.Path, parentId, SelectResultType.GameZone, name );
-        }*/
+        }
     }
 }

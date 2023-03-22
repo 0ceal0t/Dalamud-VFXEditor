@@ -27,11 +27,11 @@ namespace VfxEditor.Select2.Shared.Npc {
         // Shared across multiple dialogs
         private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
 
-        public NpcTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public NpcTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Npc" ) { }
 
         // ===== LOADING =====
 
-        public override void OnLoad() {
+        public override void LoadData() {
             // maps uint ids to npc names
             var nameToString = Plugin.DataManager.GetExcelSheet<BNpcName>()
                 .Where( x => !string.IsNullOrEmpty( x.Singular ) )
@@ -55,7 +55,7 @@ namespace VfxEditor.Select2.Shared.Npc {
             NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectUtils.NpcFilesPath ) );
         }
 
-        public override void SelectItem( NpcRow item, out NpcRowSelected loaded ) {
+        public override void LoadSelection( NpcRow item, out NpcRowSelected loaded ) {
             var files = NpcFiles.TryGetValue( item.MonsterId, out var paths ) ? paths : new NpcFilesStruct();
             FilesToSelected( files, out loaded );
         }

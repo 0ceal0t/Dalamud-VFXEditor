@@ -8,11 +8,11 @@ using VfxEditor.Select2.Shared;
 
 namespace VfxEditor.Select2.Vfx.Gimmick {
     public class GimmickTab : SelectTab<GimmickRow, ParseAvfxFromFile> {
-        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Gimmick" ) { }
 
         // ===== LOADING =====
 
-        public override void OnLoad() {
+        public override void LoadData() {
             var territories = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
             var suffixToName = new Dictionary<string, string>();
             foreach( var zone in territories ) {
@@ -25,7 +25,7 @@ namespace VfxEditor.Select2.Vfx.Gimmick {
             }
         }
 
-        public override void SelectItem( GimmickRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.TmbPath, out loaded );
+        public override void LoadSelection( GimmickRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.TmbPath, out loaded );
 
         // ===== DRAWING ======
 

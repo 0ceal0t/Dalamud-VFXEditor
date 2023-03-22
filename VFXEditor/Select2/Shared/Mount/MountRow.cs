@@ -1,7 +1,6 @@
 using VfxEditor.Select2.Shared.Npc;
 
-namespace VfxEditor.Select2.Vfx.Mount
-{
+namespace VfxEditor.Select2.Shared.Mount {
     public class MountRow : NpcRow {
         public readonly ushort Icon;
         public readonly string Bgm;

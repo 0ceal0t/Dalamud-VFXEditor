@@ -41,14 +41,12 @@ namespace VfxEditor.Select2.Shared {
 
         public static void ReadFile( string path, out ParseAvfxFromFile loaded ) {
             loaded = null;
-            var result = Plugin.DataManager.FileExists( path );
-            if( result ) {
+            if( Plugin.DataManager.FileExists( path ) ) {
                 try {
                     loaded = new ParseAvfxFromFile( Plugin.DataManager.GetFile( path ) );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Error reading " + path );
-                    return;
                 }
             }
             else PluginLog.Error( path + " does not exist" );
@@ -65,7 +63,6 @@ namespace VfxEditor.Select2.Shared {
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error reading files" );
-                return;
             }
         }
     }

@@ -5,15 +5,15 @@ using VfxEditor.Select2.Shared;
 
 namespace VfxEditor.Select2.Vfx.Cutscene {
     public class CutsceneTab : SelectTab<CutsceneRow, ParseAvfxFromFile> {
-        public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Cutscene" ) { }
 
-        public override void OnLoad() {
+        public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
 
             foreach( var item in sheet ) Items.Add( new CutsceneRow( item ) );
         }
 
-        public override void SelectItem( CutsceneRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.Path, out loaded );
+        public override void LoadSelection( CutsceneRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.Path, out loaded );
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "CUTB:" );

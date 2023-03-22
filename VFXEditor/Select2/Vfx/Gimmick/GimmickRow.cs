@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select2.Vfx.Gimmick {
     public class GimmickRow {
-        public string Name;
-        public int RowId;
-        public string TmbPath;
+        public readonly string Name;
+        public readonly int RowId;
+        public readonly string TmbPath;
 
         public GimmickRow( Lumina.Excel.GeneratedSheets.ActionTimeline timeline, Dictionary<string, string> suffixToName ) {
             RowId = ( int )timeline.RowId;

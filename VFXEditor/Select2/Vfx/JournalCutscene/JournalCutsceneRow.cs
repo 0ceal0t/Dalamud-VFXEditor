@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select2.Vfx.JournalCutscene {
     public class JournalCutsceneRow {
-        public string Name;
-        public int RowId;
+        public readonly string Name;
+        public readonly int RowId;
         public readonly List<string> Paths = new();
 
         public JournalCutsceneRow( CompleteJournal journal ) {

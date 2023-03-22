@@ -3,11 +3,11 @@ using VfxEditor.Select2.Shared;
 
 namespace VfxEditor.Select2.Vfx.Emote {
     public class EmoteTab : SelectTab<EmoteRow, ParseAvfxFromFile> {
-        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Emote" ) { }
 
         // ===== LOADING =====
 
-        public override void OnLoad() {
+        public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
 
             foreach( var item in sheet ) {
@@ -16,7 +16,7 @@ namespace VfxEditor.Select2.Vfx.Emote {
             }
         }
 
-        public override void SelectItem( EmoteRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.PapFiles, out loaded );
+        public override void LoadSelection( EmoteRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.PapFiles, out loaded );
 
         // ===== DRAWING ======
 

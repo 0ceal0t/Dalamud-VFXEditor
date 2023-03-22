@@ -5,11 +5,11 @@ using System.IO;
 
 namespace VfxEditor.Select2.Vfx.Common {
     public class CommonTab : SelectTab<CommonRow> {
-        public CommonTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public CommonTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Common" ) { }
 
         // ===== LOADING =====
 
-        public override void OnLoad() {
+        public override void LoadData() {
             Items.AddRange( new List<CommonRow>() {
                 new( 0, "vfx/action/ab_swd_abl020/eff/abi_swd020c1t.avfx", "Passage of Arms", 2515 ),
                 new( 1, "vfx/action/ab_2gn026/eff/ab_2gn026c0c.avfx", "Flamethrower", 3038 ),

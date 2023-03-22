@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace VfxEditor.Select2.Vfx.Action {
     public class NonPlayerActionTab : ActionTab {
-        public NonPlayerActionTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
+        public NonPlayerActionTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-NonPlayerAction" ) { }
 
-        public override void OnLoad() {
+        public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && !( x.IsPlayerAction || x.ClassJob.Value != null ) );
 
