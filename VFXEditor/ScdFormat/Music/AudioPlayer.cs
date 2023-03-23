@@ -9,8 +9,10 @@ using System.Numerics;
 using VfxEditor.Utils;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using VfxEditor.ScdFormat.Music.Data;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public class AudioPlayer {
         private readonly ScdAudioEntry Entry;
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;
@@ -44,123 +46,17 @@ namespace VfxEditor.ScdFormat {
             Entry = entry;
         }
 
-        public void Draw( string id, int idx ) {
-            if( ImGui.CollapsingHeader( $"Index {idx}{id}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                ImGui.Indent();
-
-                // Controls
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( State == PlaybackState.Stopped ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
+        public void Draw( string id) {
+            if( ImGui.BeginTabBar( $"{id}/Tabs" ) ) {
+                if( ImGui.BeginTabItem( $"Music{id}" ) ) {
+                    DrawPlayer( id );
+                    ImGui.EndTabItem();
                 }
-                else if( State == PlaybackState.Playing ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
+                if( ImGui.BeginTabItem( $"Converter{id}" ) ) {
+                    DrawConverter( id );
+                    ImGui.EndTabItem();
                 }
-                else if( State == PlaybackState.Paused ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) CurrentOutput.Play();
-                }
-
-                ImGui.PopFont();
-
-                if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-                var selectedTime = ( float )CurrentTime;
-                ImGui.SameLine( 50f );
-                ImGui.SetNextItemWidth( 221f );
-                var drawPos = ImGui.GetCursorScreenPos();
-                if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
-                    if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
-                        CurrentOutput.Pause();
-                        LeftStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
-                        RightStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
-                    }
-                }
-                if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
-
-                if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
-                    var startX = 221f * ( LoopStartTime / TotalTime );
-                    var endX = 221f * ( LoopEndTime / TotalTime );
-
-                    var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
-                    var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
-
-                    var height = ImGui.GetFrameHeight();
-
-                    var drawList = ImGui.GetWindowDrawList();
-                    drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-                    drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-                }
-
-                // Save
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
-                    if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
-                    else SaveWaveDialog();
-                }
-                ImGui.PopFont();
-                UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
-
-                if( ImGui.BeginPopup( "SavePopup" + id ) ) {
-                    if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
-                    if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
-                    ImGui.EndPopup();
-                }
-
-                // Import
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
-                ImGui.PopFont();
-                UiUtils.Tooltip( "Replace sound file" );
-
-                var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
-                ImGui.SetNextItemWidth( 250f );
-                if( ImGui.InputInt2( $"{id}/LoopStartEnd", ref loopStartEnd[0] ) ) {
-                    Entry.LoopStart = loopStartEnd[0];
-                    Entry.LoopEnd = loopStartEnd[1];
-                    RefreshLoopStartEndTime();
-                }
-
-                // Convert
-                ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Sync}" + id ) ) ConverterOpen = !ConverterOpen;
-                ImGui.PopFont();
-                UiUtils.Tooltip( "Open converter" );
-                ImGui.SameLine();
-                ImGui.Text( "Loop Start/End (Bytes)" );
-
-                if( ConverterOpen ) {
-                    var style = ImGui.GetStyle();
-                    ImGui.BeginChild( $"{id}/Child", new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetFrameHeight() * 2 + style.FramePadding.Y * 4 + style.ItemSpacing.Y * 2 ), true );
-
-                    // Bytes
-                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
-                    ImGui.SameLine();
-                    ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-                    ImGui.SameLine();
-                    if( ImGui.Button( $"Samples to Bytes{id}") ) {
-                        ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
-                    }
-
-                    // Time
-                    ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( $"{id}/SecondsIn", ref ConverterSeconds, 0, 0 );
-                    ImGui.SameLine();
-                    ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-                    ImGui.SameLine();
-                    if( ImGui.Button( $"Seconds to Bytes{id}" ) ) {
-                        ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
-                    }
-                    ImGui.EndChild();
-                }
-
-                ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
-
-                ImGui.Unindent();
+                ImGui.EndTabBar();
             }
 
             var currentState = State;
@@ -191,6 +87,115 @@ namespace VfxEditor.ScdFormat {
             }
 
             PrevState = currentState;
+        }
+
+        private void DrawPlayer( string id ) {
+            // Controls
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( State == PlaybackState.Stopped ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
+            }
+            else if( State == PlaybackState.Playing ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
+            }
+            else if( State == PlaybackState.Paused ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) CurrentOutput.Play();
+            }
+
+            ImGui.PopFont();
+
+            if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
+            var selectedTime = ( float )CurrentTime;
+            ImGui.SameLine( 25f );
+            ImGui.SetNextItemWidth( 221f );
+            var drawPos = ImGui.GetCursorScreenPos();
+            if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
+                if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
+                    CurrentOutput.Pause();
+                    LeftStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                    RightStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                }
+            }
+            if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
+
+            if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
+                var startX = 221f * ( LoopStartTime / TotalTime );
+                var endX = 221f * ( LoopEndTime / TotalTime );
+
+                var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
+                var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
+
+                var height = ImGui.GetFrameHeight();
+
+                var drawList = ImGui.GetWindowDrawList();
+                drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+            }
+
+            // Save
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
+                if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
+                else SaveWaveDialog();
+            }
+            ImGui.PopFont();
+            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
+
+            if( ImGui.BeginPopup( "SavePopup" + id ) ) {
+                if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
+                if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
+                ImGui.EndPopup();
+            }
+
+            // Import
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
+            ImGui.PopFont();
+            ImGui.PopStyleVar( 1 );
+            UiUtils.Tooltip( "Replace sound file" );
+
+            var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
+            ImGui.SetNextItemWidth( 246f );
+            if( ImGui.InputInt2( $"{id}/LoopStartEnd", ref loopStartEnd[0] ) ) {
+                Entry.LoopStart = loopStartEnd[0];
+                Entry.LoopEnd = loopStartEnd[1];
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.DisabledButton( $"Update{id}", Plugin.Configuration.SimulateScdLoop ) ) {
+                RefreshLoopStartEndTime();
+            }
+            ImGui.SameLine();
+            ImGui.Text( "Loop Start/End (Bytes)" );
+
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
+        }
+
+        private void DrawConverter( string id ) {
+            // Bytes
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+            ImGui.SameLine();
+            if( ImGui.Button( $"Samples to Bytes{id}" ) ) {
+                ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
+            }
+
+            // Time
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( $"{id}/SecondsIn", ref ConverterSeconds, 0, 0 );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+            ImGui.SameLine();
+            if( ImGui.Button( $"Seconds to Bytes{id}" ) ) {
+                ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
+            }
         }
 
         private void Play() {

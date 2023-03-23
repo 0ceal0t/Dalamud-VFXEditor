@@ -7,11 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.ScdFormat.Layout;
+using VfxEditor.ScdFormat.Music;
+using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.ScdFormat.Sound;
 using VfxEditor.ScdFormat.Track;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
@@ -22,6 +25,7 @@ namespace VfxEditor.ScdFormat {
         public List<ScdTrackEntry> Tracks = new();
         public List<ScdAttributeEntry> Attributes = new();
 
+        public ScdAudioEntrySplitView AudioSplitView;
         public ScdSoundSplitView SoundView;
         public ScdLayoutSplitView LayoutView;
         public ScdTrackSplitView TrackView;
@@ -66,6 +70,7 @@ namespace VfxEditor.ScdFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
+            AudioSplitView = new( Audio );
             LayoutView = new( Layouts );
             SoundView = new( Sounds );
             TrackView = new( Tracks );
@@ -99,27 +104,28 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawSounds( string id ) {
-            ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
-            if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
-            ImGui.SameLine();
-            if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
-            ImGui.SameLine();
-            if( ImGui.Checkbox( $"Simulate Loop Start/End{id}", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
-            ImGui.SetNextItemWidth( 50 );
-            if( ImGui.InputFloat( $"Volume{id}", ref Plugin.Configuration.ScdVolume ) ) {
-                Plugin.Configuration.Save();
-                Audio.ForEach( x => x.Player.UpdateVolume() );
+            if( ImGui.CollapsingHeader( "Settings##Audio" ) ) {
+                ImGui.Indent();
+
+                ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
+                if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( $"Simulate Loop Start/End{id}", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
+                ImGui.SetNextItemWidth( 50 );
+                if( ImGui.InputFloat( $"Volume{id}", ref Plugin.Configuration.ScdVolume ) ) {
+                    Plugin.Configuration.Save();
+                    Audio.ForEach( x => x.Player.UpdateVolume() );
+                }
+
+                ImGui.Unindent();
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
             ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
             ImGui.BeginChild( $"{id}-Child" );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            for( var idx = 0; idx < Audio.Count; idx++ ) {
-                Audio[idx].Draw( id + idx, idx );
-            }
+            AudioSplitView.Draw( id + "/Audio" );
             ImGui.EndChild();
         }
 

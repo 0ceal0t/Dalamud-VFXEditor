@@ -7,7 +7,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.ScdFormat {
     public class ScdSimpleSplitView<T> : SplitView<T> where T : class, IScdSimpleUiBase {
-        private readonly string ItemName;
+        protected readonly string ItemName;
 
         public ScdSimpleSplitView( string itemName, List<T> items, bool allowNew = false ) : base( items, allowNew ) {
             ItemName = itemName;

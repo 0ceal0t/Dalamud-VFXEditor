@@ -4,9 +4,11 @@ using NAudio.Wave;
 using System;
 using System.IO;
 using System.Threading;
+using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public enum SscfWaveFormat : int {
         Empty = -1,
         Pcm = 0x01,
@@ -17,7 +19,7 @@ namespace VfxEditor.ScdFormat {
         Atrac3Too = 0x0D
     }
 
-    public class ScdAudioEntry : ScdEntry {
+    public class ScdAudioEntry : ScdEntry, IScdSimpleUiBase {
         public int DataLength;
         public int NumChannels;
         public int SampleRate;
@@ -72,9 +74,9 @@ namespace VfxEditor.ScdFormat {
             };
         }
 
-        public void Draw( string id, int idx ) {
+        public void Draw( string id ) {
             if( DataLength == 0 ) return;
-            Player.Draw( id, idx );
+            Player.Draw( id );
         }
 
         public void Dispose() => Player.Dispose();
