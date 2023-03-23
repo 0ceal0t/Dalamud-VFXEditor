@@ -8,6 +8,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
@@ -15,12 +16,14 @@ namespace VfxEditor.ScdFormat {
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;
         private PlaybackState PrevState = PlaybackState.Stopped;
 
-        private WaveStream CurrentStream;
-        private WaveChannel32 CurrentChannel;
+        private WaveStream LeftStream;
+        private WaveStream RightStream;
+        private IWaveProvider Volume;
+        private MultiplexingWaveProvider LeftRightCombined;
         private WasapiOut CurrentOutput;
 
-        private double TotalTime => CurrentStream == null ? 0 : CurrentStream.TotalTime.TotalSeconds - 0.01f;
-        private double CurrentTime => CurrentStream == null ? 0 : CurrentStream.CurrentTime.TotalSeconds;
+        private double TotalTime => LeftStream == null ? 0 : LeftStream.TotalTime.TotalSeconds - 0.01f;
+        private double CurrentTime => LeftStream == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
@@ -67,7 +70,8 @@ namespace VfxEditor.ScdFormat {
                 if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
                     if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
                         CurrentOutput.Pause();
-                        CurrentStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                        LeftStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                        RightStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
                     }
                 }
                 if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
@@ -181,7 +185,8 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( currentState == PlaybackState.Playing && QueueSeek != -1 && !justQueued ) {
-                CurrentStream.CurrentTime = TimeSpan.FromSeconds( QueueSeek );
+                LeftStream.CurrentTime = TimeSpan.FromSeconds( QueueSeek );
+                RightStream.CurrentTime = TimeSpan.FromSeconds( QueueSeek );
                 QueueSeek = -1;
             }
 
@@ -194,21 +199,35 @@ namespace VfxEditor.ScdFormat {
                 if( !LoopTimeInitialized ) RefreshLoopStartEndTime();
 
                 var stream = Entry.Data.GetStream();
-                PluginLog.Log( $"Playing @ {stream.WaveFormat.SampleRate} / {stream.WaveFormat.BitsPerSample}" );
+                var format = stream.WaveFormat;
+                LeftStream = ConvertStream( stream );
+                RightStream = ConvertStream( Entry.Data.GetStream() );
 
-                CurrentStream = stream.WaveFormat.Encoding switch {
-                    WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                    WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
-                    _ => stream
-                };
+                var leftStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { LeftStream }, 1 );
+                leftStreamIsolated.ConnectInputToOutput( 0, 0 );
 
-                CurrentChannel = new WaveChannel32( CurrentStream ) {
-                    Volume = Plugin.Configuration.ScdVolume,
-                    PadWithZeroes = false,
-                };
+                var rightStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { RightStream }, 1 );
+                rightStreamIsolated.ConnectInputToOutput( format.Channels > 1 ? 1 : 0, 0 );
+
+                LeftRightCombined = new MultiplexingWaveProvider( new[] { leftStreamIsolated, rightStreamIsolated }, 2 );
+                LeftRightCombined.ConnectInputToOutput( 0, 0 );
+                LeftRightCombined.ConnectInputToOutput( 1, 1 );
+
+                if( format.Encoding == WaveFormatEncoding.IeeeFloat ) {
+                    var floatVolume = new WaveFloatTo16Provider( LeftRightCombined ) {
+                        Volume = Plugin.Configuration.ScdVolume
+                    };
+                    Volume = floatVolume;
+                }
+                else {
+                    var pcmVolume = new VolumeWaveProvider16( LeftRightCombined ) {
+                        Volume = Plugin.Configuration.ScdVolume
+                    };
+                    Volume = pcmVolume;
+                }
+
                 CurrentOutput = new WasapiOut();
-
-                CurrentOutput.Init( CurrentChannel );
+                CurrentOutput.Init( Volume );
                 CurrentOutput.Play();
             }
             catch( Exception e ) {
@@ -217,8 +236,13 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void UpdateVolume() {
-            if( CurrentChannel == null ) return;
-            CurrentChannel.Volume = Plugin.Configuration.ScdVolume;
+            if( Volume == null ) return;
+            if( Volume is  WaveFloatTo16Provider floatVolume ) {
+                floatVolume.Volume = Plugin.Configuration.ScdVolume;
+            }
+            else if( Volume is VolumeWaveProvider16 pcmVolume ) {
+                pcmVolume.Volume = Plugin.Configuration.ScdVolume;
+            }
         }
 
         private void ImportDialog() {
@@ -246,6 +270,12 @@ namespace VfxEditor.ScdFormat {
             } );
         }
 
+        private WaveStream ConvertStream( WaveStream stream ) => stream.WaveFormat.Encoding switch {
+            WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+            WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
+            _ => stream
+        };
+
         private async void RefreshLoopStartEndTime() {
             if( LoopTimeRefreshing ) return;
             LoopTimeRefreshing = true;
@@ -258,8 +288,8 @@ namespace VfxEditor.ScdFormat {
 
         public void Reset() {
             CurrentOutput?.Dispose();
-            CurrentChannel?.Dispose();
-            CurrentStream?.Dispose();
+            LeftStream?.Dispose();
+            RightStream?.Dispose();
         }
 
         public void Dispose() {
