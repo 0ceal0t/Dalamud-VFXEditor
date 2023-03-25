@@ -1,5 +1,4 @@
 using Dalamud.Logging;
-using Lumina.Data.Parsing;
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
@@ -7,10 +6,8 @@ using SharpDX.Text;
 using System;
 using System.IO;
 
-namespace VfxEditor.ScdFormat.Music.Data
-{
-    public class ScdVorbis : ScdAudioData
-    {
+namespace VfxEditor.ScdFormat.Music.Data {
+    public class ScdVorbis : ScdAudioData {
         private readonly bool Imported = false;
 
         public short EncodeMode;
@@ -32,8 +29,7 @@ namespace VfxEditor.ScdFormat.Music.Data
         // https://github.com/CrimsonOrion/CS-FFXIV-Data-Worker/blob/af126fd74139f54722b4dd8feea87c54077caeb7/FFXIV%20Data%20Worker/OggToScd.cs
         // https://github.com/Soreepeong/XivAlexander/blob/0b1077ebbcd2bf13955169fddc2bc38c218d19fe/XivAlexanderCommon/Sqex/Sound/Writer.cpp#L63
 
-        public ScdVorbis( BinaryReader reader, ScdAudioEntry entry )
-        {
+        public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) {
             EncodeMode = reader.ReadInt16();
             EncodeByte = reader.ReadInt16();
             Unk1 = reader.ReadInt32();
@@ -43,8 +39,7 @@ namespace VfxEditor.ScdFormat.Music.Data
 
             // ==== IMPORTED =====
             var seekTableString = Encoding.ASCII.GetString( BitConverter.GetBytes( SeekTableSize ) );
-            if( seekTableString.EndsWith( "vor" ) )
-            { // "vorbis"
+            if( seekTableString.EndsWith( "vor" ) ) { // "vorbis"
                 Imported = true;
                 VorbisHeaderData = reader.ReadBytes( 0x35C );
                 OggData = reader.ReadBytes( entry.DataLength + 0x10 );
@@ -77,8 +72,7 @@ namespace VfxEditor.ScdFormat.Music.Data
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( DecodedData, OggData.Length );
         }
 
-        public override int SamplesToBytes( int samples )
-        {
+        public override int SamplesToBytes( int samples ) {
             var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
             var reader = new VorbisReader( ms );
 
@@ -90,11 +84,9 @@ namespace VfxEditor.ScdFormat.Music.Data
             return bytes;
         }
 
-        public override int TimeToBytes( float time )
-        {
+        public override int TimeToBytes( float time ) {
             var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
-            var reader = new VorbisReader( ms )
-            {
+            var reader = new VorbisReader( ms ) {
                 TimePosition = TimeSpan.FromSeconds( time )
             };
 
@@ -110,13 +102,11 @@ namespace VfxEditor.ScdFormat.Music.Data
             return bytes;
         }
 
-        private static int SamplesToBytesInternal( long samples, VorbisReader reader )
-        {
+        private static int SamplesToBytesInternal( long samples, VorbisReader reader ) {
             var buffer = new float[reader.Channels];
             reader.StreamStats.ResetStats();
 
-            for( var i = 0; i < samples; i++ )
-            {
+            for( var i = 0; i < samples; i++ ) {
                 reader.ReadSamples( buffer, 0, buffer.Length );
             }
 
@@ -129,10 +119,8 @@ namespace VfxEditor.ScdFormat.Music.Data
             return ( int )( totalBits / 8L );
         }
 
-        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime )
-        {
-            if( loopStart == 0 && loopEnd == 0 )
-            {
+        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
+            if( loopStart == 0 && loopEnd == 0 ) {
                 startTime = 0;
                 endTime = 0;
                 return;
@@ -151,8 +139,7 @@ namespace VfxEditor.ScdFormat.Music.Data
             var startFound = false;
             var endFound = false;
 
-            for( var i = 0; i < reader.TotalSamples; i++ )
-            {
+            for( var i = 0; i < reader.TotalSamples; i++ ) {
                 reader.ReadSamples( buffer, 0, buffer.Length );
 
                 var currentBits = 0L;
@@ -164,14 +151,12 @@ namespace VfxEditor.ScdFormat.Music.Data
                 var currentBytes = ( int )( currentBits / 8L );
                 var currentTime = reader.TimePosition.TotalSeconds;
 
-                if( !startFound && prevBytes < loopStart && currentBytes >= loopStart )
-                {
+                if( !startFound && prevBytes < loopStart && currentBytes >= loopStart ) {
                     startFound = true;
                     startTime = currentTime;
                 }
 
-                if( !endFound && prevBytes < loopEnd && currentBytes >= loopEnd )
-                {
+                if( !endFound && prevBytes < loopEnd && currentBytes >= loopEnd ) {
                     endFound = true;
                     endTime = currentTime;
                 }
@@ -184,14 +169,12 @@ namespace VfxEditor.ScdFormat.Music.Data
             ms.Dispose();
         }
 
-        public override WaveStream GetStream()
-        {
+        public override WaveStream GetStream() {
             var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
             return new VorbisWaveReader( ms );
         }
 
-        public override void Write( BinaryWriter writer )
-        {
+        public override void Write( BinaryWriter writer ) {
             writer.Write( EncodeMode );
             writer.Write( EncodeByte );
             writer.Write( Unk1 );
@@ -199,8 +182,7 @@ namespace VfxEditor.ScdFormat.Music.Data
             writer.Write( Unk3 );
             writer.Write( SeekTableSize );
 
-            if( Imported )
-            {
+            if( Imported ) {
                 writer.Write( VorbisHeaderData );
                 writer.Write( OggData );
                 return;
@@ -215,8 +197,7 @@ namespace VfxEditor.ScdFormat.Music.Data
         }
 
         // Giga-scuffed
-        public static void ImportOgg( string path, ScdAudioEntry oldEntry )
-        {
+        public static void ImportOgg( string path, ScdAudioEntry oldEntry ) {
             using var oggReader = new VorbisReader( path );
 
             var loopStartTag = oggReader.Tags.GetTagSingle( "LoopStart" );
@@ -248,13 +229,11 @@ namespace VfxEditor.ScdFormat.Music.Data
             var newEntry = new ScdAudioEntry();
             newEntry.Read( reader );
 
-            if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) )
-            {
+            if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) ) {
                 newEntry.LoopStart = newEntry.Data.SamplesToBytes( loopStartSamples );
             }
 
-            if( !string.IsNullOrEmpty( loopEndTag ) && int.TryParse( loopEndTag, out var loopEndSamples ) )
-            {
+            if( !string.IsNullOrEmpty( loopEndTag ) && int.TryParse( loopEndTag, out var loopEndSamples ) ) {
                 newEntry.LoopEnd = newEntry.Data.SamplesToBytes( loopEndSamples );
             }
 
@@ -262,8 +241,7 @@ namespace VfxEditor.ScdFormat.Music.Data
             oldEntry.Dispose();
         }
 
-        public static void ImportWav( string path, ScdAudioEntry entry )
-        {
+        public static void ImportWav( string path, ScdAudioEntry entry ) {
             ScdUtils.ConvertToOgg( path );
             ImportOgg( ScdManager.ConvertOgg, entry );
         }

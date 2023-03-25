@@ -1,15 +1,14 @@
+using Dalamud.Interface;
+using Dalamud.Logging;
+using ImGuiFileDialog;
 using ImGuiNET;
 using NAudio.Wave;
 using System;
-using Dalamud.Logging;
-using Dalamud.Interface;
-using ImGuiFileDialog;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Utils;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using VfxEditor.ScdFormat.Music.Data;
+using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat
 {
@@ -24,8 +23,8 @@ namespace VfxEditor.ScdFormat
         private MultiplexingWaveProvider LeftRightCombined;
         private WasapiOut CurrentOutput;
 
-        private double TotalTime => LeftStream == null ? 0 : LeftStream.TotalTime.TotalSeconds - 0.01f;
-        private double CurrentTime => LeftStream == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
+        private double TotalTime => LeftStream?.TotalTime == null ? 0 : LeftStream.TotalTime.TotalSeconds - 0.01f;
+        private double CurrentTime => LeftStream?.CurrentTime == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
@@ -33,7 +32,6 @@ namespace VfxEditor.ScdFormat
         private int ConverterSecondsOut = 0;
         private int ConverterSamples = 0;
         private float ConverterSeconds = 0f;
-        private bool ConverterOpen = false;
 
         private bool LoopTimeInitialized = false;
         private bool LoopTimeRefreshing = false;
@@ -41,6 +39,10 @@ namespace VfxEditor.ScdFormat
         private double LoopEndTime = 0;
 
         private double QueueSeek = -1;
+
+        private bool ShowChannelSelect => Entry.NumChannels > 2;
+        private int Channel1 = 0;
+        private int Channel2 = 1;
 
         public AudioPlayer( ScdAudioEntry entry ) {
             Entry = entry;
@@ -50,6 +52,10 @@ namespace VfxEditor.ScdFormat
             if( ImGui.BeginTabBar( $"{id}/Tabs" ) ) {
                 if( ImGui.BeginTabItem( $"Music{id}" ) ) {
                     DrawPlayer( id );
+                    ImGui.EndTabItem();
+                }
+                if( ShowChannelSelect && ImGui.BeginTabItem( $"Channels{id}" ) ) {
+                    DrawChannels( id );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Converter{id}" ) ) {
@@ -174,7 +180,31 @@ namespace VfxEditor.ScdFormat
             ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
         }
 
+        private void DrawChannels( string id ) {
+            ImGui.TextDisabled( "Which channels to play when previewing the audio file. Does not affect the .scd file" );
+            
+            if( ImGui.BeginCombo( $"Preview Channel 1{id}", $"Channel #{Channel1}" ) ) {
+                for( var i = 0; i < Entry.NumChannels; i++ ) {
+                    if( ImGui.Selectable( $"Channel #{i}{id}", Channel1 == i ) ) Channel1 = i;
+                }
+                ImGui.EndCombo();
+            }
+
+            if( ImGui.BeginCombo( $"Preview Channel 2{id}", $"Channel #{Channel2}" ) ) {
+                for( var i = 0; i < Entry.NumChannels; i++ ) {
+                    if( ImGui.Selectable( $"Channel #{i}{id}", Channel2 == i ) ) Channel2 = i;
+                }
+                ImGui.EndCombo();
+            }
+
+            if( ImGui.Button( $"Update{id}" ) ) {
+                Reset();
+            }
+        }
+
         private void DrawConverter( string id ) {
+            ImGui.TextDisabled( "Utilities to generate byte values which can be used for loop start/end" );
+
             // Bytes
             ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
             ImGui.SameLine();
@@ -208,11 +238,14 @@ namespace VfxEditor.ScdFormat
                 LeftStream = ConvertStream( stream );
                 RightStream = ConvertStream( Entry.Data.GetStream() );
 
+                var firstChannel = ShowChannelSelect ? Channel1 : 0;
+                var secondChannel = ShowChannelSelect ? Channel2 : ( format.Channels > 1 ? 1 : 0 );
+
                 var leftStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { LeftStream }, 1 );
-                leftStreamIsolated.ConnectInputToOutput( 0, 0 );
+                leftStreamIsolated.ConnectInputToOutput( firstChannel, 0 );
 
                 var rightStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { RightStream }, 1 );
-                rightStreamIsolated.ConnectInputToOutput( format.Channels > 1 ? 1 : 0, 0 );
+                rightStreamIsolated.ConnectInputToOutput( secondChannel, 0 );
 
                 LeftRightCombined = new MultiplexingWaveProvider( new[] { leftStreamIsolated, rightStreamIsolated }, 2 );
                 LeftRightCombined.ConnectInputToOutput( 0, 0 );
@@ -292,9 +325,13 @@ namespace VfxEditor.ScdFormat
         }
 
         public void Reset() {
+            CurrentOutput?.Stop();
             CurrentOutput?.Dispose();
             LeftStream?.Dispose();
             RightStream?.Dispose();
+            LeftStream = null;
+            RightStream = null;
+            CurrentOutput = null;
         }
 
         public void Dispose() {
