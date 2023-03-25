@@ -50,7 +50,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] 6-channel `.ogg`
+- [ ] More research into sound position (C063)
+- [ ] Weird crackling when playing back 4-ch and 6-ch files. Maybe related to clipping/conversion?
 - [ ] Make it so node names don't change when others are deleted (Particle 1, etc.)
 - [ ] More accurate spline curve calculations
 - [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)

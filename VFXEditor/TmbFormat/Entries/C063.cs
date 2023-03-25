@@ -17,7 +17,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedInt SoundIndex = new( "Sound Index", defaultValue: 1 );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt SoundPosition = new( "Sound Position", defaultValue: 1 );
 
         public C063( bool papEmbedded ) : base( papEmbedded ) { }
 
@@ -31,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk2,
             Path,
             SoundIndex,
-            Unk3
+            SoundPosition
         };
 
         public override void Write( TmbWriter writer ) {
