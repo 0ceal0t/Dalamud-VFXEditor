@@ -21,7 +21,9 @@ namespace VfxEditor.Select {
         GameCutscene,
         GameNpc,
         GameMusic,
-        GameQuest
+        GameQuest,
+        GameCharacter,
+        GameJob
     }
 
     public struct SelectResult {

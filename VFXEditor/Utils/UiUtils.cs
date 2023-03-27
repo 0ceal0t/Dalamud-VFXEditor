@@ -208,7 +208,7 @@ namespace VfxEditor.Utils {
         public static float GetIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();
             ImGui.PushFont( UiBuilder.IconFont );
-            var iconSize = ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + 2;
+            var iconSize = ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
             ImGui.PopFont();
             return iconSize;
         }

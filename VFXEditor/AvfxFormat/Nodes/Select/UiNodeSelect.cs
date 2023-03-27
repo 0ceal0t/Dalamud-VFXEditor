@@ -193,12 +193,14 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
             // Draw go button
-            ImGui.SameLine( inputSize + 2 );
+            ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
             ImGui.PushFont( UiBuilder.IconFont );
             if( Selected == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
             if( Selected == null ) ImGui.PopStyleVar();
             ImGui.PopFont();
+
+            UiUtils.Tooltip( "Navigate to selected node" );
 
             ImGui.SameLine();
             ImGui.Text( Name );

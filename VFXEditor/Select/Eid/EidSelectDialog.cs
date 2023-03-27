@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Eid {
 
         public EidSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "eid", manager, isSourceDialog ) {
             GameTabs = new List<SelectTab>( new SelectTab[]{
-                new CharacterTab( this, "Character" ),
+                new CharacterEidTab( this, "Character" ),
                 new NpcEidTab( this, "Npc" ),
                 new MountEidTab( this, "Mount" )
             } );

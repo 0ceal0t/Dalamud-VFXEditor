@@ -94,6 +94,9 @@ namespace VfxEditor {
         public int CurveEditorSelectedSize = 10;
         public int CurveEditorPrimarySelectedSize = 12;
 
+        public bool OpenPathAsNewDocument = true;
+        public bool OpenPathReplace = true;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -210,6 +213,9 @@ namespace VfxEditor {
 
             if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
 
+            if( ImGui.Checkbox( $"Open paths as new document{id}", ref OpenPathAsNewDocument ) ) Save();
+            if( ImGui.Checkbox( $"Set replacement when opening path{id}", ref OpenPathReplace ) ) Save();
+
             ImGui.Unindent();
             ImGui.EndChild();
         }
@@ -228,9 +234,9 @@ namespace VfxEditor {
             if( RedoKeybind.Draw( "Redo ", "##RedoKeybind" ) ) Save();
             if( DocumentsKeybind.Draw( "Documents", "##DocumentsKeybind" ) ) Save();
             if( UpdateKeybind.Draw( "Update", "##UpdateKeybind" ) ) Save();
-            if( SpawnOnSelfKeybind.Draw( "Spawn on self (VFX only)", "##SpawnSelfKeybind" ) ) Save();
-            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (VFX only)", "##SpawnGroundKeybind" ) ) Save();
-            if( SpawnOnTargetKeybind.Draw( "Spawn on target (VFX only)", "##SpawnTargetKeybind" ) ) Save();
+            if( SpawnOnSelfKeybind.Draw( "Spawn on self (Vfx only)", "##SpawnSelfKeybind" ) ) Save();
+            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (Vfx only)", "##SpawnGroundKeybind" ) ) Save();
+            if( SpawnOnTargetKeybind.Draw( "Spawn on target (Vfx only)", "##SpawnTargetKeybind" ) ) Save();
 
             ImGui.EndChild();
         }

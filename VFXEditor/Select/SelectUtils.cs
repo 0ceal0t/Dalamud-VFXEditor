@@ -66,18 +66,33 @@ namespace VfxEditor.Select {
             { "Ninja", "bt_dgr_dgr" },
             { "Reaper", "bt_2km_emp" },
             { "Red Mage", "bt_2rp_emp" },
-            { "Black Mage", "bt_stf_sld" },
+            { "Black Mage", "bt_jst_sld" },
             { "Summoner", "bt_2bk_emp" },
             { "Blue Mage", "bt_rod_emp" },
         };
 
+        public static readonly Dictionary<string, string> JobMovementOverride = new() {
+            { "Black Mage", "bt_stf_sld" },
+            { "Ninja", "bt_nin_nin" },
+        };
+
+        public static readonly Dictionary<string, string> JobDrawOverride = new() {
+            { "Black Mage", "bt_stf_sld" }
+        };
+
+        public static readonly Dictionary<string, string> JobAutoOverride = new() {
+            { "Black Mage", "bt_stf_sld" }
+        };
+
+        public static readonly int MaxChangePoses = 6;
+
         public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
-        public static string GetSkeletonpath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
+        public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, string>();
-            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonpath( x.Value.SkeletonId, path ) );
+            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonPath( x.Value.SkeletonId, path ) );
         }
 
         public static Dictionary<string, string> GetAllJobSkeletonPaths( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );

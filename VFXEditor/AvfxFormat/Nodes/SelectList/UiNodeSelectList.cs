@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.Utils;
 
@@ -164,13 +165,18 @@ namespace VfxEditor.AvfxFormat {
 
                 AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
+                var style = ImGui.GetStyle();
+                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( style.ItemInnerSpacing.X, style.ItemSpacing.Y ) );
+
                 // Draw go button
-                ImGui.SameLine( inputSize + 2 );
+                ImGui.SameLine();
                 ImGui.PushFont( UiBuilder.IconFont );
                 if( Selected[idx] == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id + idx ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
                 if( Selected[idx] == null ) ImGui.PopStyleVar();
                 ImGui.PopFont();
+
+                UiUtils.Tooltip( "Navigate to selected node" );
 
                 if( idx == 0 ) {
                     ImGui.SameLine();
@@ -179,7 +185,6 @@ namespace VfxEditor.AvfxFormat {
                 else {
                     // Remove button
                     ImGui.SameLine();
-                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                     ImGui.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
@@ -188,6 +193,8 @@ namespace VfxEditor.AvfxFormat {
                     }
                     ImGui.PopFont();
                 }
+
+                ImGui.PopStyleVar( 1 );
             }
 
 

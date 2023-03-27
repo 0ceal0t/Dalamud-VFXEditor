@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using VfxEditor.Data;
 using VfxEditor.Utils;
@@ -61,24 +62,34 @@ namespace VfxEditor.AvfxFormat {
 
             DrawRemoveContextMenu( this, Name, id );
 
-            ImGui.PushFont( UiBuilder.IconFont );
+            var style = ImGui.GetStyle();
 
             // Check - update value
-            ImGui.SameLine( inputSize + 2 );
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( style.ItemInnerSpacing.X, style.ItemSpacing.Y ) );
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.SameLine();
             if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                 var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
                 CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
             }
+            ImGui.PopFont();
+
+            UiUtils.Tooltip( "Update field value" );
+
             // Remove - unassign
             if( ShowRemoveButton ) {
-                ImGui.SameLine( inputSize + checkSize + 2 );
+                ImGui.PushFont( UiBuilder.IconFont );
+                ImGui.SameLine();
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
-            }
+                ImGui.PopFont();
 
-            ImGui.PopFont();
+                UiUtils.Tooltip( "Unassign field" );
+            }
 
             ImGui.SameLine();
             ImGui.Text( Name );
+
+            ImGui.PopStyleVar( 1 );
         }
     }
 }
