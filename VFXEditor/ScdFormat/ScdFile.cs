@@ -13,8 +13,7 @@ using VfxEditor.ScdFormat.Sound;
 using VfxEditor.ScdFormat.Track;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;

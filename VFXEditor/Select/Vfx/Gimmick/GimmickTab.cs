@@ -7,7 +7,7 @@ using System.Text;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Gimmick {
-    public class GimmickTab : SelectTab<GimmickRow, ParseAvfxFromFile> {
+    public class GimmickTab : SelectTab<GimmickRow, ParseAvfx> {
         public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Gimmick" ) { }
 
         // ===== LOADING =====
@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Vfx.Gimmick {
             }
         }
 
-        public override void LoadSelection( GimmickRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.TmbPath, out loaded );
+        public override void LoadSelection( GimmickRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.TmbPath, out loaded );
 
         // ===== DRAWING ======
 

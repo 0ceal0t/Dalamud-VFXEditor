@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using VfxEditor.Select.Shared.Npc;
 
 namespace VfxEditor.Select.Pap.Npc {
@@ -7,11 +8,11 @@ namespace VfxEditor.Select.Pap.Npc {
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "Variant: " + Selected.Variant );
-            Dialog.DrawPath( "PAP", Loaded.Paths, parentId, SelectResultType.GameNpc, Selected.Name );
+            Dialog.DrawPath( "PAP", Loaded, parentId, SelectResultType.GameNpc, Selected.Name );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out NpcRowSelected selected ) {
-            selected = new( files.pap );
+        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
+            selected = files.pap;
         }
     }
 }

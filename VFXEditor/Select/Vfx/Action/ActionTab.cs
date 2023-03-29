@@ -5,7 +5,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Action {
-    public class ActionTab : SelectTab<ActionRow, ParseAvfxFromFile> {
+    public class ActionTab : SelectTab<ActionRow, ParseAvfx> {
         public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
         public ActionTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Action" ) { }
 
@@ -22,13 +22,13 @@ namespace VfxEditor.Select.Vfx.Action {
             }
         }
 
-        public override void LoadSelection( ActionRow item, out ParseAvfxFromFile loaded ) {
+        public override void LoadSelection( ActionRow item, out ParseAvfx loaded ) {
             if( string.IsNullOrEmpty( item.SelfTmbKey ) ) { // no need to get the file
-                loaded = new ParseAvfxFromFile();
+                loaded = new ParseAvfx();
                 return;
             }
 
-            ParseAvfxFromFile.ReadFile( item.TmbPath, out loaded );
+            ParseAvfx.ReadFile( item.TmbPath, out loaded );
         }
 
         // ===== DRAWING ======

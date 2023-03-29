@@ -83,6 +83,7 @@ namespace VfxEditor.Animation {
             var trimmed = path.Replace( ".tmb", "" );
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.ActionTimeline>()
                 .Where( x => !string.IsNullOrEmpty( x.Key ) );
+
             foreach( var item in sheet ) {
                 var key = item.Key.ToString();
                 if( monster && key.Contains( "[SKL_ID]" ) ) {

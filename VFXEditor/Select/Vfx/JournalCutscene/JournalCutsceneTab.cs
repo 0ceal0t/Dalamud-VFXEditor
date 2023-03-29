@@ -1,10 +1,11 @@
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.JournalCutscene {
-    public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, ParseAvfxFromFile> {
+    public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParseAvfx>> {
         public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-JournalCutscene" ) { }
 
         // ===== LOADING =====
@@ -15,13 +16,13 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
             foreach( var item in sheet ) Items.Add( new JournalCutsceneRow( item ) );
         }
 
-        public override void LoadSelection( JournalCutsceneRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.Paths, out loaded );
+        public override void LoadSelection( JournalCutsceneRow item, out List<ParseAvfx> loaded ) => ParseAvfx.ReadFile( item.Paths, out loaded );
 
         // ===== DRAWING ======
 
         protected override void DrawSelected( string parentId ) {
-            for( var idx = 0; idx < Loaded.VfxPaths.Count; idx++ ) {
-                var paths = Loaded.VfxPaths[idx];
+            for( var idx = 0; idx < Loaded.Count; idx++ ) {
+                var paths = Loaded[idx].VfxPaths;
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}{parentId}" ) ) {
                     ImGui.Indent();
                     Dialog.DrawPath( "VFX", paths, $"{parentId}{idx}", SelectResultType.GameCutscene, $"{Selected.Name} {idx}", true );

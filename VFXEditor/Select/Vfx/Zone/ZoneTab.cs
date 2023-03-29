@@ -6,7 +6,7 @@ using VfxEditor.Select.Shared;
 using VfxEditor.Select.Shared.Zone;
 
 namespace VfxEditor.Select.Vfx.Zone {
-    public class ZoneTab : SelectTab<ZoneRow, ParseAvfxFromFile> {
+    public class ZoneTab : SelectTab<ZoneRow, ParseAvfx> {
         public ZoneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Zone" ) { }
 
         // ===== LOADING =====
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Vfx.Zone {
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
 
-        public override void LoadSelection( ZoneRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.LgbPath, out loaded );
+        public override void LoadSelection( ZoneRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.LgbPath, out loaded );
 
         // ===== DRAWING ======
 

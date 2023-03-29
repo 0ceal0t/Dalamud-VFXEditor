@@ -4,7 +4,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Cutscene {
-    public class CutsceneTab : SelectTab<CutsceneRow, ParseAvfxFromFile> {
+    public class CutsceneTab : SelectTab<CutsceneRow, ParseAvfx> {
         public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Cutscene" ) { }
 
         public override void LoadData() {
@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Vfx.Cutscene {
             foreach( var item in sheet ) Items.Add( new CutsceneRow( item ) );
         }
 
-        public override void LoadSelection( CutsceneRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.Path, out loaded );
+        public override void LoadSelection( CutsceneRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.Path, out loaded );
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "CUTB:" );

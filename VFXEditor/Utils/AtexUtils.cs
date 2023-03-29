@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using VfxEditor.TextureFormat;
 
 namespace VfxEditor.Utils {
     public static class AtexUtils {

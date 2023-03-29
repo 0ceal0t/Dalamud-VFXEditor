@@ -10,23 +10,22 @@ using Dalamud.Plugin;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
+using System.Collections.Generic;
+using VfxEditor.Animation;
 using VfxEditor.AvfxFormat;
-using VfxEditor.PapFormat;
-using VfxEditor.TmbFormat;
-using VfxEditor.ScdFormat;
 using VfxEditor.Data;
-using VfxEditor.Ui;
 using VfxEditor.DirectX;
+using VfxEditor.EidFormat;
+using VfxEditor.FileManager;
 using VfxEditor.Interop;
+using VfxEditor.PapFormat;
 using VfxEditor.Penumbra;
-using VfxEditor.Select;
+using VfxEditor.ScdFormat;
 using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
+using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
-using VfxEditor.Animation;
-using System.Collections.Generic;
-using VfxEditor.FileManager;
-using VfxEditor.EidFormat;
+using VfxEditor.Ui;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {

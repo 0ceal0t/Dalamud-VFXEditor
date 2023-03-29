@@ -5,7 +5,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Housing {
-    public class HousingTab : SelectTab<HousingRow, ParseAvfxFromFile> {
+    public class HousingTab : SelectTab<HousingRow, ParseAvfx> {
         public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Housing" ) { }
 
         // ===== LOADING =====
@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Vfx.Housing {
             foreach( var item in outdoorSheet ) Items.Add( new HousingRow( item ) );
         }
 
-        public override void LoadSelection( HousingRow item, out ParseAvfxFromFile loaded ) => ParseAvfxFromFile.ReadFile( item.SgbPath, out loaded );
+        public override void LoadSelection( HousingRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.SgbPath, out loaded );
 
         // ===== DRAWING ======
 

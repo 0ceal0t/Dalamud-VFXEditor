@@ -23,7 +23,7 @@ namespace VfxEditor.Select.Shared.Npc {
         public uint bnpcName;
     }
 
-    public abstract class NpcTab : SelectTab<NpcRow, NpcRowSelected> {
+    public abstract class NpcTab : SelectTab<NpcRow, List<string>> {
         // Shared across multiple dialogs
         private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
 
@@ -55,12 +55,12 @@ namespace VfxEditor.Select.Shared.Npc {
             NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectUtils.NpcFilesPath ) );
         }
 
-        public override void LoadSelection( NpcRow item, out NpcRowSelected loaded ) {
+        public override void LoadSelection( NpcRow item, out List<string> loaded ) {
             var files = NpcFiles.TryGetValue( item.ModelString, out var paths ) ? paths : new NpcFilesStruct();
             FilesToSelected( files, out loaded );
         }
 
-        protected abstract void FilesToSelected( NpcFilesStruct files, out NpcRowSelected selected );
+        protected abstract void FilesToSelected( NpcFilesStruct files, out List<string> selected );
 
         // ===== DRAWING ======
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using VfxEditor.Select.Shared.Npc;
 
 namespace VfxEditor.Select.Eid.Npc {
@@ -9,8 +10,8 @@ namespace VfxEditor.Select.Eid.Npc {
             Dialog.DrawPath( "Path", Selected.GetEidPath(), parentId, SelectResultType.GameNpc, Selected.Name );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out NpcRowSelected selected ) {
-            selected = new( null ); // don't actually need any of the files
+        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
+            selected = null;
         }
     }
 }
