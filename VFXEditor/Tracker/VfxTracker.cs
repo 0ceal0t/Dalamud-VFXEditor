@@ -40,8 +40,7 @@ namespace VfxEditor.Tracker {
         private readonly ConcurrentDictionary<IntPtr, TrackerData> ActorVfxs = new();
         private readonly ConcurrentDictionary<IntPtr, TrackerData> StaticVfxs = new();
 
-        public VfxTracker() {
-        }
+        public VfxTracker() { }
 
         public void Reset() {
             ActorVfxs.Clear();

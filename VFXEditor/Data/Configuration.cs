@@ -213,8 +213,8 @@ namespace VfxEditor {
 
             if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
 
-            if( ImGui.Checkbox( $"Open paths as new document{id}", ref OpenPathAsNewDocument ) ) Save();
-            if( ImGui.Checkbox( $"Set replacement when opening path{id}", ref OpenPathReplace ) ) Save();
+            // if( ImGui.Checkbox( $"Open paths as new document{id}", ref OpenPathAsNewDocument ) ) Save();
+            // if( ImGui.Checkbox( $"Set replacement when opening path{id}", ref OpenPathReplace ) ) Save();
 
             ImGui.Unindent();
             ImGui.EndChild();
