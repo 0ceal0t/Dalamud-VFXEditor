@@ -53,5 +53,13 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedStringCommand( this, Value, StateBeforeEdit ) );
             }
         }
+
+        public void Pad( BinaryReader reader, int length ) {
+            reader.ReadBytes( length - Value.Length - 1 );
+        }
+
+        public void Pad( BinaryWriter writer, int length ) {
+            for( var i = 0; i < ( length - Value.Length - 1 ); i++ ) writer.Write( ( byte )0 );
+        }
     }
 }

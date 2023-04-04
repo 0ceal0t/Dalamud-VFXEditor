@@ -16,7 +16,7 @@ namespace VfxEditor.EidFormat {
 
         public EidBindPoint( BinaryReader reader ) {
             Name.Read( reader );
-            reader.ReadBytes( 32 - Name.Value.Length - 1 ); // name padded to 32 bytes. also account for trailing null
+            Name.Pad( reader, 32 );
             Id.Read( reader );
             Position.Read( reader );
             Rotation.Read( reader );
@@ -25,9 +25,7 @@ namespace VfxEditor.EidFormat {
 
         public void Write(  BinaryWriter writer ) {
             Name.Write( writer );
-            for( var i = 0; i < ( 32 - Name.Value.Length - 1 ); i++ ) {
-                writer.Write( ( byte )0 );
-            }
+            Name.Pad( writer, 32 );
             Id.Write( writer );
             Position.Write( writer );
             Rotation.Write( writer );

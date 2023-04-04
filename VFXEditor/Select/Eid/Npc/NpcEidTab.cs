@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Eid.Npc {
         }
 
         protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
-            selected = null;
+            selected = new List<string>();
         }
     }
 }

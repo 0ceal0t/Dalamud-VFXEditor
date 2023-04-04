@@ -5,6 +5,7 @@ using VfxEditor.Utils;
 using VfxEditor.Interop;
 using VfxEditor.TmbFormat;
 using VfxEditor.Parsing;
+using System.Reflection.PortableExecutable;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
@@ -23,7 +24,7 @@ namespace VfxEditor.PapFormat {
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
             Name.Read( reader );
-            reader.ReadBytes( 32 - Name.Value.Length - 1 ); // name padded to 32 bytes. also account for trailing null
+            Name.Pad( reader, 32 );
             Unk1.Read( reader );
             HavokIndex = reader.ReadInt16();
             Unk2.Read( reader );
@@ -31,9 +32,7 @@ namespace VfxEditor.PapFormat {
 
         public void Write( BinaryWriter writer ) {
             Name.Write( writer );
-            for( var i = 0; i < ( 32 - Name.Value.Length - 1 ); i++ ) {
-                writer.Write( ( byte )0 );
-            }
+            Name.Pad( writer, 32 );
             Unk1.Write( writer );
             writer.Write( HavokIndex );
             Unk2.Write( writer );
