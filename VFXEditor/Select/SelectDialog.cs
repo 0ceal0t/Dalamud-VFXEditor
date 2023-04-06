@@ -23,7 +23,8 @@ namespace VfxEditor.Select {
         GameMusic,
         GameQuest,
         GameCharacter,
-        GameJob
+        GameJob,
+        GameMisc
     }
 
     public struct SelectResult {

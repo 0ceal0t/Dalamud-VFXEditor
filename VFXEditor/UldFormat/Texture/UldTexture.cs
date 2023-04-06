@@ -12,6 +12,8 @@ namespace VfxEditor.UldFormat.Texture {
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
         private readonly ParsedUInt Unk2 = new( "Unknown 2" );
 
+        public UldTexture() { }
+
         public UldTexture( BinaryReader reader, char minorVersion ) {
             Id.Read( reader );
             Path.Read( reader );
@@ -28,5 +30,13 @@ namespace VfxEditor.UldFormat.Texture {
             Unk1.Write( writer );
             if( minorVersion == '1' ) Unk2.Write( writer );
         }
+
+        public void Draw( string id ) {
+            Id.Draw( id, CommandManager.Uld );
+            Path.Draw( id, CommandManager.Uld );
+            Unk1.Draw( id, CommandManager.Uld );
+            Unk2.Draw( id, CommandManager.Uld );
+        }
+
     }
 }

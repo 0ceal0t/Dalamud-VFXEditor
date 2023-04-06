@@ -81,6 +81,7 @@ namespace VfxEditor {
             if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
             if( ImGui.MenuItem( "Scd##Menu" ) ) ScdManager.Show();
             if( ImGui.MenuItem( "Eid##Menu" ) ) EidManager.Show();
+            if( ImGui.MenuItem( "Uld##Menu" ) ) UldManager.Show();
         }
     }
 }

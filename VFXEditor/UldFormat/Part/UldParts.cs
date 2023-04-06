@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Part {
-    public class UldParts {
+    public class UldParts : ISimpleUiBase {
         public readonly ParsedUInt Id = new( "Id" );
 
         private readonly List<UldPart> Parts = new();
         private int Offset => 12 + Parts.Count * 12;
+
+        public UldParts() { }
 
         public UldParts( BinaryReader reader ) {
             Id.Read( reader );
@@ -24,6 +27,10 @@ namespace VfxEditor.UldFormat.Part {
             writer.Write( Parts.Count );
             writer.Write( Offset );
             foreach( var part in Parts ) part.Write( writer );
+        }
+
+        public void Draw( string id ) {
+            Id.Draw( id, CommandManager.Uld );
         }
     }
 

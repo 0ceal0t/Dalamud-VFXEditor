@@ -1,3 +1,5 @@
+using Dalamud.Logging;
+using ImGuiNET;
 using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
@@ -29,13 +31,16 @@ namespace VfxEditor.UldFormat
 
         private readonly UldListHeader WidgetList;
 
-        // Plugin.UldManager.GetCopyManager()
-        public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( null ) ) {
+        public readonly UldTextureSplitView AssetSplitView;
+        public readonly UldPartsSplitView PartsSplitView;
+
+        public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
             var pos = reader.BaseStream.Position;
             Header = new( reader );
 
             var offsetsPosition = reader.BaseStream.Position;
             OffsetsHeader = new( reader );
+            PluginLog.Log( $"{OffsetsHeader.RewriteDataOffset} {OffsetsHeader.WidgetOffset}" );
 
             reader.Seek( offsetsPosition + OffsetsHeader.AssetOffset );
             AssetList = new( reader );
@@ -60,6 +65,9 @@ namespace VfxEditor.UldFormat
             reader.Seek( offsetsPosition2 + OffsetsHeader2.WidgetOffset );
             WidgetList = new( reader );
             // widget data
+
+            AssetSplitView = new( Assets );
+            PartsSplitView = new( Parts );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -79,7 +87,34 @@ namespace VfxEditor.UldFormat
         }
 
         public override void Draw( string id ) {
-            
+            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Assets{id}" ) ) {
+                    AssetList.Draw( id );
+                    AssetSplitView.Draw( $"{id}/Assets" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Parts{id}" ) ) {
+                    PartList.Draw( id );
+                    PartsSplitView.Draw( $"{id}/Parts" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Components{id}" ) ) {
+                    ComponentList.Draw( id );
+                    //
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Timelines{id}" ) ) {
+                    TimelineList.Draw( id );
+                    //
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Widgets{id}" ) ) {
+                    WidgetList.Draw( id );
+                    //
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
         }
     }
 }

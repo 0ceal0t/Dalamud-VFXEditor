@@ -20,17 +20,17 @@ namespace VfxEditor.ScdFormat
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
 
-        public List<ScdAudioEntry> Audio = new();
-        public List<ScdLayoutEntry> Layouts = new();
-        public List<ScdSoundEntry> Sounds = new();
-        public List<ScdTrackEntry> Tracks = new();
-        public List<ScdAttributeEntry> Attributes = new();
+        public readonly List<ScdAudioEntry> Audio = new();
+        public readonly List<ScdLayoutEntry> Layouts = new();
+        public readonly List<ScdSoundEntry> Sounds = new();
+        public readonly List<ScdTrackEntry> Tracks = new();
+        public readonly List<ScdAttributeEntry> Attributes = new();
 
-        public ScdAudioEntrySplitView AudioSplitView;
-        public ScdSoundSplitView SoundView;
-        public ScdLayoutSplitView LayoutView;
-        public ScdTrackSplitView TrackView;
-        public SimpleSplitView<ScdAttributeEntry> AttributeView;
+        public readonly ScdAudioEntrySplitView AudioSplitView;
+        public readonly ScdSoundSplitView SoundView;
+        public readonly ScdLayoutSplitView LayoutView;
+        public readonly ScdTrackSplitView TrackView;
+        public readonly SimpleSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager.GetCopyManager() ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;

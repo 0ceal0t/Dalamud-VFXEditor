@@ -1,6 +1,4 @@
 using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Eid;
