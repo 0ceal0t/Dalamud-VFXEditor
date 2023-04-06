@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -80,7 +77,7 @@ namespace VfxEditor.ScdFormat {
 
         public ScdTrackItem() {
             Type.ExtraCommandGenerator = () => {
-                return new ScdTrackItemExtraCommand( this );
+                return new ScdTrackDataCommand( this );
             };
         }
 

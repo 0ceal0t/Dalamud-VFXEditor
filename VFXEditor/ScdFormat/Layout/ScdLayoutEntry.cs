@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public enum SoundObjectType {
         Null,
         Ambient,
@@ -51,7 +53,7 @@ namespace VfxEditor.ScdFormat {
         IsLocalFixedDirection = 0x80
     }
 
-    public class ScdLayoutEntry : ScdEntry, IScdSimpleUiBase {
+    public class ScdLayoutEntry : ScdEntry, ISimpleUiBase {
         public ushort Size = 0x80;
         public readonly ParsedEnum<SoundObjectType> Type = new( "Type", size: 1 );
         public readonly ParsedByte Version = new( "Version" );

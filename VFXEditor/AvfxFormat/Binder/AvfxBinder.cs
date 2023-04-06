@@ -83,7 +83,7 @@ namespace VfxEditor.AvfxFormat {
             } );
 
             BinderVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxBinderDataExtraCommand( this );
+                return new AvfxBinderDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );

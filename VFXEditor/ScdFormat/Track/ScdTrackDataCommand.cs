@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace VfxEditor.ScdFormat {
-    public class ScdTrackItemExtraCommand : ICommand {
+    public class ScdTrackDataCommand : ICommand {
         private readonly ScdTrackItem Item;
         private ScdTrackData OldData;
         private ScdTrackData NewData;
 
-        public ScdTrackItemExtraCommand( ScdTrackItem item ) {
+        public ScdTrackDataCommand( ScdTrackItem item ) {
             Item = item;
         }
 

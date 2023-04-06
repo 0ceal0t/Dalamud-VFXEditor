@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Sound.Data;
+using VfxEditor.Ui.Components;
 
 namespace VfxEditor.ScdFormat
 {
@@ -51,7 +52,7 @@ namespace VfxEditor.ScdFormat
         Atomosgear = 0x8000,
     }
 
-    public class ScdSoundEntry : ScdEntry, IScdSimpleUiBase {
+    public class ScdSoundEntry : ScdEntry, ISimpleUiBase {
         public readonly ParsedByte BusNumber = new( "Bus Number" );
         public readonly ParsedByte Priority = new( "Priority" );
         public readonly ParsedEnum<SoundType> Type = new( "Type", size: 1 );

@@ -43,7 +43,7 @@ namespace VfxEditor.AvfxFormat {
             };
 
             EffectorVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxEffectorDataExtraCommand( this );
+                return new AvfxEffectorDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );

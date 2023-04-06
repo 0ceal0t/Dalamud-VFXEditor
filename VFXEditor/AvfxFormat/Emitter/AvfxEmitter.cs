@@ -138,7 +138,7 @@ namespace VfxEditor.AvfxFormat {
             ParticleSplit = new( Particles, this, true );
 
             EmitterVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxEmitterDataExtraCommand( this );
+                return new AvfxEmitterDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );

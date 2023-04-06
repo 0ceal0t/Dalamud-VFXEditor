@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Components;
 
-namespace VfxEditor.ScdFormat.Sound {
-    public class ScdSoundSplitView : ScdSimpleSplitView<ScdSoundEntry> {
+namespace VfxEditor.ScdFormat.Sound
+{
+    public class ScdSoundSplitView : SimpleSplitView<ScdSoundEntry> {
         public ScdSoundSplitView( List<ScdSoundEntry> items ) : base( "Sound", items, true ) {
         }
 

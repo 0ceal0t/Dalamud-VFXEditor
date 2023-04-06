@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 using VfxEditor;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorDataExtraCommand : ICommand {
-        private readonly AvfxEffector Item;
+    public class AvfxEmitterDataCommand : ICommand {
+        private readonly AvfxEmitter Item;
         private AvfxData OldData;
         private AvfxData NewData;
 
-        public AvfxEffectorDataExtraCommand( AvfxEffector item ) {
+        public AvfxEmitterDataCommand( AvfxEmitter item ) {
             Item = item;
         }
 
         public void Execute() {
             OldData = Item.Data;
             OldData?.Disable();
-            Item.SetData( Item.EffectorVariety.GetValue() );
+            Item.SetData( Item.EmitterVariety.GetValue() );
             NewData = Item.Data;
         }
 

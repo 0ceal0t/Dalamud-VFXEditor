@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Data {
+namespace VfxEditor.UldFormat.Part {
     public class UldParts {
-        private readonly ParsedUInt Id = new( "Id" );
+        public readonly ParsedUInt Id = new( "Id" );
+
         private readonly List<UldPart> Parts = new();
         private int Offset => 12 + Parts.Count * 12;
-        
+
         public UldParts( BinaryReader reader ) {
             Id.Read( reader );
             var partCount = reader.ReadInt32();
             reader.ReadInt32(); // skip offset
-            for( var i = 0; i < partCount; i ++ ) {
+            for( var i = 0; i < partCount; i++ ) {
                 Parts.Add( new UldPart( reader ) );
             }
         }

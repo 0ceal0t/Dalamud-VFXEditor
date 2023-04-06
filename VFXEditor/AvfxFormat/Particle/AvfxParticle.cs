@@ -231,7 +231,7 @@ namespace VfxEditor.AvfxFormat {
             } );
 
             ParticleVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxParticleDataExtraCommand( this );
+                return new AvfxParticleDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );

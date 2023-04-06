@@ -11,9 +11,11 @@ using VfxEditor.ScdFormat.Music;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.ScdFormat.Sound;
 using VfxEditor.ScdFormat.Track;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.ScdFormat
+{
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
@@ -28,7 +30,7 @@ namespace VfxEditor.ScdFormat {
         public ScdSoundSplitView SoundView;
         public ScdLayoutSplitView LayoutView;
         public ScdTrackSplitView TrackView;
-        public ScdSimpleSplitView<ScdAttributeEntry> AttributeView;
+        public SimpleSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager.GetCopyManager() ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;

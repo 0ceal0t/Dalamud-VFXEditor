@@ -3,13 +3,12 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Utils;
-using VfxEditor.Ui.Components;
 
-namespace VfxEditor.ScdFormat {
-    public class ScdSimpleSplitView<T> : SplitView<T> where T : class, IScdSimpleUiBase {
+namespace VfxEditor.Ui.Components {
+    public class SimpleSplitView<T> : SplitView<T> where T : class, ISimpleUiBase {
         protected readonly string ItemName;
 
-        public ScdSimpleSplitView( string itemName, List<T> items, bool allowNew = false ) : base( items, allowNew ) {
+        public SimpleSplitView( string itemName, List<T> items, bool allowNew = false ) : base( items, allowNew ) {
             ItemName = itemName;
         }
 

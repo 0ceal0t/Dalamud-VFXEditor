@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 using VfxEditor.ScdFormat.Music.Data;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat
@@ -19,7 +20,7 @@ namespace VfxEditor.ScdFormat
         Atrac3Too = 0x0D
     }
 
-    public class ScdAudioEntry : ScdEntry, IScdSimpleUiBase {
+    public class ScdAudioEntry : ScdEntry, ISimpleUiBase {
         public int DataLength;
         public int NumChannels;
         public int SampleRate;

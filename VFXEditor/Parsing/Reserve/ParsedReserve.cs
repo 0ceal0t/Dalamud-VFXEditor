@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VfxEditor.Parsing {
     public class ParsedReserve : ParsedBase {
-        private int Size = 0;
+        private readonly int Size = 0;
         private byte[] Data;
 
         public ParsedReserve( int size ) {

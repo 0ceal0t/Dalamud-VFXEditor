@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
-    public class ScdTrackEntry : ScdEntry, IScdSimpleUiBase {
+namespace VfxEditor.ScdFormat
+{
+    public class ScdTrackEntry : ScdEntry, ISimpleUiBase {
         public readonly List<ScdTrackItem> Items = new();
 
         public override void Read( BinaryReader reader ) {

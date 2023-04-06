@@ -1,12 +1,12 @@
 using System;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataExtraCommand : ICommand {
+    public class AvfxParticleDataCommand : ICommand {
         private readonly AvfxParticle Item;
         private AvfxData OldData;
         private AvfxData NewData;
 
-        public AvfxParticleDataExtraCommand( AvfxParticle item ) {
+        public AvfxParticleDataCommand( AvfxParticle item ) {
             Item = item;
         }
 

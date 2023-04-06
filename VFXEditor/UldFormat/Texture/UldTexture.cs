@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 
-namespace VfxEditor.UldFormat.Data {
-    public class UldTexture {
-        private readonly ParsedUInt Id = new( "Id" );
+namespace VfxEditor.UldFormat.Texture {
+    public class UldTexture : ISimpleUiBase {
+        public readonly ParsedUInt Id = new( "Id" );
+
         private readonly ParsedString Path = new( "Path", maxSize: 44 );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
         private readonly ParsedUInt Unk2 = new( "Unknown 2" );
@@ -19,7 +21,7 @@ namespace VfxEditor.UldFormat.Data {
             else Unk2.Value = 0;
         }
 
-        public void Writer( BinaryWriter writer, char minorVersion ) {
+        public void Write( BinaryWriter writer, char minorVersion ) {
             Id.Write( writer );
             Path.Write( writer );
             Path.Pad( writer, 44 );

@@ -1,10 +1,10 @@
 namespace VfxEditor.AvfxFormat {
-    public class AvfxBinderDataExtraCommand : ICommand {
+    public class AvfxBinderDataCommand : ICommand {
         private readonly AvfxBinder Item;
         private AvfxData OldData;
         private AvfxData NewData;
 
-        public AvfxBinderDataExtraCommand( AvfxBinder item ) {
+        public AvfxBinderDataCommand( AvfxBinder item ) {
             Item = item;
         }
 
