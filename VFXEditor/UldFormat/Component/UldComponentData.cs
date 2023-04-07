@@ -17,5 +17,9 @@ namespace VfxEditor.UldFormat.Component {
         public virtual void Write( BinaryWriter writer ) {
             foreach( var parsed in Parsed ) parsed.Write( writer );
         }
+
+        public virtual void Draw( string id ) {
+            foreach( var parsed in Parsed ) parsed.Draw( id, CommandManager.Uld );
+        }
     }
 }

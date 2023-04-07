@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
+using VfxEditor.UldFormat.Part;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTextureSplitView : SimpleSplitView<UldTexture> {
@@ -14,5 +15,7 @@ namespace VfxEditor.UldFormat.Texture {
         protected override void OnDelete( UldTexture item ) {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldTexture>( Items, item ) );
         }
+
+        protected override string GetText( UldTexture item, int idx ) => $"Texture {item.Id.Value}";
     }
 }

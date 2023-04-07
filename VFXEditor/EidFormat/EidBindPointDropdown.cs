@@ -11,9 +11,7 @@ namespace VfxEditor.EidFormat {
         protected override string GetText( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}";
 
         protected override void OnDelete( EidBindPoint item ) {
-            var index = Items.IndexOf( item );
-            if( index == -1 ) return;
-
+            if( Items.IndexOf( item ) == -1 ) return;
             CommandManager.Eid.Add( new GenericRemoveCommand<EidBindPoint>( Items, item ) );
         }
 
@@ -26,6 +24,5 @@ namespace VfxEditor.EidFormat {
             if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
             else ImGui.Text( "Select a bind point..." );
         }
-
     }
 }

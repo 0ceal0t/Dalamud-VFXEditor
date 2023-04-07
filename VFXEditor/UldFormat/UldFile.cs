@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
+using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Headers;
 using VfxEditor.UldFormat.Part;
 using VfxEditor.UldFormat.Texture;
@@ -26,6 +27,7 @@ namespace VfxEditor.UldFormat
         private readonly List<UldParts> Parts = new();
 
         private readonly UldListHeader ComponentList;
+        private readonly List<UldComponent> Components = new();
 
         private readonly UldListHeader TimelineList;
 
@@ -33,6 +35,7 @@ namespace VfxEditor.UldFormat
 
         public readonly UldTextureSplitView AssetSplitView;
         public readonly UldPartsSplitView PartsSplitView;
+        public readonly UldComponentDropdown ComponentDropdown;
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
             var pos = reader.BaseStream.Position;
@@ -40,7 +43,6 @@ namespace VfxEditor.UldFormat
 
             var offsetsPosition = reader.BaseStream.Position;
             OffsetsHeader = new( reader );
-            PluginLog.Log( $"{OffsetsHeader.RewriteDataOffset} {OffsetsHeader.WidgetOffset}" );
 
             reader.Seek( offsetsPosition + OffsetsHeader.AssetOffset );
             AssetList = new( reader );
@@ -52,7 +54,7 @@ namespace VfxEditor.UldFormat
 
             reader.Seek( offsetsPosition + OffsetsHeader.ComponentOffset );
             ComponentList = new( reader );
-            // component data
+            for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components ) );
 
             reader.Seek( offsetsPosition + OffsetsHeader.TimelineOffset );
             TimelineList = new( reader );
@@ -68,6 +70,7 @@ namespace VfxEditor.UldFormat
 
             AssetSplitView = new( Assets );
             PartsSplitView = new( Parts );
+            ComponentDropdown = new( Components );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -100,7 +103,7 @@ namespace VfxEditor.UldFormat
                 }
                 if( ImGui.BeginTabItem( $"Components{id}" ) ) {
                     ComponentList.Draw( id );
-                    //
+                    ComponentDropdown.Draw( $"{id}/Components" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Timelines{id}" ) ) {

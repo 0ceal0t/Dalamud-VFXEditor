@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,6 +38,8 @@ namespace VfxEditor.UldFormat.Component {
     }
 
     public class UldComponent {
+        private readonly List<UldComponent> Components;
+
         public readonly ParsedUInt Id = new( "Id" );
 
         private readonly ParsedBool IgnoreInput = new( "Ignore Input", size: 1 );
@@ -48,13 +51,14 @@ namespace VfxEditor.UldFormat.Component {
 
         private readonly List<UldNode> Nodes = new();
 
-        public UldComponent() {
+        public UldComponent( List<UldComponent> components ) {
+            Components = components;
             Type.ExtraCommandGenerator = () => {
                 return new UldComponentDataCommand( this );
             };
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this() {
+        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -63,8 +67,10 @@ namespace VfxEditor.UldFormat.Component {
             DropArrow.Read( reader );
             Type.Read( reader );
             var nodeCount = reader.ReadUInt32();
-            reader.ReadUInt16(); // size
+            var size = reader.ReadUInt16(); // size
             var offset = reader.ReadUInt16();
+
+            PluginLog.Log( $"{size} {offset}" );
 
             UpdateData();
             if( Data is CustomComponentData custom ) {
@@ -115,23 +121,27 @@ namespace VfxEditor.UldFormat.Component {
                 ComponentType.Slider => new SliderComponentData(),
                 ComponentType.TextInput => new TextInputComponentData(),
                 ComponentType.NumericInput => new NumericInputComponentData(),
-                /*ComponentType.List => new ListComponentData(),
+                ComponentType.List => new ListComponentData(),
                 ComponentType.DropDown => new DropDownComponentData(),
                 ComponentType.Tabbed => new TabbedComponentData(),
                 ComponentType.TreeList => new TreeListComponentData(),
                 ComponentType.ScrollBar => new ScrollBarComponentData(),
                 ComponentType.ListItem => new ListItemComponentData(),
                 ComponentType.Icon => new IconComponentData(),
-                ComponentType.IconWithText => new IconWithTextComponentData(),
-                ComponentType.DragDrop => new DragDropComponentData(),
-                ComponentType.LeveCard => new LeveCardComponentData(),
-                ComponentType.NineGridText => new NineGridTextComponentData(),
-                ComponentType.Journal => new JournalComponentData(),
-                ComponentType.Multipurpose => new MultipurposeComponentData(),
-                ComponentType.Map => new MapComponentData(),
-                ComponentType.Preview => new PreviewComponentData(),*/
+                //ComponentType.IconWithText => new IconWithTextComponentData(), // 2
+                //ComponentType.DragDrop => new DragDropComponentData(), // 1
+                //ComponentType.LeveCard => new LeveCardComponentData(), // 3
+                //ComponentType.NineGridText => new NineGridTextComponentData(), // 2
+                //ComponentType.Journal => new JournalComponentData(),
+                //ComponentType.Multipurpose => new MultipurposeComponentData(), // 3
+                //ComponentType.Map => new MapComponentData(), // 10
+                //ComponentType.Preview => new PreviewComponentData(), // 2
                 _ => null
             };
+        }
+
+        public void Draw( string id ) {
+
         }
     }
 }

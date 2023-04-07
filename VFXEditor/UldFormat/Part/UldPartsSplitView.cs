@@ -14,5 +14,7 @@ namespace VfxEditor.UldFormat.Part {
         protected override void OnDelete( UldParts item ) {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldParts>( Items, item ) );
         }
+
+        protected override string GetText( UldParts item, int idx ) => $"Parts {item.Id.Value}";
     }
 }

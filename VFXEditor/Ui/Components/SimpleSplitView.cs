@@ -30,8 +30,10 @@ namespace VfxEditor.Ui.Components {
         protected virtual void OnDelete( T item ) { }
 
         protected override void DrawLeftItem( T item, int idx, string id ) {
-            if( ImGui.Selectable( $"{ItemName} {idx}{id}{idx}", item == Selected ) ) Selected = item;
+            if( ImGui.Selectable( $"{GetText( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
         }
+
+        protected virtual string GetText( T item, int idx ) => $"{ItemName} {idx}";
 
         protected override void DrawSelected( string id ) {
             Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
