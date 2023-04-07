@@ -7,7 +7,6 @@ using VfxEditor.Ui.Components;
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : ISimpleUiBase {
         public readonly ParsedUInt Id = new( "Id" );
-
         private readonly ParsedString Path = new( "Path", maxSize: 44 );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
         private readonly ParsedUInt Unk2 = new( "Unknown 2" );

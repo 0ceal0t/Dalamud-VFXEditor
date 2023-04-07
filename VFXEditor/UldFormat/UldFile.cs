@@ -13,8 +13,7 @@ using VfxEditor.UldFormat.Headers;
 using VfxEditor.UldFormat.Part;
 using VfxEditor.UldFormat.Texture;
 
-namespace VfxEditor.UldFormat
-{
+namespace VfxEditor.UldFormat {
     public class UldFile : FileManagerFile {
         private readonly UldMainHeader Header;
         private readonly UldAtkHeader OffsetsHeader;

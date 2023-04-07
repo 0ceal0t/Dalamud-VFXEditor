@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Part {
     public class UldPartItem {
-        private readonly ParsedUInt TextureId = new( "Texture Id" );
+        public readonly ParsedUInt TextureId = new( "Texture Id" );
         private readonly ParsedUInt U = new( "U", size: 2 );
         private readonly ParsedUInt V = new( "V", size: 2 );
         private readonly ParsedUInt W = new( "W", size: 2 );

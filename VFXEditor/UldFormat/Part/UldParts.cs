@@ -10,8 +10,8 @@ using VfxEditor.Utils;
 namespace VfxEditor.UldFormat.Part {
     public class UldParts : ISimpleUiBase {
         public readonly ParsedUInt Id = new( "Id" );
+        public readonly List<UldPartItem> Parts = new();
 
-        private readonly List<UldPartItem> Parts = new();
         private int Offset => 12 + Parts.Count * 12;
 
         public UldParts() { }

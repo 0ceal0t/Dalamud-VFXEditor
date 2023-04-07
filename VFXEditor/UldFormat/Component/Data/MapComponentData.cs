@@ -1,8 +1,8 @@
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Component.Data {
-    public class GaugeComponentData : UldComponentData {
-        public GaugeComponentData() {
+    public class MapComponentData : UldComponentData {
+        public MapComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),
                 new ParsedUInt( "Unknown 2" ),
@@ -10,10 +10,10 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Unknown 4" ),
                 new ParsedUInt( "Unknown 5" ),
                 new ParsedUInt( "Unknown 6" ),
-                new ParsedUInt( "Vertical Margin", size: 2 ),
-                new ParsedUInt( "Horizontal Margin", size: 2 ),
-                new ParsedBool( "Is Vertical", size: 1 ),
-                new ParsedReserve( 3 ) // Padding
+                new ParsedUInt( "Unknown 7" ),
+                new ParsedUInt( "Unknown 8" ),
+                new ParsedUInt( "Unknown 9" ),
+                new ParsedUInt( "Unknown 10"),
             } );
         }
     }

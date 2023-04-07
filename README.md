@@ -51,6 +51,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 
 ## TODO
 - [ ] `.uld` editor
+- [ ] When do `.uld` files even get loaded?
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)
 - [ ] Weird crackling when playing back 4-ch and 6-ch files. Maybe related to clipping/conversion?

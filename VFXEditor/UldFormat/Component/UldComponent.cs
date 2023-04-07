@@ -1,10 +1,8 @@
 using Dalamud.Logging;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
@@ -38,10 +36,7 @@ namespace VfxEditor.UldFormat.Component {
     }
 
     public class UldComponent {
-        private readonly List<UldComponent> Components;
-
         public readonly ParsedUInt Id = new( "Id" );
-
         private readonly ParsedBool IgnoreInput = new( "Ignore Input", size: 1 );
         private readonly ParsedBool DragArrow = new( "Drag Arrow", size: 1 );
         private readonly ParsedBool DropArrow = new( "Drop Arrow", size: 1 );
@@ -50,9 +45,10 @@ namespace VfxEditor.UldFormat.Component {
         public UldComponentData Data = null;
 
         private readonly List<UldNode> Nodes = new();
+        private readonly UldNodeSplitView NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {
-            Components = components;
+            NodeSplitView = new( Nodes, components );
             Type.ExtraCommandGenerator = () => {
                 return new UldComponentDataCommand( this );
             };
@@ -67,12 +63,16 @@ namespace VfxEditor.UldFormat.Component {
             DropArrow.Read( reader );
             Type.Read( reader );
             var nodeCount = reader.ReadUInt32();
-            var size = reader.ReadUInt16(); // size
+            var size = reader.ReadUInt16();
             var offset = reader.ReadUInt16();
 
-            PluginLog.Log( $"{size} {offset}" );
+            PluginLog.Log( $"UldComponent size:{size} offset:{offset}" );
 
             UpdateData();
+            if( Data == null ) {
+                PluginLog.Log( $"Unknown component type {( int )Type.Value} @ {reader.BaseStream.Position:X8}" );
+            }
+
             if( Data is CustomComponentData custom ) {
                 custom.Read( reader, offset - 16 );
             }
@@ -82,7 +82,7 @@ namespace VfxEditor.UldFormat.Component {
             reader.BaseStream.Position = pos + offset;
 
             for( var i = 0; i< nodeCount; i++ ) {
-                // TODO: nodes
+                Nodes.Add( new UldNode( reader, components ) );
             }
         }
 
@@ -128,20 +128,52 @@ namespace VfxEditor.UldFormat.Component {
                 ComponentType.ScrollBar => new ScrollBarComponentData(),
                 ComponentType.ListItem => new ListItemComponentData(),
                 ComponentType.Icon => new IconComponentData(),
-                //ComponentType.IconWithText => new IconWithTextComponentData(), // 2
-                //ComponentType.DragDrop => new DragDropComponentData(), // 1
-                //ComponentType.LeveCard => new LeveCardComponentData(), // 3
-                //ComponentType.NineGridText => new NineGridTextComponentData(), // 2
-                //ComponentType.Journal => new JournalComponentData(),
-                //ComponentType.Multipurpose => new MultipurposeComponentData(), // 3
-                //ComponentType.Map => new MapComponentData(), // 10
-                //ComponentType.Preview => new PreviewComponentData(), // 2
+                ComponentType.IconWithText => new IconWithTextComponentData(),
+                ComponentType.DragDrop => new DragDropComponentData(),
+                ComponentType.LeveCard => new LeveCardComponentData(),
+                ComponentType.NineGridText => new NineGridTextComponentData(),
+                ComponentType.Journal => new JournalComponentData(),
+                ComponentType.Multipurpose => new MultipurposeComponentData(),
+                ComponentType.Map => new MapComponentData(),
+                ComponentType.Preview => new PreviewComponentData(),
                 _ => null
             };
         }
 
         public void Draw( string id ) {
+            Id.Draw( id, CommandManager.Uld );
+            Type.Draw( id, CommandManager.Uld );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
+            if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
+                    DrawParameters( $"{id}/Param" );
+                    ImGui.EndTabItem();
+                }
+                if( Data != null && ImGui.BeginTabItem( $"Data{id}" ) ) {
+                    DrawData( $"{id}/Data" );
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"Nodes{id}" ) ) {
+                    NodeSplitView.Draw( $"{id}/Nodes" );
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+        }
+
+        private void DrawParameters( string id ) {
+            ImGui.BeginChild( id );
+            IgnoreInput.Draw( id, CommandManager.Uld );
+            DragArrow.Draw( id, CommandManager.Uld );
+            DropArrow.Draw( id, CommandManager.Uld );
+            ImGui.EndChild();
+        }
+
+        private void DrawData( string id ) {
+            ImGui.BeginChild( id );
+            Data.Draw( id );
+            ImGui.EndChild();
         }
     }
 }
