@@ -17,6 +17,8 @@ namespace VfxEditor.UldFormat.Component.Node {
     }
 
     public class UldNode : ISimpleUiBase {
+        private readonly List<UldComponent> Components;
+
         public readonly ParsedUInt Id = new( "Id" );
         public readonly ParsedInt ParentId = new( "Parent Id" );
         public readonly ParsedInt NextSiblingId = new( "Next Sibling Id" );
@@ -26,9 +28,26 @@ namespace VfxEditor.UldFormat.Component.Node {
         private bool IsComponentNode = false;
         public readonly ParsedEnum<NodeType> Type = new( "Type" ); // TODO: command
         public readonly ParsedInt ComponentTypeId = new( "Component Id" ); // TODO: change on update
+        public UldNodeData Data = null;
+
+        public readonly ParsedInt TabIndex = new( "Tab Index", size: 2 );
+        public readonly ParsedInt Unk1 = new( "Unknown 1" );
+        public readonly ParsedInt Unk2 = new( "Unknown 2" );
+        public readonly ParsedInt Unk3 = new( "Unknown 3" );
+        public readonly ParsedInt Unk4 = new( "Unknown 4" );
+        public readonly ParsedShort X = new( "X" );
+        public readonly ParsedShort Y = new( "Y" );
+        public readonly ParsedUInt W = new( "Width", size: 2 );
+        public readonly ParsedUInt H = new( "Height", size: 2 );
+        public readonly ParsedFloat Rotation = new( "Rotation" );
+        public readonly ParsedFloat2 Scale = new( "Scale" );
+        public readonly ParsedShort OriginX = new( "Origin X" );
+        public readonly ParsedShort OriginY = new( "Origin Y" );
+        public readonly ParsedUInt Priority = new( "Priority", size: 2 );
 
         public UldNode( List<UldComponent> components ) {
-
+            Components = components;
+            // TODO: extra commands
         }
 
         public UldNode( BinaryReader reader, List<UldComponent> components ) : this( components ) {
@@ -40,6 +59,19 @@ namespace VfxEditor.UldFormat.Component.Node {
             PrevSiblingId.Read( reader );
             ChildNodeId.Read( reader );
 
+            // Weirdness with node type
+            var nodeType = reader.ReadInt32();
+            var offset = reader.ReadUInt32();
+
+            if( nodeType > 1000 ) {
+                IsComponentNode = true;
+                ComponentTypeId.Value = nodeType;
+            }
+            else {
+                Type.Value = ( NodeType )nodeType;
+            }
+
+            // TODO: update data
         }
 
         public void Write( BinaryWriter writer ) {
@@ -49,5 +81,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public void Draw( string id ) {
 
         }
+
+
     }
 }
