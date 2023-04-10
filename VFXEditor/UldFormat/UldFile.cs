@@ -38,27 +38,40 @@ namespace VfxEditor.UldFormat {
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
             var pos = reader.BaseStream.Position;
-            Header = new( reader );
+            Header = new( reader ); // uldh 0100
 
             var offsetsPosition = reader.BaseStream.Position;
-            OffsetsHeader = new( reader );
+            OffsetsHeader = new( reader ); // atkh 0100
 
-            reader.Seek( offsetsPosition + OffsetsHeader.AssetOffset );
-            AssetList = new( reader );
-            for( var i = 0; i < AssetList.ElementCount; i++ ) Assets.Add( new( reader, AssetList.Version[3] ) );
+            // ==== ASSETS ======
+            if( OffsetsHeader.AssetOffset > 0 ) {
+                reader.Seek( offsetsPosition + OffsetsHeader.AssetOffset );
+                AssetList = new( reader );
+                for( var i = 0; i < AssetList.ElementCount; i++ ) Assets.Add( new( reader, AssetList.Version[3] ) );
+            }
+            else AssetList = new( "ashd", "0101" );
 
-            reader.Seek( offsetsPosition + OffsetsHeader.PartOffset );
-            PartList = new( reader );
-            for( var i = 0; i < PartList.ElementCount; i++ ) Parts.Add( new( reader ) );
+            // ===== PARTS ======
+            if( OffsetsHeader.PartOffset > 0 ) {
+                reader.Seek( offsetsPosition + OffsetsHeader.PartOffset );
+                PartList = new( reader );
+                for( var i = 0; i < PartList.ElementCount; i++ ) Parts.Add( new( reader ) );
+            }
+            else PartList = new( "tphd", "0100" );
 
-            reader.Seek( offsetsPosition + OffsetsHeader.ComponentOffset );
-            ComponentList = new( reader );
-            for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components ) );
+            // ====== COMPONENTS =======
+            if( OffsetsHeader.ComponentOffset > 0 ) {
+                reader.Seek( offsetsPosition + OffsetsHeader.ComponentOffset );
+                ComponentList = new( reader );
+                for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components ) );
+            }
+            else ComponentList = new( "cohd", "0100" );
 
             reader.Seek( offsetsPosition + OffsetsHeader.TimelineOffset );
             TimelineList = new( reader );
             // timeline data
 
+            // TODO
             var offsetsPosition2 = reader.BaseStream.Position;
             reader.Seek( pos + Header.WidgetOffset );
             OffsetsHeader2 = new( reader );

@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using System.IO;
 
 namespace VfxEditor.UldFormat.Headers {
@@ -5,9 +6,16 @@ namespace VfxEditor.UldFormat.Headers {
         public readonly char[] Identifier;
         public readonly char[] Version;
 
+        public UldGenericHeader( string identifier, string version ) {
+            Identifier = identifier.ToCharArray();
+            Version = version.ToCharArray();
+        }
+
         public UldGenericHeader( BinaryReader reader ) {
             Identifier = reader.ReadChars( 4 );
             Version = reader.ReadChars( 4 );
+
+            PluginLog.Log($"{new string(Identifier)} {new string(Version)}");
         }
 
         protected void WriteHeader( BinaryWriter writer ) {

@@ -12,6 +12,7 @@ using VfxEditor.UldFormat.Component.Node.Data;
 
 namespace VfxEditor.UldFormat.Component.Node {
     public enum NodeType : int {
+        Container = 1,
         Image = 2,
         Text = 3,
         NineGrid = 4,
@@ -22,7 +23,7 @@ namespace VfxEditor.UldFormat.Component.Node {
     [Flags]
     public enum NodeFlags {
         Visible = 0x80,
-        Eanbled = 0x40,
+        Enabled = 0x40,
         Clip = 0x20,
         Fill = 0x10,
         AnchorTop = 0x08,
@@ -46,12 +47,11 @@ namespace VfxEditor.UldFormat.Component.Node {
         public UldNodeData Data = null;
 
         private readonly List<ParsedBase> Parsed;
-        public readonly ParsedInt TabIndex = new( "Tab Index", size: 2 );
+        public readonly ParsedShort TabIndex = new( "Tab Index" );
         public readonly ParsedInt Unk1 = new( "Unknown 1" );
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
         public readonly ParsedInt Unk3 = new( "Unknown 3" );
-        public readonly ParsedInt Unk4 = new( "Unknown 4", size: 2 );
-        public readonly ParsedInt Unk5 = new( "Unknown 5", size: 2 );
+        public readonly ParsedInt Unk4 = new( "Unknown 4" );
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
         public readonly ParsedUInt W = new( "Width", size: 2 );
@@ -62,7 +62,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedShort OriginY = new( "Origin Y" );
         public readonly ParsedUInt Priority = new( "Priority", size: 2 );
         public readonly ParsedFlag<NodeFlags> Flags = new( "Flags", size: 1 );
-        public readonly ParsedInt Unk6 = new( "Unknown 6", size: 1 );
+        public readonly ParsedInt Unk7 = new( "Unknown 7", size: 1 );
         public readonly ParsedShort MultiplyRed = new( "Multiply Red" );
         public readonly ParsedShort MultiplyGreen = new( "Multiply Green" );
         public readonly ParsedShort MultiplyBlue = new( "Multiply Blue" );
@@ -83,7 +83,6 @@ namespace VfxEditor.UldFormat.Component.Node {
                 Unk2,
                 Unk3,
                 Unk4,
-                Unk5,
                 X,
                 Y,
                 W,
@@ -94,7 +93,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 OriginY,
                 Priority,
                 Flags,
-                Unk6,
+                Unk7,
                 MultiplyRed,
                 MultiplyGreen,
                 MultiplyBlue,
@@ -118,7 +117,7 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             // Weirdness with node type
             var nodeType = reader.ReadInt32();
-            var offset = reader.ReadUInt32();
+            var offset = reader.ReadUInt16();
 
             if( nodeType > 1000 ) {
                 IsComponentNode = true;
@@ -133,7 +132,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             UpdateData();
             if( Data == null ) {
                 // TODO: what about this +2
-                PluginLog.Log( $"Unknown node type {nodeType} / {pos + offset - reader.BaseStream.Position + 2} @ {reader.BaseStream.Position:X8}" );
+                PluginLog.Log( $"Unknown node type {nodeType} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
             Data?.Read( reader );
 
@@ -154,8 +153,8 @@ namespace VfxEditor.UldFormat.Component.Node {
                     NodeType.Image => new ImageNodeData(),
                     NodeType.Text => new TextNodeData(),
                     NodeType.NineGrid => new NineGridNodeData(),
-                    //NodeType.Counter => new CounterNodeData(),
-                    //NodeType.Collision => new CollisionNodeData(),
+                    NodeType.Counter => new CounterNodeData(),
+                    NodeType.Collision => new CollisionNodeData(),
                     _ => null
                 };
             }

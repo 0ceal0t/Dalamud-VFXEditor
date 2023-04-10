@@ -23,8 +23,9 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 new ParsedShort( "Bottom Offset" ),
                 new ParsedShort( "Left Offset" ),
                 new ParsedShort( "Right Offset" ),
-                new ParsedInt( "Unknown 1", size: 1 ),
-                new ParsedInt( "Unknown 2", size: 2 ),
+                new ParsedInt( "Unknown 2", size: 1 ),
+                new ParsedInt( "Unknown 3", size: 1 ),
+                new ParsedInt( "Unknown 4", size: 1 ),
             } );
         }
     }

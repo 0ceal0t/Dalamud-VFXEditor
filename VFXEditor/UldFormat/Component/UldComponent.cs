@@ -72,10 +72,7 @@ namespace VfxEditor.UldFormat.Component {
             }
 
             if( Data is CustomComponentData custom ) {
-                // ui/uld/CharaSelect_Shadow.uld
-                // TODO
-                if( offset < 16 ) PluginLog.Log( $"{offset}" );
-                else custom.Read( reader, offset - 16 );
+                custom.Read( reader, offset - 16 );
             }
             else Data?.Read( reader );
 

@@ -6,8 +6,10 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Headers {
     public class UldListHeader : UldGenericHeader {
-        public uint ElementCount;
+        public uint ElementCount = 0;
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
+
+        public UldListHeader( string identifier, string version ) : base( identifier, version ) { }
 
         public UldListHeader( BinaryReader reader ) : base( reader ) {
             ElementCount = reader.ReadUInt32();
