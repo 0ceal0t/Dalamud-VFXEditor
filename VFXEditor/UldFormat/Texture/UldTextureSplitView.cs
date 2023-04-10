@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
-using VfxEditor.UldFormat.Part;
+using VfxEditor.UldFormat.PartList;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTextureSplitView : SimpleSplitView<UldTexture> {

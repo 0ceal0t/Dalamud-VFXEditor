@@ -13,6 +13,7 @@ namespace VfxEditor.AvfxFormat {
             State = Item.Selected[Idx];
             Item.UnlinkParentChild( State );
             Item.Selected.RemoveAt( Idx );
+            Item.UpdateLiteral();
         }
 
         public void Redo() => Execute();
@@ -20,6 +21,7 @@ namespace VfxEditor.AvfxFormat {
         public void Undo() {
             Item.Selected.Insert( Idx, State );
             Item.LinkParentChild( State );
+            Item.UpdateLiteral();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Part {
+namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
         public readonly ParsedUInt TextureId = new( "Texture Id" );
         private readonly ParsedUInt U = new( "U", size: 2 );

@@ -8,7 +8,7 @@ using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Component {
-    public enum ComponentType : byte {
+    public enum ComponentType : int {
         Custom = 0x0,
         Button = 0x1,
         Window = 0x2,
@@ -63,31 +63,34 @@ namespace VfxEditor.UldFormat.Component {
             DropArrow.Read( reader );
             Type.Read( reader );
             var nodeCount = reader.ReadUInt32();
-            var size = reader.ReadUInt16();
+            reader.ReadUInt16(); // size
             var offset = reader.ReadUInt16();
-
-            PluginLog.Log( $"UldComponent size:{size} offset:{offset}" );
 
             UpdateData();
             if( Data == null ) {
-                PluginLog.Log( $"Unknown component type {( int )Type.Value} @ {reader.BaseStream.Position:X8}" );
+                PluginLog.Log( $"Unknown component type {( int )Type.Value} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
 
             if( Data is CustomComponentData custom ) {
-                custom.Read( reader, offset - 16 );
+                // ui/uld/CharaSelect_Shadow.uld
+                // TODO
+                if( offset < 16 ) PluginLog.Log( $"{offset}" );
+                else custom.Read( reader, offset - 16 );
             }
             else Data?.Read( reader );
 
             // TODO: what if there's some padding
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i< nodeCount; i++ ) {
-                Nodes.Add( new UldNode( reader, components ) );
-            }
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components ) );
+
+            // Size is this final pos - original pos
         }
 
         public void Write( BinaryWriter writer ) {
             Id.Write( writer );
+            ImGui.TextDisabled( "Component Ids must be greater than 1000" );
+
             IgnoreInput.Write( writer );
             DragArrow.Write( writer );
             DropArrow.Write( writer );

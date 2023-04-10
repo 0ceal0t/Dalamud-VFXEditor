@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Headers;
-using VfxEditor.UldFormat.Part;
+using VfxEditor.UldFormat.PartList;
 using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat {
@@ -23,7 +23,7 @@ namespace VfxEditor.UldFormat {
         private readonly List<UldTexture> Assets = new();
 
         private readonly UldListHeader PartList;
-        private readonly List<UldParts> Parts = new();
+        private readonly List<UldPartList> Parts = new();
 
         private readonly UldListHeader ComponentList;
         private readonly List<UldComponent> Components = new();
@@ -95,7 +95,7 @@ namespace VfxEditor.UldFormat {
                     AssetSplitView.Draw( $"{id}/Assets" );
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( $"Parts{id}" ) ) {
+                if( ImGui.BeginTabItem( $"Part Lists{id}" ) ) {
                     PartList.Draw( id );
                     PartsSplitView.Draw( $"{id}/Parts" );
                     ImGui.EndTabItem();

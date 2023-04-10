@@ -7,17 +7,15 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Execute() {
-            var item = Item.Group.Items[0];
-            Item.Selected.Add( item );
-            Item.LinkParentChild( item );
+            Item.Selected.Add( null );
+            Item.UpdateLiteral();
         }
 
         public void Redo() => Execute();
 
         public void Undo() {
-            var idx = Item.Selected.Count - 1;
-            Item.UnlinkParentChild( Item.Selected[idx] );
-            Item.Selected.RemoveAt( idx );
+            Item.Selected.RemoveAt( Item.Selected.Count - 1 );
+            Item.UpdateLiteral();
         }
     }
 }

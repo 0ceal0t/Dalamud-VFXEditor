@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,6 +89,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void RecurseVisit( AvfxNode node, List<AvfxNode> output, HashSet<AvfxNode> visited ) {
+            if( node == null ) return;
             if( visited.Contains( node ) ) return; // prevents infinite loop
             visited.Add( node );
 

@@ -199,8 +199,4 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="UldFormat\Component\Node\Data\" />
-    </ItemGroup>
 </Project>

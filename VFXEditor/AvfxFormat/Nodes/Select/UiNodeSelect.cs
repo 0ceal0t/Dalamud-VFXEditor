@@ -10,7 +10,6 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat {
     public abstract class UiNodeSelect : IAvfxUiBase {
         public readonly AvfxNode Node;
-        protected bool ParentChildLinked = false;
         protected bool OnChangeLinked = false;
 
         public UiNodeSelect( AvfxNode node ) {
@@ -38,9 +37,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void UnlinkParentChild( AvfxNode node ) {
             if( node == null ) return;
-            if( !ParentChildLinked ) return;
 
-            ParentChildLinked = false;
             Node.ChildNodes.Remove( node );
             node.Parents.Remove( this );
             OutdatedGraph( node );
@@ -48,9 +45,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void LinkParentChild( AvfxNode node ) {
             if( node == null ) return;
-            if( ParentChildLinked ) return;
 
-            ParentChildLinked = true;
             Node.ChildNodes.Add( node );
             node.Parents.Add( this );
             OutdatedGraph( node );

@@ -7,16 +7,16 @@ using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat.Part {
-    public class UldParts : ISimpleUiBase {
+namespace VfxEditor.UldFormat.PartList {
+    public class UldPartList : ISimpleUiBase {
         public readonly ParsedUInt Id = new( "Id" );
         public readonly List<UldPartItem> Parts = new();
 
         private int Offset => 12 + Parts.Count * 12;
 
-        public UldParts() { }
+        public UldPartList() { }
 
-        public UldParts( BinaryReader reader ) {
+        public UldPartList( BinaryReader reader ) {
             Id.Read( reader );
             var partCount = reader.ReadInt32();
             reader.ReadInt32(); // skip offset
