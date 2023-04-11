@@ -36,7 +36,7 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Strings[Name] = Value;
             if( copy.IsPasting && copy.Strings.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<string>( this, val, Value ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<string>( this, val ) );
             }
 
             var prevValue = Value;

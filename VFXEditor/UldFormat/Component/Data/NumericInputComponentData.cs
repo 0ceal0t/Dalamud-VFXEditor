@@ -10,7 +10,7 @@ namespace VfxEditor.UldFormat.Component.Data
                 new ParsedUInt( "Unknown 3" ),
                 new ParsedUInt( "Unknown 4" ),
                 new ParsedUInt( "Unknown 5" ),
-                new ParsedIntColor( "Color" ),
+                new ParsedUInt( "Color" ),
             } );
         }
     }

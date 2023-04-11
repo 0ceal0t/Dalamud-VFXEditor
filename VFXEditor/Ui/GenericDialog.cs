@@ -25,15 +25,20 @@ namespace VfxEditor.Ui {
 
         public void SetVisible( bool visible ) { Visible = visible; }
 
+        protected virtual void PreDraw() { }
+        protected virtual void PostDraw() { }
+
         public void Draw() {
             if( !Visible ) return;
-            ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
+            PreDraw();
+            ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
             if( ImGui.Begin( Name, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
                 Plugin.CheckClearKeyState();
                 DrawBody();
             }
             ImGui.End();
+            PostDraw();
         }
 
         public abstract void DrawBody();

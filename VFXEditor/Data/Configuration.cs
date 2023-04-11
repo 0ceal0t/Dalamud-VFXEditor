@@ -12,9 +12,13 @@ using VfxEditor.Select;
 
 namespace VfxEditor {
     [Serializable]
-    public class ManagerConfiguration {
+    public unsafe class ManagerConfiguration {
         public List<SelectResult> RecentItems = new();
         public List<SelectResult> Favorites = new();
+        public bool UseCustomWindowColor = false;
+        public Vector4 TitleBg = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBg );
+        public Vector4 TitleBgActive = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgActive );
+        public Vector4 TitleBgCollapsed = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgCollapsed );
     }
 
     [Serializable]
@@ -94,9 +98,6 @@ namespace VfxEditor {
         public int CurveEditorSelectedSize = 10;
         public int CurveEditorPrimarySelectedSize = 12;
 
-        public bool OpenPathAsNewDocument = true;
-        public bool OpenPathReplace = true;
-
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -162,6 +163,10 @@ namespace VfxEditor {
                     DrawCurveEditor();
                     ImGui.EndTabItem();
                 }
+                if( ImGui.BeginTabItem( $"Editor-Specific Settings{id}" ) ) {
+                    DrawEditorSpecific();
+                    ImGui.EndTabItem();
+                }
 
                 ImGui.EndTabBar();
             }
@@ -213,9 +218,6 @@ namespace VfxEditor {
 
             if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
 
-            // if( ImGui.Checkbox( $"Open paths as new document{id}", ref OpenPathAsNewDocument ) ) Save();
-            // if( ImGui.Checkbox( $"Set replacement when opening path{id}", ref OpenPathReplace ) ) Save();
-
             ImGui.Unindent();
             ImGui.EndChild();
         }
@@ -261,6 +263,32 @@ namespace VfxEditor {
             if( ImGui.InputInt( $"Grab distance{id}", ref CurveEditorGrabbingDistance ) ) Save();
 
             ImGui.Unindent();
+            ImGui.EndChild();
+        }
+
+        private void DrawEditorSpecific() {
+            var id = $"##EditorSpecific";
+
+            ImGui.BeginChild( $"{id}-Config" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            foreach( var config in ManagerConfigs ) {
+                var configId = $"{id}{config.Key}";
+
+                if( ImGui.CollapsingHeader( $"{config.Key}{configId}" ) ) {
+                    ImGui.Indent( 5 );
+
+                    if( ImGui.Checkbox( $"Use custom window color{configId}", ref config.Value.UseCustomWindowColor ) ) ;
+                    if( config.Value.UseCustomWindowColor ) {
+                        if( ImGui.ColorEdit4( $"Background{configId}", ref config.Value.TitleBg ) ) Save();
+                        if( ImGui.ColorEdit4( $"Active{configId}", ref config.Value.TitleBgActive ) ) Save();
+                        if( ImGui.ColorEdit4( $"Collapsed{configId}", ref config.Value.TitleBgCollapsed ) ) Save();
+                    }
+
+                    ImGui.Unindent();
+                }
+            }
+
             ImGui.EndChild();
         }
     }

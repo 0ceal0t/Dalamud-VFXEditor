@@ -417,10 +417,11 @@ namespace VfxEditor.Interop {
             var split = path.Split( '/' );
             var categoryString = split[0];
             var categoryBytes = categoryString switch {
-                "vfx" => BitConverter.GetBytes( 8u ),
-                "chara" => BitConverter.GetBytes( 4u ),
                 "bgcommon" => BitConverter.GetBytes( 1u ),
+                "chara" => BitConverter.GetBytes( 4u ),
+                "ui" => BitConverter.GetBytes( 6u ),
                 "sound" => BitConverter.GetBytes( 7u ),
+                "vfx" => BitConverter.GetBytes( 8u ),
                 "bg" => InteropUtils.GetBgCategory( split[1], split[2] ),
                 "music" => InteropUtils.GetMusicCategory( split[1] ),
                 _ => BitConverter.GetBytes( 0u )

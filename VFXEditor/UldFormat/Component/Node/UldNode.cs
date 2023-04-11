@@ -227,7 +227,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public void Draw( string id ) {
             Id.Draw( id, CommandManager.Uld );
             // Update component state along with data
-            if( ImGui.Checkbox( $"Component Node{id}", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
+            if( ImGui.Checkbox( $"Is Component Node{id}", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
 
             if( IsComponentNode ) {
                 ComponentTypeId.Draw( id, CommandManager.Uld );

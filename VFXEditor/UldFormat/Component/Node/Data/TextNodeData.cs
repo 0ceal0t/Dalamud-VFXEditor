@@ -1,5 +1,7 @@
 using System;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Color;
+using VfxEditor.UldFormat.Widget;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
     public enum FontType : int {
@@ -33,12 +35,12 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Text Id", size: 2 ),
                 new ParsedUInt( "Unknown 1", size: 2 ),
-                new ParsedIntColor( "Color" ),
-                new ParsedUInt( "Alignment", size: 1 ),
+                new ParsedSheetColor( "Color" ),
+                new ParsedEnum<AlignmentType>( "Alignment", size: 1 ),
                 new ParsedUInt( "Unknown 2", size: 1 ),
                 new ParsedEnum<FontType>( "Font", size: 1 ),
                 new ParsedInt( "Font Size", size: 1 ),
-                new ParsedIntColor( "Edge Color" ),
+                new ParsedSheetColor( "Edge Color" ),
                 new ParsedFlag<TextFlags>( "Flags", size: 1 ),
                 new ParsedEnum<SheetType>( "Sheet Type", size: 1 ),
                 new ParsedInt( "Character Spacing", size: 1 ),

@@ -7,8 +7,8 @@ namespace VfxEditor.UldFormat.Component.Data
             AddUnknown( 16 );
 
             Parsed.AddRange( new ParsedBase[] {
-                new ParsedIntColor( "Color" ),
-                new ParsedIntColor( "IME Color" ),
+                new ParsedUInt( "Color" ),
+                new ParsedUInt( "IME Color" ),
             } );
         }
     }

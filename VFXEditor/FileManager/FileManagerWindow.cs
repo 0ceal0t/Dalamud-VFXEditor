@@ -143,6 +143,18 @@ namespace VfxEditor.FileManager {
             ActiveDocument?.Draw();
         }
 
+        protected override void PreDraw() {
+            if( !Configuration.UseCustomWindowColor ) return;
+            ImGui.PushStyleColor( ImGuiCol.TitleBg, Configuration.TitleBg );
+            ImGui.PushStyleColor( ImGuiCol.TitleBgActive, Configuration.TitleBgActive );
+            ImGui.PushStyleColor( ImGuiCol.TitleBgCollapsed, Configuration.TitleBgCollapsed );
+        }
+
+        protected override void PostDraw() {
+            if( !Configuration.UseCustomWindowColor ) return;
+            ImGui.PopStyleColor( 3 );
+        }
+
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
             if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentWindow.Show();

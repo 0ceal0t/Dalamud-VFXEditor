@@ -50,8 +50,9 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] `.uld` editor
-- [ ] When do `.uld` files even get loaded?
+- [ ] `.uld` texture replacement (`.tex` instead of `.atex`)
+- [ ] `.uld` texture part preview
+- [ ] `.uld` selection dropdowns
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)
 - [ ] Weird crackling when playing back 4-ch and 6-ch files. Maybe related to clipping/conversion?
