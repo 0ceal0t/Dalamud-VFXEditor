@@ -124,7 +124,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             var pos = reader.BaseStream.Position;
 
             Time.Read( reader );
-            var offset = reader.ReadUInt16();
+            var size = reader.ReadUInt16();
             Interpolation.Read( reader );
             Unk1.Read( reader );
             Acceleration.Read( reader );
@@ -132,11 +132,29 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
 
             Data.ForEach( x => x.Read( reader ) );
 
-            reader.BaseStream.Position = pos + offset;
+            reader.BaseStream.Position = pos + size;
         }
 
         public void Write( BinaryWriter writer ) {
+            var pos = writer.BaseStream.Position;
 
+            Time.Write( writer );
+
+            var savePos = writer.BaseStream.Position;
+            writer.Write( ( ushort )0 );
+
+            Interpolation.Write( writer );
+            Unk1.Write( writer );
+            Acceleration.Write( writer );
+            Deceleration.Write( writer );
+
+            Data.ForEach( x => x.Write( writer ) );
+
+            var finalPos = writer.BaseStream.Position;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( ushort )size );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void Draw( string id ) {

@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
@@ -55,7 +56,7 @@ namespace VfxEditor.UldFormat.Component
             };
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldComponent( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -72,23 +73,18 @@ namespace VfxEditor.UldFormat.Component
                 PluginLog.Log( $"Unknown component type {( int )Type.Value} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
 
-            if( Data is CustomComponentData custom ) {
-                custom.Read( reader, offset - 16 );
-            }
+            if( Data is CustomComponentData custom ) custom.Read( reader, offset - 16 );
             else Data?.Read( reader );
 
-            // TODO: what if there's some padding
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components ) );
-
-            // Size is this final pos - original pos
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, delayed ) );
         }
 
         public void Write( BinaryWriter writer ) {
-            Id.Write( writer );
-            ImGui.TextDisabled( "Component Ids must be greater than 1000" );
+            var pos = writer.BaseStream.Position;
 
+            Id.Write( writer );
             IgnoreInput.Write( writer );
             DragArrow.Write( writer );
             DropArrow.Write( writer );
@@ -96,24 +92,26 @@ namespace VfxEditor.UldFormat.Component
             writer.Write( Nodes.Count );
 
             var savePos = writer.BaseStream.Position;
-            // TODO: what is the difference between size and offset?
             writer.Write( ( ushort )0 );
             writer.Write( ( ushort )0 );
 
             Data?.Write( writer );
 
             var nodePos = writer.BaseStream.Position;
-            // TODO: go back to savePos
+            foreach( var node in Nodes ) node.Write( writer );
 
-            foreach( var node in Nodes ) {
-                // TODO: nodes
-            }
-
+            var finalPos = writer.BaseStream.Position;
+            var offset = nodePos - pos;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( ushort )size );
+            writer.Write( ( ushort )offset );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void UpdateData() {
             Data = Type.Value switch {
-                ComponentType.Custom => new CustomComponentData(),
+                ComponentType.Custom => new CustomComponentData(), // ?
                 ComponentType.Button => new ButtonComponentData(),
                 ComponentType.Window => new WindowComponentData(),
                 ComponentType.CheckBox => new CheckboxComponentData(),
@@ -143,6 +141,7 @@ namespace VfxEditor.UldFormat.Component
 
         public void Draw( string id ) {
             Id.Draw( id, CommandManager.Uld );
+            ImGui.TextDisabled( "Component Ids must be greater than 1000" );
             Type.Draw( id, CommandManager.Uld );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

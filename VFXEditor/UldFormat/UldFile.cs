@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.UldFormat.Component;
+using VfxEditor.UldFormat.Component.Node;
 using VfxEditor.UldFormat.Headers;
 using VfxEditor.UldFormat.PartList;
 using VfxEditor.UldFormat.Texture;
 using VfxEditor.UldFormat.Timeline;
 using VfxEditor.UldFormat.Widget;
+using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat {
     public class UldFile : FileManagerFile {
@@ -40,6 +42,10 @@ namespace VfxEditor.UldFormat {
         public readonly UldWidgetDropdown WidgetDropdown;
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
+            List<DelayedNodeData> delayed = new();
+
+            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
+
             var pos = reader.BaseStream.Position;
             Header = new( reader ); // uldh 0100
 
@@ -66,7 +72,7 @@ namespace VfxEditor.UldFormat {
             if( OffsetsHeader.ComponentOffset > 0 ) {
                 reader.Seek( offsetsPosition + OffsetsHeader.ComponentOffset );
                 ComponentList = new( reader );
-                for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components ) );
+                for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components, delayed ) );
             }
             else ComponentList = new( "cohd", "0100" );
 
@@ -78,17 +84,23 @@ namespace VfxEditor.UldFormat {
             }
             else TimelineList = new( "tlhd", "0100" );
 
-            var offsetsPosition2 = reader.BaseStream.Position;
             reader.Seek( pos + Header.WidgetOffset );
+            var offsetsPosition2 = reader.BaseStream.Position;
             OffsetsHeader2 = new( reader );
 
             // ===== WIDGETS ====
             if( OffsetsHeader2.WidgetOffset > 0 ) {
                 reader.Seek( offsetsPosition2 + OffsetsHeader2.WidgetOffset );
                 WidgetList = new( reader );
-                for( var i = 0; i < WidgetList.ElementCount; i++ ) Widgets.Add( new( reader, Components ) );
+                for( var i = 0; i < WidgetList.ElementCount; i++ ) Widgets.Add( new( reader, Components, delayed ) );
             }
             else WidgetList = new( "wdhd", "0100" );
+
+            foreach( var item in delayed ) {
+                item.Node.InitData( reader, item );
+            }
+
+            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             AssetSplitView = new( Assets );
             PartsSplitView = new( Parts );
@@ -102,15 +114,39 @@ namespace VfxEditor.UldFormat {
             Header.Write( writer, out var headerUpdatePosition );
 
             var offsetsPosition = writer.BaseStream.Position;
-            OffsetsHeader.Write( writer, out var offsetsUpatePosition );
+            OffsetsHeader.Write( writer, out var offsetsUpdatePosition );
 
-            // TODO: some of the Atk offsets can be zero
+            // ====== ASSETS ========
+            var assetOffset = AssetList.Write( writer, Assets, offsetsPosition );
+            Assets.ForEach( x => x.Write( writer, AssetList.Version[3] ) );
 
+            // ===== PARTS ========
+            var partOffset = PartList.Write( writer, Parts, offsetsPosition );
+            Parts.ForEach( x => x.Write( writer ) );
+
+            // ====== COMPONENTS ======
+            var componentOffset = ComponentList.Write( writer, Components, offsetsPosition );
+            Components.ForEach( x => x.Write( writer ) );
+
+            // ====== TIMELINES =====
+            var timelineOffset = TimelineList.Write( writer, Timelines, offsetsPosition );
+            Timelines.ForEach( x => x.Write( writer ) );
+
+            var headerWidgetOffset = writer.BaseStream.Position - pos;
             var offsetsPosition2 = writer.BaseStream.Position;
-            // TODO
-            OffsetsHeader.Write( writer, out var offsetsUpdatePosition2 );
+            OffsetsHeader2.Write( writer, out var offsetsUpdatePosition2 );
 
-            // TODO: update header offsets
+            // ====== WIDGETS ========
+            var widgetOffset = WidgetList.Write( writer, Widgets, offsetsPosition2 );
+            Widgets.ForEach( x => x.Write( writer ) );
+
+            var finalPos = writer.BaseStream.Position;
+
+            UldMainHeader.UpdateOffsets( writer, headerUpdatePosition, ( uint )headerWidgetOffset );
+            UldAtkHeader.UpdateOffsets( writer, offsetsUpdatePosition, ( uint )assetOffset, ( uint )partOffset, ( uint )componentOffset, ( uint )timelineOffset );
+            UldAtkHeader2.UpdateOffsets( writer, offsetsUpdatePosition2, ( uint )widgetOffset );
+
+            writer.BaseStream.Position = finalPos;
         }
 
         public override void Draw( string id ) {

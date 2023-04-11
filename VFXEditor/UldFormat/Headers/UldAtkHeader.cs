@@ -1,14 +1,15 @@
+using Dalamud.Logging;
 using System.IO;
 
 namespace VfxEditor.UldFormat.Headers {
     public class UldAtkHeader : UldGenericHeader {
-        public uint AssetOffset;
-        public uint PartOffset;
-        public uint ComponentOffset;
-        public uint TimelineOffset;
-        public uint WidgetOffset; // ?
-        public uint RewriteDataOffset; // ?
-        public uint TimelineSize;
+        public readonly uint AssetOffset;
+        public readonly uint PartOffset;
+        public readonly uint ComponentOffset;
+        public readonly uint TimelineOffset;
+        public readonly uint WidgetOffset; // ?
+        public readonly uint RewriteDataOffset; // ?
+        public readonly uint TimelineSize; // TODO: this is weird sometimes
 
         public UldAtkHeader( BinaryReader reader ) : base( reader ) {
             AssetOffset = reader.ReadUInt32();
@@ -23,13 +24,21 @@ namespace VfxEditor.UldFormat.Headers {
         public void Write( BinaryWriter writer, out long offsetsPosition ) {
             WriteHeader( writer );
             offsetsPosition = writer.BaseStream.Position;
-            writer.Write( AssetOffset );
-            writer.Write( PartOffset );
-            writer.Write( ComponentOffset );
-            writer.Write( TimelineOffset );
-            writer.Write( WidgetOffset );
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( 0 );
             writer.Write( RewriteDataOffset );
             writer.Write( TimelineSize );
+        }
+
+        public static void UpdateOffsets( BinaryWriter writer, long offsetsPosition, uint assetOffset, uint partOffset, uint componentOffset, uint timelineOffset ) {
+            writer.BaseStream.Position = offsetsPosition;
+            writer.Write( assetOffset );
+            writer.Write( partOffset );
+            writer.Write( componentOffset );
+            writer.Write( timelineOffset );
         }
     }
 }

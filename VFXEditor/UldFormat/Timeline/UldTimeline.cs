@@ -25,17 +25,33 @@ namespace VfxEditor.UldFormat.Timeline {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
-            var offset = reader.ReadUInt32(); // TODO: is this offset ok?
+            var size = reader.ReadUInt32();
             var count1 = reader.ReadUInt16();
             var count2 = reader.ReadUInt16();
             for( var i = 0; i < count1; i++ ) Frames1.Add( new( reader ) );
             for( var i = 0; i < count2; i++ ) Frames2.Add( new( reader ) );
 
-            reader.BaseStream.Position = pos + offset;
+            reader.BaseStream.Position = pos + size;
         }
 
         public void Write( BinaryWriter writer ) {
+            var pos = writer.BaseStream.Position;
 
+            Id.Write( writer );
+
+            var savePos = writer.BaseStream.Position;
+            writer.Write( ( uint )0 );
+
+            writer.Write( ( ushort )Frames1.Count );
+            writer.Write( ( ushort )Frames2.Count );
+            Frames1.ForEach( x => x.Write( writer ) );
+            Frames2.ForEach( x => x.Write( writer ) );
+
+            var finalPos = writer.BaseStream.Position;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( uint )size );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void Draw( string id ) {

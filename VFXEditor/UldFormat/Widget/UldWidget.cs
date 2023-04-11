@@ -32,7 +32,7 @@ namespace VfxEditor.UldFormat.Widget {
             NodeSplitView = new( Nodes, components );
         }
 
-        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldWidget( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -40,15 +40,32 @@ namespace VfxEditor.UldFormat.Widget {
             X.Read( reader );
             Y.Read( reader );
             var nodeCount = reader.ReadUInt16();
-            var offset = reader.ReadUInt16();
+            var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, delayed ) );
 
-            reader.BaseStream.Position = pos + offset;
+            reader.BaseStream.Position = pos + size;
         }
 
-        public void Writer( BinaryWriter writer ) {
+        public void Write( BinaryWriter writer ) {
+            var pos = writer.BaseStream.Position;
 
+            Id.Write( writer );
+            AlignmentType.Write( writer );
+            X.Write( writer );
+            Y.Write( writer );
+            writer.Write( (ushort) Nodes.Count );
+
+            var savePos = writer.BaseStream.Position;
+            writer.Write( ( ushort )0 );
+
+            Nodes.ForEach( x => x.Write( writer ) );
+
+            var finalPos = writer.BaseStream.Position;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( ushort )size );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void Draw( string id ) {

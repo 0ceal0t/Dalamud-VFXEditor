@@ -2,9 +2,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
@@ -70,18 +67,33 @@ namespace VfxEditor.UldFormat.Timeline {
 
             Usage.Read( reader );
             Type.Read( reader );
-            var offset = reader.ReadUInt16(); // TODO: is this offset ok?
+            var size = reader.ReadUInt16();
             var count = reader.ReadUInt16();
 
             for( var i = 0; i < count; i++ ) {
                 Keyframes.Add( new( reader, Type.Value ) );
             }
 
-            reader.BaseStream.Position = pos + offset;
+            reader.BaseStream.Position = pos + size;
         }
 
         public void Write( BinaryWriter writer ) {
-        
+            var pos = writer.BaseStream.Position;
+
+            Usage.Write( writer );
+            Type.Write( writer );
+
+            var savePos = writer.BaseStream.Position;
+            writer.Write( ( ushort )0 );
+
+            writer.Write( ( ushort )Keyframes.Count );
+            Keyframes.ForEach( x => x.Write( writer ) );
+
+            var finalPos = writer.BaseStream.Position;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( ushort )size );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void Draw( string id ) {

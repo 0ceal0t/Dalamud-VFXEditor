@@ -6,7 +6,7 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Headers {
     public class UldListHeader : UldGenericHeader {
-        public uint ElementCount = 0;
+        public readonly uint ElementCount = 0;
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
 
         public UldListHeader( string identifier, string version ) : base( identifier, version ) { }
@@ -16,12 +16,16 @@ namespace VfxEditor.UldFormat.Headers {
             Unk1.Read( reader );
         }
 
-        public void Write( BinaryWriter writer, uint elementCount ) {
-            ElementCount = elementCount;
+        public long Write<T>( BinaryWriter writer, List<T> items, long offsetsPosition ) {
+            if( items.Count == 0 ) return 0;
+
+            var offset = writer.BaseStream.Position - offsetsPosition;
 
             WriteHeader( writer );
-            writer.Write( ElementCount );
+            writer.Write( items.Count );
             Unk1.Write( writer );
+
+            return offset;
         }
 
         public void Draw( string id ) {

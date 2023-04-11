@@ -1,9 +1,12 @@
 using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
@@ -31,6 +34,13 @@ namespace VfxEditor.UldFormat.Component.Node {
         AnchorBottom = 0x04,
         AnchorLeft = 0x02,
         AnchorRight = 0x01
+    }
+
+    public class DelayedNodeData {
+        public UldNode Node;
+        public int NodeType;
+        public long Position;
+        public int Size;
     }
 
     public class UldNode : ISimpleUiBase {
@@ -109,7 +119,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             };
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -118,9 +128,9 @@ namespace VfxEditor.UldFormat.Component.Node {
             PrevSiblingId.Read( reader );
             ChildNodeId.Read( reader );
 
-            // Weirdness with node type
             var nodeType = reader.ReadInt32();
-            var offset = reader.ReadUInt16();
+            var size = reader.ReadUInt16();
+            // TODO: what if offset <= 88
 
             if( nodeType > 1000 ) {
                 IsComponentNode = true;
@@ -132,20 +142,51 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             Parsed.ForEach( x => x.Read( reader ) );
 
-            // TODO: what if offset <= 88
+            delayed.Add( new DelayedNodeData() {
+                Node = this,
+                Position = reader.BaseStream.Position,
+                Size = ( int )( pos + size - reader.BaseStream.Position ) - 12,
+                NodeType = nodeType
+            } );
+
+            reader.BaseStream.Position = pos + size;
+        }
+
+        // Needs to be initialized later since it depends on component list being filled
+        public void InitData( BinaryReader reader, DelayedNodeData data ) {
+            reader.BaseStream.Position = data.Position;
 
             UpdateData();
-            if( Data == null && nodeType > 1 ) {
-                PluginLog.Log( $"Unknown node type {nodeType} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
+            if( Data == null && data.NodeType > 1 ) {
+                PluginLog.Log( $"Unknown node type {data.NodeType} / {data.Size} @ {reader.BaseStream.Position:X8}" );
             }
-            Data?.Read( reader );
-
-            // TODO: what if there's some padding
-            reader.BaseStream.Position = pos + offset;
+            if( Data is CustomNodeData custom ) custom.Read( reader, data.Size );
+            else Data?.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            // TODO
+            var pos = writer.BaseStream.Position;
+
+            Id.Write( writer );
+            ParentId.Write( writer );
+            NextSiblingId.Write( writer );
+            PrevSiblingId.Write( writer );
+            ChildNodeId.Write( writer );
+
+            if( IsComponentNode ) ComponentTypeId.Write( writer );
+            else Type.Write( writer );
+
+            var savePos = writer.BaseStream.Position;
+            writer.Write( ( ushort )0 );
+
+            Parsed.ForEach( x => x.Write( writer ) );
+            Data?.Write( writer );
+
+            var finalPos = writer.BaseStream.Position;
+            var size = finalPos - pos;
+            writer.BaseStream.Position = savePos;
+            writer.Write( ( ushort )size );
+            writer.BaseStream.Position = finalPos;
         }
 
         public void UpdateData() {
@@ -154,6 +195,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 if( component == null ) Data = null;
                 else {
                     Data = component.Type.Value switch {
+                        //ComponentType.Custom => new CustomNodeData(),
                         ComponentType.Button => new ButtonNodeData(),
                         ComponentType.Window => new WindowNodeData(),
                         ComponentType.CheckBox => new CheckboxNodeData(),
@@ -163,21 +205,10 @@ namespace VfxEditor.UldFormat.Component.Node {
                         ComponentType.TextInput => new TextInputNodeData(),
                         ComponentType.NumericInput => new NumericInputNodeData(),
                         ComponentType.List => new ListNodeData(),
-                        //ComponentType.DropDown => new DropDownNodeData(),
                         ComponentType.Tabbed => new TabbedNodeData(),
-                        //ComponentType.TreeList => new TreeListNodeData(),
-                        //ComponentType.ScrollBar => new ScollBarNodeData(),
                         ComponentType.ListItem => new ListItemNodeData(),
-                        //ComponentType.Icon => new IconNodeData(),
-                        ComponentType.IconWithText => new IconWithTextNodeData(),
-                        //ComponentType.DragDrop => new DragDropNodeData(),
-                        //ComponentType.LeveCard => new LeveCardNodeData(),
                         ComponentType.NineGridText => new NineGridTextNodeData(),
-                        //ComponentType.Journal => new JournalNodeData(),
-                        //ComponentType.Multipurpose => new MultipurposeNodeData(),
-                        //Map => new MapNodeData(),
-                        //ComponentType.Preview => new PreviewNodeData(),
-                        _ => null
+                        _ => new UldNodeComponentData()
                     };
                 }
             }
