@@ -28,12 +28,12 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedIntCommand( this, val ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<int>( this, val ) );
             }
 
             var value = ToEnum( Value );
             if( UiUtils.EnumComboBox( $"{Name}{id}", value.ToString(), Options, value, out var newValue ) ) {
-                manager.Add( new ParsedIntCommand( this, ToInt( newValue ) ) );
+                manager.Add( new ParsedSimpleCommand<int>( this, ToInt( newValue ) ) );
             }
         }
     }

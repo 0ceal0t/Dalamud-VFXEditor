@@ -2,10 +2,9 @@ using ImGuiNET;
 using System.IO;
 
 namespace VfxEditor.Parsing {
-    public class ParsedInt : ParsedBase {
+    public class ParsedInt : ParsedSimpleBase<int> {
         public readonly string Name;
         private int Size;
-        public int Value = 0;
 
         public ParsedInt( string name, int defaultValue, int size = 4 ) : this( name, size ) {
             Value = defaultValue;
@@ -39,12 +38,12 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedIntCommand( this, val ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<int>( this, val ) );
             }
 
             var value = Value;
             if( ImGui.InputInt( Name + id, ref value ) ) {
-                manager.Add( new ParsedIntCommand( this, value ) );
+                manager.Add( new ParsedSimpleCommand<int>( this, value ) );
             }
         }
     }

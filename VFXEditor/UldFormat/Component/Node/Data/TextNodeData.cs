@@ -28,7 +28,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         Emboss = 0x01
     }
 
-    public class TextNodeData : UldNodeData {
+    public class TextNodeData : UldGenericData {
         public TextNodeData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Text Id", size: 2 ),

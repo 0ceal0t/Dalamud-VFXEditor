@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class TextInputComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class TextInputComponentData : UldGenericData {
         public TextInputComponentData() {
             AddUnknown( 16 );
 

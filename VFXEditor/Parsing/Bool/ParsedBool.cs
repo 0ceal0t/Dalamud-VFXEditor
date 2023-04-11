@@ -4,10 +4,9 @@ using System.IO;
 using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Parsing {
-    public class ParsedBool : ParsedBase {
+    public class ParsedBool : ParsedSimpleBase<bool?> {
         public readonly string Name;
         private int Size;
-        public bool? Value = false;
 
         public ParsedBool( string name, bool defaultValue, int size = 4 ) : this( name, size ) {
             Value = defaultValue;
@@ -46,11 +45,11 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Bools[Name] = Value == true;
             if( copy.IsPasting && copy.Bools.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedBoolCommand( this, val ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<bool?>( this, val ) );
             }
 
             var value = Value == true;
-            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedBoolCommand( this, value ) );
+            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
         }
     }
 }

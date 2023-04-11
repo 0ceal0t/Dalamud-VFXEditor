@@ -27,14 +27,14 @@ namespace VfxEditor.AvfxFormat {
             var manager = CopyManager.Avfx;
             if( manager.IsCopying ) manager.Ints[Name] = Literal.GetValue();
             if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) {
-                manager.PasteCommand.Add( new ParsedIntCommand( Literal.Parsed, val ) );
+                manager.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
             }
 
             var value = Literal.GetValue();
             var spacing = ImGui.GetStyle().ItemSpacing.X;
             var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing; // have to do this calculation now
             ImGui.SetNextItemWidth( 100 );
-            if( ImGui.InputInt( $"{id}-MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedIntCommand( Literal.Parsed, value ) );
+            if( ImGui.InputInt( $"{id}-MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
 
             ImGui.SameLine( 100 + spacing );
             ImGui.SetNextItemWidth( comboWidth );
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 foreach( var entry in Mapping ) {
                     var isSelected = entry.Key == value;
                     if( ImGui.Selectable( $"{entry.Value}##{idx}", isSelected ) ) {
-                        CommandManager.Avfx.Add( new ParsedIntCommand( Literal.Parsed, entry.Key ) );
+                        CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
                     }
 
                     if( isSelected ) ImGui.SetItemDefaultFocus();

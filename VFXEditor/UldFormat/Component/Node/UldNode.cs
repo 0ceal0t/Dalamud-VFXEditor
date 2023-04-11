@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.UldFormat.Component.Node.Data;
+using VfxEditor.UldFormat.Component.Node.Data.Component;
 
 namespace VfxEditor.UldFormat.Component.Node {
     public enum NodeType : int {
@@ -41,10 +42,10 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt PrevSiblingId = new( "Prev Sibling Id" );
         public readonly ParsedInt ChildNodeId = new( "Child Node Id" );
 
-        private bool IsComponentNode = false;
+        public bool IsComponentNode = false;
         public readonly ParsedEnum<NodeType> Type = new( "Type" ); // TODO: command
         public readonly ParsedInt ComponentTypeId = new( "Component Id" ); // TODO: change on update
-        public UldNodeData Data = null;
+        public UldGenericData Data = null;
 
         private readonly List<ParsedBase> Parsed;
         public readonly ParsedShort TabIndex = new( "Tab Index" );
@@ -75,7 +76,9 @@ namespace VfxEditor.UldFormat.Component.Node {
 
         public UldNode( List<UldComponent> components ) {
             Components = components;
-            // TODO: extra commands
+            Type.ExtraCommandGenerator = () => {
+                return new UldNodeDataCommand( this );
+            };
 
             Parsed = new() {
                 TabIndex,
@@ -129,9 +132,10 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             Parsed.ForEach( x => x.Read( reader ) );
 
+            // TODO: what if offset <= 88
+
             UpdateData();
-            if( Data == null ) {
-                // TODO: what about this +2
+            if( Data == null && nodeType > 1 ) {
                 PluginLog.Log( $"Unknown node type {nodeType} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
             Data?.Read( reader );
@@ -146,7 +150,36 @@ namespace VfxEditor.UldFormat.Component.Node {
 
         public void UpdateData() {
             if( IsComponentNode ) {
-
+                var component = Components.Where( x => x.Id.Value == ComponentTypeId.Value ).FirstOrDefault();
+                if( component == null ) Data = null;
+                else {
+                    Data = component.Type.Value switch {
+                        ComponentType.Button => new ButtonNodeData(),
+                        ComponentType.Window => new WindowNodeData(),
+                        ComponentType.CheckBox => new CheckboxNodeData(),
+                        ComponentType.RadioButton => new RadioButtonNodeData(),
+                        ComponentType.Gauge => new GaugeNodeData(),
+                        ComponentType.Slider => new SliderNodeData(),
+                        ComponentType.TextInput => new TextInputNodeData(),
+                        ComponentType.NumericInput => new NumericInputNodeData(),
+                        ComponentType.List => new ListNodeData(),
+                        //ComponentType.DropDown => new DropDownNodeData(),
+                        ComponentType.Tabbed => new TabbedNodeData(),
+                        //ComponentType.TreeList => new TreeListNodeData(),
+                        //ComponentType.ScrollBar => new ScollBarNodeData(),
+                        ComponentType.ListItem => new ListItemNodeData(),
+                        //ComponentType.Icon => new IconNodeData(),
+                        ComponentType.IconWithText => new IconWithTextNodeData(),
+                        //ComponentType.DragDrop => new DragDropNodeData(),
+                        //ComponentType.LeveCard => new LeveCardNodeData(),
+                        ComponentType.NineGridText => new NineGridTextNodeData(),
+                        //ComponentType.Journal => new JournalNodeData(),
+                        //ComponentType.Multipurpose => new MultipurposeNodeData(),
+                        //Map => new MapNodeData(),
+                        //ComponentType.Preview => new PreviewNodeData(),
+                        _ => null
+                    };
+                }
             }
             else {
                 Data = Type.Value switch {
@@ -162,12 +195,13 @@ namespace VfxEditor.UldFormat.Component.Node {
 
         public void Draw( string id ) {
             Id.Draw( id, CommandManager.Uld );
-            if( ImGui.Checkbox( $"Component Node{id}", ref IsComponentNode ) ) UpdateData();
+            // Update component state along with data
+            if( ImGui.Checkbox( $"Component Node{id}", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
 
             if( IsComponentNode ) {
                 ComponentTypeId.Draw( id, CommandManager.Uld );
                 ImGui.SameLine();
-                if( ImGui.SmallButton( $"Update{id}" ) ) UpdateData();
+                if( ImGui.SmallButton( $"Update{id}" ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this ) );
             }
             else Type.Draw( id, CommandManager.Uld );
 
@@ -202,6 +236,5 @@ namespace VfxEditor.UldFormat.Component.Node {
             Data.Draw( id );
             ImGui.EndChild();
         }
-
     }
 }

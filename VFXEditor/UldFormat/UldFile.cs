@@ -4,14 +4,13 @@ using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Headers;
 using VfxEditor.UldFormat.PartList;
 using VfxEditor.UldFormat.Texture;
+using VfxEditor.UldFormat.Timeline;
+using VfxEditor.UldFormat.Widget;
 
 namespace VfxEditor.UldFormat {
     public class UldFile : FileManagerFile {
@@ -29,12 +28,16 @@ namespace VfxEditor.UldFormat {
         private readonly List<UldComponent> Components = new();
 
         private readonly UldListHeader TimelineList;
+        private readonly List<UldTimeline> Timelines = new();
 
         private readonly UldListHeader WidgetList;
+        private readonly List<UldWidget> Widgets = new();
 
         public readonly UldTextureSplitView AssetSplitView;
         public readonly UldPartsSplitView PartsSplitView;
         public readonly UldComponentDropdown ComponentDropdown;
+        public readonly UldTimelineDropdown TimelineDropdown;
+        public readonly UldWidgetDropdown WidgetDropdown;
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
             var pos = reader.BaseStream.Position;
@@ -67,22 +70,31 @@ namespace VfxEditor.UldFormat {
             }
             else ComponentList = new( "cohd", "0100" );
 
-            reader.Seek( offsetsPosition + OffsetsHeader.TimelineOffset );
-            TimelineList = new( reader );
-            // timeline data
+            // ===== TIMELINES ====
+            if( OffsetsHeader.TimelineOffset > 0 ) {
+                reader.Seek( offsetsPosition + OffsetsHeader.TimelineOffset );
+                TimelineList = new( reader );
+                for( var i = 0; i < TimelineList.ElementCount; i++ ) Timelines.Add( new( reader ) );
+            }
+            else TimelineList = new( "tlhd", "0100" );
 
-            // TODO
             var offsetsPosition2 = reader.BaseStream.Position;
             reader.Seek( pos + Header.WidgetOffset );
             OffsetsHeader2 = new( reader );
 
-            reader.Seek( offsetsPosition2 + OffsetsHeader2.WidgetOffset );
-            WidgetList = new( reader );
-            // widget data
+            // ===== WIDGETS ====
+            if( OffsetsHeader2.WidgetOffset > 0 ) {
+                reader.Seek( offsetsPosition2 + OffsetsHeader2.WidgetOffset );
+                WidgetList = new( reader );
+                for( var i = 0; i < WidgetList.ElementCount; i++ ) Widgets.Add( new( reader, Components ) );
+            }
+            else WidgetList = new( "wdhd", "0100" );
 
             AssetSplitView = new( Assets );
             PartsSplitView = new( Parts );
             ComponentDropdown = new( Components );
+            TimelineDropdown = new( Timelines );
+            WidgetDropdown = new( Widgets, Components );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -120,12 +132,12 @@ namespace VfxEditor.UldFormat {
                 }
                 if( ImGui.BeginTabItem( $"Timelines{id}" ) ) {
                     TimelineList.Draw( id );
-                    //
+                    TimelineDropdown.Draw( $"{id}/Timelines" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Widgets{id}" ) ) {
                     WidgetList.Draw( id );
-                    //
+                    WidgetDropdown.Draw( $"{id}/Widgets" );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();

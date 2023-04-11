@@ -11,7 +11,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         Tile = 0x1,
     }
 
-    public class NineGridNodeData : UldNodeData {
+    public class NineGridNodeData : UldGenericData {
         public NineGridNodeData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Part List Id", size: 2 ),

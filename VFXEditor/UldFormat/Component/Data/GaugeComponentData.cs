@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class GaugeComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class GaugeComponentData : UldGenericData {
         public GaugeComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),
@@ -12,7 +13,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Unknown 6" ),
                 new ParsedUInt( "Vertical Margin", size: 2 ),
                 new ParsedUInt( "Horizontal Margin", size: 2 ),
-                new ParsedBool( "Is Vertical", size: 1 ),
+                new ParsedByteBool( "Is Vertical" ),
                 new ParsedReserve( 3 ) // Padding
             } );
         }

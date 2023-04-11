@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class LeveCardComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class LeveCardComponentData : UldGenericData {
         public LeveCardComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component {
-    public abstract class UldComponentData {
+namespace VfxEditor.UldFormat {
+    public abstract class UldGenericData {
         protected List<ParsedBase> Parsed = new();
 
         public virtual void Read( BinaryReader reader ) {
@@ -20,7 +20,7 @@ namespace VfxEditor.UldFormat.Component {
         }
 
         protected void AddUnknown( int count ) {
-            for( var i = 1; i <= ( count + 1 ); i++ ) Parsed.Add( new ParsedUInt( $"Unknown {i}" ) );
+            for( var i = 1; i <= count + 1; i++ ) Parsed.Add( new ParsedUInt( $"Unknown {i}" ) );
         }
     }
 }

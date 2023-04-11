@@ -26,20 +26,20 @@ namespace VfxEditor.Parsing {
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
             if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
                 var command = new CompoundCommand( false, true );
-                command.Add( new ParsedIntCommand( P1, ( int )val.X ) );
-                command.Add( new ParsedIntCommand( P2, ( int )val.Y ) );
-                command.Add( new ParsedIntCommand( P3, ( int )val.Z ) );
-                command.Add( new ParsedIntCommand( P4, ( int )val.W ) );
+                command.Add( new ParsedSimpleCommand<int>( P1, ( int )val.X ) );
+                command.Add( new ParsedSimpleCommand<int>( P2, ( int )val.Y ) );
+                command.Add( new ParsedSimpleCommand<int>( P3, ( int )val.Z ) );
+                command.Add( new ParsedSimpleCommand<int>( P4, ( int )val.W ) );
                 manager.Add( command );
             }
 
             var value = Value;
             if( ImGui.InputFloat4( Name + id, ref value ) ) {
                 var command = new CompoundCommand( false, true );
-                command.Add( new ParsedIntCommand( P1, ( int )value.X ) );
-                command.Add( new ParsedIntCommand( P2, ( int )value.Y ) );
-                command.Add( new ParsedIntCommand( P3, ( int )value.Z ) );
-                command.Add( new ParsedIntCommand( P4, ( int )value.W ) );
+                command.Add( new ParsedSimpleCommand<int>( P1, ( int )value.X ) );
+                command.Add( new ParsedSimpleCommand<int>( P2, ( int )value.Y ) );
+                command.Add( new ParsedSimpleCommand<int>( P3, ( int )value.Z ) );
+                command.Add( new ParsedSimpleCommand<int>( P4, ( int )value.W ) );
                 manager.Add( command );
             }
         }

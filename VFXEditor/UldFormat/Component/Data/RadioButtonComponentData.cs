@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class RadioButtonComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class RadioButtonComponentData : UldGenericData {
         public RadioButtonComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),

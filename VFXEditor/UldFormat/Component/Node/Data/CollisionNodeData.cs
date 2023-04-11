@@ -7,7 +7,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         Move = 0x2,
     }
 
-    public class CollisionNodeData : UldNodeData {
+    public class CollisionNodeData : UldGenericData {
         public CollisionNodeData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedEnum<CollisionType>( "Collision Type", size: 2 ),

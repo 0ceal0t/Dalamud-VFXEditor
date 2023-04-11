@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class CheckboxComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class CheckboxComponentData : UldGenericData {
         public CheckboxComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),

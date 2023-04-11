@@ -3,9 +3,8 @@ using System.IO;
 using System.Numerics;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat4 : ParsedBase {
+    public class ParsedFloat4 : ParsedSimpleBase<Vector4> {
         public readonly string Name;
-        public Vector4 Value = new( 0 );
 
         public ParsedFloat4( string name, Vector4 defaultValue ) : this( name ) {
             Value = defaultValue;
@@ -36,12 +35,12 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
             if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedFloat4Command( this, val ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<Vector4>( this, val ) );
             }
 
             var value = Value;
             if( ImGui.InputFloat4( Name + id, ref value ) ) {
-                manager.Add( new ParsedFloat4Command( this, value ) );
+                manager.Add( new ParsedSimpleCommand<Vector4>( this, value ) );
             }
         }
     }

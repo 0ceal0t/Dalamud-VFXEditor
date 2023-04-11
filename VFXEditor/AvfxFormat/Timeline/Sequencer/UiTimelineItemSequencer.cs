@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override bool IsEnabled( AvfxTimelineItem item ) => item.Enabled.GetValue() == true;
 
-        public override void Toggle( AvfxTimelineItem item ) => CommandManager.Avfx.Add( new ParsedBoolCommand( item.Enabled.Parsed, !IsEnabled( item ) ) );
+        public override void Toggle( AvfxTimelineItem item ) => CommandManager.Avfx.Add( new ParsedSimpleCommand<bool?>( item.Enabled.Parsed, !IsEnabled( item ) ) );
 
         public override void SetPos( AvfxTimelineItem item, int start, int end ) {
             item.StartTime.SetValue( start );

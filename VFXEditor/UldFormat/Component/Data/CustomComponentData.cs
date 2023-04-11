@@ -1,8 +1,9 @@
 using ImGuiNET;
 using System.IO;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class CustomComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class CustomComponentData : UldGenericData {
         private byte[] Data;
 
         public void Read( BinaryReader reader, int size ) {

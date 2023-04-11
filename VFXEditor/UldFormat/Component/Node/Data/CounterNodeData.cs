@@ -1,7 +1,7 @@
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
-    public class CounterNodeData : UldNodeData {
+    public class CounterNodeData : UldGenericData {
         public CounterNodeData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Part List Id", size: 2 ),

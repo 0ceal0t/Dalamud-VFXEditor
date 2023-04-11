@@ -19,6 +19,9 @@ namespace VfxEditor.UldFormat.Component.Node {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldNode>( Items, item ) );
         }
 
-        protected override string GetText( UldNode item, int idx ) => $"Node {item.Id.Value}";
+        protected override string GetText( UldNode item, int idx ) {
+            var suffix = item.IsComponentNode ? item.ComponentTypeId.Value.ToString() : item.Type.Value.ToString();
+            return $"Node {item.Id.Value} ({suffix})";
+        }
     }
 }

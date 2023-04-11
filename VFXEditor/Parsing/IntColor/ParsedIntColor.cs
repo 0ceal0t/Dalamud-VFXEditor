@@ -4,9 +4,8 @@ using System.Numerics;
 using System.IO;
 
 namespace VfxEditor.Parsing {
-    public class ParsedIntColor : ParsedBase {
+    public class ParsedIntColor : ParsedSimpleBase<Vector4> {
         public readonly string Name;
-        public Vector4 Value = new( 0 );
 
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
@@ -41,7 +40,7 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
             if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedIntColorCommand( this, val, Value ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<Vector4>( this, val, Value ) );
             }
 
             var prevValue = Value;
@@ -54,7 +53,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedIntColorCommand( this, Value, StateBeforeEdit ) );
+                manager.Add( new ParsedSimpleCommand<Vector4>( this, Value, StateBeforeEdit ) );
             }
         }
     }

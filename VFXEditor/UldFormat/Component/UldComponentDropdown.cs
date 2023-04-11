@@ -8,7 +8,7 @@ namespace VfxEditor.UldFormat.Component {
     public class UldComponentDropdown : Dropdown<UldComponent> {
         public UldComponentDropdown( List<UldComponent> items ) : base( items, true ) { }
 
-        protected override string GetText( UldComponent item, int idx ) => $"Component {item.Id.Value}";
+        protected override string GetText( UldComponent item, int idx ) => $"Component {item.Id.Value} ({item.Type.Value})";
 
         protected override void OnDelete( UldComponent item ) {
             if( Items.IndexOf( item ) == -1 ) return;

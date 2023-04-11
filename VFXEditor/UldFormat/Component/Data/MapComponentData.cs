@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
-    public class MapComponentData : UldComponentData {
+namespace VfxEditor.UldFormat.Component.Data
+{
+    public class MapComponentData : UldGenericData {
         public MapComponentData() {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedUInt( "Unknown 1" ),

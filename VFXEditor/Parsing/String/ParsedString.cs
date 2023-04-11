@@ -4,10 +4,9 @@ using System.IO;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedString : ParsedBase {
+    public class ParsedString : ParsedSimpleBase<string> {
         public readonly string Name;
         public readonly uint MaxSize;
-        public string Value = "";
 
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
@@ -37,7 +36,7 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Strings[Name] = Value;
             if( copy.IsPasting && copy.Strings.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedStringCommand( this, val, Value ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<string>( this, val, Value ) );
             }
 
             var prevValue = Value;
@@ -50,7 +49,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedStringCommand( this, Value, StateBeforeEdit ) );
+                manager.Add( new ParsedSimpleCommand<string>( this, Value, StateBeforeEdit ) );
             }
         }
 

@@ -7,7 +7,8 @@ using VfxEditor.Parsing;
 using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
 
-namespace VfxEditor.UldFormat.Component {
+namespace VfxEditor.UldFormat.Component
+{
     public enum ComponentType : int {
         Custom = 0x0,
         Button = 0x1,
@@ -37,15 +38,15 @@ namespace VfxEditor.UldFormat.Component {
 
     public class UldComponent {
         public readonly ParsedUInt Id = new( "Id" );
-        private readonly ParsedBool IgnoreInput = new( "Ignore Input", size: 1 );
-        private readonly ParsedBool DragArrow = new( "Drag Arrow", size: 1 );
-        private readonly ParsedBool DropArrow = new( "Drop Arrow", size: 1 );
+        public readonly ParsedByteBool IgnoreInput = new( "Ignore Input" );
+        public readonly ParsedByteBool DragArrow = new( "Drag Arrow" );
+        public readonly ParsedByteBool DropArrow = new( "Drop Arrow" );
 
         public readonly ParsedEnum<ComponentType> Type = new( "Type", size: 1 );
-        public UldComponentData Data = null;
+        public UldGenericData Data = null;
 
-        private readonly List<UldNode> Nodes = new();
-        private readonly UldNodeSplitView NodeSplitView;
+        public readonly List<UldNode> Nodes = new();
+        public readonly UldNodeSplitView NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {
             NodeSplitView = new( Nodes, components );
