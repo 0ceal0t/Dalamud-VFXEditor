@@ -42,15 +42,11 @@ namespace VfxEditor.AvfxFormat {
             DrawRename( id );
             Path.Draw( id );
 
-            var currentPathValue = LoadTex();
-
-            Plugin.TextureManager.DrawTexture( currentPathValue, id );
+            Plugin.TextureManager.DrawTexture( LoadTex(), id );
         }
 
         public override void ShowTooltip() {
-            var currentPathValue = LoadTex();
-
-            if( Plugin.TextureManager.GetPreviewTexture( currentPathValue, out var t ) ) {
+            if( Plugin.TextureManager.GetPreviewTexture( LoadTex(), out var t ) ) {
                 ImGui.BeginTooltip();
                 ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
                 ImGui.EndTooltip();

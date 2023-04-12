@@ -88,6 +88,15 @@ namespace VfxEditor.TextureFormat {
             }
         }
 
+        public void DrawTextureUv( string path, uint u, uint v, uint w, uint h ) {
+            if( GetPreviewTexture( path, out var texOut ) ) {
+                var size = new Vector2( texOut.Width, texOut.Height );
+                var uv0 = new Vector2( u, v ) / size;
+                var uv1 = uv0 + new Vector2( w, h ) / size;
+                ImGui.Image( texOut.Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
+            }
+        }
+
         private void ImportDialog( string newPath ) {
             FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;

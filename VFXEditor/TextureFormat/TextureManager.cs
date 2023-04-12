@@ -127,6 +127,6 @@ namespace VfxEditor.TextureFormat {
             TEX_ID = 0;
         }
 
-        public bool DoDebug( string path ) => path.Contains( ".atex" );
+        public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
     }
 }

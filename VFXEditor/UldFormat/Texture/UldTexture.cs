@@ -7,9 +7,12 @@ using VfxEditor.Ui.Components;
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : ISimpleUiBase {
         public readonly ParsedUInt Id = new( "Id" );
-        private readonly ParsedString Path = new( "Path", maxSize: 44 );
+        public readonly ParsedString Path = new( "Path", maxSize: 44 );
+
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
         private readonly ParsedUInt Unk2 = new( "Unknown 2" );
+
+        private string LastValue = "";
 
         public UldTexture() { }
 
@@ -20,6 +23,18 @@ namespace VfxEditor.UldFormat.Texture {
             Unk1.Read( reader );
             if( minorVersion == '1' ) Unk2.Read( reader );
             else Unk2.Value = 0;
+
+            LastValue = Path.Value;
+            Plugin.TextureManager.LoadPreviewTexture( Path.Value );
+        }
+
+        public string LoadTex() {
+            var currentPathValue = Path.Value;
+            if( currentPathValue != LastValue ) {
+                LastValue = currentPathValue;
+                Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
+            }
+            return currentPathValue;
         }
 
         public void Write( BinaryWriter writer, char minorVersion ) {
@@ -33,6 +48,8 @@ namespace VfxEditor.UldFormat.Texture {
         public void Draw( string id ) {
             Id.Draw( id, CommandManager.Uld );
             Path.Draw( id, CommandManager.Uld );
+            Plugin.TextureManager.DrawTexture( LoadTex(), id );
+
             Unk1.Draw( id, CommandManager.Uld );
             Unk2.Draw( id, CommandManager.Uld );
         }

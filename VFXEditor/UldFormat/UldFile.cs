@@ -20,22 +20,22 @@ namespace VfxEditor.UldFormat {
         private readonly UldAtkHeader OffsetsHeader;
         private readonly UldAtkHeader2 OffsetsHeader2;
 
-        private readonly UldListHeader AssetList;
-        private readonly List<UldTexture> Assets = new();
+        private readonly UldListHeader TextureList;
+        public readonly List<UldTexture> Textures = new();
 
         private readonly UldListHeader PartList;
-        private readonly List<UldPartList> Parts = new();
+        public readonly List<UldPartList> Parts = new();
 
         private readonly UldListHeader ComponentList;
-        private readonly List<UldComponent> Components = new();
+        public readonly List<UldComponent> Components = new();
 
         private readonly UldListHeader TimelineList;
-        private readonly List<UldTimeline> Timelines = new();
+        public readonly List<UldTimeline> Timelines = new();
 
         private readonly UldListHeader WidgetList;
-        private readonly List<UldWidget> Widgets = new();
+        public readonly List<UldWidget> Widgets = new();
 
-        public readonly UldTextureSplitView AssetSplitView;
+        public readonly UldTextureSplitView TextureSplitView;
         public readonly UldPartsSplitView PartsSplitView;
         public readonly UldComponentDropdown ComponentDropdown;
         public readonly UldTimelineDropdown TimelineDropdown;
@@ -55,10 +55,10 @@ namespace VfxEditor.UldFormat {
             // ==== ASSETS ======
             if( OffsetsHeader.AssetOffset > 0 ) {
                 reader.Seek( offsetsPosition + OffsetsHeader.AssetOffset );
-                AssetList = new( reader );
-                for( var i = 0; i < AssetList.ElementCount; i++ ) Assets.Add( new( reader, AssetList.Version[3] ) );
+                TextureList = new( reader );
+                for( var i = 0; i < TextureList.ElementCount; i++ ) Textures.Add( new( reader, TextureList.Version[3] ) );
             }
-            else AssetList = new( "ashd", "0101" );
+            else TextureList = new( "ashd", "0101" );
 
             // ===== PARTS ======
             if( OffsetsHeader.PartOffset > 0 ) {
@@ -102,7 +102,7 @@ namespace VfxEditor.UldFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            AssetSplitView = new( Assets );
+            TextureSplitView = new( Textures );
             PartsSplitView = new( Parts );
             ComponentDropdown = new( Components );
             TimelineDropdown = new( Timelines );
@@ -117,8 +117,8 @@ namespace VfxEditor.UldFormat {
             OffsetsHeader.Write( writer, out var offsetsUpdatePosition );
 
             // ====== ASSETS ========
-            var assetOffset = AssetList.Write( writer, Assets, offsetsPosition );
-            Assets.ForEach( x => x.Write( writer, AssetList.Version[3] ) );
+            var assetOffset = TextureList.Write( writer, Textures, offsetsPosition );
+            Textures.ForEach( x => x.Write( writer, TextureList.Version[3] ) );
 
             // ===== PARTS ========
             var partOffset = PartList.Write( writer, Parts, offsetsPosition );
@@ -151,9 +151,9 @@ namespace VfxEditor.UldFormat {
 
         public override void Draw( string id ) {
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Assets{id}" ) ) {
-                    AssetList.Draw( id );
-                    AssetSplitView.Draw( $"{id}/Assets" );
+                if( ImGui.BeginTabItem( $"Textures{id}" ) ) {
+                    TextureList.Draw( id );
+                    TextureSplitView.Draw( $"{id}/Textures" );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Part Lists{id}" ) ) {

@@ -1,6 +1,8 @@
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.PartList {
@@ -31,6 +33,12 @@ namespace VfxEditor.UldFormat.PartList {
 
         public void Draw( string id ) {
             TextureId.Draw( id, CommandManager.Uld );
+
+            var texture = Plugin.UldManager.CurrentFile.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
+            if( texture != null ) {
+                Plugin.TextureManager.DrawTextureUv( texture.Path.Value, U.Value, V.Value, W.Value, H.Value );
+            }
+
             U.Draw( id, CommandManager.Uld );
             V.Draw( id, CommandManager.Uld );
             W.Draw( id, CommandManager.Uld );
