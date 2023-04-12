@@ -57,28 +57,23 @@ namespace VfxEditor.TextureFormat {
             ImGui.EndChild();
         }
 
-        public void DrawTexture( string path, string id ) {
-            if( GetPreviewTexture( path, out var texOut ) ) {
-                ImGui.Image( texOut.Wrap.ImGuiHandle, new Vector2( texOut.Width, texOut.Height ) );
-                ImGui.Text( $"Format: {texOut.Format}  MIPS: {texOut.MipLevels}  SIZE: {texOut.Width}x{texOut.Height}" );
-                if( ImGui.Button( "Export" + id ) ) {
-                    ImGui.OpenPopup( "Tex_Export" + id );
-                }
-                ImGui.SameLine();
-                if( ImGui.Button( "Replace" + id ) ) {
-                    ImportDialog( path.Trim( '\0' ) );
-                }
-                if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                    if( ImGui.Selectable( "PNG" + id ) ) {
-                        SavePngDialog( path.Trim( '\0' ) );
+        public void DrawTexture( string path, string id, bool isVfx = true ) {
+            if( GetPreviewTexture( path, out var texture ) ) {
+                ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
+                ImGui.Text( $"Format: {texture.Format}  MIPS: {texture.MipLevels}  SIZE: {texture.Width}x{texture.Height}" );
+
+                if( isVfx ) {
+                    if( ImGui.Button( "Export" + id ) ) ImGui.OpenPopup( "Tex_Export" + id );
+                    ImGui.SameLine();
+                    if( ImGui.Button( "Replace" + id ) ) ImportDialog( path.Trim( '\0' ) );
+                    if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
+                        if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path.Trim( '\0' ) );
+                        if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path.Trim( '\0' ) );
+                        ImGui.EndPopup();
                     }
-                    if( ImGui.Selectable( "DDS" + id ) ) {
-                        SaverDdsDialog( path.Trim( '\0' ) );
-                    }
-                    ImGui.EndPopup();
                 }
 
-                if( texOut.IsReplaced ) {
+                if( texture.IsReplaced ) {
                     ImGui.SameLine();
                     if( UiUtils.RemoveButton( "Remove Replaced Texture" + id ) ) {
                         RemoveReplaceTexture( path.Trim( '\0' ) );
@@ -89,11 +84,11 @@ namespace VfxEditor.TextureFormat {
         }
 
         public void DrawTextureUv( string path, uint u, uint v, uint w, uint h ) {
-            if( GetPreviewTexture( path, out var texOut ) ) {
-                var size = new Vector2( texOut.Width, texOut.Height );
+            if( GetPreviewTexture( path, out var texture ) ) {
+                var size = new Vector2( texture.Width, texture.Height );
                 var uv0 = new Vector2( u, v ) / size;
                 var uv1 = uv0 + new Vector2( w, h ) / size;
-                ImGui.Image( texOut.Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
+                ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
             }
         }
 
@@ -117,7 +112,7 @@ namespace VfxEditor.TextureFormat {
             } );
         }
 
-        private void SaverDdsDialog( string texPath ) {
+        private void SaveDdsDialog( string texPath ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 var texFile = GetRawTexture( texPath );

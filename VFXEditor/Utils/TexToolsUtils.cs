@@ -21,11 +21,14 @@ namespace VfxEditor.Utils {
                 case "vfx":
                     simple.DatFile = "080000";
                     break;
+                case "bgcommon":
+                    simple.DatFile = "010000";
+                    break;
                 case "chara":
                     simple.DatFile = "040000";
                     break;
-                case "bgcommon":
-                    simple.DatFile = "010000";
+                case "ui":
+                    simple.DatFile = "060000";
                     break;
                 case "sound":
                     simple.DatFile = "070000";

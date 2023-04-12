@@ -201,16 +201,57 @@ namespace VfxEditor.Utils {
 
         public static float Lerp( float firstFloat, float secondFloat, float by ) => firstFloat * ( 1 - by ) + secondFloat * by;
 
-        public static float GetOffsetInputSize( FontAwesomeIcon icon ) => GetOffsetInputSize( GetIconSize( icon ) );
+        public static float GetOffsetInputSize( FontAwesomeIcon icon ) => GetOffsetInputSize( GetPaddedIconSize( icon ) );
 
         public static float GetOffsetInputSize( float size ) => ImGui.GetContentRegionAvail().X * 0.65f - size;
 
-        public static float GetIconSize( FontAwesomeIcon icon ) {
+        public static float GetPaddedIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();
             ImGui.PushFont( UiBuilder.IconFont );
             var iconSize = ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
             ImGui.PopFont();
             return iconSize;
+        }
+
+        public static Vector2 GetIconSize( FontAwesomeIcon icon ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            var iconSize = ImGui.CalcTextSize( icon.ToIconString() );
+            ImGui.PopFont();
+            return iconSize;
+        }
+
+        public static bool RemoveIconButton( FontAwesomeIcon icon, string text ) => ColorIconButton( icon, text, RED_COLOR );
+
+        public static bool ColorIconButton( FontAwesomeIcon icon, string text, Vector4 color ) {
+            ImGui.PushStyleColor( ImGuiCol.Button, color );
+            var ret = IconButton( icon, text );
+            ImGui.PopStyleColor();
+            return ret;
+        }
+
+        public static bool IconButton( FontAwesomeIcon icon, string text ) {
+            var buttonClicked = false;
+
+            var iconSize = GetIconSize( icon );
+            var textSize = ImGui.CalcTextSize( text );
+            var padding = ImGui.GetStyle().FramePadding;
+            var spacing = ImGui.GetStyle().ItemSpacing;
+
+            var buttonSizeX = iconSize.X + textSize.X + padding.X * 2 + spacing.X;
+            var buttonSizeY = ( iconSize.Y > textSize.Y ? iconSize.Y : textSize.Y ) + padding.Y * 2;
+            var buttonSize = new Vector2( buttonSizeX, buttonSizeY );
+
+            if( ImGui.Button( "###" + icon.ToIconString() + text, buttonSize ) ) buttonClicked = true;
+
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - padding.X );
+            ImGui.PushFont( UiBuilder.IconFont );
+            ImGui.Text( icon.ToIconString() );
+            ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.Text( text );
+
+            return buttonClicked;
         }
     }
 }

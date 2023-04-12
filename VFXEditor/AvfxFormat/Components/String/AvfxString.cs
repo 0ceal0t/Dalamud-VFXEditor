@@ -52,8 +52,8 @@ namespace VfxEditor.AvfxFormat {
             if( manager.IsCopying ) manager.Strings[Name] = Value;
             if( manager.IsPasting && manager.Strings.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxStringCommand( this, val, IsAssigned() ) );
 
-            var checkSize = UiUtils.GetIconSize( FontAwesomeIcon.Check );
-            var removeSize = UiUtils.GetIconSize( FontAwesomeIcon.Trash );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
+            var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Trash );
 
             // Input
             var inputSize = UiUtils.GetOffsetInputSize( checkSize + ( ShowRemoveButton ? removeSize : 0 ) );

@@ -10,7 +10,7 @@ using TeximpNet.DDS;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
-    public class CustomTexFile : Lumina.Data.FileResource {
+    public class TextureFile : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
         public unsafe struct TexHeader {
             public Attribute Type;
@@ -47,8 +47,8 @@ namespace VfxEditor.TextureFormat {
             ValidFormat = ( ImageData.Length > 0 );
         }
 
-        public static CustomTexFile LoadFromLocal( string path ) {
-            var tex = new CustomTexFile();
+        public static TextureFile LoadFromLocal( string path ) {
+            var tex = new TextureFile();
             var file = File.Open( path, FileMode.Open );
             using( var reader = new BinaryReader( file ) ) {
                 tex.LoadFile( reader, ( int )file.Length );

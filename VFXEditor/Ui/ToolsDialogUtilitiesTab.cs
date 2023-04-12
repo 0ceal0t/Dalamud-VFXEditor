@@ -39,7 +39,7 @@ namespace VfxEditor.Ui {
             if( ImGui.Button( ".atex to PNG" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
-                    var texFile = CustomTexFile.LoadFromLocal( res );
+                    var texFile = TextureFile.LoadFromLocal( res );
                     texFile.SaveAsPng( res + ".png" );
                 } );
             }
@@ -48,7 +48,7 @@ namespace VfxEditor.Ui {
             if( ImGui.Button( ".atex to DDS" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
                     if( !ok ) return;
-                    var texFile = CustomTexFile.LoadFromLocal( res );
+                    var texFile = TextureFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );
                 } );
             }

@@ -483,8 +483,8 @@ namespace ImGuiFileDialog {
                                 var data = new byte[uncompressedLength];
                                 br.Read( data, 0, ( int )uncompressedLength );
 
-                                var format = CustomTexFile.DXGItoTextureFormat( ddsFile.Format );
-                                var convertedData = CustomTexFile.BGRA_to_RGBA( CustomTexFile.Convert( data, format, width, height ) );
+                                var format = TextureFile.DXGItoTextureFormat( ddsFile.Format );
+                                var convertedData = TextureFile.BGRA_to_RGBA( TextureFile.Convert( data, format, width, height ) );
                                 var temp = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
                                 PreviewWrap = temp;
                             }
@@ -492,7 +492,7 @@ namespace ImGuiFileDialog {
                             ddsFile.Dispose();
                         }
                         else if( file.Ext.ToLower() == "atex" ) {
-                            var tex = CustomTexFile.LoadFromLocal( path );
+                            var tex = TextureFile.LoadFromLocal( path );
                             if( tex == null ) return;
 
                             var temp = PluginInterface.UiBuilder.LoadImageRaw( tex.ImageData, tex.Header.Width, tex.Header.Height, 4 );

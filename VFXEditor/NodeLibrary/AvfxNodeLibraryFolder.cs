@@ -103,8 +103,8 @@ namespace VfxEditor.NodeLibrary {
                     ImGui.Text( Name );
                 }
                 else {
-                    var checkSize = UiUtils.GetIconSize( FontAwesomeIcon.Check );
-                    var removeSize = UiUtils.GetIconSize( FontAwesomeIcon.Trash );
+                    var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
+                    var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Trash );
                     ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
                     // Input

@@ -48,7 +48,7 @@ namespace VfxEditor.UldFormat.Texture {
         public void Draw( string id ) {
             Id.Draw( id, CommandManager.Uld );
             Path.Draw( id, CommandManager.Uld );
-            Plugin.TextureManager.DrawTexture( LoadTex(), id );
+            Plugin.TextureManager.DrawTexture( LoadTex(), id, isVfx: false );
 
             Unk1.Draw( id, CommandManager.Uld );
             Unk2.Draw( id, CommandManager.Uld );

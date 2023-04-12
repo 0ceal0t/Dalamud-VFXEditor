@@ -6,6 +6,7 @@ namespace VfxEditor.Utils {
     public static class AtexUtils {
         public static List<byte> CreateAtexHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
+
             short texFormatCode = 0;
             switch( format ) {
                 case TextureFormat.TextureFormat.DXT1:
@@ -24,6 +25,7 @@ namespace VfxEditor.Utils {
                     texFormatCode = 5200;
                     break;
             }
+
             headerData.AddRange( BitConverter.GetBytes( ( short )0 ) );
             headerData.AddRange( BitConverter.GetBytes( ( short )128 ) );
             headerData.AddRange( BitConverter.GetBytes( texFormatCode ) );

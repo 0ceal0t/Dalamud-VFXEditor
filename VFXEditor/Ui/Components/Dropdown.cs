@@ -31,7 +31,7 @@ namespace VfxEditor.Ui.Components {
 
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
 
-            var leftRightSize = UiUtils.GetIconSize( FontAwesomeIcon.ChevronLeft ) - 5;
+            var leftRightSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ChevronLeft ) - 5;
             var inputSize = UiUtils.GetOffsetInputSize( leftRightSize * 2 );
 
             ImGui.PushFont( UiBuilder.IconFont );
