@@ -22,6 +22,6 @@ namespace VfxEditor.AvfxFormat {
             else item.EmitterSelect.Enable();
         }
 
-        public override AvfxEmitterItem CreateNewAvfx() => new AvfxEmitterItem( IsParticle, Emitter, true );
+        public override AvfxEmitterItem CreateNewAvfx() => new( IsParticle, Emitter, true );
     }
 }

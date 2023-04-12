@@ -4,27 +4,27 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
-    public interface IUiWorkspaceItem : IUiSelectableItem {
+namespace VfxEditor.Ui.Interfaces {
+    public interface IWorkspaceUiItem : ISelectableUiItem {
         public string GetWorkspaceId();
         public string GetRenamed();
         public void SetRenamed( string renamed );
         public void DrawRename( string parentId );
 
-        public void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict );
-        public void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict );
+        public void GetChildrenRename( Dictionary<string, string> RenameDict );
+        public void SetChildrenRename( Dictionary<string, string> RenameDict );
 
-        public static void PopulateWorkspaceMeta( IUiWorkspaceItem item, Dictionary<string, string> RenameDict ) {
-            if( !string.IsNullOrEmpty( item.GetRenamed() ) ) RenameDict[item.GetWorkspaceId()] = item.GetRenamed();
-            item.PopulateWorkspaceMetaChildren( RenameDict );
+        public static void PopulateMeta( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
+            if( !string.IsNullOrEmpty( item.GetRenamed() ) ) renameDict[item.GetWorkspaceId()] = item.GetRenamed();
+            item.GetChildrenRename( renameDict );
         }
 
-        public static void ReadWorkspaceMeta( IUiWorkspaceItem item, Dictionary<string, string> RenameDict ) {
-            if( RenameDict.TryGetValue( item.GetWorkspaceId(), out var renamed ) ) item.SetRenamed( renamed );
-            item.ReadWorkspaceMetaChildren( RenameDict );
+        public static void ReadMeta( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
+            if( renameDict.TryGetValue( item.GetWorkspaceId(), out var renamed ) ) item.SetRenamed( renamed );
+            item.SetChildrenRename( renameDict );
         }
 
-        public static void DrawRenameBox( IUiWorkspaceItem item, string parentId, ref string renamed, ref string renamedTemp, ref bool currentRenaming ) {
+        public static void DrawRenameBox( IWorkspaceUiItem item, string parentId, ref string renamed, ref string renamedTemp, ref bool currentRenaming ) {
             var id = parentId + "/Rename";
             if( currentRenaming ) {
                 ImGui.InputText( $"{id}-Input", ref renamedTemp, 255 );

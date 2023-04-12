@@ -68,7 +68,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/TD";
 
             AssignedCopyPaste( this, GetDefaultText() );
-            IUiItem.DrawListTabs( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Texture Distortion";

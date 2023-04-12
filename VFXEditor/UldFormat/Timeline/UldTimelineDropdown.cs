@@ -22,6 +22,6 @@ namespace VfxEditor.UldFormat.Timeline {
             else ImGui.Text( "Select a timeline..." );
         }
 
-        protected override string GetText( UldTimeline item, int idx ) => $"Timeline {item.Id.Value}";
+        protected override string GetText( UldTimeline item, int idx ) => item.GetText();
     }
 }

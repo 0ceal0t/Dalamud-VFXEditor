@@ -1,18 +1,22 @@
+using ImGuiNET;
+using ImGuiScene;
+using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Select;
 
 namespace VfxEditor.UldFormat.Texture {
-    public class UldTexture : ISimpleUiBase {
-        public readonly ParsedUInt Id = new( "Id" );
+    public class UldTexture : UldWorkspaceItem {
         public readonly ParsedString Path = new( "Path", maxSize: 44 );
-
+        private readonly ParsedUInt IconId = new( "Icon Id" );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedUInt Unk2 = new( "Unknown 2" );
 
-        private string LastValue = "";
+        private string LoadedTexturePath = "";
+        private uint LoadedIconId = 0;
+        private TextureWrap Icon;
 
         public UldTexture() { }
 
@@ -20,39 +24,62 @@ namespace VfxEditor.UldFormat.Texture {
             Id.Read( reader );
             Path.Read( reader );
             Path.Pad( reader, 44 );
-            Unk1.Read( reader );
-            if( minorVersion == '1' ) Unk2.Read( reader );
-            else Unk2.Value = 0;
+            IconId.Read( reader );
+            if( minorVersion == '1' ) Unk1.Read( reader );
+            else Unk1.Value = 0;
 
-            LastValue = Path.Value;
-            Plugin.TextureManager.LoadPreviewTexture( Path.Value );
+            UpdateTexture();
+            UpdateIcon();
         }
 
-        public string LoadTex() {
-            var currentPathValue = Path.Value;
-            if( currentPathValue != LastValue ) {
-                LastValue = currentPathValue;
-                Plugin.TextureManager.LoadPreviewTexture( currentPathValue );
+        private string UpdateTexture() {
+            if( Path.Value != LoadedTexturePath ) { // Path changed
+                LoadedTexturePath = Path.Value;
+                Plugin.TextureManager.LoadPreviewTexture( Path.Value );
             }
-            return currentPathValue;
+            return Path.Value;
+        }
+
+        private void UpdateIcon() {
+            if( IconId.Value != LoadedIconId ) { // Icon changed
+                LoadedIconId = IconId.Value;
+                Icon?.Dispose();
+                Icon = null;
+                if( LoadedIconId > 0 ) {
+                    TexFile tex;
+                    try { tex = Plugin.DataManager.GetIcon( LoadedIconId ); }
+                    catch( Exception ) { tex = Plugin.DataManager.GetIcon( 0 ); }
+                    Icon = Plugin.PluginInterface.UiBuilder.LoadImageRaw( SelectTabUtils.BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+                }
+            }
         }
 
         public void Write( BinaryWriter writer, char minorVersion ) {
             Id.Write( writer );
             Path.Write( writer );
             Path.Pad( writer, 44 );
-            Unk1.Write( writer );
-            if( minorVersion == '1' ) Unk2.Write( writer );
+            IconId.Write( writer );
+            if( minorVersion == '1' ) Unk1.Write( writer );
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
+            DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
+
             Path.Draw( id, CommandManager.Uld );
-            Plugin.TextureManager.DrawTexture( LoadTex(), id, isVfx: false );
+            Plugin.TextureManager.DrawTexture( UpdateTexture(), id, isVfx: false );
+
+            IconId.Draw( id, CommandManager.Uld );
+            UpdateIcon();
+            if( IconId.Value > 0 && Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
+            }
 
             Unk1.Draw( id, CommandManager.Uld );
-            Unk2.Draw( id, CommandManager.Uld );
         }
 
+        public override string GetDefaultText() => $"Texture {GetIdx()}";
+
+        public override string GetWorkspaceId() => $"Texture{GetIdx()}";
     }
 }

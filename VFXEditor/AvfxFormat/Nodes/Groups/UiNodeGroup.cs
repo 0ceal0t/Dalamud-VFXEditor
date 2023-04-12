@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class UiNodeGroupSet {
@@ -114,10 +115,10 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void PopulateWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, meta ) );
+            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, meta ) );
         }
         public override void ReadWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, meta ) );
+            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, meta ) );
         }
 
         public void AddAndUpdate( T item ) {

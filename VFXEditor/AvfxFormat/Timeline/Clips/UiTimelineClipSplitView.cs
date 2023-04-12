@@ -13,6 +13,6 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Enable( AvfxTimelineClip item ) { }
 
-        public override AvfxTimelineClip CreateNewAvfx() => new AvfxTimelineClip( Timeline );
+        public override AvfxTimelineClip CreateNewAvfx() => new( Timeline );
     }
 }

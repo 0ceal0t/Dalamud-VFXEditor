@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            IUiItem.DrawListTabs( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Texture Color 1";

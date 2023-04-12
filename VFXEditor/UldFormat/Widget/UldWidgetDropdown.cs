@@ -13,7 +13,7 @@ namespace VfxEditor.UldFormat.Widget {
             Components = components;
         }
 
-        protected override string GetText( UldWidget item, int idx ) => $"Widget {item.Id.Value}";
+        protected override string GetText( UldWidget item, int idx ) => item.GetText();
 
         protected override void OnDelete( UldWidget item ) {
             if( Items.IndexOf( item ) == -1 ) return;

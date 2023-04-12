@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Component.Node;
 
@@ -19,8 +20,7 @@ namespace VfxEditor.UldFormat.Widget {
         BottomRight = 0x8,
     }
  
-    public class UldWidget {
-        public readonly ParsedUInt Id = new( "Id" );
+    public class UldWidget : UldWorkspaceItem {
         public readonly ParsedEnum<AlignmentType> AlignmentType = new( "Alignment Type" );
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
@@ -29,7 +29,7 @@ namespace VfxEditor.UldFormat.Widget {
         public readonly UldNodeSplitView NodeSplitView;
 
         public UldWidget( List<UldComponent> components ) {
-            NodeSplitView = new( Nodes, components );
+            NodeSplitView = new( Nodes, components, this );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
@@ -42,7 +42,7 @@ namespace VfxEditor.UldFormat.Widget {
             var nodeCount = reader.ReadUInt16();
             var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, delayed ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, delayed ) );
 
             reader.BaseStream.Position = pos + size;
         }
@@ -68,7 +68,8 @@ namespace VfxEditor.UldFormat.Widget {
             writer.BaseStream.Position = finalPos;
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
+            DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -91,6 +92,18 @@ namespace VfxEditor.UldFormat.Widget {
             X.Draw( id, CommandManager.Uld );
             Y.Draw( id, CommandManager.Uld );
             ImGui.EndChild();
+        }
+
+        public override string GetDefaultText() => $"Widget {GetIdx()}";
+
+        public override string GetWorkspaceId() => $"Widget{GetIdx()}";
+
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
+            Nodes.ForEach( x => IWorkspaceUiItem.PopulateMeta( x, renameDict ) );
+        }
+
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
+            Nodes.ForEach( x => IWorkspaceUiItem.ReadMeta( x, renameDict ) );
         }
     }
 }

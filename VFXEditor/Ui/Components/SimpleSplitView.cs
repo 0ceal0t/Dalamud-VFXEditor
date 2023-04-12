@@ -2,10 +2,11 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
-    public class SimpleSplitView<T> : SplitView<T> where T : class, ISimpleUiBase {
+    public class SimpleSplitView<T> : SplitView<T> where T : class, IUiItem {
         protected readonly string ItemName;
 
         public SimpleSplitView( string itemName, List<T> items, bool allowNew = false ) : base( items, allowNew ) {

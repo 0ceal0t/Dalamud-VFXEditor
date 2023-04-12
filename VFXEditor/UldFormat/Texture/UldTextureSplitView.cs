@@ -16,6 +16,6 @@ namespace VfxEditor.UldFormat.Texture {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldTexture>( Items, item ) );
         }
 
-        protected override string GetText( UldTexture item, int idx ) => $"Texture {item.Id.Value}";
+        protected override string GetText( UldTexture item, int idx ) => item.GetText();
     }
 }

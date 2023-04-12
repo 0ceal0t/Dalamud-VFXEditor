@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Timeline.Frames;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat.Timeline {
+namespace VfxEditor.UldFormat.Timeline
+{
     public enum KeyUsage : int {
         Position = 0x0,
         Rotation = 0x1,
@@ -50,7 +51,7 @@ namespace VfxEditor.UldFormat.Timeline {
         Number = 0x1A,
     }
 
-    public class UldKeyGroup : ISimpleUiBase {
+    public class UldKeyGroup : IUiItem {
         public readonly ParsedEnum<KeyUsage> Usage = new( "Usage", size: 2 );
         public readonly ParsedEnum<KeyGroupType> Type = new( "Type", size: 2 );
 

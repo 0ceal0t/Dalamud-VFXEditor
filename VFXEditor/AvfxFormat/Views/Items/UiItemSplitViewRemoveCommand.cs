@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiItemSplitViewRemoveCommand<T> : ICommand where T : class, IUiSelectableItem {
+    public class UiItemSplitViewRemoveCommand<T> : ICommand where T : class, ISelectableUiItem {
         private readonly UiItemSplitView<T> View;
         private readonly List<T> Group;
         private readonly T Item;

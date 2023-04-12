@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using VfxEditor;
 using VfxEditor.Data;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -260,6 +261,28 @@ namespace VfxEditor.AvfxFormat {
             if( copyManager.IsPasting ) {
                 if( copyManager.Assigned.TryGetValue( name, out var a ) ) copyManager.PasteCommand.Add( new AvfxAssignCommand( assignable, a ) );
             }
+        }
+
+        public static void DrawNamedItems<T>( List<T> items, string parentId ) where T : INamedUiItem {
+            var numerOfUnassigned = 0;
+            foreach( var item in items ) { // Draw unassigned
+                if( item is not AvfxOptional optionalItem || optionalItem.IsAssigned() ) continue;
+
+                if( numerOfUnassigned > 0 ) ImGui.SameLine();
+                item.Draw( parentId );
+                numerOfUnassigned++;
+            }
+
+            ImGui.BeginTabBar( parentId + "-Tabs" ); // Draw assigned
+            foreach( var item in items ) {
+                if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) continue;
+
+                if( ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
+                    item.Draw( parentId );
+                    ImGui.EndTabItem();
+                }
+            }
+            ImGui.EndTabBar();
         }
     }
 }

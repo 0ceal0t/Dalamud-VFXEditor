@@ -3,10 +3,11 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class ImGuiSequencer<T> : IAvfxUiBase where T : class, IUiSelectableItem {
+    public abstract class ImGuiSequencer<T> : IAvfxUiBase where T : class, ISelectableUiItem {
         private enum MovingType : int {
             LeftHandle = 1,
             RightHandle = 2,

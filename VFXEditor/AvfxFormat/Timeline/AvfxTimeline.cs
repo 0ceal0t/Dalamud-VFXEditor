@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTimeline : AvfxNode {
@@ -120,14 +121,14 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndChild();
         }
 
-        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
-            Clips.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
+            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Clips.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
         }
 
-        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
-            Clips.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
+            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Clips.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
         }
 
         public override string GetDefaultText() => $"Timeline {GetIdx()}";

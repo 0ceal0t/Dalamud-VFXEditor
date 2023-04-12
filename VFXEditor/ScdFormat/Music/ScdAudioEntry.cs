@@ -5,11 +5,10 @@ using System;
 using System.IO;
 using System.Threading;
 using VfxEditor.ScdFormat.Music.Data;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public enum SscfWaveFormat : int {
         Empty = -1,
         Pcm = 0x01,
@@ -20,7 +19,7 @@ namespace VfxEditor.ScdFormat
         Atrac3Too = 0x0D
     }
 
-    public class ScdAudioEntry : ScdEntry, ISimpleUiBase {
+    public class ScdAudioEntry : ScdEntry, IUiItem {
         public int DataLength;
         public int NumChannels;
         public int SampleRate;

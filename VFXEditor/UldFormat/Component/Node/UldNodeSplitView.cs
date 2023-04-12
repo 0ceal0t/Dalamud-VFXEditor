@@ -6,22 +6,21 @@ using VfxEditor.Ui.Components;
 namespace VfxEditor.UldFormat.Component.Node {
     public class UldNodeSplitView : SimpleSplitView<UldNode> {
         private readonly List<UldComponent> Components;
+        private readonly UldWorkspaceItem Parent;
 
-        public UldNodeSplitView( List<UldNode> items, List<UldComponent> components) : base( "Node", items, true ) {
+        public UldNodeSplitView( List<UldNode> items, List<UldComponent> components, UldWorkspaceItem parent ) : base( "Node", items, true ) {
             Components = components;
+            Parent = parent;
         }
 
         protected override void OnNew() {
-            CommandManager.Uld.Add( new GenericAddCommand<UldNode>( Items, new UldNode( Components ) ) );
+            CommandManager.Uld.Add( new GenericAddCommand<UldNode>( Items, new UldNode( Components, Parent ) ) );
         }
 
         protected override void OnDelete( UldNode item ) {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldNode>( Items, item ) );
         }
 
-        protected override string GetText( UldNode item, int idx ) {
-            var suffix = item.IsComponentNode ? item.ComponentTypeId.Value.ToString() : item.Type.Value.ToString();
-            return $"Node {item.Id.Value} ({suffix})";
-        }
+        protected override string GetText( UldNode item, int idx ) => item.GetText();
     }
 }

@@ -56,7 +56,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/TN";
 
             AssignedCopyPaste( this, GetDefaultText() );
-            IUiItem.DrawListTabs( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => "Texture Normal";

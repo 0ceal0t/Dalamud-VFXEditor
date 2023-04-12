@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxScheduler : AvfxNode {
@@ -101,14 +102,14 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
-            Triggers.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
+            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Triggers.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
         }
 
-        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
-            Triggers.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
+            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Triggers.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
         }
 
         public override string GetDefaultText() => $"Scheduler {GetIdx()}";

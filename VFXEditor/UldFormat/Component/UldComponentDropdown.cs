@@ -8,8 +8,6 @@ namespace VfxEditor.UldFormat.Component {
     public class UldComponentDropdown : Dropdown<UldComponent> {
         public UldComponentDropdown( List<UldComponent> items ) : base( items, true ) { }
 
-        protected override string GetText( UldComponent item, int idx ) => $"Component {item.Id.Value} ({item.Type.Value})";
-
         protected override void OnDelete( UldComponent item ) {
             if( Items.IndexOf( item ) == -1 ) return;
             CommandManager.Uld.Add( new GenericRemoveCommand<UldComponent>( Items, item ) );
@@ -18,6 +16,8 @@ namespace VfxEditor.UldFormat.Component {
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldComponent>( Items, new UldComponent( Items ) ) );
         }
+
+        protected override string GetText( UldComponent item, int idx ) => item.GetText();
 
         public override void Draw( string id ) {
             base.Draw( id );

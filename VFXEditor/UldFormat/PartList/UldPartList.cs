@@ -3,13 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.PartList {
-    public class UldPartList : ISimpleUiBase {
-        public readonly ParsedUInt Id = new( "Id" );
+    public class UldPartList : UldWorkspaceItem {
         public readonly List<UldPartItem> Parts = new();
 
         private int Offset => 12 + Parts.Count * 12;
@@ -33,12 +30,13 @@ namespace VfxEditor.UldFormat.PartList {
             foreach( var part in Parts ) part.Write( writer );
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
+            DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
 
             for( var idx = 0; idx < Parts.Count; idx++ ) {
                 var item = Parts[idx];
-                if( ImGui.CollapsingHeader( $"Part #{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"Part {idx} (Texture {item.TextureId.Value})" ) ) {
                     ImGui.Indent();
 
                     if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
@@ -55,5 +53,9 @@ namespace VfxEditor.UldFormat.PartList {
                 CommandManager.Uld.Add( new GenericAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
             }
         }
+
+        public override string GetDefaultText() => $"Part List {GetIdx()}";
+
+        public override string GetWorkspaceId() => $"PartList{GetIdx()}";
     }
 }

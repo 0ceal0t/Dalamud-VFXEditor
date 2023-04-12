@@ -2,10 +2,11 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, IUiSelectableItem {
+    public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, ISelectableUiItem {
         public UiItemSplitView( List<T> items ) : base( items, true, true ) {
             UpdateIdx();
         }

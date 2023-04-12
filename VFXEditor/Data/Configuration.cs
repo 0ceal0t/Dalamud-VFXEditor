@@ -278,7 +278,7 @@ namespace VfxEditor {
                 if( ImGui.CollapsingHeader( $"{config.Key}{configId}" ) ) {
                     ImGui.Indent( 5 );
 
-                    if( ImGui.Checkbox( $"Use custom window color{configId}", ref config.Value.UseCustomWindowColor ) ) ;
+                    ImGui.Checkbox( $"Use custom window color{configId}", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {
                         if( ImGui.ColorEdit4( $"Background{configId}", ref config.Value.TitleBg ) ) Save();
                         if( ImGui.ColorEdit4( $"Active{configId}", ref config.Value.TitleBgActive ) ) Save();

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class GenericWorkspaceItem : GenericSelectableItem, IUiWorkspaceItem {
+    public abstract class GenericWorkspaceItem : GenericSelectableItem, IWorkspaceUiItem {
         public string Renamed;
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;
@@ -12,12 +13,13 @@ namespace VfxEditor.AvfxFormat {
         public abstract string GetWorkspaceId();
 
         public string GetRenamed() => Renamed;
+
         public void SetRenamed( string renamed ) => Renamed = renamed;
 
-        public virtual void PopulateWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
+        public virtual void GetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public virtual void ReadWorkspaceMetaChildren( Dictionary<string, string> RenameDict ) { }
+        public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public void DrawRename( string parentId ) => IUiWorkspaceItem.DrawRenameBox( this, parentId, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
+        public void DrawRename( string parentId ) => IWorkspaceUiItem.DrawRenameBox( this, parentId, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
     }
 }

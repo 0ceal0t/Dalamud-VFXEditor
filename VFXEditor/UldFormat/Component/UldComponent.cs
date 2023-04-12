@@ -1,15 +1,16 @@
 using Dalamud.Logging;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
 
-namespace VfxEditor.UldFormat.Component
-{
+namespace VfxEditor.UldFormat.Component {
     public enum ComponentType : int {
         Custom = 0x0,
         Button = 0x1,
@@ -37,8 +38,7 @@ namespace VfxEditor.UldFormat.Component
         Preview = 0x17,
     }
 
-    public class UldComponent {
-        public readonly ParsedUInt Id = new( "Id" );
+    public class UldComponent : UldWorkspaceItem {
         public readonly ParsedByteBool IgnoreInput = new( "Ignore Input" );
         public readonly ParsedByteBool DragArrow = new( "Drag Arrow" );
         public readonly ParsedByteBool DropArrow = new( "Drop Arrow" );
@@ -50,7 +50,7 @@ namespace VfxEditor.UldFormat.Component
         public readonly UldNodeSplitView NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {
-            NodeSplitView = new( Nodes, components );
+            NodeSplitView = new( Nodes, components, this );
             Type.ExtraCommandGenerator = () => {
                 return new UldComponentDataCommand( this );
             };
@@ -78,7 +78,7 @@ namespace VfxEditor.UldFormat.Component
 
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, delayed ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, delayed ) );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -139,7 +139,8 @@ namespace VfxEditor.UldFormat.Component
             };
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
+            DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
             ImGui.TextDisabled( "Component Ids must be greater than 1000" );
             Type.Draw( id, CommandManager.Uld );
@@ -174,6 +175,18 @@ namespace VfxEditor.UldFormat.Component
             ImGui.BeginChild( id );
             Data.Draw( id );
             ImGui.EndChild();
+        }
+
+        public override string GetDefaultText() => $"Component {GetIdx()} ({Type.Value})";
+
+        public override string GetWorkspaceId() => $"Comp{GetIdx()}";
+
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
+            Nodes.ForEach( x => IWorkspaceUiItem.PopulateMeta( x, renameDict ) );
+        }
+
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
+            Nodes.ForEach( x => IWorkspaceUiItem.ReadMeta( x, renameDict ) );
         }
     }
 }

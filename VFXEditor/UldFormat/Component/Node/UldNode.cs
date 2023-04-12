@@ -1,16 +1,10 @@
 using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
 
@@ -43,10 +37,10 @@ namespace VfxEditor.UldFormat.Component.Node {
         public int Size;
     }
 
-    public class UldNode : ISimpleUiBase {
+    public class UldNode : UldWorkspaceItem {
         private readonly List<UldComponent> Components;
+        private readonly UldWorkspaceItem Parent;
 
-        public readonly ParsedUInt Id = new( "Id" );
         public readonly ParsedInt ParentId = new( "Parent Id" );
         public readonly ParsedInt NextSiblingId = new( "Next Sibling Id" );
         public readonly ParsedInt PrevSiblingId = new( "Prev Sibling Id" );
@@ -84,7 +78,8 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt ClipCount = new( "Clip Count", size: 1 );
         public readonly ParsedUInt TimelineId = new( "Timeline Id", size: 2 );
 
-        public UldNode( List<UldComponent> components ) {
+        public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
+            Parent = parent;
             Components = components;
             Type.ExtraCommandGenerator = () => {
                 return new UldNodeDataCommand( this );
@@ -119,7 +114,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             };
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, List<DelayedNodeData> delayed ) : this( components, parent ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -224,9 +219,10 @@ namespace VfxEditor.UldFormat.Component.Node {
             }
         }
 
-        public void Draw( string id ) {
+        public override void Draw( string id ) {
+            DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
-            // Update component state along with data
+
             if( ImGui.Checkbox( $"Is Component Node{id}", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
 
             if( IsComponentNode ) {
@@ -267,5 +263,12 @@ namespace VfxEditor.UldFormat.Component.Node {
             Data.Draw( id );
             ImGui.EndChild();
         }
+
+        public override string GetDefaultText() {
+            var suffix = IsComponentNode ? ComponentTypeId.Value.ToString() : Type.Value.ToString();
+            return $"Node {GetIdx()} ({suffix})";
+        }
+
+        public override string GetWorkspaceId() => $"{Parent.GetWorkspaceId()}/Node{GetIdx()}";
     }
 }

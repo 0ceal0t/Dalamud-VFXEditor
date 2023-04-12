@@ -35,7 +35,7 @@ namespace VfxEditor.Ui.Components {
 
         public void Draw( string id ) {
             ImGui.Columns( 2, id + "/Cols", true );
-            if ( AllowNew ) DrawControls( id );
+            if( AllowNew ) DrawControls( id );
 
             ImGui.BeginChild( id + "/Left" );
             DrawLeftColumn( id );

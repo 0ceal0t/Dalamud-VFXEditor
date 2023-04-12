@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -278,14 +279,14 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetWorkspaceId() => $"Emit{GetIdx()}";
 
-        public override void PopulateWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Emitters.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
-            Particles.ForEach( item => IUiWorkspaceItem.PopulateWorkspaceMeta( item, renameDict ) );
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
+            Emitters.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Particles.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
         }
 
-        public override void ReadWorkspaceMetaChildren( Dictionary<string, string> renameDict ) {
-            Emitters.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
-            Particles.ForEach( item => IUiWorkspaceItem.ReadWorkspaceMeta( item, renameDict ) );
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
+            Emitters.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Particles.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
         }
 
         public bool HasSound => Sound.IsAssigned() && SoundNumber.GetValue() > 0 && Sound.GetValue().Trim( '\0' ).Length > 0;

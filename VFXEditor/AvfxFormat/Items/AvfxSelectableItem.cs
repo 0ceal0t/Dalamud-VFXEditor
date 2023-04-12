@@ -1,5 +1,7 @@
+using VfxEditor.Ui.Interfaces;
+
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxSelectableItem : AvfxItem, IUiSelectableItem {
+    public abstract class AvfxSelectableItem : AvfxItem, ISelectableUiItem {
         private int Idx;
 
         public AvfxSelectableItem( string avfxName ) : base( avfxName ) { }

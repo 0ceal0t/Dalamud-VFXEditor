@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.UldFormat.Timeline.Frames {
-    public class UldFrame : ISimpleUiBase {
+namespace VfxEditor.UldFormat.Timeline.Frames
+{
+    public class UldFrame : IUiItem {
         public readonly ParsedUInt StartFrame = new( "Start Frame" );
         public readonly ParsedUInt EndFrame = new( "End Frame" );
         public readonly List<UldKeyGroup> KeyGroups = new();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -24,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
 
         private readonly UiDisplayList Display;
-        private readonly List<IUiItem> DisplayTabs;
+        private readonly List<INamedUiItem> DisplayTabs;
 
         private static readonly Dictionary<int, string> BinderIds = new() {
             { 0, "Not working" },
@@ -109,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
             AssignedCopyPaste( this, Name );
             DrawRemoveButton( this, Name, id );
 
-            IUiItem.DrawListTabs( DisplayTabs, id );
+            AvfxBase.DrawNamedItems( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => Name;

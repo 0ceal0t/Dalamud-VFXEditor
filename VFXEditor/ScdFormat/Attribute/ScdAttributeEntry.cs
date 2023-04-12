@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat
 {
-    public class ScdAttributeEntry : ScdEntry, ISimpleUiBase {
+    public class ScdAttributeEntry : ScdEntry, IUiItem {
         public readonly ParsedByte Version = new( "Version" );
         public readonly ParsedReserve Reserved = new( 1 );
         public readonly ParsedShort AttributeId = new( "Attribute Id" );

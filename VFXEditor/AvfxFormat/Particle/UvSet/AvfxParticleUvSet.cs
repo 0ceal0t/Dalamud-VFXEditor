@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/UV";
             IAvfxUiBase.DrawList( Display, id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            IUiItem.DrawListTabs( Curves, parentId );
+            DrawNamedItems( Curves, parentId );
         }
 
         public override string GetDefaultText() => $"UV {GetIdx()}";
