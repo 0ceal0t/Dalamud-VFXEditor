@@ -12,6 +12,8 @@ namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportTexture( string localPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
+            gamePath = gamePath.Trim( '\0' );
+
             try {
                 TextureReplace replaceData;
                 var gameFileExtension = gamePath.Split( '.' )[^1].Trim( '\0' );
@@ -79,6 +81,8 @@ namespace VfxEditor.TextureFormat {
         }
 
         private bool ReplaceAndRefreshTexture( TextureReplace data, string gamePath ) {
+            gamePath = gamePath.Trim( '\0' );
+
             // if there is already a replacement for the same file, delete the old file
             RemoveReplaceTexture( gamePath );
             if( !PathToTextureReplace.TryAdd( gamePath, data ) ) return false;
@@ -89,6 +93,7 @@ namespace VfxEditor.TextureFormat {
         }
 
         public void RemoveReplaceTexture( string gamePath ) {
+            gamePath = gamePath.Trim( '\0' );
             if( PathToTextureReplace.ContainsKey( gamePath ) && PathToTextureReplace.TryRemove( gamePath, out var oldValue ) ) File.Delete( oldValue.LocalPath );
         }
 
@@ -123,32 +128,34 @@ namespace VfxEditor.TextureFormat {
         }
 
         public TextureFile GetRawTexture( string gamePath ) {
+            gamePath = gamePath.Trim( '\0' );
             return PathToTextureReplace.TryGetValue( gamePath, out var texturePreview ) ? TextureFile.LoadFromLocal( texturePreview.LocalPath ) : Plugin.DataManager.GetFile<TextureFile>( gamePath );
         }
 
         public void LoadPreviewTexture( string gamePath ) {
-            var trimmedPath = gamePath.Trim( '\u0000' );
+            gamePath = gamePath.Trim( '\0' );
             if( PathToTexturePreview.ContainsKey( gamePath ) ) return; // Already loaded
 
-            var result = CreatePreviewTexture( trimmedPath, out var tex );
+            var result = CreatePreviewTexture( gamePath, out var tex );
             if( result && tex.Wrap != null ) {
                 PathToTexturePreview.TryAdd( gamePath, tex );
             }
         }
 
         public void RefreshPreviewTexture( string gamePath ) {
-            var paddedPath = gamePath + '\u0000';
-            if( PathToTexturePreview.ContainsKey( paddedPath ) ) {
-                if( PathToTexturePreview.TryRemove( paddedPath, out var oldValue ) ) {
+            gamePath = gamePath.Trim( '\0' );
+            if( PathToTexturePreview.ContainsKey( gamePath ) ) {
+                if( PathToTexturePreview.TryRemove( gamePath, out var oldValue ) ) {
                     oldValue.Wrap?.Dispose();
                 }
             }
-            LoadPreviewTexture( paddedPath );
+            LoadPreviewTexture( gamePath );
         }
 
-        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( gamePath, out data );
+        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( gamePath.Trim('\0'), out data );
 
         public bool CreatePreviewTexture( string gamePath, out PreviewTexture ret, bool loadImage = true ) {
+            gamePath = gamePath.Trim( '\0' );
             var result = Plugin.DataManager.FileExists( gamePath ) || PathToTextureReplace.ContainsKey( gamePath );
             ret = new PreviewTexture();
             if( result ) {

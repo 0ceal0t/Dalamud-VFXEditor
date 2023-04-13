@@ -1,4 +1,5 @@
 using Dalamud.Logging;
+using Lumina;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
@@ -88,8 +89,9 @@ namespace VfxEditor.TextureFormat {
         }
 
         // import replacement texture from atex
-        private bool ImportAtex( string localPath, string replacePath, int height, int width, int depth, int mips, TextureFormat format ) {
-            var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + ".atex" );
+        private bool ImportAtex( string localPath, string gamePath, int height, int width, int depth, int mips, TextureFormat format ) {
+            var gameFileExtension = gamePath.Split( '.' )[^1].Trim( '\0' );
+            var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
             File.Copy( localPath, path, true );
 
             var replaceData = new TextureReplace {
@@ -100,7 +102,7 @@ namespace VfxEditor.TextureFormat {
                 Format = format,
                 LocalPath = path
             };
-            return ReplaceAndRefreshTexture( replaceData, replacePath );
+            return ReplaceAndRefreshTexture( replaceData, gamePath );
         }
 
         public CopyManager GetCopyManager() => null;

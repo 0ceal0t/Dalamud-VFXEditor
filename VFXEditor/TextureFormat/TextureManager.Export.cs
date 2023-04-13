@@ -42,7 +42,8 @@ namespace VfxEditor.TextureFormat {
             List<WorkspaceMetaTex> texMeta = new();
 
             foreach( var entry in PathToTextureReplace ) {
-                var newPath = $"VFX_{texId++}.atex";
+                var extension = Path.GetExtension( entry.Value.LocalPath );
+                var newPath = $"VFX_{texId++}{extension}";
                 var newFullPath = Path.Combine( texRootPath, newPath );
                 File.Copy( entry.Value.LocalPath, newFullPath, true );
 

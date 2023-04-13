@@ -19,7 +19,7 @@ namespace ImGuiFileDialog {
         private static Vector4 IMAGE_TEXT_COLOR = new( 0.31372549020f, 0.98039215686f, 0.48235294118f, 1f );
         private static Vector4 STANDARD_TEXT_COLOR = new( 1f );
 
-        private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex" };
+        private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex", "tex" };
 
         private struct IconColorItem {
             public char Icon;
@@ -467,7 +467,9 @@ namespace ImGuiFileDialog {
                 await Task.Run( () => {
                     lock( PreviewLock ) {
                         var path = Path.Combine( file.FilePath, file.FileName );
-                        if( file.Ext.ToLower() == "dds" ) {
+                        var ext = file.Ext.ToLower();
+
+                        if( ext == "dds" ) {
                             var ddsFile = DDSFile.Read( path );
                             if( ddsFile == null ) return;
 
@@ -491,7 +493,7 @@ namespace ImGuiFileDialog {
 
                             ddsFile.Dispose();
                         }
-                        else if( file.Ext.ToLower() == "atex" ) {
+                        else if( ext == "atex" || ext == "tex" ) {
                             var tex = TextureFile.LoadFromLocal( path );
                             if( tex == null ) return;
 

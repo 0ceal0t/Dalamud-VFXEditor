@@ -21,6 +21,10 @@ namespace VfxEditor.Interop {
 
         public static readonly string ResourceManagerSig = "48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 32 C0";
 
+        public static readonly string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 c0 74 ?? 45 0f b6 ce 48 89 44 24";
+        public static readonly string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
+        public static readonly string LoadTexFileExternSig = "E8 ?? ?? ?? ?? 0F B6 E8 48 8B CB E8";
+
         // https://github.com/aers/FFXIVClientStructs/blob/fe20b24789a5b2c3eaae1e02b974187769615353/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs#L46
         public static readonly int RenderOffset = 0x114;
 

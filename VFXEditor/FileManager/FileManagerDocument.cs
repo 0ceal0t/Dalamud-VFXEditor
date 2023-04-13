@@ -215,8 +215,8 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawExtraColumn() { }
 
         protected void DisplaySearchBars() {
-            var sourceString = SourceDisplay;
-            var previewString = ReplaceDisplay;
+            var sourceString = SourceDisplay ?? "";
+            var previewString = ReplaceDisplay ?? "";
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );

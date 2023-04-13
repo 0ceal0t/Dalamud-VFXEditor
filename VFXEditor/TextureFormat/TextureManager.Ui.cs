@@ -21,7 +21,7 @@ namespace VfxEditor.TextureFormat {
             ImGui.SameLine();
 
             var path = NewCustomPath.Trim().Trim( '\0' );
-            var importDisabled = string.IsNullOrEmpty( path ) || PathToTexturePreview.ContainsKey( path );
+            var importDisabled = string.IsNullOrEmpty( path ) || PathToTextureReplace.ContainsKey( path );
             if( importDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
             if( ImGui.Button( $"Import Texture{id}" ) && !importDisabled ) {
                 ImportDialog( path );
@@ -40,15 +40,13 @@ namespace VfxEditor.TextureFormat {
 
             ImGui.BeginChild( id + "/Child", new Vector2( -1, -1 ), true );
 
-            if( PathToTextureReplace.Count == 0 ) {
-                ImGui.Text( "No textures have been imported..." );
-            }
+            if( PathToTextureReplace.Count == 0 ) ImGui.Text( "No textures have been imported..." );
 
             var idx = 0;
             foreach( var entry in PathToTextureReplace ) {
                 if( ImGui.CollapsingHeader( $"{entry.Key}##{id}-{idx}" ) ) {
                     ImGui.Indent();
-                    DrawTexture( entry.Key + '\u0000', $"{id}-{idx}" );
+                    DrawTexture( entry.Key, $"{id}-{idx}" );
                     ImGui.Unindent();
                 }
                 idx++;
@@ -60,22 +58,22 @@ namespace VfxEditor.TextureFormat {
         public void DrawTexture( string path, string id ) {
             if( GetPreviewTexture( path, out var texture ) ) {
                 ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
-                ImGui.TextDisabled( $"Format: {texture.Format}  MIPS: {texture.MipLevels}  SIZE: {texture.Width}x{texture.Height}" );
+                ImGui.TextDisabled( $"Format: {texture.Format}  Mips: {texture.MipLevels}  Size: {texture.Width}x{texture.Height}" );
 
                 if( ImGui.Button( "Export" + id ) ) ImGui.OpenPopup( "Tex_Export" + id );
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" + id ) ) ImportDialog( path.Trim( '\0' ) );
+                if( ImGui.Button( "Replace" + id ) ) ImportDialog( path );
                 if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                    if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path.Trim( '\0' ) );
-                    if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path.Trim( '\0' ) );
+                    if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path );
+                    if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path );
                     ImGui.EndPopup();
                 }
 
                 if( texture.IsReplaced ) {
                     ImGui.SameLine();
                     if( UiUtils.RemoveButton( "Remove Replaced Texture" + id ) ) {
-                        RemoveReplaceTexture( path.Trim( '\0' ) );
-                        RefreshPreviewTexture( path.Trim( '\0' ) );
+                        RemoveReplaceTexture( path );
+                        RefreshPreviewTexture( path );
                     }
                 }
             }
