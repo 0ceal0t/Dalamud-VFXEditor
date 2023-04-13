@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiNodeGroup<AvfxTimeline> Timelines;
         public readonly UiNodeGroup<AvfxScheduler> Schedulers;
 
-        private readonly List<UiNodeGroup> AllGroups;
+        protected readonly List<UiNodeGroup> AllGroups;
 
         public UiNodeGroupSet( AvfxMain main ) {
             Effectors = new UiNodeGroup<AvfxEffector>( main.Effectors );
@@ -41,12 +41,12 @@ namespace VfxEditor.AvfxFormat {
 
         public Dictionary<string, string> GetRenamingMap() {
             Dictionary<string, string> ret = new();
-            AllGroups.ForEach( group => group.PopulateWorkspaceMeta( ret ) );
+            AllGroups.ForEach( group => group.GetRenamingMap( ret ) );
             return ret;
         }
 
         public void ReadRenamingMap( Dictionary<string, string> renamingMap ) {
-            AllGroups.ForEach( group => group.ReadWorkspaceMeta( renamingMap ) );
+            AllGroups.ForEach( group => group.ReadRenamingMap( renamingMap ) );
         }
 
         public void PreImport() => AllGroups.ForEach( group => group.PreImport() );
@@ -70,11 +70,11 @@ namespace VfxEditor.AvfxFormat {
         public abstract void PreImport();
         public abstract void PostImport();
         public abstract void Dispose();
-        public abstract void PopulateWorkspaceMeta( Dictionary<string, string> meta );
-        public abstract void ReadWorkspaceMeta( Dictionary<string, string> meta );
+        public abstract void GetRenamingMap( Dictionary<string, string> meta );
+        public abstract void ReadRenamingMap( Dictionary<string, string> meta );
     }
 
-    public class UiNodeGroup<T> : UiNodeGroup where T : AvfxNode {
+    public class UiNodeGroup<T> : UiNodeGroup where T : IWorkspaceUiItem {
         public readonly List<T> Items;
 
         public Action OnInit;
@@ -114,11 +114,11 @@ namespace VfxEditor.AvfxFormat {
             OnImportFinish = null;
         }
 
-        public override void PopulateWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, meta ) );
+        public override void GetRenamingMap( Dictionary<string, string> meta ) {
+            Items.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, meta ) );
         }
-        public override void ReadWorkspaceMeta( Dictionary<string, string> meta ) {
-            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, meta ) );
+        public override void ReadRenamingMap( Dictionary<string, string> meta ) {
+            Items.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, meta ) );
         }
 
         public void AddAndUpdate( T item ) {

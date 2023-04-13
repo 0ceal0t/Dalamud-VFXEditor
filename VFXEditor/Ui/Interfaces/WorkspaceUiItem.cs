@@ -14,12 +14,12 @@ namespace VfxEditor.Ui.Interfaces {
         public void GetChildrenRename( Dictionary<string, string> RenameDict );
         public void SetChildrenRename( Dictionary<string, string> RenameDict );
 
-        public static void PopulateMeta( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
+        public static void GetRenamingMap( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
             if( !string.IsNullOrEmpty( item.GetRenamed() ) ) renameDict[item.GetWorkspaceId()] = item.GetRenamed();
             item.GetChildrenRename( renameDict );
         }
 
-        public static void ReadMeta( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
+        public static void ReadRenamingMap( IWorkspaceUiItem item, Dictionary<string, string> renameDict ) {
             if( renameDict.TryGetValue( item.GetWorkspaceId(), out var renamed ) ) item.SetRenamed( renamed );
             item.SetChildrenRename( renameDict );
         }

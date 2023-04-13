@@ -164,7 +164,7 @@ namespace VfxEditor.AvfxFormat {
             ForceOpenTabs.Clear();
         }
 
-        // ========== WORKSPACE ======
+        // ========== WORKSPACE ==========
 
         public Dictionary<string, string> GetRenamingMap() => NodeGroupSet.GetRenamingMap();
 

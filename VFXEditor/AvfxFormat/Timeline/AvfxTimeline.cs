@@ -122,13 +122,13 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
-            Clips.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Items.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
+            Clips.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
         }
 
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
-            Clips.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Items.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
+            Clips.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
 
         public override string GetDefaultText() => $"Timeline {GetIdx()}";

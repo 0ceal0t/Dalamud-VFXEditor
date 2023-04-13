@@ -5,7 +5,7 @@ using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaAvfx> {
+    public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
         public readonly AvfxNodeLibrary NodeLibrary;
 
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override AvfxDocument GetNewDocument() => new( this, LocalPath );
 
-        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaAvfx data, string localPath ) => 
+        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => 
             new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
 
         protected override void DrawMenu() {

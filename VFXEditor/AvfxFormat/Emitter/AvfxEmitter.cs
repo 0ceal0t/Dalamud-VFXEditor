@@ -280,13 +280,13 @@ namespace VfxEditor.AvfxFormat {
         public override string GetWorkspaceId() => $"Emit{GetIdx()}";
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
-            Emitters.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
-            Particles.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Emitters.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
+            Particles.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
         }
 
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
-            Emitters.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
-            Particles.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Emitters.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
+            Particles.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
 
         public bool HasSound => Sound.IsAssigned() && SoundNumber.GetValue() > 0 && Sound.GetValue().Trim( '\0' ).Length > 0;

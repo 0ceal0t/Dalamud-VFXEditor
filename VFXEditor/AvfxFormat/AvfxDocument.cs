@@ -9,7 +9,7 @@ using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaAvfx> {
+    public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaRenamed> {
         private DateTime LastUpdate = DateTime.Now;
         private string SpawnPath => Replace.Path;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
@@ -19,11 +19,13 @@ namespace VfxEditor.AvfxFormat {
         public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) {
             AvfxManager = manager;
         }
+
         public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
             base( manager, writeLocation, localPath, source, replace, "Vfx", "avfx" ) {
             AvfxManager = manager;
         }
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaAvfx data ) : this( manager, writeLocation, localPath, data.Source, data.Replace ) {
+
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
             AvfxManager = manager;
         }
@@ -67,7 +69,7 @@ namespace VfxEditor.AvfxFormat {
             SetSource( newResult );
         }
 
-        public override WorkspaceMetaAvfx GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,

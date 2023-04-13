@@ -6,11 +6,11 @@ using System.IO;
 using VfxEditor.Select;
 
 namespace VfxEditor.Utils {
-    public struct WorkspaceMetaAvfx {
+    public struct WorkspaceMetaRenamed {
         public SelectResult Source;
         public SelectResult Replace;
         public Dictionary<string, string> Renaming;
-        public string RelativeLocation; // can be empty if no avfx file
+        public string RelativeLocation;
     }
 
     public struct WorkspaceMetaTex {

@@ -103,13 +103,13 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
-            Triggers.ForEach( item => IWorkspaceUiItem.PopulateMeta( item, renameDict ) );
+            Items.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
+            Triggers.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
         }
 
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
-            Triggers.ForEach( item => IWorkspaceUiItem.ReadMeta( item, renameDict ) );
+            Items.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
+            Triggers.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
 
         public override string GetDefaultText() => $"Scheduler {GetIdx()}";

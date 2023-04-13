@@ -1,10 +1,12 @@
 using Dalamud.Logging;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
 using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Component.Node;
 using VfxEditor.UldFormat.Headers;
@@ -178,6 +180,26 @@ namespace VfxEditor.UldFormat {
                 }
                 ImGui.EndTabBar();
             }
+        }
+
+        // ========== WORKSPACE ==========
+
+        public Dictionary<string, string> GetRenamingMap() {
+            Dictionary<string, string> ret = new();
+            Textures.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
+            Parts.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
+            Components.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
+            Timelines.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
+            Widgets.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
+            return ret;
+        }
+
+        public void ReadRenamingMap( Dictionary<string, string> renamingMap ) {
+            Textures.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renamingMap ) );
+            Parts.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renamingMap ) );
+            Components.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renamingMap ) );
+            Timelines.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renamingMap ) );
+            Widgets.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renamingMap ) );
         }
     }
 }

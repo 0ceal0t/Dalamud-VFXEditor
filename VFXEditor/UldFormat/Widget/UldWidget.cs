@@ -99,11 +99,11 @@ namespace VfxEditor.UldFormat.Widget {
         public override string GetWorkspaceId() => $"Widget{GetIdx()}";
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
-            Nodes.ForEach( x => IWorkspaceUiItem.PopulateMeta( x, renameDict ) );
+            Nodes.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, renameDict ) );
         }
 
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
-            Nodes.ForEach( x => IWorkspaceUiItem.ReadMeta( x, renameDict ) );
+            Nodes.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renameDict ) );
         }
     }
 }
