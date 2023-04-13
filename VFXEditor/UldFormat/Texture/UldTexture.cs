@@ -67,7 +67,7 @@ namespace VfxEditor.UldFormat.Texture {
             Id.Draw( id, CommandManager.Uld );
 
             Path.Draw( id, CommandManager.Uld );
-            Plugin.TextureManager.DrawTexture( UpdateTexture(), id, isVfx: false );
+            Plugin.TextureManager.DrawTexture( UpdateTexture(), id );
 
             IconId.Draw( id, CommandManager.Uld );
             UpdateIcon();

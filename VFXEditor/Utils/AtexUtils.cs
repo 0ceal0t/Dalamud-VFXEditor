@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VfxEditor.Utils {
     public static class AtexUtils {
-        public static List<byte> CreateAtexHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
+        public static List<byte> CreateTextureHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
 
             short texFormatCode = 0;
@@ -38,10 +38,12 @@ namespace VfxEditor.Utils {
             headerData.AddRange( BitConverter.GetBytes( 1 ) );
             headerData.AddRange( BitConverter.GetBytes( 2 ) );
             var mipLength = format switch {
+                TextureFormat.TextureFormat.R4G4B4A4 => ( newWidth * newHeight ) * 2,
                 TextureFormat.TextureFormat.DXT1 => ( newWidth * newHeight ) / 2,
                 TextureFormat.TextureFormat.DXT5 or TextureFormat.TextureFormat.A8 => newWidth * newHeight,
                 _ => ( newWidth * newHeight ) * 4,
             };
+
             var combinedLength = 80;
             for( var i = 0; i < newMipCount; i++ ) {
                 headerData.AddRange( BitConverter.GetBytes( combinedLength ) );
@@ -53,6 +55,7 @@ namespace VfxEditor.Utils {
                     mipLength = 16;
                 }
             }
+
             var padding = 80 - headerData.Count;
             headerData.AddRange( new byte[padding] );
             return headerData;

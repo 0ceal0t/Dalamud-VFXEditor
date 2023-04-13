@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
@@ -12,6 +13,8 @@ namespace VfxEditor.UldFormat.PartList {
         private readonly ParsedUInt V = new( "V", size: 2 );
         private readonly ParsedUInt W = new( "W", size: 2 );
         private readonly ParsedUInt H = new( "H", size: 2 );
+
+        public UldTexture CurrentTexture => Plugin.UldManager.CurrentFile.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
 
         public UldPartItem() { }
 
@@ -34,9 +37,9 @@ namespace VfxEditor.UldFormat.PartList {
         public void Draw( string id ) {
             TextureId.Draw( id, CommandManager.Uld );
 
-            var texture = Plugin.UldManager.CurrentFile.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
-            if( texture != null ) {
-                Plugin.TextureManager.DrawTextureUv( texture.Path.Value, U.Value, V.Value, W.Value, H.Value );
+            var currentTexture = CurrentTexture;
+            if( currentTexture != null ) {
+                Plugin.TextureManager.DrawTextureUv( currentTexture.Path.Value, U.Value, V.Value, W.Value, H.Value );
             }
 
             U.Draw( id, CommandManager.Uld );

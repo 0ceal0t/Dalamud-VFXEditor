@@ -20,7 +20,7 @@ namespace VfxEditor.TextureFormat {
 
             ImGui.SameLine();
 
-            var path = NewCustomPath.Trim().Trim( '\0' ).ToLower();
+            var path = NewCustomPath.Trim().Trim( '\0' );
             var importDisabled = string.IsNullOrEmpty( path ) || PathToTexturePreview.ContainsKey( path );
             if( importDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
             if( ImGui.Button( $"Import Texture{id}" ) && !importDisabled ) {
@@ -57,20 +57,18 @@ namespace VfxEditor.TextureFormat {
             ImGui.EndChild();
         }
 
-        public void DrawTexture( string path, string id, bool isVfx = true ) {
+        public void DrawTexture( string path, string id ) {
             if( GetPreviewTexture( path, out var texture ) ) {
                 ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
-                ImGui.Text( $"Format: {texture.Format}  MIPS: {texture.MipLevels}  SIZE: {texture.Width}x{texture.Height}" );
+                ImGui.TextDisabled( $"Format: {texture.Format}  MIPS: {texture.MipLevels}  SIZE: {texture.Width}x{texture.Height}" );
 
-                if( isVfx ) {
-                    if( ImGui.Button( "Export" + id ) ) ImGui.OpenPopup( "Tex_Export" + id );
-                    ImGui.SameLine();
-                    if( ImGui.Button( "Replace" + id ) ) ImportDialog( path.Trim( '\0' ) );
-                    if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                        if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path.Trim( '\0' ) );
-                        if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path.Trim( '\0' ) );
-                        ImGui.EndPopup();
-                    }
+                if( ImGui.Button( "Export" + id ) ) ImGui.OpenPopup( "Tex_Export" + id );
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace" + id ) ) ImportDialog( path.Trim( '\0' ) );
+                if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
+                    if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path.Trim( '\0' ) );
+                    if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path.Trim( '\0' ) );
+                    ImGui.EndPopup();
                 }
 
                 if( texture.IsReplaced ) {
@@ -93,7 +91,7 @@ namespace VfxEditor.TextureFormat {
         }
 
         private void ImportDialog( string newPath ) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.dds},.*", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,." + newPath.Split('.')[^1].Trim('\0') + ",.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( !ImportTexture( res, newPath, pngMip: ( ushort )PngMip, pngFormat: PngFormat ) ) PluginLog.Error( $"Could not import" );

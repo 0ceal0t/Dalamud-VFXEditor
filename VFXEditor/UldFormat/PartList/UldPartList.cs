@@ -36,7 +36,10 @@ namespace VfxEditor.UldFormat.PartList {
 
             for( var idx = 0; idx < Parts.Count; idx++ ) {
                 var item = Parts[idx];
-                if( ImGui.CollapsingHeader( $"Part {idx} (Texture {item.TextureId.Value})" ) ) {
+                var currentTexture = item.CurrentTexture;
+                var text = currentTexture != null ? currentTexture.GetText() : $"Texture {item.TextureId.Value}";
+
+                if( ImGui.CollapsingHeader( $"Part {idx} ({text}){id}" ) ) {
                     ImGui.Indent();
 
                     if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
