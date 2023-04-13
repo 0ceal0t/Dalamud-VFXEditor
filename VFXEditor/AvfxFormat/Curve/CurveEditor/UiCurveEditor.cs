@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Data;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiCurveEditor : IAvfxUiBase {
+    public class UiCurveEditor : IUiItem {
         private static int EditorCount = 0;
 
         public readonly List<UiCurveEditorPoint> Selected = new();

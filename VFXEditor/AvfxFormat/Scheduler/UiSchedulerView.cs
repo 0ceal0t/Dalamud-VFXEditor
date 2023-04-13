@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class UiScheduleView : UiNodeDropdownView<AvfxScheduler> {
-        public UiScheduleView( AvfxFile file, UiNodeGroup<AvfxScheduler> group ) : base( file, group, "Scheduler", false, false, "" ) { }
+        public UiScheduleView( AvfxFile file, NodeGroup<AvfxScheduler> group ) : base( file, group, "Scheduler", false, false, "" ) { }
 
         public override void OnSelect( AvfxScheduler item ) { }
 

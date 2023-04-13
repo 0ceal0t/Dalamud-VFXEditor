@@ -1,9 +1,10 @@
 using System;
 using System.IO;
+using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class UiTimelineView : UiNodeDropdownView<AvfxTimeline> {
-        public UiTimelineView( AvfxFile file, UiNodeGroup<AvfxTimeline> group ) : base( file, group, "Timeline", true, true, "default_timeline.vfxedit" ) { }
+        public UiTimelineView( AvfxFile file, NodeGroup<AvfxTimeline> group ) : base( file, group, "Timeline", true, true, "default_timeline.vfxedit" ) { }
 
         public override void OnSelect( AvfxTimeline item ) { }
 

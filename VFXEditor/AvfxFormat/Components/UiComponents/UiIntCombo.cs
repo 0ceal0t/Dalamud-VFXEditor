@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiIntCombo : IAvfxUiBase {
+    public class UiIntCombo : IUiItem {
         public readonly string Name;
         public readonly AvfxInt Literal;
 

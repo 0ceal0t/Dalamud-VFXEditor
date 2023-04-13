@@ -2,6 +2,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Nodes;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -76,15 +78,15 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed2;
 
         private readonly UiNodeGraphView NodeView;
-        public readonly UiNodeGroupSet NodeGroups;
+        public readonly AvfxNodeGroupSet NodeGroups;
 
         public readonly AvfxDisplaySplitView<AvfxItem> AnimationDisplaySplit;
 
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
 
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
-        public AvfxParticle( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.ParticleColor ) {
+        public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor ) {
             NodeGroups = groupSet;
 
             // Initialize the remaining ones
@@ -327,7 +329,7 @@ namespace VfxEditor.AvfxFormat {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             NodeView.Draw( id );
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             ImGui.EndChild();
         }
 

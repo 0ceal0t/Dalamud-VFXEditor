@@ -1,14 +1,15 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
+using VfxEditor.Ui.Interfaces;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeSelect : IAvfxUiBase {
+    public abstract class UiNodeSelect : IUiItem {
         public readonly AvfxNode Node;
         protected bool OnChangeLinked = false;
 
@@ -60,12 +61,12 @@ namespace VfxEditor.AvfxFormat {
     public class UiNodeSelect<T> : UiNodeSelect where T : AvfxNode {
         public T Selected = null;
         public readonly AvfxInt Literal;
-        public readonly UiNodeGroup<T> Group; // the group being selected from
+        public readonly NodeGroup<T> Group; // the group being selected from
         public readonly string Name;
 
         private bool Enabled = true;
 
-        public UiNodeSelect( AvfxNode node, string name, UiNodeGroup<T> group, AvfxInt literal ) : base( node ) {
+        public UiNodeSelect( AvfxNode node, string name, NodeGroup<T> group, AvfxInt literal ) : base( node ) {
             Name = name;
             Group = group;
             Literal = literal;

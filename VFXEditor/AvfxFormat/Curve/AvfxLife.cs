@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -13,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<RandomType> ValRandomType = new( "Random Type", "Type" );
 
         private readonly List<AvfxBase> Parsed;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
         public AvfxLife() : base( "Life" ) {
             Value.SetValue( -1 );
@@ -52,7 +53,7 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawAssigned( string parentId ) {
             var id = parentId + "/Life";
             AssignedCopyPaste( this, GetDefaultText() );
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
         }
 
         public override void DrawUnassigned( string id ) {

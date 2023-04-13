@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -50,7 +51,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly List<AvfxEmitterItem> Emitters = new();
 
         private readonly UiNodeGraphView NodeView;
-        public readonly UiNodeGroupSet NodeGroups;
+        public readonly AvfxNodeGroupSet NodeGroups;
 
         public readonly UiNodeSelect<AvfxEffector> EffectorSelect;
 
@@ -58,9 +59,9 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly UiEmitterSplitView EmitterSplit;
         public readonly UiEmitterSplitView ParticleSplit;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
-        public AvfxEmitter( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.EmitterColor ) {
+        public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor ) {
             NodeGroups = groupSet;
 
             Parsed = new() {
@@ -234,7 +235,7 @@ namespace VfxEditor.AvfxFormat {
             Sound.Draw( id );
             SoundNumber.Draw( id );
 
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             ImGui.EndChild();
         }
 

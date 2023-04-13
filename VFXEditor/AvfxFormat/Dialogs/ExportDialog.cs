@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Ui;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -85,11 +86,11 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private class ExportDialogCategory<T> : ExportDialogCategory where T : AvfxNode {
-            public UiNodeGroup<T> Group;
+            public NodeGroup<T> Group;
             public string HeaderText;
             public string Id;
 
-            public ExportDialogCategory( UiNodeGroup<T> group, string text ) {
+            public ExportDialogCategory( NodeGroup<T> group, string text ) {
                 Group = group;
                 Reset();
                 Group.OnChange += Reset;

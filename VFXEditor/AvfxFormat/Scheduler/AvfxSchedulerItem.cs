@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxSchedulerItem : GenericWorkspaceItem {
@@ -15,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
 
         public UiNodeSelect<AvfxTimeline> TimelineSelect;
 
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
         public AvfxSchedulerItem( AvfxScheduler scheduler, string name, bool initNodeSelects ) {
             Scheduler = scheduler;
@@ -47,7 +48,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/" + Name;
             DrawRename( id );
             TimelineSelect.Draw( id );
-            IAvfxUiBase.DrawList( Display, id );
+            AvfxBase.DrawItems( Display, id );
         }
 
         public override string GetDefaultText() => TimelineSelect.GetText();

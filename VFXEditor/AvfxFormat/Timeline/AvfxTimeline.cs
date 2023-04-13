@@ -2,7 +2,9 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTimeline : AvfxNode {
@@ -19,15 +21,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly List<AvfxTimelineClip> Clips = new();
         public readonly List<AvfxTimelineItem> Items = new();
 
-        public readonly UiNodeGroupSet NodeGroups;
+        public readonly AvfxNodeGroupSet NodeGroups;
 
         public readonly UiNodeSelect<AvfxBinder> BinderSelect;
 
         public readonly UiTimelineClipSplitView ClipSplit;
         public readonly UiTimelineItemSequencer ItemSplit;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
-        public AvfxTimeline( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.TimelineColor ) {
+        public AvfxTimeline( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
             Parsed = new List<AvfxBase> {
@@ -117,7 +119,7 @@ namespace VfxEditor.AvfxFormat {
         private void DrawParameters( string id ) {
             ImGui.BeginChild( id );
             BinderSelect.Draw( id );
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             ImGui.EndChild();
         }
 

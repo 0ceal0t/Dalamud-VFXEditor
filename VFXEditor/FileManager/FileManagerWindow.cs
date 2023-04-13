@@ -164,7 +164,10 @@ namespace VfxEditor.FileManager {
 
         public void WorkspaceImport( JObject meta, string loadLocation ) {
             var items = WorkspaceUtils.ReadFromMeta<S>( meta, WorkspaceKey );
-            if( items == null ) return;
+            if( items == null ) {
+                AddDocument();
+                return;
+            }
             foreach( var item in items ) {
                 var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
                 ActiveDocument = newDocument;

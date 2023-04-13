@@ -27,7 +27,7 @@ namespace VfxEditor.ScdFormat {
         public void Draw( string id ) {
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
-                if( ImGui.CollapsingHeader( $"Item #{idx} ({item.Type.Value}){id}{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value}){id}{idx}" ) ) {
                     ImGui.Indent();
 
                     if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE

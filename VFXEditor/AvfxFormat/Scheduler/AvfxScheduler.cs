@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
@@ -19,9 +20,9 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly UiNodeGroupSet NodeGroups;
+        public readonly AvfxNodeGroupSet NodeGroups;
 
-        public AvfxScheduler( UiNodeGroupSet groupSet ) : base( NAME, UiNodeGroup.SchedColor ) {
+        public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
             Parsed = new() {

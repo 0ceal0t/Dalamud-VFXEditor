@@ -2,9 +2,10 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiFloat2 : IAvfxUiBase {
+    public class UiFloat2 : IUiItem {
         public readonly UiParsedFloat2 Parsed;
         private readonly List<AvfxBase> Literals;
 

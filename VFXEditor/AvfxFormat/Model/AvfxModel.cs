@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using VfxEditor.AvfxFormat.Model;
 using VfxEditor.Utils;
 using static VfxEditor.DirectX.ModelPreview;
+using VfxEditor.AvfxFormat.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxModel : AvfxNode {
@@ -29,7 +30,7 @@ namespace VfxEditor.AvfxFormat {
         private bool Refresh = false;
         private readonly UiModelUvView UvView;
 
-        public AvfxModel() : base( NAME, UiNodeGroup.ModelColor ) {
+        public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
             Parsed = new() {
                 EmitVertexNumbers,
                 EmitVertexes,

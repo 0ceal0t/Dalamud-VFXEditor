@@ -1,18 +1,19 @@
 using ImGuiNET;
 using System;
 using System.IO;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class UiNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
-        public readonly UiNodeGroup<T> Group;
+        public readonly NodeGroup<T> Group;
 
         public readonly string Id;
         public readonly string DefaultText;
         public readonly string DefaultPath;
 
-        public UiNodeSplitView( AvfxFile file, UiNodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( group.Items, allowNew, allowDelete ) {
+        public UiNodeSplitView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( group.Items, allowNew, allowDelete ) {
             File = file;
             Group = group;
 
@@ -38,7 +39,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void ResetSelected() { Selected = null; }
 
-        public UiNodeGroup<T> GetGroup() => Group;
+        public NodeGroup<T> GetGroup() => Group;
 
         public string GetDefaultPath() => DefaultPath;
 

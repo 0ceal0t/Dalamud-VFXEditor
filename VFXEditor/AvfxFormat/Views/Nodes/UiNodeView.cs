@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public interface IUiNodeView<T> : IAvfxUiBase where T : AvfxNode {
-        public UiNodeGroup<T> GetGroup();
+    public interface IUiNodeView<T> : IUiItem where T : AvfxNode {
+        public NodeGroup<T> GetGroup();
         public string GetDefaultPath();
 
         public bool IsAllowedNew();

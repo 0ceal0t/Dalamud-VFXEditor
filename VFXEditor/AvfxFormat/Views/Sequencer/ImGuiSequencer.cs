@@ -7,7 +7,7 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class ImGuiSequencer<T> : IAvfxUiBase where T : class, ISelectableUiItem {
+    public abstract class ImGuiSequencer<T> : IUiItem where T : class, ISelectableUiItem {
         private enum MovingType : int {
             LeftHandle = 1,
             RightHandle = 2,

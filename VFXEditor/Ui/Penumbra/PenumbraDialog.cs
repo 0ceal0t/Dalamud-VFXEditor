@@ -73,9 +73,7 @@ namespace VfxEditor.Penumbra {
                 };
 
                 Directory.CreateDirectory( modFolder );
-                var modConfig = Path.Combine( modFolder, "meta.json" );
-                var configString = JsonConvert.SerializeObject( mod );
-                File.WriteAllText( modConfig, configString );
+                File.WriteAllText( Path.Combine( modFolder, "meta.json" ), JsonConvert.SerializeObject( mod ) );
 
                 foreach( var manager in Plugin.Managers ) {
                     if( manager == null ) continue;

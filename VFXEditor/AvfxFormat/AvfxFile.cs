@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -23,11 +25,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiScheduleView ScheduleView;
         public readonly UiBinderView BinderView;
 
-        public readonly UiNodeGroupSet NodeGroupSet;
+        public readonly AvfxNodeGroupSet NodeGroupSet;
 
         public readonly ExportDialog ExportUi;
 
-        private readonly HashSet<IAvfxUiBase> ForceOpenTabs = new();
+        private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Data.CopyManager.Avfx ) ) {
             byte[] original = null;
@@ -80,7 +82,7 @@ namespace VfxEditor.AvfxFormat {
             ExportUi.Draw();
         }
 
-        private unsafe void DrawView( IAvfxUiBase view, string label ) {
+        private unsafe void DrawView( IUiItem view, string label ) {
             var labelBytes = Encoding.UTF8.GetBytes( label + "##Main" );
             var labelRef = stackalloc byte[labelBytes.Length + 1];
             Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );

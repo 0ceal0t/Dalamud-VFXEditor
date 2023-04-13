@@ -2,10 +2,11 @@ using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class UiNodeRemover<T> where T : AvfxNode {
-        private readonly UiNodeGroup<T> Group;
+        private readonly NodeGroup<T> Group;
         private readonly IUiNodeView<T> View;
         private readonly T Item;
         private int Idx;
@@ -14,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly Dictionary<UiNodeSelect, List<AvfxNode>> RemovedFromParents = new();
         private readonly Dictionary<UiNodeSelect, List<int>> ParentsSelectIdx = new();
 
-        public UiNodeRemover( IUiNodeView<T> view, UiNodeGroup<T> group, T item ) {
+        public UiNodeRemover( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
             View = view;
             Group = group;
             Item = item;

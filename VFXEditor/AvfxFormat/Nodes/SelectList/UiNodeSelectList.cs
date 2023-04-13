@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Data;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class UiNodeSelectList<T> : UiNodeSelect where T : AvfxNode {
         public List<T> Selected = new();
         public readonly AvfxIntList Literal;
-        public readonly UiNodeGroup<T> Group; // the group being selected from
+        public readonly NodeGroup<T> Group; // the group being selected from
         public readonly string Name;
 
         private bool Enabled = true;
 
-        public UiNodeSelectList( AvfxNode node, string name, UiNodeGroup<T> group, AvfxIntList literal ) : base( node ) {
+        public UiNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal ) : base( node ) {
             Name = name;
             Group = group;
             Literal = literal;

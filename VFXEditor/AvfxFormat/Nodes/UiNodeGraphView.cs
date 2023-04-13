@@ -2,10 +2,11 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiNodeGraphView : IAvfxUiBase {
+    public class UiNodeGraphView : IUiItem {
         public AvfxNode Node;
         private static readonly uint BgColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
         private static readonly uint BgColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );

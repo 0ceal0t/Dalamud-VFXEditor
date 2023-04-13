@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -45,9 +46,9 @@ namespace VfxEditor.AvfxFormat {
         public UiNodeSelect<AvfxParticle> ParticleSelect;
         public UiNodeSelect<AvfxEmitter> EmitterSelect;
 
-        private readonly List<IAvfxUiBase> Display;
-        private readonly List<IAvfxUiBase> CoordOptionsDisplay;
-        private readonly List<IAvfxUiBase> Display2;
+        private readonly List<IUiItem> Display;
+        private readonly List<IUiItem> CoordOptionsDisplay;
+        private readonly List<IUiItem> Display2;
 
         public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects ) {
             IsParticle = isParticle;
@@ -132,16 +133,16 @@ namespace VfxEditor.AvfxFormat {
             if( IsParticle ) ParticleSelect.Draw( id );
             else EmitterSelect.Draw( id );
 
-            IAvfxUiBase.DrawList( Display, id );
+            AvfxBase.DrawItems( Display, id );
 
             ParentInfluenceCoord.Draw( id );
             var influenceType = ParentInfluenceCoord.GetValue();
             var allowOptions = influenceType == ParentInfluenceCoordOptions.InitialPosition_WithOptions || influenceType == ParentInfluenceCoordOptions.WithOptions_NoPosition;
             if( !allowOptions ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            IAvfxUiBase.DrawList( CoordOptionsDisplay, id );
+            AvfxBase.DrawItems( CoordOptionsDisplay, id );
             if( !allowOptions ) ImGui.PopStyleVar();
 
-            IAvfxUiBase.DrawList( Display2, id );
+            AvfxBase.DrawItems( Display2, id );
         }
 
         public override string GetDefaultText() => IsParticle ? ParticleSelect.GetText() : EmitterSelect.GetText();

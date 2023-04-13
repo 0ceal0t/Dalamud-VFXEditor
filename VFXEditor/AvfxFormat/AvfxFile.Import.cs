@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -110,7 +111,7 @@ namespace VfxEditor.AvfxFormat {
             if( hasDependencies ) NodeGroupSet.PostImport();
         }
 
-        private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, UiNodeGroup<T> group, CompoundCommand command ) where T : AvfxNode {
+        private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, NodeGroup<T> group, CompoundCommand command ) where T : AvfxNode {
             foreach( var pos in positions ) {
                 reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
                 var item = view.Read( reader, pos.Size );

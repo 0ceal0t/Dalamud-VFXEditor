@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTimelineItem : GenericWorkspaceItem {
@@ -22,7 +23,7 @@ namespace VfxEditor.AvfxFormat {
         public UiNodeSelect<AvfxEmitter> EmitterSelect;
         public UiNodeSelect<AvfxEffector> EffectorSelect;
 
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
@@ -70,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
             BinderSelect.Draw( id );
             EmitterSelect.Draw( id );
             EffectorSelect.Draw( id );
-            IAvfxUiBase.DrawList( Display, id );
+            AvfxBase.DrawItems( Display, id );
 
             var clipAssigned = ClipIdx.IsAssigned();
             if( ImGui.Checkbox( "Clip Enabled" + id, ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );

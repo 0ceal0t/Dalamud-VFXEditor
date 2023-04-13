@@ -1,16 +1,17 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
-using ImPlotNET;
 using System;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
+using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeDropdownView<T> : IAvfxUiBase, IUiNodeView<T> where T : AvfxNode {
+    public abstract class UiNodeDropdownView<T> : IUiItem, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
-        public readonly UiNodeGroup<T> Group;
+        public readonly NodeGroup<T> Group;
 
         public readonly string Id;
         public readonly string DefaultText;
@@ -20,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
 
         public T Selected = null;
 
-        public UiNodeDropdownView( AvfxFile file, UiNodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
+        public UiNodeDropdownView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
             File = file;
             Group = group;
             AllowNew = allowNew;
@@ -89,7 +90,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void ResetSelected() { Selected = null; }
 
-        public UiNodeGroup<T> GetGroup() => Group;
+        public NodeGroup<T> GetGroup() => Group;
 
         public string GetDefaultPath() => DefaultPath;
 

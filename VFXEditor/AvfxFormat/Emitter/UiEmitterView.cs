@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class UiEmitterView : UiNodeDropdownView<AvfxEmitter> {
-        public UiEmitterView( AvfxFile file, UiNodeGroup<AvfxEmitter> group ) : base( file, group, "Emitter", true, true, "default_emitter.vfxedit" ) { }
+        public UiEmitterView( AvfxFile file, NodeGroup<AvfxEmitter> group ) : base( file, group, "Emitter", true, true, "default_emitter.vfxedit" ) { }
 
         public override void OnSelect( AvfxEmitter item ) { }
 

@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiFloat3 : IAvfxUiBase {
+    public class UiFloat3 : IUiItem {
         public readonly UiParsedFloat3 Parsed;
         private readonly List<AvfxBase> Literals;
 

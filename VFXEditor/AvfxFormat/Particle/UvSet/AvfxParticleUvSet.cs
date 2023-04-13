@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -14,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxItem> Curves;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
         public AvfxParticleUvSet() : base( "UvSt" ) {
             Parsed = new() {
@@ -45,7 +46,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Draw( string parentId ) {
             var id = parentId + "/UV";
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawNamedItems( Curves, parentId );
         }

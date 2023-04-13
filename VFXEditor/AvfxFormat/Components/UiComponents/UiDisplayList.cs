@@ -1,27 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    // Dummy class
-
     public class UiDisplayList : AvfxItem {
         public readonly string Name;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
 
         public UiDisplayList( string name ) : base( "" ) {
             Name = name;
-            Display = new List<IAvfxUiBase>();
+            Display = new List<IUiItem>();
             SetAssigned( true );
         }
 
-        public void Add( IAvfxUiBase item ) => Display.Add( item );
+        public void Add( IUiItem item ) => Display.Add( item );
 
-        public void Remove( IAvfxUiBase item ) => Display.Remove( item );
+        public void Remove( IUiItem item ) => Display.Remove( item );
 
-        public void Prepend( IAvfxUiBase item ) => Display.Insert( 0, item );
+        public void Prepend( IUiItem item ) => Display.Insert( 0, item );
 
-        public override void Draw( string id ) => IAvfxUiBase.DrawList( Display, id );
+        public override void Draw( string id ) => AvfxBase.DrawItems( Display, id );
 
         public override string GetDefaultText() => Name;
 

@@ -2,6 +2,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -18,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveKeys Keys = new();
 
         private readonly List<AvfxBase> Parsed;
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
         private readonly UiCurveEditor CurveEditor;
 
         private readonly string Name;
@@ -64,7 +65,7 @@ namespace VfxEditor.AvfxFormat {
             var id = parentId + "/" + Name;
             AssignedCopyPaste( this, Name );
             if( !Locked && DrawRemoveButton( this, Name, id ) ) return;
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             CurveEditor.Draw( id );
         }
 

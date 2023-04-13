@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxTimelineClipType : IAvfxUiBase {
+    public class AvfxTimelineClipType : IUiItem {
         private static readonly Dictionary<string, string> IdOptions = new() {
             { "LLIK", "Kill" },
             { "TSER", "Reset" },

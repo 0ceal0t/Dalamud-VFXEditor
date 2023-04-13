@@ -2,6 +2,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Nodes;
+using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -70,7 +72,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat GlobalFogInfluence = new( "Global Fog Influence", "GFIM" );
         public readonly AvfxBool LTSEnabled = new( "LTS Enabled", "bLTS" );
 
-        public readonly UiNodeGroupSet NodeGroupSet;
+        public readonly AvfxNodeGroupSet NodeGroupSet;
 
         private readonly List<AvfxBase> Parsed;
 
@@ -83,7 +85,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly List<AvfxTexture> Textures = new();
         public readonly List<AvfxModel> Models = new();
 
-        private readonly List<IAvfxUiBase> Display;
+        private readonly List<IUiItem> Display;
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
@@ -278,7 +280,7 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleZ.SetValue( ScaleCombined );
             };
 
-            IAvfxUiBase.DrawList( Display, id );
+            DrawItems( Display, id );
             ImGui.Text( $"VFX Version: {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
             ImGui.EndChild();
         }
