@@ -39,7 +39,8 @@ namespace VfxEditor.UldFormat.PartList {
 
             var currentTexture = CurrentTexture;
             if( currentTexture != null ) {
-                Plugin.TextureManager.DrawTextureUv( currentTexture.Path.Value, U.Value, V.Value, W.Value, H.Value );
+                var path = currentTexture.IconId.Value > 0 ? currentTexture.GetIconPath( false ) : currentTexture.Path.Value;
+                if( !string.IsNullOrEmpty( path ) ) Plugin.TextureManager.DrawTextureUv( path, U.Value, V.Value, W.Value, H.Value );
             }
 
             U.Draw( id, CommandManager.Uld );

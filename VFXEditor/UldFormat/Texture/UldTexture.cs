@@ -11,7 +11,7 @@ using VfxEditor.Select;
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : UldWorkspaceItem {
         public readonly ParsedString Path = new( "Path", maxSize: 44 );
-        private readonly ParsedUInt IconId = new( "Icon Id" );
+        public readonly ParsedUInt IconId = new( "Icon Id" );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
 
         private string LoadedTexturePath = "";
@@ -85,6 +85,8 @@ namespace VfxEditor.UldFormat.Texture {
 
         private string TexturePath => ShowHd ? Path.Value.Replace( ".tex", "_hr1.tex" ) : Path.Value;
 
-        private string IconPath => string.Format( "ui/icon/{0:D3}000/{1:D6}{2}.tex", IconId.Value / 1000, IconId.Value, ShowHd ? "_hr1" : "" );
+        private string IconPath => GetIconPath( ShowHd );
+
+        public string GetIconPath( bool hd ) => string.Format( "ui/icon/{0:D3}000/{1:D6}{2}.tex", IconId.Value / 1000, IconId.Value, hd ? "_hr1" : "" );
     }
 }
