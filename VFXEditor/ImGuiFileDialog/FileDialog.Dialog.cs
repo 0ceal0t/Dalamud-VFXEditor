@@ -486,7 +486,7 @@ namespace ImGuiFileDialog {
                                 br.Read( data, 0, ( int )uncompressedLength );
 
                                 var format = TextureFile.DXGItoTextureFormat( ddsFile.Format );
-                                var convertedData = TextureFile.BGRA_to_RGBA( TextureFile.Convert( data, format, width, height ) );
+                                var convertedData = TextureFile.BgraToRgba( TextureFile.Convert( data, format, width, height ) );
                                 var temp = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
                                 PreviewWrap = temp;
                             }

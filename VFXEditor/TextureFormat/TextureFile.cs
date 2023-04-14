@@ -34,7 +34,7 @@ namespace VfxEditor.TextureFormat {
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
             Header = Reader.ReadStructure<TexHeader>();
-            ImageData = BGRA_to_RGBA( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
+            ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ( ImageData.Length > 0 );
         }
 
@@ -43,7 +43,7 @@ namespace VfxEditor.TextureFormat {
             br.BaseStream.Position = 0;
             Header = br.ReadStructure<TexHeader>();
             RawData = br.ReadBytes( size - HeaderLength );
-            ImageData = BGRA_to_RGBA( Convert( new Span<byte>( RawData ), Header.Format, Header.Width, Header.Height ) );
+            ImageData = BgraToRgba( Convert( new Span<byte>( RawData ), Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ( ImageData.Length > 0 );
         }
 
@@ -164,7 +164,7 @@ namespace VfxEditor.TextureFormat {
             Array.Copy( dec, dst, dst.Length );
         }
 
-        public static byte[] BGRA_to_RGBA( byte[] data ) {
+        public static byte[] BgraToRgba( byte[] data ) {
             var ret = new byte[data.Length];
             for( var i = 0; i < data.Length / 4; i++ ) {
                 var idx = i * 4;

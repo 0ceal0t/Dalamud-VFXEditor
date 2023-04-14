@@ -15,8 +15,9 @@ namespace VfxEditor.UldFormat.Texture {
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
 
         private string LoadedTexturePath = "";
-        private uint LoadedIconId = 0;
-        private TextureWrap Icon;
+        private string LoadedIconPath = "";
+
+        private bool ShowHd = false;
 
         public UldTexture() { }
 
@@ -33,25 +34,19 @@ namespace VfxEditor.UldFormat.Texture {
         }
 
         private string UpdateTexture() {
-            if( Path.Value != LoadedTexturePath ) { // Path changed
-                LoadedTexturePath = Path.Value;
-                Plugin.TextureManager.LoadPreviewTexture( Path.Value );
+            if( LoadedTexturePath != TexturePath ) { // Path changed
+                LoadedTexturePath = TexturePath;
+                Plugin.TextureManager.LoadPreviewTexture( TexturePath );
             }
-            return Path.Value;
+            return TexturePath;
         }
 
-        private void UpdateIcon() {
-            if( IconId.Value != LoadedIconId ) { // Icon changed
-                LoadedIconId = IconId.Value;
-                Icon?.Dispose();
-                Icon = null;
-                if( LoadedIconId > 0 ) {
-                    TexFile tex;
-                    try { tex = Plugin.DataManager.GetIcon( LoadedIconId ); }
-                    catch( Exception ) { tex = Plugin.DataManager.GetIcon( 0 ); }
-                    Icon = Plugin.PluginInterface.UiBuilder.LoadImageRaw( SelectTabUtils.BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
-                }
+        private string UpdateIcon() {
+            if( LoadedIconPath != IconPath ) { // Icon changed
+                LoadedIconPath = IconPath;
+                if( IconId.Value > 0 ) Plugin.TextureManager.LoadPreviewTexture( IconPath );
             }
+            return IconPath;
         }
 
         public void Write( BinaryWriter writer, char minorVersion ) {
@@ -67,12 +62,18 @@ namespace VfxEditor.UldFormat.Texture {
             Id.Draw( id, CommandManager.Uld );
 
             Path.Draw( id, CommandManager.Uld );
-            Plugin.TextureManager.DrawTexture( UpdateTexture(), id );
+            if( !string.IsNullOrEmpty( Path.Value ) ) {
+                ImGui.Checkbox( $"Show Hd{id}", ref ShowHd );
+                if( ShowHd ) ImGui.TextDisabled( TexturePath );
+                Plugin.TextureManager.DrawTexture( UpdateTexture(), id );
+            }
 
             IconId.Draw( id, CommandManager.Uld );
             UpdateIcon();
-            if( IconId.Value > 0 && Icon != null && Icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( Icon.ImGuiHandle, new Vector2( Icon.Width, Icon.Height ) );
+            if( IconId.Value > 0 ) {
+                ImGui.Checkbox( $"Show Hd{id}", ref ShowHd );
+                ImGui.TextDisabled( IconPath );
+                Plugin.TextureManager.DrawTexture( UpdateIcon(), id );
             }
 
             Unk1.Draw( id, CommandManager.Uld );
@@ -81,5 +82,9 @@ namespace VfxEditor.UldFormat.Texture {
         public override string GetDefaultText() => $"Texture {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Texture{GetIdx()}";
+
+        private string TexturePath => ShowHd ? Path.Value.Replace( ".tex", "_hr1.tex" ) : Path.Value;
+
+        private string IconPath => string.Format( "ui/icon/{0:D3}000/{1:D6}{2}.tex", IconId.Value / 1000, IconId.Value, ShowHd ? "_hr1" : "" );
     }
 }
