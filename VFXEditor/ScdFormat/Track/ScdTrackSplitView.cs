@@ -5,7 +5,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.ScdFormat.Track {
     public class ScdTrackSplitView : SimpleSplitView<ScdTrackEntry> {
-        public ScdTrackSplitView( List<ScdTrackEntry> items ) : base( "Track", items, true ) { }
+        public ScdTrackSplitView( List<ScdTrackEntry> items ) : base( "Track", items, true, false ) { }
 
         protected override void OnNew() {
             CommandManager.Scd.Add( new GenericAddCommand<ScdTrackEntry>( Items, new ScdTrackEntry() ) );

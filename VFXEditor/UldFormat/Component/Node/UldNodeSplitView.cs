@@ -8,7 +8,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         private readonly List<UldComponent> Components;
         private readonly UldWorkspaceItem Parent;
 
-        public UldNodeSplitView( List<UldNode> items, List<UldComponent> components, UldWorkspaceItem parent ) : base( "Node", items, true ) {
+        public UldNodeSplitView( List<UldNode> items, List<UldComponent> components, UldWorkspaceItem parent ) : base( "Node", items, true, true ) {
             Components = components;
             Parent = parent;
         }

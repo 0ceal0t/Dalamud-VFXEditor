@@ -75,7 +75,7 @@ namespace VfxEditor.ScdFormat
             LayoutView = new( Layouts );
             SoundView = new( Sounds );
             TrackView = new( Tracks );
-            AttributeView = new( "Attribute", Attributes );
+            AttributeView = new( "Attribute", Attributes, false, false );
         }
 
         public override void Draw( string id ) {

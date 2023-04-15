@@ -35,11 +35,12 @@ namespace VfxEditor.AvfxFormat {
             ImGui.PopFont();
         }
 
-        protected override void DrawLeftItem( T item, int idx, string id ) {
+        protected override bool DrawLeftItem( T item, int idx, string id ) {
             if( ImGui.Selectable( $"{item.GetText()}{id}{idx}", Selected == item ) ) {
                 OnSelect( item );
                 Selected = item;
             }
+            return false;
         }
 
         protected override void DrawSelected( string id ) => Selected.Draw( id );

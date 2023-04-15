@@ -5,7 +5,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldKeyGroupSplitView : SimpleSplitView<UldKeyGroup> {
-        public UldKeyGroupSplitView( List<UldKeyGroup> items ) : base( "Key Group", items, true ) { }
+        public UldKeyGroupSplitView( List<UldKeyGroup> items ) : base( "Key Group", items, true, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldKeyGroup>( Items, new UldKeyGroup() ) );

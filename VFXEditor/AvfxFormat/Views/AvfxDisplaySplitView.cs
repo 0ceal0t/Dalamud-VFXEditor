@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Items.Where( x => !x.IsAssigned() ) ) item.Draw( id );
         }
 
-        protected override void DrawLeftItem( T item, int idx, string id ) { }
+        protected override bool DrawLeftItem( T item, int idx, string id ) => false;
 
         protected override void DrawSelected( string id ) {
             if( Selected.IsAssigned() ) Selected.Draw( id );

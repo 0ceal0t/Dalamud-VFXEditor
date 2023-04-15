@@ -28,11 +28,12 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawControls( string id ) => IUiNodeView<T>.DrawControls( this, File, id );
 
-        protected override void DrawLeftItem( T item, int idx, string id ) {
+        protected override bool DrawLeftItem( T item, int idx, string id ) {
             if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
                 Selected = item;
                 OnSelect( item );
             }
+            return false;
         }
 
         protected override void DrawSelected( string id ) => Selected.Draw( Id );

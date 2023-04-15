@@ -169,7 +169,7 @@ namespace VfxEditor.Utils {
                         header.AddRange( BitConverter.GetBytes( dwABitMask ) );
                         const uint dwCaps = 4096;
                         header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                        byte[] blank1 = new byte[16];
+                        var blank1 = new byte[16];
                         header.AddRange( blank1 );
                         break;
                     }

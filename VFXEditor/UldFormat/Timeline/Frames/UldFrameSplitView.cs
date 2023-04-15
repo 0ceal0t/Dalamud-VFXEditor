@@ -5,7 +5,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldFrameSplitView : SimpleSplitView<UldFrame> {
-        public UldFrameSplitView( List<UldFrame> items ) : base( "Frame", items, true ) { }
+        public UldFrameSplitView( List<UldFrame> items ) : base( "Frame", items, true, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldFrame>( Items, new UldFrame() ) );

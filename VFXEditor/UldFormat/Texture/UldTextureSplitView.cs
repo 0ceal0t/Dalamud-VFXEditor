@@ -6,7 +6,7 @@ using VfxEditor.UldFormat.PartList;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTextureSplitView : SimpleSplitView<UldTexture> {
-        public UldTextureSplitView( List<UldTexture> items ) : base( "Texture", items, true ) { }
+        public UldTextureSplitView( List<UldTexture> items ) : base( "Texture", items, true, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldTexture>( Items, new UldTexture() ) );

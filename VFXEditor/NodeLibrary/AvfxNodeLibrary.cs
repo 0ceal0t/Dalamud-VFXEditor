@@ -9,18 +9,11 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.NodeLibrary {
     public class AvfxNodeLibrary : GenericDialog {
-        public enum DraggingState {
-            NotDragging,
-            Dragging,
-            Waiting
-        }
-
         private readonly AvfxNodeLibraryFolder Root;
         private readonly string RootPath;
 
         private string SearchInput = string.Empty;
         private AvfxNodeLibraryGeneric DraggingItem = null;
-        public DraggingState DragState = DraggingState.NotDragging;
 
         public AvfxNodeLibrary( List<AvfxNodeLibraryProps> items, string rootPath ) : base( "Node Library", false, 500, 750 ) {
             Root = new( null, null, null, items );
@@ -28,11 +21,6 @@ namespace VfxEditor.NodeLibrary {
         }
 
         public override void DrawBody() {
-            DragState = DragState switch {
-                DraggingState.Dragging => DraggingState.Waiting,
-                _ => DraggingState.NotDragging
-            };
-
             ImGui.TextDisabled( "Save VFX nodes here using the button:" );
             ImGui.SameLine();
             UiUtils.IconText( FontAwesomeIcon.BookMedical, true );

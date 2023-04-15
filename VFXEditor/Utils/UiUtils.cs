@@ -17,6 +17,12 @@ namespace VfxEditor.Utils {
         OK
     };
 
+    public enum DraggingState {
+        NotDragging,
+        Dragging,
+        Waiting
+    };
+
     public static class UiUtils {
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );

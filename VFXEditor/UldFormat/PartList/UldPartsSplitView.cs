@@ -5,7 +5,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartsSplitView : SimpleSplitView<UldPartList> {
-        public UldPartsSplitView( List<UldPartList> items ) : base( "Part Lists", items, true ) { }
+        public UldPartsSplitView( List<UldPartList> items ) : base( "Part Lists", items, true, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldPartList>( Items, new UldPartList() ) );

@@ -20,7 +20,7 @@ namespace VfxEditor.Ui.Components {
         protected virtual void DrawLeftColumn( string id ) {
             if( Selected != null && !Items.Contains( Selected ) ) Selected = null;
             for( var idx = 0; idx < Items.Count; idx++ ) {
-                DrawLeftItem( Items[idx], idx, id );
+                if( DrawLeftItem( Items[idx], idx, id ) ) break; // break if list modified
             }
         }
 
@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.Components {
             else DrawSelected( id );
         }
 
-        protected abstract void DrawLeftItem( T item, int idx, string id );
+        protected abstract bool DrawLeftItem( T item, int idx, string id );
 
         protected abstract void DrawSelected( string id );
 

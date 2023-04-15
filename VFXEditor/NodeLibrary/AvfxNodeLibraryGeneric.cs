@@ -1,9 +1,5 @@
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VfxEditor.Utils;
 
 namespace VfxEditor.NodeLibrary {
     public abstract class AvfxNodeLibraryGeneric {
@@ -26,7 +22,6 @@ namespace VfxEditor.NodeLibrary {
         protected void DragDrop( AvfxNodeLibrary library, ref bool listModified ) {
             if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
                 library.StartDragging( this );
-                library.DragState = AvfxNodeLibrary.DraggingState.Dragging;
                 ImGui.Text( "..." );
                 ImGui.EndDragDropSource();
             }

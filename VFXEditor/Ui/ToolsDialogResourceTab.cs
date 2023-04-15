@@ -72,7 +72,7 @@ namespace VfxEditor.Ui {
                 while( !node->IsNil ) {
                     var path = node->KeyValuePair.Item2.Value->FileName.ToString();
 
-                    if( string.IsNullOrEmpty( Search ) || path.Contains( Search ) ) { // match against search
+                    if( string.IsNullOrEmpty( Search ) || path.ToLower().Contains( Search.ToLower() ) ) { // match against search
                         itemList.Add( new ResourceItemStruct {
                             Hash = node->KeyValuePair.Item1,
                             Address = ( ulong )node->KeyValuePair.Item2.Value,
