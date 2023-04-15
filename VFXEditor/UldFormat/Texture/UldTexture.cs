@@ -10,7 +10,7 @@ using VfxEditor.Select;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : UldWorkspaceItem {
-        public readonly ParsedString Path = new( "Path", defaultValue: "", maxSize: 44 );
+        public readonly ParsedString Path = new( "Path", maxSize: 44 );
         public readonly ParsedUInt IconId = new( "Icon Id" );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
 

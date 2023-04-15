@@ -18,6 +18,7 @@ namespace VfxEditor.Parsing {
 
         public ParsedString( string name, uint maxSize = 255 ) {
             Name = name;
+            Value = "";
             MaxSize = maxSize;
         }
 

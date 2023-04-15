@@ -47,8 +47,8 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt ChildNodeId = new( "Child Node Id" );
 
         public bool IsComponentNode = false;
-        public readonly ParsedEnum<NodeType> Type = new( "Type" ); // TODO: command
-        public readonly ParsedInt ComponentTypeId = new( "Component Id" ); // TODO: change on update
+        public readonly ParsedEnum<NodeType> Type = new( "Type" );
+        public readonly ParsedInt ComponentTypeId = new( "Component Id" );
         public UldGenericData Data = null;
 
         private readonly List<ParsedBase> Parsed;
