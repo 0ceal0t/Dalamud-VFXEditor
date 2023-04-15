@@ -49,7 +49,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedSimpleCommand<string>( this, Value, StateBeforeEdit ) );
+                manager.Add( new ParsedSimpleCommand<string>( this, StateBeforeEdit, Value ) );
             }
         }
 
