@@ -19,23 +19,15 @@ namespace VfxEditor.AvfxFormat {
         protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => 
             new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
 
-        protected override void DrawMenu() {
-            if( CurrentFile == null ) return;
-
-            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                GetCopyManager().Draw();
-                GetCommandManager().Draw();
-
-                if( ImGui.BeginMenu( "Templates##Menu" ) ) {
-                    if( ImGui.MenuItem( "Blank##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_vfx.avfx" );
-                    if( ImGui.MenuItem( "Weapon##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_weapon.avfx" );
-                    ImGui.EndMenu();
-                }
-
-                if( ImGui.MenuItem( "Clean up##Menu" ) ) CurrentFile.Cleanup();
-
+        protected override void DrawEditMenuExtra() {
+            if( ImGui.BeginMenu( "Templates##Menu" ) ) {
+                if( ImGui.MenuItem( "Blank##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_vfx.avfx" );
+                if( ImGui.MenuItem( "Weapon##Menu" ) ) ActiveDocument?.OpenTemplate( @"default_weapon.avfx" );
                 ImGui.EndMenu();
             }
+
+            if( CurrentFile == null ) return;
+            if( ImGui.MenuItem( "Clean up##Menu" ) ) CurrentFile.Cleanup();
         }
 
         public override void DrawBody() {

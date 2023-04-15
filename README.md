@@ -50,7 +50,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] `.uld` texture replacement (`.tex` files)
+- [ ] Ability to drag/reorder elements (dropdown/split view/collapsing headers)
 - [ ] `.uld` selection dropdowns
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)

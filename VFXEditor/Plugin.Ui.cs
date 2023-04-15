@@ -7,6 +7,7 @@ using VfxEditor.Penumbra;
 using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
 using VfxEditor.Tracker;
+using VfxEditor.FileManager;
 
 namespace VfxEditor {
     public partial class Plugin {
@@ -73,15 +74,22 @@ namespace VfxEditor {
             }
         }
 
-        public static void DrawManagersMenu() {
+        public static void DrawManagersMenu( IFileManager manager ) {
             if( ImGui.MenuItem( "Textures##Menu" ) ) TextureManager.Show();
             ImGui.Separator();
-            if( ImGui.MenuItem( "Vfx##Menu" ) ) AvfxManager.Show();
-            if( ImGui.MenuItem( "Tmb##Menu" ) ) TmbManager.Show();
-            if( ImGui.MenuItem( "Pap##Menu" ) ) PapManager.Show();
-            if( ImGui.MenuItem( "Scd##Menu" ) ) ScdManager.Show();
-            if( ImGui.MenuItem( "Eid##Menu" ) ) EidManager.Show();
-            if( ImGui.MenuItem( "Uld##Menu" ) ) UldManager.Show();
+            DrawManagerMenu( manager, "Vfx##Menu", AvfxManager );
+            DrawManagerMenu( manager, "Tmb##Menu", TmbManager );
+            DrawManagerMenu( manager, "Pap##Menu", PapManager );
+            DrawManagerMenu( manager, "Scd##Menu", ScdManager );
+            DrawManagerMenu( manager, "Eid##Menu", EidManager );
+            DrawManagerMenu( manager, "Uld##Menu", UldManager );
+        }
+
+        private static void DrawManagerMenu( IFileManager manager, string text, IFileManager menuManager ) {
+            var disabled = manager == menuManager;
+            if( disabled ) ImGui.BeginDisabled();
+            if( ImGui.MenuItem( text ) ) menuManager.Show();
+            if( disabled ) ImGui.EndDisabled();
         }
     }
 }

@@ -112,15 +112,7 @@ namespace VfxEditor.FileManager {
             return false;
         }
 
-        protected virtual void DrawMenu() {
-            if( CurrentFile == null ) return;
-
-            if( ImGui.BeginMenu( "Edit##Menu" ) ) {
-                GetCopyManager().Draw();
-                GetCommandManager().Draw();
-                ImGui.EndMenu();
-            }
-        }
+        protected virtual void DrawEditMenuExtra() { }
 
         public override void DrawBody() {
             SourceSelect?.Draw();
@@ -132,10 +124,15 @@ namespace VfxEditor.FileManager {
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawFileMenu();
-                DrawMenu();
-                if( ImGui.MenuItem( $"Documents##{WindowTitle}/Menu" ) ) DocumentWindow.Show();
+                if( CurrentFile != null && ImGui.BeginMenu( $"Edit##{Id}" ) ) {
+                    GetCopyManager().Draw();
+                    GetCommandManager().Draw();
+                    DrawEditMenuExtra();
+                    ImGui.EndMenu();
+                }
+                if( ImGui.MenuItem( $"Documents##{Id}" ) ) DocumentWindow.Show();
                 ImGui.Separator();
-                Plugin.DrawManagersMenu();
+                Plugin.DrawManagersMenu( this );
 
                 ImGui.EndMenuBar();
             }

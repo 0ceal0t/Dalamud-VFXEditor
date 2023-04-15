@@ -10,6 +10,12 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
+        private enum PostConversion {
+            None,
+            A8,
+            R4444
+        }
+
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
         public bool ImportTexture( string localPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
             gamePath = gamePath.Trim( '\0' );
@@ -67,7 +73,13 @@ namespace VfxEditor.TextureFormat {
                     var ddsData = ms.ToArray();
 
                     using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateTexture( pngFormat, ddsData, writer, convertToA8: ( pngFormat == TextureFormat.A8 ) );
+                        var postConversion = pngFormat switch {
+                            TextureFormat.A8 => PostConversion.A8,
+                            TextureFormat.R4G4B4A4 => PostConversion.R4444,
+                            _ => PostConversion.None
+                        };
+
+                        replaceData = CreateTexture( pngFormat, ddsData, writer, postConversion );
                     }
                     ddsContainer.Dispose();
                 }
@@ -98,7 +110,7 @@ namespace VfxEditor.TextureFormat {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/Textures/FileTypes/Tex.cs#L1002
-        private static TextureReplace CreateTexture( TextureFormat format, byte[] dds, BinaryWriter writer, bool convertToA8 = false ) {
+        private static TextureReplace CreateTexture( TextureFormat format, byte[] dds, BinaryWriter writer, PostConversion post = PostConversion.None ) {
             // Get DDS info
             using var ddsMs = new MemoryStream( dds );
             using var ddsReader = new BinaryReader( ddsMs );
@@ -120,7 +132,8 @@ namespace VfxEditor.TextureFormat {
             var ddsData = new byte[uncompressedLength];
             ddsReader.Read( ddsData, 0, ( int )uncompressedLength );
             // scuffed way to handle png -> A8. Just load is as BGRA, then only keep the A channel
-            if( convertToA8 ) ddsData = TextureFile.CompressA8( ddsData );
+            // Not currently used
+            if( post == PostConversion.A8 ) ddsData = TextureFile.CompressA8( ddsData );
 
             writer.Write( ddsData );
 

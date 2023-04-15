@@ -5,7 +5,7 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.UldFormat {
     public abstract class UldWorkspaceItem : IWorkspaceUiItem {
-        public readonly ParsedUInt Id = new( "Id" );
+        public readonly ParsedUInt Id = new( "Id", 1, size: 4 );
         public string Renamed;
         private string RenamedTemp;
         private bool CurrentlyRenaming = false;

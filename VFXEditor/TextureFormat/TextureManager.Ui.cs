@@ -10,7 +10,13 @@ namespace VfxEditor.TextureFormat {
         private string NewCustomPath = string.Empty;
         private int PngMip = 9;
         private TextureFormat PngFormat = TextureFormat.DXT5;
-        private static readonly TextureFormat[] ValidPngFormat = new[] { TextureFormat.DXT5, TextureFormat.DXT3, TextureFormat.DXT1, TextureFormat.A8, TextureFormat.A8R8G8B8 };
+
+        private static readonly TextureFormat[] ValidPngFormat = new[] {
+            TextureFormat.DXT5,
+            TextureFormat.DXT3,
+            TextureFormat.DXT1,
+            TextureFormat.A8R8G8B8,
+        };
 
         public override void DrawBody() {
             var id = "##ImportTex";

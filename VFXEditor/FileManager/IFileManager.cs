@@ -22,5 +22,7 @@ namespace VfxEditor.FileManager {
 
         public void ToDefault();
         public void Dispose();
+
+        public void Show();
     }
 }

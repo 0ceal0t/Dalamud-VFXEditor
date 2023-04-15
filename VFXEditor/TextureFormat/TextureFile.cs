@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
 using System;
@@ -101,6 +102,9 @@ namespace VfxEditor.TextureFormat {
                     dst = new byte[src.Length];
                     src.CopyTo( dst );
                     break;
+                case TextureFormat.R4G4B4A4: // ui/uld/TargetInfo.tex
+                    Read4444( src.ToArray(), dst, width, height );
+                    break;
                 case TextureFormat.A8:
                     DecompressA8( src, dst, width, height );
                     break;
@@ -117,6 +121,7 @@ namespace VfxEditor.TextureFormat {
                 DXGIFormat.BC2_UNorm => TextureFormat.DXT3,
                 DXGIFormat.BC3_UNorm => TextureFormat.DXT5,
                 DXGIFormat.B8G8R8A8_UNorm => TextureFormat.A8R8G8B8,
+                DXGIFormat.B4G4R4A4_UNorm => TextureFormat.R4G4B4A4,
                 _ => TextureFormat.Null,
             };
         }
@@ -126,7 +131,7 @@ namespace VfxEditor.TextureFormat {
                 TextureFormat.DXT1 => CompressionFormat.BC1a,
                 TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
-                TextureFormat.A8R8G8B8 or TextureFormat.A8 => CompressionFormat.BGRA,
+                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
             };
         }
@@ -162,6 +167,29 @@ namespace VfxEditor.TextureFormat {
         public static void DecompressDxt5( Span<byte> src, byte[] dst, int width, int height ) {
             var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT5 );
             Array.Copy( dec, dst, dst.Length );
+        }
+
+        public static void Read4444( byte[] src, byte[] dst, int width, int height ) {
+            using var ms = new MemoryStream( src );
+            using var reader = new BinaryReader( ms );
+
+            var idx = 0;
+            for( var y = 0; y < height; y++ ) {
+                for( var x = 0; x < width; x++ ) {
+                    var pixel = reader.ReadUInt16() & 0xFFFF;
+                    var blue = ( ( pixel & 0xF ) ) * 16;
+                    var green = ( ( pixel & 0xF0 ) >> 4 ) * 16;
+                    var red = ( ( pixel & 0xF00 ) >> 8 ) * 16;
+                    var alpha = ( ( pixel & 0xF000 ) >> 12 ) * 16;
+
+                    dst[idx * 4 + 0] = ( byte )blue;
+                    dst[idx * 4 + 1] = ( byte )green;
+                    dst[idx * 4 + 2] = ( byte )red;
+                    dst[idx * 4 + 3] = ( byte )alpha;
+
+                    idx++;
+                }
+            }
         }
 
         public static byte[] BgraToRgba( byte[] data ) {

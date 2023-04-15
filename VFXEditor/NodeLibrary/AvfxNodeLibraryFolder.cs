@@ -53,7 +53,10 @@ namespace VfxEditor.NodeLibrary {
 
                 ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
                 ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
-                if( ImGui.BeginChild( $"{id}-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false ) ) ImGui.EndChild();
+
+                ImGui.BeginChild( $"{id}-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
+                ImGui.EndChild();
+
                 if( ImGui.BeginDragDropTarget() ) {
                     if( library.StopDragging( this, overridePosition: true ) ) listModified = true;
                     ImGui.EndDragDropTarget();
@@ -141,7 +144,10 @@ namespace VfxEditor.NodeLibrary {
 
                 ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
                 ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
-                if( ImGui.BeginChild( $"{id}-end-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false ) ) ImGui.EndChild();
+
+                ImGui.BeginChild( $"{id}-end-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
+                ImGui.EndChild();
+
                 if( ImGui.BeginDragDropTarget() ) {
                     if( library.StopDragging( this ) ) listModified = true;
                     ImGui.EndDragDropTarget();

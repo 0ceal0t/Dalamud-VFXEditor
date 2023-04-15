@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace VfxEditor.Utils {
+    // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
     public static class AtexUtils {
         public static List<byte> CreateTextureHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
@@ -23,6 +24,9 @@ namespace VfxEditor.Utils {
                     break;
                 case TextureFormat.TextureFormat.A8R8G8B8:
                     texFormatCode = 5200;
+                    break;
+                case TextureFormat.TextureFormat.R4G4B4A4:
+                    texFormatCode = 5184;
                     break;
             }
 
@@ -85,6 +89,9 @@ namespace VfxEditor.Utils {
             else if( format == TextureFormat.TextureFormat.DXT1 ) {
                 dwPitchOrLinearSize = ( dwHeight * dwWidth ) / 2;
             }
+            else if( format == TextureFormat.TextureFormat.R4G4B4A4 ) {
+                dwPitchOrLinearSize = ( dwHeight * dwWidth ) * 2;
+            }
             else {
                 dwPitchOrLinearSize = dwHeight * dwWidth;
             }
@@ -98,7 +105,8 @@ namespace VfxEditor.Utils {
 
             header.AddRange( BitConverter.GetBytes( ( uint )32 ) );
             var pfFlags = format switch {
-                TextureFormat.TextureFormat.A8R8G8B8 or TextureFormat.TextureFormat.A8 => 2,
+                TextureFormat.TextureFormat.A8R8G8B8 or TextureFormat.TextureFormat.R4G4B4A4 => 65,
+                TextureFormat.TextureFormat.A8 => 2,
                 _ => 4,
             };
             header.AddRange( BitConverter.GetBytes( pfFlags ) );
@@ -114,6 +122,7 @@ namespace VfxEditor.Utils {
                     dwFourCC = 0x35545844;
                     break;
                 case TextureFormat.TextureFormat.A8R8G8B8:
+                case TextureFormat.TextureFormat.R4G4B4A4:
                 case TextureFormat.TextureFormat.A8:
                     dwFourCC = 0;
                     break;
@@ -125,6 +134,7 @@ namespace VfxEditor.Utils {
                 var bytes = Encoding.UTF8.GetBytes( "DX10" );
                 dwFourCC = BitConverter.ToUInt32( bytes, 0 );
             }
+
             header.AddRange( BitConverter.GetBytes( dwFourCC ) );
 
             switch( format ) {
@@ -144,6 +154,23 @@ namespace VfxEditor.Utils {
                         var blank1 = new byte[16];
                         header.AddRange( blank1 );
 
+                        break;
+                    }
+                case TextureFormat.TextureFormat.R4G4B4A4: {
+                        const uint dwRGBBitCount = 16;
+                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
+                        const uint dwRBitMask = 3840;
+                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
+                        const uint dwGBitMask = 240;
+                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
+                        const uint dwBBitMask = 15;
+                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
+                        const uint dwABitMask = 61440;
+                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
+                        const uint dwCaps = 4096;
+                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
+                        byte[] blank1 = new byte[16];
+                        header.AddRange( blank1 );
                         break;
                     }
                 case TextureFormat.TextureFormat.A8: {
@@ -184,13 +211,13 @@ namespace VfxEditor.Utils {
                 header.AddRange( BitConverter.GetBytes( dxgiFormat ) );
 
                 // D3D10_RESOURCE_DIMENSION resourceDimension
-                header.AddRange( BitConverter.GetBytes( ( int )3 ) );
+                header.AddRange( BitConverter.GetBytes( 3 ) );
                 // UINT miscFlag
-                header.AddRange( BitConverter.GetBytes( ( int )0 ) );
+                header.AddRange( BitConverter.GetBytes( 0 ) );
                 // UINT arraySize
                 header.AddRange( BitConverter.GetBytes( depth ) );
                 // UINT miscFlags2
-                header.AddRange( BitConverter.GetBytes( ( int )0 ) );
+                header.AddRange( BitConverter.GetBytes( 0 ) );
             }
 
             return header.ToArray();

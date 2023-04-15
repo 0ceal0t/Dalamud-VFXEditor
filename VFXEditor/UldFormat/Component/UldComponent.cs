@@ -51,6 +51,7 @@ namespace VfxEditor.UldFormat.Component {
 
         public UldComponent( List<UldComponent> components ) {
             NodeSplitView = new( Nodes, components, this );
+            Id.Value = 1001; // default
             Type.ExtraCommandGenerator = () => {
                 return new UldComponentDataCommand( this );
             };
