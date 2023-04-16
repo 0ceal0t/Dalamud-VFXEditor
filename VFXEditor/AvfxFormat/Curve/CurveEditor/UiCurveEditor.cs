@@ -44,12 +44,14 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Draw( string parentId ) {
-            DrawControls( parentId );
+            ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 1f, 0.5f ) );
 
+            DrawControls( parentId );
             Selected.RemoveAll( x => !Points.Contains( x ) );
 
             var wrongOrder = false;
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+
             if( ImPlot.BeginPlot( $"{parentId}-Plot-{EditorId}", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
@@ -148,7 +150,7 @@ namespace VfxEditor.AvfxFormat {
                 // Inserting point [Ctrl + Left Click]
                 if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) {
                     var pos = ImPlot.GetPlotMousePos();
-                    var z = IsColor ? 1.0f : ( float )pos.y;
+                    var z = IsColor ? 1.0f : ( float )ToRadians( pos.y );
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                         InsertPoint( ( float )pos.x, 1, 1, z );
                     } ) );
@@ -162,6 +164,8 @@ namespace VfxEditor.AvfxFormat {
 
                 ImPlot.EndPlot();
             }
+
+            ImPlot.PopStyleVar( 1 );
 
             if( wrongOrder ) DrawWrongOrder( parentId );
 
@@ -273,6 +277,16 @@ namespace VfxEditor.AvfxFormat {
             UpdateGradient();
         }
 
+        public double ToRadians( double value ) {
+            if( Type != CurveType.Angle || !Plugin.Configuration.UseDegreesForAngles ) return value;
+            return ( Math.PI / 180 ) * value;
+        }
+
+        public double ToDegrees( double value ) {
+            if( Type != CurveType.Angle || !Plugin.Configuration.UseDegreesForAngles ) return value;
+            return ( 180 / Math.PI ) * value;
+        }
+
         private void InsertPoint( float time, float x, float y, float z ) {
             var insertIdx = 0;
             foreach( var p in Points ) {
@@ -286,14 +300,13 @@ namespace VfxEditor.AvfxFormat {
 
         // ==========================
 
-        private static void GetDrawLine( List<UiCurveEditorPoint> points, bool color, out List<float> xs, out List<float> ys ) {
-            xs = new List<float>();
-            ys = new List<float>();
+        private static void GetDrawLine( List<UiCurveEditorPoint> points, bool color, out List<double> xs, out List<double> ys ) {
+            xs = new List<double>();
+            ys = new List<double>();
 
             if( points.Count > 0 ) {
-                var pos = points[0].GetPosition();
-                xs.Add( pos.X );
-                ys.Add( pos.Y );
+                xs.Add( points[0].DisplayX );
+                ys.Add( points[0].DisplayY );
             }
 
             for( var idx = 1; idx < points.Count; idx++ ) {
@@ -302,34 +315,39 @@ namespace VfxEditor.AvfxFormat {
 
                 if( p1.KeyType == KeyType.Linear || color ) {
                     // p1 should already be added
-                    var pos = p2.GetPosition();
-                    xs.Add( pos.X );
-                    ys.Add( pos.Y );
+                    xs.Add( p2.DisplayX );
+                    ys.Add( p2.DisplayY );
                 }
                 else if( p1.KeyType == KeyType.Step ) {
                     // p1 should already be added
-                    xs.Add( ( float )p2.DisplayX );
-                    ys.Add( ( float )p1.DisplayY );
+                    xs.Add( p2.DisplayX );
+                    ys.Add( p1.DisplayY );
 
-                    var pos = p2.GetPosition();
-                    xs.Add( pos.X );
-                    ys.Add( pos.Y );
+                    xs.Add( p2.DisplayX );
+                    ys.Add( p2.DisplayY );
                 }
                 else if( p1.KeyType == KeyType.Spline ) {
-                    var p1_ = p1.GetPosition();
-                    var p2_ = p2.GetPosition();
-                    var midX = ( p2_.X - p1_.X ) / 2;
-                    var handle1 = new Vector2( p1_.X + p1.RawData.X * midX, p1_.Y );
-                    var handle2 = new Vector2( p2_.X - p1.RawData.Y * midX, p2_.Y );
-                    for( var i = 0; i < 100; i++ ) {
-                        var t = i / 99.0f;
+                    var p1X = p1.DisplayX;
+                    var p1Y = p1.DisplayY;
+                    var p2X = p2.DisplayX;
+                    var p2Y = p2.DisplayY;
 
-                        var pos = Bezier( p1_, p2_, handle1, handle2, t );
-                        xs.Add( pos.X );
-                        ys.Add( pos.Y );
+                    var midX = ( p2X - p1X ) / 2;
+
+                    var handle1X = p1X + p1.RawData.X * midX;
+                    var handle1Y = p1Y;
+                    var handle2X = p2X - p1.RawData.Y * midX;
+                    var handle2Y = p2Y;
+
+                    for( var i = 0; i < 100; i++ ) {
+                        var t = i / 99.0d;
+
+                        Bezier( p1X, p1Y, p2X, p2Y, handle1X, handle1Y, handle2X, handle2Y, t, out var bezX, out var bezY );
+                        xs.Add( bezX );
+                        ys.Add( bezY );
                     }
-                    xs.Add( p2_.X );
-                    ys.Add( p2_.Y );
+                    xs.Add( p2X );
+                    ys.Add( p2Y );
                 }
             }
         }
@@ -369,16 +387,15 @@ namespace VfxEditor.AvfxFormat {
 
         private static uint Invert( Vector3 color ) => color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
 
-        private static Vector2 Bezier( Vector2 p1, Vector2 p2, Vector2 handle1, Vector2 handle2, float t ) {
+        private static void Bezier( double p1X, double p1Y, double p2X, double p2Y, double handle1X, double handle1Y, double handle2X, double handle2Y, double t, out double x, out double y ) {
             var u = 1 - t;
             var w1 = u * u * u;
             var w2 = 3 * u * u * t;
             var w3 = 3 * u * t * t;
             var w4 = t * t * t;
-            return new Vector2(
-                w1 * p1.X + w2 * handle1.X + w3 * handle2.X + w4 * p2.X,
-                w1 * p1.Y + w2 * handle1.Y + w3 * handle2.Y + w4 * p2.Y
-            );
+
+            x = w1 * p1X + w2 * handle1X + w3 * handle2X + w4 * p2X;
+            y = w1 * p1Y + w2 * handle1Y + w3 * handle2Y + w4 * p2Y;
         }
     }
 }

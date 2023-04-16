@@ -24,11 +24,11 @@ namespace VfxEditor.AvfxFormat {
         public KeyType KeyType => Key.Type;
 
         public Vector3 RawData {
-            get => new( Key.X, Key.Y, ( float )ToDegrees( Key.Z ) );
+            get => new( Key.X, Key.Y, ( float )Editor.ToDegrees( Key.Z ) );
             set {
                 Key.X = value.X;
                 Key.Y = value.Y;
-                Key.Z = ( float )ToRadians( value.Z );
+                Key.Z = ( float )Editor.ToRadians( value.Z );
                 Editor.UpdateGradient();
             }
         }
@@ -41,9 +41,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public double DisplayY {
-            get => IsColor ? 0 : ToDegrees( Key.Z );
+            get => IsColor ? 0 : Editor.ToDegrees( Key.Z );
             set {
-                if( !IsColor ) Key.Z = ( float )ToRadians( value );
+                if( !IsColor ) Key.Z = ( float )Editor.ToRadians( value );
                 else Editor.UpdateGradient();
             }
         }
@@ -53,8 +53,6 @@ namespace VfxEditor.AvfxFormat {
             Key = key;
             Type = type;
         }
-
-        public Vector2 GetPosition() => new( ( float )DisplayX, ( float )DisplayY );
 
         public ImPlotPoint GetImPlotPoint() {
             return new ImPlotPoint {
@@ -151,15 +149,6 @@ namespace VfxEditor.AvfxFormat {
                     } ) );
                 }
             }
-        }
-
-        private double ToRadians( double value ) {
-            if( Type != CurveType.Angle || !Plugin.Configuration.UseDegreesForAngles ) return value; // no need to convert
-            return ( Math.PI / 180 ) * value;
-        }
-        private double ToDegrees( double value ) {
-            if( Type != CurveType.Angle || !Plugin.Configuration.UseDegreesForAngles ) return value; // no need to convert
-            return ( 180 / Math.PI ) * value;
         }
     }
 }
