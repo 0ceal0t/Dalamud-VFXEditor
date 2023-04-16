@@ -20,14 +20,14 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
     [Flags]
     public enum TextFlags {
-        Bold = 0x80,
-        Italic = 0x40,
-        Edge = 0x20,
-        Glare = 0x10,
-        Multiline = 0x08,
-        Ellipsis = 0x04,
-        Paragraph = 0x02,
-        Emboss = 0x01
+        Bold = 0x01,
+        Italic = 0x02,
+        Edge = 0x04,
+        Glare = 0x08,
+        Multiline = 0x10,
+        Ellipsis = 0x20,
+        Paragraph = 0x40,
+        Emboss = 0x80
     }
 
     public class TextNodeData : UldGenericData {

@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Draw( string parentId ) {
-            ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 1f, 0.5f ) );
+            ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
 
             DrawControls( parentId );
             Selected.RemoveAll( x => !Points.Contains( x ) );

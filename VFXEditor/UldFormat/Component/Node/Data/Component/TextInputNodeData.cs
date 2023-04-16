@@ -4,24 +4,26 @@ using VfxEditor.Parsing;
 namespace VfxEditor.UldFormat.Component.Node.Data.Component {
     [Flags]
     public enum TextInputFlags {
-        Capitalize = 0x80,
-        Mask = 0x40,
-        AutoTranslate = 0x20,
-        History = 0x10,
-        IME = 0x08,
-        EscapeClears = 0x04,
-        CapsAllowed = 0x02,
-        LowerAllowed = 0x01
+        Capitalize = 0x01,
+        Mask = 0x02,
+        AutoTranslate = 0x04,
+        History = 0x08,
+        IME = 0x10,
+        EscapeClears = 0x20,
+        CapsAllowed = 0x40,
+        LowerAllowed = 0x80
     }
 
     [Flags]
     public enum TextInputFlags2 {
-        NumbersAllowed = 0x80,
-        SymbolsAllowed = 0x40,
-        WordWrap = 0x20,
-        Multiline = 0x10,
-        AutoMaxWidth = 0x08,
-        Unknown = 0x07
+        NumbersAllowed = 0x01,
+        SymbolsAllowed = 0x02,
+        WordWrap = 0x04,
+        Multiline = 0x08,
+        AutoMaxWidth = 0x10,
+        Unknown_1 = 0x20,
+        Unknown_2 = 0x40,
+        Unknown_3 = 0x80
     }
 
     public class TextInputNodeData : UldNodeComponentData {
@@ -36,7 +38,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
                 new ParsedUInt( "Charset", size: 2 ),
             } );
 
-            for( var i = 1; i <= 16; i++ ) Parsed.Add( new ParsedInt( $"Charset Extra #{i}" ) );
+            for( var i = 1; i <= 16; i++ ) Parsed.Add( new ParsedInt( $"Charset Extra {i}", size: 1 ) );
         }
     }
 }

@@ -1,4 +1,5 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Color;
 
 namespace VfxEditor.UldFormat.Component.Data
 {
@@ -7,8 +8,8 @@ namespace VfxEditor.UldFormat.Component.Data
             AddUnknown( 16 );
 
             Parsed.AddRange( new ParsedBase[] {
-                new ParsedUInt( "Color" ),
-                new ParsedUInt( "IME Color" ),
+                new ParsedSheetColor( "Color" ),
+                new ParsedSheetColor( "IME Color" ),
             } );
         }
     }

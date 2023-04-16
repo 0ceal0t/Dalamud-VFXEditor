@@ -20,14 +20,14 @@ namespace VfxEditor.UldFormat.Component.Node {
 
     [Flags]
     public enum NodeFlags {
-        Visible = 0x80,
-        Enabled = 0x40,
-        Clip = 0x20,
-        Fill = 0x10,
-        AnchorTop = 0x08,
-        AnchorBottom = 0x04,
-        AnchorLeft = 0x02,
-        AnchorRight = 0x01
+        Visible = 0x01,
+        Enabled = 0x02,
+        Clip = 0x04,
+        Fill = 0x08,
+        AnchorTop = 0x10,
+        AnchorBottom = 0x20,
+        AnchorLeft = 0x40,
+        AnchorRight = 0x80
     }
 
     public class DelayedNodeData {
