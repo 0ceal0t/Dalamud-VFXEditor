@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;

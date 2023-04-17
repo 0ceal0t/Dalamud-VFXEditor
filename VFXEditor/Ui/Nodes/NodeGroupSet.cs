@@ -18,7 +18,7 @@ namespace VfxEditor.Ui.Nodes {
             AllGroups.ForEach( group => group.ReadRenamingMap( renamingMap ) );
         }
 
-        public void PreImport() => AllGroups.ForEach( group => group.PreImport() );
+        public void PreImport( bool hasDependencies ) => AllGroups.ForEach( group => group.PreImport( hasDependencies ) );
 
         public void PostImport() => AllGroups.ForEach( group => group.PostImport() );
 

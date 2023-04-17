@@ -189,12 +189,13 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
+
                         ImGui.PopFont();
+                        ImGui.PopStyleVar( 1 );
                         return;
                     }
                     ImGui.PopFont();
                 }
-
                 ImGui.PopStyleVar( 1 );
             }
 

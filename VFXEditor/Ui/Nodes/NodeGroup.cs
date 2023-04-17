@@ -5,7 +5,7 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Ui.Nodes {
     public abstract class NodeGroup {
         public abstract void Initialize();
-        public abstract void PreImport();
+        public abstract void PreImport( bool hasDependencies );
         public abstract void PostImport();
         public abstract void Dispose();
         public abstract void GetRenamingMap( Dictionary<string, string> meta );
@@ -41,9 +41,9 @@ namespace VfxEditor.Ui.Nodes {
 
         public void TriggerOnChange() => OnChange?.Invoke();
 
-        public override void PreImport() {
+        public override void PreImport( bool hasDependencies ) {
             ImportInProgress = true;
-            PreImportSize = Items.Count;
+            PreImportSize = hasDependencies ? Items.Count : 0;
         }
 
         public override void PostImport() {

@@ -30,13 +30,6 @@ namespace VfxEditor.UldFormat.Component.Node {
         AnchorRight = 0x80
     }
 
-    public class DelayedNodeData {
-        public UldNode Node;
-        public int NodeType;
-        public long Position;
-        public int Size;
-    }
-
     public class UldNode : UldWorkspaceItem {
         private readonly List<UldComponent> Components;
         private readonly UldWorkspaceItem Parent;
@@ -78,6 +71,11 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt ClipCount = new( "Clip Count", size: 1 );
         public readonly ParsedUInt TimelineId = new( "Timeline Id", size: 2 );
 
+        // need to wait until all components are initialized, so store this until then
+        private readonly long DelayedPosition;
+        private readonly int DelayedSize;
+        private readonly int DelayedNodeType;
+
         public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
             Parent = parent;
             Components = components;
@@ -114,7 +112,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             };
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, List<DelayedNodeData> delayed ) : this( components, parent ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -137,25 +135,22 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             Parsed.ForEach( x => x.Read( reader ) );
 
-            delayed.Add( new DelayedNodeData() {
-                Node = this,
-                Position = reader.BaseStream.Position,
-                Size = ( int )( pos + size - reader.BaseStream.Position ) - 12,
-                NodeType = nodeType
-            } );
+            DelayedPosition = reader.BaseStream.Position;
+            DelayedSize = ( int )( pos + size - reader.BaseStream.Position ) - 12;
+            DelayedNodeType = nodeType;
 
             reader.BaseStream.Position = pos + size;
         }
 
         // Needs to be initialized later since it depends on component list being filled
-        public void InitData( BinaryReader reader, DelayedNodeData data ) {
-            reader.BaseStream.Position = data.Position;
+        public void InitData( BinaryReader reader ) {
+            reader.BaseStream.Position = DelayedPosition;
 
             UpdateData();
-            if( Data == null && data.NodeType > 1 ) {
-                PluginLog.Log( $"Unknown node type {data.NodeType} / {data.Size} @ {reader.BaseStream.Position:X8}" );
+            if( Data == null && DelayedNodeType > 1 ) {
+                PluginLog.Log( $"Unknown node type {DelayedNodeType} / {DelayedSize} @ {reader.BaseStream.Position:X8}" );
             }
-            if( Data is CustomNodeData custom ) custom.Read( reader, data.Size );
+            if( Data is CustomNodeData custom ) custom.Read( reader, DelayedSize );
             else Data?.Read( reader );
         }
 

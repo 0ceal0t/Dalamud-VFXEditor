@@ -44,8 +44,6 @@ namespace VfxEditor.UldFormat {
         public readonly UldWidgetDropdown WidgetDropdown;
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
-            List<DelayedNodeData> delayed = new();
-
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             var pos = reader.BaseStream.Position;
@@ -74,7 +72,7 @@ namespace VfxEditor.UldFormat {
             if( OffsetsHeader.ComponentOffset > 0 ) {
                 reader.Seek( offsetsPosition + OffsetsHeader.ComponentOffset );
                 ComponentList = new( reader );
-                for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components, delayed ) );
+                for( var i = 0; i < ComponentList.ElementCount; i++ ) Components.Add( new( reader, Components ) );
             }
             else ComponentList = new( "cohd", "0100" );
 
@@ -94,13 +92,13 @@ namespace VfxEditor.UldFormat {
             if( OffsetsHeader2.WidgetOffset > 0 ) {
                 reader.Seek( offsetsPosition2 + OffsetsHeader2.WidgetOffset );
                 WidgetList = new( reader );
-                for( var i = 0; i < WidgetList.ElementCount; i++ ) Widgets.Add( new( reader, Components, delayed ) );
+                for( var i = 0; i < WidgetList.ElementCount; i++ ) Widgets.Add( new( reader, Components ) );
             }
             else WidgetList = new( "wdhd", "0100" );
 
-            foreach( var item in delayed ) {
-                item.Node.InitData( reader, item );
-            }
+            // Init node data now that components are all set up
+            Components.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
+            Widgets.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 

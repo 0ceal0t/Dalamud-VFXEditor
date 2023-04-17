@@ -32,7 +32,7 @@ namespace VfxEditor.UldFormat.Widget {
             NodeSplitView = new( Nodes, components, this );
         }
 
-        public UldWidget( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
+        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -42,7 +42,7 @@ namespace VfxEditor.UldFormat.Widget {
             var nodeCount = reader.ReadUInt16();
             var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, delayed ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
 
             reader.BaseStream.Position = pos + size;
         }

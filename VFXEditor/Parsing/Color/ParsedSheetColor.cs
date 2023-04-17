@@ -25,7 +25,7 @@ namespace VfxEditor.Parsing.Color {
         // =================
 
         public readonly string Name;
-        private Vector4 CurrentColor => Colors.TryGetValue( Value, out var color ) ? color : new Vector4( 0, 0, 0, 1 );
+        private Vector4 CurrentColor => Colors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
 
         public ParsedSheetColor( string name ) {
             Name = name;

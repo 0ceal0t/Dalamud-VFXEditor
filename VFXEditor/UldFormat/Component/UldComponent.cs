@@ -51,13 +51,14 @@ namespace VfxEditor.UldFormat.Component {
 
         public UldComponent( List<UldComponent> components ) {
             NodeSplitView = new( Nodes, components, this );
+
             Id.Value = 1001; // default
             Type.ExtraCommandGenerator = () => {
                 return new UldComponentDataCommand( this );
             };
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components, List<DelayedNodeData> delayed ) : this( components ) {
+        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -79,7 +80,7 @@ namespace VfxEditor.UldFormat.Component {
 
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, delayed ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -143,8 +144,8 @@ namespace VfxEditor.UldFormat.Component {
         public override void Draw( string id ) {
             DrawRename( id );
             Id.Draw( id, CommandManager.Uld );
-            ImGui.TextDisabled( "Component Ids must be greater than 1000" );
             Type.Draw( id, CommandManager.Uld );
+            ImGui.TextDisabled( $"Nodes referencing this component: {NumNodesReferencing}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
@@ -189,5 +190,9 @@ namespace VfxEditor.UldFormat.Component {
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
             Nodes.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renameDict ) );
         }
+
+        private int NumNodesReferencing => 
+            Plugin.UldManager.CurrentFile.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
+            Plugin.UldManager.CurrentFile.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
     }
 }

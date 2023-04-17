@@ -56,7 +56,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
-            if( hasDependencies ) NodeGroupSet.PreImport();
+            NodeGroupSet.PreImport( hasDependencies );
 
             List<NodePosition> models = new();
             List<NodePosition> textures = new();
@@ -108,7 +108,7 @@ namespace VfxEditor.AvfxFormat {
 
             CommandManager.Avfx.Add( importCommand ); // doesn't actually execute anything
 
-            if( hasDependencies ) NodeGroupSet.PostImport();
+            NodeGroupSet.PostImport();
         }
 
         private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, NodeGroup<T> group, CompoundCommand command ) where T : AvfxNode {
