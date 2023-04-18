@@ -97,7 +97,7 @@ namespace VfxEditor.Select {
         public virtual void Play( string playPath, string id ) { }
 
         public override void DrawBody() {
-            var id = $"##{Name}";
+            var id = $"##{Manager.Id}/Select";
             ImGui.BeginTabBar( $"Tabs{id}" );
             DrawGame( id );
             DrawGamePath( id );

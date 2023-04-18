@@ -115,12 +115,9 @@ namespace VfxEditor {
             ProcessOldManagerConfigs( RecentSelectsPAP, FavoritePap, "Pap" );
             ProcessOldManagerConfigs( RecentSelectsScd, FavoriteScd, "Scd" );
 
-            try {
-                Directory.CreateDirectory( WriteLocation );
-            }
-            catch( Exception ) {
-                WriteLocationError = true;
-            }
+            try { Directory.CreateDirectory( WriteLocation ); }
+            catch( Exception ) { WriteLocationError = true; }
+
             PluginLog.Log( "Write location: " + WriteLocation );
         }
 

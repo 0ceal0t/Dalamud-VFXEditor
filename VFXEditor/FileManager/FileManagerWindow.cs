@@ -12,8 +12,10 @@ using VfxEditor.Select;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerWindow : GenericDialog {
-        protected FileManagerWindow( string name, bool menuBar, int startingWidth, int startingHeight ) : 
-            base( name, menuBar, startingWidth, startingHeight ) {
+        public readonly string Id;
+
+        protected FileManagerWindow( string name, string id ) : base( name, true, 800, 1000 ) {
+            Id = id;
         }
 
         public abstract ManagerConfiguration GetConfig();
@@ -32,7 +34,6 @@ namespace VfxEditor.FileManager {
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
         private int DOC_ID = 0;
-        public readonly string Id;
         protected readonly string WindowTitle;
         private readonly string Extension;
         private readonly string TempFilePrefix;
@@ -50,9 +51,8 @@ namespace VfxEditor.FileManager {
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
 
-        public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, true, 800, 1000 ) {
+        public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, id ) {
             WindowTitle = windowTitle;
-            Id = id;
             TempFilePrefix = $"{id}Temp";
             Extension = extension;
             WorkspaceKey = workspaceKey;
