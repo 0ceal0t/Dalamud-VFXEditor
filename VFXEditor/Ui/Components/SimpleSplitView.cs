@@ -61,7 +61,7 @@ namespace VfxEditor.Ui.Components {
         }
 
         private bool StopDragging( T destination, string id ) {
-            if( id == null ) return false;
+            if( DraggingItem == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( $"{id}-SPLIT" );
             unsafe {
                 if( payload.NativePtr != null ) {

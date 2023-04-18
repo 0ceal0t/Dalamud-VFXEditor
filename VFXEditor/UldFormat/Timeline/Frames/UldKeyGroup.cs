@@ -103,7 +103,7 @@ namespace VfxEditor.UldFormat.Timeline
 
             for( var idx = 0; idx < Keyframes.Count; idx++ ) {
                 var item = Keyframes[idx];
-                if( ImGui.CollapsingHeader( $"Keyframe #{idx}{id}{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"Keyframe {idx}{id}{idx}" ) ) {
                     ImGui.Indent();
 
                     if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
