@@ -110,13 +110,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 reader.ReadSamples( buffer, 0, buffer.Length );
             }
 
-            var totalBits = 0L;
-            totalBits += reader.StreamStats.AudioBits;
-            totalBits += reader.StreamStats.ContainerBits;
-            totalBits += reader.StreamStats.WasteBits;
-            totalBits += reader.StreamStats.OverheadBits;
-
-            return ( int )( totalBits / 8L );
+            return CurrentBytes( reader );
         }
 
         public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
@@ -142,13 +136,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             for( var i = 0; i < reader.TotalSamples; i++ ) {
                 reader.ReadSamples( buffer, 0, buffer.Length );
 
-                var currentBits = 0L;
-                currentBits += reader.StreamStats.AudioBits;
-                currentBits += reader.StreamStats.ContainerBits;
-                currentBits += reader.StreamStats.WasteBits;
-                currentBits += reader.StreamStats.OverheadBits;
-
-                var currentBytes = ( int )( currentBits / 8L );
+                var currentBytes = CurrentBytes( reader );
                 var currentTime = reader.TimePosition.TotalSeconds;
 
                 if( !startFound && prevBytes < loopStart && currentBytes >= loopStart ) {
@@ -168,6 +156,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
             reader.Dispose();
             ms.Dispose();
         }
+
+        private static int CurrentBytes( VorbisReader reader ) => ( int )( ( reader.StreamStats.AudioBits + reader.StreamStats.ContainerBits + reader.StreamStats.WasteBits + reader.StreamStats.OverheadBits ) / 8 );
 
         public override WaveStream GetStream() {
             var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );

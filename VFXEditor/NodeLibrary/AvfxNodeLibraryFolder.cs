@@ -106,7 +106,7 @@ namespace VfxEditor.NodeLibrary {
                 }
                 else {
                     var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-                    var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Trash );
+                    var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Cross );
                     ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
                     // Input
@@ -123,7 +123,7 @@ namespace VfxEditor.NodeLibrary {
                         listModified = true;
                     }
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Cross}" + id ) ) {
                         Editing = false;
                     }
                     ImGui.PopFont();

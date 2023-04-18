@@ -1,9 +1,7 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -22,7 +20,7 @@ namespace VfxEditor.Select.Lists {
                 ImGui.TableNextColumn();
 
                 var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-                var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Trash );
+                var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Cross );
                 ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
                 // Input
@@ -38,7 +36,7 @@ namespace VfxEditor.Select.Lists {
                     EditingItem = null;
                 }
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Cross}" + id ) ) {
                     EditingItem = null;
                 }
                 ImGui.PopFont();
