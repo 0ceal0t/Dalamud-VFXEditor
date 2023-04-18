@@ -212,8 +212,8 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawExtraColumn() { }
 
         protected void DisplaySearchBars() {
-            var sourceString = SourceDisplay ?? "";
-            var previewString = ReplaceDisplay ?? "";
+            var sourceString = Source == null ? "" : Source.DisplayString;
+            var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
             ImGui.PushFont( UiBuilder.IconFont );
@@ -223,7 +223,7 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputText( $"##{Id}-Source", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            ImGui.InputTextWithHint( $"##{Id}-Source", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
             // Search
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );
@@ -239,7 +239,7 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputText( $"##{Id}-Preview", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+            ImGui.InputTextWithHint( $"##{Id}-Preview", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
             // Search
             ImGui.SameLine();
             ImGui.PushFont( UiBuilder.IconFont );

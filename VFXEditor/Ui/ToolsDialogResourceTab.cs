@@ -26,7 +26,7 @@ namespace VfxEditor.Ui {
 
             if( resourceHandler == null ) return;
 
-            ImGui.InputText( "Search##ResourceManager", ref Search, 256 );
+            ImGui.InputTextWithHint( "##ResourceManager/Search", "Search", ref Search, 256 );
 
             if( !ImGui.BeginChild( "##ResourceManager", -Vector2.One, true ) ) return;
 

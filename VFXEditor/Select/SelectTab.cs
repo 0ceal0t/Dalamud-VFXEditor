@@ -80,7 +80,7 @@ namespace VfxEditor.Select {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var ResetScroll = false;
             DrawExtra();
-            if( ImGui.InputText( "Search" + id, ref SearchInput, 255 ) ) {
+            if( ImGui.InputTextWithHint( $"{id}/Search", "Search", ref SearchInput, 255 ) ) {
                 Searched = Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
                 ResetScroll = true;
             }

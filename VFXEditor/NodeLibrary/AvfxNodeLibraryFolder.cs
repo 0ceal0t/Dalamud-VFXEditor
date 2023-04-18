@@ -66,7 +66,7 @@ namespace VfxEditor.NodeLibrary {
 
                 ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
                 open = ImGui.TreeNodeEx( $"{uniqueId}",
-                    ( Editing ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.SpanAvailWidth ) |
+                    ( Editing ? ImGuiTreeNodeFlags.AllowItemOverlap : ImGuiTreeNodeFlags.SpanAvailWidth ) |
                     ImGuiTreeNodeFlags.FramePadding |
                     ImGuiTreeNodeFlags.Framed
                 );

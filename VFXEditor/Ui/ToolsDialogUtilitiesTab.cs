@@ -4,6 +4,7 @@ using ImGuiNET;
 using System;
 using VfxEditor.Utils;
 using VfxEditor.TextureFormat;
+using System.Numerics;
 
 namespace VfxEditor.Ui {
     public class ToolsDialogUtilitiesTab {
@@ -14,7 +15,9 @@ namespace VfxEditor.Ui {
             ImGui.TextDisabled( "Extract Raw Game File" );
             ImGui.Indent();
 
-            ImGui.InputText( "Path##Extract", ref ExtractPath, 255 );
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
+            ImGui.InputTextWithHint( "##Extract", "Game Path", ref ExtractPath, 255 );
+
             ImGui.SameLine();
             if( ImGui.Button( "Extract" ) ) {
                 var cleanedPath = ExtractPath.Replace( "\\", "/" );
@@ -29,6 +32,8 @@ namespace VfxEditor.Ui {
                     }
                 }
             }
+
+            ImGui.PopStyleVar( 1 );
 
             ImGui.Unindent();
 

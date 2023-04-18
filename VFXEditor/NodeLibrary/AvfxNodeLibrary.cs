@@ -34,7 +34,7 @@ namespace VfxEditor.NodeLibrary {
             ImGui.PopFont();
             ImGui.SameLine();
 
-            ImGui.InputText( "Search##NodeLibrary", ref SearchInput, 255 );
+            ImGui.InputTextWithHint( "##NodeLibrary/Search", "Search", ref SearchInput, 255 );
 
             ImGui.BeginChild( "##NodeLibrary-Region", ImGui.GetContentRegionAvail(), true );
 
