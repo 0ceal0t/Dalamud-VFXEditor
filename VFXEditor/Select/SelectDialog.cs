@@ -3,6 +3,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Lists;
@@ -28,7 +29,8 @@ namespace VfxEditor.Select {
         GameMisc
     }
 
-    public struct SelectResult {
+    [Serializable]
+    public class SelectResult {
         public SelectResultType Type;
         public string DisplayString;
         public string Path;
@@ -39,16 +41,7 @@ namespace VfxEditor.Select {
             Path = path;
         }
 
-        public override readonly bool Equals( object obj ) => obj is SelectResult other && Equals( other );
-        public readonly bool Equals( SelectResult p ) => p.Type == Type && p.DisplayString == DisplayString && p.Path == Path;
-        public override readonly int GetHashCode() => (Type, DisplayString, Path).GetHashCode();
-        public static bool operator ==( SelectResult lhs, SelectResult rhs ) => lhs.Equals( rhs );
-        public static bool operator !=( SelectResult lhs, SelectResult rhs ) => !( lhs == rhs );
-
-        public static SelectResult None() => new() {
-            DisplayString = "[NONE]",
-            Path = ""
-        };
+        public bool CompareTo( SelectResult other ) => Type == other.Type && DisplayString == other.DisplayString && Path == other.Path;
     }
 
     public abstract class SelectDialog : GenericDialog {
@@ -61,7 +54,7 @@ namespace VfxEditor.Select {
         protected abstract List<SelectTab> GetTabs();
 
         protected readonly List<SelectResult> Favorites;
-        protected readonly SelectRecentTab RecentTab;
+        protected readonly SelectListTab RecentTab;
         protected readonly SelectFavoriteTab FavoritesTab;
 
         private string LocalPathInput = "";
@@ -82,18 +75,6 @@ namespace VfxEditor.Select {
             else Manager.SetReplace( result );
         }
 
-        public bool IsFavorite( SelectResult result ) => Favorites.Contains( result );
-
-        public void AddFavorite( SelectResult result ) {
-            Favorites.Add( result );
-            Plugin.Configuration.Save();
-        }
-
-        public void RemoveFavorite( SelectResult result ) {
-            Favorites.Remove( result );
-            Plugin.Configuration.Save();
-        }
-
         public virtual void Play( string playPath, string id ) { }
 
         public override void DrawBody() {
@@ -107,6 +88,20 @@ namespace VfxEditor.Select {
             ImGui.EndTabBar();
         }
 
+        // ============= GAME =================
+
+        public void DrawGame( string parentId ) {
+            var id = $"{parentId}/Game";
+
+            if( GetTabs().Count == 0 ) return;
+            if( !ImGui.BeginTabItem( $"Game Items{id}" ) ) return;
+
+            ImGui.BeginTabBar( $"Tabs{id}" );
+            foreach( var tab in GetTabs() ) tab.Draw( id );
+            ImGui.EndTabBar();
+            ImGui.EndTabItem();
+        }
+
         // =========== LOCAL ================
 
         private void DrawLocal( string parentId ) {
@@ -115,8 +110,9 @@ namespace VfxEditor.Select {
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
             ImGui.TextDisabled( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
-            ImGui.Text( "Path" );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
 
+            ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText( $"{id}-Input", ref LocalPathInput, 255 );
 
@@ -136,21 +132,7 @@ namespace VfxEditor.Select {
                 Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
             }
 
-            ImGui.PopStyleVar();
-            ImGui.EndTabItem();
-        }
-
-        // ============= GAME =================
-
-        public void DrawGame( string parentId ) {
-            var id = $"{parentId}/Game";
-
-            if( GetTabs().Count == 0 ) return;
-            if( !ImGui.BeginTabItem( $"Game Items{id}" ) ) return;
-
-            ImGui.BeginTabBar( $"Tabs{id}" );
-            foreach( var tab in GetTabs() ) tab.Draw( id );
-            ImGui.EndTabBar();
+            ImGui.PopStyleVar( 1 );
             ImGui.EndTabItem();
         }
 
@@ -162,20 +144,35 @@ namespace VfxEditor.Select {
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
             ImGui.TextDisabled( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
+
             ImGui.Text( "Path" );
             ImGui.SameLine();
             ImGui.InputText(  $"{id}-Input", ref GamePathInput, 255 );
+
             ImGui.SameLine();
             if( ImGui.Button( $"SELECT{id}" ) ) {
                 var cleanedGamePath = GamePathInput.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
 
-            ImGui.PopStyleVar();
+            ImGui.PopStyleVar( 1 );
             ImGui.EndTabItem();
         }
 
         // ======== DRAWING UTILS ======
+
+        public bool IsFavorite( SelectResult result ) => Favorites.Any( result.CompareTo );
+
+        public void AddFavorite( SelectResult result ) {
+            Favorites.Add( result );
+            Plugin.Configuration.Save();
+        }
+
+        public void RemoveFavorite( SelectResult result ) {
+            Favorites.RemoveAll( result.CompareTo );
+            Plugin.Configuration.Save();
+        }
 
         public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
 

@@ -11,7 +11,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.AvfxFormat {
     public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaRenamed> {
         private DateTime LastUpdate = DateTime.Now;
-        private string SpawnPath => Replace.Path;
+        private string SpawnPath => ReplacePath;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
         private readonly AvfxManager AvfxManager;
@@ -60,14 +60,8 @@ namespace VfxEditor.AvfxFormat {
 
         public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
 
-        public void OpenTemplate( string path ) {
-            var newResult = new SelectResult {
-                DisplayString = "[NEW]",
-                Type = SelectResultType.Local,
-                Path = Path.Combine( Plugin.RootLocation, "Files", path )
-            };
-            SetSource( newResult );
-        }
+        public void OpenTemplate( string path ) =>
+            SetSource( new SelectResult( SelectResultType.Local, "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
 
         public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
             RelativeLocation = newPath,

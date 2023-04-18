@@ -13,20 +13,20 @@ namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
         public T CurrentFile { get; protected set; }
 
-        protected SelectResult Source = SelectResult.None();
-        public string SourceDisplay => Source.DisplayString;
-        public string SourcePath => Source.Path;
+        protected SelectResult Source;
+        public string SourceDisplay => Source == null ? "[NONE]" : Source.DisplayString;
+        public string SourcePath => Source == null ? "" : Source.Path;
 
-        protected SelectResult Replace = SelectResult.None();
-        public string ReplaceDisplay => Replace.DisplayString;
-        public string ReplacePath => Replace.Path;
+        protected SelectResult Replace;
+        public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
+        public string ReplacePath => Replace == null ? "" : Replace.Path;
 
         protected VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
         protected string WriteLocation;
         public string WritePath => WriteLocation;
 
-        protected readonly string Id; // Tmb
-        protected readonly string IdUpperCase; // TMB
+        protected readonly string Id;
+        protected readonly string IdUpperCase;
         protected readonly string Extension;
         protected readonly FileManagerWindow Manager;
 
@@ -49,15 +49,12 @@ namespace VfxEditor.FileManager {
         protected bool IsVerified() => CurrentFile.IsVerified();
 
         public void SetSource( SelectResult result ) {
-            switch( result.Type ) {
-                case SelectResultType.Local: // LOCAL
-                    LoadLocal( result.Path );
-                    break;
-                default: // EVERYTHING ELSE: GAME FILES
-                    LoadGame( result.Path );
-                    break;
-            }
+            if( result == null ) return;
             Source = result;
+
+            if( result.Type == SelectResultType.Local ) LoadLocal( result.Path );
+            else LoadGame( result.Path );
+
             if( CurrentFile != null ) {
                 Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
                 UpdateFile();
@@ -67,15 +64,15 @@ namespace VfxEditor.FileManager {
         protected void RemoveSource() {
             CurrentFile?.Dispose();
             CurrentFile = null;
-            Source = SelectResult.None();
+            Source = null;
         }
 
         public void SetReplace( SelectResult result ) { Replace = result; }
 
-        protected void RemoveReplace() { Replace = SelectResult.None(); }
+        protected void RemoveReplace() { Replace = null; }
 
         public bool GetReplacePath( string path, out string replacePath ) {
-            replacePath = Replace.Path.Equals( path ) ? WriteLocation : null;
+            replacePath = ReplacePath.Equals( path ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
 
@@ -127,7 +124,7 @@ namespace VfxEditor.FileManager {
 
         protected void Reload( List<string> papIds = null ) {
             if( CurrentFile == null ) return;
-            Plugin.ResourceLoader.ReloadPath( Replace.Path, WriteLocation, papIds );
+            Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
         }
 
         public virtual void Update() {
@@ -137,14 +134,14 @@ namespace VfxEditor.FileManager {
         }
 
         public void PenumbraExport( string modFolder ) {
-            var path = Replace.Path;
+            var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
             var data = CurrentFile.ToBytes();
             PenumbraUtils.WriteBytes( data, modFolder, path );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            var path = Replace.Path;
+            var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
             var modData = TexToolsUtils.CreateType2Data( CurrentFile.ToBytes() );
             simpleParts.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );

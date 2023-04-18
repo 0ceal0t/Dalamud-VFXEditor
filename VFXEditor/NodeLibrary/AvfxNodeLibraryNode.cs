@@ -33,7 +33,7 @@ namespace VfxEditor.NodeLibrary {
             ImGui.PushStyleColor( ImGuiCol.Header, Color );
             ImGui.PushStyleColor( ImGuiCol.HeaderHovered, Color * 0.75f );
             var open = ImGui.CollapsingHeader( $"{Name}{uniqueId}" );
-            DragDrop( library, ref listModified );
+            DragDrop( library, Name, ref listModified );
             ImGui.PopStyleColor( 2 );
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}-context" );
 

@@ -70,7 +70,7 @@ namespace VfxEditor.NodeLibrary {
                     ImGuiTreeNodeFlags.FramePadding |
                     ImGuiTreeNodeFlags.Framed
                 );
-                DragDrop( library, ref listModified );
+                DragDrop( library, Name, ref listModified );
                 ImGui.PopStyleColor( 1 );
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}-context" );
 

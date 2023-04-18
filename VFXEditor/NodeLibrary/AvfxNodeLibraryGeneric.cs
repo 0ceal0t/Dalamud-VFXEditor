@@ -19,10 +19,10 @@ namespace VfxEditor.NodeLibrary {
 
         public abstract bool Contains( AvfxNodeLibraryGeneric item );
 
-        protected void DragDrop( AvfxNodeLibrary library, ref bool listModified ) {
+        protected void DragDrop( AvfxNodeLibrary library, string text, ref bool listModified ) {
             if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
                 library.StartDragging( this );
-                ImGui.Text( "..." );
+                ImGui.Text( text );
                 ImGui.EndDragDropSource();
             }
             if( ImGui.BeginDragDropTarget() ) {

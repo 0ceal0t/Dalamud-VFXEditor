@@ -9,7 +9,6 @@ using System.Numerics;
 using VfxEditor.Ui;
 using VfxEditor.NodeLibrary;
 using VfxEditor.Select;
-using VfxEditor.Select.Lists;
 using System.Linq;
 
 namespace VfxEditor {
@@ -133,12 +132,11 @@ namespace VfxEditor {
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {
-            if( recentList.Contains( result ) ) recentList.Remove( result ); // want to move it to the top
+            if( result == null ) return;
+            recentList.RemoveAll( x => result.CompareTo( x ) );
 
             recentList.Add( result );
-            if( recentList.Count > SaveRecentLimit ) {
-                recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
-            }
+            if( recentList.Count > SaveRecentLimit ) recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
             Save();
         }
 
@@ -217,7 +215,7 @@ namespace VfxEditor {
 
             if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
 
-            ImGui.Unindent();
+            ImGui.Unindent( 5 );
             ImGui.EndChild();
         }
 
@@ -261,7 +259,7 @@ namespace VfxEditor {
             if( ImGui.InputInt( $"Selected size{id}", ref CurveEditorSelectedSize ) ) Save();
             if( ImGui.InputInt( $"Grab distance{id}", ref CurveEditorGrabbingDistance ) ) Save();
 
-            ImGui.Unindent();
+            ImGui.Unindent( 5 );
             ImGui.EndChild();
         }
 
@@ -284,7 +282,7 @@ namespace VfxEditor {
                         if( ImGui.ColorEdit4( $"Collapsed{configId}", ref config.Value.TitleBgCollapsed ) ) Save();
                     }
 
-                    ImGui.Unindent();
+                    ImGui.Unindent( 5 );
                 }
             }
 

@@ -4,18 +4,16 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace VfxEditor.Select.Lists {
-    public abstract class SelectListTab<T> {
+    public class SelectListTab {
         protected readonly SelectDialog Dialog;
-        protected readonly List<T> Items;
+        protected readonly List<SelectResult> Items;
         protected readonly string Name;
 
-        public SelectListTab( SelectDialog dialog, string name, List<T> items ) {
+        public SelectListTab( SelectDialog dialog, string name, List<SelectResult> items ) {
             Dialog = dialog;
             Name = name;
             Items = items;
         }
-
-        protected abstract SelectResult ItemToSelectResult( T item );
 
         public void Draw( string parentId ) {
             if( Items == null ) return;
@@ -32,16 +30,10 @@ namespace VfxEditor.Select.Lists {
 
                 var idx = 0;
                 foreach( var item in Items ) {
-                    var result = ItemToSelectResult( item );
-                    if( result.Type == SelectResultType.Local && !Dialog.IsSource ) continue;
+                    if( item.Type == SelectResultType.Local && !Dialog.IsSource ) continue;
 
                     ImGui.TableNextRow();
-
-                    ImGui.TableNextColumn();
-                    if( DrawFavorite( item, result ) ) break;
-
-                    ImGui.TableNextColumn();
-                    if( DrawSelect( item, result, $"{id}{idx}" ) ) break;
+                    if( DrawRow( item, id, idx ) ) break;
 
                     idx++;
                 }
@@ -50,24 +42,30 @@ namespace VfxEditor.Select.Lists {
             }
 
             ImGui.EndChild();
-            ImGui.PopStyleVar();
+            ImGui.PopStyleVar( 1 );
 
             ImGui.EndTabItem();
         }
 
-        protected virtual bool DrawFavorite( T item, SelectResult result ) {
+        protected virtual bool DrawRow( SelectResult item, string id,  int idx ) {
+            ImGui.TableNextColumn();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
-            if( Dialog.DrawFavorite( result ) ) return true;
+            if( Dialog.DrawFavorite( item ) ) return true;
+
+            ImGui.TableNextColumn();
+            ImGui.Selectable( $"{item.DisplayString}{id}{idx}", false, ImGuiSelectableFlags.SpanAllColumns );
+
+            if( PostRow( item, id, idx ) ) return true;
+
             return false;
         }
 
-        protected virtual bool DrawSelect( T item, SelectResult result, string id ) {
-            ImGui.Selectable( $"{result.DisplayString}{id}", false, ImGuiSelectableFlags.SpanAllColumns );
-
+        protected virtual bool PostRow( SelectResult item, string id, int idx ) {
             if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) {
-                Dialog.Invoke( result );
+                Dialog.Invoke( item );
                 return true;
             }
+
             return false;
         }
     }
