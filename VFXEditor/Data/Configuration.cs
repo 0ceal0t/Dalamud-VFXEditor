@@ -9,6 +9,8 @@ using System.Numerics;
 using VfxEditor.Ui;
 using VfxEditor.NodeLibrary;
 using VfxEditor.Select;
+using VfxEditor.Select.Lists;
+using System.Linq;
 
 namespace VfxEditor {
     [Serializable]

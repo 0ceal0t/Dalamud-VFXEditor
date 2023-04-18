@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Select.Lists;
 using VfxEditor.Select.Scd.BgmQuest;
 using VfxEditor.Ui;
 
@@ -60,8 +61,8 @@ namespace VfxEditor.Select {
         protected abstract List<SelectTab> GetTabs();
 
         protected readonly List<SelectResult> Favorites;
-        protected readonly SelectListTab RecentTab;
-        protected readonly SelectListTab FavoritesTab;
+        protected readonly SelectRecentTab RecentTab;
+        protected readonly SelectFavoriteTab FavoritesTab;
 
         private string LocalPathInput = "";
         private string GamePathInput = "";
@@ -110,22 +111,32 @@ namespace VfxEditor.Select {
 
         private void DrawLocal( string parentId ) {
             var id = $"{parentId}/Local";
+            if( !ImGui.BeginTabItem( $"Local File{id}" ) ) return;
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
-            if( !ImGui.BeginTabItem( "Local File" + id ) ) return;
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
+            ImGui.TextDisabled( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.Text( "Path" );
+
             ImGui.SameLine();
-            ImGui.InputText( id + "-Input", ref LocalPathInput, 255 );
+            ImGui.InputText( $"{id}-Input", ref LocalPathInput, 255 );
+
             ImGui.SameLine();
-            if( ImGui.Button( ( "Browse" + id ) ) ) {
+            ImGui.PushFont( UiBuilder.IconFont );
+            var browse = ImGui.Button( $"{( char )FontAwesomeIcon.Search}{id}" );
+            ImGui.PopFont();
+            if( browse) {
                 FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
                     Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
                 } );
             }
+
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT" + id ) ) Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
+            if( ImGui.Button( $"SELECT{id}" ) ) {
+                Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
+            }
+
+            ImGui.PopStyleVar();
             ImGui.EndTabItem();
         }
 
@@ -135,9 +146,9 @@ namespace VfxEditor.Select {
             var id = $"{parentId}/Game";
 
             if( GetTabs().Count == 0 ) return;
-            if( !ImGui.BeginTabItem( "Game Items" + id ) ) return;
+            if( !ImGui.BeginTabItem( $"Game Items{id}" ) ) return;
 
-            ImGui.BeginTabBar( "Tabs" + id );
+            ImGui.BeginTabBar( $"Tabs{id}" );
             foreach( var tab in GetTabs() ) tab.Draw( id );
             ImGui.EndTabBar();
             ImGui.EndTabItem();
@@ -147,20 +158,24 @@ namespace VfxEditor.Select {
 
         public void DrawGamePath( string parentId ) {
             var id = $"{parentId}/Path";
-            if( !ImGui.BeginTabItem( "Game Path" + id ) ) return;
+            if( !ImGui.BeginTabItem( $"Game Path{id}" ) ) return;
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Text( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
+            ImGui.TextDisabled( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( id + "-Input", ref GamePathInput, 255 );
+            ImGui.InputText(  $"{id}-Input", ref GamePathInput, 255 );
             ImGui.SameLine();
-            if( ImGui.Button( "SELECT" + id ) ) {
+            if( ImGui.Button( $"SELECT{id}" ) ) {
                 var cleanedGamePath = GamePathInput.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
+
+            ImGui.PopStyleVar();
             ImGui.EndTabItem();
         }
+
+        // ======== DRAWING UTILS ======
 
         public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
 
