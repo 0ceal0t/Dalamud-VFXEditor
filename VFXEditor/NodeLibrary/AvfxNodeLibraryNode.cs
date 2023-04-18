@@ -63,7 +63,7 @@ namespace VfxEditor.NodeLibrary {
                 }
 
                 ImGui.SameLine();
-                if( ImGui.Button( Editing ? $"{( char )FontAwesomeIcon.Save}{id}" : $"{( char )FontAwesomeIcon.Edit}{id}" ) ) {
+                if( ImGui.Button( Editing ? $"{( char )FontAwesomeIcon.Save}{id}" : $"{( char )FontAwesomeIcon.PencilAlt}{id}" ) ) {
                     Editing = !Editing;
                     if( !Editing ) { // done editing
                         library.Save();

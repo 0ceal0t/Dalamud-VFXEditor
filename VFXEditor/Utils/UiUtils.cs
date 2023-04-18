@@ -209,7 +209,7 @@ namespace VfxEditor.Utils {
 
         public static float GetOffsetInputSize( FontAwesomeIcon icon ) => GetOffsetInputSize( GetPaddedIconSize( icon ) );
 
-        public static float GetOffsetInputSize( float size ) => ImGui.GetContentRegionAvail().X * 0.65f - size;
+        public static float GetOffsetInputSize( float size ) => (ImGui.GetWindowSize().X) * 0.65f - size;
 
         public static float GetPaddedIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();

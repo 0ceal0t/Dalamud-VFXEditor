@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat.Utils {
     }
 
     public class TmbUtils {
-        public static readonly Dictionary<string, ItemTypeStruct> ItemTypes = new() {
+        public static readonly SortedDictionary<string, ItemTypeStruct> ItemTypes = new() {
             { C063.MAGIC, new ItemTypeStruct( C063.DISPLAY_NAME, typeof(C063) ) },
             { C006.MAGIC, new ItemTypeStruct( C006.DISPLAY_NAME, typeof(C006) ) },
             { C010.MAGIC, new ItemTypeStruct( C010.DISPLAY_NAME, typeof(C010) ) },
@@ -58,6 +58,7 @@ namespace VfxEditor.TmbFormat.Utils {
             { C021.MAGIC, new ItemTypeStruct( C021.DISPLAY_NAME, typeof(C021) ) },
             { C139.MAGIC, new ItemTypeStruct( C139.DISPLAY_NAME, typeof(C139) ) },
             { C089.MAGIC, new ItemTypeStruct( C089.DISPLAY_NAME, typeof(C089) ) },
+            { C033.MAGIC, new ItemTypeStruct( C033.DISPLAY_NAME, typeof(C033) ) },
         };
     }
 }

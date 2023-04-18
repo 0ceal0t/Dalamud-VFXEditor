@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Interfaces {
@@ -24,53 +25,54 @@ namespace VfxEditor.Ui.Interfaces {
             item.SetChildrenRename( renameDict );
         }
 
-        public static void DrawRenameBox( IWorkspaceUiItem item, string parentId, ref string renamed, ref string renamedTemp, ref bool currentRenaming ) {
+        public static void DrawRenameBox( IWorkspaceUiItem item, string parentId, ref string renamed, ref string renamedTemp, ref bool renaming ) {
             var id = parentId + "/Rename";
-            if( currentRenaming ) {
+            var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Check );
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
+
+            if( renaming ) {
+                ImGui.SetNextItemWidth( inputSize );
                 ImGui.InputText( $"{id}-Input", ref renamedTemp, 255 );
 
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
                     if( string.IsNullOrEmpty( renamedTemp ) || renamed == item.GetDefaultText() ) renamed = null;
                     else renamed = renamedTemp;
-                    currentRenaming = false;
+                    renaming = false;
                 }
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
-                    currentRenaming = false;
-                }
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) renaming = false;
 
                 ImGui.PopFont();
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( "Reset" + id ) ) {
                     renamed = null;
-                    currentRenaming = false;
+                    renaming = false;
                 }
             }
             else {
                 var currentText = string.IsNullOrEmpty( renamed ) ? item.GetDefaultText() : renamed;
                 ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.8f );
+                ImGui.SetNextItemWidth( inputSize );
                 ImGui.InputText( $"{id}-Input", ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
-                ImGui.PopStyleVar();
+                ImGui.PopStyleVar( 1 );
 
                 ImGui.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
                 if( ImGui.Button( $"{( char )FontAwesomeIcon.PencilAlt}" + id ) ) {
-                    currentRenaming = true;
+                    renaming = true;
                     renamedTemp = currentText;
                 }
 
                 ImGui.PopFont();
             }
+
+            ImGui.PopStyleVar( 1 );
         }
     }
 }
