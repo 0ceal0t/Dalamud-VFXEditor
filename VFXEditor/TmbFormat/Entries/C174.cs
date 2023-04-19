@@ -1,20 +1,31 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
-    public enum C174_ObjectPosition {
-        StowedPosition = 0,
+    public enum ObjectControlPosition {
+        Stowed = 0,
         RightHand = 1,
-        RightHand_2 = 2,
-        Switch_LeftHand = 3,
+        Unknown = 2,
+        SwitchHand = 3,
         RootBone = 4,
-        Switch_LeftHand_2 = 5
+        SwitchReverse = 5
     }
 
-    public enum C174_ObjectControl {
+    public enum ObjectControlFinal {
+        Stowed = 0,
+        Drawn = 1,
+        MainHand = 2,
+        OffHand = 3,
+        RootBone = 4,
+        UncontrolledRoot = 5,
+        Original = 6,
+    }
+
+    public enum ObjectControl {
         MainHand = 0,
         OffHand = 1,
         Summoned = 2
@@ -29,52 +40,13 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedSimpleEnum<C174_ObjectPosition> ObjectPosition = new( "Object Position", ObjectPositions, defaultValue: 5 );
-        private readonly ParsedSimpleEnum<C174_ObjectControl> ObjectControl = new( "Object Control", ObjectControls, defaultValue: 1 );
-        private readonly ParsedInt Unk4 = new( "Unknown 4", defaultValue: 1 );
-        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedEnum<ObjectControlPosition> ObjectPosition = new( "Object Position" );
+        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
+        private readonly ParsedEnum<ObjectControlFinal> FinalPosition = new( "Final Position" );
+        private readonly ParsedInt PositionDelay = new( "Position Delay" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
-
-        public static readonly C174_ObjectPosition[] ObjectPositions = new[] {
-            C174_ObjectPosition.StowedPosition,
-            C174_ObjectPosition.RightHand,
-            C174_ObjectPosition.RightHand_2,
-            C174_ObjectPosition.Switch_LeftHand,
-            C174_ObjectPosition.RootBone,
-            C174_ObjectPosition.Switch_LeftHand_2
-        };
-
-        public static readonly C174_ObjectControl[] ObjectControls = new[] {
-            C174_ObjectControl.MainHand,
-            C174_ObjectControl.OffHand,
-            C174_ObjectControl.Summoned
-        };
-
-        /*
-            0 - The control object returns to the stowed weapon state.
-
-            1 - When the control object is a summoned general weapon, bind the weapon to the right hand.
-
-            2 - When the control object is a summoned general weapon, bind the weapon to the right hand.
-            When the control object is the second hand and the second hand is the standby second hand, it seems to rotate 90 ° upward on the original bone (doubtful)
-
-            3 - Switch the control object to the left hand when it is the main hand weapon.
-            Or switch the off hand weapon to the right hand.
-            When the control object is a general summoning weapon, bind it to the left hand.
-
-            4 - In most cases, bind the object to hara bone
-
-            5 - When the control object is a main hand weapon, switch it to the left hand.
-            Or switch the off hand weapon to the right hand.
-            When the control object is a general summoning weapon, bind it to the left hand. (The samurai sword will be held reversely)
-
-
-            0 - Control the main weapon
-            1 - Control the second hand weapon
-            2 - Control summoning weapons
-        */
 
         public C174( bool papEmbedded ) : base( papEmbedded ) { }
 
@@ -84,12 +56,12 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
+            Duration,
             Unk2,
             ObjectPosition,
             ObjectControl,
-            Unk4,
-            Unk5,
+            FinalPosition,
+            PositionDelay,
             Unk6
         };
 

@@ -42,7 +42,6 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Read( BinaryReader reader ) {
-            // Datalength = 0, 0x20
             DataLength = reader.ReadInt32();
             NumChannels = reader.ReadInt32();
             SampleRate = reader.ReadInt32();

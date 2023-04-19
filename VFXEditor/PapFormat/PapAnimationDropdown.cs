@@ -55,7 +55,7 @@ namespace VfxEditor.PapFormat {
         public override void Draw( string id ) {
             base.Draw( id );
             if( Selected != null ) {
-                Selected.Draw( $"{id}{Items.IndexOf( Selected )}", File.ModelId.Value, File.ModelType.GetValue() );
+                Selected.Draw( $"{id}{Items.IndexOf( Selected )}", File.ModelId.Value, File.ModelType.Value );
             }
             else ImGui.Text( "Select an animation..." );
         }

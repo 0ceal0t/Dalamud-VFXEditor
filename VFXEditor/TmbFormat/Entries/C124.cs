@@ -5,6 +5,9 @@ using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
+    // Makes character untargetable
+    // Don't mess with this
+
     public class C124 : TmbEntry {
         public const string MAGIC = "C124";
         public const string DISPLAY_NAME = "C124";
@@ -37,6 +40,8 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
+            TmbFile.GenericWarning();
+
             DrawHeader( id );
             DrawParsed( id );
         }

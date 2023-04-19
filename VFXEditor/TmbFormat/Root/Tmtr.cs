@@ -18,7 +18,7 @@ namespace VfxEditor.TmbFormat {
         private readonly List<int> TempIds;
 
         private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
-        private readonly ParsedBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
+        private readonly ParsedByteBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
         private readonly List<TmtrUnknownData> UnknownData = new();
 
         public Tmtr( bool papEmbedded ) : base( papEmbedded ) { }

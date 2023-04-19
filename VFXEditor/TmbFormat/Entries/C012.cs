@@ -1,6 +1,4 @@
 using ImGuiNET;
-using System.Numerics;
-using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using System.Collections.Generic;

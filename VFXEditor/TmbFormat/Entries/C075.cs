@@ -7,16 +7,16 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C075 : TmbEntry {
         public const string MAGIC = "C075";
-        public const string DISPLAY_NAME = "C075";
+        public const string DISPLAY_NAME = "Terrain VFX (C075)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x40;
         public override int ExtraSize => 4 * ( 3 + 3 + 3 + 4 );
 
-        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Shape = new( "Shape" );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
         private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
@@ -32,9 +32,9 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Duration,
+            Enabled,
             Unk1,
-            Unk2,
+            Shape,
             Scale,
             Rotation,
             Position,

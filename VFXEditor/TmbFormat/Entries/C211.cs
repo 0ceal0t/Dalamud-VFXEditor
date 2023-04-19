@@ -7,7 +7,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C211 : TmbEntry {
         public const string MAGIC = "C211";
-        public const string DISPLAY_NAME = "C211";
+        public const string DISPLAY_NAME = "Lock Facing Direction (C211)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

@@ -1,5 +1,4 @@
 using Dalamud.Logging;
-using Lumina.Extensions;
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
@@ -47,39 +46,41 @@ namespace VfxEditor.ScdFormat.Music.Data {
             Unk3 = reader.ReadSingle();
             SeekTableSize = reader.ReadInt32();
 
-            // ==== IMPORTED =====
+            // Check if imported .ogg
+
             var seekTableString = Encoding.ASCII.GetString( BitConverter.GetBytes( SeekTableSize ) );
+
             if( seekTableString.EndsWith( "vor" ) ) { // "vorbis"
                 Imported = true;
                 VorbisHeaderData = reader.ReadBytes( 0x35C );
                 OggData = reader.ReadBytes( entry.DataLength + 0x10 );
                 DecodedData = OggData;
-                return;
             }
+            else {
+                VorbisHeaderSize = reader.ReadInt32();
+                Unk4 = reader.ReadInt32();
+                Unk5 = reader.ReadInt32();
 
-            VorbisHeaderSize = reader.ReadInt32();
-            Unk4 = reader.ReadInt32();
-            Unk5 = reader.ReadInt32();
+                //1c6c
+                //Vorbis Header + Data
+                SeekTableData = reader.ReadBytes( SeekTableSize );
+                VorbisHeaderData = reader.ReadBytes( VorbisHeaderSize );
 
-            //1c6c
-            //Vorbis Header + Data
-            SeekTableData = reader.ReadBytes( SeekTableSize );
-            VorbisHeaderData = reader.ReadBytes( VorbisHeaderSize );
+                var decodedHeader = new byte[VorbisHeaderData.Length];
+                Buffer.BlockCopy( VorbisHeaderData, 0, decodedHeader, 0, decodedHeader.Length );
+                if( EncodeMode == 0x2002 && EncodeByte != 0x00 ) ScdUtils.XorDecode( decodedHeader, ( byte )EncodeByte );
 
-            var decodedHeader = new byte[VorbisHeaderData.Length];
-            Buffer.BlockCopy( VorbisHeaderData, 0, decodedHeader, 0, decodedHeader.Length );
-            if( EncodeMode == 0x2002 && EncodeByte != 0x00 ) ScdUtils.XorDecode( decodedHeader, ( byte )EncodeByte );
+                OggData = reader.ReadBytes( entry.DataLength );
 
-            OggData = reader.ReadBytes( entry.DataLength );
+                using var ms = new MemoryStream();
+                using var bw = new BinaryWriter( ms );
+                bw.Write( decodedHeader );
+                bw.Write( OggData );
 
-            using var ms = new MemoryStream();
-            using var bw = new BinaryWriter( ms );
-            bw.Write( decodedHeader );
-            bw.Write( OggData );
+                DecodedData = ms.ToArray();
 
-            DecodedData = ms.ToArray();
-
-            if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( DecodedData, OggData.Length );
+                if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( DecodedData, OggData.Length );
+            }
 
             // Parse out pages
 
@@ -238,9 +239,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             var list = new List<int>();
 
             for( var i = start; i < data.Length; i++ ) {
-                if( !IsMatch( data, i, candidate ) )
-                    continue;
-
+                if( !IsMatch( data, i, candidate ) ) continue;
                 list.Add( i );
                 if( onlyOnce ) break;
             }
@@ -251,8 +250,9 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private static bool IsMatch( byte[] array, int position, byte[] candidate ) {
             if( candidate.Length > ( array.Length - position ) ) return false;
 
-            for( var i = 0; i < candidate.Length; i++ )
+            for( var i = 0; i < candidate.Length; i++ ) {
                 if( array[position + i] != candidate[i] ) return false;
+            }
 
             return true;
         }

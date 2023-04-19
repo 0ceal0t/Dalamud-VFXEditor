@@ -146,5 +146,11 @@ namespace VfxEditor.TmbFormat
             ImGui.SameLine();
             if( ImGui.SmallButton( "Guide" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Notes-on-TMFC" );
         }
+
+        public static void GenericWarning() {
+            ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+            ImGui.TextWrapped( "Please don't do anything stupid with this" );
+            ImGui.PopStyleColor();
+        }
     }
 }

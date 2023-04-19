@@ -1,6 +1,5 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.Parsing {
@@ -52,7 +51,7 @@ namespace VfxEditor.Parsing {
             foreach( var option in options ) {
                 var intFlagValue = ( int )( object )option;
                 if( intFlagValue == 0 ) continue;
-                var hasFlag = Value.HasFlag( option );
+                var hasFlag = HasFlag( option );
                 if( ImGui.Checkbox( $"{option}{id}", ref hasFlag ) ) {
                     var intValue = ( int )( object )Value;
                     if( hasFlag ) intValue |= intFlagValue;
@@ -63,5 +62,7 @@ namespace VfxEditor.Parsing {
                 }
             }
         }
+
+        public bool HasFlag( T option ) => Value.HasFlag( option );
     }
 }

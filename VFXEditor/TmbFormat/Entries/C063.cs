@@ -13,8 +13,8 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x20;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Loop = new( "Loop", defaultValue: 1 );
+        private readonly ParsedInt Interrupt = new( "Interrupt" );
         private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedInt SoundIndex = new( "Sound Index", defaultValue: 1 );
         private readonly ParsedInt SoundPosition = new( "Sound Position", defaultValue: 1 );
@@ -27,8 +27,8 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
-            Unk2,
+            Loop,
+            Interrupt,
             Path,
             SoundIndex,
             SoundPosition

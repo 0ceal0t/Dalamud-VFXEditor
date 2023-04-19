@@ -7,7 +7,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C093 : TmbEntry {
         public const string MAGIC = "C093";
-        public const string DISPLAY_NAME = "C093";
+        public const string DISPLAY_NAME = "Color (C093)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -16,8 +16,8 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration", defaultValue: 30 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly TmbOffsetFloat4 Unk2 = new( "Unknown 2", defaultValue: new( 1 ) );
-        private readonly TmbOffsetFloat4 Unk3 = new( "Unknown 3", defaultValue: new( 1 ) );
+        private readonly TmbOffsetFloat4 Color1 = new( "Color 1", defaultValue: new( 1 ) );
+        private readonly TmbOffsetFloat4 Color2 = new( "Color 2", defaultValue: new( 1 ) );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
         public C093( bool papEmbedded ) : base( papEmbedded ) { }
@@ -30,8 +30,8 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new() {
             Duration,
             Unk1,
-            Unk2,
-            Unk3,
+            Color1,
+            Color2,
             Unk4
         };
 

@@ -3,7 +3,7 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxBool : AvfxDrawable {
-        public readonly ParsedBool Parsed;
+        public readonly ParsedNullableBool Parsed;
 
         public AvfxBool( string name, string avfxName, bool defaultValue, int size = 4 ) : this( name, avfxName, size ) {
             SetValue( defaultValue );

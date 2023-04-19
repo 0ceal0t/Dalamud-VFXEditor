@@ -2,16 +2,13 @@ using Dalamud.Logging;
 using NAudio.Wave;
 using System.IO;
 
-namespace VfxEditor.ScdFormat.Music.Data
-{
-    public class ScdAdpcm : ScdAudioData
-    {
+namespace VfxEditor.ScdFormat.Music.Data {
+    public class ScdAdpcm : ScdAudioData {
         public byte[] WaveHeader;
         public byte[] Data;
         public WaveFormat Format;
 
-        public ScdAdpcm( BinaryReader reader, ScdAudioEntry entry )
-        {
+        public ScdAdpcm( BinaryReader reader, ScdAudioEntry entry ) {
             WaveHeader = reader.ReadBytes( entry.FirstFrame - entry.AuxChunkData.Length );
             Data = reader.ReadBytes( entry.DataLength );
 
@@ -20,34 +17,28 @@ namespace VfxEditor.ScdFormat.Music.Data
             Format = WaveFormat.FromFormatChunk( br, WaveHeader.Length );
         }
 
-        public override WaveStream GetStream()
-        {
+        public override WaveStream GetStream() {
             var ms = new MemoryStream( Data, 0, Data.Length, false );
             return new RawSourceWaveStream( ms, Format );
         }
 
-        public override void Write( BinaryWriter writer )
-        {
+        public override void Write( BinaryWriter writer ) {
             writer.Write( WaveHeader );
             writer.Write( Data );
         }
 
-        public static void Import( string path, ScdAudioEntry entry )
-        {
+        public static void Import( string path, ScdAudioEntry entry ) {
             var waveFileCheck = new WaveFileReader( path );
-            if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm )
-            {
+            if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
                 PluginLog.Log( "Already Adpcm, skipping conversion" );
                 File.Copy( path, ScdManager.ConvertWav, true );
             }
-            else
-            {
+            else {
                 ScdUtils.ConvertToAdpcm( path );
             }
             waveFileCheck.Close();
 
-            if( !File.Exists( ScdManager.ConvertWav ) )
-            {
+            if( !File.Exists( ScdManager.ConvertWav ) ) {
                 PluginLog.Error( "Could not conver to ADPCM" );
                 return;
             }
@@ -68,8 +59,7 @@ namespace VfxEditor.ScdFormat.Music.Data
             data.WaveHeader = br.ReadBytes( headerLength );
 
             var magic = br.ReadInt32();
-            while( magic != 0x61746164 )
-            { // data
+            while( magic != 0x61746164 ) { // data
                 var size = br.ReadInt32();
                 br.ReadBytes( size );
                 magic = br.ReadInt32();
@@ -89,8 +79,7 @@ namespace VfxEditor.ScdFormat.Music.Data
 
         public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
 
-        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime )
-        {
+        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
             startTime = ( double )loopStart / Format.AverageBytesPerSecond;
             endTime = ( double )loopEnd / Format.AverageBytesPerSecond;
         }

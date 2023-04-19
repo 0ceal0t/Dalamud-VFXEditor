@@ -17,12 +17,10 @@ namespace VfxEditor.PapFormat {
     }
 
     public class PapFile : FileManagerFile {
-        public static readonly SkeletonType[] SkeletonOptions = new[] { SkeletonType.Human, SkeletonType.Monster, SkeletonType.DemiHuman };
-
         public readonly string HkxTempLocation;
 
         public readonly ParsedShort ModelId = new( "Model Id" );
-        public readonly ParsedSimpleEnum<SkeletonType> ModelType = new( "Skeleton Type", SkeletonOptions, size: 1 );
+        public readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", size: 1 );
         public readonly ParsedInt Variant = new( "Variant", size: 1 );
 
         public readonly List<PapAnimation> Animations = new();

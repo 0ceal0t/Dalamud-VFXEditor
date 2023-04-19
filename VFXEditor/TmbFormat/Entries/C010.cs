@@ -1,9 +1,22 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
+    [Flags]
+    public enum AnimationFlags {
+        TimeControlEnabled = 0x01,
+        Unknown_2 = 0x02,
+        Unknown_3 = 0x04,
+        Unknown_4 = 0x08,
+        Unknown_5 = 0x10,
+        Unknown_6 = 0x20,
+        Unknown_7 = 0x40,
+        Unknown_8 = 0x80
+    }
+
     public class C010 : TmbEntry {
         public const string MAGIC = "C010";
         public const string DISPLAY_NAME = "Animation (C010)";
@@ -15,9 +28,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration", defaultValue: 50 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedFloat Unk3 = new( "Unknown 3" );
-        private readonly ParsedFloat Unk4 = new( "Unknown 4" );
+        private readonly ParsedFlag<AnimationFlags> Flags = new( "Flags" );
+        private readonly ParsedFloat AnimationStart = new( "Animation Start Frame" );
+        private readonly ParsedFloat AnimationEnd = new( "Animation End Frame" );
         private readonly TmbOffsetString Path = new( "Path", maxSize: 31 );
         private readonly ParsedInt Unk5 = new( "Unknown 1" );
 
@@ -31,9 +44,9 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new() {
             Duration,
             Unk1,
-            Unk2,
-            Unk3,
-            Unk4,
+            Flags,
+            AnimationStart,
+            AnimationEnd,
             Path,
             Unk5
         };
@@ -45,7 +58,19 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public override void Draw( string id ) {
             DrawHeader( id );
-            DrawParsed( id );
+
+            Flags.Draw( id, Command );
+
+            var timeControlEnabled = Flags.HasFlag( AnimationFlags.TimeControlEnabled );
+            if( !timeControlEnabled ) ImGui.BeginDisabled();
+            Duration.Draw( id, Command );
+            AnimationStart.Draw( id, Command );
+            AnimationEnd.Draw( id, Command );
+            if( !timeControlEnabled ) ImGui.EndDisabled();
+
+            Unk1.Draw(id, Command);
+            Path.Draw( id, Command );
+            Unk5.Draw(id, Command );
         }
     }
 }

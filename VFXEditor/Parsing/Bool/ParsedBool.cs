@@ -1,12 +1,12 @@
 using ImGuiNET;
 using System;
 using System.IO;
-using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Parsing {
-    public class ParsedBool : ParsedSimpleBase<bool?> {
+    public class ParsedBool : ParsedSimpleBase<bool> {
         public readonly string Name;
         private int Size;
+        private int IntValue => Value ? 1 : 0;
 
         public ParsedBool( string name, bool defaultValue, int size = 4 ) : this( name, size ) {
             Value = defaultValue;
@@ -20,36 +20,31 @@ namespace VfxEditor.Parsing {
         public override void Read( BinaryReader reader ) => Read( reader, Size );
 
         public override void Read( BinaryReader reader, int size ) {
-            var b = reader.ReadByte();
-            Value = b switch {
-                0x00 => false,
-                0x01 => true,
-                0xff => null,
-                _ => null
-            };
             Size = size;
+            Value = (Size switch {
+                4 => reader.ReadInt32(),
+                2 => reader.ReadInt16(),
+                1 => reader.ReadByte(),
+                _ => reader.ReadByte()
+            }) == 1;
         }
 
         public override void Write( BinaryWriter writer ) {
-            byte v = Value switch {
-                true => 0x01,
-                false => 0x00,
-                null => 0xff
-            };
-            writer.Write( v );
-            AvfxBase.WritePad( writer, Size - 1 );
+            if( Size == 4 ) writer.Write( IntValue );
+            else if( Size == 2 ) writer.Write( ( short )IntValue );
+            else writer.Write( ( byte )IntValue );
         }
 
         public override void Draw( string id, CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Bools[Name] = Value == true;
+            if( copy.IsCopying ) copy.Bools[Name] = Value;
             if( copy.IsPasting && copy.Bools.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<bool?>( this, val ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<bool>( this, val ) );
             }
 
-            var value = Value == true;
-            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
+            var value = Value;
+            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
         }
     }
 }
