@@ -99,6 +99,9 @@ namespace VfxEditor {
         public int CurveEditorSelectedSize = 10;
         public int CurveEditorPrimarySelectedSize = 12;
 
+        public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
+        public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -160,7 +163,11 @@ namespace VfxEditor {
                     DrawCurveEditor();
                     ImGui.EndTabItem();
                 }
-                if( ImGui.BeginTabItem( $"Editor-Specific Settings{id}" ) ) {
+                if( ImGui.BeginTabItem( $"Timeline Editor{id}" ) ) {
+                    DrawTimelineEditor();
+                    ImGui.EndTabItem();
+                }
+                if( ImGui.BeginTabItem( $"File Editors{id}" ) ) {
                     DrawEditorSpecific();
                     ImGui.EndTabItem();
                 }
@@ -258,6 +265,20 @@ namespace VfxEditor {
             if( ImGui.InputInt( $"Primary selected size{id}", ref CurveEditorPrimarySelectedSize ) ) Save();
             if( ImGui.InputInt( $"Selected size{id}", ref CurveEditorSelectedSize ) ) Save();
             if( ImGui.InputInt( $"Grab distance{id}", ref CurveEditorGrabbingDistance ) ) Save();
+
+            ImGui.Unindent( 5 );
+            ImGui.EndChild();
+        }
+
+        private void DrawTimelineEditor() {
+            var id = $"##TimelineEditorConfig";
+
+            ImGui.BeginChild( $"{id}-Config" );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Indent( 5 );
+
+            if( ImGui.ColorEdit4( $"Selected color{id}", ref TimelineSelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( $"Bar color{id}", ref TimelineBarColor ) ) Save();
 
             ImGui.Unindent( 5 );
             ImGui.EndChild();
