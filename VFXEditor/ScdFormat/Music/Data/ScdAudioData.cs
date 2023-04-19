@@ -1,10 +1,8 @@
 using NAudio.Wave;
 using System.IO;
 
-namespace VfxEditor.ScdFormat.Music.Data
-{
-    public abstract class ScdAudioData
-    {
+namespace VfxEditor.ScdFormat.Music.Data {
+    public abstract class ScdAudioData {
         public abstract WaveStream GetStream();
 
         public abstract int SamplesToBytes( int samples );

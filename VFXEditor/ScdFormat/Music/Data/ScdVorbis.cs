@@ -1,9 +1,11 @@
 using Dalamud.Logging;
+using Lumina.Extensions;
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
 using SharpDX.Text;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.ScdFormat.Music.Data {
@@ -28,6 +30,14 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         // https://github.com/CrimsonOrion/CS-FFXIV-Data-Worker/blob/af126fd74139f54722b4dd8feea87c54077caeb7/FFXIV%20Data%20Worker/OggToScd.cs
         // https://github.com/Soreepeong/XivAlexander/blob/0b1077ebbcd2bf13955169fddc2bc38c218d19fe/XivAlexanderCommon/Sqex/Sound/Writer.cpp#L63
+
+        // https://github.com/Leinxad/KHPCSoundTools/blob/ad90c925c7b6b5d20fdabe0e7bc1c80bf106dbbe/SingleEncoder/Program.cs#L218
+        private readonly SortedDictionary<int, int> PageBytesToSamples = new();
+        private readonly static byte[] PagePattern = "OggS"u8.ToArray();
+        private readonly static byte[] HeaderPattern = new byte[] { 0x05, 0x76, 0x6F, 0x72, 0x62, 0x69, 0x73 };
+        private readonly int SampleRate;
+        private readonly int FirstPageBytes;
+        private readonly int LastPageSamples;
 
         public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) {
             EncodeMode = reader.ReadInt16();
@@ -70,47 +80,68 @@ namespace VfxEditor.ScdFormat.Music.Data {
             DecodedData = ms.ToArray();
 
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( DecodedData, OggData.Length );
-        }
 
-        public override int SamplesToBytes( int samples ) {
-            var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
-            var reader = new VorbisReader( ms );
+            // Parse out pages
 
-            var bytes = SamplesToBytesInternal( samples, reader );
+            var headerOffset = Locate( DecodedData, HeaderPattern, 0, true );
+            if( headerOffset == null || headerOffset.Length == 0 ) {
+                PluginLog.Error( "Could not find header" );
+            }
+            var headerSize = headerOffset[0];
 
-            reader.Dispose();
-            ms.Dispose();
-
-            return bytes;
-        }
-
-        public override int TimeToBytes( float time ) {
-            var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
-            var reader = new VorbisReader( ms ) {
-                TimePosition = TimeSpan.FromSeconds( time )
-            };
-
-            var samples = reader.SamplePosition;
-
-            reader.SeekTo( 0 );
-
-            var bytes = SamplesToBytesInternal( samples, reader );
-
-            reader.Dispose();
-            ms.Dispose();
-
-            return bytes;
-        }
-
-        private static int SamplesToBytesInternal( long samples, VorbisReader reader ) {
-            var buffer = new float[reader.Channels];
-            reader.StreamStats.ResetStats();
-
-            for( var i = 0; i < samples; i++ ) {
-                reader.ReadSamples( buffer, 0, buffer.Length );
+            var pageOffsets = Locate( DecodedData, PagePattern, headerSize, false );
+            if( headerOffset == null || headerOffset.Length == 0 ) {
+                PluginLog.Error( "Could not find pages" );
             }
 
-            return CurrentBytes( reader );
+            using var pageMs = new MemoryStream( DecodedData );
+            using var decodedReader = new BinaryReader( pageMs );
+
+            var lastPageSamples = 0;
+            foreach( var offset in pageOffsets ) {
+                decodedReader.BaseStream.Seek( offset + 6, SeekOrigin.Begin );
+                var samples = decodedReader.ReadInt32();
+                var pageOffset = offset + 4;
+                if( PageBytesToSamples.Count == 0 ) FirstPageBytes = pageOffset;
+                PageBytesToSamples[pageOffset] = samples;
+                lastPageSamples = samples;
+            }
+            LastPageSamples = lastPageSamples;
+
+            SampleRate = entry.SampleRate;
+        }
+
+        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )( SampleRate * time ) );
+
+        public override int SamplesToBytes( int samples ) {
+            var lastBytes = 0;
+            foreach( var page in PageBytesToSamples ) {
+                if( page.Value == samples ) {
+                    return Math.Min( page.Key, DecodedData.Length ) - FirstPageBytes;
+                }
+                else if( page.Value > samples ) {
+                    return Math.Min( lastBytes, DecodedData.Length ) - FirstPageBytes;
+                }
+                lastBytes = page.Key;
+            }
+            return DecodedData.Length - FirstPageBytes;
+        }
+
+        public double BytesToTime( int bytes ) => ( ( double )BytesToSamples( bytes ) ) / SampleRate;
+
+        public int BytesToSamples( int bytes ) {
+            var lastSamples = 0;
+            bytes += FirstPageBytes;
+            foreach( var page in PageBytesToSamples ) {
+                if( page.Key == bytes ) {
+                    return page.Value;
+                }
+                else if( page.Key > bytes ) {
+                    return lastSamples;
+                }
+                lastSamples = page.Value;
+            }
+            return LastPageSamples;
         }
 
         public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
@@ -120,41 +151,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 return;
             }
 
-            var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
-            var reader = new VorbisReader( ms );
-
-            startTime = 0;
-            endTime = reader.TotalTime.TotalSeconds;
-
-            var buffer = new float[reader.Channels];
-            reader.StreamStats.ResetStats();
-
-            var prevBytes = 0;
-            var startFound = false;
-            var endFound = false;
-
-            for( var i = 0; i < reader.TotalSamples; i++ ) {
-                reader.ReadSamples( buffer, 0, buffer.Length );
-
-                var currentBytes = CurrentBytes( reader );
-                var currentTime = reader.TimePosition.TotalSeconds;
-
-                if( !startFound && prevBytes < loopStart && currentBytes >= loopStart ) {
-                    startFound = true;
-                    startTime = currentTime;
-                }
-
-                if( !endFound && prevBytes < loopEnd && currentBytes >= loopEnd ) {
-                    endFound = true;
-                    endTime = currentTime;
-                }
-
-                if( startFound && endFound ) break;
-                prevBytes = currentBytes;
-            }
-
-            reader.Dispose();
-            ms.Dispose();
+            startTime = BytesToTime( loopStart );
+            endTime = BytesToTime( loopEnd );
         }
 
         private static int CurrentBytes( VorbisReader reader ) => ( int )( ( reader.StreamStats.AudioBits + reader.StreamStats.ContainerBits + reader.StreamStats.WasteBits + reader.StreamStats.OverheadBits ) / 8 );
@@ -234,6 +232,39 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public static void ImportWav( string path, ScdAudioEntry entry ) {
             ScdUtils.ConvertToOgg( path );
             ImportOgg( ScdManager.ConvertOgg, entry );
+        }
+
+        private static int[] Locate( byte[] data, byte[] candidate, int start, bool onlyOnce ) {
+            if( IsEmptyLocate( data, candidate ) ) return null;
+
+            var list = new List<int>();
+
+            for( var i = start; i < data.Length; i++ ) {
+                if( !IsMatch( data, i, candidate ) )
+                    continue;
+
+                list.Add( i );
+                if( onlyOnce ) break;
+            }
+
+            return list.Count == 0 ? null : list.ToArray();
+        }
+
+        private static bool IsMatch( byte[] array, int position, byte[] candidate ) {
+            if( candidate.Length > ( array.Length - position ) ) return false;
+
+            for( var i = 0; i < candidate.Length; i++ )
+                if( array[position + i] != candidate[i] ) return false;
+
+            return true;
+        }
+
+        private static bool IsEmptyLocate( byte[] array, byte[] candidate ) {
+            return array == null
+                || candidate == null
+                || array.Length == 0
+                || candidate.Length == 0
+                || candidate.Length > array.Length;
         }
     }
 }
