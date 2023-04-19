@@ -33,8 +33,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         // https://github.com/Leinxad/KHPCSoundTools/blob/ad90c925c7b6b5d20fdabe0e7bc1c80bf106dbbe/SingleEncoder/Program.cs#L218
         private readonly SortedDictionary<int, int> PageBytesToSamples = new();
-        private readonly static byte[] PagePattern = "OggS"u8.ToArray();
-        private readonly static byte[] HeaderPattern = new byte[] { 0x05, 0x76, 0x6F, 0x72, 0x62, 0x69, 0x73 };
+        private static readonly byte[] PagePattern = "OggS"u8.ToArray();
+        private static readonly byte[] HeaderPattern = new byte[] { 0x05, 0x76, 0x6F, 0x72, 0x62, 0x69, 0x73 };
         private readonly int SampleRate;
         private readonly int FirstPageBytes;
         private readonly int LastPageSamples;
@@ -154,8 +154,6 @@ namespace VfxEditor.ScdFormat.Music.Data {
             startTime = BytesToTime( loopStart );
             endTime = BytesToTime( loopEnd );
         }
-
-        private static int CurrentBytes( VorbisReader reader ) => ( int )( ( reader.StreamStats.AudioBits + reader.StreamStats.ContainerBits + reader.StreamStats.WasteBits + reader.StreamStats.OverheadBits ) / 8 );
 
         public override WaveStream GetStream() {
             var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );

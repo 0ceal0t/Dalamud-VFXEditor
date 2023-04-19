@@ -308,7 +308,7 @@ namespace VfxEditor.ScdFormat
             } );
         }
 
-        private WaveStream ConvertStream( WaveStream stream ) => stream.WaveFormat.Encoding switch {
+        private static WaveStream ConvertStream( WaveStream stream ) => stream.WaveFormat.Encoding switch {
             WaveFormatEncoding.Pcm => WaveFormatConversionStream.CreatePcmStream( stream ),
             WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
             _ => stream
