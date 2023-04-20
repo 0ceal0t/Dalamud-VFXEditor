@@ -18,9 +18,9 @@ namespace VfxEditor.TmbFormat {
             if( ActiveDocument != null ) ActiveDocument.AnimationId = ActorAnimationManager.GetIdFromTmbPath( result.Path );
         }
 
-        protected override TmbDocument GetNewDocument() => new( this, LocalPath );
+        protected override TmbDocument GetNewDocument() => new( this, WriteLocation );
 
         protected override TmbDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => 
-            new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
+            new( this, WriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
     }
 }

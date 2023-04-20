@@ -45,8 +45,8 @@ namespace VfxEditor.FileManager {
         public readonly ManagerConfiguration Configuration;
         public readonly CopyManager Copy = new();
 
-        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
-        public override string GetWriteLocation() => LocalPath;
+        protected string WriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
+        public override string GetWriteLocation() => WriteLocation;
 
         public readonly List<T> Documents = new();
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;

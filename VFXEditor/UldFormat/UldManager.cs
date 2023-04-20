@@ -10,9 +10,9 @@ namespace VfxEditor.UldFormat {
             ReplaceSelect = new UldSelectDialog( "Uld Select [REPLACED]", this, false );
         }
 
-        protected override UldDocument GetNewDocument() => new( this, LocalPath );
+        protected override UldDocument GetNewDocument() => new( this, WriteLocation );
 
         protected override UldDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) =>
-            new( this, LocalPath, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
+            new( this, WriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
     }
 }
