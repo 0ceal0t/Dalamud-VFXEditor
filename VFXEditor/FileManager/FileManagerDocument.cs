@@ -127,11 +127,18 @@ namespace VfxEditor.FileManager {
             Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
         }
 
-        public virtual void Update() {
+        public void Update() {
+            var oldWriteLocation = WriteLocation;
+            WriteLocation = Manager.GetWriteLocation();
+
             UpdateFile();
-            Reload();
+            Reload( GetPapIds() );
             Plugin.ResourceLoader.ReRender();
+
+            File.Delete( oldWriteLocation );
         }
+
+        protected virtual List<string> GetPapIds() => null;
 
         public void PenumbraExport( string modFolder ) {
             var path = ReplacePath;
@@ -278,10 +285,6 @@ namespace VfxEditor.FileManager {
             var width = availWidth > 500 ? 500 : availWidth; // cap out at 300
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( availWidth - width ) / 2 );
             ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
-
-            //UiUtils.CenteredText( "Welcome to VFXEditor" );
-            //ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
-            //ImGui.TextWrapped( "To begin, select a file to load and one to replace using the magnifying glass icons above, then click \"Update\". For example, to edit the skill \"Fell Cleave,\" select it as both the loaded and replaced effect. For more information, please see any of the resources below." );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 30 );
 

@@ -11,6 +11,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
 using System.Collections.Generic;
+using System.IO;
 using VfxEditor.Animation;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Data;

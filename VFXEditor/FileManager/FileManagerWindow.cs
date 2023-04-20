@@ -27,6 +27,8 @@ namespace VfxEditor.FileManager {
 
         public abstract void SetReplace( SelectResult result );
         public abstract void ShowReplace();
+
+        public abstract string GetWriteLocation();
     }
 
     public abstract class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
@@ -43,7 +45,8 @@ namespace VfxEditor.FileManager {
         public readonly ManagerConfiguration Configuration;
         public readonly CopyManager Copy = new();
 
-        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' ); // temporary write location
+        protected string LocalPath => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
+        public override string GetWriteLocation() => LocalPath;
 
         public readonly List<T> Documents = new();
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;

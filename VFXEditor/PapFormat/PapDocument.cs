@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
@@ -13,12 +14,7 @@ namespace VfxEditor.PapFormat {
         public PapDocument( PapManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
             base( manager, writeLocation, localPath, source, replace, "Pap", "pap" ) { }
 
-        // Need to pass PapIds
-        public override void Update() {
-            UpdateFile();
-            Reload( CurrentFile.GetPapIds() );
-            Plugin.ResourceLoader.ReRender();
-        }
+        protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
         protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
 
