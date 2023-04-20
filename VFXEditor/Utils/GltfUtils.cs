@@ -15,17 +15,17 @@ namespace VfxEditor.Utils {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
 
-            var Verts = new GLTFVert[model.Vertexes.Vertexes.Count];
+            var Vertexes = new GltfVertex[model.Vertexes.Vertexes.Count];
             var idx = 0;
             foreach( var v in model.Vertexes.Vertexes ) {
-                Verts[idx] = GetVert( v );
+                Vertexes[idx] = GetVertex( v );
                 idx++;
             }
 
             foreach( var tri in model.Indexes.Indexes ) {
-                var v1 = Verts[tri.I1];
-                var v2 = Verts[tri.I2];
-                var v3 = Verts[tri.I3];
+                var v1 = Vertexes[tri.I1];
+                var v2 = Vertexes[tri.I2];
+                var v3 = Vertexes[tri.I3];
                 mesh.UsePrimitive( material ).AddTriangle( (v1.Pos, v1.Tex), (v2.Pos, v2.Tex), (v3.Pos, v3.Tex) );
             }
 
@@ -35,25 +35,25 @@ namespace VfxEditor.Utils {
             PluginLog.Log( "Saved GLTF to: " + path );
         }
 
-        private static GLTFVert GetVert( AvfxVertex vert ) {
-            var Pos = new Vector3( vert.Position[0], vert.Position[1], vert.Position[2] );
-            var Normal = Vector3.Normalize( new Vector3( vert.Normal[0], vert.Normal[1], vert.Normal[2] ) );
-            var Tangent = Vector4.Normalize( new Vector4( vert.Tangent[0], vert.Tangent[1], vert.Tangent[2], 1 ) );
-            var _Pos = new VertexPositionNormalTangent( Pos, Normal, Tangent );
+        private static GltfVertex GetVertex( AvfxVertex vertex ) {
+            var Pos = new Vector3( vertex.Position[0], vertex.Position[1], vertex.Position[2] );
+            var Normal = Vector3.Normalize( new Vector3( vertex.Normal[0], vertex.Normal[1], vertex.Normal[2] ) );
+            var Tangent = Vector4.Normalize( new Vector4( vertex.Tangent[0], vertex.Tangent[1], vertex.Tangent[2], 1 ) );
+            var CombinedPos = new VertexPositionNormalTangent( Pos, Normal, Tangent );
 
-            var Color = new Vector4( vert.Color[0], vert.Color[1], vert.Color[2], vert.Color[3] ); // 255
-            var UV1 = new Vector2( vert.UV1[0], vert.UV1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
-            var UV2 = new Vector2( vert.UV2[2], vert.UV2[3] );
-            var _Tex = new VertexColor1Texture2( Color, UV1, UV2 );
+            var Color = new Vector4( vertex.Color[0], vertex.Color[1], vertex.Color[2], vertex.Color[3] ); // 255
+            var UV1 = new Vector2( vertex.UV1[0], vertex.UV1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
+            var UV2 = new Vector2( vertex.UV2[2], vertex.UV2[3] );
+            var CombinedTexture = new VertexColor1Texture2( Color, UV1, UV2 );
 
-            var ret = new GLTFVert {
-                Pos = _Pos,
-                Tex = _Tex
+            var ret = new GltfVertex {
+                Pos = CombinedPos,
+                Tex = CombinedTexture
             };
             return ret;
         }
 
-        private static AvfxVertex GetAvfxVert( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static AvfxVertex GetAvfxVertex( Vector3 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 uv1, Vector2 uv2 ) {
             var ret = new AvfxVertex();
             color *= 255;
             normal *= 128;
@@ -67,8 +67,8 @@ namespace VfxEditor.Utils {
             ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
             ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
 
-            ret.UV1 = new float[] { tex1.X, tex1.Y, tex1.X, tex1.Y };
-            ret.UV2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
+            ret.UV1 = new float[] { uv1.X, uv1.Y, uv1.X, uv1.Y };
+            ret.UV2 = new float[] { uv1.X, uv1.Y, uv2.X, uv2.Y };
 
             return ret;
         }
@@ -102,7 +102,7 @@ namespace VfxEditor.Utils {
                         var color = hasColor ? colors[i] : new Vector4( 1f, 1f, 1f, 1f ); // default white
                         var uv2 = hasUv2 ? tex2s[i] : tex1s[i]; // default uv1;
 
-                        vertexesOut.Add( GetAvfxVert( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
+                        vertexesOut.Add( GetAvfxVertex( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
                     }
                     foreach( var (A, B, C) in triangles ) {
                         indexesOut.Add( new AvfxIndex( A, B, C ) );
@@ -113,7 +113,7 @@ namespace VfxEditor.Utils {
             return false;
         }
 
-        private struct GLTFVert {
+        private struct GltfVertex {
             public VertexPositionNormalTangent Pos;
             public VertexColor1Texture2 Tex;
         }

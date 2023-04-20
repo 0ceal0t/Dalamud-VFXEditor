@@ -124,7 +124,7 @@ namespace VfxEditor.TextureFormat {
             replaceData.Depth = ddsReader.ReadInt32();
             replaceData.MipLevels = ddsReader.ReadInt32();
 
-            writer.Write( AtexUtils.CreateTextureHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
+            writer.Write( TextureUtils.CreateTextureHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
 
             // Add DDS data
             ddsReader.BaseStream.Seek( 128, SeekOrigin.Begin );

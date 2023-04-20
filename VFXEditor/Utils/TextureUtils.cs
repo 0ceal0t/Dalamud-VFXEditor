@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VfxEditor.Utils {
     // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
-    public static class AtexUtils {
+    public static class TextureUtils {
         public static List<byte> CreateTextureHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
 

@@ -173,9 +173,7 @@ namespace VfxEditor.Utils {
             }
         }
 
-        public static void WriteBytesDialog( string filter, string data, string ext ) {
-            WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
-        }
+        public static void WriteBytesDialog( string filter, string data, string ext ) => WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {

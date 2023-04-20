@@ -24,13 +24,6 @@ Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud
 
 If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues) or ask in the [QuickLauncher discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
 
-## Manually Building
-> Only do this if you know what you're doing
-
-1. Build the solution
-2. Place the files inside of `AppData\Roaming\XIVLauncher\devPlugins`, or wherever the `devPlugins` folder of your QuickLauncher installation is located
-3. Run QuickLauncher
-
 ### Notes
 * It might interact strangely with Penumbra
 
@@ -63,10 +56,3 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Add pre and post behavior to curve editor
 - [ ] Update "try on" preview
-
-
-```
-chara/xls/weapontype/attach.wtd
-chara/xls/attachOffset/c1401.atch
-chara/weapon/w%04d/skeleton/base/b%04d/eid_w%04db%04d.eid
-```
