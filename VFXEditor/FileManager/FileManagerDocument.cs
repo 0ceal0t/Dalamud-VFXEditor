@@ -127,7 +127,7 @@ namespace VfxEditor.FileManager {
             Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
         }
 
-        public void Update() {
+        public virtual void Update() {
             var oldWriteLocation = WriteLocation;
             WriteLocation = Manager.GetWriteLocation();
 
