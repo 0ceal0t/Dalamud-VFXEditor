@@ -13,8 +13,8 @@ namespace VfxEditor.TmbFormat {
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
         public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation, "Tmb", "tmb" ) { }
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, 
-            writeLocation, localPath, source, replace, "Tmb", "tmb" ) {
+
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Tmb", "tmb" ) {
             AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
         }
 
@@ -48,17 +48,7 @@ namespace VfxEditor.TmbFormat {
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DisplayAnimationWarning();
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            if( CurrentFile == null ) DisplayBeginHelpText();
-            else {
-                DisplayFileControls();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw( "##Tmb" );
-            }
+            base.DrawBody();
         }
     }
 }

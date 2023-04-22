@@ -13,7 +13,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x14;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
+        private readonly ParsedInt Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public C067( bool papEmbedded ) : base( papEmbedded ) { }
@@ -24,7 +24,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
+            Enabled,
             Unk2
         };
 

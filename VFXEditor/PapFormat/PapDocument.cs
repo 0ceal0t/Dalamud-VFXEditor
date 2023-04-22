@@ -11,8 +11,8 @@ namespace VfxEditor.PapFormat {
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
         public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation, "Pap", "pap" ) { }
-        public PapDocument( PapManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
-            base( manager, writeLocation, localPath, source, replace, "Pap", "pap" ) { }
+
+        public PapDocument( PapManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Pap", "pap" ) { }
 
         protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
@@ -27,21 +27,8 @@ namespace VfxEditor.PapFormat {
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DisplayAnimationWarning();
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            if( CurrentFile == null ) DisplayBeginHelpText();
-            else {
-                DisplayFileControls();
-
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw( "##Pap" );
-            }
+            base.DrawBody();
         }
-
-        protected override bool ExtraInputColumn() => false;
 
         public override void Dispose() {
             base.Dispose();

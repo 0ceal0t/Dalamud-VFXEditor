@@ -1,14 +1,14 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui;
-using VfxEditor.TexTools;
-using VfxEditor.Utils;
-using Newtonsoft.Json.Linq;
 using VfxEditor.Data;
 using VfxEditor.Select;
+using VfxEditor.TexTools;
+using VfxEditor.Ui;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerWindow : GenericDialog {
@@ -19,13 +19,17 @@ namespace VfxEditor.FileManager {
         }
 
         public abstract ManagerConfiguration GetConfig();
+
         public abstract CopyManager GetCopyManager();
+
         public abstract CommandManager GetCommandManager();
 
         public abstract void SetSource( SelectResult result );
+
         public abstract void ShowSource();
 
         public abstract void SetReplace( SelectResult result );
+
         public abstract void ShowReplace();
 
         public abstract string GetWriteLocation();
@@ -45,8 +49,8 @@ namespace VfxEditor.FileManager {
         public readonly ManagerConfiguration Configuration;
         public readonly CopyManager Copy = new();
 
-        protected string WriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
-        public override string GetWriteLocation() => WriteLocation;
+        protected string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
+        public override string GetWriteLocation() => NewWriteLocation;
 
         public readonly List<T> Documents = new();
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
@@ -71,11 +75,15 @@ namespace VfxEditor.FileManager {
         }
 
         public override CopyManager GetCopyManager() => Copy;
+
         public override CommandManager GetCommandManager() => CurrentFile?.Command;
+
         public override ManagerConfiguration GetConfig() => Configuration;
+
         public string GetExportName() => Id;
 
         public override void SetSource( SelectResult result ) {
+
             ActiveDocument?.SetSource( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }

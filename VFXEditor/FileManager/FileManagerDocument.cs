@@ -1,13 +1,13 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using Dalamud.Logging;
-using System;
-using VfxEditor.Utils;
-using VfxEditor.TexTools;
 using VfxEditor.Select;
+using VfxEditor.TexTools;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
@@ -29,6 +29,7 @@ namespace VfxEditor.FileManager {
         protected readonly string IdUpperCase;
         protected readonly string Extension;
         protected readonly FileManagerWindow Manager;
+        protected DateTime LastUpdate = DateTime.Now;
 
         public FileManagerDocument( FileManagerWindow manager, string writeLocation, string id, string extension ) {
             Manager = manager;
@@ -38,7 +39,7 @@ namespace VfxEditor.FileManager {
             Extension = extension;
         }
 
-        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string extension ) : 
+        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string extension ) :
             this( manager, writeLocation, id, extension ) {
 
             Source = source;
@@ -57,7 +58,7 @@ namespace VfxEditor.FileManager {
 
             if( CurrentFile != null ) {
                 Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
-                UpdateFile();
+                WriteFile( WriteLocation );
             }
         }
 
@@ -114,10 +115,10 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected void UpdateFile() {
+        protected void WriteFile( string path ) {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", WriteLocation, IdUpperCase );
-            File.WriteAllBytes( WriteLocation, CurrentFile.ToBytes() );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", path, IdUpperCase );
+            File.WriteAllBytes( path, CurrentFile.ToBytes() );
         }
 
         protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + Extension, CurrentFile.ToBytes(), Extension );
@@ -127,11 +128,15 @@ namespace VfxEditor.FileManager {
             Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
         }
 
-        public virtual void Update() {
-            var oldWriteLocation = WriteLocation;
-            WriteLocation = Manager.GetWriteLocation();
+        public void Update() {
+            if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
+            LastUpdate = DateTime.Now;
 
-            UpdateFile();
+            var oldWriteLocation = WriteLocation;
+            var newWriteLocation = Manager.GetWriteLocation();
+
+            WriteFile( newWriteLocation );
+            WriteLocation = newWriteLocation;
             Reload( GetPapIds() );
             Plugin.ResourceLoader.ReRender();
 
@@ -173,8 +178,6 @@ namespace VfxEditor.FileManager {
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Redo();
         }
 
-        protected abstract bool ExtraInputColumn();
-
         // ====== DRAWING ==========
 
         public void Draw() {
@@ -184,7 +187,6 @@ namespace VfxEditor.FileManager {
             }
 
             var threeColumns = ExtraInputColumn();
-
             ImGui.Columns( threeColumns ? 3 : 2, $"{Id}-Columns", false );
 
             DrawInputTextColumn();
@@ -197,7 +199,6 @@ namespace VfxEditor.FileManager {
             }
 
             ImGui.Columns( 1 );
-
             DrawBody();
         }
 
@@ -215,6 +216,8 @@ namespace VfxEditor.FileManager {
             DisplaySearchBars();
             ImGui.PopItemWidth();
         }
+
+        protected virtual bool ExtraInputColumn() => false;
 
         protected virtual void DrawExtraColumn() { }
 
@@ -268,7 +271,18 @@ namespace VfxEditor.FileManager {
             UiUtils.ShowVerifiedStatus( Verified );
         }
 
-        protected abstract void DrawBody();
+        protected virtual void DrawBody() {
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            if( CurrentFile == null ) DisplayBeginHelpText();
+            else {
+                DisplayFileControls();
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                CurrentFile.Draw( $"##{Id}" );
+            }
+        }
 
         public virtual void Dispose() {
             CurrentFile?.Dispose();

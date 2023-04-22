@@ -14,10 +14,10 @@ namespace VfxEditor.ScdFormat {
             ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", this, false );
         }
 
-        protected override ScdDocument GetNewDocument() => new( this, WriteLocation );
+        protected override ScdDocument GetNewDocument() => new( this, NewWriteLocation );
 
         protected override ScdDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => 
-            new( this, WriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
+            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
 
         public override void Dispose() {
             base.Dispose();

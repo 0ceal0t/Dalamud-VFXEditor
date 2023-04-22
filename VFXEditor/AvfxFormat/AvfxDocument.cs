@@ -10,30 +10,15 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaRenamed> {
-        private DateTime LastUpdate = DateTime.Now;
         private string SpawnPath => ReplacePath;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
-        private readonly AvfxManager AvfxManager;
+        public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) {
-            AvfxManager = manager;
-        }
-
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : 
-            base( manager, writeLocation, localPath, source, replace, "Vfx", "avfx" ) {
-            AvfxManager = manager;
-        }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Vfx", "avfx" ) { }
 
         public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation, localPath, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
-            AvfxManager = manager;
-        }
-
-        public override void Update() {
-            if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.5 ) return;
-            base.Update();
-            LastUpdate = DateTime.Now;
         }
 
         public override void CheckKeybinds() {
@@ -94,7 +79,7 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) AvfxManager.NodeLibrary.Show();
+            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) Plugin.AvfxManager.NodeLibrary.Show();
 
             // Spawn + eye
             if( !Plugin.SpawnExists() ) {
@@ -131,21 +116,6 @@ namespace VfxEditor.AvfxFormat {
             }
             ImGui.PopFont();
             UiUtils.Tooltip( "VFX path overlay" );
-        }
-
-        protected override void DrawBody() {
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            ImGui.Separator();
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            if( CurrentFile == null ) DisplayBeginHelpText();
-            else {
-                DisplayFileControls();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw( "##Avfx" );
-            }
         }
     }
 }

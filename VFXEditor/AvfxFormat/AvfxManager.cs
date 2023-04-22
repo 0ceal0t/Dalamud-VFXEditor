@@ -14,10 +14,10 @@ namespace VfxEditor.AvfxFormat {
             NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 
-        protected override AvfxDocument GetNewDocument() => new( this, WriteLocation );
+        protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );
 
         protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => 
-            new( this, WriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
+            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
 
         protected override void DrawEditMenuExtra() {
             if( ImGui.BeginMenu( "Templates##Menu" ) ) {
