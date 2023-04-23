@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Eid {
             GameTabs = new List<SelectTab>( new SelectTab[]{
                 new CharacterEidTab( this, "Character" ),
                 new NpcEidTab( this, "Npc" ),
-                new MountEidTab( this, "Mount" )
+                new MountEidTab( this, "Mount" ),
             } );
         }
 

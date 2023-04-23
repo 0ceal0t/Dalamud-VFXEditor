@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Scd.Bgm;
 using VfxEditor.Select.Scd.BgmQuest;
+using VfxEditor.Select.Scd.Common;
 using VfxEditor.Select.Scd.Instance;
 using VfxEditor.Select.Scd.Mount;
 using VfxEditor.Select.Scd.Orchestrion;
+using VfxEditor.Select.Scd.Voice;
 using VfxEditor.Select.Scd.Zone;
 
 namespace VfxEditor.Select.Scd {
@@ -19,7 +21,9 @@ namespace VfxEditor.Select.Scd {
                 new ZoneTab( this, "Zone" ),
                 new BgmTab( this, "BGM" ),
                 new BgmQuestTab( this, "Quest BGM" ),
-                new InstanceTab( this, "Instance" )
+                new InstanceTab( this, "Instance" ),
+                new CommonTab( this, "Common" ),
+                new VoiceTab( this, "Voice" ),
             } );
         }
 

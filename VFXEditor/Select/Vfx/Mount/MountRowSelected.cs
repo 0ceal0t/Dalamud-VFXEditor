@@ -2,8 +2,7 @@ using Lumina.Data.Files;
 using System.Linq;
 using VfxEditor.Select.Shared.Mount;
 
-namespace VfxEditor.Select.Vfx.Mount
-{
+namespace VfxEditor.Select.Vfx.Mount {
     public class MountRowSelected {
         public readonly string ImcPath;
         public readonly int VfxId;
