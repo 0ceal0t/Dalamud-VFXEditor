@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using VfxEditor.Select.Shared.Common;
 
 namespace VfxEditor.Select.Vfx.Common {
     public class CommonTab : SelectTab<CommonRow> {
@@ -30,7 +31,7 @@ namespace VfxEditor.Select.Vfx.Common {
             } );
 
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
-            foreach( var item in sheet ) Items.Add( new( item ) );
+            foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location.ToString()}.avfx", item.Location.ToString(), 0 ) );
 
             var lineIdx = 0;
             foreach( var line in File.ReadLines( SelectUtils.MiscVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {

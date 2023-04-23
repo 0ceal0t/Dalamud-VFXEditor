@@ -1,5 +1,6 @@
 using System.Linq;
 using System.IO;
+using VfxEditor.Select.Shared.Common;
 
 namespace VfxEditor.Select.Tmb.Common {
     public class CommonTab : SelectTab<CommonRow> {
@@ -10,7 +11,7 @@ namespace VfxEditor.Select.Tmb.Common {
         public override void LoadData() {
             var lineIdx = 0;
             foreach( var line in File.ReadLines( SelectUtils.MiscTmbPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
-                Items.Add( new CommonRow( lineIdx, line, line.Replace( "chara/action/", "" ).Replace( ".tmb", "" ) ) );
+                Items.Add( new CommonRow( lineIdx, line, line.Replace( "chara/action/", "" ).Replace( ".tmb", "" ), 0 ) );
                 lineIdx++;
             }
         }
@@ -18,7 +19,7 @@ namespace VfxEditor.Select.Tmb.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
+            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameMisc, Selected.Name, true );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

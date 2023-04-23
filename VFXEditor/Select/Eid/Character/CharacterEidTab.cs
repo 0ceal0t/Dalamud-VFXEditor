@@ -5,7 +5,7 @@ namespace VfxEditor.Select.Eid.Character {
         public CharacterEidTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "Path", Selected.EidPath, parentId, SelectResultType.GameNpc, Selected.Name );
+            Dialog.DrawPath( "Path", Selected.EidPath, parentId, SelectResultType.GameCharacter, Selected.Name );
         }
     }
 }

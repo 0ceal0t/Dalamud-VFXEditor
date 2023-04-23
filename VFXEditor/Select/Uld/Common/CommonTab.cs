@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VfxEditor.Select.Shared.Common;
 
 namespace VfxEditor.Select.Uld.Common {
     public class CommonTab : SelectTab<CommonRow> {
@@ -14,7 +13,7 @@ namespace VfxEditor.Select.Uld.Common {
         public override void LoadData() {
             var lineIdx = 0;
             foreach( var line in File.ReadLines( SelectUtils.MiscUldPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
-                Items.Add( new CommonRow( lineIdx, line, line.Replace( ".uld", "" ).Replace( "ui/uld/", "" ) ) );
+                Items.Add( new CommonRow( lineIdx, line, line.Replace( ".uld", "" ).Replace( "ui/uld/", "" ), 0 ) );
                 lineIdx++;
             }
         }
