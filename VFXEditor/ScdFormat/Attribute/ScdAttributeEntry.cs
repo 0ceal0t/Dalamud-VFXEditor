@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public class ScdAttributeEntry : ScdEntry, IUiItem {
         public readonly ParsedByte Version = new( "Version" );
         public readonly ParsedReserve Reserved = new( 1 );

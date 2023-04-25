@@ -1,6 +1,5 @@
 using Dalamud.Logging;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
-using VfxEditor.UldFormat.Component.Node;
 using VfxEditor.UldFormat.Headers;
 using VfxEditor.UldFormat.PartList;
 using VfxEditor.UldFormat.Texture;

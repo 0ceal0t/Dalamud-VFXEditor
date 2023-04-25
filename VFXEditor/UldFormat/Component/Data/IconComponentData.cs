@@ -1,7 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data
-{
+namespace VfxEditor.UldFormat.Component.Data {
     public class IconComponentData : UldGenericData {
         public IconComponentData() {
             Parsed.AddRange( new ParsedBase[] {

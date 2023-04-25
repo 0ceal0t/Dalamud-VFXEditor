@@ -6,15 +6,14 @@ using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.UldFormat.Timeline.Frames
-{
+namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldFrame : IUiItem {
         public readonly ParsedUInt StartFrame = new( "Start Frame" );
         public readonly ParsedUInt EndFrame = new( "End Frame" );
         public readonly List<UldKeyGroup> KeyGroups = new();
 
         public readonly UldKeyGroupSplitView KeyGroupView;
-        
+
         public UldFrame() {
             KeyGroupView = new( KeyGroups );
         }

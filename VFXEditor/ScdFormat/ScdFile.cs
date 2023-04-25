@@ -14,8 +14,7 @@ using VfxEditor.ScdFormat.Track;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;

@@ -9,8 +9,7 @@ using VfxEditor.TmbFormat.Utils;
 using VfxEditor.TmbFormat.Actor;
 
 // Rework based on https://github.com/AsgardXIV/XAT
-namespace VfxEditor.TmbFormat
-{
+namespace VfxEditor.TmbFormat {
     public class TmbFile : FileManagerFile {
         public readonly bool PapEmbedded;
 
