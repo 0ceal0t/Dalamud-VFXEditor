@@ -149,7 +149,28 @@ namespace VfxEditor {
 
         private void DrawConfigUi() => AvfxManager.Show();
 
-        private void OnCommand( string command, string rawArgs ) => AvfxManager.Toggle();
+        private void OnCommand( string command, string rawArgs ) {
+            switch( rawArgs.ToLowerInvariant() ) {
+                case "tmb":
+                    TmbManager.Toggle();
+                    break;
+                case "pap":
+                    PapManager.Toggle();
+                    break;
+                case "scd":
+                    ScdManager.Toggle();
+                    break;
+                case "eid":
+                    EidManager.Toggle();
+                    break;
+                case "uld":
+                    UldManager.Toggle();
+                    break;
+                default:
+                    AvfxManager.Toggle();
+                    break;
+            }
+        }
 
         public void Dispose() {
             Framework.Update -= FrameworkOnUpdate;
