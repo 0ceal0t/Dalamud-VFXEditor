@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -35,22 +36,31 @@ namespace VfxEditor.DirectX {
         private readonly ShaderSignature Signature;
         private readonly InputLayout Layout;
 
+        public readonly bool ShaderError = false;
+
         public GradientView( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             RefreshRasterizeState();
             ResizeResources();
 
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
-            VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-            PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-            VShader = new VertexShader( Device, VertexShaderByteCode );
-            PShader = new PixelShader( Device, PixelShaderByteCode );
-            Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-            Layout = new InputLayout( Device, Signature, new[] {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-            } );
+
+            try {
+                var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
+                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
+                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
+                VShader = new VertexShader( Device, VertexShaderByteCode );
+                PShader = new PixelShader( Device, PixelShaderByteCode );
+                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
+                Layout = new InputLayout( Device, Signature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
+                } );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( "Error compiling shaders", e );
+                ShaderError = true;
+            }
         }
 
         public void SetGradient( AvfxCurve curve ) {
@@ -166,23 +176,25 @@ namespace VfxEditor.DirectX {
         public void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
-            Ctx.OutputMerger.SetTargets( DepthView, RenderView );
-            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
-            Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+            if( !ShaderError ) {
+                Ctx.OutputMerger.SetTargets( DepthView, RenderView );
+                Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
+                Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
 
-            Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
-            Ctx.Rasterizer.State = RState;
+                Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
+                Ctx.Rasterizer.State = RState;
 
-            if( NumVerts > 0 ) {
-                Ctx.PixelShader.Set( PShader );
-                Ctx.VertexShader.Set( VShader );
-                Ctx.InputAssembler.InputLayout = Layout;
-                Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
-                Ctx.Draw( NumVerts, 0 );
+                if( NumVerts > 0 ) {
+                    Ctx.PixelShader.Set( PShader );
+                    Ctx.VertexShader.Set( VShader );
+                    Ctx.InputAssembler.InputLayout = Layout;
+                    Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+                    Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
+                    Ctx.Draw( NumVerts, 0 );
+                }
+
+                Ctx.Flush();
             }
-
-            Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }

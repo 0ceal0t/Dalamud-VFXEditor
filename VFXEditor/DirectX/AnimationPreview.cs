@@ -1,9 +1,11 @@
+using Dalamud.Logging;
 using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System;
 using System.IO;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -20,20 +22,29 @@ namespace VfxEditor.DirectX {
         private readonly ShaderSignature Signature;
         private readonly InputLayout Layout;
 
+        public readonly bool ShaderError = false;
+
         public AnimationPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
-            VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-            PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-            VShader = new VertexShader( Device, VertexShaderByteCode );
-            PShader = new PixelShader( Device, PixelShaderByteCode );
-            Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-            Layout = new InputLayout( Device, Signature, new[] {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
-            } );
+
+            try {
+                var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
+                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
+                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
+                VShader = new VertexShader( Device, VertexShaderByteCode );
+                PShader = new PixelShader( Device, PixelShaderByteCode );
+                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
+                Layout = new InputLayout( Device, Signature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
+                } );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( "Error compiling shaders", e );
+                ShaderError = true;
+            }
         }
 
         public void LoadAnimation( BoneSkinnedMeshGeometry3D boneMesh ) {
@@ -68,6 +79,8 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDraw() {
+            if( ShaderError ) return;
+
             if( NumVerts > 0 ) {
                 Ctx.PixelShader.Set( PShader );
                 Ctx.VertexShader.Set( VShader );

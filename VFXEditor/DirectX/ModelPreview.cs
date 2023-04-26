@@ -1,8 +1,10 @@
+using Dalamud.Logging;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
@@ -57,34 +59,50 @@ namespace VfxEditor.DirectX {
         private readonly ShaderSignature EmitSignature;
         private readonly InputLayout EmitLayout;
 
+        public readonly bool ShaderError = false;
+
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             // ======= BASE MODEL =========
             NumVerts = 0;
             Vertices = null;
-            var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
-            VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-            PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-            VShader = new VertexShader( Device, VertexShaderByteCode );
-            PShader = new PixelShader( Device, PixelShaderByteCode );
-            Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-            Layout = new InputLayout( Device, Signature, new[] {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
-            } );
+
+            try {
+                var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
+                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
+                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
+                VShader = new VertexShader( Device, VertexShaderByteCode );
+                PShader = new PixelShader( Device, PixelShaderByteCode );
+                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
+                Layout = new InputLayout( Device, Signature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
+                } );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( "Error compiling shaders", e );
+                ShaderError = true;
+            }
 
             // ======= MODEL EDGES ========
             EdgeNumVerts = 0;
             EdgeVertices = null;
-            EdgeVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
-            EdgePixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
-            EdgeVShader = new VertexShader( Device, EdgeVertexShaderByteCode );
-            EdgePShader = new PixelShader( Device, EdgePixelShaderByteCode );
-            EdgeSignature = ShaderSignature.GetInputSignature( EdgeVertexShaderByteCode );
-            EdgeLayout = new InputLayout( Device, EdgeSignature, new[] {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-            } );
+
+            try {
+                EdgeVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
+                EdgePixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
+                EdgeVShader = new VertexShader( Device, EdgeVertexShaderByteCode );
+                EdgePShader = new PixelShader( Device, EdgePixelShaderByteCode );
+                EdgeSignature = ShaderSignature.GetInputSignature( EdgeVertexShaderByteCode );
+                EdgeLayout = new InputLayout( Device, EdgeSignature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
+                } );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( "Error compiling shaders", e );
+                ShaderError = true;
+            }
 
 
             // ======= EMITTER VERTICES ========
@@ -140,16 +158,23 @@ namespace VfxEditor.DirectX {
 
             EmitNumInstances = 0;
             EmitInstances = null;
-            EmitVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
-            EmitPixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
-            EmitVShader = new VertexShader( Device, EmitVertexShaderByteCode );
-            EmitPShader = new PixelShader( Device, EmitPixelShaderByteCode );
-            EmitSignature = ShaderSignature.GetInputSignature( EmitVertexShaderByteCode );
-            EmitLayout = new InputLayout( Device, EmitSignature, new[] {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
-                new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
-                new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1)
-            } );
+
+            try {
+                EmitVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
+                EmitPixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
+                EmitVShader = new VertexShader( Device, EmitVertexShaderByteCode );
+                EmitPShader = new PixelShader( Device, EmitPixelShaderByteCode );
+                EmitSignature = ShaderSignature.GetInputSignature( EmitVertexShaderByteCode );
+                EmitLayout = new InputLayout( Device, EmitSignature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
+                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
+                    new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1)
+                } );
+            }
+            catch( Exception e ) {
+                PluginLog.Error( "Error compiling shaders", e );
+                ShaderError = true;
+            }
         }
 
         public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.CombinedEmitVertexes, mode );
@@ -223,6 +248,8 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDraw() {
+            if( ShaderError ) return;
+
             // ====== DRAW BASE =========
             if( NumVerts > 0 ) {
                 Ctx.PixelShader.Set( PShader );
