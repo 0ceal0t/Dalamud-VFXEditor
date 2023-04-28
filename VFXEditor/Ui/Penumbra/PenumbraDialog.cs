@@ -9,17 +9,19 @@ using System.Numerics;
 using VfxEditor.Ui;
 
 namespace VfxEditor.Penumbra {
-    public class PenumbraDialog : GenericDialog {
-        private struct PenumbraMod {
-            public string Name;
-            public string Author;
-            public string Description;
+    public struct PenumbraMod {
+        public string Name;
+        public string Author;
+        public string Description;
 #nullable enable
-            public string? Version;
-            public string? Website;
+        public string? Version;
+        public string? Website;
 #nullable disable
-            public Dictionary<string, string> FileSwaps;
-        }
+        public Dictionary<string, string> Files;
+        public Dictionary<string, string> FileSwaps;
+    }
+
+    public class PenumbraDialog : GenericDialog {
 
         private string ModName = "";
         private string Author = "";
@@ -69,6 +71,7 @@ namespace VfxEditor.Penumbra {
                     Description = "Exported from VFXEditor",
                     Version = Version,
                     Website = null,
+                    Files = new(),
                     FileSwaps = new Dictionary<string, string>()
                 };
 

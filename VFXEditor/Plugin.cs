@@ -49,6 +49,8 @@ namespace VfxEditor {
         public static VfxTracker VfxTracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
         public static TexToolsDialog TexToolsDialog { get; private set; }
+
+        public static PenumbraIpc PenumbraIpc { get; private set; }
         public static PenumbraDialog PenumbraDialog { get; private set; }
 
         public static List<IFileManager> Managers => new( new IFileManager[]{
@@ -118,6 +120,7 @@ namespace VfxEditor {
             UldManager = new UldManager();
 
             ToolsDialog = new ToolsDialog();
+            PenumbraIpc = new PenumbraIpc();
             PenumbraDialog = new PenumbraDialog();
             TexToolsDialog = new TexToolsDialog();
             ResourceLoader = new ResourceLoader();
@@ -181,6 +184,7 @@ namespace VfxEditor {
             ImPlot.DestroyContext();
 
             CommandManager.RemoveHandler( CommandName );
+            PenumbraIpc?.Dispose();
 
             ResourceLoader?.Dispose();
             ResourceLoader = null;

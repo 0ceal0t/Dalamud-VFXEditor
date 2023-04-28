@@ -48,14 +48,15 @@ namespace VfxEditor.Select {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
 
-        private readonly FileManagerWindow Manager;
-        private readonly string Extension;
+        public readonly FileManagerWindow Manager;
+        public readonly string Extension;
         public readonly bool IsSource; // as opposed to replaced
         protected abstract List<SelectTab> GetTabs();
 
         protected readonly List<SelectResult> Favorites;
         protected readonly SelectListTab RecentTab;
         protected readonly SelectFavoriteTab FavoritesTab;
+        protected readonly SelectPenumbraTab PenumbraTab;
 
         private string LocalPathInput = "";
         private string GamePathInput = "";
@@ -68,6 +69,7 @@ namespace VfxEditor.Select {
 
             RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
             FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
+            if( isSource ) PenumbraTab = new( this );
         }
 
         public void Invoke( SelectResult result ) {
@@ -80,9 +82,12 @@ namespace VfxEditor.Select {
         public override void DrawBody() {
             var id = $"##{Manager.Id}/Select";
             ImGui.BeginTabBar( $"Tabs{id}" );
-            DrawGame( id );
+            DrawGameTabs( id );
             DrawGamePath( id );
-            if( IsSource ) DrawLocal( id );
+            if( IsSource ) {
+                DrawLocalPath( id );
+                PenumbraTab.Draw( id );
+            }
             RecentTab.Draw( id );
             FavoritesTab.Draw( id );
             ImGui.EndTabBar();
@@ -90,7 +95,7 @@ namespace VfxEditor.Select {
 
         // ============= GAME =================
 
-        public void DrawGame( string parentId ) {
+        public void DrawGameTabs( string parentId ) {
             var id = $"{parentId}/Game";
 
             if( GetTabs().Count == 0 ) return;
@@ -104,7 +109,7 @@ namespace VfxEditor.Select {
 
         // =========== LOCAL ================
 
-        private void DrawLocal( string parentId ) {
+        private void DrawLocalPath( string parentId ) {
             var id = $"{parentId}/Local";
             if( !ImGui.BeginTabItem( $"Local File{id}" ) ) return;
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
@@ -218,7 +223,10 @@ namespace VfxEditor.Select {
             }
         }
 
-        public void DrawPath( string label, string path, string id, SelectResultType resultType, string resultName, bool play = false ) {
+        public void DrawPath( string label, string path, string id, SelectResultType resultType, string resultName, bool play = false ) =>
+            DrawPath( label, path, path, id, resultType, resultName, play );
+
+        public void DrawPath( string label, string path, string displayPath, string id, SelectResultType resultType, string resultName, bool play = false ) {
             if( string.IsNullOrEmpty( path ) ) return;
             if( path.Contains( "BGM_Null" ) ) return;
 
@@ -226,7 +234,7 @@ namespace VfxEditor.Select {
                 DrawFavorite( path, resultType, resultName );
                 ImGui.Text( $"{label}:" );
                 ImGui.SameLine();
-                SelectTabUtils.DisplayPath( path );
+                SelectTabUtils.DisplayPath( displayPath );
             }
 
             ImGui.Indent( 25f );
