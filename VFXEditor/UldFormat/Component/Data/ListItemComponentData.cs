@@ -4,10 +4,10 @@ namespace VfxEditor.UldFormat.Component.Data {
     public class ListItemComponentData : UldGenericData {
         public ListItemComponentData() {
             Parsed.AddRange( new ParsedBase[] {
-                new ParsedUInt( "Unknown 1" ),
-                new ParsedUInt( "Unknown 2" ),
-                new ParsedUInt( "Unknown 3" ),
-                new ParsedUInt( "Unknown 4" ),
+                new ParsedUInt( "Unknown Node Id 1" ),
+                new ParsedUInt( "Unknown Node Id 2" ),
+                new ParsedUInt( "Unknown Node Id 3" ),
+                new ParsedUInt( "Unknown Node Id 4" ),
             } );
         }
     }

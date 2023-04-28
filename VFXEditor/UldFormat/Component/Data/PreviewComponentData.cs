@@ -4,8 +4,8 @@ namespace VfxEditor.UldFormat.Component.Data {
     public class PreviewComponentData : UldGenericData {
         public PreviewComponentData() {
             Parsed.AddRange( new ParsedBase[] {
-                new ParsedUInt( "Unknown 1" ),
-                new ParsedUInt( "Unknown 2" ),
+                new ParsedUInt( "Unknown Node Id 1" ),
+                new ParsedUInt( "Unknown Node Id 2" ),
             } );
         }
     }

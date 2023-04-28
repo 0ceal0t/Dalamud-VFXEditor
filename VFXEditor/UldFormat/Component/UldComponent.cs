@@ -12,7 +12,7 @@ using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Component {
     public enum ComponentType : int {
-        Custom = 0x0,
+        Base = 0x0,
         Button = 0x1,
         Window = 0x2,
         CheckBox = 0x3,
@@ -36,6 +36,7 @@ namespace VfxEditor.UldFormat.Component {
         Multipurpose = 0x15,
         Map = 0x16,
         Preview = 0x17,
+        //HoldButton = 0x18,
     }
 
     public class UldComponent : UldWorkspaceItem {
@@ -75,7 +76,7 @@ namespace VfxEditor.UldFormat.Component {
                 PluginLog.Log( $"Unknown component type {( int )Type.Value} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
 
-            if( Data is CustomComponentData custom ) custom.Read( reader, offset - 16 );
+            if( Data is BaseComponentData custom ) custom.Read( reader, offset - 16 );
             else Data?.Read( reader );
 
             reader.BaseStream.Position = pos + offset;
@@ -113,7 +114,7 @@ namespace VfxEditor.UldFormat.Component {
 
         public void UpdateData() {
             Data = Type.Value switch {
-                ComponentType.Custom => new CustomComponentData(), // ?
+                ComponentType.Base => new BaseComponentData(), // ?
                 ComponentType.Button => new ButtonComponentData(),
                 ComponentType.Window => new WindowComponentData(),
                 ComponentType.CheckBox => new CheckboxComponentData(),

@@ -19,8 +19,8 @@ namespace VfxEditor.UldFormat {
             foreach( var parsed in Parsed ) parsed.Draw( id, CommandManager.Uld );
         }
 
-        protected void AddUnknown( int count ) {
-            for( var i = 1; i <= count + 1; i++ ) Parsed.Add( new ParsedUInt( $"Unknown {i}" ) );
+        protected void AddUnknown( int count, string prefix = "Unknown" ) {
+            for( var i = 1; i <= count + 1; i++ ) Parsed.Add( new ParsedUInt( $"{prefix} {i}" ) );
         }
     }
 }

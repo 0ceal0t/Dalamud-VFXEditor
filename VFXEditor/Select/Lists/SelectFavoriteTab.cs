@@ -20,7 +20,7 @@ namespace VfxEditor.Select.Lists {
                 ImGui.TableNextColumn();
 
                 var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-                var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Cross );
+                var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
                 ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
                 // Input
@@ -36,7 +36,7 @@ namespace VfxEditor.Select.Lists {
                     EditingItem = null;
                 }
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Cross}" + id ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
                     EditingItem = null;
                 }
                 ImGui.PopFont();
