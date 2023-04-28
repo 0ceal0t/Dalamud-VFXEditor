@@ -36,7 +36,7 @@ namespace VfxEditor.PapFormat {
                 if( ok ) {
                     Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
                         var newAnim = new PapAnimation( File.HkxTempLocation );
-                        newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
+                        newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
 
                         CompoundCommand command = new( false, true );
                         command.Add( new PapAnimationAddCommand( File, Items, newAnim ) );

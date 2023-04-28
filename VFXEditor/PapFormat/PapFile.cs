@@ -67,7 +67,7 @@ namespace VfxEditor.PapFormat {
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations[i].ReadTmb( reader );
+                Animations[i].ReadTmb( reader, Command );
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
 

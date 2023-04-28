@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat.Actor {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk1 = new( "Ability Delay" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public readonly List<Tmtr> Tracks = new();

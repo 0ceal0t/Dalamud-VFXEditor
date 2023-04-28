@@ -53,6 +53,8 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
+            TmbFile.GenericWarning();
+
             DrawHeader( id );
             DrawParsed( id );
         }

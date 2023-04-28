@@ -5,7 +5,6 @@ using VfxEditor.Utils;
 using VfxEditor.Interop;
 using VfxEditor.TmbFormat;
 using VfxEditor.Parsing;
-using System.Reflection.PortableExecutable;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
@@ -38,12 +37,12 @@ namespace VfxEditor.PapFormat {
             Unk2.Write( writer );
         }
 
-        public void ReadTmb( BinaryReader reader ) {
-            Tmb = new TmbFile( reader, true );
+        public void ReadTmb( BinaryReader reader, CommandManager manager ) {
+            Tmb = new TmbFile( reader, manager, true );
         }
 
-        public void ReadTmb( string path ) {
-            Tmb = TmbFile.FromLocalFile( path, true );
+        public void ReadTmb( string path, CommandManager manager ) {
+            Tmb = TmbFile.FromPapEmbedded( path, manager );
         }
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
@@ -85,7 +84,7 @@ namespace VfxEditor.PapFormat {
             if( ImGui.Button( $"Replace TMB{parentId}" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
-                        CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromLocalFile( res, true ) ) );
+                        CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
                         UiUtils.OkNotification( "TMB data imported" );
                     }
                 } );

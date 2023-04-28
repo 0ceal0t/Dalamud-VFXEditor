@@ -4,12 +4,9 @@ using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
-    // Moves character's server position while keeping client position
-    // Don't mess with this
-
     public class C142 : TmbEntry {
         public const string MAGIC = "C142";
-        public const string DISPLAY_NAME = "C142";
+        public const string DISPLAY_NAME = "Freeze Position (C142)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -41,8 +38,6 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            TmbFile.GenericWarning();
-
             DrawHeader( id );
             DrawParsed( id );
         }

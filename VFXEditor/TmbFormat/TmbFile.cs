@@ -25,7 +25,9 @@ namespace VfxEditor.TmbFormat {
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
 
-        public TmbFile( BinaryReader binaryReader, bool papEmbedded, bool checkOriginal = true ) : base( papEmbedded ? CommandManager.Pap : new( Plugin.TmbManager.GetCopyManager() ) ) {
+        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager.GetCopyManager() ), false, checkOriginal ) { }
+
+        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool papEmbedded, bool checkOriginal = true ) : base( manager ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 
@@ -132,10 +134,10 @@ namespace VfxEditor.TmbFormat {
 
         // ===============
 
-        public static TmbFile FromLocalFile( string path, bool papEmbedded ) {
+        public static TmbFile FromPapEmbedded( string path, CommandManager manager ) {
             if( !File.Exists( path ) ) return null;
             using BinaryReader br = new( File.Open( path, FileMode.Open ) );
-            return new TmbFile( br, papEmbedded );
+            return new TmbFile( br, manager, true );
         }
 
         public static void TmfcWarning() {
