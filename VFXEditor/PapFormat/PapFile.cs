@@ -102,7 +102,7 @@ namespace VfxEditor.PapFormat {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            FileUtils.PadTo( writer, 16 );
+            FileUtils.PadTo( writer, 2 );
 
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
