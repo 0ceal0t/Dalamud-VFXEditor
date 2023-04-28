@@ -102,7 +102,7 @@ namespace VfxEditor.PapFormat {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            // turns out that padding isn't really a big deal
+            FileUtils.PadTo( writer, 16 );
 
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
