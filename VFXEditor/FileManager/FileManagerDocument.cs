@@ -132,15 +132,21 @@ namespace VfxEditor.FileManager {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
             LastUpdate = DateTime.Now;
 
-            var oldWriteLocation = WriteLocation;
-            var newWriteLocation = Manager.GetWriteLocation();
+            if( Plugin.Configuration.UpdateWriteLocation ) {
+                var oldWriteLocation = WriteLocation;
+                var newWriteLocation = Manager.GetWriteLocation();
 
-            WriteFile( newWriteLocation );
-            WriteLocation = newWriteLocation;
-            Reload( GetPapIds() );
-            Plugin.ResourceLoader.ReRender();
-
-            File.Delete( oldWriteLocation );
+                WriteFile( newWriteLocation );
+                WriteLocation = newWriteLocation;
+                Reload( GetPapIds() );
+                Plugin.ResourceLoader.ReRender();
+                File.Delete( oldWriteLocation );
+            }
+            else {
+                WriteFile( WriteLocation );
+                Reload( GetPapIds() );
+                Plugin.ResourceLoader.ReRender();
+            }
         }
 
         protected virtual List<string> GetPapIds() => null;

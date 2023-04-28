@@ -42,6 +42,8 @@ namespace VfxEditor {
             "VFXEditor",
         } );
 
+        public bool UpdateWriteLocation = true;
+
         // ===== [ OBSOLETE ] =======
         public List<SelectResult> RecentSelects = new();
         public List<SelectResult> RecentSelectsTMB = new();
@@ -185,6 +187,7 @@ namespace VfxEditor {
 
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( $"Temp file location{id}", ref WriteLocation, 255 ) ) Save();
+            if( ImGui.Checkbox( $"Refresh write location each update{id}", ref UpdateWriteLocation ) ) Save();
             if( ImGui.Checkbox( $"Log all files{id}", ref LogAllFiles ) ) Save();
             if( ImGui.Checkbox( $"Log debug information{id}", ref LogDebug ) ) Save();
             if( ImGui.Checkbox( $"Log Vfx debug information{id}", ref LogVfxDebug ) ) Save();

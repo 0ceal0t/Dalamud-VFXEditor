@@ -4,6 +4,13 @@ using VfxEditor.Parsing;
 using System.Collections.Generic;
 
 namespace VfxEditor.TmbFormat.Entries {
+    public enum VfxVisibility {
+        Unknown_0 = 0,
+        Unknown_1 = 1,
+        Everyone = 2,
+        Unknown_3 = 3,
+    }
+
     public class C012 : TmbEntry {
         public const string MAGIC = "C012";
         public const string DISPLAY_NAME = "VFX (C012)";
@@ -24,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
         private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedEnum<VfxVisibility> Visibility = new( "Visibility" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C012( bool papEmbedded ) : base( papEmbedded ) { }
@@ -46,7 +53,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Rotation,
             Position,
             RGBA,
-            Unk2,
+            Visibility,
             Unk3
         };
 
