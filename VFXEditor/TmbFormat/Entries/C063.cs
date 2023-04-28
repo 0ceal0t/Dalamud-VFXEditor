@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Loop = new( "Loop", defaultValue: 1 );
         private readonly ParsedInt Interrupt = new( "Interrupt" );
         private readonly TmbOffsetString Path = new( "Path" );
-        private readonly ParsedInt SoundIndex = new( "Sound Index", defaultValue: 1 );
+        private readonly ParsedInt SoundIndex = new( "Sound Index" );
         private readonly ParsedInt SoundPosition = new( "Sound Position", defaultValue: 1 );
 
         public C063( bool papEmbedded ) : base( papEmbedded ) { }
