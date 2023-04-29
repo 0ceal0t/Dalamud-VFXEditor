@@ -200,10 +200,8 @@ namespace VfxEditor.FileManager {
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
         }
 
-        public virtual void PenumbraExport( string modFolder ) {
-            foreach( var document in Documents ) {
-                document.PenumbraExport( modFolder );
-            }
+        public virtual void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
+            foreach( var document in Documents ) document.PenumbraExport( modFolder, files );
         }
 
         public virtual void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {

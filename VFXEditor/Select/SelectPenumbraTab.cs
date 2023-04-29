@@ -1,12 +1,11 @@
 using Dalamud.Logging;
 using ImGuiNET;
+using ImGuizmoNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Penumbra;
 
 namespace VfxEditor.Select {
@@ -14,19 +13,8 @@ namespace VfxEditor.Select {
         public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
 
         public override void Draw( string parentId ) {
-            if( Plugin.PenumbraIpc.PenumbraEnabled ) {
-                base.Draw( parentId );
-                return;
-            }
-
-            var id = $"{parentId}/{Name}";
-
-            ImGui.BeginDisabled();
-            var closed = !ImGui.BeginTabItem( $"{Name}{id}" );
-            ImGui.EndDisabled();
-            if( closed ) return;
-
-            ImGui.TextDisabled( "Penumbra is not currently running..." );
+            if( !Plugin.PenumbraIpc.PenumbraEnabled ) return;
+            base.Draw( parentId );
         }
 
         // Don't need to worry about doing this async
@@ -47,25 +35,46 @@ namespace VfxEditor.Select {
             var baseModPath = Plugin.PenumbraIpc.GetModDirectory();
             if( string.IsNullOrEmpty( baseModPath ) ) return;
 
-            var modPath = Path.Join( baseModPath, Selected );
-            var files = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
-            foreach( var file in files ) {
-                try {
-                    var loadedFiles = new List<(string, string)>();
-                    loaded[Path.GetFileName( file ).Replace( ".json", "" )] = loadedFiles;
+            try {
+                var modPath = Path.Join( baseModPath, Selected );
+                var files = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
+                foreach( var file in files ) {
+                    try {
+                        var fileName = Path.GetFileName( file ).Replace( ".json", "" );
+                        var mod = JsonConvert.DeserializeObject<PenumbraMod>( File.ReadAllText( file ) );
 
-                    var jsonFile = JsonConvert.DeserializeObject<PenumbraMod>( File.ReadAllText( file ) );
-                    foreach( var modFile in jsonFile.Files ) {
-                        var (gamePath, localFile) = modFile;
-                        if( !gamePath.EndsWith( Dialog.Extension ) ) continue;
-                        loadedFiles.Add( (gamePath, Path.Join( modPath, localFile )) );
+                        if( fileName == "default_mod" && mod.Files != null ) { // Default mod
+                            var defaultFiles = new List<(string, string)>();
+                            AddToFiles( mod, defaultFiles, modPath );
+                            loaded[fileName] = defaultFiles;
+                        }
+                        else if( mod.Options != null ) { // Option group
+                            var groupName = mod.Name;
+
+                            foreach( var option in mod.Options.Where( x => x.Files != null ) ) {
+                                var optionFiles = new List<(string, string)>();
+                                AddToFiles( option, optionFiles, modPath );
+                                loaded[$"{groupName} / {option.Name}"] = optionFiles;
+                            }
+                        }
+                    }
+                    catch( Exception ex ) {
+                        PluginLog.Error( file, ex );
                     }
                 }
-                catch( Exception ex ) {
-                    PluginLog.Error( file, ex );
-                }
             }
+            catch( Exception e ) {
+                PluginLog.Error( "Error reading Penumbra mods", e );
+            }
+        }
 
+        private void AddToFiles( PenumbraMod mod, List<(string, string)> files, string modPath ) {
+            if( mod == null || mod.Files == null ) return;
+            foreach( var modFile in mod.Files ) {
+                var (gamePath, localFile) = modFile;
+                if( !gamePath.EndsWith( Dialog.Extension ) ) continue;
+                files.Add( (gamePath, Path.Join( modPath, localFile )) );
+            }
         }
 
         protected override void DrawSelected( string parentId ) {

@@ -43,8 +43,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages incidating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] Penumbra select options
-- [ ] Double-check penumbra export (File / FileSwap / Options / etc. )
 - [ ] `.uld` update component type
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)

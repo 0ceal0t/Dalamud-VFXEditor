@@ -151,11 +151,12 @@ namespace VfxEditor.FileManager {
 
         protected virtual List<string> GetPapIds() => null;
 
-        public void PenumbraExport( string modFolder ) {
+        public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
             var data = CurrentFile.ToBytes();
-            PenumbraUtils.WriteBytes( data, modFolder, path );
+
+            PenumbraUtils.WriteBytes( data, modFolder, path, files );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
@@ -349,14 +350,15 @@ namespace VfxEditor.FileManager {
             ImGui.PushStyleColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
-            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - 40 );
+            var style = ImGui.GetStyle();
+            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - style.WindowPadding.X * 2 - 8 );
 
             ImGui.BeginChild( "##AnimationWarning", new Vector2( -1,
-                ImGui.GetFrameHeightWithSpacing() +
                 textSize.Y +
-                ImGui.GetStyle().ItemSpacing.Y * 2 +
-                ImGui.GetStyle().FramePadding.Y
-            ), true );
+                style.WindowPadding.Y * 2 +
+                style.ItemSpacing.Y +
+                ImGui.GetTextLineHeightWithSpacing()
+            ), true, ImGuiWindowFlags.NoScrollbar );
 
             ImGui.TextWrapped( Text );
             if( ImGui.SmallButton( "Guides##Pap" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );

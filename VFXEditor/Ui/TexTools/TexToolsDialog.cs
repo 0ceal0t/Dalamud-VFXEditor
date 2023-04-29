@@ -76,7 +76,7 @@ namespace VfxEditor.TexTools {
             } );
         }
 
-        private void Export( string saveLocation ) {
+        private void Export( string saveFile ) {
             try {
                 var simpleParts = new List<TTMPL_Simple>();
                 byte[] newData;
@@ -103,19 +103,20 @@ namespace VfxEditor.TexTools {
                     SimpleModsList = simpleParts.ToArray()
                 };
 
-                var saveDir = Path.GetDirectoryName( saveLocation );
+                var saveDir = Path.GetDirectoryName( saveFile );
                 var tempDir = Path.Combine( saveDir, "VFXEDITOR_TEXTOOLS_TEMP" );
                 Directory.CreateDirectory( tempDir );
+
                 var mdpPath = Path.Combine( tempDir, "TTMPD.mpd" );
                 var mplPath = Path.Combine( tempDir, "TTMPL.mpl" );
                 var mplString = JsonConvert.SerializeObject( mod );
                 File.WriteAllText( mplPath, mplString );
                 File.WriteAllBytes( mdpPath, newData );
 
-                if( File.Exists( saveLocation ) ) File.Delete( saveLocation );
-                ZipFile.CreateFromDirectory( tempDir, saveLocation );
+                if( File.Exists( saveFile ) ) File.Delete( saveFile );
+                ZipFile.CreateFromDirectory( tempDir, saveFile );
                 Directory.Delete( tempDir, true );
-                PluginLog.Log( "Exported To: " + saveLocation );
+                PluginLog.Log( "Exported To: " + saveFile );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Could not export to TexTools" );

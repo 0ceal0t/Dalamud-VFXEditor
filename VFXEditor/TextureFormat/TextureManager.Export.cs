@@ -6,13 +6,13 @@ using VfxEditor.TexTools;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
-        public void PenumbraExport( string modFolder ) {
+        public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
             foreach( var entry in PathToTextureReplace ) {
                 var localPath = entry.Value.LocalPath;
                 var path = entry.Key;
                 if( string.IsNullOrEmpty( localPath ) || string.IsNullOrEmpty( path ) ) continue;
 
-                PenumbraUtils.CopyFile( localPath, modFolder, path );
+                PenumbraUtils.CopyFile( localPath, modFolder, path, files );
             }
         }
 
