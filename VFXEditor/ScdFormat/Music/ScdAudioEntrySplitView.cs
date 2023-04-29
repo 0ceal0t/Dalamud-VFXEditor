@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.ScdFormat.Music
-{
+namespace VfxEditor.ScdFormat.Music {
     public class ScdAudioEntrySplitView : SimpleSplitView<ScdAudioEntry> {
         public ScdAudioEntrySplitView( List<ScdAudioEntry> items ) : base( "Audio", items, false, false ) { }
 

@@ -7,7 +7,6 @@ using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
-using Lumina.Excel.GeneratedSheets;
 using System.Numerics;
 
 namespace VfxEditor.TmbFormat {
@@ -18,7 +17,6 @@ namespace VfxEditor.TmbFormat {
 
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
-
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
@@ -117,8 +115,7 @@ namespace VfxEditor.TmbFormat {
             if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) { // NEW
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
                     if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
-                        var type = entryOption.Type;
-                        var constructor = type.GetConstructor( new Type[] { typeof( bool ) } );
+                        var constructor = entryOption.Type.GetConstructor( new Type[] { typeof( bool ) } );
                         var newEntry = ( TmbEntry )constructor.Invoke( new object[] { PapEmbedded } );
                         var idx = Entries.Count == 0 ? 0 : file.Entries.IndexOf( Entries.Last() ) + 1;
 
