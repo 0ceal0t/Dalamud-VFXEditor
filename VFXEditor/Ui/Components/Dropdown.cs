@@ -24,6 +24,20 @@ namespace VfxEditor.Ui.Components {
 
         public void ClearSelected() { Selected = null; }
 
+        protected virtual void DrawSelectItem( T item, string id, int idx ) {
+            var isColored = DoColor( item, out var color );
+            if( isColored ) ImGui.PushStyleColor( ImGuiCol.Text, color );
+
+            if( ImGui.Selectable( $"{GetText( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
+
+            if( isColored ) ImGui.PopStyleColor( 1 ); // Uncolor
+        }
+
+        protected virtual bool DoColor( T item, out Vector4 color ) {
+            color = new( 1 );
+            return false;
+        }
+
         public virtual void Draw( string id ) {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             if( Selected != null && !Items.Contains( Selected ) ) Selected = null;
@@ -48,13 +62,15 @@ namespace VfxEditor.Ui.Components {
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
 
+            Vector4 color = new( 1 );
+            var isColored = Selected != null && DoColor( Selected, out color );
+            if( isColored ) ImGui.PushStyleColor( ImGuiCol.Text, color );
             if( ImGui.BeginCombo( $"{id}-Selected", Selected == null ? "[NONE]" : GetText( Selected, Items.IndexOf( Selected ) ) ) ) {
-                for( var idx = 0; idx < Items.Count; idx++ ) {
-                    var item = Items[idx];
-                    if( ImGui.Selectable( $"{GetText( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
-                }
+                if( isColored ) ImGui.PopStyleColor( 1 ); // Uncolor
+                for( var idx = 0; idx < Items.Count; idx++ ) DrawSelectItem( Items[idx], id, idx );
                 ImGui.EndCombo();
             }
+            else if( isColored ) ImGui.PopStyleColor( 1 ); // Uncolor
 
             ImGui.PopStyleVar( 1 );
 

@@ -2,10 +2,20 @@ using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using System.Numerics;
 
 namespace VfxEditor.TmbFormat.Entries {
+    public enum DangerLevel : int {
+        None,
+        Yellow,
+        Red,
+        Detectable,
+        DontAddRemove
+    }
+
     public abstract class TmbEntry : TmbItemWithTime {
         public abstract string DisplayName { get; }
+        public virtual DangerLevel Danger => DangerLevel.None;
 
         private readonly List<ParsedBase> Parsed;
 
@@ -32,5 +42,14 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected abstract List<ParsedBase> GetParsed();
+
+        public static bool DoColor( DangerLevel level, out Vector4 color ) {
+            color = new( 1 );
+            if( level < DangerLevel.Yellow ) return false;
+            else if( level == DangerLevel.Yellow ) color = UiUtils.YELLOW_COLOR;
+            else color = UiUtils.RED_COLOR;
+
+            return true;
+        }
     }
 }

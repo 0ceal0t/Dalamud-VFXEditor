@@ -10,6 +10,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public const string DISPLAY_NAME = "C117";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
+        public override DangerLevel Danger => DangerLevel.Detectable;
 
         public override int Size => 0x18;
         public override int ExtraSize => 0;
@@ -39,8 +40,6 @@ namespace VfxEditor.TmbFormat.Entries {
         public override void Draw( string id ) {
             DrawHeader( id );
             DrawParsed( id );
-
-            TmbFile.TmfcWarning();
         }
     }
 }

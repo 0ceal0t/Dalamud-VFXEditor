@@ -10,6 +10,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public const string DISPLAY_NAME = "Animation Lock (C125)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
+        public override DangerLevel Danger => DangerLevel.Yellow;
 
         public override int Size => 0x14;
         public override int ExtraSize => 0;
@@ -35,8 +36,6 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void Draw( string id ) {
-            TmbFile.GenericWarning();
-
             DrawHeader( id );
             DrawParsed( id );
         }

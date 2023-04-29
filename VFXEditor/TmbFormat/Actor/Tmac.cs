@@ -7,6 +7,7 @@ using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.FileManager;
+using VfxEditor.TmbFormat.Entries;
 
 namespace VfxEditor.TmbFormat.Actor {
     public class Tmac : TmbItemWithTime {
@@ -19,6 +20,8 @@ namespace VfxEditor.TmbFormat.Actor {
 
         public readonly List<Tmtr> Tracks = new();
         private Tmtr SelectedTrack = null;
+
+        public DangerLevel MaxDanger => Tracks.Count == 0 ? DangerLevel.None : Tracks.Select( x => x.MaxDanger ).Max();
 
         private readonly List<int> TempIds;
 
@@ -83,10 +86,15 @@ namespace VfxEditor.TmbFormat.Actor {
 
             var selectedIndex = SelectedTrack == null ? -1 : Tracks.IndexOf( SelectedTrack );
             for( var i = 0; i < Tracks.Count; i++ ) {
+                var isColored = TmbEntry.DoColor( Tracks[i].MaxDanger, out var color );
+                if( isColored ) ImGui.PushStyleColor( ImGuiCol.Text, color );
+
                 if( ImGui.Selectable( $"Track {i}{id}{i}", Tracks[i] == SelectedTrack ) ) {
                     SelectedTrack = Tracks[i];
                     selectedIndex = i;
                 }
+
+                if( isColored ) ImGui.PopStyleColor( 1 ); // Uncolor
             }
             if( selectedIndex == -1 ) SelectedTrack = null;
 

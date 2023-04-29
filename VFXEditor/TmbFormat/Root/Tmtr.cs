@@ -7,6 +7,8 @@ using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
+using Lumina.Excel.GeneratedSheets;
+using System.Numerics;
 
 namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
@@ -16,6 +18,8 @@ namespace VfxEditor.TmbFormat {
 
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
+
+        public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
         private readonly ParsedByteBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
@@ -81,10 +85,17 @@ namespace VfxEditor.TmbFormat {
 
             var entryIdx = 0;
             foreach( var entry in Entries ) {
+                var isColored = TmbEntry.DoColor( entry.Danger, out var color );
+                if( isColored ) {
+                    ImGui.PushStyleColor( ImGuiCol.Header, color );
+                    ImGui.PushStyleColor( ImGuiCol.HeaderHovered, color * new Vector4( 0.75f, 0.75f, 0.75f, 1f ) );
+                }
+
                 if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
+                    if( isColored ) ImGui.PopStyleColor( 2 ); // Uncolor
                     ImGui.Indent();
 
-                    if( entry is not C117 && UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
                         TmbRefreshIdsCommand command = new( file, false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
@@ -96,6 +107,8 @@ namespace VfxEditor.TmbFormat {
                     entry.Draw( $"{id}{entryIdx}" );
                     ImGui.Unindent();
                 }
+                else if( isColored ) ImGui.PopStyleColor( 2 ); // Uncolor
+
                 entryIdx++;
             }
 

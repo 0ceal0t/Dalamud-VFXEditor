@@ -1,7 +1,10 @@
 using ImGuiNET;
+using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
@@ -12,6 +15,8 @@ namespace VfxEditor.TmbFormat.Actor {
         }
 
         protected override string GetText( Tmac item, int idx ) => $"Actor {idx}";
+
+        protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 
         protected override void OnDelete( Tmac item ) {
             TmbRefreshIdsCommand command = new( File, false, true );

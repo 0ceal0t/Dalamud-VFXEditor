@@ -5,26 +5,26 @@ using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
-    // Makes character untargetable
-    // Don't mess with this
-
-    public class C124 : TmbEntry {
-        public const string MAGIC = "C124";
-        public const string DISPLAY_NAME = "C124";
+    public class C197 : TmbEntry {
+        public const string MAGIC = "C197";
+        public const string DISPLAY_NAME = "C197";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
-        public override DangerLevel Danger => DangerLevel.Red;
+        public override DangerLevel Danger => DangerLevel.DontAddRemove;
 
-        public override int Size => 0x18;
+        public override int Size => 0x24;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3", defaultValue: 100 );
+        private readonly ParsedInt Unk3 = new( "Unknown 3" ); // <---
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
-        public C124( bool papEmbedded ) : base( papEmbedded ) { }
+        public C197( bool papEmbedded ) : base( papEmbedded ) { }
 
-        public C124( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C197( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }
@@ -32,7 +32,10 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new() {
             Unk1,
             Unk2,
-            Unk3
+            Unk3,
+            Unk4,
+            Unk5,
+            Unk6
         };
 
         public override void Write( TmbWriter writer ) {

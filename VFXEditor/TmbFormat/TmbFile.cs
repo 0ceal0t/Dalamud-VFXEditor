@@ -101,7 +101,9 @@ namespace VfxEditor.TmbFormat {
         }
 
         public override void Draw( string id ) {
-            if( Tmfcs.Count > 0 || Entries.Where( x => x is C117 ).Any() ) TmfcWarning();
+            var maxDanger = Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
+            if( maxDanger == DangerLevel.DontAddRemove ) DontAddRemoveWarning();
+            else if( maxDanger == DangerLevel.Detectable || Tmfcs.Count > 0 ) DetectableWarning();
 
             if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
                 if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
@@ -140,7 +142,7 @@ namespace VfxEditor.TmbFormat {
             return new TmbFile( br, manager, true );
         }
 
-        public static void TmfcWarning() {
+        public static void DetectableWarning() {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
             ImGui.TextWrapped( "Changes to this file are potentially detectable" );
             ImGui.PopStyleColor();
@@ -151,6 +153,12 @@ namespace VfxEditor.TmbFormat {
         public static void GenericWarning() {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
             ImGui.TextWrapped( "Please don't do anything stupid with this" );
+            ImGui.PopStyleColor();
+        }
+
+        public static void DontAddRemoveWarning() {
+            ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+            ImGui.TextWrapped( "Don't add or remove entries in this file" );
             ImGui.PopStyleColor();
         }
     }
