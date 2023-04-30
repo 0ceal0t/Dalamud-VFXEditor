@@ -60,9 +60,6 @@ namespace VfxEditor.TmbFormat {
         public void WriteRows( BinaryWriter writer ) => Rows.ForEach( x => x.Write( writer ) );
 
         public void Draw( string id ) {
-            var itemMin = ImGui.GetItemRectMin();
-            var itemMax = ImGui.GetItemRectMax();
-
             Parsed.ForEach( x => x.Draw( id, Command ) );
 
             for( var idx = 0; idx < Rows.Count; idx++ ) {
