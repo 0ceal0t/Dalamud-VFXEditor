@@ -31,7 +31,7 @@ namespace VfxEditor.Select.Vfx.Common {
             } );
 
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
-            foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location.ToString()}.avfx", item.Location.ToString(), 0 ) );
+            foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location}.avfx", item.Location.ToString(), 0 ) );
 
             var lineIdx = 0;
             foreach( var line in File.ReadLines( SelectUtils.MiscVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
@@ -46,7 +46,7 @@ namespace VfxEditor.Select.Vfx.Common {
 
         protected override void DrawSelected( string parentId ) {
             SelectTabUtils.DrawIcon( Icon );
-            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameAction, Selected.Name, true );
+            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameMisc, Selected.Name, true );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

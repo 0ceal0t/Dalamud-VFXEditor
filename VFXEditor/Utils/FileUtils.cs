@@ -76,8 +76,8 @@ namespace VfxEditor.Utils {
 
         public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );
 
-        public static long PadTo( BinaryWriter writer, long position, long multiple ) {
-            var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
+        public static long PadTo( BinaryWriter writer, long position, long multiple, int mod = 0 ) {
+            var paddedBytes = NumberToPad( position, multiple, mod );
             Pad( writer, paddedBytes );
             return paddedBytes;
         }
@@ -88,8 +88,8 @@ namespace VfxEditor.Utils {
 
         public static long PadTo( BinaryReader reader, long multiple ) => PadTo( reader, reader.BaseStream.Position, multiple );
 
-        public static long PadTo( BinaryReader reader, long position, long multiple ) {
-            var paddedBytes = ( position % multiple == 0 ) ? 0 : ( multiple - ( position % multiple ) );
+        public static long PadTo( BinaryReader reader, long position, long multiple, int mod = 0 ) {
+            var paddedBytes = NumberToPad( position, multiple, mod );
             Pad( reader, paddedBytes );
             return paddedBytes;
         }
@@ -97,5 +97,7 @@ namespace VfxEditor.Utils {
         public static void Pad( BinaryReader reader, long bytes ) {
             for( var j = 0; j < bytes; j++ ) reader.ReadByte();
         }
+
+        public static long NumberToPad( long position, long multiple, int mod = 0 ) => ( position % multiple == mod ) ? 0 : ( mod - ( position % multiple ) + multiple ) % multiple;
     }
 }

@@ -181,12 +181,10 @@ namespace VfxEditor.Utils {
             } );
         }
 
-        public static void OpenUrl( string url ) {
-            Process.Start( new ProcessStartInfo {
-                FileName = url,
-                UseShellExecute = true
-            } );
-        }
+        public static void OpenUrl( string url ) => Process.Start( new ProcessStartInfo {
+            FileName = url,
+            UseShellExecute = true
+        } );
 
         private static readonly Random random = new();
 
@@ -207,7 +205,7 @@ namespace VfxEditor.Utils {
 
         public static float GetOffsetInputSize( FontAwesomeIcon icon ) => GetOffsetInputSize( GetPaddedIconSize( icon ) );
 
-        public static float GetOffsetInputSize( float size ) => (ImGui.GetWindowSize().X) * 0.65f - size;
+        public static float GetOffsetInputSize( float size ) => ( ImGui.GetWindowSize().X ) * 0.65f - size;
 
         public static float GetPaddedIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();

@@ -32,7 +32,6 @@ namespace VfxEditor.Penumbra {
     }
 
     public class PenumbraDialog : GenericDialog {
-
         private string ModName = "";
         private string Author = "";
         private string Version = "1.0.0";

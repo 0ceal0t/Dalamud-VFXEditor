@@ -1,6 +1,3 @@
-using Lumina.Excel.GeneratedSheets;
-using VfxEditor;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxAssignCommand : ICommand {
         private readonly AvfxBase Item;

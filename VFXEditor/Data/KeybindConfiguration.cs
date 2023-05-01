@@ -1,12 +1,12 @@
+using Dalamud.Game.ClientState.Keys;
+using Dalamud.Interface;
+using Dalamud.Logging;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Keys;
-using Dalamud.Interface;
-using Dalamud.Logging;
-using ImGuiNET;
 using VfxEditor.Utils;
 
 namespace VfxEditor {

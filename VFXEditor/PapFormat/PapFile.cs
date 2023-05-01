@@ -28,6 +28,7 @@ namespace VfxEditor.PapFormat {
 
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
+        private readonly int ModdedPapMod4 = 0;
 
         public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager.GetCopyManager() ) ) {
             AnimationsDropdown = new( this, Animations );
@@ -62,6 +63,8 @@ namespace VfxEditor.PapFormat {
             reader.BaseStream.Seek( havokPosition, SeekOrigin.Begin );
             var havokData = reader.ReadBytes( havokDataSize );
             File.WriteAllBytes( HkxTempLocation, havokData );
+
+            ModdedPapMod4 = ( int )( reader.BaseStream.Position % 4 );
 
             reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
@@ -102,7 +105,7 @@ namespace VfxEditor.PapFormat {
             var havokPos = writer.BaseStream.Position;
             writer.Write( havokData );
 
-            FileUtils.PadTo( writer, 2 );
+            FileUtils.PadTo( writer, writer.BaseStream.Position, 4, ModdedPapMod4 );
 
             var timelinePos = writer.BaseStream.Position;
             var idx = 0;
