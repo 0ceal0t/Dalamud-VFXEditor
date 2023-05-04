@@ -5,6 +5,7 @@ using VfxEditor.Select.Pap.Action;
 using VfxEditor.Select.Pap.Emote;
 using VfxEditor.Select.Pap.IdlePose;
 using VfxEditor.Select.Pap.Job;
+using VfxEditor.Select.Pap.Mount;
 using VfxEditor.Select.Pap.Npc;
 
 namespace VfxEditor.Select.Pap {
@@ -42,7 +43,8 @@ namespace VfxEditor.Select.Pap {
                 new EmoteTab( this, "Emote" ),
                 new NpcPapTab( this, "Npc" ),
                 new CharacterPapTab( this, "Character" ),
-                new JobTab( this, "Job" )
+                new JobTab( this, "Job" ),
+                new MountTab( this, "Mount" )
             } );
         }
 

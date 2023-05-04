@@ -16,7 +16,5 @@ namespace VfxEditor.Select.Vfx.Mount {
             VfxExists = VfxId > 0;
             VfxPath = VfxExists ? mount.GetVfxPath( VfxId ) : "";
         }
-
-        // chara/human/[character ID]/animation/a0001/mt-[monster ID]/resident/mount.pap
     }
 }

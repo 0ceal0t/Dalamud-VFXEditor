@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ImGuiFileDialog {
@@ -12,11 +13,11 @@ namespace ImGuiFileDialog {
                 CollectionFilters.Clear();
             }
 
-            public bool Empty() {
+            public readonly bool Empty() {
                 return string.IsNullOrEmpty( Filter ) && ( ( CollectionFilters == null ) || ( CollectionFilters.Count == 0 ) );
             }
 
-            public bool FilterExists( string filter ) {
+            public readonly bool FilterExists( string filter ) {
                 return ( Filter == filter ) || ( CollectionFilters != null && CollectionFilters.Contains( filter ) );
             }
         }
@@ -24,7 +25,9 @@ namespace ImGuiFileDialog {
         private readonly List<FilterStruct> Filters = new();
         private FilterStruct SelectedFilter;
 
-        private static readonly Regex FilterRegex = new( @"[^,{}]+(\{([^{}]*?)\})?", RegexOptions.Compiled );
+        [GeneratedRegex( "[^,{}]+(\\{([^{}]*?)\\})?", RegexOptions.Compiled )]
+        private static partial Regex FilterRegexPattern();
+        private static readonly Regex FilterRegex = FilterRegexPattern();
 
         private void ParseFilters( string filters ) {
             // ".*,.cpp,.h,.hpp"
@@ -35,7 +38,7 @@ namespace ImGuiFileDialog {
 
             var currentFilterFound = false;
             var matches = FilterRegex.Matches( filters );
-            foreach( Match m in matches ) {
+            foreach( var m in matches.Cast<Match>() ) {
                 var match = m.Value;
                 FilterStruct filter = new();
 
