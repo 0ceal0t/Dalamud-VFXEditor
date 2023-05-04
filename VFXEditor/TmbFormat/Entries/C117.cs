@@ -17,7 +17,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "TMFC ID" );
+        private readonly ParsedInt TmfcId = new( "TMFC ID" );
 
         public C117( bool papEmbedded ) : base( papEmbedded ) { }
 
@@ -29,7 +29,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new() {
             Unk1,
             Unk2,
-            Unk3
+            TmfcId
         };
 
         public override void Write( TmbWriter writer ) {

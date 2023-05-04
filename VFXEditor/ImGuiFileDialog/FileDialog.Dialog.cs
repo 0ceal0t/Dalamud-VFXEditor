@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using TeximpNet.DDS;
 using VfxEditor.TextureFormat;
+using VfxEditor.Utils;
 
 namespace ImGuiFileDialog {
     public partial class FileDialog {
@@ -27,7 +28,6 @@ namespace ImGuiFileDialog {
         }
 
         private static Dictionary<string, IconColorItem> ICON_MAP;
-
         private bool SideBarDrawn = false;
 
         public bool Draw() {
@@ -235,12 +235,10 @@ namespace ImGuiFileDialog {
                     SideBarDrawn = true;
                     ImGui.SetColumnWidth( 0, 150 );
                 }
-
-                DrawSideBar( new Vector2( ImGui.GetColumnWidth( 0 ), size.Y ) );
-
+                DrawSideBar( size with { X = Scaled( ImGui.GetColumnWidth( 0 ) ) } );
                 ImGui.NextColumn();
 
-                DrawFileListView( size - new Vector2( 160, 0 ) );
+                DrawFileListView( size - new Vector2( Scaled( ImGui.GetColumnWidth( 0 ) + 10 ), 0 ) );
 
                 ImGui.Columns( 1 );
                 ImGui.EndChild();
@@ -264,13 +262,27 @@ namespace ImGuiFileDialog {
                 DrawSideBarItem( quick, ref idx );
             }
 
-            if( Favorites.Count > 0 ) ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
-            foreach( var favorite in Favorites ) {
-                DrawSideBarItem( favorite, ref idx );
+            if( Favorites != null && Favorites.Count > 0 ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                ImGui.BeginDisabled();
+                UiUtils.IconText( FontAwesomeIcon.Star );
+                ImGui.SameLine();
+                ImGui.Text( "Favorites" );
+                ImGui.EndDisabled();
+
+                foreach( var favorite in Favorites ) {
+                    DrawSideBarItem( favorite, ref idx );
+                }
             }
 
-            if( Recent != null ) {
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
+            if( Recent != null && Recent.Count > 0 ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                ImGui.BeginDisabled();
+                UiUtils.IconText( FontAwesomeIcon.History );
+                ImGui.SameLine();
+                ImGui.Text( "Recent" );
+                ImGui.EndDisabled();
+
                 foreach( var recent in Recent ) {
                     DrawSideBarItem( recent, ref idx );
                 }
@@ -800,5 +812,7 @@ namespace ImGuiFileDialog {
 
             return false;
         }
+
+        private static float Scaled( float value ) => value * ImGuiHelpers.GlobalScale;
     }
 }

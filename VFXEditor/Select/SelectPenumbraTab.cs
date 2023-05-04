@@ -1,6 +1,5 @@
 using Dalamud.Logging;
 using ImGuiNET;
-using ImGuizmoNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -86,6 +85,7 @@ namespace VfxEditor.Select {
                     var fileIdx = 0;
                     foreach( var file in group.Value ) {
                         var (gamePath, localPath) = file;
+                        if(!Path.Exists( localPath ) ) continue;
                         Dialog.DrawPath( $"File {fileIdx}", localPath, gamePath, $"{parentId}{groupIdx}", SelectResultType.Local, $"{Selected} {group.Key} {fileIdx}", false );
                         fileIdx++;
                     }
