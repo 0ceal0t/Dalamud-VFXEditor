@@ -24,9 +24,9 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
             for( var idx = 0; idx < Loaded.Count; idx++ ) {
                 var paths = Loaded[idx].VfxPaths;
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}{parentId}" ) ) {
-                    ImGui.Indent();
+                    ImGui.Indent( 10 );
                     Dialog.DrawPaths( "VFX", paths, $"{parentId}{idx}", SelectResultType.GameCutscene, $"{Selected.Name} {idx}", true );
-                    ImGui.Unindent();
+                    ImGui.Unindent( 10 );
                 }
             }
         }

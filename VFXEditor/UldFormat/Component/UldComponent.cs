@@ -37,6 +37,7 @@ namespace VfxEditor.UldFormat.Component {
         Map = 0x16,
         Preview = 0x17,
         //HoldButton = 0x18,
+        Unknown_25 = 0x19,
     }
 
     public class UldComponent : UldWorkspaceItem {
@@ -138,6 +139,8 @@ namespace VfxEditor.UldFormat.Component {
                 ComponentType.Multipurpose => new MultipurposeComponentData(),
                 ComponentType.Map => new MapComponentData(),
                 ComponentType.Preview => new PreviewComponentData(),
+
+                ComponentType.Unknown_25 => new Unknown25ComponentData(),
                 _ => null
             };
         }

@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;

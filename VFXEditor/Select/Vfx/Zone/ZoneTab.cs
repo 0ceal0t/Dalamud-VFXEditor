@@ -13,7 +13,6 @@ namespace VfxEditor.Select.Vfx.Zone {
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
 
