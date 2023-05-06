@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
@@ -200,22 +201,32 @@ namespace VfxEditor.Select {
             return res;
         }
 
-        public void DrawPapDict( Dictionary<string, string> items, string label, string name, string id ) {
-            foreach( var item in items ) {
-                var skeleton = item.Key;
-                var path = item.Value;
+        public void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, SelectResultType resultType, string name, string id ) {
+            foreach( var (subName, subItems) in items ) {
+                if( subItems.Count == 0 ) continue;
 
-                DrawFavorite( path, SelectResultType.GameAction, $"{name} {label} ({skeleton})" );
-                ImGui.Text( $"{label} ({skeleton}): " );
+                if( ImGui.CollapsingHeader( subName, ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    ImGui.Indent( 10 );
+                    DrawPaps( subItems, resultType, $"{name} {subName}", $"{id}/{subName}" );
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+                    ImGui.Unindent( 10 );
+                }
+            }
+        }
+
+        public void DrawPaps( Dictionary<string, string> items, SelectResultType resultType, string name, string id ) {
+            foreach( var (suffix, path) in items ) {
+                DrawFavorite( path, resultType, $"{name} ({suffix})" );
+                ImGui.Text( $"{suffix}:" );
                 ImGui.SameLine();
                 if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
                 else SelectTabUtils.DisplayPath( path );
 
-                DrawPath( "", path, $"{id}{skeleton}", SelectResultType.GameAction, $"{name} {label} ({skeleton})" );
+                DrawPath( "", path, $"{id}{suffix}", resultType, $"{name} ({suffix})" );
             }
         }
 
-        public void DrawPath( string label, IEnumerable<string> paths, string id, SelectResultType resultType, string resultName, bool play = false ) {
+        public void DrawPaths( string label, IEnumerable<string> paths, string id, SelectResultType resultType, string resultName, bool play = false ) {
             var idx = 0;
             foreach( var path in paths ) {
                 DrawPath( $"{label} #{idx}", path, $"{id}-{idx}", resultType, $"{resultName} #{idx}", play );

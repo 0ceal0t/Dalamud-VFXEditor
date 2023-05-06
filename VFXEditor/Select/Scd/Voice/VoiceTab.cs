@@ -55,7 +55,7 @@ namespace VfxEditor.Select.Scd.Voice {
         // ===== DRAWING ======
 
         protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "SCD", Loaded, parentId, SelectResultType.GameMisc, Selected.Name );
+            Dialog.DrawPaths( "SCD", Loaded, parentId, SelectResultType.GameMisc, Selected.Name );
         }
 
         protected override string GetName( VoiceRow item ) => item.Name;

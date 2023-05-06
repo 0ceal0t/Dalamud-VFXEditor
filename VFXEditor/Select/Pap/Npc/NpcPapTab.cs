@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Pap.Npc {
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "Variant: " + Selected.Variant );
-            Dialog.DrawPath( "PAP", Loaded, parentId, SelectResultType.GameNpc, Selected.Name );
+            Dialog.DrawPaths( "PAP", Loaded, parentId, SelectResultType.GameNpc, Selected.Name );
         }
 
         protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {

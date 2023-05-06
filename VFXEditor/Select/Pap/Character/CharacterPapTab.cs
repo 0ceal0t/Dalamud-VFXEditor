@@ -16,32 +16,30 @@ namespace VfxEditor.Select.Pap.IdlePose {
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
             // General
 
+            var general = new Dictionary<string, string>();
+
             var idlePath = item.GetPap( "idle" );
             var movePathA = item.GetPap( "move_a" );
             var movePathB = item.GetPap( "move_b" );
+            if( Plugin.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
+            if( Plugin.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
+            if( Plugin.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
-            var generalData = new GeneralData() {
-                IdlePath = Plugin.DataManager.FileExists( idlePath ) ? idlePath : null,
-                MovePathA = Plugin.DataManager.FileExists( movePathA ) ? movePathA : null,
-                MovePathB = Plugin.DataManager.FileExists( movePathB ) ? movePathB : null,
-            };
+            // Poses
 
-            // ChangePoses
-
-            var poseData = new List<PoseData>();
-            for( var idx = 1; idx < SelectUtils.MaxChangePoses; idx++ ) {
-                var start = item.GetStartPap( idx );
-                var loop = item.GetLoopPap( idx );
-                if( Plugin.DataManager.FileExists( start ) &&  Plugin.DataManager.FileExists( loop ) ) {
-                    poseData.Add( new PoseData() {
-                        PoseIndex = idx,
-                        Start = start,
-                        Loop = loop
+            var poses = new Dictionary<string, Dictionary<string, string>>();
+            for( var i = 1; i <= SelectUtils.MaxChangePoses; i++ ) {
+                var start = item.GetStartPap( i );
+                var loop = item.GetLoopPap( i );
+                if( Plugin.DataManager.FileExists( start ) && Plugin.DataManager.FileExists( loop ) ) {
+                    poses.Add( $"Pose {i}", new Dictionary<string, string>() {
+                        { "Start", start },
+                        { "Loop", loop }
                     } );
                 }
             }
 
-            loaded = new( poseData, generalData );
+            loaded = new( general, poses );
         }
 
         // ===== DRAWING ======
@@ -49,28 +47,14 @@ namespace VfxEditor.Select.Pap.IdlePose {
         protected override void DrawSelected( string parentId ) {
             if( ImGui.BeginTabBar( $"{parentId}/Tabs" ) ) {
                 if( ImGui.BeginTabItem( $"General{parentId}" ) ) {
-                    DrawGeneral( parentId );
+                    Dialog.DrawPaps( Loaded.General, SelectResultType.GameCharacter, Selected.Name, parentId );
                     ImGui.EndTabItem();
                 }
                 if( ImGui.BeginTabItem( $"Poses{parentId}" ) ) {
-                    DrawChangePose( parentId );
+                    Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameCharacter, Selected.Name, parentId );
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
-            }
-        }
-
-        private void DrawGeneral( string parentId ) {
-            Dialog.DrawPath( $"Idle", Loaded.General.IdlePath, $"{parentId}-Idle", SelectResultType.GameCharacter, $"{Selected.Name} Idle" );
-            Dialog.DrawPath( $"Move A", Loaded.General.MovePathA, $"{parentId}-MoveA", SelectResultType.GameCharacter, $"{Selected.Name} Move A" );
-            Dialog.DrawPath( $"Move B", Loaded.General.MovePathB, $"{parentId}-MoveB", SelectResultType.GameCharacter, $"{Selected.Name} Move B" );
-        }
-
-        private void DrawChangePose( string parentId ) {
-            foreach( var pose in Loaded.Poses ) {
-                var idx = pose.PoseIndex;
-                Dialog.DrawPath( $"Pose #{idx} Start", pose.Start, $"{parentId}-{idx}-Start", SelectResultType.GameCharacter, $"{Selected.Name} #{idx} Start" );
-                Dialog.DrawPath( $"Pose #{idx} Loop", pose.Loop, $"{parentId}-{idx}-Loop", SelectResultType.GameCharacter, $"{Selected.Name} #{idx} Loop" );
             }
         }
 

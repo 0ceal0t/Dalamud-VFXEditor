@@ -53,20 +53,15 @@ namespace VfxEditor.Select.Pap.Emote {
             SelectTabUtils.DrawIcon( Icon );
 
             ImGui.BeginTabBar( "EmotePapTabs" );
-            foreach( var action in Loaded.AllPaps ) {
-                if( !ImGui.BeginTabItem( $"{action.Key}{parentId}/Emote" ) ) continue;
+            foreach( var (subAction, subActionPaths) in Loaded.AllPaps ) {
+                if( !ImGui.BeginTabItem( $"{subAction}{parentId}/Emote" ) ) continue;
                 ImGui.BeginChild( "EmotePapChild", new Vector2( -1 ), false );
 
-                if( action.Value.TryGetValue( "Action", out var actionDict ) ) Dialog.DrawPapDict( actionDict, "", $"{Selected.Name} {action.Key}", parentId );
+                if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
+                    Dialog.DrawPaps( actionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}", parentId );
+                }
                 else {
-                    foreach( var subItem in action.Value ) {
-                        if( subItem.Value.Count == 0 ) continue;
-                        if( ImGui.CollapsingHeader( subItem.Key ) ) {
-                            ImGui.Indent();
-                            Dialog.DrawPapDict( subItem.Value, "", $"{Selected.Name} {action.Key} {subItem.Key}", parentId );
-                            ImGui.Unindent();
-                        }
-                    }
+                    Dialog.DrawPapsWithHeader( subActionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}", parentId );
                 }
 
                 ImGui.EndChild();

@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tmb.Npc {
 
         protected override void DrawSelected( string parentId ) {
             ImGui.Text( "Variant: " + Selected.Variant );
-            Dialog.DrawPath( "TMB", Loaded, parentId, SelectResultType.GameNpc, Selected.Name );
+            Dialog.DrawPaths( "TMB", Loaded, parentId, SelectResultType.GameNpc, Selected.Name );
         }
 
         protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {

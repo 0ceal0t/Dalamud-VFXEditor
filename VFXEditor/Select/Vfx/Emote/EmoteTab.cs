@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Vfx.Emote {
         protected override void DrawSelected( string parentId ) {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameEmote, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

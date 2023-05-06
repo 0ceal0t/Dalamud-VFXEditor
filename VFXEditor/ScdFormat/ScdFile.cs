@@ -124,9 +124,7 @@ namespace VfxEditor.ScdFormat {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
-            ImGui.BeginChild( $"{id}-Child" );
             AudioSplitView.Draw( id + "/Audio" );
-            ImGui.EndChild();
         }
 
         public override void Write( BinaryWriter writer ) {

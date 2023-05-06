@@ -36,7 +36,7 @@ namespace VfxEditor.Select.Vfx.Gimmick {
                 SelectTabUtils.DisplayPath( Selected.TmbPath );
                 SelectTabUtils.Copy( Selected.TmbPath, id: $"{parentId}/CopyTmb" );
 
-                Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameGimmick, Selected.Name, true );
+                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameGimmick, Selected.Name, true );
             }
         }
 

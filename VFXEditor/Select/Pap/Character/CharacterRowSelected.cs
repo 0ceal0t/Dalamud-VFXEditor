@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Select.Pap.Character {
     public class CharacterRowSelected {
-        public readonly List<PoseData> Poses;
-        public readonly GeneralData General;
+        // Idle, MoveA, MoveB
+        public readonly Dictionary<string, string> General;
+        // Pose # -> Start, Loop
+        public readonly Dictionary<string, Dictionary<string, string>> Poses;
 
-        public CharacterRowSelected( List<PoseData> poses, GeneralData general ) {
+        public CharacterRowSelected( Dictionary<string, string> general, Dictionary<string, Dictionary<string, string>> poses ) {
             Poses = poses;
             General = general;
         }

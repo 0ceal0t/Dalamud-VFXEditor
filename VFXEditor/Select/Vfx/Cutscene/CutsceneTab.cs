@@ -20,7 +20,7 @@ namespace VfxEditor.Select.Vfx.Cutscene {
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.Path );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameCutscene, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameCutscene, Selected.Name, true );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

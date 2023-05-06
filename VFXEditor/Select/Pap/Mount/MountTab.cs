@@ -4,7 +4,7 @@ using System.Linq;
 using VfxEditor.Select.Shared.Mount;
 
 namespace VfxEditor.Select.Pap.Mount {
-    public class MountTab : SelectTab<MountRow, List<Dictionary<string, string>>> {
+    public class MountTab : SelectTab<MountRow, Dictionary<string, Dictionary<string, string>>> {
         public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount" ) { }
 
         // ===== LOADING =====
@@ -18,21 +18,19 @@ namespace VfxEditor.Select.Pap.Mount {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        public override void LoadSelection( MountRow item, out List<Dictionary<string, string>> loaded ) {
+        public override void LoadSelection( MountRow item, out Dictionary<string, Dictionary<string, string>> loaded ) {
             loaded = new();
 
             var papPaths = item.GetMountPaps();
-            foreach( var papPath in papPaths ) {
-                loaded.Add( SelectUtils.FileExistsFilter( SelectUtils.GetAllSkeletonPaths( papPath ) ) );
+            for( var i = 0; i <  papPaths.Count; i++ ) {
+                loaded.Add( $"Seat {i + 1}", SelectUtils.FileExistsFilter( SelectUtils.GetAllSkeletonPaths( papPaths[i] ) ) );
             }
         }
 
         protected override void DrawSelected( string parentId ) {
             SelectTabUtils.DrawIcon( Icon );
 
-            for( var seatIdx = 0; seatIdx < Loaded.Count; seatIdx++ ) {
-                Dialog.DrawPapDict( Loaded[seatIdx], $"Seat {seatIdx + 1}", Selected.Name, $"{parentId}/{seatIdx}" );
-            }
+            Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameNpc, Selected.Name, parentId );
         }
 
         protected override string GetName( MountRow item ) => item.Name;

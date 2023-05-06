@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Vfx.Zone {
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.LgbPath );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameZone, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameZone, Selected.Name, true );
         }
 
         protected override string GetName( ZoneRow item ) => item.Name;

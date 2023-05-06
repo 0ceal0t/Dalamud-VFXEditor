@@ -49,7 +49,7 @@ namespace VfxEditor.Select.Vfx.Action {
             Dialog.DrawPath( "Cast", Selected.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, $"{Selected.Name} Cast", true );
 
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameAction, Selected.Name, true );
+                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameAction, Selected.Name, true );
             }
         }
 

@@ -30,7 +30,7 @@ namespace VfxEditor.Select.Vfx.Housing {
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.SgbPath );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

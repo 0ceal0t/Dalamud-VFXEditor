@@ -9,29 +9,6 @@ using VfxEditor.Select.Pap.Mount;
 using VfxEditor.Select.Pap.Npc;
 
 namespace VfxEditor.Select.Pap {
-    public struct PoseData {
-        public int PoseIndex;
-        public string Start;
-        public string Loop;
-
-        public bool HasData =>
-            !string.IsNullOrEmpty(Start) ||
-            !string.IsNullOrEmpty(Loop);
-    }
-
-    public struct GeneralData {
-        public string IdlePath;
-        public string MovePathA;
-        public string MovePathB;
-        public string DrawWeaponPath;
-
-        public bool HasData => 
-            !string.IsNullOrEmpty(IdlePath) ||
-            !string.IsNullOrEmpty(MovePathA) ||
-            !string.IsNullOrEmpty(MovePathB) ||
-            !string.IsNullOrEmpty(DrawWeaponPath);
-    }
-
     public class PapSelectDialog : SelectDialog {
         private readonly List<SelectTab> GameTabs;
 

@@ -80,7 +80,7 @@ namespace VfxEditor.Select {
             var groupIdx = 0;
             foreach( var group in Loaded ) {
                 if( ImGui.CollapsingHeader( $"{group.Key}{parentId}{groupIdx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    ImGui.Indent();
+                    ImGui.Indent( 10 );
 
                     var fileIdx = 0;
                     foreach( var file in group.Value ) {
@@ -90,7 +90,7 @@ namespace VfxEditor.Select {
                         fileIdx++;
                     }
 
-                    ImGui.Unindent();
+                    ImGui.Unindent( 10 );
                 }
 
                 groupIdx++;

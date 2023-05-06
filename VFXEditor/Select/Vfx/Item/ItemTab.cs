@@ -55,7 +55,7 @@ namespace VfxEditor.Select.Vfx.Item {
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Loaded.ImcPath );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
 
             if( Loaded.VfxPaths.Count == 0 ) SelectTabUtils.DisplayNoVfx();
         }
