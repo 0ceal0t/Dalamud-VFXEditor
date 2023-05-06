@@ -21,7 +21,7 @@ namespace VfxEditor.Select.Lists {
             var id = $"{parentId}/{Name}";
             if( !ImGui.BeginTabItem( $"{Name}{id}" ) ) return;
 
-            ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 0, 2 ) );
+            ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             ImGui.BeginChild( id + "/Child", new Vector2( -1, -1 ), true );
 
             if( ImGui.BeginTable( $"{id}/Table", 2, ImGuiTableFlags.RowBg ) ) {

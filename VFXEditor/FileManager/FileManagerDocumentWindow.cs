@@ -1,7 +1,4 @@
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -23,6 +20,7 @@ namespace VfxEditor.FileManager {
             ImGui.SameLine();
             ImGui.TextDisabled( "Create documents in order to replace multiple files simultaneously" );
 
+            ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
 
             if( ImGui.BeginTable( $"{id}/Table", 2, ImGuiTableFlags.RowBg ) ) {
@@ -34,7 +32,8 @@ namespace VfxEditor.FileManager {
                     var showActive = document == Manager.ActiveDocument;
 
                     if( showActive ) ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
-                    if( ImGui.Selectable( document.SourceDisplay + id + idx, document == SelectedDocument, ImGuiSelectableFlags.SpanAllColumns ) ) {
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
+                    if( ImGui.Selectable( $"{document.SourceDisplay}{id}{idx}", document == SelectedDocument, ImGuiSelectableFlags.SpanAllColumns ) ) {
                         SelectedDocument = document;
                     }
                     if( showActive ) ImGui.PopStyleColor();
@@ -61,6 +60,7 @@ namespace VfxEditor.FileManager {
             }
 
             ImGui.EndChild();
+            ImGui.PopStyleVar( 1 );
 
             if( UiUtils.DisabledButton( $"Open{id}", SelectedDocument != null ) ) {
                 Manager.SelectDocument( SelectedDocument );

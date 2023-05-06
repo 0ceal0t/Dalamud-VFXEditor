@@ -38,13 +38,12 @@ If you have other questions, please open an [Issue](https://github.com/0ceal0t/D
 * Export, play, and modify music and sound effects
 
 ## Contributing
-If a VFX is behaving unexpectedly, or you are getting log messages incidating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
+If a VFX is behaving unexpectedly, or you are getting log messages indicating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
 - [ ] `.scd` modded parsing
-- [ ] Mount sitting animations in `.pap`
 - [ ] `.uld` update component type
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)
