@@ -2,6 +2,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Data.Files;
 using System;
+using VfxEditor.Select.Shared.Item;
 
 namespace VfxEditor.Select.Vfx.Item {
     public class ItemTab : SelectTab<ItemRow, ItemRowSelected> {
@@ -31,7 +32,7 @@ namespace VfxEditor.Select.Vfx.Item {
 
         public override void LoadSelection( ItemRow item, out ItemRowSelected loaded ) {
             loaded = null;
-            var imcPath = item.ImcPath;
+            var imcPath = item.GetImcPath();
             if( Plugin.DataManager.FileExists( imcPath ) ) {
                 try {
                     var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
@@ -50,7 +51,7 @@ namespace VfxEditor.Select.Vfx.Item {
         protected override void DrawSelected( string parentId ) {
             SelectTabUtils.DrawIcon( Icon );
 
-            ImGui.Text( "Variant: " + Selected.Variant );
+            ImGui.Text( "Variant: " + Selected.GetVariant() );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Loaded.ImcPath );

@@ -22,8 +22,8 @@ namespace VfxEditor.Select.Scd {
                 new BgmTab( this, "BGM" ),
                 new BgmQuestTab( this, "Quest BGM" ),
                 new InstanceTab( this, "Instance" ),
-                new CommonTab( this, "Common" ),
                 new VoiceTab( this, "Voice" ),
+                new CommonTab( this, "Common" ),
             } );
         }
 

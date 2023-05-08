@@ -13,7 +13,8 @@ namespace VfxEditor.PapFormat {
     public enum SkeletonType {
         Human = 0,
         Monster = 1,
-        DemiHuman = 2
+        DemiHuman = 2,
+        Weapon = 3,
     }
 
     public class PapFile : FileManagerFile {

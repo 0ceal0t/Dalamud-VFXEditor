@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VfxEditor.Select.Vfx.Item {
+namespace VfxEditor.Select.Shared.Item {
     public struct ItemIds {
         public ulong Raw;
 
@@ -10,10 +10,10 @@ namespace VfxEditor.Select.Vfx.Item {
         public int Id3;
         public int Id4;
 
-        public int Id => Id1;
-        public int GearVariant => Id2;
-        public int WeaponBody => Id2;
-        public int WeaponVariant => Id3;
+        public readonly int Id => Id1;
+        public readonly int GearVariant => Id2;
+        public readonly int WeaponBody => Id2;
+        public readonly int WeaponVariant => Id3;
 
         public ItemIds( ulong modelDataRaw ) {
             Raw = modelDataRaw;
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Vfx.Item {
         }
     }
 
-    public class ItemRow {
+    public abstract class ItemRow {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -48,11 +48,6 @@ namespace VfxEditor.Select.Vfx.Item {
         public readonly ItemIds SecondaryIds;
         public readonly bool HasModel;
 
-        public string RootPath;
-        public string VfxRootPath;
-        public string ImcPath;
-        public int Variant;
-
         public ItemRow( Lumina.Excel.GeneratedSheets.Item item ) {
             Name = item.Name.ToString();
             RowId = ( int )item.RowId;
@@ -60,9 +55,15 @@ namespace VfxEditor.Select.Vfx.Item {
 
             Ids = new ItemIds( item.ModelMain );
             SecondaryIds = new ItemIds( item.ModelSub );
-            HasModel = ( Ids.Id1 != 0 );
+            HasModel =  Ids.Id1 != 0 ;
         }
 
-        public string GetVfxPath( int idx ) => $"{VfxRootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";
+        public string GetVfxPath( int idx ) => $"{GetVfxRootPath()}{idx.ToString().PadLeft( 4, '0' )}.avfx";
+
+        public abstract string GetVfxRootPath();
+
+        public abstract string GetImcPath();
+
+        public abstract int GetVariant();
     }
 }

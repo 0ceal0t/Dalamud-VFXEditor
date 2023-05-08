@@ -25,14 +25,14 @@ namespace VfxEditor.Select.Vfx {
                 new StatusTab( this, "Status" ),
                 new ActionTab( this, "Action" ),
                 new NonPlayerActionTab( this, "Non-Player Action" ),
-                new ZoneTab( this, "Zone" ),
-                new NpcVfxTab( this, "Npc" ),
                 new EmoteTab( this, "Emote" ),
+                new ZoneTab( this, "Zone" ),
                 new GimmickTab( this, "Gimmick" ),
+                new HousingTab( this, "Housing" ),
+                new NpcVfxTab( this, "Npc" ),
+                new MountTab( this, "Mount" ),
                 new CutsceneTab( this, "Cutscene" ),
                 new JournalCutsceneTab( this, "Journal Cutscene" ),
-                new MountTab( this, "Mount" ),
-                new HousingTab( this, "Housing" ),
                 new CommonTab( this, "Common" )
             } );
         }
