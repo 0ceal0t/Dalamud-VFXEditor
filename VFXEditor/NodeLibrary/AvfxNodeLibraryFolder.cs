@@ -14,9 +14,6 @@ namespace VfxEditor.NodeLibrary {
         private string Name;
         private readonly string Id;
 
-        private bool Editing = false;
-        private string EditingName = "";
-
         public AvfxNodeLibraryFolder( AvfxNodeLibraryFolder parent, string name, string id, List<AvfxNodeLibraryProps> items ) : base( parent ) {
             Name = name;
             Id = id;
@@ -66,20 +63,16 @@ namespace VfxEditor.NodeLibrary {
 
                 ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
                 open = ImGui.TreeNodeEx( $"{uniqueId}",
-                    ( Editing ? ImGuiTreeNodeFlags.AllowItemOverlap : ImGuiTreeNodeFlags.SpanAvailWidth ) |
+                   ImGuiTreeNodeFlags.SpanAvailWidth |
                     ImGuiTreeNodeFlags.FramePadding |
                     ImGuiTreeNodeFlags.Framed
                 );
                 DragDrop( library, Name, ref listModified );
                 ImGui.PopStyleColor( 1 );
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}-context" );
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}/Popup" );
 
-                if( ImGui.BeginPopup( $"{id}-context" ) ) {
-                    if( ImGui.Selectable( $"Rename{id}" ) ) {
-                        EditingName = Name;
-                        Editing = true;
-                    }
-                    if( ImGui.Selectable( $"New sub-folder{id}" ) ) {
+                if( ImGui.BeginPopup( $"{id}/Popup" ) ) {
+                    if( ImGui.Selectable( $"New Sub-Folder{id}" ) ) {
                         var newFolder = new AvfxNodeLibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
                         Add( newFolder );
                         library.Save();
@@ -91,45 +84,21 @@ namespace VfxEditor.NodeLibrary {
                         library.Save();
                         listModified = true;
                     }
+                    if( ImGui.InputText( $"{id}/Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
+                        library.Save();
+                        listModified = true;
+                    }
                     ImGui.EndPopup();
                 }
 
                 ImGui.SameLine();
 
-                if( !Editing ) {
-                    ImGui.PushFont( UiBuilder.IconFont );
-                    ImGui.Text( $"{( char )FontAwesomeIcon.Folder}" );
-                    ImGui.PopFont();
+                ImGui.PushFont( UiBuilder.IconFont );
+                ImGui.Text( $"{( char )FontAwesomeIcon.Folder}" );
+                ImGui.PopFont();
 
-                    ImGui.SameLine();
-                    ImGui.Text( Name );
-                }
-                else {
-                    var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-                    var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
-                    ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-
-                    // Input
-                    var inputSize = ImGui.GetContentRegionAvail().X - checkSize - removeSize - 6;
-                    ImGui.SetNextItemWidth( inputSize );
-                    ImGui.InputText( $"{id}-input", ref EditingName, 256 );
-
-                    ImGui.PushFont( UiBuilder.IconFont );
-                    ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
-                        Name = EditingName;
-                        Editing = false;
-                        library.Save();
-                        listModified = true;
-                    }
-                    ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
-                        Editing = false;
-                    }
-                    ImGui.PopFont();
-
-                    ImGui.PopStyleVar( 1 );
-                }
+                ImGui.SameLine();
+                ImGui.Text( Name );
             }
 
             if( open ) {

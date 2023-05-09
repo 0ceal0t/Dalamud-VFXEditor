@@ -14,13 +14,15 @@ namespace VfxEditor.TmbFormat {
 
         public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation, "Tmb", "tmb" ) { }
 
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Tmb", "tmb" ) {
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
+            base( manager, writeLocation, localPath, name, source, replace, "Tmb", "tmb" ) {
             AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
         }
 
         protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+            Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source

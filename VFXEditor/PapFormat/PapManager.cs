@@ -17,7 +17,7 @@ namespace VfxEditor.PapFormat {
         protected override PapDocument GetNewDocument() => new( this, NewWriteLocation );
 
         protected override PapDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Source, data.Replace );
+            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace );
 
         public override void DrawBody() {
             IndexDialog.Draw();

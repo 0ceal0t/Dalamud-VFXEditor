@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
-        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Data.CopyManager.Avfx ) ) {
+        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.AvfxManager ) ) {
             byte[] original = null;
             if( checkOriginal ) {
                 var startPos = reader.BaseStream.Position;

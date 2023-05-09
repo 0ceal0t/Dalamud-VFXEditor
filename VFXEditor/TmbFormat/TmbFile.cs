@@ -25,7 +25,7 @@ namespace VfxEditor.TmbFormat {
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
 
-        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager.GetCopyManager() ), false, checkOriginal ) { }
+        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), false, checkOriginal ) { }
 
         public TmbFile( BinaryReader binaryReader, CommandManager manager, bool papEmbedded, bool checkOriginal = true ) : base( manager ) {
             ActorsDropdown = new( this );

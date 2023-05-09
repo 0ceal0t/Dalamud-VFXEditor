@@ -12,13 +12,15 @@ namespace VfxEditor.PapFormat {
 
         public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation, "Pap", "pap" ) { }
 
-        public PapDocument( PapManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Pap", "pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
+            base( manager, writeLocation, localPath, name, source, replace, "Pap", "pap" ) { }
 
         protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
         protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+            Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source

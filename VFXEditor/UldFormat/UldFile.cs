@@ -41,7 +41,7 @@ namespace VfxEditor.UldFormat {
         public readonly UldTimelineDropdown TimelineDropdown;
         public readonly UldWidgetDropdown WidgetDropdown;
 
-        public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager.GetCopyManager() ) ) {
+        public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             var pos = reader.BaseStream.Position;

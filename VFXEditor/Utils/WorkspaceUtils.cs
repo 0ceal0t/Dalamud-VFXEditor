@@ -7,6 +7,7 @@ using VfxEditor.Select;
 
 namespace VfxEditor.Utils {
     public struct WorkspaceMetaRenamed {
+        public string Name;
         public SelectResult Source;
         public SelectResult Replace;
         public Dictionary<string, string> Renaming;
@@ -24,6 +25,7 @@ namespace VfxEditor.Utils {
     }
 
     public struct WorkspaceMetaBasic {
+        public string Name;
         public SelectResult Source;
         public SelectResult Replace;
         public string RelativeLocation;

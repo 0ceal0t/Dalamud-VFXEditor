@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt FadeTime = new( "Fade Time" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt VoicelineNumber = new( "Voiceline Number" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt BindPointId = new( "Bind Point ID" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
@@ -31,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
             FadeTime,
             Unk2,
             VoicelineNumber,
-            Unk4,
+            BindPointId,
             Unk5,
             Unk6
         };

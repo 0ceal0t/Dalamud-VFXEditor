@@ -15,9 +15,11 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, SelectResult source, SelectResult replace ) : base( manager, writeLocation, localPath, source, replace, "Vfx", "avfx" ) { }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
+            base( manager, writeLocation, localPath, name, source, replace, "Vfx", "avfx" ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation, localPath, data.Source, data.Replace ) {
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) :
+            this( manager, writeLocation, localPath, data.Name, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }
 
@@ -49,6 +51,7 @@ namespace VfxEditor.AvfxFormat {
             SetSource( new SelectResult( SelectResultType.Local, "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
 
         public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
+            Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,

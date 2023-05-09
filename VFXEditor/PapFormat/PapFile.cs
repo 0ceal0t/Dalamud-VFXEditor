@@ -31,7 +31,7 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager.GetCopyManager() ) ) {
+        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 

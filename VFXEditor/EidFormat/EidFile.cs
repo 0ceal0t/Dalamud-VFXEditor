@@ -10,7 +10,7 @@ namespace VfxEditor.EidFormat {
         public readonly List<EidBindPoint> BindPoints = new();
         public readonly EidBindPointDropdown Dropdown;
 
-        public EidFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.EidManager.GetCopyManager() ) ) {
+        public EidFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.EidManager ) ) {
             Dropdown = new( BindPoints );
 
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;

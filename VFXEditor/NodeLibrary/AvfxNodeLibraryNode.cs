@@ -40,12 +40,13 @@ namespace VfxEditor.NodeLibrary {
             if( ImGui.BeginPopup( $"{id}-context" ) ) {
                 if( ImGui.Selectable( $"Import{id}" ) && Plugin.AvfxManager.CurrentFile != null ) Plugin.AvfxManager.Import( Path );
 
-                if( ImGui.Selectable( $"Edit{id}" ) ) {
-                    Editing = true;
-                }
                 if( ImGui.Selectable( $"Delete{id}" ) ) {
                     Cleanup();
                     Parent.Remove( this );
+                    library.Save();
+                    listModified = true;
+                }
+                if( ImGui.InputText( $"{id}/Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
                     library.Save();
                     listModified = true;
                 }

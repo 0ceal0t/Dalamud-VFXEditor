@@ -1,52 +1,14 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Lists {
     public class SelectFavoriteTab : SelectListTab, IDraggableList<SelectResult> {
         private SelectResult DraggingItem;
-        private SelectResult EditingItem;
-        private string EditingInput = "";
 
         public SelectFavoriteTab( SelectDialog dialog, string name, List<SelectResult> items ) : base( dialog, name, items ) { }
-
-        protected override bool DrawRow( SelectResult item, string id, int idx ) {
-            if( item == EditingItem ) {
-                ImGui.TableNextColumn();
-                ImGui.TableNextColumn();
-
-                var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-                var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
-                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-
-                // Input
-                var inputSize = ImGui.GetContentRegionAvail().X - checkSize - removeSize - 6;
-                ImGui.SetNextItemWidth( inputSize );
-                ImGui.InputText( $"{id}/Rename", ref EditingInput, 256 );
-
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
-                    EditingItem.DisplayString = EditingInput;
-                    Plugin.Configuration.Save();
-                    EditingItem = null;
-                }
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
-                    EditingItem = null;
-                }
-                ImGui.PopFont();
-
-                ImGui.PopStyleVar( 1 );
-
-                return false;
-            }
-            return base.DrawRow( item, id, idx );
-        }
 
         protected override bool PostRow( SelectResult item, string id, int idx ) {
             if( IDraggableList<SelectResult>.DrawDragDrop( this, item, $"{id}-FAVORITE" ) ) {
@@ -57,15 +19,12 @@ namespace VfxEditor.Select.Lists {
             if( base.PostRow( item, id, idx ) ) return true;
 
             var itemId = $"{id}{idx}";
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{itemId}-context" );
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{itemId}/Popup" );
 
             // Make sure to remove and then restore window padding if necessary
             ImGui.PopStyleVar( 1 );
-            if( ImGui.BeginPopup( $"{itemId}-context" ) ) {
-                if( ImGui.Selectable( $"Rename{itemId}" ) ) {
-                    EditingItem = item;
-                    EditingInput = item.DisplayString;
-                }
+            if( ImGui.BeginPopup( $"{itemId}/Popup" ) ) {
+                if( ImGui.InputText( $"{itemId}/Rename", ref item.DisplayString, 128, ImGuiInputTextFlags.AutoSelectAll ) ) Plugin.Configuration.Save();
                 ImGui.EndPopup();
             }
             ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 0, 2 ) );

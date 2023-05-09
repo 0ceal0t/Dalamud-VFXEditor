@@ -47,7 +47,7 @@ namespace VfxEditor.Select.Lists {
             ImGui.EndTabItem();
         }
 
-        protected virtual bool DrawRow( SelectResult item, string id,  int idx ) {
+        protected bool DrawRow( SelectResult item, string id,  int idx ) {
             ImGui.TableNextColumn();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
             if( Dialog.DrawFavorite( item ) ) return true;

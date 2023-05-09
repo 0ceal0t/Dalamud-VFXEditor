@@ -1,9 +1,12 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.Select;
 using VfxEditor.TexTools;
@@ -33,10 +36,13 @@ namespace VfxEditor.FileManager {
         public abstract void ShowReplace();
 
         public abstract string GetWriteLocation();
+
+        public abstract void Unsaved();
     }
 
     public abstract class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
         public T ActiveDocument { get; protected set; } = null;
+
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
         private int DOC_ID = 0;
@@ -79,6 +85,10 @@ namespace VfxEditor.FileManager {
         public override CommandManager GetCommandManager() => CurrentFile?.Command;
 
         public override ManagerConfiguration GetConfig() => Configuration;
+
+        public override void Unsaved() {
+            if( ActiveDocument != null ) ActiveDocument.Unsaved = true;
+        }
 
         public string GetExportName() => Id;
 
@@ -128,10 +138,12 @@ namespace VfxEditor.FileManager {
         public override void DrawBody() {
             SourceSelect?.Draw();
             ReplaceSelect?.Draw();
+            DocumentWindow.Draw();
 
             Name = WindowTitle + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + WindowTitle;
             CheckKeybinds();
-            DocumentWindow.Draw();
+
+            // Menu
 
             if( ImGui.BeginMenuBar() ) {
                 Plugin.DrawFileMenu();
@@ -147,6 +159,71 @@ namespace VfxEditor.FileManager {
 
                 ImGui.EndMenuBar();
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
+
+            // A very cursed way to have more control over this dropdown
+
+            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0 ) );
+            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 0 ) );
+            var dropdownOpen = ImGui.BeginCombo( $"##{Id}/Combo", "", ImGuiComboFlags.NoPreview );
+            ImGui.PopStyleVar( 1 );
+            ImGui.PopStyleColor( 1 );
+
+            if( dropdownOpen ) {
+                for( var i = 0; i < Documents.Count; i++ ) {
+                    var document = Documents[i];
+                    if( ImGui.Selectable( $"{document.DisplayName}##{Id}/{i}", document == ActiveDocument ) ) SelectDocument( document );
+                }
+                ImGui.EndCombo();
+            }
+
+            var pos1 = ImGui.GetCursorScreenPos() + new Vector2( 0, -1 );
+            ImGui.SameLine();
+            var pos2 = ImGui.GetCursorScreenPos();
+            var color = ImGui.GetColorU32( ImGuiCol.TabActive );
+            var drawlist = ImGui.GetWindowDrawList();
+
+            var offset = ( float )Math.Floor( ImGui.GetStyle().WindowPadding.X * 0.5f );
+
+            drawlist.AddLine( pos1, new Vector2( pos2.X - ImGui.GetStyle().ItemSpacing.X + 4 - offset, pos1.Y ), color, 1 );
+
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 4 );
+
+            // Tabs
+
+            if( ImGui.BeginTabBar( $"{Id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+                for( var i = 0; i < Documents.Count; i++ ) {
+                    var document = Documents[i];
+
+                    var open = true;
+                    var flags = ImGuiTabItemFlags.None | ImGuiTabItemFlags.NoPushId;
+                    if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
+                    if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
+
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}###{Id}/{i}", ref open, flags ) ) ImGui.EndTabItem();
+
+                    if( !open && Documents.Count > 1 ) {
+                        RemoveDocument( document );
+                        break;
+                    }
+
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) ) SelectDocument( document );
+
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{Id}/{i}/Popup" );
+
+                    if( ImGui.BeginPopup( $"{Id}/{i}/Popup" ) ) {
+                        document.DrawRename( $"##{Id}/{i}" );
+                        ImGui.EndPopup();
+                    }
+                }
+
+                if( ImGui.TabItemButton( $"+##{Id}", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
+
+                ImGui.EndTabBar();
+            }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             ActiveDocument?.Draw();
         }

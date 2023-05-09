@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
+using VfxEditor.FileManager;
 
 namespace VfxEditor {
     public class CommandManager {
@@ -21,10 +22,12 @@ namespace VfxEditor {
         private int CommandIndex;
 
         public readonly CopyManager Copy;
+        public readonly FileManagerWindow Manager;
 
-        public CommandManager( CopyManager copy ) {
+        public CommandManager( FileManagerWindow manager ) {
             Managers.Add( this );
-            Copy = copy;
+            Manager = manager;
+            Copy = manager.GetCopyManager();
         }
 
         public void Add( ICommand command ) {
@@ -35,6 +38,7 @@ namespace VfxEditor {
             while( CommandBuffer.Count > Max ) CommandBuffer.RemoveAt( 0 );
             CommandIndex = CommandBuffer.Count - 1;
             command.Execute();
+            Manager.Unsaved();
         }
 
         public bool CanUndo => CommandBuffer.Count > 0 && CommandIndex >= 0;
@@ -45,12 +49,14 @@ namespace VfxEditor {
             if( !CanUndo ) return;
             CommandBuffer[CommandIndex].Undo();
             CommandIndex--;
+            Manager.Unsaved();
         }
 
         public void Redo() {
             if( !CanRedo ) return;
             CommandIndex++;
             CommandBuffer[CommandIndex].Redo();
+            Manager.Unsaved();
         }
 
         public unsafe void Draw() {

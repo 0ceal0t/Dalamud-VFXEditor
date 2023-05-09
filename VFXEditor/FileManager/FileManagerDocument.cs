@@ -13,6 +13,9 @@ namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
         public T CurrentFile { get; protected set; }
 
+        public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
+        protected string Name = "";
+
         protected SelectResult Source;
         public string SourceDisplay => Source == null ? "[NONE]" : Source.DisplayString;
         public string SourcePath => Source == null ? "" : Source.Path;
@@ -29,9 +32,16 @@ namespace VfxEditor.FileManager {
         protected readonly string IdUpperCase;
         protected readonly string Extension;
         protected readonly FileManagerWindow Manager;
+
+        public bool Unsaved = false;
         protected DateTime LastUpdate = DateTime.Now;
 
-        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string id, string extension ) {
+        public FileManagerDocument(
+            FileManagerWindow manager,
+            string writeLocation,
+            string id,
+            string extension
+         ) {
             Manager = manager;
             WriteLocation = writeLocation;
             Id = id;
@@ -39,9 +49,17 @@ namespace VfxEditor.FileManager {
             Extension = extension;
         }
 
-        public FileManagerDocument( FileManagerWindow manager, string writeLocation, string localPath, SelectResult source, SelectResult replace, string id, string extension ) :
-            this( manager, writeLocation, id, extension ) {
-
+        public FileManagerDocument(
+            FileManagerWindow manager,
+            string writeLocation,
+            string localPath,
+            string name,
+            SelectResult source,
+            SelectResult replace,
+            string id,
+            string extension
+        ) : this( manager, writeLocation, id, extension ) {
+            Name = name ?? "";
             Source = source;
             Replace = replace;
             LoadLocal( localPath );
@@ -131,6 +149,7 @@ namespace VfxEditor.FileManager {
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
             LastUpdate = DateTime.Now;
+            Unsaved = false;
 
             if( Plugin.Configuration.UpdateWriteLocation ) {
                 var oldWriteLocation = WriteLocation;
@@ -279,7 +298,7 @@ namespace VfxEditor.FileManager {
         }
 
         protected virtual void DrawBody() {
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -289,6 +308,11 @@ namespace VfxEditor.FileManager {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 CurrentFile.Draw( $"##{Id}" );
             }
+        }
+
+        public void DrawRename( string id ) {
+            Name ??= "";
+            ImGui.InputText( $"{id}/Rename", ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
         }
 
         public virtual void Dispose() {

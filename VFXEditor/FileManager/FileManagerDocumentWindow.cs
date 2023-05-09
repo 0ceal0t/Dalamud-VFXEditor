@@ -16,6 +16,8 @@ namespace VfxEditor.FileManager {
             var id = $"##{Name}";
             var footerHeight = ImGui.GetFrameHeightWithSpacing();
 
+            if( !Manager.Documents.Contains( SelectedDocument ) ) SelectedDocument = null;
+
             if( ImGui.Button( "+ NEW" + id ) ) Manager.AddDocument();
             ImGui.SameLine();
             ImGui.TextDisabled( "Create documents in order to replace multiple files simultaneously" );
@@ -40,11 +42,6 @@ namespace VfxEditor.FileManager {
 
                     if( ImGui.IsItemHovered() ) {
                         if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) Manager.SelectDocument( SelectedDocument );
-
-                        ImGui.BeginTooltip();
-                        ImGui.Text( "Replace path: " + document.ReplaceDisplay );
-                        ImGui.Text( "Write path: " + document.WritePath );
-                        ImGui.EndTooltip();
                     }
 
                     ImGui.TableNextColumn();
