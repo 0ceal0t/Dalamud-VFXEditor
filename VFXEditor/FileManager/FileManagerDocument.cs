@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Select;
@@ -229,15 +230,55 @@ namespace VfxEditor.FileManager {
         }
 
         protected virtual void DrawInputTextColumn() {
-            ImGui.SetColumnWidth( 0, 140 );
+            ImGui.SetColumnWidth( 0, 150 );
+
+            var pos = ImGui.GetCursorScreenPos() + new Vector2( 5, 0 );
+            var color = ImGui.GetColorU32( ImGuiCol.TextDisabled );
+            var height = ImGui.GetFrameHeight();
+            var spacing = ImGui.GetStyle().ItemSpacing.Y;
+
+            var radius = 5f;
+            var width = 15f;
+            var segmentResolution = 10;
+            var thickness = 2;
+
+            var arrowHeight = 8;
+            var arrowWidth = 8;
+
+            var drawList = ImGui.GetWindowDrawList();
+            var topLeft = pos + new Vector2( 0, height * 0.5f );
+            var topRight = topLeft + new Vector2( width, 0 );
+            var bottomRight = pos + new Vector2( width, height * 1.5f + spacing - 1 );
+            var bottomLeft = new Vector2( topLeft.X, bottomRight.Y );
+
+            var topLeftCurveCenter = new Vector2( topLeft.X + radius, topLeft.Y + radius );
+            var bottomLeftCurveCenter = new Vector2( bottomLeft.X + radius, bottomLeft.Y - radius );
+
+            drawList.PathArcTo( topLeftCurveCenter, radius, DegreesToRadians( 180 ), DegreesToRadians( 270 ), segmentResolution );
+            drawList.PathStroke( color, ImDrawFlags.None, thickness );
+
+            drawList.PathArcTo( bottomLeftCurveCenter, radius, DegreesToRadians( 90 ), DegreesToRadians( 180 ), segmentResolution );
+            drawList.PathStroke( color, ImDrawFlags.None, thickness );
+
+            drawList.AddLine( topLeft + new Vector2( -0.5f, radius - 0.5f ), bottomLeft + new Vector2( -0.5f, -radius + 0.5f ), color, thickness );
+            drawList.AddLine( topLeft + new Vector2( radius - 0.5f, -0.5f ), topRight + new Vector2( 0, -0.5f), color, thickness );
+            drawList.AddLine( bottomLeft + new Vector2( radius - 0.5f, -0.5f ), bottomRight + new Vector2( -4, -0.5f ), color, thickness );
+
+            drawList.AddTriangleFilled( bottomRight, bottomRight + new Vector2( -arrowWidth, arrowHeight / 2 ), bottomRight + new Vector2( -arrowWidth, -arrowHeight / 2 ), color );
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
             ImGui.Text( $"Loaded {IdUpperCase}" );
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
             ImGui.Text( $"{IdUpperCase} Being Replaced" );
         }
 
+        private float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
+
         protected virtual void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 140 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 150 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
             DisplaySearchBars();
             ImGui.PopItemWidth();
@@ -312,7 +353,7 @@ namespace VfxEditor.FileManager {
 
         public void DrawRename( string id ) {
             Name ??= "";
-            ImGui.InputText( $"{id}/Rename", ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
+            ImGui.InputTextWithHint( $"{id}/Rename", ReplaceDisplay, ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
         }
 
         public virtual void Dispose() {

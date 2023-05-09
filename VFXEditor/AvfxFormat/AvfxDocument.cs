@@ -62,16 +62,6 @@ namespace VfxEditor.AvfxFormat {
 
         protected override bool ExtraInputColumn() => true;
 
-        protected override void DrawInputTextColumn() {
-            ImGui.SetColumnWidth( 0, 150 );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            UiUtils.HelpMarker( "The source of the new VFX. For example, if you wanted to replace the Fire animation with that of Blizzard, Blizzard would be the loaded VFX" ); ImGui.SameLine();
-            ImGui.Text( "Loaded VFX" );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            UiUtils.HelpMarker( "The VFX which is being replaced. For example, if you wanted to replace the Fire animation with that of Blizzard, Fire would be the replaced VFX" ); ImGui.SameLine();
-            ImGui.Text( "VFX Being Replaced" );
-        }
-
         protected override void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
