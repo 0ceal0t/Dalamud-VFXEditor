@@ -5,6 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxItem( string avfxName ) : base( avfxName ) { }
 
         public abstract string GetDefaultText();
+
         public virtual string GetText() => GetDefaultText();
     }
 }

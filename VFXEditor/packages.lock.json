@@ -1297,6 +1297,9 @@
           "System.Xml.XmlDocument": "4.3.0"
         }
       },
+      "ottergui": {
+        "type": "Project"
+      },
       "penumbra.string": {
         "type": "Project"
       }

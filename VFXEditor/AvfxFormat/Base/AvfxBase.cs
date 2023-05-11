@@ -198,9 +198,9 @@ namespace VfxEditor.AvfxFormat {
 
         public static bool DrawUnassignContextMenu( string id, string name ) {
             var ret = false;
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) {
-                ImGui.OpenPopup( $"Unassign-{id}-{name}" );
-            }
+
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign-{id}-{name}" );
+
             if( ImGui.BeginPopup( $"Unassign-{id}-{name}" ) ) {
                 if( ImGui.Selectable( $"Unassign {name}" ) ) {
                     ret = true;
@@ -208,6 +208,7 @@ namespace VfxEditor.AvfxFormat {
                 }
                 ImGui.EndPopup();
             }
+
             return ret;
         }
 

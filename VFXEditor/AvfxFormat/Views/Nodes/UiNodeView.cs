@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,35 +29,33 @@ namespace VfxEditor.AvfxFormat {
             var selected = view.GetSelected();
             var group = view.GetGroup();
 
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
-            ImGui.PushFont( UiBuilder.IconFont );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-            if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + id ) ) ImGui.OpenPopup( "New_Popup" + id );
+                if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + id ) ) ImGui.OpenPopup( "New_Popup" + id );
 
-            if( selected != null && allowDelete ) {
-                if( allowNew ) ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + id ) ) {
-                    file.ShowExportDialog( selected );
-                }
+                if( selected != null && allowDelete ) {
+                    if( allowNew ) ImGui.SameLine();
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + id ) ) {
+                        file.ShowExportDialog( selected );
+                    }
 
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" + id ) ) {
-                    file.AddToNodeLibrary( selected );
-                }
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" + id ) ) {
+                        file.AddToNodeLibrary( selected );
+                    }
 
-                // Tooltip
-                ImGui.PopFont();
-                UiUtils.Tooltip( "Add to node library" );
-                ImGui.PushFont( UiBuilder.IconFont );
+                    // Tooltip
+                    ImGui.PopFont();
+                    UiUtils.Tooltip( "Add to node library" );
+                    ImGui.PushFont( UiBuilder.IconFont );
 
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
-                    CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
+                    ImGui.SameLine();
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                        CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
+                    }
                 }
             }
-
-            ImGui.PopFont();
-            ImGui.PopStyleVar( 1 );
 
             // ===== NEW =====
 

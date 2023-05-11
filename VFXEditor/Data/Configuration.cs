@@ -67,7 +67,6 @@ namespace VfxEditor {
         public KeybindConfiguration SaveKeybind = new();
         public KeybindConfiguration SaveAsKeybind = new();
         public KeybindConfiguration OpenKeybind = new();
-        public KeybindConfiguration DocumentsKeybind = new();
         public KeybindConfiguration UpdateKeybind = new();
         public KeybindConfiguration CopyKeybind = new();
         public KeybindConfiguration PasteKeybind = new();
@@ -241,7 +240,6 @@ namespace VfxEditor {
             if( PasteKeybind.Draw( "Paste ", "##PasteKeybind" ) ) Save();
             if( UndoKeybind.Draw( "Undo", "##UndoKeybind" ) ) Save();
             if( RedoKeybind.Draw( "Redo ", "##RedoKeybind" ) ) Save();
-            if( DocumentsKeybind.Draw( "Documents", "##DocumentsKeybind" ) ) Save();
             if( UpdateKeybind.Draw( "Update", "##UpdateKeybind" ) ) Save();
             if( SpawnOnSelfKeybind.Draw( "Spawn on self (Vfx only)", "##SpawnSelfKeybind" ) ) Save();
             if( SpawnOnGroundKeybind.Draw( "Spawn on ground (Vfx only)", "##SpawnGroundKeybind" ) ) Save();

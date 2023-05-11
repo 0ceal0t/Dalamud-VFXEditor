@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
@@ -20,19 +21,17 @@ namespace VfxEditor.AvfxFormat {
         public abstract void Disable( T item );
 
         protected override void DrawControls( string id ) {
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( AllowNew ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
-                    CommandManager.Avfx.Add( new UiItemSplitViewAddCommand<T>( this, Items ) );
-                }
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            if( AllowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
+                CommandManager.Avfx.Add( new UiItemSplitViewAddCommand<T>( this, Items ) );
             }
+
             if( Selected != null && AllowDelete ) {
                 if( AllowNew ) ImGui.SameLine();
                 if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     CommandManager.Avfx.Add( new UiItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }
             }
-            ImGui.PopFont();
         }
 
         protected override bool DrawLeftItem( T item, int idx, string id ) {

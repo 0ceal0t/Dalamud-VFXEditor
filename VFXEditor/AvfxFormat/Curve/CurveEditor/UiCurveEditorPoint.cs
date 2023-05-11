@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using ImPlotNET;
+using OtterGui.Raii;
 using System;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -64,51 +65,48 @@ namespace VfxEditor.AvfxFormat {
         public void Draw() {
             var id = "##CurveEdit";
 
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
-            ImGui.PushFont( UiBuilder.IconFont );
-
-            // Delete
-            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
-                CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
-                    Editor.Keys.Remove( Key );
-                    Editor.Points.Remove( this );
-                    if( Editor.Selected.Contains( this ) ) Editor.Selected.Remove( this );
-                    Editor.UpdateGradient();
-                } ) );
-
-                ImGui.PopStyleVar( 1 );
-                ImGui.PopFont();
-                return;
-            }
-
-            // Shift over left/right
-            if( Editor.Points[0] != this ) {
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowLeft}{id}" ) ) {
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                // Delete
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
-                        var idx = Editor.Points.IndexOf( this );
-                        var swap = Editor.Points[idx - 1];
-                        Editor.Points[idx - 1] = this;
-                        Editor.Points[idx] = swap;
+                        Editor.Keys.Remove( Key );
+                        Editor.Points.Remove( this );
+                        if( Editor.Selected.Contains( this ) ) Editor.Selected.Remove( this );
                         Editor.UpdateGradient();
                     } ) );
-                }
-            }
-            if( Editor.Points[^1] != this ) {
-                ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowRight}{id}" ) ) {
-                    CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
-                        var idx = Editor.Points.IndexOf( this );
-                        var swap = Editor.Points[idx + 1];
-                        Editor.Points[idx + 1] = this;
-                        Editor.Points[idx] = swap;
-                        Editor.UpdateGradient();
-                    } ) );
-                }
-            }
 
-            ImGui.PopStyleVar( 1 );
-            ImGui.PopFont();
+                    ImGui.PopStyleVar( 1 );
+                    ImGui.PopFont();
+                    return;
+                }
+
+                // Shift over left/right
+                if( Editor.Points[0] != this ) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowLeft}{id}" ) ) {
+                        CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
+                            var idx = Editor.Points.IndexOf( this );
+                            var swap = Editor.Points[idx - 1];
+                            Editor.Points[idx - 1] = this;
+                            Editor.Points[idx] = swap;
+                            Editor.UpdateGradient();
+                        } ) );
+                    }
+                }
+                if( Editor.Points[^1] != this ) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowRight}{id}" ) ) {
+                        CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
+                            var idx = Editor.Points.IndexOf( this );
+                            var swap = Editor.Points[idx + 1];
+                            Editor.Points[idx + 1] = this;
+                            Editor.Points[idx] = swap;
+                            Editor.UpdateGradient();
+                        } ) );
+                    }
+                }
+            }
 
             // ====================
 

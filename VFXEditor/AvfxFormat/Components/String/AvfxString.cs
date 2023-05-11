@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Text;
 using VfxEditor.Data;
 using VfxEditor.Utils;
+using OtterGui.Raii;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxString : AvfxDrawable {
@@ -62,34 +63,32 @@ namespace VfxEditor.AvfxFormat {
 
             DrawRemoveContextMenu( this, Name, id );
 
-            var style = ImGui.GetStyle();
+            var imguiStyle = ImGui.GetStyle();
 
             // Check - update value
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( style.ItemInnerSpacing.X, style.ItemSpacing.Y ) );
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SameLine();
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
-                var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
-                CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
+                    var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
+                    CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
+                }
             }
-            ImGui.PopFont();
 
             UiUtils.Tooltip( "Update field value" );
 
             // Remove - unassign
             if( ShowRemoveButton ) {
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
-                ImGui.PopFont();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.SameLine();
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
+                }
 
                 UiUtils.Tooltip( "Unassign field" );
             }
 
             ImGui.SameLine();
             ImGui.Text( Name );
-
-            ImGui.PopStyleVar( 1 );
         }
     }
 }

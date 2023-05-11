@@ -1,6 +1,3 @@
-using Dalamud.Interface;
-using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using System;
@@ -59,7 +56,6 @@ namespace VfxEditor.FileManager {
         public override string GetWriteLocation() => NewWriteLocation;
 
         public readonly List<T> Documents = new();
-        private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
 
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
@@ -77,7 +73,6 @@ namespace VfxEditor.FileManager {
             }
 
             AddDocument();
-            DocumentWindow = new( windowTitle, this );
         }
 
         public override CopyManager GetCopyManager() => Copy;
@@ -138,7 +133,6 @@ namespace VfxEditor.FileManager {
         public override void DrawBody() {
             SourceSelect?.Draw();
             ReplaceSelect?.Draw();
-            DocumentWindow.Draw();
 
             Name = WindowTitle + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + WindowTitle;
             CheckKeybinds();
@@ -153,7 +147,6 @@ namespace VfxEditor.FileManager {
                     DrawEditMenuExtra();
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( $"Documents##{Id}" ) ) DocumentWindow.Show();
                 ImGui.Separator();
                 Plugin.DrawManagersMenu( this );
 
@@ -192,7 +185,7 @@ namespace VfxEditor.FileManager {
 
             // Tabs
 
-            if( ImGui.BeginTabBar( $"{Id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
+            if( ImGui.BeginTabBar( $"{Id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable ) ) {
                 for( var i = 0; i < Documents.Count; i++ ) {
                     var document = Documents[i];
 
@@ -203,17 +196,23 @@ namespace VfxEditor.FileManager {
 
                     if( ImGui.BeginTabItem( $"{document.DisplayName}###{Id}/{i}", ref open, flags ) ) ImGui.EndTabItem();
 
-                    if( !open && Documents.Count > 1 ) {
-                        RemoveDocument( document );
-                        break;
+                    if( !open && Documents.Count > 1 ) ImGui.OpenPopup( $"{Id}/{i}/DeletePopup" );
+
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
+
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{Id}/{i}/RenamePopup" );
+
+                    if( ImGui.BeginPopup( $"{Id}/{i}/RenamePopup" ) ) {
+                        document.DrawRename( $"##{Id}/{i}" );
+                        ImGui.EndPopup();
                     }
 
-                    if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) ) SelectDocument( document );
-
-                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{Id}/{i}/Popup" );
-
-                    if( ImGui.BeginPopup( $"{Id}/{i}/Popup" ) ) {
-                        document.DrawRename( $"##{Id}/{i}" );
+                    if( ImGui.BeginPopup( $"{Id}/{i}/DeletePopup" ) ) {
+                        if( ImGui.Selectable( $"Delete##{Id}" ) ) {
+                            RemoveDocument( document );
+                            ImGui.EndPopup();
+                            break;
+                        }
                         ImGui.EndPopup();
                     }
                 }
@@ -242,7 +241,6 @@ namespace VfxEditor.FileManager {
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
-            if( Plugin.Configuration.DocumentsKeybind.KeyPressed() ) DocumentWindow.Show();
             if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
             ActiveDocument?.CheckKeybinds();
         }

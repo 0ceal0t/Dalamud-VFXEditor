@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -108,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
             var childFramePos = ImGui.GetCursorScreenPos();
             var childFrameSize = new Vector2( canvasSize.X, canvasSize.Y - 8f - headerSize.Y - scrollBarSize.Y );
             var childFramePosMax = childFramePos + childFrameSize;
-            ImGui.PushStyleColor( ImGuiCol.FrameBg, 0 );
+            using var frameColor = ImRaii.PushColor( ImGuiCol.FrameBg, 0 );
             ImGui.BeginChildFrame( 889, childFrameSize );
             ImGui.InvisibleButton( "SeqContentBar", new Vector2( canvasSize.X, controlHeight ) );
 
@@ -352,7 +353,7 @@ namespace VfxEditor.AvfxFormat {
             drawList.PopClipRect();
 
             ImGui.EndChildFrame();
-            ImGui.PopStyleColor();
+            frameColor.Pop();
 
             ImGui.InvisibleButton( "SeqScollBar", scrollBarSize );
             var scrollBarMin = ImGui.GetItemRectMin();
@@ -447,6 +448,8 @@ namespace VfxEditor.AvfxFormat {
                 if( deleteEntry == Selected ) Selected = null;
                 OnDelete( deleteEntry );
             }
+
+            // DRAW SELECTION
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {

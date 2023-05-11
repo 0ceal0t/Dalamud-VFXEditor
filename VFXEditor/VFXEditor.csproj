@@ -120,6 +120,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\OtterGui\OtterGui.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="Files\adpcmencode3.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

@@ -3,7 +3,6 @@ using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Select;

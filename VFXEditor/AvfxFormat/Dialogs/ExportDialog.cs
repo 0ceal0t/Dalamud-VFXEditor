@@ -1,5 +1,7 @@
 using ImGuiFileDialog;
 using ImGuiNET;
+using Microsoft.VisualBasic;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -109,30 +111,19 @@ namespace VfxEditor.AvfxFormat {
             public override void Draw() {
                 ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
 
-                var count = Selected.Count;
-                var visible = false;
-                if( count > 0 ) {
-                    ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ) );
-                }
-                if( ImGui.CollapsingHeader( $"{HeaderText} ({count} Selected / {Group.Items.Count})###ExportUI_{HeaderText}" ) ) {
-                    if( count > 0 ) {
-                        visible = true;
-                        ImGui.PopStyleColor();
-                    }
+                using var color = ImRaii.PushColor( ImGuiCol.Text, new Vector4( 0.10f, 0.90f, 0.10f, 1.0f ), Selected.Count > 0 );
+                if( ImGui.CollapsingHeader( $"{HeaderText} ({Selected.Count} Selected / {Group.Items.Count})###ExportUI/{HeaderText}" ) ) {
+                    color.Pop();
 
-                    ImGui.Indent();
-
+                    using var indent = ImRaii.PushIndent();
                     foreach( var item in Group.Items ) {
-                        var isSelected = Selected.Contains( item );
-                        if( ImGui.Checkbox( item.GetText() + Id, ref isSelected ) ) {
-                            if( isSelected ) Selected.Add( item );
+                        var nodeSelected = Selected.Contains( item );
+                        if( ImGui.Checkbox( item.GetText() + Id, ref nodeSelected ) ) {
+                            if( nodeSelected ) Selected.Add( item );
                             else Selected.Remove( item );
                         }
                     }
-
-                    ImGui.Unindent();
                 }
-                if( count > 0 && !visible ) ImGui.PopStyleColor();
             }
         }
     }

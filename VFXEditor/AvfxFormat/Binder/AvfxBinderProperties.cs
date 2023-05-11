@@ -110,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
             AssignedCopyPaste( this, Name );
             DrawRemoveButton( this, Name, id );
 
-            AvfxBase.DrawNamedItems( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs, id );
         }
 
         public override string GetDefaultText() => Name;

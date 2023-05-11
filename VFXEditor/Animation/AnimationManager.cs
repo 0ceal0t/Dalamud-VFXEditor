@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
+using OtterGui.Raii;
 
 namespace VfxEditor.Animation {
     public class AnimationManager {
@@ -92,19 +93,16 @@ namespace VfxEditor.Animation {
 
             // Controls
 
-            ImGui.PushFont( UiBuilder.IconFont );
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( Playing ? $"{( char )FontAwesomeIcon.Stop}" : $"{( char )FontAwesomeIcon.Play}" ) ) Playing = !Playing;
 
-            ImGui.SameLine();
-            if( ImGui.Button( Playing ? $"{( char )FontAwesomeIcon.Stop}" : $"{( char )FontAwesomeIcon.Play}" ) ) Playing = !Playing;
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            var dimLoop = !Looping;
-            if( dimLoop ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Sync}" ) ) Looping = !Looping;
-            if( dimLoop ) ImGui.PopStyleVar();
-
-            ImGui.PopFont();
+                using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, !Looping );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Sync}" ) ) Looping = !Looping;
+            }
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );

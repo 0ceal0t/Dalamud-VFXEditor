@@ -270,9 +270,9 @@ namespace VfxEditor.AvfxFormat {
             var id = "##AVFX";
             ImGui.BeginChild( id + "/Child" );
 
-            ImGui.PushStyleColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) );
+            ImGui.BeginDisabled();
             ImGui.TextWrapped( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
-            ImGui.PopStyleColor();
+            ImGui.EndDisabled();
 
             if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
                 RevisedValuesScaleX.SetValue( ScaleCombined );

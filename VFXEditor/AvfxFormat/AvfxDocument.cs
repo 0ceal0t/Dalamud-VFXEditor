@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
@@ -96,7 +97,7 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            ImGui.PushFont( UiBuilder.IconFont );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( $"{( !Plugin.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
                 Plugin.VfxTracker.Toggle();
                 if( !Plugin.VfxTracker.Enabled ) {
@@ -107,7 +108,6 @@ namespace VfxEditor.AvfxFormat {
                     Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
                 }
             }
-            ImGui.PopFont();
             UiUtils.Tooltip( "VFX path overlay" );
         }
     }

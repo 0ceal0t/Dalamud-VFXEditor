@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using ImPlotNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -183,36 +184,36 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
 
-            if( !DrawOnce || ImGui.SmallButton( "Fit To Contents" + parentId ) ) {
-                ImPlot.SetNextAxesToFit();
-                DrawOnce = true;
-            }
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                if( !DrawOnce || ImGui.SmallButton( "Fit To Contents" + parentId ) ) {
+                    ImPlot.SetNextAxesToFit();
+                    DrawOnce = true;
+                }
 
-            ImGui.SameLine();
-            if( UiUtils.DisabledButton( "Copy" + parentId, Keys.Count > 0, true ) ) {
-                CopyManager.Avfx.ClearCurveKeys();
-                foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key.Time, key.X, key.Y, key.Z );
-            }
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( "Copy" + parentId, Keys.Count > 0, true ) ) {
+                    CopyManager.Avfx.ClearCurveKeys();
+                    foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key.Time, key.X, key.Y, key.Z );
+                }
 
-            ImGui.SameLine();
-            if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.Avfx.HasCurveKeys(), true ) ) {
-                CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
-                    foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
-                    UpdateGradient();
-                } ) );
-            }
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.Avfx.HasCurveKeys(), true ) ) {
+                    CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
+                        foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
+                        UpdateGradient();
+                    } ) );
+                }
 
-            ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Clear" + parentId, true ) ) {
-                CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
-                    Points.Clear();
-                    Keys.Clear();
-                    UpdateGradient();
-                    Selected.Clear();
-                } ) );
+                ImGui.SameLine();
+                if( UiUtils.RemoveButton( "Clear" + parentId, true ) ) {
+                    CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
+                        Points.Clear();
+                        Keys.Clear();
+                        UpdateGradient();
+                        Selected.Clear();
+                    } ) );
+                }
             }
-
-            ImGui.PopStyleVar( 1 );
 
             if( Type == CurveType.Angle ) {
                 if( ImGui.RadioButton( $"Radians##{parentId}1", !Plugin.Configuration.UseDegreesForAngles ) ) {
@@ -228,7 +229,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawWrongOrder( string parentId ) {
-            ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "POINTS ARE IN THE WRONG ORDER" );
+            ImGui.TextColored( UiUtils.RED_COLOR, "POINTS ARE IN THE WRONG ORDER" );
             ImGui.SameLine();
             if( UiUtils.RemoveButton( $"Sort{parentId}", true ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => { // Sort

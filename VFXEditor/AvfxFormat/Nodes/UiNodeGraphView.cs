@@ -38,7 +38,7 @@ namespace VfxEditor.AvfxFormat {
                 Node.Graph = new UiNodeGraph( Node );
             }
             if( Node.Graph.Cycle ) {
-                ImGui.TextColored( new Vector4( 1, 0, 0, 1 ), "WARNING: CYCLICAL" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: CYCLICAL" );
                 return;
             }
 

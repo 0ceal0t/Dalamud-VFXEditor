@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
@@ -190,11 +191,10 @@ namespace VfxEditor.AvfxFormat {
 
             // Draw go button
             ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( Selected == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
-            if( Selected == null ) ImGui.PopStyleVar();
-            ImGui.PopFont();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
+            }
 
             UiUtils.Tooltip( "Navigate to selected node" );
 

@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -166,16 +167,15 @@ namespace VfxEditor.AvfxFormat {
 
                 AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
-                var style = ImGui.GetStyle();
-                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( style.ItemInnerSpacing.X, style.ItemSpacing.Y ) );
+                var imguiStyle = ImGui.GetStyle();
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
 
                 // Draw go button
                 ImGui.SameLine();
-                ImGui.PushFont( UiBuilder.IconFont );
-                if( Selected[idx] == null ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id + idx ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
-                if( Selected[idx] == null ) ImGui.PopStyleVar();
-                ImGui.PopFont();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id + idx ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
+                }
 
                 UiUtils.Tooltip( "Navigate to selected node" );
 
@@ -186,17 +186,12 @@ namespace VfxEditor.AvfxFormat {
                 else {
                     // Remove button
                     ImGui.SameLine();
-                    ImGui.PushFont( UiBuilder.IconFont );
+                    using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
-
-                        ImGui.PopFont();
-                        ImGui.PopStyleVar( 1 );
                         return;
                     }
-                    ImGui.PopFont();
                 }
-                ImGui.PopStyleVar( 1 );
             }
 
 
