@@ -53,7 +53,7 @@ namespace VfxEditor.AvfxFormat {
             var wrongOrder = false;
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
 
-            if( ImPlot.BeginPlot( $"{parentId}-Plot-{EditorId}", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+            if( ImPlot.BeginPlot( $"{parentId}/Plot/{EditorId}", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
@@ -71,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
 
                         var topLeft = new ImPlotPoint { x = Points[0].DisplayX, y = 1 };
                         var bottomRight = new ImPlotPoint { x = Points[^1].DisplayX, y = -1 };
-                        ImPlot.PlotImage( parentId + "gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
+                        ImPlot.PlotImage( $"{parentId}gradient-image", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
                     }
 
                     var idx = 0;
@@ -182,8 +182,6 @@ namespace VfxEditor.AvfxFormat {
                 "Left-click to select a point, hold shift to select multiple\n" +
                 "Right-click, drag, then left-click to perform a box selection" );
 
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
-
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 if( !DrawOnce || ImGui.SmallButton( "Fit To Contents" + parentId ) ) {
                     ImPlot.SetNextAxesToFit();
@@ -191,13 +189,13 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Copy" + parentId, Keys.Count > 0, true ) ) {
+                if( UiUtils.DisabledButton( $"Copy{parentId}", Keys.Count > 0, true ) ) {
                     CopyManager.Avfx.ClearCurveKeys();
                     foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key.Time, key.X, key.Y, key.Z );
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Paste" + parentId, CopyManager.Avfx.HasCurveKeys(), true ) ) {
+                if( UiUtils.DisabledButton( $"Paste{parentId}", CopyManager.Avfx.HasCurveKeys(), true ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                         foreach( var key in CopyManager.Avfx.CurveKeys ) InsertPoint( key.X, key.Y, key.Z, key.W );
                         UpdateGradient();
@@ -205,7 +203,7 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( "Clear" + parentId, true ) ) {
+                if( UiUtils.RemoveButton( $"Clear{parentId}", true ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( this, () => {
                         Points.Clear();
                         Keys.Clear();
@@ -216,12 +214,12 @@ namespace VfxEditor.AvfxFormat {
             }
 
             if( Type == CurveType.Angle ) {
-                if( ImGui.RadioButton( $"Radians##{parentId}1", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( $"Radians{parentId}", !Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = false;
                     Plugin.Configuration.Save();
                 }
                 ImGui.SameLine();
-                if( ImGui.RadioButton( $"Degrees##{parentId}2", Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( $"Degrees{parentId}", Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = true;
                     Plugin.Configuration.Save();
                 }

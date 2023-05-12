@@ -1,7 +1,9 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -85,16 +87,14 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void DrawAssignedCurves( List<AvfxCurve> curves, string id ) {
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                foreach( var curve in curves ) {
-                    if( curve.IsAssigned() ) {
-                        if( ImGui.BeginTabItem( curve.Name + id ) ) {
-                            curve.DrawAssigned( id );
-                            ImGui.EndTabItem();
-                        }
-                    }
+            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {
+                if( ImGui.BeginTabItem( curve.Name + id ) ) {
+                    curve.DrawAssigned( id );
+                    ImGui.EndTabItem();
                 }
-                ImGui.EndTabBar();
             }
         }
     }

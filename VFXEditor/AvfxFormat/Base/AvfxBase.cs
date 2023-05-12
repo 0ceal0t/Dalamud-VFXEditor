@@ -1,11 +1,10 @@
-using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using VfxEditor;
 using VfxEditor.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -197,19 +196,17 @@ namespace VfxEditor.AvfxFormat {
         // ========= STATIC DRAWING =============
 
         public static bool DrawUnassignContextMenu( string id, string name ) {
-            var ret = false;
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{id}/{name}" );
 
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign-{id}-{name}" );
-
-            if( ImGui.BeginPopup( $"Unassign-{id}-{name}" ) ) {
+            using var popup = ImRaii.Popup( $"Unassign/{id}/{name}" );
+            if( popup ) {
                 if( ImGui.Selectable( $"Unassign {name}" ) ) {
-                    ret = true;
                     ImGui.CloseCurrentPopup();
+                    return true;
                 }
-                ImGui.EndPopup();
             }
 
-            return ret;
+            return false;
         }
 
         public static bool DrawAddButton<T>( T assignable, string name, string id ) where T : AvfxBase {
@@ -274,16 +271,15 @@ namespace VfxEditor.AvfxFormat {
                 numerOfUnassigned++;
             }
 
-            ImGui.BeginTabBar( parentId + "-Tabs" ); // Draw assigned
+            using var tabBar = ImRaii.TabBar( $"{parentId}/Tabs" );
+            if( !tabBar ) return;
+
             foreach( var item in items ) {
                 if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) continue;
 
-                if( ImGui.BeginTabItem( item.GetText() + parentId + "-Tabs" ) ) {
-                    item.Draw( parentId );
-                    ImGui.EndTabItem();
-                }
+                using var tabBarItem = ImRaii.TabItem( $"{item.GetText()}{parentId}/Tabs" );
+                if( tabBarItem ) item.Draw( parentId );
             }
-            ImGui.EndTabBar();
         }
 
         public static void DrawItems<T>( List<T> items, string parentId ) where T : IUiItem {

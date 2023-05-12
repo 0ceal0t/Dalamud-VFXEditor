@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -125,42 +126,44 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw( string parentId ) {
-            var id = parentId + "/Binder";
+            var id = $"{parentId}/Binder";
             DrawRename( id );
             BinderVariety.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters" + id + "/Tab" ) ) {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id + "/Tab" ) ) {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Properties" + id + "/Tab" ) ) {
-                    DrawProperties( id + "/Prop" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters( $"{id}/Params" );
+            DrawData( $"{id}/Data" );
+            DrawProperties( $"{id}/Properties" );
         }
 
         private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
+            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+            if( !tabItem ) return;
+
+            using var child = ImRaii.Child( id );
             NodeView.Draw( id );
             DrawItems( Display, id );
-            ImGui.EndChild();
         }
 
         private void DrawData( string id ) {
-            ImGui.BeginChild( id );
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( $"Data{id}/Tab" );
+            if( !tabItem ) return;
+
+            using var child = ImRaii.Child( id );
             Data.Draw( id );
-            ImGui.EndChild();
         }
 
-        private void DrawProperties( string id ) => PropSplitDisplay.Draw( id );
+        private void DrawProperties( string id ) {
+            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+            if( !tabItem ) return;
+
+            PropSplitDisplay.Draw( id );
+        }
 
         public override string GetDefaultText() => $"Binder {GetIdx()}({BinderVariety.GetValue()})";
 

@@ -150,20 +150,11 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            ImGui.PushFont( UiBuilder.IconFont );
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
-            ImGui.PopFont();
 
             for( var idx = 0; idx < Selected.Count; idx++ ) {
                 ImGui.SetNextItemWidth( inputSize );
-                if( ImGui.BeginCombo( $"{id}{idx}-MainInput", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() ) ) {
-                    if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
-                    foreach( var item in Group.Items ) {
-                        if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
-                        if( ImGui.IsItemHovered() ) item.ShowTooltip();
-                    }
-                    ImGui.EndCombo();
-                }
+                DrawCombo( id, idx );
 
                 AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
@@ -199,11 +190,23 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.Text( Name );
                 ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add an item!" );
             }
+
             if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
+
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( "+ " + Name + id ) ) CommandManager.Avfx.Add( new UiNodeSelectListAddCommand<T>( this ) );
-
                 AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+            }
+        }
+
+        private void DrawCombo( string id, int idx ) {
+            using var combo = ImRaii.Combo( $"{id}{idx}/MainInput", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
+            if( !combo ) return;
+
+            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
+            foreach( var item in Group.Items ) {
+                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
+                if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }
     }

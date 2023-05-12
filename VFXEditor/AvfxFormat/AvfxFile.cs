@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;

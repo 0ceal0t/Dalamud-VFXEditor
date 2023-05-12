@@ -1,11 +1,7 @@
-using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -127,7 +123,7 @@ namespace VfxEditor.AvfxFormat {
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
         public override void Draw( string parentId ) {
-            var id = parentId + "/Item";
+            var id = $"{parentId}/Item";
             DrawRename( id );
 
             if( IsParticle ) ParticleSelect.Draw( id );

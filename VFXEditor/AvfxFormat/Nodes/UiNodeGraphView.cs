@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
@@ -12,12 +11,9 @@ namespace VfxEditor.AvfxFormat {
         private static readonly uint BgColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
         private static readonly uint BorderColor = ImGui.GetColorU32( new Vector4( 0.1f, 0.1f, 0.1f, 1 ) );
         private static readonly uint TextColor = ImGui.GetColorU32( new Vector4( 0.9f, 0.9f, 0.9f, 1 ) );
-        //private static readonly uint NodeColor = ImGui.GetColorU32( new Vector4( 0.25f, 0.25f, 0.25f, 1 ) );
         private static readonly uint LineColor = ImGui.GetColorU32( new Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
-        //private static readonly Vector2 HeaderSize = new( 160, 20 );
         private static readonly Vector2 BoxSize = new( 160, 30 );
         private static readonly Vector2 Spacing = new( 200, 100 );
-        //private static readonly float TextSize = 20;
         private static readonly Vector2 TextOffset = new( 10, 5 );
         private static readonly Vector2 LineOffset = new( 0, 15 );
 
@@ -57,7 +53,9 @@ namespace VfxEditor.AvfxFormat {
             DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
 
             DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BgColor );
+
             // ========= GRID =========
+
             for( var i = 0; i < Size.X / GridSmall; i++ ) {
                 DrawList.AddLine( new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasTopLeft.Y ), new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasBottomRight.Y ), GridColor, 1.0f );
             }
@@ -101,11 +99,8 @@ namespace VfxEditor.AvfxFormat {
                 var item = Node.Graph.Graph[node];
                 var Pos = CanvasBottomRight - GetPos( item );
                 DrawList.AddRectFilled( Pos, Pos + BoxSize, node.GraphColor, 5 );
-                //DrawList.AddRectFilled( Pos, Pos + BoxSize, NodeColor, 5 ); // main node
-                //DrawList.AddRectFilled( Pos, Pos + HeaderSize, node.GraphColor, 5, ImDrawFlags.RoundCornersTop );
 
                 DrawList.AddText( Pos + TextOffset, TextColor, TrimText( node.GetText() ) );
-                //DrawList.AddText( ImGui.GetFont(), TextSize, Pos + TextOffset, TextColor, node.GetText() );
 
                 var buttonPos = Pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
                 var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );

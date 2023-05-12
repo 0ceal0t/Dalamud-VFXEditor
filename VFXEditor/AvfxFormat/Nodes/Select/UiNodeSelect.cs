@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -19,9 +18,11 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public abstract void UpdateLiteral();
+
         public abstract void Initialize();
 
         public abstract void LinkOnIndexChange();
+
         public abstract void UnlinkOnIndexChange();
 
         public abstract void Draw( string id );
@@ -29,12 +30,15 @@ namespace VfxEditor.AvfxFormat {
         // For when something happens to the selector
 
         public abstract void Enable();
+
         public abstract void Disable();
 
         // For when something happens to the selected node
 
         public abstract List<int> GetSelectedIdx( AvfxNode node );
+
         public abstract void EnableNode( AvfxNode node, int idx );
+
         public abstract void DisableNode( AvfxNode node );
 
         public void UnlinkParentChild( AvfxNode node ) {
@@ -178,14 +182,7 @@ namespace VfxEditor.AvfxFormat {
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
 
             ImGui.SetNextItemWidth( inputSize );
-            if( ImGui.BeginCombo( $"{id}-MainInput", GetText() ) ) {
-                if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector
-                foreach( var item in Group.Items ) {
-                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
-                    if( ImGui.IsItemHovered() ) item.ShowTooltip();
-                }
-                ImGui.EndCombo();
-            }
+            DrawCombo( id );
 
             AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
 
@@ -200,6 +197,17 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SameLine();
             ImGui.Text( Name );
+        }
+
+        private void DrawCombo( string id ) {
+            using var combo = ImRaii.Combo( $"{id}/MainInput", GetText() );
+            if( !combo ) return;
+
+            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector
+            foreach( var item in Group.Items ) {
+                if( ImGui.Selectable( item.GetText(), Selected == item ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
+                if( ImGui.IsItemHovered() ) item.ShowTooltip();
+            }
         }
 
         public string GetText() => Selected == null ? "[NONE]" : Selected.GetText();

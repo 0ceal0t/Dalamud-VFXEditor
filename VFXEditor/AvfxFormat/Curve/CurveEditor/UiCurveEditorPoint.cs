@@ -75,9 +75,6 @@ namespace VfxEditor.AvfxFormat {
                         if( Editor.Selected.Contains( this ) ) Editor.Selected.Remove( this );
                         Editor.UpdateGradient();
                     } ) );
-
-                    ImGui.PopStyleVar( 1 );
-                    ImGui.PopFont();
                     return;
                 }
 
@@ -108,17 +105,15 @@ namespace VfxEditor.AvfxFormat {
                 }
             }
 
-            // ====================
-
             var tempTime = Key.Time;
-            if( ImGui.InputInt( "Time" + id, ref tempTime ) ) {
+            if( ImGui.InputInt( $"Time{id}", ref tempTime ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Key.Time = tempTime;
                     Editor.UpdateGradient();
                 } ) );
             }
 
-            if( UiUtils.EnumComboBox( "Type" + id, KeyTypeOptions, Key.Type, out var newKeyType ) ) {
+            if( UiUtils.EnumComboBox( $"Type{id}", KeyTypeOptions, Key.Type, out var newKeyType ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Key.Type = newKeyType;
                 } ) );
@@ -126,7 +121,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( IsColor ) {
                 var tempColorData = RawData;
-                if( ImGui.ColorEdit3( "Color" + id, ref tempColorData, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
+                if( ImGui.ColorEdit3( $"Color{id}", ref tempColorData, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                     if( !IsColorChanging ) {
                         IsColorChanging = true;
                         PreColorChangeState = Editor.GetState();
@@ -141,7 +136,7 @@ namespace VfxEditor.AvfxFormat {
             }
             else {
                 var tempData = RawData;
-                if( ImGui.InputFloat3( "Value" + id, ref tempData ) ) {
+                if( ImGui.InputFloat3( $"Value{id}", ref tempData ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                         RawData = tempData;
                     } ) );

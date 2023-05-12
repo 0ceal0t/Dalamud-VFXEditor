@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,21 +87,21 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw( string parentId ) {
-            var id = parentId + "/Effector";
+            var id = $"{parentId}/Effector";
             DrawRename( id );
             EffectorVariety.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
+            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            if( ImGui.BeginTabItem( $"Parameters{id}/Tab" ) ) {
+                DrawParameters( $"{id}/Param" );
+                ImGui.EndTabItem();
+            }
+            if( Data != null && ImGui.BeginTabItem( $"Data{id}/Tab" ) ) {
+                DrawData( $"{id}/Data" );
+                ImGui.EndTabItem();
             }
         }
 

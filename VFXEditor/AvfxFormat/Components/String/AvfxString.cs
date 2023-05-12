@@ -59,7 +59,7 @@ namespace VfxEditor.AvfxFormat {
             // Input
             var inputSize = UiUtils.GetOffsetInputSize( checkSize + ( ShowRemoveButton ? removeSize : 0 ) );
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputText( $"{id}-MainInput", ref InputString, 256 );
+            ImGui.InputText( $"{id}/MainInput", ref InputString, 256 );
 
             DrawRemoveContextMenu( this, Name, id );
 

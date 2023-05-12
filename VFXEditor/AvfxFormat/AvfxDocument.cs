@@ -77,16 +77,12 @@ namespace VfxEditor.AvfxFormat {
 
             // Spawn + eye
             if( !Plugin.SpawnExists() ) {
-                if( SpawnDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-                if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "Spawn_Popup" );
-                if( SpawnDisabled ) {
-                    ImGui.PopStyleVar();
-                    UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled ) ) {
+                    if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "Spawn_Popup" );
                 }
+                UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
             }
-            else {
-                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
-            }
+            else if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
 
             if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
@@ -97,15 +93,17 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( !Plugin.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}###MainInterfaceFiles-MarkVfx", new Vector2( 28, 23 ) ) ) {
-                Plugin.VfxTracker.Toggle();
-                if( !Plugin.VfxTracker.Enabled ) {
-                    Plugin.VfxTracker.Reset();
-                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
-                }
-                else {
-                    Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( $"{( !Plugin.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}##ToggleVfxOverlay", new Vector2( 28, 23 ) ) ) {
+                    Plugin.VfxTracker.Toggle();
+
+                    if( !Plugin.VfxTracker.Enabled ) {
+                        Plugin.VfxTracker.Reset();
+                        Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
+                    }
+                    else {
+                        Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+                    }
                 }
             }
             UiUtils.Tooltip( "VFX path overlay" );

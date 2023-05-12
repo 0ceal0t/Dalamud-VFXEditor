@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
@@ -35,26 +36,30 @@ namespace VfxEditor.AvfxFormat {
             var spacing = ImGui.GetStyle().ItemSpacing.X;
             var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing; // have to do this calculation now
             ImGui.SetNextItemWidth( 100 );
-            if( ImGui.InputInt( $"{id}-MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
+            if( ImGui.InputInt( $"{id}/MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
 
             ImGui.SameLine( 100 + spacing );
             ImGui.SetNextItemWidth( comboWidth );
 
-            var idx = 0;
-            if( ImGui.BeginCombo( $"{Name}{id}", DisplayText ) ) {
-                foreach( var entry in Mapping ) {
-                    var isSelected = entry.Key == value;
-                    if( ImGui.Selectable( $"{entry.Value}##{idx}", isSelected ) ) {
-                        CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
-                    }
-
-                    if( isSelected ) ImGui.SetItemDefaultFocus();
-                    idx++;
-                }
-                ImGui.EndCombo();
-            }
+            DrawCombo( id, value );
 
             AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+        }
+
+        private void DrawCombo( string id, int value ) {
+            using var combo = ImRaii.Combo( $"{Name}{id}", DisplayText );
+            if( !combo ) return;
+
+            var idx = 0;
+            foreach( var entry in Mapping ) {
+                var isSelected = entry.Key == value;
+                if( ImGui.Selectable( $"{entry.Value}##{idx}", isSelected ) ) {
+                    CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
+                }
+
+                if( isSelected ) ImGui.SetItemDefaultFocus();
+                idx++;
+            }
         }
     }
 }

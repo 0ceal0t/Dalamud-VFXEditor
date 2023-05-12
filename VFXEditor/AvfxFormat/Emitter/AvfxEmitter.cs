@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -227,53 +228,63 @@ namespace VfxEditor.AvfxFormat {
             Data?.SetAssigned( true );
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            EffectorSelect.Draw( id );
-
-            Sound.Draw( id );
-            SoundNumber.Draw( id );
-
-            DrawItems( Display, id );
-            ImGui.EndChild();
-        }
-
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id );
-            Data.Draw( id );
-            ImGui.EndChild();
-        }
-
         public override void Draw( string parentId ) {
             var id = parentId + "/Emitter";
             DrawRename( id );
             EmitterVariety.Draw( id );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationSplitDisplay.Draw( id + "/Anim" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Create Particles" + id ) ) {
-                    ParticleSplit.Draw( id + "/ItPr" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Create Emitters" + id ) ) {
-                    EmitterSplit.Draw( id + "/ItEm" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters( $"{id}/Params" );
+            DrawData( $"{id}/Data" );
+            DrawAnimation( $"{id}/Animation" );
+            DrawParticles( $"{id}/ItPr" );
+            DrawEmitters( $"{id}/ItEm" );
+        }
+
+        private void DrawParameters( string id ) {
+            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+            if( !tabItem ) return;
+
+            using var child = ImRaii.Child( id );
+            NodeView.Draw( id );
+            EffectorSelect.Draw( id );
+            Sound.Draw( id );
+            SoundNumber.Draw( id );
+            DrawItems( Display, id );
+        }
+
+        private void DrawData( string id ) {
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( $"Data{id}/Tab" );
+            if( !tabItem ) return;
+
+            using var child = ImRaii.Child( id );
+            Data.Draw( id );
+        }
+
+        private void DrawAnimation( string id ) {
+            using var tabItem = ImRaii.TabItem( $"Animation{id}/Tab" );
+            if( !tabItem ) return;
+
+            AnimationSplitDisplay.Draw( id );
+        }
+
+        private void DrawParticles( string id ) {
+            using var tabItem = ImRaii.TabItem( $"Create Particles{id}/Tab" );
+            if( !tabItem ) return;
+
+            ParticleSplit.Draw( id );
+        }
+
+        private void DrawEmitters( string id ) {
+            using var tabItem = ImRaii.TabItem( $"Create Emitters{id}/Tab" );
+            if( !tabItem ) return;
+
+            EmitterSplit.Draw( id );
         }
 
         public override string GetDefaultText() => $"Emitter {GetIdx()}({EmitterVariety.GetValue()})";

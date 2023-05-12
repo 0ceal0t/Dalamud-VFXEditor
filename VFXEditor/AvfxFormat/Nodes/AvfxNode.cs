@@ -1,5 +1,3 @@
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {

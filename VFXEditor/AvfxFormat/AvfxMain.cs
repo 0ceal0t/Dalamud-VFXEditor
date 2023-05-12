@@ -267,7 +267,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw( string parentId = "" ) {
-            var id = "##AVFX";
+            var id = "##Avfx";
             ImGui.BeginChild( id + "/Child" );
 
             ImGui.BeginDisabled();
