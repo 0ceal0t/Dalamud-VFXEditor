@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System.Numerics;
+using OtterGui.Raii;
 
 namespace VfxEditor.Ui {
     public partial class ToolsDialog : GenericDialog {
@@ -12,16 +12,17 @@ namespace VfxEditor.Ui {
         }
 
         public override void DrawBody() {
-            if( ImGui.BeginTabBar( "##ToolsTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Resources##ToolsTabs" ) ) {
-                    ResourceTab.Draw();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Utilities##ToolsTabs" ) ) {
-                    UtilitiesTab.Draw();
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
+            using var id = ImRaii.PushId( "ToolsTab" );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( tabBar ) return;
+
+            if( ImGui.BeginTabItem( "Resources" ) ) {
+                ResourceTab.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Utilities" ) ) {
+                UtilitiesTab.Draw();
+                ImGui.EndTabItem();
             }
         }
     }

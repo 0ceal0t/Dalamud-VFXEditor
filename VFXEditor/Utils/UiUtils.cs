@@ -1,9 +1,8 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -35,41 +34,33 @@ namespace VfxEditor.Utils {
 
         public static bool EnumComboBox<T>( string label, string text, T[] options, T currentValue, out T newValue ) {
             newValue = currentValue;
-            if( ImGui.BeginCombo( label, text ) ) {
-                foreach( var option in options ) {
-                    var selected = currentValue.Equals( option );
-                    if( ImGui.Selectable( $"{option}", currentValue.Equals( option ) ) ) {
-                        newValue = option;
-                        ImGui.EndCombo();
-                        return true;
-                    }
+            using var combo = ImRaii.Combo( label, text );
+            if( !combo ) return false;
 
-                    if( selected ) ImGui.SetItemDefaultFocus();
+            foreach( var option in options ) {
+                var selected = currentValue.Equals( option );
+                if( ImGui.Selectable( $"{option}", selected ) ) {
+                    newValue = option;
+                    return true;
                 }
-                ImGui.EndCombo();
+                if( selected ) ImGui.SetItemDefaultFocus();
             }
             return false;
         }
 
         public static bool DisabledButton( string label, bool enabled, bool small = false ) {
-            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( ( small ? ImGui.SmallButton( label ) : ImGui.Button( label ) ) && enabled ) return true;
-            if( !enabled ) ImGui.PopStyleVar();
-            return false;
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            return ( small ? ImGui.SmallButton( label ) : ImGui.Button( label ) ) && enabled;
         }
 
         public static bool DisabledRemoveButton( string label, bool enabled, bool small = false ) {
-            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( RemoveButton( label, small ) && enabled ) return true;
-            if( !enabled ) ImGui.PopStyleVar();
-            return false;
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            return RemoveButton( label, small ) && enabled;
         }
 
         public static bool DisabledTransparentButton( string label, Vector4 color, bool enabled ) {
-            if( !enabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f );
-            if( TransparentButton( label, color ) && enabled ) return true;
-            if( !enabled ) ImGui.PopStyleVar();
-            return false;
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            return TransparentButton( label, color ) && enabled;
         }
 
         public static bool RemoveButton( string label, bool small = false ) => ColorButton( label, RED_COLOR, small );
@@ -77,19 +68,15 @@ namespace VfxEditor.Utils {
         public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
 
         public static bool TransparentButton( string label, Vector4 color ) {
-            ImGui.PushStyleColor( ImGuiCol.Text, color );
-            ImGui.PushStyleColor( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
-            ImGui.PushStyleColor( ImGuiCol.ButtonActive, new Vector4( 0 ) );
-            var ret = ColorButton( label, new Vector4( 0 ), false );
-            ImGui.PopStyleColor( 3 );
-            return ret;
+            using var style = ImRaii.PushColor( ImGuiCol.Text, color );
+            style.Push( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
+            style.Push( ImGuiCol.ButtonActive, new Vector4( 0 ) );
+            return ColorButton( label, new Vector4( 0 ), false );
         }
 
         public static bool ColorButton( string label, Vector4 color, bool small ) {
-            ImGui.PushStyleColor( ImGuiCol.Button, color );
-            var ret = small ? ImGui.SmallButton( label ) : ImGui.Button( label );
-            ImGui.PopStyleColor();
-            return ret;
+            using var style = ImRaii.PushColor( ImGuiCol.Button, color );
+            return small ? ImGui.SmallButton( label ) : ImGui.Button( label );
         }
 
         public static void CenteredText( string text ) {
@@ -105,10 +92,10 @@ namespace VfxEditor.Utils {
         }
 
         public static void IconText( FontAwesomeIcon icon, bool disabled = false ) {
-            ImGui.PushFont( UiBuilder.IconFont );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+
             if( disabled ) ImGui.TextDisabled( $"{( char )icon}" );
             else ImGui.Text( $"{( char )icon}" );
-            ImGui.PopFont();
         }
 
         public static void Tooltip( string text ) {
@@ -140,8 +127,6 @@ namespace VfxEditor.Utils {
 #nullable disable
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
-            ImGui.PushFont( UiBuilder.IconFont );
-
             var color = verified switch {
                 VerifiedStatus.OK => GREEN_COLOR,
                 VerifiedStatus.ISSUE => RED_COLOR,
@@ -160,8 +145,10 @@ namespace VfxEditor.Utils {
                 _ => "Workspace"
             };
 
-            ImGui.TextColored( color, icon );
-            ImGui.PopFont();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.TextColored( color, icon );
+            }
+
             ImGui.SameLine();
             ImGui.TextColored( color, text );
 
@@ -209,26 +196,20 @@ namespace VfxEditor.Utils {
 
         public static float GetPaddedIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();
-            ImGui.PushFont( UiBuilder.IconFont );
-            var iconSize = ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
-            ImGui.PopFont();
-            return iconSize;
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            return ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
         }
 
         public static Vector2 GetIconSize( FontAwesomeIcon icon ) {
-            ImGui.PushFont( UiBuilder.IconFont );
-            var iconSize = ImGui.CalcTextSize( icon.ToIconString() );
-            ImGui.PopFont();
-            return iconSize;
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            return ImGui.CalcTextSize( icon.ToIconString() );
         }
 
         public static bool RemoveIconButton( FontAwesomeIcon icon, string text ) => ColorIconButton( icon, text, RED_COLOR );
 
         public static bool ColorIconButton( FontAwesomeIcon icon, string text, Vector4 color ) {
-            ImGui.PushStyleColor( ImGuiCol.Button, color );
-            var ret = IconButton( icon, text );
-            ImGui.PopStyleColor();
-            return ret;
+            using var style = ImRaii.PushColor( ImGuiCol.Button, color );
+            return IconButton( icon, text );
         }
 
         public static bool IconButton( FontAwesomeIcon icon, string text ) {
@@ -247,9 +228,11 @@ namespace VfxEditor.Utils {
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - padding.X );
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.Text( icon.ToIconString() );
-            ImGui.PopFont();
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.Text( icon.ToIconString() );
+            }
+
             ImGui.SameLine();
             ImGui.Text( text );
 

@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -213,7 +214,7 @@ namespace VfxEditor.FileManager {
             }
 
             var threeColumns = ExtraInputColumn();
-            ImGui.Columns( threeColumns ? 3 : 2, $"{Id}-Columns", false );
+            ImGui.Columns( threeColumns ? 3 : 2, "Columns", false );
 
             DrawInputTextColumn();
             ImGui.NextColumn();
@@ -274,12 +275,13 @@ namespace VfxEditor.FileManager {
             ImGui.Text( $"{IdUpperCase} Being Replaced" );
         }
 
-        private float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
+        private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
 
         protected virtual void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 150 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySearchBars();
+            DisplaySourceBar();
+            DisplayReplaceBar();
             ImGui.PopItemWidth();
         }
 
@@ -287,50 +289,59 @@ namespace VfxEditor.FileManager {
 
         protected virtual void DrawExtraColumn() { }
 
-        protected void DisplaySearchBars() {
+        protected void DisplaySourceBar() {
+            using var id = ImRaii.PushId( "Source" );
             var sourceString = Source == null ? "" : Source.DisplayString;
+
+            // Remove
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveSource();
+            }
+
+            // Input
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            ImGui.InputTextWithHint( "", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+
+            // Search
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) Manager.ShowSource();
+            }
+        }
+
+        protected void DisplayReplaceBar() {
+            using var id = ImRaii.PushId( "Replace" );
             var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-SourceRemove", UiUtils.RED_COLOR ) ) RemoveSource();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveReplace();
+            }
 
-            ImGui.PopFont();
             // Input
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputTextWithHint( $"##{Id}-Source", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            ImGui.InputTextWithHint( "", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+
             // Search
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-SourceSelect" ) ) Manager.ShowSource();
-            ImGui.PopFont();
 
-            // Remove
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}##{Id}-ReplaceRemove", UiUtils.RED_COLOR ) ) RemoveReplace();
-
-            ImGui.PopFont();
-            // Input
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            ImGui.InputTextWithHint( $"##{Id}-Preview", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-            // Search
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}##{Id}-PreviewSelect" ) ) Manager.ShowReplace();
-            ImGui.PopFont();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) Manager.ShowReplace();
+            }
         }
 
         protected void DisplayFileControls() {
             if( UiUtils.OkButton( "UPDATE" ) ) Update();
 
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) ExportRaw();
-            ImGui.PopFont();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) ExportRaw();
+            }
             UiUtils.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
 
             ImGui.SameLine();
@@ -350,9 +361,10 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        public void DrawRename( string id ) {
+        public void DrawRename() {
             Name ??= "";
-            ImGui.InputTextWithHint( $"{id}/Rename", ReplaceDisplay, ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
+            using var id = ImRaii.PushId( "Rename" );
+            ImGui.InputTextWithHint( "", ReplaceDisplay, ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
         }
 
         public virtual void Dispose() {
@@ -369,7 +381,7 @@ namespace VfxEditor.FileManager {
             var availWidth = ImGui.GetContentRegionMax().X;
             var width = availWidth > 500 ? 500 : availWidth; // cap out at 300
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( availWidth - width ) / 2 );
-            ImGui.BeginChild( "##HelpText-1", new Vector2( width, -1 ) );
+            using var child = ImRaii.Child( "HelpTextChild", new Vector2( width, -1 ) );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 30 );
 
@@ -404,20 +416,18 @@ namespace VfxEditor.FileManager {
                 UiUtils.OpenUrl( "https://discord.gg/3NMcUV5" );
             }
             ImGui.PopStyleColor();
-
-            ImGui.EndChild();
         }
 
         private static readonly string Text = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
 
         protected static void DisplayAnimationWarning() {
-            ImGui.PushStyleColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
-            ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
+            using var color = ImRaii.PushColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
+            color.Push( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
             var style = ImGui.GetStyle();
             var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - style.WindowPadding.X * 2 - 8 );
 
-            ImGui.BeginChild( "##AnimationWarning", new Vector2( -1,
+            using var child = ImRaii.Child( "AnimationWarningChild", new Vector2( -1,
                 textSize.Y +
                 style.WindowPadding.Y * 2 +
                 style.ItemSpacing.Y +
@@ -426,9 +436,6 @@ namespace VfxEditor.FileManager {
 
             ImGui.TextWrapped( Text );
             if( ImGui.SmallButton( "Guides##Pap" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
-
-            ImGui.EndChild();
-            ImGui.PopStyleColor( 2 );
         }
     }
 }

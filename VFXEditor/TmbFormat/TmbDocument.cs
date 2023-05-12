@@ -33,7 +33,8 @@ namespace VfxEditor.TmbFormat {
         protected override void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 245 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySearchBars();
+            DisplaySourceBar();
+            DisplayReplaceBar();
             ImGui.PopItemWidth();
         }
 

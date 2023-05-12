@@ -66,7 +66,8 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawSearchBarsColumn() {
             ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySearchBars();
+            DisplaySourceBar();
+            DisplayReplaceBar();
             ImGui.PopItemWidth();
         }
 

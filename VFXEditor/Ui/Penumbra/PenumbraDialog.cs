@@ -2,6 +2,7 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,23 +46,22 @@ namespace VfxEditor.Penumbra {
         }
 
         public override void DrawBody() {
-            var id = "##Penumbra";
+            using var id = ImRaii.PushId( "Penumbra" );
+
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
-            ImGui.BeginChild( id + "/Child", new Vector2( 0, -footerHeight ), true );
+            using( var child = ImRaii.Child( "Child", new Vector2( 0, -footerHeight ), true ) ) {
+                ImGui.InputText( "Mod Name", ref ModName, 255 );
+                ImGui.InputText( "Author", ref Author, 255 );
+                ImGui.InputText( "Version", ref Version, 255 );
 
-            ImGui.InputText( "Mod Name" + id, ref ModName, 255 );
-            ImGui.InputText( "Author" + id, ref Author, 255 );
-            ImGui.InputText( "Version" + id, ref Version, 255 );
-
-            foreach( var entry in ToExport ) {
-                var exportItem = entry.Value;
-                if( ImGui.Checkbox( $"Export {entry.Key}{id}", ref exportItem ) ) ToExport[entry.Key] = exportItem;
+                foreach( var entry in ToExport ) {
+                    var exportItem = entry.Value;
+                    if( ImGui.Checkbox( $"Export {entry.Key}", ref exportItem ) ) ToExport[entry.Key] = exportItem;
+                }
             }
 
-            ImGui.EndChild();
-
-            if( ImGui.Button( "Export" + id ) ) SaveDialog();
+            if( ImGui.Button( "Export" ) ) SaveDialog();
         }
 
         private void SaveDialog() {

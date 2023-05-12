@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using ImGuiNET;
 using System.Numerics;
 
@@ -32,12 +31,15 @@ namespace VfxEditor.Ui {
             if( !Visible ) return;
 
             PreDraw();
+
             ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
+
             if( ImGui.Begin( Name, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
                 Plugin.CheckClearKeyState();
                 DrawBody();
             }
             ImGui.End();
+
             PostDraw();
         }
 

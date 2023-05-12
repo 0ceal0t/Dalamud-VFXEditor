@@ -1,5 +1,6 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +38,7 @@ namespace VfxEditor.FileManager {
         public abstract void Unsaved();
     }
 
-    public abstract class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
+    public abstract partial class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
         public T ActiveDocument { get; protected set; } = null;
 
         public R CurrentFile => ActiveDocument?.CurrentFile;
@@ -126,117 +127,6 @@ namespace VfxEditor.FileManager {
 
             document.Dispose();
             return false;
-        }
-
-        protected virtual void DrawEditMenuExtra() { }
-
-        public override void DrawBody() {
-            SourceSelect?.Draw();
-            ReplaceSelect?.Draw();
-
-            Name = WindowTitle + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) + "###" + WindowTitle;
-            CheckKeybinds();
-
-            // Menu
-
-            if( ImGui.BeginMenuBar() ) {
-                Plugin.DrawFileMenu();
-                if( CurrentFile != null && ImGui.BeginMenu( $"Edit##{Id}" ) ) {
-                    GetCopyManager().Draw();
-                    GetCommandManager().Draw();
-                    DrawEditMenuExtra();
-                    ImGui.EndMenu();
-                }
-                ImGui.Separator();
-                Plugin.DrawManagersMenu( this );
-
-                ImGui.EndMenuBar();
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
-
-            // A very cursed way to have more control over this dropdown
-
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0 ) );
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 0 ) );
-            var dropdownOpen = ImGui.BeginCombo( $"##{Id}/Combo", "", ImGuiComboFlags.NoPreview );
-            ImGui.PopStyleVar( 1 );
-            ImGui.PopStyleColor( 1 );
-
-            if( dropdownOpen ) {
-                for( var i = 0; i < Documents.Count; i++ ) {
-                    var document = Documents[i];
-                    if( ImGui.Selectable( $"{document.DisplayName}##{Id}/{i}", document == ActiveDocument ) ) SelectDocument( document );
-                }
-                ImGui.EndCombo();
-            }
-
-            var pos1 = ImGui.GetCursorScreenPos() + new Vector2( 0, -1 );
-            ImGui.SameLine();
-            var pos2 = ImGui.GetCursorScreenPos();
-            var color = ImGui.GetColorU32( ImGuiCol.TabActive );
-            var drawlist = ImGui.GetWindowDrawList();
-
-            var offset = ( float )Math.Floor( ImGui.GetStyle().WindowPadding.X * 0.5f );
-
-            drawlist.AddLine( pos1, new Vector2( pos2.X - ImGui.GetStyle().ItemSpacing.X + 4 - offset, pos1.Y ), color, 1 );
-
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 4 );
-
-            // Tabs
-
-            if( ImGui.BeginTabBar( $"{Id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable ) ) {
-                for( var i = 0; i < Documents.Count; i++ ) {
-                    var document = Documents[i];
-
-                    var open = true;
-                    var flags = ImGuiTabItemFlags.None | ImGuiTabItemFlags.NoPushId;
-                    if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
-                    if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
-
-                    if( ImGui.BeginTabItem( $"{document.DisplayName}###{Id}/{i}", ref open, flags ) ) ImGui.EndTabItem();
-
-                    if( !open && Documents.Count > 1 ) ImGui.OpenPopup( $"{Id}/{i}/DeletePopup" );
-
-                    if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
-
-                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{Id}/{i}/RenamePopup" );
-
-                    if( ImGui.BeginPopup( $"{Id}/{i}/RenamePopup" ) ) {
-                        document.DrawRename( $"##{Id}/{i}" );
-                        ImGui.EndPopup();
-                    }
-
-                    if( ImGui.BeginPopup( $"{Id}/{i}/DeletePopup" ) ) {
-                        if( ImGui.Selectable( $"Delete##{Id}" ) ) {
-                            RemoveDocument( document );
-                            ImGui.EndPopup();
-                            break;
-                        }
-                        ImGui.EndPopup();
-                    }
-                }
-
-                if( ImGui.TabItemButton( $"+##{Id}", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
-
-                ImGui.EndTabBar();
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-
-            ActiveDocument?.Draw();
-        }
-
-        protected override void PreDraw() {
-            if( !Configuration.UseCustomWindowColor ) return;
-            ImGui.PushStyleColor( ImGuiCol.TitleBg, Configuration.TitleBg );
-            ImGui.PushStyleColor( ImGuiCol.TitleBgActive, Configuration.TitleBgActive );
-            ImGui.PushStyleColor( ImGuiCol.TitleBgCollapsed, Configuration.TitleBgCollapsed );
-        }
-
-        protected override void PostDraw() {
-            if( !Configuration.UseCustomWindowColor ) return;
-            ImGui.PopStyleColor( 3 );
         }
 
         private void CheckKeybinds() {

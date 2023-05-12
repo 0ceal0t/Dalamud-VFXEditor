@@ -56,7 +56,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw( string parentId ) {
-            var id = parentId + "/Clip";
+            var id = $"{parentId}/Clip";
             DrawRename( id );
 
             Type.Draw( id );
@@ -65,22 +65,22 @@ namespace VfxEditor.AvfxFormat {
 
             if( Type.Value == "LLIK" ) {
                 var duration = Unk1.Value;
-                if( ImGui.InputInt( "Fade Out Duration" + id, ref duration ) ) {
+                if( ImGui.InputInt( $"Fade Out Duration{id}", ref duration ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Unk1, duration ) );
                 }
 
                 var hide = Unk4.Value == 1;
-                if( ImGui.Checkbox( "Hide" + id, ref hide ) ) {
+                if( ImGui.Checkbox( $"Hide{id}", ref hide ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Unk4, hide ? 1 : 0 ) );
                 }
 
                 var allowShow = Unk5.Value != -1f;
-                if( ImGui.Checkbox( "Allow Show" + id, ref allowShow ) ) {
+                if( ImGui.Checkbox( $"Allow Show{id}", ref allowShow ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<float>( Unk5, allowShow ? 0 : -1f ) );
                 }
 
                 var startHidden = Unk6.Value != -1f;
-                if( ImGui.Checkbox( "Start Hidden" + id, ref startHidden ) ) {
+                if( ImGui.Checkbox( $"Start Hidden{id}", ref startHidden ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<float>( Unk6, startHidden ? 0 : -1f ) );
                 }
             }

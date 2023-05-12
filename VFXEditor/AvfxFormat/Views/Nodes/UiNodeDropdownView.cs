@@ -74,7 +74,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetNextItemWidth( inputSize );
 
             var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
-            if( ImGui.BeginCombo( Id + "-Select", selectedString ) ) {
+            if( ImGui.BeginCombo( $"{Id}/Select", selectedString ) ) {
                 for( var idx = 0; idx < Group.Items.Count; idx++ ) {
                     var item = Group.Items[idx];
                     if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
