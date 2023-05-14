@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.IO;
 using VfxEditor.AvfxFormat;
 
@@ -40,7 +39,7 @@ namespace VfxEditor.Parsing {
             AvfxBase.WritePad( writer, Size - 1 );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Bools[Name] = Value == true;
@@ -49,7 +48,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value == true;
-            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
+            if( ImGui.Checkbox( Name, ref value ) ) manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
         }
     }
 }

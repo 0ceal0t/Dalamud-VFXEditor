@@ -1,4 +1,3 @@
-using ImGuiNET;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Scd;

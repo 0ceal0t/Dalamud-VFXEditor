@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
@@ -6,7 +7,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.EidFormat {
     public class EidBindPointDropdown : Dropdown<EidBindPoint> {
-        public EidBindPointDropdown( List<EidBindPoint> items ) : base( items, true ) { }
+        public EidBindPointDropdown( List<EidBindPoint> items ) : base( "BindPoint", items, true ) { }
 
         protected override string GetText( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}";
 
@@ -19,9 +20,9 @@ namespace VfxEditor.EidFormat {
             CommandManager.Eid.Add( new GenericAddCommand<EidBindPoint>( Items, new EidBindPoint() ) );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw();
             else ImGui.Text( "Select a bind point..." );
         }
     }

@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -61,9 +62,10 @@ namespace VfxEditor.TextureFormat {
 
             var idx = 0;
             foreach( var entry in PathToTextureReplace ) {
-                if( ImGui.CollapsingHeader( $"{entry.Key}##{id}-{idx}" ) ) {
+                using var _ = ImRaii.PushId( idx );
+                if( ImGui.CollapsingHeader( entry.Key ) ) {
                     ImGui.Indent();
-                    DrawTexture( entry.Key, $"{id}-{idx}" );
+                    DrawTexture( entry.Key );
                     ImGui.Unindent();
                 }
                 idx++;
@@ -72,23 +74,23 @@ namespace VfxEditor.TextureFormat {
             ImGui.EndChild();
         }
 
-        public void DrawTexture( string path, string id ) {
+        public void DrawTexture( string path ) {
             if( GetPreviewTexture( path, out var texture ) ) {
                 ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
                 ImGui.TextDisabled( $"Format: {texture.Format}  Mips: {texture.MipLevels}  Size: {texture.Width}x{texture.Height}" );
 
-                if( ImGui.Button( "Export" + id ) ) ImGui.OpenPopup( "Tex_Export" + id );
+                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" + id ) ) ImportDialog( path );
-                if( ImGui.BeginPopup( "Tex_Export" + id ) ) {
-                    if( ImGui.Selectable( "PNG" + id ) ) SavePngDialog( path );
-                    if( ImGui.Selectable( "DDS" + id ) ) SaveDdsDialog( path );
+                if( ImGui.Button( "Replace" ) ) ImportDialog( path );
+                if( ImGui.BeginPopup( "TexExport" ) ) {
+                    if( ImGui.Selectable( "PNG" ) ) SavePngDialog( path );
+                    if( ImGui.Selectable( "DDS" ) ) SaveDdsDialog( path );
                     ImGui.EndPopup();
                 }
 
                 if( texture.IsReplaced ) {
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( "Remove Replaced Texture" + id ) ) {
+                    if( UiUtils.RemoveButton( "Remove Replaced Texture" ) ) {
                         RemoveReplaceTexture( path );
                         RefreshPreviewTexture( path );
                     }

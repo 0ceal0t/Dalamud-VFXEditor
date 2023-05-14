@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {
     public class UiModelEmitSplitView : UiItemSplitView<UiEmitVertex> {
-        public UiModelEmitSplitView( List<UiEmitVertex> items ) : base( items ) { }
+        public UiModelEmitSplitView( List<UiEmitVertex> items ) : base( "EmitVertex", items ) { }
 
         public override void Disable( UiEmitVertex item ) { }
 

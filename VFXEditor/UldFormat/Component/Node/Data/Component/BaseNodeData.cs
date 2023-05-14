@@ -16,8 +16,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
             writer.Write( Data );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
+        public override void Draw() {
+            base.Draw();
             ImGui.TextDisabled( $"Data of size 0x{Data?.Length:X8}" );
         }
     }

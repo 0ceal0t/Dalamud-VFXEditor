@@ -14,7 +14,7 @@ namespace VfxEditor.Ui.Interfaces {
 
         public void SetRenamed( string renamed );
 
-        public void DrawRename( string parentId );
+        public void DrawRename();
 
         public void GetChildrenRename( Dictionary<string, string> RenameDict );
 
@@ -30,14 +30,14 @@ namespace VfxEditor.Ui.Interfaces {
             item.SetChildrenRename( renameDict );
         }
 
-        public static void DrawRenameBox( IWorkspaceUiItem item, string parentId, ref string renamed, ref string renamedTemp, ref bool renaming ) {
+        public static void DrawRenameBox( IWorkspaceUiItem item, ref string renamed, ref string renamedTemp, ref bool renaming ) {
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Check );
-            using var id = ImRaii.PushId( "Rename" );
+            using var _ = ImRaii.PushId( "Rename" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
 
             if( renaming ) {
                 ImGui.SetNextItemWidth( inputSize );
-                ImGui.InputText( $"", ref renamedTemp, 255 );
+                ImGui.InputText( "##Rename", ref renamedTemp, 255 );
 
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
@@ -60,7 +60,7 @@ namespace VfxEditor.Ui.Interfaces {
                 var currentText = string.IsNullOrEmpty( renamed ) ? item.GetDefaultText() : renamed;
                 using( var disabled = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.8f ) ) {
                     ImGui.SetNextItemWidth( inputSize );
-                    ImGui.InputText( $"{id}", ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
+                    ImGui.InputText( "", ref currentText, 255, ImGuiInputTextFlags.ReadOnly );
                 }
 
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );

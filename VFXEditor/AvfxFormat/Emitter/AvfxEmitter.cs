@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
@@ -60,7 +59,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly UiEmitterSplitView EmitterSplit;
         public readonly UiEmitterSplitView ParticleSplit;
-        private readonly List<IUiItem> Display;
+        private readonly List<IUiItem> Parameters;
 
         public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor ) {
             NodeGroups = groupSet;
@@ -102,17 +101,7 @@ namespace VfxEditor.AvfxFormat {
             };
             Sound.SetAssigned( false );
 
-            Display = new() {
-                LoopStart,
-                LoopEnd,
-                ChildLimit,
-                AnyDirection,
-                RotationDirectionBaseType,
-                CoordComputeOrderType,
-                RotationOrderType
-            };
-
-            AnimationSplitDisplay = new( new() {
+            AnimationSplitDisplay = new( "Animation", new() {
                 Life,
                 CreateCount,
                 CreateCountRandom,
@@ -137,14 +126,24 @@ namespace VfxEditor.AvfxFormat {
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
 
-            EmitterSplit = new( Emitters, this, false );
-            ParticleSplit = new( Particles, this, true );
+            EmitterSplit = new( "Create Emitters", Emitters, this, false );
+            ParticleSplit = new( "Create Particles", Particles, this, true );
 
             EmitterVariety.Parsed.ExtraCommandGenerator = () => {
                 return new AvfxEmitterDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );
+
+            Parameters = new() {
+                LoopStart,
+                LoopEnd,
+                ChildLimit,
+                AnyDirection,
+                RotationDirectionBaseType,
+                CoordComputeOrderType,
+                RotationOrderType
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -228,63 +227,64 @@ namespace VfxEditor.AvfxFormat {
             Data?.SetAssigned( true );
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Emitter";
-            DrawRename( id );
-            EmitterVariety.Draw( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Emitter" );
+            DrawRename();
+            EmitterVariety.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters( $"{id}/Params" );
-            DrawData( $"{id}/Data" );
-            DrawAnimation( $"{id}/Animation" );
-            DrawParticles( $"{id}/ItPr" );
-            DrawEmitters( $"{id}/ItEm" );
+            DrawParameters();
+            DrawData();
+            DrawAnimation();
+            DrawParticles();
+            DrawEmitters();
         }
 
-        private void DrawParameters( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
             if( !tabItem ) return;
 
-            using var child = ImRaii.Child( id );
-            NodeView.Draw( id );
-            EffectorSelect.Draw( id );
-            Sound.Draw( id );
-            SoundNumber.Draw( id );
-            DrawItems( Display, id );
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child" );
+
+            NodeView.Draw();
+            EffectorSelect.Draw();
+            Sound.Draw();
+            SoundNumber.Draw();
+            DrawItems( Parameters );
         }
 
-        private void DrawData( string id ) {
+        private void DrawData() {
             if( Data == null ) return;
 
-            using var tabItem = ImRaii.TabItem( $"Data{id}/Tab" );
+            using var tabItem = ImRaii.TabItem( "Data" );
             if( !tabItem ) return;
 
-            using var child = ImRaii.Child( id );
-            Data.Draw( id );
+            Data.Draw();
         }
 
-        private void DrawAnimation( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Animation{id}/Tab" );
+        private void DrawAnimation() {
+            using var tabItem = ImRaii.TabItem( "Animation" );
             if( !tabItem ) return;
 
-            AnimationSplitDisplay.Draw( id );
+            AnimationSplitDisplay.Draw();
         }
 
-        private void DrawParticles( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Create Particles{id}/Tab" );
+        private void DrawParticles() {
+            using var tabItem = ImRaii.TabItem( "Create Particles" );
             if( !tabItem ) return;
 
-            ParticleSplit.Draw( id );
+            ParticleSplit.Draw();
         }
 
-        private void DrawEmitters( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Create Emitters{id}/Tab" );
+        private void DrawEmitters() {
+            using var tabItem = ImRaii.TabItem( "Create Emitters" );
             if( !tabItem ) return;
 
-            EmitterSplit.Draw( id );
+            EmitterSplit.Draw();
         }
 
         public override string GetDefaultText() => $"Emitter {GetIdx()}({EmitterVariety.GetValue()})";

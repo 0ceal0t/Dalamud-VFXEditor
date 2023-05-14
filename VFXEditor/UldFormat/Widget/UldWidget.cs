@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -68,30 +68,37 @@ namespace VfxEditor.UldFormat.Widget {
             writer.BaseStream.Position = finalPos;
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    DrawParameters( $"{id}/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Nodes{id}" ) ) {
-                    NodeSplitView.Draw( $"{id}/Nodes" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters();
+            DrawNodes();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            AlignmentType.Draw( id, CommandManager.Uld );
-            X.Draw( id, CommandManager.Uld );
-            Y.Draw( id, CommandManager.Uld );
-            ImGui.EndChild();
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child" );
+
+            AlignmentType.Draw( CommandManager.Uld );
+            X.Draw( CommandManager.Uld );
+            Y.Draw( CommandManager.Uld );
+        }
+
+        private void DrawNodes() {
+            using var tabItem = ImRaii.TabItem( "Nodes" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Nodes" );
+
+            NodeSplitView.Draw();
         }
 
         public override string GetDefaultText() => $"Widget {GetIdx()}";

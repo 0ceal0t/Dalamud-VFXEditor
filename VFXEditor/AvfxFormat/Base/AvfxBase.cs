@@ -195,10 +195,10 @@ namespace VfxEditor.AvfxFormat {
 
         // ========= STATIC DRAWING =============
 
-        public static bool DrawUnassignContextMenu( string id, string name ) {
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{id}/{name}" );
+        public static bool DrawUnassignContextMenu( string name ) {
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{name}" );
 
-            using var popup = ImRaii.Popup( $"Unassign/{id}/{name}" );
+            using var popup = ImRaii.Popup( $"Unassign/{name}" );
             if( popup ) {
                 if( ImGui.Selectable( $"Unassign {name}" ) ) {
                     ImGui.CloseCurrentPopup();
@@ -209,44 +209,44 @@ namespace VfxEditor.AvfxFormat {
             return false;
         }
 
-        public static bool DrawAddButton<T>( T assignable, string name, string id ) where T : AvfxBase {
+        public static bool DrawAddButton<T>( T assignable, string name ) where T : AvfxBase {
             if( !assignable.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( assignable, true ) );
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( assignable, true ) );
                 return true;
             }
             return false;
         }
 
-        public static void DrawRemoveContextMenu<T>( T assignable, string name, string id ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( assignable, false ) );
+        public static void DrawRemoveContextMenu<T>( T assignable, string name ) where T : AvfxBase {
+            if( DrawUnassignContextMenu( name ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( assignable, false ) );
         }
 
-        public static bool DrawAddButton<T>( List<T> assignable, string name, string id ) where T : AvfxBase {
+        public static bool DrawAddButton<T>( List<T> assignable, string name ) where T : AvfxBase {
             if( !assignable[0].IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommandToggle<T>( assignable, true ) );
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommandToggle<T>( assignable, true ) );
                 return true;
             }
             return false;
         }
 
-        public static void DrawRemoveContextMenu<T>( List<T> assignable, string name, string id ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new AvfxAssignCommandToggle<T>( assignable, false ) );
+        public static void DrawRemoveContextMenu<T>( List<T> assignable, string name ) where T : AvfxBase {
+            if( DrawUnassignContextMenu( name ) ) CommandManager.Avfx.Add( new AvfxAssignCommandToggle<T>( assignable, false ) );
         }
 
-        public static bool DrawAddButtonRecurse<T>( T assignable, string name, string id ) where T : AvfxBase {
+        public static bool DrawAddButtonRecurse<T>( T assignable, string name ) where T : AvfxBase {
             if( !assignable.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}{id}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommandMulti( assignable, true ) );
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Avfx.Add( new AvfxAssignCommandMulti( assignable, true ) );
                 return true;
             }
             return false;
         }
 
-        public static void DrawRemoveContextMenuRecurse<T>( T assignable, string name, string id ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( id, name ) ) CommandManager.Avfx.Add( new AvfxAssignCommandMulti( assignable, false ) );
+        public static void DrawRemoveContextMenuRecurse<T>( T assignable, string name ) where T : AvfxBase {
+            if( DrawUnassignContextMenu( name ) ) CommandManager.Avfx.Add( new AvfxAssignCommandMulti( assignable, false ) );
         }
 
-        public static bool DrawRemoveButton<T>( T assignable, string name, string id ) where T : AvfxBase {
-            if( UiUtils.RemoveButton( $"Delete {name}{id}", small: true ) ) {
+        public static bool DrawRemoveButton<T>( T assignable, string name ) where T : AvfxBase {
+            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
                 CommandManager.Avfx.Add( new AvfxAssignCommand( assignable, false ) );
                 return true;
             }
@@ -261,35 +261,34 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public static void DrawNamedItems<T>( List<T> items, string parentId ) where T : INamedUiItem {
+        public static void DrawNamedItems<T>( List<T> items ) where T : INamedUiItem {
             var numerOfUnassigned = 0;
             foreach( var item in items ) { // Draw unassigned
                 if( item is not AvfxOptional optionalItem || optionalItem.IsAssigned() ) continue;
 
                 if( numerOfUnassigned > 0 ) ImGui.SameLine();
-                item.Draw( parentId );
+                item.Draw();
                 numerOfUnassigned++;
             }
 
-            using var tabBar = ImRaii.TabBar( $"{parentId}/Tabs" );
+            using var tabBar = ImRaii.TabBar( $"Tabs" );
             if( !tabBar ) return;
 
             foreach( var item in items ) {
                 if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) continue;
-
-                using var tabBarItem = ImRaii.TabItem( $"{item.GetText()}{parentId}/Tabs" );
-                if( tabBarItem ) item.Draw( parentId );
+                using var tabBarItem = ImRaii.TabItem( $"{item.GetText()}" );
+                if( tabBarItem ) item.Draw();
             }
         }
 
-        public static void DrawItems<T>( List<T> items, string parentId ) where T : IUiItem {
+        public static void DrawItems<T>( List<T> items ) where T : IUiItem {
             foreach( var item in items ) { // Draw assigned items
                 if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) continue;
-                item.Draw( parentId );
+                item.Draw();
             }
 
             foreach( var item in items ) { // Draw unassigned items
-                if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) item.Draw( parentId );
+                if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) item.Draw();
             }
         }
     }

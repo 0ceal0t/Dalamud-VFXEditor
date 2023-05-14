@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -23,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public void ResetSelected();
         public void SetSelected( T selected );
 
-        public static void DrawControls( IUiNodeView<T> view, AvfxFile file, string id ) {
+        public static void DrawControls( IUiNodeView<T> view, AvfxFile file ) {
             var allowNew = view.IsAllowedNew();
             var allowDelete = view.IsAllowedDelete();
             var selected = view.GetSelected();
@@ -32,16 +31,16 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-                if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" + id ) ) ImGui.OpenPopup( "New_Popup" + id );
+                if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) ImGui.OpenPopup( "NewPopup" );
 
                 if( selected != null && allowDelete ) {
                     if( allowNew ) ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" + id ) ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" ) ) {
                         file.ShowExportDialog( selected );
                     }
 
                     ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" + id ) ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" ) ) {
                         file.AddToNodeLibrary( selected );
                     }
 
@@ -51,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.PushFont( UiBuilder.IconFont );
 
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) {
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
                         CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
                     }
                 }
@@ -59,24 +58,22 @@ namespace VfxEditor.AvfxFormat {
 
             // ===== NEW =====
 
-            if( ImGui.BeginPopup( "New_Popup" + id ) ) {
-                if( ImGui.Selectable( "Default" + id ) ) {
-                    file.Import( view.GetDefaultPath() );
-                }
-                if( ImGui.Selectable( "Import" + id ) ) {
-                    file.ShowImportDialog();
-                }
-                if( selected != null && ImGui.Selectable( "Duplicate" + id ) ) {
-                    using var ms = new MemoryStream();
-                    using var writer = new BinaryWriter( ms );
-                    using var reader = new BinaryReader( ms );
-                    selected.Write( writer );
-                    reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            using var popup = ImRaii.Popup( "NewPopup" );
+            if( !popup ) return;
 
-                    var size = ms.Length;
-                    file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed } ) );
-                }
-                ImGui.EndPopup();
+            if( ImGui.Selectable( "Default" ) ) file.Import( view.GetDefaultPath() );
+
+            if( ImGui.Selectable( "Import" ) ) file.ShowImportDialog();
+
+            if( selected != null && ImGui.Selectable( "Duplicate" ) ) {
+                using var ms = new MemoryStream();
+                using var writer = new BinaryWriter( ms );
+                using var reader = new BinaryReader( ms );
+                selected.Write( writer );
+                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+
+                var size = ms.Length;
+                file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed } ) );
             }
         }
     }

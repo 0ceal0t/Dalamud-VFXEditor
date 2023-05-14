@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
@@ -66,22 +66,24 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( "TC1" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Color 1" + parentId ) ) Assign();
+            if( ImGui.SmallButton( "+ Texture Color 1" ) ) Assign();
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/TC1";
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( "TC1" );
 
             AssignedCopyPaste( this, GetDefaultText() );
-            if( UiUtils.RemoveButton( "Delete Texture Color 1" + id, small: true ) ) {
+            if( UiUtils.RemoveButton( "Delete Texture Color 1", small: true ) ) {
                 Unassign();
                 return;
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawNamedItems( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs );
         }
 
         public override string GetDefaultText() => "Texture Color 1";

@@ -1,5 +1,4 @@
-using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Numerics;
 
 namespace VfxEditor.AvfxFormat {
@@ -16,13 +15,13 @@ namespace VfxEditor.AvfxFormat {
             Number = number;
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Vnum";
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "VNum" );
 
-            Number.Number.Draw( id, CommandManager.Avfx );
-            Vertex.Position.Draw( id, CommandManager.Avfx );
-            Vertex.Normal.Draw( id, CommandManager.Avfx );
-            Vertex.Color.Draw( id, CommandManager.Avfx );
+            Number.Number.Draw( CommandManager.Avfx );
+            Vertex.Position.Draw( CommandManager.Avfx );
+            Vertex.Normal.Draw( CommandManager.Avfx );
+            Vertex.Color.Draw( CommandManager.Avfx );
         }
 
         public override string GetDefaultText() => $"{GetIdx()}";

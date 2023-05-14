@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
@@ -77,24 +78,22 @@ namespace VfxEditor.TmbFormat.Entries {
             }, ExtraData );
         }
 
-        public override void Draw( string id ) {
-            DrawHeader( id );
-            DrawParsed( id );
+        public override void Draw() {
+            DrawHeader();
+            DrawParsed();
 
-            ImGui.Checkbox( $"Extra Data{id}", ref ExtraData );
+            ImGui.Checkbox( "Extra Data", ref ExtraData );
             if( ExtraData ) {
-                EnableFilter.Draw( id, Command );
+                EnableFilter.Draw( Command );
 
-                var filtersEnabled = EnableFilter.Value == true;
-                if( !filtersEnabled ) ImGui.BeginDisabled();
-                ImGui.Indent();
-                Filter.Draw( id, Command );
-                ImGui.Unindent();
-                if( !filtersEnabled ) ImGui.EndDisabled();
+                using( var disabled = ImRaii.Disabled( !EnableFilter.Value ) )
+                using( var indent = ImRaii.PushIndent() ) {
+                    Filter.Draw( Command );
+                }
 
-                Unk4.Draw( id, Command );
-                Unk5.Draw( id, Command );
-                Unk6.Draw( id, Command );
+                Unk4.Draw( Command );
+                Unk5.Draw( Command );
+                Unk6.Draw( Command );
             }
         }
     }

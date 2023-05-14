@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
@@ -9,7 +8,7 @@ namespace VfxEditor.UldFormat.Widget {
     public class UldWidgetDropdown : Dropdown<UldWidget> {
         private readonly List<UldComponent> Components;
 
-        public UldWidgetDropdown( List<UldWidget> items, List<UldComponent> components ) : base( items, true ) {
+        public UldWidgetDropdown( List<UldWidget> items, List<UldComponent> components ) : base( "Widget", items, true ) {
             Components = components;
         }
 
@@ -24,9 +23,9 @@ namespace VfxEditor.UldFormat.Widget {
             CommandManager.Uld.Add( new GenericAddCommand<UldWidget>( Items, new UldWidget( Components ) ) );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw();
             else ImGui.Text( "Select a component..." );
         }
     }

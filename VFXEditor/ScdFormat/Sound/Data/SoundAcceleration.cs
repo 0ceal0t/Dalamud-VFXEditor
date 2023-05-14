@@ -1,13 +1,11 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat.Sound.Data
-{
-    public class SoundAccelerationInfo
-    {
+namespace VfxEditor.ScdFormat.Sound.Data {
+    public class SoundAccelerationInfo {
         public readonly ParsedByte Version = new( "Version" );
         private byte Size = 0x10;
         private readonly ParsedReserve Reserve1 = new( 2 );
@@ -15,8 +13,7 @@ namespace VfxEditor.ScdFormat.Sound.Data
         public readonly ParsedInt UpTime = new( "Up Time" );
         public readonly ParsedInt DownTime = new( "Down Time" );
 
-        public void Read( BinaryReader reader )
-        {
+        public void Read( BinaryReader reader ) {
             Version.Read( reader );
             Size = reader.ReadByte();
             Reserve1.Read( reader );
@@ -25,8 +22,7 @@ namespace VfxEditor.ScdFormat.Sound.Data
             DownTime.Read( reader );
         }
 
-        public void Write( BinaryWriter writer )
-        {
+        public void Write( BinaryWriter writer ) {
             Version.Write( writer );
             writer.Write( Size );
             Reserve1.Write( writer );
@@ -35,40 +31,35 @@ namespace VfxEditor.ScdFormat.Sound.Data
             DownTime.Write( writer );
         }
 
-        public void Draw( string parentId )
-        {
-            Version.Draw( parentId, CommandManager.Scd );
-            Volume.Draw( parentId, CommandManager.Scd );
-            UpTime.Draw( parentId, CommandManager.Scd );
-            DownTime.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            Version.Draw( CommandManager.Scd );
+            Volume.Draw( CommandManager.Scd );
+            UpTime.Draw( CommandManager.Scd );
+            DownTime.Draw( CommandManager.Scd );
         }
     }
 
-    public class SoundAcceleration
-    {
+    public class SoundAcceleration {
         public readonly ParsedByte Version = new( "Version" );
         private byte Size = 0x10; // TODO: does this change with the size of acceleration?
         private readonly ParsedByte NumAcceleration = new( "Acceleration Count" );
         private readonly ParsedReserve Reserve1 = new( 1 + 4 * 3 );
         public List<SoundAccelerationInfo> Acceleration = new();
 
-        public void Read( BinaryReader reader )
-        {
+        public void Read( BinaryReader reader ) {
             Version.Read( reader );
             Size = reader.ReadByte();
             NumAcceleration.Read( reader );
             Reserve1.Read( reader );
 
-            for( var i = 0; i < 4; i++ )
-            {
+            for( var i = 0; i < 4; i++ ) {
                 var newAcceleration = new SoundAccelerationInfo();
                 newAcceleration.Read( reader );
                 Acceleration.Add( newAcceleration );
             }
         }
 
-        public void Write( BinaryWriter writer )
-        {
+        public void Write( BinaryWriter writer ) {
             Version.Write( writer );
             writer.Write( Size );
             NumAcceleration.Write( writer );
@@ -77,20 +68,19 @@ namespace VfxEditor.ScdFormat.Sound.Data
             Acceleration.ForEach( x => x.Write( writer ) );
         }
 
-        public void Draw( string parentId )
-        {
-            Version.Draw( parentId, CommandManager.Scd );
-            NumAcceleration.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            using var _ = ImRaii.PushId( "Acceleration" );
+
+            Version.Draw( CommandManager.Scd );
+            NumAcceleration.Draw( CommandManager.Scd );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            for( var idx = 0; idx < Acceleration.Count; idx++ )
-            {
-                if( ImGui.CollapsingHeader( $"Acceleration #{idx}{parentId}", ImGuiTreeNodeFlags.DefaultOpen ) )
-                {
-                    ImGui.Indent();
-                    Acceleration[idx].Draw( $"{parentId}{idx}" );
-                    ImGui.Unindent();
+            for( var idx = 0; idx < Acceleration.Count; idx++ ) {
+                if( ImGui.CollapsingHeader( $"Acceleration #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    using var __ = ImRaii.PushId( idx );
+                    using var indent = ImRaii.PushIndent();
+                    Acceleration[idx].Draw();
 
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 }

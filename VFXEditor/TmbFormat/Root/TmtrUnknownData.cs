@@ -1,4 +1,3 @@
-using ImGuiNET;
 using System.IO;
 using VfxEditor.Parsing;
 
@@ -29,10 +28,10 @@ namespace VfxEditor.TmbFormat {
             Unk4.Write( writer );
         }
 
-        public void Draw( string id ) {
-            Unk1.Draw( id, PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
-            Unk2.Draw( id, PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
-            Unk3.Draw( id, PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
+        public void Draw() {
+            Unk1.Draw( PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
+            Unk2.Draw( PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
+            Unk3.Draw( PapEmbedded ? CommandManager.Pap : CommandManager.Tmb );
         }
     }
 }

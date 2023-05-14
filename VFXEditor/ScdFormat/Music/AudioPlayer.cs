@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using NAudio.Wave;
+using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
@@ -10,8 +11,7 @@ using System.Threading.Tasks;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public class AudioPlayer {
         private readonly ScdAudioEntry Entry;
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;
@@ -48,23 +48,164 @@ namespace VfxEditor.ScdFormat
             Entry = entry;
         }
 
-        public void Draw( string id) {
-            if( ImGui.BeginTabBar( $"{id}/Tabs" ) ) {
-                if( ImGui.BeginTabItem( $"Music{id}" ) ) {
-                    DrawPlayer( id );
-                    ImGui.EndTabItem();
+        public void Draw() {
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
+
+            DrawPlayer();
+            DrawChannels();
+            DrawConverter();
+
+            ProcessQueue();
+        }
+
+        private void DrawPlayer() {
+            using var tabItem = ImRaii.TabItem( "Music" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Music" );
+
+            // Controls
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( State == PlaybackState.Stopped ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" ) ) Play();
                 }
-                if( ShowChannelSelect && ImGui.BeginTabItem( $"Channels{id}" ) ) {
-                    DrawChannels( id );
-                    ImGui.EndTabItem();
+                else if( State == PlaybackState.Playing ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" ) ) CurrentOutput.Pause();
                 }
-                if( ImGui.BeginTabItem( $"Converter{id}" ) ) {
-                    DrawConverter( id );
-                    ImGui.EndTabItem();
+                else if( State == PlaybackState.Paused ) {
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" ) ) CurrentOutput.Play();
                 }
-                ImGui.EndTabBar();
             }
 
+            var selectedTime = ( float )CurrentTime;
+            ImGui.SameLine( 25f );
+            ImGui.SetNextItemWidth( 221f );
+            var drawPos = ImGui.GetCursorScreenPos();
+
+            using( var stopped = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, State == PlaybackState.Stopped ) ) {
+                if( ImGui.SliderFloat( "##Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
+                    if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
+                        CurrentOutput.Pause();
+                        LeftStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                        RightStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
+                    }
+                }
+            }
+
+            if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
+                var startX = 221f * ( LoopStartTime / TotalTime );
+                var endX = 221f * ( LoopEndTime / TotalTime );
+
+                var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
+                var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
+
+                var height = ImGui.GetFrameHeight();
+
+                var drawList = ImGui.GetWindowDrawList();
+                drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+            }
+
+            // Save
+            ImGui.SameLine();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" ) ) {
+                    if( IsVorbis ) ImGui.OpenPopup( "SavePopup" );
+                    else SaveWaveDialog();
+                }
+            }
+            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
+
+            using( var popup = ImRaii.Popup( "SavePopup" ) ) {
+                if( popup ) {
+                    if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
+                    if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
+                }
+            }
+
+            // Import
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" ) ) ImportDialog();
+            }
+            UiUtils.Tooltip( "Replace sound file" );
+
+            var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
+            ImGui.SetNextItemWidth( 246f );
+            if( ImGui.InputInt2( "##LoopStartEnd", ref loopStartEnd[0] ) ) {
+                Entry.LoopStart = loopStartEnd[0];
+                Entry.LoopEnd = loopStartEnd[1];
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.DisabledButton( "Update", Plugin.Configuration.SimulateScdLoop ) ) RefreshLoopStartEndTime();
+            ImGui.SameLine();
+            ImGui.Text( "Loop Start/End (Bytes)" );
+
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
+        }
+
+        private void DrawChannels() {
+            if( !ShowChannelSelect ) return;
+
+            using var tabItem = ImRaii.TabItem( "Channels" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Channels" );
+
+            ImGui.TextDisabled( "Which channels to play when previewing the audio file. Does not affect the .scd file" );
+
+            if( ImGui.BeginCombo( "Preview Channel 1", $"Channel #{Channel1}" ) ) {
+                for( var i = 0; i < Entry.NumChannels; i++ ) {
+                    if( ImGui.Selectable( "Channel #{i}", Channel1 == i ) ) Channel1 = i;
+                }
+                ImGui.EndCombo();
+            }
+
+            if( ImGui.BeginCombo( $"Preview Channel 2", $"Channel #{Channel2}" ) ) {
+                for( var i = 0; i < Entry.NumChannels; i++ ) {
+                    if( ImGui.Selectable( "Channel #{i}", Channel2 == i ) ) Channel2 = i;
+                }
+                ImGui.EndCombo();
+            }
+
+            if( ImGui.Button( "Update" ) ) Reset();
+        }
+
+        private void DrawConverter() {
+            using var tabItem = ImRaii.TabItem( "Convertor" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Convertor" );
+
+            ImGui.TextDisabled( "Utilities to generate byte values which can be used for loop start/end" );
+
+            // Bytes
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesIn", ref ConverterSamples, 0, 0 );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+            ImGui.SameLine();
+            if( ImGui.Button( "Samples to Bytes" ) ) {
+                ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
+            }
+
+            // Time
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( "##SecondsIn", ref ConverterSeconds, 0, 0 );
+            ImGui.SameLine();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"##SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
+            ImGui.SameLine();
+            if( ImGui.Button( "Seconds to Bytes" ) ) {
+                ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
+            }
+        }
+
+        private void ProcessQueue() {
             var currentState = State;
             var justQueued = false;
 
@@ -93,139 +234,6 @@ namespace VfxEditor.ScdFormat
             }
 
             PrevState = currentState;
-        }
-
-        private void DrawPlayer( string id ) {
-            // Controls
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( State == PlaybackState.Stopped ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) Play();
-            }
-            else if( State == PlaybackState.Playing ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" + id ) ) CurrentOutput.Pause();
-            }
-            else if( State == PlaybackState.Paused ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" + id ) ) CurrentOutput.Play();
-            }
-
-            ImGui.PopFont();
-
-            if( State == PlaybackState.Stopped ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            var selectedTime = ( float )CurrentTime;
-            ImGui.SameLine( 25f );
-            ImGui.SetNextItemWidth( 221f );
-            var drawPos = ImGui.GetCursorScreenPos();
-            if( ImGui.SliderFloat( $"{id}-Drag", ref selectedTime, 0, ( float )TotalTime ) ) {
-                if( State != PlaybackState.Stopped && selectedTime > 0 && selectedTime < TotalTime ) {
-                    CurrentOutput.Pause();
-                    LeftStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
-                    RightStream.CurrentTime = TimeSpan.FromSeconds( selectedTime );
-                }
-            }
-            if( State == PlaybackState.Stopped ) ImGui.PopStyleVar();
-
-            if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
-                var startX = 221f * ( LoopStartTime / TotalTime );
-                var endX = 221f * ( LoopEndTime / TotalTime );
-
-                var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
-                var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
-
-                var height = ImGui.GetFrameHeight();
-
-                var drawList = ImGui.GetWindowDrawList();
-                drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-                drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-            }
-
-            // Save
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" + id ) ) {
-                if( IsVorbis ) ImGui.OpenPopup( "SavePopup" + id );
-                else SaveWaveDialog();
-            }
-            ImGui.PopFont();
-            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
-
-            if( ImGui.BeginPopup( "SavePopup" + id ) ) {
-                if( ImGui.Selectable( ".wav" ) ) SaveWaveDialog();
-                if( ImGui.Selectable( ".ogg" ) ) SaveOggDialog();
-                ImGui.EndPopup();
-            }
-
-            // Import
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" + id ) ) ImportDialog();
-            ImGui.PopFont();
-            ImGui.PopStyleVar( 1 );
-            UiUtils.Tooltip( "Replace sound file" );
-
-            var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
-            ImGui.SetNextItemWidth( 246f );
-            if( ImGui.InputInt2( $"{id}/LoopStartEnd", ref loopStartEnd[0] ) ) {
-                Entry.LoopStart = loopStartEnd[0];
-                Entry.LoopEnd = loopStartEnd[1];
-            }
-
-            ImGui.SameLine();
-            if( UiUtils.DisabledButton( $"Update{id}", Plugin.Configuration.SimulateScdLoop ) ) {
-                RefreshLoopStartEndTime();
-            }
-            ImGui.SameLine();
-            ImGui.Text( "Loop Start/End (Bytes)" );
-
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
-        }
-
-        private void DrawChannels( string id ) {
-            ImGui.TextDisabled( "Which channels to play when previewing the audio file. Does not affect the .scd file" );
-            
-            if( ImGui.BeginCombo( $"Preview Channel 1{id}", $"Channel #{Channel1}" ) ) {
-                for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( $"Channel #{i}{id}", Channel1 == i ) ) Channel1 = i;
-                }
-                ImGui.EndCombo();
-            }
-
-            if( ImGui.BeginCombo( $"Preview Channel 2{id}", $"Channel #{Channel2}" ) ) {
-                for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( $"Channel #{i}{id}", Channel2 == i ) ) Channel2 = i;
-                }
-                ImGui.EndCombo();
-            }
-
-            if( ImGui.Button( $"Update{id}" ) ) {
-                Reset();
-            }
-        }
-
-        private void DrawConverter( string id ) {
-            ImGui.TextDisabled( "Utilities to generate byte values which can be used for loop start/end" );
-
-            // Bytes
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesIn", ref ConverterSamples, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( $"Samples to Bytes{id}" ) ) {
-                ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
-            }
-
-            // Time
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( $"{id}/SecondsIn", ref ConverterSeconds, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"{id}/SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( $"Seconds to Bytes{id}" ) ) {
-                ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
-            }
         }
 
         private void Play() {
@@ -275,7 +283,7 @@ namespace VfxEditor.ScdFormat
 
         public void UpdateVolume() {
             if( Volume == null ) return;
-            if( Volume is  WaveFloatTo16Provider floatVolume ) {
+            if( Volume is WaveFloatTo16Provider floatVolume ) {
                 floatVolume.Volume = Plugin.Configuration.ScdVolume;
             }
             else if( Volume is VolumeWaveProvider16 pcmVolume ) {

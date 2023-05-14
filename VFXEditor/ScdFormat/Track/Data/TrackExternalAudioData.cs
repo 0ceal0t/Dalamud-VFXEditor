@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -26,8 +22,8 @@ namespace VfxEditor.ScdFormat {
             foreach( var idx in RandomIndices ) writer.Write( idx );
         }
 
-        public override void Draw( string parentId ) {
-            BankNumber.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            BankNumber.Draw( CommandManager.Scd );
         }
     }
 }

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
@@ -55,40 +56,40 @@ namespace VfxEditor.AvfxFormat {
             WritePad( writer, 4 * 32 );
         }
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/Clip";
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Clip" );
+            DrawRename();
 
-            Type.Draw( id );
+            Type.Draw();
 
             // ====== KILL ============
 
             if( Type.Value == "LLIK" ) {
                 var duration = Unk1.Value;
-                if( ImGui.InputInt( $"Fade Out Duration{id}", ref duration ) ) {
+                if( ImGui.InputInt( "Fade Out Duration", ref duration ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Unk1, duration ) );
                 }
 
                 var hide = Unk4.Value == 1;
-                if( ImGui.Checkbox( $"Hide{id}", ref hide ) ) {
+                if( ImGui.Checkbox( "Hide", ref hide ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Unk4, hide ? 1 : 0 ) );
                 }
 
                 var allowShow = Unk5.Value != -1f;
-                if( ImGui.Checkbox( $"Allow Show{id}", ref allowShow ) ) {
+                if( ImGui.Checkbox( "Allow Show", ref allowShow ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<float>( Unk5, allowShow ? 0 : -1f ) );
                 }
 
                 var startHidden = Unk6.Value != -1f;
-                if( ImGui.Checkbox( $"Start Hidden{id}", ref startHidden ) ) {
+                if( ImGui.Checkbox( "Start Hidden", ref startHidden ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<float>( Unk6, startHidden ? 0 : -1f ) );
                 }
             }
 
             // ======================
 
-            RawInts.Draw( id, CommandManager.Avfx );
-            RawFloats.Draw( id, CommandManager.Avfx );
+            RawInts.Draw( CommandManager.Avfx );
+            RawFloats.Draw( CommandManager.Avfx );
         }
 
         public override string GetDefaultText() => $"Clip {GetIdx()}({Type.Text})";

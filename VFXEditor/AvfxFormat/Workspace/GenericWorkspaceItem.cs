@@ -20,6 +20,6 @@ namespace VfxEditor.AvfxFormat {
 
         public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public void DrawRename( string parentId ) => IWorkspaceUiItem.DrawRenameBox( this, parentId, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
+        public void DrawRename() => IWorkspaceUiItem.DrawRenameBox( this, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
     }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.Parsing {
@@ -12,7 +10,7 @@ namespace VfxEditor.Parsing {
             Data = new byte[Size];
         }
 
-        public override void Draw( string parentId, CommandManager manager ) { }
+        public override void Draw( CommandManager manager ) { }
 
         public override void Read( BinaryReader reader ) {
             Data = reader.ReadBytes( Size );
@@ -20,8 +18,6 @@ namespace VfxEditor.Parsing {
 
         public override void Read( BinaryReader reader, int size ) => Read( reader );
 
-        public override void Write( BinaryWriter writer ) {
-            writer.Write( Data );
-        }
+        public override void Write( BinaryWriter writer ) => writer.Write( Data );
     }
 }

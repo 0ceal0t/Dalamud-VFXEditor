@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using static VfxEditor.AvfxFormat.Enums;
@@ -58,23 +58,26 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( Name );
+
             AssignedCopyPaste( this, Name );
-            DrawAddButtonRecurse( this, Name, parentId );
+            DrawAddButtonRecurse( this, Name );
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/" + Name;
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( Name );
+
             AssignedCopyPaste( this, Name );
-            if( !Locked && DrawRemoveButton( this, Name, id ) ) return;
+            if( !Locked && DrawRemoveButton( this, Name ) ) return;
 
-            AvfxCurve.DrawUnassignedCurves( Curves, id );
+            AvfxCurve.DrawUnassignedCurves( Curves );
 
-            AxisConnectType.Draw( id );
-            AxisConnectRandomType.Draw( id );
+            AxisConnectType.Draw();
+            AxisConnectRandomType.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            AvfxCurve.DrawAssignedCurves( Curves, id );
+            AvfxCurve.DrawAssignedCurves( Curves );
         }
 
         public override string GetDefaultText() => Name;

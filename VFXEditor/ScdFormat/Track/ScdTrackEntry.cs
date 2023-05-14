@@ -1,6 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -24,23 +23,23 @@ namespace VfxEditor.ScdFormat {
             Items.ForEach( x => x.Write( writer ) );
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
-                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value}){id}{idx}" ) ) {
-                    ImGui.Indent();
+                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value})" ) ) {
+                    using var _ = ImRaii.PushId( idx );
+                    using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
                         CommandManager.Scd.Add( new GenericRemoveCommand<ScdTrackItem>( Items, item ) );
-                        ImGui.Unindent(); break;
+                        break;
                     }
 
-                    item.Draw( $"{id}{idx}" );
-                    ImGui.Unindent();
+                    item.Draw();
                 }
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
+            if( ImGui.Button( "+ New" ) ) { // NEW
                 CommandManager.Scd.Add( new GenericAddCommand<ScdTrackItem>( Items, new ScdTrackItem() ) );
             }
         }

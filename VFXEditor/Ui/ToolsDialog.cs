@@ -12,7 +12,7 @@ namespace VfxEditor.Ui {
         }
 
         public override void DrawBody() {
-            using var id = ImRaii.PushId( "ToolsTab" );
+            using var _ = ImRaii.PushId( "ToolsTab" );
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( tabBar ) return;
 

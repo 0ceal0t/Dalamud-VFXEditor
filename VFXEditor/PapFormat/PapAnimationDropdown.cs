@@ -1,6 +1,5 @@
 using ImGuiFileDialog;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Interop;
@@ -11,7 +10,7 @@ namespace VfxEditor.PapFormat {
     public class PapAnimationDropdown : Dropdown<PapAnimation> {
         private readonly PapFile File;
 
-        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( items, true ) {
+        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items, true ) {
             File = file;
         }
 
@@ -52,11 +51,9 @@ namespace VfxEditor.PapFormat {
             } );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) {
-                Selected.Draw( $"{id}{Items.IndexOf( Selected )}", File.ModelId.Value, File.ModelType.Value );
-            }
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw( File.ModelId.Value, File.ModelType.Value );
             else ImGui.Text( "Select an animation..." );
         }
     }

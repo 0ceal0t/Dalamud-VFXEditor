@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -183,7 +184,7 @@ namespace VfxEditor.DirectX {
 
         public void DrawInline() {
             var cursor = ImGui.GetCursorScreenPos();
-            ImGui.BeginChild( "3DViewChild" );
+            using var child = ImRaii.Child( "3DChild" );
 
             var space = ImGui.GetContentRegionAvail();
             Resize( space );
@@ -202,8 +203,6 @@ namespace VfxEditor.DirectX {
             }
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
-
-            ImGui.EndChild();
         }
 
         public abstract void OnDispose();

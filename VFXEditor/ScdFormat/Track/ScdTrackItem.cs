@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using OtterGui.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 
@@ -147,9 +146,10 @@ namespace VfxEditor.ScdFormat {
             };
         }
 
-        public void Draw( string parentId ) {
-            Type.Draw( parentId, CommandManager.Scd );
-            Data?.Draw( $"{parentId}/Data" );
+        public void Draw() {
+            Type.Draw( CommandManager.Scd );
+            using var _ = ImRaii.PushId( "Data" );
+            Data?.Draw();
         }
     }
 }

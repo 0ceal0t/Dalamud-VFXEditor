@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Extensions;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -147,35 +148,55 @@ namespace VfxEditor.UldFormat {
             writer.BaseStream.Position = finalPos;
         }
 
-        public override void Draw( string id ) {
-            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Textures{id}" ) ) {
-                    TextureList.Draw( id );
-                    TextureSplitView.Draw( $"{id}/Textures" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Part Lists{id}" ) ) {
-                    PartList.Draw( id );
-                    PartsSplitView.Draw( $"{id}/Parts" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Components{id}" ) ) {
-                    ComponentList.Draw( id );
-                    ComponentDropdown.Draw( $"{id}/Components" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Timelines{id}" ) ) {
-                    TimelineList.Draw( id );
-                    TimelineDropdown.Draw( $"{id}/Timelines" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Widgets{id}" ) ) {
-                    WidgetList.Draw( id );
-                    WidgetDropdown.Draw( $"{id}/Widgets" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+        public override void Draw() {
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawTextures();
+            DrawParts();
+            DrawComponents();
+            DrawTimelines();
+            DrawWidgets();
+        }
+
+        private void DrawTextures() {
+            using var tabItem = ImRaii.TabItem( "Textures" );
+            if( !tabItem ) return;
+
+            TextureList.Draw();
+            TextureSplitView.Draw();
+        }
+
+        private void DrawParts() {
+            using var tabItem = ImRaii.TabItem( "Part Lists" );
+            if( !tabItem ) return;
+
+            PartList.Draw();
+            PartsSplitView.Draw();
+        }
+
+        private void DrawComponents() {
+            using var tabItem = ImRaii.TabItem( "Components" );
+            if( !tabItem ) return;
+
+            ComponentList.Draw();
+            ComponentDropdown.Draw();
+        }
+
+        private void DrawTimelines() {
+            using var tabItem = ImRaii.TabItem( "Timelines" );
+            if( !tabItem ) return;
+
+            TimelineList.Draw();
+            TimelineDropdown.Draw();
+        }
+
+        private void DrawWidgets() {
+            using var tabItem = ImRaii.TabItem( "Widgets" );
+            if( !tabItem ) return;
+
+            WidgetList.Draw();
+            WidgetDropdown.Draw();
         }
 
         // ========== WORKSPACE ==========

@@ -1,3 +1,4 @@
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        private readonly UiDisplayList Display;
+        private readonly UiDisplayList Parameters;
         private readonly List<INamedUiItem> DisplayTabs;
 
         private static readonly Dictionary<int, string> BinderIds = new() {
@@ -78,19 +79,22 @@ namespace VfxEditor.AvfxFormat {
             Position.SetAssigned( true );
 
             DisplayTabs = new() {
-                ( Display = new UiDisplayList( "Parameters" ) ),
+                ( Parameters = new UiDisplayList( "Parameters" ) ),
                 Position
             };
-            Display.Add( BindPointType );
-            Display.Add( BindTargetPointType );
-            Display.Add( BinderName );
-            Display.Add( new UiIntCombo( "Bind Point Id", BindPointId, BinderIds ) );
-            Display.Add( GenerateDelay );
-            Display.Add( CoordUpdateFrame );
-            Display.Add( RingEnable );
-            Display.Add( RingProgressTime );
-            Display.Add( new UiFloat3( "Ring Position", RingPositionX, RingPositionY, RingPositionZ ) );
-            Display.Add( RingRadius );
+
+            Parameters.AddRange( new() {
+                BindPointType,
+                BindTargetPointType,
+                BinderName,
+                new UiIntCombo( "Bind Point Id", BindPointId, BinderIds ),
+                GenerateDelay,
+                CoordUpdateFrame,
+                RingEnable,
+                RingProgressTime,
+                new UiFloat3( "Ring Position", RingPositionX, RingPositionY, RingPositionZ ),
+                RingRadius
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
@@ -99,18 +103,20 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( Name );
+
             AssignedCopyPaste( this, Name );
-            DrawAddButtonRecurse( this, Name, parentId );
+            DrawAddButtonRecurse( this, Name );
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/" + Name;
+        public override void DrawAssigned( ) {
+            using var _ = ImRaii.PushId( Name );
 
             AssignedCopyPaste( this, Name );
-            DrawRemoveButton( this, Name, id );
+            DrawRemoveButton( this, Name );
 
-            DrawNamedItems( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs );
         }
 
         public override string GetDefaultText() => Name;

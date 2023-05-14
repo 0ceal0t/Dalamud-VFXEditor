@@ -1,10 +1,9 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json.Linq;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace VfxEditor.Parsing.Color {
@@ -38,11 +37,9 @@ namespace VfxEditor.Parsing.Color {
             Value = reader.ReadUInt32();
         }
 
-        public override void Write( BinaryWriter writer ) {
-            writer.Write( Value );
-        }
+        public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )Value;
@@ -50,26 +47,29 @@ namespace VfxEditor.Parsing.Color {
                 copy.PasteCommand.Add( new ParsedSimpleCommand<uint>( this, ( uint )val ) );
             }
 
-            ImGui.PushStyleColor( ImGuiCol.Text, CurrentColor );
-            var text = Colors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
-
-            if( ImGui.BeginCombo( $"{id}{Name}", text ) ) {
-                foreach( var option in Colors ) {
-                    var selected = option.Key == Value;
-                    ImGui.PushStyleColor( ImGuiCol.Text, option.Value );
-                    if( ImGui.Selectable( $"----{option.Key}----{id}", selected ) ) {
-                        manager.Add( new ParsedSimpleCommand<uint>( this, option.Key ) );
-                    }
-                    ImGui.PopStyleColor();
-
-                    if( selected ) ImGui.SetItemDefaultFocus();
-                }
-                ImGui.EndCombo();
-            }
-            ImGui.PopStyleColor();
+            DrawCombo( manager );
 
             ImGui.SameLine();
             ImGui.Text( Name );
+        }
+
+        private void DrawCombo( CommandManager manager ) {
+            using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
+            var text = Colors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
+
+            using var combo = ImRaii.Combo( "", text );
+            if( !combo ) return;
+
+            foreach( var option in Colors ) {
+                var selected = option.Key == Value;
+
+                using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );
+                if( ImGui.Selectable( $"----{option.Key}----", selected ) ) {
+                    manager.Add( new ParsedSimpleCommand<uint>( this, option.Key ) );
+                }
+
+                if( selected ) ImGui.SetItemDefaultFocus();
+            }
         }
     }
 }

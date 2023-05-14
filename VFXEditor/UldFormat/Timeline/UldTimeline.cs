@@ -1,6 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.UldFormat.Timeline.Frames;
@@ -51,26 +50,25 @@ namespace VfxEditor.UldFormat.Timeline {
             writer.BaseStream.Position = finalPos;
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                DrawFrames( "Frames 1", id, FramesView1 );
-                DrawFrames( "Frames 2", id, FramesView2 );
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawFrames( "Frames 1", FramesView1 );
+            DrawFrames( "Frames 2", FramesView2 );
         }
 
-        private static void DrawFrames( string name, string id, UldFrameSplitView view ) {
-            if( ImGui.BeginTabItem( $"{name}{id}" ) ) {
-                var innerId = $"{id}/{name}";
-                ImGui.BeginChild( innerId );
-                view.Draw( innerId );
-                ImGui.EndChild();
-                ImGui.EndTabItem();
-            }
+        private static void DrawFrames( string name, UldFrameSplitView view ) {
+            using var tabItem = ImRaii.TabItem( name );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( name );
+            using var child = ImRaii.Child( "Child" );
+            view.Draw();
         }
 
         public override string GetDefaultText() => $"Timeline {GetIdx()}";

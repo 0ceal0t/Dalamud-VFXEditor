@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -21,9 +16,9 @@ namespace VfxEditor.ScdFormat {
             Value2.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            Value1.Draw( parentId, CommandManager.Scd );
-            Value2.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Value1.Draw( CommandManager.Scd );
+            Value2.Draw( CommandManager.Scd );
         }
     }
 }

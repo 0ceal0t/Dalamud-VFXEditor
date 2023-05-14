@@ -25,10 +25,10 @@ namespace VfxEditor.TmbFormat {
             Unk3.Write( writer );
         }
 
-        public void Draw( string id ) {
-            Unk1.Draw( id, Command );
-            Length.Draw( id, Command );
-            Unk3.Draw( id, Command );
+        public void Draw() {
+            Unk1.Draw( Command );
+            Length.Draw( Command );
+            Unk3.Draw( Command );
         }
     }
 }

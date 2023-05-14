@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -64,18 +64,18 @@ namespace VfxEditor.AvfxFormat {
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Item";
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Item" );
+            DrawRename();
 
-            BinderSelect.Draw( id );
-            EmitterSelect.Draw( id );
-            EffectorSelect.Draw( id );
-            AvfxBase.DrawItems( Display, id );
+            BinderSelect.Draw();
+            EmitterSelect.Draw();
+            EffectorSelect.Draw();
+            AvfxBase.DrawItems( Display );
 
             var clipAssigned = ClipIdx.IsAssigned();
-            if( ImGui.Checkbox( "Clip Enabled" + id, ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
-            ClipIdx.Draw( id );
+            if( ImGui.Checkbox( "Clip Enabled", ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
+            ClipIdx.Draw();
         }
 
         public override string GetDefaultText() {

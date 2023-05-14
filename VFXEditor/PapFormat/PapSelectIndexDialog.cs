@@ -1,6 +1,6 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
-using System.Numerics;
 using VfxEditor.Ui;
 
 namespace VfxEditor.PapFormat {
@@ -11,15 +11,17 @@ namespace VfxEditor.PapFormat {
         public PapSelectIndexDialog() : base( "Select Index", false, 400, 100 ) { }
 
         public override void DrawBody() {
-            ImGui.SetNextItemWidth( 100f );
-            ImGui.InputInt( "Index of the animation being imported##PapIndex", ref Index );
+            using var _ = ImRaii.PushId( "PapIndex" );
 
-            if( ImGui.Button( "Ok##PapIndex" ) ) {
+            ImGui.SetNextItemWidth( 100f );
+            ImGui.InputInt( "Index of the animation being imported", ref Index );
+
+            if( ImGui.Button( "Ok" ) ) {
                 OnOk?.Invoke( Index );
                 Visible = false;
             }
             ImGui.SameLine();
-            if( ImGui.Button( "Cancel##PapIndex" ) ) {
+            if( ImGui.Button( "Cancel" ) ) {
                 Visible = false;
             }
         }

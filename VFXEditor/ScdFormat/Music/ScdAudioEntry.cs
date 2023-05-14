@@ -3,7 +3,6 @@ using ImGuiNET;
 using NAudio.Wave;
 using System;
 using System.IO;
-using System.Threading;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -73,9 +72,9 @@ namespace VfxEditor.ScdFormat {
             };
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             if( DataLength == 0 ) return;
-            Player.Draw( id );
+            Player.Draw();
         }
 
         public void Dispose() => Player.Dispose();

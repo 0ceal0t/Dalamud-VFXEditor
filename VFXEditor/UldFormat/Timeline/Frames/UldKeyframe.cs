@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
@@ -157,14 +154,14 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             writer.BaseStream.Position = finalPos;
         }
 
-        public void Draw( string id ) {
-            Time.Draw( id, CommandManager.Uld );
-            Interpolation.Draw( id, CommandManager.Uld );
-            Unk1.Draw( id, CommandManager.Uld );
-            Acceleration.Draw( id, CommandManager.Uld );
-            Deceleration.Draw ( id, CommandManager.Uld );
+        public void Draw() {
+            Time.Draw( CommandManager.Uld );
+            Interpolation.Draw( CommandManager.Uld );
+            Unk1.Draw( CommandManager.Uld );
+            Acceleration.Draw( CommandManager.Uld );
+            Deceleration.Draw ( CommandManager.Uld );
 
-            Data.ForEach( x => x.Draw( id, CommandManager.Uld ) );
+            Data.ForEach( x => x.Draw( CommandManager.Uld ) );
         }
     }
 }

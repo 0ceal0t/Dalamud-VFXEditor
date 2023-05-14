@@ -32,11 +32,11 @@ namespace VfxEditor.EidFormat {
             writer.Write( 0 );
         }
 
-        public void Draw( string parentId ) {
-            Name.Draw( parentId, CommandManager.Eid );
-            Id.Draw( parentId, CommandManager.Eid );
-            Position.Draw( parentId, CommandManager.Eid );
-            Rotation.Draw( parentId, CommandManager.Eid );
+        public void Draw() {
+            Name.Draw( CommandManager.Eid );
+            Id.Draw( CommandManager.Eid );
+            Position.Draw( CommandManager.Eid );
+            Rotation.Draw( CommandManager.Eid );
         }
     }
 }

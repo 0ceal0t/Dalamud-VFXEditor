@@ -17,7 +17,7 @@ namespace VfxEditor.UldFormat.Texture {
         private string LoadedTexturePath = "";
         private string LoadedIconPath = "";
 
-        private bool ShowHd = false;
+        private bool ShowHD = false;
 
         public UldTexture() { }
 
@@ -57,35 +57,35 @@ namespace VfxEditor.UldFormat.Texture {
             if( minorVersion == '1' ) Unk1.Write( writer );
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
 
-            Path.Draw( id, CommandManager.Uld );
+            Path.Draw( CommandManager.Uld );
             if( !string.IsNullOrEmpty( Path.Value ) ) {
-                ImGui.Checkbox( $"Show Hd{id}", ref ShowHd );
-                if( ShowHd ) ImGui.TextDisabled( TexturePath );
-                Plugin.TextureManager.DrawTexture( UpdateTexture(), id );
+                ImGui.Checkbox( $"Show HD", ref ShowHD );
+                if( ShowHD ) ImGui.TextDisabled( TexturePath );
+                Plugin.TextureManager.DrawTexture( UpdateTexture() );
             }
 
-            IconId.Draw( id, CommandManager.Uld );
+            IconId.Draw( CommandManager.Uld );
             UpdateIcon();
             if( IconId.Value > 0 ) {
-                ImGui.Checkbox( $"Show Hd{id}", ref ShowHd );
+                ImGui.Checkbox( $"Show HD", ref ShowHD );
                 ImGui.TextDisabled( IconPath );
-                Plugin.TextureManager.DrawTexture( UpdateIcon(), id );
+                Plugin.TextureManager.DrawTexture( UpdateIcon() );
             }
 
-            Unk1.Draw( id, CommandManager.Uld );
+            Unk1.Draw( CommandManager.Uld );
         }
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Texture{GetIdx()}";
 
-        private string TexturePath => ShowHd ? Path.Value.Replace( ".tex", "_hr1.tex" ) : Path.Value;
+        private string TexturePath => ShowHD ? Path.Value.Replace( ".tex", "_hr1.tex" ) : Path.Value;
 
-        private string IconPath => GetIconPath( ShowHd );
+        private string IconPath => GetIconPath( ShowHD );
 
         public string GetIconPath( bool hd ) => string.Format( "ui/icon/{0:D3}000/{1:D6}{2}.tex", IconId.Value / 1000, IconId.Value, hd ? "_hr1" : "" );
     }

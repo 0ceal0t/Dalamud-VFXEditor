@@ -1,5 +1,3 @@
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
@@ -14,15 +12,15 @@ namespace VfxEditor.AvfxFormat {
             Parsed = new( name, l1.Parsed, l2.Parsed );
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literals[0], $"{Parsed.Name}_1" );
             AvfxBase.AssignedCopyPaste( Literals[1], $"{Parsed.Name}_2" );
-            if( AvfxBase.DrawAddButton( Literals, Parsed.Name, id ) ) return;
+            if( AvfxBase.DrawAddButton( Literals, Parsed.Name ) ) return;
 
-            Parsed.Draw( id, CommandManager.Avfx );
+            Parsed.Draw( CommandManager.Avfx );
 
-            AvfxBase.DrawRemoveContextMenu( Literals, Parsed.Name, id );
+            AvfxBase.DrawRemoveContextMenu( Literals, Parsed.Name );
         }
     }
 }

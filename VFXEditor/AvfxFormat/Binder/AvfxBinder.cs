@@ -1,10 +1,8 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
-using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -35,8 +33,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
 
         private readonly AvfxDisplaySplitView<AvfxBinderProperties> PropSplitDisplay;
-        private readonly UiNodeGraphView NodeView;
-        private readonly List<IUiItem> Display;
+        private readonly UiDisplayList Parameters;
 
         public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor ) {
             Parsed = new() {
@@ -61,7 +58,12 @@ namespace VfxEditor.AvfxFormat {
                 PropGoal
             };
 
-            Display = new() {
+            BinderVariety.Parsed.ExtraCommandGenerator = () => {
+                return new AvfxBinderDataCommand( this );
+            };
+
+            Parameters = new( "Parameters", new() {
+                new UiNodeGraphView( this ),
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -76,20 +78,14 @@ namespace VfxEditor.AvfxFormat {
                 BET_Unknown,
                 Life,
                 BinderRotationType
-            };
+            } );
 
-            PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( new() {
+            PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( "Properties", new() {
                 PropStart,
                 Prop1,
                 Prop2,
                 PropGoal
             } );
-
-            BinderVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxBinderDataCommand( this );
-            };
-
-            NodeView = new UiNodeGraphView( this );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -125,44 +121,41 @@ namespace VfxEditor.AvfxFormat {
             Data?.SetAssigned( true );
         }
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/Binder";
-            DrawRename( id );
-            BinderVariety.Draw( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Binder" );
+            DrawRename();
+            BinderVariety.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters( $"{id}/Params" );
-            DrawData( $"{id}/Data" );
-            DrawProperties( $"{id}/Properties" );
+            DrawParameters();
+            DrawData();
+            DrawProperties();
         }
 
-        private void DrawParameters( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
             if( !tabItem ) return;
 
-            using var child = ImRaii.Child( id );
-            NodeView.Draw( id );
-            DrawItems( Display, id );
+            Parameters.Draw();
         }
 
-        private void DrawData( string id ) {
+        private void DrawData() {
             if( Data == null ) return;
 
-            using var tabItem = ImRaii.TabItem( $"Data{id}/Tab" );
+            using var tabItem = ImRaii.TabItem( "Data" );
             if( !tabItem ) return;
 
-            using var child = ImRaii.Child( id );
-            Data.Draw( id );
+            Data.Draw();
         }
 
-        private void DrawProperties( string id ) {
-            using var tabItem = ImRaii.TabItem( $"Parameters{id}/Tab" );
+        private void DrawProperties() {
+            using var tabItem = ImRaii.TabItem( "Properties" );
             if( !tabItem ) return;
 
-            PropSplitDisplay.Draw( id );
+            PropSplitDisplay.Draw();
         }
 
         public override string GetDefaultText() => $"Binder {GetIdx()}({BinderVariety.GetValue()})";

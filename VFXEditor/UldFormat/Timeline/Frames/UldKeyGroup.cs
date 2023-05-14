@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -96,28 +97,32 @@ namespace VfxEditor.UldFormat.Timeline {
             writer.BaseStream.Position = finalPos;
         }
 
-        public void Draw( string id ) {
-            Usage.Draw( id, CommandManager.Uld );
-            Type.Draw( id, CommandManager.Uld );
+        public void Draw() {
+            Usage.Draw( CommandManager.Uld );
+            Type.Draw( CommandManager.Uld );
 
             for( var idx = 0; idx < Keyframes.Count; idx++ ) {
-                var item = Keyframes[idx];
-                if( ImGui.CollapsingHeader( $"Keyframe {idx}{id}{idx}" ) ) {
-                    ImGui.Indent();
-
-                    if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
-                        CommandManager.Uld.Add( new GenericRemoveCommand<UldKeyframe>( Keyframes, item ) );
-                        ImGui.Unindent(); break;
-                    }
-
-                    item.Draw( $"{id}{idx}" );
-                    ImGui.Unindent();
-                }
+                if( DrawKeyframe( Keyframes[idx], idx ) ) break;
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
+            if( ImGui.Button( "+ New" ) ) { // NEW
                 CommandManager.Uld.Add( new GenericAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
             }
+        }
+
+        private bool DrawKeyframe( UldKeyframe item, int idx ) {
+            using var _ = ImRaii.PushId( idx );
+            if( ImGui.CollapsingHeader( $"Keyframe {idx}" ) ) {
+                using var indent = ImRaii.PushIndent();
+
+                if( UiUtils.RemoveButton( $"Delete", true ) ) { // REMOVE
+                    CommandManager.Uld.Add( new GenericRemoveCommand<UldKeyframe>( Keyframes, item ) );
+                    return true;
+                }
+
+                item.Draw();
+            }
+            return false;
         }
     }
 }

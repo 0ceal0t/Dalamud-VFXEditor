@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -44,11 +44,12 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/UV";
-            DrawItems( Display, id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "UV" );
+
+            DrawItems( Display );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawNamedItems( Curves, parentId );
+            DrawNamedItems( Curves );
         }
 
         public override string GetDefaultText() => $"UV {GetIdx()}";

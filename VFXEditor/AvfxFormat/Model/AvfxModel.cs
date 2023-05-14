@@ -69,32 +69,34 @@ namespace VfxEditor.AvfxFormat {
             if( Indexes.Indexes.Count > 0 ) Indexes.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/Model";
-            NodeView.Draw( id );
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Model" );
+            NodeView.Draw();
+            DrawRename();
 
             ImGui.Text( $"Vertices: {Vertexes.Vertexes.Count} Indexes: {Indexes.Indexes.Count}" );
-            if( ImGui.Button( $"Export{id}" ) ) ImGui.OpenPopup( $"ExportPopup{id}" );
+            if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
 
-            if( ImGui.BeginPopup( $"ExportPopup{id}" ) ) {
-                if( ImGui.Selectable( $"GLTF{id}" ) ) ExportDialog();
-                if( ImGui.Selectable( $"AVFX{id}" ) ) Plugin.AvfxManager.ShowExportDialog( this );
-                ImGui.EndPopup();
+            using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
+                if( popup ) {
+                    if( ImGui.Selectable( "GLTF" ) ) ExportDialog();
+                    if( ImGui.Selectable( "AVFX" ) ) Plugin.AvfxManager.ShowExportDialog( this );
+                }
             }
 
             ImGui.SameLine();
-
-            if( ImGui.Button( $"Replace{id}" ) ) ImportDialog();
+            if( ImGui.Button( "Replace" ) ) ImportDialog();
 
             ImGui.Text( "Notes on exporting GLTF models:" );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Here" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
 
             using var tabBar = ImRaii.TabBar( "ModelTabs" );
-            DrawModel3D( id );
-            DrawUvView( id );
-            DrawEmitterVerts( id );
+            if( !tabBar ) return;
+
+            DrawModel3D();
+            DrawUvView();
+            DrawEmitterVerts();
         }
 
         public void OnSelect() {
@@ -102,9 +104,11 @@ namespace VfxEditor.AvfxFormat {
             UvView.LoadModel( this );
         }
 
-        private void DrawModel3D( string parentId ) {
-            using var tabItem = ImRaii.TabItem( $"3D View{parentId}/Tab" );
+        private void DrawModel3D() {
+            using var tabItem = ImRaii.TabItem( $"3D View" );
             if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "3DModel" );
 
             if( Refresh ) {
                 Plugin.DirectXManager.ModelPreview.LoadModel( this, ( RenderMode )Mode );
@@ -113,19 +117,19 @@ namespace VfxEditor.AvfxFormat {
             }
 
             var wireframe = Plugin.DirectXManager.ModelPreview.IsWireframe;
-            if( ImGui.Checkbox( "Wireframe##3DModel", ref wireframe ) ) {
+            if( ImGui.Checkbox( "Wireframe", ref wireframe ) ) {
                 Plugin.DirectXManager.ModelPreview.IsWireframe = wireframe;
                 Plugin.DirectXManager.ModelPreview.RefreshRasterizeState();
                 Plugin.DirectXManager.ModelPreview.Draw();
             }
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Edges##3DModel", ref Plugin.DirectXManager.ModelPreview.ShowEdges ) ) {
+            if( ImGui.Checkbox( "Show Edges", ref Plugin.DirectXManager.ModelPreview.ShowEdges ) ) {
                 Plugin.DirectXManager.ModelPreview.Draw();
             }
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Emitter Vertices##3DModel", ref Plugin.DirectXManager.ModelPreview.ShowEmitter ) ) {
+            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.DirectXManager.ModelPreview.ShowEmitter ) ) {
                 Plugin.DirectXManager.ModelPreview.Draw();
             }
 
@@ -146,18 +150,18 @@ namespace VfxEditor.AvfxFormat {
             Plugin.DirectXManager.ModelPreview.DrawInline();
         }
 
-        private void DrawUvView( string parentId ) {
-            using var tabItem = ImRaii.TabItem( $"UV View{parentId}/Tab" );
+        private void DrawUvView() {
+            using var tabItem = ImRaii.TabItem( $"UV View" );
             if( !tabItem ) return;
 
-            UvView.Draw( parentId );
+            UvView.Draw();
         }
 
-        private void DrawEmitterVerts( string parentId ) {
-            using var tabItem = ImRaii.TabItem( $"Emitter Vertices{parentId}/Tab" );
+        private void DrawEmitterVerts() {
+            using var tabItem = ImRaii.TabItem( $"Emitter Vertices" );
             if( !tabItem ) return;
 
-            EmitSplitDisplay.Draw( parentId );
+            EmitSplitDisplay.Draw();
         }
 
         private void ImportDialog() {

@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -145,42 +146,50 @@ namespace VfxEditor.UldFormat.Component {
             };
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
-            Type.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
+            Type.Draw( CommandManager.Uld );
             ImGui.TextDisabled( $"Nodes referencing this component: {NumNodesReferencing}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    DrawParameters( $"{id}/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( $"Data{id}" ) ) {
-                    DrawData( $"{id}/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Nodes{id}" ) ) {
-                    NodeSplitView.Draw( $"{id}/Nodes" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters();
+            DrawData();
+            DrawNodes();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            IgnoreInput.Draw( id, CommandManager.Uld );
-            DragArrow.Draw( id, CommandManager.Uld );
-            DropArrow.Draw( id, CommandManager.Uld );
-            ImGui.EndChild();
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child" );
+
+            IgnoreInput.Draw( CommandManager.Uld );
+            DragArrow.Draw( CommandManager.Uld );
+            DropArrow.Draw( CommandManager.Uld );
         }
 
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id );
-            Data.Draw( id );
-            ImGui.EndChild();
+        private void DrawData() {
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( "Data" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Data" );
+            using var child = ImRaii.Child( "Child" );
+
+            Data.Draw();
+        }
+
+        private void DrawNodes() {
+            using var tabItem = ImRaii.TabItem( "Nodes" );
+            if( !tabItem ) return;
+
+            NodeSplitView.Draw();
         }
 
         public override string GetDefaultText() => $"Component {GetIdx()} ({Type.Value})";

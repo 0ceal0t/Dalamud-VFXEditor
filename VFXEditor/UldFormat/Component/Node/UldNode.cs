@@ -1,5 +1,6 @@
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -214,49 +215,53 @@ namespace VfxEditor.UldFormat.Component.Node {
             }
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
 
-            if( ImGui.Checkbox( $"Is Component Node{id}", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
+            if( ImGui.Checkbox( "Is Component Node", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
 
             if( IsComponentNode ) {
-                ComponentTypeId.Draw( id, CommandManager.Uld );
+                ComponentTypeId.Draw( CommandManager.Uld );
                 ImGui.SameLine();
-                if( ImGui.SmallButton( $"Update{id}" ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this ) );
+                if( ImGui.SmallButton( "Update" ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this ) );
             }
-            else Type.Draw( id, CommandManager.Uld );
+            else Type.Draw( CommandManager.Uld );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    DrawParameters( $"{id}/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( $"Data{id}" ) ) {
-                    DrawData( $"{id}/Data" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters();
+            DrawData();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            ParentId.Draw( id, CommandManager.Uld );
-            NextSiblingId.Draw( id, CommandManager.Uld );
-            PrevSiblingId.Draw( id, CommandManager.Uld );
-            ChildNodeId.Draw( id, CommandManager.Uld );
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
 
-            Parsed.ForEach( x => x.Draw( id, CommandManager.Uld ) );
-            ImGui.EndChild();
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child" );
+
+            ParentId.Draw( CommandManager.Uld );
+            NextSiblingId.Draw( CommandManager.Uld );
+            PrevSiblingId.Draw( CommandManager.Uld );
+            ChildNodeId.Draw( CommandManager.Uld );
+
+            Parsed.ForEach( x => x.Draw( CommandManager.Uld ) );
         }
 
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id );
-            Data.Draw( id );
-            ImGui.EndChild();
+        private void DrawData() {
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( "Data" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Data" );
+            using var child = ImRaii.Child( "Child" );
+
+            Data.Draw();
         }
 
         public override string GetDefaultText() {

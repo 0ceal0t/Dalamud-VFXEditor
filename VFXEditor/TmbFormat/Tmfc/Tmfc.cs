@@ -1,4 +1,3 @@
-using ImGuiNET;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
 using System.Collections.Generic;
@@ -6,6 +5,7 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Ui.Components;
 using System.Numerics;
+using OtterGui.Raii;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class Tmfc : TmbEntry {
@@ -62,14 +62,14 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk2.Write( writer );
         }
 
-        public override void Draw( string id ) {
-            DrawHeader( id );
-            Unk1.Draw( id, Command );
-            Unk2.Draw( id, Command );
+        public override void Draw() {
+            DrawHeader();
+            Unk1.Draw( Command );
+            Unk2.Draw( Command );
 
-            ImGui.BeginChild( $"{id}/Child", new Vector2( -1, -1 ), true );
-            DataSplitView.Draw( $"{id}/Data" );
-            ImGui.EndChild();
+            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            using var _ = ImRaii.PushId( "Data" );
+            DataSplitView.Draw();
         }
     }
 }

@@ -2,7 +2,6 @@ using ImGuiNET;
 using System;
 using System.Numerics;
 using System.IO;
-using Dalamud.Logging;
 
 namespace VfxEditor.Parsing {
     public class ParsedIntColor : ParsedSimpleBase<Vector4> {
@@ -36,7 +35,7 @@ namespace VfxEditor.Parsing {
             writer.Write( ( byte )( int )( Value.W * 255f ) );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
@@ -45,7 +44,7 @@ namespace VfxEditor.Parsing {
             }
 
             var prevValue = Value;
-            if( ImGui.ColorEdit4( Name + id, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
+            if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                 if( !Editing ) {
                     Editing = true;
                     StateBeforeEdit = prevValue;

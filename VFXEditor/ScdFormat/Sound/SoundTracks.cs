@@ -1,6 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -23,25 +22,26 @@ namespace VfxEditor.ScdFormat {
             Tracks.ForEach( x => x.Write( writer ) );
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
+            using var _ = ImRaii.PushId( "Tracks" );
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
             for( var idx = 0; idx < Tracks.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Track #{idx}{id}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    ImGui.Indent();
+                if( ImGui.CollapsingHeader( $"Track #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    using var __ = ImRaii.PushId( idx );
+                    using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
                         CommandManager.Scd.Add( new GenericRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
-                        ImGui.Unindent(); break;
                     }
 
-                    Tracks[idx].Draw( $"{id}{idx}" );
-                    ImGui.Unindent();
+                    Tracks[idx].Draw();
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 }
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
+            if( ImGui.Button( "+ New" ) ) { // NEW
                 CommandManager.Scd.Add( new GenericAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
             }
         }
@@ -61,9 +61,9 @@ namespace VfxEditor.ScdFormat {
             AudioIdx.Write( writer );
         }
 
-        public void Draw( string parentId ) {
-            TrackIdx.Draw( parentId, CommandManager.Scd );
-            AudioIdx.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            TrackIdx.Draw( CommandManager.Scd );
+            AudioIdx.Draw( CommandManager.Scd );
         }
     }
 }

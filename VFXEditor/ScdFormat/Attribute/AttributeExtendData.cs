@@ -1,10 +1,6 @@
-using Dalamud.Logging;
+using OtterGui.Raii;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -27,7 +23,6 @@ namespace VfxEditor.ScdFormat {
         Priority = 0x05,
         ExternalId = 0x06,
         TypeMask = 0x0F,
-        GE = 0x00,
         GT = 0x10,
         LT = 0x20,
         LE = 0x30,
@@ -75,15 +70,16 @@ namespace VfxEditor.ScdFormat {
             Result.Write( writer );
         }
 
-        public void Draw( string parentId ) {
-            FirstCondition.Draw( parentId, CommandManager.Scd );
-            SecondCondition.Draw( parentId, CommandManager.Scd );
-            JoinTypeSelect.Draw( parentId, CommandManager.Scd );
-            NumberOfConditions.Draw( parentId, CommandManager.Scd );
-            SelfArgument.Draw( parentId, CommandManager.Scd );
-            TargetArgument.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            FirstCondition.Draw( CommandManager.Scd );
+            SecondCondition.Draw( CommandManager.Scd );
+            JoinTypeSelect.Draw( CommandManager.Scd );
+            NumberOfConditions.Draw( CommandManager.Scd );
+            SelfArgument.Draw( CommandManager.Scd );
+            TargetArgument.Draw( CommandManager.Scd );
 
-            Result.Draw( $"{parentId}/Result" );
+            using var _ = ImRaii.PushId( "Result" );
+            Result.Draw();
         }
     }
 }

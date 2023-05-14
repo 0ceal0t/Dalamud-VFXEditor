@@ -1,6 +1,4 @@
-using ImGuiNET;
 using System.Collections.Generic;
-using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
@@ -34,15 +32,5 @@ namespace VfxEditor.TmbFormat.Entries {
             Color2,
             Unk4
         };
-
-        public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
-            WriteParsed( writer );
-        }
-
-        public override void Draw( string id ) {
-            DrawHeader( id );
-            DrawParsed( id );
-        }
     }
 }

@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -64,12 +59,12 @@ namespace VfxEditor.ScdFormat {
             Rate.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            Carrier.Draw( parentId, CommandManager.Scd );
-            Modulator.Draw( parentId, CommandManager.Scd );
-            Curve.Draw( parentId, CommandManager.Scd );
-            Depth.Draw( parentId, CommandManager.Scd );
-            Rate.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Carrier.Draw( CommandManager.Scd );
+            Modulator.Draw( CommandManager.Scd );
+            Curve.Draw( CommandManager.Scd );
+            Depth.Draw( CommandManager.Scd );
+            Rate.Draw( CommandManager.Scd );
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Numerics;
 using VfxEditor.Ui;
 
 namespace VfxEditor.TexTools {
@@ -49,11 +50,11 @@ namespace VfxEditor.TexTools {
         }
 
         public override void DrawBody() {
-            using var id = ImRaii.PushId( "TexTools" );
+            using var _ = ImRaii.PushId( "TexTools" );
 
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
-            using( var child = ImRaii.Child( "Child" ) ) {
+            using( var child = ImRaii.Child( "Child", new Vector2( 0, -footerHeight ), true ) ) {
                 ImGui.InputText( "Mod Name", ref ModName, 255 );
                 ImGui.InputText( "Author", ref Author, 255 );
                 ImGui.InputText( "Version", ref Version, 255 );

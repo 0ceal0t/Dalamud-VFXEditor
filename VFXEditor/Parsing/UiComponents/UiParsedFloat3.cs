@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Numerics;
 
 namespace VfxEditor.Parsing {
@@ -18,7 +17,7 @@ namespace VfxEditor.Parsing {
             P3 = p3;
         }
 
-        public void Draw( string id, CommandManager manager ) {
+        public void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector3s[Name] = Value;
@@ -31,7 +30,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputFloat3( Name + id, ref value ) ) {
+            if( ImGui.InputFloat3( Name, ref value ) ) {
                 var command = new CompoundCommand( false, true );
                 command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );

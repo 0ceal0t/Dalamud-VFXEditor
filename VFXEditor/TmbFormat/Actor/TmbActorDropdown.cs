@@ -4,13 +4,12 @@ using VfxEditor.FileManager;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
         private readonly TmbFile File;
 
-        public TmbActorDropdown( TmbFile file ) : base( file.Actors, true ) {
+        public TmbActorDropdown( TmbFile file ) : base( "Actors", file.Actors, true ) {
             File = file;
         }
 
@@ -31,9 +30,9 @@ namespace VfxEditor.TmbFormat.Actor {
             File.Command.Add( command );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}", File );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw( File );
             else ImGui.Text( "Select a timeline actor..." );
         }
     }

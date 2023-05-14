@@ -122,7 +122,7 @@ namespace ImGuiFileDialog {
 
                 if( PathInputActivated ) {
                     ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
-                    ImGui.InputText( "##pathedit", ref PathInputBuffer, 255 );
+                    ImGui.InputText( "##PathEdit", ref PathInputBuffer, 255 );
                     ImGui.PopItemWidth();
                 }
                 else {

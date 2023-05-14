@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -15,8 +14,8 @@ namespace VfxEditor.UldFormat {
             foreach( var parsed in Parsed ) parsed.Write( writer );
         }
 
-        public virtual void Draw( string id ) {
-            foreach( var parsed in Parsed ) parsed.Draw( id, CommandManager.Uld );
+        public virtual void Draw() {
+            foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Uld );
         }
 
         protected void AddUnknown( int count, string prefix ) {

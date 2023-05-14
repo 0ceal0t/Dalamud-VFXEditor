@@ -1,9 +1,8 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
-using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleSimple : AvfxParticleAttribute {
@@ -209,20 +208,23 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( "Simple" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            if( ImGui.SmallButton( "+ Simple Animation" + parentId ) ) Assign();
+            if( ImGui.SmallButton( "+ Simple Animation" ) ) Assign();
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/Simple";
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( "Simple" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            if( UiUtils.RemoveButton( "Delete" + id, small: true ) ) {
+            if( UiUtils.RemoveButton( "Delete", small: true ) ) {
                 Unassign();
                 return;
             }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawNamedItems( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs );
         }
 
         public override string GetDefaultText() => "Simple Animation";

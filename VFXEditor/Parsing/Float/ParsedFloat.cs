@@ -21,7 +21,7 @@ namespace VfxEditor.Parsing {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Floats[Name] = Value;
@@ -30,7 +30,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputFloat( Name + id, ref value ) ) {
+            if( ImGui.InputFloat( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<float>( this, value ) );
             }
         }

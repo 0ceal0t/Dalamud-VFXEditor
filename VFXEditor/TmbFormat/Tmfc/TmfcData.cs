@@ -1,6 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -59,14 +58,14 @@ namespace VfxEditor.TmbFormat {
 
         public void WriteRows( BinaryWriter writer ) => Rows.ForEach( x => x.Write( writer ) );
 
-        public void Draw( string id ) {
-            Parsed.ForEach( x => x.Draw( id, Command ) );
+        public void Draw() {
+            Parsed.ForEach( x => x.Draw( Command ) );
 
             for( var idx = 0; idx < Rows.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Row {idx}{id}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    ImGui.Indent();
-                    Rows[idx].Draw( $"{id}/{idx}", Command );
-                    ImGui.Unindent();
+                if( ImGui.CollapsingHeader( $"Row {idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    using var _ = ImRaii.PushId( idx );
+                    using var indent = ImRaii.PushIndent();
+                    Rows[idx].Draw( Command );
                 }
             }
         }

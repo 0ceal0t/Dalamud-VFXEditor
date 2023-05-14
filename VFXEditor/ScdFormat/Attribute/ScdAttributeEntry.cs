@@ -1,10 +1,7 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -60,38 +57,35 @@ namespace VfxEditor.ScdFormat {
             Extend4.Write( writer );
         }
 
-        public void Draw( string id ) {
-            Parsed.ForEach( x => x.Draw( id, CommandManager.Scd ) );
+        public void Draw() {
+            Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            if( ImGui.BeginTabBar( $"{id}/Tabs" ) ) {
-                if( ImGui.BeginTabItem( $"Result{id}" ) ) {
-                    ResultFirst.Draw( $"{id}/Result" );
-                    ImGui.EndTabItem();
-                }
 
-                if( ImGui.BeginTabItem( $"Extend 1{id}" ) ) {
-                    Extend1.Draw( $"{id}/Extend1" );
-                    ImGui.EndTabItem();
-                }
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
 
-                if( ImGui.BeginTabItem( $"Extend 2{id}" ) ) {
-                    Extend2.Draw( $"{id}/Extend2" );
-                    ImGui.EndTabItem();
-                }
+            DrawResult();
+            DrawExtendData( "Extend 1", Extend1 );
+            DrawExtendData( "Extend 2", Extend2 );
+            DrawExtendData( "Extend 3", Extend3 );
+            DrawExtendData( "Extend 4", Extend4 );
+        }
 
-                if( ImGui.BeginTabItem( $"Extend 3{id}" ) ) {
-                    Extend3.Draw( $"{id}/Extend3" );
-                    ImGui.EndTabItem();
-                }
+        private void DrawResult() {
+            using var tabItem = ImRaii.TabItem( "Result" );
+            if( !tabItem ) return;
 
-                if( ImGui.BeginTabItem( $"Extend 4{id}" ) ) {
-                    Extend4.Draw( $"{id}/Extend4" );
-                    ImGui.EndTabItem();
-                }
+            using var _ = ImRaii.PushId( "Result" );
+            ResultFirst.Draw();
+        }
 
-                ImGui.EndTabBar();
-            }
+        private static void DrawExtendData( string name, AttributeExtendData extendData ) {
+            using var tabItem = ImRaii.TabItem( name );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( name );
+            extendData.Draw();
         }
     }
 }

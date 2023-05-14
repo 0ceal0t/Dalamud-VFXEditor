@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackAnalysisFlagData : ScdTrackData {
@@ -20,8 +15,6 @@ namespace VfxEditor.ScdFormat {
             Data.ForEach( x => writer.Write( x ) );
         }
 
-        public override void Draw( string parentId ) {
-
-        }
+        public override void Draw() { }
     }
 }

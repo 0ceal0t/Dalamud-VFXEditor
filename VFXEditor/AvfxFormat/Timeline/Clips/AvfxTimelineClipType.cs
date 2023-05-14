@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,14 +32,14 @@ namespace VfxEditor.AvfxFormat {
             writer.Write( Encoding.ASCII.GetBytes( Value ) );
         }
 
-        public void Draw( string id ) {
-            if( ImGui.BeginCombo( "Type" + id, Text ) ) {
-                foreach( var key in IdOptions.Keys ) {
-                    if( ImGui.Selectable( IdOptions[key], Value == key ) ) {
-                        CommandManager.Avfx.Add( new AvfxTimelineClipTypeCommand( this, key ) );
-                    }
+        public void Draw() {
+            using var combo = ImRaii.Combo( "Type", Text );
+            if( !combo ) return;
+
+            foreach( var key in IdOptions.Keys ) {
+                if( ImGui.Selectable( IdOptions[key], Value == key ) ) {
+                    CommandManager.Avfx.Add( new AvfxTimelineClipTypeCommand( this, key ) );
                 }
-                ImGui.EndCombo();
             }
         }
     }

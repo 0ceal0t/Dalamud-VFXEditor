@@ -1,7 +1,6 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -13,39 +12,44 @@ namespace VfxEditor.Ui.Components {
 
         private T DraggingItem;
 
-        public SimpleSplitView( string itemName, List<T> items, bool allowNew, bool allowReorder ) : base( items, allowNew ) {
+        public SimpleSplitView( string itemName, List<T> items, bool allowNew, bool allowReorder ) : base( itemName, items, allowNew ) {
             ItemName = itemName;
             AllowReorder = allowReorder;
         }
 
-        protected override void DrawControls( string id ) {
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) OnNew();
+        protected override void DrawControls() {
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+
+            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) OnNew();
             if( Selected != null ) {
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
                     OnDelete( Selected );
                     Selected = null;
                 }
             }
-            ImGui.PopFont();
         }
 
         protected virtual void OnNew() { }
 
         protected virtual void OnDelete( T item ) { }
 
-        protected override bool DrawLeftItem( T item, int idx, string id ) {
-            if( ImGui.Selectable( $"{GetText( item, idx )}{id}{idx}", item == Selected ) ) Selected = item;
+        protected override bool DrawLeftItem( T item, int idx ) {
+            using( var _ = ImRaii.PushId( idx ) ) {
+                if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
+            }
 
-            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{id}-SPLIT" ) ) return true;
-
+            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{ItemName}-SPLIT" ) ) return true;
             return false;
         }
 
         protected virtual string GetText( T item, int idx ) => $"{ItemName} {idx}";
 
-        protected override void DrawSelected( string id ) => Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        protected override void DrawSelected() {
+            using var _ = ImRaii.PushId( Items.IndexOf( Selected ) );
+            Selected.Draw();
+        }
+
 
         // For drag+drop
 

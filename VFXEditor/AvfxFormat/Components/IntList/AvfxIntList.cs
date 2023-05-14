@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
@@ -60,10 +59,10 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Value ) writer.Write( ( byte )item );
         }
 
-        public override void Draw( string id ) {
+        public override void Draw() {
             // Unassigned
             AssignedCopyPaste( this, Name );
-            if( DrawAddButton( this, Name, id ) ) return;
+            if( DrawAddButton( this, Name ) ) return;
 
             // Copy/Paste
             var manager = CopyManager.Avfx;
@@ -71,11 +70,11 @@ namespace VfxEditor.AvfxFormat {
             if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxIntListCommand( this, val ) );
 
             var value = Value[0];
-            if( ImGui.InputInt( Name + id, ref value ) ) {
+            if( ImGui.InputInt( Name, ref value ) ) {
                 CommandManager.Avfx.Add( new AvfxIntListCommand( this, value ) );
             }
 
-            DrawRemoveContextMenu( this, Name, id );
+            DrawRemoveContextMenu( this, Name );
         }
     }
 }

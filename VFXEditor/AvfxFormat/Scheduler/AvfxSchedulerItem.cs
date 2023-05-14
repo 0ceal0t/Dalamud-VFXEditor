@@ -1,4 +1,4 @@
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -44,11 +44,11 @@ namespace VfxEditor.AvfxFormat {
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/" + Name;
-            DrawRename( id );
-            TimelineSelect.Draw( id );
-            AvfxBase.DrawItems( Display, id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( Name );
+            DrawRename();
+            TimelineSelect.Draw();
+            AvfxBase.DrawItems( Display );
         }
 
         public override string GetDefaultText() => TimelineSelect.GetText();

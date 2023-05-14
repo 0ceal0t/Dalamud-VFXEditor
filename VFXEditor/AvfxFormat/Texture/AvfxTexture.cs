@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using System.Text;
@@ -35,13 +35,13 @@ namespace VfxEditor.AvfxFormat {
             return Path.GetValue();
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Texture";
-            NodeView.Draw( id );
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Texture" );
+            NodeView.Draw();
+            DrawRename();
 
-            Path.Draw( id );
-            Plugin.TextureManager.DrawTexture( UpdateTexture(), id );
+            Path.Draw();
+            Plugin.TextureManager.DrawTexture( UpdateTexture() );
         }
 
         public override void ShowTooltip() {

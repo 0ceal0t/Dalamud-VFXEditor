@@ -1,6 +1,4 @@
-using ImGuiNET;
 using System.Collections.Generic;
-using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
@@ -38,16 +36,6 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk6,
             Unk7
         };
-
-        public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
-            WriteParsed( writer );
-        }
-
-        public override void Draw( string id ) {
-            DrawHeader( id );
-            DrawParsed( id );
-        }
 
         /*
             Unknown 1 can either function as Duration or a general toggle. If Unknown 5 is at 0, this should be at 1 if Time is 0, or can be ignored if Time is >0.

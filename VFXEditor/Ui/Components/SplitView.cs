@@ -1,45 +1,50 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 
 namespace VfxEditor.Ui.Components {
     public abstract class SplitView<T> where T : class {
+        protected readonly string Id;
+
         protected bool AllowNew;
         protected bool DrawOnce = false;
 
         protected readonly List<T> Items;
         protected T Selected = null;
 
-        public SplitView( List<T> items, bool allowNew ) {
+        public SplitView( string id, List<T> items, bool allowNew ) {
+            Id = id;
             Items = items;
             AllowNew = allowNew;
         }
 
-        protected virtual void DrawControls( string id ) { }
+        protected virtual void DrawControls() { }
 
-        protected virtual void DrawLeftColumn( string id ) {
+        protected virtual void DrawLeftColumn() {
             if( Selected != null && !Items.Contains( Selected ) ) Selected = null;
             for( var idx = 0; idx < Items.Count; idx++ ) {
-                if( DrawLeftItem( Items[idx], idx, id ) ) break; // break if list modified
+                if( DrawLeftItem( Items[idx], idx ) ) break; // break if list modified
             }
         }
 
-        protected virtual void DrawRightColumn( string id ) {
+        protected virtual void DrawRightColumn() {
             if( Selected == null ) ImGui.TextDisabled( "Select an item..." );
-            else DrawSelected( id );
+            else DrawSelected();
         }
 
-        protected abstract bool DrawLeftItem( T item, int idx, string id );
+        protected abstract bool DrawLeftItem( T item, int idx);
 
-        protected abstract void DrawSelected( string id );
+        protected abstract void DrawSelected();
 
-        public void Draw( string id ) {
-            ImGui.Columns( 2, id + "/Cols", true );
-            if( AllowNew ) DrawControls( id );
+        public void Draw() {
+            using var _ = ImRaii.PushId( Id );
 
-            ImGui.BeginChild( id + "/Left" );
-            DrawLeftColumn( id );
-            ImGui.EndChild();
+            ImGui.Columns( 2, "Columns", true );
+            if( AllowNew ) DrawControls();
+
+            using( var left = ImRaii.Child( "Left" ) ) {
+                DrawLeftColumn();
+            }
 
             if( !DrawOnce ) {
                 ImGui.SetColumnWidth( 0, 200 );
@@ -47,9 +52,9 @@ namespace VfxEditor.Ui.Components {
             }
             ImGui.NextColumn();
 
-            ImGui.BeginChild( id + "/Right" );
-            DrawRightColumn( id );
-            ImGui.EndChild();
+            using( var left = ImRaii.Child( "Right" ) ) {
+                DrawRightColumn();
+            }
 
             ImGui.Columns( 1 );
         }

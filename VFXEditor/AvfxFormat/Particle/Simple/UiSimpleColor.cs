@@ -1,4 +1,3 @@
-using System;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -12,9 +11,9 @@ namespace VfxEditor.AvfxFormat {
             Color = color;
         }
 
-        public void Draw( string parentId ) {
-            Frame.Draw( parentId, CommandManager.Avfx );
-            Color.Draw( parentId, CommandManager.Avfx );
+        public void Draw() {
+            Frame.Draw( CommandManager.Avfx );
+            Color.Draw( CommandManager.Avfx );
         }
     }
 }

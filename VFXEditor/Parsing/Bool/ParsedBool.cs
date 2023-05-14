@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.IO;
 
 namespace VfxEditor.Parsing {
@@ -21,12 +20,12 @@ namespace VfxEditor.Parsing {
 
         public override void Read( BinaryReader reader, int size ) {
             Size = size;
-            Value = (Size switch {
+            Value = ( Size switch {
                 4 => reader.ReadInt32(),
                 2 => reader.ReadInt16(),
                 1 => reader.ReadByte(),
                 _ => reader.ReadByte()
-            }) == 1;
+            } ) == 1;
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -35,7 +34,7 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )IntValue );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Bools[Name] = Value;
@@ -44,7 +43,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.Checkbox( Name + id, ref value ) ) manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
+            if( ImGui.Checkbox( Name, ref value ) ) manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
         }
     }
 }

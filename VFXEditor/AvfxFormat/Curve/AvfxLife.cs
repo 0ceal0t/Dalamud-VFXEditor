@@ -1,4 +1,4 @@
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -50,15 +50,18 @@ namespace VfxEditor.AvfxFormat {
             WriteNested( writer, Parsed );
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/Life";
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( "Life" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            DrawItems( Display, id );
+            DrawAddButtonRecurse( this, GetDefaultText() );
         }
 
-        public override void DrawUnassigned( string id ) {
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( "Life" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            DrawAddButtonRecurse( this, GetDefaultText(), id );
+            DrawItems( Display );
         }
 
         public override string GetDefaultText() => "Life";

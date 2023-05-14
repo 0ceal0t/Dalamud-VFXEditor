@@ -85,6 +85,7 @@ namespace VfxEditor.FileManager {
             CurrentFile?.Dispose();
             CurrentFile = null;
             Source = null;
+            Unsaved = false;
         }
 
         public void SetReplace( SelectResult result ) { Replace = result; }
@@ -290,7 +291,7 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawExtraColumn() { }
 
         protected void DisplaySourceBar() {
-            using var id = ImRaii.PushId( "Source" );
+            using var _ = ImRaii.PushId( "Source" );
             var sourceString = Source == null ? "" : Source.DisplayString;
 
             // Remove
@@ -313,7 +314,7 @@ namespace VfxEditor.FileManager {
         }
 
         protected void DisplayReplaceBar() {
-            using var id = ImRaii.PushId( "Replace" );
+            using var _ = ImRaii.PushId( "Replace" );
             var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
@@ -357,13 +358,14 @@ namespace VfxEditor.FileManager {
             else {
                 DisplayFileControls();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                CurrentFile.Draw( $"##{Id}" );
+                using var _ = ImRaii.PushId( "Body" );
+                CurrentFile.Draw();
             }
         }
 
         public void DrawRename() {
             Name ??= "";
-            using var id = ImRaii.PushId( "Rename" );
+            using var _ = ImRaii.PushId( "Rename" );
             ImGui.InputTextWithHint( "", ReplaceDisplay, ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
         }
 

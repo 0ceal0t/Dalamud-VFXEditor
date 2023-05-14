@@ -1,14 +1,13 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, ISelectableUiItem {
-        public UiItemSplitView( List<T> items ) : base( items, true, true ) {
+        public UiItemSplitView( string id, List<T> items ) : base( id, items, true, true ) {
             UpdateIdx();
         }
 
@@ -20,29 +19,31 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract void Disable( T item );
 
-        protected override void DrawControls( string id ) {
+        protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( AllowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}{id}" ) ) {
+            if( AllowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) {
                 CommandManager.Avfx.Add( new UiItemSplitViewAddCommand<T>( this, Items ) );
             }
 
             if( Selected != null && AllowDelete ) {
                 if( AllowNew ) ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
                     CommandManager.Avfx.Add( new UiItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }
             }
         }
 
-        protected override bool DrawLeftItem( T item, int idx, string id ) {
-            if( ImGui.Selectable( $"{item.GetText()}{id}{idx}", Selected == item ) ) {
+        protected override bool DrawLeftItem( T item, int idx) {
+            using var _ = ImRaii.PushId( idx );
+
+            if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
                 OnSelect( item );
                 Selected = item;
             }
             return false;
         }
 
-        protected override void DrawSelected( string id ) => Selected.Draw( id );
+        protected override void DrawSelected() => Selected.Draw();
 
         public void UpdateIdx() { for( var i = 0; i < Items.Count; i++ ) Items[i].SetIdx( i ); }
 

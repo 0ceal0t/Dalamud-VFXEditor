@@ -10,6 +10,7 @@ using VfxEditor.Ui;
 using VfxEditor.NodeLibrary;
 using VfxEditor.Select;
 using System.Linq;
+using OtterGui.Raii;
 
 namespace VfxEditor {
     [Serializable]
@@ -150,165 +151,145 @@ namespace VfxEditor {
         }
 
         public override void DrawBody() {
-            var id = "##Settings";
-            if( ImGui.BeginTabBar( $"{id}-TabBar" ) ) {
-                if( ImGui.BeginTabItem( $"Configuration{id}" ) ) {
-                    DrawConfiguration();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Keybinds{id}" ) ) {
-                    DrawKeybinds();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Curve Editor{id}" ) ) {
-                    DrawCurveEditor();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Timeline Editor{id}" ) ) {
-                    DrawTimelineEditor();
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"File Editors{id}" ) ) {
-                    DrawEditorSpecific();
-                    ImGui.EndTabItem();
-                }
+            using var _ = ImRaii.PushId( "##Settings" );
 
-                ImGui.EndTabBar();
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
+
+            if( ImGui.BeginTabItem( "Configuration" ) ) {
+                DrawConfiguration();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Keybinds" ) ) {
+                DrawKeybinds();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Curve Editor" ) ) {
+                DrawCurveEditor();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Timeline Editor" ) ) {
+                DrawTimelineEditor();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "File Editors" ) ) {
+                DrawEditorSpecific();
+                ImGui.EndTabItem();
             }
         }
 
         private void DrawConfiguration() {
-            var id = $"##Settings";
+            using var child = ImRaii.Child( "Config" );
 
-            ImGui.BeginChild( $"{id}-Config" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Indent( 5 );
+            using var indent = ImRaii.PushIndent( 5 );
 
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
-            if( ImGui.InputText( $"Temp file location{id}", ref WriteLocation, 255 ) ) Save();
-            if( ImGui.Checkbox( $"Refresh write location each update{id}", ref UpdateWriteLocation ) ) Save();
-            if( ImGui.Checkbox( $"Log all files{id}", ref LogAllFiles ) ) Save();
-            if( ImGui.Checkbox( $"Log debug information{id}", ref LogDebug ) ) Save();
-            if( ImGui.Checkbox( $"Log Vfx debug information{id}", ref LogVfxDebug ) ) Save();
+            if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
+            if( ImGui.Checkbox( "Refresh write location each update", ref UpdateWriteLocation ) ) Save();
+            if( ImGui.Checkbox( "Log all files", ref LogAllFiles ) ) Save();
+            if( ImGui.Checkbox( "Log debug information", ref LogDebug ) ) Save();
+            if( ImGui.Checkbox( "Log Vfx debug information", ref LogVfxDebug ) ) Save();
 
-            if( ImGui.Checkbox( $"Autosave workspace{id}", ref AutosaveEnabled ) ) Save();
+            if( ImGui.Checkbox( "Autosave workspace", ref AutosaveEnabled ) ) Save();
             ImGui.Indent();
             if( !AutosaveEnabled ) {
                 var style = ImGui.GetStyle();
                 ImGui.PushStyleVar( ImGuiStyleVar.Alpha, style.Alpha * 0.5f );
             }
             ImGui.SetNextItemWidth( 120 );
-            if( ImGui.InputInt( $"Autosave time (seconds){id}", ref AutosaveSeconds ) ) Save();
+            if( ImGui.InputInt( "Autosave time (seconds)", ref AutosaveSeconds ) ) Save();
             if( !AutosaveEnabled ) ImGui.PopStyleVar();
             ImGui.Unindent();
 
-            if( ImGui.Checkbox( $"Hide with UI{id}", ref HideWithUI ) ) Save();
+            if( ImGui.Checkbox( "Hide with UI", ref HideWithUI ) ) Save();
 
-            if( ImGui.Checkbox( $"File picker image preview{id}", ref FilepickerImagePreview ) ) {
+            if( ImGui.Checkbox( "File picker image preview", ref FilepickerImagePreview ) ) {
                 FileDialogManager.ImagePreview = FilepickerImagePreview;
                 Save();
             }
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( $"Recent file limit{id}", ref SaveRecentLimit ) ) {
+            if( ImGui.InputInt( "Recent file limit", ref SaveRecentLimit ) ) {
                 SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
                 Save();
             }
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputFloat( $"Live overlay remove delay time{id}", ref OverlayRemoveDelay ) ) Save();
-            if( ImGui.Checkbox( $"Live overlay limit by distance{id}", ref OverlayLimit ) ) Save();
+            if( ImGui.InputFloat( "Live overlay remove delay time", ref OverlayRemoveDelay ) ) Save();
+            if( ImGui.Checkbox( "Live overlay limit by distance", ref OverlayLimit ) ) Save();
 
             ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( $"Undo history size{id}", ref MaxUndoSize ) ) Save();
+            if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
 
-            if( ImGui.Checkbox( $"Double-click to navigate to items{id}", ref DoubleClickNavigate ) ) Save();
-
-            ImGui.Unindent( 5 );
-            ImGui.EndChild();
+            if( ImGui.Checkbox( "Double-click to navigate to items", ref DoubleClickNavigate ) ) Save();
         }
 
         private void DrawKeybinds() {
             if( ImGui.Checkbox( "Block game inputs when VFXEditor is focused##Settings", ref BlockGameInputsWhenFocused ) ) Save();
 
-            ImGui.BeginChild( "##Settings-Keybinds", new Vector2( -1 ), true );
+            using var child = ImRaii.Child( "Keybinds", new Vector2( -1 ), true );
 
-            if( SaveKeybind.Draw( "Save", "##SaveKeybind" ) ) Save();
-            if( SaveAsKeybind.Draw( "Save as", "##SaveAsKeybind" ) ) Save();
-            if( OpenKeybind.Draw( "Open", "##OpenKeybind" ) ) Save();
-            if( CopyKeybind.Draw( "Copy", "##CopyKeybind" ) ) Save();
-            if( PasteKeybind.Draw( "Paste ", "##PasteKeybind" ) ) Save();
-            if( UndoKeybind.Draw( "Undo", "##UndoKeybind" ) ) Save();
-            if( RedoKeybind.Draw( "Redo ", "##RedoKeybind" ) ) Save();
-            if( UpdateKeybind.Draw( "Update", "##UpdateKeybind" ) ) Save();
-            if( SpawnOnSelfKeybind.Draw( "Spawn on self (Vfx only)", "##SpawnSelfKeybind" ) ) Save();
-            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (Vfx only)", "##SpawnGroundKeybind" ) ) Save();
-            if( SpawnOnTargetKeybind.Draw( "Spawn on target (Vfx only)", "##SpawnTargetKeybind" ) ) Save();
-
-            ImGui.EndChild();
+            if( SaveKeybind.Draw( "Save" ) ) Save();
+            if( SaveAsKeybind.Draw( "Save as" ) ) Save();
+            if( OpenKeybind.Draw( "Open" ) ) Save();
+            if( CopyKeybind.Draw( "Copy" ) ) Save();
+            if( PasteKeybind.Draw( "Paste" ) ) Save();
+            if( UndoKeybind.Draw( "Undo" ) ) Save();
+            if( RedoKeybind.Draw( "Redo " ) ) Save();
+            if( UpdateKeybind.Draw( "Update" ) ) Save();
+            if( SpawnOnSelfKeybind.Draw( "Spawn on self (Vfx only)" ) ) Save();
+            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (Vfx only)" ) ) Save();
+            if( SpawnOnTargetKeybind.Draw( "Spawn on target (Vfx only)" ) ) Save();
         }
 
         private void DrawCurveEditor() {
-            var id = $"##CurveEditorConfig";
+            using var child = ImRaii.Child( "CurveEditor" );
 
-            ImGui.BeginChild( $"{id}-Config" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Indent( 5 );
+            using var indent = ImRaii.PushIndent( 5 );
 
-            if( ImGui.ColorEdit4( $"Line color{id}", ref CurveEditorLineColor ) ) Save();
-            if( ImGui.ColorEdit4( $"Point color{id}", ref CurveEditorPointColor ) ) Save();
-            if( ImGui.ColorEdit4( $"Primary selected color{id}", ref CurveEditorPrimarySelectedColor ) ) Save();
-            if( ImGui.ColorEdit4( $"Selected color{id}", ref CurveEditorSelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
+            if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
+            if( ImGui.ColorEdit4( "Primary selected color", ref CurveEditorPrimarySelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( "Selected color", ref CurveEditorSelectedColor ) ) Save();
 
-            if( ImGui.InputInt( $"Line width{id}", ref CurveEditorLineWidth ) ) Save();
-            if( ImGui.InputInt( $"Color ring width{id}", ref CurveEditorColorRingSize ) ) Save();
-            if( ImGui.InputInt( $"Point size{id}", ref CurveEditorPointSize ) ) Save();
-            if( ImGui.InputInt( $"Primary selected size{id}", ref CurveEditorPrimarySelectedSize ) ) Save();
-            if( ImGui.InputInt( $"Selected size{id}", ref CurveEditorSelectedSize ) ) Save();
-            if( ImGui.InputInt( $"Grab distance{id}", ref CurveEditorGrabbingDistance ) ) Save();
-
-            ImGui.Unindent( 5 );
-            ImGui.EndChild();
+            if( ImGui.InputInt( "Line width", ref CurveEditorLineWidth ) ) Save();
+            if( ImGui.InputInt( "Color ring width", ref CurveEditorColorRingSize ) ) Save();
+            if( ImGui.InputInt( "Point size", ref CurveEditorPointSize ) ) Save();
+            if( ImGui.InputInt( "Primary selected size", ref CurveEditorPrimarySelectedSize ) ) Save();
+            if( ImGui.InputInt( "Selected size", ref CurveEditorSelectedSize ) ) Save();
+            if( ImGui.InputInt( "Grab distance", ref CurveEditorGrabbingDistance ) ) Save();
         }
 
         private void DrawTimelineEditor() {
-            var id = $"##TimelineEditorConfig";
+            using var child = ImRaii.Child( "TimelineEditor" );
 
-            ImGui.BeginChild( $"{id}-Config" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.Indent( 5 );
+            using var indent = ImRaii.PushIndent( 5 );
 
-            if( ImGui.ColorEdit4( $"Selected color{id}", ref TimelineSelectedColor ) ) Save();
-            if( ImGui.ColorEdit4( $"Bar color{id}", ref TimelineBarColor ) ) Save();
-
-            ImGui.Unindent( 5 );
-            ImGui.EndChild();
+            if( ImGui.ColorEdit4( $"Selected color", ref TimelineSelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( $"Bar color", ref TimelineBarColor ) ) Save();
         }
 
         private void DrawEditorSpecific() {
-            var id = $"##EditorSpecific";
-
-            ImGui.BeginChild( $"{id}-Config" );
+            using var child = ImRaii.Child( "EditorSpecific" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             foreach( var config in ManagerConfigs ) {
-                var configId = $"{id}{config.Key}";
+                using var _ = ImRaii.PushId( config.Key );
 
-                if( ImGui.CollapsingHeader( $"{config.Key}{configId}" ) ) {
-                    ImGui.Indent( 5 );
+                if( ImGui.CollapsingHeader( config.Key ) ) {
+                    using var indent = ImRaii.PushIndent( 5 );
 
-                    ImGui.Checkbox( $"Use custom window color{configId}", ref config.Value.UseCustomWindowColor );
+                    ImGui.Checkbox( "Use custom window color", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {
-                        if( ImGui.ColorEdit4( $"Background{configId}", ref config.Value.TitleBg ) ) Save();
-                        if( ImGui.ColorEdit4( $"Active{configId}", ref config.Value.TitleBgActive ) ) Save();
-                        if( ImGui.ColorEdit4( $"Collapsed{configId}", ref config.Value.TitleBgCollapsed ) ) Save();
+                        if( ImGui.ColorEdit4( "Background", ref config.Value.TitleBg ) ) Save();
+                        if( ImGui.ColorEdit4( "Active", ref config.Value.TitleBgActive ) ) Save();
+                        if( ImGui.ColorEdit4( "Collapsed", ref config.Value.TitleBgCollapsed ) ) Save();
                     }
-
-                    ImGui.Unindent( 5 );
                 }
             }
-
-            ImGui.EndChild();
         }
     }
 }

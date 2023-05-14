@@ -6,7 +6,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Timeline {
     public class UldTimelineDropdown : Dropdown<UldTimeline> {
-        public UldTimelineDropdown( List<UldTimeline> items ) : base( items, true ) { }
+        public UldTimelineDropdown( List<UldTimeline> items ) : base( "Timeline", items, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldTimeline>( Items, new UldTimeline() ) );
@@ -16,9 +16,9 @@ namespace VfxEditor.UldFormat.Timeline {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldTimeline>( Items, item ) );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw();
             else ImGui.Text( "Select a timeline..." );
         }
 

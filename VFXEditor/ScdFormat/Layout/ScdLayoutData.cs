@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -14,6 +10,6 @@ namespace VfxEditor.ScdFormat {
 
         public void Write( BinaryWriter writer ) => Parsed.ForEach( x => x.Write( writer ) );
 
-        public void Draw( string parentId ) => Parsed.ForEach( x => x.Draw( parentId, CommandManager.Scd ) );
+        public void Draw() => Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
     }
 }

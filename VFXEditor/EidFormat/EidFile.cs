@@ -36,9 +36,9 @@ namespace VfxEditor.EidFormat {
             foreach( var bindPoint in BindPoints ) bindPoint.Write( writer );
         }
 
-        public override void Draw( string id ) {
+        public override void Draw() {
             ImGui.Separator();
-            Dropdown.Draw( id );
+            Dropdown.Draw();
         }
     }
 }

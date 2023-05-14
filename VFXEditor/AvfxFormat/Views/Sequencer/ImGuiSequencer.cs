@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
             UpdateIdx();
         }
 
-        public void Draw( string parentId ) {
+        public void Draw() {
             var io = ImGui.GetIO();
             var cursorX = ( int )io.MousePos.X;
             var cursorY = ( int )io.MousePos.Y;
@@ -453,9 +453,8 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             if( Selected != null ) {
-                ImGui.BeginChild( $"{parentId}-Child" );
-                Selected.Draw( parentId );
-                ImGui.EndChild();
+                using var child = ImRaii.Child( "Child" );
+                Selected.Draw();
             }
             else {
                 ImGui.Text( "Select an item..." );

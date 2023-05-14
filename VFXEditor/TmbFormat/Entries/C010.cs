@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
@@ -51,26 +52,20 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk5
         };
 
-        public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
-            WriteParsed( writer );
-        }
+        public override void Draw() {
+            DrawHeader();
 
-        public override void Draw( string id ) {
-            DrawHeader( id );
+            Flags.Draw( Command );
 
-            Flags.Draw( id, Command );
+            using( var disabled = ImRaii.Disabled( !Flags.HasFlag( AnimationFlags.TimeControlEnabled ) ) ) {
+                Duration.Draw( Command );
+                AnimationStart.Draw( Command );
+                AnimationEnd.Draw( Command );
+            }
 
-            var timeControlEnabled = Flags.HasFlag( AnimationFlags.TimeControlEnabled );
-            if( !timeControlEnabled ) ImGui.BeginDisabled();
-            Duration.Draw( id, Command );
-            AnimationStart.Draw( id, Command );
-            AnimationEnd.Draw( id, Command );
-            if( !timeControlEnabled ) ImGui.EndDisabled();
-
-            Unk1.Draw(id, Command);
-            Path.Draw( id, Command );
-            Unk5.Draw(id, Command );
+            Unk1.Draw( Command );
+            Path.Draw( Command );
+            Unk5.Draw( Command );
         }
     }
 }

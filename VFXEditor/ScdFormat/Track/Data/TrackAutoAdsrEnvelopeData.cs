@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -27,11 +24,11 @@ namespace VfxEditor.ScdFormat {
             ReleaseTime.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            AttackTime.Draw( parentId, CommandManager.Scd );
-            DecayTime.Draw( parentId, CommandManager.Scd );
-            SustainLevel.Draw( parentId, CommandManager.Scd );
-            ReleaseTime.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            AttackTime.Draw( CommandManager.Scd );
+            DecayTime.Draw( CommandManager.Scd );
+            SustainLevel.Draw( CommandManager.Scd );
+            ReleaseTime.Draw( CommandManager.Scd );
         }
     }
 }

@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;
 
-        public readonly string Id;
+        public readonly string Name;
         public readonly string DefaultText;
         public readonly string DefaultPath;
         private readonly bool AllowNew;
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat {
             AllowNew = allowNew;
             AllowDelete = allowDelete;
 
-            Id = $"##{name}";
+            Name = name;
             DefaultText = $"Select {UiUtils.GetArticle( name )} {name}";
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
         }
@@ -37,18 +37,20 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract T Read( BinaryReader reader, int size );
 
-        public void Draw( string parentId = "" ) {
+        public void Draw() {
+            using var _ = ImRaii.PushId( Name );
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ViewSelect();
 
             if( AllowNew ) ImGui.SameLine();
-            IUiNodeView<T>.DrawControls( this, File, parentId );
+            IUiNodeView<T>.DrawControls( this, File );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            Selected?.Draw( Id );
+            Selected?.Draw();
         }
 
         public void ViewSelect() {
@@ -59,12 +61,12 @@ namespace VfxEditor.AvfxFormat {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 var index = Selected == null ? -1 : Group.Items.IndexOf( Selected );
-                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}{Id}-Left", new Vector4( 1 ), Selected != null && index > 0 ) ) {
+                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}", new Vector4( 1 ), Selected != null && index > 0 ) ) {
                     Selected = Group.Items[index - 1];
                     OnSelect( Selected );
                 }
                 ImGui.SameLine();
-                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronRight}{Id}-Right", new Vector4( 1 ), Selected != null && index < ( Group.Items.Count - 1 ) ) ) {
+                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronRight}", new Vector4( 1 ), Selected != null && index < ( Group.Items.Count - 1 ) ) ) {
                     Selected = Group.Items[index + 1];
                     OnSelect( Selected );
                 }
@@ -74,10 +76,12 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetNextItemWidth( inputSize );
 
             var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
-            if( ImGui.BeginCombo( $"{Id}/Select", selectedString ) ) {
+            if( ImGui.BeginCombo( "##Select", selectedString ) ) {
                 for( var idx = 0; idx < Group.Items.Count; idx++ ) {
+                    using var _ = ImRaii.PushId( idx );
+
                     var item = Group.Items[idx];
-                    if( ImGui.Selectable( $"{item.GetText()}{Id}{idx}", Selected == item ) ) {
+                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
                         Selected = item;
                         OnSelect( Selected );
                     }

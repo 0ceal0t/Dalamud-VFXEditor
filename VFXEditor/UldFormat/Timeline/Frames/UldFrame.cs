@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -49,13 +49,12 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             writer.BaseStream.Position = finalPos;
         }
 
-        public void Draw( string id ) {
-            StartFrame.Draw( id, CommandManager.Uld );
-            EndFrame.Draw( id, CommandManager.Uld );
+        public void Draw() {
+            StartFrame.Draw( CommandManager.Uld );
+            EndFrame.Draw( CommandManager.Uld );
 
-            ImGui.BeginChild( id, new Vector2( -1, -1 ), true );
-            KeyGroupView.Draw( $"{id}/Keys" );
-            ImGui.EndChild();
+            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            KeyGroupView.Draw();
         }
     }
 }

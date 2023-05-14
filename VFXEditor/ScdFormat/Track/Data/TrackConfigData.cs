@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public enum TrackCmdConfigType {
-        NOP,
         IntervalType,
         IntervalTypeFloat = 1
     }
@@ -17,7 +12,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedEnum<TrackCmdConfigType> Type = new( "Type", size: 2 );
         private ushort Count;
         private ushort DataSingle;
-        private List<ushort> DataList = new();
+        private readonly List<ushort> DataList = new();
 
         public override void Read( BinaryReader reader ) {
             Type.Read( reader );
@@ -43,8 +38,8 @@ namespace VfxEditor.ScdFormat {
             }
         }
 
-        public override void Draw( string parentId ) {
-            Type.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Type.Draw( CommandManager.Scd );
         }
     }
 }

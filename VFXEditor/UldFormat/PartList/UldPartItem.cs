@@ -34,8 +34,8 @@ namespace VfxEditor.UldFormat.PartList {
             H.Write( writer );
         }
 
-        public void Draw( string id ) {
-            TextureId.Draw( id, CommandManager.Uld );
+        public void Draw() {
+            TextureId.Draw( CommandManager.Uld );
 
             var currentTexture = CurrentTexture;
             if( currentTexture != null ) {
@@ -43,10 +43,10 @@ namespace VfxEditor.UldFormat.PartList {
                 if( !string.IsNullOrEmpty( path ) ) Plugin.TextureManager.DrawTextureUv( path, U.Value, V.Value, W.Value, H.Value );
             }
 
-            U.Draw( id, CommandManager.Uld );
-            V.Draw( id, CommandManager.Uld );
-            W.Draw( id, CommandManager.Uld );
-            H.Draw( id, CommandManager.Uld );
+            U.Draw( CommandManager.Uld );
+            V.Draw( CommandManager.Uld );
+            W.Draw( CommandManager.Uld );
+            H.Draw( CommandManager.Uld );
         }
     }
 }

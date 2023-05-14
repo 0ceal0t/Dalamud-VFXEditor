@@ -7,6 +7,7 @@ using VfxEditor.Utils;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.TmbFormat.Actor;
+using OtterGui.Raii;
 
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {
@@ -100,31 +101,39 @@ namespace VfxEditor.TmbFormat {
             writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
         }
 
-        public override void Draw( string id ) {
+        public override void Draw() {
             var maxDanger = Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
             if( maxDanger == DangerLevel.DontAddRemove ) DontAddRemoveWarning();
             else if( maxDanger == DangerLevel.Detectable || Tmfcs.Count > 0 ) DetectableWarning();
 
-            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    HeaderTmdh.Draw( id );
-                    HeaderTmpp.Draw( id );
-                    // Don't need to draw TMAL
-                    ImGui.EndTabItem();
-                }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
 
-                if( ImGui.BeginTabItem( $"Actors{id}" ) ) {
-                    ActorsDropdown.Draw( id );
-                    ImGui.EndTabItem();
-                }
+            DrawParameters();
+            DrawActors();
+            DrawTmfc();
+        }
 
-                if( ImGui.BeginTabItem( $"TMFC{id}" ) ) {
-                    TmfcDropdown.Draw( id );
-                    ImGui.EndTabItem();
-                }
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
 
-                ImGui.EndTabBar();
-            }
+            HeaderTmdh.Draw();
+            HeaderTmpp.Draw();
+        }
+
+        private void DrawActors() {
+            using var tabItem = ImRaii.TabItem( "Actors" );
+            if( !tabItem ) return;
+
+            ActorsDropdown.Draw();
+        }
+
+        private void DrawTmfc() {
+            using var tabItem = ImRaii.TabItem( "TMFC" );
+            if( !tabItem ) return;
+
+            TmfcDropdown.Draw();
         }
 
         public void RefreshIds() {

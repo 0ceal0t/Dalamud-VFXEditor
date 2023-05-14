@@ -5,7 +5,7 @@ namespace VfxEditor.AvfxFormat {
     public class UiTimelineClipSplitView : UiItemSplitView<AvfxTimelineClip> {
         public readonly AvfxTimeline Timeline;
 
-        public UiTimelineClipSplitView( List<AvfxTimelineClip> items, AvfxTimeline timeline ) : base( items ) {
+        public UiTimelineClipSplitView( List<AvfxTimelineClip> items, AvfxTimeline timeline ) : base( "Clips", items ) {
             Timeline = timeline;
         }
 

@@ -1,10 +1,9 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTimeline : AvfxNode {
@@ -94,33 +93,40 @@ namespace VfxEditor.AvfxFormat {
             foreach( var clip in Clips ) clip.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Timeline";
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Timeline" );
+            DrawRename();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
-                    DrawParameters( id + "/Params" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Items" + id ) ) {
-                    ItemSplit.Draw( id + "/Items" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Clips" + id ) ) {
-                    ClipSplit.Draw( id + "/Clips" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters();
+            DrawItems();
+            DrawClips();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            BinderSelect.Draw( id );
-            DrawItems( Display, id );
-            ImGui.EndChild();
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
+
+            using var child = ImRaii.Child( "Child" );
+            BinderSelect.Draw();
+            DrawItems( Display );
+        }
+
+        private void DrawItems() {
+            using var tabItem = ImRaii.TabItem( "Items" );
+            if( !tabItem ) return;
+
+            ItemSplit.Draw();
+        }
+
+        private void DrawClips() {
+            using var tabItem = ImRaii.TabItem( "Clips" );
+            if( !tabItem ) return;
+
+            ClipSplit.Draw();
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {

@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,19 +68,22 @@ namespace VfxEditor.AvfxFormat {
             ExportUi = new ExportDialog( this );
         }
 
-        public override void Draw( string id ) {
-            if( ImGui.BeginTabBar( "##MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                DrawView( Main, "Parameters" );
-                DrawView( ScheduleView, "Scheduler" );
-                DrawView( TimelineView, "Timelines" );
-                DrawView( EmitterView, "Emitters" );
-                DrawView( ParticleView, "Particles" );
-                DrawView( EffectorView, "Effectors" );
-                DrawView( BinderView, "Binders" );
-                DrawView( TextureView, "Textures" );
-                DrawView( ModelView, "Models" );
-                ImGui.EndTabBar();
-            }
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Main" );
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawView( Main, "Parameters" );
+            DrawView( ScheduleView, "Scheduler" );
+            DrawView( TimelineView, "Timelines" );
+            DrawView( EmitterView, "Emitters" );
+            DrawView( ParticleView, "Particles" );
+            DrawView( EffectorView, "Effectors" );
+            DrawView( BinderView, "Binders" );
+            DrawView( TextureView, "Textures" );
+            DrawView( ModelView, "Models" );
+
             ExportUi.Draw();
         }
 
@@ -92,7 +96,7 @@ namespace VfxEditor.AvfxFormat {
             if( forceOpen ) ForceOpenTabs.Remove( view );
             var flags = forceOpen ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
             if( ImGuiNative.igBeginTabItem( labelRef, null, flags ) == 1 ) {
-                view.Draw( "" );
+                view.Draw();
                 ImGuiNative.igEndTabItem();
             }
         }

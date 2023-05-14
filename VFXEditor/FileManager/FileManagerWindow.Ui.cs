@@ -18,7 +18,7 @@ namespace VfxEditor.FileManager {
 
             CheckKeybinds();
 
-            using var id = ImRaii.PushId( $"##{Id}" );
+            using var _ = ImRaii.PushId( $"##{Id}" );
             DrawMenu();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
             DrawTabs();
@@ -55,12 +55,12 @@ namespace VfxEditor.FileManager {
             drawlist.AddLine( pos1, new Vector2( pos2.X - ImGui.GetStyle().ItemSpacing.X + 4 - offset, pos1.Y ), color, 1 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 4 );
 
-            using var id = ImRaii.PushId( "Tabs" );
+            using var _ = ImRaii.PushId( "Tabs" );
             using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable );
             if( !tabBar ) return;
 
             for( var i = 0; i < Documents.Count; i++ ) {
-                using var _ = ImRaii.PushId( i );
+                using var __ = ImRaii.PushId( i );
                 var document = Documents[i];
 
                 var open = true;
@@ -94,7 +94,7 @@ namespace VfxEditor.FileManager {
         }
 
         private void DrawTabsDropdown() {
-            using var id = ImRaii.PushId( "Combo" );
+            using var _ = ImRaii.PushId( "Combo" );
 
             using var color = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 0 ) );
@@ -104,7 +104,7 @@ namespace VfxEditor.FileManager {
             if( !combo ) return;
 
             for( var i = 0; i < Documents.Count; i++ ) {
-                using var _ = ImRaii.PushId( i );
+                using var __ = ImRaii.PushId( i );
                 var document = Documents[i];
                 if( ImGui.Selectable( document.DisplayName, document == ActiveDocument ) ) SelectDocument( document );
             }

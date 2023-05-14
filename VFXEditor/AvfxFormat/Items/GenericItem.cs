@@ -6,6 +6,6 @@ namespace VfxEditor.AvfxFormat {
 
         public virtual string GetText() => GetDefaultText();
 
-        public abstract void Draw( string parentId );
+        public abstract void Draw();
     }
 }

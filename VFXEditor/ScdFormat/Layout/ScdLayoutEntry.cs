@@ -1,11 +1,8 @@
-using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -122,16 +119,17 @@ namespace VfxEditor.ScdFormat {
             };
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
 
-            Parsed.ForEach( x => x.Draw( id, CommandManager.Scd ) );
+            Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            Data?.Draw( $"{id}/Data" );
+            using var _ = ImRaii.PushId( "Data" );
+            Data?.Draw();
         }
     }
 }

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,8 +31,8 @@ namespace VfxEditor.AvfxFormat {
                 TriggerCount
             };
 
-            ItemSplit = new( Items, this, true );
-            TriggerSplit = new( Triggers, this, false );
+            ItemSplit = new( "ItEm", Items, this, true );
+            TriggerSplit = new( "Trgr", Triggers, this, false );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -87,20 +88,28 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Scheduler";
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Scheduler" );
 
-            if( ImGui.BeginTabBar( id + "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Items" + id ) ) {
-                    ItemSplit.Draw( id + "/Item" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Triggers" + id ) ) {
-                    TriggerSplit.Draw( id + "/Trigger" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawItems();
+            DrawTriggers();
+        }
+
+        private void DrawItems() {
+            using var tabItem = ImRaii.TabItem( "Items" );
+            if( !tabItem ) return;
+
+            ItemSplit.Draw();
+        }
+
+        private void DrawTriggers() {
+            using var tabItem = ImRaii.TabItem( "Triggers" );
+            if( !tabItem ) return;
+
+            TriggerSplit.Draw();
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {

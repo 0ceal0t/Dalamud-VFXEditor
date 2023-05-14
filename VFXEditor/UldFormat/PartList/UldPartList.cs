@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -30,29 +30,30 @@ namespace VfxEditor.UldFormat.PartList {
             foreach( var part in Parts ) part.Write( writer );
         }
 
-        public override void Draw( string id ) {
-            DrawRename( id );
-            Id.Draw( id, CommandManager.Uld );
+        public override void Draw() {
+            DrawRename();
+            Id.Draw( CommandManager.Uld );
 
             for( var idx = 0; idx < Parts.Count; idx++ ) {
+                using var _ = ImRaii.PushId( idx );
+
                 var item = Parts[idx];
                 var currentTexture = item.CurrentTexture;
                 var text = currentTexture != null ? currentTexture.GetText() : $"Texture {item.TextureId.Value}";
 
-                if( ImGui.CollapsingHeader( $"Part {idx} ({text})#{id}{idx}" ) ) {
-                    ImGui.Indent();
+                if( ImGui.CollapsingHeader( $"Part {idx} ({text})###{idx}" ) ) {
+                    using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( $"Delete{id}{idx}", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
                         CommandManager.Uld.Add( new GenericRemoveCommand<UldPartItem>( Parts, item ) );
-                        ImGui.Unindent(); break;
+                        break;
                     }
 
-                    item.Draw( $"{id}{idx}" );
-                    ImGui.Unindent();
+                    item.Draw();
                 }
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) { // NEW
+            if( ImGui.Button( "+ New" ) ) { // NEW
                 CommandManager.Uld.Add( new GenericAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
             }
         }

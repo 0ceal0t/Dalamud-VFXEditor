@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -122,23 +122,23 @@ namespace VfxEditor.AvfxFormat {
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/Item";
-            DrawRename( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Item" );
+            DrawRename();
 
-            if( IsParticle ) ParticleSelect.Draw( id );
-            else EmitterSelect.Draw( id );
+            if( IsParticle ) ParticleSelect.Draw();
+            else EmitterSelect.Draw();
 
-            AvfxBase.DrawItems( Display, id );
+            AvfxBase.DrawItems( Display );
 
-            ParentInfluenceCoord.Draw( id );
+            ParentInfluenceCoord.Draw();
             var influenceType = ParentInfluenceCoord.GetValue();
             var allowOptions = influenceType == ParentInfluenceCoordOptions.InitialPosition_WithOptions || influenceType == ParentInfluenceCoordOptions.WithOptions_NoPosition;
             if( !allowOptions ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            AvfxBase.DrawItems( CoordOptionsDisplay, id );
+            AvfxBase.DrawItems( CoordOptionsDisplay );
             if( !allowOptions ) ImGui.PopStyleVar();
 
-            AvfxBase.DrawItems( Display2, id );
+            AvfxBase.DrawItems( Display2 );
         }
 
         public override string GetDefaultText() => IsParticle ? ParticleSelect.GetText() : EmitterSelect.GetText();

@@ -46,7 +46,7 @@ namespace VfxEditor.Penumbra {
         }
 
         public override void DrawBody() {
-            using var id = ImRaii.PushId( "Penumbra" );
+            using var _ = ImRaii.PushId( "Penumbra" );
 
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 

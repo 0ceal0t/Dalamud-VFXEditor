@@ -39,7 +39,7 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
@@ -52,7 +52,7 @@ namespace VfxEditor.Parsing {
                 var intFlagValue = ( int )( object )option;
                 if( intFlagValue == 0 ) continue;
                 var hasFlag = HasFlag( option );
-                if( ImGui.Checkbox( $"{option}{id}", ref hasFlag ) ) {
+                if( ImGui.Checkbox( $"{option}", ref hasFlag ) ) {
                     var intValue = ( int )( object )Value;
                     if( hasFlag ) intValue |= intFlagValue;
                     else intValue &= ~intFlagValue;

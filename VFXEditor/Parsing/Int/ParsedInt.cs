@@ -33,7 +33,7 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )Value );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = Value;
@@ -42,7 +42,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputInt( Name + id, ref value ) ) {
+            if( ImGui.InputInt( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<int>( this, value ) );
             }
         }

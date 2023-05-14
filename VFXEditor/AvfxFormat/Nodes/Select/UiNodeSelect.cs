@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.Ui.Interfaces;
@@ -25,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract void UnlinkOnIndexChange();
 
-        public abstract void Draw( string id );
+        public abstract void Draw();
 
         // For when something happens to the selector
 
@@ -163,12 +162,12 @@ namespace VfxEditor.AvfxFormat {
             UpdateLiteral();
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Node/" + Name;
+        public override void Draw() {
+            using var _ = ImRaii.PushId( $"Node{Name}" );
 
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
+            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
             var copy = CopyManager.Avfx;
@@ -182,15 +181,15 @@ namespace VfxEditor.AvfxFormat {
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
 
             ImGui.SetNextItemWidth( inputSize );
-            DrawCombo( id );
+            DrawCombo();
 
-            AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+            AvfxBase.DrawRemoveContextMenu( Literal, Name );
 
             // Draw go button
             ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
             }
 
             UiUtils.Tooltip( "Navigate to selected node" );
@@ -199,8 +198,8 @@ namespace VfxEditor.AvfxFormat {
             ImGui.Text( Name );
         }
 
-        private void DrawCombo( string id ) {
-            using var combo = ImRaii.Combo( $"{id}/MainInput", GetText() );
+        private void DrawCombo() {
+            using var combo = ImRaii.Combo( "##MainCombo", GetText() );
             if( !combo ) return;
 
             if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector

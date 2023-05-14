@@ -5,6 +5,7 @@ using VfxEditor.Utils;
 using VfxEditor.Interop;
 using VfxEditor.TmbFormat;
 using VfxEditor.Parsing;
+using OtterGui.Raii;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
@@ -49,16 +50,16 @@ namespace VfxEditor.PapFormat {
 
         public string GetName() => Name.Value;
 
-        public void Draw( string parentId, int modelId, SkeletonType modelType ) {
-            Name.Draw( parentId, CommandManager.Pap );
-            Unk1.Draw( parentId, CommandManager.Pap );
-            Unk2.Draw( parentId, CommandManager.Pap );
+        public void Draw( int modelId, SkeletonType modelType ) {
+            Name.Draw( CommandManager.Pap );
+            Unk1.Draw( CommandManager.Pap );
+            Unk2.Draw( CommandManager.Pap );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             ImGui.Text( $"This animation has Havok index: {HavokIndex}" );
 
-            if( ImGui.Button( $"Replace Havok data{parentId}" ) ) {
+            if( ImGui.Button( $"Replace Havok data" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
@@ -72,16 +73,18 @@ namespace VfxEditor.PapFormat {
                 } );
             }
 
-            ImGui.BeginTabBar( "AnimationTabls" );
-            DrawTmb( parentId );
-            DrawAnimation3D( parentId, modelId, modelType );
-            ImGui.EndTabBar();
+            using var tabBar = ImRaii.TabBar( "AnimationTabs" );
+            if( !tabBar ) return;
+
+            DrawTmb();
+            DrawAnimation3D( modelId, modelType );
         }
 
-        private void DrawTmb( string parentId ) {
-            if( !ImGui.BeginTabItem( "TMB" + parentId ) ) return;
+        private void DrawTmb() {
+            using var tabItem = ImRaii.TabItem( "TMB" );
+            if( !tabItem ) return;
 
-            if( ImGui.Button( $"Replace TMB{parentId}" ) ) {
+            if( ImGui.Button( "Replace TMB" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
@@ -91,18 +94,19 @@ namespace VfxEditor.PapFormat {
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( $"Export TMB{parentId}" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+            if( ImGui.Button( "Export TMB" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            Tmb.Draw( parentId + "/Tmb" );
 
-            ImGui.EndTabItem();
+            using var _ = ImRaii.PushId( "Tmb" );
+            Tmb.Draw();
         }
 
-        private void DrawAnimation3D( string parentId, int modelId, SkeletonType modelType ) {
-            if( !ImGui.BeginTabItem( "3D View" + parentId ) ) return;
+        private void DrawAnimation3D( int modelId, SkeletonType modelType ) {
+            using var tabItem = ImRaii.TabItem( "3D View" );
+            if( !tabItem ) return;
+
             Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, modelType );
-            ImGui.EndTabItem();
         }
     }
 }

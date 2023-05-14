@@ -9,7 +9,7 @@ namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {
         private readonly TmbFile File;
 
-        public TmfcDropdown( TmbFile file ) : base( file.Tmfcs, false ) {
+        public TmfcDropdown( TmbFile file ) : base( "Tmfc", file.Tmfcs, false ) {
             File = file;
         }
 
@@ -30,9 +30,9 @@ namespace VfxEditor.TmbFormat {
             File.Command.Add( command );
         }
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw( );
             else ImGui.Text( "Select a TMFC..." );
         }
     }

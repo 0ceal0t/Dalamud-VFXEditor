@@ -43,10 +43,10 @@ namespace VfxEditor.AvfxFormat {
             if( FixedSize != -1 ) WritePad( writer, FixedSize - bytes.Length );
         }
 
-        public override void Draw( string id ) {
+        public override void Draw() {
             // Unassigned
             AssignedCopyPaste( this, Name );
-            if( DrawAddButton( this, Name, id ) ) return;
+            if( DrawAddButton( this, Name ) ) return;
 
             // Copy/Paste
             var manager = CopyManager.Avfx;
@@ -56,12 +56,14 @@ namespace VfxEditor.AvfxFormat {
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
             var removeSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Trash );
 
+            using var _ = ImRaii.PushId( Name );
+
             // Input
             var inputSize = UiUtils.GetOffsetInputSize( checkSize + ( ShowRemoveButton ? removeSize : 0 ) );
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputText( $"{id}/MainInput", ref InputString, 256 );
+            ImGui.InputText( "##Input", ref InputString, 256 );
 
-            DrawRemoveContextMenu( this, Name, id );
+            DrawRemoveContextMenu( this, Name );
 
             var imguiStyle = ImGui.GetStyle();
 
@@ -69,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" + id ) ) {
+                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" ) ) {
                     var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
                     CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
                 }
@@ -81,7 +83,7 @@ namespace VfxEditor.AvfxFormat {
             if( ShowRemoveButton ) {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
                 }
 
                 UiUtils.Tooltip( "Unassign field" );

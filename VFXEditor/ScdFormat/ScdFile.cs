@@ -1,5 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,54 +77,74 @@ namespace VfxEditor.ScdFormat {
             AttributeView = new( "Attribute", Attributes, false, false );
         }
 
-        public override void Draw( string id ) {
-            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Audio{id}" ) ) {
-                    DrawSounds( id );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Sounds{id}" ) ) {
-                    SoundView.Draw( $"{id}/Sounds" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Layouts{id}" ) ) {
-                    LayoutView.Draw( $"{id}/Layouts" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Tracks{id}" ) ) {
-                    TrackView.Draw( $"{id}/Tacks" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Attributes{id}" ) ) {
-                    AttributeView.Draw( $"{id}/Attributes" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+        public override void Draw() {
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawAudio();
+            DrawSounds();
+            DrawLayouts();
+            DrawTracks();
+            DrawAttributes();
         }
 
-        private void DrawSounds( string id ) {
-            if( ImGui.CollapsingHeader( "Settings##Audio" ) ) {
-                ImGui.Indent();
+        private void DrawAudio() {
+            using var tabItem = ImRaii.TabItem( "Audio" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Audio" );
+
+            if( ImGui.CollapsingHeader( "Settings#" ) ) {
+                using var indent = ImRaii.PushIndent();
 
                 ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
-                if( ImGui.Checkbox( $"Loop Music{id}", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
-                if( ImGui.Checkbox( $"Loop Sound Effects{id}", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
-                if( ImGui.Checkbox( $"Simulate Loop Start/End{id}", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "Loop Music", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "Loop Sound Effects", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "Simulate Loop Start/End", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
                 ImGui.SetNextItemWidth( 50 );
-                if( ImGui.InputFloat( $"Volume{id}", ref Plugin.Configuration.ScdVolume ) ) {
+                if( ImGui.InputFloat( "Volume", ref Plugin.Configuration.ScdVolume ) ) {
                     Plugin.Configuration.Save();
                     Audio.ForEach( x => x.Player.UpdateVolume() );
                 }
-
-                ImGui.Unindent();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
-            AudioSplitView.Draw( id + "/Audio" );
+            AudioSplitView.Draw();
+        }
+
+        private void DrawSounds() {
+            using var tabItem = ImRaii.TabItem( "Sounds" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Sounds" );
+            SoundView.Draw();
+        }
+
+        private void DrawLayouts() {
+            using var tabItem = ImRaii.TabItem( "Layouts" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Layouts" );
+            LayoutView.Draw();
+        }
+
+        private void DrawTracks() {
+            using var tabItem = ImRaii.TabItem( "Tracks" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Tracks" );
+            TrackView.Draw();
+        }
+
+        private void DrawAttributes() {
+            using var tabItem = ImRaii.TabItem( "Attributes" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Attributes" );
+            AttributeView.Draw();
         }
 
         public override void Write( BinaryWriter writer ) {

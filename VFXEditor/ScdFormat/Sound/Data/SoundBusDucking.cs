@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
+using OtterGui.Raii;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat.Sound.Data
-{
-    public class SoundBusDucking
-    {
+namespace VfxEditor.ScdFormat.Sound.Data {
+    public class SoundBusDucking {
         private byte Size = 0x10;
         public readonly ParsedByte Number = new( "Number" );
         private readonly ParsedReserve Reserve1 = new( 2 );
@@ -17,8 +11,7 @@ namespace VfxEditor.ScdFormat.Sound.Data
         public readonly ParsedFloat Volume = new( "Volume" );
         private uint Reserve2;
 
-        public void Read( BinaryReader reader )
-        {
+        public void Read( BinaryReader reader ) {
             Size = reader.ReadByte();
             Number.Read( reader );
             Reserve1.Read( reader );
@@ -27,8 +20,7 @@ namespace VfxEditor.ScdFormat.Sound.Data
             Reserve2 = reader.ReadUInt32();
         }
 
-        public void Write( BinaryWriter writer )
-        {
+        public void Write( BinaryWriter writer ) {
             writer.Write( Size );
             Number.Write( writer );
             Reserve1.Write( writer );
@@ -37,11 +29,12 @@ namespace VfxEditor.ScdFormat.Sound.Data
             writer.Write( Reserve2 );
         }
 
-        public void Draw( string parentId )
-        {
-            Number.Draw( parentId, CommandManager.Scd );
-            FadeTime.Draw( parentId, CommandManager.Scd );
-            Volume.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            using var _ = ImRaii.PushId( "BusDucking" );
+
+            Number.Draw( CommandManager.Scd );
+            FadeTime.Draw( CommandManager.Scd );
+            Volume.Draw( CommandManager.Scd );
         }
     }
 }

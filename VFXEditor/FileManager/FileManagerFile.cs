@@ -11,7 +11,7 @@ namespace VfxEditor.FileManager {
 
         public bool IsVerified() => Verified;
 
-        public abstract void Draw( string id );
+        public abstract void Draw();
 
         public abstract void Write( BinaryWriter writer );
 

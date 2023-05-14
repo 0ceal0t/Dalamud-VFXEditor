@@ -1,9 +1,6 @@
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -33,12 +30,13 @@ namespace VfxEditor.ScdFormat {
             Items.ForEach( x => x.Write( writer ) );
         }
 
-        public override void Draw( string parentId ) {
-            Version.Draw( parentId, CommandManager.Scd );
-            Unk1.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Version.Draw( CommandManager.Scd );
+            Unk1.Draw( CommandManager.Scd );
 
             for( var idx = 0; idx < Items.Count; idx++ ) {
-                Items[idx].Draw( $"{parentId}{idx}" );
+                using var _ = ImRaii.PushId( idx );
+                Items[idx].Draw();
             }
         }
     }
@@ -63,11 +61,11 @@ namespace VfxEditor.ScdFormat {
             Unk2.Write( writer );
         }
 
-        public void Draw( string parentId ) {
-            BankNumber.Draw( parentId, CommandManager.Scd );
-            Index.Draw( parentId, CommandManager.Scd );
-            Unk1.Draw( parentId, CommandManager.Scd );
-            Unk2.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            BankNumber.Draw( CommandManager.Scd );
+            Index.Draw( CommandManager.Scd );
+            Unk1.Draw( CommandManager.Scd );
+            Unk2.Draw( CommandManager.Scd );
         }
     }
 }

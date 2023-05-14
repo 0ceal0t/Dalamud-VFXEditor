@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,41 +57,44 @@ namespace VfxEditor.AvfxFormat {
             WriteNested( writer, Parsed );
         }
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( Name );
+
             AssignedCopyPaste( this, Name );
-            DrawAddButtonRecurse( this, Name, parentId );
+            DrawAddButtonRecurse( this, Name );
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/" + Name;
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( Name );
+
             AssignedCopyPaste( this, Name );
-            if( !Locked && DrawRemoveButton( this, Name, id ) ) return;
-            DrawItems( Display, id );
-            CurveEditor.Draw( id );
+            if( !Locked && DrawRemoveButton( this, Name ) ) return;
+            DrawItems( Display );
+            CurveEditor.Draw();
         }
 
         public override string GetDefaultText() => Name;
 
         // ======== STATIC DRAW ==========
 
-        public static void DrawUnassignedCurves( List<AvfxCurve> curves, string id ) {
-            var idx = 0;
+        public static void DrawUnassignedCurves( List<AvfxCurve> curves ) {
+            var assignedIdx = 0;
             foreach( var curve in curves ) {
                 if( !curve.IsAssigned() ) {
-                    if( idx % 5 != 0 ) ImGui.SameLine();
-                    curve.Draw( id );
-                    idx++;
+                    if( assignedIdx % 5 != 0 ) ImGui.SameLine();
+                    curve.Draw();
+                    assignedIdx++;
                 }
             }
         }
 
-        public static void DrawAssignedCurves( List<AvfxCurve> curves, string id ) {
-            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+        public static void DrawAssignedCurves( List<AvfxCurve> curves ) {
+            using var tabBar = ImRaii.TabBar( $"Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {
-                if( ImGui.BeginTabItem( curve.Name + id ) ) {
-                    curve.DrawAssigned( id );
+                if( ImGui.BeginTabItem( curve.Name ) ) {
+                    curve.DrawAssigned( );
                     ImGui.EndTabItem();
                 }
             }

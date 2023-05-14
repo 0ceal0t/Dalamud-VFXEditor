@@ -1,5 +1,6 @@
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -26,20 +27,21 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         public void Reset() => Categories.ForEach( cat => cat.Reset() );
 
         public override void DrawBody() {
+            using var _ = ImRaii.PushId( "##ExportDialog" );
+
             ImGui.Checkbox( "Export Dependencies", ref ExportDependencies );
 
             ImGui.SameLine();
             UiUtils.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
 
             ImGui.SameLine();
-            if( ImGui.Button( "Reset##ExportDialog" ) ) Reset();
+            if( ImGui.Button( "Reset#" ) ) Reset();
 
             ImGui.SameLine();
-            if( ImGui.Button( "Export##ExportDialog" ) ) SaveDialog();
+            if( ImGui.Button( "Export" ) ) SaveDialog();
 
-            ImGui.BeginChild( "##ExportRegion", ImGui.GetContentRegionAvail(), false );
+            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
             Categories.ForEach( cat => cat.Draw() );
-            ImGui.EndChild();
         }
 
         public void ShowDialog( AvfxNode node ) {

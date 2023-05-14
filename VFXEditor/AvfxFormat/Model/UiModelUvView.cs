@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using ImPlotNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,19 +50,21 @@ namespace VfxEditor.AvfxFormat {
             Uv2_Y = orderedVertexes.Select( x => x.UV2[3] ).ToArray();
         }
 
-        public void Draw( string parentId ) {
+        public void Draw() {
+            using var _ = ImRaii.PushId( "UV" );
+
             ImGui.RadioButton( "UV 1", ref UvMode, 1 );
             ImGui.SameLine();
             ImGui.RadioButton( "UV 2", ref UvMode, 2 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( !DrawOnce || ImGui.Button( "Fit To Contents" + parentId ) ) {
+            if( !DrawOnce || ImGui.Button( "Fit To Contents" ) ) {
                 ImPlot.SetNextAxesToFit();
                 DrawOnce = true;
             }
 
-            if( ImPlot.BeginPlot( $"{parentId}-Plot", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+            if( ImPlot.BeginPlot( "##Plot", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 ImPlot.SetupAxes( "U", "V", ImPlotAxisFlags.None, ImPlotAxisFlags.None );
 
                 ImPlot.PushStyleColor( ImPlotCol.Line, LINE_COLOR );

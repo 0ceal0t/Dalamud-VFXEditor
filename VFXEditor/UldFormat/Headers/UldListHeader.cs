@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -28,8 +27,8 @@ namespace VfxEditor.UldFormat.Headers {
             return offset;
         }
 
-        public void Draw( string id ) {
-            Unk1.Draw( id, CommandManager.Uld );
+        public void Draw() {
+            Unk1.Draw( CommandManager.Uld );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
             ImGui.Separator();

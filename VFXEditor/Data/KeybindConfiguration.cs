@@ -1,12 +1,9 @@
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -28,12 +25,14 @@ namespace VfxEditor {
         public KeybindModifierKeys Modifier = KeybindModifierKeys.Ctrl;
         public VirtualKey Key = VirtualKey.NONCONVERT;
 
-        public bool Draw( string label, string id ) {
+        public bool Draw( string name ) {
+            using var _ = ImRaii.PushId( name );
+
             var ret = false;
             var unassigned = Key == VirtualKey.NONCONVERT;
 
             ImGui.SetNextItemWidth( 100f );
-            if( UiUtils.EnumComboBox( $"{id}-Modifier", ValidKeybindModifiers, Modifier, out var newModifier ) ) {
+            if( UiUtils.EnumComboBox( "##Modifier", ValidKeybindModifiers, Modifier, out var newModifier ) ) {
                 Modifier = newModifier;
                 ret = true;
             }
@@ -41,7 +40,7 @@ namespace VfxEditor {
             var inputPreview = unassigned ? "[NONE]" : $"{Key.GetFancyName()}";
             ImGui.SetNextItemWidth( 100f );
             ImGui.SameLine();
-            ImGui.InputText( $"{id}-Input", ref inputPreview, 255, ImGuiInputTextFlags.ReadOnly );
+            ImGui.InputText( "##Input", ref inputPreview, 255, ImGuiInputTextFlags.ReadOnly );
             if( ImGui.IsItemActive() ) {
                 foreach( var key in Plugin.KeyState.GetValidVirtualKeys() ) {
                     if( CheckState( key ) ) {
@@ -56,7 +55,7 @@ namespace VfxEditor {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             if( unassigned ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" + id ) ) {
+            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" ) ) {
                 Modifier = KeybindModifierKeys.Ctrl;
                 Key = VirtualKey.NONCONVERT;
                 ret = true;
@@ -69,8 +68,8 @@ namespace VfxEditor {
             ImGui.SameLine();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() - 1 );
 
-            if( unassigned ) ImGui.TextDisabled( label );
-            else ImGui.Text( label );
+            if( unassigned ) ImGui.TextDisabled( name );
+            else ImGui.Text( name );
 
             return ret;
         }

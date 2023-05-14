@@ -1,5 +1,3 @@
-using ImGuiNET;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Pap;
 using VfxEditor.Utils;

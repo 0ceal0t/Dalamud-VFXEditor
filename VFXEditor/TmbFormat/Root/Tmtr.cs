@@ -1,13 +1,14 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Utils;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
-using System.Numerics;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
@@ -52,69 +53,68 @@ namespace VfxEditor.TmbFormat {
             }
         }
 
-        public void Draw( string id, TmbFile file ) {
-            DrawHeader( id );
+        public void Draw( TmbFile file ) {
+            DrawHeader();
 
             // ==== Unknown Data ====
 
-            UnknownExtraAssigned.Draw( id, Command );
+            UnknownExtraAssigned.Draw( Command );
             if( UseUnknownExtra ) {
-                ImGui.SameLine();
-                if( ImGui.Button( $"+ New{id}-Unk" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
+                using var _ = ImRaii.PushId( "Unk" );
 
-                var unkExtraIdx = 0;
-                foreach( var unknownItem in UnknownData ) {
-                    var itemId = $"{id}-Unk{unkExtraIdx}";
-                    if( ImGui.CollapsingHeader( $"Unknown Extra Item {unkExtraIdx}{itemId}" ) ) {
-                        ImGui.Indent();
-                        if( UiUtils.RemoveButton( $"Delete{itemId}", true ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( $"+ New" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
+
+                for( var idx = 0; idx < UnknownData.Count; idx++ ) {
+                    var unknownItem = UnknownData[ idx ];
+
+                    if( ImGui.CollapsingHeader( $"Unknown Extra Item {idx}" ) ) {
+                        using var __ = ImRaii.PushId( idx );
+                        using var indent = ImRaii.PushIndent();
+
+                        if( UiUtils.RemoveButton( "Delete", true ) ) {
                             Command.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
-                            ImGui.Unindent();
                             break;
                         }
-                        unknownItem.Draw( itemId );
-                        ImGui.Unindent();
+                        unknownItem.Draw();
                     }
-                    unkExtraIdx++;
                 }
             }
 
             // ======= Entries =======
 
-            var entryIdx = 0;
-            foreach( var entry in Entries ) {
-                var isColored = TmbEntry.DoColor( entry.Danger, out var color );
-                if( isColored ) {
-                    ImGui.PushStyleColor( ImGuiCol.Header, color );
-                    ImGui.PushStyleColor( ImGuiCol.HeaderHovered, color * new Vector4( 0.75f, 0.75f, 0.75f, 1f ) );
-                }
+            for( var idx = 0; idx < Entries.Count; idx++ ) {
+                var entry = Entries[ idx ];
+                var isColored = TmbEntry.DoColor( entry.Danger, out var col );
 
-                if( ImGui.CollapsingHeader( $"{entry.DisplayName}{id}{entryIdx}" ) ) {
-                    if( isColored ) ImGui.PopStyleColor( 2 ); // Uncolor
-                    ImGui.Indent();
+                using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );
+                color.Push( ImGuiCol.HeaderHovered, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
 
-                    if( UiUtils.RemoveButton( $"Delete{id}{entryIdx}", true ) ) { // REMOVE
+                using var _ = ImRaii.PushId( idx );
+
+                if( ImGui.CollapsingHeader( entry.DisplayName ) ) {
+                    if( isColored ) color.Pop( 2 );
+
+                    using var indent = ImRaii.PushIndent();
+
+                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
                         TmbRefreshIdsCommand command = new( file, false, true );
                         command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                         command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
                         Command.Add( command );
-
-                        ImGui.Unindent(); break;
+                        break;
                     }
 
-                    entry.Draw( $"{id}{entryIdx}" );
-                    ImGui.Unindent();
+                    entry.Draw();
                 }
-                else if( isColored ) ImGui.PopStyleColor( 2 ); // Uncolor
-
-                entryIdx++;
             }
 
-            if( ImGui.Button( $"+ New{id}" ) ) ImGui.OpenPopup( "New_Entry_Tmb" );
+            if( ImGui.Button( "+ New" ) ) ImGui.OpenPopup( "NewEntryTmb" );
 
-            if( ImGui.BeginPopup( "New_Entry_Tmb" ) ) { // NEW
+            if( ImGui.BeginPopup( "NewEntryTmb" ) ) { // NEW
+                using var _ = ImRaii.PushId( "NewEntryTmb" );
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
-                    if( ImGui.Selectable( $"{entryOption.DisplayName}##New_Entry_Tmb" ) ) {
+                    if( ImGui.Selectable( entryOption.DisplayName ) ) {
                         var constructor = entryOption.Type.GetConstructor( new Type[] { typeof( bool ) } );
                         var newEntry = ( TmbEntry )constructor.Invoke( new object[] { PapEmbedded } );
                         var idx = Entries.Count == 0 ? 0 : file.Entries.IndexOf( Entries.Last() ) + 1;

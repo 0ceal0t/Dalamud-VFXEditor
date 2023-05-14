@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Ui.Nodes;
@@ -17,14 +16,12 @@ namespace VfxEditor.AvfxFormat.Dialogs {
     public class ExportDialogCategory<T> : ExportDialogCategory where T : AvfxNode {
         public NodeGroup<T> Group;
         public string HeaderText;
-        public string Id;
 
         public ExportDialogCategory( NodeGroup<T> group, string text ) {
             Group = group;
             Reset();
             Group.OnChange += Reset;
             HeaderText = text;
-            Id = "##" + HeaderText;
         }
 
         public override void Reset() {
@@ -46,7 +43,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
 
                 foreach( var item in Group.Items ) {
                     var nodeSelected = Selected.Contains( item );
-                    if( ImGui.Checkbox( item.GetText() + Id, ref nodeSelected ) ) {
+                    if( ImGui.Checkbox( item.GetText(), ref nodeSelected ) ) {
                         if( nodeSelected ) Selected.Add( item );
                         else Selected.Remove( item );
                     }

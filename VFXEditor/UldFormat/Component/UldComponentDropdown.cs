@@ -1,12 +1,11 @@
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Component {
     public class UldComponentDropdown : Dropdown<UldComponent> {
-        public UldComponentDropdown( List<UldComponent> items ) : base( items, true ) { }
+        public UldComponentDropdown( List<UldComponent> items ) : base( "Component", items, true ) { }
 
         protected override void OnDelete( UldComponent item ) {
             if( Items.IndexOf( item ) == -1 ) return;
@@ -19,9 +18,9 @@ namespace VfxEditor.UldFormat.Component {
 
         protected override string GetText( UldComponent item, int idx ) => item.GetText();
 
-        public override void Draw( string id ) {
-            base.Draw( id );
-            if( Selected != null ) Selected.Draw( $"{id}{Items.IndexOf( Selected )}" );
+        public override void Draw() {
+            base.Draw();
+            if( Selected != null ) Selected.Draw();
             else ImGui.Text( "Select a component..." );
         }
     }

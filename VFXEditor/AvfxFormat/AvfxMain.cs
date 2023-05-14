@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -266,9 +267,9 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Models ) item.Write( writer );
         }
 
-        public override void Draw( string parentId = "" ) {
-            var id = "##Avfx";
-            ImGui.BeginChild( id + "/Child" );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Avfx" );
+            using var child = ImRaii.Child( "Child" );
 
             ImGui.BeginDisabled();
             ImGui.TextWrapped( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
@@ -280,9 +281,8 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleZ.SetValue( ScaleCombined );
             };
 
-            DrawItems( Display, id );
+            DrawItems( Display );
             ImGui.Text( $"VFX Version: {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
-            ImGui.EndChild();
         }
     }
 }

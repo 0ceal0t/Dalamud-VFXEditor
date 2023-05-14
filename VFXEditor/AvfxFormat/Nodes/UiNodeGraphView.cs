@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
             Node = node;
         }
 
-        public void Draw( string parentId ) {
+        public void Draw() {
             if( Node.Graph == null || Node.Graph.Outdated ) {
                 Node.Graph = new UiNodeGraph( Node );
             }

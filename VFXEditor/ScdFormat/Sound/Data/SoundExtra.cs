@@ -1,24 +1,16 @@
-using Dalamud.Logging;
-using System;
-using System.Collections.Generic;
+using OtterGui.Raii;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat.Sound.Data
-{
-    public class SoundExtra
-    {
+namespace VfxEditor.ScdFormat.Sound.Data {
+    public class SoundExtra {
         public readonly ParsedByte Version = new( "Version" );
         private byte Reserved1;
         private ushort Size = 0x10;
         public readonly ParsedInt PlayTimeLength = new( "Play Time Length" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
-        public void Read( BinaryReader reader )
-        {
+        public void Read( BinaryReader reader ) {
             Version.Read( reader );
             Reserved1 = reader.ReadByte();
             Size = reader.ReadUInt16();
@@ -26,8 +18,7 @@ namespace VfxEditor.ScdFormat.Sound.Data
             Reserve2.Read( reader );
         }
 
-        public void Write( BinaryWriter writer )
-        {
+        public void Write( BinaryWriter writer ) {
             Version.Write( writer );
             writer.Write( Reserved1 );
             writer.Write( Size );
@@ -35,10 +26,11 @@ namespace VfxEditor.ScdFormat.Sound.Data
             Reserve2.Write( writer );
         }
 
-        public void Draw( string parentId )
-        {
-            Version.Draw( parentId, CommandManager.Scd );
-            PlayTimeLength.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            using var _ = ImRaii.PushId( "Extra" );
+
+            Version.Draw( CommandManager.Scd );
+            PlayTimeLength.Draw( CommandManager.Scd );
         }
     }
 }

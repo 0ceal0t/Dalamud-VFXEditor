@@ -40,7 +40,7 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
@@ -50,7 +50,7 @@ namespace VfxEditor.Parsing {
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[NONE]";
-            if( UiUtils.EnumComboBox( $"{Name}{id}", text, options, Value, out var newValue ) ) {
+            if( UiUtils.EnumComboBox( Name, text, options, Value, out var newValue ) ) {
                 manager.Add( new ParsedEnumCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
             }
         }

@@ -128,12 +128,12 @@ namespace VfxEditor.AvfxFormat {
             UpdateLiteral();
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Node";
+        public override void Draw() {
+            using var _ = ImRaii.PushId( $"Node{Name}" );
 
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
+            if( AvfxBase.DrawAddButton( Literal, Name) ) return;
 
             // Copy/Paste
             var copy = CopyManager.Avfx;
@@ -153,10 +153,12 @@ namespace VfxEditor.AvfxFormat {
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
 
             for( var idx = 0; idx < Selected.Count; idx++ ) {
-                ImGui.SetNextItemWidth( inputSize );
-                DrawCombo( id, idx );
+                using var __ = ImRaii.PushId( idx );
 
-                AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+                ImGui.SetNextItemWidth( inputSize );
+                DrawCombo( idx );
+
+                AvfxBase.DrawRemoveContextMenu( Literal, Name );
 
                 var imguiStyle = ImGui.GetStyle();
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
@@ -165,7 +167,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" + id + idx ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
+                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
                 }
 
                 UiUtils.Tooltip( "Navigate to selected node" );
@@ -178,7 +180,7 @@ namespace VfxEditor.AvfxFormat {
                     // Remove button
                     ImGui.SameLine();
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" + id + idx ) ) {
+                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
                         return;
                     }
@@ -194,13 +196,13 @@ namespace VfxEditor.AvfxFormat {
             if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
 
             if( Selected.Count < 4 ) {
-                if( ImGui.SmallButton( "+ " + Name + id ) ) CommandManager.Avfx.Add( new UiNodeSelectListAddCommand<T>( this ) );
-                AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+                if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Avfx.Add( new UiNodeSelectListAddCommand<T>( this ) );
+                AvfxBase.DrawRemoveContextMenu( Literal, Name );
             }
         }
 
-        private void DrawCombo( string id, int idx ) {
-            using var combo = ImRaii.Combo( $"{id}{idx}/MainInput", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
+        private void DrawCombo( int idx ) {
+            using var combo = ImRaii.Combo( $"##Combo", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
             if( !combo ) return;
 
             if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector

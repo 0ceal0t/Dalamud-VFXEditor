@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
@@ -60,16 +60,12 @@ namespace VfxEditor {
         }
 
         public unsafe void Draw() {
-            var dimUndo = !CanUndo;
-            var dimRedo = !CanRedo;
+            using( var dimUndo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanUndo ) ) {
+                if( ImGui.MenuItem( "Undo##Menu" ) ) Undo();
+            }
 
-            if( dimUndo ) ImGui.PushStyleColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
-            if( ImGui.MenuItem( "Undo##Menu" ) ) Undo();
-            if( dimUndo ) ImGui.PopStyleColor();
-
-            if( dimRedo ) ImGui.PushStyleColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
+            using var dimRedo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanRedo );
             if( ImGui.MenuItem( "Redo##Menu" ) ) Redo();
-            if( dimRedo ) ImGui.PopStyleColor();
         }
 
         public void Dispose() {

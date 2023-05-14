@@ -11,9 +11,10 @@ namespace VfxEditor.UldFormat {
         private bool CurrentlyRenaming = false;
 
         public int GetIdx() => ( int )Id.Value;
+
         public void SetIdx( int idx ) { Id.Value = ( uint )idx; }
 
-        public abstract void Draw( string id );
+        public abstract void Draw();
 
         public string GetText() => string.IsNullOrEmpty( Renamed ) ? GetDefaultText() : Renamed;
 
@@ -29,6 +30,6 @@ namespace VfxEditor.UldFormat {
 
         public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public void DrawRename( string parentId ) => IWorkspaceUiItem.DrawRenameBox( this, parentId, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
+        public void DrawRename() => IWorkspaceUiItem.DrawRenameBox( this, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
     }
 }

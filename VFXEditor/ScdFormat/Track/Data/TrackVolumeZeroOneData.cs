@@ -1,10 +1,6 @@
-using Dalamud.Logging;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -36,11 +32,12 @@ namespace VfxEditor.ScdFormat {
             Points.ForEach( x => x.Write( writer ) );
         }
 
-        public override void Draw( string parentId ) {
-            Version.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Version.Draw( CommandManager.Scd );
 
             for( var idx = 0; idx < Points.Count; idx++ ) {
-                Points[idx].Draw( $"{parentId}{idx}" );
+                using var _ = ImRaii.PushId( idx );
+                Points[idx].Draw();
             }
         }
     }
@@ -59,9 +56,9 @@ namespace VfxEditor.ScdFormat {
             Value.Write( writer );
         }
 
-        public void Draw( string parentId ) {
-            ZeroOne.Draw( parentId, CommandManager.Scd );
-            Value.Draw( parentId, CommandManager.Scd );
+        public void Draw() {
+            ZeroOne.Draw( CommandManager.Scd );
+            Value.Draw( CommandManager.Scd );
         }
     }
 }

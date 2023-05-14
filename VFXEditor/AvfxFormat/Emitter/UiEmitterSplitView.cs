@@ -1,5 +1,3 @@
-using Dalamud.Logging;
-using System;
 using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {
@@ -7,7 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEmitter Emitter;
         public readonly bool IsParticle;
 
-        public UiEmitterSplitView( List<AvfxEmitterItem> items, AvfxEmitter emitter, bool isParticle ) : base( items ) {
+        public UiEmitterSplitView( string id, List<AvfxEmitterItem> items, AvfxEmitter emitter, bool isParticle ) : base( id, items ) {
             Emitter = emitter;
             IsParticle = isParticle;
         }

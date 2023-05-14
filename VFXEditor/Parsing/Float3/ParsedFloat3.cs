@@ -28,7 +28,7 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Z );
         }
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector3s[Name] = Value;
@@ -37,7 +37,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputFloat3( Name + id, ref value ) ) {
+            if( ImGui.InputFloat3( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector3>( this, value ) );
             }
         }

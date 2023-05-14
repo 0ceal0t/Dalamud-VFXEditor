@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
             P4 = p4;
         }
 
-        public void Draw( string id, CommandManager manager ) {
+        public void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector4s[Name] = Value;
@@ -34,7 +34,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputFloat4( Name + id, ref value ) ) {
+            if( ImGui.InputFloat4( Name, ref value ) ) {
                 var command = new CompoundCommand( false, true );
                 command.Add( new ParsedSimpleCommand<int>( P1, ( int )value.X ) );
                 command.Add( new ParsedSimpleCommand<int>( P2, ( int )value.Y ) );

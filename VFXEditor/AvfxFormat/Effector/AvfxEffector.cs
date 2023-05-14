@@ -1,10 +1,8 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
-using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -22,8 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        private readonly UiNodeGraphView NodeView;
-        private readonly List<IUiItem> Display;
+        private readonly UiDisplayList Parameters;
 
         public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor ) {
             Parsed = new() {
@@ -36,20 +33,19 @@ namespace VfxEditor.AvfxFormat {
                 LoopPointEnd
             };
 
-            Display = new() {
+            EffectorVariety.Parsed.ExtraCommandGenerator = () => {
+                return new AvfxEffectorDataCommand( this );
+            };
+
+            Parameters = new( "Parameters", new() {
+                new UiNodeGraphView( this ),
                 RotationOrder,
                 CoordComputeOrder,
                 AffectOtherVfx,
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            };
-
-            EffectorVariety.Parsed.ExtraCommandGenerator = () => {
-                return new AvfxEffectorDataCommand( this );
-            };
-
-            NodeView = new UiNodeGraphView( this );
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -86,36 +82,33 @@ namespace VfxEditor.AvfxFormat {
             Data?.SetAssigned( true );
         }
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/Effector";
-            DrawRename( id );
-            EffectorVariety.Draw( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Effector" );
+            DrawRename();
+            EffectorVariety.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( $"{id}/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( $"Parameters{id}/Tab" ) ) {
-                DrawParameters( $"{id}/Param" );
-                ImGui.EndTabItem();
-            }
-            if( Data != null && ImGui.BeginTabItem( $"Data{id}/Tab" ) ) {
-                DrawData( $"{id}/Data" );
-                ImGui.EndTabItem();
-            }
+            DrawParameters();
+            DrawData();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            DrawItems( Display, id );
-            ImGui.EndChild();
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
+
+            Parameters.Draw();
         }
 
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id );
-            Data.Draw( id );
-            ImGui.EndChild();
+        private void DrawData() {
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( "Data" );
+            if( !tabItem ) return;
+
+            Data.Draw();
         }
 
         public override string GetDefaultText() => $"Effector {GetIdx()}({EffectorVariety.GetValue()})";

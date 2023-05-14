@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;

@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxScheduler Scheduler;
         public readonly bool IsItem;
 
-        public UiSchedulerSplitView( List<AvfxSchedulerItem> items, AvfxScheduler scheduler, bool isItem ) : base( items ) {
+        public UiSchedulerSplitView( string id, List<AvfxSchedulerItem> items, AvfxScheduler scheduler, bool isItem ) : base( id, items ) {
             if( !isItem ) {
                 AllowDelete = false;
                 AllowNew = false;

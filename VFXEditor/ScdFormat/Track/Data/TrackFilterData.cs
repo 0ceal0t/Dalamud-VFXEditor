@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Sound.Data;
 
-namespace VfxEditor.ScdFormat
-{
+namespace VfxEditor.ScdFormat {
     public class TrackFilterData : ScdTrackData {
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
         public readonly ParsedFloat Frequency = new( "Frequency" );
@@ -29,11 +23,11 @@ namespace VfxEditor.ScdFormat
             Gain.Write( writer );
         }
 
-        public override void Draw( string parentId ) {
-            Type.Draw( parentId, CommandManager.Scd );
-            Frequency.Draw( parentId, CommandManager.Scd );
-            InvQ.Draw( parentId, CommandManager.Scd );
-            Gain.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Type.Draw( CommandManager.Scd );
+            Frequency.Draw( CommandManager.Scd );
+            InvQ.Draw( CommandManager.Scd );
+            Gain.Draw( CommandManager.Scd );
         }
     }
 }

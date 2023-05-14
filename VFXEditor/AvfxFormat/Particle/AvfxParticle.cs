@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
@@ -77,14 +77,13 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxBase> Parsed2;
 
-        private readonly UiNodeGraphView NodeView;
         public readonly AvfxNodeGroupSet NodeGroups;
 
-        public readonly AvfxDisplaySplitView<AvfxItem> AnimationDisplaySplit;
+        public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplitDisplay;
 
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
 
-        private readonly List<IUiItem> Display;
+        private readonly UiDisplayList Parameters;
 
         public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor ) {
             NodeGroups = groupSet;
@@ -168,7 +167,8 @@ namespace VfxEditor.AvfxFormat {
 
             // Drawing
 
-            Display = new() {
+            Parameters = new( "Parameters", new() {
+                new UiNodeGraphView( this ),
                 LoopStart,
                 LoopEnd,
                 SimpleAnimEnable,
@@ -198,9 +198,9 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateLightBuffer,
                 DOTy,
                 DepthOffset
-            };
+            } );
 
-            AnimationDisplaySplit = new( new() {
+            AnimationSplitDisplay = new( "Animation", new() {
                 Life,
                 Simple,
                 Gravity,
@@ -221,7 +221,7 @@ namespace VfxEditor.AvfxFormat {
 
             UvView = new( UvSets );
 
-            TextureDisplaySplit = new( new() {
+            TextureDisplaySplit = new( "Textures", new() {
                 TC1,
                 TC2,
                 TC3,
@@ -235,8 +235,6 @@ namespace VfxEditor.AvfxFormat {
             ParticleVariety.Parsed.ExtraCommandGenerator = () => {
                 return new AvfxParticleDataCommand( this );
             };
-
-            NodeView = new UiNodeGraphView( this );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -295,48 +293,57 @@ namespace VfxEditor.AvfxFormat {
             Data?.SetAssigned( true );
         }
 
-        public override void Draw( string parentId ) {
-            var id = parentId + "/Ptcl";
-            DrawRename( id );
-            ParticleVariety.Draw( id );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Particle" );
+            DrawRename();
+            ParticleVariety.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.BeginTabBar( id + "/Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( "Parameters" + id ) ) {
-                    DrawParameters( id + "/Param" );
-                    ImGui.EndTabItem();
-                }
-                if( Data != null && ImGui.BeginTabItem( "Data" + id ) ) {
-                    DrawData( id + "/Data" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Animation" + id ) ) {
-                    AnimationDisplaySplit.Draw( id + "/Animation" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "UV Sets" + id ) ) {
-                    UvView.Draw( id + "/UVSets" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( "Textures" + id ) ) {
-                    TextureDisplaySplit.Draw( id + "/Tex" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawParameters();
+            DrawData();
+            DrawAnimation();
+            DrawUvSets();
+            DrawTextures();
         }
 
-        private void DrawParameters( string id ) {
-            ImGui.BeginChild( id );
-            NodeView.Draw( id );
-            DrawItems( Display, id );
-            ImGui.EndChild();
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
+
+            Parameters.Draw();
         }
 
-        private void DrawData( string id ) {
-            ImGui.BeginChild( id );
-            Data.Draw( id );
-            ImGui.EndChild();
+        private void DrawData() {
+            if( Data == null ) return;
+
+            using var tabItem = ImRaii.TabItem( "Data" );
+            if( !tabItem ) return;
+
+            Data.Draw();
+        }
+
+        private void DrawAnimation() {
+            using var tabItem = ImRaii.TabItem( "Animation" );
+            if( !tabItem ) return;
+
+            AnimationSplitDisplay.Draw();
+        }
+
+        private void DrawUvSets() {
+            using var tabItem = ImRaii.TabItem( "UV Sets" );
+            if( !tabItem ) return;
+
+            UvView.Draw();
+        }
+
+        private void DrawTextures() {
+            using var tabItem = ImRaii.TabItem( "Textures" );
+            if( !tabItem ) return;
+
+            TextureDisplaySplit.Draw();
         }
 
         public override string GetDefaultText() => $"Particle {GetIdx()}({ParticleVariety.GetValue()})";

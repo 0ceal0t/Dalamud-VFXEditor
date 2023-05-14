@@ -1,13 +1,12 @@
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 using VfxEditor.Parsing;
+using OtterGui.Raii;
 
 namespace VfxEditor.PapFormat {
     public enum SkeletonType {
@@ -123,29 +122,36 @@ namespace VfxEditor.PapFormat {
             writer.Write( ( int )( timelinePos - startPos ) );
         }
 
-        public override void Draw( string id ) {
-            if( ImGui.BeginTabBar( $"{id}-MainTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                if( ImGui.BeginTabItem( $"Parameters{id}" ) ) {
-                    ModelId.Draw( id, CommandManager.Pap );
-                    ModelType.Draw( id, CommandManager.Pap );
-                    Variant.Draw( id, CommandManager.Pap );
+        public override void Draw() {
+            using var _ = ImRaii.PushId( "Main" );
 
-                    if( ImGui.Button( $"Export all Havok data{id}" ) ) {
-                        FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
-                            if( ok ) File.Copy( HkxTempLocation, res, true );
-                        } );
-                    }
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
 
-                    ImGui.EndTabItem();
-                }
+            DrawParameters();
+            DrawAnimations();
+        }
 
-                if( ImGui.BeginTabItem( $"Animations{id}" ) ) {
-                    AnimationsDropdown.Draw( id );
-                    ImGui.EndTabItem();
-                }
+        private void DrawParameters() {
+            using var tabItem = ImRaii.TabItem( "Parameters" );
+            if( !tabItem ) return;
 
-                ImGui.EndTabBar();
+            ModelId.Draw( CommandManager.Pap );
+            ModelType.Draw( CommandManager.Pap );
+            Variant.Draw( CommandManager.Pap );
+
+            if( ImGui.Button( $"Export all Havok data" ) ) {
+                FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                    if( ok ) File.Copy( HkxTempLocation, res, true );
+                } );
             }
+        }
+
+        private void DrawAnimations() {
+            using var tabItem = ImRaii.TabItem( "Animations" );
+            if( !tabItem ) return;
+
+            AnimationsDropdown.Draw();
         }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();

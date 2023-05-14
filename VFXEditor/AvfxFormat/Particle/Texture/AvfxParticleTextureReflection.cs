@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using static VfxEditor.AvfxFormat.Enums;
@@ -47,16 +47,18 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
-        public override void DrawUnassigned( string parentId ) {
+        public override void DrawUnassigned() {
+            using var _ = ImRaii.PushId( "TR" );
+
             AssignedCopyPaste( this, GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Reflection" + parentId ) ) Assign();
+            if( ImGui.SmallButton( "+ Texture Reflection" ) ) Assign();
         }
 
-        public override void DrawAssigned( string parentId ) {
-            var id = parentId + "/TR";
+        public override void DrawAssigned() {
+            using var _ = ImRaii.PushId( "TR" );
 
             AssignedCopyPaste( this, GetDefaultText() );
-            DrawNamedItems( DisplayTabs, id );
+            DrawNamedItems( DisplayTabs );
         }
 
         public override string GetDefaultText() => "Texture Reflection";

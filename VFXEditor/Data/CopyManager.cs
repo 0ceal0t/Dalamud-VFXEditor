@@ -71,8 +71,8 @@ namespace VfxEditor.Data {
         }
 
         public void Draw() {
-            if( ImGui.MenuItem( "Copy##Menu" ) ) Copy();
-            if( ImGui.MenuItem( "Paste##Menu" ) ) Paste();
+            if( ImGui.MenuItem( "Copy" ) ) Copy();
+            if( ImGui.MenuItem( "Paste" ) ) Paste();
         }
 
         //==================

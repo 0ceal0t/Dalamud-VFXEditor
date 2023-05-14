@@ -1,9 +1,6 @@
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -35,11 +32,12 @@ namespace VfxEditor.ScdFormat {
             Channels.ForEach( x => x.Write( writer ) );
         }
 
-        public override void Draw( string parentId ) {
-            Version.Draw( parentId, CommandManager.Scd );
+        public override void Draw() {
+            Version.Draw( CommandManager.Scd );
 
             for( var idx = 0; idx < Channels.Count; idx++ ) {
-                Channels[idx].Draw( $"{parentId}{idx}" );
+                using var _ = ImRaii.PushId( idx );
+                Channels[idx].Draw();
             }
         }
     }

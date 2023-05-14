@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.Parsing;
@@ -20,10 +19,10 @@ namespace VfxEditor.AvfxFormat {
             Mapping = mapping;
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name, id ) ) return;
+            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
             var manager = CopyManager.Avfx;
@@ -34,26 +33,27 @@ namespace VfxEditor.AvfxFormat {
 
             var value = Literal.GetValue();
             var spacing = ImGui.GetStyle().ItemSpacing.X;
-            var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing; // have to do this calculation now
+            var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing;
             ImGui.SetNextItemWidth( 100 );
-            if( ImGui.InputInt( $"{id}/MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
+            if( ImGui.InputInt( "##MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
 
             ImGui.SameLine( 100 + spacing );
             ImGui.SetNextItemWidth( comboWidth );
 
-            DrawCombo( id, value );
+            DrawCombo( value );
 
-            AvfxBase.DrawRemoveContextMenu( Literal, Name, id );
+            AvfxBase.DrawRemoveContextMenu( Literal, Name );
         }
 
-        private void DrawCombo( string id, int value ) {
-            using var combo = ImRaii.Combo( $"{Name}{id}", DisplayText );
+        private void DrawCombo( int value ) {
+            using var combo = ImRaii.Combo( Name, DisplayText );
             if( !combo ) return;
 
             var idx = 0;
             foreach( var entry in Mapping ) {
+                using var _ = ImRaii.PushId( idx );
                 var isSelected = entry.Key == value;
-                if( ImGui.Selectable( $"{entry.Value}##{idx}", isSelected ) ) {
+                if( ImGui.Selectable( $"{entry.Value}", isSelected ) ) {
                     CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
                 }
 

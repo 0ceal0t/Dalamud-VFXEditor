@@ -28,11 +28,9 @@ namespace VfxEditor.Parsing {
             Value = FileUtils.ReadString( reader );
         }
 
-        public override void Write( BinaryWriter writer ) {
-            FileUtils.WriteString( writer, Value, writeNull: true );
-        }
+        public override void Write( BinaryWriter writer ) => FileUtils.WriteString( writer, Value, writeNull: true );
 
-        public override void Draw( string id, CommandManager manager ) {
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Strings[Name] = Value;
@@ -41,7 +39,7 @@ namespace VfxEditor.Parsing {
             }
 
             var prevValue = Value;
-            if( ImGui.InputText( Name + id, ref Value, MaxSize ) ) {
+            if( ImGui.InputText( Name, ref Value, MaxSize ) ) {
                 if( !Editing ) {
                     Editing = true;
                     StateBeforeEdit = prevValue;
@@ -54,9 +52,7 @@ namespace VfxEditor.Parsing {
             }
         }
 
-        public void Pad( BinaryReader reader, int length ) {
-            reader.ReadBytes( length - Value.Length - 1 );
-        }
+        public void Pad( BinaryReader reader, int length ) => reader.ReadBytes( length - Value.Length - 1 );
 
         public void Pad( BinaryWriter writer, int length ) {
             for( var i = 0; i < ( length - Value.Length - 1 ); i++ ) writer.Write( ( byte )0 );

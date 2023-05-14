@@ -1,11 +1,7 @@
-using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Sound.Data;
 using VfxEditor.Ui.Interfaces;
@@ -118,52 +114,53 @@ namespace VfxEditor.ScdFormat {
             else Tracks.Write( writer );
         }
 
-        public void Draw( string id ) {
+        public void Draw() {
             ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
 
-            BusNumber.Draw( id, CommandManager.Scd );
-            Priority.Draw( id, CommandManager.Scd );
-            Type.Draw( id, CommandManager.Scd );
-            Volume.Draw( id, CommandManager.Scd );
-            LocalNumber.Draw( id, CommandManager.Scd );
-            UserId.Draw( id, CommandManager.Scd );
-            PlayHistory.Draw( id, CommandManager.Scd );
+            BusNumber.Draw( CommandManager.Scd );
+            Priority.Draw( CommandManager.Scd );
+            Type.Draw( CommandManager.Scd );
+            Volume.Draw( CommandManager.Scd );
+            LocalNumber.Draw( CommandManager.Scd );
+            UserId.Draw( CommandManager.Scd );
+            PlayHistory.Draw( CommandManager.Scd );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            if( ImGui.BeginTabBar( $"{id}/SoundTabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton ) ) {
-                // Draw attribute selection in its own tab
-                if( ImGui.BeginTabItem( $"Attributes{id}" ) ) {
-                    Attributes.Draw( $"{id}/Attributes", CommandManager.Scd );
-                    ImGui.EndTabItem();
-                }
 
-                if( RoutingEnabled && ImGui.BeginTabItem( $"Routing{id}" ) ) {
-                    RoutingInfo.Draw( $"{id}/Routing" );
-                    ImGui.EndTabItem();
-                }
-                if( BusDuckingEnabled && ImGui.BeginTabItem( $"Bus Ducking{id}" ) ) {
-                    BusDucking.Draw( $"{id}/BusDucking" );
-                    ImGui.EndTabItem();
-                }
-                if( AccelerationEnabled && ImGui.BeginTabItem( $"Acceleration{id}" ) ) {
-                    Acceleration.Draw( $"{id}/Acceleration" );
-                    ImGui.EndTabItem();
-                }
-                if( AtomosEnabled && ImGui.BeginTabItem( $"Atomos{id}" ) ) {
-                    Atomos.Draw( $"{id}/Atomos" );
-                    ImGui.EndTabItem();
-                }
-                if( ExtraEnabled && ImGui.BeginTabItem( $"Extra{id}" ) ) {
-                    Extra.Draw( $"{id}/Extra" );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Tracks{id}" ) ) {
-                    if( RandomTracksEnabled ) RandomTracks.Draw( $"{id}/Tracks", Type.Value );
-                    else Tracks.Draw( $"{id}/Tracks" );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            if( ImGui.BeginTabItem( "Attributes" ) ) {
+                Attributes.Draw( CommandManager.Scd );
+                ImGui.EndTabItem();
             }
+
+            if( RoutingEnabled && ImGui.BeginTabItem( "Routing" ) ) {
+                RoutingInfo.Draw();
+                ImGui.EndTabItem();
+            }
+            if( BusDuckingEnabled && ImGui.BeginTabItem( "Bus Ducking" ) ) {
+                BusDucking.Draw();
+                ImGui.EndTabItem();
+            }
+            if( AccelerationEnabled && ImGui.BeginTabItem( "Acceleration" ) ) {
+                Acceleration.Draw();
+                ImGui.EndTabItem();
+            }
+            if( AtomosEnabled && ImGui.BeginTabItem( "Atomos" ) ) {
+                Atomos.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ExtraEnabled && ImGui.BeginTabItem( "Extra" ) ) {
+                Extra.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Tracks" ) ) {
+                if( RandomTracksEnabled ) RandomTracks.Draw( Type.Value );
+                else Tracks.Draw();
+                ImGui.EndTabItem();
+            }
+            ImGui.EndTabBar();
         }
     }
 }

@@ -1,9 +1,6 @@
 using System;
 using System.IO;
-using System.Linq;
-using VfxEditor.Data;
 using VfxEditor.Parsing;
-using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEnum<T> : AvfxDrawable where T : Enum {
@@ -30,14 +27,14 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void WriteContents( BinaryWriter writer ) => Parsed.Write( writer );
 
-        public override void Draw( string id ) {
+        public override void Draw() {
             // Unassigned
             AssignedCopyPaste( this, Parsed.Name );
-            if( DrawAddButton( this, Parsed.Name, id ) ) return;
+            if( DrawAddButton( this, Parsed.Name ) ) return;
 
-            Parsed.Draw( id, CommandManager.Avfx );
+            Parsed.Draw( CommandManager.Avfx );
 
-            DrawRemoveContextMenu( this, Parsed.Name, id );
+            DrawRemoveContextMenu( this, Parsed.Name );
         }
     }
 }

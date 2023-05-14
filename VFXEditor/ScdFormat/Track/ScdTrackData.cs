@@ -6,6 +6,6 @@ namespace VfxEditor.ScdFormat {
 
         public abstract void Write( BinaryWriter writer );
 
-        public abstract void Draw( string parentId );
+        public abstract void Draw();
     }
 }
