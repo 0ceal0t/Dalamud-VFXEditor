@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Penumbra;
+using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Select {
     public class SelectPenumbraTab : SelectTab<string, Dictionary<string, List<(string, string)>>> {

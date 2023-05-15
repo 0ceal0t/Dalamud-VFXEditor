@@ -103,7 +103,7 @@ namespace VfxEditor.TextureFormat {
         }
 
         private void ImportDialog( string newPath ) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,." + newPath.Split('.')[^1].Trim('\0') + ",.dds},.*", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,." + newPath.Split( '.' )[^1].Trim( '\0' ) + ",.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( !ImportTexture( res, newPath, pngMip: ( ushort )PngMip, pngFormat: PngFormat ) ) PluginLog.Error( $"Could not import" );

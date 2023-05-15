@@ -1,3 +1,4 @@
+using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,7 @@ namespace VfxEditor.Select.Pap.Emote {
 
         protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
+            ImGui.TextDisabled( Selected.Command );
 
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
@@ -57,6 +59,8 @@ namespace VfxEditor.Select.Pap.Emote {
             foreach( var (subAction, subActionPaths) in Loaded.AllPaps ) {
                 using var tabItem = ImRaii.TabItem( subAction );
                 if( !tabItem ) continue;
+
+                using var _ = ImRaii.PushId( subAction );
 
                 using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
@@ -70,5 +74,7 @@ namespace VfxEditor.Select.Pap.Emote {
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;
+
+        protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectTabUtils.Matches( item.Command, searchInput );
     }
 }

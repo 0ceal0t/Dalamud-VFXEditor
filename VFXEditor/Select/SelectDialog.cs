@@ -81,7 +81,7 @@ namespace VfxEditor.Select {
         public virtual void Play( string path ) { }
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( $"##{Manager.Id}/Select" );
+            using var _ = ImRaii.PushId( $"##{Manager.Id}/{Name}" );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -208,6 +208,8 @@ namespace VfxEditor.Select {
             foreach( var (subName, subItems) in items ) {
                 if( subItems.Count == 0 ) continue;
 
+                using var _ = ImRaii.PushId( subName );
+
                 if( ImGui.CollapsingHeader( subName, ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
                     DrawPaps( subItems, resultType, $"{name} {subName}" );
@@ -220,6 +222,8 @@ namespace VfxEditor.Select {
             using var _ = ImRaii.PushId( name );
 
             foreach( var (suffix, path) in items ) {
+                using var __ = ImRaii.PushId( suffix );
+
                 DrawFavorite( path, resultType, $"{name} ({suffix})" );
 
                 ImGui.Text( $"{suffix}:" );

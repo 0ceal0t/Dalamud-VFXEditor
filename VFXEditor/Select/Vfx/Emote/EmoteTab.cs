@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System.Linq;
 using VfxEditor.Select.Shared;
 
@@ -24,10 +25,13 @@ namespace VfxEditor.Select.Vfx.Emote {
 
         protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
+            ImGui.TextDisabled( Selected.Command );
 
             Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;
+
+        protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectTabUtils.Matches( item.Command, searchInput );
     }
 }

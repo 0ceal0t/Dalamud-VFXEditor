@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.Select;
-using VfxEditor.TexTools;
 using VfxEditor.Ui;
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {

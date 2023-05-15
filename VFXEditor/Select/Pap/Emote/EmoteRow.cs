@@ -19,16 +19,18 @@ namespace VfxEditor.Select.Pap.Emote {
     }
 
     public class EmoteRow {
-        public readonly ushort Icon;
         public readonly int RowId;
         public readonly string Name;
+        public readonly ushort Icon;
+        public readonly string Command;
 
         public readonly List<EmoteRowItem> PapFiles;
 
         public EmoteRow( Lumina.Excel.GeneratedSheets.Emote emote ) {
             RowId = ( int )emote.RowId;
+            Name = emote.Name;
             Icon = emote.Icon;
-            Name = emote.Name.ToString();
+            Command = emote.TextCommand.Value?.Command.ToString() ?? "";
 
             var emoteItems = emote.ActionTimeline.Select( x => ToPap( x.Value ) ).Where( x => x != null );
             PapFiles = emoteItems.GroupBy( x => x.Key ).Select( x => x.First() ).ToList(); // dedup by key

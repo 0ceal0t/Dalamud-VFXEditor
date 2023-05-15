@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
@@ -15,7 +16,7 @@ namespace VfxEditor.TmbFormat.Actor {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Ability Delay" );
+        private readonly ParsedInt AbilityDelay = new( "Ability Delay" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
 
         public readonly List<Tmtr> Tracks = new();
@@ -29,7 +30,7 @@ namespace VfxEditor.TmbFormat.Actor {
 
         public Tmac( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
             ReadHeader( reader );
-            Unk1.Read( reader );
+            AbilityDelay.Read( reader );
             Unk2.Read( reader );
             TempIds = reader.ReadOffsetTimeline();
         }
@@ -40,19 +41,19 @@ namespace VfxEditor.TmbFormat.Actor {
 
         public override void Write( TmbWriter writer ) {
             WriteHeader( writer );
-            Unk1.Write( writer );
+            AbilityDelay.Write( writer );
             Unk2.Write( writer );
             writer.WriteOffsetTimeline( Tracks );
         }
 
         public void Draw( TmbFile file ) {
             DrawHeader();
-            Unk1.Draw( Command );
+            AbilityDelay.Draw( Command );
             Unk2.Draw( Command );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            using var child = ImRaii.Child( "Child" );
+            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
             ImGui.Columns( 2, $"Cols", true );
 
             var selectedIndex = SelectedTrack == null ? -1 : Tracks.IndexOf( SelectedTrack );

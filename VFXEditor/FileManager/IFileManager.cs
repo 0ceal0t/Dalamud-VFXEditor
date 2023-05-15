@@ -2,7 +2,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
-using VfxEditor.TexTools;
+using VfxEditor.Ui.Export;
 
 namespace VfxEditor.FileManager {
     public interface IFileManager {

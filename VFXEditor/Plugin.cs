@@ -18,13 +18,12 @@ using VfxEditor.EidFormat;
 using VfxEditor.FileManager;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
-using VfxEditor.Penumbra;
 using VfxEditor.ScdFormat;
-using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Ui;
+using VfxEditor.Ui.Export;
 using VfxEditor.UldFormat;
 using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
 

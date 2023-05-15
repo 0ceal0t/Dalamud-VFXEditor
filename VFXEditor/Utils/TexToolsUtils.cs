@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using VfxEditor.TexTools;
+using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Utils {
     public static class TexToolsUtils {

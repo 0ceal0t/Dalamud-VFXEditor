@@ -1,16 +1,12 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
-using ImGuiNET;
 using Newtonsoft.Json;
-using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Numerics;
-using VfxEditor.Ui;
 
-namespace VfxEditor.TexTools {
+namespace VfxEditor.Ui.Export {
     public struct TTMPL {
         public string TTMPVersion;
         public string Name;
@@ -36,39 +32,10 @@ namespace VfxEditor.TexTools {
 #nullable disable
     }
 
-    public class TexToolsDialog : GenericDialog {
-        private string ModName = "";
-        private string Author = "";
-        private string Version = "1.0.0";
-        private readonly Dictionary<string, bool> ToExport = new();
+    public class TexToolsDialog : ModExportDialog {
+        public TexToolsDialog() : base( "TexTools" ) { }
 
-        public TexToolsDialog() : base( "TexTools", false, 400, 300 ) {
-            foreach( var manager in Plugin.Managers ) {
-                if( manager == null ) continue;
-                ToExport[manager.GetExportName()] = false;
-            }
-        }
-
-        public override void DrawBody() {
-            using var _ = ImRaii.PushId( "TexTools" );
-
-            var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
-
-            using( var child = ImRaii.Child( "Child", new Vector2( 0, -footerHeight ), true ) ) {
-                ImGui.InputText( "Mod Name", ref ModName, 255 );
-                ImGui.InputText( "Author", ref Author, 255 );
-                ImGui.InputText( "Version", ref Version, 255 );
-
-                foreach( var entry in ToExport ) {
-                    var exportItem = entry.Value;
-                    if( ImGui.Checkbox( $"Export {entry.Key}", ref exportItem ) ) ToExport[entry.Key] = exportItem;
-                }
-            }
-
-            if( ImGui.Button( "Export" ) ) SaveDialog();
-        }
-
-        private void SaveDialog() {
+        protected override void OnExport() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
-using VfxEditor.TexTools;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {

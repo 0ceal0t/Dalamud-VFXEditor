@@ -3,10 +3,9 @@ using OtterGui.Raii;
 using System;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
-using VfxEditor.Penumbra;
-using VfxEditor.TexTools;
 using VfxEditor.TextureFormat;
 using VfxEditor.Tracker;
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor {

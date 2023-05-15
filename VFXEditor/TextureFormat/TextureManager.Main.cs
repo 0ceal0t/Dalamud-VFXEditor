@@ -164,7 +164,7 @@ namespace VfxEditor.TextureFormat {
             LoadPreviewTexture( gamePath );
         }
 
-        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( gamePath.Trim('\0'), out data );
+        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( gamePath.Trim( '\0' ), out data );
 
         public bool CreatePreviewTexture( string gamePath, out PreviewTexture ret, bool loadImage = true ) {
             gamePath = gamePath.Trim( '\0' );

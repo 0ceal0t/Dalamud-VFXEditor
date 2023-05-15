@@ -34,13 +34,7 @@ namespace VfxEditor.PapFormat {
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 
-            var startPos = reader.BaseStream.Position;
-
-            byte[] original = null;
-            if( checkOriginal ) {
-                original = FileUtils.ReadAllBytes( reader );
-                reader.BaseStream.Seek( startPos, SeekOrigin.Begin );
-            }
+            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // magic
             reader.ReadInt32(); // version
@@ -74,9 +68,7 @@ namespace VfxEditor.PapFormat {
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
 
-            if( checkOriginal ) { // Check if output matches the original
-                Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
-            }
+            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
 
         public override void Write( BinaryWriter writer ) {
