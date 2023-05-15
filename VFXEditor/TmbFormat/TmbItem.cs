@@ -1,7 +1,7 @@
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
 using ImGuiNET;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {

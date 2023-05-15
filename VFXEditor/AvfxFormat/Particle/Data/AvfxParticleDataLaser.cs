@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataLaser : AvfxData {
         public readonly AvfxCurve Length = new( "Length", "Len" );

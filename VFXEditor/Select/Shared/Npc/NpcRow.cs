@@ -41,8 +41,8 @@ namespace VfxEditor.Select.Shared.Npc {
 
         // chara/monster/m0519/skeleton/base/b0001/eid_m0519b0001.eid
         // chara/demihuman/d0002/skeleton/base/b0001/eid_d0002b0001.eid
-        public string GetEidPath() => 
-            "chara/" + ( Type == NpcType.Monster ? "monster/" : "demihuman/" ) + ModelString + 
+        public string GetEidPath() =>
+            "chara/" + ( Type == NpcType.Monster ? "monster/" : "demihuman/" ) + ModelString +
             "/skeleton/base/b0001/eid_" + ModelString + "b0001.eid";
 
         public string GetImcPath() => RootPath + ( Type == NpcType.Monster ? "b" : "e" ) + BaseIdString + ".imc";

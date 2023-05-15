@@ -1,5 +1,4 @@
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace VfxEditor.ScdFormat {
     public class ScdHeader {

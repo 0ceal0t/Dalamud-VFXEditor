@@ -1,4 +1,3 @@
-using System.Linq;
 using VfxEditor.Select.Shared.Mount;
 
 namespace VfxEditor.Select.Scd.Mount {

@@ -33,7 +33,7 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        protected override bool DrawLeftItem( T item, int idx) {
+        protected override bool DrawLeftItem( T item, int idx ) {
             using var _ = ImRaii.PushId( idx );
 
             if( ImGui.Selectable( item.GetText(), Selected == item ) ) {

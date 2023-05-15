@@ -1,11 +1,11 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.IO;
 using VfxEditor.Interop;
 using VfxEditor.PapFormat;
-using OtterGui.Raii;
 
 namespace VfxEditor.Animation {
     public class AnimationManager {

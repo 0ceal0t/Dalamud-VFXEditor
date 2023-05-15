@@ -1,4 +1,3 @@
-using System;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Uld;
 using VfxEditor.Utils;

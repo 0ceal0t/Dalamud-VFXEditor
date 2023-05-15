@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => 
+        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) =>
             new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
 
         protected override void DrawEditMenuExtra() {

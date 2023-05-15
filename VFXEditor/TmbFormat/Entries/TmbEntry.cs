@@ -1,8 +1,8 @@
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Utils;
 using System.Collections.Generic;
-using VfxEditor.Parsing;
 using System.Numerics;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public enum DangerLevel : int {

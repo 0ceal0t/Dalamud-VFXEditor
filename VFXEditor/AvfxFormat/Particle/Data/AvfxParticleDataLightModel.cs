@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataLightModel : AvfxData {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MNO", size: 1 );

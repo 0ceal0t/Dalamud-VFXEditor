@@ -1,5 +1,4 @@
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -110,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
             DrawAddButtonRecurse( this, Name );
         }
 
-        public override void DrawAssigned( ) {
+        public override void DrawAssigned() {
             using var _ = ImRaii.PushId( Name );
 
             AssignedCopyPaste( this, Name );

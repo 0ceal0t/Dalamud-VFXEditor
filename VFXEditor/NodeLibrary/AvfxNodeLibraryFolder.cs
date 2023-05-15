@@ -1,7 +1,5 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;

@@ -1,12 +1,12 @@
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
-using VfxEditor.Utils;
 using VfxEditor.Parsing;
-using OtterGui.Raii;
+using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public enum SkeletonType {

@@ -3,7 +3,7 @@ namespace VfxEditor.Select.Pap.Job {
         public readonly string Name;
         public readonly string Id;
 
-        public JobRow(string name, string id) {
+        public JobRow( string name, string id ) {
             Name = name;
             Id = id;
         }

@@ -1,5 +1,5 @@
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class Tmdh : TmbItemWithId {

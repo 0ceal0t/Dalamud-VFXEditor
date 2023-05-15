@@ -55,7 +55,7 @@ namespace VfxEditor.Select.Shared.Item {
 
             Ids = new ItemIds( item.ModelMain );
             SecondaryIds = new ItemIds( item.ModelSub );
-            HasModel =  Ids.Id1 != 0 ;
+            HasModel = Ids.Id1 != 0;
         }
 
         public string GetVfxPath( int idx ) => $"{GetVfxRootPath()}{idx.ToString().PadLeft( 4, '0' )}.avfx";

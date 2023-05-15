@@ -1,9 +1,8 @@
-using System;
-using System.Numerics;
-using System.IO;
-using ImGuiNET;
-using VfxEditor.Utils;
 using Dalamud.Interface;
+using ImGuiNET;
+using System.IO;
+using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.NodeLibrary {
     public class AvfxNodeLibraryNode : AvfxNodeLibraryGeneric {

@@ -1,8 +1,8 @@
 using ImGuiNET;
 using System.IO;
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class Tmpp : TmbItem {

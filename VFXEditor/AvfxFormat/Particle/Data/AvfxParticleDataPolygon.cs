@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataPolygon : AvfxData {
         public readonly AvfxCurve Count = new( "Count", "Cnt" );

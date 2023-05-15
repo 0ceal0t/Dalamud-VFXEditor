@@ -11,9 +11,9 @@ namespace VfxEditor.FileManager {
             SourceSelect?.Draw();
             ReplaceSelect?.Draw();
 
-            Name = WindowTitle 
-                + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation ) 
-                + "###" 
+            Name = WindowTitle
+                + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation )
+                + "###"
                 + WindowTitle;
 
             CheckKeybinds();
@@ -47,7 +47,7 @@ namespace VfxEditor.FileManager {
             DrawTabsDropdown();
 
             var pos1 = ImGui.GetCursorScreenPos() + new Vector2( 0, -1 );
-            ImGui.SameLine(); 
+            ImGui.SameLine();
             var pos2 = ImGui.GetCursorScreenPos();
             var color = ImGui.GetColorU32( ImGuiCol.TabActive );
             var drawlist = ImGui.GetWindowDrawList();

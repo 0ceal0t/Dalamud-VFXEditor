@@ -1,12 +1,11 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using System.Text;
 using VfxEditor.Data;
 using VfxEditor.Utils;
-using OtterGui.Raii;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxString : AvfxDrawable {

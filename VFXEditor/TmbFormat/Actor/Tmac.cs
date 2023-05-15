@@ -7,7 +7,6 @@ using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Actor {

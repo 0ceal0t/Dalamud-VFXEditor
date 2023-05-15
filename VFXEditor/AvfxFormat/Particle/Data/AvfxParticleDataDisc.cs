@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDisc : AvfxData {
         public readonly AvfxInt PartsCount = new( "Parts Count", "PrtC" );

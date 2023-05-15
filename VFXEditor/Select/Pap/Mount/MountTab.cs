@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Shared.Mount;
@@ -22,7 +21,7 @@ namespace VfxEditor.Select.Pap.Mount {
             loaded = new();
 
             var papPaths = item.GetMountPaps();
-            for( var i = 0; i <  papPaths.Count; i++ ) {
+            for( var i = 0; i < papPaths.Count; i++ ) {
                 loaded.Add( $"Seat {i + 1}", SelectUtils.FileExistsFilter( SelectUtils.GetAllSkeletonPaths( papPaths[i] ) ) );
             }
         }

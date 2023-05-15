@@ -134,7 +134,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
             NumFilters.Draw( CommandManager.Scd );
 
             for( var idx = 0; idx < Filters.Count; idx++ ) {
-                var filter = Filters[ idx ];
+                var filter = Filters[idx];
                 if( ImGui.CollapsingHeader( $"Filter {idx}" ) ) {
                     using var __ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
@@ -169,8 +169,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
 
             Frequency.Draw( CommandManager.Scd );
             Invq.Draw( CommandManager.Scd );
-            Gain.Draw( CommandManager .Scd );
-            Type.Draw( CommandManager .Scd );
+            Gain.Draw( CommandManager.Scd );
+            Type.Draw( CommandManager.Scd );
         }
     }
 }

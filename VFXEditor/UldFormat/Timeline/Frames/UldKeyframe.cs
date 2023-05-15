@@ -159,7 +159,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             Interpolation.Draw( CommandManager.Uld );
             Unk1.Draw( CommandManager.Uld );
             Acceleration.Draw( CommandManager.Uld );
-            Deceleration.Draw ( CommandManager.Uld );
+            Deceleration.Draw( CommandManager.Uld );
 
             Data.ForEach( x => x.Draw( CommandManager.Uld ) );
         }

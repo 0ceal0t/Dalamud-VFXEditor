@@ -1,11 +1,11 @@
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Ui.Components;
 using System.Numerics;
-using OtterGui.Raii;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Ui.Components;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class Tmfc : TmbEntry {

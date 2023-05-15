@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Actor;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Utils {
     public class TmbReader {

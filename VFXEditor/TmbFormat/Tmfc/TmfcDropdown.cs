@@ -1,8 +1,7 @@
-using ImGuiNET;
 using VfxEditor.FileManager;
-using VfxEditor.Ui.Components;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Ui.Components;
 
 namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {

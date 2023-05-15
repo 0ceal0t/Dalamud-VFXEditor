@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDecal : AvfxData {
         public readonly AvfxFloat ScalingScale = new( "Scaling Scale", "SS" );

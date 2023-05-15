@@ -1,5 +1,4 @@
 using ImGuiNET;
-using VfxEditor.Utils;
 
 namespace VfxEditor.NodeLibrary {
     public abstract class AvfxNodeLibraryGeneric {

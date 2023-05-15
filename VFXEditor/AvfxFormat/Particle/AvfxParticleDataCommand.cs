@@ -1,5 +1,3 @@
-using System;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataCommand : ICommand {
         private readonly AvfxParticle Item;

@@ -2,9 +2,9 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
-using VfxEditor.Utils;
-using VfxEditor.TextureFormat;
 using System.Numerics;
+using VfxEditor.TextureFormat;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui {
     public class ToolsDialogUtilitiesTab {

@@ -1,8 +1,6 @@
 using Dalamud.Logging;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -204,7 +202,7 @@ namespace VfxEditor.UldFormat.Component {
             Nodes.ForEach( x => IWorkspaceUiItem.ReadRenamingMap( x, renameDict ) );
         }
 
-        private int NumNodesReferencing => 
+        private int NumNodesReferencing =>
             Plugin.UldManager.CurrentFile.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
             Plugin.UldManager.CurrentFile.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
     }

@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDecalRing : AvfxData {
         public readonly AvfxCurve Width = new( "Width", "WID" );

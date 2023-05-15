@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using VfxEditor;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxAssignCommandToggle<T> : ICommand where T : AvfxBase {

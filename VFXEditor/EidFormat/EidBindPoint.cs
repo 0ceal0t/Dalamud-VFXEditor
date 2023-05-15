@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
@@ -23,7 +21,7 @@ namespace VfxEditor.EidFormat {
             reader.ReadInt32(); // padding
         }
 
-        public void Write(  BinaryWriter writer ) {
+        public void Write( BinaryWriter writer ) {
             Name.Write( writer );
             Name.Pad( writer, 32 );
             Id.Write( writer );

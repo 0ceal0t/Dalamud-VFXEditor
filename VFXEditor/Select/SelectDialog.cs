@@ -159,7 +159,7 @@ namespace VfxEditor.Select {
 
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText(  "##Input", ref GamePathInput, 255 );
+            ImGui.InputText( "##Input", ref GamePathInput, 255 );
 
             ImGui.SameLine();
             if( ImGui.Button( "SELECT" ) ) {

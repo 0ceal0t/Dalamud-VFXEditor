@@ -94,7 +94,7 @@ namespace VfxEditor.AvfxFormat {
 
             foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {
                 if( ImGui.BeginTabItem( curve.Name ) ) {
-                    curve.DrawAssigned( );
+                    curve.DrawAssigned();
                     ImGui.EndTabItem();
                 }
             }

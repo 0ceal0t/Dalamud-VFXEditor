@@ -1,13 +1,13 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
-using VfxEditor.Utils;
+using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
-using VfxEditor.TmbFormat.Actor;
-using OtterGui.Raii;
+using VfxEditor.Utils;
 
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {

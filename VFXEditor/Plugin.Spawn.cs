@@ -1,5 +1,4 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using System;
 using VfxEditor.Structs.Vfx;

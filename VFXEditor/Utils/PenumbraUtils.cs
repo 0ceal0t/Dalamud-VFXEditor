@@ -9,7 +9,7 @@ namespace VfxEditor.Utils {
             Directory.CreateDirectory( modFileFolder );
             File.WriteAllBytes( modFile, data );
 
-            files[path] = path.Replace('/', '\\');
+            files[path] = path.Replace( '/', '\\' );
         }
 
         public static void CopyFile( string localPath, string modFolder, string path, Dictionary<string, string> files ) {

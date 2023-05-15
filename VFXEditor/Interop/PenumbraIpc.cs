@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using Dalamud.Plugin.Ipc;
 using System;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace VfxEditor.Interop {
                     ret.Add( modPath );
                 }
             }
-            catch ( Exception ) { }
+            catch( Exception ) { }
             return ret;
         }
 

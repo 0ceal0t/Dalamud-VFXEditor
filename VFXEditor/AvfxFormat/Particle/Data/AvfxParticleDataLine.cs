@@ -1,6 +1,3 @@
-using System;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataLine : AvfxData {
         public readonly AvfxInt LineCount = new( "Line Count", "LnCT" );

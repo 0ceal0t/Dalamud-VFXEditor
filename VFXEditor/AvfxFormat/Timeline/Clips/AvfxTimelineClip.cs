@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.IO;
 using VfxEditor.Parsing;
 

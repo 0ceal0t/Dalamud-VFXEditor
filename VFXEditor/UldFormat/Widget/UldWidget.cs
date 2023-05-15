@@ -96,8 +96,6 @@ namespace VfxEditor.UldFormat.Widget {
             using var tabItem = ImRaii.TabItem( "Nodes" );
             if( !tabItem ) return;
 
-            using var _ = ImRaii.PushId( "Nodes" );
-
             NodeSplitView.Draw();
         }
 

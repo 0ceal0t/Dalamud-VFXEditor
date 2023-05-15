@@ -1,10 +1,9 @@
 using Dalamud.Hooking;
 using Dalamud.Logging;
-using Penumbra.String.Classes;
 using Penumbra.String;
+using Penumbra.String.Classes;
 using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.Structs;

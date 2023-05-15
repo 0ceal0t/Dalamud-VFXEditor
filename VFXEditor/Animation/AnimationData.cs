@@ -1,12 +1,10 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Dalamud.Logging;
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
 
 namespace VfxEditor.Animation {
     public class AnimationData {

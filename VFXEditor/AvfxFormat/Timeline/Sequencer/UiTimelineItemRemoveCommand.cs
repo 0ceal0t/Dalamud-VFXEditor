@@ -1,5 +1,3 @@
-using Lumina.Excel.GeneratedSheets;
-
 namespace VfxEditor.AvfxFormat {
     public class UiTimelineItemRemoveCommand : ICommand {
         private readonly UiTimelineItemSequencer View;

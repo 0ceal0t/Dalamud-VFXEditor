@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldKeyGroupDataCommand : ICommand {
         private readonly UldKeyGroup Item;
-        private List<UldKeyframe> OldKeyframes = new();
+        private readonly List<UldKeyframe> OldKeyframes = new();
 
         public UldKeyGroupDataCommand( UldKeyGroup item ) {
             Item = item;

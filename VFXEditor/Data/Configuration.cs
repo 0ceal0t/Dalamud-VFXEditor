@@ -2,15 +2,14 @@ using Dalamud.Configuration;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Ui;
 using VfxEditor.NodeLibrary;
 using VfxEditor.Select;
-using System.Linq;
-using OtterGui.Raii;
+using VfxEditor.Ui;
 
 namespace VfxEditor {
     [Serializable]

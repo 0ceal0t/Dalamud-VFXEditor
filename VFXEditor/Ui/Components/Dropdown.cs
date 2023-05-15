@@ -3,7 +3,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
@@ -95,7 +94,7 @@ namespace VfxEditor.Ui.Components {
             Vector4 col = new( 1 );
             var isColored = Selected != null && DoColor( Selected, out col );
             using var color = ImRaii.PushColor( ImGuiCol.Text, col, isColored );
-            using var combo = ImRaii.Combo( "", Selected == null ? "[NONE]" : GetText( Selected, Items.IndexOf( Selected ) ) );
+            using var combo = ImRaii.Combo( "##Combo", Selected == null ? "[NONE]" : GetText( Selected, Items.IndexOf( Selected ) ) );
             if( !combo ) return;
             if( isColored ) color.Pop();
 

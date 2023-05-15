@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;

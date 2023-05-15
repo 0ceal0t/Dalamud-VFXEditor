@@ -1,11 +1,11 @@
 using ImGuiFileDialog;
 using ImGuiNET;
-using System.IO;
-using VfxEditor.Utils;
-using VfxEditor.Interop;
-using VfxEditor.TmbFormat;
-using VfxEditor.Parsing;
 using OtterGui.Raii;
+using System.IO;
+using VfxEditor.Interop;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat;
+using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {

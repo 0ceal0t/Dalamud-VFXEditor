@@ -1,4 +1,3 @@
-using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;

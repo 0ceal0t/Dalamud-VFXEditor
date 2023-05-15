@@ -7,10 +7,10 @@ namespace VfxEditor.UldFormat {
     public class UldDocument : FileManagerDocument<UldFile, WorkspaceMetaRenamed> {
         public UldDocument( UldManager manager, string writeLocation ) : base( manager, writeLocation, "Uld", "uld" ) { }
 
-        public UldDocument( UldManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) : 
+        public UldDocument( UldManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
             base( manager, writeLocation, localPath, name, source, replace, "Uld", "uld" ) { }
 
-        public UldDocument( UldManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : 
+        public UldDocument( UldManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) :
             this( manager, writeLocation, localPath, data.Name, data.Source, data.Replace ) {
             CurrentFile.ReadRenamingMap( data.Renaming );
         }

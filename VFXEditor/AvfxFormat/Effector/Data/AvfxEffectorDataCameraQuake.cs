@@ -1,5 +1,3 @@
-using System;
-
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataCameraQuake : AvfxData {
         public readonly AvfxCurve Attenuation = new( "Attenuation", "Att" );

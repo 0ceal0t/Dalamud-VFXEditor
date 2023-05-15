@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -133,7 +132,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Unassigned
             AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name) ) return;
+            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
             var copy = CopyManager.Avfx;

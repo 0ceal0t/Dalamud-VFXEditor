@@ -1,4 +1,3 @@
-using System;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {

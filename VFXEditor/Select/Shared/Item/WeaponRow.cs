@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Shared.Item {
         private readonly string BodyString;
 
         public WeaponRow( Lumina.Excel.GeneratedSheets.Item item ) : base( item ) {
-            HasSubModel =  SecondaryIds.Id1 != 0 ;
+            HasSubModel = SecondaryIds.Id1 != 0;
 
             ModelString = "w" + Ids.Id.ToString().PadLeft( 4, '0' );
             BodyString = "b" + Ids.WeaponBody.ToString().PadLeft( 4, '0' );

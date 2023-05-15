@@ -1,4 +1,3 @@
-using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;

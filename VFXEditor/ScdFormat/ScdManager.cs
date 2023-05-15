@@ -15,7 +15,7 @@ namespace VfxEditor.ScdFormat {
 
         protected override ScdDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override ScdDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => 
+        protected override ScdDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
             new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace );
 
         public override void Dispose() {

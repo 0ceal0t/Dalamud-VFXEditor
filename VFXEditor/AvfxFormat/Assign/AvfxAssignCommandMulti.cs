@@ -1,6 +1,3 @@
-using System;
-using VfxEditor;
-
 namespace VfxEditor.AvfxFormat {
     internal class AvfxAssignCommandMulti : ICommand {
         private readonly AvfxBase Item;

@@ -1,10 +1,7 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
-using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.Select;
 using VfxEditor.TexTools;

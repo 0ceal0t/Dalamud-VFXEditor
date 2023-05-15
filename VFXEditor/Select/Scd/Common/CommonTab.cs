@@ -1,6 +1,6 @@
+using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 using System.Linq;
-using Lumina.Excel.GeneratedSheets;
 using VfxEditor.Select.Shared.Common;
 
 namespace VfxEditor.Select.Scd.Common {

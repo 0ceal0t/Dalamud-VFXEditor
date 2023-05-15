@@ -1,7 +1,7 @@
 using ImGuiNET;
 using System;
-using System.Numerics;
 using System.IO;
+using System.Numerics;
 
 namespace VfxEditor.Parsing {
     public class ParsedIntColor : ParsedSimpleBase<Vector4> {

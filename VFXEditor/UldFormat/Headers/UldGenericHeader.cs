@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using System.IO;
 
 namespace VfxEditor.UldFormat.Headers {

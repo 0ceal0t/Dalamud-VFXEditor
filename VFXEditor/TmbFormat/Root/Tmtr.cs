@@ -66,7 +66,7 @@ namespace VfxEditor.TmbFormat {
                 if( ImGui.Button( $"+ New" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
 
                 for( var idx = 0; idx < UnknownData.Count; idx++ ) {
-                    var unknownItem = UnknownData[ idx ];
+                    var unknownItem = UnknownData[idx];
 
                     if( ImGui.CollapsingHeader( $"Unknown Extra Item {idx}" ) ) {
                         using var __ = ImRaii.PushId( idx );
@@ -84,7 +84,7 @@ namespace VfxEditor.TmbFormat {
             // ======= Entries =======
 
             for( var idx = 0; idx < Entries.Count; idx++ ) {
-                var entry = Entries[ idx ];
+                var entry = Entries[idx];
                 var isColored = TmbEntry.DoColor( entry.Danger, out var col );
 
                 using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );

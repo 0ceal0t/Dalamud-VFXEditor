@@ -1,5 +1,3 @@
-using Dalamud.Logging;
-using ImGuiNET;
 using VfxEditor.Animation;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
@@ -20,7 +18,7 @@ namespace VfxEditor.TmbFormat {
 
         protected override TmbDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override TmbDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => 
+        protected override TmbDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
             new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace );
     }
 }

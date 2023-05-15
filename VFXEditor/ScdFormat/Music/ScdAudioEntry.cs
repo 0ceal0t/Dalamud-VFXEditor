@@ -1,6 +1,3 @@
-using Dalamud.Logging;
-using ImGuiNET;
-using NAudio.Wave;
 using System;
 using System.IO;
 using VfxEditor.ScdFormat.Music.Data;

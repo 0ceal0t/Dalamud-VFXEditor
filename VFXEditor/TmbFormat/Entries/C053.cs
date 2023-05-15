@@ -1,6 +1,6 @@
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
 using System.Collections.Generic;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C053 : TmbEntry {

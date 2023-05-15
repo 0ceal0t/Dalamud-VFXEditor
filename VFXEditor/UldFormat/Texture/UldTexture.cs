@@ -1,12 +1,6 @@
 using ImGuiNET;
-using ImGuiScene;
-using Lumina.Data.Files;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using VfxEditor.Parsing;
-using VfxEditor.Select;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : UldWorkspaceItem {
@@ -63,7 +57,7 @@ namespace VfxEditor.UldFormat.Texture {
 
             Path.Draw( CommandManager.Uld );
             if( !string.IsNullOrEmpty( Path.Value ) ) {
-                ImGui.Checkbox( $"Show HD", ref ShowHD );
+                ImGui.Checkbox( "Show HD", ref ShowHD );
                 if( ShowHD ) ImGui.TextDisabled( TexturePath );
                 Plugin.TextureManager.DrawTexture( UpdateTexture() );
             }
@@ -71,7 +65,7 @@ namespace VfxEditor.UldFormat.Texture {
             IconId.Draw( CommandManager.Uld );
             UpdateIcon();
             if( IconId.Value > 0 ) {
-                ImGui.Checkbox( $"Show HD", ref ShowHD );
+                ImGui.Checkbox( "Show HD", ref ShowHD );
                 ImGui.TextDisabled( IconPath );
                 Plugin.TextureManager.DrawTexture( UpdateIcon() );
             }
