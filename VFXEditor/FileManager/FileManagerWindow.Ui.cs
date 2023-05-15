@@ -1,7 +1,9 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManagerWindow<T, R, S> : FileManagerWindow, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
@@ -31,12 +33,18 @@ namespace VfxEditor.FileManager {
             if( !menu ) return;
 
             Plugin.DrawFileMenu();
-            if( CurrentFile != null && ImGui.BeginMenu( "Edit" ) ) {
+
+            if( CurrentFile == null ) {
+                using var disabled = ImRaii.Disabled();
+                ImGui.MenuItem( "Edit" );
+            }
+            else if( ImGui.BeginMenu( "Edit" ) ) {
                 GetCopyManager().Draw();
                 GetCommandManager().Draw();
                 DrawEditMenuExtra();
                 ImGui.EndMenu();
             }
+
             ImGui.Separator();
             Plugin.DrawManagersMenu( this );
 
@@ -82,7 +90,7 @@ namespace VfxEditor.FileManager {
 
                 using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
                     if( popup ) {
-                        if( ImGui.Selectable( $"Delete" ) ) {
+                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
                             RemoveDocument( document );
                             break;
                         }

@@ -62,7 +62,7 @@ namespace VfxEditor.TmbFormat.Actor {
 
             using( var left = ImRaii.Child( "Left" ) ) {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) { // NEW
+                    if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) { // NEW
                         var newTrack = new Tmtr( PapEmbedded );
                         var idx = Tracks.Count == 0 ? 0 : file.Tracks.IndexOf( Tracks.Last() ) + 1;
 
@@ -74,7 +74,7 @@ namespace VfxEditor.TmbFormat.Actor {
 
                     if( SelectedTrack != null ) {
                         ImGui.SameLine();
-                        if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) { // REMOVE
+                        if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) { // REMOVE
                             TmbRefreshIdsCommand command = new( file, false, true );
                             command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                             command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, SelectedTrack ) );

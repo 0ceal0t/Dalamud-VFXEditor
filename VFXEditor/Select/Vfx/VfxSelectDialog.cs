@@ -42,7 +42,7 @@ namespace VfxEditor.Select.Vfx {
 
             ImGui.SameLine();
             if( Plugin.SpawnExists() ) {
-                if( ImGui.Button( "Remov" ) ) Plugin.RemoveSpawn();
+                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
             }
             else {
                 if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );

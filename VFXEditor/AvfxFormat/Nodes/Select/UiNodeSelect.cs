@@ -189,7 +189,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
+                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
             }
 
             UiUtils.Tooltip( "Navigate to selected node" );

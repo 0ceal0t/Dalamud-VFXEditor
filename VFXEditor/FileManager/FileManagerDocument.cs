@@ -296,7 +296,7 @@ namespace VfxEditor.FileManager {
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveSource();
+                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveSource();
             }
 
             // Input
@@ -309,7 +309,7 @@ namespace VfxEditor.FileManager {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) Manager.ShowSource();
+                if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
             }
         }
 
@@ -319,7 +319,7 @@ namespace VfxEditor.FileManager {
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( UiUtils.TransparentButton( $"{( char )FontAwesomeIcon.Times}", UiUtils.RED_COLOR ) ) RemoveReplace();
+                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveReplace();
             }
 
             // Input
@@ -332,7 +332,7 @@ namespace VfxEditor.FileManager {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Search}" ) ) Manager.ShowReplace();
+                if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
             }
         }
 
@@ -341,7 +341,7 @@ namespace VfxEditor.FileManager {
 
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.FileDownload}" ) ) ExportRaw();
+                if( ImGui.Button( FontAwesomeIcon.FileDownload.ToIconString() ) ) ExportRaw();
             }
             UiUtils.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
 

@@ -166,7 +166,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Share}" ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
+                    if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
                 }
 
                 UiUtils.Tooltip( "Navigate to selected node" );
@@ -179,7 +179,7 @@ namespace VfxEditor.AvfxFormat {
                     // Remove button
                     ImGui.SameLine();
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                         CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
                         return;
                     }

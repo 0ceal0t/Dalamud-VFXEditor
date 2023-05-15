@@ -62,12 +62,12 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Draw() {
-            var id = "##CurveEdit";
+            using var _ = ImRaii.PushId( "CurveEdit" );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 // Delete
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                         Editor.Keys.Remove( Key );
                         Editor.Points.Remove( this );
@@ -80,7 +80,7 @@ namespace VfxEditor.AvfxFormat {
                 // Shift over left/right
                 if( Editor.Points[0] != this ) {
                     ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowLeft}{id}" ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.ArrowLeft.ToIconString() ) ) {
                         CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                             var idx = Editor.Points.IndexOf( this );
                             var swap = Editor.Points[idx - 1];
@@ -92,7 +92,7 @@ namespace VfxEditor.AvfxFormat {
                 }
                 if( Editor.Points[^1] != this ) {
                     ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.ArrowRight}{id}" ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.ArrowRight.ToIconString() ) ) {
                         CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                             var idx = Editor.Points.IndexOf( this );
                             var swap = Editor.Points[idx + 1];
@@ -105,14 +105,14 @@ namespace VfxEditor.AvfxFormat {
             }
 
             var tempTime = Key.Time;
-            if( ImGui.InputInt( $"Time{id}", ref tempTime ) ) {
+            if( ImGui.InputInt( "Time", ref tempTime ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Key.Time = tempTime;
                     Editor.UpdateGradient();
                 } ) );
             }
 
-            if( UiUtils.EnumComboBox( $"Type{id}", KeyTypeOptions, Key.Type, out var newKeyType ) ) {
+            if( UiUtils.EnumComboBox( "Type", KeyTypeOptions, Key.Type, out var newKeyType ) ) {
                 CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                     Key.Type = newKeyType;
                 } ) );
@@ -120,7 +120,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( IsColor ) {
                 var tempColorData = RawData;
-                if( ImGui.ColorEdit3( $"Color{id}", ref tempColorData, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
+                if( ImGui.ColorEdit3( "Color", ref tempColorData, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                     if( !IsColorChanging ) {
                         IsColorChanging = true;
                         PreColorChangeState = Editor.GetState();
@@ -135,7 +135,7 @@ namespace VfxEditor.AvfxFormat {
             }
             else {
                 var tempData = RawData;
-                if( ImGui.InputFloat3( $"Value{id}", ref tempData ) ) {
+                if( ImGui.InputFloat3( "Value", ref tempData ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
                         RawData = tempData;
                     } ) );

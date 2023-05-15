@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
                     var newValue = InputString.Trim().Trim( '\0' ) + '\u0000';
                     CommandManager.Avfx.Add( new AvfxStringCommand( this, newValue, ShowRemoveButton && newValue.Trim( '\0' ).Length == 0 ) );
                 }
@@ -82,7 +82,7 @@ namespace VfxEditor.AvfxFormat {
             if( ShowRemoveButton ) {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) CommandManager.Avfx.Add( new AvfxStringCommand( this, "", true ) );
                 }
 
                 UiUtils.Tooltip( "Unassign field" );

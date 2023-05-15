@@ -24,6 +24,7 @@ namespace VfxEditor.NodeLibrary {
                 ImGui.Text( text );
                 ImGui.EndDragDropSource();
             }
+
             if( ImGui.BeginDragDropTarget() ) {
                 if( library.StopDragging( this ) ) listModified = true;
                 ImGui.EndDragDropTarget();

@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -25,78 +26,82 @@ namespace VfxEditor.NodeLibrary {
         public AvfxNodeLibraryNode( AvfxNodeLibraryFolder parent, AvfxNodeLibraryProps props ) : this( parent, props.Name, props.Id, props.Path, props.Description, props.Color ) { }
 
         public override bool Draw( AvfxNodeLibrary library, string searchInput ) {
-            var id = $"##NodeLibrary{Id}";
-            var uniqueId = $"###NodeLibrary{Id}";
+            using var _ = ImRaii.PushId( Id );
+
             var listModified = false;
 
             ImGui.PushStyleColor( ImGuiCol.Header, Color );
             ImGui.PushStyleColor( ImGuiCol.HeaderHovered, Color * 0.75f );
-            var open = ImGui.CollapsingHeader( $"{Name}{uniqueId}" );
+            var open = ImGui.CollapsingHeader( Name );
             DragDrop( library, Name, ref listModified );
             ImGui.PopStyleColor( 2 );
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}-context" );
 
-            if( ImGui.BeginPopup( $"{id}-context" ) ) {
-                if( ImGui.Selectable( $"Import{id}" ) && Plugin.AvfxManager.CurrentFile != null ) Plugin.AvfxManager.Import( Path );
+            if( DrawPopup( library ) ) listModified = true;
 
-                if( ImGui.Selectable( $"Delete{id}" ) ) {
-                    Cleanup();
-                    Parent.Remove( this );
-                    library.Save();
-                    listModified = true;
-                }
-                if( ImGui.InputText( $"{id}/Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
-                    library.Save();
-                    listModified = true;
-                }
-                ImGui.EndPopup();
-            }
+            if( !open ) return listModified;
 
-            if( open ) {
-                ImGui.Indent();
+            // =========== Open ===========
 
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
+            using var indent = ImRaii.PushIndent();
 
-                if( UiUtils.DisabledButton( $"{( char )FontAwesomeIcon.Download}{id}", Plugin.AvfxManager.CurrentFile != null ) ) {
-                    Plugin.AvfxManager.Import( Path );
-                }
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) ) ) {
+                if( UiUtils.DisabledButton( FontAwesomeIcon.Download.ToIconString(), Plugin.AvfxManager.CurrentFile != null ) ) Plugin.AvfxManager.Import( Path );
 
                 ImGui.SameLine();
-                if( ImGui.Button( Editing ? $"{( char )FontAwesomeIcon.Save}{id}" : $"{( char )FontAwesomeIcon.PencilAlt}{id}" ) ) {
+                if( ImGui.Button( Editing ? FontAwesomeIcon.Save.ToIconString() : FontAwesomeIcon.PencilAlt.ToIconString() ) ) {
                     Editing = !Editing;
                     if( !Editing ) { // done editing
                         library.Save();
                         listModified = true;
                     }
                 }
+
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}{id}" ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     Cleanup();
                     Parent.Remove( this );
                     library.Save();
                     listModified = true;
                 }
+            }
 
-                ImGui.PopStyleVar( 1 );
-                ImGui.PopFont();
-
-                if( !Editing ) {
-                    if( string.IsNullOrEmpty( Description ) ) ImGui.TextDisabled( "No description" );
-                    else ImGui.TextWrapped( Description );
-                }
-                else {
-                    var preX = ImGui.GetCursorPosX();
-                    ImGui.InputText( $"Name{id}", ref Name, 255 );
-                    var w = ImGui.GetCursorPosX() - preX;
-                    ImGui.ColorEdit4( $"Color{id}", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
-                    ImGui.InputTextMultiline( $"Description{id}", ref Description, 1000, new Vector2( w, 100 ) );
-                }
-
-                ImGui.Unindent();
+            if( !Editing ) {
+                if( string.IsNullOrEmpty( Description ) ) ImGui.TextDisabled( "No description" );
+                else ImGui.TextWrapped( Description );
+            }
+            else {
+                var preX = ImGui.GetCursorPosX();
+                ImGui.InputText( "Name", ref Name, 255 );
+                var w = ImGui.GetCursorPosX() - preX;
+                ImGui.ColorEdit4( "Color", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
+                ImGui.InputTextMultiline( "Description", ref Description, 1000, new Vector2( w, 100 ) );
             }
 
             return listModified;
+        }
+
+        private bool DrawPopup( AvfxNodeLibrary library ) {
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "Popup" );
+
+            using var popup = ImRaii.Popup( "Popup" );
+            if( !popup ) return false;
+
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && Plugin.AvfxManager.CurrentFile != null ) Plugin.AvfxManager.Import( Path );
+
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                Cleanup();
+                Parent.Remove( this );
+                library.Save();
+                return true;
+            }
+
+            if( ImGui.InputText( "##Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
+                library.Save();
+                return true;
+            }
+
+            return false;
         }
 
         public override bool Matches( string input ) {

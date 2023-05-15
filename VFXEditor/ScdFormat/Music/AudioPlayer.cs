@@ -68,13 +68,13 @@ namespace VfxEditor.ScdFormat {
             // Controls
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( State == PlaybackState.Stopped ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" ) ) Play();
+                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
                 }
                 else if( State == PlaybackState.Playing ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Pause}" ) ) CurrentOutput.Pause();
+                    if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) CurrentOutput.Pause();
                 }
                 else if( State == PlaybackState.Paused ) {
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Play}" ) ) CurrentOutput.Play();
+                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) CurrentOutput.Play();
                 }
             }
 
@@ -110,7 +110,7 @@ namespace VfxEditor.ScdFormat {
             // Save
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Download}" ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) {
                     if( IsVorbis ) ImGui.OpenPopup( "SavePopup" );
                     else SaveWaveDialog();
                 }
@@ -128,7 +128,7 @@ namespace VfxEditor.ScdFormat {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Upload}" ) ) ImportDialog();
+                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ImportDialog();
             }
             UiUtils.Tooltip( "Replace sound file" );
 
@@ -185,7 +185,7 @@ namespace VfxEditor.ScdFormat {
             // Bytes
             ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesIn", ref ConverterSamples, 0, 0 );
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
             ImGui.SameLine();
@@ -196,7 +196,7 @@ namespace VfxEditor.ScdFormat {
             // Time
             ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( "##SecondsIn", ref ConverterSeconds, 0, 0 );
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( $"{( char )FontAwesomeIcon.ArrowRight}" ); ImGui.PopFont();
+            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"##SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
             ImGui.SameLine();

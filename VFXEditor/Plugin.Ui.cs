@@ -90,10 +90,8 @@ namespace VfxEditor {
         }
 
         private static void DrawManagerMenu( IFileManager manager, string text, IFileManager menuManager ) {
-            var disabled = manager == menuManager;
-            if( disabled ) ImGui.BeginDisabled();
+            using var disabled = ImRaii.Disabled( manager == menuManager );
             if( ImGui.MenuItem( text ) ) menuManager.Show();
-            if( disabled ) ImGui.EndDisabled();
         }
     }
 }

@@ -93,7 +93,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( $"{( !Plugin.VfxTracker.Enabled ? ( char )FontAwesomeIcon.Eye : ( char )FontAwesomeIcon.Times )}##ToggleVfxOverlay", new Vector2( 28, 23 ) ) ) {
+                if( ImGui.Button( !Plugin.VfxTracker.Enabled ? FontAwesomeIcon.Eye.ToIconString() : FontAwesomeIcon.Times.ToIconString(), new Vector2( 28, 23 ) ) ) {
                     Plugin.VfxTracker.Toggle();
 
                     if( !Plugin.VfxTracker.Enabled ) {

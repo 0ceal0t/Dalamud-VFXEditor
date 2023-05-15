@@ -94,8 +94,8 @@ namespace VfxEditor.Utils {
         public static void IconText( FontAwesomeIcon icon, bool disabled = false ) {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-            if( disabled ) ImGui.TextDisabled( $"{( char )icon}" );
-            else ImGui.Text( $"{( char )icon}" );
+            if( disabled ) ImGui.TextDisabled( icon.ToIconString() );
+            else ImGui.Text( icon.ToIconString() );
         }
 
         public static void Tooltip( string text ) {
@@ -134,9 +134,9 @@ namespace VfxEditor.Utils {
             };
 
             var icon = verified switch {
-                VerifiedStatus.OK => $"{( char )FontAwesomeIcon.Check}",
-                VerifiedStatus.ISSUE => $"{( char )FontAwesomeIcon.Times}",
-                _ => $"{( char )FontAwesomeIcon.Circle}"
+                VerifiedStatus.OK => FontAwesomeIcon.Check.ToIconString(),
+                VerifiedStatus.ISSUE => FontAwesomeIcon.Times.ToIconString(),
+                _ => FontAwesomeIcon.Circle.ToIconString()
             };
 
             var text = verified switch {
@@ -197,7 +197,7 @@ namespace VfxEditor.Utils {
         public static float GetPaddedIconSize( FontAwesomeIcon icon ) {
             var style = ImGui.GetStyle();
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            return ImGui.CalcTextSize( $"{( char )icon}" ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
+            return ImGui.CalcTextSize( icon.ToIconString() ).X + style.FramePadding.X * 2 + style.ItemInnerSpacing.X;
         }
 
         public static Vector2 GetIconSize( FontAwesomeIcon icon ) {
@@ -212,6 +212,20 @@ namespace VfxEditor.Utils {
             return IconButton( icon, text );
         }
 
+        public static bool IconSelectable( FontAwesomeIcon icon, string text ) {
+            var ret = false;
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ret = ImGui.Selectable( icon.ToIconString() );
+            }
+
+            //using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 0 ) );
+            ImGui.SameLine();
+            ImGui.Text( text );
+
+            return ret;
+        }
+
         public static bool IconButton( FontAwesomeIcon icon, string text ) {
             var buttonClicked = false;
 
@@ -224,7 +238,7 @@ namespace VfxEditor.Utils {
             var buttonSizeY = ( iconSize.Y > textSize.Y ? iconSize.Y : textSize.Y ) + padding.Y * 2;
             var buttonSize = new Vector2( buttonSizeX, buttonSizeY );
 
-            if( ImGui.Button( "###" + icon.ToIconString() + text, buttonSize ) ) buttonClicked = true;
+            if( ImGui.Button( "##" + icon.ToIconString() + text, buttonSize ) ) buttonClicked = true;
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - padding.X );

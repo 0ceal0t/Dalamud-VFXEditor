@@ -55,7 +55,7 @@ namespace VfxEditor {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             if( unassigned ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" ) ) {
+            if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) {
                 Modifier = KeybindModifierKeys.Ctrl;
                 Key = VirtualKey.NONCONVERT;
                 ret = true;

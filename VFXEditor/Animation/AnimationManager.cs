@@ -95,13 +95,13 @@ namespace VfxEditor.Animation {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( Playing ? $"{( char )FontAwesomeIcon.Stop}" : $"{( char )FontAwesomeIcon.Play}" ) ) Playing = !Playing;
+                if( ImGui.Button( Playing ? FontAwesomeIcon.Stop.ToIconString() : FontAwesomeIcon.Play.ToIconString() ) ) Playing = !Playing;
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, !Looping );
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.Sync}" ) ) Looping = !Looping;
+                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) Looping = !Looping;
             }
 
             ImGui.SameLine();

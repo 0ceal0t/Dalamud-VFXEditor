@@ -129,7 +129,7 @@ namespace VfxEditor.Select {
 
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                var browse = ImGui.Button( $"{( char )FontAwesomeIcon.Search}" );
+                var browse = ImGui.Button( FontAwesomeIcon.Search.ToIconString() );
                 if( browse ) {
                     FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                         if( !ok ) return;
@@ -190,7 +190,7 @@ namespace VfxEditor.Select {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
             using( var color = ImRaii.PushColor( ImGuiCol.Text, FavoriteColor, isFavorite ) ) {
-                ImGui.Text( $"{( char )FontAwesomeIcon.Star}" );
+                ImGui.Text( FontAwesomeIcon.Star.ToIconString() );
 
                 if( ImGui.IsItemClicked() ) {
                     if( isFavorite ) RemoveFavorite( selectResult );

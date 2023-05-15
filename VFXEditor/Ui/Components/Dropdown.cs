@@ -80,12 +80,12 @@ namespace VfxEditor.Ui.Components {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             var index = Selected == null ? -1 : Items.IndexOf( Selected );
 
-            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}", new Vector4( 1 ), Selected != null && index > 0 ) ) {
+            if( UiUtils.DisabledTransparentButton( FontAwesomeIcon.ChevronLeft.ToIconString(), new Vector4( 1 ), Selected != null && index > 0 ) ) {
                 Selected = Items[index - 1];
             }
 
             ImGui.SameLine();
-            if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronRight}", new Vector4( 1 ), Selected != null && index < ( Items.Count - 1 ) ) ) {
+            if( UiUtils.DisabledTransparentButton( FontAwesomeIcon.ChevronRight.ToIconString(), new Vector4( 1 ), Selected != null && index < ( Items.Count - 1 ) ) ) {
                 Selected = Items[index + 1];
             }
         }
@@ -104,12 +104,12 @@ namespace VfxEditor.Ui.Components {
         private void DrawAddDelete() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             ImGui.SameLine();
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) OnNew();
+            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
 
             if( Selected != null ) {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     OnDelete( Selected );
                     Selected = null;
                 }

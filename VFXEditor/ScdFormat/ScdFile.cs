@@ -94,8 +94,8 @@ namespace VfxEditor.ScdFormat {
 
             using var _ = ImRaii.PushId( "Audio" );
 
-            if( ImGui.CollapsingHeader( "Settings#" ) ) {
-                using var indent = ImRaii.PushIndent();
+            if( ImGui.CollapsingHeader( "Settings" ) ) {
+                using var indent = ImRaii.PushIndent( 10f );
 
                 ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
                 if( ImGui.Checkbox( "Loop Music", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();

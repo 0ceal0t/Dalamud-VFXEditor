@@ -26,7 +26,7 @@ namespace VfxEditor.ScdFormat {
         public void Draw() {
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
-                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value})" ) ) {
+                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value})###{idx}" ) ) {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 

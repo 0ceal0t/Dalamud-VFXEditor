@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -41,13 +40,13 @@ namespace VfxEditor.Ui.Interfaces {
 
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Check}" ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
                         renamed = ( string.IsNullOrEmpty( renamedTemp ) || renamed == item.GetDefaultText() ) ? null : renamedTemp;
                         renaming = false;
                     }
 
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Times}" ) ) renaming = false;
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) renaming = false;
                 }
 
                 ImGui.SameLine();
@@ -65,7 +64,7 @@ namespace VfxEditor.Ui.Interfaces {
 
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
-                if( ImGui.Button( $"{( char )FontAwesomeIcon.PencilAlt}" ) ) {
+                if( ImGui.Button( FontAwesomeIcon.PencilAlt.ToIconString() ) ) {
                     renaming = true;
                     renamedTemp = currentText;
                 }

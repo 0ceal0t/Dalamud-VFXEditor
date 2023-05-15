@@ -20,10 +20,10 @@ namespace VfxEditor.Ui.Components {
         protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) OnNew();
+            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
             if( Selected != null ) {
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     OnDelete( Selected );
                     Selected = null;
                 }

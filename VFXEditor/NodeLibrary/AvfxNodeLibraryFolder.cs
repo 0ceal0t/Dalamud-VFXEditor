@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -37,94 +38,100 @@ namespace VfxEditor.NodeLibrary {
         }
 
         public override bool Draw( AvfxNodeLibrary library, string searchInput ) {
-            var id = $"##NodeLibrary{Id}";
-            var uniqueId = $"###NodeLibrary{Id}";
-            var listModified = false;
+            using var _ = ImRaii.PushId( Id );
 
+            var listModified = false;
             var open = true;
+
             if( !IsRoot ) {
                 // So that you can drag an item BEFORE a folder, rather than only inside of it
 
-                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
-                ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
-
-                ImGui.BeginChild( $"{id}-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
-                ImGui.EndChild();
-
-                if( ImGui.BeginDragDropTarget() ) {
-                    if( library.StopDragging( this, overridePosition: true ) ) listModified = true;
-                    ImGui.EndDragDropTarget();
-                }
-                ImGui.PopStyleVar( 2 );
+                if( DrawDragDrop( library, true, "Child" ) ) listModified = true;
 
                 // Main folder item
 
-                ImGui.PushStyleColor( ImGuiCol.Header, new Vector4( 0 ) );
-                open = ImGui.TreeNodeEx( $"{uniqueId}",
-                   ImGuiTreeNodeFlags.SpanAvailWidth |
-                    ImGuiTreeNodeFlags.FramePadding |
-                    ImGuiTreeNodeFlags.Framed
-                );
-                DragDrop( library, Name, ref listModified );
-                ImGui.PopStyleColor( 1 );
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"{id}/Popup" );
-
-                if( ImGui.BeginPopup( $"{id}/Popup" ) ) {
-                    if( ImGui.Selectable( $"New Sub-Folder{id}" ) ) {
-                        var newFolder = new AvfxNodeLibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
-                        Add( newFolder );
-                        library.Save();
-                        listModified = true;
-                    }
-                    if( ImGui.Selectable( $"Delete{id}" ) ) {
-                        Cleanup();
-                        Parent.Remove( this );
-                        library.Save();
-                        listModified = true;
-                    }
-                    if( ImGui.InputText( $"{id}/Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
-                        library.Save();
-                        listModified = true;
-                    }
-                    ImGui.EndPopup();
+                using( var color = ImRaii.PushColor( ImGuiCol.Header, new Vector4( 0 ) ) ) {
+                    open = ImGui.TreeNodeEx( "###Node",
+                        ImGuiTreeNodeFlags.SpanAvailWidth |
+                        ImGuiTreeNodeFlags.FramePadding |
+                        ImGuiTreeNodeFlags.Framed
+                    );
                 }
+                DragDrop( library, Name, ref listModified );
 
-                ImGui.SameLine();
+                if( DrawPopup( library ) ) listModified = true;
 
-                ImGui.PushFont( UiBuilder.IconFont );
-                ImGui.Text( $"{( char )FontAwesomeIcon.Folder}" );
-                ImGui.PopFont();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.SameLine();
+                    ImGui.Text( FontAwesomeIcon.Folder.ToIconString() );
+                }
 
                 ImGui.SameLine();
                 ImGui.Text( Name );
             }
 
-            if( open ) {
-                foreach( var item in Children ) {
-                    if( !item.Matches( searchInput ) ) continue;
-                    if( item.Draw( library, searchInput ) ) {
-                        listModified = true;
-                        break;
-                    }
+            if( !open ) return listModified;
+
+            // =========== Open ===========
+
+            foreach( var item in Children ) {
+                if( !item.Matches( searchInput ) ) continue;
+                if( item.Draw( library, searchInput ) ) {
+                    listModified = true;
+                    break;
                 }
-
-                ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
-                ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
-
-                ImGui.BeginChild( $"{id}-end-child", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
-                ImGui.EndChild();
-
-                if( ImGui.BeginDragDropTarget() ) {
-                    if( library.StopDragging( this ) ) listModified = true;
-                    ImGui.EndDragDropTarget();
-                }
-                ImGui.PopStyleVar( 2 );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-
-                if( !IsRoot ) ImGui.TreePop();
             }
 
+            if( DrawDragDrop( library, false, "EndChild" ) ) listModified = true;
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            if( !IsRoot ) ImGui.TreePop();
+
             return listModified;
+        }
+
+        private bool DrawDragDrop( AvfxNodeLibrary library, bool overridePosition, string name ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
+            style.Push( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
+
+            ImGui.BeginChild( name, new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
+            ImGui.EndChild();
+
+            using var dragDrop = ImRaii.DragDropTarget();
+            if( !dragDrop ) return false;
+
+            if( library.StopDragging( this, overridePosition ) ) return true;
+
+            return false;
+        }
+
+        private bool DrawPopup( AvfxNodeLibrary library ) {
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "Popup" );
+
+            using var popup = ImRaii.Popup( "Popup" );
+            if( !popup ) return false;
+
+            if( UiUtils.IconSelectable( FontAwesomeIcon.FolderPlus, "New Sub-Folder" ) ) {
+                var newFolder = new AvfxNodeLibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
+                Add( newFolder );
+                library.Save();
+                return true;
+            }
+
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                Cleanup();
+                Parent.Remove( this );
+                library.Save();
+                return true;
+            }
+
+            if( ImGui.InputText( "##Rename", ref Name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
+                library.Save();
+                return true;
+            }
+
+            return false;
         }
 
         public override bool Matches( string input ) => true;

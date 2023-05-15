@@ -305,7 +305,7 @@ namespace VfxEditor.AvfxFormat {
                     }
                 }
 
-                if( infinite ) drawList.AddText( UiBuilder.IconFont, 12, new Vector2( contentMax.X - 22, contentMin.Y + i * ItemHeight + 5 ), 0xFFFFFFFF, $"{( char )FontAwesomeIcon.Infinity}" );
+                if( infinite ) drawList.AddText( UiBuilder.IconFont, 12, new Vector2( contentMax.X - 22, contentMin.Y + i * ItemHeight + 5 ), 0xFFFFFFFF, FontAwesomeIcon.Infinity.ToIconString() );
             }
 
             if( MovingEntry != null ) {

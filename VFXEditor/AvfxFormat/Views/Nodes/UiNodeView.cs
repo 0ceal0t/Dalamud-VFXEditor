@@ -31,16 +31,16 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-                if( allowNew && ImGui.Button( $"{( char )FontAwesomeIcon.Plus}" ) ) ImGui.OpenPopup( "NewPopup" );
+                if( allowNew && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) ImGui.OpenPopup( "NewPopup" );
 
                 if( selected != null && allowDelete ) {
                     if( allowNew ) ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.Save}" ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
                         file.ShowExportDialog( selected );
                     }
 
                     ImGui.SameLine();
-                    if( ImGui.Button( $"{( char )FontAwesomeIcon.BookMedical}" ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.BookMedical.ToIconString() ) ) {
                         file.AddToNodeLibrary( selected );
                     }
 
@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.PushFont( UiBuilder.IconFont );
 
                     ImGui.SameLine();
-                    if( UiUtils.RemoveButton( $"{( char )FontAwesomeIcon.Trash}" ) ) {
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                         CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
                     }
                 }

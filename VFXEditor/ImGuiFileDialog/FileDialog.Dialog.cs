@@ -109,7 +109,7 @@ namespace ImGuiFileDialog {
 
         private void DrawPathComposer() {
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( PathInputActivated ? ( char )FontAwesomeIcon.Times : ( char )FontAwesomeIcon.Edit )}" ) ) {
+            if( ImGui.Button( PathInputActivated ? FontAwesomeIcon.Times.ToIconString() : FontAwesomeIcon.Edit.ToIconString() ) ) {
                 PathInputActivated = !PathInputActivated;
             }
             ImGui.PopFont();
@@ -155,7 +155,7 @@ namespace ImGuiFileDialog {
 
         private void DrawSearchBar() {
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.Home}" ) ) {
+            if( ImGui.Button( FontAwesomeIcon.Home.ToIconString() ) ) {
                 SetPath( "." );
             }
             ImGui.PopFont();
@@ -185,7 +185,7 @@ namespace ImGuiFileDialog {
             if( Flags.HasFlag( ImGuiFileDialogFlags.DisableCreateDirectoryButton ) ) return;
 
             ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( $"{( char )FontAwesomeIcon.FolderPlus}" ) ) {
+            if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
                 if( !CreateDirectoryMode ) {
                     CreateDirectoryMode = true;
                     CreateDirectoryBuffer = "";

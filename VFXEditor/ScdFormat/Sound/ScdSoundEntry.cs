@@ -160,7 +160,6 @@ namespace VfxEditor.ScdFormat {
                 else Tracks.Draw();
                 ImGui.EndTabItem();
             }
-            ImGui.EndTabBar();
         }
     }
 }

@@ -60,12 +60,12 @@ namespace VfxEditor.AvfxFormat {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 var index = Selected == null ? -1 : Group.Items.IndexOf( Selected );
 
-                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}", new Vector4( 1 ), Selected != null && index > 0 ) ) {
+                if( UiUtils.DisabledTransparentButton( FontAwesomeIcon.ChevronLeft.ToIconString(), new Vector4( 1 ), Selected != null && index > 0 ) ) {
                     Selected = Group.Items[index - 1];
                     OnSelect( Selected );
                 }
                 ImGui.SameLine();
-                if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronRight}", new Vector4( 1 ), Selected != null && index < ( Group.Items.Count - 1 ) ) ) {
+                if( UiUtils.DisabledTransparentButton( FontAwesomeIcon.ChevronRight.ToIconString(), new Vector4( 1 ), Selected != null && index < ( Group.Items.Count - 1 ) ) ) {
                     Selected = Group.Items[index + 1];
                     OnSelect( Selected );
                 }
