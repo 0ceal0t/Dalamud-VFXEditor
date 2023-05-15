@@ -27,10 +27,10 @@ namespace VfxEditor.Select.Pap.Mount {
             }
         }
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameNpc, Selected.Name, parentId );
+            Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameNpc, Selected.Name );
         }
 
         protected override string GetName( MountRow item ) => item.Name;

@@ -24,13 +24,13 @@ namespace VfxEditor.Select.Vfx.Housing {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
             ImGui.Text( "SGB:" );
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.SgbPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameItem, Selected.Name, true );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

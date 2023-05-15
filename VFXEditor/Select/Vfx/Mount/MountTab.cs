@@ -34,15 +34,16 @@ namespace VfxEditor.Select.Vfx.Mount {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + Selected.Variant );
             ImGui.Text( "IMC: " );
+
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Loaded.ImcPath );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPath, parentId, SelectResultType.GameNpc, Selected.Name, true );
+            Dialog.DrawPath( "VFX", Loaded.VfxPath, SelectResultType.GameNpc, Selected.Name, true );
         }
 
         protected override string GetName( MountRow item ) => item.Name;

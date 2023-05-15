@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Tmb.Action;
@@ -21,13 +21,15 @@ namespace VfxEditor.Select.Tmb {
             } );
         }
 
-        public override void Play( string playPath, string parentId ) {
+        public override void Play( string path ) {
+            using var _ = ImRaii.PushId( "Spawn" );
+
             ImGui.SameLine();
             if( Plugin.ActorAnimationManager.CanReset ) {
-                if( ImGui.Button( "Reset##" + parentId ) ) Plugin.ActorAnimationManager.Reset();
+                if( ImGui.Button( "Reset" ) ) Plugin.ActorAnimationManager.Reset();
             }
             else {
-                if( ImGui.Button( "Play##" + parentId ) ) Plugin.ActorAnimationManager.Apply( playPath );
+                if( ImGui.Button( "Play" ) ) Plugin.ActorAnimationManager.Apply( path );
             }
         }
 

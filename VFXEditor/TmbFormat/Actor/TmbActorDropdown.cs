@@ -1,4 +1,3 @@
-using ImGuiNET;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.TmbFormat.Entries;
@@ -9,7 +8,7 @@ namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
         private readonly TmbFile File;
 
-        public TmbActorDropdown( TmbFile file ) : base( "Actors", file.Actors, true ) {
+        public TmbActorDropdown( TmbFile file ) : base( "Actor", file.Actors, true ) {
             File = file;
         }
 
@@ -30,10 +29,6 @@ namespace VfxEditor.TmbFormat.Actor {
             File.Command.Add( command );
         }
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw( File );
-            else ImGui.Text( "Select a timeline actor..." );
-        }
+        protected override void DrawSelected() => Selected.Draw( File );
     }
 }

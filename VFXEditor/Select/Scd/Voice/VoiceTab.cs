@@ -1,5 +1,3 @@
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,8 +52,8 @@ namespace VfxEditor.Select.Scd.Voice {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPaths( "SCD", Loaded, parentId, SelectResultType.GameMisc, Selected.Name );
+        protected override void DrawSelected() {
+            Dialog.DrawPaths( "SCD", Loaded, SelectResultType.GameMisc, Selected.Name );
         }
 
         protected override string GetName( VoiceRow item ) => item.Name;

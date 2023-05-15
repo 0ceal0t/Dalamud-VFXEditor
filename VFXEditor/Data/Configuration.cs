@@ -182,7 +182,7 @@ namespace VfxEditor {
             using var child = ImRaii.Child( "Config" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5 );
+            using var indent = ImRaii.PushIndent( 5f );
 
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
@@ -247,7 +247,7 @@ namespace VfxEditor {
             using var child = ImRaii.Child( "CurveEditor" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5 );
+            using var indent = ImRaii.PushIndent( 5f );
 
             if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
             if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
@@ -266,7 +266,7 @@ namespace VfxEditor {
             using var child = ImRaii.Child( "TimelineEditor" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5 );
+            using var indent = ImRaii.PushIndent( 5f );
 
             if( ImGui.ColorEdit4( $"Selected color", ref TimelineSelectedColor ) ) Save();
             if( ImGui.ColorEdit4( $"Bar color", ref TimelineBarColor ) ) Save();
@@ -280,7 +280,7 @@ namespace VfxEditor {
                 using var _ = ImRaii.PushId( config.Key );
 
                 if( ImGui.CollapsingHeader( config.Key ) ) {
-                    using var indent = ImRaii.PushIndent( 5 );
+                    using var indent = ImRaii.PushIndent( 5f );
 
                     ImGui.Checkbox( "Use custom window color", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {

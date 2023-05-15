@@ -48,7 +48,7 @@ namespace VfxEditor.Select.Vfx.Item {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + Selected.GetVariant() );
@@ -56,7 +56,7 @@ namespace VfxEditor.Select.Vfx.Item {
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Loaded.ImcPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameItem, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameItem, Selected.Name, true );
 
             if( Loaded.VfxPaths.Count == 0 ) SelectTabUtils.DisplayNoVfx();
         }

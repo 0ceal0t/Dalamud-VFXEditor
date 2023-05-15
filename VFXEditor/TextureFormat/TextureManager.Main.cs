@@ -1,5 +1,4 @@
 using Dalamud.Logging;
-using Lumina;
 using System;
 using System.IO;
 using TeximpNet;

@@ -15,8 +15,8 @@ namespace VfxEditor.Select.Scd.Bgm {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameMusic, Selected.Name );
+        protected override void DrawSelected() {
+            Dialog.DrawPath( "Path", Selected.Path, SelectResultType.GameMusic, Selected.Name );
         }
 
         protected override string GetName( BgmRow item ) => item.Name;

@@ -17,8 +17,8 @@ namespace VfxEditor.Select.Scd.Orchestrion {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "Path", Loaded.Path, parentId, SelectResultType.GameMusic, Selected.Name );
+        protected override void DrawSelected() {
+            Dialog.DrawPath( "Path", Loaded.Path, SelectResultType.GameMusic, Selected.Name );
         }
 
         protected override string GetName( OrchestrionRow item ) => item.Name;

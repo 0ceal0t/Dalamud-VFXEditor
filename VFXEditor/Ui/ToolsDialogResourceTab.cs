@@ -101,7 +101,6 @@ namespace VfxEditor.Ui {
             ImGui.TableHeadersRow();
 
             foreach( var item in itemList ) {
-
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
                 ImGui.Text( $"0x{item.Hash:X8}" );

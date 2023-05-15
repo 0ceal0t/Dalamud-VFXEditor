@@ -16,12 +16,8 @@ namespace VfxEditor.UldFormat.Timeline {
             CommandManager.Uld.Add( new GenericRemoveCommand<UldTimeline>( Items, item ) );
         }
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw();
-            else ImGui.Text( "Select a timeline..." );
-        }
-
         protected override string GetText( UldTimeline item, int idx ) => item.GetText();
+
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

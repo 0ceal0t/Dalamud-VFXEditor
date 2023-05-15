@@ -21,8 +21,8 @@ namespace VfxEditor.Select.Scd.BgmQuest {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawBgmSituation( Selected.Name, parentId, Loaded.Situation );
+        protected override void DrawSelected() {
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 
         protected override string GetName( BgmQuestRow item ) => item.Name;

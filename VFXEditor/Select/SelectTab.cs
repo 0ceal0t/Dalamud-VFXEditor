@@ -2,10 +2,10 @@ using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
 using Lumina.Data.Files;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace VfxEditor.Select {
@@ -20,7 +20,7 @@ namespace VfxEditor.Select {
             Name = name;
         }
 
-        public abstract void Draw( string parentId );
+        public abstract void Draw();
     }
 
     public class SelectTabState<T> {
@@ -60,29 +60,33 @@ namespace VfxEditor.Select {
 
         // Drawing
         protected abstract string GetName( T item );
+
         protected virtual bool CheckMatch( T item, string searchInput ) => SelectTabUtils.Matches( GetName( item ), searchInput );
 
-        protected abstract void DrawSelected( string parentId );
+        protected abstract void DrawSelected();
+
         protected virtual void DrawExtra() { }
+
         protected virtual void OnSelect() { }
 
-        public override void Draw( string parentId ) {
-            var id = $"{parentId}/{Name}";
+        public override void Draw() {
+            using var _ = ImRaii.PushId( Name );
 
-            if( !ImGui.BeginTabItem( $"{Name}{id}" ) ) return;
+            using var tabItem = ImRaii.TabItem( Name );
+            if( !tabItem ) return;
+
             Load();
-            if( !ItemsLoaded ) {
-                ImGui.EndTabItem();
-                return;
-            }
+
+            if( !ItemsLoaded ) return;
 
             if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Items ); }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            var ResetScroll = false;
+
+            var resetScroll = false;
             DrawExtra();
-            if( ImGui.InputTextWithHint( $"{id}/Search", "Search", ref SearchInput, 255 ) ) {
+            if( ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 ) ) {
                 Searched = Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
-                ResetScroll = true;
+                resetScroll = true;
             }
 
             ImGui.Separator();
@@ -90,39 +94,41 @@ namespace VfxEditor.Select {
             // Navigate through items using the up and down arrow buttons
             if( KeybindConfiguration.NavigateUpDown( Searched, Selected, out var newSelected ) ) Select( newSelected );
 
-            ImGui.Columns( 2, id + "-Columns", true );
-            ImGui.BeginChild( id + "-Tree" );
-            SelectTabUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
-            if( ResetScroll ) { ImGui.SetScrollHereY(); };
+            ImGui.Columns( 2, "Columns", true );
 
-            var idx = 0;
-            foreach( var item in Searched ) {
-                if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
-                if( ImGui.Selectable( $"{GetName( item )}{id}{idx}", Selected == item ) ) {
-                    if( Selected != item ) Select( item ); // not what is currently selected
+            using( var tree = ImRaii.Child( "Tree" ) ) {
+                SelectTabUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
+                if( resetScroll ) { ImGui.SetScrollHereY(); };
+
+                var idx = 0;
+                foreach( var item in Searched ) {
+                    if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
+
+                    using var __ = ImRaii.PushId( idx );
+                    if( ImGui.Selectable( GetName( item ), Selected == item ) ) {
+                        if( Selected != item ) Select( item ); // not what is currently selected
+                    }
+
+                    idx++;
                 }
-                idx++;
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
-            ImGui.EndChild();
             ImGui.NextColumn();
 
             if( Selected == null ) ImGui.Text( "Select an item..." );
-            else {
-                DrawInner( id );
-            }
+            else DrawInner();
+
             ImGui.Columns( 1 );
-            ImGui.EndTabItem();
         }
 
-        protected virtual void DrawInner( string id ) {
-            ImGui.BeginChild( id + "-Selected" );
+        protected virtual void DrawInner() {
+            using var child = ImRaii.Child( "Child" );
             ImGui.Text( GetName( Selected ) );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawSelected( id );
-            ImGui.EndChild();
+            DrawSelected();
         }
 
         protected virtual void Select( T item ) {
@@ -135,8 +141,13 @@ namespace VfxEditor.Select {
             Icon = null;
             if( iconId > 0 ) {
                 TexFile tex;
-                try { tex = Plugin.DataManager.GetIcon( iconId ); }
-                catch( Exception ) { tex = Plugin.DataManager.GetIcon( 0 ); }
+                try {
+                    tex = Plugin.DataManager.GetIcon( iconId );
+                }
+                catch( Exception ) {
+                    tex = Plugin.DataManager.GetIcon( 0 );
+                }
+
                 Icon = Plugin.PluginInterface.UiBuilder.LoadImageRaw( SelectTabUtils.BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
             }
         }
@@ -147,6 +158,7 @@ namespace VfxEditor.Select {
             if( WaitingForItems || ItemsLoaded ) return;
             State.WaitingForItems = true;
             PluginLog.Log( "Loading " + StateId );
+
             await Task.Run( () => {
                 try {
                     LoadData();
@@ -154,6 +166,7 @@ namespace VfxEditor.Select {
                 catch( Exception e ) {
                     PluginLog.Error( e, "Error Loading: " + StateId );
                 }
+
                 State.ItemsLoaded = true;
             } );
         }
@@ -173,13 +186,12 @@ namespace VfxEditor.Select {
             base.Select( item );
         }
 
-        protected override void DrawInner( string id ) {
+        protected override void DrawInner() {
             if( Loaded != null ) {
-                ImGui.BeginChild( id + "-Selected" );
+                using var child = ImRaii.Child( "Child" );
                 ImGui.Text( GetName( Selected ) );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                DrawSelected( id );
-                ImGui.EndChild();
+                DrawSelected();
             }
             else ImGui.Text( "No data found" );
         }

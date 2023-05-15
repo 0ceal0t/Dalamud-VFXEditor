@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +12,9 @@ namespace VfxEditor.Select {
     public class SelectPenumbraTab : SelectTab<string, Dictionary<string, List<(string, string)>>> {
         public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
 
-        public override void Draw( string parentId ) {
+        public override void Draw() {
             if( !Plugin.PenumbraIpc.PenumbraEnabled ) return;
-            base.Draw( parentId );
+            base.Draw();
         }
 
         // Don't need to worry about doing this async
@@ -69,31 +70,35 @@ namespace VfxEditor.Select {
 
         private void AddToFiles( PenumbraMod mod, List<(string, string)> files, string modPath ) {
             if( mod == null || mod.Files == null ) return;
+
             foreach( var modFile in mod.Files ) {
                 var (gamePath, localFile) = modFile;
                 if( !gamePath.EndsWith( Dialog.Extension ) ) continue;
+
                 files.Add( (gamePath, Path.Join( modPath, localFile )) );
             }
         }
 
-        protected override void DrawSelected( string parentId ) {
-            var groupIdx = 0;
+        protected override void DrawSelected() {
+            var idx = 0;
             foreach( var group in Loaded ) {
-                if( ImGui.CollapsingHeader( $"{group.Key}{parentId}{groupIdx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    ImGui.Indent( 10 );
+                using var _ = ImRaii.PushId( idx );
+
+                if( ImGui.CollapsingHeader( group.Key, ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    using var indent = ImRaii.PushIndent( 10f );
 
                     var fileIdx = 0;
                     foreach( var file in group.Value ) {
                         var (gamePath, localPath) = file;
                         if( !Path.Exists( localPath ) ) continue;
-                        Dialog.DrawPath( $"File {fileIdx}", localPath, gamePath, $"{parentId}{groupIdx}", SelectResultType.Local, $"{Selected} {group.Key} {fileIdx}", false );
+
+                        Dialog.DrawPath( $"File {fileIdx}", localPath, gamePath, SelectResultType.Local, $"{Selected} {group.Key} {fileIdx}", false );
+
                         fileIdx++;
                     }
-
-                    ImGui.Unindent( 10 );
                 }
 
-                groupIdx++;
+                idx++;
             }
         }
 

@@ -1,6 +1,5 @@
-using Dalamud.Logging;
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Linq;
 using VfxEditor.Select.Shared;
 
@@ -35,21 +34,24 @@ namespace VfxEditor.Select.Vfx.Action {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                SelectTabUtils.Copy( Loaded.OriginalPath, $"{parentId}/CopyTmb" );
+                using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
+                    SelectTabUtils.Copy( Loaded.OriginalPath );
+                }
+
                 ImGui.SameLine();
                 ImGui.Text( "TMB:" );
                 ImGui.SameLine();
                 SelectTabUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            Dialog.DrawPath( "Cast", Selected.CastVfxPath, $"{parentId}/Cast", SelectResultType.GameAction, $"{Selected.Name} Cast", true );
+            Dialog.DrawPath( "Cast", Selected.CastVfxPath, SelectResultType.GameAction, $"{Selected.Name} Cast", true );
 
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameAction, Selected.Name, true );
+                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameAction, Selected.Name, true );
             }
         }
 

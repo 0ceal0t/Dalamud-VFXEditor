@@ -16,10 +16,10 @@ namespace VfxEditor.Select.Tmb.Emote {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPaths( "Path", Selected.TmbFiles, parentId, SelectResultType.GameEmote, Selected.Name, true );
+            Dialog.DrawPaths( "Path", Selected.TmbFiles, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

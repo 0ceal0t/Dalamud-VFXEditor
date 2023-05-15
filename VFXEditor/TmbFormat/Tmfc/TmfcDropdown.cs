@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
 using VfxEditor.TmbFormat.Entries;
@@ -9,7 +8,7 @@ namespace VfxEditor.TmbFormat {
     public class TmfcDropdown : Dropdown<Tmfc> {
         private readonly TmbFile File;
 
-        public TmfcDropdown( TmbFile file ) : base( "Tmfc", file.Tmfcs, false ) {
+        public TmfcDropdown( TmbFile file ) : base( "TMFC", file.Tmfcs, false ) {
             File = file;
         }
 
@@ -30,10 +29,6 @@ namespace VfxEditor.TmbFormat {
             File.Command.Add( command );
         }
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw( );
-            else ImGui.Text( "Select a TMFC..." );
-        }
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

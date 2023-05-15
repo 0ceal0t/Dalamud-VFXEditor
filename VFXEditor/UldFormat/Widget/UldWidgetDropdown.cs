@@ -23,10 +23,6 @@ namespace VfxEditor.UldFormat.Widget {
             CommandManager.Uld.Add( new GenericAddCommand<UldWidget>( Items, new UldWidget( Components ) ) );
         }
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw();
-            else ImGui.Text( "Select a component..." );
-        }
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

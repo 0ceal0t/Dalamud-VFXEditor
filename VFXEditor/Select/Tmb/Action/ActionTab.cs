@@ -21,17 +21,17 @@ namespace VfxEditor.Select.Tmb.Action {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "Start", Selected.Start.Path, $"{parentId}/Start", SelectResultType.GameAction, $"{Selected.Name} Start", true );
+            Dialog.DrawPath( "Start", Selected.Start.Path, SelectResultType.GameAction, $"{Selected.Name} Start", true );
             DrawMovementCancel( Selected.Start );
 
-            Dialog.DrawPath( "End", Selected.End.Path, $"{parentId}/End", SelectResultType.GameAction, $"{Selected.Name} End", true );
+            Dialog.DrawPath( "End", Selected.End.Path, SelectResultType.GameAction, $"{Selected.Name} End", true );
             DrawMovementCancel( Selected.End );
 
-            Dialog.DrawPath( "Hit", Selected.Hit.Path, $"{parentId}/Hit", SelectResultType.GameAction, $"{Selected.Name} Hit", true );
-            Dialog.DrawPath( "Weapon", Selected.Weapon.Path, $"{parentId}/Weapon", SelectResultType.GameAction, $"{Selected.Name} Weapon", true );
+            Dialog.DrawPath( "Hit", Selected.Hit.Path, SelectResultType.GameAction, $"{Selected.Name} Hit", true );
+            Dialog.DrawPath( "Weapon", Selected.Weapon.Path, SelectResultType.GameAction, $"{Selected.Name} Weapon", true );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

@@ -1,13 +1,14 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System.Linq;
-using System.Collections.Generic;
-using VfxEditor.Utils;
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
-using VfxEditor.FileManager;
-using VfxEditor.TmbFormat.Entries;
 using OtterGui.Raii;
+using System.Collections.Generic;
+using System.Linq;
+using VfxEditor.FileManager;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Actor {
     public class Tmac : TmbItemWithTime {

@@ -27,10 +27,10 @@ namespace VfxEditor.Select.Pap.Action {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameAction, Selected.Name, parentId );
+            Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameAction, Selected.Name );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

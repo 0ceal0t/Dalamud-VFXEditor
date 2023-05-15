@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,92 +78,94 @@ namespace VfxEditor.Select {
             else Manager.SetReplace( result );
         }
 
-        public virtual void Play( string playPath, string id ) { }
+        public virtual void Play( string path ) { }
 
         public override void DrawBody() {
-            var id = $"##{Manager.Id}/Select";
-            ImGui.BeginTabBar( $"Tabs{id}" );
-            DrawGameTabs( id );
-            DrawGamePath( id );
+            using var _ = ImRaii.PushId( $"##{Manager.Id}/Select" );
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            DrawGameTabs();
+            DrawGamePath();
             if( IsSource ) {
-                DrawLocalPath( id );
-                PenumbraTab.Draw( id );
+                DrawLocalPath();
+                PenumbraTab.Draw();
             }
-            RecentTab.Draw( id );
-            FavoritesTab.Draw( id );
-            ImGui.EndTabBar();
+            RecentTab.Draw();
+            FavoritesTab.Draw();
         }
 
         // ============= GAME =================
 
-        public void DrawGameTabs( string parentId ) {
-            var id = $"{parentId}/Game";
-
+        public void DrawGameTabs() {
             if( GetTabs().Count == 0 ) return;
-            if( !ImGui.BeginTabItem( $"Game Items{id}" ) ) return;
+            using var _ = ImRaii.PushId( "Game" );
 
-            ImGui.BeginTabBar( $"Tabs{id}" );
-            foreach( var tab in GetTabs() ) tab.Draw( id );
-            ImGui.EndTabBar();
-            ImGui.EndTabItem();
+            using var tabItem = ImRaii.TabItem( "Game Items" );
+            if( !tabItem ) return;
+
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
+            foreach( var tab in GetTabs() ) tab.Draw();
         }
 
         // =========== LOCAL ================
 
-        private void DrawLocalPath( string parentId ) {
-            var id = $"{parentId}/Local";
-            if( !ImGui.BeginTabItem( $"Local File{id}" ) ) return;
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
+        private void DrawLocalPath() {
+            using var _ = ImRaii.PushId( "Local" );
+
+            using var tabItem = ImRaii.TabItem( "Local File" );
+            if( !tabItem ) return;
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
             ImGui.TextDisabled( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
 
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText( $"{id}-Input", ref LocalPathInput, 255 );
+            ImGui.InputText( "##Input", ref LocalPathInput, 255 );
 
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
-            var browse = ImGui.Button( $"{( char )FontAwesomeIcon.Search}{id}" );
-            ImGui.PopFont();
-            if( browse) {
-                FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
-                    if( !ok ) return;
-                    Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
-                } );
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                var browse = ImGui.Button( $"{( char )FontAwesomeIcon.Search}" );
+                if( browse ) {
+                    FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                        if( !ok ) return;
+                        Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
+                    } );
+                }
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( $"SELECT{id}" ) ) {
+            if( ImGui.Button( "SELECT" ) ) {
                 Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
             }
-
-            ImGui.PopStyleVar( 1 );
-            ImGui.EndTabItem();
         }
 
         // ============== GAME FILE =============
 
-        public void DrawGamePath( string parentId ) {
-            var id = $"{parentId}/Path";
-            if( !ImGui.BeginTabItem( $"Game Path{id}" ) ) return;
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
+        public void DrawGamePath() {
+            using var _ = ImRaii.PushId( "Path" );
+
+            using var tabItem = ImRaii.TabItem( "Game Path" );
+            if( !tabItem ) return;
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
 
             ImGui.TextDisabled( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
 
             ImGui.Text( "Path" );
             ImGui.SameLine();
-            ImGui.InputText(  $"{id}-Input", ref GamePathInput, 255 );
+            ImGui.InputText(  "##Input", ref GamePathInput, 255 );
 
             ImGui.SameLine();
-            if( ImGui.Button( $"SELECT{id}" ) ) {
+            if( ImGui.Button( "SELECT" ) ) {
                 var cleanedGamePath = GamePathInput.Replace( "\\", "/" );
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedGamePath, cleanedGamePath ) );
             }
-
-            ImGui.PopStyleVar( 1 );
-            ImGui.EndTabItem();
         }
 
         // ======== DRAWING UTILS ======
@@ -184,61 +187,68 @@ namespace VfxEditor.Select {
         public bool DrawFavorite( SelectResult selectResult ) {
             var res = false;
             var isFavorite = IsFavorite( selectResult );
-            if( isFavorite ) ImGui.PushStyleColor( ImGuiCol.Text, FavoriteColor );
-            ImGui.PushFont( UiBuilder.IconFont );
 
-            ImGui.Text( $"{( char )FontAwesomeIcon.Star}" );
-            if( ImGui.IsItemClicked() ) {
-                if( isFavorite ) RemoveFavorite( selectResult );
-                else AddFavorite( selectResult );
-                res = true;
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, FavoriteColor, isFavorite ) ) {
+                ImGui.Text( $"{( char )FontAwesomeIcon.Star}" );
+
+                if( ImGui.IsItemClicked() ) {
+                    if( isFavorite ) RemoveFavorite( selectResult );
+                    else AddFavorite( selectResult );
+                    res = true;
+                }
             }
-            ImGui.PopFont();
-            if( isFavorite ) ImGui.PopStyleColor();
+
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 2 );
             return res;
         }
 
-        public void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, SelectResultType resultType, string name, string id ) {
+        public void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, SelectResultType resultType, string name ) {
             foreach( var (subName, subItems) in items ) {
                 if( subItems.Count == 0 ) continue;
 
                 if( ImGui.CollapsingHeader( subName, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    ImGui.Indent( 10 );
-                    DrawPaps( subItems, resultType, $"{name} {subName}", $"{id}/{subName}" );
+                    using var indent = ImRaii.PushIndent( 10f );
+                    DrawPaps( subItems, resultType, $"{name} {subName}" );
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-                    ImGui.Unindent( 10 );
                 }
             }
         }
 
-        public void DrawPaps( Dictionary<string, string> items, SelectResultType resultType, string name, string id ) {
+        public void DrawPaps( Dictionary<string, string> items, SelectResultType resultType, string name ) {
+            using var _ = ImRaii.PushId( name );
+
             foreach( var (suffix, path) in items ) {
                 DrawFavorite( path, resultType, $"{name} ({suffix})" );
+
                 ImGui.Text( $"{suffix}:" );
+
                 ImGui.SameLine();
                 if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
                 else SelectTabUtils.DisplayPath( path );
 
-                DrawPath( "", path, $"{id}{suffix}", resultType, $"{name} ({suffix})" );
+                DrawPath( "", path, resultType, $"{name} ({suffix})" );
             }
         }
 
-        public void DrawPaths( string label, IEnumerable<string> paths, string id, SelectResultType resultType, string resultName, bool play = false ) {
+        public void DrawPaths( string label, IEnumerable<string> paths, SelectResultType resultType, string resultName, bool play = false ) {
             var idx = 0;
             foreach( var path in paths ) {
-                DrawPath( $"{label} #{idx}", path, $"{id}-{idx}", resultType, $"{resultName} #{idx}", play );
+                using var _ = ImRaii.PushId( idx );
+                DrawPath( $"{label} #{idx}", path, resultType, $"{resultName} #{idx}", play );
                 idx++;
             }
         }
 
-        public void DrawPath( string label, string path, string id, SelectResultType resultType, string resultName, bool play = false ) =>
-            DrawPath( label, path, path, id, resultType, resultName, play );
+        public void DrawPath( string label, string path, SelectResultType resultType, string resultName, bool play = false ) =>
+            DrawPath( label, path, path, resultType, resultName, play );
 
-        public void DrawPath( string label, string path, string displayPath, string id, SelectResultType resultType, string resultName, bool play = false ) {
+        public void DrawPath( string label, string path, string displayPath, SelectResultType resultType, string resultName, bool play = false ) {
             if( string.IsNullOrEmpty( path ) ) return;
             if( path.Contains( "BGM_Null" ) ) return;
+
+            using var _ = ImRaii.PushId( label );
 
             if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
                 DrawFavorite( path, resultType, resultName );
@@ -247,24 +257,22 @@ namespace VfxEditor.Select {
                 SelectTabUtils.DisplayPath( displayPath );
             }
 
-            ImGui.Indent( 25f );
+            using var indent = ImRaii.PushIndent( 25f );
 
-            if( ImGui.Button( $"SELECT{id}" ) ) Invoke( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
+            if( ImGui.Button( "SELECT" ) ) Invoke( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
             ImGui.SameLine();
-            SelectTabUtils.Copy( path, id + "Copy" );
-            if( play ) Play( path, id + "/Spawn" );
-
-            ImGui.Unindent( 25f );
+            SelectTabUtils.Copy( path );
+            if( play ) Play( path );
         }
 
-        public void DrawBgmSituation( string name, string parentId, BgmSituationStruct situation ) {
+        public void DrawBgmSituation( string name, BgmSituationStruct situation ) {
             if( situation.IsSituation ) {
-                DrawPath( "Daytime Bgm", situation.DayPath, $"{parentId}/Day", SelectResultType.GameMusic, $"{name} / Day" );
-                DrawPath( "Nighttime Bgm", situation.NightPath, $"{parentId}/Night", SelectResultType.GameMusic, $"{name} / Night" );
-                DrawPath( "Battle Bgm", situation.BattlePath, $"{parentId}/Battle", SelectResultType.GameMusic, $"{name} / Battle" );
-                DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{parentId}/Break", SelectResultType.GameMusic, $"{name} / Break" );
+                DrawPath( "Daytime Bgm", situation.DayPath, SelectResultType.GameMusic, $"{name} / Day" );
+                DrawPath( "Nighttime Bgm", situation.NightPath, SelectResultType.GameMusic, $"{name} / Night" );
+                DrawPath( "Battle Bgm", situation.BattlePath, SelectResultType.GameMusic, $"{name} / Battle" );
+                DrawPath( "Daybreak Bgm", situation.DaybreakPath, SelectResultType.GameMusic, $"{name} / Break" );
             }
-            else DrawPath( "Bgm", situation.Path, parentId, SelectResultType.GameZone, name );
+            else DrawPath( "Bgm", situation.Path, SelectResultType.GameZone, name );
         }
     }
 }

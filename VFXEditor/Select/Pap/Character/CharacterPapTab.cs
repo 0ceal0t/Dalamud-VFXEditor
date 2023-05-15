@@ -1,4 +1,6 @@
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.Select.Pap.Character;
 using VfxEditor.Select.Shared.Character;
@@ -44,17 +46,17 @@ namespace VfxEditor.Select.Pap.IdlePose {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            if( ImGui.BeginTabBar( $"{parentId}/Tabs" ) ) {
-                if( ImGui.BeginTabItem( $"General{parentId}" ) ) {
-                    Dialog.DrawPaps( Loaded.General, SelectResultType.GameCharacter, Selected.Name, parentId );
-                    ImGui.EndTabItem();
-                }
-                if( ImGui.BeginTabItem( $"Poses{parentId}" ) ) {
-                    Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameCharacter, Selected.Name, parentId );
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
+        protected override void DrawSelected() {
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
+
+            if( ImGui.BeginTabItem( "General" ) ) {
+                Dialog.DrawPaps( Loaded.General, SelectResultType.GameCharacter, Selected.Name );
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Poses" ) ) {
+                Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameCharacter, Selected.Name );
+                ImGui.EndTabItem();
             }
         }
 

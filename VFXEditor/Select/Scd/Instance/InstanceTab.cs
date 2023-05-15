@@ -21,10 +21,10 @@ namespace VfxEditor.Select.Scd.Instance {
 
         protected override void OnSelect() => LoadIcon( Selected.Image );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawBgmSituation( Selected.Name, parentId, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 
         protected override string GetName( InstanceRow item ) => item.Name;

@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
@@ -18,6 +19,8 @@ namespace VfxEditor.Ui.Components {
             Items = items;
             AllowNew = allowNew;
         }
+
+        protected abstract void DrawSelected();
 
         protected abstract string GetText( T item, int idx );
 
@@ -41,7 +44,7 @@ namespace VfxEditor.Ui.Components {
             return false;
         }
 
-        public virtual void Draw() {
+        public void Draw() {
             using var _ = ImRaii.PushId( Id );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
@@ -64,7 +67,14 @@ namespace VfxEditor.Ui.Components {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            ImRaii.PushId( Items.IndexOf( Selected ) );
+            using var __ = ImRaii.PushId( Items.IndexOf( Selected ) );
+
+            if( Selected != null ) DrawSelected();
+            else {
+                var text = Id.ToLower();
+                var article = UiUtils.GetArticle( text );
+                ImGui.Text( $"Select {article} {text}..." );
+            }
         }
 
         private void DrawLeftRight() {

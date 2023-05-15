@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Shared;
@@ -20,13 +20,14 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             for( var idx = 0; idx < Loaded.Count; idx++ ) {
+                using var _ = ImRaii.PushId( idx );
                 var paths = Loaded[idx].VfxPaths;
-                if( ImGui.CollapsingHeader( $"Cutscene {idx}{parentId}" ) ) {
-                    ImGui.Indent( 10 );
-                    Dialog.DrawPaths( "VFX", paths, $"{parentId}{idx}", SelectResultType.GameCutscene, $"{Selected.Name} {idx}", true );
-                    ImGui.Unindent( 10 );
+
+                if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
+                    using var indent = ImRaii.PushIndent( 10f );
+                    Dialog.DrawPaths( "VFX", paths, SelectResultType.GameCutscene, $"{Selected.Name} {idx}", true );
                 }
             }
         }

@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using Lumina.Excel.GeneratedSheets;
 using VfxEditor.Select.Shared.Common;
 
@@ -30,8 +28,8 @@ namespace VfxEditor.Select.Scd.Common {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameMisc, Selected.Name, true );
+        protected override void DrawSelected() {
+            Dialog.DrawPath( "Path", Selected.Path, SelectResultType.GameMisc, Selected.Name, true );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

@@ -1,6 +1,5 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using System;
 using System.Linq;
 using VfxEditor.Select.Shared;
 using VfxEditor.Select.Shared.Zone;
@@ -20,12 +19,12 @@ namespace VfxEditor.Select.Vfx.Zone {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             ImGui.Text( "LGB: " );
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.LgbPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameZone, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameZone, Selected.Name, true );
         }
 
         protected override string GetName( ZoneRow item ) => item.Name;

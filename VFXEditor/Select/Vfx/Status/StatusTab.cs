@@ -18,13 +18,13 @@ namespace VfxEditor.Select.Vfx.Status {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "Hit", Selected.HitVfxPath, $"{parentId}/Hit", SelectResultType.GameStatus, $"{Selected.Name} Hit", true );
-            Dialog.DrawPath( "Loop 1", Selected.LoopVfxPath1, $"{parentId}/Loop1", SelectResultType.GameStatus, $"{Selected.Name} Loop 1", true );
-            Dialog.DrawPath( "Loop 2", Selected.LoopVfxPath2, $"{parentId}/Loop2", SelectResultType.GameStatus, $"{Selected.Name} Loop 2", true );
-            Dialog.DrawPath( "Loop 3", Selected.LoopVfxPath3, $"{parentId}/Loop3", SelectResultType.GameStatus, $"{Selected.Name} Loop 3", true );
+            Dialog.DrawPath( "Hit", Selected.HitVfxPath, SelectResultType.GameStatus, $"{Selected.Name} Hit", true );
+            Dialog.DrawPath( "Loop 1", Selected.LoopVfxPath1, SelectResultType.GameStatus, $"{Selected.Name} Loop 1", true );
+            Dialog.DrawPath( "Loop 2", Selected.LoopVfxPath2, SelectResultType.GameStatus, $"{Selected.Name} Loop 2", true );
+            Dialog.DrawPath( "Loop 3", Selected.LoopVfxPath3, SelectResultType.GameStatus, $"{Selected.Name} Loop 3", true );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

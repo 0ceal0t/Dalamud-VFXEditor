@@ -44,9 +44,10 @@ namespace VfxEditor.Select.Vfx.Common {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
-            Dialog.DrawPath( "Path", Selected.Path, parentId, SelectResultType.GameMisc, Selected.Name, true );
+
+            Dialog.DrawPath( "Path", Selected.Path, SelectResultType.GameMisc, Selected.Name, true );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

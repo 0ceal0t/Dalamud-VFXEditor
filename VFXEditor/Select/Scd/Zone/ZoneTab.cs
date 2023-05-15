@@ -1,5 +1,6 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using OtterGui.Raii;
 using System.Linq;
 using VfxEditor.Select.Shared.Zone;
 
@@ -21,19 +22,19 @@ namespace VfxEditor.Select.Scd.Zone {
 
         // ===== DRAWING ======
 
-        protected override void DrawSelected( string parentId ) {
-            Dialog.DrawBgmSituation( Selected.Name, parentId, Loaded.Situation );
+        protected override void DrawSelected() {
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var idx = 0;
             foreach( var entry in Loaded.Quests ) {
-                var id = $"{parentId}{idx}";
-                if( ImGui.CollapsingHeader( $"{entry.Key}{id}" ) ) {
-                    ImGui.Indent();
+                using var _ = ImRaii.PushId( idx );
+
+                if( ImGui.CollapsingHeader( entry.Key ) ) {
+                    using var indent = ImRaii.PushIndent();
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-                    Dialog.DrawBgmSituation( entry.Key, id, entry.Value );
+                    Dialog.DrawBgmSituation( entry.Key, entry.Value );
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-                    ImGui.Unindent();
                 }
                 idx++;
             }

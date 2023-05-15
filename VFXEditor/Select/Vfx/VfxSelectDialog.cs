@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Vfx.Action;
@@ -37,18 +37,20 @@ namespace VfxEditor.Select.Vfx {
             } );
         }
 
-        public override void Play( string playPath, string parentId ) {
+        public override void Play( string path ) {
+            using var _ = ImRaii.PushId( "Spawn" );
+
             ImGui.SameLine();
             if( Plugin.SpawnExists() ) {
-                if( ImGui.Button( "Remove##" + parentId ) ) Plugin.RemoveSpawn();
+                if( ImGui.Button( "Remov" ) ) Plugin.RemoveSpawn();
             }
             else {
-                if( ImGui.Button( "Spawn##" + parentId ) ) ImGui.OpenPopup( "Spawn_Popup##" + parentId );
+                if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
 
-                if( ImGui.BeginPopup( "Spawn_Popup##" + parentId ) ) {
-                    if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( playPath );
-                    if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( playPath );
-                    if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( playPath );
+                if( ImGui.BeginPopup( "SpawnPopup" ) ) {
+                    if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( path );
+                    if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( path );
+                    if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( path );
                     ImGui.EndPopup();
                 }
             }

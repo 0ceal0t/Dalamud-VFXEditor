@@ -1,5 +1,4 @@
 using ImGuiFileDialog;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Interop;
@@ -51,10 +50,6 @@ namespace VfxEditor.PapFormat {
             } );
         }
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw( File.ModelId.Value, File.ModelType.Value );
-            else ImGui.Text( "Select an animation..." );
-        }
+        protected override void DrawSelected() => Selected.Draw( File.ModelId.Value, File.ModelType.Value );
     }
 }

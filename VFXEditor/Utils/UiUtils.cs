@@ -49,17 +49,17 @@ namespace VfxEditor.Utils {
         }
 
         public static bool DisabledButton( string label, bool enabled, bool small = false ) {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !enabled );
             return ( small ? ImGui.SmallButton( label ) : ImGui.Button( label ) ) && enabled;
         }
 
         public static bool DisabledRemoveButton( string label, bool enabled, bool small = false ) {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !enabled );
             return RemoveButton( label, small ) && enabled;
         }
 
         public static bool DisabledTransparentButton( string label, Vector4 color, bool enabled ) {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, enabled );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !enabled );
             return TransparentButton( label, color ) && enabled;
         }
 

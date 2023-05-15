@@ -22,10 +22,10 @@ namespace VfxEditor.Select.Vfx.Emote {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameEmote, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameEmote, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

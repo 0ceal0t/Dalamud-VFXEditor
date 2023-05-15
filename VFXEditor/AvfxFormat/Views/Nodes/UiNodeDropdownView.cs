@@ -1,8 +1,6 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
@@ -61,6 +59,7 @@ namespace VfxEditor.AvfxFormat {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 var index = Selected == null ? -1 : Group.Items.IndexOf( Selected );
+
                 if( UiUtils.DisabledTransparentButton( $"{( char )FontAwesomeIcon.ChevronLeft}", new Vector4( 1 ), Selected != null && index > 0 ) ) {
                     Selected = Group.Items[index - 1];
                     OnSelect( Selected );
@@ -76,17 +75,17 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetNextItemWidth( inputSize );
 
             var selectedString = ( Selected != null ) ? Selected.GetText() : DefaultText;
-            if( ImGui.BeginCombo( "##Select", selectedString ) ) {
-                for( var idx = 0; idx < Group.Items.Count; idx++ ) {
-                    using var _ = ImRaii.PushId( idx );
+            using var combo = ImRaii.Combo( "##Select", selectedString );
+            if( !combo ) return;
 
-                    var item = Group.Items[idx];
-                    if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
-                        Selected = item;
-                        OnSelect( Selected );
-                    }
+            for( var idx = 0; idx < Group.Items.Count; idx++ ) {
+                using var _ = ImRaii.PushId( idx );
+
+                var item = Group.Items[idx];
+                if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
+                    Selected = item;
+                    OnSelect( Selected );
                 }
-                ImGui.EndCombo();
             }
         }
 

@@ -1,5 +1,5 @@
 using ImGuiNET;
-using System;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -49,25 +49,25 @@ namespace VfxEditor.Select.Pap.Emote {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
-            ImGui.BeginTabBar( "EmotePapTabs" );
+            using var tabBar = ImRaii.TabBar( "Tabs" );
+            if( !tabBar ) return;
+
             foreach( var (subAction, subActionPaths) in Loaded.AllPaps ) {
-                if( !ImGui.BeginTabItem( $"{subAction}{parentId}/Emote" ) ) continue;
-                ImGui.BeginChild( "EmotePapChild", new Vector2( -1 ), false );
+                using var tabItem = ImRaii.TabItem( subAction );
+                if( !tabItem ) continue;
+
+                using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
                 if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
-                    Dialog.DrawPaps( actionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}", parentId );
+                    Dialog.DrawPaps( actionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}" );
                 }
                 else {
-                    Dialog.DrawPapsWithHeader( subActionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}", parentId );
+                    Dialog.DrawPapsWithHeader( subActionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}" );
                 }
-
-                ImGui.EndChild();
-                ImGui.EndTabItem();
             }
-            ImGui.EndTabBar();
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

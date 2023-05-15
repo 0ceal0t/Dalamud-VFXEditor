@@ -18,10 +18,6 @@ namespace VfxEditor.UldFormat.Component {
 
         protected override string GetText( UldComponent item, int idx ) => item.GetText();
 
-        public override void Draw() {
-            base.Draw();
-            if( Selected != null ) Selected.Draw();
-            else ImGui.Text( "Select a component..." );
-        }
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

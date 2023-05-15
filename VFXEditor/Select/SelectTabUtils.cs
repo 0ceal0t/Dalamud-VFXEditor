@@ -1,5 +1,4 @@
 using ImGuiNET;
-using Lumina.Data.Files;
 using System;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -31,6 +30,7 @@ namespace VfxEditor.Select {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
             ImGui.TextWrapped( $"{path} (!)" );
             ImGui.PopStyleColor();
+
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
@@ -40,9 +40,9 @@ namespace VfxEditor.Select {
             }
         }
 
-        public static void Copy( string copyPath, string id ) {
+        public static void Copy( string path ) {
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
-            if( ImGui.Button( "Copy" + id ) ) ImGui.SetClipboardText( copyPath );
+            if( ImGui.Button( "Copy" ) ) ImGui.SetClipboardText( path );
             ImGui.PopStyleColor();
         }
 

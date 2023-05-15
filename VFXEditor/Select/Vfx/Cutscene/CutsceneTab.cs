@@ -1,5 +1,4 @@
 using ImGuiNET;
-using System;
 using System.Linq;
 using VfxEditor.Select.Shared;
 
@@ -15,12 +14,12 @@ namespace VfxEditor.Select.Vfx.Cutscene {
 
         public override void LoadSelection( CutsceneRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.Path, out loaded );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             ImGui.Text( "CUTB:" );
             ImGui.SameLine();
             SelectTabUtils.DisplayPath( Selected.Path );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, parentId, SelectResultType.GameCutscene, Selected.Name, true );
+            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameCutscene, Selected.Name, true );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

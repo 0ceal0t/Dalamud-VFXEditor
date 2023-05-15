@@ -24,12 +24,12 @@ namespace VfxEditor.Select.Pap.Weapon {
 
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
-        protected override void DrawSelected( string parentId ) {
+        protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
 
             if( string.IsNullOrEmpty( Loaded ) ) return;
 
-            Dialog.DrawPath( "Animations", Loaded, parentId, SelectResultType.GameItem, Selected.Name );
+            Dialog.DrawPath( "Animations", Loaded, SelectResultType.GameItem, Selected.Name );
         }
 
         protected override string GetName( WeaponRow item ) => item.Name;
