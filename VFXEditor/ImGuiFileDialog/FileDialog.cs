@@ -167,6 +167,7 @@ namespace ImGuiFileDialog {
         }
 
         private void SetPath( string path ) {
+            this.SearchBuffer = string.Empty;
             SelectedSideBar = null;
             CurrentPath = path;
             Files.Clear();
