@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -19,6 +18,8 @@ namespace VfxEditor.FileManager {
                 + WindowTitle;
 
             CheckKeybinds();
+
+            DocumentWindow.Draw();
 
             using var _ = ImRaii.PushId( $"##{Id}" );
             DrawMenu();
@@ -54,51 +55,68 @@ namespace VfxEditor.FileManager {
         private void DrawTabs() {
             DrawTabsDropdown();
 
-            var pos1 = ImGui.GetCursorScreenPos() + new Vector2( 0, -1 );
-            ImGui.SameLine();
-            var pos2 = ImGui.GetCursorScreenPos();
-            var color = ImGui.GetColorU32( ImGuiCol.TabActive );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 2 ) );
+
             var drawlist = ImGui.GetWindowDrawList();
-            var offset = ( float )Math.Floor( ImGui.GetStyle().WindowPadding.X * 0.5f );
-            drawlist.AddLine( pos1, new Vector2( pos2.X - ImGui.GetStyle().ItemSpacing.X + 4 - offset, pos1.Y ), color, 1 );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 4 );
+            var color = ImGui.GetColorU32( ImGuiCol.TabActive );
+
+            var preDropdownPos = ImGui.GetCursorScreenPos() + new Vector2( 0, -1 );
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 2 );
+            var postDropdownPos = ImGui.GetCursorScreenPos();
+            drawlist.AddLine( preDropdownPos, new Vector2( postDropdownPos.X, preDropdownPos.Y ), color, 1 );
 
             using var _ = ImRaii.PushId( "Tabs" );
-            using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable );
-            if( !tabBar ) return;
 
-            for( var i = 0; i < Documents.Count; i++ ) {
-                using var __ = ImRaii.PushId( i );
-                var document = Documents[i];
+            var size = ImGui.GetContentRegionAvail().X;
+            var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
 
-                var open = true;
-                var flags = ImGuiTabItemFlags.None | ImGuiTabItemFlags.NoPushId;
-                if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
-                if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
+            using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
+                using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable );
+                if( !tabBar ) return;
 
-                if( ImGui.BeginTabItem( $"{document.DisplayName}###", ref open, flags ) ) ImGui.EndTabItem();
+                for( var i = 0; i < Documents.Count; i++ ) {
+                    using var __ = ImRaii.PushId( i );
+                    var document = Documents[i];
 
-                if( !open && Documents.Count > 1 ) ImGui.OpenPopup( $"DeletePopup" );
+                    var open = true;
+                    var flags = ImGuiTabItemFlags.None | ImGuiTabItemFlags.NoPushId;
+                    if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
+                    if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}###", ref open, flags ) ) ImGui.EndTabItem();
 
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"RenamePopup" );
+                    if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
 
-                using( var popup = ImRaii.Popup( "RenamePopup" ) ) {
-                    if( popup ) document.DrawRename();
-                }
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
 
-                using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
-                    if( popup ) {
-                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
-                            RemoveDocument( document );
-                            break;
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RenamePopup" );
+
+                    using var itemSpacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 8, 4 ) );
+
+                    using( var popup = ImRaii.Popup( "RenamePopup" ) ) {
+                        if( popup ) document.DrawRename();
+                    }
+
+                    using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
+                        if( popup ) {
+                            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                                RemoveDocument( document );
+                                break;
+                            }
                         }
                     }
                 }
+
+                if( ImGui.TabItemButton( $"+", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
             }
 
-            if( ImGui.TabItemButton( $"+", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
+            ImGui.SameLine();
+            var prePopoutPos = ImGui.GetCursorScreenPos();
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            using var transparentButtonStyle = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) );
+            if( ImGui.Button( FontAwesomeIcon.ArrowUpRightFromSquare.ToIconString() ) ) DocumentWindow.Show();
+            drawlist.AddLine( new Vector2( prePopoutPos.X, preDropdownPos.Y ), new Vector2( prePopoutPos.X + popupSize, preDropdownPos.Y ), color, 1 );
         }
 
         private void DrawTabsDropdown() {

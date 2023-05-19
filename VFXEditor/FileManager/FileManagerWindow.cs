@@ -58,6 +58,8 @@ namespace VfxEditor.FileManager {
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
 
+        private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
+
         public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, id ) {
             WindowTitle = windowTitle;
             TempFilePrefix = $"{id}Temp";
@@ -71,6 +73,7 @@ namespace VfxEditor.FileManager {
             }
 
             AddDocument();
+            DocumentWindow = new( windowTitle, this );
         }
 
         public override CopyManager GetCopyManager() => Copy;

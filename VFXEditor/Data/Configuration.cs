@@ -103,6 +103,8 @@ namespace VfxEditor {
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
 
+        public bool DocumentPopoutShowSource = false;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
