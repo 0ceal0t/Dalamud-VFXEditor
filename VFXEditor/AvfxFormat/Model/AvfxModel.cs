@@ -87,9 +87,11 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) ImportDialog();
 
-            ImGui.Text( "Notes on exporting GLTF models:" );
+            ImGui.Text( "Notes on using GLTF models" );
             ImGui.SameLine();
             if( ImGui.SmallButton( "Here" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 4 );
 
             using var tabBar = ImRaii.TabBar( "ModelTabs" );
             if( !tabBar ) return;

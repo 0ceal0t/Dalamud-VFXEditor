@@ -47,7 +47,7 @@ namespace VfxEditor.FileManager {
                         ImGui.TableNextColumn();
                     }
 
-                    ImGui.Selectable( document.DisplayName, false, ImGuiSelectableFlags.SpanAllColumns );
+                    if( ImGui.Selectable( document.DisplayName, false, ImGuiSelectableFlags.SpanAllColumns ) ) Manager.SelectDocument( document );
 
                     ImGui.TableNextColumn();
                     if( document.Unsaved ) {
@@ -59,13 +59,14 @@ namespace VfxEditor.FileManager {
                     }
                 }
 
-                if( ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) Manager.SelectDocument( document );
-
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "DocumentPopup" );
 
                 using var popup = ImRaii.Popup( "DocumentPopup" );
                 if( popup ) {
-                    if( Manager.Documents.Count > 1 && UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) Manager.RemoveDocument( document );
+                    var deleteDisabled = Manager.Documents.Count < 2;
+                    using( var disabled = ImRaii.Disabled( deleteDisabled ) ) {
+                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) && !deleteDisabled ) Manager.RemoveDocument( document );
+                    }
                     document.DrawRename();
                 }
             }

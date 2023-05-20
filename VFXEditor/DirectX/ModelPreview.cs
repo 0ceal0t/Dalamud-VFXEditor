@@ -1,4 +1,5 @@
 using Dalamud.Logging;
+using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -47,7 +48,6 @@ namespace VfxEditor.DirectX {
 
         // ======= EMITTERS ==========
         private static readonly int EmitSpan = 2; // position, normal
-        private readonly int EmitInstanceSpan = 1; // position
         private readonly int EmitNumVerts;
         private int EmitNumInstances;
         private readonly Buffer EmitVertices;
@@ -106,55 +106,31 @@ namespace VfxEditor.DirectX {
 
 
             // ======= EMITTER VERTICES ========
-            // .... It's just a cube ...
-            var vertices = new[]
-            {
-                new Vector4(-1.0f, 1.0f, -1.0f, 1.0f),  // TLB 0
-                new Vector4(1.0f, 1.0f, -1.0f, 1.0f),   // TRB 1
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),    // TRF 2
-                new Vector4(-1.0f, 1.0f, 1.0f, 1.0f),   // TLF 3
-                new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), // BLB 4
-                new Vector4(1.0f, -1.0f, -1.0f, 1.0f),  // BRB 5
-                new Vector4(1.0f, -1.0f, 1.0f, 1.0f),   // BRF 6
-                new Vector4(-1.0f, -1.0f, 1.0f, 1.0f)   // BLF 7
-            };
-            var faces = new[]
-            {
-                new int[] { 3, 2, 6, 7 }, // Front
-                new int[] { 1, 0, 4, 5 }, // Back
-                new int[] { 0, 3, 7, 4 }, // Left
-                new int[] { 2, 1, 5, 6 }, // Right
-                new int[] { 0, 1, 2, 3 }, // Top
-                new int[] { 7, 6, 5, 4 }, // Bottom
-            };
-            var normals = new[]
-            {
-                new Vector4(0, 0, 1, 1), // Front
-                new Vector4(0, 0, -1, 1), // Back
-                new Vector4(-1, 0, 0, 1), // Left
-                new Vector4(1, 0, 0, 1), // Right
-                new Vector4(0, 1, 0, 1), // Top
-                new Vector4(0, -1, 0, 1), // Bottom
-            };
 
-            var vertexEmitters = new Vector4[faces.Length * 6 * EmitSpan]; // 6 VERTICES PER FACE (2 TRIANGLES) * 2 VECTORS PER VERTEX
-            for( var i = 0; i < faces.Length; i++ ) {
-                var indexes = new int[]{
-                    faces[i][0],
-                    faces[i][1],
-                    faces[i][2],
-                    faces[i][0],
-                    faces[i][2],
-                    faces[i][3]
-                };
-                for( var j = 0; j < indexes.Length; j++ ) {
-                    var idx = i * ( 6 * EmitSpan ) + j * EmitSpan;
-                    vertexEmitters[idx] = vertices[indexes[j]] * new Vector4( 0.1f, 0.1f, 0.1f, 1.0f ); // vertex position, scale it down
-                    vertexEmitters[idx + 1] = normals[i]; // face normal
-                }
+            var builder = new MeshBuilder( true, false );
+            builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
+            var emit = builder.ToMesh();
+            emit.Normals = emit.CalculateNormals();
+
+            var normals = emit.Normals;
+            var positions = emit.Positions;
+            var indexes = emit.Indices;
+
+            var data = new Vector4[indexes.Count * EmitSpan];
+
+            for( var index = 0; index < indexes.Count; index++ ) {
+                var pointIdx = indexes[index];
+
+                var position = positions[pointIdx];
+                var normal = normals[pointIdx];
+
+                var dataIdx = index * EmitSpan;
+                data[dataIdx] = new Vector4( position.X, position.Y, position.Z, 1 ); // POSITION
+                data[dataIdx + 1] = new Vector4( normal.X, normal.Y, normal.Z, 0 ); // NORMAL
             }
-            EmitNumVerts = vertexEmitters.Length / EmitSpan;
-            EmitVertices = Buffer.Create( Device, BindFlags.VertexBuffer, vertexEmitters );
+
+            EmitNumVerts = indexes.Count;
+            EmitVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
 
             EmitNumInstances = 0;
             EmitInstances = null;
@@ -168,7 +144,10 @@ namespace VfxEditor.DirectX {
                 EmitLayout = new InputLayout( Device, EmitSignature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
                     new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
-                    new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1)
+                    new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1),
+                    new InputElement("INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
+                    new InputElement("INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
+                    new InputElement("INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1)
                 } );
             }
             catch( Exception e ) {
@@ -233,10 +212,11 @@ namespace VfxEditor.DirectX {
                 EmitInstances?.Dispose();
             }
             else {
-                var data = new Vector4[modelEmitters.Count * EmitInstanceSpan];
-                for( var index = 0; index < modelEmitters.Count; index++ ) {
-                    var emitter = modelEmitters[index];
-                    data[index] = new Vector4( emitter.Position.X, emitter.Position.Y, emitter.Position.Z, 0 );
+                var data = new Matrix[modelEmitters.Count];
+                for( var idx = 0; idx < modelEmitters.Count; idx++ ) {
+                    var emitter = modelEmitters[idx];
+
+                    data[idx] = Matrix.Translation( new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z ) );
                 }
 
                 EmitInstances?.Dispose();
@@ -286,7 +266,7 @@ namespace VfxEditor.DirectX {
                 Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
 
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EmitVertices, Utilities.SizeOf<Vector4>() * EmitSpan, 0 ) );
-                Ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( EmitInstances, Utilities.SizeOf<Vector4>() * EmitInstanceSpan, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( EmitInstances, Utilities.SizeOf<Matrix>(), 0 ) );
 
                 Ctx.DrawInstanced( EmitNumVerts, EmitNumInstances, 0, 0 );
             }

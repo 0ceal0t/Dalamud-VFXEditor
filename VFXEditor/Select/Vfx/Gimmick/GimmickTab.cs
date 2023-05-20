@@ -1,10 +1,8 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Gimmick {
@@ -32,13 +30,14 @@ namespace VfxEditor.Select.Vfx.Gimmick {
 
         protected override void DrawSelected() {
             if( Loaded.VfxExists ) {
-                ImGui.Text( "TMB:" );
-                ImGui.SameLine();
-                SelectTabUtils.DisplayPath( Selected.TmbPath );
-
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
                     SelectTabUtils.Copy( Selected.TmbPath );
                 }
+
+                ImGui.SameLine();
+                ImGui.Text( "TMB:" );
+                ImGui.SameLine();
+                SelectTabUtils.DisplayPath( Selected.TmbPath );
 
                 Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameGimmick, Selected.Name, true );
             }

@@ -69,11 +69,7 @@ namespace VfxEditor.Ui.Components {
             using var __ = ImRaii.PushId( Items.IndexOf( Selected ) );
 
             if( Selected != null ) DrawSelected();
-            else {
-                var text = Id.ToLower();
-                var article = UiUtils.GetArticle( text );
-                ImGui.Text( $"Select {article} {text}..." );
-            }
+            else ImGui.Text( "Select an item..." );
         }
 
         private void DrawLeftRight() {

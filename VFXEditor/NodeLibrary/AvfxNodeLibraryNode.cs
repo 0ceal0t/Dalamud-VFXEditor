@@ -87,7 +87,10 @@ namespace VfxEditor.NodeLibrary {
             using var popup = ImRaii.Popup( "Popup" );
             if( !popup ) return false;
 
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && Plugin.AvfxManager.CurrentFile != null ) Plugin.AvfxManager.Import( Path );
+            var importDisabled = Plugin.AvfxManager.CurrentFile == null;
+            using( var disabled = ImRaii.Disabled( importDisabled ) ) {
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && !importDisabled ) Plugin.AvfxManager.Import( Path );
+            }
 
             if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
                 Cleanup();
