@@ -206,7 +206,10 @@ namespace VfxEditor.AvfxFormat {
 
             if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
             foreach( var item in Group.Items ) {
-                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
+                var cycle = Node.IsChildOf( item );
+                using var disabled = ImRaii.Disabled( cycle );
+
+                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) && !cycle ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
                 if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }

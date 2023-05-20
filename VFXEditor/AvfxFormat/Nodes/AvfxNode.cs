@@ -27,5 +27,16 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public virtual void ShowTooltip() { }
+
+        public bool IsChildOf( AvfxNode parent ) {
+            if( this == parent ) return true;
+
+            foreach( var p in Parents ) {
+                if( p.Node == parent ) return true;
+                if( p.Node.IsChildOf( parent ) ) return true;
+            }
+
+            return false;
+        }
     }
 }
