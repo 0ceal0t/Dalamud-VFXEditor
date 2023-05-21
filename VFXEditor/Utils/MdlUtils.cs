@@ -74,8 +74,8 @@ namespace VfxEditor.Utils {
             ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
             ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
 
-            ret.UV1 = new float[] { tex1.X, tex1.Y, tex1.X, tex1.Y };
-            ret.UV2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
+            ret.Uv1 = new float[] { tex1.X, tex1.Y, tex1.X, tex1.Y };
+            ret.Uv2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
 
             return ret;
         }

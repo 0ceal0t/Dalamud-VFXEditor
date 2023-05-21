@@ -42,8 +42,8 @@ namespace VfxEditor.Utils {
             var CombinedPos = new VertexPositionNormalTangent( Pos, Normal, Tangent );
 
             var Color = new Vector4( vertex.Color[0], vertex.Color[1], vertex.Color[2], vertex.Color[3] ); // 255
-            var UV1 = new Vector2( vertex.UV1[0], vertex.UV1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
-            var UV2 = new Vector2( vertex.UV2[2], vertex.UV2[3] );
+            var UV1 = new Vector2( vertex.Uv1[0], vertex.Uv1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
+            var UV2 = new Vector2( vertex.Uv2[2], vertex.Uv2[3] );
             var CombinedTexture = new VertexColor1Texture2( Color, UV1, UV2 );
 
             var ret = new GltfVertex {
@@ -67,8 +67,8 @@ namespace VfxEditor.Utils {
             ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
             ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
 
-            ret.UV1 = new float[] { uv1.X, uv1.Y, uv1.X, uv1.Y };
-            ret.UV2 = new float[] { uv1.X, uv1.Y, uv2.X, uv2.Y };
+            ret.Uv1 = new float[] { uv1.X, uv1.Y, uv1.X, uv1.Y };
+            ret.Uv2 = new float[] { uv1.X, uv1.Y, uv2.X, uv2.Y };
 
             return ret;
         }

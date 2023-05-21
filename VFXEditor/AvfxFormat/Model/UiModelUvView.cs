@@ -43,10 +43,10 @@ namespace VfxEditor.AvfxFormat {
             }
 
             NumPoints = orderedVertexes.Count;
-            Uv1_X = orderedVertexes.Select( x => x.UV1[0] ).ToArray();
-            Uv1_Y = orderedVertexes.Select( x => x.UV1[1] ).ToArray();
-            Uv2_X = orderedVertexes.Select( x => x.UV2[2] ).ToArray();
-            Uv2_Y = orderedVertexes.Select( x => x.UV2[3] ).ToArray();
+            Uv1_X = orderedVertexes.Select( x => x.Uv1[0] ).ToArray();
+            Uv1_Y = orderedVertexes.Select( x => x.Uv1[1] ).ToArray();
+            Uv2_X = orderedVertexes.Select( x => x.Uv2[2] ).ToArray();
+            Uv2_Y = orderedVertexes.Select( x => x.Uv2[3] ).ToArray();
         }
 
         public void Draw() {

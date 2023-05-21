@@ -179,8 +179,8 @@ namespace VfxEditor.DirectX {
                         data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
                         data[idx + 1] = mode switch {
                             RenderMode.Color => new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f ),
-                            RenderMode.Uv1 => new Vector4( v.UV1[0] + 0.5f, 0, v.UV1[1] + 0.5f, 1.0f ),
-                            RenderMode.Uv2 => new Vector4( v.UV2[2] + 0.5f, 0, v.UV2[3] + 0.5f, 1.0f ),
+                            RenderMode.Uv1 => new Vector4( v.Uv1[0] + 0.5f, 0, v.Uv1[1] + 0.5f, 1.0f ),
+                            RenderMode.Uv2 => new Vector4( v.Uv2[2] + 0.5f, 0, v.Uv2[3] + 0.5f, 1.0f ),
                             _ => throw new System.NotImplementedException()
                         };
                         data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 0 );
@@ -216,7 +216,10 @@ namespace VfxEditor.DirectX {
                 for( var idx = 0; idx < modelEmitters.Count; idx++ ) {
                     var emitter = modelEmitters[idx];
 
-                    data[idx] = Matrix.Translation( new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z ) );
+                    var pos = new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z );
+                    var rot = GetEmitterRotationQuat( new Vector3( emitter.Normal.X, emitter.Normal.Y, emitter.Normal.Z ) );
+
+                    data[idx] = Matrix.AffineTransformation( 1f, rot, pos );
                 }
 
                 EmitInstances?.Dispose();
@@ -225,6 +228,20 @@ namespace VfxEditor.DirectX {
             }
 
             UpdateDraw();
+        }
+
+        private static Quaternion GetEmitterRotationQuat( Vector3 normal ) {
+            var originalNormal = Vector3.UnitY;
+            if( normal.Equals( originalNormal ) ) return Quaternion.Identity;
+
+            var rotationAxis = Vector3.Cross( normal, originalNormal );
+            if( rotationAxis.Length() == 0f ) { // N = -N'
+                return Quaternion.RotationAxis( Vector3.UnitX, ( float )Math.PI );
+            }
+
+            var rotationAngle = Math.Acos( Vector3.Dot( normal, originalNormal ) / ( normal.Length() * originalNormal.Length() ) );
+
+            return Quaternion.RotationAxis( rotationAxis, ( float )rotationAngle );
         }
 
         public override void OnDraw() {
