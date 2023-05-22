@@ -8,6 +8,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public const string DISPLAY_NAME = "Voiceline (C192)";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
+        public override DangerLevel Danger => DangerLevel.Yellow;
 
         public override int Size => 0x38;
         public override int ExtraSize => 0;

@@ -3,7 +3,7 @@ using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
     public class UiTextureView : UiNodeSplitView<AvfxTexture> {
-        public UiTextureView( AvfxFile file, NodeGroup<AvfxTexture> group ) : base( "Textures", file, group, "Texture", true, true, "default_texture.vfxedit2" ) { }
+        public UiTextureView( AvfxFile file, NodeGroup<AvfxTexture> group ) : base( file, group, "Texture", true, true, "default_texture.vfxedit2" ) { }
 
         public override void OnSelect( AvfxTexture item ) { }
 

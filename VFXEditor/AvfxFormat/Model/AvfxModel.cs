@@ -74,7 +74,7 @@ namespace VfxEditor.AvfxFormat {
             NodeView.Draw();
             DrawRename();
 
-            ImGui.Text( $"Vertices: {Vertexes.Vertexes.Count} Indexes: {Indexes.Indexes.Count}" );
+            ImGui.TextDisabled( $"Vertices: {Vertexes.Vertexes.Count} Indexes: {Indexes.Indexes.Count}" );
             if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
 
             using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
