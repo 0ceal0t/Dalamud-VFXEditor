@@ -2,7 +2,7 @@ namespace VfxEditor.Select.Vfx.Status {
     public class StatusRow {
         public readonly string Name;
         public readonly int RowId;
-        public readonly ushort Icon;
+        public readonly uint Icon;
 
         public readonly string HitVfxPath;
         public readonly string LoopVfxPath1;

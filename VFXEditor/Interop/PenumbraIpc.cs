@@ -1,6 +1,7 @@
 using Dalamud.Plugin.Ipc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Interop {
     public class PenumbraIpc : IDisposable {
@@ -24,7 +25,7 @@ namespace VfxEditor.Interop {
             InitializedSubscriber.Subscribe( EnablePenumbra );
             DisposedSubscriber.Subscribe( DisablePenumbra );
 
-            if( !Plugin.PluginInterface.PluginNames.Contains( "Penumbra" ) ) return;
+            if( !Plugin.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
             try {
                 ApiVersionsSubscriber.InvokeFunc();
             }

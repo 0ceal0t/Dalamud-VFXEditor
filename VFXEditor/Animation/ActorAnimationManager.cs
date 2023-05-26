@@ -73,7 +73,7 @@ namespace VfxEditor.Animation {
             if( new IntPtr( actor ).Equals( ActorToReset ) ) ResetAnimationOverride( actor );
         }
 
-        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.ActorAnimationOffset );
+        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.AnimationMemoryOffset );
 
         private static ActorMemoryStruct* GetActor() => ( ActorMemoryStruct* )Plugin.PlayerObject?.Address;
 

@@ -50,7 +50,7 @@ namespace VfxEditor.Interop {
 
         private void OnUpdateEvent( object framework ) {
             var player = Plugin.PlayerObject;
-            var renderPtr = player.Address + Constants.RenderOffset;
+            var renderPtr = player.Address + Constants.RenderFlagOffset;
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
