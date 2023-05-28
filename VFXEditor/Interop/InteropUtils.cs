@@ -68,7 +68,7 @@ namespace VfxEditor.Interop {
 
         public static void PrepPap( IntPtr resource, List<string> papIds ) {
             if( papIds == null ) return;
-            Marshal.WriteByte( resource + 105, 0xec );
+            Marshal.WriteByte( resource + Constants.PrepPapOffset, Constants.PrepPapValue );
         }
 
         public static void WritePapIds( IntPtr resource, List<string> papIds ) {
