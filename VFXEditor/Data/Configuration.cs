@@ -79,7 +79,6 @@ namespace VfxEditor {
         public List<AvfxNodeLibraryProps> VFXNodeLibraryItems = new();
 
         public int MaxUndoSize = 10;
-        public bool DoubleClickNavigate = true;
 
         public bool LoopMusic = true;
         public bool LoopSoundEffects = false;
@@ -182,9 +181,6 @@ namespace VfxEditor {
         private void DrawConfiguration() {
             using var child = ImRaii.Child( "Config" );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5f );
-
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
             if( ImGui.Checkbox( "Refresh write location each update", ref UpdateWriteLocation ) ) Save();
@@ -222,14 +218,12 @@ namespace VfxEditor {
 
             ImGui.SetNextItemWidth( 135 );
             if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
-
-            if( ImGui.Checkbox( "Double-click to navigate to items", ref DoubleClickNavigate ) ) Save();
         }
 
         private void DrawKeybinds() {
             if( ImGui.Checkbox( "Block game inputs when VFXEditor is focused##Settings", ref BlockGameInputsWhenFocused ) ) Save();
 
-            using var child = ImRaii.Child( "Keybinds", new Vector2( -1 ), true );
+            using var child = ImRaii.Child( "Keybinds", new Vector2( -1 ), false );
 
             if( SaveKeybind.Draw( "Save" ) ) Save();
             if( SaveAsKeybind.Draw( "Save as" ) ) Save();
@@ -247,9 +241,6 @@ namespace VfxEditor {
         private void DrawCurveEditor() {
             using var child = ImRaii.Child( "CurveEditor" );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5f );
-
             if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
             if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
             if( ImGui.ColorEdit4( "Primary selected color", ref CurveEditorPrimarySelectedColor ) ) Save();
@@ -266,16 +257,12 @@ namespace VfxEditor {
         private void DrawTimelineEditor() {
             using var child = ImRaii.Child( "TimelineEditor" );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using var indent = ImRaii.PushIndent( 5f );
-
             if( ImGui.ColorEdit4( $"Selected color", ref TimelineSelectedColor ) ) Save();
             if( ImGui.ColorEdit4( $"Bar color", ref TimelineBarColor ) ) Save();
         }
 
         private void DrawEditorSpecific() {
             using var child = ImRaii.Child( "EditorSpecific" );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             foreach( var config in ManagerConfigs ) {
                 using var _ = ImRaii.PushId( config.Key );

@@ -24,10 +24,6 @@ namespace VfxEditor.NodeLibrary {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "NodeLibrary" );
 
-            ImGui.TextDisabled( "Save VFX nodes here using the button:" );
-            ImGui.SameLine();
-            UiUtils.IconText( FontAwesomeIcon.BookMedical, true );
-
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
                     var newFolder = new AvfxNodeLibraryFolder( Root, "New Folder", UiUtils.RandomString( 12 ), new List<AvfxNodeLibraryProps>() );
@@ -39,7 +35,26 @@ namespace VfxEditor.NodeLibrary {
             ImGui.SameLine();
             ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
 
-            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), true );
+            // Info circle
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.SameLine();
+                ImGui.TextDisabled( FontAwesomeIcon.InfoCircle.ToIconString() );
+            }
+            if( ImGui.IsItemHovered() ) {
+                using var tooltip = ImRaii.Tooltip();
+                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
+                ImGui.TextUnformatted( "Save VFX nodes here using the button:" );
+                ImGui.SameLine();
+                UiUtils.IconText( FontAwesomeIcon.BookMedical, false );
+                ImGui.PopTextWrapPos();
+            }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
 
             if( Root.Children.Count == 0 ) ImGui.Text( "No nodes saved..." );
             Root.Draw( this, SearchInput );

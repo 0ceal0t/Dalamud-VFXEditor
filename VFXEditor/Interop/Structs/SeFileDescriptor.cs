@@ -24,7 +24,7 @@ namespace VfxEditor.Structs {
         [FieldOffset( 20 )]
         public uint SegmentLength;
 
-        public bool IsPartialRead
+        public readonly bool IsPartialRead
             => SegmentLength != 0;
     }
 }

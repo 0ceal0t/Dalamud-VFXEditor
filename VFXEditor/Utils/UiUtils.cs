@@ -86,7 +86,6 @@ namespace VfxEditor.Utils {
         }
 
         public static void HelpMarker( string text ) {
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 0 );
             IconText( FontAwesomeIcon.InfoCircle, true );
             Tooltip( text );
         }

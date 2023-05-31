@@ -93,6 +93,9 @@ namespace VfxEditor.FileManager {
         protected void RemoveReplace() { Replace = null; }
 
         public bool GetReplacePath( string path, out string replacePath ) {
+            replacePath = null;
+            if( CurrentFile == null ) return false;
+
             replacePath = ReplacePath.Equals( path ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
@@ -154,14 +157,11 @@ namespace VfxEditor.FileManager {
             Unsaved = false;
 
             if( Plugin.Configuration.UpdateWriteLocation ) {
-                var oldWriteLocation = WriteLocation;
                 var newWriteLocation = Manager.GetWriteLocation();
-
                 WriteFile( newWriteLocation );
                 WriteLocation = newWriteLocation;
                 Reload( GetPapIds() );
                 Plugin.ResourceLoader.ReRender();
-                File.Delete( oldWriteLocation );
             }
             else {
                 WriteFile( WriteLocation );
