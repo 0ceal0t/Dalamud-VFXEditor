@@ -25,17 +25,19 @@ namespace VfxEditor.Structs.Animation {
         Overlay = 12,
     }
 
-    // https://github.com/imchillin/Anamnesis/blob/340ae29d9cc6825c270842c7404d9fd8ea3cf208/Anamnesis/Memory/AnimationMemory.cs
+    // https://github.com/imchillin/Anamnesis/blob/master/Anamnesis/Memory/ActorMemory.cs
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct ActorMemoryStruct {
-        [FieldOffset( 0x1B00 )] public byte CharacterMode;
-        [FieldOffset( 0x1B01 )] public byte CharacterModeInput;
-        [FieldOffset( 0x0900 )] public AnimationMemory Animation;
+        [FieldOffset( 0x1B26 )] public byte CharacterMode;
+        [FieldOffset( 0x1B27 )] public byte CharacterModeInput;
+        [FieldOffset( 0x0930 )] public AnimationMemory Animation;
 
-        public bool CanAnimate => ( CharacterModes )CharacterMode == CharacterModes.Normal || ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
-        public bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
+        public readonly bool CanAnimate => ( CharacterModes )CharacterMode == CharacterModes.Normal || ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
+        public readonly bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
     }
+
+    // https://github.com/imchillin/Anamnesis/blob/master/Anamnesis/Memory/AnimationMemory.cs
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct AnimationMemory {

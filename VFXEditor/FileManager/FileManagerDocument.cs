@@ -64,6 +64,7 @@ namespace VfxEditor.FileManager {
             Source = source;
             Replace = replace;
             LoadLocal( localPath );
+            WriteFile( WriteLocation );
         }
 
         protected bool IsVerified() => CurrentFile.IsVerified();

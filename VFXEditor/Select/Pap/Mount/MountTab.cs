@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Shared.Mount;
@@ -18,9 +19,9 @@ namespace VfxEditor.Select.Pap.Mount {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         public override void LoadSelection( MountRow item, out Dictionary<string, Dictionary<string, string>> loaded ) {
-            loaded = new();
+            loaded = new Dictionary<string, Dictionary<string, string>>();
 
-            var papPaths = item.GetMountPaps();
+            var papPaths = item.GetMountSeatPaps();
             for( var i = 0; i < papPaths.Count; i++ ) {
                 loaded.Add( $"Seat {i + 1}", SelectUtils.FileExistsFilter( SelectUtils.GetAllSkeletonPaths( papPaths[i] ) ) );
             }
@@ -28,6 +29,10 @@ namespace VfxEditor.Select.Pap.Mount {
 
         protected override void DrawSelected() {
             SelectTabUtils.DrawIcon( Icon );
+
+            Dialog.DrawPath( "Mount", Selected.GetMountPap(), SelectResultType.GameNpc, $"{Selected.Name} Mount", false );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             Dialog.DrawPapsWithHeader( Loaded, SelectResultType.GameNpc, Selected.Name );
         }

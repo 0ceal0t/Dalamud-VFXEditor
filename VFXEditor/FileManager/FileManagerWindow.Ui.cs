@@ -21,11 +21,15 @@ namespace VfxEditor.FileManager {
 
             DocumentWindow.Draw();
 
-            using var _ = ImRaii.PushId( $"##{Id}" );
+            using var _ = ImRaii.PushId( Id );
             DrawMenu();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
-            DrawTabs();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            if( Plugin.Configuration.ShowTabBar ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
+                DrawTabs();
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            }
+
             ActiveDocument?.Draw();
         }
 
@@ -45,6 +49,8 @@ namespace VfxEditor.FileManager {
                 DrawEditMenuExtra();
                 ImGui.EndMenu();
             }
+
+            if( !Plugin.Configuration.ShowTabBar && ImGui.MenuItem( "Documents" ) ) DocumentWindow.Show();
 
             ImGui.Separator();
             Plugin.DrawManagersMenu( this );
@@ -72,7 +78,7 @@ namespace VfxEditor.FileManager {
             var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
 
             using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
-                using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton | ImGuiTabBarFlags.Reorderable );
+                using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
                 if( !tabBar ) return;
 
                 for( var i = 0; i < Documents.Count; i++ ) {
@@ -80,11 +86,11 @@ namespace VfxEditor.FileManager {
                     var document = Documents[i];
 
                     var open = true;
-                    var flags = ImGuiTabItemFlags.None | ImGuiTabItemFlags.NoPushId;
+                    var flags = ImGuiTabItemFlags.None;
                     if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
-                    if( ImGui.BeginTabItem( $"{document.DisplayName}###", ref open, flags ) ) ImGui.EndTabItem();
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}###{i}", ref open, flags ) ) ImGui.EndTabItem();
 
                     if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
 

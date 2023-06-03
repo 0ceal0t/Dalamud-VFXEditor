@@ -102,6 +102,7 @@ namespace VfxEditor {
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
 
+        public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
 
         [NonSerialized]
@@ -138,7 +139,7 @@ namespace VfxEditor {
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {
             if( result == null ) return;
-            recentList.RemoveAll( x => result.CompareTo( x ) );
+            recentList.RemoveAll( result.CompareTo );
 
             recentList.Add( result );
             if( recentList.Count > SaveRecentLimit ) recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
@@ -218,6 +219,8 @@ namespace VfxEditor {
 
             ImGui.SetNextItemWidth( 135 );
             if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
+
+            if( ImGui.Checkbox( "Show tab bar", ref ShowTabBar ) ) Save();
         }
 
         private void DrawKeybinds() {

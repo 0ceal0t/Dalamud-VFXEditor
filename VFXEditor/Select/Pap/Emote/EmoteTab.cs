@@ -42,7 +42,9 @@ namespace VfxEditor.Select.Pap.Emote {
                 allPaps.Add( key, papDict );
             }
 
-            loaded = new EmoteRowSelected( allPaps );
+            loaded = new EmoteRowSelected {
+                AllPaps = allPaps
+            };
         }
 
         // ===== DRAWING ======

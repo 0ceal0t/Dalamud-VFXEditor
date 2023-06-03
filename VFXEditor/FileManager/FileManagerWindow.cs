@@ -89,7 +89,6 @@ namespace VfxEditor.FileManager {
         public string GetExportName() => Id;
 
         public override void SetSource( SelectResult result ) {
-
             ActiveDocument?.SetSource( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }

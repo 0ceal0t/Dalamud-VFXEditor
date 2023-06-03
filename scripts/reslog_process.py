@@ -5,6 +5,9 @@ import json
 
 npc_output = {}
 
+# csv comes from https://rl2.perchbird.dev/Downloads
+# bnpc.json comes from https://gubal.hasura.app/api/rest/bnpc
+
 # ======= RESLOGGER =========
 
 with open("CurrentPathList") as f:

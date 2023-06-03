@@ -40,7 +40,10 @@ namespace VfxEditor.Select.Pap.IdlePose {
                 }
             }
 
-            loaded = new( general, poses );
+            loaded = new CharacterRowSelected {
+                General = general,
+                Poses = poses
+            };
         }
 
         // ===== DRAWING ======

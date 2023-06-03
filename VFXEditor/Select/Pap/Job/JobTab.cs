@@ -68,7 +68,11 @@ namespace VfxEditor.Select.Pap.Job {
                 autoAttack.Add( raceName, raceAutos );
             }
 
-            loaded = new JobRowSelected( general, poses, autoAttack );
+            loaded = new JobRowSelected {
+                General = general,
+                Poses = poses,
+                AutoAttack = autoAttack
+            };
         }
 
         protected override void DrawSelected() {

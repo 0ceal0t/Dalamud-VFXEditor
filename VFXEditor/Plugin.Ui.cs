@@ -43,7 +43,7 @@ namespace VfxEditor {
         }
 
         public static void DrawFileMenu() {
-            using var _ = ImRaii.PushId( "##Menu" );
+            using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.BeginMenu( "File" ) ) {
                 ImGui.TextDisabled( "Workspace" );
@@ -76,7 +76,7 @@ namespace VfxEditor {
         }
 
         public static void DrawManagersMenu( IFileManager manager ) {
-            using var _ = ImRaii.PushId( "##Menu" );
+            using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.MenuItem( "Textures" ) ) TextureManager.Show();
             ImGui.Separator();

@@ -81,7 +81,7 @@ namespace VfxEditor.Select {
         public virtual void Play( string path ) { }
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( $"##{Manager.Id}/{Name}" );
+            using var _ = ImRaii.PushId( $"{Manager.Id}/{Name}" );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
