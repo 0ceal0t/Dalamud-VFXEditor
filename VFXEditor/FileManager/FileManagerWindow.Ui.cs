@@ -86,7 +86,7 @@ namespace VfxEditor.FileManager {
                     var document = Documents[i];
 
                     var open = true;
-                    var flags = ImGuiTabItemFlags.None;
+                    var flags = ImGuiTabItemFlags.NoTooltip;
                     if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
