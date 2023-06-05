@@ -56,7 +56,7 @@ namespace VfxEditor.NodeLibrary {
 
             using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
 
-            if( Root.Children.Count == 0 ) ImGui.Text( "No nodes saved..." );
+            if( Root.Children.Count == 0 ) ImGui.TextDisabled( "No nodes saved..." );
             Root.Draw( this, SearchInput );
         }
 

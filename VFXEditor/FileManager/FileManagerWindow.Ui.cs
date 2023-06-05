@@ -78,7 +78,7 @@ namespace VfxEditor.FileManager {
             var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
 
             using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
-                using var tabBar = ImRaii.TabBar( "", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+                using var tabBar = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
                 if( !tabBar ) return;
 
                 for( var i = 0; i < Documents.Count; i++ ) {
@@ -90,7 +90,7 @@ namespace VfxEditor.FileManager {
                     if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
-                    if( ImGui.BeginTabItem( $"{document.DisplayName}###{i}", ref open, flags ) ) ImGui.EndTabItem();
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{i}", ref open, flags ) ) ImGui.EndTabItem();
 
                     if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
 
@@ -114,7 +114,7 @@ namespace VfxEditor.FileManager {
                     }
                 }
 
-                if( ImGui.TabItemButton( $"+", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
+                if( ImGui.TabItemButton( "+", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
             }
 
             ImGui.SameLine();

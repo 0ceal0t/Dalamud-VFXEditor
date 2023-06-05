@@ -56,7 +56,7 @@ namespace VfxEditor.TextureFormat {
 
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
 
-            if( PathToTextureReplace.IsEmpty ) ImGui.Text( "No textures have been imported..." );
+            if( PathToTextureReplace.IsEmpty ) ImGui.TextDisabled( "No textures have been imported..." );
 
             var idx = 0;
             foreach( var entry in PathToTextureReplace ) {
