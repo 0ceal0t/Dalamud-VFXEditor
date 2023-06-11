@@ -50,7 +50,5 @@ namespace VfxEditor.Interop {
         public const int GetGameObjectIdxVfunc = 28;
 
         public const int TimelineToActionOffset = 152;
-
-        public const int ActionToNameOffset = 74;
     }
 }

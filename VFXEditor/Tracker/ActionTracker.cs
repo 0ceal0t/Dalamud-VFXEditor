@@ -1,7 +1,12 @@
+using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using VfxEditor.Interop;
+using VfxEditor.Structs;
 
 namespace VfxEditor.Tracker {
     public unsafe class ActionTracker : Tracker {
@@ -20,13 +25,42 @@ namespace VfxEditor.Tracker {
 
         public ActionTracker() { }
 
-        public void AddAction( IntPtr action, int actorId, string path ) {
+        public void AddAction( IntPtr timeline ) {
             if( !Enabled ) return;
-            Actions.TryAdd( action, new ActionData() {
-                ActorId = actorId,
-                Path = path,
-                StartTime = DateTime.Now
-            } );
+
+            try {
+                if( timeline == IntPtr.Zero ) return;
+
+                var getGameObjectIdx = ( ( delegate* unmanaged< IntPtr, int >** )timeline )[0][Constants.GetGameObjectIdxVfunc];
+                var idx = getGameObjectIdx( timeline );
+                if( idx < 0 || idx >= Plugin.Objects.Length ) return;
+
+                var obj = ( GameObject* )Plugin.Objects.GetObjectAddress( idx );
+                if( obj == null ) return;
+
+                var action = Marshal.ReadIntPtr( timeline + Constants.TimelineToActionOffset );
+                if( action == IntPtr.Zero ) return;
+
+                // Something like battle/idle
+                // var actionString = Marshal.PtrToStringAnsi( action + 74 );
+
+                var objectId = obj->ObjectID;
+
+                var resource = ( ResourceHandle* )Marshal.ReadIntPtr( action + 24 );
+                if( resource == null ) return;
+
+                var tmbPath = resource->FileName().ToString();
+
+                Actions.TryAdd( action, new ActionData() {
+                    ActorId = ( int )objectId,
+                    Path = tmbPath,
+                    StartTime = DateTime.Now
+                } );
+
+            }
+            catch( Exception e ) {
+                PluginLog.Error( $"Error reading timeline\n{e}" );
+            }
         }
 
         public override void AddAll( HashSet<TrackerItem> displayItems ) {
