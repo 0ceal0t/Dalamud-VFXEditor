@@ -4,7 +4,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat {
     public unsafe class UldManager : FileManagerWindow<UldDocument, UldFile, WorkspaceMetaRenamed> {
-        public UldManager() : base( "Uld Editor", "Uld", "uld", "Uld", "Uld" ) {
+        public UldManager() : base( "Uld Editor", "Uld" ) {
             SourceSelect = new UldSelectDialog( "Uld Select [LOADED]", this, true );
             ReplaceSelect = new UldSelectDialog( "Uld Select [REPLACED]", this, false );
         }

@@ -45,7 +45,7 @@ namespace VfxEditor {
         public static ActorAnimationManager ActorAnimationManager { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
-        public static VfxTracker VfxTracker { get; private set; }
+        public static TrackerManager Tracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
         public static TexToolsDialog TexToolsDialog { get; private set; }
 
@@ -126,12 +126,9 @@ namespace VfxEditor {
             AnimationManager = new AnimationManager();
             ActorAnimationManager = new ActorAnimationManager();
             DirectXManager = new DirectXManager();
-            VfxTracker = new VfxTracker();
+            Tracker = new TrackerManager();
 
             FileDialogManager.Initialize( PluginInterface );
-
-            ResourceLoader.Init();
-            ResourceLoader.Enable();
 
             Framework.Update += FrameworkOnUpdate;
             PluginInterface.UiBuilder.Draw += Draw;

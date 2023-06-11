@@ -1,10 +1,7 @@
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using VfxEditor.Structs.Vfx;
 
 namespace VfxEditor.Interop {
@@ -52,7 +49,7 @@ namespace VfxEditor.Interop {
         private IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            Plugin.VfxTracker?.AddStatic( ( VfxStruct* )vfx, vfxPath );
+            Plugin.Tracker?.Vfx.AddStatic( ( VfxStruct* )vfx, vfxPath );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {vfxPath} {vfx:X8}" );
 
@@ -61,14 +58,14 @@ namespace VfxEditor.Interop {
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
             if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
-            Plugin.VfxTracker?.RemoveStatic( ( VfxStruct* )vfx );
+            Plugin.Tracker?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
             var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            Plugin.VfxTracker?.AddActor( ( VfxStruct* )vfx, vfxPath );
+            Plugin.Tracker?.Vfx.AddActor( ( VfxStruct* )vfx, vfxPath );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {vfxPath} {vfx:X8}" );
 
@@ -77,7 +74,7 @@ namespace VfxEditor.Interop {
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
             if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
-            Plugin.VfxTracker?.RemoveActor( ( VfxStruct* )vfx );
+            Plugin.Tracker?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
     }

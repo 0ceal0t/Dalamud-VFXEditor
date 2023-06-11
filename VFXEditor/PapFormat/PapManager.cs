@@ -6,7 +6,7 @@ namespace VfxEditor.PapFormat {
     public partial class PapManager : FileManagerWindow<PapDocument, PapFile, WorkspaceMetaBasic> {
         public readonly PapSelectIndexDialog IndexDialog;
 
-        public PapManager() : base( "Pap Editor", "Pap", "pap", "Pap", "Pap" ) {
+        public PapManager() : base( "Pap Editor", "Pap" ) {
             SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", this, true );
             ReplaceSelect = new PapSelectDialog( "Pap Select [REPLACED]", this, false );
             IndexDialog = new PapSelectIndexDialog();

@@ -1,13 +1,10 @@
 using Dalamud.Hooking;
 using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader : IDisposable {
-        public bool IsEnabled { get; private set; } = false;
-
-        public void Init() {
+        public ResourceLoader() {
             var scanner = Plugin.SigScanner;
 
             var readFileAddress = scanner.ScanText( Constants.ReadFileSig );
@@ -44,47 +41,24 @@ namespace VfxEditor.Interop {
             CheckFileStateHook = Hook<CheckFileStatePrototype>.FromAddress( scanner.ScanText( Constants.CheckFileStateSig ), CheckFileStateDetour );
             LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( scanner.ScanText( Constants.LoadTexFileLocalSig ) );
             LoadTexFileExternHook = Hook<LoadTexFileExternPrototype>.FromAddress( scanner.ScanText( Constants.LoadTexFileExternSig ), LoadTexFileExternDetour );
-        }
 
-        public void Enable() {
-            if( IsEnabled ) return;
+            PlayActionHook = Hook<PlayActionPrototype>.FromAddress( scanner.ScanText( Constants.PlayAction ), PlayActionDetour );
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
-
             StaticVfxCreateHook.Enable();
             StaticVfxRemoveHook.Enable();
             ActorVfxCreateHook.Enable();
             ActorVfxRemoveHook.Enable();
-
             CheckFileStateHook.Enable();
             LoadTexFileExternHook.Enable();
+            PlayActionHook.Enable();
             PathResolved += AddCrc;
-
-            IsEnabled = true;
         }
 
         public void Dispose() {
-            if( IsEnabled ) Disable();
-        }
-
-        public void Disable() {
-            if( !IsEnabled ) return;
-
             PathResolved -= AddCrc;
-
-            ReadSqpackHook.Disable();
-            GetResourceSyncHook.Disable();
-            GetResourceAsyncHook.Disable();
-            StaticVfxCreateHook.Disable();
-            StaticVfxRemoveHook.Disable();
-            ActorVfxCreateHook.Disable();
-            ActorVfxRemoveHook.Disable();
-            CheckFileStateHook.Disable();
-            LoadTexFileExternHook.Disable();
-
-            Thread.Sleep( 500 );
-
             ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
@@ -94,18 +68,7 @@ namespace VfxEditor.Interop {
             ActorVfxRemoveHook.Dispose();
             CheckFileStateHook.Dispose();
             LoadTexFileExternHook.Dispose();
-
-            ReadSqpackHook = null;
-            GetResourceSyncHook = null;
-            GetResourceAsyncHook = null;
-            StaticVfxCreateHook = null;
-            StaticVfxRemoveHook = null;
-            ActorVfxCreateHook = null;
-            ActorVfxRemoveHook = null;
-            CheckFileStateHook = null;
-            LoadTexFileExternHook = null;
-
-            IsEnabled = false;
+            PlayActionHook.Dispose();
         }
     }
 }

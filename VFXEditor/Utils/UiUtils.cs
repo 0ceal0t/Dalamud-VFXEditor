@@ -218,7 +218,6 @@ namespace VfxEditor.Utils {
                 ret = ImGui.Selectable( icon.ToIconString() );
             }
 
-            //using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 0 ) );
             ImGui.SameLine();
             ImGui.Text( text );
 

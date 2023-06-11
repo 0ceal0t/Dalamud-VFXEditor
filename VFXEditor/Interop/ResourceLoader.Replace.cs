@@ -16,6 +16,7 @@ namespace VfxEditor.Interop {
 #nullable disable
 
         // ===== FILES =========
+
         public delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
 
         public delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
@@ -27,6 +28,7 @@ namespace VfxEditor.Interop {
             int* resourceHash, byte* path, GetResourceParameters* resParams, bool isUnknown );
 
         // ====== FILES HOOKS ========
+
         public Hook<GetResourceSyncPrototype> GetResourceSyncHook { get; private set; }
 
         public Hook<GetResourceAsyncPrototype> GetResourceAsyncHook { get; private set; }

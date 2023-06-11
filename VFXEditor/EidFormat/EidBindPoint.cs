@@ -5,10 +5,10 @@ namespace VfxEditor.EidFormat {
     public class EidBindPoint {
         public int BindPointId => Id.Value;
 
-        private readonly ParsedString Name = new( "Bone Name", "n_root", 31 );
-        private readonly ParsedInt Id = new( "Id" );
-        private readonly ParsedFloat3 Position = new( "Position" );
-        private readonly ParsedFloat3 Rotation = new( "Rotation" );
+        public readonly ParsedString Name = new( "Bone Name", "n_root", 31 );
+        public readonly ParsedInt Id = new( "Id" );
+        public readonly ParsedFloat3 Position = new( "Position" );
+        public readonly ParsedFloat3 Rotation = new( "Rotation" );
 
         public EidBindPoint() { }
 

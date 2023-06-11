@@ -8,7 +8,7 @@ namespace VfxEditor.ScdFormat {
         public static string ConvertWav => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.wav" ).Replace( '\\', '/' );
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.ogg" ).Replace( '\\', '/' );
 
-        public ScdManager() : base( "Scd Editor", "Scd", "scd", "Scd", "Scd" ) {
+        public ScdManager() : base( "Scd Editor", "Scd" ) {
             SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", this, true );
             ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", this, false );
         }

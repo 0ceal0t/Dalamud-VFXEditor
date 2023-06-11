@@ -11,6 +11,7 @@ namespace VfxEditor.Interop {
         private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
 
         // ====== REDRAW =======
+
         private enum RedrawState {
             None,
             Start,
@@ -22,6 +23,7 @@ namespace VfxEditor.Interop {
         private int WaitFrames = 0;
 
         // ========= MISC ==============
+
         public delegate IntPtr GetMatrixSingletonDelegate();
 
         public GetMatrixSingletonDelegate GetMatrixSingleton { get; private set; }

@@ -77,30 +77,31 @@ namespace VfxEditor.AvfxFormat {
                     return;
                 }
 
-                // Shift over left/right
-                if( Editor.Points[0] != this ) {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.ArrowLeft.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
-                            var idx = Editor.Points.IndexOf( this );
-                            var swap = Editor.Points[idx - 1];
-                            Editor.Points[idx - 1] = this;
-                            Editor.Points[idx] = swap;
-                            Editor.UpdateGradient();
-                        } ) );
-                    }
+                // shift over left/right
+
+                var leftDisabled = Editor.Points.Count == 0 || Editor.Points[0] == this;
+                var rightDisabled = Editor.Points.Count == 0 || Editor.Points[^1] == this;
+
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !leftDisabled ) ) {
+                    CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
+                        var idx = Editor.Points.IndexOf( this );
+                        var swap = Editor.Points[idx - 1];
+                        Editor.Points[idx - 1] = this;
+                        Editor.Points[idx] = swap;
+                        Editor.UpdateGradient();
+                    } ) );
                 }
-                if( Editor.Points[^1] != this ) {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.ArrowRight.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
-                            var idx = Editor.Points.IndexOf( this );
-                            var swap = Editor.Points[idx + 1];
-                            Editor.Points[idx + 1] = this;
-                            Editor.Points[idx] = swap;
-                            Editor.UpdateGradient();
-                        } ) );
-                    }
+
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !rightDisabled ) ) {
+                    CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
+                        var idx = Editor.Points.IndexOf( this );
+                        var swap = Editor.Points[idx + 1];
+                        Editor.Points[idx + 1] = this;
+                        Editor.Points[idx] = swap;
+                        Editor.UpdateGradient();
+                    } ) );
                 }
             }
 

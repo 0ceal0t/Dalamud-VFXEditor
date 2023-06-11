@@ -4,7 +4,6 @@ using System;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.TextureFormat;
-using VfxEditor.Tracker;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
@@ -19,7 +18,7 @@ namespace VfxEditor {
             TexToolsDialog.Draw();
             PenumbraDialog.Draw();
             ToolsDialog.Draw();
-            VfxTracker.Draw();
+            Tracker.Draw();
             Configuration.Draw();
 
             Managers.ForEach( x => x?.Draw() );

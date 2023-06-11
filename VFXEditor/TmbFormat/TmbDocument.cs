@@ -1,4 +1,5 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Animation;
@@ -30,7 +31,7 @@ namespace VfxEditor.TmbFormat {
         protected override bool ExtraInputColumn() => true;
 
         protected override void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 245 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
             DisplaySourceBar();
             DisplayReplaceBar();
@@ -38,13 +39,19 @@ namespace VfxEditor.TmbFormat {
         }
 
         protected override void DrawExtraColumn() {
-            ImGui.SetColumnWidth( 3, 120 );
+            ImGui.SetColumnWidth( 3, 150 );
 
-            if( AnimationDisabled ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( ImGui.Button( "Play", new Vector2( 60, 23 ) ) && !AnimationDisabled ) Plugin.ActorAnimationManager.Apply( AnimationId );
-            if( AnimationDisabled ) ImGui.PopStyleVar();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, AnimationDisabled ) ) {
+                if( ImGui.Button( "Play", new Vector2( 80, 23 ) ) && !AnimationDisabled ) Plugin.ActorAnimationManager.Apply( AnimationId );
+            }
 
-            if( ImGui.Button( "Reset", new Vector2( 60, 23 ) ) ) Plugin.ActorAnimationManager.Reset();
+            if( ImGui.Button( "Reset", new Vector2( 50, 23 ) ) ) Plugin.ActorAnimationManager.Reset();
+
+            using var style2 = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
+
+            ImGui.SameLine();
+            Plugin.Tracker.Action.DrawEye();
+            UiUtils.Tooltip( "Action overlay" );
         }
 
         protected override void DrawBody() {

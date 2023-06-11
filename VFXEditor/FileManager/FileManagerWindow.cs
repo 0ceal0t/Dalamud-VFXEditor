@@ -60,6 +60,8 @@ namespace VfxEditor.FileManager {
 
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
 
+        public FileManagerWindow( string windowTitle, string id ) : this( windowTitle, id, id.ToLower(), id, id ) { }
+
         public FileManagerWindow( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, id ) {
             WindowTitle = windowTitle;
             TempFilePrefix = $"{id}Temp";

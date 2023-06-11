@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
@@ -77,34 +76,23 @@ namespace VfxEditor.AvfxFormat {
             // Spawn + eye
             if( !Plugin.SpawnExists() ) {
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled ) ) {
-                    if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "Spawn_Popup" );
+                    if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
                 }
                 UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
             }
             else if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
 
-            if( ImGui.BeginPopup( "Spawn_Popup" ) ) {
+            if( ImGui.BeginPopup( "SpawnPopup" ) ) {
                 if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
                 if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
                 if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( SpawnPath );
                 ImGui.EndPopup();
             }
 
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 6 );
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( !Plugin.VfxTracker.Enabled ? FontAwesomeIcon.Eye.ToIconString() : FontAwesomeIcon.Times.ToIconString(), new Vector2( 28, 23 ) ) ) {
-                    Plugin.VfxTracker.Toggle();
+            using var style2 = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
 
-                    if( !Plugin.VfxTracker.Enabled ) {
-                        Plugin.VfxTracker.Reset();
-                        Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = false;
-                    }
-                    else {
-                        Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
-                    }
-                }
-            }
+            ImGui.SameLine();
+            Plugin.Tracker.Vfx.DrawEye();
             UiUtils.Tooltip( "VFX path overlay" );
         }
     }
