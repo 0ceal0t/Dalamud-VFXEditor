@@ -42,7 +42,7 @@ namespace VfxEditor.Interop {
             LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( scanner.ScanText( Constants.LoadTexFileLocalSig ) );
             LoadTexFileExternHook = Hook<LoadTexFileExternPrototype>.FromAddress( scanner.ScanText( Constants.LoadTexFileExternSig ), LoadTexFileExternDetour );
 
-            PlayActionHook = Hook<PlayActionPrototype>.FromAddress( scanner.ScanText( Constants.PlayAction ), PlayActionDetour );
+            PlayActionHook = Hook<PlayActionPrototype>.FromAddress( scanner.ScanText( Constants.PlayActionSig ), PlayActionDetour );
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
@@ -54,11 +54,13 @@ namespace VfxEditor.Interop {
             CheckFileStateHook.Enable();
             LoadTexFileExternHook.Enable();
             PlayActionHook.Enable();
+
             PathResolved += AddCrc;
         }
 
         public void Dispose() {
             PathResolved -= AddCrc;
+
             ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();

@@ -27,7 +27,7 @@ namespace VfxEditor.Interop {
         public const string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
         public const string LoadTexFileExternSig = "E8 ?? ?? ?? ?? 0F B6 E8 48 8B CB E8";
 
-        public const string PlayAction = "E8 ?? ?? ?? ?? 84 C0 75 04 32 DB EB 14";
+        public const string PlayActionSig = "E8 ?? ?? ?? ?? 84 C0 75 04 32 DB EB 14";
 
         // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs
 
