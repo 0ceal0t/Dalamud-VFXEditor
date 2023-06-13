@@ -22,8 +22,8 @@ using VfxEditor.ScdFormat;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
-using VfxEditor.Ui;
 using VfxEditor.Ui.Export;
+using VfxEditor.Ui.Tools;
 using VfxEditor.UldFormat;
 using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
 

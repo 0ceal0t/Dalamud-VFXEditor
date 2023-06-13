@@ -1,14 +1,16 @@
 using ImGuiNET;
 using OtterGui.Raii;
 
-namespace VfxEditor.Ui {
+namespace VfxEditor.Ui.Tools {
     public partial class ToolsDialog : GenericDialog {
-        private readonly ToolsDialogResourceTab ResourceTab;
-        private readonly ToolsDialogUtilitiesTab UtilitiesTab;
+        private readonly ResourceTab ResourceTab;
+        private readonly UtilitiesTab UtilitiesTab;
+        private readonly LoadedTab LoadedTab;
 
         public ToolsDialog() : base( "Tools", false, 300, 400 ) {
-            ResourceTab = new ToolsDialogResourceTab();
-            UtilitiesTab = new ToolsDialogUtilitiesTab();
+            ResourceTab = new ResourceTab();
+            UtilitiesTab = new UtilitiesTab();
+            LoadedTab = new LoadedTab();
         }
 
         public override void DrawBody() {
@@ -23,6 +25,10 @@ namespace VfxEditor.Ui {
             }
             if( ImGui.BeginTabItem( "Utilities" ) ) {
                 UtilitiesTab.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Loaded Files" ) ) {
+                LoadedTab.Draw();
                 ImGui.EndTabItem();
             }
         }

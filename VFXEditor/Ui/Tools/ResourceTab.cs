@@ -9,8 +9,8 @@ using System.Numerics;
 using VfxEditor.Interop;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui {
-    public unsafe class ToolsDialogResourceTab {
+namespace VfxEditor.Ui.Tools {
+    public unsafe class ResourceTab {
         private struct ResourceItemStruct {
             public uint Hash;
             public ulong Address;
@@ -123,8 +123,8 @@ namespace VfxEditor.Ui {
 
         private static string GetNodeLabel( uint label, uint type, ulong count ) {
             var byte1 = type >> 24;
-            var byte2 = ( type >> 16 ) & 0xFF;
-            var byte3 = ( type >> 8 ) & 0xFF;
+            var byte2 = type >> 16 & 0xFF;
+            var byte3 = type >> 8 & 0xFF;
             var byte4 = type & 0xFF;
             return byte1 == 0
                 ? $"({type:X8}) {( char )byte2}{( char )byte3}{( char )byte4} - {count}###{label}{type}Debug"

@@ -6,8 +6,8 @@ using System.Numerics;
 using VfxEditor.TextureFormat;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui {
-    public class ToolsDialogUtilitiesTab {
+namespace VfxEditor.Ui.Tools {
+    public class UtilitiesTab {
         private string ExtractPath = "";
 
         public void Draw() {
@@ -42,7 +42,7 @@ namespace VfxEditor.Ui {
             ImGui.Indent();
 
             if( ImGui.Button( ".atex to PNG" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureFile.LoadFromLocal( res );
                     texFile.SaveAsPng( res + ".png" );
@@ -51,7 +51,7 @@ namespace VfxEditor.Ui {
 
             ImGui.SameLine();
             if( ImGui.Button( ".atex to DDS" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( bool ok, string res ) => {
+                FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );
