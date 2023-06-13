@@ -21,7 +21,7 @@ namespace VfxEditor.Ui.Tools {
                 var id = gameObject->ObjectID;
                 if( id == 0 ) continue;
 
-                using var _ = ImRaii.PushId( $"{id:X8}" );
+                using var _ = ImRaii.PushId( $"{item.Address:X8}" );
                 if( !ImGui.CollapsingHeader( $"{item.Name}" ) ) continue;
 
                 using var indent = ImRaii.PushIndent();
@@ -78,8 +78,10 @@ namespace VfxEditor.Ui.Tools {
                 tablePtr = Marshal.ReadIntPtr( tablePos );
             }
 
-            for( var i = 0; i < tablePtrs.Count - 2; i++ ) {
-                if( i == 5 ) continue; // for shaders and other misc stuff. format still WIP
+            for( var i = 0; i < tablePtrs.Count - 1; i++ ) {
+
+                if( i == 5 || i == 7 || i == 8 ) continue; // for shaders and other misc stuff. format still WIP
+
                 DrawTable( tablePtrs[i], tablePtrs[i + 1], $"{prefix} {i}" );
             }
         }
