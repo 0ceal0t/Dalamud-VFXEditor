@@ -1,17 +1,13 @@
 using ImGuiNET;
 using VfxEditor.FileManager;
-using VfxEditor.NodeLibrary;
 using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
-        public readonly AvfxNodeLibrary NodeLibrary;
-
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
             SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
             ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );
-            NodeLibrary = new( Plugin.Configuration.VFXNodeLibraryItems, Plugin.Configuration.WriteLocation );
         }
 
         protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );
@@ -28,11 +24,6 @@ namespace VfxEditor.AvfxFormat {
 
             if( CurrentFile == null ) return;
             if( ImGui.MenuItem( "Clean up" ) ) CurrentFile.Cleanup();
-        }
-
-        public override void DrawBody() {
-            NodeLibrary.Draw();
-            base.DrawBody();
         }
 
         public void Import( string path ) => ActiveDocument.Import( path );

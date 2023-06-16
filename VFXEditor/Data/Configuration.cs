@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.NodeLibrary;
+using VfxEditor.Library;
 using VfxEditor.Select;
 using VfxEditor.Ui;
 
@@ -76,7 +76,9 @@ namespace VfxEditor {
         public KeybindConfiguration SpawnOnGroundKeybind = new();
         public KeybindConfiguration SpawnOnTargetKeybind = new();
 
-        public List<AvfxNodeLibraryProps> VFXNodeLibraryItems = new();
+        public List<LibraryProps> VFXNodeLibraryItems = new();
+        public List<LibraryProps> VfxTextureLibraryItems = new();
+        public bool VfxTextureDefaultLoaded = false;
 
         public int MaxUndoSize = 10;
 

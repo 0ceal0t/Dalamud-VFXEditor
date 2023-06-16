@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using VfxEditor.AvfxFormat.Nodes;
+using VfxEditor.Library.Texture;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
@@ -12,42 +13,43 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxString Path = new( "Path", "Path" );
         public readonly UiNodeGraphView NodeView;
 
-        private string LoadedTexturePath = "";
-
         public AvfxTexture() : base( NAME, AvfxNodeGroupSet.TextureColor ) {
             NodeView = new( this );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Path.SetValue( Encoding.ASCII.GetString( reader.ReadBytes( size ) ) );
-            UpdateTexture();
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
         protected override void WriteContents( BinaryWriter writer ) => writer.Write( Encoding.ASCII.GetBytes( Path.GetValue() ) );
 
-        public string UpdateTexture() {
-            if( Path.GetValue() != LoadedTexturePath ) {
-                LoadedTexturePath = Path.GetValue();
-                Plugin.TextureManager.LoadPreviewTexture( Path.GetValue() );
-            }
-            return Path.GetValue();
-        }
-
         public override void Draw() {
             using var _ = ImRaii.PushId( "Texture" );
             NodeView.Draw();
             DrawRename();
 
-            Path.Draw();
-            Plugin.TextureManager.DrawTexture( UpdateTexture() );
+            var preCombo = ImGui.GetCursorPosX();
+
+            Plugin.LibraryManager.DrawTextureCombo( Path.GetValue(), ( TextureLeaf texture ) => {
+                if( texture.DrawSelectable() ) Path.SetValue( texture.GetPath() );
+            } );
+
+            var imguiStyle = ImGui.GetStyle();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) ) ) {
+                ImGui.SameLine();
+                Path.Draw( ImGui.GetCursorPosX() - preCombo );
+            }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            Plugin.TextureManager.DrawTexture( Path.GetValue() );
         }
 
         public override void ShowTooltip() {
-            if( Plugin.TextureManager.GetPreviewTexture( UpdateTexture(), out var t ) ) {
+            if( Plugin.TextureManager.GetPreviewTexture( Path.GetValue(), out var tex ) ) {
                 ImGui.BeginTooltip();
-                ImGui.Image( t.Wrap.ImGuiHandle, new Vector2( t.Width, t.Height ) );
+                ImGui.Image( tex.Wrap.ImGuiHandle, new Vector2( tex.Width, tex.Height ) );
                 ImGui.EndTooltip();
             }
         }

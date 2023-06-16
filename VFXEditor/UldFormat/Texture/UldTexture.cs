@@ -8,9 +8,6 @@ namespace VfxEditor.UldFormat.Texture {
         public readonly ParsedUInt IconId = new( "Icon Id" );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
 
-        private string LoadedTexturePath = "";
-        private string LoadedIconPath = "";
-
         private bool ShowHD = false;
 
         public UldTexture() { }
@@ -22,25 +19,6 @@ namespace VfxEditor.UldFormat.Texture {
             IconId.Read( reader );
             if( minorVersion == '1' ) Unk1.Read( reader );
             else Unk1.Value = 0;
-
-            UpdateTexture();
-            UpdateIcon();
-        }
-
-        private string UpdateTexture() {
-            if( LoadedTexturePath != TexturePath ) { // Path changed
-                LoadedTexturePath = TexturePath;
-                Plugin.TextureManager.LoadPreviewTexture( TexturePath );
-            }
-            return TexturePath;
-        }
-
-        private string UpdateIcon() {
-            if( LoadedIconPath != IconPath ) { // Icon changed
-                LoadedIconPath = IconPath;
-                if( IconId.Value > 0 ) Plugin.TextureManager.LoadPreviewTexture( IconPath );
-            }
-            return IconPath;
         }
 
         public void Write( BinaryWriter writer, char minorVersion ) {
@@ -59,15 +37,14 @@ namespace VfxEditor.UldFormat.Texture {
             if( !string.IsNullOrEmpty( Path.Value ) ) {
                 ImGui.Checkbox( "Show HD", ref ShowHD );
                 if( ShowHD ) ImGui.TextDisabled( TexturePath );
-                Plugin.TextureManager.DrawTexture( UpdateTexture() );
+                Plugin.TextureManager.DrawTexture( TexturePath );
             }
 
             IconId.Draw( CommandManager.Uld );
-            UpdateIcon();
             if( IconId.Value > 0 ) {
                 ImGui.Checkbox( "Show HD", ref ShowHD );
                 ImGui.TextDisabled( IconPath );
-                Plugin.TextureManager.DrawTexture( UpdateIcon() );
+                Plugin.TextureManager.DrawTexture( IconPath );
             }
 
             Unk1.Draw( CommandManager.Uld );

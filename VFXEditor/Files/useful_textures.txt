@@ -1,0 +1,64 @@
+vfx/action/mgc_fire1/texture/fire007bm.atex Fire
+vfx/ws/wgp_ws_s17/texture/fire019bh.atex Fire Wide
+vfx/monster/m0618/texture/fire_r_uv_013_k1.atex Fire Wide Transparent
+vfx/action/mgc_fire1/texture/fire001bt.atex Medium Fire
+vfx/action/mgc_fire1/texture/fire_u007a_h.atex Light Fire
+vfx/action/ab_swl_abl027/texture/1pt_fire01bs.atex Blue Flame
+vfx/action/ab_swl_abl038/texture/sm_fire02ah.atex Orange Flame
+vfx/monster/m0565/texture/m0565sp1_uvzmnfire_v01p.atex Purple Fire
+vfx/action/ab_swl_abl027/texture/bh_uv_fire_1s.atex Blue Fire
+vfx/action/mgc_swl_mgc029/texture/m0396fire_uv_052b_128_d5_w.atex Blue Fire Wide
+chara/weapon/w0808/obj/body/b0017/vfx/texture/uvfire01_bp.atex Green Fire
+vfx/action/mgc_swl_mgc020/texture/uv_fire_hk_bl1s.atex Dark Blue Fire
+vfx/action/mgc_sword_fire1/texture/aura001am.atex Smoke
+vfx/monster/d1025/texture/uvelcline03s.atex White Lightning Wide
+vfx/monster/m0123/texture/uvelcline01s.atex Blue Lightning Wide
+vfx/action/mgc_sword_thunder1/texture/elct001bt.atex Blue Lightning Short
+vfx/monster/m0123/texture/uvelc01s.atex White Lightning
+vfx/monster/m0123/texture/elc_pt02as.atex Blue Lightning Arcs
+vfx/monster/m0123/texture/elc_pt01as.atex Blue Lightning Arcs 2
+vfx/monster/m7006/texture/uvelcline02bs.atex Purple Lightning Thick
+vfx/monster/m0150/texture/elct601ac.atex Blue Lightning
+vfx/monster/gimmick4/texture/uv_elc_line01as.atex White Lightning Thick
+vfx/monster/gimmick4/texture/uv_elc_02v.atex Red Lightning
+vfx/action/mgc_2rp_b04/texture/elec105_ah.atex Blue and Yellow Lightning Thick
+vfx/monster/m0559/texture/elc_pp02_2_128r.atex Yellow Lightning Arcs
+vfx/monster/m0559/texture/elc_pp01_2_128r.atex Yellow Lightning Arcs 2
+vfx/action/mgc_sword_stone1/texture/rock_u02ah.atex Stone
+vfx/limitbreak/lbk_warrior_lv3/texture/uv_rock01wt.atex Firey Stone
+vfx/action/mgc_sword_water1/texture/watr022am.atex Droplet
+vfx/action/mgc_sword_water1/texture/wter_001bt.atex Water
+vfx/action/mgc_sword_water1/texture/watr016am.atex Water Wide
+vfx/monster/common/texture/watr063af.atex Horizontal Droplets
+vfx/monster/common/texture/watr065bf.atex Water Opaque
+vfx/monster/common/texture/watr072af.atex Water Edge
+vfx/action/mgc_sword_ice1/texture/jew_u02ah.atex Ice
+vfx/action/mgc_sword_ice1/texture/glss_u01ah.atex Ice Shiny
+vfx/action/mgc_sword_water1/texture/line003bm.atex Blue Line
+vfx/action/mgc_sword_fire1/texture/line002bm.atex Orange Line
+vfx/action/mgc_sword_stone1/texture/line005bm.atex Green Line
+vfx/action/mgc_sword_thunder1/texture/line004bm.atex Purple Line
+vfx/bgb/2gb_ws_s02/texture/line03y_i.atex Orange Fading Line
+vfx/action/mgc_2rp_w25/texture/mgc2rp25_togeline01p.atex Bramble
+vfx/monster/m0295/texture/othr077_c.atex Vine
+vfx/monster/m0742/texture/othr602_t1.atex Music Notes
+vfx/monster/m0042/texture/kira_002bm.atex Blue Powder
+vfx/monster/m0123/texture/spkanm01as.atex Orange Spark
+vfx/action/mgc_sword_stone1/texture/rock_a01ah.atex Rock Powder
+vfx/monster/m0063/texture/sold002_c.atex Glass Powder
+vfx/action/mgc_blizara1/texture/snow_a01ah.atex Large White Powder
+vfx/common/texture/fire214_i.atex Flame Powder
+vfx/action/mgc_2rp_b08/texture/hinoko_anm.atex Orange Powder
+vfx/monster/m0016/texture/hane_s01bh.atex Feather
+vfx/monster/m7106/texture/hane_00af.atex Glowing Feather
+vfx/monster/m0011/texture/elec01t16.atex Spark Powder
+vfx/monster/m0487/texture/momiji_03ah.atex Leaf Powder
+vfx/action/mgc_2rp_w25/texture/mgc2rp25_sakura_anim02p.atex Flower Petal Powder
+vfx/monster/gimmick3/texture/mizutama_004_01_i.atex Water Droplet Powder
+vfx/monster/m0640/texture/zmn_tm4t.atex Circle Orange
+vfx/monster/gimmick2/texture/zmn_tm1s.atex Circle Blue
+vfx/monster/m7004/texture/tm_qt1.atex Quarter Circle Orange
+vfx/monster/m0096/texture/ring001bt.atex Quarter Circle
+vfx/monster/m7001/texture/fairy_x01ah.atex Fairy Wing
+chara/weapon/w0101/obj/body/b0078/vfx/texture/mariposa_02x.atex Fairy Wing Alpha
+vfx/action/mgc_swl_mgc015/texture/awr_001f_n.atex Swirly

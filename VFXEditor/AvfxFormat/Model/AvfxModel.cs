@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.AvfxFormat.Model;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Utils;
@@ -75,17 +76,20 @@ namespace VfxEditor.AvfxFormat {
             DrawRename();
 
             ImGui.TextDisabled( $"Vertices: {Vertexes.Vertexes.Count} Indexes: {Indexes.Indexes.Count}" );
-            if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
 
-            using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
-                if( popup ) {
-                    if( ImGui.Selectable( "GLTF" ) ) ExportDialog();
-                    if( ImGui.Selectable( "AVFX" ) ) Plugin.AvfxManager.ShowExportDialog( this );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
+
+                using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
+                    if( popup ) {
+                        if( ImGui.Selectable( "GLTF" ) ) ExportDialog();
+                        if( ImGui.Selectable( "AVFX" ) ) Plugin.AvfxManager.ShowExportDialog( this );
+                    }
                 }
-            }
 
-            ImGui.SameLine();
-            if( ImGui.Button( "Replace" ) ) ImportDialog();
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace" ) ) ImportDialog();
+            }
 
             ImGui.Text( "Notes on using GLTF models" );
             ImGui.SameLine();
@@ -107,7 +111,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawModel3D() {
-            using var tabItem = ImRaii.TabItem( $"3D View" );
+            using var tabItem = ImRaii.TabItem( "3D View" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "3DModel" );
@@ -153,14 +157,14 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawUvView() {
-            using var tabItem = ImRaii.TabItem( $"UV View" );
+            using var tabItem = ImRaii.TabItem( "UV View" );
             if( !tabItem ) return;
 
             UvView.Draw();
         }
 
         private void DrawEmitterVerts() {
-            using var tabItem = ImRaii.TabItem( $"Emitter Vertices" );
+            using var tabItem = ImRaii.TabItem( "Emitter Vertices" );
             if( !tabItem ) return;
 
             EmitSplitDisplay.Draw();

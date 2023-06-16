@@ -17,6 +17,7 @@ using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
 using VfxEditor.FileManager;
 using VfxEditor.Interop;
+using VfxEditor.Library;
 using VfxEditor.PapFormat;
 using VfxEditor.ScdFormat;
 using VfxEditor.TextureFormat;
@@ -48,6 +49,7 @@ namespace VfxEditor {
         public static TrackerManager Tracker { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
         public static TexToolsDialog TexToolsDialog { get; private set; }
+        public static LibraryManager LibraryManager { get; private set; }
 
         public static PenumbraIpc PenumbraIpc { get; private set; }
         public static PenumbraDialog PenumbraDialog { get; private set; }
@@ -127,6 +129,7 @@ namespace VfxEditor {
             ActorAnimationManager = new ActorAnimationManager();
             DirectXManager = new DirectXManager();
             Tracker = new TrackerManager();
+            LibraryManager = new LibraryManager();
 
             FileDialogManager.Initialize( PluginInterface );
 

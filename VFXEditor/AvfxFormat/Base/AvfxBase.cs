@@ -271,7 +271,7 @@ namespace VfxEditor.AvfxFormat {
                 numerOfUnassigned++;
             }
 
-            using var tabBar = ImRaii.TabBar( $"Tabs" );
+            using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
 
             foreach( var item in items ) {

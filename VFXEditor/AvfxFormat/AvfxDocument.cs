@@ -71,7 +71,7 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) Plugin.AvfxManager.NodeLibrary.Show();
+            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) Plugin.LibraryManager.Show();
 
             // Spawn + eye
             if( !Plugin.SpawnExists() ) {

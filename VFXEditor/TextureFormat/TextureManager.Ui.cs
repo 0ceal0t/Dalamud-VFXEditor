@@ -74,9 +74,13 @@ namespace VfxEditor.TextureFormat {
                 ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
                 ImGui.TextDisabled( $"Format: {texture.Format}  Mips: {texture.MipLevels}  Size: {texture.Width}x{texture.Height}" );
 
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
+
                 if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
+
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) ImportDialog( path );
+
                 if( ImGui.BeginPopup( "TexExport" ) ) {
                     if( ImGui.Selectable( "PNG" ) ) SavePngDialog( path );
                     if( ImGui.Selectable( "DDS" ) ) SaveDdsDialog( path );

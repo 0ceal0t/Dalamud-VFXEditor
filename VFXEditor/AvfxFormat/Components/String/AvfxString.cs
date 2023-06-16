@@ -42,7 +42,9 @@ namespace VfxEditor.AvfxFormat {
             if( FixedSize != -1 ) WritePad( writer, FixedSize - bytes.Length );
         }
 
-        public override void Draw() {
+        public override void Draw() => Draw( 0 );
+
+        public void Draw( float preOffset ) {
             // Unassigned
             AssignedCopyPaste( this, Name );
             if( DrawAddButton( this, Name ) ) return;
@@ -58,7 +60,7 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( Name );
 
             // Input
-            var inputSize = UiUtils.GetOffsetInputSize( checkSize + ( ShowRemoveButton ? removeSize : 0 ) );
+            var inputSize = UiUtils.GetOffsetInputSize( preOffset + checkSize + ( ShowRemoveButton ? removeSize : 0 ) );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##Input", ref InputString, 256 );
 

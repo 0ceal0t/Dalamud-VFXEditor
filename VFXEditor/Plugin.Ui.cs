@@ -20,6 +20,7 @@ namespace VfxEditor {
             ToolsDialog.Draw();
             Tracker.Draw();
             Configuration.Draw();
+            LibraryManager.Draw();
 
             Managers.ForEach( x => x?.Draw() );
 

@@ -92,8 +92,6 @@ namespace VfxEditor.TextureFormat {
         }
 
         private bool ReplaceAndRefreshTexture( TextureReplace data, string gamePath ) {
-            gamePath = gamePath.Trim( '\0' );
-
             // if there is already a replacement for the same file, delete the old file
             RemoveReplaceTexture( gamePath );
             if( !PathToTextureReplace.TryAdd( gamePath, data ) ) return false;
@@ -103,9 +101,66 @@ namespace VfxEditor.TextureFormat {
             return true;
         }
 
-        public void RemoveReplaceTexture( string gamePath ) {
+        private void RemoveReplaceTexture( string gamePath ) {
             gamePath = gamePath.Trim( '\0' );
             if( PathToTextureReplace.ContainsKey( gamePath ) && PathToTextureReplace.TryRemove( gamePath, out var oldValue ) ) File.Delete( oldValue.LocalPath );
+        }
+
+        private void RefreshPreviewTexture( string gamePath ) {
+            gamePath = gamePath.Trim( '\0' );
+            if( PathToTexturePreview.ContainsKey( gamePath ) ) {
+                if( PathToTexturePreview.TryRemove( gamePath, out var oldValue ) ) {
+                    oldValue.Wrap?.Dispose();
+                }
+            }
+        }
+
+        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) {
+            gamePath = gamePath.Trim( '\0' );
+            data = new PreviewTexture();
+            if( string.IsNullOrEmpty( gamePath ) || !gamePath.Contains( '/' ) ) return false;
+
+            if( PathToTexturePreview.TryGetValue( gamePath, out data ) ) return true;
+
+            // Doesn't exist yet, try to load
+            var result = CreatePreviewTexture( gamePath, out data );
+            if( result && data.Wrap != null ) {
+                PathToTexturePreview.TryAdd( gamePath, data );
+            }
+
+            return result;
+        }
+
+        private bool CreatePreviewTexture( string gamePath, out PreviewTexture ret, bool loadImage = true ) {
+            var result = Plugin.DataManager.FileExists( gamePath ) || PathToTextureReplace.ContainsKey( gamePath );
+            ret = new PreviewTexture();
+
+            if( !result ) return false;
+
+            try {
+                var texFile = GetRawTexture( gamePath );
+                ret.Format = texFile.Header.Format;
+                ret.MipLevels = texFile.Header.MipLevels;
+                ret.Width = texFile.Header.Width;
+                ret.Height = texFile.Header.Height;
+                ret.Depth = texFile.Header.Depth;
+                ret.IsReplaced = texFile.Local;
+
+                if( !texFile.ValidFormat ) {
+                    PluginLog.Error( $"Invalid format: {ret.Format} {gamePath}" );
+                    return false;
+                }
+
+                if( loadImage ) {
+                    var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
+                    ret.Wrap = texBind;
+                }
+                return true;
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, $"Could not find tex: {gamePath}" );
+                return false;
+            }
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/Textures/FileTypes/Tex.cs#L1002
@@ -139,67 +194,11 @@ namespace VfxEditor.TextureFormat {
             return replaceData;
         }
 
-        public TextureFile GetRawTexture( string gamePath ) {
+        private TextureFile GetRawTexture( string gamePath ) {
             gamePath = gamePath.Trim( '\0' );
-            return PathToTextureReplace.TryGetValue( gamePath, out var texturePreview ) ? TextureFile.LoadFromLocal( texturePreview.LocalPath ) : Plugin.DataManager.GetFile<TextureFile>( gamePath );
-        }
-
-        public void LoadPreviewTexture( string gamePath ) {
-            gamePath = gamePath.Trim( '\0' );
-            if( PathToTexturePreview.ContainsKey( gamePath ) ) return; // Already loaded
-
-            var result = CreatePreviewTexture( gamePath, out var tex );
-            if( result && tex.Wrap != null ) {
-                PathToTexturePreview.TryAdd( gamePath, tex );
-            }
-        }
-
-        public void RefreshPreviewTexture( string gamePath ) {
-            gamePath = gamePath.Trim( '\0' );
-            if( PathToTexturePreview.ContainsKey( gamePath ) ) {
-                if( PathToTexturePreview.TryRemove( gamePath, out var oldValue ) ) {
-                    oldValue.Wrap?.Dispose();
-                }
-            }
-            LoadPreviewTexture( gamePath );
-        }
-
-        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) => PathToTexturePreview.TryGetValue( gamePath.Trim( '\0' ), out data );
-
-        public bool CreatePreviewTexture( string gamePath, out PreviewTexture ret, bool loadImage = true ) {
-            gamePath = gamePath.Trim( '\0' );
-            var result = Plugin.DataManager.FileExists( gamePath ) || PathToTextureReplace.ContainsKey( gamePath );
-            ret = new PreviewTexture();
-            if( result ) {
-                try {
-                    var texFile = GetRawTexture( gamePath );
-                    ret.Format = texFile.Header.Format;
-                    ret.MipLevels = texFile.Header.MipLevels;
-                    ret.Width = texFile.Header.Width;
-                    ret.Height = texFile.Header.Height;
-                    ret.Depth = texFile.Header.Depth;
-                    ret.IsReplaced = texFile.Local;
-
-                    if( !texFile.ValidFormat ) {
-                        PluginLog.Error( $"Invalid format: {ret.Format} {gamePath}" );
-                        return false;
-                    }
-
-                    if( loadImage ) {
-                        var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
-                        ret.Wrap = texBind;
-                    }
-                    return true;
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Could not find tex: " + gamePath );
-                    return false;
-                }
-            }
-            else {
-                PluginLog.Error( "Could not find tex: " + gamePath );
-                return false;
-            }
+            return PathToTextureReplace.TryGetValue( gamePath, out var texturePreview ) ?
+                TextureFile.LoadFromLocal( texturePreview.LocalPath ) :
+                Plugin.DataManager.GetFile<TextureFile>( gamePath );
         }
     }
 }
