@@ -2,10 +2,10 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Data;
 using VfxEditor.Select;
 using VfxEditor.Ui;
-using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
@@ -119,6 +119,7 @@ namespace VfxEditor.FileManager {
         public bool RemoveDocument( T document ) {
             var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
+            Plugin.CleanExportDialogs( document );
 
             if( switchDoc ) {
                 ActiveDocument = Documents[0];
@@ -166,17 +167,7 @@ namespace VfxEditor.FileManager {
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
         }
 
-        public IEnumerable<IFileDocument> GetDocuments() => Documents;
-
-        public virtual void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
-            foreach( var document in Documents ) document.PenumbraExport( modFolder, files );
-        }
-
-        public virtual void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            foreach( var document in Documents ) {
-                document.TextoolsExport( writer, simpleParts, ref modOffset );
-            }
-        }
+        public IEnumerable<IFileDocument> GetExportDocuments() => Documents.Where( x => x.CurrentFile != null && !string.IsNullOrEmpty( x.ReplacePath ) );
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = null;
@@ -197,8 +188,12 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
-            foreach( var document in Documents ) document.Dispose();
+            foreach( var document in Documents ) {
+                Plugin.CleanExportDialogs( document );
+                document.Dispose();
+            }
             Documents.Clear();
+
             ActiveDocument = null;
             DOC_ID = 0;
 

@@ -173,21 +173,23 @@ namespace VfxEditor.FileManager {
 
         protected virtual List<string> GetPapIds() => null;
 
-        public string GetDisplayName() => DisplayName;
+        public string GetExportSource() => SourceDisplay;
 
-        public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
+        public string GetExportReplace() => DisplayName;
+
+        public void PenumbraExport( string modFolder, Dictionary<string, string> filesOut ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
             var data = CurrentFile.ToBytes();
 
-            PenumbraUtils.WriteBytes( data, modFolder, path, files );
+            PenumbraUtils.WriteBytes( data, modFolder, path, filesOut );
         }
 
-        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
             var modData = TexToolsUtils.CreateType2Data( CurrentFile.ToBytes() );
-            simpleParts.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
+            simplePartsOut.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
             writer.Write( modData );
             modOffset += modData.Length;
         }

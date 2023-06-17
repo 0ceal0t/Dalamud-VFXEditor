@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Export;
+using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat.Textures {
     public class TextureReplace : IFileDocument {
@@ -20,6 +24,28 @@ namespace VfxEditor.TextureFormat.Textures {
             Format = format;
         }
 
-        public string GetDisplayName() => ReplacePath;
+        public string GetExportSource() => "";
+
+        public string GetExportReplace() => ReplacePath;
+
+        public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
+            if( string.IsNullOrEmpty( LocalPath ) || string.IsNullOrEmpty( ReplacePath ) ) return;
+
+            PenumbraUtils.CopyFile( LocalPath, modFolder, ReplacePath, files );
+        }
+
+        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
+            if( string.IsNullOrEmpty( LocalPath ) || string.IsNullOrEmpty( ReplacePath ) ) return;
+
+            using var file = File.Open( LocalPath, FileMode.Open );
+            using var texReader = new BinaryReader( file );
+            using var texMs = new MemoryStream();
+            using var texWriter = new BinaryWriter( texMs );
+            texWriter.Write( TexToolsUtils.CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
+            var modData = texMs.ToArray();
+            simpleParts.Add( TexToolsUtils.CreateModResource( ReplacePath, modOffset, modData.Length ) );
+            writer.Write( modData );
+            modOffset += modData.Length;
+        }
     }
 }

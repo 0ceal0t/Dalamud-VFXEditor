@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -102,6 +103,11 @@ namespace VfxEditor {
             Directory.Delete( saveLocation, true );
 
             UiUtils.OkNotification( "Saved workspace" );
+        }
+
+        public static void CleanExportDialogs( IFileDocument document ) {
+            TexToolsDialog.RemoveDocument( document );
+            PenumbraDialog.RemoveDocument( document );
         }
     }
 }

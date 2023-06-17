@@ -98,7 +98,10 @@ namespace VfxEditor.TextureFormat {
 
         private void RemoveReplaceTexture( string gamePath ) {
             gamePath = gamePath.Trim( '\0' );
-            if( PathToTextureReplace.ContainsKey( gamePath ) && PathToTextureReplace.TryRemove( gamePath, out var oldValue ) ) File.Delete( oldValue.LocalPath );
+            if( PathToTextureReplace.ContainsKey( gamePath ) && PathToTextureReplace.TryRemove( gamePath, out var oldValue ) ) {
+                File.Delete( oldValue.LocalPath );
+                Plugin.CleanExportDialogs( oldValue );
+            }
         }
 
         private void RefreshPreviewTexture( string gamePath ) {

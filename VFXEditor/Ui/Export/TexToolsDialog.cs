@@ -32,7 +32,7 @@ namespace VfxEditor.Ui.Export {
 #nullable disable
     }
 
-    public class TexToolsDialog : ModExportDialog {
+    public class TexToolsDialog : ExportDialog {
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
@@ -51,10 +51,8 @@ namespace VfxEditor.Ui.Export {
 
                 using( var ms = new MemoryStream() )
                 using( var writer = new BinaryWriter( ms ) ) {
-                    foreach( var manager in Plugin.Managers ) {
-                        if( manager == null ) continue;
-                        if( !ToExport.TryGetValue( manager.GetExportName(), out var exportItem ) || !exportItem ) continue;
-                        manager.TextoolsExport( writer, simpleParts, ref modOffset );
+                    foreach( var category in Categories ) {
+                        foreach( var item in category.GetItemsToExport() ) item.TextoolsExport( writer, simpleParts, ref modOffset );
                     }
 
                     newData = ms.ToArray();

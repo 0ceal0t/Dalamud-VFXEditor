@@ -1,5 +1,4 @@
 using Dalamud.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -7,7 +6,6 @@ using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.TextureFormat.Textures;
 using VfxEditor.Ui;
-using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager : GenericDialog, IFileManager {
@@ -22,20 +20,11 @@ namespace VfxEditor.TextureFormat {
             return !string.IsNullOrEmpty( localPath );
         }
 
-        public void WorkspaceImport( JObject meta, string loadLocation ) {
-            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, "Tex" );
-            if( items == null ) return;
-            foreach( var item in items ) {
-                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
-                ImportAtex( fullPath, item.ReplacePath, item.Height, item.Width, item.Depth, item.MipLevels, item.Format );
-            }
-        }
-
         // import replacement texture from atex
-        private bool ImportAtex( string localPath, string gamePath, int height, int width, int depth, int mips, TextureFormat format ) {
+        private bool ImportAtex( string importPath, string gamePath, int height, int width, int depth, int mips, TextureFormat format ) {
             var gameFileExtension = gamePath.Split( '.' )[^1].Trim( '\0' );
-            var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
-            File.Copy( localPath, path, true );
+            var localPath = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
+            File.Copy( importPath, localPath, true );
 
             var replaceData = new TextureReplace( localPath, gamePath, height, width, depth, mips, format );
 
@@ -61,6 +50,7 @@ namespace VfxEditor.TextureFormat {
                 }
             }
             foreach( var entry in PathToTextureReplace ) {
+                Plugin.CleanExportDialogs( entry.Value );
                 File.Delete( entry.Value.LocalPath );
             }
             PathToTexturePreview.Clear();

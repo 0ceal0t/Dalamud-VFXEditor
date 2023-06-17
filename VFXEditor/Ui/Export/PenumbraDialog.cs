@@ -28,7 +28,7 @@ namespace VfxEditor.Ui.Export {
         public List<string> ModTags = new();
     }
 
-    public class PenumbraDialog : ModExportDialog {
+    public class PenumbraDialog : ExportDialog {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
@@ -45,11 +45,10 @@ namespace VfxEditor.Ui.Export {
                 var tempDir = Path.Combine( saveDir, "VFXEDITOR_PENUMBRA_TEMP" );
                 Directory.CreateDirectory( tempDir );
 
-                var files = new Dictionary<string, string>();
-                foreach( var manager in Plugin.Managers ) {
-                    if( manager == null ) continue;
-                    if( !ToExport.TryGetValue( manager.GetExportName(), out var exportItem ) || !exportItem ) continue;
-                    manager.PenumbraExport( tempDir, files );
+                var filesOut = new Dictionary<string, string>();
+
+                foreach( var category in Categories ) {
+                    foreach( var item in category.GetItemsToExport() ) item.PenumbraExport( tempDir, filesOut );
                 }
 
                 var meta = new PenumbraMeta {
@@ -60,7 +59,7 @@ namespace VfxEditor.Ui.Export {
                 };
 
                 var mod = new PenumbraMod {
-                    Files = files
+                    Files = filesOut
                 };
 
                 File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( meta ) );

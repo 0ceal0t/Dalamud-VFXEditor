@@ -1,8 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.IO;
 using VfxEditor.Data;
-using VfxEditor.Ui.Export;
 
 namespace VfxEditor.FileManager {
     public interface IFileManager {
@@ -10,13 +8,15 @@ namespace VfxEditor.FileManager {
         public bool GetReplacePath( string gamePath, out string replacePath );
 
         public void WorkspaceImport( JObject meta, string loadLocation );
+
         public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation );
-        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset );
-        public void PenumbraExport( string modFolder, Dictionary<string, string> files );
-        public IEnumerable<IFileDocument> GetDocuments();
 
         public string GetExportName();
+
+        public IEnumerable<IFileDocument> GetExportDocuments();
+
         public CopyManager GetCopyManager();
+
         public CommandManager GetCommandManager();
 
         public void Draw();

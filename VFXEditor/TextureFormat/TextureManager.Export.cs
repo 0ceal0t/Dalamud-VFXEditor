@@ -1,38 +1,19 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
-        public IEnumerable<IFileDocument> GetDocuments() => PathToTextureReplace.Values;
+        public IEnumerable<IFileDocument> GetExportDocuments() => PathToTextureReplace.Values;
 
-        public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
-            foreach( var entry in PathToTextureReplace ) {
-                var localPath = entry.Value.LocalPath;
-                var path = entry.Key;
-                if( string.IsNullOrEmpty( localPath ) || string.IsNullOrEmpty( path ) ) continue;
-
-                PenumbraUtils.CopyFile( localPath, modFolder, path, files );
-            }
-        }
-
-        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset ) {
-            foreach( var entry in PathToTextureReplace ) {
-                var localPath = entry.Value.LocalPath;
-                var path = entry.Key;
-                if( string.IsNullOrEmpty( localPath ) || string.IsNullOrEmpty( path ) ) continue;
-
-                using var file = File.Open( localPath, FileMode.Open );
-                using var texReader = new BinaryReader( file );
-                using var texMs = new MemoryStream();
-                using var texWriter = new BinaryWriter( texMs );
-                texWriter.Write( TexToolsUtils.CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
-                var modData = texMs.ToArray();
-                simpleParts.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
-                writer.Write( modData );
-                modOffset += modData.Length;
+        public void WorkspaceImport( JObject meta, string loadLocation ) {
+            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, "Tex" );
+            if( items == null ) return;
+            foreach( var item in items ) {
+                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
+                ImportAtex( fullPath, item.ReplacePath, item.Height, item.Width, item.Depth, item.MipLevels, item.Format );
             }
         }
 
