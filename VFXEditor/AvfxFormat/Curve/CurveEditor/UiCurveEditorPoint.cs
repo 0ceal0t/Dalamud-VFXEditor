@@ -23,6 +23,8 @@ namespace VfxEditor.AvfxFormat {
 
         public KeyType KeyType => Key.Type;
 
+        private Vector3 BackupColor;
+
         public Vector3 RawData {
             get => new( Key.X, Key.Y, ( float )Editor.ToDegrees( Key.Z ) );
             set {
@@ -120,14 +122,64 @@ namespace VfxEditor.AvfxFormat {
             }
 
             if( IsColor ) {
-                var tempColorData = RawData;
-                if( ImGui.ColorEdit3( "Color", ref tempColorData, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
+                var tempX = RawData.X;
+                var tempY = RawData.Y;
+                var tempZ = RawData.Z;
+                var tempColor = RawData;
+
+                var changed = false;
+
+                var imguiStyle = ImGui.GetStyle();
+                var floatWidth = ( ImGui.GetWindowSize().X * 0.65f - imguiStyle.ItemInnerSpacing.X * 3 - ImGui.GetFrameHeight() ) / 3f;
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) ) ) {
+                    ImGui.SetNextItemWidth( floatWidth );
+                    if( ImGui.DragFloat( "##X", ref tempX, 1.0f / 255.0f, 0.0f, 1.0f, "R:%0.3f" ) ) {
+                        changed = true;
+                        tempColor = RawData with {
+                            X = tempX
+                        };
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( floatWidth );
+                    if( ImGui.DragFloat( "##Y", ref tempY, 1.0f / 255.0f, 0.0f, 1.0f, "G:%0.3f" ) ) {
+                        changed = true;
+                        tempColor = RawData with {
+                            Y = tempY
+                        };
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( floatWidth );
+                    if( ImGui.DragFloat( "##Z", ref tempZ, 1.0f / 255.0f, 0.0f, 1.0f, "B:%0.3f" ) ) {
+                        changed = true;
+                        tempColor = RawData with {
+                            Z = tempZ
+                        };
+                    }
+
+                    ImGui.SameLine();
+                    if( ImGui.ColorButton( "##Color", new Vector4( tempColor, 1 ) ) ) {
+                        BackupColor = tempColor;
+                        ImGui.OpenPopup( "PalettePopup" );
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.Text( "Color" );
+                }
+
+                if( DrawPalettePopup( tempColor, BackupColor, out var popupColor ) ) {
+                    changed = true;
+                    tempColor = popupColor;
+                }
+
+                if( changed ) {
                     if( !IsColorChanging ) {
                         IsColorChanging = true;
                         PreColorChangeState = Editor.GetState();
                     }
                     ColorChangeStartTime = DateTime.Now;
-                    RawData = tempColorData;
+                    RawData = tempColor;
                 }
                 else if( IsColorChanging && ( DateTime.Now - ColorChangeStartTime ).TotalMilliseconds > 200 ) {
                     IsColorChanging = false;
@@ -142,6 +194,66 @@ namespace VfxEditor.AvfxFormat {
                     } ) );
                 }
             }
+        }
+
+        private unsafe static bool DrawPalettePopup( Vector3 currentColor, Vector3 backupColor, out Vector3 color ) {
+            color = currentColor;
+            var ret = false;
+
+            using var popup = ImRaii.Popup( "PalettePopup" );
+            if( !popup ) return false;
+
+            if( ImGui.ColorPicker3( "##Picker", ref currentColor, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview ) ) {
+                color = currentColor;
+                ret = true;
+            }
+
+            ImGui.SameLine();
+
+            using var group = ImRaii.Group();
+
+            ImGui.Text( "Current" );
+            ImGui.ColorButton( "##Current", new Vector4( currentColor, 1 ), ImGuiColorEditFlags.NoPicker, new Vector2( 60, 40 ) );
+
+            ImGui.Text( "Previous" );
+            if( ImGui.ColorButton( "##Previous", new Vector4( backupColor, 1 ), ImGuiColorEditFlags.NoPicker, new Vector2( 60, 40 ) ) ) {
+                color = backupColor;
+                ret = true;
+            }
+
+            ImGui.Separator();
+
+            for( var i = 0; i < Plugin.Configuration.CurveEditorPalette.Count; i++ ) {
+                using var _ = ImRaii.PushId( i );
+                var paletteColor = Plugin.Configuration.CurveEditorPalette[i];
+
+                if( ( i % 8 ) != 0 ) ImGui.SameLine( 0f, ImGui.GetStyle().ItemSpacing.Y );
+
+                if( ImGui.ColorButton( "##Palette", paletteColor, ImGuiColorEditFlags.NoAlpha | ImGuiColorEditFlags.NoPicker | ImGuiColorEditFlags.NoTooltip ) ) {
+                    color = new Vector3( paletteColor.X, paletteColor.Y, paletteColor.Z );
+                    ret = true;
+                }
+
+                if( ImGui.BeginDragDropTarget() ) {
+                    var payload3 = ImGui.AcceptDragDropPayload( "_COL3F" );
+                    if( payload3.NativePtr != null ) {
+                        var vec3 = *( Vector3* )payload3.Data;
+                        Plugin.Configuration.CurveEditorPalette[i] = new Vector4( vec3, 1 );
+                        Plugin.Configuration.Save();
+                    }
+
+                    var payload4 = ImGui.AcceptDragDropPayload( "_COL4F" );
+                    if( payload4.NativePtr != null ) {
+                        var vec4 = *( Vector4* )payload4.Data;
+                        Plugin.Configuration.CurveEditorPalette[i] = vec4;
+                        Plugin.Configuration.Save();
+                    }
+
+                    ImGui.EndDragDropTarget();
+                }
+            }
+
+            return ret;
         }
     }
 }

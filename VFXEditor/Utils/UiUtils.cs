@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
@@ -53,11 +52,6 @@ namespace VfxEditor.Utils {
             return ( small ? ImGui.SmallButton( label ) : ImGui.Button( label ) ) && enabled;
         }
 
-        public static bool DisabledRemoveButton( string label, bool enabled, bool small = false ) {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !enabled );
-            return RemoveButton( label, small ) && enabled;
-        }
-
         public static bool DisabledTransparentButton( string label, Vector4 color, bool enabled ) {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !enabled );
             return TransparentButton( label, color ) && enabled;
@@ -77,12 +71,6 @@ namespace VfxEditor.Utils {
         public static bool ColorButton( string label, Vector4 color, bool small ) {
             using var style = ImRaii.PushColor( ImGuiCol.Button, color );
             return small ? ImGui.SmallButton( label ) : ImGui.Button( label );
-        }
-
-        public static void CenteredText( string text ) {
-            var size = ImGui.CalcTextSize( text );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( ImGui.GetContentRegionMax().X - size.X ) / 2 );
-            ImGui.Text( text );
         }
 
         public static void HelpMarker( string text ) {
@@ -159,8 +147,6 @@ namespace VfxEditor.Utils {
             }
         }
 
-        public static void WriteBytesDialog( string filter, string data, string ext ) => WriteBytesDialog( filter, Encoding.ASCII.GetBytes( data ), ext );
-
         public static void WriteBytesDialog( string filter, byte[] data, string ext ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", filter, "", ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
@@ -202,13 +188,6 @@ namespace VfxEditor.Utils {
         public static Vector2 GetIconSize( FontAwesomeIcon icon ) {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             return ImGui.CalcTextSize( icon.ToIconString() );
-        }
-
-        public static bool RemoveIconButton( FontAwesomeIcon icon, string text ) => ColorIconButton( icon, text, RED_COLOR );
-
-        public static bool ColorIconButton( FontAwesomeIcon icon, string text, Vector4 color ) {
-            using var style = ImRaii.PushColor( ImGuiCol.Button, color );
-            return IconButton( icon, text );
         }
 
         public static bool IconSelectable( FontAwesomeIcon icon, string text ) {

@@ -1,4 +1,5 @@
 using Dalamud.Configuration;
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -94,6 +95,7 @@ namespace VfxEditor {
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
         public Vector4 CurveEditorPrimarySelectedColor = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
+        public List<Vector4> CurveEditorPalette = new();
         public int CurveEditorLineWidth = 2;
         public int CurveEditorColorRingSize = 3;
         public int CurveEditorGrabbingDistance = 25;
@@ -126,6 +128,10 @@ namespace VfxEditor {
             catch( Exception ) { WriteLocationError = true; }
 
             PluginLog.Log( "Write location: " + WriteLocation );
+
+            if( CurveEditorPalette.Count == 0 ) {
+                CurveEditorPalette.AddRange( ImGuiHelpers.DefaultColorPalette( 56 ) );
+            }
         }
 
         private void ProcessOldManagerConfigs( List<SelectResult> recent, List<SelectResult> favorites, string key ) {
