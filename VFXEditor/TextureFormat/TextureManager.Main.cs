@@ -5,6 +5,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.TextureFormat.CustomTeximpNet;
+using VfxEditor.TextureFormat.Textures;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
@@ -16,39 +17,33 @@ namespace VfxEditor.TextureFormat {
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/872329d84c7b920fe2ac5e0b824d6ec5b68f4f57/xivModdingFramework/Textures/FileTypes/Tex.cs
-        public bool ImportTexture( string localPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
+        public bool ImportTexture( string importPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
             gamePath = gamePath.Trim( '\0' );
 
             try {
                 TextureReplace replaceData;
                 var gameFileExtension = gamePath.Split( '.' )[^1].Trim( '\0' );
-                var localFileExtension = Path.GetExtension( localPath ).ToLower();
-                var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
+                var localFileExtension = Path.GetExtension( importPath ).ToLower();
+                var localPath = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
 
                 if( localFileExtension == ".dds" ) { // a .dds, use the format that the file is already in
-                    var ddsFile = DDSFile.Read( localPath );
+                    var ddsFile = DDSFile.Read( importPath );
                     var format = TextureFile.DXGItoTextureFormat( ddsFile.Format );
                     if( format == TextureFormat.Null ) return false;
 
-                    using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
-                        replaceData = CreateTexture( format, File.ReadAllBytes( localPath ), writer );
+                    using( var writer = new BinaryWriter( File.Open( localPath, FileMode.Create ) ) ) {
+                        replaceData = CreateTextureReplace( format, localPath, gamePath, File.ReadAllBytes( importPath ), writer );
                     }
                     ddsFile.Dispose();
                 }
                 else if( localFileExtension == ".atex" || localFileExtension == ".tex" ) {
-                    File.Copy( localPath, path, true );
-                    var tex = TextureFile.LoadFromLocal( localPath );
-                    replaceData = new TextureReplace {
-                        Height = tex.Header.Height,
-                        Width = tex.Header.Width,
-                        Depth = tex.Header.Depth,
-                        MipLevels = tex.Header.MipLevels,
-                        Format = tex.Header.Format,
-                        LocalPath = path
-                    };
+                    File.Copy( importPath, localPath, true );
+                    var tex = TextureFile.LoadFromLocal( importPath );
+
+                    replaceData = new TextureReplace( localPath, gamePath, tex.Header.Height, tex.Header.Width, tex.Header.Depth, tex.Header.MipLevels, tex.Header.Format );
                 }
                 else { // .png
-                    using var surface = Surface.LoadFromFile( localPath );
+                    using var surface = Surface.LoadFromFile( importPath );
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
@@ -71,22 +66,22 @@ namespace VfxEditor.TextureFormat {
 
                     var ddsData = ms.ToArray();
 
-                    using( var writer = new BinaryWriter( File.Open( path, FileMode.Create ) ) ) {
+                    using( var writer = new BinaryWriter( File.Open( localPath, FileMode.Create ) ) ) {
                         var postConversion = pngFormat switch {
                             TextureFormat.A8 => PostConversion.A8,
                             TextureFormat.R4G4B4A4 => PostConversion.R4444,
                             _ => PostConversion.None
                         };
 
-                        replaceData = CreateTexture( pngFormat, ddsData, writer, postConversion );
+                        replaceData = CreateTextureReplace( pngFormat, localPath, gamePath, ddsData, writer, postConversion );
                     }
                     ddsContainer.Dispose();
                 }
-                replaceData.LocalPath = path;
+
                 return ReplaceAndRefreshTexture( replaceData, gamePath );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, $"Error importing {localPath} into {gamePath}" );
+                PluginLog.Error( e, $"Error importing {importPath} into {gamePath}" );
             }
             return false;
         }
@@ -115,68 +110,56 @@ namespace VfxEditor.TextureFormat {
             }
         }
 
-        public bool GetPreviewTexture( string gamePath, out PreviewTexture data ) {
+        public PreviewTexture GetPreviewTexture( string gamePath ) {
             gamePath = gamePath.Trim( '\0' );
-            data = new PreviewTexture();
-            if( string.IsNullOrEmpty( gamePath ) || !gamePath.Contains( '/' ) ) return false;
+            if( string.IsNullOrEmpty( gamePath ) || !gamePath.Contains( '/' ) ) return null;
 
-            if( PathToTexturePreview.TryGetValue( gamePath, out data ) ) return true;
+            if( PathToTexturePreview.TryGetValue( gamePath, out var data ) ) return data;
 
             // Doesn't exist yet, try to load
-            var result = CreatePreviewTexture( gamePath, out data );
-            if( result && data.Wrap != null ) {
-                PathToTexturePreview.TryAdd( gamePath, data );
+            var texture = CreatePreviewTexture( gamePath );
+            if( texture != null && texture.Wrap != null ) {
+                PathToTexturePreview.TryAdd( gamePath, texture );
+                return texture;
             }
 
-            return result;
+            return null;
         }
 
-        private bool CreatePreviewTexture( string gamePath, out PreviewTexture ret, bool loadImage = true ) {
+        private PreviewTexture CreatePreviewTexture( string gamePath, bool loadImage = true ) {
             var result = Plugin.DataManager.FileExists( gamePath ) || PathToTextureReplace.ContainsKey( gamePath );
-            ret = new PreviewTexture();
 
-            if( !result ) return false;
+            if( !result ) return null;
 
             try {
                 var texFile = GetRawTexture( gamePath );
-                ret.Format = texFile.Header.Format;
-                ret.MipLevels = texFile.Header.MipLevels;
-                ret.Width = texFile.Header.Width;
-                ret.Height = texFile.Header.Height;
-                ret.Depth = texFile.Header.Depth;
-                ret.IsReplaced = texFile.Local;
 
                 if( !texFile.ValidFormat ) {
-                    PluginLog.Error( $"Invalid format: {ret.Format} {gamePath}" );
-                    return false;
+                    PluginLog.Error( $"Invalid format: {texFile.Header.Format} {gamePath}" );
+                    return null;
                 }
 
-                if( loadImage ) {
-                    var texBind = Plugin.PluginInterface.UiBuilder.LoadImageRaw( texFile.ImageData, texFile.Header.Width, texFile.Header.Height, 4 );
-                    ret.Wrap = texBind;
-                }
-                return true;
+                return new PreviewTexture( texFile, gamePath, loadImage );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, $"Could not find tex: {gamePath}" );
-                return false;
+                return null;
             }
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/Textures/FileTypes/Tex.cs#L1002
-        private static TextureReplace CreateTexture( TextureFormat format, byte[] dds, BinaryWriter writer, PostConversion post = PostConversion.None ) {
+        private static TextureReplace CreateTextureReplace( TextureFormat format, string localPath, string gamePath, byte[] dds, BinaryWriter writer, PostConversion post = PostConversion.None ) {
             // Get DDS info
             using var ddsMs = new MemoryStream( dds );
             using var ddsReader = new BinaryReader( ddsMs );
-            var replaceData = new TextureReplace {
-                Format = format
-            };
             ddsReader.BaseStream.Seek( 12, SeekOrigin.Begin );
-            replaceData.Height = ddsReader.ReadInt32();
-            replaceData.Width = ddsReader.ReadInt32();
+            var height = ddsReader.ReadInt32();
+            var width = ddsReader.ReadInt32();
             var pitch = ddsReader.ReadInt32();
-            replaceData.Depth = ddsReader.ReadInt32();
-            replaceData.MipLevels = ddsReader.ReadInt32();
+            var depth = ddsReader.ReadInt32();
+            var mipLevels = ddsReader.ReadInt32();
+
+            var replaceData = new TextureReplace( localPath, gamePath, height, width, depth, mipLevels, format );
 
             writer.Write( TextureUtils.CreateTextureHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
 

@@ -13,6 +13,7 @@ namespace VfxEditor.FileManager {
         public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation );
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simpleParts, ref int modOffset );
         public void PenumbraExport( string modFolder, Dictionary<string, string> files );
+        public IEnumerable<IFileDocument> GetDocuments();
 
         public string GetExportName();
         public CopyManager GetCopyManager();

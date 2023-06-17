@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
 using System;

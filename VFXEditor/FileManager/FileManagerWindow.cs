@@ -166,6 +166,8 @@ namespace VfxEditor.FileManager {
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
         }
 
+        public IEnumerable<IFileDocument> GetDocuments() => Documents;
+
         public virtual void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
             foreach( var document in Documents ) document.PenumbraExport( modFolder, files );
         }

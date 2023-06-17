@@ -37,19 +37,25 @@ namespace VfxEditor.Library.Texture {
         }
 
         protected override void DrawBody() {
-            if( Plugin.TextureManager.GetPreviewTexture( Path, out var tex ) ) {
-                using var indent = ImRaii.PushIndent( 5f );
-                ImGui.Image( tex.Wrap.ImGuiHandle, new Vector2( tex.Width, tex.Height ) );
-            }
+            var texture = Plugin.TextureManager.GetPreviewTexture( Path );
+            if( texture == null ) return;
+
+            using var indent = ImRaii.PushIndent( 5f );
+            texture.Draw();
         }
 
         public bool DrawSelectable() {
             var ret = ImGui.Selectable( $"{Name}##{Id}" );
-            if( ImGui.IsItemHovered() && Plugin.TextureManager.GetPreviewTexture( Path, out var tex ) ) {
-                ImGui.BeginTooltip();
-                ImGui.Image( tex.Wrap.ImGuiHandle, new Vector2( tex.Width, tex.Height ) );
-                ImGui.EndTooltip();
+
+            if( ImGui.IsItemHovered() ) {
+                var texture = Plugin.TextureManager.GetPreviewTexture( Path );
+                if( texture != null ) {
+                    ImGui.BeginTooltip();
+                    texture.Draw();
+                    ImGui.EndTooltip();
+                }
             }
+
             return ret;
         }
 

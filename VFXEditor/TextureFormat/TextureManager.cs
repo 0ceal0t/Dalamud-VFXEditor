@@ -5,29 +5,11 @@ using System.Collections.Concurrent;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.TextureFormat.Textures;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
-    public struct PreviewTexture { // ImGui texture previews
-        public ushort Height;
-        public ushort Width;
-        public ushort MipLevels;
-        public ushort Depth;
-        public bool IsReplaced;
-        public TextureFormat Format;
-        public ImGuiScene.TextureWrap Wrap;
-    }
-
-    public struct TextureReplace {
-        public string LocalPath;
-        public int Height;
-        public int Width;
-        public int Depth;
-        public int MipLevels;
-        public TextureFormat Format;
-    }
-
     public partial class TextureManager : GenericDialog, IFileManager {
         private int TEX_ID = 0;
         private readonly ConcurrentDictionary<string, TextureReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
@@ -55,14 +37,8 @@ namespace VfxEditor.TextureFormat {
             var path = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
             File.Copy( localPath, path, true );
 
-            var replaceData = new TextureReplace {
-                Height = height,
-                Width = width,
-                Depth = depth,
-                MipLevels = mips,
-                Format = format,
-                LocalPath = path
-            };
+            var replaceData = new TextureReplace( localPath, gamePath, height, width, depth, mips, format );
+
             return ReplaceAndRefreshTexture( replaceData, gamePath );
         }
 

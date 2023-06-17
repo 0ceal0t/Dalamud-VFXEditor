@@ -70,40 +70,42 @@ namespace VfxEditor.TextureFormat {
         }
 
         public void DrawTexture( string path ) {
-            if( GetPreviewTexture( path, out var texture ) ) {
-                ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( texture.Width, texture.Height ) );
-                ImGui.TextDisabled( $"Format: {texture.Format}  Mips: {texture.MipLevels}  Size: {texture.Width}x{texture.Height}" );
+            var texture = GetPreviewTexture( path );
+            if( texture == null ) return;
 
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
+            texture.Draw();
+            ImGui.TextDisabled( $"Format: {texture.Format}  Mips: {texture.MipLevels}  Size: {texture.Width}x{texture.Height}" );
 
-                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) );
 
+            if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
+
+            ImGui.SameLine();
+            if( ImGui.Button( "Replace" ) ) ImportDialog( path );
+
+            if( ImGui.BeginPopup( "TexExport" ) ) {
+                if( ImGui.Selectable( "PNG" ) ) SavePngDialog( path );
+                if( ImGui.Selectable( "DDS" ) ) SaveDdsDialog( path );
+                ImGui.EndPopup();
+            }
+
+            if( texture.IsReplaced ) {
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" ) ) ImportDialog( path );
-
-                if( ImGui.BeginPopup( "TexExport" ) ) {
-                    if( ImGui.Selectable( "PNG" ) ) SavePngDialog( path );
-                    if( ImGui.Selectable( "DDS" ) ) SaveDdsDialog( path );
-                    ImGui.EndPopup();
-                }
-
-                if( texture.IsReplaced ) {
-                    ImGui.SameLine();
-                    if( UiUtils.RemoveButton( "Remove Replaced Texture" ) ) {
-                        RemoveReplaceTexture( path );
-                        RefreshPreviewTexture( path );
-                    }
+                if( UiUtils.RemoveButton( "Remove Replaced Texture" ) ) {
+                    RemoveReplaceTexture( path );
+                    RefreshPreviewTexture( path );
                 }
             }
         }
 
         public void DrawTextureUv( string path, uint u, uint v, uint w, uint h ) {
-            if( GetPreviewTexture( path, out var texture ) ) {
-                var size = new Vector2( texture.Width, texture.Height );
-                var uv0 = new Vector2( u, v ) / size;
-                var uv1 = uv0 + new Vector2( w, h ) / size;
-                ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
-            }
+            var texture = GetPreviewTexture( path );
+            if( texture == null ) return;
+
+            var size = new Vector2( texture.Width, texture.Height );
+            var uv0 = new Vector2( u, v ) / size;
+            var uv1 = uv0 + new Vector2( w, h ) / size;
+            ImGui.Image( texture.Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
         }
 
         private void ImportDialog( string newPath ) {

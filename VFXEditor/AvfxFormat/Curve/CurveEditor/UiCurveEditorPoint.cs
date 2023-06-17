@@ -196,7 +196,7 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        private unsafe static bool DrawPalettePopup( Vector3 currentColor, Vector3 backupColor, out Vector3 color ) {
+        private static unsafe bool DrawPalettePopup( Vector3 currentColor, Vector3 backupColor, out Vector3 color ) {
             color = currentColor;
             var ret = false;
 

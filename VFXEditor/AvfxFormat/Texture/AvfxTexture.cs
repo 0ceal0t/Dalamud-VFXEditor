@@ -47,11 +47,12 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void ShowTooltip() {
-            if( Plugin.TextureManager.GetPreviewTexture( Path.GetValue(), out var tex ) ) {
-                ImGui.BeginTooltip();
-                ImGui.Image( tex.Wrap.ImGuiHandle, new Vector2( tex.Width, tex.Height ) );
-                ImGui.EndTooltip();
-            }
+            var texture = Plugin.TextureManager.GetPreviewTexture( Path.GetValue() );
+            if( texture == null ) return;
+
+            ImGui.BeginTooltip();
+            texture.Draw();
+            ImGui.EndTooltip();
         }
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";

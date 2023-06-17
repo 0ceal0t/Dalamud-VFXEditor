@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.FileManager;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TextureFormat {
     public partial class TextureManager {
+        public IEnumerable<IFileDocument> GetDocuments() => PathToTextureReplace.Values;
+
         public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
             foreach( var entry in PathToTextureReplace ) {
                 var localPath = entry.Value.LocalPath;

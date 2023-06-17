@@ -11,7 +11,7 @@ using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerDocument<T, S> where T : FileManagerFile {
+    public abstract class FileManagerDocument<T, S> : IFileDocument where T : FileManagerFile {
         public T CurrentFile { get; protected set; }
 
         public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
@@ -172,6 +172,8 @@ namespace VfxEditor.FileManager {
         }
 
         protected virtual List<string> GetPapIds() => null;
+
+        public string GetDisplayName() => DisplayName;
 
         public void PenumbraExport( string modFolder, Dictionary<string, string> files ) {
             var path = ReplacePath;
