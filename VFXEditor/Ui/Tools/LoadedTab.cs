@@ -1,5 +1,6 @@
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -33,35 +34,54 @@ namespace VfxEditor.Ui.Tools {
                 var drawObject = gameObject->DrawObject;
                 if( drawObject == null ) continue;
 
-                var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + 160 );
-                if( data == IntPtr.Zero ) continue;
+                DrawDrawObject( drawObject );
 
-                var sklbTable = Marshal.ReadIntPtr( data + 88 );
-                var tableStart = Marshal.ReadIntPtr( data + 96 );
+                if( gameObject->ObjectKind == 0x01 ) {
+                    var weapon = drawObject->Object.ChildObject;
+                    if( weapon == null ) continue;
 
-                DrawTable( sklbTable, IntPtr.Zero, "SKLB" );
+                    using var __ = ImRaii.PushId( "Weapon" );
 
-                var idx = 0;
-                var tablePos = tableStart;
-                var tablePtr = Marshal.ReadIntPtr( tablePos );
+                    using var tree = ImRaii.TreeNode( "Child Object" );
+                    if( !tree ) continue;
 
-                while( tablePtr > 256 ) {
-                    if( tablePtr != 0x3F800000 ) { // -1 = skip
-                        var name = $"TABLE {idx}";
+                    using var indent2 = ImRaii.PushIndent();
 
-                        using var __ = ImRaii.PushId( name );
-
-                        using var tree = ImRaii.TreeNode( name );
-                        if( tree ) {
-                            DrawResource( Marshal.ReadIntPtr( tablePtr ) );
-                            DrawMultiTable( tablePtr + 8, "PAP" );
-                        }
-                    }
-
-                    idx++;
-                    tablePos += 8;
-                    tablePtr = Marshal.ReadIntPtr( tablePos );
+                    DrawDrawObject( ( DrawObject* )weapon );
                 }
+            }
+        }
+
+        private void DrawDrawObject( DrawObject* drawObject ) {
+
+            var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + 160 );
+            if( data == IntPtr.Zero ) return;
+
+            var sklbTable = Marshal.ReadIntPtr( data + 88 );
+            var tableStart = Marshal.ReadIntPtr( data + 96 );
+
+            DrawTable( sklbTable, IntPtr.Zero, "SKLB" );
+
+            var idx = 0;
+            var tablePos = tableStart;
+            var tablePtr = Marshal.ReadIntPtr( tablePos );
+
+            while( tablePtr > 256 ) {
+                if( tablePtr != 0x3F800000 ) { // -1 = skip
+                    var name = $"TABLE {idx}";
+
+                    using var __ = ImRaii.PushId( name );
+
+                    using var tree = ImRaii.TreeNode( name );
+                    if( tree ) {
+                        DrawResource( Marshal.ReadIntPtr( tablePtr ) );
+                        DrawMultiTable( tablePtr + 8, "PAP" );
+                    }
+                }
+
+                idx++;
+                tablePos += 8;
+                tablePtr = Marshal.ReadIntPtr( tablePos );
             }
         }
 
