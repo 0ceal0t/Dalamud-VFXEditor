@@ -1,7 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 
@@ -15,7 +14,7 @@ namespace VfxEditor.Ui.Export {
 
         protected readonly List<ExportDialogCategory> Categories = new();
 
-        public ExportDialog( string id ) : base( id, false, 400, 300 ) {
+        public ExportDialog( string id ) : base( id, false, 600, 500 ) {
             foreach( var manager in Plugin.Managers ) {
                 if( manager == null ) continue;
                 ToExport[manager.GetExportName()] = false;
@@ -43,73 +42,5 @@ namespace VfxEditor.Ui.Export {
         protected abstract void OnExport();
 
         public void RemoveDocument( IFileDocument document ) => Categories.ForEach( x => x.RemoveDocument( document ) );
-    }
-
-    public class ExportDialogCategory {
-        public readonly IFileManager Manager;
-
-        private bool ExportAll = false;
-        private readonly Dictionary<IFileDocument, bool> ToExport = new();
-
-        public ExportDialogCategory( IFileManager manager ) {
-            Manager = manager;
-        }
-
-        public void Draw() {
-            var id = Manager.GetExportName();
-            using var _ = ImRaii.PushId( id );
-
-            if( ImGui.Checkbox( "##All", ref ExportAll ) ) {
-                foreach( var key in ToExport.Keys ) ToExport[key] = ExportAll;
-            }
-
-            ImGui.SameLine();
-
-            if( ImGui.CollapsingHeader( id ) ) {
-                using var indent = ImRaii.PushIndent( 5f );
-
-                var items = Manager.GetExportDocuments();
-                if( items.Count() == 0 ) return;
-
-                using var table = ImRaii.Table( "##Table", 3, ImGuiTableFlags.RowBg );
-                if( !table ) return;
-
-                ImGui.TableSetupColumn( "##Check", ImGuiTableColumnFlags.WidthFixed, 20 );
-                ImGui.TableSetupColumn( "##Source", ImGuiTableColumnFlags.WidthStretch );
-                ImGui.TableSetupColumn( "##Replace", ImGuiTableColumnFlags.WidthStretch );
-
-                var idx = 0;
-                foreach( var item in items ) {
-                    using var __ = ImRaii.PushId( idx );
-
-                    var isChecked = DoExport( item );
-
-                    ImGui.TableNextRow();
-
-                    ImGui.TableNextColumn();
-                    if( ImGui.Checkbox( "##Check", ref isChecked ) ) {
-                        if( !isChecked && ExportAll ) ExportAll = false;
-                    }
-
-                    ImGui.TableNextColumn();
-                    ImGui.Text( item.GetExportSource() );
-
-                    ImGui.TableNextColumn();
-                    ImGui.Text( item.GetExportReplace() );
-
-                    ToExport[item] = isChecked;
-
-                    idx++;
-                }
-            }
-        }
-
-        public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetExportDocuments().Where( DoExport );
-
-        private bool DoExport( IFileDocument item ) => ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll;
-
-        public void RemoveDocument( IFileDocument document ) {
-            if( ToExport.ContainsKey( document ) ) ToExport.Remove( document );
-        }
     }
 }

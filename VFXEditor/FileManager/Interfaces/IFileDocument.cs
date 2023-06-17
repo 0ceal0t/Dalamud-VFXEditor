@@ -8,6 +8,8 @@ namespace VfxEditor.FileManager {
 
         public string GetExportReplace();
 
+        public bool CanExport();
+
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset );
 
         public void PenumbraExport( string modFolder, Dictionary<string, string> filesOut );

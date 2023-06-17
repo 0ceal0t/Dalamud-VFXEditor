@@ -2,7 +2,6 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VfxEditor.Data;
 using VfxEditor.Select;
 using VfxEditor.Ui;
@@ -119,7 +118,7 @@ namespace VfxEditor.FileManager {
         public bool RemoveDocument( T document ) {
             var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
-            Plugin.CleanExportDialogs( document );
+            Plugin.CleanupExport( document );
 
             if( switchDoc ) {
                 ActiveDocument = Documents[0];
@@ -167,7 +166,7 @@ namespace VfxEditor.FileManager {
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
         }
 
-        public IEnumerable<IFileDocument> GetExportDocuments() => Documents.Where( x => x.CurrentFile != null && !string.IsNullOrEmpty( x.ReplacePath ) );
+        public IEnumerable<IFileDocument> GetExportDocuments() => Documents;
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = null;
@@ -189,7 +188,7 @@ namespace VfxEditor.FileManager {
 
         public virtual void Dispose() {
             foreach( var document in Documents ) {
-                Plugin.CleanExportDialogs( document );
+                Plugin.CleanupExport( document );
                 document.Dispose();
             }
             Documents.Clear();

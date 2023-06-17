@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Numerics;
 using VfxEditor.TextureFormat;
@@ -13,33 +14,31 @@ namespace VfxEditor.Ui.Tools {
         public void Draw() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.TextDisabled( "Extract Raw Game File" );
-            ImGui.Indent();
 
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) );
-            ImGui.InputTextWithHint( "##Extract", "Game Path", ref ExtractPath, 255 );
+            using( var indent = ImRaii.PushIndent() )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) ) ) {
+                ImGui.InputTextWithHint( "##Extract", "Game Path", ref ExtractPath, 255 );
 
-            ImGui.SameLine();
-            if( ImGui.Button( "Extract" ) ) {
-                var cleanedPath = ExtractPath.Replace( "\\", "/" );
-                if( Plugin.DataManager.FileExists( cleanedPath ) ) {
-                    try {
-                        var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
-                        var file = Plugin.DataManager.GetFile( cleanedPath );
-                        UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
-                    }
-                    catch( Exception e ) {
-                        PluginLog.Error( "Could not read file", e );
+                ImGui.SameLine();
+                if( ImGui.Button( "Extract" ) ) {
+                    var cleanedPath = ExtractPath.Replace( "\\", "/" );
+                    if( Plugin.DataManager.FileExists( cleanedPath ) ) {
+                        try {
+                            var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
+                            var file = Plugin.DataManager.GetFile( cleanedPath );
+                            UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
+                        }
+                        catch( Exception e ) {
+                            PluginLog.Error( "Could not read file", e );
+                        }
                     }
                 }
             }
 
-            ImGui.PopStyleVar( 1 );
-
-            ImGui.Unindent();
-
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.TextDisabled( "Image Conversion" );
-            ImGui.Indent();
+
+            using var indent2 = ImRaii.PushIndent();
 
             if( ImGui.Button( ".atex to PNG" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
@@ -57,8 +56,6 @@ namespace VfxEditor.Ui.Tools {
                     texFile.SaveAsDds( res + ".dds" );
                 } );
             }
-
-            ImGui.Unindent();
         }
 
         /*

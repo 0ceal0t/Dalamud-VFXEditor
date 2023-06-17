@@ -116,5 +116,12 @@ namespace VfxEditor.TmbFormat.Utils {
         public void Write( short data ) => Writer.Write( data );
         public void Write( byte data ) => Writer.Write( data );
         public void Write( float data ) => Writer.Write( data );
+
+        public void WriteTo( BinaryWriter writer ) {
+            writer.Write( WriterMs.ToArray() );
+            writer.Write( ExtraMs.ToArray() );
+            writer.Write( TimelineMs.ToArray() );
+            writer.Write( StringMs.ToArray() );
+        }
     }
 }

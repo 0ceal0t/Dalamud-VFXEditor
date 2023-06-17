@@ -50,7 +50,7 @@ namespace VfxEditor.TextureFormat {
                 }
             }
             foreach( var entry in PathToTextureReplace ) {
-                Plugin.CleanExportDialogs( entry.Value );
+                Plugin.CleanupExport( entry.Value );
                 File.Delete( entry.Value.LocalPath );
             }
             PathToTexturePreview.Clear();

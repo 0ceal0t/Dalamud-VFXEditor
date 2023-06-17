@@ -47,5 +47,7 @@ namespace VfxEditor.TextureFormat.Textures {
             writer.Write( modData );
             modOffset += modData.Length;
         }
+
+        public bool CanExport() => true;
     }
 }

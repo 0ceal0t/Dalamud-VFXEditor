@@ -46,17 +46,16 @@ namespace VfxEditor.Ui.Export {
         private void Export( string saveFile ) {
             try {
                 var simpleParts = new List<TTMPL_Simple>();
-                byte[] newData;
                 var modOffset = 0;
 
-                using( var ms = new MemoryStream() )
-                using( var writer = new BinaryWriter( ms ) ) {
-                    foreach( var category in Categories ) {
-                        foreach( var item in category.GetItemsToExport() ) item.TextoolsExport( writer, simpleParts, ref modOffset );
-                    }
+                using var ms = new MemoryStream();
+                using var writer = new BinaryWriter( ms );
 
-                    newData = ms.ToArray();
+                foreach( var category in Categories ) {
+                    foreach( var item in category.GetItemsToExport() ) item.TextoolsExport( writer, simpleParts, ref modOffset );
                 }
+
+                var newData = ms.ToArray();
 
                 var mod = new TTMPL {
                     TTMPVersion = "1.3s",
@@ -81,7 +80,7 @@ namespace VfxEditor.Ui.Export {
                 if( File.Exists( saveFile ) ) File.Delete( saveFile );
                 ZipFile.CreateFromDirectory( tempDir, saveFile );
                 Directory.Delete( tempDir, true );
-                PluginLog.Log( "Exported To: " + saveFile );
+                PluginLog.Log( $"Exported To: {saveFile}" );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Could not export to TexTools" );

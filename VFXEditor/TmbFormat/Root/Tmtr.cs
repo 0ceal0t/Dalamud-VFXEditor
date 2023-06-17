@@ -1,11 +1,14 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
@@ -55,15 +58,17 @@ namespace VfxEditor.TmbFormat {
 
         public void Draw( TmbFile file ) {
             DrawHeader();
+            DrawUnknownData();
+            DrawEntries( file );
+        }
 
-            // ==== Unknown Data ====
-
+        private void DrawUnknownData() {
             UnknownExtraAssigned.Draw( Command );
             if( UseUnknownExtra ) {
                 using var _ = ImRaii.PushId( "Unk" );
 
                 ImGui.SameLine();
-                if( ImGui.Button( $"+ New" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
+                if( ImGui.Button( "+ New" ) ) Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
 
                 for( var idx = 0; idx < UnknownData.Count; idx++ ) {
                     var unknownItem = UnknownData[idx];
@@ -80,15 +85,16 @@ namespace VfxEditor.TmbFormat {
                     }
                 }
             }
+        }
 
-            // ======= Entries =======
-
+        private void DrawEntries( TmbFile file ) {
             for( var idx = 0; idx < Entries.Count; idx++ ) {
                 var entry = Entries[idx];
                 var isColored = TmbEntry.DoColor( entry.Danger, out var col );
 
                 using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );
                 color.Push( ImGuiCol.HeaderHovered, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
+                color.Push( ImGuiCol.HeaderActive, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
 
                 using var _ = ImRaii.PushId( idx );
 
@@ -97,22 +103,28 @@ namespace VfxEditor.TmbFormat {
 
                     using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        TmbRefreshIdsCommand command = new( file, false, true );
-                        command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
-                        command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
-                        Command.Add( command );
-                        break;
+                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) )
+                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                        if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                            DeleteEntry( file, entry );
+                            break;
+                        }
+
+                        ImGui.SameLine();
+                        if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
+                            DuplicateEntry( file, entry );
+                            break;
+                        }
                     }
 
                     entry.Draw();
                 }
             }
 
-            if( ImGui.Button( "+ New" ) ) ImGui.OpenPopup( "NewEntryTmb" );
+            if( ImGui.Button( "+ New" ) ) ImGui.OpenPopup( "NewEntryPopup" );
 
-            if( ImGui.BeginPopup( "NewEntryTmb" ) ) { // NEW
-                using var _ = ImRaii.PushId( "NewEntryTmb" );
+            if( ImGui.BeginPopup( "NewEntryPopup" ) ) { // NEW
+                using var _ = ImRaii.PushId( "NewEntry" );
                 foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
                     if( ImGui.Selectable( entryOption.DisplayName ) ) {
                         var constructor = entryOption.Type.GetConstructor( new Type[] { typeof( bool ) } );
@@ -127,6 +139,47 @@ namespace VfxEditor.TmbFormat {
                 }
                 ImGui.EndPopup();
             }
+        }
+
+        private void DuplicateEntry( TmbFile file, TmbEntry entry ) {
+            // Kind of a scuffed way to do this
+            // An even more scuffed but robust way might be to write the ENTIRE file, then parse it againf and look for the right entry
+
+            var tmbWriter = new TmbWriter( entry.Size, entry.ExtraSize, sizeof( short ) );
+            entry.Write( tmbWriter );
+
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            tmbWriter.WriteTo( writer );
+            tmbWriter.Dispose();
+
+            ms.Position = 0;
+            using var reader = new BinaryReader( ms );
+            var tmbReader = new TmbReader( reader );
+
+            var verified = true;
+            var actors = new List<Tmac>();
+            var tracks = new List<Tmtr>();
+            var entries = new List<TmbEntry>();
+            var tmfcs = new List<Tmfc>();
+
+            tmbReader.ParseItem( actors, tracks, entries, tmfcs, file.PapEmbedded, ref verified );
+
+            var newEntry = entries[0];
+            var idx = Entries.Count == 0 ? 0 : file.Entries.IndexOf( Entries.Last() ) + 1;
+
+            TmbRefreshIdsCommand command = new( file, false, true );
+            command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
+            command.Add( new GenericAddCommand<TmbEntry>( file.Entries, newEntry, idx ) );
+            Command.Add( command );
+        }
+
+        private void DeleteEntry( TmbFile file, TmbEntry entry ) {
+            TmbRefreshIdsCommand command = new( file, false, true );
+            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
+            command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );
+            Command.Add( command );
         }
 
         public void DeleteChildren( TmbRefreshIdsCommand command, TmbFile file ) {

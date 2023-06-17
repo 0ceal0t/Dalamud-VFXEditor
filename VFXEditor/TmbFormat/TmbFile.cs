@@ -88,10 +88,7 @@ namespace VfxEditor.TmbFormat {
                 item.Write( tmbWriter );
             }
 
-            writer.Write( tmbWriter.WriterMs.ToArray() );
-            writer.Write( tmbWriter.ExtraMs.ToArray() );
-            writer.Write( tmbWriter.TimelineMs.ToArray() );
-            writer.Write( tmbWriter.StringMs.ToArray() );
+            tmbWriter.WriteTo( writer );
             tmbWriter.Dispose();
 
             // Fill in size placeholder

@@ -100,7 +100,7 @@ namespace VfxEditor.TextureFormat {
             gamePath = gamePath.Trim( '\0' );
             if( PathToTextureReplace.ContainsKey( gamePath ) && PathToTextureReplace.TryRemove( gamePath, out var oldValue ) ) {
                 File.Delete( oldValue.LocalPath );
-                Plugin.CleanExportDialogs( oldValue );
+                Plugin.CleanupExport( oldValue );
             }
         }
 
@@ -162,9 +162,7 @@ namespace VfxEditor.TextureFormat {
             var depth = ddsReader.ReadInt32();
             var mipLevels = ddsReader.ReadInt32();
 
-            var replaceData = new TextureReplace( localPath, gamePath, height, width, depth, mipLevels, format );
-
-            writer.Write( TextureUtils.CreateTextureHeader( format, replaceData.Width, replaceData.Height, replaceData.MipLevels ).ToArray() );
+            writer.Write( TextureUtils.CreateTextureHeader( format, width, height, mipLevels ).ToArray() );
 
             // Add DDS data
             ddsReader.BaseStream.Seek( 128, SeekOrigin.Begin );
@@ -177,7 +175,7 @@ namespace VfxEditor.TextureFormat {
 
             writer.Write( ddsData );
 
-            return replaceData;
+            return new TextureReplace( localPath, gamePath, height, width, depth, mipLevels, format );
         }
 
         private TextureFile GetRawTexture( string gamePath ) {

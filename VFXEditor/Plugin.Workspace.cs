@@ -105,7 +105,7 @@ namespace VfxEditor {
             UiUtils.OkNotification( "Saved workspace" );
         }
 
-        public static void CleanExportDialogs( IFileDocument document ) {
+        public static void CleanupExport( IFileDocument document ) {
             TexToolsDialog.RemoveDocument( document );
             PenumbraDialog.RemoveDocument( document );
         }

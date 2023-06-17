@@ -5,6 +5,7 @@ using VfxEditor.Data;
 namespace VfxEditor.FileManager {
     public interface IFileManager {
         public bool DoDebug( string path );
+
         public bool GetReplacePath( string gamePath, out string replacePath );
 
         public void WorkspaceImport( JObject meta, string loadLocation );
@@ -22,6 +23,7 @@ namespace VfxEditor.FileManager {
         public void Draw();
 
         public void ToDefault();
+
         public void Dispose();
 
         public void Show();
