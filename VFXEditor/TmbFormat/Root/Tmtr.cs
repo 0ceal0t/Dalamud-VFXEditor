@@ -143,7 +143,7 @@ namespace VfxEditor.TmbFormat {
 
         private void DuplicateEntry( TmbFile file, TmbEntry entry ) {
             // Kind of a scuffed way to do this
-            // An even more scuffed but robust way might be to write the ENTIRE file, then parse it againf and look for the right entry
+            // An even more scuffed but robust way might be to write the ENTIRE file, then parse it again and look for the right entry
 
             var tmbWriter = new TmbWriter( entry.Size, entry.ExtraSize, sizeof( short ) );
             entry.Write( tmbWriter );
