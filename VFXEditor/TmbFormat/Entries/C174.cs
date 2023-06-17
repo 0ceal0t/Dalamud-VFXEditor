@@ -23,9 +23,9 @@ namespace VfxEditor.TmbFormat.Entries {
     }
 
     public enum ObjectControl {
-        MainHand = 0,
+        Weapon_or_Pet = 0,
         OffHand = 1,
-        Summoned = 2
+        Lemure_or_Summon = 2
     }
 
     public class C174 : TmbEntry {

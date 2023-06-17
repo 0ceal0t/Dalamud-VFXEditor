@@ -57,7 +57,7 @@ namespace VfxEditor.Parsing.Color {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
             var text = Colors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
 
-            using var combo = ImRaii.Combo( "", text );
+            using var combo = ImRaii.Combo( "##Combo", text );
             if( !combo ) return;
 
             foreach( var option in Colors ) {

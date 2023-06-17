@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Sheets;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -14,8 +15,8 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedShort AnimationId = new( "Animation Id" );
-        private readonly ParsedShort TargetType = new( "Target Type", defaultValue: 2 );
+        private readonly ParsedWeaponTimeline Animation = new( "Animation" );
+        private readonly ParsedEnum<ObjectControl> TargetType = new( "Target Type", size: 2 );
 
         public C031( bool papEmbedded ) : base( papEmbedded ) { }
 
@@ -27,7 +28,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new() {
             Duration,
             Unk1,
-            AnimationId,
+            Animation,
             TargetType
         };
     }
