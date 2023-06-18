@@ -4,7 +4,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.EidFormat {
     public class EidBindPointDropdown : Dropdown<EidBindPoint> {
-        public EidBindPointDropdown( List<EidBindPoint> items ) : base( "BindPoint", items, true ) { }
+        public EidBindPointDropdown( List<EidBindPoint> items ) : base( "BindPoint", items, true, true ) { }
 
         protected override string GetText( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}";
 

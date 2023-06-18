@@ -9,7 +9,7 @@ namespace VfxEditor.PapFormat {
     public class PapAnimationDropdown : Dropdown<PapAnimation> {
         private readonly PapFile File;
 
-        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items, true ) {
+        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items, true, true ) {
             File = file;
         }
 

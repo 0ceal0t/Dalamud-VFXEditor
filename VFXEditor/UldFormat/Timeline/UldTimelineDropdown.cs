@@ -4,7 +4,7 @@ using VfxEditor.Ui.Components;
 
 namespace VfxEditor.UldFormat.Timeline {
     public class UldTimelineDropdown : Dropdown<UldTimeline> {
-        public UldTimelineDropdown( List<UldTimeline> items ) : base( "Timeline", items, true ) { }
+        public UldTimelineDropdown( List<UldTimeline> items ) : base( "Timeline", items, true, true ) { }
 
         protected override void OnNew() {
             CommandManager.Uld.Add( new GenericAddCommand<UldTimeline>( Items, new UldTimeline() ) );

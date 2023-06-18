@@ -17,8 +17,8 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
-        private readonly ParsedShort ModelId = new( "ModelId" );
-        private readonly ParsedShort BodyId = new( "BodyId" );
+        private readonly ParsedShort ModelId = new( "Model Id" );
+        private readonly ParsedShort BodyId = new( "Body Id" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
 
         public C198( bool papEmbedded ) : base( papEmbedded ) { }

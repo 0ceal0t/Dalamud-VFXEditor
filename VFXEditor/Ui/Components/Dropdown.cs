@@ -11,12 +11,14 @@ namespace VfxEditor.Ui.Components {
 
         protected T Selected = null;
         protected readonly bool AllowNew;
+        protected readonly bool AllowDelete;
         protected readonly List<T> Items;
 
-        public Dropdown( string id, List<T> items, bool allowNew ) {
+        public Dropdown( string id, List<T> items, bool allowNew, bool allowDelete ) {
             Id = id;
             Items = items;
             AllowNew = allowNew;
+            AllowDelete = allowDelete;
         }
 
         protected abstract void DrawSelected();
@@ -60,7 +62,8 @@ namespace VfxEditor.Ui.Components {
                 DrawCombo();
             }
 
-            if( AllowNew ) DrawAddDelete();
+            if( AllowNew ) DrawNew();
+            if( AllowDelete ) DrawDelete();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
@@ -97,12 +100,15 @@ namespace VfxEditor.Ui.Components {
             for( var idx = 0; idx < Items.Count; idx++ ) DrawSelectItem( Items[idx], idx );
         }
 
-        private void DrawAddDelete() {
+        private void DrawNew() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             ImGui.SameLine();
             if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
+        }
 
+        private void DrawDelete() {
             if( Selected != null ) {
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
@@ -110,6 +116,8 @@ namespace VfxEditor.Ui.Components {
                     Selected = null;
                 }
             }
+
+            UiUtils.DrawModal();
         }
     }
 }

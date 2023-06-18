@@ -7,7 +7,7 @@ namespace VfxEditor.UldFormat.Widget {
     public class UldWidgetDropdown : Dropdown<UldWidget> {
         private readonly List<UldComponent> Components;
 
-        public UldWidgetDropdown( List<UldWidget> items, List<UldComponent> components ) : base( "Widget", items, true ) {
+        public UldWidgetDropdown( List<UldWidget> items, List<UldComponent> components ) : base( "Widget", items, true, true ) {
             Components = components;
         }
 

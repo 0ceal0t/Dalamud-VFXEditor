@@ -8,7 +8,7 @@ namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
         private readonly TmbFile File;
 
-        public TmbActorDropdown( TmbFile file ) : base( "Actor", file.Actors, true ) {
+        public TmbActorDropdown( TmbFile file ) : base( "Actor", file.Actors, true, true ) {
             File = file;
         }
 

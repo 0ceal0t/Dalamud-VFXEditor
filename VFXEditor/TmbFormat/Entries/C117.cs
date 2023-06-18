@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt TmfcId = new( "TMFC ID" );
+        private readonly ParsedInt TmfcId = new( "TMFC Id" );
 
         public C117( bool papEmbedded ) : base( papEmbedded ) { }
 

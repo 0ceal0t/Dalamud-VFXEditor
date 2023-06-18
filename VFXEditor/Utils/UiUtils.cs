@@ -23,7 +23,9 @@ namespace VfxEditor.Utils {
 
     public static class UiUtils {
         public static readonly Vector4 RED_COLOR = new( 0.89098039216f, 0.30549019608f, 0.28980392157f, 1.0f );
+
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
+
         public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
@@ -237,6 +239,64 @@ namespace VfxEditor.Utils {
             }
 
             return buttonClicked;
+        }
+
+        // ===== MODAL =====
+
+        private static string ModalTitle = "";
+
+        private static string ModalText = "";
+
+        private static Action ModalOk = null;
+
+        private static Action ModalCancel = null;
+
+        public static void OpenModal( string title, string text, Action onOk, Action onCancel ) {
+            ModalTitle = title;
+            ModalText = text;
+            ModalOk = onOk;
+            ModalCancel = onCancel;
+
+            ImGui.OpenPopup( title );
+        }
+
+        public static void DrawModal() {
+            var open = true;
+            if( ImGui.BeginPopupModal( ModalTitle, ref open, ImGuiWindowFlags.AlwaysAutoResize ) ) {
+
+                ImGui.PushTextWrapPos( 240 );
+                ImGui.TextWrapped( ModalText );
+                ImGui.PopTextWrapPos();
+
+                ImGui.Separator();
+
+                if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
+                    ImGui.CloseCurrentPopup();
+                    ModalOk?.Invoke();
+                    ResetModal();
+                }
+
+                ImGui.SameLine();
+
+                using var style = ImRaii.PushColor( ImGuiCol.Button, RED_COLOR );
+
+                if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                    ImGui.CloseCurrentPopup();
+                    ModalCancel?.Invoke();
+                    ResetModal();
+                }
+
+                ImGui.EndPopup();
+            }
+
+            if( !open ) ResetModal();
+        }
+
+        private static void ResetModal() {
+            ModalTitle = "";
+            ModalText = "";
+            ModalOk = null;
+            ModalCancel = null;
         }
     }
 }
