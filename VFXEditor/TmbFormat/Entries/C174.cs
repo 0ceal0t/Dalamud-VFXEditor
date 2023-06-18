@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
     public enum ObjectControlFinal {
         Stowed = 0,
         Drawn = 1,
-        MainHand = 2,
+        Weapon = 2,
         OffHand = 3,
         RootBone = 4,
         UncontrolledRoot = 5,

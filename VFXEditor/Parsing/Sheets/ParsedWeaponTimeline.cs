@@ -51,13 +51,13 @@ namespace VfxEditor.Parsing.Sheets {
         }
 
         private void DrawCombo( CommandManager manager ) {
-            using var combo = ImRaii.Combo( "##Combo", $"{Value}: {CurrentTimeline}" );
+            using var combo = ImRaii.Combo( "##Combo", $"[{Value}] {CurrentTimeline}" );
             if( !combo ) return;
 
             foreach( var option in Timelines ) {
                 var selected = option.Key == Value;
 
-                if( ImGui.Selectable( $"{option.Key}: {option.Value}", selected ) ) {
+                if( ImGui.Selectable( $"[{option.Key}] {option.Value}", selected ) ) {
                     manager.Add( new ParsedSimpleCommand<ushort>( this, option.Key ) );
                 }
 

@@ -4,7 +4,7 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public enum SummonWeaponObjectControl {
-        MainHand = 0,
+        Weapon = 0,
         OffHand = 1,
     }
 

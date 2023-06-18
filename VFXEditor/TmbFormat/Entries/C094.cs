@@ -9,8 +9,8 @@ namespace VfxEditor.TmbFormat.Entries {
     [Flags]
     public enum InvisibilityFilter {
         Character = 0x01,
-        MainWeapon = 0x02,
-        OffhandWeapon = 0x04,
+        Weapon = 0x02,
+        OffHand = 0x04,
         Summon = 0x08,
         Unknown_1 = 0x10,
         Unknown_2 = 0x20,
