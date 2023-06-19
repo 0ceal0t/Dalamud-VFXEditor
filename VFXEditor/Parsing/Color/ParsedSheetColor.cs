@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Color {
-    public class ParsedSheetColor : ParsedSimpleBase<uint> {
+    public class ParsedSheetColor : ParsedSimpleBase<uint, int> {
         private static bool IsInitialized = false;
         private static readonly Dictionary<uint, Vector4> Colors = new();
 
@@ -23,11 +24,9 @@ namespace VfxEditor.Parsing.Color {
 
         // =================
 
-        public readonly string Name;
         private Vector4 CurrentColor => Colors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
 
-        public ParsedSheetColor( string name ) {
-            Name = name;
+        public ParsedSheetColor( string name ) : base( name ) {
             Init();
         }
 
@@ -40,12 +39,7 @@ namespace VfxEditor.Parsing.Color {
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Ints[Name] = ( int )Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<uint>( this, ( uint )val ) );
-            }
+            Copy( manager );
 
             DrawCombo( manager );
 
@@ -71,5 +65,11 @@ namespace VfxEditor.Parsing.Color {
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
         }
+
+        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
+
+        protected override int ToCopy() => ( int )Value;
+
+        protected override uint FromCopy( int val ) => ( uint )val;
     }
 }

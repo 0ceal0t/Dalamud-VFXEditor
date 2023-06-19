@@ -1,18 +1,16 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat3 : ParsedSimpleBase<Vector3> {
-        public readonly string Name;
-
+    public class ParsedFloat3 : ParsedSimpleBase<Vector3, Vector3> {
         public ParsedFloat3( string name, Vector3 defaultValue ) : this( name ) {
             Value = defaultValue;
         }
 
-        public ParsedFloat3( string name ) {
-            Name = name;
-        }
+        public ParsedFloat3( string name ) : base( name ) { }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
@@ -29,17 +27,18 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Vector3s[Name] = Value;
-            if( copy.IsPasting && copy.Vector3s.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<Vector3>( this, val ) );
-            }
+            Copy( manager );
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector3>( this, value ) );
             }
         }
+
+        protected override Dictionary<string, Vector3> GetCopyMap( CopyManager manager ) => manager.Vector3s;
+
+        protected override Vector3 ToCopy() => Value;
+
+        protected override Vector3 FromCopy( Vector3 val ) => val;
     }
 }

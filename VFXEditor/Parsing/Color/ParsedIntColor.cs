@@ -1,12 +1,12 @@
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedIntColor : ParsedSimpleBase<Vector4> {
-        public readonly string Name;
-
+    public class ParsedIntColor : ParsedSimpleBase<Vector4, Vector4> {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
         private Vector4 StateBeforeEdit;
@@ -15,9 +15,7 @@ namespace VfxEditor.Parsing {
             Value = defaultValue;
         }
 
-        public ParsedIntColor( string name ) {
-            Name = name;
-        }
+        public ParsedIntColor( string name ) : base( name ) { }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
@@ -36,12 +34,7 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Vector4s[Name] = Value;
-            if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<Vector4>( this, val ) );
-            }
+            Copy( manager );
 
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
@@ -56,5 +49,11 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<Vector4>( this, StateBeforeEdit, Value ) );
             }
         }
+
+        protected override Dictionary<string, Vector4> GetCopyMap( CopyManager manager ) => manager.Vector4s;
+
+        protected override Vector4 ToCopy() => Value;
+
+        protected override Vector4 FromCopy( Vector4 val ) => val;
     }
 }

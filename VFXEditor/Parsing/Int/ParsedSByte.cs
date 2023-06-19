@@ -1,17 +1,15 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedSByte : ParsedSimpleBase<sbyte> {
-        public readonly string Name;
-
+    public class ParsedSByte : ParsedSimpleBase<sbyte, int> {
         public ParsedSByte( string name, sbyte defaultValue ) : this( name ) {
             Value = defaultValue;
         }
 
-        public ParsedSByte( string name ) {
-            Name = name;
-        }
+        public ParsedSByte( string name ) : base( name ) { }
 
         public override void Read( BinaryReader reader, int size ) => Read( reader );
 
@@ -24,18 +22,19 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Ints[Name] = ( int )Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<sbyte>( this, ( sbyte )val ) );
-            }
+            Copy( manager );
 
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<sbyte>( this, ( sbyte )value ) );
             }
         }
+
+        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
+
+        protected override int ToCopy() => Value;
+
+        protected override sbyte FromCopy( int val ) => ( sbyte )val;
     }
 }
 

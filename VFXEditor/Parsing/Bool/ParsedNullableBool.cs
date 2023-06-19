@@ -1,18 +1,18 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedNullableBool : ParsedSimpleBase<bool?> {
-        public readonly string Name;
+    public class ParsedNullableBool : ParsedSimpleBase<bool?, bool> {
         private int Size;
 
         public ParsedNullableBool( string name, bool defaultValue, int size = 4 ) : this( name, size ) {
             Value = defaultValue;
         }
 
-        public ParsedNullableBool( string name, int size = 4 ) {
-            Name = name;
+        public ParsedNullableBool( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 
@@ -40,15 +40,16 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Bools[Name] = Value == true;
-            if( copy.IsPasting && copy.Bools.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<bool?>( this, val ) );
-            }
+            Copy( manager );
 
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
         }
+
+        protected override Dictionary<string, bool> GetCopyMap( CopyManager manager ) => manager.Bools;
+
+        protected override bool ToCopy() => Value == true;
+
+        protected override bool? FromCopy( bool val ) => val;
     }
 }

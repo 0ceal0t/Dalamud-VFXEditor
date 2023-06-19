@@ -25,7 +25,7 @@ namespace VfxEditor.Ui.Export {
 
             ImGui.SameLine();
 
-            if( ImGui.CollapsingHeader( id ) ) {
+            if( ImGui.CollapsingHeader( $"{id} ({GetItemsToExport().Count()}/{Manager.GetExportDocuments().Where( x => x.CanExport() ).Count()})###{id}" ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
                 var items = Manager.GetExportDocuments();
@@ -70,8 +70,6 @@ namespace VfxEditor.Ui.Export {
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
 
-        public void RemoveDocument( IFileDocument document ) {
-            if( ToExport.ContainsKey( document ) ) ToExport.Remove( document );
-        }
+        public void RemoveDocument( IFileDocument document ) => ToExport.Remove( document );
     }
 }

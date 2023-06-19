@@ -2,6 +2,7 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Interop;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat;
@@ -55,11 +56,11 @@ namespace VfxEditor.PapFormat {
             Unk1.Draw( CommandManager.Pap );
             Unk2.Draw( CommandManager.Pap );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            ImGui.Text( $"This animation has Havok index: {HavokIndex}" );
+            ImGui.TextDisabled( $"This animation has Havok index: {HavokIndex}" );
 
-            if( ImGui.Button( $"Replace Havok data" ) ) {
+            if( ImGui.Button( $"Replace Havok" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
@@ -73,6 +74,8 @@ namespace VfxEditor.PapFormat {
                 } );
             }
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             using var tabBar = ImRaii.TabBar( "AnimationTabs" );
             if( !tabBar ) return;
 
@@ -84,17 +87,21 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "TMB" );
             if( !tabItem ) return;
 
-            if( ImGui.Button( "Replace TMB" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
-                    if( ok ) {
-                        CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
-                        UiUtils.OkNotification( "TMB data imported" );
-                    }
-                } );
-            }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            ImGui.SameLine();
-            if( ImGui.Button( "Export TMB" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                if( ImGui.Button( "Export" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace" ) ) {
+                    FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                        if( ok ) {
+                            CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
+                            UiUtils.OkNotification( "TMB data imported" );
+                        }
+                    } );
+                }
+            }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

@@ -1,11 +1,12 @@
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedString : ParsedSimpleBase<string> {
-        public readonly string Name;
+    public class ParsedString : ParsedSimpleBase<string, string> {
         public readonly uint MaxSize;
 
         private bool Editing = false;
@@ -16,8 +17,7 @@ namespace VfxEditor.Parsing {
             Value = defaultValue;
         }
 
-        public ParsedString( string name, uint maxSize = 255 ) {
-            Name = name;
+        public ParsedString( string name, uint maxSize = 255 ) : base( name ) {
             Value = "";
             MaxSize = maxSize;
         }
@@ -31,12 +31,7 @@ namespace VfxEditor.Parsing {
         public override void Write( BinaryWriter writer ) => FileUtils.WriteString( writer, Value, writeNull: true );
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Strings[Name] = Value;
-            if( copy.IsPasting && copy.Strings.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<string>( this, val ) );
-            }
+            Copy( manager );
 
             var prevValue = Value;
             if( ImGui.InputText( Name, ref Value, MaxSize ) ) {
@@ -57,5 +52,11 @@ namespace VfxEditor.Parsing {
         public void Pad( BinaryWriter writer, int length ) {
             for( var i = 0; i < ( length - Value.Length - 1 ); i++ ) writer.Write( ( byte )0 );
         }
+
+        protected override Dictionary<string, string> GetCopyMap( CopyManager manager ) => manager.Strings;
+
+        protected override string ToCopy() => Value;
+
+        protected override string FromCopy( string val ) => val;
     }
 }

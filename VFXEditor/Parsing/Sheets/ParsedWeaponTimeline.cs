@@ -3,9 +3,10 @@ using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Sheets {
-    public class ParsedWeaponTimeline : ParsedSimpleBase<ushort> {
+    public class ParsedWeaponTimeline : ParsedSimpleBase<ushort, int> {
         private static bool IsInitialized = false;
         private static readonly Dictionary<ushort, string> Timelines = new();
 
@@ -20,11 +21,9 @@ namespace VfxEditor.Parsing.Sheets {
 
         // =================
 
-        public readonly string Name;
         private string CurrentTimeline => Timelines.TryGetValue( Value, out var timeline ) ? timeline : "";
 
-        public ParsedWeaponTimeline( string name ) {
-            Name = name;
+        public ParsedWeaponTimeline( string name ) : base( name ) {
             Init();
         }
 
@@ -37,12 +36,7 @@ namespace VfxEditor.Parsing.Sheets {
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Ints[Name] = Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<ushort>( this, ( ushort )val ) );
-            }
+            Copy( manager );
 
             DrawCombo( manager );
 
@@ -64,5 +58,11 @@ namespace VfxEditor.Parsing.Sheets {
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
         }
+
+        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
+
+        protected override int ToCopy() => Value;
+
+        protected override ushort FromCopy( int val ) => ( ushort )val;
     }
 }

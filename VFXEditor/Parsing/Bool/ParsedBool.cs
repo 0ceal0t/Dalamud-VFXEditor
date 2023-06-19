@@ -1,9 +1,10 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedBool : ParsedSimpleBase<bool> {
-        public readonly string Name;
+    public class ParsedBool : ParsedSimpleBase<bool, bool> {
         private int Size;
         private int IntValue => Value ? 1 : 0;
 
@@ -11,8 +12,7 @@ namespace VfxEditor.Parsing {
             Value = defaultValue;
         }
 
-        public ParsedBool( string name, int size = 4 ) {
-            Name = name;
+        public ParsedBool( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 
@@ -35,15 +35,16 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Bools[Name] = Value;
-            if( copy.IsPasting && copy.Bools.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<bool>( this, val ) );
-            }
+            Copy( manager );
 
             var value = Value;
             if( ImGui.Checkbox( Name, ref value ) ) manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
         }
+
+        protected override Dictionary<string, bool> GetCopyMap( CopyManager manager ) => manager.Bools;
+
+        protected override bool ToCopy() => Value;
+
+        protected override bool FromCopy( bool val ) => val;
     }
 }

@@ -1,17 +1,17 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedUInt : ParsedSimpleBase<uint> {
-        public readonly string Name;
+    public class ParsedUInt : ParsedSimpleBase<uint, int> {
         private int Size;
 
         public ParsedUInt( string name, uint defaultValue, int size = 4 ) : this( name, size ) {
             Value = defaultValue;
         }
 
-        public ParsedUInt( string name, int size = 4 ) {
-            Name = name;
+        public ParsedUInt( string name, int size = 4 ) : base( name ) {
             Size = size;
         }
 
@@ -34,17 +34,18 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Ints[Name] = ( int )Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<uint>( this, ( uint )val ) );
-            }
+            Copy( manager );
 
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<uint>( this, ( uint )value ) );
             }
         }
+
+        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
+
+        protected override int ToCopy() => ( int )Value;
+
+        protected override uint FromCopy( int val ) => ( uint )val;
     }
 }

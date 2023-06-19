@@ -132,7 +132,7 @@ namespace VfxEditor.PapFormat {
             ModelType.Draw( CommandManager.Pap );
             Variant.Draw( CommandManager.Pap );
 
-            if( ImGui.Button( $"Export all Havok data" ) ) {
+            if( ImGui.Button( $"Export Havok" ) ) {
                 FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
