@@ -17,7 +17,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x2C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedBool Enabled = new( "Enabled" );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" ); // chara/action/magic/2ff_sage/mgc007.tmb => 48
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
@@ -34,7 +34,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Enabled,
+            Unk1,
             Unk2,
             Unk3,
             Unk4,

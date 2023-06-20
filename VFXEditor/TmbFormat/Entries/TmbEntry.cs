@@ -1,4 +1,8 @@
+using Dalamud.Interface;
+using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
@@ -27,7 +31,39 @@ namespace VfxEditor.TmbFormat.Entries {
             Parsed = GetParsed();
         }
 
-        public virtual void Draw() {
+        public bool Draw( TmbFile file, Tmtr track ) {
+            var isColored = DoColor( Danger, out var col );
+
+            using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );
+            color.Push( ImGuiCol.HeaderHovered, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
+            color.Push( ImGuiCol.HeaderActive, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
+
+            if( ImGui.CollapsingHeader( DisplayName ) ) {
+                if( isColored ) color.Pop( 2 );
+
+                using var indent = ImRaii.PushIndent();
+
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) )
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                        track.DeleteEntry( file, this );
+                        return true;
+                    }
+
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
+                        track.DuplicateEntry( file, this );
+                        return true;
+                    }
+                }
+
+                DrawBody();
+            }
+
+            return false;
+        }
+
+        public virtual void DrawBody() {
             DrawHeader();
             DrawParsed();
         }
@@ -50,6 +86,19 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         protected abstract List<ParsedBase> GetParsed();
+
+        public byte[] ToBytes() {
+            var tmbWriter = new TmbWriter( Size, ExtraSize, sizeof( short ) );
+            Write( tmbWriter );
+
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            tmbWriter.WriteTo( writer );
+            tmbWriter.Dispose();
+
+            return ms.ToArray();
+        }
 
         public static bool DoColor( DangerLevel level, out Vector4 color ) {
             color = new( 1 );

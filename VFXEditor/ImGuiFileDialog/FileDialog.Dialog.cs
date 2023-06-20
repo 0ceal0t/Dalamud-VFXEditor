@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -474,10 +475,13 @@ namespace ImGuiFileDialog {
 
         private async void LoadTexturePreview( FileStruct file ) {
             if( !DoLoadPreview ) return;
-            if( ImageExtensions.Contains( file.Ext.ToLower() ) ) {
-                await Task.Run( () => {
-                    lock( PreviewLock ) {
-                        var path = Path.Combine( file.FilePath, file.FileName );
+            if( !ImageExtensions.Contains( file.Ext.ToLower() ) ) return;
+
+            await Task.Run( () => {
+                lock( PreviewLock ) {
+                    var path = Path.Combine( file.FilePath, file.FileName );
+
+                    try {
                         var ext = file.Ext.ToLower();
 
                         if( ext == "dds" ) {
@@ -498,8 +502,7 @@ namespace ImGuiFileDialog {
 
                                 var format = TextureFile.DXGItoTextureFormat( ddsFile.Format );
                                 var convertedData = TextureFile.BgraToRgba( TextureFile.Convert( data, format, width, height ) );
-                                var temp = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
-                                PreviewWrap = temp;
+                                PreviewWrap = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
                             }
 
                             ddsFile.Dispose();
@@ -508,17 +511,17 @@ namespace ImGuiFileDialog {
                             var tex = TextureFile.LoadFromLocal( path );
                             if( tex == null ) return;
 
-                            var temp = PluginInterface.UiBuilder.LoadImageRaw( tex.ImageData, tex.Header.Width, tex.Header.Height, 4 );
-                            PreviewWrap = temp;
                         }
                         else {
-                            var temp = PluginInterface.UiBuilder.LoadImage( path );
-                            PreviewWrap = temp;
+                            PreviewWrap = PluginInterface.UiBuilder.LoadImage( path );
                         }
                     }
-
-                } );
-            }
+                    catch( Exception ) {
+                        PluginLog.Log( $"Error previewing image {path}" );
+                        PreviewWrap = null;
+                    }
+                }
+            } );
         }
 
         private static IconColorItem GetIcon( string ext ) {

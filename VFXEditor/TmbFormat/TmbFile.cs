@@ -29,10 +29,9 @@ namespace VfxEditor.TmbFormat {
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), false, checkOriginal ) { }
 
         public TmbFile( BinaryReader binaryReader, CommandManager manager, bool papEmbedded, bool checkOriginal = true ) : base( manager ) {
+            PapEmbedded = papEmbedded;
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
-
-            PapEmbedded = papEmbedded;
 
             var startPos = binaryReader.BaseStream.Position;
             var reader = new TmbReader( binaryReader );

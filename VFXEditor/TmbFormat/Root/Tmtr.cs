@@ -1,11 +1,9 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Actor;
@@ -89,36 +87,8 @@ namespace VfxEditor.TmbFormat {
 
         private void DrawEntries( TmbFile file ) {
             for( var idx = 0; idx < Entries.Count; idx++ ) {
-                var entry = Entries[idx];
-                var isColored = TmbEntry.DoColor( entry.Danger, out var col );
-
-                using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );
-                color.Push( ImGuiCol.HeaderHovered, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
-                color.Push( ImGuiCol.HeaderActive, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
-
                 using var _ = ImRaii.PushId( idx );
-
-                if( ImGui.CollapsingHeader( entry.DisplayName ) ) {
-                    if( isColored ) color.Pop( 2 );
-
-                    using var indent = ImRaii.PushIndent();
-
-                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) )
-                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                        if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                            DeleteEntry( file, entry );
-                            break;
-                        }
-
-                        ImGui.SameLine();
-                        if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
-                            DuplicateEntry( file, entry );
-                            break;
-                        }
-                    }
-
-                    entry.Draw();
-                }
+                if( Entries[idx].Draw( file, this ) ) break;
             }
 
             if( ImGui.Button( "+ New" ) ) ImGui.OpenPopup( "NewEntryPopup" );
@@ -141,20 +111,10 @@ namespace VfxEditor.TmbFormat {
             }
         }
 
-        private void DuplicateEntry( TmbFile file, TmbEntry entry ) {
-            // Kind of a scuffed way to do this
-            // An even more scuffed but robust way might be to write the ENTIRE file, then parse it again and look for the right entry
+        public void DuplicateEntry( TmbFile file, TmbEntry entry ) {
+            var data = entry.ToBytes();
 
-            var tmbWriter = new TmbWriter( entry.Size, entry.ExtraSize, sizeof( short ) );
-            entry.Write( tmbWriter );
-
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-
-            tmbWriter.WriteTo( writer );
-            tmbWriter.Dispose();
-
-            ms.Position = 0;
+            using var ms = new MemoryStream( data );
             using var reader = new BinaryReader( ms );
             var tmbReader = new TmbReader( reader );
 
@@ -175,7 +135,7 @@ namespace VfxEditor.TmbFormat {
             Command.Add( command );
         }
 
-        private void DeleteEntry( TmbFile file, TmbEntry entry ) {
+        public void DeleteEntry( TmbFile file, TmbEntry entry ) {
             TmbRefreshIdsCommand command = new( file, false, true );
             command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
             command.Add( new GenericRemoveCommand<TmbEntry>( file.Entries, entry ) );

@@ -78,7 +78,7 @@ namespace VfxEditor.TmbFormat.Entries {
             }, ExtraData );
         }
 
-        public override void Draw() {
+        public override void DrawBody() {
             DrawHeader();
             DrawParsed();
 

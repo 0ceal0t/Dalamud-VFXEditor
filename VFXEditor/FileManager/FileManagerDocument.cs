@@ -299,6 +299,7 @@ namespace VfxEditor.FileManager {
 
         protected void DisplaySourceBar() {
             using var _ = ImRaii.PushId( "Source" );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
             var sourceString = Source == null ? "" : Source.DisplayString;
 
             // Remove
@@ -308,12 +309,10 @@ namespace VfxEditor.FileManager {
 
             // Input
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.InputTextWithHint( "", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
 
             // Search
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
@@ -322,6 +321,7 @@ namespace VfxEditor.FileManager {
 
         protected void DisplayReplaceBar() {
             using var _ = ImRaii.PushId( "Replace" );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
             var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
@@ -331,12 +331,19 @@ namespace VfxEditor.FileManager {
 
             // Input
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
             ImGui.InputTextWithHint( "", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
+            if( Replace != null && ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
+
+            if( Replace != null && ImGui.BeginPopup( "CopyPopup" ) ) {
+                ImGui.Text( Replace.Path );
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 2 );
+                if( ImGui.SmallButton( "Copy" ) ) ImGui.SetClipboardText( Replace.Path );
+                ImGui.EndPopup();
+            }
 
             // Search
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();

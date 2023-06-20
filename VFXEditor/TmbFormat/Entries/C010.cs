@@ -52,7 +52,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk5
         };
 
-        public override void Draw() {
+        public override void DrawBody() {
             DrawHeader();
 
             Flags.Draw( Command );

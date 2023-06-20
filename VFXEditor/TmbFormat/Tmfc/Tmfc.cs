@@ -62,7 +62,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk2.Write( writer );
         }
 
-        public override void Draw() {
+        public override void DrawBody() {
             DrawHeader();
             Unk1.Draw( Command );
             Unk2.Draw( Command );

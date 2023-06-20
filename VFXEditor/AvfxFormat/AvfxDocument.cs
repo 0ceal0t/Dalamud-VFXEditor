@@ -18,6 +18,7 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) :
             this( manager, writeLocation, localPath, data.Name, data.Source, data.Replace ) {
+
             CurrentFile.ReadRenamingMap( data.Renaming );
         }
 
@@ -71,7 +72,7 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             ImGui.SetColumnWidth( 3, 150 );
 
-            if( ImGui.Button( $"Library", new Vector2( 80, 23 ) ) ) Plugin.LibraryManager.Show();
+            if( ImGui.Button( "Library", new Vector2( 80, 23 ) ) ) Plugin.LibraryManager.Show();
 
             // Spawn + eye
             if( !Plugin.SpawnExists() ) {

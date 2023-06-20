@@ -85,8 +85,6 @@ namespace VfxEditor.Tracker {
             foreach( var item in Actions.Where( x => x.Value.StartTime < removeTime ).ToList() ) Actions.Remove( item.Key, out var _ );
         }
 
-        public override void Reset() {
-            Actions.Clear();
-        }
+        public override void Reset() => Actions.Clear();
     }
 }

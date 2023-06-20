@@ -35,6 +35,6 @@ namespace VfxEditor.TmbFormat {
             File.Command.Add( command );
         }
 
-        protected override void DrawSelected() => Selected.Draw();
+        protected override void DrawSelected() => Selected.DrawBody();
     }
 }
