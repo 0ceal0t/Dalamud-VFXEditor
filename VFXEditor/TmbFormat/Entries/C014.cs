@@ -17,9 +17,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedEnum<ObjectControlPosition> ObjectPosition = new( "Object Position" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
 
-        public C014( bool papEmbedded ) : base( papEmbedded ) { }
+        public C014( TmbFile file ) : base( file ) { }
 
-        public C014( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C014( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

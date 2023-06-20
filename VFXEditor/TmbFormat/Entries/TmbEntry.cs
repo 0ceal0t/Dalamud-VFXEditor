@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -23,15 +24,15 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly List<ParsedBase> Parsed;
 
-        public TmbEntry( bool papEmbedded ) : base( papEmbedded ) {
+        public TmbEntry( TmbFile file ) : base( file ) {
             Parsed = GetParsed();
         }
 
-        public TmbEntry( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public TmbEntry( TmbFile file, TmbReader reader ) : base( file, reader ) {
             Parsed = GetParsed();
         }
 
-        public bool Draw( TmbFile file, Tmtr track ) {
+        public bool Draw( Tmtr track ) {
             var isColored = DoColor( Danger, out var col );
 
             using var color = ImRaii.PushColor( ImGuiCol.Header, col, isColored );
@@ -46,13 +47,18 @@ namespace VfxEditor.TmbFormat.Entries {
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) )
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        track.DeleteEntry( file, this );
+                        track.DeleteEntry( this );
                         return true;
                     }
 
                     ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
+                        SaveDialog();
+                    }
+
+                    ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
-                        track.DuplicateEntry( file, this );
+                        track.DuplicateEntry( this );
                         return true;
                     }
                 }
@@ -98,6 +104,12 @@ namespace VfxEditor.TmbFormat.Entries {
             tmbWriter.Dispose();
 
             return ms.ToArray();
+        }
+
+        private void SaveDialog() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
+                if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
+            } );
         }
 
         public static bool DoColor( DangerLevel level, out Vector4 color ) {

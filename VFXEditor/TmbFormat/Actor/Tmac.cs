@@ -26,9 +26,9 @@ namespace VfxEditor.TmbFormat.Actor {
 
         private readonly List<int> TempIds;
 
-        public Tmac( bool papEmbedded ) : base( papEmbedded ) { }
+        public Tmac( TmbFile file ) : base( file ) { }
 
-        public Tmac( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public Tmac( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             AbilityDelay.Read( reader );
             Unk2.Read( reader );
@@ -46,7 +46,7 @@ namespace VfxEditor.TmbFormat.Actor {
             writer.WriteOffsetTimeline( Tracks );
         }
 
-        public void Draw( TmbFile file ) {
+        public void Draw() {
             DrawHeader();
             AbilityDelay.Draw( Command );
             Unk2.Draw( Command );
@@ -64,22 +64,22 @@ namespace VfxEditor.TmbFormat.Actor {
             using( var left = ImRaii.Child( "Left" ) ) {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) { // NEW
-                        var newTrack = new Tmtr( PapEmbedded );
-                        var idx = Tracks.Count == 0 ? 0 : file.Tracks.IndexOf( Tracks.Last() ) + 1;
+                        var newTrack = new Tmtr( File );
+                        var idx = Tracks.Count == 0 ? 0 : File.Tracks.IndexOf( Tracks.Last() ) + 1;
 
-                        TmbRefreshIdsCommand command = new( file, false, true );
+                        TmbRefreshIdsCommand command = new( File, false, true );
                         command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
-                        command.Add( new GenericAddCommand<Tmtr>( file.Tracks, newTrack, idx ) );
+                        command.Add( new GenericAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
                         Command.Add( command );
                     }
 
                     if( SelectedTrack != null ) {
                         ImGui.SameLine();
                         if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) { // REMOVE
-                            TmbRefreshIdsCommand command = new( file, false, true );
+                            TmbRefreshIdsCommand command = new( File, false, true );
                             command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
-                            command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, SelectedTrack ) );
-                            SelectedTrack.DeleteChildren( command, file );
+                            command.Add( new GenericRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
+                            SelectedTrack.DeleteChildren( command );
                             Command.Add( command );
 
                             SelectedTrack = null;
@@ -109,7 +109,7 @@ namespace VfxEditor.TmbFormat.Actor {
             using( var right = ImRaii.Child( "Right" ) ) {
                 if( SelectedTrack != null ) {
                     using var _ = ImRaii.PushId( selectedIndex );
-                    SelectedTrack.Draw( file );
+                    SelectedTrack.Draw();
                 }
                 else ImGui.Text( "Select a timeline track..." );
             }
@@ -121,7 +121,7 @@ namespace VfxEditor.TmbFormat.Actor {
             foreach( var track in Tracks ) {
                 command.Add( new GenericRemoveCommand<Tmtr>( Tracks, track ) );
                 command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, track ) );
-                track.DeleteChildren( command, file );
+                track.DeleteChildren( command );
             }
         }
     }

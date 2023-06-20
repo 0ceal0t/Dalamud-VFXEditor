@@ -11,7 +11,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedShort Length = new( "Length" );
         private readonly ParsedShort Unk3 = new( "Unknown 3" );
 
-        public Tmdh( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public Tmdh( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             Unk1.Read( reader );
             Length.Read( reader );

@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedByteBool Assigned = new( "Use Face Library", defaultValue: false );
         private readonly TmbOffsetString Path = new( "Face Library Path" );
 
-        public Tmpp( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public Tmpp( TmbFile file, TmbReader reader ) : base( file, reader ) {
             var savePos = reader.Reader.BaseStream.Position;
             var magic = reader.ReadString( 4 );// TMAL or TMPP
 

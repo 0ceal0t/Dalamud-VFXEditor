@@ -25,10 +25,10 @@ namespace VfxEditor.TmbFormat.Actor {
 
         protected override void OnNew() {
             TmbRefreshIdsCommand command = new( File, false, true );
-            command.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File.PapEmbedded ) ) );
+            command.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File ) ) );
             File.Command.Add( command );
         }
 
-        protected override void DrawSelected() => Selected.Draw( File );
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

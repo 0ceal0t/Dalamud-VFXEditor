@@ -17,9 +17,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt WeaponSize = new( "Size" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
 
-        public C015( bool papEmbedded ) : base( papEmbedded ) { }
+        public C015( TmbFile file ) : base( file ) { }
 
-        public C015( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C015( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

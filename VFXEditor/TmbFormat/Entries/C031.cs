@@ -18,9 +18,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedWeaponTimeline Animation = new( "Animation" );
         private readonly ParsedEnum<ObjectControl> TargetType = new( "Target Type", size: 2 );
 
-        public C031( bool papEmbedded ) : base( papEmbedded ) { }
+        public C031( TmbFile file ) : base( file ) { }
 
-        public C031( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C031( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

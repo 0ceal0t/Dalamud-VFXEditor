@@ -1,6 +1,6 @@
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
 using System.Collections.Generic;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C043 : TmbEntry {
@@ -19,9 +19,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort BodyId = new( "Body Id" );
         private readonly ParsedInt VariantId = new( "Variant Id" );
 
-        public C043( bool papEmbedded ) : base( papEmbedded ) { }
+        public C043( TmbFile file ) : base( file ) { }
 
-        public C043( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C043( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

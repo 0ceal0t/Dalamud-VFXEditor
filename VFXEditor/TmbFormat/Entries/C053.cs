@@ -32,9 +32,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort Unk3 = new( "Unknown 3" );
         private readonly ParsedFlag<SoundFlags> Flags = new( "Flags", size: 2 );
 
-        public C053( bool papEmbedded ) : base( papEmbedded ) { }
+        public C053( TmbFile file ) : base( file ) { }
 
-        public C053( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C053( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

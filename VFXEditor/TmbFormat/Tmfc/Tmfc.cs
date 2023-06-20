@@ -23,9 +23,9 @@ namespace VfxEditor.TmbFormat.Entries {
         public readonly List<TmfcData> Data = new();
         private readonly SimpleSplitView<TmfcData> DataSplitView;
 
-        public Tmfc( bool papEmbedded ) : base( papEmbedded ) { }
+        public Tmfc( TmbFile file ) : base( file ) { }
 
-        public Tmfc( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public Tmfc( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             var startOffset = reader.ReadInt32();
             var dataCount = reader.ReadInt32();
@@ -37,7 +37,7 @@ namespace VfxEditor.TmbFormat.Entries {
             // need to add an extra 4 bytes to account for id+time
             reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
                 for( var i = 0; i < dataCount; i++ ) {
-                    Data.Add( new TmfcData( br, papEmbedded ) );
+                    Data.Add( new TmfcData( br, file.PapEmbedded ) );
                 }
 
                 foreach( var data in Data ) data.ReadRows( br );

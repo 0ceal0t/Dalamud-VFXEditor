@@ -43,9 +43,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         // Unk2 = 1, Unk3 = 8 -> ExtraSize = 0x14
 
-        public C094( bool papEmbedded ) : base( papEmbedded ) { }
+        public C094( TmbFile file ) : base( file ) { }
 
-        public C094( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C094( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
 

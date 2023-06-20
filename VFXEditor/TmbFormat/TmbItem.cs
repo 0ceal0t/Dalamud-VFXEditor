@@ -5,6 +5,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
+        public readonly TmbFile File;
         public readonly bool PapEmbedded;
 
         public abstract string Magic { get; }
@@ -13,11 +14,12 @@ namespace VfxEditor.TmbFormat {
 
         public CommandManager Command => PapEmbedded ? CommandManager.Pap : CommandManager.Tmb;
 
-        public TmbItem( bool papEmbedded ) {
-            PapEmbedded = papEmbedded;
+        public TmbItem( TmbFile file ) {
+            File = file;
+            PapEmbedded = file.PapEmbedded;
         }
 
-        public TmbItem( TmbReader reader, bool papEmbedded ) : this( papEmbedded ) {
+        public TmbItem( TmbFile file, TmbReader reader ) : this( file ) {
             reader.UpdateStartPosition();
         }
 
@@ -37,11 +39,11 @@ namespace VfxEditor.TmbFormat {
     public abstract class TmbItemWithId : TmbItem {
         public short Id;
 
-        public TmbItemWithId( bool papEmbedded ) : base( papEmbedded ) {
+        public TmbItemWithId( TmbFile file ) : base( file ) {
             Id = 0;
         }
 
-        protected TmbItemWithId( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) { }
+        protected TmbItemWithId( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );
@@ -57,9 +59,9 @@ namespace VfxEditor.TmbFormat {
     public abstract class TmbItemWithTime : TmbItemWithId {
         public ParsedShort Time = new( "Time" );
 
-        public TmbItemWithTime( bool papEmbedded ) : base( papEmbedded ) { }
+        public TmbItemWithTime( TmbFile file ) : base( file ) { }
 
-        public TmbItemWithTime( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) { }
+        public TmbItemWithTime( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override void ReadHeader( TmbReader reader ) {
             base.ReadHeader( reader );

@@ -17,9 +17,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path" );
 
-        public C002( bool papEmbedded ) : base( papEmbedded ) { }
+        public C002( TmbFile file ) : base( file ) { }
 
-        public C002( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C002( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

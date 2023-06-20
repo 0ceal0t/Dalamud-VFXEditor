@@ -45,9 +45,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt PositionDelay = new( "Position Delay" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
 
-        public C174( bool papEmbedded ) : base( papEmbedded ) { }
+        public C174( TmbFile file ) : base( file ) { }
 
-        public C174( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C174( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

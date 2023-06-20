@@ -18,9 +18,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly TmbOffsetFloat4 Color2 = new( "Color 2", defaultValue: new( 1 ) );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
 
-        public C093( bool papEmbedded ) : base( papEmbedded ) { }
+        public C093( TmbFile file ) : base( file ) { }
 
-        public C093( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C093( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

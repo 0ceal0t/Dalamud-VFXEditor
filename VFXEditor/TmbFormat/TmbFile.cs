@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat {
         public readonly List<Tmfc> Tmfcs = new();
         public readonly List<Tmac> Actors = new();
         public readonly List<Tmtr> Tracks = new();
-        public readonly List<TmbEntry> Entries = new();
+        public readonly List<TmbEntry> AllEntries = new();
 
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
@@ -41,12 +41,12 @@ namespace VfxEditor.TmbFormat {
             var size = reader.ReadInt32();
             var numEntries = reader.ReadInt32(); // entry count (not including TMLB)
 
-            HeaderTmdh = new Tmdh( reader, papEmbedded );
-            HeaderTmpp = new Tmpp( reader, papEmbedded );
-            HeaderTmal = new Tmal( reader, papEmbedded );
+            HeaderTmdh = new Tmdh( this, reader );
+            HeaderTmpp = new Tmpp( this, reader );
+            HeaderTmal = new Tmal( this, reader );
 
             for( var i = 0; i < numEntries - ( HeaderTmpp.IsAssigned ? 3 : 2 ); i++ ) {
-                reader.ParseItem( Actors, Tracks, Entries, Tmfcs, papEmbedded, ref Verified );
+                reader.ParseItem( this, Actors, Tracks, AllEntries, Tmfcs, ref Verified );
             }
 
             HeaderTmal.PickActors( reader );
@@ -74,7 +74,7 @@ namespace VfxEditor.TmbFormat {
             items.Add( HeaderTmal );
             items.AddRange( Actors );
             items.AddRange( Tracks );
-            items.AddRange( Entries );
+            items.AddRange( AllEntries );
 
             var itemLength = items.Sum( x => x.Size );
             var extraLength = items.Sum( x => x.ExtraSize );
@@ -98,7 +98,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         public override void Draw() {
-            var maxDanger = Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
+            var maxDanger = AllEntries.Count == 0 ? DangerLevel.None : AllEntries.Select( x => x.Danger ).Max();
             if( maxDanger == DangerLevel.DontAddRemove ) DontAddRemoveWarning();
             else if( maxDanger == DangerLevel.Detectable || Tmfcs.Count > 0 ) DetectableWarning();
 
@@ -136,7 +136,7 @@ namespace VfxEditor.TmbFormat {
             short id = 2;
             foreach( var actor in Actors ) actor.Id = id++;
             foreach( var track in Tracks ) track.Id = id++;
-            foreach( var entry in Entries ) entry.Id = id++;
+            foreach( var entry in AllEntries ) entry.Id = id++;
         }
 
         // ===============

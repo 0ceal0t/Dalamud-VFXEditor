@@ -33,9 +33,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedEnum<VfxVisibility> Visibility = new( "Visibility" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
-        public C012( bool papEmbedded ) : base( papEmbedded ) { }
+        public C012( TmbFile file ) : base( file ) { }
 
-        public C012( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C012( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

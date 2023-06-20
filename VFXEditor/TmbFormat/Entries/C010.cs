@@ -1,4 +1,3 @@
-using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -35,9 +34,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly TmbOffsetString Path = new( "Path", maxSize: 31 );
         private readonly ParsedInt Unk5 = new( "Unknown 1" );
 
-        public C010( bool papEmbedded ) : base( papEmbedded ) { }
+        public C010( TmbFile file ) : base( file ) { }
 
-        public C010( TmbReader reader, bool papEmbedded ) : base( reader, papEmbedded ) {
+        public C010( TmbFile file, TmbReader reader ) : base( file, reader ) {
             ReadHeader( reader );
             ReadParsed( reader );
         }

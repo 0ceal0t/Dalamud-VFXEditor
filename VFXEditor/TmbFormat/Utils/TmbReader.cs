@@ -22,7 +22,7 @@ namespace VfxEditor.TmbFormat.Utils {
             StartPosition = Reader.BaseStream.Position;
         }
 
-        public void ParseItem( List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, List<Tmfc> tmfcs, bool papEmbedded, ref bool ok ) {
+        public void ParseItem( TmbFile file, List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, List<Tmfc> tmfcs, ref bool ok ) {
             var savePos = Reader.BaseStream.Position;
             var magic = ReadString( 4 );
             var size = ReadInt32();
@@ -31,17 +31,17 @@ namespace VfxEditor.TmbFormat.Utils {
             TmbItem entry;
 
             if( magic == "TMAC" ) {
-                var actor = new Tmac( this, papEmbedded );
+                var actor = new Tmac( file, this );
                 actors.Add( actor );
                 entry = actor;
             }
             else if( magic == "TMTR" ) {
-                var track = new Tmtr( this, papEmbedded );
+                var track = new Tmtr( file, this );
                 tracks.Add( track );
                 entry = track;
             }
             else if( magic == "TMFC" ) {
-                var tmfc = new Tmfc( this, papEmbedded );
+                var tmfc = new Tmfc( file, this );
                 entries.Add( tmfc );
                 tmfcs.Add( tmfc );
                 entry = tmfc;
@@ -55,7 +55,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 }
 
                 var type = TmbUtils.ItemTypes[magic].Type;
-                var constructor = type.GetConstructor( new Type[] { typeof( TmbReader ), typeof( bool ) } );
+                var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ), typeof( TmbReader ) } );
                 if( constructor == null ) {
                     PluginLog.Log( $"TmbReader constructor failed for {magic}" );
                     ok = false;
@@ -63,7 +63,7 @@ namespace VfxEditor.TmbFormat.Utils {
                     return;
                 }
 
-                var item = constructor.Invoke( new object[] { this, papEmbedded } );
+                var item = constructor.Invoke( new object[] { file, this } );
                 if( item == null ) {
                     PluginLog.Log( $"Constructor failed for {magic}" );
                     ok = false;
