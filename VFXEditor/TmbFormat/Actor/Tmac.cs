@@ -79,7 +79,7 @@ namespace VfxEditor.TmbFormat.Actor {
                             TmbRefreshIdsCommand command = new( File, false, true );
                             command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                             command.Add( new GenericRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
-                            SelectedTrack.DeleteChildren( command );
+                            SelectedTrack.DeleteAllEntries( command );
                             Command.Add( command );
 
                             SelectedTrack = null;
@@ -96,6 +96,11 @@ namespace VfxEditor.TmbFormat.Actor {
                     if( ImGui.Selectable( $"Track {idx}", Tracks[idx] == SelectedTrack ) ) {
                         SelectedTrack = Tracks[idx];
                         selectedIndex = idx;
+                    }
+
+                    if( ImGui.BeginDragDropTarget() ) {
+                        File.StopDragging( Tracks[idx] );
+                        ImGui.EndDragDropTarget();
                     }
                 }
             }
@@ -121,7 +126,7 @@ namespace VfxEditor.TmbFormat.Actor {
             foreach( var track in Tracks ) {
                 command.Add( new GenericRemoveCommand<Tmtr>( Tracks, track ) );
                 command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, track ) );
-                track.DeleteChildren( command );
+                track.DeleteAllEntries( command );
             }
         }
     }

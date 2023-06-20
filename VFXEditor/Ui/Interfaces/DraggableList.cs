@@ -29,25 +29,22 @@ namespace VfxEditor.Ui.Interfaces {
             return listModified;
         }
 
-        private static bool StopDragging<S>( IDraggableList<S> view, S destination, string id ) where S : class {
+        private unsafe static bool StopDragging<S>( IDraggableList<S> view, S destination, string id ) where S : class {
             var draggingItem = view.GetDraggingItem();
             if( draggingItem == null ) return false;
 
             var payload = ImGui.AcceptDragDropPayload( id );
-            unsafe {
-                if( payload.NativePtr != null ) {
-                    if( draggingItem != destination ) {
-                        var items = view.GetItems();
-                        items.Remove( draggingItem );
+            if( payload.NativePtr == null ) return false;
 
-                        var idx = items.IndexOf( destination );
-                        if( idx != -1 ) items.Insert( idx, draggingItem );
-                    }
-                    view.SetDraggingItem( null );
-                    return true;
-                }
+            if( draggingItem != destination ) {
+                var items = view.GetItems();
+                items.Remove( draggingItem );
+
+                var idx = items.IndexOf( destination );
+                if( idx != -1 ) items.Insert( idx, draggingItem );
             }
-            return false;
+            view.SetDraggingItem( null );
+            return true;
         }
     }
 }

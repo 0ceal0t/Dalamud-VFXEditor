@@ -91,36 +91,34 @@ namespace VfxEditor.Library {
             DraggingItem = item;
         }
 
-        public bool StopDragging( LibraryGeneric destination, bool overridePosition = false ) {
+        public unsafe bool StopDragging( LibraryGeneric destination, bool overridePosition = false ) {
             if( DraggingItem == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( "NODE_LIBRARY" );
-            unsafe {
-                if( payload.NativePtr != null ) {
-                    // Move them here
-                    if( DraggingItem != destination ) {
-                        if( DraggingItem is LibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
-                            PluginLog.Log( "Tried to put folder into itself" );
-                        }
-                        else {
-                            DraggingItem.Parent?.Remove( DraggingItem );
-                            if( destination is LibraryFolder folder && !overridePosition ) {
-                                folder.Add( DraggingItem );
-                            }
-                            else {
-                                var idx = destination.Parent.Children.IndexOf( destination );
-                                if( idx != -1 ) {
-                                    DraggingItem.Parent = destination.Parent;
-                                    destination.Parent.Children.Insert( idx, DraggingItem );
-                                }
-                            }
-                            Save();
+            if( payload.NativePtr == null ) return false;
+
+            // Move them here
+            if( DraggingItem != destination ) {
+                if( DraggingItem is LibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
+                    PluginLog.Log( "Tried to put folder into itself" );
+                }
+                else {
+                    DraggingItem.Parent?.Remove( DraggingItem );
+
+                    if( destination is LibraryFolder folder && !overridePosition ) { // Just add it at the end
+                        folder.Add( DraggingItem );
+                    }
+                    else {
+                        var idx = destination.Parent.Children.IndexOf( destination );
+                        if( idx != -1 ) {
+                            DraggingItem.Parent = destination.Parent;
+                            destination.Parent.Children.Insert( idx, DraggingItem );
                         }
                     }
-                    DraggingItem = null;
-                    return true;
+                    Save();
                 }
             }
-            return false;
+            DraggingItem = null;
+            return true;
         }
 
         // ========= NODES ===============

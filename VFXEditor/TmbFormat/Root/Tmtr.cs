@@ -119,8 +119,7 @@ namespace VfxEditor.TmbFormat {
                         var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
 
                         TmbRefreshIdsCommand command = new( File, false, true );
-                        command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
-                        command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, newEntry, AllEntriesIdx ) );
+                        AddEntry( command, newEntry );
                         Command.Add( command );
                     }
                 }
@@ -157,19 +156,29 @@ namespace VfxEditor.TmbFormat {
             var newEntry = entries[0];
 
             TmbRefreshIdsCommand command = new( File, false, true );
-            command.Add( new GenericAddCommand<TmbEntry>( Entries, newEntry ) );
-            command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, newEntry, AllEntriesIdx ) );
+            AddEntry( command, newEntry );
             Command.Add( command );
+        }
+
+        public void AddEntry( CompoundCommand command, TmbEntry entry ) {
+            command.Add( new GenericAddCommand<TmbEntry>( Entries, entry ) );
+            command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
         }
 
         public void DeleteEntry( TmbEntry entry ) {
+            if( !Entries.Contains( entry ) ) return;
             TmbRefreshIdsCommand command = new( File, false, true );
-            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
-            command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+            DeleteEntry( command, entry );
             Command.Add( command );
         }
 
-        public void DeleteChildren( TmbRefreshIdsCommand command ) {
+        public void DeleteEntry( CompoundCommand command, TmbEntry entry ) {
+            if( !Entries.Contains( entry ) ) return;
+            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
+            command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+        }
+
+        public void DeleteAllEntries( TmbRefreshIdsCommand command ) {
             foreach( var entry in Entries ) {
                 command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                 command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );

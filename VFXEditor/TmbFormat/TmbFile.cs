@@ -1,5 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace VfxEditor.TmbFormat {
 
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
+
+        private TmbEntry DraggingEntry = null;
 
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), false, checkOriginal ) { }
 
@@ -137,6 +140,26 @@ namespace VfxEditor.TmbFormat {
             foreach( var actor in Actors ) actor.Id = id++;
             foreach( var track in Tracks ) track.Id = id++;
             foreach( var entry in AllEntries ) entry.Id = id++;
+        }
+
+        public void StartDragging( TmbEntry entry ) {
+            ImGui.SetDragDropPayload( "TMB_ENTRY", IntPtr.Zero, 0 );
+            DraggingEntry = entry;
+        }
+
+        public unsafe void StopDragging( Tmtr destination ) {
+            if( DraggingEntry == null ) return;
+            var payload = ImGui.AcceptDragDropPayload( "TMB_ENTRY" );
+            if( payload.NativePtr == null ) return;
+
+            TmbRefreshIdsCommand command = new( this, false, true );
+            foreach( var track in Tracks ) {
+                track.DeleteEntry( command, DraggingEntry ); // will add to command
+            }
+            destination.AddEntry( command, DraggingEntry );
+            Command.Add( command );
+
+            DraggingEntry = null;
         }
 
         // ===============

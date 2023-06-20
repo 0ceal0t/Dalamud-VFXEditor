@@ -42,6 +42,8 @@ namespace VfxEditor.TmbFormat.Entries {
             if( ImGui.CollapsingHeader( DisplayName ) ) {
                 if( isColored ) color.Pop( 2 );
 
+                DragDrop();
+
                 using var indent = ImRaii.PushIndent();
 
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) )
@@ -64,9 +66,20 @@ namespace VfxEditor.TmbFormat.Entries {
                 }
 
                 DrawBody();
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }
+            else DragDrop();
 
             return false;
+        }
+
+        private void DragDrop() {
+            if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
+                File.StartDragging( this );
+                ImGui.Text( DisplayName );
+                ImGui.EndDragDropSource();
+            }
         }
 
         public virtual void DrawBody() {
