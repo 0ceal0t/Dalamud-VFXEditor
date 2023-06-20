@@ -15,6 +15,8 @@ namespace VfxEditor.TmbFormat {
         private readonly TmbOffsetString Path = new( "Face Library Path" );
 
         public Tmpp( TmbFile file, TmbReader reader ) : base( file, reader ) {
+            reader.Reader.BaseStream.Seek( reader.Reader.BaseStream.Position - 8, SeekOrigin.Begin ); // go back before magic and size
+
             var savePos = reader.Reader.BaseStream.Position;
             var magic = reader.ReadString( 4 );// TMAL or TMPP
 
@@ -23,13 +25,13 @@ namespace VfxEditor.TmbFormat {
                 reader.ReadInt32(); // 0x0C
                 Path.Read( reader );
             }
-            else { // TMAL, reset
+            else { // TMAL, ignore
                 reader.Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
             }
         }
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
             Path.Write( writer );
         }
 

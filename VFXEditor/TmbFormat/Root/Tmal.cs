@@ -12,12 +12,11 @@ namespace VfxEditor.TmbFormat {
         private readonly List<int> TempIds;
 
         public Tmal( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
             TempIds = reader.ReadOffsetTimeline();
         }
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
             writer.WriteOffsetTimeline( Actors );
         }
 

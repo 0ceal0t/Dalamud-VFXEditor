@@ -46,9 +46,6 @@ namespace VfxEditor.TmbFormat.Entries {
         public C094( TmbFile file ) : base( file ) { }
 
         public C094( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
-            ReadParsed( reader );
-
             ExtraData = reader.ReadAtOffset( ( binaryReader ) => {
                 EnableFilter.Read( binaryReader );
                 Filter.Read( binaryReader );
@@ -66,8 +63,7 @@ namespace VfxEditor.TmbFormat.Entries {
         };
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
-            WriteParsed( writer );
+            base.Write( writer );
 
             writer.WriteExtra( ( binaryWriter ) => {
                 EnableFilter.Write( binaryWriter );
@@ -79,8 +75,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void DrawBody() {
-            DrawHeader();
-            DrawParsed();
+            base.DrawBody();
 
             ImGui.Checkbox( "Extra Data", ref ExtraData );
             if( ExtraData ) {

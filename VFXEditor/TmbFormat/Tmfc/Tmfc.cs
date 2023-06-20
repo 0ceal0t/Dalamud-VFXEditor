@@ -26,7 +26,6 @@ namespace VfxEditor.TmbFormat.Entries {
         public Tmfc( TmbFile file ) : base( file ) { }
 
         public Tmfc( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
             var startOffset = reader.ReadInt32();
             var dataCount = reader.ReadInt32();
             Unk1.Read( reader );
@@ -49,7 +48,8 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => new();
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
+
             var offset = writer.WriteExtra( ( BinaryWriter bw ) => {
                 foreach( var data in Data ) data.Write( bw );
 
@@ -63,7 +63,8 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         public override void DrawBody() {
-            DrawHeader();
+            base.DrawBody();
+
             Unk1.Draw( Command );
             Unk2.Draw( Command );
 

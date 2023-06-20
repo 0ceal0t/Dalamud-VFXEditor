@@ -1,6 +1,6 @@
-using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Parsing;
 using System.Collections.Generic;
+using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C173 : TmbEntry {
@@ -30,10 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C173( TmbFile file ) : base( file ) { }
 
-        public C173( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
-            ReadParsed( reader );
-        }
+        public C173( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => new() {
             Unk1,

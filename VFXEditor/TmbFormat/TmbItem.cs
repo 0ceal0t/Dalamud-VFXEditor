@@ -21,19 +21,14 @@ namespace VfxEditor.TmbFormat {
 
         public TmbItem( TmbFile file, TmbReader reader ) : this( file ) {
             reader.UpdateStartPosition();
-        }
-
-        protected virtual void ReadHeader( TmbReader reader ) {
             reader.ReadString( 4 ); // magic
             reader.ReadInt32(); // size
         }
 
-        protected virtual void WriteHeader( TmbWriter writer ) {
+        public virtual void Write( TmbWriter writer ) {
             FileUtils.WriteString( writer.Writer, Magic );
             writer.Write( Size );
         }
-
-        public abstract void Write( TmbWriter writer );
     }
 
     public abstract class TmbItemWithId : TmbItem {
@@ -43,15 +38,12 @@ namespace VfxEditor.TmbFormat {
             Id = 0;
         }
 
-        protected TmbItemWithId( TmbFile file, TmbReader reader ) : base( file, reader ) { }
-
-        protected override void ReadHeader( TmbReader reader ) {
-            base.ReadHeader( reader );
+        public TmbItemWithId( TmbFile file, TmbReader reader ) : base( file, reader ) {
             Id = reader.ReadInt16();
         }
 
-        protected override void WriteHeader( TmbWriter writer ) {
-            base.WriteHeader( writer );
+        public override void Write( TmbWriter writer ) {
+            base.Write( writer );
             writer.Write( Id );
         }
     }
@@ -61,15 +53,12 @@ namespace VfxEditor.TmbFormat {
 
         public TmbItemWithTime( TmbFile file ) : base( file ) { }
 
-        public TmbItemWithTime( TmbFile file, TmbReader reader ) : base( file, reader ) { }
-
-        protected override void ReadHeader( TmbReader reader ) {
-            base.ReadHeader( reader );
+        public TmbItemWithTime( TmbFile file, TmbReader reader ) : base( file, reader ) {
             Time.Read( reader.Reader );
         }
 
-        protected override void WriteHeader( TmbWriter writer ) {
-            base.WriteHeader( writer );
+        public override void Write( TmbWriter writer ) {
+            base.Write( writer );
             Time.Write( writer.Writer );
         }
 

@@ -33,7 +33,6 @@ namespace VfxEditor.TmbFormat {
         public Tmtr( TmbFile file ) : base( file ) { }
 
         public Tmtr( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
             TempIds = reader.ReadOffsetTimeline();
             reader.ReadAtOffset( ( binaryReader ) => {
                 UnknownExtraAssigned.Value = true;
@@ -47,7 +46,7 @@ namespace VfxEditor.TmbFormat {
         public void PickEntries( TmbReader reader ) => Entries.AddRange( reader.Pick<TmbEntry>( TempIds ) );
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
             writer.WriteOffsetTimeline( Entries );
             if( !UseUnknownExtra ) writer.Write( 0 );
             else {

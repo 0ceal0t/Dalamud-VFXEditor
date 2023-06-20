@@ -12,14 +12,13 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedShort Unk3 = new( "Unknown 3" );
 
         public Tmdh( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
             Unk1.Read( reader );
             Length.Read( reader );
             Unk3.Read( reader );
         }
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
             Unk1.Write( writer );
             Length.Write( writer );
             Unk3.Write( writer );

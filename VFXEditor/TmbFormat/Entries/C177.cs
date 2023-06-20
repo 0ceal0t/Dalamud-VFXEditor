@@ -22,10 +22,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C177( TmbFile file ) : base( file ) { }
 
-        public C177( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
-            ReadParsed( reader );
-        }
+        public C177( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => new() {
             Duration,

@@ -20,10 +20,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C212( TmbFile file ) : base( file ) { }
 
-        public C212( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
-            ReadParsed( reader );
-        }
+        public C212( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => new() {
             Unk1,

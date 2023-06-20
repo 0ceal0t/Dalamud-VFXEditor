@@ -30,6 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public TmbEntry( TmbFile file, TmbReader reader ) : base( file, reader ) {
             Parsed = GetParsed();
+            foreach( var item in Parsed ) item.Read( reader );
         }
 
         public bool Draw( Tmtr track ) {
@@ -84,24 +85,12 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public virtual void DrawBody() {
             DrawHeader();
-            DrawParsed();
+            foreach( var item in Parsed ) item.Draw( Command );
         }
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
-            WriteParsed( writer );
-        }
-
-        protected void ReadParsed( TmbReader reader ) {
-            foreach( var item in Parsed ) item.Read( reader );
-        }
-
-        protected void WriteParsed( TmbWriter writer ) {
+            base.Write( writer );
             foreach( var item in Parsed ) item.Write( writer );
-        }
-
-        protected void DrawParsed() {
-            foreach( var item in Parsed ) item.Draw( Command );
         }
 
         protected abstract List<ParsedBase> GetParsed();

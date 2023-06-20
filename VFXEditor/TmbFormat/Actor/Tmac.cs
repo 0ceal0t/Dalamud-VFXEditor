@@ -29,7 +29,6 @@ namespace VfxEditor.TmbFormat.Actor {
         public Tmac( TmbFile file ) : base( file ) { }
 
         public Tmac( TmbFile file, TmbReader reader ) : base( file, reader ) {
-            ReadHeader( reader );
             AbilityDelay.Read( reader );
             Unk2.Read( reader );
             TempIds = reader.ReadOffsetTimeline();
@@ -40,7 +39,7 @@ namespace VfxEditor.TmbFormat.Actor {
         }
 
         public override void Write( TmbWriter writer ) {
-            WriteHeader( writer );
+            base.Write( writer );
             AbilityDelay.Write( writer );
             Unk2.Write( writer );
             writer.WriteOffsetTimeline( Tracks );
