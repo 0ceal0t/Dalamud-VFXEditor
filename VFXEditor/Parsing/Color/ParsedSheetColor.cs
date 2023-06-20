@@ -1,7 +1,5 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -9,25 +7,10 @@ using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Color {
     public class ParsedSheetColor : ParsedSimpleBase<uint, int> {
-        private static bool IsInitialized = false;
-        private static readonly Dictionary<uint, Vector4> Colors = new();
-
-        private static void Init() {
-            if( IsInitialized ) return;
-            IsInitialized = true;
-
-            foreach( var item in Plugin.DataManager.GetExcelSheet<UIColor>() ) {
-                var bytes = BitConverter.GetBytes( item.UIForeground );
-                Colors[item.RowId] = new( bytes[3] / 255f, bytes[2] / 255f, bytes[1] / 255f, bytes[0] / 255f );
-            }
-        }
-
-        // =================
-
-        private Vector4 CurrentColor => Colors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
+        private Vector4 CurrentColor => SheetData.UiColors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
 
         public ParsedSheetColor( string name ) : base( name ) {
-            Init();
+            SheetData.InitUiColors();
         }
 
         public override void Read( BinaryReader reader, int size ) => Read( reader, 0 );
@@ -49,12 +32,12 @@ namespace VfxEditor.Parsing.Color {
 
         private void DrawCombo( CommandManager manager ) {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
-            var text = Colors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
+            var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
 
             using var combo = ImRaii.Combo( "##Combo", text );
             if( !combo ) return;
 
-            foreach( var option in Colors ) {
+            foreach( var option in SheetData.UiColors ) {
                 var selected = option.Key == Value;
 
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );

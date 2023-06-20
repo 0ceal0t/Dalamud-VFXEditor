@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Interop;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat;
@@ -52,6 +53,14 @@ namespace VfxEditor.PapFormat {
         public string GetName() => Name.Value;
 
         public void Draw( int modelId, SkeletonType modelType ) {
+            SheetData.InitMotionTimelines();
+            if( !string.IsNullOrEmpty( Name.Value ) && SheetData.MotionTimelines.TryGetValue( Name.Value, out var motionData ) ) {
+                ImGui.TextDisabled( $"Loop: [{motionData.Loop}] Lip: [{motionData.Lip}] Blink: [{motionData.Blink}]" );
+
+                ImGui.SameLine();
+                UiUtils.HelpMarker( "These values are hard-coded in the game's MotionTimeline sheet, and are based on the animation name" );
+            }
+
             Name.Draw( CommandManager.Pap );
             Unk1.Draw( CommandManager.Pap );
             Unk2.Draw( CommandManager.Pap );

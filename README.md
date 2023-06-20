@@ -63,4 +63,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 chara/xls/boneDeformer/human.pbd
 chara/human/c1201/skeleton/hair/h0101/phy_c1201h0101.phyb
 chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.skp
+
+chara/human/c1701/animation/f0005/nonresident/wink.pap
+chara/human/c1301/animation/f0005/resident/face.pap
 ```

@@ -1,5 +1,4 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -7,24 +6,10 @@ using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Sheets {
     public class ParsedWeaponTimeline : ParsedSimpleBase<ushort, int> {
-        private static bool IsInitialized = false;
-        private static readonly Dictionary<ushort, string> Timelines = new();
-
-        private static void Init() {
-            if( IsInitialized ) return;
-            IsInitialized = true;
-
-            foreach( var item in Plugin.DataManager.GetExcelSheet<WeaponTimeline>() ) {
-                Timelines[( ushort )item.RowId] = item.File.ToString();
-            }
-        }
-
-        // =================
-
-        private string CurrentTimeline => Timelines.TryGetValue( Value, out var timeline ) ? timeline : "";
+        private string CurrentTimeline => SheetData.WeaponTimelines.TryGetValue( Value, out var timeline ) ? timeline : "";
 
         public ParsedWeaponTimeline( string name ) : base( name ) {
-            Init();
+            SheetData.InitWeaponTimelines();
         }
 
         public override void Read( BinaryReader reader, int size ) => Read( reader, 0 );
@@ -48,7 +33,7 @@ namespace VfxEditor.Parsing.Sheets {
             using var combo = ImRaii.Combo( "##Combo", $"[{Value}] {CurrentTimeline}" );
             if( !combo ) return;
 
-            foreach( var option in Timelines ) {
+            foreach( var option in SheetData.WeaponTimelines ) {
                 var selected = option.Key == Value;
 
                 if( ImGui.Selectable( $"[{option.Key}] {option.Value}", selected ) ) {
