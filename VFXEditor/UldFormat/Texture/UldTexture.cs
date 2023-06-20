@@ -1,10 +1,11 @@
 using ImGuiNET;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : UldWorkspaceItem {
-        public readonly ParsedString Path = new( "Path", maxSize: 44 );
+        public readonly ParsedPaddedString Path = new( "Path", 44, 0x00 );
         public readonly ParsedUInt IconId = new( "Icon Id" );
         private readonly ParsedUInt Unk1 = new( "Unknown 1" );
 
@@ -15,7 +16,6 @@ namespace VfxEditor.UldFormat.Texture {
         public UldTexture( BinaryReader reader, char minorVersion ) {
             Id.Read( reader );
             Path.Read( reader );
-            Path.Pad( reader, 44 );
             IconId.Read( reader );
             if( minorVersion == '1' ) Unk1.Read( reader );
             else Unk1.Value = 0;
@@ -24,7 +24,6 @@ namespace VfxEditor.UldFormat.Texture {
         public void Write( BinaryWriter writer, char minorVersion ) {
             Id.Write( writer );
             Path.Write( writer );
-            Path.Pad( writer, 44 );
             IconId.Write( writer );
             if( minorVersion == '1' ) Unk1.Write( writer );
         }

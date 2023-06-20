@@ -6,6 +6,7 @@ using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.Interop;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 using VfxEditor.TmbFormat;
 using VfxEditor.Utils;
 
@@ -14,7 +15,7 @@ namespace VfxEditor.PapFormat {
         public short HavokIndex = 0;
 
         private readonly string HkxTempLocation;
-        private readonly ParsedString Name = new( "Name", "cbbm_replace_this", 31 );
+        private readonly ParsedPaddedString Name = new( "Name", "cbbm_replace_this", 32, 0x00 );
         private readonly ParsedShort Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         public TmbFile Tmb;
@@ -26,7 +27,6 @@ namespace VfxEditor.PapFormat {
         public PapAnimation( BinaryReader reader, string hkxPath ) {
             HkxTempLocation = hkxPath;
             Name.Read( reader );
-            Name.Pad( reader, 32 );
             Unk1.Read( reader );
             HavokIndex = reader.ReadInt16();
             Unk2.Read( reader );
@@ -34,7 +34,6 @@ namespace VfxEditor.PapFormat {
 
         public void Write( BinaryWriter writer ) {
             Name.Write( writer );
-            Name.Pad( writer, 32 );
             Unk1.Write( writer );
             writer.Write( HavokIndex );
             Unk2.Write( writer );

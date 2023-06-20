@@ -1,11 +1,12 @@
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 
 namespace VfxEditor.EidFormat {
     public class EidBindPoint {
         public int BindPointId => Id.Value;
 
-        public readonly ParsedString Name = new( "Bone Name", "n_root", 31 );
+        public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
         public readonly ParsedInt Id = new( "Id" );
         public readonly ParsedFloat3 Position = new( "Position" );
         public readonly ParsedFloat3 Rotation = new( "Rotation" );
@@ -14,7 +15,6 @@ namespace VfxEditor.EidFormat {
 
         public EidBindPoint( BinaryReader reader ) {
             Name.Read( reader );
-            Name.Pad( reader, 32 );
             Id.Read( reader );
             Position.Read( reader );
             Rotation.Read( reader );
@@ -23,7 +23,6 @@ namespace VfxEditor.EidFormat {
 
         public void Write( BinaryWriter writer ) {
             Name.Write( writer );
-            Name.Pad( writer, 32 );
             Id.Write( writer );
             Position.Write( writer );
             Rotation.Write( writer );

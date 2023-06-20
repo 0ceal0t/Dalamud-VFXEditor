@@ -31,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedFlag<AnimationFlags> Flags = new( "Flags" );
         private readonly ParsedFloat AnimationStart = new( "Animation Start Frame" );
         private readonly ParsedFloat AnimationEnd = new( "Animation End Frame" );
-        private readonly TmbOffsetString Path = new( "Path", maxSize: 31 );
+        private readonly TmbOffsetString Path = new( "Path" );
         private readonly ParsedInt Unk5 = new( "Unknown 1" );
 
         public C010( TmbFile file ) : base( file ) { }

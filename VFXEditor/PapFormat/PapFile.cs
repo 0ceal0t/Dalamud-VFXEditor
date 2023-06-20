@@ -87,7 +87,7 @@ namespace VfxEditor.PapFormat {
             Variant.Write( writer );
 
             var offsetPos = writer.BaseStream.Position; // coming back here later
-            writer.Write( 0 ); // placeholders, will come back later
+            writer.Write( 0 ); // placeholders
             writer.Write( 0 );
             writer.Write( 0 );
 
