@@ -6,11 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
-using VfxEditor.ScdFormat.Layout;
 using VfxEditor.ScdFormat.Music;
 using VfxEditor.ScdFormat.Music.Data;
-using VfxEditor.ScdFormat.Sound;
-using VfxEditor.ScdFormat.Track;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
@@ -26,10 +23,10 @@ namespace VfxEditor.ScdFormat {
         public readonly List<ScdAttributeEntry> Attributes = new();
 
         public readonly ScdAudioEntrySplitView AudioSplitView;
-        public readonly ScdSoundSplitView SoundView;
-        public readonly ScdLayoutSplitView LayoutView;
-        public readonly ScdTrackSplitView TrackView;
-        public readonly SimpleSplitView<ScdAttributeEntry> AttributeView;
+        public readonly SimpleSplitview<ScdSoundEntry> SoundView;
+        public readonly SimpleSplitview<ScdLayoutEntry> LayoutView;
+        public readonly SimpleSplitview<ScdTrackEntry> TrackView;
+        public readonly GenericSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -71,9 +68,12 @@ namespace VfxEditor.ScdFormat {
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             AudioSplitView = new( Audio );
-            LayoutView = new( Layouts );
-            SoundView = new( Sounds );
-            TrackView = new( Tracks );
+            LayoutView = new( "Layout", Layouts, true,
+                null, () => new ScdLayoutEntry(), () => CommandManager.Scd );
+            SoundView = new( "Sound", Sounds, true,
+                null, () => new ScdSoundEntry(), () => CommandManager.Scd );
+            TrackView = new( "Track", Tracks, false,
+                null, () => new ScdTrackEntry(), () => CommandManager.Scd );
             AttributeView = new( "Attribute", Attributes, false, false );
         }
 

@@ -42,11 +42,16 @@ namespace VfxEditor.PhybFormat.Collision {
             for( var i = 0; i < numThreePointPlanes; i++ ) ThreePointPlanes.Add( new PhybThreePointPlane( file, reader ) );
             for( var i = 0; i < numSpheres; i++ ) Spheres.Add( new PhybSphere( file, reader ) );
 
-            CapsuleDropdown = new( "Capsule", Capsules, ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ) );
-            EllipsoidDropdown = new( "Ellipsoid", Ellipsoids, ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ) );
-            NormalPlaneDropdown = new( "NormalPlane", NormalPlanes, ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ) );
-            ThreePointPlaneDropdown = new( "ThreePointPlane", ThreePointPlanes, ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ) );
-            SphereDropdown = new( "Sphere", Spheres, ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ) );
+            CapsuleDropdown = new( "Capsule", Capsules,
+                ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ), () => CommandManager.Phyb );
+            EllipsoidDropdown = new( "Ellipsoid", Ellipsoids,
+                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ), () => CommandManager.Phyb );
+            NormalPlaneDropdown = new( "Normal Plane", NormalPlanes,
+                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ), () => CommandManager.Phyb );
+            ThreePointPlaneDropdown = new( "Three-Point Plane", ThreePointPlanes,
+                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ), () => CommandManager.Phyb );
+            SphereDropdown = new( "Sphere", Spheres,
+                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), () => CommandManager.Phyb );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -77,23 +82,23 @@ namespace VfxEditor.PhybFormat.Collision {
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Capsules" ) ) {
-                if( tab ) CapsuleDropdown.Draw( CommandManager.Phyb );
+                if( tab ) CapsuleDropdown.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Ellipsoids" ) ) {
-                if( tab ) EllipsoidDropdown.Draw( CommandManager.Phyb );
+                if( tab ) EllipsoidDropdown.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Normal Planes" ) ) {
-                if( tab ) NormalPlaneDropdown.Draw( CommandManager.Phyb );
+                if( tab ) NormalPlaneDropdown.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Three-Point Planes" ) ) {
-                if( tab ) ThreePointPlaneDropdown.Draw( CommandManager.Phyb );
+                if( tab ) ThreePointPlaneDropdown.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Spheres" ) ) {
-                if( tab ) SphereDropdown.Draw( CommandManager.Phyb );
+                if( tab ) SphereDropdown.Draw();
             }
         }
     }

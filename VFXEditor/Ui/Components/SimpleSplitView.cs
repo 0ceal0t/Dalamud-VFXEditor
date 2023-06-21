@@ -1,64 +1,30 @@
-using Dalamud.Interface;
-using ImGuiNET;
-using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
+using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
-    public class SimpleSplitView<T> : SplitView<T>, IDraggableList<T> where T : class, IUiItem {
-        protected readonly string ItemName;
-        protected readonly bool AllowReorder;
+    public class SimpleSplitview<T> : GenericSplitView<T> where T : class, IUiItem {
+        private readonly Func<T, int, string> GetTextAction;
+        private readonly Func<T> NewAction;
+        private readonly Func<CommandManager> CommandAction;
 
-        private T DraggingItem;
+        public SimpleSplitview( string id, List<T> items, bool allowReorder, Func<T, int, string> getTextAction, Func<T> newAction, Func<CommandManager> commandAction ) :
+            base( id, items, true, allowReorder ) {
 
-        public SimpleSplitView( string itemName, List<T> items, bool allowNew, bool allowReorder ) : base( itemName, items, allowNew ) {
-            ItemName = itemName;
-            AllowReorder = allowReorder;
+            GetTextAction = getTextAction;
+            NewAction = newAction;
+            CommandAction = commandAction;
         }
 
-        protected override void DrawControls() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-
-            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
-            if( Selected != null ) {
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    OnDelete( Selected );
-                    Selected = null;
-                }
-            }
+        protected override void OnNew() {
+            CommandAction.Invoke().Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
         }
 
-        protected virtual void OnNew() { }
-
-        protected virtual void OnDelete( T item ) { }
-
-        protected override bool DrawLeftItem( T item, int idx ) {
-            using( var _ = ImRaii.PushId( idx ) ) {
-                if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
-            }
-
-            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{ItemName}-SPLIT" ) ) return true;
-            return false;
+        protected override void OnDelete( T item ) {
+            CommandAction.Invoke().Add( new GenericRemoveCommand<T>( Items, item ) );
         }
 
-        protected virtual string GetText( T item, int idx ) => $"{ItemName} {idx}";
-
-        protected override void DrawSelected() {
-            using var _ = ImRaii.PushId( Items.IndexOf( Selected ) );
-            Selected.Draw();
-        }
-
-
-        // For drag+drop
-
-        public T GetDraggingItem() => DraggingItem;
-
-        public void SetDraggingItem( T item ) => DraggingItem = item;
-
-        public List<T> GetItems() => Items;
-
-        public string GetDraggingText( T item ) => GetText( item, Items.IndexOf( item ) );
+        protected override string GetText( T item, int idx ) => GetTextAction == null ? base.GetText( item, idx ) : GetTextAction.Invoke( item, idx );
     }
 }

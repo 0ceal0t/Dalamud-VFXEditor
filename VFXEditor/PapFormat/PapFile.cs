@@ -143,7 +143,7 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "Animations" );
             if( !tabItem ) return;
 
-            AnimationsDropdown.Draw( Command );
+            AnimationsDropdown.Draw();
         }
 
         public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();

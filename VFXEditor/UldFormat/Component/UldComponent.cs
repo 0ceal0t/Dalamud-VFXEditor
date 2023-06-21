@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component.Data;
 using VfxEditor.UldFormat.Component.Node;
@@ -48,10 +49,11 @@ namespace VfxEditor.UldFormat.Component {
         public UldGenericData Data = null;
 
         public readonly List<UldNode> Nodes = new();
-        public readonly UldNodeSplitView NodeSplitView;
+        public readonly SimpleSplitview<UldNode> NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {
-            NodeSplitView = new( Nodes, components, this );
+            NodeSplitView = new( "Node", Nodes, true,
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ), () => CommandManager.Uld );
 
             Id.Value = 1001; // default
             Type.ExtraCommandGenerator = () => {

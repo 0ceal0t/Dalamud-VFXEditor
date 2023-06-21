@@ -111,11 +111,11 @@ namespace VfxEditor.TmbFormat {
             DrawParameters();
 
             using( var tab = ImRaii.TabItem( "Actors" ) ) {
-                if( tab ) ActorsDropdown.Draw( Command );
+                if( tab ) ActorsDropdown.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "TMFC" ) ) {
-                if( tab ) TmfcDropdown.Draw( Command );
+                if( tab ) TmfcDropdown.Draw();
             }
         }
 

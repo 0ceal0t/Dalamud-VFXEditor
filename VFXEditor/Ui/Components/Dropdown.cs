@@ -25,9 +25,9 @@ namespace VfxEditor.Ui.Components {
 
         protected abstract string GetText( T item, int idx );
 
-        protected abstract void OnNew( CommandManager command );
+        protected abstract void OnNew();
 
-        protected abstract void OnDelete( T item, CommandManager command );
+        protected abstract void OnDelete( T item );
 
         public void ClearSelected() { Selected = null; }
 
@@ -45,7 +45,7 @@ namespace VfxEditor.Ui.Components {
             return false;
         }
 
-        public void Draw( CommandManager command ) {
+        public void Draw() {
             using var _ = ImRaii.PushId( Id );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
@@ -62,8 +62,8 @@ namespace VfxEditor.Ui.Components {
                 DrawCombo();
             }
 
-            if( AllowNew ) DrawNew( command );
-            if( AllowDelete ) DrawDelete( command );
+            if( AllowNew ) DrawNew();
+            if( AllowDelete ) DrawDelete();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
@@ -100,19 +100,19 @@ namespace VfxEditor.Ui.Components {
             for( var idx = 0; idx < Items.Count; idx++ ) DrawSelectItem( Items[idx], idx );
         }
 
-        private void DrawNew( CommandManager command ) {
+        private void DrawNew() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             ImGui.SameLine();
-            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew( command );
+            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
         }
 
-        private void DrawDelete( CommandManager command ) {
+        private void DrawDelete() {
             if( Selected != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) && Items.Contains( Selected ) ) {
-                    OnDelete( Selected, command );
+                    OnDelete( Selected );
                     Selected = null;
                 }
             }

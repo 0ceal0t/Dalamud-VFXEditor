@@ -35,8 +35,8 @@ namespace VfxEditor.UldFormat {
         private readonly UldListHeader WidgetList;
         public readonly List<UldWidget> Widgets = new();
 
-        public readonly UldTextureSplitView TextureSplitView;
-        public readonly UldPartsSplitView PartsSplitView;
+        public readonly SimpleSplitview<UldTexture> TextureSplitView;
+        public readonly SimpleSplitview<UldPartList> PartsSplitView;
         public readonly SimpleDropdown<UldComponent> ComponentDropdown;
         public readonly SimpleDropdown<UldTimeline> TimelineDropdown;
         public readonly SimpleDropdown<UldWidget> WidgetDropdown;
@@ -100,11 +100,16 @@ namespace VfxEditor.UldFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            TextureSplitView = new( Textures );
-            PartsSplitView = new( Parts );
-            ComponentDropdown = new( "Component", Components, ( UldComponent item, int idx ) => item.GetText(), () => new UldComponent( Components ) );
-            TimelineDropdown = new( "Timeline", Timelines, ( UldTimeline item, int idx ) => item.GetText(), () => new UldTimeline() );
-            WidgetDropdown = new( "Widget", Widgets, ( UldWidget item, int idx ) => item.GetText(), () => new UldWidget( Components ) );
+            TextureSplitView = new( "Texture", Textures, true,
+                ( UldTexture item, int idx ) => item.GetText(), () => new UldTexture(), () => CommandManager.Uld );
+            PartsSplitView = new( "Part List", Parts, true,
+                ( UldPartList item, int idx ) => item.GetText(), () => new UldPartList(), () => CommandManager.Uld );
+            ComponentDropdown = new( "Component", Components,
+                ( UldComponent item, int idx ) => item.GetText(), () => new UldComponent( Components ), () => CommandManager.Uld );
+            TimelineDropdown = new( "Timeline", Timelines,
+                ( UldTimeline item, int idx ) => item.GetText(), () => new UldTimeline(), () => CommandManager.Uld );
+            WidgetDropdown = new( "Widget", Widgets,
+                ( UldWidget item, int idx ) => item.GetText(), () => new UldWidget( Components ), () => CommandManager.Uld );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -179,7 +184,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             ComponentList.Draw();
-            ComponentDropdown.Draw( CommandManager.Uld );
+            ComponentDropdown.Draw();
         }
 
         private void DrawTimelines() {
@@ -187,7 +192,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             TimelineList.Draw();
-            TimelineDropdown.Draw( CommandManager.Uld );
+            TimelineDropdown.Draw();
         }
 
         private void DrawWidgets() {
@@ -195,7 +200,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             WidgetList.Draw();
-            WidgetDropdown.Draw( CommandManager.Uld );
+            WidgetDropdown.Draw();
         }
 
         // ========== WORKSPACE ==========

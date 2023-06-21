@@ -3,6 +3,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Component.Node;
@@ -19,17 +20,18 @@ namespace VfxEditor.UldFormat.Widget {
         Bottom = 0x7,
         BottomRight = 0x8,
     }
- 
+
     public class UldWidget : UldWorkspaceItem {
         public readonly ParsedEnum<AlignmentType> AlignmentType = new( "Alignment Type" );
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
 
         public readonly List<UldNode> Nodes = new();
-        public readonly UldNodeSplitView NodeSplitView;
+        public readonly SimpleSplitview<UldNode> NodeSplitView;
 
         public UldWidget( List<UldComponent> components ) {
-            NodeSplitView = new( Nodes, components, this );
+            NodeSplitView = new( "Node", Nodes, true,
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ), () => CommandManager.Uld );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
@@ -54,7 +56,7 @@ namespace VfxEditor.UldFormat.Widget {
             AlignmentType.Write( writer );
             X.Write( writer );
             Y.Write( writer );
-            writer.Write( (ushort) Nodes.Count );
+            writer.Write( ( ushort )Nodes.Count );
 
             var savePos = writer.BaseStream.Position;
             writer.Write( ( ushort )0 );

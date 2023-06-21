@@ -11,7 +11,8 @@ namespace VfxEditor.EidFormat {
         public readonly SimpleDropdown<EidBindPoint> Dropdown;
 
         public EidFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.EidManager ) ) {
-            Dropdown = new( "BindPoints", BindPoints, ( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}", () => new EidBindPoint() );
+            Dropdown = new( "Bind Point", BindPoints,
+                ( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}", () => new EidBindPoint(), () => CommandManager.Eid );
 
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
@@ -38,7 +39,7 @@ namespace VfxEditor.EidFormat {
 
         public override void Draw() {
             ImGui.Separator();
-            Dropdown.Draw( CommandManager.Eid );
+            Dropdown.Draw();
         }
     }
 }
