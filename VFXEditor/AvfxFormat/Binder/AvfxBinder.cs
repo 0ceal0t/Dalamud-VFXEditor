@@ -130,16 +130,15 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters();
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) Parameters.Draw();
+            }
+
             DrawData();
-            DrawProperties();
-        }
 
-        private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
-            if( !tabItem ) return;
-
-            Parameters.Draw();
+            using( var tab = ImRaii.TabItem( "Properties" ) ) {
+                if( tab ) PropSplitDisplay.Draw();
+            }
         }
 
         private void DrawData() {
@@ -149,13 +148,6 @@ namespace VfxEditor.AvfxFormat {
             if( !tabItem ) return;
 
             Data.Draw();
-        }
-
-        private void DrawProperties() {
-            using var tabItem = ImRaii.TabItem( "Properties" );
-            if( !tabItem ) return;
-
-            PropSplitDisplay.Draw();
         }
 
         public override string GetDefaultText() => $"Binder {GetIdx()}({BinderVariety.GetValue()})";

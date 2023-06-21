@@ -4,6 +4,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Headers;
@@ -36,9 +37,9 @@ namespace VfxEditor.UldFormat {
 
         public readonly UldTextureSplitView TextureSplitView;
         public readonly UldPartsSplitView PartsSplitView;
-        public readonly UldComponentDropdown ComponentDropdown;
-        public readonly UldTimelineDropdown TimelineDropdown;
-        public readonly UldWidgetDropdown WidgetDropdown;
+        public readonly SimpleDropdown<UldComponent> ComponentDropdown;
+        public readonly SimpleDropdown<UldTimeline> TimelineDropdown;
+        public readonly SimpleDropdown<UldWidget> WidgetDropdown;
 
         public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -101,9 +102,9 @@ namespace VfxEditor.UldFormat {
 
             TextureSplitView = new( Textures );
             PartsSplitView = new( Parts );
-            ComponentDropdown = new( Components );
-            TimelineDropdown = new( Timelines );
-            WidgetDropdown = new( Widgets, Components );
+            ComponentDropdown = new( "Component", Components, ( UldComponent item, int idx ) => item.GetText(), () => new UldComponent( Components ) );
+            TimelineDropdown = new( "Timeline", Timelines, ( UldTimeline item, int idx ) => item.GetText(), () => new UldTimeline() );
+            WidgetDropdown = new( "Widget", Widgets, ( UldWidget item, int idx ) => item.GetText(), () => new UldWidget( Components ) );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -178,7 +179,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             ComponentList.Draw();
-            ComponentDropdown.Draw();
+            ComponentDropdown.Draw( CommandManager.Uld );
         }
 
         private void DrawTimelines() {
@@ -186,7 +187,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             TimelineList.Draw();
-            TimelineDropdown.Draw();
+            TimelineDropdown.Draw( CommandManager.Uld );
         }
 
         private void DrawWidgets() {
@@ -194,7 +195,7 @@ namespace VfxEditor.UldFormat {
             if( !tabItem ) return;
 
             WidgetList.Draw();
-            WidgetDropdown.Draw();
+            WidgetDropdown.Draw( CommandManager.Uld );
         }
 
         // ========== WORKSPACE ==========

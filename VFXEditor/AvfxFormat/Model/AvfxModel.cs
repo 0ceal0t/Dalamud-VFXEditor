@@ -101,8 +101,14 @@ namespace VfxEditor.AvfxFormat {
             if( !tabBar ) return;
 
             DrawModel3D();
-            DrawUvView();
-            DrawEmitterVerts();
+
+            using( var tab = ImRaii.TabItem( "UV View" ) ) {
+                if( tab ) UvView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Emitter Vertices" ) ) {
+                if( tab ) EmitSplitDisplay.Draw();
+            }
         }
 
         public void OnSelect() {
@@ -154,20 +160,6 @@ namespace VfxEditor.AvfxFormat {
             }
 
             Plugin.DirectXManager.ModelPreview.DrawInline();
-        }
-
-        private void DrawUvView() {
-            using var tabItem = ImRaii.TabItem( "UV View" );
-            if( !tabItem ) return;
-
-            UvView.Draw();
-        }
-
-        private void DrawEmitterVerts() {
-            using var tabItem = ImRaii.TabItem( "Emitter Vertices" );
-            if( !tabItem ) return;
-
-            EmitSplitDisplay.Draw();
         }
 
         private void ImportDialog() {

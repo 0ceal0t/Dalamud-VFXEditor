@@ -6,7 +6,7 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, ISelectableUiItem {
+    public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, IIndexUiItem {
         public UiItemSplitView( string id, List<T> items ) : base( id, items, true, true ) {
             UpdateIdx();
         }

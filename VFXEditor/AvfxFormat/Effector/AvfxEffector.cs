@@ -91,15 +91,11 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters();
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) Parameters.Draw();
+            }
+
             DrawData();
-        }
-
-        private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
-            if( !tabItem ) return;
-
-            Parameters.Draw();
         }
 
         private void DrawData() {

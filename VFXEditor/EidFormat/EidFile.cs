@@ -2,15 +2,16 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
     public class EidFile : FileManagerFile {
         public readonly List<EidBindPoint> BindPoints = new();
-        public readonly EidBindPointDropdown Dropdown;
+        public readonly SimpleDropdown<EidBindPoint> Dropdown;
 
         public EidFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.EidManager ) ) {
-            Dropdown = new( BindPoints );
+            Dropdown = new( "BindPoints", BindPoints, ( EidBindPoint item, int idx ) => $"Bind Point {item.BindPointId}", () => new EidBindPoint() );
 
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
@@ -37,7 +38,7 @@ namespace VfxEditor.EidFormat {
 
         public override void Draw() {
             ImGui.Separator();
-            Dropdown.Draw();
+            Dropdown.Draw( CommandManager.Eid );
         }
     }
 }

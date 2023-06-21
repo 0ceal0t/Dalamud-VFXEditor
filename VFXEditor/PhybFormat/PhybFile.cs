@@ -1,3 +1,4 @@
+using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using VfxEditor.FileManager;
@@ -14,12 +15,14 @@ namespace VfxEditor.PhybFormat {
         public readonly PhybCollision Collision;
         public readonly PhybSimulator Simulator;
 
-        // new( Plugin.PhybManager )
-        public PhybFile( BinaryReader reader, bool checkOriginal = true ) : base( null ) {
+        public PhybFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             Version.Read( reader );
             DataType.Read( reader );
+
+            // chara/human/c0801/skeleton/met/m0173/phy_c0801m0173.phyb < Only 12 bytes long
+            // 0x0 0x0C 0x0C
 
             var collisionOffset = reader.ReadUInt32();
             var simulatorOffset = reader.ReadUInt32();
@@ -28,7 +31,7 @@ namespace VfxEditor.PhybFormat {
             Collision = new( this, reader );
 
             reader.BaseStream.Seek( simulatorOffset, SeekOrigin.Begin );
-            //Simulator = new( this, reader );
+            Simulator = new( this, reader );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
@@ -47,7 +50,7 @@ namespace VfxEditor.PhybFormat {
             Collision.Write( writer );
 
             var simulatorOffset = writer.BaseStream.Position;
-            //Simulator.Write( writer );
+            Simulator.Write( writer );
 
             writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
             writer.Write( ( int )collisionOffset );
@@ -55,9 +58,16 @@ namespace VfxEditor.PhybFormat {
         }
 
         public override void Draw() {
-            using var _ = ImRaii.PushId( "Main" );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
 
-            //
+            using( var tab = ImRaii.TabItem( "Collision" ) ) {
+                if( tab ) Collision.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Simulator" ) ) {
+                if( tab ) Simulator.Draw();
+            }
         }
     }
 }

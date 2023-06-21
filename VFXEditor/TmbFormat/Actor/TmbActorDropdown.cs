@@ -16,17 +16,17 @@ namespace VfxEditor.TmbFormat.Actor {
 
         protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 
-        protected override void OnDelete( Tmac item ) {
-            TmbRefreshIdsCommand command = new( File, false, true );
-            command.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
-            item.DeleteChildren( command, File );
-            File.Command.Add( command );
+        protected override void OnDelete( Tmac item, CommandManager command ) {
+            TmbRefreshIdsCommand command_ = new( File, false, true );
+            command_.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
+            item.DeleteChildren( command_, File );
+            File.Command.Add( command_ );
         }
 
-        protected override void OnNew() {
-            TmbRefreshIdsCommand command = new( File, false, true );
-            command.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File ) ) );
-            File.Command.Add( command );
+        protected override void OnNew( CommandManager command ) {
+            TmbRefreshIdsCommand command_ = new( File, false, true );
+            command_.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File ) ) );
+            File.Command.Add( command_ );
         }
 
         protected override void DrawSelected() => Selected.Draw();

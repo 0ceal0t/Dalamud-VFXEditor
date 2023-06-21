@@ -102,8 +102,14 @@ namespace VfxEditor.AvfxFormat {
             if( !tabBar ) return;
 
             DrawParameters();
-            DrawItems();
-            DrawClips();
+
+            using( var tab = ImRaii.TabItem( "Items" ) ) {
+                if( tab ) ItemSplit.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Clips" ) ) {
+                if( tab ) ClipSplit.Draw();
+            }
         }
 
         private void DrawParameters() {
@@ -113,20 +119,6 @@ namespace VfxEditor.AvfxFormat {
             using var child = ImRaii.Child( "Child" );
             BinderSelect.Draw();
             DrawItems( Display );
-        }
-
-        private void DrawItems() {
-            using var tabItem = ImRaii.TabItem( "Items" );
-            if( !tabItem ) return;
-
-            ItemSplit.Draw();
-        }
-
-        private void DrawClips() {
-            using var tabItem = ImRaii.TabItem( "Clips" );
-            if( !tabItem ) return;
-
-            ClipSplit.Draw();
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {

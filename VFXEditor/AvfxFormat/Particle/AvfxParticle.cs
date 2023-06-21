@@ -301,18 +301,23 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters();
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) Parameters.Draw();
+            }
+
             DrawData();
-            DrawAnimation();
-            DrawUvSets();
-            DrawTextures();
-        }
 
-        private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
-            if( !tabItem ) return;
+            using( var tab = ImRaii.TabItem( "Animation" ) ) {
+                if( tab ) AnimationSplitDisplay.Draw();
+            }
 
-            Parameters.Draw();
+            using( var tab = ImRaii.TabItem( "UV Sets" ) ) {
+                if( tab ) UvView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Textures" ) ) {
+                if( tab ) TextureDisplaySplit.Draw();
+            }
         }
 
         private void DrawData() {
@@ -322,27 +327,6 @@ namespace VfxEditor.AvfxFormat {
             if( !tabItem ) return;
 
             Data.Draw();
-        }
-
-        private void DrawAnimation() {
-            using var tabItem = ImRaii.TabItem( "Animation" );
-            if( !tabItem ) return;
-
-            AnimationSplitDisplay.Draw();
-        }
-
-        private void DrawUvSets() {
-            using var tabItem = ImRaii.TabItem( "UV Sets" );
-            if( !tabItem ) return;
-
-            UvView.Draw();
-        }
-
-        private void DrawTextures() {
-            using var tabItem = ImRaii.TabItem( "Textures" );
-            if( !tabItem ) return;
-
-            TextureDisplaySplit.Draw();
         }
 
         public override string GetDefaultText() => $"Particle {GetIdx()}({ParticleVariety.GetValue()})";

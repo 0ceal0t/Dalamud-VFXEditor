@@ -93,22 +93,13 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawItems();
-            DrawTriggers();
-        }
+            using( var tab = ImRaii.TabItem( "Items" ) ) {
+                if( tab ) ItemSplit.Draw();
+            }
 
-        private void DrawItems() {
-            using var tabItem = ImRaii.TabItem( "Items" );
-            if( !tabItem ) return;
-
-            ItemSplit.Draw();
-        }
-
-        private void DrawTriggers() {
-            using var tabItem = ImRaii.TabItem( "Triggers" );
-            if( !tabItem ) return;
-
-            TriggerSplit.Draw();
+            using( var tab = ImRaii.TabItem( "Triggers" ) ) {
+                if( tab ) TriggerSplit.Draw();
+            }
         }
 
         public override void GetChildrenRename( Dictionary<string, string> renameDict ) {

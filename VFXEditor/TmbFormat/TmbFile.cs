@@ -109,8 +109,14 @@ namespace VfxEditor.TmbFormat {
             if( !tabBar ) return;
 
             DrawParameters();
-            DrawActors();
-            DrawTmfc();
+
+            using( var tab = ImRaii.TabItem( "Actors" ) ) {
+                if( tab ) ActorsDropdown.Draw( Command );
+            }
+
+            using( var tab = ImRaii.TabItem( "TMFC" ) ) {
+                if( tab ) TmfcDropdown.Draw( Command );
+            }
         }
 
         private void DrawParameters() {
@@ -119,20 +125,6 @@ namespace VfxEditor.TmbFormat {
 
             HeaderTmdh.Draw();
             HeaderTmpp.Draw();
-        }
-
-        private void DrawActors() {
-            using var tabItem = ImRaii.TabItem( "Actors" );
-            if( !tabItem ) return;
-
-            ActorsDropdown.Draw();
-        }
-
-        private void DrawTmfc() {
-            using var tabItem = ImRaii.TabItem( "TMFC" );
-            if( !tabItem ) return;
-
-            TmfcDropdown.Draw();
         }
 
         public void RefreshIds() {

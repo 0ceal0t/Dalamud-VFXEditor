@@ -15,33 +15,32 @@ namespace VfxEditor.PapFormat {
 
         protected override string GetText( PapAnimation item, int idx ) => item.GetName();
 
-        protected override void OnDelete( PapAnimation item ) {
+        protected override void OnDelete( PapAnimation item, CommandManager command ) {
             var index = Items.IndexOf( item );
-            if( index == -1 ) return;
 
-            CompoundCommand command = new( false, true );
-            command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
-            command.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
+            CompoundCommand command_ = new( false, true );
+            command_.Add( new PapAnimationRemoveCommand( File, Items, item ) );
+            command_.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
                 HavokInterop.RemoveHavokAnimation( File.HkxTempLocation, index, File.HkxTempLocation );
             } ) );
-            CommandManager.Pap.Add( command );
+            CommandManager.Pap.Add( command_ );
 
             UiUtils.OkNotification( "Havok data removed" );
         }
 
-        protected override void OnNew() {
+        protected override void OnNew( CommandManager command ) {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
                     Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
                         var newAnim = new PapAnimation( File.HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
 
-                        CompoundCommand command = new( false, true );
-                        command.Add( new PapAnimationAddCommand( File, Items, newAnim ) );
-                        command.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
+                        CompoundCommand command_ = new( false, true );
+                        command_.Add( new PapAnimationAddCommand( File, Items, newAnim ) );
+                        command_.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
                             HavokInterop.AddHavokAnimation( File.HkxTempLocation, res, idx, File.HkxTempLocation );
                         } ) );
-                        CommandManager.Pap.Add( command );
+                        CommandManager.Pap.Add( command_ );
 
                         UiUtils.OkNotification( "Havok data imported" );
                     };

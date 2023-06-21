@@ -6,7 +6,7 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Interfaces {
-    public interface IWorkspaceUiItem : ISelectableUiItem {
+    public interface IWorkspaceUiItem : IIndexUiItem {
         public string GetWorkspaceId();
 
         public string GetRenamed();

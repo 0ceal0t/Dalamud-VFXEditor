@@ -86,6 +86,7 @@ namespace VfxEditor {
             DrawManagerMenu( manager, "Scd", ScdManager );
             DrawManagerMenu( manager, "Eid", EidManager );
             DrawManagerMenu( manager, "Uld", UldManager );
+            DrawManagerMenu( manager, "Phyb", PhybManager );
         }
 
         private static void DrawManagerMenu( IFileManager manager, string text, IFileManager menuManager ) {

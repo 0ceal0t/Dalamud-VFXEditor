@@ -1,5 +1,5 @@
 namespace VfxEditor.Ui.Interfaces {
-    public interface ISelectableUiItem : INamedUiItem {
+    public interface IIndexUiItem : INamedUiItem {
         public int GetIdx();
 
         public void SetIdx( int idx );

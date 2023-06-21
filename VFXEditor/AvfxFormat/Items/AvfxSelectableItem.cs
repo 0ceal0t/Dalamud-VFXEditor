@@ -1,7 +1,7 @@
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxSelectableItem : AvfxItem, ISelectableUiItem {
+    public abstract class AvfxSelectableItem : AvfxItem, IIndexUiItem {
         private int Idx;
 
         public AvfxSelectableItem( string avfxName ) : base( avfxName ) { }

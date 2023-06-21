@@ -238,9 +238,18 @@ namespace VfxEditor.AvfxFormat {
 
             DrawParameters();
             DrawData();
-            DrawAnimation();
-            DrawParticles();
-            DrawEmitters();
+
+            using( var tab = ImRaii.TabItem( "Animation" ) ) {
+                if( tab ) AnimationSplitDisplay.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Create Particles" ) ) {
+                if( tab ) ParticleSplit.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Emitters" ) ) {
+                if( tab ) EmitterSplit.Draw();
+            }
         }
 
         private void DrawParameters() {
@@ -264,27 +273,6 @@ namespace VfxEditor.AvfxFormat {
             if( !tabItem ) return;
 
             Data.Draw();
-        }
-
-        private void DrawAnimation() {
-            using var tabItem = ImRaii.TabItem( "Animation" );
-            if( !tabItem ) return;
-
-            AnimationSplitDisplay.Draw();
-        }
-
-        private void DrawParticles() {
-            using var tabItem = ImRaii.TabItem( "Create Particles" );
-            if( !tabItem ) return;
-
-            ParticleSplit.Draw();
-        }
-
-        private void DrawEmitters() {
-            using var tabItem = ImRaii.TabItem( "Create Emitters" );
-            if( !tabItem ) return;
-
-            EmitterSplit.Draw();
         }
 
         public override string GetDefaultText() => $"Emitter {GetIdx()}({EmitterVariety.GetValue()})";

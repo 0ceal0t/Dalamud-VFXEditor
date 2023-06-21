@@ -1,7 +1,7 @@
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class GenericSelectableItem : GenericItem, ISelectableUiItem {
+    public abstract class GenericSelectableItem : GenericItem, IIndexUiItem {
         private int Idx;
 
         public int GetIdx() => Idx;

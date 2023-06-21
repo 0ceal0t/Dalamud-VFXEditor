@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiItemSplitViewAddCommand<T> : ICommand where T : class, ISelectableUiItem {
+    public class UiItemSplitViewAddCommand<T> : ICommand where T : class, IIndexUiItem {
         private readonly UiItemSplitView<T> View;
         private readonly List<T> Group;
         private int Idx;

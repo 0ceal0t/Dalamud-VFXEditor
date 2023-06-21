@@ -19,6 +19,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Interop;
 using VfxEditor.Library;
 using VfxEditor.PapFormat;
+using VfxEditor.PhybFormat;
 using VfxEditor.ScdFormat;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
@@ -61,7 +62,8 @@ namespace VfxEditor {
             PapManager,
             ScdManager,
             EidManager,
-            UldManager
+            UldManager,
+            PhybManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -71,6 +73,7 @@ namespace VfxEditor {
         public static ScdManager ScdManager { get; private set; }
         public static EidManager EidManager { get; private set; }
         public static UldManager UldManager { get; private set; }
+        public static PhybManager PhybManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -119,6 +122,7 @@ namespace VfxEditor {
             ScdManager = new ScdManager();
             EidManager = new EidManager();
             UldManager = new UldManager();
+            PhybManager = new PhybManager();
 
             ToolsDialog = new ToolsDialog();
             PenumbraIpc = new PenumbraIpc();
@@ -167,6 +171,9 @@ namespace VfxEditor {
                     break;
                 case "uld":
                     UldManager.Toggle();
+                    break;
+                case "phyb":
+                    PhybManager.Toggle();
                     break;
                 default:
                     AvfxManager.Toggle();

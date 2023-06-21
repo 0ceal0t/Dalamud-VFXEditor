@@ -1,9 +1,10 @@
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.EidFormat {
-    public class EidBindPoint {
+    public class EidBindPoint : IUiItem {
         public int BindPointId => Id.Value;
 
         public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
