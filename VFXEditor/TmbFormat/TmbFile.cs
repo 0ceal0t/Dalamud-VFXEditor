@@ -86,7 +86,7 @@ namespace VfxEditor.TmbFormat {
 
             writer.Write( items.Count );
             foreach( var item in items ) {
-                tmbWriter.StartPosition = tmbWriter.Writer.BaseStream.Position;
+                tmbWriter.StartPosition = tmbWriter.Position;
                 item.Write( tmbWriter );
             }
 

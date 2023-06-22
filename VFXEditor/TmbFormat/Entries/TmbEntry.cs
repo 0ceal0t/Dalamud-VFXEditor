@@ -97,7 +97,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public byte[] ToBytes() {
             var tmbWriter = new TmbWriter( Size, ExtraSize, sizeof( short ) );
-            tmbWriter.StartPosition = tmbWriter.Writer.BaseStream.Position;
+            tmbWriter.StartPosition = tmbWriter.Position;
             Write( tmbWriter );
 
             using var ms = new MemoryStream();

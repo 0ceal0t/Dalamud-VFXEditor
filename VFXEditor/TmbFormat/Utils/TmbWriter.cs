@@ -2,22 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Parsing.Utils;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Utils {
-    public class TmbWriter {
+    public class TmbWriter : ParsingWriter {
         public const int BaseSize = 0x10;
         public int BodySize;
         public int ExtraSize;
         public int TimelineSize;
         public int Size => BaseSize + TimelineSize + ExtraSize + ( int )StringWriter.BaseStream.Length;
 
-        public readonly BinaryWriter Writer;
         public readonly BinaryWriter ExtraWriter;
         public readonly BinaryWriter TimelineWriter;
         public readonly BinaryWriter StringWriter;
 
-        public readonly MemoryStream WriterMs;
         public readonly MemoryStream ExtraMs;
         public readonly MemoryStream TimelineMs;
         public readonly MemoryStream StringMs;
@@ -25,29 +24,27 @@ namespace VfxEditor.TmbFormat.Utils {
         public long StartPosition;
         private readonly Dictionary<string, int> WrittenStrings = new();
 
-        public TmbWriter( int bodySize, int extraSize, int timelineSize ) {
+        public TmbWriter( int bodySize, int extraSize, int timelineSize ) : base() {
             BodySize = bodySize;
             ExtraSize = extraSize;
             TimelineSize = timelineSize;
 
-            WriterMs = new();
             ExtraMs = new();
             TimelineMs = new();
             StringMs = new();
 
-            Writer = new( WriterMs );
             ExtraWriter = new( ExtraMs );
             TimelineWriter = new( TimelineMs );
             StringWriter = new( StringMs );
         }
 
-        public void Dispose() {
-            Writer.Close();
+        public override void Dispose() {
+            base.Dispose();
+
             ExtraWriter.Close();
             TimelineWriter.Close();
             StringWriter.Close();
 
-            WriterMs.Close();
             ExtraMs.Close();
             TimelineMs.Close();
             StringMs.Close();
@@ -112,13 +109,8 @@ namespace VfxEditor.TmbFormat.Utils {
             ExtraWriter.Write( input.Z );
         }
 
-        public void Write( int data ) => Writer.Write( data );
-        public void Write( short data ) => Writer.Write( data );
-        public void Write( byte data ) => Writer.Write( data );
-        public void Write( float data ) => Writer.Write( data );
-
-        public void WriteTo( BinaryWriter writer ) {
-            writer.Write( WriterMs.ToArray() );
+        public override void WriteTo( BinaryWriter writer ) {
+            base.WriteTo( writer );
             writer.Write( ExtraMs.ToArray() );
             writer.Write( TimelineMs.ToArray() );
             writer.Write( StringMs.ToArray() );

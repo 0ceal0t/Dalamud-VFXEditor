@@ -24,7 +24,7 @@ namespace VfxEditor.Parsing.String {
 
         public override void Write( BinaryWriter writer ) {
             base.Write( writer );
-            for( var i = 0; i < ( Length - Value.Length - 1 ); i++ ) writer.Write( Padding );
+            for( var i = 0; i < ( Length - Value.Length - 1 ); i++ ) writer.Write( Value.Length == 0 ? ( byte )0 : Padding );
         }
 
         public override void Draw( CommandManager manager ) => Draw( manager, ( uint )( Length - 1 ) );

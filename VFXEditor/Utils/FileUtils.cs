@@ -63,14 +63,21 @@ namespace VfxEditor.Utils {
 
         public static bool CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
             diffIdx = -1;
+            var ret = true;
+
+            if( data.Length != original.Length ) {
+                PluginLog.Error( $"Files have different lengths {data.Length:X8} / {original.Length:X8}" );
+                ret = false; // Don't return yet since we still want to see the diffIdx
+            }
+
             for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
                 if( idx > minIdx && data[idx] != original[idx] ) {
                     diffIdx = idx;
-                    PluginLog.Log( $"Warning: files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
+                    PluginLog.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
                     return false;
                 }
             }
-            return true;
+            return ret;
         }
 
         public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );

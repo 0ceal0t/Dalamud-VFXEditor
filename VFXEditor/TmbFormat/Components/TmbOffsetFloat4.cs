@@ -1,5 +1,6 @@
 using System.Numerics;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Utils;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
@@ -8,12 +9,16 @@ namespace VfxEditor.TmbFormat {
 
         public TmbOffsetFloat4( string name ) : base( name ) { }
 
-        public override void Read( TmbReader reader ) {
-            Value = reader.ReadOffsetVector4();
+        public override void Read( ParsingReader reader ) {
+            if( reader is TmbReader tmbReader ) {
+                Value = tmbReader.ReadOffsetVector4();
+            }
         }
 
-        public override void Write( TmbWriter writer ) {
-            writer.WriteExtraVector4( Value );
+        public override void Write( ParsingWriter writer ) {
+            if( writer is TmbWriter tmbWriter ) {
+                tmbWriter.WriteExtraVector4( Value );
+            }
         }
     }
 }

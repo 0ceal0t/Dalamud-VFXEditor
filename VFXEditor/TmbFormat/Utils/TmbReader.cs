@@ -3,20 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Parsing.Utils;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Utils {
-    public class TmbReader {
-        public readonly BinaryReader Reader;
-
+    public class TmbReader : ParsingReader {
         private long StartPosition;
         private readonly Dictionary<int, TmbItemWithId> ItemsWithId = new();
 
-        public TmbReader( BinaryReader reader ) {
-            Reader = reader;
-        }
+        public TmbReader( BinaryReader reader ) : base( reader ) { }
 
         public void UpdateStartPosition() {
             StartPosition = Reader.BaseStream.Position;
@@ -159,11 +156,5 @@ namespace VfxEditor.TmbFormat.Utils {
             Reader.BaseStream.Seek( currentPos, SeekOrigin.Begin );
             return result;
         }
-
-        public int ReadInt32() => Reader.ReadInt32();
-        public short ReadInt16() => Reader.ReadInt16();
-        public byte ReadByte() => Reader.ReadByte();
-        public float ReadSingle() => Reader.ReadSingle();
-        public string ReadString( int size ) => FileUtils.ReadString( Reader, size );
     }
 }

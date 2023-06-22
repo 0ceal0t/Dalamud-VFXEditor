@@ -20,41 +20,51 @@ namespace VfxEditor.PhybFormat.Collision {
         public readonly List<PhybThreePointPlane> ThreePointPlanes = new();
         public readonly List<PhybSphere> Spheres = new();
 
-        private readonly SimpleDropdown<PhybCapsule> CapsuleDropdown;
-        private readonly SimpleDropdown<PhybEllipsoid> EllipsoidDropdown;
-        private readonly SimpleDropdown<PhybNormalPlane> NormalPlaneDropdown;
-        private readonly SimpleDropdown<PhybThreePointPlane> ThreePointPlaneDropdown;
-        private readonly SimpleDropdown<PhybSphere> SphereDropdown;
+        private readonly SimpleSplitview<PhybCapsule> CapsuleSplitView;
+        private readonly SimpleSplitview<PhybEllipsoid> EllipsoidSplitView;
+        private readonly SimpleSplitview<PhybNormalPlane> NormalPlaneSplitView;
+        private readonly SimpleSplitview<PhybThreePointPlane> ThreePointPlaneSplitView;
+        private readonly SimpleSplitview<PhybSphere> SphereDropdown;
 
-        public PhybCollision( PhybFile file, BinaryReader reader ) {
+        public bool IsEmpty => Capsules.Count + Ellipsoids.Count + NormalPlanes.Count + ThreePointPlanes.Count + Spheres.Count == 0;
+
+        public PhybCollision( PhybFile file, BinaryReader reader, bool isEmpty ) {
             File = file;
 
-            var numCapsules = reader.ReadByte();
-            var numEllipsoids = reader.ReadByte();
-            var numNormalPlanes = reader.ReadByte();
-            var numThreePointPlanes = reader.ReadByte();
-            var numSpheres = reader.ReadByte();
-            reader.ReadBytes( 3 ); // padding: 0xCC, 0xCC, 0xCC
+            if( !isEmpty ) {
+                var numCapsules = reader.ReadByte();
+                var numEllipsoids = reader.ReadByte();
+                var numNormalPlanes = reader.ReadByte();
+                var numThreePointPlanes = reader.ReadByte();
+                var numSpheres = reader.ReadByte();
+                reader.ReadBytes( 3 ); // padding: 0xCC, 0xCC, 0xCC
 
-            for( var i = 0; i < numCapsules; i++ ) Capsules.Add( new PhybCapsule( file, reader ) );
-            for( var i = 0; i < numEllipsoids; i++ ) Ellipsoids.Add( new PhybEllipsoid( file, reader ) );
-            for( var i = 0; i < numNormalPlanes; i++ ) NormalPlanes.Add( new PhybNormalPlane( file, reader ) );
-            for( var i = 0; i < numThreePointPlanes; i++ ) ThreePointPlanes.Add( new PhybThreePointPlane( file, reader ) );
-            for( var i = 0; i < numSpheres; i++ ) Spheres.Add( new PhybSphere( file, reader ) );
+                for( var i = 0; i < numCapsules; i++ ) Capsules.Add( new PhybCapsule( file, reader ) );
+                for( var i = 0; i < numEllipsoids; i++ ) Ellipsoids.Add( new PhybEllipsoid( file, reader ) );
+                for( var i = 0; i < numNormalPlanes; i++ ) NormalPlanes.Add( new PhybNormalPlane( file, reader ) );
+                for( var i = 0; i < numThreePointPlanes; i++ ) ThreePointPlanes.Add( new PhybThreePointPlane( file, reader ) );
+                for( var i = 0; i < numSpheres; i++ ) Spheres.Add( new PhybSphere( file, reader ) );
+            }
 
-            CapsuleDropdown = new( "Capsule", Capsules,
+            CapsuleSplitView = new( "Capsule", Capsules, false,
                 ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ), () => CommandManager.Phyb );
-            EllipsoidDropdown = new( "Ellipsoid", Ellipsoids,
+
+            EllipsoidSplitView = new( "Ellipsoid", Ellipsoids, false,
                 ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ), () => CommandManager.Phyb );
-            NormalPlaneDropdown = new( "Normal Plane", NormalPlanes,
+
+            NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
                 ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ), () => CommandManager.Phyb );
-            ThreePointPlaneDropdown = new( "Three-Point Plane", ThreePointPlanes,
+
+            ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
                 ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ), () => CommandManager.Phyb );
-            SphereDropdown = new( "Sphere", Spheres,
+
+            SphereDropdown = new( "Sphere", Spheres, false,
                 ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), () => CommandManager.Phyb );
         }
 
         public void Write( BinaryWriter writer ) {
+            if( IsEmpty ) return;
+
             writer.Write( ( byte )Capsules.Count );
             writer.Write( ( byte )Ellipsoids.Count );
             writer.Write( ( byte )NormalPlanes.Count );
@@ -78,23 +88,25 @@ namespace VfxEditor.PhybFormat.Collision {
                 ImGui.TextColored( UiUtils.RED_COLOR, "ELLIPSOID/NORMAL PLANE/THREE-POINT PLANE FOUND!" );
             }
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Capsules" ) ) {
-                if( tab ) CapsuleDropdown.Draw();
+                if( tab ) CapsuleSplitView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Ellipsoids" ) ) {
-                if( tab ) EllipsoidDropdown.Draw();
+                if( tab ) EllipsoidSplitView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Normal Planes" ) ) {
-                if( tab ) NormalPlaneDropdown.Draw();
+                if( tab ) NormalPlaneSplitView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Three-Point Planes" ) ) {
-                if( tab ) ThreePointPlaneDropdown.Draw();
+                if( tab ) ThreePointPlaneSplitView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Spheres" ) ) {
