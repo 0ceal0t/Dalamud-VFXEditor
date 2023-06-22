@@ -95,25 +95,24 @@ namespace VfxEditor.Select {
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonPath( x.Value.SkeletonId, path ) );
         }
 
-        public static Dictionary<string, string> GetAllJobSkeletonPaths( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
+        public static Dictionary<string, string> GetAllJobPaps( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
 
-        public static Dictionary<string, Dictionary<string, string>> GetAllJobPaths( string path ) {
+        public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
-            return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobSkeletonPaths( x.Value, path ) );
+            return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
         }
 
-        public static Dictionary<string, string> GetAllModelFacePaths( string modelId, string path, int minFace, int maxFace ) {
+        public static Dictionary<string, string> GetAllFacePaps( string modelId, string path, int minFace, int maxFace ) {
             Dictionary<string, string> ret = new();
             for( var face = minFace; face <= maxFace; face++ ) {
                 ret.Add( $"Face {face}", $"chara/human/{modelId}/animation/f{face:D4}/nonresident/{path}.pap" );
             }
-
             return FileExistsFilter( ret );
         }
 
-        public static Dictionary<string, Dictionary<string, string>> GetAllFacePaths( string path ) {
+        public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
-            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllModelFacePaths( x.Value.SkeletonId, path, x.Value.MinFace, x.Value.MaxFace ) );
+            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path, x.Value.MinFace, x.Value.MaxFace ) );
         }
     }
 }

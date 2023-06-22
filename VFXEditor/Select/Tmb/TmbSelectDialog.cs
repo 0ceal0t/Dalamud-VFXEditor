@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Tmb.Action;
 using VfxEditor.Select.Tmb.Common;
@@ -9,10 +8,8 @@ using VfxEditor.Select.Tmb.Npc;
 
 namespace VfxEditor.Select.Tmb {
     public class TmbSelectDialog : SelectDialog {
-        private readonly List<SelectTab> GameTabs;
-
         public TmbSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
-            GameTabs = new List<SelectTab>( new SelectTab[]{
+            GameTabs.AddRange( new SelectTab[]{
                 new ActionTab( this, "Action" ),
                 new NonPlayerActionTab( this, "Non-Player Action" ),
                 new EmoteTab( this, "Emote" ),
@@ -32,7 +29,5 @@ namespace VfxEditor.Select.Tmb {
                 if( ImGui.Button( "Play" ) ) Plugin.ActorAnimationManager.Apply( path );
             }
         }
-
-        protected override List<SelectTab> GetTabs() => GameTabs;
     }
 }

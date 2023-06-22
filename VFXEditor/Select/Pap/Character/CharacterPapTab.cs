@@ -1,10 +1,16 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Select.Pap.Character;
 using VfxEditor.Select.Shared.Character;
 
 namespace VfxEditor.Select.Pap.IdlePose {
+    public class CharacterRowSelected {
+        // Idle, MoveA, MoveB
+        public Dictionary<string, string> General;
+        // Pose # -> Start, Loop
+        public Dictionary<string, Dictionary<string, string>> Poses;
+    }
+
     public class CharacterPapTab : SelectTab<CharacterRow, CharacterRowSelected> {
         public CharacterPapTab( SelectDialog dialog, string name ) : base( dialog, name, "Character-Shared" ) { }
 

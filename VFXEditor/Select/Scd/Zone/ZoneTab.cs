@@ -1,10 +1,17 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Scd.BgmQuest;
 using VfxEditor.Select.Shared.Zone;
 
 namespace VfxEditor.Select.Scd.Zone {
+    public class ZoneRowSelected {
+        public BgmSituationStruct Situation;
+        public Dictionary<string, BgmSituationStruct> Quests = new();
+    }
+
     public class ZoneTab : SelectTab<ZoneRow, ZoneRowSelected> {
         public ZoneTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Zone" ) { }
 
@@ -17,7 +24,16 @@ namespace VfxEditor.Select.Scd.Zone {
         }
 
         public override void LoadSelection( ZoneRow item, out ZoneRowSelected loaded ) {
-            loaded = new( item );
+            loaded = new() {
+                Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
+            };
+            if( item.BgmId <= 50000 ) return;
+
+            foreach( var bgmSwitch in Plugin.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
+                var questName = bgmSwitch.Quest.Value?.Name.ToString();
+                var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM );
+                loaded.Quests[string.IsNullOrEmpty( questName ) ? item.Name : questName] = situation;
+            }
         }
 
         // ===== DRAWING ======

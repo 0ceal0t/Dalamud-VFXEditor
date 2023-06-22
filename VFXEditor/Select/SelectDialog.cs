@@ -52,8 +52,8 @@ namespace VfxEditor.Select {
         public readonly FileManagerWindow Manager;
         public readonly string Extension;
         public readonly bool IsSource; // as opposed to replaced
-        protected abstract List<SelectTab> GetTabs();
 
+        protected readonly List<SelectTab> GameTabs = new();
         protected readonly List<SelectResult> Favorites;
         protected readonly SelectListTab RecentTab;
         protected readonly SelectFavoriteTab FavoritesTab;
@@ -99,7 +99,7 @@ namespace VfxEditor.Select {
         // ============= GAME =================
 
         public void DrawGameTabs() {
-            if( GetTabs().Count == 0 ) return;
+            if( GameTabs.Count == 0 ) return;
             using var _ = ImRaii.PushId( "Game" );
 
             using var tabItem = ImRaii.TabItem( "Game Items" );
@@ -107,7 +107,7 @@ namespace VfxEditor.Select {
 
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
-            foreach( var tab in GetTabs() ) tab.Draw();
+            foreach( var tab in GameTabs ) tab.Draw();
         }
 
         // =========== LOCAL ================

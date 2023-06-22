@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Vfx.Action;
 using VfxEditor.Select.Vfx.Common;
@@ -17,11 +16,9 @@ using VfxEditor.Select.Vfx.Zone;
 
 namespace VfxEditor.Select.Vfx {
     public class VfxSelectDialog : SelectDialog {
-        private readonly List<SelectTab> GameTabs;
-
         public VfxSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
-            GameTabs = new List<SelectTab>( new SelectTab[]{
-                new ItemTab( this, "Item" ),
+            GameTabs.AddRange( new SelectTab[]{
+                new VfxItemTab( this, "Item" ),
                 new StatusTab( this, "Status" ),
                 new ActionTab( this, "Action" ),
                 new NonPlayerActionTab( this, "Non-Player Action" ),
@@ -55,7 +52,5 @@ namespace VfxEditor.Select.Vfx {
                 }
             }
         }
-
-        protected override List<SelectTab> GetTabs() => GameTabs;
     }
 }

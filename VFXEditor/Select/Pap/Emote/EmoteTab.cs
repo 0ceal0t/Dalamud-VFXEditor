@@ -5,6 +5,10 @@ using System.Linq;
 using System.Numerics;
 
 namespace VfxEditor.Select.Pap.Emote {
+    public class EmoteRowSelected {
+        public Dictionary<string, Dictionary<string, Dictionary<string, string>>> AllPaps;
+    }
+
     public class EmoteTab : SelectTab<EmoteRow, EmoteRowSelected> {
         public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Pap-Emote" ) { }
 
@@ -30,13 +34,13 @@ namespace VfxEditor.Select.Pap.Emote {
                 }
                 else if( papFile.Type == EmoteRowType.PerJob ) {
                     // chara/human/c0101/animation/a0001/bt_swd_sld/emote/battle01.pap
-                    papDict = SelectUtils.GetAllJobPaths( key );
+                    papDict = SelectUtils.GetAllJobPaps( key );
                 }
                 else if( papFile.Type == EmoteRowType.Facial ) {
                     // chara/human/c0101/animation/f0003/resident/face.pap
                     // chara/human/c0101/animation/f0003/resident/smile.pap
                     // chara/human/c0101/animation/f0003/nonresident/angry_cl.pap
-                    papDict = SelectUtils.GetAllFacePaths( key );
+                    papDict = SelectUtils.GetAllFacePaps( key );
                 }
 
                 allPaps.Add( key, papDict );

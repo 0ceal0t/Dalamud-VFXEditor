@@ -1,7 +1,12 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Linq;
+using VfxEditor.Select.Scd.BgmQuest;
 
 namespace VfxEditor.Select.Scd.Instance {
+    public class InstanceRowSelected {
+        public BgmSituationStruct Situation;
+    }
+
     public class InstanceTab : SelectTab<InstanceRow, InstanceRowSelected> {
         public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Instance" ) { }
 
@@ -14,7 +19,10 @@ namespace VfxEditor.Select.Scd.Instance {
         }
 
         public override void LoadSelection( InstanceRow item, out InstanceRowSelected loaded ) {
-            loaded = new( item );
+            var instance = Plugin.DataManager.GetExcelSheet<InstanceContent>().GetRow( item.ContentRowId );
+            loaded = new() {
+                Situation = BgmQuestTab.GetBgmSituation( ( ushort )instance.BGM.Row )
+            };
         }
 
         // ===== DRAWING ======

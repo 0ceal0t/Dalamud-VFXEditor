@@ -1,9 +1,20 @@
-using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using System;
 using System.Linq;
 
 namespace VfxEditor.Select.Scd.BgmQuest {
+    public struct BgmSituationStruct {
+        public bool IsSituation;
+        public string Path;
+        public string DayPath;
+        public string NightPath;
+        public string BattlePath;
+        public string DaybreakPath;
+    }
+
+    public class BgmQuestRowSelected {
+        public BgmSituationStruct Situation;
+    }
+
     public class BgmQuestTab : SelectTab<BgmQuestRow, BgmQuestRowSelected> {
         public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-BgmQuest" ) { }
 
@@ -16,7 +27,9 @@ namespace VfxEditor.Select.Scd.BgmQuest {
         }
 
         public override void LoadSelection( BgmQuestRow item, out BgmQuestRowSelected loaded ) {
-            loaded = new( item );
+            loaded = new() {
+                Situation = GetBgmSituation( item.BgmId )
+            };
         }
 
         // ===== DRAWING ======
@@ -26,5 +39,24 @@ namespace VfxEditor.Select.Scd.BgmQuest {
         }
 
         protected override string GetName( BgmQuestRow item ) => item.Name;
+
+        public static BgmSituationStruct GetBgmSituation( ushort bgmId ) {
+            if( bgmId < 1000 ) {
+                return new BgmSituationStruct {
+                    Path = Plugin.DataManager.GetExcelSheet<BGM>().GetRow( bgmId )?.File.ToString(),
+                    IsSituation = false
+                };
+            }
+            else {
+                var situation = Plugin.DataManager.GetExcelSheet<BGMSituation>().GetRow( bgmId );
+                return new BgmSituationStruct {
+                    DayPath = situation?.DaytimeID.Value?.File.ToString(),
+                    NightPath = situation?.NightID.Value?.File.ToString(),
+                    BattlePath = situation?.BattleID.Value?.File.ToString(),
+                    DaybreakPath = situation?.DaybreakID.Value?.File.ToString(),
+                    IsSituation = true
+                };
+            }
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Scd.Bgm;
 using VfxEditor.Select.Scd.BgmQuest;
@@ -11,10 +10,8 @@ using VfxEditor.Select.Scd.Zone;
 
 namespace VfxEditor.Select.Scd {
     public class ScdSelectDialog : SelectDialog {
-        private readonly List<SelectTab> GameTabs;
-
         public ScdSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
-            GameTabs = new List<SelectTab>( new SelectTab[]{
+            GameTabs.AddRange( new SelectTab[]{
                 new MountScdTab( this, "Mount" ),
                 new OrchestrionTab( this, "Orchestrion" ),
                 new ZoneTab( this, "Zone" ),
@@ -25,7 +22,5 @@ namespace VfxEditor.Select.Scd {
                 new CommonTab( this, "Common" ),
             } );
         }
-
-        protected override List<SelectTab> GetTabs() => GameTabs;
     }
 }
