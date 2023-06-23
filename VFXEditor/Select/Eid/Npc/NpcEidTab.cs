@@ -9,8 +9,8 @@ namespace VfxEditor.Select.Eid.Npc {
             Dialog.DrawPath( "Path", Selected.GetEidPath(), SelectResultType.GameNpc, Selected.Name );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
-            selected = new List<string>();
+        protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
+            loaded = new List<string>();
         }
     }
 }

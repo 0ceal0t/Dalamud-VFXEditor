@@ -11,8 +11,8 @@ namespace VfxEditor.Select.Tmb.Npc {
             Dialog.DrawPaths( "TMB", Loaded, SelectResultType.GameNpc, Selected.Name );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
-            selected = files.tmb;
+        protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
+            loaded = files.tmb;
         }
     }
 }

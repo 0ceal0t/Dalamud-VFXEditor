@@ -11,8 +11,8 @@ namespace VfxEditor.Select.Vfx.Npc {
             Dialog.DrawPaths( "VFX", Loaded, SelectResultType.GameNpc, Selected.Name, true );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
-            selected = files.vfx;
+        protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
+            loaded = files.vfx;
         }
     }
 }

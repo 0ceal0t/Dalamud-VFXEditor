@@ -5,7 +5,7 @@ namespace VfxEditor.Select.Shared.Character {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var item in SelectUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value.SkeletonId ) );
+            foreach( var item in SelectUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value ) );
         }
 
         // ===== DRAWING ======

@@ -11,8 +11,8 @@ namespace VfxEditor.Select.Pap.Npc {
             Dialog.DrawPaths( "PAP", Loaded, SelectResultType.GameNpc, Selected.Name );
         }
 
-        protected override void FilesToSelected( NpcFilesStruct files, out List<string> selected ) {
-            selected = files.pap;
+        protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
+            loaded = files.pap;
         }
     }
 }

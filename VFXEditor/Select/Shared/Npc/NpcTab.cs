@@ -56,10 +56,10 @@ namespace VfxEditor.Select.Shared.Npc {
 
         public override void LoadSelection( NpcRow item, out List<string> loaded ) {
             var files = NpcFiles.TryGetValue( item.ModelString, out var paths ) ? paths : new NpcFilesStruct();
-            FilesToSelected( files, out loaded );
+            GetLoadedFiles( files, out loaded );
         }
 
-        protected abstract void FilesToSelected( NpcFilesStruct files, out List<string> selected );
+        protected abstract void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded );
 
         // ===== DRAWING ======
 

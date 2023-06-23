@@ -229,7 +229,9 @@ namespace VfxEditor.Select {
                 ImGui.Text( $"{suffix}:" );
 
                 ImGui.SameLine();
-                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
+                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
+                    SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
+                }
                 else SelectTabUtils.DisplayPath( path );
 
                 DrawPath( "", path, resultType, $"{name} ({suffix})" );
@@ -245,6 +247,11 @@ namespace VfxEditor.Select {
             }
         }
 
+        public void DrawPaths( Dictionary<string, string> paths, SelectResultType resultType, string resultName, bool play = false ) {
+            foreach( var item in paths ) {
+                DrawPath( item.Key, item.Value, resultType, $"{resultName} ({item.Key})", play );
+            }
+        }
         public void DrawPath( string label, string path, SelectResultType resultType, string resultName, bool play = false ) =>
             DrawPath( label, path, path, resultType, resultName, play );
 

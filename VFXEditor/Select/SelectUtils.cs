@@ -4,6 +4,16 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace VfxEditor.Select {
+    public class RaceStruct {
+        public readonly string SkeletonId;
+        public readonly int HairOffset;
+
+        public RaceStruct( string skeletonId, int hairOffset ) {
+            SkeletonId = skeletonId;
+            HairOffset = hairOffset;
+        }
+    }
+
     public partial class SelectUtils {
         public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
@@ -15,37 +25,27 @@ namespace VfxEditor.Select {
         private static partial Regex AvfxRegexPattern();
         public static readonly Regex AvfxRegex = AvfxRegexPattern();
 
-        public struct RaceStruct {
-            public string SkeletonId;
-            public int MinFace;
-            public int MaxFace;
-
-            public RaceStruct( string skeletonId, int minFace, int maxFace ) {
-                SkeletonId = skeletonId;
-                MinFace = minFace;
-                MaxFace = maxFace;
-            }
-        }
+        // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
         public static readonly Dictionary<string, RaceStruct> RaceAnimationIds = new() {
-            { "Midlander M", new RaceStruct("c0101", 1, 4) },
-            { "Midlander F", new RaceStruct("c0201", 1, 4) },
-            { "Highlander M", new RaceStruct("c0301", 1, 4) },
-            { "Highlander F", new RaceStruct("c0401", 1, 4) },
-            { "Elezen M", new RaceStruct("c0501", 1, 4) },
-            { "Elezen F", new RaceStruct("c0601", 1, 4) },
-            { "Miquote M", new RaceStruct("c0701", 1, 4) },
-            { "Miquote F", new RaceStruct("c0801", 1, 4) },
-            { "Roegadyn M", new RaceStruct("c0901", 1, 4) },
-            { "Roegadyn F", new RaceStruct("c1001", 1, 4) },
-            { "Lalafell M", new RaceStruct("c1101", 1, 4) },
-            { "Lalafell F", new RaceStruct("c1201", 1, 4) },
-            { "Aura M", new RaceStruct("c1301", 1, 4) },
-            { "Aura F", new RaceStruct("c1401", 1, 4) },
-            { "Hrothgar M", new RaceStruct("c1501", 1, 4) },
+            { "Midlander M", new RaceStruct( "c0101", 0 ) },
+            { "Midlander F", new RaceStruct( "c0201", 100 ) },
+            { "Highlander M", new RaceStruct( "c0301", 200 ) },
+            { "Highlander F", new RaceStruct( "c0401", 300 ) },
+            { "Elezen M", new RaceStruct( "c0501", 400 ) },
+            { "Elezen F", new RaceStruct( "c0601", 500 ) },
+            { "Miquote M", new RaceStruct( "c0701", 800 ) },
+            { "Miquote F", new RaceStruct( "c0801", 900 ) },
+            { "Roegadyn M", new RaceStruct( "c0901", 1000 ) },
+            { "Roegadyn F", new RaceStruct( "c1001", 1100 ) },
+            { "Lalafell M", new RaceStruct( "c1101", 600 ) },
+            { "Lalafell F", new RaceStruct( "c1201", 700 ) },
+            { "Aura M", new RaceStruct( "c1301", 1200 ) },
+            { "Aura F", new RaceStruct( "c1401", 1300 ) },
+            { "Hrothgar M", new RaceStruct( "c1501", 1400 ) },
             // 1601 coming soon (tm)
-            { "Viera M", new RaceStruct("c1701", 1, 4) },
-            { "Viera F", new RaceStruct("c1801", 1, 4) },
+            { "Viera M", new RaceStruct( "c1701", 1600 ) },
+            { "Viera F", new RaceStruct( "c1801", 1700 ) },
         };
 
         public static readonly Dictionary<string, string> JobAnimationIds = new() {
@@ -86,7 +86,12 @@ namespace VfxEditor.Select {
 
         public static readonly int MaxChangePoses = 6;
 
-        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
+        public static readonly int MaxFaces = 4;
+
+        public static readonly int HairEntries = 100;
+
+        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) =>
+            dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
@@ -102,9 +107,9 @@ namespace VfxEditor.Select {
             return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
         }
 
-        public static Dictionary<string, string> GetAllFacePaps( string modelId, string path, int minFace, int maxFace ) {
+        public static Dictionary<string, string> GetAllFacePaps( string modelId, string path ) {
             Dictionary<string, string> ret = new();
-            for( var face = minFace; face <= maxFace; face++ ) {
+            for( var face = 1; face <= MaxFaces; face++ ) {
                 ret.Add( $"Face {face}", $"chara/human/{modelId}/animation/f{face:D4}/nonresident/{path}.pap" );
             }
             return FileExistsFilter( ret );
@@ -112,7 +117,7 @@ namespace VfxEditor.Select {
 
         public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
-            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path, x.Value.MinFace, x.Value.MaxFace ) );
+            return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path ) );
         }
     }
 }
