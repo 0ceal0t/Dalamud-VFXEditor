@@ -1,10 +1,12 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
-    public class PhybThreePointPlane : PhybData {
+    public class PhybThreePointPlane : PhybPhysicsData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedReserve Padding1 = new( 64 );
@@ -24,5 +26,9 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
             Padding2,
             Thickness,
         };
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+
+        }
     }
 }

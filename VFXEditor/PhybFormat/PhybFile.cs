@@ -1,5 +1,8 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
@@ -11,7 +14,7 @@ using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {
-    public class PhybFile : FileManagerFile {
+    public class PhybFile : FileManagerFile, IPhysicsObject {
         public readonly ParsedIntByte4 Version = new( "Version" );
         public readonly ParsedUInt DataType = new( "Data Type" );
 
@@ -19,6 +22,7 @@ namespace VfxEditor.PhybFormat {
         public readonly PhybSimulation Simulation;
 
         public readonly SkeletonView Skeleton;
+        public bool PhysicsUpdated = true;
 
         public PhybFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -99,6 +103,11 @@ namespace VfxEditor.PhybFormat {
         public override void Dispose() {
             base.Dispose();
             Skeleton.Dispose();
+        }
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+            Collision.AddPhysicsObjects( builder, boneMatrixes );
+            Simulation.AddPhysicsObjects( builder, boneMatrixes );
         }
     }
 }

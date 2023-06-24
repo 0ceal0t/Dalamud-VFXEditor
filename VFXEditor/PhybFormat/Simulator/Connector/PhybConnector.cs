@@ -1,9 +1,11 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.PhybFormat.Simulator.Connector {
-    public class PhybConnector : PhybData {
+    public class PhybConnector : PhybPhysicsData, IPhysicsObject {
         public readonly ParsedShort ChainId1 = new( "Chain Id 1" );
         public readonly ParsedShort ChainId2 = new( "Chain Id 2" );
         public readonly ParsedShort JointId1 = new( "Joint Id 1" );
@@ -31,5 +33,9 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             CollisionFlag,
             ContinuousCollisionFlag,
         };
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+
+        }
     }
 }

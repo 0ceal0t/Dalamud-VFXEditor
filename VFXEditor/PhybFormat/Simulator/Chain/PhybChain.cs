@@ -1,3 +1,5 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         Capsule
     }
 
-    public class PhybChain : PhybData {
+    public class PhybChain : PhybPhysicsData, IPhysicsObject {
         public readonly ParsedFloat Dampening = new( "Dampening" );
         public readonly ParsedFloat MaxSpeed = new( "Max Speed" );
         public readonly ParsedFloat Friction = new( "Friction" );
@@ -106,6 +108,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             }
 
             foreach( var item in Nodes ) item.Write( writer.ExtraWriter );
+        }
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+
         }
     }
 }

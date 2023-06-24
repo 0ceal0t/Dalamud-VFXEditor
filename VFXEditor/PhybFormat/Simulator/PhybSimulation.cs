@@ -1,3 +1,5 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +8,7 @@ using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.PhybFormat.Simulator {
-    public class PhybSimulation {
+    public class PhybSimulation : IPhysicsObject {
         public readonly PhybFile File;
 
         public readonly List<PhybSimulator> Simulators = new();
@@ -62,6 +64,10 @@ namespace VfxEditor.PhybFormat.Simulator {
             foreach( var item in items ) item.Write( writer );
             var defaultOffset = typeof( T ) == typeof( PhybPostAlignment ) ? 0xCCCCCCCC : 0;
             return items.Count == 0 ? ( int )defaultOffset : ( int )offset - 4;
+        }
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Simulators ) item.AddPhysicsObjects( builder, boneMatrixes );
         }
     }
 }

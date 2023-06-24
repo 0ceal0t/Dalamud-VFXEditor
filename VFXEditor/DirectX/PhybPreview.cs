@@ -19,8 +19,7 @@ namespace VfxEditor.DirectX {
             LoadSkeleton( mesh );
         }
 
-        public void LoadPhysics( PhybFile file, MeshGeometry3D mesh ) {
-            CurrentFile = file;
+        public void LoadPhysics( MeshGeometry3D mesh ) {
             if( mesh.Positions.Count == 0 ) {
                 NumPhysics = 0;
                 PhysicsVertices?.Dispose();
@@ -57,11 +56,32 @@ namespace VfxEditor.DirectX {
             if( NumVertices > 0 ) {
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
                 Ctx.Draw( NumVertices, 0 );
+                Ctx.Flush();
             }
 
             if( NumPhysics > 0 ) {
+                // Kind of jank, but oh well
+                var wireframe = new RasterizerState( Device, new RasterizerStateDescription {
+                    CullMode = CullMode.None,
+                    DepthBias = 0,
+                    DepthBiasClamp = 0,
+                    FillMode = FillMode.Wireframe,
+                    IsAntialiasedLineEnabled = false,
+                    IsDepthClipEnabled = true,
+                    IsFrontCounterClockwise = false,
+                    IsMultisampleEnabled = true,
+                    IsScissorEnabled = false,
+                    SlopeScaledDepthBias = 0
+                } );
+
+                Ctx.Rasterizer.State = wireframe;
+
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( PhysicsVertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
                 Ctx.Draw( NumPhysics, 0 );
+                Ctx.Flush();
+
+                Ctx.Rasterizer.State = RasterizeState;
+                wireframe.Dispose();
             }
         }
 

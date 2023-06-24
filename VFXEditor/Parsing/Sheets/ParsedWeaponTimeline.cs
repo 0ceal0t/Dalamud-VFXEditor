@@ -20,28 +20,34 @@ namespace VfxEditor.Parsing.Sheets {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( CommandManager manager ) {
-            Copy( manager );
-
-            DrawCombo( manager );
+        public override bool Draw( CommandManager manager ) {
+            var ret = Copy( manager );
+            if( DrawCombo( manager ) ) ret = true;
 
             ImGui.SameLine();
             ImGui.Text( Name );
+
+            return ret;
         }
 
-        private void DrawCombo( CommandManager manager ) {
+        private bool DrawCombo( CommandManager manager ) {
             using var combo = ImRaii.Combo( "##Combo", $"[{Value}] {CurrentTimeline}" );
-            if( !combo ) return;
+            if( !combo ) return false;
+
+            var ret = false;
 
             foreach( var option in SheetData.WeaponTimelines ) {
                 var selected = option.Key == Value;
 
                 if( ImGui.Selectable( $"[{option.Key}] {option.Value}", selected ) ) {
                     manager.Add( new ParsedSimpleCommand<ushort>( this, option.Key ) );
+                    ret = true;
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
+
+            return ret;
         }
 
         protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;

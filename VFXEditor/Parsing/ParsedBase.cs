@@ -3,7 +3,7 @@ using VfxEditor.Parsing.Utils;
 
 namespace VfxEditor.Parsing {
     public abstract class ParsedBase : IParsedUiBase {
-        public abstract void Draw( CommandManager manager );
+        public abstract bool Draw( CommandManager manager );
 
         public virtual void Read( ParsingReader reader ) => Read( reader.Reader );
 

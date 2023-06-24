@@ -40,19 +40,25 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override void Draw( CommandManager manager ) {
+        public override bool Draw( CommandManager manager ) {
+            var ret = false;
+
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
                 copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, ( T )( object )val, ExtraCommandGenerator?.Invoke() ) );
+                ret = true;
             }
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[NONE]";
             if( UiUtils.EnumComboBox( Name, text, options, Value, out var newValue ) ) {
                 manager.Add( new ParsedEnumCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
+                ret = true;
             }
+
+            return ret;
         }
     }
 }

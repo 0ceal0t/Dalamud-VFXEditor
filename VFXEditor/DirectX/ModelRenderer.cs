@@ -26,7 +26,7 @@ namespace VfxEditor.DirectX {
         protected int Height = 300;
         protected bool FirstModel = false;
 
-        protected RasterizerState RState;
+        protected RasterizerState RasterizeState;
         protected Buffer RendersizeBuffer;
         protected Buffer WorldBuffer;
         protected Matrix ViewMatrix;
@@ -48,8 +48,8 @@ namespace VfxEditor.DirectX {
         }
 
         public void RefreshRasterizeState() {
-            RState?.Dispose();
-            RState = new RasterizerState( Device, new RasterizerStateDescription {
+            RasterizeState?.Dispose();
+            RasterizeState = new RasterizerState( Device, new RasterizerStateDescription {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
@@ -173,7 +173,7 @@ namespace VfxEditor.DirectX {
             Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
 
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
-            Ctx.Rasterizer.State = RState;
+            Ctx.Rasterizer.State = RasterizeState;
 
             OnDraw();
 
@@ -207,7 +207,7 @@ namespace VfxEditor.DirectX {
 
         public abstract void OnDispose();
         public void Dispose() {
-            RState?.Dispose();
+            RasterizeState?.Dispose();
             RenderTex?.Dispose();
             RenderShad?.Dispose();
             RenderView?.Dispose();

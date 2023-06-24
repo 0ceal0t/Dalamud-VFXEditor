@@ -33,13 +33,16 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )Value );
         }
 
-        public override void Draw( CommandManager manager ) {
-            Copy( manager );
+        public override bool Draw( CommandManager manager ) {
+            var ret = Copy( manager );
 
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<uint>( this, ( uint )value ) );
+                ret = true;
             }
+
+            return ret;
         }
 
         protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;

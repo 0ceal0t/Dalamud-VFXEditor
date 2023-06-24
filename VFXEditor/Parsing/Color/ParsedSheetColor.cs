@@ -21,21 +21,25 @@ namespace VfxEditor.Parsing.Color {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( CommandManager manager ) {
-            Copy( manager );
+        public override bool Draw( CommandManager manager ) {
+            var ret = Copy( manager );
 
-            DrawCombo( manager );
+            if( DrawCombo( manager ) ) ret = true;
 
             ImGui.SameLine();
             ImGui.Text( Name );
+
+            return ret;
         }
 
-        private void DrawCombo( CommandManager manager ) {
+        private bool DrawCombo( CommandManager manager ) {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
             var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
 
             using var combo = ImRaii.Combo( "##Combo", text );
-            if( !combo ) return;
+            if( !combo ) return false;
+
+            var ret = false;
 
             foreach( var option in SheetData.UiColors ) {
                 var selected = option.Key == Value;
@@ -43,10 +47,13 @@ namespace VfxEditor.Parsing.Color {
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );
                 if( ImGui.Selectable( $"----{option.Key}----", selected ) ) {
                     manager.Add( new ParsedSimpleCommand<uint>( this, option.Key ) );
+                    ret = true;
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
+
+            return ret;
         }
 
         protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;

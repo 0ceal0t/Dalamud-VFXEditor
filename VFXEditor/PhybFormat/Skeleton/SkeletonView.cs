@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
+using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -31,7 +32,10 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         public void Draw() {
             if( BoneMatrixes == null ) RefreshBones();
-            if( PhybPreview.CurrentFile != File ) UpdateSkeleton();
+            if( PhybPreview.CurrentFile != File ) {
+                UpdateSkeleton();
+                UpdatePhysicsObjects();
+            }
 
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
             var inputSize = UiUtils.GetOffsetInputSize( checkSize );
@@ -53,6 +57,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             ImGui.Text( "Preview Skeleton Path" );
 
             if( BoneMatrixes == null ) return;
+            if( File.PhysicsUpdated ) UpdatePhysicsObjects();
             Plugin.DirectXManager.PhybPreview.DrawInline();
         }
 
@@ -142,7 +147,11 @@ namespace VfxEditor.PhybFormat.Skeleton {
         }
 
         private void UpdatePhysicsObjects() {
-
+            File.PhysicsUpdated = false;
+            if( BoneList.Count == 0 ) return;
+            var builder = new MeshBuilder( true, false );
+            File.AddPhysicsObjects( builder, BoneMatrixes );
+            PhybPreview.LoadPhysics( builder.ToMesh() );
         }
 
         private void UpdateSkeleton() {

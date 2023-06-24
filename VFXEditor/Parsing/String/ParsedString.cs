@@ -27,10 +27,10 @@ namespace VfxEditor.Parsing {
 
         public override void Write( BinaryWriter writer ) => FileUtils.WriteString( writer, Value, writeNull: true );
 
-        public override void Draw( CommandManager manager ) => Draw( manager, 255 );
+        public override bool Draw( CommandManager manager ) => Draw( manager, 255 );
 
-        public void Draw( CommandManager manager, uint maxSize ) {
-            Copy( manager );
+        public bool Draw( CommandManager manager, uint maxSize ) {
+            var ret = Copy( manager );
 
             var prevValue = Value;
             if( ImGui.InputText( Name, ref Value, maxSize ) ) {
@@ -43,7 +43,10 @@ namespace VfxEditor.Parsing {
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
                 manager.Add( new ParsedSimpleCommand<string>( this, StateBeforeEdit, Value ) );
+                ret = true;
             }
+
+            return ret;
         }
 
         protected override Dictionary<string, string> GetCopyMap( CopyManager manager ) => manager.Strings;

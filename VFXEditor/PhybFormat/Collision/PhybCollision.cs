@@ -1,3 +1,5 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat.Collision {
-    public class PhybCollision {
+    public class PhybCollision : IPhysicsObject {
         public readonly PhybFile File;
 
         public readonly List<PhybCapsule> Capsules = new();
@@ -112,6 +114,14 @@ namespace VfxEditor.PhybFormat.Collision {
             using( var tab = ImRaii.TabItem( "Spheres" ) ) {
                 if( tab ) SphereDropdown.Draw();
             }
+        }
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Capsules ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Ellipsoids ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in NormalPlanes ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in ThreePointPlanes ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Spheres ) item.AddPhysicsObjects( builder, boneMatrixes );
         }
     }
 }

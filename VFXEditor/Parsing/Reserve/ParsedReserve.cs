@@ -10,7 +10,7 @@ namespace VfxEditor.Parsing {
             Data = new byte[Size];
         }
 
-        public override void Draw( CommandManager manager ) { }
+        public override bool Draw( CommandManager manager ) => false;
 
         public override void Read( BinaryReader reader ) {
             Data = reader.ReadBytes( Size );

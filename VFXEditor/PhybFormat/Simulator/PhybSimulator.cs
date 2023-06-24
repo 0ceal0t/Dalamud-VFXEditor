@@ -1,3 +1,5 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.PhybFormat.Simulator {
-    public class PhybSimulator : IUiItem {
+    public class PhybSimulator : IUiItem, IPhysicsObject {
         public readonly PhybFile File;
 
         public readonly PhybSimulatorParams Params;
@@ -180,6 +182,17 @@ namespace VfxEditor.PhybFormat.Simulator {
             using( var tab = ImRaii.TabItem( "Post Alignments" ) ) {
                 if( tab ) PostAlignmentSplitView.Draw();
             }
+        }
+
+        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Collisions ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Chains ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Connectors ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Attracts ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Pins ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in Springs ) item.AddPhysicsObjects( builder, boneMatrixes );
+            foreach( var item in PostAlignments ) item.AddPhysicsObjects( builder, boneMatrixes );
         }
     }
 }
