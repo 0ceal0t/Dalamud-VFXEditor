@@ -12,12 +12,11 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class GradientView : Renderer {
-        public AvfxCurve CurrentCurve = null;
+        public AvfxCurve CurrentCurve { get; private set; }
         public IntPtr Output => RenderShad.NativePointer;
 
         private readonly int Width = 500;
         private readonly int Height = 50;
-        private bool FirstCurve = false;
 
         private RasterizerState RState;
         private Texture2D DepthTex;
@@ -113,10 +112,6 @@ namespace VfxEditor.DirectX {
                 Vertices?.Dispose();
                 Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
                 NumVerts = ( numPoints - 1 ) * 6;
-            }
-
-            if( !FirstCurve ) {
-                FirstCurve = true;
             }
             Draw();
         }

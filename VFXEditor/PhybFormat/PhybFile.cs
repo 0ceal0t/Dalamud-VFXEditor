@@ -6,6 +6,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.PhybFormat.Collision;
 using VfxEditor.PhybFormat.Simulator;
+using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 
@@ -16,6 +17,8 @@ namespace VfxEditor.PhybFormat {
 
         public readonly PhybCollision Collision;
         public readonly PhybSimulation Simulation;
+
+        public readonly SkeletonView Skeleton;
 
         public PhybFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -36,6 +39,8 @@ namespace VfxEditor.PhybFormat {
             Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+
+            Skeleton = new( this );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -85,6 +90,15 @@ namespace VfxEditor.PhybFormat {
             using( var tab = ImRaii.TabItem( "Simulation" ) ) {
                 if( tab ) Simulation.Draw();
             }
+
+            using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                if( tab ) Skeleton.Draw();
+            }
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            Skeleton.Dispose();
         }
     }
 }

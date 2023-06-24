@@ -88,7 +88,7 @@ namespace VfxEditor.PhybFormat.Collision {
                 ImGui.TextColored( UiUtils.RED_COLOR, "ELLIPSOID/NORMAL PLANE/THREE-POINT PLANE FOUND!" );
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;

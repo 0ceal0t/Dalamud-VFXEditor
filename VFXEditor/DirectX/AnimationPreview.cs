@@ -12,22 +12,21 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class AnimationPreview : ModelRenderer {
-        private static readonly int ModelSpan = 3; // position, color, normal
-        private int NumVerts;
-        private Buffer Vertices;
-        private readonly CompilationResult VertexShaderByteCode;
-        private readonly CompilationResult PixelShaderByteCode;
-        private readonly PixelShader PShader;
-        private readonly VertexShader VShader;
-        private readonly ShaderSignature Signature;
-        private readonly InputLayout Layout;
+        protected static readonly int ModelSpan = 3; // position, color, normal
+
+        protected int NumVertices = 0;
+        protected Buffer Vertices;
+
+        protected readonly CompilationResult VertexShaderByteCode;
+        protected readonly CompilationResult PixelShaderByteCode;
+        protected readonly PixelShader PShader;
+        protected readonly VertexShader VShader;
+        protected readonly ShaderSignature Signature;
+        protected readonly InputLayout Layout;
 
         public readonly bool ShaderError = false;
 
         public AnimationPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
-            NumVerts = 0;
-            Vertices = null;
-
             try {
                 var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
                 VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
@@ -47,16 +46,25 @@ namespace VfxEditor.DirectX {
             }
         }
 
-        public void LoadAnimation( BoneSkinnedMeshGeometry3D boneMesh ) {
-            if( boneMesh.Positions.Count == 0 ) {
-                NumVerts = 0;
+        public void LoadSkeleton( BoneSkinnedMeshGeometry3D mesh ) {
+            if( mesh.Positions.Count == 0 ) {
+                NumVertices = 0;
                 Vertices?.Dispose();
+                UpdateDraw();
                 return;
             }
 
-            var positions = boneMesh.Positions;
-            var normals = boneMesh.Normals;
-            var indexes = boneMesh.Indices;
+            var data = GetData( mesh, new Vector4( 1, 1, 1, 1 ) );
+            Vertices?.Dispose();
+            Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
+            NumVertices = mesh.Indices.Count;
+            UpdateDraw();
+        }
+
+        protected static Vector4[] GetData( MeshGeometry3D mesh, Vector4 color ) {
+            var positions = mesh.Positions;
+            var normals = mesh.Normals;
+            var indexes = mesh.Indices;
 
             var data = new Vector4[indexes.Count * ModelSpan];
 
@@ -67,29 +75,24 @@ namespace VfxEditor.DirectX {
 
                 var dataIdx = index * ModelSpan;
                 data[dataIdx] = new Vector4( position.X, position.Y, position.Z, 1 ); // POSITION
-                data[dataIdx + 1] = new Vector4( 1, 1, 1, 1 ); // COLOR
+                data[dataIdx + 1] = color; // COLOR
                 data[dataIdx + 2] = new Vector4( normal.X, normal.Y, normal.Z, 0 ); // NORMAL
             }
 
-            Vertices?.Dispose();
-            Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
-            NumVerts = indexes.Count;
-
-            UpdateDraw();
+            return data;
         }
 
         public override void OnDraw() {
             if( ShaderError ) return;
+            if( NumVertices == 0 ) return;
 
-            if( NumVerts > 0 ) {
-                Ctx.PixelShader.Set( PShader );
-                Ctx.VertexShader.Set( VShader );
-                Ctx.InputAssembler.InputLayout = Layout;
-                Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
-                Ctx.Draw( NumVerts, 0 );
-            }
+            Ctx.PixelShader.Set( PShader );
+            Ctx.VertexShader.Set( VShader );
+            Ctx.InputAssembler.InputLayout = Layout;
+            Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+            Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
+            Ctx.Draw( NumVertices, 0 );
         }
 
         public override void OnDispose() {

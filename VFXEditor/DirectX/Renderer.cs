@@ -3,8 +3,8 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class Renderer {
-        protected Device Device;
-        protected DeviceContext Ctx;
+        protected readonly Device Device;
+        protected readonly DeviceContext Ctx;
 
         public Renderer( Device device, DeviceContext ctx ) {
             Device = device;

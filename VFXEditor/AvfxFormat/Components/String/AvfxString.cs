@@ -70,6 +70,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Check - update value
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {

@@ -102,7 +102,7 @@ namespace VfxEditor.Animation {
             return CreateSkeletonMesh( bones );
         }
 
-        private static Matrix CleanMatrix( Matrix matrix ) {
+        public static Matrix CleanMatrix( Matrix matrix ) {
             var newMatrix = new Matrix();
             for( var i = 0; i < 16; i++ ) {
                 var m = matrix[i];

@@ -34,7 +34,7 @@ namespace VfxEditor.Animation {
                     file.SaveHavokData( SklHkxTemp );
                     HavokInterop.HavokToBin( animationHkx, animationIndex, SklHkxTemp, BinTemp );
                     Data = new AnimationData( BinTemp );
-                    Plugin.DirectXManager.AnimationPreview.LoadAnimation( Data.GetBoneMesh( 0 ) );
+                    Plugin.DirectXManager.AnimationPreview.LoadSkeleton( Data.GetBoneMesh( 0 ) );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, $"Could not read file: {sklbPath}" );
@@ -87,7 +87,7 @@ namespace VfxEditor.Animation {
                         }
                     }
 
-                    Plugin.DirectXManager.AnimationPreview.LoadAnimation( Data.GetBoneMesh( Frame ) );
+                    Plugin.DirectXManager.AnimationPreview.LoadSkeleton( Data.GetBoneMesh( Frame ) );
                 }
             }
 
@@ -111,7 +111,7 @@ namespace VfxEditor.Animation {
                 if( Frame < 0 ) Frame = 0;
                 if( Frame >= Data.NumFrames ) Frame = Data.NumFrames - 1;
 
-                Plugin.DirectXManager.AnimationPreview.LoadAnimation( Data.GetBoneMesh( Frame ) );
+                Plugin.DirectXManager.AnimationPreview.LoadSkeleton( Data.GetBoneMesh( Frame ) );
             }
 
             ImGui.TextDisabled( LastSklbPath );
