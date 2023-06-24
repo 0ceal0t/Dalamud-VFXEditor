@@ -59,15 +59,15 @@ namespace VfxEditor.PhybFormat.Simulator {
             SimulatorDropdown.Draw();
         }
 
-        private int WriteList<T>( List<T> items, SimulationWriter writer ) where T : PhybData {
+        private static int WriteList<T>( List<T> items, SimulationWriter writer ) where T : PhybData {
             var offset = writer.Position;
             foreach( var item in items ) item.Write( writer );
             var defaultOffset = typeof( T ) == typeof( PhybPostAlignment ) ? 0xCCCCCCCC : 0;
             return items.Count == 0 ? ( int )defaultOffset : ( int )offset - 4;
         }
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Simulators ) item.AddPhysicsObjects( builder, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Simulators ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
         }
     }
 }

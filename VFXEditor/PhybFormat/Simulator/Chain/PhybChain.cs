@@ -16,6 +16,8 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
     }
 
     public class PhybChain : PhybPhysicsData, IPhysicsObject {
+        public readonly PhybSimulator Simulator;
+
         public readonly ParsedFloat Dampening = new( "Dampening" );
         public readonly ParsedFloat MaxSpeed = new( "Max Speed" );
         public readonly ParsedFloat Friction = new( "Friction" );
@@ -30,15 +32,17 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         private readonly SimpleSplitview<PhybCollisionData> CollisionSplitView;
         private readonly SimpleSplitview<PhybNode> NodeSplitView;
 
-        public PhybChain( PhybFile file ) : base( file ) {
+        public PhybChain( PhybFile file, PhybSimulator simulator ) : base( file ) {
+            Simulator = simulator;
+
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                null, () => new( file ), () => CommandManager.Phyb );
+                null, () => new( file, simulator ), () => CommandManager.Phyb );
 
             NodeSplitView = new( "Node", Nodes, false,
-                null, () => new( file ), () => CommandManager.Phyb );
+                null, () => new( file, simulator ), () => CommandManager.Phyb );
         }
 
-        public PhybChain( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {
+        public PhybChain( PhybFile file, PhybSimulator simulator, BinaryReader reader, long simulatorStartPos ) : this( file, simulator ) {
             var numCollisions = reader.ReadUInt16();
             var numNodes = reader.ReadUInt16();
 
@@ -50,10 +54,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             var resetPos = reader.BaseStream.Position;
 
             reader.BaseStream.Seek( simulatorStartPos + collisionOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numCollisions; i++ ) Collisions.Add( new PhybCollisionData( file, reader ) );
+            for( var i = 0; i < numCollisions; i++ ) Collisions.Add( new PhybCollisionData( file, simulator, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + nodeOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numNodes; i++ ) Nodes.Add( new PhybNode( file, reader ) );
+            for( var i = 0; i < numNodes; i++ ) Nodes.Add( new PhybNode( file, simulator, reader ) );
 
             reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
         }
@@ -110,8 +114,9 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             foreach( var item in Nodes ) item.Write( writer.ExtraWriter );
         }
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
-
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Collisions ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Nodes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
         }
     }
 }

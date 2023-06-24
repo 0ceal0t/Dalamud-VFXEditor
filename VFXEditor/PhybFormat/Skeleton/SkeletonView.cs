@@ -26,8 +26,10 @@ namespace VfxEditor.PhybFormat.Skeleton {
         private Dictionary<string, Bone> BoneMatrixes;
         private List<Bone> BoneList;
 
-        public SkeletonView( PhybFile file ) {
+        public SkeletonView( PhybFile file, string sourcePath ) {
             File = file;
+            var sklbPath = sourcePath.Replace( ".phyb", ".sklb" ).Replace( "phy_", "skl_" );
+            if( Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
         }
 
         public void Draw() {
@@ -149,9 +151,12 @@ namespace VfxEditor.PhybFormat.Skeleton {
         private void UpdatePhysicsObjects() {
             File.PhysicsUpdated = false;
             if( BoneList.Count == 0 ) return;
-            var builder = new MeshBuilder( true, false );
-            File.AddPhysicsObjects( builder, BoneMatrixes );
-            PhybPreview.LoadPhysics( builder.ToMesh() );
+
+            var collisionBuilder = new MeshBuilder( true, false );
+            var simulationBuilder = new MeshBuilder( true, false );
+
+            File.AddPhysicsObjects( collisionBuilder, simulationBuilder, BoneMatrixes );
+            PhybPreview.LoadPhysics( collisionBuilder.ToMesh(), simulationBuilder.ToMesh() );
         }
 
         private void UpdateSkeleton() {

@@ -2,6 +2,8 @@ using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using System.Collections.Generic;
+using System.Linq;
 using VfxEditor.PhybFormat;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -19,18 +21,22 @@ namespace VfxEditor.DirectX {
             LoadSkeleton( mesh );
         }
 
-        public void LoadPhysics( MeshGeometry3D mesh ) {
-            if( mesh.Positions.Count == 0 ) {
+        public void LoadPhysics( MeshGeometry3D collisionMesh, MeshGeometry3D simulationMesh ) {
+            if( collisionMesh.Positions.Count == 0 && simulationMesh.Positions.Count == 0 ) {
                 NumPhysics = 0;
                 PhysicsVertices?.Dispose();
                 UpdateDraw();
                 return;
             }
 
-            var data = GetData( mesh, new Vector4( 0, 1, 0, 1 ) );
+            var meshes = new List<MeshGeometry3D>() { collisionMesh, simulationMesh };
+            var colors = new List<Vector4>() { new Vector4( 0, 1, 0, 1 ), new Vector4( 0, 0, 1, 1 ) };
+
+            var data = GetData( meshes, colors );
+
             PhysicsVertices?.Dispose();
             PhysicsVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
-            NumPhysics = mesh.Indices.Count;
+            NumPhysics = meshes.Select( x => x.Indices.Count ).Sum();
             UpdateDraw();
         }
 

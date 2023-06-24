@@ -13,19 +13,25 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
     }
 
     public class PhybCollisionData : PhybData, IPhysicsObject {
-        public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
+        public readonly PhybSimulator Simulator;
+
+        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedEnum<CollisionType> Type = new( "Collision Type" );
 
-        public PhybCollisionData( PhybFile file ) : base( file ) { }
+        public PhybCollisionData( PhybFile file, PhybSimulator simulator ) : base( file ) {
+            Simulator = simulator;
+        }
 
-        public PhybCollisionData( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
+        public PhybCollisionData( PhybFile file, PhybSimulator simulator, BinaryReader reader ) : base( file, reader ) {
+            Simulator = simulator;
+        }
 
         protected override List<ParsedBase> GetParsed() => new() {
             Name,
             Type,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }

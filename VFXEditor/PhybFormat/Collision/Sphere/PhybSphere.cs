@@ -8,7 +8,7 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.Sphere {
     public class PhybSphere : PhybPhysicsData, IPhysicsObject {
-        public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
+        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedFloat3 BoneOffset = new( "Bone Offset" );
         public readonly ParsedFloat Thickness = new( "Thickness" );
@@ -24,11 +24,11 @@ namespace VfxEditor.PhybFormat.Collision.Sphere {
             Thickness,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;
             var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
             var pos = Vector3.Transform( offset, bone.BindPose );
-            builder.AddSphere( new( pos.X, pos.Y, pos.Z ), Thickness.Value / 2f, 10, 10 );
+            collision.AddSphere( new( pos.X, pos.Y, pos.Z ), Thickness.Value / 2f, 10, 10 );
         }
     }
 }

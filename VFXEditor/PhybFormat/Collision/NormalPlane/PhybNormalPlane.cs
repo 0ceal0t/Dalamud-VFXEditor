@@ -7,7 +7,7 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.NormalPlane {
     public class PhybNormalPlane : PhybPhysicsData, IPhysicsObject {
-        public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
+        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedFloat3 BoneOffset = new( "Bone Offset" );
         public readonly ParsedFloat3 Normal = new( "Normal" );
@@ -25,7 +25,7 @@ namespace VfxEditor.PhybFormat.Collision.NormalPlane {
             Thickness,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }

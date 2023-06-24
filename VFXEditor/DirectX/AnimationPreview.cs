@@ -6,6 +6,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -59,6 +60,14 @@ namespace VfxEditor.DirectX {
             Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumVertices = mesh.Indices.Count;
             UpdateDraw();
+        }
+
+        protected static Vector4[] GetData( List<MeshGeometry3D> meshes, List<Vector4> colors ) {
+            var data = new List<Vector4>();
+            for( var i = 0; i < meshes.Count; i++ ) {
+                data.AddRange( GetData( meshes[i], colors[i] ) );
+            }
+            return data.ToArray();
         }
 
         protected static Vector4[] GetData( MeshGeometry3D mesh, Vector4 color ) {

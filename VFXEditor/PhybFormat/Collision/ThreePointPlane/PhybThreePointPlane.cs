@@ -7,7 +7,7 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
     public class PhybThreePointPlane : PhybPhysicsData, IPhysicsObject {
-        public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
+        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedReserve Padding1 = new( 64 );
         public readonly ParsedFloat3 BoneOffset = new( "Bone Offset" );
@@ -27,7 +27,7 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
             Thickness,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }

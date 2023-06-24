@@ -8,7 +8,7 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.Capsule {
     public class PhybCapsule : PhybPhysicsData, IPhysicsObject {
-        public readonly ParsedPaddedString Name = new( "Name", 32, 0xFE );
+        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString StartBone = new( "Start Bone", 32, 0xFE );
         public readonly ParsedPaddedString EndBone = new( "End Bone", 32, 0xFE );
         public readonly ParsedFloat3 StartOffset = new( "Start Offset" );
@@ -28,7 +28,7 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
             Radius,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( StartBone.Value, out var startBone ) ) return;
             if( !boneMatrixes.TryGetValue( EndBone.Value, out var endBone ) ) return;
 
@@ -41,9 +41,9 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
             var p1 = new Vector3( startPos.X, startPos.Y, startPos.Z );
             var p2 = new Vector3( endPos.X, endPos.Y, endPos.Z );
 
-            builder.AddCylinder( p1, p2, Radius.Value * 2f, 10 );
-            builder.AddSphere( p1, Radius.Value, 10, 10 );
-            builder.AddSphere( p2, Radius.Value, 10, 10 );
+            collision.AddCylinder( p1, p2, Radius.Value * 2f, 10 );
+            collision.AddSphere( p1, Radius.Value, 5, 5 );
+            collision.AddSphere( p2, Radius.Value, 5, 5 );
         }
     }
 }

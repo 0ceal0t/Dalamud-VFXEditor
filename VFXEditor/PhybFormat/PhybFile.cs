@@ -24,7 +24,7 @@ namespace VfxEditor.PhybFormat {
         public readonly SkeletonView Skeleton;
         public bool PhysicsUpdated = true;
 
-        public PhybFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
+        public PhybFile( BinaryReader reader, string sourcePath, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             Version.Read( reader );
@@ -44,7 +44,7 @@ namespace VfxEditor.PhybFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            Skeleton = new( this );
+            Skeleton = new( this, sourcePath );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -105,9 +105,9 @@ namespace VfxEditor.PhybFormat {
             Skeleton.Dispose();
         }
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
-            Collision.AddPhysicsObjects( builder, boneMatrixes );
-            Simulation.AddPhysicsObjects( builder, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            Collision.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            Simulation.AddPhysicsObjects( collision, simulation, boneMatrixes );
         }
     }
 }

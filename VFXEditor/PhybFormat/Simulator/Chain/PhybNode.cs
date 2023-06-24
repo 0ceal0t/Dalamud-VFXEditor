@@ -1,10 +1,14 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Simulator.Chain {
-    public class PhybNode : PhybData {
+    public class PhybNode : PhybPhysicsData, IPhysicsObject {
+        public readonly PhybSimulator Simulator;
+
         public readonly ParsedPaddedString BoneName = new( "Bone Name", 32, 0xFE );
         public readonly ParsedFloat Radius = new( "Collision Radius" );
         public readonly ParsedFloat AttractByAnimation = new( "Attract by Animation" );
@@ -16,9 +20,13 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly ParsedUInt CollisionFlag = new( "Collision Flags" );
         public readonly ParsedUInt ContinuousCollisionFlag = new( "Continuous Collision Flags" );
 
-        public PhybNode( PhybFile file ) : base( file ) { }
+        public PhybNode( PhybFile file, PhybSimulator simulator ) : base( file ) {
+            Simulator = simulator;
+        }
 
-        public PhybNode( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
+        public PhybNode( PhybFile file, PhybSimulator simulator, BinaryReader reader ) : base( file, reader ) {
+            Simulator = simulator;
+        }
 
         protected override List<ParsedBase> GetParsed() => new() {
             BoneName,
@@ -32,5 +40,11 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             CollisionFlag,
             ContinuousCollisionFlag,
         };
+
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            if( !boneMatrixes.TryGetValue( BoneName.Value, out var bone ) ) return;
+            var pos = bone.BindPose.TranslationVector;
+            simulation.AddSphere( pos, Radius.Value, 10, 10 );
+        }
     }
 }

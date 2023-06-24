@@ -10,7 +10,7 @@ namespace VfxEditor.PhybFormat {
         public PhybDocument( PhybManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
             base( manager, writeLocation, localPath, name, source, replace, "Phyb", "phyb" ) { }
 
-        protected override PhybFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override PhybFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

@@ -87,7 +87,7 @@ namespace VfxEditor.PhybFormat.Collision {
             using var _ = ImRaii.PushId( "Collision" );
 
             if( Ellipsoids.Count > 0 || NormalPlanes.Count > 0 || ThreePointPlanes.Count > 0 ) {
-                ImGui.TextColored( UiUtils.RED_COLOR, "ELLIPSOID/NORMAL PLANE/THREE-POINT PLANE FOUND!" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "[ELLIPSOID/NORMAL PLANE/THREE-POINT PLANE]" );
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
@@ -116,12 +116,12 @@ namespace VfxEditor.PhybFormat.Collision {
             }
         }
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Capsules ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Ellipsoids ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in NormalPlanes ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in ThreePointPlanes ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Spheres ) item.AddPhysicsObjects( builder, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Capsules ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Ellipsoids ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in NormalPlanes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in ThreePointPlanes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Spheres ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
         }
     }
 }

@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 namespace VfxEditor.PhybFormat {
     public interface IPhysicsObject {
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes );
     }
 }

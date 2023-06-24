@@ -7,21 +7,27 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Simulator.PostAlignment {
     public class PhybPostAlignment : PhybPhysicsData, IPhysicsObject {
+        public readonly PhybSimulator Simulator;
+
         public readonly ParsedPaddedString CollisionName = new( "Collision Name", 32, 0xFE );
         public readonly ParsedShort ChainId = new( "Chain Id" );
-        public readonly ParsedShort JointId = new( "Joint Id" );
+        public readonly ParsedShort NodeId = new( "Node Id" );
 
-        public PhybPostAlignment( PhybFile file ) : base( file ) { }
+        public PhybPostAlignment( PhybFile file, PhybSimulator simulator ) : base( file ) {
+            Simulator = simulator;
+        }
 
-        public PhybPostAlignment( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
+        public PhybPostAlignment( PhybFile file, PhybSimulator simulator, BinaryReader reader ) : base( file, reader ) {
+            Simulator = simulator;
+        }
 
         protected override List<ParsedBase> GetParsed() => new() {
             CollisionName,
             ChainId,
-            JointId,
+            NodeId,
         };
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }

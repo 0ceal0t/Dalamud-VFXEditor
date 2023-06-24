@@ -44,28 +44,28 @@ namespace VfxEditor.PhybFormat.Simulator {
             Params = new( file );
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb );
+                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File, this ), () => CommandManager.Phyb );
 
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
-                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb );
+                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File, this ), () => CommandManager.Phyb );
 
             ChainDropdown = new( "Chain", Chains,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
 
             AttractSplitView = new( "Attract", Attracts, false,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
 
             PinSplitView = new( "Pin", Pins, false,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
 
             SpringSplitView = new( "Spring", Springs, false,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
 
             PostAlignmentSplitView = new( "Post Alignment", PostAlignments, false,
-                null, () => new( File ), () => CommandManager.Phyb );
+                null, () => new( File, this ), () => CommandManager.Phyb );
         }
 
         public PhybSimulator( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {
@@ -95,28 +95,28 @@ namespace VfxEditor.PhybFormat.Simulator {
             var resetPos = reader.BaseStream.Position;
 
             reader.BaseStream.Seek( simulatorStartPos + collisionDataOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numCollisionData; i++ ) Collisions.Add( new PhybCollisionData( file, reader ) );
+            for( var i = 0; i < numCollisionData; i++ ) Collisions.Add( new PhybCollisionData( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + collisionConnectorOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numCollisionConnector; i++ ) CollisionConnectors.Add( new PhybCollisionData( file, reader ) );
+            for( var i = 0; i < numCollisionConnector; i++ ) CollisionConnectors.Add( new PhybCollisionData( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + chainOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numChain; i++ ) Chains.Add( new PhybChain( file, reader, simulatorStartPos ) );
+            for( var i = 0; i < numChain; i++ ) Chains.Add( new PhybChain( file, this, reader, simulatorStartPos ) );
 
             reader.BaseStream.Seek( simulatorStartPos + connectorOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numConnector; i++ ) Connectors.Add( new PhybConnector( file, reader ) );
+            for( var i = 0; i < numConnector; i++ ) Connectors.Add( new PhybConnector( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + attractOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numAttract; i++ ) Attracts.Add( new PhybAttract( file, reader ) );
+            for( var i = 0; i < numAttract; i++ ) Attracts.Add( new PhybAttract( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + pinOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numPin; i++ ) Pins.Add( new PhybPin( file, reader ) );
+            for( var i = 0; i < numPin; i++ ) Pins.Add( new PhybPin( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + springOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numSpring; i++ ) Springs.Add( new PhybSpring( file, reader ) );
+            for( var i = 0; i < numSpring; i++ ) Springs.Add( new PhybSpring( file, this, reader ) );
 
             reader.BaseStream.Seek( simulatorStartPos + postAlignmentOffset + 4, SeekOrigin.Begin );
-            for( var i = 0; i < numPostAlignment; i++ ) PostAlignments.Add( new PhybPostAlignment( file, reader ) );
+            for( var i = 0; i < numPostAlignment; i++ ) PostAlignments.Add( new PhybPostAlignment( file, this, reader ) );
 
             // reset
             reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
@@ -184,15 +184,15 @@ namespace VfxEditor.PhybFormat.Simulator {
             }
         }
 
-        public void AddPhysicsObjects( MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Collisions ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Chains ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Connectors ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Attracts ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Pins ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in Springs ) item.AddPhysicsObjects( builder, boneMatrixes );
-            foreach( var item in PostAlignments ) item.AddPhysicsObjects( builder, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Collisions ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Chains ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Connectors ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Attracts ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Pins ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in Springs ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+            foreach( var item in PostAlignments ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
         }
     }
 }

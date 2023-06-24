@@ -6,6 +6,7 @@ using VfxEditor.Select.Shared.Character;
 
 namespace VfxEditor.Select.Phyb.Character {
     public class CharacterRowSelected {
+        public string BodyPath;
         public Dictionary<string, string> FacePaths;
         public Dictionary<string, string> HairPaths;
     }
@@ -22,6 +23,8 @@ namespace VfxEditor.Select.Phyb.Character {
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
             // chara/human/c1201/skeleton/hair/h0101/phy_c1201h0101.phyb
             // chara/human/c1801/skeleton/face/f0005/phy_c1801f0005.phyb
+
+            var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/phy_{item.SkeletonId}b0001.phyb";
 
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
@@ -42,6 +45,7 @@ namespace VfxEditor.Select.Phyb.Character {
             }
 
             loaded = new() {
+                BodyPath = bodyPath,
                 FacePaths = SelectUtils.FileExistsFilter( facePaths ),
                 HairPaths = SelectUtils.FileExistsFilter( hairPaths )
             };
@@ -50,6 +54,10 @@ namespace VfxEditor.Select.Phyb.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
+            Dialog.DrawPath( "Body", Loaded.BodyPath, SelectResultType.GameCharacter, Selected.Name );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
 
