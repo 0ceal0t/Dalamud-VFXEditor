@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
@@ -40,22 +39,8 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             ContinuousCollisionFlag,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            if( ChainId1.Value >= Simulator.Chains.Count ) return;
-            if( ChainId2.Value >= Simulator.Chains.Count ) return;
-            if( NodeId1.Value >= Simulator.Chains[ChainId1.Value].Nodes.Count ) return;
-            if( NodeId2.Value >= Simulator.Chains[ChainId2.Value].Nodes.Count ) return;
-
-            var node1 = Simulator.Chains[ChainId1.Value].Nodes[NodeId1.Value];
-            var node2 = Simulator.Chains[ChainId2.Value].Nodes[NodeId2.Value];
-
-            if( !boneMatrixes.TryGetValue( node1.BoneName.Value, out var bone1 ) ) return;
-            if( !boneMatrixes.TryGetValue( node2.BoneName.Value, out var bone2 ) ) return;
-
-            var pos1 = bone1.BindPose.TranslationVector;
-            var pos2 = bone2.BindPose.TranslationVector;
-
-            simulation.AddCylinder( pos1, pos2, CollisionRadius.Value * 2f, 10 );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            Simulator.DrawConnection( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, CollisionRadius.Value, meshes.Simulation, boneMatrixes );
         }
     }
 }

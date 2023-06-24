@@ -14,6 +14,12 @@ using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {
+    public class MeshBuilders {
+        public MeshBuilder Collision;
+        public MeshBuilder Simulation;
+        public MeshBuilder Spring;
+    }
+
     public class PhybFile : FileManagerFile, IPhysicsObject {
         public readonly ParsedIntByte4 Version = new( "Version" );
         public readonly ParsedUInt DataType = new( "Data Type" );
@@ -105,9 +111,13 @@ namespace VfxEditor.PhybFormat {
             Skeleton.Dispose();
         }
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            Collision.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            Simulation.AddPhysicsObjects( collision, simulation, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            Collision.AddPhysicsObjects( meshes, boneMatrixes );
+            Simulation.AddPhysicsObjects( meshes, boneMatrixes );
+        }
+
+        public void Updated() {
+            PhysicsUpdated = true;
         }
     }
 }

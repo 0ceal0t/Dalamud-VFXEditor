@@ -44,28 +44,36 @@ namespace VfxEditor.PhybFormat.Simulator {
             Params = new( file );
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File, this ), () => CommandManager.Phyb );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
-                ( PhybCollisionData item, int idx ) => item.Name.Value, () => new( File, this ), () => CommandManager.Phyb );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             ChainDropdown = new( "Chain", Chains,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybChain item ) => File.Updated() );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybConnector item ) => File.Updated() );
 
             AttractSplitView = new( "Attract", Attracts, false,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybAttract item ) => File.Updated() );
 
             PinSplitView = new( "Pin", Pins, false,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybPin item ) => File.Updated() );
 
             SpringSplitView = new( "Spring", Springs, false,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybSpring item ) => File.Updated() );
 
             PostAlignmentSplitView = new( "Post Alignment", PostAlignments, false,
-                null, () => new( File, this ), () => CommandManager.Phyb );
+                null, () => new( File, this ),
+                () => CommandManager.Phyb, ( PhybPostAlignment item ) => File.Updated() );
         }
 
         public PhybSimulator( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {
@@ -184,15 +192,40 @@ namespace VfxEditor.PhybFormat.Simulator {
             }
         }
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Collisions ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Chains ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Connectors ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Attracts ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Pins ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Springs ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in PostAlignments ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Collisions ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Chains ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Connectors ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Attracts ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Pins ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Springs ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in PostAlignments ) item.AddPhysicsObjects( meshes, boneMatrixes );
+        }
+
+        public void DrawConnection( int chainId1, int chainId2, int nodeId1, int nodeId2, float radius,
+            MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+
+            if( !GetBone( chainId1, nodeId1, boneMatrixes, out var bone1 ) ) return;
+            if( !GetBone( chainId2, nodeId2, boneMatrixes, out var bone2 ) ) return;
+
+            var pos1 = bone1.BindPose.TranslationVector;
+            var pos2 = bone2.BindPose.TranslationVector;
+
+            builder.AddCylinder( pos1, pos2, radius * 2f, 10 );
+        }
+
+        public bool GetBone( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone ) {
+            bone = default;
+
+            if( chainId >= Chains.Count || chainId < 0 ) return false;
+            if( nodeId >= Chains[chainId].Nodes.Count || nodeId < 0 ) return false;
+
+            var node = Chains[chainId].Nodes[nodeId];
+
+            if( !boneMatrixes.TryGetValue( node.BoneName.Value, out bone ) ) return false;
+
+            return true;
         }
     }
 }

@@ -28,22 +28,19 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
             Radius,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( StartBone.Value, out var startBone ) ) return;
             if( !boneMatrixes.TryGetValue( EndBone.Value, out var endBone ) ) return;
 
             var startOffset = new Vector3( StartOffset.Value.X, StartOffset.Value.Y, StartOffset.Value.Z );
             var endOffset = new Vector3( EndOffset.Value.X, EndOffset.Value.Y, EndOffset.Value.Z );
 
-            var startPos = Vector3.Transform( startOffset, startBone.BindPose );
-            var endPos = Vector3.Transform( endOffset, endBone.BindPose );
+            var startPos = Vector3.Transform( startOffset, startBone.BindPose ).ToVector3();
+            var endPos = Vector3.Transform( endOffset, endBone.BindPose ).ToVector3();
 
-            var p1 = new Vector3( startPos.X, startPos.Y, startPos.Z );
-            var p2 = new Vector3( endPos.X, endPos.Y, endPos.Z );
-
-            collision.AddCylinder( p1, p2, Radius.Value * 2f, 10 );
-            collision.AddSphere( p1, Radius.Value, 5, 5 );
-            collision.AddSphere( p2, Radius.Value, 5, 5 );
+            meshes.Collision.AddCylinder( startPos, endPos, Radius.Value * 2f, 10 );
+            meshes.Collision.AddSphere( startPos, Radius.Value, 5, 5 );
+            meshes.Collision.AddSphere( endPos, Radius.Value, 5, 5 );
         }
     }
 }

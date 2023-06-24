@@ -8,7 +8,7 @@ namespace VfxEditor.PhybFormat {
         public PhybPhysicsData( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
         public override void Draw() {
-            if( Parsed.Aggregate( false, ( x, y ) => y.Draw( CommandManager.Phyb ) || x ) ) File.PhysicsUpdated = true;
+            if( Parsed.Aggregate( false, ( x, y ) => y.Draw( CommandManager.Phyb ) || x ) ) File.Updated();
         }
     }
 }

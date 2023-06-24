@@ -152,11 +152,14 @@ namespace VfxEditor.PhybFormat.Skeleton {
             File.PhysicsUpdated = false;
             if( BoneList.Count == 0 ) return;
 
-            var collisionBuilder = new MeshBuilder( true, false );
-            var simulationBuilder = new MeshBuilder( true, false );
+            MeshBuilders meshes = new() {
+                Collision = new MeshBuilder( true, false ),
+                Simulation = new MeshBuilder( true, false ),
+                Spring = new MeshBuilder( true, false )
+            };
 
-            File.AddPhysicsObjects( collisionBuilder, simulationBuilder, BoneMatrixes );
-            PhybPreview.LoadPhysics( collisionBuilder.ToMesh(), simulationBuilder.ToMesh() );
+            File.AddPhysicsObjects( meshes, BoneMatrixes );
+            PhybPreview.LoadPhysics( meshes.Collision.ToMesh(), meshes.Simulation.ToMesh(), meshes.Spring.ToMesh() );
         }
 
         private void UpdateSkeleton() {

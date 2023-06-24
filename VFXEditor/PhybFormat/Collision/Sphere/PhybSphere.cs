@@ -24,11 +24,11 @@ namespace VfxEditor.PhybFormat.Collision.Sphere {
             Thickness,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;
             var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
-            var pos = Vector3.Transform( offset, bone.BindPose );
-            collision.AddSphere( new( pos.X, pos.Y, pos.Z ), Thickness.Value / 2f, 10, 10 );
+            var pos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
+            meshes.Collision.AddSphere( pos, Thickness.Value / 2f, 10, 10 );
         }
     }
 }

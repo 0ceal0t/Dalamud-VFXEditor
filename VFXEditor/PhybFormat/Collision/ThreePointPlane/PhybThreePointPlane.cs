@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +26,7 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
             Thickness,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }

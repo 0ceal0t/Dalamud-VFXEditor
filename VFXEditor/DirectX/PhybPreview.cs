@@ -21,16 +21,24 @@ namespace VfxEditor.DirectX {
             LoadSkeleton( mesh );
         }
 
-        public void LoadPhysics( MeshGeometry3D collisionMesh, MeshGeometry3D simulationMesh ) {
-            if( collisionMesh.Positions.Count == 0 && simulationMesh.Positions.Count == 0 ) {
+        public void LoadPhysics( MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
+            var meshes = new List<MeshGeometry3D>() {
+                collision,
+                simulation,
+                spring
+            };
+            var colors = new List<Vector4>() {
+                new Vector4( 0, 1, 0, 1 ),
+                new Vector4( 0, 0, 1, 1 ),
+                new Vector4( 1, 0, 0, 1 ),
+            };
+
+            if( meshes.Select( x => x.Positions.Count ).Sum() == 0 ) {
                 NumPhysics = 0;
                 PhysicsVertices?.Dispose();
                 UpdateDraw();
                 return;
             }
-
-            var meshes = new List<MeshGeometry3D>() { collisionMesh, simulationMesh };
-            var colors = new List<Vector4>() { new Vector4( 0, 1, 0, 1 ), new Vector4( 0, 0, 1, 1 ) };
 
             var data = GetData( meshes, colors );
 

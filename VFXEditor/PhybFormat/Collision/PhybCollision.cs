@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -49,19 +48,24 @@ namespace VfxEditor.PhybFormat.Collision {
             }
 
             CapsuleSplitView = new( "Capsule", Capsules, false,
-                ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ), () => CommandManager.Phyb );
+                ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ),
+                () => CommandManager.Phyb, ( PhybCapsule item ) => File.Updated() );
 
             EllipsoidSplitView = new( "Ellipsoid", Ellipsoids, false,
-                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ), () => CommandManager.Phyb );
+                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ),
+                () => CommandManager.Phyb, ( PhybEllipsoid item ) => File.Updated() );
 
             NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
-                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ), () => CommandManager.Phyb );
+                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ),
+                () => CommandManager.Phyb, ( PhybNormalPlane item ) => File.Updated() );
 
             ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
-                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ), () => CommandManager.Phyb );
+                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ),
+                () => CommandManager.Phyb, ( PhybThreePointPlane item ) => File.Updated() );
 
             SphereDropdown = new( "Sphere", Spheres, false,
-                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), () => CommandManager.Phyb );
+                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ),
+                () => CommandManager.Phyb, ( PhybSphere item ) => File.Updated() );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -116,12 +120,12 @@ namespace VfxEditor.PhybFormat.Collision {
             }
         }
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Capsules ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Ellipsoids ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in NormalPlanes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in ThreePointPlanes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Spheres ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Capsules ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Ellipsoids ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in NormalPlanes ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in ThreePointPlanes ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Spheres ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
     }
 }

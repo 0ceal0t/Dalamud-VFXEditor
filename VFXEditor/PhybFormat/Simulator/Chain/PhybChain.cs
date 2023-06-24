@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -36,10 +35,12 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                null, () => new( file, simulator ), () => CommandManager.Phyb );
+                null, () => new( file, simulator ),
+                () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             NodeSplitView = new( "Node", Nodes, false,
-                null, () => new( file, simulator ), () => CommandManager.Phyb );
+                null, () => new( file, simulator ),
+                () => CommandManager.Phyb, ( PhybNode item ) => File.Updated() );
         }
 
         public PhybChain( PhybFile file, PhybSimulator simulator, BinaryReader reader, long simulatorStartPos ) : this( file, simulator ) {
@@ -114,9 +115,9 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             foreach( var item in Nodes ) item.Write( writer.ExtraWriter );
         }
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Collisions ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
-            foreach( var item in Nodes ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Collisions ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in Nodes ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
     }
 }

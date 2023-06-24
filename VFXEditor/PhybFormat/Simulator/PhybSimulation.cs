@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
@@ -66,8 +65,8 @@ namespace VfxEditor.PhybFormat.Simulator {
             return items.Count == 0 ? ( int )defaultOffset : ( int )offset - 4;
         }
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Simulators ) item.AddPhysicsObjects( collision, simulation, boneMatrixes );
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            foreach( var item in Simulators ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
     }
 }

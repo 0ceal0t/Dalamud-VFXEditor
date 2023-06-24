@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
@@ -41,10 +40,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             ContinuousCollisionFlag,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( BoneName.Value, out var bone ) ) return;
             var pos = bone.BindPose.TranslationVector;
-            simulation.AddSphere( pos, Radius.Value, 10, 10 );
+            meshes.Simulation.AddSphere( pos, Radius.Value, 10, 10 );
         }
     }
 }

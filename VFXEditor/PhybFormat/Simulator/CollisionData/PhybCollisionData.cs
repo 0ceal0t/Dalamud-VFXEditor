@@ -1,4 +1,3 @@
-using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +14,7 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
     public class PhybCollisionData : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
-        public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
+        public readonly ParsedPaddedString CollisionName = new( "Collision Name", "replace_me", 32, 0xFE );
         public readonly ParsedEnum<CollisionType> Type = new( "Collision Type" );
 
         public PhybCollisionData( PhybFile file, PhybSimulator simulator ) : base( file ) {
@@ -27,11 +26,11 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
         }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Name,
+            CollisionName,
             Type,
         };
 
-        public void AddPhysicsObjects( MeshBuilder collision, MeshBuilder simulation, Dictionary<string, Bone> boneMatrixes ) {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 
         }
     }
