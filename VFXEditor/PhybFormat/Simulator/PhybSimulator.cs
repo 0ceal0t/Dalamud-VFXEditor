@@ -2,6 +2,7 @@ using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
+using SharpDX;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.PhybFormat.Simulator.Attract;
@@ -203,11 +204,11 @@ namespace VfxEditor.PhybFormat.Simulator {
             foreach( var item in PostAlignments ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
 
-        public void DrawConnection( int chainId1, int chainId2, int nodeId1, int nodeId2, float radius,
+        public void ConnectNodes( int chainId1, int chainId2, int nodeId1, int nodeId2, float radius,
             MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
 
-            if( !GetBone( chainId1, nodeId1, boneMatrixes, out var bone1 ) ) return;
-            if( !GetBone( chainId2, nodeId2, boneMatrixes, out var bone2 ) ) return;
+            if( !GetNode( chainId1, nodeId1, boneMatrixes, out var bone1 ) ) return;
+            if( !GetNode( chainId2, nodeId2, boneMatrixes, out var bone2 ) ) return;
 
             var pos1 = bone1.BindPose.TranslationVector;
             var pos2 = bone2.BindPose.TranslationVector;
@@ -215,9 +216,24 @@ namespace VfxEditor.PhybFormat.Simulator {
             builder.AddCylinder( pos1, pos2, radius * 2f, 10 );
         }
 
-        public bool GetBone( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone ) {
+        public void ConnectNodeToBone( int chainId, int nodeId,
+            string boneName, Vector3 offset,
+            MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
+
+            if( !GetNode( chainId, nodeId, boneMatrixes, out var bone1 ) ) return;
+            if( !boneMatrixes.TryGetValue( boneName, out var bone2 ) ) return;
+
+            var pos1 = bone1.BindPose.TranslationVector;
+            var pos2 = Vector3.Transform( offset, bone2.BindPose ).ToVector3();
+
+            builder.AddCylinder( pos1, pos2, 0.02f, 5 );
+            builder.AddSphere( pos2, 0.03f, 10, 10 );
+        }
+
+        public bool GetNode( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone ) {
             bone = default;
 
+            nodeId -= 1; // 1-indexed?
             if( chainId >= Chains.Count || chainId < 0 ) return false;
             if( nodeId >= Chains[chainId].Nodes.Count || nodeId < 0 ) return false;
 

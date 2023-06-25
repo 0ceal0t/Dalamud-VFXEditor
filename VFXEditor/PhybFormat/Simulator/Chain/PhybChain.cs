@@ -39,7 +39,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
                 () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             NodeSplitView = new( "Node", Nodes, false,
-                null, () => new( file, simulator ),
+                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), // 1-indexed?
                 () => CommandManager.Phyb, ( PhybNode item ) => File.Updated() );
         }
 

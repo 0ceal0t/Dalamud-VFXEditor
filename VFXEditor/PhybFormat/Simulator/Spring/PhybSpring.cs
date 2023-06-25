@@ -32,7 +32,7 @@ namespace VfxEditor.PhybFormat.Simulator.Spring {
         };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
-            Simulator.DrawConnection( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, 0.02f, meshes.Spring, boneMatrixes );
+            Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, 0.02f, meshes.Spring, boneMatrixes );
         }
     }
 }
