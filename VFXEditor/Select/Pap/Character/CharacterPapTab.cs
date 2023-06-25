@@ -9,6 +9,7 @@ namespace VfxEditor.Select.Pap.IdlePose {
         public Dictionary<string, string> General;
         // Pose # -> Start, Loop
         public Dictionary<string, Dictionary<string, string>> Poses;
+        public Dictionary<string, string> FacePaths;
     }
 
     public class CharacterPapTab : SelectTab<CharacterRow, CharacterRowSelected> {
@@ -35,6 +36,7 @@ namespace VfxEditor.Select.Pap.IdlePose {
             // Poses
 
             var poses = new Dictionary<string, Dictionary<string, string>>();
+
             for( var i = 1; i <= SelectUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i );
                 var loop = item.GetLoopPap( i );
@@ -46,9 +48,19 @@ namespace VfxEditor.Select.Pap.IdlePose {
                 }
             }
 
+            // Faces
+
+            var facePaths = new Dictionary<string, string>();
+
+            for( var face = 1; face < SelectUtils.MaxFaces; face++ ) {
+                var faceString = $"f{face:D4}";
+                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/{faceString}/resident/face.pap";
+            }
+
             loaded = new CharacterRowSelected {
                 General = general,
-                Poses = poses
+                Poses = poses,
+                FacePaths = SelectUtils.FileExistsFilter( facePaths ),
             };
         }
 
@@ -64,6 +76,10 @@ namespace VfxEditor.Select.Pap.IdlePose {
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
                 Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameCharacter, Selected.Name );
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Faces" ) ) {
+                Dialog.DrawPaths( Loaded.FacePaths, SelectResultType.GameCharacter, Selected.Name );
                 ImGui.EndTabItem();
             }
         }

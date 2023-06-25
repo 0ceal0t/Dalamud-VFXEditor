@@ -122,9 +122,7 @@ namespace VfxEditor.Select {
 
             ImGui.TextDisabled( $".{Extension} file located on your computer, eg: C:/Users/me/Downloads/awesome.{Extension}" );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
-
-            ImGui.Text( "Path" );
-            ImGui.SameLine();
+            ;
             ImGui.InputText( "##Input", ref LocalPathInput, 255 );
 
             ImGui.SameLine();
@@ -157,8 +155,6 @@ namespace VfxEditor.Select {
             ImGui.TextDisabled( $"In-game .{Extension} file, eg: vfx/common/eff/wp_astro1h.{Extension}" );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
 
-            ImGui.Text( "Path" );
-            ImGui.SameLine();
             ImGui.InputText( "##Input", ref GamePathInput, 255 );
 
             ImGui.SameLine();

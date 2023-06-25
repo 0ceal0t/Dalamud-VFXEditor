@@ -13,7 +13,11 @@ namespace VfxEditor.Animation {
 
             var offsetToHavok = -1;
 
-            if( version == 0x31333030 ) {
+            /* 0x31333031 is found in chara/human/c1801/animation/f0003/resident/face.pap
+             * It has a different structure than 0x31333030, but this works for now
+             */
+
+            if( version == 0x31333030 || version == 0x31333031 ) {
                 Reader.ReadInt32(); // Skeleton offset
                 offsetToHavok = Reader.ReadInt32();
                 Reader.ReadInt16();

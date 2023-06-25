@@ -142,6 +142,8 @@ namespace VfxEditor.PhybFormat.Skeleton {
                         }
                     }
                 }
+
+                // TODO: resource ->dtor() ?
             }
             catch( Exception e ) {
                 PluginLog.Error( $"Could not read file: {SklbPreviewPath}", e );

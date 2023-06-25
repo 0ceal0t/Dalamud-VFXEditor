@@ -18,6 +18,7 @@ namespace VfxEditor.PapFormat {
 
     public class PapFile : FileManagerFile {
         public readonly string HkxTempLocation;
+        public readonly string SourcePath;
 
         public readonly ParsedShort ModelId = new( "Model Id" );
         public readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", size: 1 );
@@ -30,7 +31,9 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
 
-        public PapFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
+            SourcePath = sourcePath;
+
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 
@@ -49,7 +52,7 @@ namespace VfxEditor.PapFormat {
             var footerPosition = reader.ReadInt32();
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations.Add( new PapAnimation( reader, HkxTempLocation ) );
+                Animations.Add( new PapAnimation( this, reader, HkxTempLocation ) );
             }
 
             // ... do something about havok data ...

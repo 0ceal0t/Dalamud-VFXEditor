@@ -32,7 +32,7 @@ namespace VfxEditor.PapFormat {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
                     Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
-                        var newAnim = new PapAnimation( File.HkxTempLocation );
+                        var newAnim = new PapAnimation( File, File.HkxTempLocation );
                         newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
 
                         CompoundCommand command = new( false, true );
@@ -49,6 +49,6 @@ namespace VfxEditor.PapFormat {
             } );
         }
 
-        protected override void DrawSelected() => Selected.Draw( File.ModelId.Value, File.ModelType.Value );
+        protected override void DrawSelected() => Selected.Draw();
     }
 }

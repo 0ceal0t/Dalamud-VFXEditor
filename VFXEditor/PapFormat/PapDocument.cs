@@ -16,7 +16,7 @@ namespace VfxEditor.PapFormat {
 
         protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
-        protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
+        protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path, HkxTemp );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

@@ -12,8 +12,8 @@ namespace VfxEditor.Animation {
         private bool Looping = true;
         private bool Playing = false;
 
-        private static string SklHkxTemp => Path.Combine( Plugin.Configuration.WriteLocation, $"skl_temp.hkx" ).Replace( '\\', '/' );
-        private static string BinTemp => Path.Combine( Plugin.Configuration.WriteLocation, $"anim_out.bin" ).Replace( '\\', '/' );
+        private static string SklHkxTemp => Path.Combine( Plugin.Configuration.WriteLocation, "skl_temp.hkx" ).Replace( '\\', '/' );
+        private static string BinTemp => Path.Combine( Plugin.Configuration.WriteLocation, "anim_out.bin" ).Replace( '\\', '/' );
 
         private bool AnimationLoaded = false;
         private AnimationData Data = null;
@@ -45,7 +45,7 @@ namespace VfxEditor.Animation {
             AnimationLoaded = true;
         }
 
-        public void Draw( PapAnimation animation, string animationHkx, int animationIndex, int modelId, SkeletonType modelType ) {
+        public void Draw( PapAnimation animation, string animationHkx, int animationIndex ) {
             if( animation != SelectedAnimation ) {
                 // Selected a new animation, reset
                 SelectedAnimation = animation;
@@ -55,19 +55,16 @@ namespace VfxEditor.Animation {
             }
 
             if( !AnimationLoaded ) {
-                ImGui.TextDisabled( "The 3D preview does not currently work with facial animations (smile, frown, etc.)" );
-
                 if( ImGui.Button( "Load Animation" ) ) {
                     Playing = false;
-                    Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType ) );
+                    Load( animationHkx, animationIndex, GetSklbPath( animation ) );
                 }
-
                 return;
             }
 
             if( ImGui.Button( "Refresh" ) ) {
                 Playing = false;
-                Load( animationHkx, animationIndex, GetSklbPath( modelId, modelType ) );
+                Load( animationHkx, animationIndex, GetSklbPath( animation ) );
             }
 
             if( Playing ) {
@@ -119,7 +116,19 @@ namespace VfxEditor.Animation {
             Plugin.DirectXManager.AnimationPreview.DrawInline();
         }
 
-        private static string GetSklbPath( int modelId, SkeletonType modelType ) {
+        private static string GetSklbPath( PapAnimation animation ) {
+            var modelType = animation.File.ModelType.Value;
+            var modelId = animation.File.ModelId.Value;
+            var sourcePath = animation.File.SourcePath;
+
+            if( sourcePath.Contains( "animation/f" ) ) {
+                // chara / human / c1301 / animation / f0002 /nonresident/emot/airquotes.pap
+                var split = sourcePath.Split( '/' );
+                var charaType = split[2];
+                var faceType = split[4];
+                return $"chara/human/{charaType}/skeleton/face/{faceType}/skl_{charaType}{faceType}.sklb";
+            }
+
             var format = modelType switch {
                 SkeletonType.Monster => "chara/monster/m{0:D4}/skeleton/base/b{1:D4}/skl_m{0:D4}b{1:D4}.sklb",
                 SkeletonType.DemiHuman => "chara/demihuman/d{0:D4}/skeleton/base/b{1:D4}/skl_d{0:D4}b{1:D4}.sklb",

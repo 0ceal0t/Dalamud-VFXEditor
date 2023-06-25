@@ -12,35 +12,38 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
+        public readonly PapFile File;
         public short HavokIndex = 0;
 
         private readonly string HkxTempLocation;
         private readonly ParsedPaddedString Name = new( "Name", "cbbm_replace_this", 32, 0x00 );
-        private readonly ParsedShort Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort Type = new( "Type" );
+        private readonly ParsedBool Face = new( "Face Animation" );
         public TmbFile Tmb;
 
-        public PapAnimation( string hkxPath ) {
+        public PapAnimation( PapFile file, string hkxPath ) {
+            File = file;
             HkxTempLocation = hkxPath;
         }
 
-        public PapAnimation( BinaryReader reader, string hkxPath ) {
+        public PapAnimation( PapFile file, BinaryReader reader, string hkxPath ) {
+            File = file;
             HkxTempLocation = hkxPath;
             Name.Read( reader );
-            Unk1.Read( reader );
+            Type.Read( reader );
             HavokIndex = reader.ReadInt16();
-            Unk2.Read( reader );
+            Face.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
             Name.Write( writer );
-            Unk1.Write( writer );
+            Type.Write( writer );
             writer.Write( HavokIndex );
-            Unk2.Write( writer );
+            Face.Write( writer );
         }
 
         public void ReadTmb( BinaryReader reader, CommandManager manager ) {
-            Tmb = new TmbFile( reader, manager, true );
+            Tmb = new TmbFile( reader, manager, true, false );
         }
 
         public void ReadTmb( string path, CommandManager manager ) {
@@ -51,7 +54,7 @@ namespace VfxEditor.PapFormat {
 
         public string GetName() => Name.Value;
 
-        public void Draw( int modelId, SkeletonType modelType ) {
+        public void Draw() {
             SheetData.InitMotionTimelines();
             if( !string.IsNullOrEmpty( Name.Value ) && SheetData.MotionTimelines.TryGetValue( Name.Value, out var motionData ) ) {
                 ImGui.TextDisabled( $"Loop: [{motionData.Loop}] Lip: [{motionData.Lip}] Blink: [{motionData.Blink}]" );
@@ -61,8 +64,8 @@ namespace VfxEditor.PapFormat {
             }
 
             Name.Draw( CommandManager.Pap );
-            Unk1.Draw( CommandManager.Pap );
-            Unk2.Draw( CommandManager.Pap );
+            Type.Draw( CommandManager.Pap );
+            Face.Draw( CommandManager.Pap );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
@@ -88,7 +91,7 @@ namespace VfxEditor.PapFormat {
             if( !tabBar ) return;
 
             DrawTmb();
-            DrawAnimation3D( modelId, modelType );
+            DrawAnimation3D();
         }
 
         private void DrawTmb() {
@@ -117,11 +120,11 @@ namespace VfxEditor.PapFormat {
             Tmb.Draw();
         }
 
-        private void DrawAnimation3D( int modelId, SkeletonType modelType ) {
+        private void DrawAnimation3D() {
             using var tabItem = ImRaii.TabItem( "3D View" );
             if( !tabItem ) return;
 
-            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex, modelId, modelType );
+            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex );
         }
     }
 }
