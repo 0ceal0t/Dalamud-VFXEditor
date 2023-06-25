@@ -28,16 +28,13 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.W );
         }
 
-        public override bool Draw( CommandManager manager ) {
-            var ret = Copy( manager );
+        public override void Draw( CommandManager manager ) {
+            Copy( manager );
 
             var value = Value;
             if( ImGui.InputFloat4( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector4>( this, value ) );
-                ret = true;
             }
-
-            return ret;
         }
 
         protected override Dictionary<string, Vector4> GetCopyMap( CopyManager manager ) => manager.Vector4s;

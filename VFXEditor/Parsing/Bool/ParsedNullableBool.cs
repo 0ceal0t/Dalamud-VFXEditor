@@ -39,16 +39,13 @@ namespace VfxEditor.Parsing {
             AvfxBase.WritePad( writer, Size - 1 );
         }
 
-        public override bool Draw( CommandManager manager ) {
-            var ret = Copy( manager );
+        public override void Draw( CommandManager manager ) {
+            Copy( manager );
 
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
-                ret = true;
             }
-
-            return ret;
         }
 
         protected override Dictionary<string, bool> GetCopyMap( CopyManager manager ) => manager.Bools;

@@ -1,5 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
@@ -25,10 +26,13 @@ namespace VfxEditor {
         public readonly CopyManager Copy;
         public readonly FileManagerWindow Manager;
 
-        public CommandManager( FileManagerWindow manager ) {
+        private readonly Action OnChangeAction;
+
+        public CommandManager( FileManagerWindow manager, Action onChangeAction = null ) {
             Managers.Add( this );
             Manager = manager;
             Copy = manager.GetCopyManager();
+            OnChangeAction = onChangeAction;
         }
 
         public void Add( ICommand command ) {
@@ -40,6 +44,7 @@ namespace VfxEditor {
             CommandIndex = CommandBuffer.Count - 1;
             command.Execute();
             Manager.Unsaved();
+            OnChangeAction?.Invoke();
         }
 
         public bool CanUndo => CommandBuffer.Count > 0 && CommandIndex >= 0;
@@ -51,6 +56,7 @@ namespace VfxEditor {
             CommandBuffer[CommandIndex].Undo();
             CommandIndex--;
             Manager.Unsaved();
+            OnChangeAction?.Invoke();
         }
 
         public void Redo() {
@@ -58,6 +64,7 @@ namespace VfxEditor {
             CommandIndex++;
             CommandBuffer[CommandIndex].Redo();
             Manager.Unsaved();
+            OnChangeAction?.Invoke();
         }
 
         public unsafe void Draw() {

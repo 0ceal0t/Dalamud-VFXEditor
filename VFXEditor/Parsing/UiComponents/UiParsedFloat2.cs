@@ -15,9 +15,7 @@ namespace VfxEditor.Parsing {
             P2 = p2;
         }
 
-        public bool Draw( CommandManager manager ) {
-            var ret = false;
-
+        public void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector2s[Name] = Value;
@@ -26,7 +24,6 @@ namespace VfxEditor.Parsing {
                 command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
                 manager.Add( command );
-                ret = true;
             }
 
             var value = Value;
@@ -35,10 +32,7 @@ namespace VfxEditor.Parsing {
                 command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
                 manager.Add( command );
-                ret = true;
             }
-
-            return ret;
         }
     }
 }

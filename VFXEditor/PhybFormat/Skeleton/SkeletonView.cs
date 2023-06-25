@@ -49,14 +49,14 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
                     RefreshBones();
                     UpdateSkeleton();
                 }
             }
 
             ImGui.SameLine();
-            ImGui.Text( "Preview Skeleton Path" );
+            ImGui.Text( "Skeleton Path" );
 
             if( BoneMatrixes == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();

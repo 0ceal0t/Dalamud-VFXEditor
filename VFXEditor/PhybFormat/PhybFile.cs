@@ -4,6 +4,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
@@ -30,7 +31,9 @@ namespace VfxEditor.PhybFormat {
         public readonly SkeletonView Skeleton;
         public bool PhysicsUpdated = true;
 
-        public PhybFile( BinaryReader reader, string sourcePath, bool checkOriginal = true ) : base( new( Plugin.PhybManager ) ) {
+        private bool SkeletonTabOpen = false;
+
+        public PhybFile( BinaryReader reader, string sourcePath, bool checkOriginal = true ) : base( new( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             Version.Read( reader );
@@ -87,24 +90,47 @@ namespace VfxEditor.PhybFormat {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            Version.Draw( CommandManager.Phyb );
-            DataType.Draw( CommandManager.Phyb );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
-            if( !tabBar ) return;
-
-            using( var tab = ImRaii.TabItem( "Collision" ) ) {
-                if( tab ) Collision.Draw();
+            var size = new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeightWithSpacing() - ImGui.GetStyle().ItemSpacing.Y * 2f );
+            if( SkeletonTabOpen ) {
+                size = new Vector2( -1 );
+            }
+            else if( Plugin.Configuration.PhybSkeletonSplit ) {
+                size = new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y / 2 );
             }
 
-            using( var tab = ImRaii.TabItem( "Simulation" ) ) {
-                if( tab ) Simulation.Draw();
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            using( var child = ImRaii.Child( "Child", size, false ) ) {
+                Version.Draw( CommandManager.Phyb );
+                DataType.Draw( CommandManager.Phyb );
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+
+                using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+                if( !tabBar ) return;
+
+                SkeletonTabOpen = false;
+
+                using( var tab = ImRaii.TabItem( "Collision" ) ) {
+                    if( tab ) Collision.Draw();
+                }
+
+                using( var tab = ImRaii.TabItem( "Simulation" ) ) {
+                    if( tab ) Simulation.Draw();
+                }
+
+                using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                    if( tab ) {
+                        Skeleton.Draw();
+                        SkeletonTabOpen = true;
+                    }
+                }
             }
 
-            using( var tab = ImRaii.TabItem( "3D View" ) ) {
-                if( tab ) Skeleton.Draw();
+            if( !SkeletonTabOpen ) {
+                ImGui.Separator();
+                if( ImGui.Checkbox( "Show Split View", ref Plugin.Configuration.PhybSkeletonSplit ) ) Plugin.Configuration.Save();
+                if( Plugin.Configuration.PhybSkeletonSplit ) Skeleton.Draw();
             }
         }
 

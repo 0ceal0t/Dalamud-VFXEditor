@@ -109,6 +109,8 @@ namespace VfxEditor {
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
 
+        public bool PhybSkeletonSplit = true;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 

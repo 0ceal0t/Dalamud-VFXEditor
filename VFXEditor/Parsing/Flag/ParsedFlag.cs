@@ -39,15 +39,12 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override bool Draw( CommandManager manager ) {
-            var ret = false;
-
+        public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
                 copy.PasteCommand.Add( new ParsedFlagCommand<T>( this, ( T )( object )val, ExtraCommandGenerator?.Invoke() ) );
-                ret = true;
             }
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );
@@ -62,11 +59,8 @@ namespace VfxEditor.Parsing {
 
                     var newValue = ( T )( object )intValue;
                     manager.Add( new ParsedFlagCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
-                    ret = true;
                 }
             }
-
-            return ret;
         }
 
         public bool HasFlag( T option ) => Value.HasFlag( option );

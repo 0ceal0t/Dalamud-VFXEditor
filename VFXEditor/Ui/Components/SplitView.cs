@@ -1,6 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace VfxEditor.Ui.Components {
     public abstract class SplitView<T> where T : class {
@@ -32,17 +33,23 @@ namespace VfxEditor.Ui.Components {
             else DrawSelected();
         }
 
-        protected abstract bool DrawLeftItem( T item, int idx);
+        protected abstract bool DrawLeftItem( T item, int idx );
 
         protected abstract void DrawSelected();
 
         public void Draw() {
             using var _ = ImRaii.PushId( Id );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
+                ImGui.Columns( 2, "Columns", true );
+            }
 
-            ImGui.Columns( 2, "Columns", true );
-            if( AllowNew ) DrawControls();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) ) ) {
+                if( AllowNew ) DrawControls();
+            }
 
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) )
             using( var left = ImRaii.Child( "Left" ) ) {
+                style.Pop();
                 DrawLeftColumn();
             }
 

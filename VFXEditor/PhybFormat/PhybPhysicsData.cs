@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 
 namespace VfxEditor.PhybFormat {
     public abstract class PhybPhysicsData : PhybData {
@@ -7,8 +6,6 @@ namespace VfxEditor.PhybFormat {
 
         public PhybPhysicsData( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        public override void Draw() {
-            if( Parsed.Aggregate( false, ( x, y ) => y.Draw( CommandManager.Phyb ) || x ) ) File.Updated();
-        }
+        public override void Draw() => Parsed.ForEach( x => x.Draw( CommandManager.Phyb ) );
     }
 }

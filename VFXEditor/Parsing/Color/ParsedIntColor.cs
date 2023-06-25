@@ -33,8 +33,8 @@ namespace VfxEditor.Parsing {
             writer.Write( ( byte )( int )( Value.W * 255f ) );
         }
 
-        public override bool Draw( CommandManager manager ) {
-            var ret = Copy( manager );
+        public override void Draw( CommandManager manager ) {
+            Copy( manager );
 
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
@@ -47,10 +47,7 @@ namespace VfxEditor.Parsing {
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
                 manager.Add( new ParsedSimpleCommand<Vector4>( this, StateBeforeEdit, Value ) );
-                ret = true;
             }
-
-            return ret;
         }
 
         protected override Dictionary<string, Vector4> GetCopyMap( CopyManager manager ) => manager.Vector4s;

@@ -9,8 +9,8 @@ namespace VfxEditor.Parsing.Int {
     public class ParsedIntByte4 : ParsedSimpleBase<int, int> {
         public ParsedIntByte4( string name ) : base( name ) { }
 
-        public override bool Draw( CommandManager manager ) {
-            var ret = Copy( manager );
+        public override void Draw( CommandManager manager ) {
+            Copy( manager );
 
             var bytes = BitConverter.GetBytes( Value );
             var value = bytes.Select( x => ( int )x ).ToArray();
@@ -18,10 +18,7 @@ namespace VfxEditor.Parsing.Int {
             if( ImGui.InputInt4( Name, ref value[0] ) ) {
                 var newValue = BitConverter.ToInt32( value.Select( x => ( byte )x ).ToArray() );
                 manager.Add( new ParsedSimpleCommand<int>( this, newValue ) );
-                ret = true;
             }
-
-            return ret;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
