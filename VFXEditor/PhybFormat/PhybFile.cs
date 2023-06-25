@@ -56,17 +56,19 @@ namespace VfxEditor.PhybFormat {
         public override void Write( BinaryWriter writer ) {
             writer.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-            Version.Write( writer );
-
-            if( Version.Value > 0 ) {
-                DataType.Write( writer );
+            if( Version.Value == 0 ) {
+                writer.Write( 0 );
+                writer.Write( 0x0C );
+                writer.Write( 0x0C );
+                return;
             }
+
+            Version.Write( writer );
+            DataType.Write( writer );
 
             var offsetPos = writer.BaseStream.Position; // coming back here later
             writer.Write( 0 ); // placeholders
             writer.Write( 0 );
-
-            if( Version.Value == 0 ) return;
 
             var collisionOffset = writer.BaseStream.Position;
             Collision.Write( writer );
