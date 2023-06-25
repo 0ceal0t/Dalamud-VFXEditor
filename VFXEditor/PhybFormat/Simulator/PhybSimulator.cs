@@ -3,6 +3,7 @@ using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.PhybFormat.Simulator.Attract;
@@ -207,8 +208,8 @@ namespace VfxEditor.PhybFormat.Simulator {
         public void ConnectNodes( int chainId1, int chainId2, int nodeId1, int nodeId2, float radius,
             MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
 
-            if( !GetNode( chainId1, nodeId1, boneMatrixes, out var bone1 ) ) return;
-            if( !GetNode( chainId2, nodeId2, boneMatrixes, out var bone2 ) ) return;
+            if( !GetNode( chainId1, nodeId1, boneMatrixes, out var bone1, out var _ ) ) return;
+            if( !GetNode( chainId2, nodeId2, boneMatrixes, out var bone2, out var _ ) ) return;
 
             var pos1 = bone1.BindPose.TranslationVector;
             var pos2 = bone2.BindPose.TranslationVector;
@@ -220,24 +221,37 @@ namespace VfxEditor.PhybFormat.Simulator {
             string boneName, Vector3 offset,
             MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
 
-            if( !GetNode( chainId, nodeId, boneMatrixes, out var bone1 ) ) return;
-            if( !boneMatrixes.TryGetValue( boneName, out var bone2 ) ) return;
+            if( !GetNode( chainId, nodeId, boneMatrixes, out var nodeBone, out var node ) ) return;
+            if( !boneMatrixes.TryGetValue( boneName, out var bone ) ) return;
 
-            var pos1 = bone1.BindPose.TranslationVector;
-            var pos2 = Vector3.Transform( offset, bone2.BindPose ).ToVector3();
+            var nodeStart = nodeBone.BindPose.TranslationVector;
+            var bonePos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
 
-            builder.AddCylinder( pos1, pos2, 0.02f, 5 );
-            builder.AddSphere( pos2, 0.03f, 10, 10 );
+            var axisOffset = new Vector3( node.ConeAxisOffset.Value.Y, node.ConeAxisOffset.Value.X, -node.ConeAxisOffset.Value.Z );
+            var axisPos = Vector3.Transform( axisOffset, nodeBone.BindPose ).ToVector3();
+            var norm = ( axisPos - nodeStart ).Normalized();
+            var distance = ( bonePos - nodeStart ).Length();
+
+            var coneStart = nodeStart + distance * norm;
+            var coneEnd = nodeStart;
+            var angle = node.ConeMaxAngle.Value;
+            // tan(angle) = radius / distance
+            var radius = Math.Tan( angle ) * distance;
+
+            builder.AddCone( coneStart, coneEnd, radius, false, 10 );
+
+            builder.AddSphere( bonePos, 0.01f, 10, 10 );
         }
 
-        public bool GetNode( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone ) {
+        public bool GetNode( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone, out PhybNode node ) {
             bone = default;
+            node = null;
 
             nodeId -= 1; // 1-indexed?
             if( chainId >= Chains.Count || chainId < 0 ) return false;
             if( nodeId >= Chains[chainId].Nodes.Count || nodeId < 0 ) return false;
 
-            var node = Chains[chainId].Nodes[nodeId];
+            node = Chains[chainId].Nodes[nodeId];
 
             if( !boneMatrixes.TryGetValue( node.BoneName.Value, out bone ) ) return false;
 

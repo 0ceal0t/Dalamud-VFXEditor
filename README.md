@@ -1,7 +1,7 @@
 # VFXEditor
 [![Download count](https://img.shields.io/endpoint?url=https%3A%2F%2Fvz32sgcoal.execute-api.us-east-1.amazonaws.com%2FVFXEditor)](https://github.com/0ceal0t/Dalamud-VFXEditor)
 
-VFX, animation, and sound editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
+VFX, animation, sound, and physics editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
@@ -15,9 +15,9 @@ Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 3. Once installed, open with `/vfxedit`
 
 ## Usage
-1. Select a "Data Source" VFX (the effect you want to edit)
-2. Select a "Preview On" VFX (the effect to temporarily overwrite, can be the same as the source)
-3. Make any modifications you want, then press "Update"
+1. Select a "Loaded VFX" (the new effect you want to use)
+2. Select a "VFX Being Replaced" (the effect which is being overriden. This can be the same as the source)
+3. Make any modifications you want, then press `UPDATE`
 
 ## Help
 Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting) or a [basic guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide)
@@ -43,7 +43,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
-- [ ] `.phyb` individual 3D views
 - [ ] C192
 - [ ] `.scd` modded parsing
 - [ ] `.uld` update component type
@@ -63,6 +62,4 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 ```
 chara/xls/boneDeformer/human.pbd
 chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.skp
-chara/human/c1701/animation/f0005/nonresident/wink.pap
-chara/human/c1301/animation/f0005/resident/face.pap
 ```

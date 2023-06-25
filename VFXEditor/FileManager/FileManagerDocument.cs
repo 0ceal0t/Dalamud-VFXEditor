@@ -238,7 +238,7 @@ namespace VfxEditor.FileManager {
         }
 
         protected virtual void DrawInputTextColumn() {
-            ImGui.SetColumnWidth( 0, 150 );
+            ImGui.SetColumnWidth( 0, 160 );
 
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 5, 0 );
             var color = ImGui.GetColorU32( ImGuiCol.TextDisabled );
@@ -286,7 +286,7 @@ namespace VfxEditor.FileManager {
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
 
         protected virtual void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 150 );
+            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 160 );
             ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
             DisplaySourceBar();
             DisplayReplaceBar();
