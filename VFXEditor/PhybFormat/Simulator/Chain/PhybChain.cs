@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
 using VfxEditor.PhybFormat.Utils;
@@ -76,12 +77,15 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Chain" );
 
-            foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Phyb );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) {
+                    using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
+                    foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Phyb );
+                }
+            }
 
             using( var tab = ImRaii.TabItem( "Collision Objects" ) ) {
                 if( tab ) CollisionSplitView.Draw();

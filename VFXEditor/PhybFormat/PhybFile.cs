@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
@@ -129,8 +130,17 @@ namespace VfxEditor.PhybFormat {
 
             if( !SkeletonTabOpen ) {
                 ImGui.Separator();
-                if( ImGui.Checkbox( "Show Split View", ref Plugin.Configuration.PhybSkeletonSplit ) ) Plugin.Configuration.Save();
-                if( Plugin.Configuration.PhybSkeletonSplit ) Skeleton.Draw();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( Plugin.Configuration.PhybSkeletonSplit ? FontAwesomeIcon.AngleDoubleDown.ToIconString() : FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
+                        Plugin.Configuration.PhybSkeletonSplit = !Plugin.Configuration.PhybSkeletonSplit;
+                        Plugin.Configuration.Save();
+                    }
+                }
+
+                if( Plugin.Configuration.PhybSkeletonSplit ) {
+                    ImGui.SameLine();
+                    Skeleton.Draw();
+                }
             }
         }
 
