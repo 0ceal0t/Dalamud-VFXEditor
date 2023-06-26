@@ -9,8 +9,10 @@ namespace VfxEditor.DirectX {
 
         public readonly ModelPreview ModelPreview;
         public readonly GradientView GradientView;
-        public readonly AnimationPreview AnimationPreview;
         public readonly PhybPreview PhybPreview;
+        public readonly PapPreview PapPreview;
+
+        public readonly AnimationPreview AnimationPreview;
 
         public DirectXManager() {
             var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );
@@ -18,15 +20,20 @@ namespace VfxEditor.DirectX {
             Ctx = Device.ImmediateContext;
             ModelPreview = new( Device, Ctx, shaderPath );
             GradientView = new( Device, Ctx, shaderPath );
-            AnimationPreview = new( Device, Ctx, shaderPath );
             PhybPreview = new( Device, Ctx, shaderPath );
+            PapPreview = new( Device, Ctx, shaderPath );
+
+            AnimationPreview = new( Device, Ctx, shaderPath );
         }
 
         public void Dispose() {
             ModelPreview.Dispose();
             GradientView.Dispose();
-            AnimationPreview.Dispose();
             PhybPreview.Dispose();
+            PapPreview.Dispose();
+
+            AnimationPreview.Dispose();
+
             Device = null;
             Ctx = null;
         }

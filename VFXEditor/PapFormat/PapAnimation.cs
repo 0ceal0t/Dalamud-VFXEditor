@@ -13,9 +13,10 @@ using VfxEditor.Utils;
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
         public readonly PapFile File;
-        public short HavokIndex = 0;
 
-        private readonly string HkxTempLocation;
+        public short HavokIndex = 0;
+        public readonly string HkxTempLocation;
+
         private readonly ParsedPaddedString Name = new( "Name", "cbbm_replace_this", 32, 0x00 );
         private readonly ParsedShort Type = new( "Type" );
         private readonly ParsedBool Face = new( "Face Animation" );

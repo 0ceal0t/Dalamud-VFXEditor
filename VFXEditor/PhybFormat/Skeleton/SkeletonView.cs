@@ -37,7 +37,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             if( BoneMatrixes == null ) LoadSklbPath();
             else if( PhybPreview.CurrentFile != File ) UpdateSkeleton();
 
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
             var inputSize = UiUtils.GetOffsetInputSize( checkSize );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
@@ -65,7 +65,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
             if( BoneMatrixes == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();
-            Plugin.DirectXManager.PhybPreview.DrawInline();
+            PhybPreview.DrawInline();
         }
 
         private void LoadSklbPath() {
