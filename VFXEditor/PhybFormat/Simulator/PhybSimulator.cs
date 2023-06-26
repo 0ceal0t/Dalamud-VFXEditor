@@ -225,22 +225,24 @@ namespace VfxEditor.PhybFormat.Simulator {
             if( !boneMatrixes.TryGetValue( boneName, out var bone ) ) return;
 
             var nodeStart = nodeBone.BindPose.TranslationVector;
-            var bonePos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
+            // var bonePos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
 
             var axisOffset = new Vector3( node.ConeAxisOffset.Value.Y, node.ConeAxisOffset.Value.X, -node.ConeAxisOffset.Value.Z );
             var axisPos = Vector3.Transform( axisOffset, nodeBone.BindPose ).ToVector3();
             var norm = ( axisPos - nodeStart ).Normalized();
-            var distance = ( bonePos - nodeStart ).Length();
 
-            var coneStart = nodeStart + distance * norm;
+            // var boneDiff = bonePos - nodeStart;
+            // var closest = norm * Vector3.Dot( boneDiff, norm );
+
+            // var coneStart = nodeStart + closest;
+            var coneStart = nodeStart + norm * 0.2f;
             var coneEnd = nodeStart;
+            var distance = ( coneEnd - coneStart ).Length();
             var angle = node.ConeMaxAngle.Value;
             // tan(angle) = radius / distance
             var radius = Math.Tan( angle ) * distance;
 
             builder.AddCone( coneStart, coneEnd, radius, false, 10 );
-
-            builder.AddSphere( bonePos, 0.01f, 10, 10 );
         }
 
         public bool GetNode( int chainId, int nodeId, Dictionary<string, Bone> boneMatrixes, out Bone bone, out PhybNode node ) {

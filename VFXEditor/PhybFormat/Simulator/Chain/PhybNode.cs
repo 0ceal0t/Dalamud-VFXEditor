@@ -41,9 +41,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
-            if( !boneMatrixes.TryGetValue( BoneName.Value, out var bone ) ) return;
-            var pos = bone.BindPose.TranslationVector;
-            meshes.Simulation.AddSphere( pos, Radius.Value, 10, 10 );
+
         }
     }
 }

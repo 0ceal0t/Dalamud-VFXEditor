@@ -96,7 +96,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected abstract List<ParsedBase> GetParsed();
 
         public byte[] ToBytes() {
-            var tmbWriter = new TmbWriter( Size, ExtraSize, sizeof( short ) );
+            var tmbWriter = new TmbWriter( Size, ExtraSize, 0 );
             tmbWriter.StartPosition = tmbWriter.Position;
             Write( tmbWriter );
 
