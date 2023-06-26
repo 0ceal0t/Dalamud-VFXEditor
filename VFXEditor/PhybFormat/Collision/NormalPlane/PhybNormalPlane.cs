@@ -1,4 +1,6 @@
+using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
+using SharpDX;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -25,7 +27,17 @@ namespace VfxEditor.PhybFormat.Collision.NormalPlane {
         };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
+            if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;
+            var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
+            var pos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
 
+            var normal = new Vector3( Normal.Value.X, Normal.Value.Y, Normal.Value.Z ).Normalized();
+            var tangent = Vector3.Cross( normal, Vector3.UnitY );
+            if( tangent.Length() == 0 ) {
+                tangent = Vector3.Cross( normal, Vector3.UnitX );
+            }
+
+            meshes.Collision.AddBox( pos, normal, tangent.Normalized(), 0.5f, 0.5f, Thickness.Value );
         }
     }
 }

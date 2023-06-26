@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
+using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
@@ -33,11 +34,8 @@ namespace VfxEditor.PhybFormat.Skeleton {
         }
 
         public void Draw() {
-            if( BoneMatrixes == null ) RefreshBones();
-            if( PhybPreview.CurrentFile != File ) {
-                UpdateSkeleton();
-                UpdatePhysicsObjects();
-            }
+            if( BoneMatrixes == null ) LoadSklbPath();
+            else if( PhybPreview.CurrentFile != File ) UpdateSkeleton();
 
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
             var inputSize = UiUtils.GetOffsetInputSize( checkSize );
@@ -49,31 +47,43 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
-                    RefreshBones();
-                    UpdateSkeleton();
+                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) LoadSklbPath();
+
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
+                    FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                        if( !ok ) return;
+                        UpdateBones( SklbFile.LoadFromLocal( res ) );
+                        UpdateSkeleton();
+                        UpdatePhysicsObjects();
+                    } );
                 }
             }
 
             ImGui.SameLine();
-            ImGui.Text( "Skeleton Path" );
+            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the physics file" );
 
             if( BoneMatrixes == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();
             Plugin.DirectXManager.PhybPreview.DrawInline();
         }
 
-        private unsafe void RefreshBones() {
+        private void LoadSklbPath() {
+            if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
+                UpdateBones( Plugin.DataManager.GetFile<SklbFile>( SklbPreviewPath ) );
+                UpdateSkeleton();
+                UpdatePhysicsObjects();
+            }
+            else {
+                PluginLog.Error( $"File does not exist: {SklbPreviewPath}" );
+            }
+        }
+
+        private unsafe void UpdateBones( SklbFile sklbFile ) {
             BoneMatrixes = new();
             BoneList = new();
 
             try {
-                if( !Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
-                    PluginLog.Error( $"File does not exist: {SklbPreviewPath}" );
-                    return;
-                }
-
-                var sklbFile = Plugin.DataManager.GetFile<SklbFile>( SklbPreviewPath );
                 var tempPath = Path.Combine( Plugin.Configuration.WriteLocation, $"phyb_skl_temp.hkx" );
                 sklbFile.SaveHavokData( tempPath.Replace( '\\', '/' ) );
 

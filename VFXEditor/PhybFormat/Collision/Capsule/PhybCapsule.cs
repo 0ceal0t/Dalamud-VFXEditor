@@ -39,8 +39,8 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
             var endPos = Vector3.Transform( endOffset, endBone.BindPose ).ToVector3();
 
             meshes.Collision.AddCylinder( startPos, endPos, Radius.Value * 2f, 10 );
-            meshes.Collision.AddSphere( startPos, Radius.Value, 5, 5 );
-            meshes.Collision.AddSphere( endPos, Radius.Value, 5, 5 );
+            meshes.Collision.AddSphere( startPos, Radius.Value, 10, 10 );
+            meshes.Collision.AddSphere( endPos, Radius.Value, 10, 10 );
         }
     }
 }

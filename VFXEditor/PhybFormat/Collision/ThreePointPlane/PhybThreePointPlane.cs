@@ -8,9 +8,13 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
     public class PhybThreePointPlane : PhybPhysicsData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
-        public readonly ParsedReserve Padding1 = new( 64 );
+        public readonly ParsedFloat4 Unknown1 = new( "Unknown 1" );
+        public readonly ParsedFloat4 Unknown2 = new( "Unknown 2" );
+        public readonly ParsedFloat4 Unknown3 = new( "Unknown 3" );
+        public readonly ParsedFloat4 Unknown4 = new( "Unknown 4" );
         public readonly ParsedFloat3 BoneOffset = new( "Bone Offset" );
-        public readonly ParsedReserve Padding2 = new( 24 );
+        public readonly ParsedFloat3 Unknown5 = new( "Unknown 5" );
+        public readonly ParsedFloat3 Unknown6 = new( "Unknown 6" );
         public readonly ParsedFloat Thickness = new( "Thickness" );
 
         public PhybThreePointPlane( PhybFile file ) : base( file ) { }
@@ -20,9 +24,13 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
         protected override List<ParsedBase> GetParsed() => new() {
             Name,
             Bone,
-            Padding1,
+            Unknown1,
+            Unknown2,
+            Unknown3,
+            Unknown4,
             BoneOffset,
-            Padding2,
+            Unknown5,
+            Unknown6,
             Thickness,
         };
 

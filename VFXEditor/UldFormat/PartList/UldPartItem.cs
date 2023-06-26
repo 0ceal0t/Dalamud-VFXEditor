@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
@@ -12,6 +13,8 @@ namespace VfxEditor.UldFormat.PartList {
         private readonly ParsedUInt H = new( "H", size: 2 );
 
         public UldTexture CurrentTexture => Plugin.UldManager.CurrentFile.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
+
+        private bool ShowHd = false;
 
         public UldPartItem() { }
 
@@ -34,10 +37,22 @@ namespace VfxEditor.UldFormat.PartList {
         public void Draw() {
             TextureId.Draw( CommandManager.Uld );
 
+            ImGui.Checkbox( "Show HD", ref ShowHd );
+
             var currentTexture = CurrentTexture;
             if( currentTexture != null ) {
-                var path = currentTexture.IconId.Value > 0 ? currentTexture.GetIconPath( false ) : currentTexture.Path.Value;
-                if( !string.IsNullOrEmpty( path ) ) Plugin.TextureManager.DrawTextureUv( path, U.Value, V.Value, W.Value, H.Value );
+                var path = currentTexture.IconId.Value > 0 ? currentTexture.GetIconPath( ShowHd ) : currentTexture.GetTexturePath( ShowHd );
+                var mult = ShowHd ? 2u : 1u;
+
+                if( !string.IsNullOrEmpty( path ) ) {
+                    Plugin.TextureManager.DrawTextureUv(
+                        path,
+                        U.Value * mult,
+                        V.Value * mult,
+                        W.Value * mult,
+                        H.Value * mult
+                   );
+                }
             }
 
             U.Draw( CommandManager.Uld );

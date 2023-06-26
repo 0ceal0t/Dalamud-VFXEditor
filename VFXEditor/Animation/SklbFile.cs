@@ -4,12 +4,14 @@ namespace VfxEditor.Animation {
     public class SklbFile : Lumina.Data.FileResource {
         private byte[] HavokData;
 
-        public override void LoadFile() {
-            var size = Reader.BaseStream.Length;
+        public override void LoadFile() => LoadFile( Reader );
 
-            Reader.BaseStream.Seek( 0, SeekOrigin.Begin );
-            Reader.ReadInt32(); // Magic
-            var version = Reader.ReadInt32();
+        public void LoadFile( BinaryReader reader ) {
+            var size = reader.BaseStream.Length;
+
+            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            reader.ReadInt32(); // Magic
+            var version = reader.ReadInt32();
 
             var offsetToHavok = -1;
 
@@ -18,24 +20,34 @@ namespace VfxEditor.Animation {
              */
 
             if( version == 0x31333030 || version == 0x31333031 ) {
-                Reader.ReadInt32(); // Skeleton offset
-                offsetToHavok = Reader.ReadInt32();
-                Reader.ReadInt16();
-                Reader.ReadInt16();
-                Reader.ReadInt32();
-                Reader.ReadInt32();
+                reader.ReadInt32(); // Skeleton offset
+                offsetToHavok = reader.ReadInt32();
+                reader.ReadInt16();
+                reader.ReadInt16();
+                reader.ReadInt32();
+                reader.ReadInt32();
             }
             else if( version == 0x31323030 ) {
-                Reader.ReadInt16(); // Skeleton offset
-                offsetToHavok = Reader.ReadInt16();
-                Reader.ReadInt16();
-                Reader.ReadInt16();
+                reader.ReadInt16(); // Skeleton offset
+                offsetToHavok = reader.ReadInt16();
+                reader.ReadInt16();
+                reader.ReadInt16();
             }
 
-            Reader.BaseStream.Seek( offsetToHavok, SeekOrigin.Begin );
-            HavokData = Reader.ReadBytes( ( int )( size - offsetToHavok ) );
+            reader.BaseStream.Seek( offsetToHavok, SeekOrigin.Begin );
+            HavokData = reader.ReadBytes( ( int )( size - offsetToHavok ) );
         }
 
         public void SaveHavokData( string path ) => File.WriteAllBytes( path, HavokData );
+
+        public static SklbFile LoadFromLocal( string path ) {
+            var sklb = new SklbFile();
+            var file = File.Open( path, FileMode.Open );
+            using( var reader = new BinaryReader( file ) ) {
+                sklb.LoadFile( reader );
+            }
+            file.Close();
+            return sklb;
+        }
     }
 }
