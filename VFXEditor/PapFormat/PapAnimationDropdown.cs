@@ -20,7 +20,7 @@ namespace VfxEditor.PapFormat {
 
             CompoundCommand command = new( false, true );
             command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
-            command.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
+            command.Add( new PapHavokFileCommand( item, File.HkxTempLocation, () => {
                 HavokInterop.RemoveHavokAnimation( File.HkxTempLocation, index, File.HkxTempLocation );
             } ) );
             CommandManager.Pap.Add( command );
@@ -32,12 +32,12 @@ namespace VfxEditor.PapFormat {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) {
                     Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
-                        var newAnim = new PapAnimation( File, File.HkxTempLocation );
-                        newAnim.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
+                        var animation = new PapAnimation( File, File.HkxTempLocation );
+                        animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
 
                         CompoundCommand command = new( false, true );
-                        command.Add( new PapAnimationAddCommand( File, Items, newAnim ) );
-                        command.Add( new PapHavokFileCommand( File.HkxTempLocation, () => {
+                        command.Add( new PapAnimationAddCommand( File, Items, animation ) );
+                        command.Add( new PapHavokFileCommand( animation, File.HkxTempLocation, () => {
                             HavokInterop.AddHavokAnimation( File.HkxTempLocation, res, idx, File.HkxTempLocation );
                         } ) );
                         CommandManager.Pap.Add( command );

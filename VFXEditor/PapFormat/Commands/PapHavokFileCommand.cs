@@ -4,12 +4,14 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapHavokFileCommand : ICommand {
+        private readonly PapAnimation Animation;
         private readonly Action ChangeAction;
         private readonly string FileLocation;
         private readonly string PreFileLocation;
         private readonly string PostFileLocation;
 
-        public PapHavokFileCommand( string fileLocation, Action changeAction ) {
+        public PapHavokFileCommand( PapAnimation animation, string fileLocation, Action changeAction ) {
+            Animation = animation;
             FileLocation = fileLocation;
             ChangeAction = changeAction;
 
@@ -24,16 +26,24 @@ namespace VfxEditor.PapFormat {
         }
 
         public void Execute() {
+            ClearAnimation();
             ChangeAction.Invoke();
             File.Copy( FileLocation, PostFileLocation, true );
         }
 
         public void Redo() {
+            ClearAnimation();
             File.Copy( PostFileLocation, FileLocation, true );
         }
 
         public void Undo() {
+            ClearAnimation();
             File.Copy( PreFileLocation, FileLocation, true );
+        }
+
+        private void ClearAnimation() {
+            Animation.Skeleton.ClearData();
+            if( Plugin.DirectXManager.PapPreview.CurrentAnimation == Animation ) Plugin.DirectXManager.PapPreview.ClearAnimation();
         }
     }
 }

@@ -12,8 +12,6 @@ namespace VfxEditor.DirectX {
         public readonly PhybPreview PhybPreview;
         public readonly PapPreview PapPreview;
 
-        public readonly AnimationPreview AnimationPreview;
-
         public DirectXManager() {
             var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );
             Device = Plugin.PluginInterface.UiBuilder.Device;
@@ -22,8 +20,6 @@ namespace VfxEditor.DirectX {
             GradientView = new( Device, Ctx, shaderPath );
             PhybPreview = new( Device, Ctx, shaderPath );
             PapPreview = new( Device, Ctx, shaderPath );
-
-            AnimationPreview = new( Device, Ctx, shaderPath );
         }
 
         public void Dispose() {
@@ -31,8 +27,6 @@ namespace VfxEditor.DirectX {
             GradientView.Dispose();
             PhybPreview.Dispose();
             PapPreview.Dispose();
-
-            AnimationPreview.Dispose();
 
             Device = null;
             Ctx = null;

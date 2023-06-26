@@ -5,6 +5,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
 using VfxEditor.Interop;
+using VfxEditor.PapFormat.Skeleton;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 using VfxEditor.TmbFormat;
@@ -22,18 +23,24 @@ namespace VfxEditor.PapFormat {
         private readonly ParsedBool Face = new( "Face Animation" );
         public TmbFile Tmb;
 
+        public readonly SkeletonView Skeleton;
+
         public PapAnimation( PapFile file, string hkxPath ) {
             File = file;
             HkxTempLocation = hkxPath;
+            Skeleton = new( File, this );
         }
 
         public PapAnimation( PapFile file, BinaryReader reader, string hkxPath ) {
             File = file;
             HkxTempLocation = hkxPath;
+
             Name.Read( reader );
             Type.Read( reader );
             HavokIndex = reader.ReadInt16();
             Face.Read( reader );
+
+            Skeleton = new( File, this );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -76,7 +83,7 @@ namespace VfxEditor.PapFormat {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                     if( ok ) {
                         Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
-                            CommandManager.Pap.Add( new PapHavokFileCommand( HkxTempLocation, () => {
+                            CommandManager.Pap.Add( new PapHavokFileCommand( this, HkxTempLocation, () => {
                                 HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
                             } ) );
                             UiUtils.OkNotification( "Havok data replaced" );
@@ -125,7 +132,7 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "3D View" );
             if( !tabItem ) return;
 
-            Plugin.AnimationManager.Draw( this, HkxTempLocation, HavokIndex );
+            Skeleton.Draw();
         }
     }
 }

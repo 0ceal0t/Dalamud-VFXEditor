@@ -37,7 +37,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             if( BoneMatrixes == null ) LoadSklbPath();
             else if( PhybPreview.CurrentFile != File ) UpdateSkeleton();
 
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
             var inputSize = UiUtils.GetOffsetInputSize( checkSize );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
@@ -47,7 +47,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) LoadSklbPath();
+                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) LoadSklbPath();
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {

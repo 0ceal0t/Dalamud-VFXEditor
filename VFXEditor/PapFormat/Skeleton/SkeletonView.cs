@@ -26,7 +26,9 @@ namespace VfxEditor.PapFormat.Skeleton {
         private int Frame = 0;
         private bool Looping = true;
         private bool Playing = false;
-        private DateTime LastFrame = DateTime.Now;
+
+        private int LastFrame = -1;
+        private DateTime LastTime = DateTime.Now;
 
         public SkeletonView( PapFile file, PapAnimation animation ) {
             File = file;
@@ -45,7 +47,7 @@ namespace VfxEditor.PapFormat.Skeleton {
 
             // ==== Skeleton ====
 
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
             var inputSize = UiUtils.GetOffsetInputSize( checkSize );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
@@ -55,7 +57,7 @@ namespace VfxEditor.PapFormat.Skeleton {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) LoadSklbPath();
+                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) LoadSklbPath();
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
@@ -73,7 +75,6 @@ namespace VfxEditor.PapFormat.Skeleton {
             // ==== Frame controls ====
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                ImGui.SameLine();
                 if( ImGui.Button( Playing ? FontAwesomeIcon.Stop.ToIconString() : FontAwesomeIcon.Play.ToIconString() ) ) Playing = !Playing;
 
                 ImGui.SameLine();
@@ -94,9 +95,9 @@ namespace VfxEditor.PapFormat.Skeleton {
 
             if( Playing ) {
                 var time = DateTime.Now;
-                var diff = ( time - LastFrame ).TotalMilliseconds;
-                if( diff > 33.3f ) { // 30 fps (1000ms / 30)
-                    LastFrame = time;
+                var diff = ( time - LastTime ).TotalMilliseconds;
+                if( diff > 33.3f ) {
+                    LastTime = time;
 
                     Frame++;
                     if( Frame >= Data.NumFrames ) {
@@ -108,10 +109,10 @@ namespace VfxEditor.PapFormat.Skeleton {
                             Frame = 0;
                         }
                     }
-
-                    UpdateSkeleton();
                 }
             }
+
+            if( Frame != LastFrame ) UpdateSkeleton();
 
             PapPreview.DrawInline();
         }
@@ -154,6 +155,9 @@ namespace VfxEditor.PapFormat.Skeleton {
             try {
                 sklbFile.SaveHavokData( SklHkxTemp );
                 HavokInterop.HavokToBin( Animation.HkxTempLocation, Animation.HavokIndex, SklHkxTemp, BinTemp );
+                LastFrame = -1;
+                Frame = 0;
+                Playing = false;
                 Data = new AnimationData( BinTemp );
             }
             catch( Exception ) {
@@ -163,6 +167,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         private void UpdateSkeleton() {
+            LastFrame = Frame;
             if( Data == null || Data.NumFrames == 0 ) PapPreview.LoadEmpty( File, Animation );
             else {
                 PapPreview.LoadSkeleton( File, Animation, Data.GetBoneMesh( Frame ) );
@@ -171,6 +176,9 @@ namespace VfxEditor.PapFormat.Skeleton {
 
         public void ClearData() {
             if( PapPreview.CurrentAnimation == Animation ) PapPreview.ClearAnimation();
+            LastFrame = -1;
+            Frame = 0;
+            Playing = false;
             Data = null;
         }
 

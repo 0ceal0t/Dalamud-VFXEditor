@@ -43,7 +43,6 @@ namespace VfxEditor {
         public static KeyState KeyState { get; private set; }
 
         public static ResourceLoader ResourceLoader { get; private set; }
-        public static AnimationManager AnimationManager { get; private set; }
         public static ActorAnimationManager ActorAnimationManager { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
@@ -129,7 +128,6 @@ namespace VfxEditor {
             PenumbraDialog = new PenumbraDialog();
             TexToolsDialog = new TexToolsDialog();
             ResourceLoader = new ResourceLoader();
-            AnimationManager = new AnimationManager();
             ActorAnimationManager = new ActorAnimationManager();
             DirectXManager = new DirectXManager();
             Tracker = new TrackerManager();
@@ -207,9 +205,6 @@ namespace VfxEditor {
             ScdManager = null;
             EidManager = null;
             UldManager = null;
-
-            AnimationManager?.Dispose();
-            AnimationManager = null;
 
             ActorAnimationManager?.Dispose();
             ActorAnimationManager = null;
