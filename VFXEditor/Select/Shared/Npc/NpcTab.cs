@@ -17,11 +17,6 @@ namespace VfxEditor.Select.Shared.Npc {
         }
     }
 
-    public struct BnpcStruct {
-        public uint bnpcBase;
-        public uint bnpcName;
-    }
-
     public abstract class NpcTab : SelectTab<NpcRow, List<string>> {
         // Shared across multiple dialogs
         private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
@@ -35,17 +30,19 @@ namespace VfxEditor.Select.Shared.Npc {
             var nameToString = Plugin.DataManager.GetExcelSheet<BNpcName>()
                 .Where( x => !string.IsNullOrEmpty( x.Singular ) )
                 .ToDictionary(
-                    x => x.RowId,
+                    x => $"{x.RowId}",
                     x => x.Singular.ToString()
                 );
 
-            var baseToName = JsonConvert.DeserializeObject<Dictionary<string, List<BnpcStruct>>>( File.ReadAllText( SelectUtils.BnpcPath ) )["bnpc"];
+            // https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
+
+            var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectUtils.BnpcPath ) );
 
             var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
 
             foreach( var entry in baseToName ) {
-                if( !nameToString.TryGetValue( entry.bnpcName, out var name ) ) continue;
-                var bnpcRow = battleNpcSheet.GetRow( entry.bnpcBase );
+                if( !nameToString.TryGetValue( entry.Key, out var name ) ) continue;
+                var bnpcRow = battleNpcSheet.GetRow( entry.Value );
                 if( bnpcRow == null || bnpcRow.ModelChara.Value == null || bnpcRow.ModelChara.Value.Model == 0 ) continue;
                 if( bnpcRow.ModelChara.Value.Type != 2 && bnpcRow.ModelChara.Value.Type != 3 ) continue;
                 Items.Add( new NpcRow( bnpcRow.ModelChara.Value, name ) );
