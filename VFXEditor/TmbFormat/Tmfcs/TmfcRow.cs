@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcRow {
         public readonly ParsedUInt Unk1 = new( "Unknown 1" );
         public readonly ParsedFloat Time = new( "Time" );

@@ -212,6 +212,8 @@ namespace VfxEditor {
             DirectXManager?.Dispose();
             DirectXManager = null;
 
+            Modals.Clear();
+
             RemoveSpawn();
 
             FileDialogManager.Dispose();

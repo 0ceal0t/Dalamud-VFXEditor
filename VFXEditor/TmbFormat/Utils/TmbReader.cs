@@ -6,6 +6,7 @@ using System.Numerics;
 using VfxEditor.Parsing.Utils;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Utils {

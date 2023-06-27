@@ -4,7 +4,6 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
-using VfxEditor.Interop;
 using VfxEditor.PapFormat.Skeleton;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
@@ -81,15 +80,7 @@ namespace VfxEditor.PapFormat {
 
             if( ImGui.Button( $"Replace Havok" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                    if( ok ) {
-                        Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
-                            CommandManager.Pap.Add( new PapHavokFileCommand( this, HkxTempLocation, () => {
-                                HavokInterop.ReplaceHavokAnimation( HkxTempLocation, HavokIndex, res, idx, HkxTempLocation );
-                            } ) );
-                            UiUtils.OkNotification( "Havok data replaced" );
-                        };
-                        Plugin.PapManager.IndexDialog.Show();
-                    }
+                    if( ok ) Plugin.AddModal( new PapIndexModal( this, res ) );
                 } );
             }
 

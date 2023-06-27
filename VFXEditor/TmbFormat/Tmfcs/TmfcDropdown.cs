@@ -2,11 +2,10 @@ using VfxEditor.FileManager;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcDropdown : Dropdown<Tmfc> {
-        private readonly TmbFile File;
+        public readonly TmbFile File;
 
         public TmfcDropdown( TmbFile file ) : base( "TMFC", file.Tmfcs, false, true ) {
             File = file;
@@ -15,7 +14,7 @@ namespace VfxEditor.TmbFormat {
         protected override string GetText( Tmfc item, int idx ) => $"TMFC {idx}";
 
         protected override void OnDelete( Tmfc item ) {
-            UiUtils.OpenModal(
+            Plugin.AddModal( new TextModal(
                 "Delete TMFC",
                 "Are you sure you want to delete this item? This change is potentially detectable, so make sure you know what you're doing.",
                 () => {
@@ -23,7 +22,8 @@ namespace VfxEditor.TmbFormat {
                     command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
                     command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, item ) );
                     File.Command.Add( command );
-                }, null );
+                }
+            ) );
         }
 
         protected override void OnNew() {

@@ -1,6 +1,5 @@
 using ImGuiFileDialog;
 using System.Collections.Generic;
-using System.IO;
 using VfxEditor.Interop;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
@@ -30,22 +29,7 @@ namespace VfxEditor.PapFormat {
 
         protected override void OnNew() {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                if( ok ) {
-                    Plugin.PapManager.IndexDialog.OnOk = ( int idx ) => {
-                        var animation = new PapAnimation( File, File.HkxTempLocation );
-                        animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
-
-                        CompoundCommand command = new( false, true );
-                        command.Add( new PapAnimationAddCommand( File, Items, animation ) );
-                        command.Add( new PapHavokFileCommand( animation, File.HkxTempLocation, () => {
-                            HavokInterop.AddHavokAnimation( File.HkxTempLocation, res, idx, File.HkxTempLocation );
-                        } ) );
-                        CommandManager.Pap.Add( command );
-
-                        UiUtils.OkNotification( "Havok data imported" );
-                    };
-                    Plugin.PapManager.IndexDialog.Show();
-                }
+                if( ok ) Plugin.AddModal( new PapImportModal( File, res ) );
             } );
         }
 

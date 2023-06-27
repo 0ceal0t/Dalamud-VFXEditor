@@ -4,27 +4,14 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public partial class PapManager : FileManagerWindow<PapDocument, PapFile, WorkspaceMetaBasic> {
-        public readonly PapSelectIndexDialog IndexDialog;
-
         public PapManager() : base( "Pap Editor", "Pap" ) {
             SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", this, true );
             ReplaceSelect = new PapSelectDialog( "Pap Select [REPLACED]", this, false );
-            IndexDialog = new PapSelectIndexDialog();
         }
 
         protected override PapDocument GetNewDocument() => new( this, NewWriteLocation );
 
         protected override PapDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
             new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace );
-
-        public override void DrawBody() {
-            IndexDialog.Draw();
-            base.DrawBody();
-        }
-
-        public override void Dispose() {
-            IndexDialog.Hide();
-            base.Dispose();
-        }
     }
 }

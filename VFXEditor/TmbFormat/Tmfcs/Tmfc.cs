@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.TmbFormat.Tmfcs {
     public class Tmfc : TmbEntry {
         public const string MAGIC = "TMFC";
         public const string DISPLAY_NAME = "TMFC";

@@ -7,6 +7,7 @@ using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
+using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 

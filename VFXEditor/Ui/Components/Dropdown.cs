@@ -116,8 +116,6 @@ namespace VfxEditor.Ui.Components {
                     Selected = null;
                 }
             }
-
-            UiUtils.DrawModal();
         }
     }
 }

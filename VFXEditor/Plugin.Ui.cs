@@ -1,14 +1,18 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
+using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.TextureFormat;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
     public partial class Plugin {
+        public static readonly Dictionary<string, Modal> Modals = new();
+
         public static void Draw() {
             if( Loading ) return;
 
@@ -34,6 +38,8 @@ namespace VfxEditor {
                 LastAutoSave = DateTime.Now;
                 SaveWorkspace();
             }
+
+            foreach( var modal in Modals ) modal.Value.Draw();
         }
 
         private static void CheckWorkspaceKeybinds() {
@@ -92,6 +98,11 @@ namespace VfxEditor {
         private static void DrawManagerMenu( IFileManager manager, string text, IFileManager menuManager ) {
             using var disabled = ImRaii.Disabled( manager == menuManager );
             if( ImGui.MenuItem( text ) ) menuManager.Show();
+        }
+
+        public static void AddModal( Modal modal ) {
+            Modals[modal.Title] = modal;
+            ImGui.OpenPopup( modal.Title );
         }
     }
 }

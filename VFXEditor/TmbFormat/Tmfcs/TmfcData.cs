@@ -5,7 +5,7 @@ using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcData : IUiItem {
         public readonly ParsedUInt Unk1 = new( "Unknown 1" );
         public readonly ParsedUInt Unk2 = new( "Unknown 2", size: 1 );
