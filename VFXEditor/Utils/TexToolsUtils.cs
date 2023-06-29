@@ -24,6 +24,9 @@ namespace VfxEditor.Utils {
                 case "bgcommon":
                     simple.DatFile = "010000";
                     break;
+                case "cut":
+                    simple.DatFile = GetDat( "03", split );
+                    break;
                 case "chara":
                     simple.DatFile = "040000";
                     break;
@@ -34,12 +37,7 @@ namespace VfxEditor.Utils {
                     simple.DatFile = "070000";
                     break;
                 case "music":
-                    simple.DatFile = "0c";
-                    if( split[1] == "ffxiv" ) simple.DatFile += "0000";
-                    else {
-                        simple.DatFile += split[1].Replace( "ex", "" ).PadLeft( 2, '0' ); // expansion
-                        simple.DatFile += "00";
-                    }
+                    simple.DatFile = GetDat( "0c", split );
                     break;
                 case "bg":
                     simple.DatFile = "02";
@@ -55,6 +53,16 @@ namespace VfxEditor.Utils {
             }
             simple.ModPackEntry = null;
             return simple;
+        }
+
+        private static string GetDat( string prefix, string[] split ) {
+            var ret = prefix;
+            if( split[1] == "ffxiv" ) ret += "0000";
+            else {
+                ret += split[1].Replace( "ex", "" ).PadLeft( 2, '0' ); // expansion
+                ret += "00";
+            }
+            return ret;
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/SqPack/FileTypes/Dat.cs#L584
