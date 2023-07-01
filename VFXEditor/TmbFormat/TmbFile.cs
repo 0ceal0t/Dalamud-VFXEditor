@@ -14,8 +14,6 @@ using VfxEditor.Utils;
 // Rework based on https://github.com/AsgardXIV/XAT
 namespace VfxEditor.TmbFormat {
     public class TmbFile : FileManagerFile {
-        public readonly bool PapEmbedded;
-
         public readonly Tmdh HeaderTmdh;
         public readonly Tmpp HeaderTmpp;
         public readonly Tmal HeaderTmal;
@@ -30,10 +28,9 @@ namespace VfxEditor.TmbFormat {
 
         private TmbEntry DraggingEntry = null;
 
-        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), false, checkOriginal ) { }
+        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }
 
-        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool papEmbedded, bool checkOriginal = true ) : base( manager ) {
-            PapEmbedded = papEmbedded;
+        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool checkOriginal = true ) : base( manager ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 

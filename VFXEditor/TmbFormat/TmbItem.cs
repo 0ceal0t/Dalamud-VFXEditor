@@ -6,17 +6,15 @@ using VfxEditor.Utils;
 namespace VfxEditor.TmbFormat {
     public abstract class TmbItem {
         public readonly TmbFile File;
-        public readonly bool PapEmbedded;
 
         public abstract string Magic { get; }
         public abstract int Size { get; }
         public abstract int ExtraSize { get; }
 
-        public CommandManager Command => PapEmbedded ? CommandManager.Pap : CommandManager.Tmb;
+        public CommandManager Command => File.Command;
 
         public TmbItem( TmbFile file ) {
             File = file;
-            PapEmbedded = file.PapEmbedded;
         }
 
         public TmbItem( TmbFile file, TmbReader reader ) : this( file ) {

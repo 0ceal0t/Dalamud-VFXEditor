@@ -7,7 +7,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.Capsule {
-    public class PhybCapsule : PhybPhysicsData, IPhysicsObject {
+    public class PhybCapsule : PhybData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString StartBone = new( "Start Bone", 32, 0xFE );
         public readonly ParsedPaddedString EndBone = new( "End Bone", 32, 0xFE );

@@ -50,7 +50,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public void ReadTmb( BinaryReader reader, CommandManager manager ) {
-            Tmb = new TmbFile( reader, manager, true, false );
+            Tmb = new TmbFile( reader, manager, false );
         }
 
         public void ReadTmb( string path, CommandManager manager ) {

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.CutbFormat.Timeline {
     public class CutbTimeline : CutbHeader {
@@ -16,5 +18,7 @@ namespace VfxEditor.CutbFormat.Timeline {
         public override void Draw() {
 
         }
+
+        protected override List<ParsedBase> GetParsed() => new();
     }
 }

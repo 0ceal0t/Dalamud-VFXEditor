@@ -7,6 +7,8 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcData : IUiItem {
+        public readonly TmbFile File;
+
         public readonly ParsedUInt Unk1 = new( "Unknown 1" );
         public readonly ParsedUInt Unk2 = new( "Unknown 2", size: 1 );
         public readonly ParsedUInt Unk3 = new( "Unknown 3", size: 1 );
@@ -24,13 +26,12 @@ namespace VfxEditor.TmbFormat.Tmfcs {
 
         public int Size => 0x10 + ( 0x18 * Rows.Count );
 
-        public readonly bool PapEmbedded;
-        public CommandManager Command => PapEmbedded ? CommandManager.Pap : CommandManager.Tmb;
+        public CommandManager Command => File.Command;
 
         // 24 bytes x count
 
-        public TmfcData( BinaryReader reader, bool papEmbedded ) {
-            PapEmbedded = papEmbedded;
+        public TmfcData( BinaryReader reader, TmbFile file ) {
+            File = file;
             Parsed.AddRange( new ParsedBase[] {
                 Unk1,
                 Unk2,

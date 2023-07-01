@@ -5,7 +5,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.Ellipsoid {
-    public class PhybEllipsoid : PhybPhysicsData, IPhysicsObject {
+    public class PhybEllipsoid : PhybData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedFloat3 Offset1 = new( "Bone Offset 1" );

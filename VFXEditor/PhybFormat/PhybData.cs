@@ -1,35 +1,26 @@
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.PhybFormat {
-    public abstract class PhybData : IUiItem {
+    public abstract class PhybData : ParsedData, IUiItem {
         protected readonly PhybFile File;
-        protected readonly List<ParsedBase> Parsed;
 
-        public PhybData( PhybFile file ) {
+        public PhybData( PhybFile file ) : base() {
             File = file;
-            Parsed = GetParsed();
         }
 
         public PhybData( PhybFile file, BinaryReader reader ) : this( file ) {
-            foreach( var parsed in Parsed ) parsed.Read( reader );
+            ReadParsed( reader );
         }
-
-        protected abstract List<ParsedBase> GetParsed();
 
         public virtual void Write( SimulationWriter writer ) {
             foreach( var parsed in Parsed ) parsed.Write( writer );
         }
 
-        public virtual void Write( BinaryWriter writer ) {
-            foreach( var parsed in Parsed ) parsed.Write( writer );
-        }
+        public virtual void Write( BinaryWriter writer ) => WriteParsed( writer );
 
-        public virtual void Draw() {
-            foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Phyb );
-        }
+        public virtual void Draw() => DrawParsed( CommandManager.Phyb );
     }
 }

@@ -31,14 +31,18 @@ namespace VfxEditor.CutbFormat {
             reader.ReadInt32(); // size
             var headercount = reader.ReadInt32();
 
-            // Resource List
-            // Initial State
-            // Default Scene
-            // EX [0+]  cut/ex3/qstmyc/qstmyc00310/qstmyc00310.cutb
             // Actor List
             // CB
             // Animation
             // Timeline [0+]
+
+            /*
+             * TODO: how does this interact with the cutscene sheets like
+             * CutsceneActorSize_0
+             * CutsceneEventMotion_0
+             * CutActionTimeline_0
+             * TalkSubtitle
+             */
 
             for( var i = 0; i < headercount; i++ ) {
                 var magic = FileUtils.ReadString( reader, 4 );
@@ -80,7 +84,7 @@ namespace VfxEditor.CutbFormat {
                 reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
             }
 
-            // Padded to 16 bytes after headers
+            // Padded to 16 bytes after each body, and after headers
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
@@ -100,18 +104,13 @@ namespace VfxEditor.CutbFormat {
             using( var tab = ImRaii.TabItem( "Initial State" ) ) {
                 if( tab ) InitialState?.Draw();
             }
+
+            using( var tab = ImRaii.TabItem( "Default Scene" ) ) {
+                if( tab ) DefaultScene?.Draw();
+            }
         }
 
         /*
-
-struct initial_state_t {
-  uint32_t scenario_path_offset; // for jobmnk00010.cutb that's "quest/010/JobMnk300_01061" for instance
-  uint8_t screen_fades_out;
-  uint8_t bgm_fades_out;
-  uint8_t se_sounds_fade_out;
-  uint8_t can_skip;
-}
-
 struct default_scene_header_t {
   uint32_t level_path_offset;
   uint32_t id;

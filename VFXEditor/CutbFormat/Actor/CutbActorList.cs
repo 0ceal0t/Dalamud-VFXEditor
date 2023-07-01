@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.CutbFormat.Actor {
     public class CutbActorList : CutbHeader {
@@ -12,5 +14,7 @@ namespace VfxEditor.CutbFormat.Actor {
         public override void Draw() {
 
         }
+
+        protected override List<ParsedBase> GetParsed() => new();
     }
 }

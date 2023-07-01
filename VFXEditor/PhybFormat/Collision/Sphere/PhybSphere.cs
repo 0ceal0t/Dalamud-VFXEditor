@@ -7,7 +7,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Collision.Sphere {
-    public class PhybSphere : PhybPhysicsData, IPhysicsObject {
+    public class PhybSphere : PhybData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString Bone = new( "Bone", 32, 0xFE );
         public readonly ParsedFloat3 BoneOffset = new( "Bone Offset" );

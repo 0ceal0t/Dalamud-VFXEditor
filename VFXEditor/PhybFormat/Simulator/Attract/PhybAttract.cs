@@ -5,7 +5,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Simulator.Attract {
-    public class PhybAttract : PhybPhysicsData, IPhysicsObject {
+    public class PhybAttract : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
         public readonly ParsedPaddedString BoneName = new( "Bone Name", 32, 0xFE );

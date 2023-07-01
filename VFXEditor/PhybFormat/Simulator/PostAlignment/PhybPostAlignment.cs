@@ -5,7 +5,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.PhybFormat.Simulator.PostAlignment {
-    public class PhybPostAlignment : PhybPhysicsData, IPhysicsObject {
+    public class PhybPostAlignment : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
         public readonly ParsedPaddedString CollisionName = new( "Collision Name", 32, 0xFE );

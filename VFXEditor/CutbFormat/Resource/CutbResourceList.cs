@@ -9,23 +9,15 @@ namespace VfxEditor.CutbFormat.Resource {
         public const string MAGIC = "CTRL";
         public override string Magic => MAGIC;
 
-        public readonly ParsedUInt Size1 = new( "Size 1" );
-        public readonly ParsedUInt Size2 = new( "Size 2" );
-        public readonly ParsedUInt Size3 = new( "Size 3" );
-        public readonly ParsedUInt Size4 = new( "Size 4" );
-
         public readonly List<CutbResource> Resources = new();
 
         private readonly SimpleSplitview<CutbResource> ResourceSplitView;
 
         public CutbResourceList( BinaryReader reader ) {
-            var offset = reader.ReadUInt32(); // is this always 0x18?
+            reader.ReadUInt32(); // resources offset; is this always 0x18?
             var count = reader.ReadUInt32();
 
-            Size1.Read( reader );
-            Size2.Read( reader );
-            Size3.Read( reader );
-            Size4.Read( reader );
+            ReadParsed( reader );
 
             for( var i = 0; i < count; i++ ) {
                 Resources.Add( new( reader ) );
@@ -36,14 +28,19 @@ namespace VfxEditor.CutbFormat.Resource {
         }
 
         public override void Draw() {
-            Size1.Draw( CommandManager.Cutb );
-            Size2.Draw( CommandManager.Cutb );
-            Size3.Draw( CommandManager.Cutb );
-            Size4.Draw( CommandManager.Cutb );
+            DrawParsed( CommandManager.Cutb );
 
             ImGui.Separator();
 
             ResourceSplitView.Draw();
         }
+
+        // Winter speculated that there are related to the total resource size for PS3 optimization
+        protected override List<ParsedBase> GetParsed() => new() {
+            new ParsedUInt( "Unknown Size 1" ),
+            new ParsedUInt( "Unknown Size 2" ),
+            new ParsedUInt( "Unknown Size 3" ),
+            new ParsedUInt( "Unknown Size 4" ),
+        };
     }
 }

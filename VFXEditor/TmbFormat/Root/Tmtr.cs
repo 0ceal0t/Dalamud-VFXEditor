@@ -40,7 +40,7 @@ namespace VfxEditor.TmbFormat {
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
-                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader, file.PapEmbedded ) );
+                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader, File ) );
             } );
         }
 
@@ -73,7 +73,7 @@ namespace VfxEditor.TmbFormat {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                        Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( PapEmbedded ) ) );
+                        Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( File ) ) );
                     }
                 }
 

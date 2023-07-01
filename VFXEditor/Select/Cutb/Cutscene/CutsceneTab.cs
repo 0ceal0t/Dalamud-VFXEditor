@@ -1,10 +1,8 @@
-using ImGuiNET;
 using System.Linq;
-using VfxEditor.Select.Shared;
 using VfxEditor.Select.Shared.Cutscene;
 
-namespace VfxEditor.Select.Vfx.Cutscene {
-    public class CutsceneTab : SelectTab<CutsceneRow, ParseAvfx> {
+namespace VfxEditor.Select.Cutb.Cutscene {
+    public class CutsceneTab : SelectTab<CutsceneRow> {
         public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Cutscene" ) { }
 
         public override void LoadData() {
@@ -13,14 +11,8 @@ namespace VfxEditor.Select.Vfx.Cutscene {
             foreach( var item in sheet ) Items.Add( new CutsceneRow( item ) );
         }
 
-        public override void LoadSelection( CutsceneRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.Path, out loaded );
-
         protected override void DrawSelected() {
-            ImGui.Text( "CUTB:" );
-            ImGui.SameLine();
-            SelectTabUtils.DisplayPath( Selected.Path );
-
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameCutscene, Selected.Name, true );
+            Dialog.DrawPath( "Path", Selected.Path, SelectResultType.GameCutscene, Selected.Name );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

@@ -3,10 +3,11 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Shared;
+using VfxEditor.Select.Shared.Cutscene;
 
 namespace VfxEditor.Select.Vfx.JournalCutscene {
     public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParseAvfx>> {
-        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-JournalCutscene" ) { }
+        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-JournalCutscene" ) { }
 
         // ===== LOADING =====
 

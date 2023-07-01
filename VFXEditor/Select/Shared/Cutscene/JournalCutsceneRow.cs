@@ -1,7 +1,7 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 
-namespace VfxEditor.Select.Vfx.JournalCutscene {
+namespace VfxEditor.Select.Shared.Cutscene {
     public class JournalCutsceneRow {
         public readonly string Name;
         public readonly int RowId;

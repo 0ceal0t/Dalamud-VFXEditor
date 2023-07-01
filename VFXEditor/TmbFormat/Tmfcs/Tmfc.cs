@@ -37,7 +37,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             // need to add an extra 4 bytes to account for id+time
             reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
                 for( var i = 0; i < dataCount; i++ ) {
-                    Data.Add( new TmfcData( br, file.PapEmbedded ) );
+                    Data.Add( new TmfcData( br, File ) );
                 }
 
                 foreach( var data in Data ) data.ReadRows( br );

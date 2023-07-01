@@ -15,7 +15,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         Capsule
     }
 
-    public class PhybChain : PhybPhysicsData, IPhysicsObject {
+    public class PhybChain : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
         public readonly ParsedFloat Dampening = new( "Dampening" );

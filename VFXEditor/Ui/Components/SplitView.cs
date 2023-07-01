@@ -43,7 +43,7 @@ namespace VfxEditor.Ui.Components {
                 ImGui.Columns( 2, "Columns", true );
             }
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) ) ) {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 if( AllowNew ) DrawControls();
             }
 

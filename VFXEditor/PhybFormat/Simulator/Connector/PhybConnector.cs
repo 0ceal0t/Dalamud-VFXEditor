@@ -4,7 +4,7 @@ using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.PhybFormat.Simulator.Connector {
-    public class PhybConnector : PhybPhysicsData, IPhysicsObject {
+    public class PhybConnector : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
         public readonly ParsedShort ChainId1 = new( "Chain Id 1" );
