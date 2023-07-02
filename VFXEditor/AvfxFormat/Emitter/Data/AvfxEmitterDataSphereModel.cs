@@ -7,6 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt DivideX = new( "Divide X", "DivX" );
         public readonly AvfxInt DivideY = new( "Divide Y", "DivY" );
         public readonly AvfxCurve Radius = new( "Radius", "Rads" );
+        public readonly AvfxCurve AZ = new( "Angle Z", "AnZ", CurveType.Angle );
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
@@ -19,6 +20,7 @@ namespace VfxEditor.AvfxFormat {
                 DivideX,
                 DivideY,
                 Radius,
+                AZ,
                 InjectionSpeed,
                 InjectionSpeedRandom
             };
@@ -31,6 +33,7 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( DivideX );
             Display.Add( DivideY );
             DisplayTabs.Add( Radius );
+            DisplayTabs.Add( AZ );
             DisplayTabs.Add( InjectionSpeed );
             DisplayTabs.Add( InjectionSpeedRandom );
         }

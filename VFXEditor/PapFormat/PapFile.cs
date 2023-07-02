@@ -31,12 +31,16 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
 
-        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) :
+            this( reader, new( Plugin.PapManager ), sourcePath, hkxTemp, checkOriginal ) { }
+
+        public PapFile( BinaryReader reader, CommandManager manager, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( manager ) {
             SourcePath = sourcePath;
 
             AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
 
+            var startPos = reader.BaseStream.Position;
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // magic
@@ -57,13 +61,13 @@ namespace VfxEditor.PapFormat {
 
             // ... do something about havok data ...
             var havokDataSize = footerPosition - havokPosition;
-            reader.BaseStream.Seek( havokPosition, SeekOrigin.Begin );
+            reader.BaseStream.Seek( startPos + havokPosition, SeekOrigin.Begin );
             var havokData = reader.ReadBytes( havokDataSize );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
             ModdedPapMod4 = ( int )( reader.BaseStream.Position % 4 );
 
-            reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
+            reader.BaseStream.Seek( startPos + footerPosition, SeekOrigin.Begin );
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
 
             for( var i = 0; i < numAnimations; i++ ) {
@@ -77,8 +81,6 @@ namespace VfxEditor.PapFormat {
         public override void Write( BinaryWriter writer ) {
             var havokData = File.ReadAllBytes( HkxTempLocation );
             var tmbData = Animations.Select( x => x.GetTmbBytes() );
-
-            writer.BaseStream.Seek( 0, SeekOrigin.Begin );
 
             var startPos = writer.BaseStream.Position;
 
@@ -111,10 +113,12 @@ namespace VfxEditor.PapFormat {
             }
 
             // go back and write sizes
+            var endPos = writer.BaseStream.Position;
             writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
             writer.Write( ( int )( infoPos - startPos ) );
             writer.Write( ( int )( havokPos - startPos ) );
             writer.Write( ( int )( timelinePos - startPos ) );
+            writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
         }
 
         public override void Draw() {
@@ -131,9 +135,9 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "Parameters" );
             if( !tabItem ) return;
 
-            ModelId.Draw( CommandManager.Pap );
-            ModelType.Draw( CommandManager.Pap );
-            Variant.Draw( CommandManager.Pap );
+            ModelId.Draw( Command );
+            ModelType.Draw( Command );
+            Variant.Draw( Command );
 
             if( ImGui.Button( $"Export Havok" ) ) {
                 FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {

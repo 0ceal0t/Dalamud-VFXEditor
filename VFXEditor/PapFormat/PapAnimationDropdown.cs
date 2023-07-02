@@ -22,7 +22,7 @@ namespace VfxEditor.PapFormat {
             command.Add( new PapHavokFileCommand( item, File.HkxTempLocation, () => {
                 HavokInterop.RemoveHavokAnimation( File.HkxTempLocation, index, File.HkxTempLocation );
             } ) );
-            CommandManager.Pap.Add( command );
+            File.Command.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );
         }

@@ -28,7 +28,8 @@ namespace VfxEditor.TmbFormat {
 
         private TmbEntry DraggingEntry = null;
 
-        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) : this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }
+        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) :
+            this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }
 
         public TmbFile( BinaryReader binaryReader, CommandManager manager, bool checkOriginal = true ) : base( manager ) {
             ActorsDropdown = new( this );

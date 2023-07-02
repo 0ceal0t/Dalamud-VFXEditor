@@ -70,9 +70,9 @@ namespace VfxEditor.PapFormat {
                 UiUtils.HelpMarker( "These values are hard-coded in the game's MotionTimeline sheet, and are based on the animation name" );
             }
 
-            Name.Draw( CommandManager.Pap );
-            Type.Draw( CommandManager.Pap );
-            Face.Draw( CommandManager.Pap );
+            Name.Draw( File.Command );
+            Type.Draw( File.Command );
+            Face.Draw( File.Command );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
@@ -106,7 +106,7 @@ namespace VfxEditor.PapFormat {
                 if( ImGui.Button( "Replace" ) ) {
                     FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
-                            CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
+                            File.Command.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
                             UiUtils.OkNotification( "TMB data imported" );
                         }
                     } );

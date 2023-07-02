@@ -24,7 +24,7 @@ namespace VfxEditor.CutbFormat {
         public readonly CutbAnimation Animation;
         public readonly List<CutbTimeline> Timelines = new();
 
-        public CutbFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.CutbManager ) ) {
+        public CutbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new CommandManager( Plugin.CutbManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // CUTB
@@ -107,6 +107,10 @@ namespace VfxEditor.CutbFormat {
 
             using( var tab = ImRaii.TabItem( "Default Scene" ) ) {
                 if( tab ) DefaultScene?.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Animation" ) ) {
+                if( tab ) Animation?.Draw();
             }
         }
 

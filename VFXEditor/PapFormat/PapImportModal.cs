@@ -34,7 +34,7 @@ namespace VfxEditor.PapFormat {
             command.Add( new PapHavokFileCommand( animation, File.HkxTempLocation, () => {
                 HavokInterop.AddHavokAnimation( File.HkxTempLocation, ImportPath, Index, File.HkxTempLocation );
             } ) );
-            CommandManager.Pap.Add( command );
+            File.Command.Add( command );
 
             UiUtils.OkNotification( "Havok data imported" );
         }

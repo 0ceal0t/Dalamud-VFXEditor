@@ -25,7 +25,7 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
-            CommandManager.Pap.Add( new PapHavokFileCommand( Animation, Animation.HkxTempLocation, () => {
+            Animation.File.Command.Add( new PapHavokFileCommand( Animation, Animation.HkxTempLocation, () => {
                 HavokInterop.ReplaceHavokAnimation(
                     Animation.HkxTempLocation,
                     Animation.HavokIndex,
