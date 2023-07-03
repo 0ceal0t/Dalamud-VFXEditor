@@ -113,7 +113,7 @@ namespace VfxEditor.TmbFormat {
                 if( tab ) ActorsDropdown.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "TMFC" ) ) {
+            using( var tab = ImRaii.TabItem( "F-Curves" ) ) {
                 if( tab ) TmfcDropdown.Draw();
             }
         }

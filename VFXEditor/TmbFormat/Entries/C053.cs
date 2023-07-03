@@ -18,7 +18,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C053 : TmbEntry {
         public const string MAGIC = "C053";
-        public const string DISPLAY_NAME = "Voiceline (C053)";
+        public const string DISPLAY_NAME = "Voiceline";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

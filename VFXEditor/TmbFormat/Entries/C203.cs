@@ -10,7 +10,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C203 : TmbEntry {
         public const string MAGIC = "C203";
-        public const string DISPLAY_NAME = "Summon Weapon Visibility (C203)";
+        public const string DISPLAY_NAME = "Summon Weapon Visibility";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

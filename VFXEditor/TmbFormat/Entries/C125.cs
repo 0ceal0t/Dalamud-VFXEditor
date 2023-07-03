@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C125 : TmbEntry {
         public const string MAGIC = "C125";
-        public const string DISPLAY_NAME = "Animation Lock (C125)";
+        public const string DISPLAY_NAME = "Animation Lock";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
         public override DangerLevel Danger => DangerLevel.Yellow;

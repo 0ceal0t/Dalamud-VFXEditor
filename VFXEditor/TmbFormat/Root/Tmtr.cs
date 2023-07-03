@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Actor;
@@ -19,28 +20,31 @@ namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
         public override string Magic => "TMTR";
         public override int Size => 0x18;
-        public override int ExtraSize => !UseUnknownExtra ? 0 : 8 + ( 12 * UnknownData.Count );
+        public override int ExtraSize => !UseUnknownExtra ? 0 : 8 + ( 12 * LuaEntries.Count );
 
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
-        private readonly ParsedByteBool UnknownExtraAssigned = new( "Use Unknown Extra Data", defaultValue: false );
-        private readonly List<TmtrUnknownData> UnknownData = new();
+        private readonly ParsedByteBool UnknownExtraAssigned = new( "Use Lua", defaultValue: false );
+        private readonly List<TmtrLuaEntry> LuaEntries = new();
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
+
+        private string NewSearchInput = "";
 
         public Tmtr( TmbFile file ) : base( file ) { }
 
         public Tmtr( TmbFile file, TmbReader reader ) : base( file, reader ) {
             TempIds = reader.ReadOffsetTimeline();
+
             reader.ReadAtOffset( ( binaryReader ) => {
                 UnknownExtraAssigned.Value = true;
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
-                for( var i = 0; i < count; i++ ) UnknownData.Add( new TmtrUnknownData( binaryReader, File ) );
+                for( var i = 0; i < count; i++ ) LuaEntries.Add( new TmtrLuaEntry( binaryReader, File ) );
             } );
         }
 
@@ -53,8 +57,8 @@ namespace VfxEditor.TmbFormat {
             else {
                 writer.WriteExtra( ( binaryWriter ) => {
                     binaryWriter.Write( 8 );
-                    binaryWriter.Write( UnknownData.Count );
-                    UnknownData.ForEach( x => x.Write( binaryWriter ) );
+                    binaryWriter.Write( LuaEntries.Count );
+                    LuaEntries.ForEach( x => x.Write( binaryWriter ) );
                 } );
             }
         }
@@ -68,27 +72,27 @@ namespace VfxEditor.TmbFormat {
         private void DrawUnknownData() {
             UnknownExtraAssigned.Draw( Command );
             if( UseUnknownExtra ) {
-                using var _ = ImRaii.PushId( "Unk" );
+                using var _ = ImRaii.PushId( "Lua" );
 
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                        Command.Add( new GenericAddCommand<TmtrUnknownData>( UnknownData, new TmtrUnknownData( File ) ) );
+                        Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File ) ) );
                     }
                 }
 
-                for( var idx = 0; idx < UnknownData.Count; idx++ ) {
-                    var unknownItem = UnknownData[idx];
+                for( var idx = 0; idx < LuaEntries.Count; idx++ ) {
+                    var lua = LuaEntries[idx];
 
-                    if( ImGui.CollapsingHeader( $"Unknown Extra Item {idx}" ) ) {
+                    if( ImGui.CollapsingHeader( $"Lua Entry {idx}" ) ) {
                         using var __ = ImRaii.PushId( idx );
                         using var indent = ImRaii.PushIndent();
 
                         if( UiUtils.RemoveButton( "Delete", true ) ) {
-                            Command.Add( new GenericRemoveCommand<TmtrUnknownData>( UnknownData, unknownItem ) );
+                            Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( LuaEntries, lua ) );
                             break;
                         }
-                        unknownItem.Draw();
+                        lua.Draw();
                     }
                 }
             }
@@ -106,40 +110,13 @@ namespace VfxEditor.TmbFormat {
 
             if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) ImGui.OpenPopup( "NewEntryPopup" );
 
-            if( ImGui.BeginPopup( "NewEntryPopup" ) ) { // NEW
-                using var _ = ImRaii.PushId( "NewEntry" );
-
-                if( UiUtils.IconSelectable( FontAwesomeIcon.FileImport, "Import" ) ) ImportDialog();
-
-                ImGui.Separator();
-
-                foreach( var entryOption in TmbUtils.ItemTypes.Values ) {
-                    if( ImGui.Selectable( entryOption.DisplayName ) ) {
-                        var constructor = entryOption.Type.GetConstructor( new Type[] { typeof( TmbFile ) } );
-                        var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
-
-                        TmbRefreshIdsCommand command = new( File, false, true );
-                        AddEntry( command, newEntry );
-                        Command.Add( command );
-                    }
-                }
+            if( ImGui.BeginPopup( "NewEntryPopup" ) ) {
+                DrawNewPopup();
                 ImGui.EndPopup();
             }
         }
 
         public void DuplicateEntry( TmbEntry entry ) => ImportEntry( entry.ToBytes() );
-
-        private void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", "TMB Entry{.tmbentry},.*", ( bool ok, string res ) => {
-                if( !ok ) return;
-                try {
-                    ImportEntry( System.IO.File.ReadAllBytes( res ) );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Could not import data" );
-                }
-            } );
-        }
 
         private void ImportEntry( byte[] data ) {
             using var ms = new MemoryStream( data );
@@ -183,6 +160,65 @@ namespace VfxEditor.TmbFormat {
                 command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
                 command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
             }
+        }
+
+        private void DrawNewPopup() {
+            using var _ = ImRaii.PushId( "NewEntry" );
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( FontAwesomeIcon.FileImport.ToIconString() ) ) ImportDialog();
+            }
+
+            var resetScroll = false;
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+                ImGui.SameLine();
+                ImGui.SetNextItemWidth( 200f );
+                resetScroll = ImGui.InputTextWithHint( "##Search", "Search", ref NewSearchInput, 255 );
+            }
+
+            ImGui.Separator();
+
+            var maxLength = TmbUtils.ItemTypes.Select( x => ImGui.CalcTextSize( $"{x.Key} | {x.Value.DisplayName}" ).X ).Max();
+            var imguiStyle = ImGui.GetStyle();
+
+            using var child = ImRaii.Child( "Child", new Vector2( maxLength + imguiStyle.FramePadding.X * 3 + imguiStyle.ScrollbarSize, 800 ) );
+
+            if( resetScroll ) ImGui.SetScrollHereY();
+
+            foreach( var option in TmbUtils.ItemTypes ) {
+                if( !string.IsNullOrEmpty( NewSearchInput ) ) {
+                    var combinedText = $"{option.Key} {option.Value.DisplayName}".ToLower();
+                    if( !combinedText.Contains( NewSearchInput.ToLower() ) ) continue;
+                }
+
+
+                ImGui.TextDisabled( option.Key );
+                ImGui.SameLine();
+
+                if( ImGui.Selectable( $"{option.Value.DisplayName}##{option.Key}", false, ImGuiSelectableFlags.SpanAllColumns ) ) AddEntry( option.Value.Type );
+            }
+        }
+
+        private void AddEntry( Type type ) {
+            var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ) } );
+            var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
+
+            TmbRefreshIdsCommand command = new( File, false, true );
+            AddEntry( command, newEntry );
+            Command.Add( command );
+        }
+
+        private void ImportDialog() {
+            FileDialogManager.OpenFileDialog( "Select a File", "TMB Entry{.tmbentry},.*", ( bool ok, string res ) => {
+                if( !ok ) return;
+                try {
+                    ImportEntry( System.IO.File.ReadAllBytes( res ) );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( e, "Could not import data" );
+                }
+            } );
         }
     }
 }

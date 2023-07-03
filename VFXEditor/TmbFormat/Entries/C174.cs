@@ -30,7 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C174 : TmbEntry {
         public const string MAGIC = "C174";
-        public const string DISPLAY_NAME = "Object Control (C174)";
+        public const string DISPLAY_NAME = "Object Control";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

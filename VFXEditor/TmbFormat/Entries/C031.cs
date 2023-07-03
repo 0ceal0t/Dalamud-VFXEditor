@@ -6,7 +6,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C031 : TmbEntry {
         public const string MAGIC = "C031";
-        public const string DISPLAY_NAME = "Summon Animation (C031)";
+        public const string DISPLAY_NAME = "Summon Animation";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

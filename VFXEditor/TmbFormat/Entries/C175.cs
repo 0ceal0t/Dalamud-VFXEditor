@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C175 : TmbEntry {
         public const string MAGIC = "C175";
-        public const string DISPLAY_NAME = "Object Scaling (C175)";
+        public const string DISPLAY_NAME = "Object Scaling";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C033 : TmbEntry {
         public const string MAGIC = "C033";
-        public const string DISPLAY_NAME = "Crafting Delay (C033)";
+        public const string DISPLAY_NAME = "Crafting Delay";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

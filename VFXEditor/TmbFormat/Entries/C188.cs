@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C188 : TmbEntry {
         public const string MAGIC = "C188";
-        public const string DISPLAY_NAME = "Invisibility (C188)";
+        public const string DISPLAY_NAME = "Invisibility";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

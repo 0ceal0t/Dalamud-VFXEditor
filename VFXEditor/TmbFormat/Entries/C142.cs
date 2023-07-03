@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C142 : TmbEntry {
         public const string MAGIC = "C142";
-        public const string DISPLAY_NAME = "Freeze Position (C142)";
+        public const string DISPLAY_NAME = "Freeze Position";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

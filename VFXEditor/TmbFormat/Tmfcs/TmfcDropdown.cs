@@ -7,15 +7,15 @@ namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcDropdown : Dropdown<Tmfc> {
         public readonly TmbFile File;
 
-        public TmfcDropdown( TmbFile file ) : base( "TMFC", file.Tmfcs, false, true ) {
+        public TmfcDropdown( TmbFile file ) : base( "F-Curve", file.Tmfcs, false, true ) {
             File = file;
         }
 
-        protected override string GetText( Tmfc item, int idx ) => $"TMFC {idx}";
+        protected override string GetText( Tmfc item, int idx ) => $"F-Curve {idx}";
 
         protected override void OnDelete( Tmfc item ) {
             Plugin.AddModal( new TextModal(
-                "Delete TMFC",
+                "Delete F-Curve",
                 "Are you sure you want to delete this item? This change is potentially detectable, so make sure you know what you're doing.",
                 () => {
                     TmbRefreshIdsCommand command = new( File, false, true );

@@ -20,7 +20,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C094 : TmbEntry {
         public const string MAGIC = "C094";
-        public const string DISPLAY_NAME = "Invisibility (C094)";
+        public const string DISPLAY_NAME = "Invisibility";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

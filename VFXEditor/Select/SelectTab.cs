@@ -99,7 +99,8 @@ namespace VfxEditor.Select {
             using( var tree = ImRaii.Child( "Tree" ) ) {
                 SelectTabUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
-                if( resetScroll ) { ImGui.SetScrollHereY(); };
+
+                if( resetScroll ) ImGui.SetScrollHereY();
 
                 var idx = 0;
                 foreach( var item in Searched ) {
@@ -126,6 +127,7 @@ namespace VfxEditor.Select {
 
         protected virtual void DrawInner() {
             using var child = ImRaii.Child( "Child" );
+
             ImGui.Text( GetName( Selected ) );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DrawSelected();

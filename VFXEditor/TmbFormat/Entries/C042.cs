@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C042 : TmbEntry {
         public const string MAGIC = "C042";
-        public const string DISPLAY_NAME = "Footstep (C042)";
+        public const string DISPLAY_NAME = "Footstep";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

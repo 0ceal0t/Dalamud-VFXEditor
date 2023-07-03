@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C168 : TmbEntry {
         public const string MAGIC = "C168";
-        public const string DISPLAY_NAME = "C168";
+        public const string DISPLAY_NAME = "";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
         public override DangerLevel Danger => DangerLevel.Detectable;
@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt TmfcId = new( "TMFC ID" );
+        private readonly ParsedInt TmfcId = new( "F-Curve Id" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" ); // <-----
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );

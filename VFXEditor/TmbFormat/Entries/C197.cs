@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C197 : TmbEntry {
         public const string MAGIC = "C197";
-        public const string DISPLAY_NAME = "Voiceline (C197)";
+        public const string DISPLAY_NAME = "Voiceline";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
