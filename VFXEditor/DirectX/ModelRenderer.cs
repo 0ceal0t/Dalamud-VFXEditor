@@ -20,16 +20,16 @@ namespace VfxEditor.DirectX {
         private float Pitch;
         private Vector3 Position = new( 0, 0, 0 );
         private float Distance = 5;
-        private Matrix LocalMatrix = Matrix.Identity;
+        protected Matrix LocalMatrix = Matrix.Identity;
 
         protected int Width = 300;
         protected int Height = 300;
+        protected Matrix ViewMatrix;
         protected bool FirstModel = false;
 
         protected RasterizerState RasterizeState;
         protected Buffer RendersizeBuffer;
         protected Buffer WorldBuffer;
-        protected Matrix ViewMatrix;
         protected Matrix ProjMatrix;
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
@@ -182,14 +182,20 @@ namespace VfxEditor.DirectX {
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
-        public void DrawInline() {
-            var cursor = ImGui.GetCursorScreenPos();
+        public virtual void DrawInline() {
             using var child = ImRaii.Child( "3DChild" );
 
-            var space = ImGui.GetContentRegionAvail();
-            Resize( space );
+            DrawImage( out var _, out var _ );
+        }
 
-            ImGui.ImageButton( Output, space, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
+        protected void DrawImage( out Vec2 topleft, out Vec2 bottomRight ) {
+            var cursor = ImGui.GetCursorScreenPos();
+            var size = ImGui.GetContentRegionAvail();
+            Resize( size );
+
+            ImGui.ImageButton( Output, size, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
+            topleft = ImGui.GetItemRectMin();
+            bottomRight = ImGui.GetItemRectMax();
 
             if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();

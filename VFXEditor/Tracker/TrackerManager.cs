@@ -23,7 +23,7 @@ namespace VfxEditor.Tracker {
     public class TrackerManager {
         private static bool WatchingCutscene => Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
-        private static readonly ClosenessComp CloseComp = new();
+        private static readonly ClosenessComparator Comparator = new();
 
         public bool Enabled { get; private set; }
         public bool AnyEnabled => EnabledTrackers.Any();
@@ -70,7 +70,7 @@ namespace VfxEditor.Tracker {
 
             var idx = 0;
 
-            foreach( var group in floatingItems.GroupBy( item => item.Position, item => item.Item, CloseComp ) ) {
+            foreach( var group in floatingItems.GroupBy( item => item.Position, item => item.Item, Comparator ) ) {
                 var paths = new HashSet<TrackerItem>( group );
 
                 if( !WorldToScreen( height, width, ref matrix, windowPosition, group.Key, out var screenCoords ) ) continue;
@@ -152,7 +152,7 @@ namespace VfxEditor.Tracker {
             ImGui.End();
         }
 
-        private class ClosenessComp : IEqualityComparer<Vector3> {
+        private class ClosenessComparator : IEqualityComparer<Vector3> {
             public bool Equals( Vector3 x, Vector3 y ) => ( x - y ).Length() < 2;
             public int GetHashCode( Vector3 obj ) => 0;
         }

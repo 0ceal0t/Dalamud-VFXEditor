@@ -43,40 +43,40 @@ namespace VfxEditor.AvfxFormat {
             // now the fun (tm) begins
             var space = ImGui.GetContentRegionAvail();
             var Size = new Vector2( space.X, 150 );
-            var DrawList = ImGui.GetWindowDrawList();
+            var drawList = ImGui.GetWindowDrawList();
 
             ImGui.BeginGroup();
 
             ImGui.InvisibleButton( "##NodeEmpty", Size );
-            var CanvasTopLeft = ImGui.GetItemRectMin();
-            var CanvasBottomRight = ImGui.GetItemRectMax();
-            DrawList.PushClipRect( CanvasTopLeft, CanvasBottomRight, true );
+            var canvasTopLeft = ImGui.GetItemRectMin();
+            var canvasBottomRight = ImGui.GetItemRectMax();
+            drawList.PushClipRect( canvasTopLeft, canvasBottomRight, true );
 
-            DrawList.AddRectFilled( CanvasTopLeft, CanvasBottomRight, BgColor );
+            drawList.AddRectFilled( canvasTopLeft, canvasBottomRight, BgColor );
 
             // ========= GRID =========
 
             for( var i = 0; i < Size.X / GridSmall; i++ ) {
-                DrawList.AddLine( new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasTopLeft.Y ), new Vector2( CanvasTopLeft.X + i * GridSmall, CanvasBottomRight.Y ), GridColor, 1.0f );
+                drawList.AddLine( new Vector2( canvasTopLeft.X + i * GridSmall, canvasTopLeft.Y ), new Vector2( canvasTopLeft.X + i * GridSmall, canvasBottomRight.Y ), GridColor, 1.0f );
             }
             for( var i = 0; i < Size.Y / GridSmall; i++ ) {
-                DrawList.AddLine( new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + i * GridSmall ), new Vector2( CanvasBottomRight.X, CanvasTopLeft.Y + i * GridSmall ), GridColor, 1.0f );
+                drawList.AddLine( new Vector2( canvasTopLeft.X, canvasTopLeft.Y + i * GridSmall ), new Vector2( canvasBottomRight.X, canvasTopLeft.Y + i * GridSmall ), GridColor, 1.0f );
             }
             for( var i = 0; i < Size.X / GridLarge; i++ ) {
-                DrawList.AddLine( new Vector2( CanvasTopLeft.X + i * GridLarge, CanvasTopLeft.Y ), new Vector2( CanvasTopLeft.X + i * GridLarge, CanvasBottomRight.Y ), GridColor, 2.0f );
+                drawList.AddLine( new Vector2( canvasTopLeft.X + i * GridLarge, canvasTopLeft.Y ), new Vector2( canvasTopLeft.X + i * GridLarge, canvasBottomRight.Y ), GridColor, 2.0f );
             }
             for( var i = 0; i < Size.Y / GridLarge; i++ ) {
-                DrawList.AddLine( new Vector2( CanvasTopLeft.X, CanvasTopLeft.Y + i * GridLarge ), new Vector2( CanvasBottomRight.X, CanvasTopLeft.Y + i * GridLarge ), GridColor, 2.0f );
+                drawList.AddLine( new Vector2( canvasTopLeft.X, canvasTopLeft.Y + i * GridLarge ), new Vector2( canvasBottomRight.X, canvasTopLeft.Y + i * GridLarge ), GridColor, 2.0f );
             }
 
-            DrawList.AddRect( CanvasTopLeft, CanvasBottomRight, BgColor2 );
+            drawList.AddRect( canvasTopLeft, canvasBottomRight, BgColor2 );
 
             foreach( var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
-                var Pos = CanvasBottomRight - GetPos( item ) + LineOffset; // left node
+                var Pos = canvasBottomRight - GetPos( item ) + LineOffset; // left node
                 foreach( var n in item.Next ) {
                     var item2 = Node.Graph.Graph[n];
-                    var Pos2 = CanvasBottomRight - GetPos( item2 ) + BoxSize - LineOffset; // right node
+                    var Pos2 = canvasBottomRight - GetPos( item2 ) + BoxSize - LineOffset; // right node
 
                     Vector2 Mid;
                     Vector2 Mid1;
@@ -92,33 +92,33 @@ namespace VfxEditor.AvfxFormat {
                         Mid2 = new Vector2( Mid.X, Pos2.Y );
                     }
 
-                    DrawList.AddBezierCubic( Pos, Mid1, Mid2, Pos2, LineColor, 3.0f );
+                    drawList.AddBezierCubic( Pos, Mid1, Mid2, Pos2, LineColor, 3.0f );
                 }
             }
             foreach( var node in Node.Graph.Graph.Keys ) {
                 var item = Node.Graph.Graph[node];
-                var Pos = CanvasBottomRight - GetPos( item );
-                DrawList.AddRectFilled( Pos, Pos + BoxSize, node.GraphColor, 5 );
+                var pos = canvasBottomRight - GetPos( item );
+                drawList.AddRectFilled( pos, pos + BoxSize, node.GraphColor, 5 );
 
-                DrawList.AddText( Pos + TextOffset, TextColor, TrimText( node.GetText() ) );
+                drawList.AddText( pos + TextOffset, TextColor, TrimText( node.GetText() ) );
 
-                var buttonPos = Pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
-                var buttonOver = UiUtils.MouseOver( CanvasTopLeft, CanvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );
+                var buttonPos = pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
+                var buttonOver = UiUtils.MouseOver( canvasTopLeft, canvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );
 
-                DrawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, FontAwesomeIcon.Share.ToIconString() );
+                drawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, FontAwesomeIcon.Share.ToIconString() );
                 if( buttonOver && UiUtils.MouseClicked() ) {
                     Plugin.AvfxManager.CurrentFile.SelectItem( node ); // navigate to node
                 }
 
                 if( item.Level > 0 ) { // right node
-                    var Pos2 = CanvasBottomRight - GetPos( item ) + BoxSize - LineOffset;
-                    DrawList.AddCircleFilled( Pos2, 4, LineColor );
-                    DrawList.AddCircle( Pos2, 5, BorderColor );
+                    var Pos2 = canvasBottomRight - GetPos( item ) + BoxSize - LineOffset;
+                    drawList.AddCircleFilled( Pos2, 4, LineColor );
+                    drawList.AddCircle( Pos2, 5, BorderColor );
                 }
                 if( item.Next.Count > 0 ) { // left node
-                    var Pos2 = CanvasBottomRight - GetPos( item ) + LineOffset;
-                    DrawList.AddCircleFilled( Pos2, 4, LineColor );
-                    DrawList.AddCircle( Pos2, 5, BorderColor );
+                    var Pos2 = canvasBottomRight - GetPos( item ) + LineOffset;
+                    drawList.AddCircleFilled( Pos2, 4, LineColor );
+                    drawList.AddCircle( Pos2, 5, BorderColor );
                 }
             }
 
@@ -136,7 +136,7 @@ namespace VfxEditor.AvfxFormat {
                 ViewDrag = false;
             }
 
-            DrawList.PopClipRect();
+            drawList.PopClipRect();
             ImGui.EndGroup();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }

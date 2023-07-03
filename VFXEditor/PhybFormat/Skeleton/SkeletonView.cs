@@ -38,7 +38,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             else if( PhybPreview.CurrentFile != File ) UpdateSkeleton();
 
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-            var inputSize = UiUtils.GetOffsetInputSize( checkSize );
+            var inputSize = UiUtils.GetOffsetInputSize( checkSize + 200 );
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
 
@@ -61,7 +61,8 @@ namespace VfxEditor.PhybFormat.Skeleton {
             }
 
             ImGui.SameLine();
-            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the physics file" );
+
+            if( ImGui.Checkbox( "Bone Names", ref Plugin.Configuration.PhybShowBoneName ) ) Plugin.Configuration.Save();
 
             if( BoneMatrixes == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();
@@ -115,6 +116,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
                         var parents = new List<int>();
                         var refPoses = new List<Matrix>();
                         var bindPoses = new List<Matrix>();
+                        var names = new List<string>();
 
                         for( var i = 0; i < skeleton->Bones.Length; i++ ) {
                             var pose = skeleton->ReferencePose[i];
@@ -142,13 +144,15 @@ namespace VfxEditor.PhybFormat.Skeleton {
                         }
 
                         for( var i = 0; i < skeleton->Bones.Length; i++ ) {
+                            var name = skeleton->Bones[i].Name.String;
                             var bone = new Bone {
                                 BindPose = bindPoses[i],
-                                ParentIndex = skeleton->ParentIndices[i]
+                                ParentIndex = skeleton->ParentIndices[i],
+                                Name = name
                             };
 
                             BoneList.Add( bone );
-                            BoneMatrixes[skeleton->Bones[i].Name.String] = bone;
+                            BoneMatrixes[name] = bone;
                         }
                     }
                 }
@@ -176,7 +180,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         private void UpdateSkeleton() {
             if( BoneList?.Count == 0 ) PhybPreview.LoadEmpty( File );
-            else PhybPreview.LoadSkeleton( File, AnimationData.CreateSkeletonMesh( BoneList ) );
+            else PhybPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList ) );
         }
 
         public void Dispose() {

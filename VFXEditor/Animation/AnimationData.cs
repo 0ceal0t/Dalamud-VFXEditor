@@ -95,7 +95,7 @@ namespace VfxEditor.Animation {
             for( var idx = 0; idx < BoneParents.Count; idx++ ) {
                 bones.Add( new Bone {
                     BindPose = CleanMatrix( bindPoses[idx] ),
-                    ParentIndex = BoneParents[idx]
+                    ParentIndex = BoneParents[idx],
                 } );
             }
 

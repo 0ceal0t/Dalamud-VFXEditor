@@ -110,6 +110,7 @@ namespace VfxEditor {
         public bool DocumentPopoutShowSource = false;
 
         public bool PhybSkeletonSplit = true;
+        public bool PhybShowBoneName = true;
 
         [NonSerialized]
         public bool WriteLocationError = false;
