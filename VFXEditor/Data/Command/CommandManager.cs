@@ -16,7 +16,6 @@ namespace VfxEditor {
         public static CommandManager Eid => Plugin.EidManager?.GetCommandManager();
         public static CommandManager Uld => Plugin.UldManager?.GetCommandManager();
         public static CommandManager Phyb => Plugin.PhybManager?.GetCommandManager();
-        public static CommandManager Cutb => Plugin.CutbManager?.GetCommandManager();
 
         public static int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();

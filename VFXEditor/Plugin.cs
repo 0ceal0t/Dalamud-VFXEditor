@@ -12,7 +12,6 @@ using ImPlotNET;
 using System.Collections.Generic;
 using VfxEditor.Animation;
 using VfxEditor.AvfxFormat;
-using VfxEditor.CutbFormat;
 using VfxEditor.Data;
 using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
@@ -64,7 +63,6 @@ namespace VfxEditor {
             EidManager,
             UldManager,
             PhybManager,
-            CutbManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -75,7 +73,6 @@ namespace VfxEditor {
         public static EidManager EidManager { get; private set; }
         public static UldManager UldManager { get; private set; }
         public static PhybManager PhybManager { get; private set; }
-        public static CutbManager CutbManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -125,7 +122,6 @@ namespace VfxEditor {
             EidManager = new();
             UldManager = new();
             PhybManager = new();
-            CutbManager = new();
 
             ToolsDialog = new ToolsDialog();
             PenumbraIpc = new PenumbraIpc();
@@ -177,9 +173,6 @@ namespace VfxEditor {
                 case "phyb":
                     PhybManager.Toggle();
                     break;
-                case "cutb":
-                    CutbManager.Toggle();
-                    break;
                 default:
                     AvfxManager.Toggle();
                     break;
@@ -213,7 +206,6 @@ namespace VfxEditor {
             EidManager = null;
             UldManager = null;
             PhybManager = null;
-            CutbManager = null;
 
             ActorAnimationManager?.Dispose();
             ActorAnimationManager = null;
