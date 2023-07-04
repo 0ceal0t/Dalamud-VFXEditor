@@ -1,8 +1,8 @@
+using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
@@ -69,7 +69,10 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             Unk1.Draw( Command );
             Unk2.Draw( Command );
 
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
             using var _ = ImRaii.PushId( "Data" );
             DataSplitView.Draw();
         }

@@ -3,7 +3,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
@@ -50,10 +49,11 @@ namespace VfxEditor.TmbFormat.Actor {
             AbilityDelay.Draw( Command );
             Unk2.Draw( Command );
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
-            ImGui.Columns( 2, $"Cols", true );
+            ImGui.Columns( 2, "Cols", true );
 
             var selectedIndex = SelectedTrack == null ? -1 : Tracks.IndexOf( SelectedTrack );
             if( selectedIndex == -1 ) SelectedTrack = null;
