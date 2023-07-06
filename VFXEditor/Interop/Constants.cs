@@ -50,5 +50,8 @@ namespace VfxEditor.Interop {
         public const int GetGameObjectIdxVfunc = 28;
 
         public const int TimelineToActionOffset = 152;
+
+        public const string LuaManagerSig = "48 8B 0D ?? ?? ?? ?? BA 0F 00 00 10";
+        public const string LuaVariableSig = "44 8B C2 C1 FA 1C 41 81 E0 FF FF FF 0F";
     }
 }

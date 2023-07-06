@@ -6,11 +6,13 @@ namespace VfxEditor.Ui.Tools {
         private readonly ResourceTab ResourceTab;
         private readonly UtilitiesTab UtilitiesTab;
         private readonly LoadedTab LoadedTab;
+        private readonly LuaTab LuaTab;
 
         public ToolsDialog() : base( "Tools", false, 300, 400 ) {
             ResourceTab = new ResourceTab();
             UtilitiesTab = new UtilitiesTab();
             LoadedTab = new LoadedTab();
+            LuaTab = new LuaTab();
         }
 
         public override void DrawBody() {
@@ -29,6 +31,10 @@ namespace VfxEditor.Ui.Tools {
             }
             if( ImGui.BeginTabItem( "Loaded Files" ) ) {
                 LoadedTab.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Lua Variables" ) ) {
+                LuaTab.Draw();
                 ImGui.EndTabItem();
             }
         }

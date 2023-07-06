@@ -20,15 +20,15 @@ namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
         public override string Magic => "TMTR";
         public override int Size => 0x18;
-        public override int ExtraSize => !UseUnknownExtra ? 0 : 8 + ( 12 * LuaEntries.Count );
+        public override int ExtraSize => !UseLua ? 0 : 8 + ( 12 * LuaEntries.Count );
 
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
-        private bool UseUnknownExtra => UnknownExtraAssigned.Value == true;
-        private readonly ParsedByteBool UnknownExtraAssigned = new( "Use Lua", defaultValue: false );
-        private readonly List<TmtrLuaEntry> LuaEntries = new();
+        private bool UseLua => LuaAssigned.Value == true;
+        private readonly ParsedByteBool LuaAssigned = new( "Use Lua", defaultValue: false );
+        public readonly List<TmtrLuaEntry> LuaEntries = new();
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
 
@@ -40,11 +40,11 @@ namespace VfxEditor.TmbFormat {
             TempIds = reader.ReadOffsetTimeline();
 
             reader.ReadAtOffset( ( binaryReader ) => {
-                UnknownExtraAssigned.Value = true;
+                LuaAssigned.Value = true;
 
                 binaryReader.ReadInt32(); // 8
                 var count = binaryReader.ReadInt32();
-                for( var i = 0; i < count; i++ ) LuaEntries.Add( new TmtrLuaEntry( binaryReader, File ) );
+                for( var i = 0; i < count; i++ ) LuaEntries.Add( new TmtrLuaEntry( binaryReader, File, this ) );
             } );
         }
 
@@ -53,7 +53,7 @@ namespace VfxEditor.TmbFormat {
         public override void Write( TmbWriter writer ) {
             base.Write( writer );
             writer.WriteOffsetTimeline( Entries );
-            if( !UseUnknownExtra ) writer.Write( 0 );
+            if( !UseLua ) writer.Write( 0 );
             else {
                 writer.WriteExtra( ( binaryWriter ) => {
                     binaryWriter.Write( 8 );
@@ -64,37 +64,35 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw() {
+            DrawLua();
             DrawHeader();
-            DrawUnknownData();
             DrawEntries();
         }
 
-        private void DrawUnknownData() {
-            UnknownExtraAssigned.Draw( Command );
-            if( UseUnknownExtra ) {
+        private void DrawLua() {
+            LuaAssigned.Draw( Command );
+            if( UseLua ) {
                 using var _ = ImRaii.PushId( "Lua" );
 
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                        Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File ) ) );
+                        Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
                     }
                 }
 
+                var currentX = 0f;
+                var maxX = ImGui.GetContentRegionAvail().X;
                 for( var idx = 0; idx < LuaEntries.Count; idx++ ) {
                     var lua = LuaEntries[idx];
+                    using var __ = ImRaii.PushId( idx );
 
-                    if( ImGui.CollapsingHeader( $"Lua Entry {idx}" ) ) {
-                        using var __ = ImRaii.PushId( idx );
-                        using var indent = ImRaii.PushIndent();
-
-                        if( UiUtils.RemoveButton( "Delete", true ) ) {
-                            Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( LuaEntries, lua ) );
-                            break;
-                        }
-                        lua.Draw();
-                    }
+                    if( lua.Draw( idx == 0, maxX, ref currentX ) ) break;
                 }
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+                ImGui.Separator();
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }
         }
 

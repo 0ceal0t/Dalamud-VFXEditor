@@ -44,6 +44,12 @@ namespace VfxEditor.Interop {
 
             PlayActionHook = Hook<PlayActionPrototype>.FromAddress( scanner.ScanText( Constants.PlayActionSig ), PlayActionDetour );
 
+            GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( scanner.ScanText( Constants.LuaVariableSig ) );
+
+            var luaManagerStart = scanner.ScanText( Constants.LuaManagerSig ) + 3;
+            var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
+            LuaManager = Marshal.ReadIntPtr( luaManagerStart + 4 + luaManagerOffset );
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
