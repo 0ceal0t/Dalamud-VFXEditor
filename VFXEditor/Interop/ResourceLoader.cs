@@ -48,7 +48,7 @@ namespace VfxEditor.Interop {
 
             var luaManagerStart = scanner.ScanText( Constants.LuaManagerSig ) + 3;
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
-            LuaManager = Marshal.ReadIntPtr( luaManagerStart + 4 + luaManagerOffset );
+            LuaManager = luaManagerStart + 4 + luaManagerOffset;
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();

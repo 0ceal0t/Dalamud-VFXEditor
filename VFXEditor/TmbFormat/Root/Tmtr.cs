@@ -20,14 +20,13 @@ namespace VfxEditor.TmbFormat {
     public class Tmtr : TmbItemWithTime {
         public override string Magic => "TMTR";
         public override int Size => 0x18;
-        public override int ExtraSize => !UseLua ? 0 : 8 + ( 12 * LuaEntries.Count );
+        public override int ExtraSize => !LuaAssigned.Value ? 0 : 8 + ( 12 * LuaEntries.Count );
 
         public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
-        private bool UseLua => LuaAssigned.Value == true;
-        private readonly ParsedByteBool LuaAssigned = new( "Use Lua", defaultValue: false );
+        private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", defaultValue: false );
         public readonly List<TmtrLuaEntry> LuaEntries = new();
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
@@ -53,7 +52,7 @@ namespace VfxEditor.TmbFormat {
         public override void Write( TmbWriter writer ) {
             base.Write( writer );
             writer.WriteOffsetTimeline( Entries );
-            if( !UseLua ) writer.Write( 0 );
+            if( !LuaAssigned.Value ) writer.Write( 0 );
             else {
                 writer.WriteExtra( ( binaryWriter ) => {
                     binaryWriter.Write( 8 );
@@ -71,15 +70,14 @@ namespace VfxEditor.TmbFormat {
 
         private void DrawLua() {
             LuaAssigned.Draw( Command );
-            if( UseLua ) {
-                using var _ = ImRaii.PushId( "Lua" );
+            ImGui.SameLine();
+            UiUtils.HelpMarker( "The current value of Lua variables can be found in the \"Lua Variables\" tab of File > Tools" );
 
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                        Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
-                    }
-                }
+            if( !LuaAssigned.Value ) return;
+
+            using var _ = ImRaii.PushId( "Lua" );
+            using( var indent = ImRaii.PushIndent( 5f ) ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
                 var currentX = 0f;
                 var maxX = ImGui.GetContentRegionAvail().X;
@@ -90,10 +88,14 @@ namespace VfxEditor.TmbFormat {
                     if( lua.Draw( idx == 0, maxX, ref currentX ) ) break;
                 }
 
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-                ImGui.Separator();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+                if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
+                    Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
+                }
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
         }
 
         private void DrawEntries() {

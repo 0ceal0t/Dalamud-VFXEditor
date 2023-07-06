@@ -112,6 +112,11 @@ namespace VfxEditor {
         public bool PhybSkeletonSplit = true;
         public bool PhybShowBoneName = true;
 
+        public Vector4 LuaParensColor = new( 0.5f, 0.5f, 0.5f, 1f );
+        public Vector4 LuaFunctionColor = new( 0f, 0.439f, 1f, 1f );
+        public Vector4 LuaLiteralColor = new( 0.639f, 0.207f, 0.933f, 1f );
+        public Vector4 LuaVariableColor = new( 0.125f, 0.67058f, 0.45098f, 1f );
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -176,12 +181,12 @@ namespace VfxEditor {
                 DrawKeybinds();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Curve Editor" ) ) {
-                DrawCurveEditor();
+            if( ImGui.BeginTabItem( "Vfx" ) ) {
+                DrawVfx();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Timeline Editor" ) ) {
-                DrawTimelineEditor();
+            if( ImGui.BeginTabItem( "Tmb" ) ) {
+                DrawTmb();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "File Editors" ) ) {
@@ -252,27 +257,44 @@ namespace VfxEditor {
             if( SpawnOnTargetKeybind.Draw( "Spawn on target (Vfx only)" ) ) Save();
         }
 
-        private void DrawCurveEditor() {
-            using var child = ImRaii.Child( "CurveEditor" );
+        private void DrawVfx() {
+            using var child = ImRaii.Child( "Vfx" );
 
-            if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
-            if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
-            if( ImGui.ColorEdit4( "Primary selected color", ref CurveEditorPrimarySelectedColor ) ) Save();
-            if( ImGui.ColorEdit4( "Selected color", ref CurveEditorSelectedColor ) ) Save();
+            if( ImGui.CollapsingHeader( "Curve Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var indent = ImRaii.PushIndent( 10f );
 
-            if( ImGui.InputInt( "Line width", ref CurveEditorLineWidth ) ) Save();
-            if( ImGui.InputInt( "Color ring width", ref CurveEditorColorRingSize ) ) Save();
-            if( ImGui.InputInt( "Point size", ref CurveEditorPointSize ) ) Save();
-            if( ImGui.InputInt( "Primary selected size", ref CurveEditorPrimarySelectedSize ) ) Save();
-            if( ImGui.InputInt( "Selected size", ref CurveEditorSelectedSize ) ) Save();
-            if( ImGui.InputInt( "Grab distance", ref CurveEditorGrabbingDistance ) ) Save();
+                if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
+                if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
+                if( ImGui.ColorEdit4( "Primary selected color", ref CurveEditorPrimarySelectedColor ) ) Save();
+                if( ImGui.ColorEdit4( "Selected color", ref CurveEditorSelectedColor ) ) Save();
+
+                if( ImGui.InputInt( "Line width", ref CurveEditorLineWidth ) ) Save();
+                if( ImGui.InputInt( "Color ring width", ref CurveEditorColorRingSize ) ) Save();
+                if( ImGui.InputInt( "Point size", ref CurveEditorPointSize ) ) Save();
+                if( ImGui.InputInt( "Primary selected size", ref CurveEditorPrimarySelectedSize ) ) Save();
+                if( ImGui.InputInt( "Selected size", ref CurveEditorSelectedSize ) ) Save();
+                if( ImGui.InputInt( "Grab distance", ref CurveEditorGrabbingDistance ) ) Save();
+            }
+
+            if( ImGui.CollapsingHeader( "Timeline Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var indent = ImRaii.PushIndent( 10f );
+
+                if( ImGui.ColorEdit4( "Selected color", ref TimelineSelectedColor ) ) Save();
+                if( ImGui.ColorEdit4( "Bar color", ref TimelineBarColor ) ) Save();
+            }
         }
 
-        private void DrawTimelineEditor() {
-            using var child = ImRaii.Child( "TimelineEditor" );
+        private void DrawTmb() {
+            using var child = ImRaii.Child( "Tmb" );
 
-            if( ImGui.ColorEdit4( $"Selected color", ref TimelineSelectedColor ) ) Save();
-            if( ImGui.ColorEdit4( $"Bar color", ref TimelineBarColor ) ) Save();
+            if( ImGui.CollapsingHeader( "Lua", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var indent = ImRaii.PushIndent( 10f );
+
+                if( ImGui.ColorEdit4( "Parentheses color", ref LuaParensColor ) ) Save();
+                if( ImGui.ColorEdit4( "Function color", ref LuaFunctionColor ) ) Save();
+                if( ImGui.ColorEdit4( "Literal color", ref LuaLiteralColor ) ) Save();
+                if( ImGui.ColorEdit4( "Variable color", ref LuaVariableColor ) ) Save();
+            }
         }
 
         private void DrawEditorSpecific() {

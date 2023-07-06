@@ -70,11 +70,6 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedUInt Value = new( "Value" );
         private readonly ParsedFloat FloatValue = new( "Float Value" );
 
-        private static Vector4 COLOR_PARENS = new( 0.5f, 0.5f, 0.5f, 1f );
-        private static Vector4 COLOR_FUNCTION = new( 0f, 0.439f, 1f, 1f );
-        private static Vector4 COLOR_LITERAL = new( 0.639f, 0.207f, 0.933f, 1f );
-        private static Vector4 COLOR_VARIABLE = new( 0.125f, 0.67058f, 0.45098f, 1f );
-
         public TmtrLuaEntry( TmbFile file, Tmtr track ) {
             File = file;
             Track = track;
@@ -103,12 +98,12 @@ namespace VfxEditor.TmbFormat {
             };
 
             var color = Operation.Value switch {
-                LuaOperation.Int_Value => COLOR_LITERAL,
-                LuaOperation.Float_Value => COLOR_LITERAL,
-                LuaOperation.Variable => COLOR_VARIABLE,
-                LuaOperation.Open_Parens => COLOR_PARENS,
-                LuaOperation.Close_Parens => COLOR_PARENS,
-                _ => COLOR_FUNCTION
+                LuaOperation.Int_Value => Plugin.Configuration.LuaLiteralColor,
+                LuaOperation.Float_Value => Plugin.Configuration.LuaLiteralColor,
+                LuaOperation.Variable => Plugin.Configuration.LuaVariableColor,
+                LuaOperation.Open_Parens => Plugin.Configuration.LuaParensColor,
+                LuaOperation.Close_Parens => Plugin.Configuration.LuaParensColor,
+                _ => Plugin.Configuration.LuaFunctionColor
             };
 
 
@@ -143,9 +138,11 @@ namespace VfxEditor.TmbFormat {
         }
 
         private bool DrawPopup() {
-            if( UiUtils.RemoveButton( "Delete", true ) ) {
-                File.Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
-                return true;
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                    File.Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
+                    return true;
+                }
             }
 
             Operation.Draw( File.Command );
