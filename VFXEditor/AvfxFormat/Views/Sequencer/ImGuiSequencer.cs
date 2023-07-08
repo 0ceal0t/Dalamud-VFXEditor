@@ -54,6 +54,7 @@ namespace VfxEditor.AvfxFormat {
             var io = ImGui.GetIO();
             var cursorX = ( int )io.MousePos.X;
             var cursorY = ( int )io.MousePos.Y;
+            var focused = false;
 
             T deleteEntry = null;
             var newItemAdded = false;
@@ -104,14 +105,21 @@ namespace VfxEditor.AvfxFormat {
 
             var headerSize = new Vector2( canvasSize.X, ItemHeight );
             var scrollBarSize = new Vector2( canvasSize.X, 14f );
+
             ImGui.InvisibleButton( "SeqTopBar", headerSize );
+            focused |= ImGui.IsItemFocused();
+
             drawList.AddRectFilled( canvasPos, canvasPos + headerSize, 0xFFFF0000, 0 );
             var childFramePos = ImGui.GetCursorScreenPos();
             var childFrameSize = new Vector2( canvasSize.X, canvasSize.Y - 8f - headerSize.Y - scrollBarSize.Y );
             var childFramePosMax = childFramePos + childFrameSize;
             using var frameColor = ImRaii.PushColor( ImGuiCol.FrameBg, 0 );
+
             ImGui.BeginChildFrame( 889, childFrameSize );
+            focused |= ImGui.IsItemFocused();
+
             ImGui.InvisibleButton( "SeqContentBar", new Vector2( canvasSize.X, controlHeight ) );
+            focused |= ImGui.IsItemFocused();
 
             var contentMin = ImGui.GetItemRectMin();
             var contentMax = ImGui.GetItemRectMax();
@@ -120,7 +128,7 @@ namespace VfxEditor.AvfxFormat {
 
             drawList.AddRectFilled( canvasPos, new Vector2( canvasPos.X + canvasSize.X, canvasPos.Y + ItemHeight ), 0xFF3D3837, 0 );
 
-            if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && UiUtils.MouseClicked() ) {
+            if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && UiUtils.MouseClicked() && focused ) {
                 OnNew();
                 newItemAdded = true;
             }
@@ -192,18 +200,18 @@ namespace VfxEditor.AvfxFormat {
                 var text = item.GetText().Length < 22 ? item.GetText() : item.GetText()[..19] + "...";
                 var textColor = item == Selected ? Plugin.Configuration.TimelineSelectedColor : new Vector4( 1 ); // Selected text color <-----------------
                 drawList.AddText( itemPos + new Vector2( 25, -1 ), ImGui.GetColorU32( textColor ), text );
-                if( !newItemAdded && overCheck && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
+                if( !newItemAdded && overCheck && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     ignoreSelected = true;
                     Toggle( item );
                 }
 
                 var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y ), false );
-                if( !newItemAdded && overDelete && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
+                if( !newItemAdded && overDelete && UiUtils.MouseClicked() && UiUtils.MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     ignoreSelected = true;
                     deleteEntry = item;
                 }
 
-                if( !newItemAdded && !ignoreSelected && UiUtils.Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && UiUtils.MouseOver( childFramePos, childFramePosMax ) ) {
+                if( !newItemAdded && !ignoreSelected && UiUtils.Contains( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ), io.MousePos ) && UiUtils.MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     if( UiUtils.MouseClicked() ) Selected = item; // Select from left side
                     if( UiUtils.DoubleClicked() ) OnDoubleClick( item );
                 }
@@ -294,7 +302,7 @@ namespace VfxEditor.AvfxFormat {
                         if( !UiUtils.Contains( childFramePos, childFramePos + childFrameSize, io.MousePos ) ) continue;
 
                         // Start dragging an entry
-                        if( UiUtils.MouseClicked() && !MovingScrollBar ) {
+                        if( UiUtils.MouseClicked() && !MovingScrollBar && focused ) {
                             MovingEntry = item;
                             MovingMousePos = cursorX;
                             MovingPart = ( MovingType )j + 1;

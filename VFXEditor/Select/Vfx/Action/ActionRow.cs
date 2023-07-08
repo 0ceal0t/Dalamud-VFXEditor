@@ -3,7 +3,7 @@ using System.Text;
 
 namespace VfxEditor.Select.Vfx.Action {
     public class ActionRow {
-        public static readonly string CastPrefix = "vfx/common/eff/";
+        public static readonly string CommonVfxPrefix = "vfx/common/eff/";
 
         public readonly string Name;
         public readonly int RowId;
@@ -12,9 +12,11 @@ namespace VfxEditor.Select.Vfx.Action {
         public readonly string SelfTmbKey;
         public readonly ActionRow HitAction;
         public readonly string CastVfxKey;
+        public readonly string StartVfxKey;
 
-        public string CastVfxPath => string.IsNullOrEmpty( CastVfxKey ) ? "" : $"{CastPrefix}{CastVfxKey}.avfx";
-        public bool HasVfx => !string.IsNullOrEmpty( CastVfxKey ) || !string.IsNullOrEmpty( SelfTmbKey );
+        public string CastVfxPath => string.IsNullOrEmpty( CastVfxKey ) ? "" : $"{CommonVfxPrefix}{CastVfxKey}.avfx";
+        public string StartVfxPath => string.IsNullOrEmpty( StartVfxKey ) ? "" : $"{CommonVfxPrefix}{StartVfxKey}.avfx";
+        public bool HasVfx => !string.IsNullOrEmpty( CastVfxKey ) || !string.IsNullOrEmpty( SelfTmbKey ) || !string.IsNullOrEmpty( StartVfxKey );
         public string TmbPath => $"chara/action/{SelfTmbKey}.tmb";
 
         public ActionRow( Lumina.Excel.GeneratedSheets.Action action, bool justSelf ) {
@@ -30,6 +32,7 @@ namespace VfxEditor.Select.Vfx.Action {
                 return;
             }
 
+            StartVfxKey = action.AnimationStart.Value?.VFX.Value?.Location;
             CastVfxKey = action.VFX.Value?.VFX.Value?.Location;
 
             var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();

@@ -159,14 +159,14 @@ namespace VfxEditor.ScdFormat {
 
             if( ImGui.BeginCombo( "Preview Channel 1", $"Channel #{Channel1}" ) ) {
                 for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( "Channel #{i}", Channel1 == i ) ) Channel1 = i;
+                    if( ImGui.Selectable( $"Channel #{i}", Channel1 == i ) ) Channel1 = i;
                 }
                 ImGui.EndCombo();
             }
 
-            if( ImGui.BeginCombo( $"Preview Channel 2", $"Channel #{Channel2}" ) ) {
+            if( ImGui.BeginCombo( "Preview Channel 2", $"Channel #{Channel2}" ) ) {
                 for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( "Channel #{i}", Channel2 == i ) ) Channel2 = i;
+                    if( ImGui.Selectable( $"Channel #{i}", Channel2 == i ) ) Channel2 = i;
                 }
                 ImGui.EndCombo();
             }

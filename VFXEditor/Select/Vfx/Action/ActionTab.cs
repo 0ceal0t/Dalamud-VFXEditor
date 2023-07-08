@@ -50,6 +50,8 @@ namespace VfxEditor.Select.Vfx.Action {
 
             Dialog.DrawPath( "Cast", Selected.CastVfxPath, SelectResultType.GameAction, $"{Selected.Name} Cast", true );
 
+            Dialog.DrawPath( "Start", Selected.StartVfxPath, SelectResultType.GameAction, $"{Selected.Name} Start", true );
+
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
                 Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameAction, Selected.Name, true );
             }

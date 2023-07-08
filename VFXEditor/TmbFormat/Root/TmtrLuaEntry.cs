@@ -18,11 +18,11 @@ namespace VfxEditor.TmbFormat {
         Mul = 0x5,
         Div = 0x6,
         Mod = 0x7,
-        GTh = 0x8,
-        GEq = 0x9,
-        LTh = 0xA,
-        LEq = 0xB,
-        NEq = 0xC,
+        Greater = 0x8,
+        Greater_Eq = 0x9,
+        Less = 0xA,
+        Less_Eq = 0xB,
+        Not_Eq = 0xC,
         Eq = 0xD,
         And = 0xE,
         Or = 0xF,
@@ -100,6 +100,8 @@ namespace VfxEditor.TmbFormat {
             var color = Operation.Value switch {
                 LuaOperation.Int_Value => Plugin.Configuration.LuaLiteralColor,
                 LuaOperation.Float_Value => Plugin.Configuration.LuaLiteralColor,
+                LuaOperation.True => Plugin.Configuration.LuaLiteralColor,
+                LuaOperation.False => Plugin.Configuration.LuaLiteralColor,
                 LuaOperation.Variable => Plugin.Configuration.LuaVariableColor,
                 LuaOperation.Open_Parens => Plugin.Configuration.LuaParensColor,
                 LuaOperation.Close_Parens => Plugin.Configuration.LuaParensColor,
@@ -141,6 +143,7 @@ namespace VfxEditor.TmbFormat {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     File.Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
+                    ImGui.CloseCurrentPopup();
                     return true;
                 }
             }

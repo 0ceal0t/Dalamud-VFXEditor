@@ -106,7 +106,7 @@ namespace VfxEditor.AvfxFormat {
                 var buttonOver = UiUtils.MouseOver( canvasTopLeft, canvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );
 
                 drawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, FontAwesomeIcon.Share.ToIconString() );
-                if( buttonOver && UiUtils.MouseClicked() ) {
+                if( buttonOver && UiUtils.MouseClicked() && ImGui.IsItemFocused() ) {
                     Plugin.AvfxManager.CurrentFile.SelectItem( node ); // navigate to node
                 }
 

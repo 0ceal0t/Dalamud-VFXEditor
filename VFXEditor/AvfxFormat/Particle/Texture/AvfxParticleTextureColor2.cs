@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat.Particle.Texture;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -26,6 +27,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleTextureColor2( string name, string avfxName, AvfxParticle particle ) : base( avfxName, particle ) {
             Name = name;
             InitNodeSelects();
+            Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
             Parsed = new() {
                 Enabled,

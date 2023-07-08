@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Text;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Library.Texture;
+using VfxEditor.TextureFormat.Textures;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
@@ -47,13 +48,15 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void ShowTooltip() {
-            var texture = Plugin.TextureManager.GetPreviewTexture( Path.GetValue() );
+            var texture = GetPreviewTexture();
             if( texture == null ) return;
 
             ImGui.BeginTooltip();
             texture.Draw();
             ImGui.EndTooltip();
         }
+
+        public PreviewTexture GetPreviewTexture() => Plugin.TextureManager.GetPreviewTexture( Path.GetValue() );
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";
 
