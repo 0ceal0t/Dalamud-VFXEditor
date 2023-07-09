@@ -46,11 +46,15 @@ namespace VfxEditor.Interop {
 
             GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( scanner.ScanText( Constants.LuaVariableSig ) );
 
-            VfxUseTriggerHook = Hook<VfxUseTriggerHookDelete>.FromAddress( scanner.ScanText( Constants.CallTriggerSig ), VfxUseTriggerHandler );
-
             var luaManagerStart = scanner.ScanText( Constants.LuaManagerSig ) + 3;
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
             LuaManager = luaManagerStart + 4 + luaManagerOffset;
+
+            var luaActorVariableStart = scanner.ScanText( Constants.LuaActorVariableSig ) + 2;
+            var luaActorVariableOffset = Marshal.ReadInt32( luaActorVariableStart );
+            LuaActorVariables = luaActorVariableStart + 8 + luaActorVariableOffset;
+
+            VfxUseTriggerHook = Hook<VfxUseTriggerHookDelete>.FromAddress( scanner.ScanText( Constants.CallTriggerSig ), VfxUseTriggerHandler );
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
