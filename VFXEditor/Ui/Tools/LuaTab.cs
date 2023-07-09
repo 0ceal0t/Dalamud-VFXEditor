@@ -1,38 +1,15 @@
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.TmbFormat.Root;
 using static VfxEditor.Interop.ResourceLoader;
 
 namespace VfxEditor.Ui.Tools {
     public unsafe class LuaTab {
-        public static readonly Dictionary<int, string> NamesPool1 = new() {
-            { 0x0, "[CUTSCENE] Game Language" },
-            { 0x1, "[CUTSCENE] Caption Language" },
-            { 0x2, "[CUTSCENE] Voice Language" },
-            { 0x3, "[CUTSCENE] Skeleton Id" },
-            { 0x4, "[CUTSCENE] Starting Town" },
-            { 0x10, "[CUTSCENE] Legacy Player" },
-            { 0x12, "[CUTSCENE] Class/Job" },
-            { 0x13, "Is Player Character" },
-            { 0x23, "[CUTSCENE] Is Gatherer" },
-            { 0x24, "[CUTSCENE] Is Crafter" },
-            { 0x25, "Is Mount" },
-            { 0x26, "Mounted" },
-            { 0x27, "Swimming" },
-            { 0x28, "Underwater" },
-            { 0x29, "Class/Job" },
-            { 0x33, "Mount Id" },
-            { 0x39, "GPose" },
-        };
-
-        public static readonly Dictionary<int, string> NamesPool2 = new();
-
-        public static readonly Dictionary<int, string> NamesPool3 = new();
-
         private uint ObjectId = 0;
 
         public void Draw() {
@@ -76,16 +53,9 @@ namespace VfxEditor.Ui.Tools {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Pool 1" ) ) {
-                if( tab ) DrawPool( 1, 64, NamesPool1, manager, objectAddress );
-            }
-
-            using( var tab = ImRaii.TabItem( "Pool 2" ) ) {
-                if( tab ) DrawPool( 2, 32, NamesPool2, manager, objectAddress );
-            }
-
-            using( var tab = ImRaii.TabItem( "Pool 3" ) ) {
-                if( tab ) DrawPool( 3, 32, NamesPool3, manager, objectAddress );
+            foreach( var pool in LuaPool.Pools ) {
+                using var tab = ImRaii.TabItem( $"Pool {pool.Id}" );
+                if( tab ) DrawPool( pool, manager, objectAddress );
             }
         }
 
@@ -94,22 +64,27 @@ namespace VfxEditor.Ui.Tools {
             if( !combo ) return;
 
             foreach( var item in Plugin.Objects ) {
-                var name = GetObjectName( item );
+                if( item.ObjectKind != ObjectKind.Player &&
+                    item.ObjectKind != ObjectKind.MountType &&
+                    item.ObjectKind != ObjectKind.EventNpc &&
+                    item.ObjectKind != ObjectKind.Companion &&
+                    item.ObjectKind != ObjectKind.BattleNpc ) continue;
 
+                var name = GetObjectName( item );
                 if( ImGui.Selectable( $"{name}##{item.ObjectId}", item.ObjectId == ObjectId ) ) {
                     ObjectId = item.ObjectId;
                 }
             }
         }
 
-        private string GetObjectName( GameObject item ) {
+        private static string GetObjectName( GameObject item ) {
             var name = item.Name.ToString();
             if( !string.IsNullOrEmpty( name ) ) return name;
             return $"[0x{item.ObjectId:X8}]";
         }
 
-        private void DrawPool( int pool, int numVar, Dictionary<int, string> names, IntPtr manager, IntPtr objectAddress ) {
-            using var _ = ImRaii.PushId( pool );
+        private static void DrawPool( LuaPool pool, IntPtr manager, IntPtr objectAddress ) {
+            using var _ = ImRaii.PushId( pool.Id );
 
             using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
@@ -122,17 +97,17 @@ namespace VfxEditor.Ui.Tools {
             ImGui.TableSetupColumn( "Hex", ImGuiTableColumnFlags.WidthStretch );
             ImGui.TableHeadersRow();
 
-            for( var i = 0; i < numVar; i++ ) {
+            for( var i = 0; i < pool.Size; i++ ) {
                 ImGui.TableNextRow();
 
                 ImGui.TableNextColumn();
                 ImGui.TextDisabled( $"[0x{i:X2}]  {i}" );
 
-                var value = ( ( uint )pool << 28 ) | ( ( uint )i );
+                var value = ( ( uint )pool.Id << 28 ) | ( ( uint )i );
                 var varValue = GetVariableValue( value, manager, objectAddress );
 
                 ImGui.TableNextColumn();
-                ImGui.Text( names.TryGetValue( i, out var name ) ? name : "" );
+                ImGui.Text( pool.Names.TryGetValue( i, out var name ) ? name : "" );
 
                 ImGui.TableNextColumn();
                 ImGui.Text( $"{varValue}" );
@@ -142,7 +117,7 @@ namespace VfxEditor.Ui.Tools {
             }
         }
 
-        private uint GetVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
+        private static uint GetVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
             if( objectAddress == IntPtr.Zero ) return Plugin.ResourceLoader.GetLuaVariable( manager, value );
 
             return value switch {

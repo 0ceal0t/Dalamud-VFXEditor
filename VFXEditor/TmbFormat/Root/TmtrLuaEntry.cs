@@ -6,6 +6,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Root;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
@@ -91,7 +92,7 @@ namespace VfxEditor.TmbFormat {
             var text = Operation.Value switch {
                 LuaOperation.Int_Value => $"{Value.Value}",
                 LuaOperation.Float_Value => $"{FloatValue.Value}",
-                LuaOperation.Variable => $"VAR[{VariablePool},{VariableIndex}]",
+                LuaOperation.Variable => GetVariableText( VariablePool, VariableIndex ),
                 LuaOperation.Open_Parens => new string( '(', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
                 LuaOperation.Close_Parens => new string( ')', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
                 _ => $"{Operation.Value}"
@@ -150,35 +151,51 @@ namespace VfxEditor.TmbFormat {
 
             Operation.Draw( File.Command );
 
-            if( Operation.Value == LuaOperation.Variable ) {
-                var pool = VariablePool;
-                var value = VariableIndex;
-
-                var update = false;
-                if( ImGui.InputInt( "Pool", ref pool ) ) {
-                    if( pool < 0 ) pool = 0;
-                    if( pool > 3 ) pool = 3;
-                    update = true;
-                }
-                if( ImGui.InputInt( "Index", ref value ) ) {
-                    update = true;
-                }
-
-                if( update ) {
-                    var newValue = ( ( uint )pool << 28 ) | ( ( uint )value );
-                    File.Command.Add( new ParsedSimpleCommand<uint>( Value, newValue ) );
-                }
-            }
+            if( Operation.Value == LuaOperation.Variable ) DrawVariablePopup();
             else {
                 Value.Draw( File.Command );
+                FloatValue.Draw( File.Command );
             }
-
-            FloatValue.Draw( File.Command );
 
             return false;
         }
 
+        private void DrawVariablePopup() {
+            var pool = VariablePool;
+            var value = VariableIndex;
+
+            var update = false;
+
+            if( ImGui.InputInt( "Pool", ref pool ) ) {
+                if( pool < 0 ) pool = 0;
+                if( pool > 3 ) pool = 3;
+                update = true;
+            }
+            if( ImGui.InputInt( "Index", ref value ) ) {
+                update = true;
+            }
+
+            if( update ) {
+                var newValue = ( ( uint )pool << 28 ) | ( ( uint )value );
+                File.Command.Add( new ParsedSimpleCommand<uint>( Value, newValue ) );
+            }
+        }
+
         private int VariablePool => ( int )( Value.Value >> 28 );
         private int VariableIndex => ( int )( Value.Value & 0x0FFFFFFF );
+
+        private static string GetVariableText( int pool, int index ) {
+            var luaPool = GetPool( pool );
+            if( luaPool == null ) return $"VAR[{pool},{index}]";
+            return luaPool.Names.TryGetValue( index, out var name ) ? name : $"VAR[{pool},{index}]";
+        }
+
+
+        private static LuaPool GetPool( int pool ) => pool switch {
+            1 => LuaPool.Pool1,
+            2 => LuaPool.Pool2,
+            3 => LuaPool.Pool3,
+            _ => null
+        };
     }
 }
