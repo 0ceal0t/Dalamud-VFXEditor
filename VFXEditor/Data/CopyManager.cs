@@ -1,6 +1,8 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
+using Int3 = SharpDX.Int3;
+using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.Data {
     public class CopyManager {
@@ -12,6 +14,8 @@ namespace VfxEditor.Data {
         public readonly Dictionary<string, bool> Assigned = new();
         public readonly Dictionary<string, bool> Bools = new();
         public readonly Dictionary<string, int> Ints = new();
+        public readonly Dictionary<string, Int3> Int3s = new();
+        public readonly Dictionary<string, Int4> Int4s = new();
         public readonly Dictionary<string, float> Floats = new();
         public readonly Dictionary<string, Vector2> Vector2s = new();
         public readonly Dictionary<string, Vector3> Vector3s = new();
@@ -55,6 +59,8 @@ namespace VfxEditor.Data {
             Assigned.Clear();
             Bools.Clear();
             Ints.Clear();
+            Int3s.Clear();
+            Int4s.Clear();
             Floats.Clear();
             Vector2s.Clear();
             Vector3s.Clear();

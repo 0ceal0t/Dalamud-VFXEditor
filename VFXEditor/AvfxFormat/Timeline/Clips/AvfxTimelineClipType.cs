@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -41,30 +40,6 @@ namespace VfxEditor.AvfxFormat {
                     CommandManager.Avfx.Add( new AvfxTimelineClipTypeCommand( this, key ) );
                 }
             }
-        }
-    }
-
-    public class AvfxTimelineClipTypeCommand : ICommand {
-        private readonly AvfxTimelineClipType Item;
-        private readonly string State;
-        private string PrevState;
-
-        public AvfxTimelineClipTypeCommand( AvfxTimelineClipType item, string state ) {
-            Item = item;
-            State = state;
-        }
-
-        public void Execute() {
-            PrevState = Item.Value;
-            Item.Value = State;
-        }
-
-        public void Redo() {
-            Item.Value = State;
-        }
-
-        public void Undo() {
-            Item.Value = PrevState;
         }
     }
 }

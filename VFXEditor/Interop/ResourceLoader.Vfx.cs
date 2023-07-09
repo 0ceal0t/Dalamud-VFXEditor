@@ -46,6 +46,13 @@ namespace VfxEditor.Interop {
 
         public Hook<ActorVfxRemoveHookDelegate> ActorVfxRemoveHook { get; private set; }
 
+        // ======= TRIGGERS =============
+        public delegate IntPtr VfxUseTriggerHookDelete( IntPtr vfx, uint triggerId );
+
+        public Hook<VfxUseTriggerHookDelete> VfxUseTriggerHook { get; private set; }
+
+        // ==============================
+
         private IntPtr StaticVfxNewHandler( char* path, char* pool ) {
             var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
             var vfx = StaticVfxCreateHook.Original( path, pool );
@@ -76,6 +83,14 @@ namespace VfxEditor.Interop {
             if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
             Plugin.Tracker?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
+        }
+
+        private IntPtr VfxUseTriggerHandler( IntPtr vfx, uint triggerId ) {
+            var timeline = VfxUseTriggerHook.Original( vfx, triggerId );
+
+            if( Plugin.Configuration?.LogVfxTriggers == true ) PluginLog.Log( $"Uses trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
+
+            return timeline;
         }
     }
 }

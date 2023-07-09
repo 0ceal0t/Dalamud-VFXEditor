@@ -46,6 +46,8 @@ namespace VfxEditor.Interop {
 
             GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( scanner.ScanText( Constants.LuaVariableSig ) );
 
+            VfxUseTriggerHook = Hook<VfxUseTriggerHookDelete>.FromAddress( scanner.ScanText( Constants.CallTriggerSig ), VfxUseTriggerHandler );
+
             var luaManagerStart = scanner.ScanText( Constants.LuaManagerSig ) + 3;
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
             LuaManager = luaManagerStart + 4 + luaManagerOffset;
@@ -60,6 +62,7 @@ namespace VfxEditor.Interop {
             CheckFileStateHook.Enable();
             LoadTexFileExternHook.Enable();
             PlayActionHook.Enable();
+            VfxUseTriggerHook.Enable();
 
             PathResolved += AddCrc;
         }
@@ -77,6 +80,7 @@ namespace VfxEditor.Interop {
             CheckFileStateHook.Dispose();
             LoadTexFileExternHook.Dispose();
             PlayActionHook.Dispose();
+            VfxUseTriggerHook.Dispose();
         }
     }
 }

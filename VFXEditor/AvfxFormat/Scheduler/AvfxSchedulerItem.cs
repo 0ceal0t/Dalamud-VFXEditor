@@ -51,7 +51,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.DrawItems( Display );
         }
 
-        public override string GetDefaultText() => TimelineSelect.GetText();
+        public override string GetDefaultText() => $"{GetIdx()}: {TimelineSelect.GetText()}";
 
         public override string GetWorkspaceId() {
             var type = ( Name == "Item" ) ? "Item" : "Trigger";
