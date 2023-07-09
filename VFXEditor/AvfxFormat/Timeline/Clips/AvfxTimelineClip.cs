@@ -6,9 +6,19 @@ using VfxEditor.Parsing;
 using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.AvfxFormat {
+    public enum ClipType {
+        Kill = 0x4B_49_4C_4C, // "KILL"
+        Reset = 0x52_45_53_54, // "REST"
+        End = 0x45_4E_44_20, // "END "
+        FadeIn = 0x46_41_44_49, // "FADI"
+        UnlockLoopPoint = 0x55_4C_4C_50, // "ULLP"
+        Trigger = 0x54_52_47_20, // "TRG "
+        RandomTrigger = 0x52_54_52_47, // "RTRG"
+    }
+
     public class AvfxTimelineClip : AvfxWorkspaceItem {
         public readonly AvfxTimeline Timeline;
-        public readonly AvfxTimelineClipType Type = new();
+        public readonly ParsedEnum<ClipType> Type = new( "Type", ClipType.Kill );
         public readonly ParsedInt4 RawInts = new( "Raw Integers" );
         public readonly ParsedFloat4 RawFloats = new( "Raw Floats" );
 
@@ -36,16 +46,16 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "Clip" );
             DrawRename();
 
-            Type.Draw();
+            Type.Draw( CommandManager.Avfx );
 
-            if( Type.Value == "LLIK" ) DrawKill();
-            else if( Type.Value == "GRTR" ) DrawRandomTrigger();
+            if( Type.Value == ClipType.Kill ) DrawKill();
+            else if( Type.Value == ClipType.RandomTrigger ) DrawRandomTrigger();
 
             RawInts.Draw( CommandManager.Avfx );
             RawFloats.Draw( CommandManager.Avfx );
         }
 
-        public override string GetDefaultText() => $"Clip {GetIdx()}({Type.Text})";
+        public override string GetDefaultText() => $"Clip {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Clip{GetIdx()}";
 
