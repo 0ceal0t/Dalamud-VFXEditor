@@ -13,11 +13,11 @@ namespace VfxEditor.TmbFormat.Root {
         }
 
         public static readonly LuaPool Pool1 = new( 1, 64, new() {
-            { 0x0, "[CUTSCENE] Game Language" },
-            { 0x1, "[CUTSCENE] Caption Language" },
-            { 0x2, "[CUTSCENE] Voice Language" },
-            { 0x3, "[CUTSCENE] Skeleton Id" },
-            { 0x4, "[CUTSCENE] Starting Town" },
+            { 0x00, "[CUTSCENE] Game Language" },
+            { 0x01, "[CUTSCENE] Caption Language" },
+            { 0x02, "[CUTSCENE] Voice Language" },
+            { 0x03, "[CUTSCENE] Skeleton Id" },
+            { 0x04, "[CUTSCENE] Starting Town" },
             { 0x10, "[CUTSCENE] Legacy Player" },
             { 0x12, "[CUTSCENE] Class/Job" },
             { 0x13, "Is Player Character" },

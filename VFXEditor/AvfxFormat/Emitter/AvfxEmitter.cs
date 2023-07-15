@@ -253,7 +253,7 @@ namespace VfxEditor.AvfxFormat {
                 if( tab ) ParticleSplit.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Emitters" ) ) {
+            using( var tab = ImRaii.TabItem( "Create Emitters" ) ) {
                 if( tab ) EmitterSplit.Draw();
             }
         }

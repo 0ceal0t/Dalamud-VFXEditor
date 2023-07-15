@@ -221,7 +221,7 @@ namespace VfxEditor.Utils {
             var hovered = ImGui.IsItemHovered();
 
             ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - padding.X );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - spacing.X + padding.X );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.Text( icon.ToIconString() );

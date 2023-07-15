@@ -80,7 +80,7 @@ namespace VfxEditor.Ui.Tools {
         private static string GetObjectName( GameObject item ) {
             var name = item.Name.ToString();
             if( !string.IsNullOrEmpty( name ) ) return name;
-            return $"[0x{item.ObjectId:X8}]";
+            return $"[0x{item.ObjectId:X4}]";
         }
 
         private static void DrawPool( LuaPool pool, IntPtr manager, IntPtr objectAddress ) {
@@ -113,7 +113,7 @@ namespace VfxEditor.Ui.Tools {
                 ImGui.Text( $"{varValue}" );
 
                 ImGui.TableNextColumn();
-                ImGui.Text( $"0x{varValue:X8}" );
+                ImGui.Text( $"0x{varValue:X4}" );
             }
         }
 
