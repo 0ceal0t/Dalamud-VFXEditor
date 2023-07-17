@@ -3,25 +3,25 @@ using System.Linq;
 using VfxEditor.Interop;
 using VfxEditor.Structs.Animation;
 
-namespace VfxEditor.Animation {
-    public unsafe class ActorAnimationManager {
-        private IntPtr ActorToReset = IntPtr.Zero;
+namespace VfxEditor.Spawn {
+    public static unsafe class TmbSpawn {
+        private static IntPtr ActorToReset = IntPtr.Zero;
 
-        public bool CanReset => !ActorToReset.Equals( IntPtr.Zero );
+        public static bool CanReset => !ActorToReset.Equals( IntPtr.Zero );
 
-        public void Apply( string path ) {
+        public static void Apply( string path ) {
             var id = GetIdFromTmbPath( path );
             if( id > 0 ) Apply( id );
         }
 
-        public void Apply( uint animationId ) {
+        public static void Apply( uint animationId ) {
             if( animationId == 0 ) return;
             ApplyAnimationOverride( GetActor(), ( ushort )animationId, true );
         }
 
-        public void Reset() => ResetAnimationOverride( GetActor() );
+        public static void Reset() => ResetAnimationOverride( GetActor() );
 
-        public bool ApplyAnimationOverride( ActorMemoryStruct* memory, ushort animationId, bool interrupt ) {
+        public static bool ApplyAnimationOverride( ActorMemoryStruct* memory, ushort animationId, bool interrupt ) {
             if( memory == null ) return false;
             if( !memory->CanAnimate ) return false;
             ActorToReset = new IntPtr( memory );
@@ -29,7 +29,7 @@ namespace VfxEditor.Animation {
             return true;
         }
 
-        public void ResetAnimationOverride( ActorMemoryStruct* memory ) {
+        public static void ResetAnimationOverride( ActorMemoryStruct* memory ) {
             if( memory == null ) return;
             ActorToReset = IntPtr.Zero;
             ApplyBaseAnimationInternal( memory, 0, true, CharacterModes.Normal, 0 );
@@ -46,7 +46,7 @@ namespace VfxEditor.Animation {
             animation->Speeds![( int )AnimationSlots.FullBody] = 1.0f;
         }
 
-        private void ApplyBaseAnimationInternal( ActorMemoryStruct* memory, ushort animationId, bool interrupt, CharacterModes mode, byte modeInput ) {
+        private static void ApplyBaseAnimationInternal( ActorMemoryStruct* memory, ushort animationId, bool interrupt, CharacterModes mode, byte modeInput ) {
             var animation = GetAnimation( memory );
 
             if( animation->BaseOverride != animationId ) {
@@ -64,13 +64,6 @@ namespace VfxEditor.Animation {
             if( interrupt ) {
                 animation->AnimationIds[( int )AnimationSlots.FullBody] = 0;
             }
-        }
-
-        public void Dispose() {
-            if( ActorToReset == IntPtr.Zero ) return;
-            var actor = GetActor();
-            if( actor == null ) return; // local player no longer exists
-            if( new IntPtr( actor ).Equals( ActorToReset ) ) ResetAnimationOverride( actor );
         }
 
         private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.AnimationMemoryOffset );
@@ -95,6 +88,13 @@ namespace VfxEditor.Animation {
                 }
             }
             return 0;
+        }
+
+        public static void Dispose() {
+            if( ActorToReset == IntPtr.Zero ) return;
+            var actor = GetActor();
+            if( actor == null ) return; // local player no longer exists
+            if( new IntPtr( actor ).Equals( ActorToReset ) ) ResetAnimationOverride( actor );
         }
     }
 }

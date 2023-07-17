@@ -22,9 +22,9 @@ namespace VfxEditor.Tracker {
             if( !Enabled ) Reset();
         }
 
-        public void DrawEye() {
+        public void DrawEye( Vector2 size ) {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( !Enabled ? FontAwesomeIcon.Eye.ToIconString() : FontAwesomeIcon.Times.ToIconString(), new Vector2( 28, 23 ) ) ) {
+            if( ImGui.Button( !Enabled ? FontAwesomeIcon.Eye.ToIconString() : FontAwesomeIcon.Times.ToIconString(), size ) ) {
                 Toggle();
                 Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = Plugin.Tracker.AnyEnabled;
             }

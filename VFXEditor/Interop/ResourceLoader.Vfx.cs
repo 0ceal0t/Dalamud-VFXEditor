@@ -2,6 +2,7 @@ using Dalamud.Hooking;
 using Dalamud.Logging;
 using System;
 using System.Text;
+using VfxEditor.Spawn;
 using VfxEditor.Structs.Vfx;
 
 namespace VfxEditor.Interop {
@@ -64,7 +65,7 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
+            if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
             Plugin.Tracker?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
@@ -80,7 +81,7 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( Plugin.SpawnedVfx != null && vfx == ( IntPtr )Plugin.SpawnedVfx.Vfx ) Plugin.ClearSpawn();
+            if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
             Plugin.Tracker?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }

@@ -5,6 +5,7 @@ using VfxEditor.Select.Tmb.Action;
 using VfxEditor.Select.Tmb.Common;
 using VfxEditor.Select.Tmb.Emote;
 using VfxEditor.Select.Tmb.Npc;
+using VfxEditor.Spawn;
 
 namespace VfxEditor.Select.Tmb {
     public class TmbSelectDialog : SelectDialog {
@@ -22,11 +23,11 @@ namespace VfxEditor.Select.Tmb {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();
-            if( Plugin.ActorAnimationManager.CanReset ) {
-                if( ImGui.Button( "Reset" ) ) Plugin.ActorAnimationManager.Reset();
+            if( TmbSpawn.CanReset ) {
+                if( ImGui.Button( "Reset" ) ) TmbSpawn.Reset();
             }
             else {
-                if( ImGui.Button( "Play" ) ) Plugin.ActorAnimationManager.Apply( path );
+                if( ImGui.Button( "Play" ) ) TmbSpawn.Apply( path );
             }
         }
     }

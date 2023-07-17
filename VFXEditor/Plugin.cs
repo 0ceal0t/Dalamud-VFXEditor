@@ -4,13 +4,15 @@ using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
+using System;
 using System.Collections.Generic;
-using VfxEditor.Animation;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Data;
 using VfxEditor.DirectX;
@@ -21,6 +23,7 @@ using VfxEditor.Library;
 using VfxEditor.PapFormat;
 using VfxEditor.PhybFormat;
 using VfxEditor.ScdFormat;
+using VfxEditor.Spawn;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
@@ -30,7 +33,7 @@ using VfxEditor.UldFormat;
 using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
 
 namespace VfxEditor {
-    public partial class Plugin : IDalamudPlugin {
+    public unsafe partial class Plugin : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ClientState ClientState { get; private set; }
         public static Framework Framework { get; private set; }
@@ -42,8 +45,12 @@ namespace VfxEditor {
         public static TargetManager TargetManager { get; private set; }
         public static KeyState KeyState { get; private set; }
 
+        public static bool InGpose => PluginInterface.UiBuilder.GposeActive;
+        public static GameObject GposeTarget => Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
+        public static GameObject PlayerObject => InGpose ? GposeTarget : ClientState?.LocalPlayer;
+        public static GameObject TargetObject => InGpose ? GposeTarget : TargetManager?.Target;
+
         public static ResourceLoader ResourceLoader { get; private set; }
-        public static ActorAnimationManager ActorAnimationManager { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static TrackerManager Tracker { get; private set; }
@@ -128,7 +135,6 @@ namespace VfxEditor {
             PenumbraDialog = new PenumbraDialog();
             TexToolsDialog = new TexToolsDialog();
             ResourceLoader = new ResourceLoader();
-            ActorAnimationManager = new ActorAnimationManager();
             DirectXManager = new DirectXManager();
             Tracker = new TrackerManager();
             LibraryManager = new LibraryManager();
@@ -146,6 +152,7 @@ namespace VfxEditor {
         }
 
         private void FrameworkOnUpdate( Framework framework ) {
+            VfxSpawn.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) KeyState.ClearAll();
             ClearKeyState = false;
@@ -207,16 +214,13 @@ namespace VfxEditor {
             UldManager = null;
             PhybManager = null;
 
-            ActorAnimationManager?.Dispose();
-            ActorAnimationManager = null;
-
             DirectXManager?.Dispose();
             DirectXManager = null;
 
             Modals.Clear();
 
-            RemoveSpawn();
-
+            VfxSpawn.Remove();
+            TmbSpawn.Dispose();
             FileDialogManager.Dispose();
         }
     }

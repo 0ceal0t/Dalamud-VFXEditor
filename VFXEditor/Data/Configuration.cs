@@ -46,6 +46,9 @@ namespace VfxEditor {
 
         public bool UpdateWriteLocation = true;
 
+        public bool VfxSpawnLoop = false;
+        public float VfxSpawnDelay = 0.1f;
+
         // ===== [ OBSOLETE ] =======
         public List<SelectResult> RecentSelects = new();
         public List<SelectResult> RecentSelectsTMB = new();

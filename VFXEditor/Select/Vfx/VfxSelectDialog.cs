@@ -13,6 +13,7 @@ using VfxEditor.Select.Vfx.Mount;
 using VfxEditor.Select.Vfx.Npc;
 using VfxEditor.Select.Vfx.Status;
 using VfxEditor.Select.Vfx.Zone;
+using VfxEditor.Spawn;
 
 namespace VfxEditor.Select.Vfx {
     public class VfxSelectDialog : SelectDialog {
@@ -38,16 +39,16 @@ namespace VfxEditor.Select.Vfx {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();
-            if( Plugin.SpawnExists() ) {
-                if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
+            if( VfxSpawn.Exists ) {
+                if( ImGui.Button( "Remove" ) ) VfxSpawn.Remove();
             }
             else {
                 if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
 
                 if( ImGui.BeginPopup( "SpawnPopup" ) ) {
-                    if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( path );
-                    if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( path );
-                    if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( path );
+                    if( ImGui.Selectable( "On Ground" ) ) VfxSpawn.OnGround( path );
+                    if( ImGui.Selectable( "On Self" ) ) VfxSpawn.OnSelf( path );
+                    if( ImGui.Selectable( "On Target" ) ) VfxSpawn.OnTarget( path );
                     ImGui.EndPopup();
                 }
             }

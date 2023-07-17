@@ -1,9 +1,11 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
+using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -26,17 +28,17 @@ namespace VfxEditor.AvfxFormat {
             base.CheckKeybinds();
 
             if( Plugin.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnSelf( SpawnPath );
+                VfxSpawn.Remove();
+                if( !SpawnDisabled ) VfxSpawn.OnSelf( SpawnPath, true );
             }
             if( Plugin.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnGround( SpawnPath );
+                VfxSpawn.Remove();
+                if( !SpawnDisabled ) VfxSpawn.OnGround( SpawnPath, true );
 
             }
             if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
-                Plugin.RemoveSpawn();
-                if( !SpawnDisabled ) Plugin.SpawnOnTarget( SpawnPath );
+                VfxSpawn.Remove();
+                if( !SpawnDisabled ) VfxSpawn.OnTarget( SpawnPath, true );
             }
         }
 
@@ -59,42 +61,51 @@ namespace VfxEditor.AvfxFormat {
 
         // ========= DRAWING =============
 
-        protected override bool ExtraInputColumn() => true;
-
-        protected override void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySourceBar();
-            DisplayReplaceBar();
-            ImGui.PopItemWidth();
-        }
+        protected override int ExtraColumnWidth => 125;
 
         protected override void DrawExtraColumn() {
-            ImGui.SetColumnWidth( 3, 150 );
-
-            if( ImGui.Button( "Library", new Vector2( 80, 23 ) ) ) Plugin.LibraryManager.Show();
-
-            // Spawn + eye
-            if( !Plugin.SpawnExists() ) {
-                using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled ) ) {
-                    if( ImGui.Button( "Spawn", new Vector2( 50, 23 ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
+            using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
+            using( var group = ImRaii.Group() ) {
+                if( VfxSpawn.Exists ) {
+                    if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
                 }
-                UiUtils.Tooltip( "Select both a loaded VFX and a VFX to replace in order to use the spawn function" );
+                else {
+                    using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled );
+                    if( ImGui.Button( "Spawn", new Vector2( 60, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
+                }
+
+                using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) ) ) {
+                    ImGui.SameLine();
+                }
+
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString(), new Vector2( 28, ImGui.GetFrameHeight() ) ) ) ImGui.OpenPopup( "SettingsPopup" );
+                }
+
+                if( ImGui.Button( "Library", new Vector2( 90, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
             }
-            else if( ImGui.Button( "Remove" ) ) Plugin.RemoveSpawn();
+
+            var height = ImGui.GetItemRectSize().Y;
+
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemSpacing.Y, 4 ) ) ) {
+                ImGui.SameLine();
+            }
+            Plugin.Tracker.Vfx.DrawEye( new Vector2( 28, height ) );
+
+            framePadding.Pop(); // so it doesn't mess with the popups
 
             if( ImGui.BeginPopup( "SpawnPopup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) Plugin.SpawnOnGround( SpawnPath );
-                if( !Plugin.InGpose && ImGui.Selectable( "On Self" ) ) Plugin.SpawnOnSelf( SpawnPath );
-                if( ImGui.Selectable( "On Target" ) ) Plugin.SpawnOnTarget( SpawnPath );
+                if( ImGui.Selectable( "On Ground" ) ) VfxSpawn.OnGround( SpawnPath, true );
+                if( ImGui.Selectable( "On Self" ) ) VfxSpawn.OnSelf( SpawnPath, true );
+                if( ImGui.Selectable( "On Target" ) ) VfxSpawn.OnTarget( SpawnPath, true );
                 ImGui.EndPopup();
             }
 
-            using var style2 = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
-
-            ImGui.SameLine();
-            Plugin.Tracker.Vfx.DrawEye();
-            UiUtils.Tooltip( "VFX path overlay" );
+            if( ImGui.BeginPopup( "SettingsPopup" ) ) {
+                if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
+                if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
+                ImGui.EndPopup();
+            }
         }
     }
 }

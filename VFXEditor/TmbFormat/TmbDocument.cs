@@ -2,9 +2,9 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Animation;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
+using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat {
 
         public TmbDocument( TmbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
             base( manager, writeLocation, localPath, name, source, replace, "Tmb", "tmb" ) {
-            AnimationId = ActorAnimationManager.GetIdFromTmbPath( ReplacePath );
+            AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
         protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader );
@@ -28,30 +28,24 @@ namespace VfxEditor.TmbFormat {
             Source = Source
         };
 
-        protected override bool ExtraInputColumn() => true;
-
-        protected override void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 265 );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySourceBar();
-            DisplayReplaceBar();
-            ImGui.PopItemWidth();
-        }
+        protected override int ExtraColumnWidth => 115;
 
         protected override void DrawExtraColumn() {
-            ImGui.SetColumnWidth( 3, 150 );
+            using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
+            using( var group = ImRaii.Group() ) {
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, AnimationDisabled ) ) {
+                    if( ImGui.Button( "Play", new Vector2( 80, ImGui.GetFrameHeight() ) ) && !AnimationDisabled ) TmbSpawn.Apply( AnimationId );
+                }
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, AnimationDisabled ) ) {
-                if( ImGui.Button( "Play", new Vector2( 80, 23 ) ) && !AnimationDisabled ) Plugin.ActorAnimationManager.Apply( AnimationId );
+                if( ImGui.Button( "Reset", new Vector2( 80, ImGui.GetFrameHeight() ) ) ) TmbSpawn.Reset();
             }
 
-            if( ImGui.Button( "Reset", new Vector2( 50, 23 ) ) ) Plugin.ActorAnimationManager.Reset();
+            var height = ImGui.GetItemRectSize().Y;
 
-            using var style2 = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) );
-
-            ImGui.SameLine();
-            Plugin.Tracker.Action.DrawEye();
-            UiUtils.Tooltip( "Action overlay" );
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemSpacing.Y, 4 ) ) ) {
+                ImGui.SameLine();
+            }
+            Plugin.Tracker.Action.DrawEye( new Vector2( 28, height ) );
         }
 
         protected override void DrawBody() {

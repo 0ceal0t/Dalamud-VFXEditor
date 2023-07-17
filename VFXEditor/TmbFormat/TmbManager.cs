@@ -1,7 +1,7 @@
-using VfxEditor.Animation;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
 using VfxEditor.Select.Tmb;
+using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
@@ -13,7 +13,7 @@ namespace VfxEditor.TmbFormat {
 
         public override void SetReplace( SelectResult result ) {
             base.SetReplace( result );
-            if( ActiveDocument != null ) ActiveDocument.AnimationId = ActorAnimationManager.GetIdFromTmbPath( result.Path );
+            if( ActiveDocument != null ) ActiveDocument.AnimationId = TmbSpawn.GetIdFromTmbPath( result.Path );
         }
 
         protected override TmbDocument GetNewDocument() => new( this, NewWriteLocation );

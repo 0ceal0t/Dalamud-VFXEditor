@@ -217,29 +217,39 @@ namespace VfxEditor.FileManager {
 
         public void Draw() {
             if( Plugin.Configuration.WriteLocationError ) {
-                ImGui.TextWrapped( $"The plugin does not have access to your designated temp file location ({Plugin.Configuration.WriteLocation}). Please go to File > Settings and change it, then restart your game (for example, C:\\Users\\[YOUR USERNAME HERE]\\Documents\\VFXEdit)." );
+                ImGui.TextWrapped( $"VFXEditor does not have access to {Plugin.Configuration.WriteLocation}. Please go to [File > Settings] and change it, then restart your game" );
                 return;
             }
 
-            var threeColumns = ExtraInputColumn();
-            ImGui.Columns( threeColumns ? 3 : 2, "Columns", false );
+            var searchWidth = ImGui.GetContentRegionAvail().X - 160 - ExtraColumnWidth;
 
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0 ) ) )
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
+                ImGui.Columns( ExtraColumnWidth > 0 ? 3 : 2, "Columns", false );
+                ImGui.SetColumnWidth( 0, 160 );
+            }
             DrawInputTextColumn();
-            ImGui.NextColumn();
 
-            DrawSearchBarsColumn();
-            if( threeColumns ) {
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
                 ImGui.NextColumn();
+                ImGui.SetColumnWidth( 1, searchWidth );
+            }
+            DrawSearchBarsColumn();
+
+            if( ExtraColumnWidth > 0 ) {
+                using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
+                    ImGui.NextColumn();
+                    ImGui.SetColumnWidth( 2, ExtraColumnWidth );
+                }
                 DrawExtraColumn();
             }
 
             ImGui.Columns( 1 );
+
             DrawBody();
         }
 
         protected virtual void DrawInputTextColumn() {
-            ImGui.SetColumnWidth( 0, 160 );
-
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 5, 0 );
             var color = ImGui.GetColorU32( ImGuiCol.TextDisabled );
             var height = ImGui.GetFrameHeight();
@@ -285,19 +295,21 @@ namespace VfxEditor.FileManager {
 
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
 
-        protected virtual void DrawSearchBarsColumn() {
-            ImGui.SetColumnWidth( 1, ImGui.GetWindowWidth() - 160 );
-            ImGui.PushItemWidth( ImGui.GetColumnWidth() - 100 );
-            DisplaySourceBar();
-            DisplayReplaceBar();
-            ImGui.PopItemWidth();
+        protected void DrawSearchBarsColumn() {
+            var timesWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
+            var searchWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Search );
+            // 3 * 2 for spacing, 25 for some more padding
+            var inputWidth = ImGui.GetColumnWidth() - timesWidth - searchWidth - ( 3 * 2 ) - ( ExtraColumnWidth > 0 ? 20 : 0 );
+
+            DisplaySourceBar( inputWidth );
+            DisplayReplaceBar( inputWidth );
         }
 
-        protected virtual bool ExtraInputColumn() => false;
+        protected virtual int ExtraColumnWidth => 0;
 
         protected virtual void DrawExtraColumn() { }
 
-        protected void DisplaySourceBar() {
+        protected void DisplaySourceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Source" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
             var sourceString = Source == null ? "" : Source.DisplayString;
@@ -309,6 +321,7 @@ namespace VfxEditor.FileManager {
 
             // Input
             ImGui.SameLine();
+            ImGui.SetNextItemWidth( inputSize );
             ImGui.InputTextWithHint( "", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
 
             // Search
@@ -319,7 +332,7 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected void DisplayReplaceBar() {
+        protected void DisplayReplaceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Replace" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
             var previewString = Replace == null ? "" : Replace.DisplayString;
@@ -331,6 +344,7 @@ namespace VfxEditor.FileManager {
 
             // Input
             ImGui.SameLine();
+            ImGui.SetNextItemWidth( inputSize );
             ImGui.InputTextWithHint( "", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
             if( Replace != null && ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
 
