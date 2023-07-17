@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
@@ -61,8 +62,6 @@ namespace VfxEditor.AvfxFormat {
 
         // ========= DRAWING =============
 
-        protected override int ExtraColumnWidth => 125;
-
         protected override void DrawExtraColumn() {
             using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
@@ -106,6 +105,12 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
                 ImGui.EndPopup();
             }
+        }
+
+        protected override string GetWarningText() {
+            var invalidTimeline = CurrentFile.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
+            if( invalidTimeline == null ) return "";
+            return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
         }
     }
 }

@@ -221,11 +221,11 @@ namespace VfxEditor.FileManager {
                 return;
             }
 
-            var searchWidth = ImGui.GetContentRegionAvail().X - 160 - ExtraColumnWidth;
+            var searchWidth = ImGui.GetContentRegionAvail().X - 160 - 125;
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0 ) ) )
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
-                ImGui.Columns( ExtraColumnWidth > 0 ? 3 : 2, "Columns", false );
+                ImGui.Columns( 3, "Columns", false );
                 ImGui.SetColumnWidth( 0, 160 );
             }
             DrawInputTextColumn();
@@ -236,13 +236,11 @@ namespace VfxEditor.FileManager {
             }
             DrawSearchBarsColumn();
 
-            if( ExtraColumnWidth > 0 ) {
-                using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
-                    ImGui.NextColumn();
-                    ImGui.SetColumnWidth( 2, ExtraColumnWidth );
-                }
-                DrawExtraColumn();
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
+                ImGui.NextColumn();
+                ImGui.SetColumnWidth( 2, 126 );
             }
+            DrawExtraColumn();
 
             ImGui.Columns( 1 );
 
@@ -299,13 +297,11 @@ namespace VfxEditor.FileManager {
             var timesWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
             var searchWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Search );
             // 3 * 2 for spacing, 25 for some more padding
-            var inputWidth = ImGui.GetColumnWidth() - timesWidth - searchWidth - ( 3 * 2 ) - ( ExtraColumnWidth > 0 ? 20 : 0 );
+            var inputWidth = ImGui.GetColumnWidth() - timesWidth - searchWidth - ( 3 * 2 ) - 20;
 
             DisplaySourceBar( inputWidth );
             DisplayReplaceBar( inputWidth );
         }
-
-        protected virtual int ExtraColumnWidth => 0;
 
         protected virtual void DrawExtraColumn() { }
 
@@ -375,7 +371,21 @@ namespace VfxEditor.FileManager {
 
             ImGui.SameLine();
             UiUtils.ShowVerifiedStatus( Verified );
+
+            var warnings = GetWarningText();
+            if( !string.IsNullOrEmpty( warnings ) ) {
+                ImGui.SameLine();
+                using var _ = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.SameLine();
+                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
+                }
+                ImGui.SameLine();
+                ImGui.Text( warnings );
+            }
         }
+
+        protected virtual string GetWarningText() => "";
 
         protected virtual void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );

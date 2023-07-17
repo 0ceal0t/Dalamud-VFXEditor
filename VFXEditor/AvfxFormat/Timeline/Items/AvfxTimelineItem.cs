@@ -94,5 +94,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitter Emitter => EmitterSelect.Selected;
 
         public bool HasSound => EmitterSelect.Selected != null && EmitterSelect.Selected.HasSound;
+
+        public bool HasValue => EmitterIdx.GetValue() >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.GetValue() >= 0 );
     }
 }

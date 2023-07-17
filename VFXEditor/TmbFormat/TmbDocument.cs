@@ -28,16 +28,14 @@ namespace VfxEditor.TmbFormat {
             Source = Source
         };
 
-        protected override int ExtraColumnWidth => 115;
-
         protected override void DrawExtraColumn() {
             using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, AnimationDisabled ) ) {
-                    if( ImGui.Button( "Play", new Vector2( 80, ImGui.GetFrameHeight() ) ) && !AnimationDisabled ) TmbSpawn.Apply( AnimationId );
+                    if( ImGui.Button( "Play", new Vector2( 90, ImGui.GetFrameHeight() ) ) && !AnimationDisabled ) TmbSpawn.Apply( AnimationId );
                 }
 
-                if( ImGui.Button( "Reset", new Vector2( 80, ImGui.GetFrameHeight() ) ) ) TmbSpawn.Reset();
+                if( ImGui.Button( "Reset", new Vector2( 90, ImGui.GetFrameHeight() ) ) ) TmbSpawn.Reset();
             }
 
             var height = ImGui.GetItemRectSize().Y;
