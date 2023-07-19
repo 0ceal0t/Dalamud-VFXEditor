@@ -102,6 +102,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( ImGui.BeginPopup( "SettingsPopup" ) ) {
                 if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
+                ImGui.SetNextItemWidth( 150 );
                 if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
                 ImGui.EndPopup();
             }

@@ -17,7 +17,7 @@ namespace VfxEditor.FileManager {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "Documents" );
 
-            if( ImGui.Button( "+ NEW" ) ) Manager.AddDocument();
+            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) Manager.AddDocument();
 
             ImGui.SameLine();
             if( ImGui.Checkbox( "Show source column", ref Plugin.Configuration.DocumentPopoutShowSource ) ) Plugin.Configuration.Save();

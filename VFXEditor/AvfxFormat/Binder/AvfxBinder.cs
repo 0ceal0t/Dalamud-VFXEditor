@@ -150,7 +150,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Binder {GetIdx()}({BinderVariety.GetValue()})";
+        public override string GetDefaultText() => $"Binder {GetIdx()} ({BinderVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Bind{GetIdx()}";
     }

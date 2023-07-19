@@ -281,7 +281,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Emitter {GetIdx()}({EmitterVariety.GetValue()})";
+        public override string GetDefaultText() => $"Emitter {GetIdx()} ({EmitterVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Emit{GetIdx()}";
 

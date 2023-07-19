@@ -329,7 +329,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Particle {GetIdx()}({ParticleVariety.GetValue()})";
+        public override string GetDefaultText() => $"Particle {GetIdx()} ({ParticleVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Ptcl{GetIdx()}";
     }

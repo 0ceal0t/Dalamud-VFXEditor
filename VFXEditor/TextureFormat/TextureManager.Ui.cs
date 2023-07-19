@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -20,41 +21,39 @@ namespace VfxEditor.TextureFormat {
         };
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( "ImportTex" );
+            using var _ = ImRaii.PushId( "Textures" );
 
-            // Input
+            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) ImGui.OpenPopup( "NewPopup" );
 
-            var imguiStyle = ImGui.GetStyle();
-            var buttonSize = ImGui.CalcTextSize( "Import Texture" ).X + imguiStyle.FramePadding.X * 2 + imguiStyle.ItemInnerSpacing.X;
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) ) ) {
-                ImGui.SetNextItemWidth( UiUtils.GetWindowContentRegionWidth() - buttonSize );
-                ImGui.InputTextWithHint( $"##GamePath", "Game Path", ref NewCustomPath, 255 );
+            using( var popup = ImRaii.Popup( "NewPopup" ) ) {
+                if( popup ) {
+                    ImGui.SetNextItemWidth( 300 );
+                    ImGui.InputTextWithHint( "Game Path", "vfx/common/texture/fire214_i.atex", ref NewCustomPath, 255 );
 
-                ImGui.SameLine();
-                var path = NewCustomPath.Trim().Trim( '\0' );
-                var importDisabled = string.IsNullOrEmpty( path ) || PathToTextureReplace.ContainsKey( path );
-                using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, importDisabled );
-                if( ImGui.Button( "Import Texture" ) && !importDisabled ) {
-                    ImportDialog( path );
+                    // Mip
+
+                    ImGui.SetNextItemWidth( 300 );
+                    ImGui.InputInt( "PNG Mip Levels", ref PngMip );
+
+                    // Format
+
+                    ImGui.SetNextItemWidth( 300 );
+                    if( UiUtils.EnumComboBox( "PNG Format", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
+                        PngFormat = newPngFormat;
+                    }
+
+                    var path = NewCustomPath.Trim().Trim( '\0' );
+                    var importDisabled = string.IsNullOrEmpty( path ) || PathToTextureReplace.ContainsKey( path );
+                    using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, importDisabled );
+                    if( UiUtils.IconButton( FontAwesomeIcon.Search, "Browse" ) && !importDisabled ) {
+                        ImportDialog( path );
+                    }
                 }
             }
 
-            // Mip
+            ImGui.Separator();
 
-            ImGui.SetNextItemWidth( 150 );
-            ImGui.InputInt( "PNG Mip Levels", ref PngMip );
-
-            // Format
-
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - buttonSize );
-            if( UiUtils.EnumComboBox( "PNG Format", ValidPngFormat, PngFormat, out var newPngFormat ) ) {
-                PngFormat = newPngFormat;
-            }
-
-            // ======= DISPLAY IMPORTED TEXTURES =============
-
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            using var child = ImRaii.Child( "Child" );
 
             if( PathToTextureReplace.IsEmpty ) ImGui.TextDisabled( "No textures have been imported..." );
 

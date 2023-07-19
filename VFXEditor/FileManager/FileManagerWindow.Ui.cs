@@ -25,7 +25,6 @@ namespace VfxEditor.FileManager {
             DrawMenu();
 
             if( Plugin.Configuration.ShowTabBar ) {
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ( ImGui.GetStyle().WindowPadding.Y - 4 ) );
                 DrawTabs();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }

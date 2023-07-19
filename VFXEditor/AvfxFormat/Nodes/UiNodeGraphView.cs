@@ -141,7 +141,18 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
 
-        private static string TrimText( string text ) => text.Length <= 20 ? text : text[..20] + "...";
+        private static string TrimText( string text ) {
+            var allowedWidth = BoxSize.X - TextOffset.X - 25;
+            if( ImGui.CalcTextSize( text ).X <= allowedWidth ) return text;
+
+            var ellipWidth = ImGui.CalcTextSize( "..." ).X;
+            for( var i = 0; i < text.Length; i++ ) {
+                var subText = text[0..^i];
+                if( ( ellipWidth + ImGui.CalcTextSize( subText ).X ) <= allowedWidth ) return subText + "...";
+            }
+
+            return "";
+        }
 
         public Vector2 GetPos( UiNodeGraphItem item ) => new Vector2( Spacing.X * ( item.Level + 1 ), Spacing.Y * ( item.Level2 + 1 ) ) + OFFSET;
     }

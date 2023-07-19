@@ -107,7 +107,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Effector {GetIdx()}({EffectorVariety.GetValue()})";
+        public override string GetDefaultText() => $"Effector {GetIdx()} ({EffectorVariety.GetValue()})";
 
         public override string GetWorkspaceId() => $"Effct{GetIdx()}";
     }
