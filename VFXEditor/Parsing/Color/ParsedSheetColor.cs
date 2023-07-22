@@ -33,7 +33,7 @@ namespace VfxEditor.Parsing.Color {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
             var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
 
-            using var combo = ImRaii.Combo( "##Combo", text );
+            using var combo = ImRaii.Combo( $"##Combo{Name}", text );
             if( !combo ) return;
 
             foreach( var option in SheetData.UiColors ) {
