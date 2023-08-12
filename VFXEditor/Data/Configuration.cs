@@ -34,7 +34,11 @@ namespace VfxEditor {
         public bool LogVfxTriggers = false;
 
         public bool HideWithUI = true;
+        public bool UpdateWriteLocation = true;
+        public bool AutosaveEnabled = false;
+        public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 10;
+        public int MaxUndoSize = 10;
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;
         public string WriteLocation = Path.Combine( new[] {
@@ -43,8 +47,6 @@ namespace VfxEditor {
             "pluginConfigs",
             "VFXEditor",
         } );
-
-        public bool UpdateWriteLocation = true;
 
         public bool VfxSpawnLoop = false;
         public float VfxSpawnDelay = 0.1f;
@@ -64,9 +66,6 @@ namespace VfxEditor {
 
         public bool FilepickerImagePreview = true;
 
-        public bool AutosaveEnabled = false;
-        public int AutosaveSeconds = 300;
-
         public bool BlockGameInputsWhenFocused = false;
 
         public KeybindConfiguration SaveKeybind = new();
@@ -85,8 +84,6 @@ namespace VfxEditor {
         public List<LibraryProps> VfxTextureLibraryItems = new();
         public bool VfxTextureDefaultLoaded = false;
 
-        public int MaxUndoSize = 10;
-
         public bool LoopMusic = true;
         public bool LoopSoundEffects = false;
         public float ScdVolume = 1f;
@@ -98,7 +95,6 @@ namespace VfxEditor {
         public Vector4 CurveEditorPointColor = new( 1 );
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
         public Vector4 CurveEditorPrimarySelectedColor = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
-
         public List<Vector4> CurveEditorPalette = new();
         public int CurveEditorLineWidth = 2;
         public int CurveEditorColorRingSize = 3;
@@ -106,7 +102,6 @@ namespace VfxEditor {
         public int CurveEditorPointSize = 7;
         public int CurveEditorSelectedSize = 10;
         public int CurveEditorPrimarySelectedSize = 12;
-
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
 

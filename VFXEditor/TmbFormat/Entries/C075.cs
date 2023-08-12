@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Shape = new( "Shape" );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
-        private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
+        private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
         private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );

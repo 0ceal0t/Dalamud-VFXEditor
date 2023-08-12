@@ -15,18 +15,23 @@ namespace VfxEditor.Utils {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
 
-            var Vertexes = new GltfVertex[model.Vertexes.Vertexes.Count];
+            var vertexes = new GltfVertex[model.Vertexes.Vertexes.Count];
             var idx = 0;
             foreach( var v in model.Vertexes.Vertexes ) {
-                Vertexes[idx] = GetVertex( v );
+                vertexes[idx] = GetVertex( v );
                 idx++;
             }
 
             foreach( var tri in model.Indexes.Indexes ) {
-                var v1 = Vertexes[tri.I1];
-                var v2 = Vertexes[tri.I2];
-                var v3 = Vertexes[tri.I3];
-                mesh.UsePrimitive( material ).AddTriangle( (v1.Pos, v1.Tex), (v2.Pos, v2.Tex), (v3.Pos, v3.Tex) );
+                var v1 = vertexes[tri.I1];
+                var v2 = vertexes[tri.I2];
+                var v3 = vertexes[tri.I3];
+
+                mesh.UsePrimitive( material ).AddTriangle(
+                    (v1.Pos, v1.Tex),
+                    (v2.Pos, v2.Tex),
+                    (v3.Pos, v3.Tex)
+                );
             }
 
             var scene = new SceneBuilder();
@@ -36,19 +41,19 @@ namespace VfxEditor.Utils {
         }
 
         private static GltfVertex GetVertex( AvfxVertex vertex ) {
-            var Pos = new Vector3( vertex.Position[0], vertex.Position[1], vertex.Position[2] );
-            var Normal = Vector3.Normalize( new Vector3( vertex.Normal[0], vertex.Normal[1], vertex.Normal[2] ) );
-            var Tangent = Vector4.Normalize( new Vector4( vertex.Tangent[0], vertex.Tangent[1], vertex.Tangent[2], 1 ) );
-            var CombinedPos = new VertexPositionNormalTangent( Pos, Normal, Tangent );
+            var pos = new Vector3( vertex.Position[0], vertex.Position[1], vertex.Position[2] );
+            var normal = Vector3.Normalize( new Vector3( vertex.Normal[0], vertex.Normal[1], vertex.Normal[2] ) );
+            var tangent = Vector4.Normalize( new Vector4( vertex.Tangent[0], vertex.Tangent[1], vertex.Tangent[2], 1 ) );
+            var combinedPos = new VertexPositionNormalTangent( pos, normal, tangent );
 
-            var Color = new Vector4( vertex.Color[0], vertex.Color[1], vertex.Color[2], vertex.Color[3] ); // 255
-            var UV1 = new Vector2( vertex.Uv1[0], vertex.Uv1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
-            var UV2 = new Vector2( vertex.Uv2[2], vertex.Uv2[3] );
-            var CombinedTexture = new VertexColor1Texture2( Color, UV1, UV2 );
+            var color = new Vector4( vertex.Color[0] / 255f, vertex.Color[1] / 255f, vertex.Color[2] / 255f, vertex.Color[3] / 255f ); // 255
+            var uv1 = new Vector2( vertex.Uv1[0], vertex.Uv1[1] ); // this gets replicated -> 1: uv1.x uv1.y uv1.x uv1.y    2: uv1.x uv1.y uv2.x uv2.y
+            var uv2 = new Vector2( vertex.Uv2[2], vertex.Uv2[3] );
+            var combinedTexture = new VertexColor1Texture2( color, uv1, uv2 );
 
             var ret = new GltfVertex {
-                Pos = CombinedPos,
-                Tex = CombinedTexture
+                Pos = combinedPos,
+                Tex = combinedTexture
             };
             return ret;
         }

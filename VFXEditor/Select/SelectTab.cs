@@ -1,7 +1,6 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
-using Lumina.Data.Files;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -141,16 +140,12 @@ namespace VfxEditor.Select {
         protected void LoadIcon( uint iconId ) {
             Icon?.Dispose();
             Icon = null;
-            if( iconId > 0 ) {
-                TexFile tex;
-                try {
-                    tex = Plugin.DataManager.GetIcon( iconId );
-                }
-                catch( Exception ) {
-                    tex = Plugin.DataManager.GetIcon( 0 );
-                }
-
-                Icon = Plugin.PluginInterface.UiBuilder.LoadImageRaw( SelectTabUtils.BgraToRgba( tex.ImageData ), tex.Header.Width, tex.Header.Height, 4 );
+            if( iconId <= 0 ) return;
+            try {
+                Icon = Plugin.TextureProvider.GetIcon( iconId );
+            }
+            catch( Exception ) {
+                Icon = Plugin.TextureProvider.GetIcon( 0 );
             }
         }
 

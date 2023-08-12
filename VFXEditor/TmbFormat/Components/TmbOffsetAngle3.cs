@@ -4,10 +4,10 @@ using VfxEditor.Parsing.Utils;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
-    public class TmbOffsetAngle3 : ParsedAngle3 {
-        public TmbOffsetAngle3( string name, Vector3 defaultValue ) : base( name, defaultValue ) { }
+    public class TmbOffsetFloat3 : ParsedFloat3 {
+        public TmbOffsetFloat3( string name, Vector3 defaultValue ) : base( name, defaultValue ) { }
 
-        public TmbOffsetAngle3( string name ) : base( name ) { }
+        public TmbOffsetFloat3( string name ) : base( name ) { }
 
         public override void Read( ParsingReader reader ) {
             if( reader is TmbReader tmbReader ) {

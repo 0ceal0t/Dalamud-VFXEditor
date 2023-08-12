@@ -47,6 +47,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="C:\Users\kamin\.nuget\packages\naudio.vorbis\1.5.0\contentFiles\any\netstandard2.0\README.md" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Reference Include="Dalamud">
             <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
             <Private>False</Private>

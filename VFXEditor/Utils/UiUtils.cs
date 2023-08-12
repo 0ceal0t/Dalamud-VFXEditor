@@ -237,8 +237,63 @@ namespace VfxEditor.Utils {
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
-
             return buttonClicked;
+        }
+
+        public static bool DrawAngle( string name, float oldValue, out float newValue ) {
+            newValue = oldValue;
+            var value = ToDegrees( oldValue );
+
+            ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
+            if( ImGui.InputFloat( "##Input", ref value ) ) {
+                newValue = ToRadians( value );
+                return true;
+            }
+
+            DrawAngleToggle( name );
+            return false;
+        }
+
+        public static bool DrawAngle3( string name, Vector3 oldValue, out Vector3 newValue ) {
+            newValue = oldValue;
+            var value = new Vector3( ToDegrees( oldValue.X ), ToDegrees( oldValue.Y ), ToDegrees( oldValue.Z ) );
+
+            ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
+            if( ImGui.InputFloat3( "##Input", ref value ) ) {
+                newValue = new Vector3(
+                    ToRadians( value.X ),
+                    ToRadians( value.Y ),
+                    ToRadians( value.Z )
+                );
+                return true;
+            }
+
+            DrawAngleToggle( name );
+            return false;
+        }
+
+        public static void DrawAngleToggle( string name ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
+            ImGui.SameLine();
+            if( ImGui.Button( Plugin.Configuration.UseDegreesForAngles ? "°" : "r", new Vector2( 15, ImGui.GetFrameHeight() ) ) ) {
+                Plugin.Configuration.UseDegreesForAngles = !Plugin.Configuration.UseDegreesForAngles;
+                Plugin.Configuration.Save();
+            }
+            Tooltip( "Switch between degrees and radians" );
+
+            ImGui.SameLine();
+            ImGui.Text( name );
+        }
+
+        public static float ToRadians( float value ) {
+            if( !Plugin.Configuration.UseDegreesForAngles ) return value;
+            return ( float )( ( Math.PI / 180 ) * value );
+        }
+
+        public static float ToDegrees( float value ) {
+            if( !Plugin.Configuration.UseDegreesForAngles ) return value;
+            return ( float )( ( 180 / Math.PI ) * value );
         }
     }
 }

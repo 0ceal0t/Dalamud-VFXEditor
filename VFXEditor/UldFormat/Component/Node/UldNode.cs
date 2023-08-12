@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedShort Y = new( "Y" );
         public readonly ParsedUInt W = new( "Width", size: 2 );
         public readonly ParsedUInt H = new( "Height", size: 2 );
-        public readonly ParsedFloat Rotation = new( "Rotation" );
+        public readonly ParsedAngle Rotation = new( "Rotation" );
         public readonly ParsedFloat2 Scale = new( "Scale" );
         public readonly ParsedShort OriginX = new( "Origin X" );
         public readonly ParsedShort OriginY = new( "Origin Y" );

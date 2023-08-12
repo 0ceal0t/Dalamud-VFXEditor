@@ -142,6 +142,7 @@ namespace ImGuiFileDialog {
 
             var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
             if( string.IsNullOrEmpty( personal ) ) return;
+            if( personal.EndsWith( "OneDrive" ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
 
             QuickAccess.Add( new SideBarItem {
                 Icon = ( char )FontAwesomeIcon.Desktop,

@@ -38,7 +38,9 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         public void Draw() {
-            if( Data == null ) LoadSklbPath();
+            if( Data == null ) {
+                LoadSklbPath();
+            }
             else if( PapPreview.CurrentAnimation != Animation ) {
                 Frame = 0;
                 Playing = false;

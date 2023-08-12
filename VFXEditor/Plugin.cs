@@ -7,6 +7,7 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiFileDialog;
 using ImGuiNET;
@@ -44,6 +45,7 @@ namespace VfxEditor {
         public static DataManager DataManager { get; private set; }
         public static TargetManager TargetManager { get; private set; }
         public static KeyState KeyState { get; private set; }
+        public static ITextureProvider TextureProvider { get; private set; }
 
         public static bool InGpose => PluginInterface.UiBuilder.GposeActive;
         public static GameObject GposeTarget => Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
@@ -97,7 +99,8 @@ namespace VfxEditor {
                 SigScanner sigScanner,
                 DataManager dataManager,
                 TargetManager targetManager,
-                KeyState keyState
+                KeyState keyState,
+                ITextureProvider textureProvider
          ) {
             PluginInterface = pluginInterface;
             ClientState = clientState;
@@ -109,6 +112,7 @@ namespace VfxEditor {
             Framework = framework;
             TargetManager = targetManager;
             KeyState = keyState;
+            TextureProvider = textureProvider;
 
             CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 

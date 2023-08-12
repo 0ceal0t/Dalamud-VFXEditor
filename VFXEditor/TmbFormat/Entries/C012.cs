@@ -27,7 +27,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedShort BindPoint3 = new( "Bind Point 3", defaultValue: 2 );
         private readonly ParsedShort BindPoint4 = new( "Bind Point 4", defaultValue: 0xFF );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
-        private readonly TmbOffsetFloat3 Rotation = new( "Rotation" );
+        private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
         private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
         private readonly ParsedEnum<VfxVisibility> Visibility = new( "Visibility" );

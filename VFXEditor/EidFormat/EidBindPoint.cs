@@ -10,7 +10,7 @@ namespace VfxEditor.EidFormat {
         public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
         public readonly ParsedInt Id = new( "Id" );
         public readonly ParsedFloat3 Position = new( "Position" );
-        public readonly ParsedFloat3 Rotation = new( "Rotation" );
+        public readonly ParsedAngle3 Rotation = new( "Rotation" );
 
         public EidBindPoint() { }
 
