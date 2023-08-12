@@ -205,7 +205,7 @@ namespace VfxEditor.Utils {
             return ret;
         }
 
-        public static bool IconButton( FontAwesomeIcon icon, string text, string tooltip = "" ) {
+        public static bool IconButton( FontAwesomeIcon icon, string text ) {
             var buttonClicked = false;
 
             var iconSize = GetIconSize( icon );
@@ -218,7 +218,6 @@ namespace VfxEditor.Utils {
             var buttonSize = new Vector2( buttonSizeX, buttonSizeY );
 
             if( ImGui.Button( "##" + icon.ToIconString() + text, buttonSize ) ) buttonClicked = true;
-            var hovered = ImGui.IsItemHovered();
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - buttonSize.X - spacing.X + padding.X );
@@ -230,13 +229,6 @@ namespace VfxEditor.Utils {
             ImGui.SameLine();
             ImGui.Text( text );
 
-            if( !string.IsNullOrEmpty( tooltip ) && hovered ) {
-                ImGui.BeginTooltip();
-                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
-                ImGui.TextUnformatted( tooltip );
-                ImGui.PopTextWrapPos();
-                ImGui.EndTooltip();
-            }
             return buttonClicked;
         }
 
