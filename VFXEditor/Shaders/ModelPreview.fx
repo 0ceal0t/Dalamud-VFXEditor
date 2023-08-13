@@ -32,7 +32,10 @@ cbuffer VSConstants : register(b0)
 
 cbuffer PSConstants : register(b0)
 {
-    int showEdges;
+    float4 LightDirection;
+    float4 LightColor;
+    int ShowEdges;
+    
 }
 
 GS_IN VS(VS_IN input)
@@ -93,13 +96,13 @@ float4 PS(PS_IN input) : SV_Target
     float3 WorldPos = input.PositionWS.xyz;
     float3 LightDir = normalize(LightPos - WorldPos);
 
-    float3 LightColor = { 1.0f, 1.0f, 1.0f};
+    float3 lightColor = { 1.0f, 1.0f, 1.0f};
     float3 ObjectColor = input.col.xyz;
     float3 Ambient = { 0.7f, 0.7f, 0.7f };
     float Diffuse = saturate(dot(Norm, -LightDir));
-    float3 Result = saturate((Ambient + (LightColor * Diffuse * 0.6f)) * ObjectColor);
+    float3 Result = saturate((Ambient + (lightColor * Diffuse * 0.6f)) * ObjectColor);
 
-    if(showEdges == 1)
+    if(ShowEdges == 1)
     {
         float3 barys;
         barys.xy = input.barycentricCoordinates;

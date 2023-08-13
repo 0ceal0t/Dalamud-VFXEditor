@@ -188,17 +188,14 @@
         <None Update="Files\vorbis_header.bin">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Shaders\Emitter.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Shaders\Gradient.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\ModelPreview.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\EmitterVertex_VS.fx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\EmitterVertex_PS.fx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="VFXEditor.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

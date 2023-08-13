@@ -18,6 +18,8 @@ namespace VfxEditor.DirectX {
 
     [StructLayout( LayoutKind.Sequential )]
     public struct PSBufferStruct {
+        public Vector4 LightDirection;
+        public Vector4 LightColor;
         public int ShowEdges;
         public Vector3 Padding;
     }
@@ -42,11 +44,13 @@ namespace VfxEditor.DirectX {
         protected Buffer VSBuffer;
         protected Buffer PSBuffer;
         protected Matrix ProjMatrix;
-        protected Texture2D DepthTex;
-        protected DepthStencilView DepthView;
+
         protected Texture2D RenderTex;
         protected ShaderResourceView RenderShad;
         protected RenderTargetView RenderView;
+
+        protected Texture2D DepthTex;
+        protected DepthStencilView DepthView;
 
         public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
             VSBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
@@ -89,6 +93,7 @@ namespace VfxEditor.DirectX {
 
         protected void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
+
             RenderTex?.Dispose();
             RenderTex = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.B8G8R8A8_UNorm,
@@ -102,8 +107,10 @@ namespace VfxEditor.DirectX {
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None
             } );
+
             RenderShad?.Dispose();
             RenderShad = new ShaderResourceView( Device, RenderTex );
+
             RenderView?.Dispose();
             RenderView = new RenderTargetView( Device, RenderTex );
 
@@ -120,6 +127,7 @@ namespace VfxEditor.DirectX {
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None
             } );
+
             DepthView?.Dispose();
             DepthView = new DepthStencilView( Device, DepthTex );
         }
@@ -185,7 +193,9 @@ namespace VfxEditor.DirectX {
             };
 
             var psBuffer = new PSBufferStruct {
-                ShowEdges = ShowEdges() ? 1 : 0
+                LightDirection = new( 1.0f, 1.0f, 1.0f, 1.0f ),
+                LightColor = new( 10.0f, 8.0f, 5.0f, 0.0f ),
+                ShowEdges = ShowEdges() ? 1 : 0,
             };
 
             Ctx.UpdateSubresource( ref vsBuffer, VSBuffer );

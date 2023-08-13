@@ -14,10 +14,11 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class ModelPreview : ModelRenderer {
-        public enum RenderMode : int {
-            Color = 1,
-            Uv1 = 2,
-            Uv2 = 3
+        public enum RenderMode {
+            Color,
+            Uv1,
+            Uv2,
+            Normal
         }
 
         // ======= BASE MODEL =======
@@ -55,10 +56,9 @@ namespace VfxEditor.DirectX {
             Vertices = null;
 
             try {
-                var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
-                CompiledVS = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-                CompiledPS = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-                CompiledGS = ShaderBytecode.CompileFromFile( shaderFile, "GS", "gs_4_0" );
+                CompiledVS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelPreview.fx" ), "VS", "vs_4_0" );
+                CompiledPS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelPreview.fx" ), "PS", "ps_4_0" );
+                CompiledGS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelPreview.fx" ), "GS", "gs_4_0" );
                 VS = new VertexShader( Device, CompiledVS );
                 PS = new PixelShader( Device, CompiledPS );
                 GS = new GeometryShader( Device, CompiledGS );
@@ -105,8 +105,8 @@ namespace VfxEditor.DirectX {
             EmitInstances = null;
 
             try {
-                EmitCompiledVS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
-                EmitCompiledPS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
+                EmitCompiledVS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "Emitter.fx" ), "VS", "vs_4_0" );
+                EmitCompiledPS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "Emitter.fx" ), "PS", "ps_4_0" );
                 EmitVS = new VertexShader( Device, EmitCompiledVS );
                 EmitPS = new PixelShader( Device, EmitCompiledPS );
                 EmitSignature = ShaderSignature.GetInputSignature( EmitCompiledVS );
@@ -137,18 +137,25 @@ namespace VfxEditor.DirectX {
 
                 for( var index = 0; index < modelIndexes.Count; index++ ) { // each face
                     var indexes = new int[] { modelIndexes[index].I1, modelIndexes[index].I2, modelIndexes[index].I3 };
+
                     for( var j = 0; j < indexes.Length; j++ ) { // push all 3 vertices per face
                         var idx = GetIdx( index, j, ModelSpan, 3 );
-                        var v = modelVertexes[indexes[j]];
+                        var vertex = modelVertexes[indexes[j]];
 
-                        data[idx + 0] = new Vector4( v.Position[0], v.Position[1], v.Position[2], 1.0f );
+                        var normal = new Vector3( vertex.Normal[0], vertex.Normal[1], vertex.Normal[2] );
+                        var color = new Vector3( vertex.Color[0], vertex.Color[1], vertex.Color[2] );
+                        var uv1 = new Vector4( vertex.Uv1[0] + 0.5f, 0, vertex.Uv1[1] + 0.5f, 1.0f );
+                        var uv2 = new Vector4( vertex.Uv2[2] + 0.5f, 0, vertex.Uv2[3] + 0.5f, 1.0f );
+
+                        data[idx + 0] = new Vector4( vertex.Position[0], vertex.Position[1], vertex.Position[2], 1.0f );
                         data[idx + 1] = mode switch {
-                            RenderMode.Color => new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f ),
-                            RenderMode.Uv1 => new Vector4( v.Uv1[0] + 0.5f, 0, v.Uv1[1] + 0.5f, 1.0f ),
-                            RenderMode.Uv2 => new Vector4( v.Uv2[2] + 0.5f, 0, v.Uv2[3] + 0.5f, 1.0f ),
+                            RenderMode.Color => new Vector4( color / 255, 1.0f ),
+                            RenderMode.Uv1 => uv1,
+                            RenderMode.Uv2 => uv2,
+                            RenderMode.Normal => new Vector4( normal.Normalized(), 1.0f ),
                             _ => throw new NotImplementedException()
                         };
-                        data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 0 );
+                        data[idx + 2] = new Vector4( normal, 0 );
                     }
                 }
 

@@ -160,6 +160,11 @@ namespace VfxEditor.AvfxFormat {
                 Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv2 );
             }
 
+            ImGui.SameLine();
+            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) {
+                Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
+            }
+
             Plugin.DirectXManager.ModelPreview.DrawInline();
         }
 
