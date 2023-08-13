@@ -4,15 +4,21 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Runtime.InteropServices;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.DirectX {
+    [StructLayout( LayoutKind.Sequential )]
+    public struct ConstantBufferStruct {
+        public Matrix WorldMatrix;
+        public int ShowEdges;
+        public Vector3 Padding;
+    }
+
     public abstract class ModelRenderer : Renderer {
         public IntPtr Output => RenderShad.NativePointer;
-
-        public bool IsWireframe = false;
         public bool IsDragging = false;
 
         private Vector2 LastMousePos;
@@ -28,8 +34,7 @@ namespace VfxEditor.DirectX {
         protected bool FirstModel = false;
 
         protected RasterizerState RasterizeState;
-        protected Buffer RendersizeBuffer;
-        protected Buffer WorldBuffer;
+        protected Buffer ConstantBuffer;
         protected Matrix ProjMatrix;
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
@@ -38,14 +43,13 @@ namespace VfxEditor.DirectX {
         protected RenderTargetView RenderView;
 
         public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
-            WorldBuffer = new Buffer( Device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            ConstantBuffer = new Buffer( Device, Utilities.SizeOf<ConstantBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), Position, Vector3.UnitY );
-
-            RendersizeBuffer = new Buffer( Device, Utilities.SizeOf<Vector4>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-
             RefreshRasterizeState();
             ResizeResources();
         }
+
+        protected virtual bool Wireframe() => Plugin.Configuration.ModelWireframe;
 
         public void RefreshRasterizeState() {
             RasterizeState?.Dispose();
@@ -53,7 +57,7 @@ namespace VfxEditor.DirectX {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
-                FillMode = IsWireframe ? FillMode.Wireframe : FillMode.Solid,
+                FillMode = Wireframe() ? FillMode.Wireframe : FillMode.Solid,
                 IsAntialiasedLineEnabled = false,
                 IsDepthClipEnabled = true,
                 IsFrontCounterClockwise = false,
@@ -157,16 +161,21 @@ namespace VfxEditor.DirectX {
 
         public abstract void OnDraw();
 
+        protected virtual bool ShowEdges() => Plugin.Configuration.ModelShowEdges && !Plugin.Configuration.ModelWireframe;
+
         public void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
             worldViewProj.Transpose();
-            Ctx.UpdateSubresource( ref worldViewProj, WorldBuffer );
 
-            var renderSize = new Vector4( Width, Height, 0, 0 );
-            Ctx.UpdateSubresource( ref renderSize, RendersizeBuffer );
+            var constantBuffer = new ConstantBufferStruct {
+                WorldMatrix = worldViewProj,
+                ShowEdges = ShowEdges() ? 1 : 0
+            };
+
+            Ctx.UpdateSubresource( ref constantBuffer, ConstantBuffer );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
@@ -219,8 +228,7 @@ namespace VfxEditor.DirectX {
             RenderView?.Dispose();
             DepthTex?.Dispose();
             DepthView?.Dispose();
-            WorldBuffer?.Dispose();
-            RendersizeBuffer?.Dispose();
+            ConstantBuffer?.Dispose();
 
             OnDispose();
         }

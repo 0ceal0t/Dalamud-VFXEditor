@@ -17,9 +17,14 @@ struct PS_IN
     float4 pos : SV_POSITION;
     float4 col : COLOR;
     float4 norm : NORMAL;
+    float2 barycentricCoordinates : TEXCOORD9;
 };
 
-float4x4 worldViewProj;
+cbuffer globalBuffer : register(b0)
+{
+    float4x4 worldViewProj;
+    int showEdges;
+}
 
 GS_IN VS(VS_IN input)
 {
@@ -35,16 +40,26 @@ GS_IN VS(VS_IN input)
 [maxvertexcount(3)]
 void GS( triangle GS_IN input[3], inout TriangleStream<PS_IN> OutputStream )
 {   
-    PS_IN output = (PS_IN)0;
+    PS_IN g0 = (PS_IN)0;
+    g0.pos = input[0].pos;
+    g0.norm = input[0].norm;
+    g0.col = input[0].col;
+    g0.barycentricCoordinates = float2(1, 0);
+    OutputStream.Append( g0 );
 
-    for( uint i=0; i<3; i+=1 )
-    {
-        output.pos = input[i].pos;
-        output.norm = input[i].norm;
-        output.col = input[i].col;
-        
-        OutputStream.Append( output );
-    }
+    PS_IN g1 = (PS_IN)0;
+    g1.pos = input[1].pos;
+    g1.norm = input[1].norm;
+    g1.col = input[1].col;
+    g1.barycentricCoordinates = float2(0, 1);
+    OutputStream.Append( g1 );
+
+    PS_IN g2 = (PS_IN)0;
+    g2.pos = input[2].pos;
+    g2.norm = input[2].norm;
+    g2.col = input[2].col;
+    g2.barycentricCoordinates = float2(0, 0);
+    OutputStream.Append( g2 );
     
     OutputStream.RestartStrip();
 }
@@ -62,7 +77,21 @@ float4 PS(PS_IN input) : SV_Target
     float Diffuse = saturate(dot(Norm, -LightDir));
     float3 Result = saturate((Ambient + (LightColor * Diffuse * 0.6f)) * ObjectColor);
 
-    float4 Out_Col = { Result.x, Result.y, Result.z, 1.0f };
+    if(showEdges == 1)
+    {
+        float3 barys;
+        barys.xy = input.barycentricCoordinates;
+        barys.z = 1 - barys.x - barys.y;
+        float3 deltas = fwidth(barys);
+        float3 smoothing = deltas * 0.5f;
+	    float3 thickness = deltas * 0.1f;
+	    barys = smoothstep(thickness, thickness + smoothing, barys);
+	    float minBary = min(barys.x, min(barys.y, barys.z));
+        float3 wireframeColor = { 1.0f, 0.0f, 0.0f };
 
+        Result = lerp(wireframeColor, Result, minBary);
+    }
+
+    float4 Out_Col = { Result.x, Result.y, Result.z, 1.0f };
     return Out_Col;
 }

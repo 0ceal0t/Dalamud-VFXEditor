@@ -188,12 +188,6 @@
         <None Update="Files\vorbis_header.bin">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\ModelEdge_PS.fx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\ModelEdge_VS.fx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="Shaders\Gradient.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

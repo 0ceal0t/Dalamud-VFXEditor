@@ -69,11 +69,13 @@ namespace VfxEditor.DirectX {
             if( ShaderError ) return;
             if( NumVertices == 0 && NumPhysics == 0 ) return;
 
-            Ctx.PixelShader.Set( PShader );
-            Ctx.VertexShader.Set( VShader );
+            Ctx.PixelShader.Set( PS );
+            Ctx.GeometryShader.Set( GS );
+            Ctx.VertexShader.Set( VS );
             Ctx.InputAssembler.InputLayout = Layout;
             Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+            Ctx.VertexShader.SetConstantBuffer( 0, ConstantBuffer );
+            Ctx.PixelShader.SetConstantBuffer( 0, ConstantBuffer );
 
             if( NumVertices > 0 ) {
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
@@ -105,6 +107,8 @@ namespace VfxEditor.DirectX {
                 Ctx.Rasterizer.State = RasterizeState;
                 wireframe.Dispose();
             }
+
+            Ctx.GeometryShader.Set( null );
         }
 
         public void ClearFile() {

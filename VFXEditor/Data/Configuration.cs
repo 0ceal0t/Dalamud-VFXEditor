@@ -109,6 +109,10 @@ namespace VfxEditor {
         public bool PhybSkeletonSplit = true;
         public bool PhybShowBoneName = true;
 
+        public bool ModelWireframe = false;
+        public bool ModelShowEdges = true;
+        public bool ModelShowEmitters = true;
+
         public Vector4 LuaParensColor = new( 0.5f, 0.5f, 0.5f, 1f );
         public Vector4 LuaFunctionColor = new( 0f, 0.439f, 1f, 1f );
         public Vector4 LuaLiteralColor = new( 0.639f, 0.207f, 0.933f, 1f );

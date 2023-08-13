@@ -128,21 +128,22 @@ namespace VfxEditor.AvfxFormat {
                 Refresh = false;
             }
 
-            var wireframe = Plugin.DirectXManager.ModelPreview.IsWireframe;
-            if( ImGui.Checkbox( "Wireframe", ref wireframe ) ) {
-                Plugin.DirectXManager.ModelPreview.IsWireframe = wireframe;
+            if( ImGui.Checkbox( "Wireframe", ref Plugin.Configuration.ModelWireframe ) ) {
                 Plugin.DirectXManager.ModelPreview.RefreshRasterizeState();
                 Plugin.DirectXManager.ModelPreview.Draw();
+                Plugin.Configuration.Save();
             }
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Edges", ref Plugin.DirectXManager.ModelPreview.ShowEdges ) ) {
+            if( ImGui.Checkbox( "Show Edges", ref Plugin.Configuration.ModelShowEdges ) ) {
                 Plugin.DirectXManager.ModelPreview.Draw();
+                Plugin.Configuration.Save();
             }
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.DirectXManager.ModelPreview.ShowEmitter ) ) {
+            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.Configuration.ModelShowEmitters ) ) {
                 Plugin.DirectXManager.ModelPreview.Draw();
+                Plugin.Configuration.Save();
             }
 
             if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) {

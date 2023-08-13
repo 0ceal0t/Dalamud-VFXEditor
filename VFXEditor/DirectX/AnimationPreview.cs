@@ -18,10 +18,12 @@ namespace VfxEditor.DirectX {
         protected int NumVertices = 0;
         protected Buffer Vertices;
 
-        protected readonly CompilationResult VertexShaderByteCode;
-        protected readonly CompilationResult PixelShaderByteCode;
-        protected readonly PixelShader PShader;
-        protected readonly VertexShader VShader;
+        protected readonly CompilationResult CompiledVS;
+        protected readonly CompilationResult CompiledPS;
+        protected readonly CompilationResult CompiledGS;
+        protected readonly PixelShader PS;
+        protected readonly VertexShader VS;
+        protected readonly GeometryShader GS;
         protected readonly ShaderSignature Signature;
         protected readonly InputLayout Layout;
 
@@ -30,11 +32,13 @@ namespace VfxEditor.DirectX {
         public AnimationPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             try {
                 var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
-                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-                VShader = new VertexShader( Device, VertexShaderByteCode );
-                PShader = new PixelShader( Device, PixelShaderByteCode );
-                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
+                CompiledVS = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
+                CompiledPS = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
+                CompiledGS = ShaderBytecode.CompileFromFile( shaderFile, "GS", "gs_4_0" );
+                VS = new VertexShader( Device, CompiledVS );
+                PS = new PixelShader( Device, CompiledPS );
+                GS = new GeometryShader( Device, CompiledGS );
+                Signature = ShaderSignature.GetInputSignature( CompiledVS );
                 Layout = new InputLayout( Device, Signature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
@@ -91,27 +95,38 @@ namespace VfxEditor.DirectX {
             return data;
         }
 
+        protected override bool Wireframe() => false;
+
+        protected override bool ShowEdges() => false;
+
         public override void OnDraw() {
             if( ShaderError ) return;
             if( NumVertices == 0 ) return;
 
-            Ctx.PixelShader.Set( PShader );
-            Ctx.VertexShader.Set( VShader );
+            Ctx.PixelShader.Set( PS );
+            Ctx.GeometryShader.Set( GS );
+            Ctx.VertexShader.Set( VS );
             Ctx.InputAssembler.InputLayout = Layout;
             Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
+            Ctx.VertexShader.SetConstantBuffer( 0, ConstantBuffer );
+            Ctx.PixelShader.SetConstantBuffer( 0, ConstantBuffer );
             Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
+
             Ctx.Draw( NumVertices, 0 );
+
+            Ctx.GeometryShader.Set( null );
         }
 
         public override void OnDispose() {
             Vertices?.Dispose();
             Layout?.Dispose();
             Signature?.Dispose();
-            PShader?.Dispose();
-            VShader?.Dispose();
-            VertexShaderByteCode?.Dispose();
-            PixelShaderByteCode?.Dispose();
+            PS?.Dispose();
+            VS?.Dispose();
+            GS?.Dispose();
+            CompiledVS?.Dispose();
+            CompiledPS?.Dispose();
+            CompiledGS?.Dispose();
         }
     }
 }

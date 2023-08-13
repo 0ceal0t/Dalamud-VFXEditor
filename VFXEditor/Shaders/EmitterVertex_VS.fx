@@ -14,7 +14,11 @@ struct PS_IN
     float4 norm : NORMAL;
 };
 
-float4x4 worldViewProj;
+cbuffer globalBuffer : register(b0)
+{
+    float4x4 worldViewProj;
+    int showEdges;
+}
 
 PS_IN VS(VS_IN input)
 {
