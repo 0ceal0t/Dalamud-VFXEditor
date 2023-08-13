@@ -169,7 +169,7 @@ namespace VfxEditor.DirectX {
             Ctx.UpdateSubresource( ref renderSize, RendersizeBuffer );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
-            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
+            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
             Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
 
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );

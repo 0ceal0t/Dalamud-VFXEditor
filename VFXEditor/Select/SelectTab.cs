@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
     // ==== BASE =======
@@ -142,10 +143,10 @@ namespace VfxEditor.Select {
             Icon = null;
             if( iconId <= 0 ) return;
             try {
-                Icon = Plugin.TextureProvider.GetIcon( iconId );
+                Icon = Plugin.TextureProvider.GetIcon( iconId, IconFlags.None );
             }
             catch( Exception ) {
-                Icon = Plugin.TextureProvider.GetIcon( 0 );
+                Icon = Plugin.TextureProvider.GetIcon( 0, IconFlags.None );
             }
         }
 

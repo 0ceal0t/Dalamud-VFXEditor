@@ -41,7 +41,7 @@ namespace VfxEditor.Interop {
             try {
                 var mods = GetModsSubscriber.InvokeFunc();
                 foreach( var m in mods ) {
-                    var (modPath, nodName) = m;
+                    var (modPath, modName) = m;
                     ret.Add( modPath );
                 }
             }

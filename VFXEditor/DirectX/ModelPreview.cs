@@ -28,10 +28,12 @@ namespace VfxEditor.DirectX {
         private static readonly int ModelSpan = 3; // position, color, normal
         private int NumVerts;
         private Buffer Vertices;
-        private readonly CompilationResult VertexShaderByteCode;
-        private readonly CompilationResult PixelShaderByteCode;
-        private readonly PixelShader PShader;
-        private readonly VertexShader VShader;
+        private readonly CompilationResult CompiledVS;
+        private readonly CompilationResult CompiledPS;
+        private readonly CompilationResult CompiledGS;
+        private readonly PixelShader PS;
+        private readonly VertexShader VS;
+        private readonly GeometryShader GS;
         private readonly ShaderSignature Signature;
         private readonly InputLayout Layout;
 
@@ -39,10 +41,10 @@ namespace VfxEditor.DirectX {
         private static readonly int EdgeSpan = 2;
         private int EdgeNumVerts;
         private Buffer EdgeVertices;
-        private readonly CompilationResult EdgeVertexShaderByteCode;
-        private readonly CompilationResult EdgePixelShaderByteCode;
-        private readonly PixelShader EdgePShader;
-        private readonly VertexShader EdgeVShader;
+        private readonly CompilationResult EdgeCompiledVS;
+        private readonly CompilationResult EdgeCompiledPS;
+        private readonly PixelShader EdgePS;
+        private readonly VertexShader EdgeVS;
         private readonly ShaderSignature EdgeSignature;
         private readonly InputLayout EdgeLayout;
 
@@ -52,10 +54,10 @@ namespace VfxEditor.DirectX {
         private int EmitNumInstances;
         private readonly Buffer EmitVertices;
         private Buffer EmitInstances;
-        private readonly CompilationResult EmitVertexShaderByteCode;
-        private readonly CompilationResult EmitPixelShaderByteCode;
-        private readonly PixelShader EmitPShader;
-        private readonly VertexShader EmitVShader;
+        private readonly CompilationResult EmitCompiledVS;
+        private readonly CompilationResult EmitCompiledPS;
+        private readonly PixelShader EmitPS;
+        private readonly VertexShader EmitVS;
         private readonly ShaderSignature EmitSignature;
         private readonly InputLayout EmitLayout;
 
@@ -63,16 +65,19 @@ namespace VfxEditor.DirectX {
 
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             // ======= BASE MODEL =========
+
             NumVerts = 0;
             Vertices = null;
 
             try {
                 var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
-                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-                VShader = new VertexShader( Device, VertexShaderByteCode );
-                PShader = new PixelShader( Device, PixelShaderByteCode );
-                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
+                CompiledVS = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
+                CompiledPS = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
+                CompiledGS = ShaderBytecode.CompileFromFile( shaderFile, "GS", "gs_4_0" );
+                VS = new VertexShader( Device, CompiledVS );
+                PS = new PixelShader( Device, CompiledPS );
+                GS = new GeometryShader( Device, CompiledGS );
+                Signature = ShaderSignature.GetInputSignature( CompiledVS );
                 Layout = new InputLayout( Device, Signature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
@@ -80,27 +85,28 @@ namespace VfxEditor.DirectX {
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error compiling shaders", e );
+                PluginLog.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
 
             // ======= MODEL EDGES ========
+
             EdgeNumVerts = 0;
             EdgeVertices = null;
 
             try {
-                EdgeVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
-                EdgePixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
-                EdgeVShader = new VertexShader( Device, EdgeVertexShaderByteCode );
-                EdgePShader = new PixelShader( Device, EdgePixelShaderByteCode );
-                EdgeSignature = ShaderSignature.GetInputSignature( EdgeVertexShaderByteCode );
+                EdgeCompiledVS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_VS.fx" ), "VS", "vs_4_0" );
+                EdgeCompiledPS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "ModelEdge_PS.fx" ), "PS", "ps_4_0" );
+                EdgeVS = new VertexShader( Device, EdgeCompiledVS );
+                EdgePS = new PixelShader( Device, EdgeCompiledPS );
+                EdgeSignature = ShaderSignature.GetInputSignature( EdgeCompiledVS );
                 EdgeLayout = new InputLayout( Device, EdgeSignature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error compiling shaders", e );
+                PluginLog.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
 
@@ -136,11 +142,11 @@ namespace VfxEditor.DirectX {
             EmitInstances = null;
 
             try {
-                EmitVertexShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
-                EmitPixelShaderByteCode = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
-                EmitVShader = new VertexShader( Device, EmitVertexShaderByteCode );
-                EmitPShader = new PixelShader( Device, EmitPixelShaderByteCode );
-                EmitSignature = ShaderSignature.GetInputSignature( EmitVertexShaderByteCode );
+                EmitCompiledVS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_VS.fx" ), "VS", "vs_4_0" );
+                EmitCompiledPS = ShaderBytecode.CompileFromFile( Path.Combine( shaderPath, "EmitterVertex_PS.fx" ), "PS", "ps_4_0" );
+                EmitVS = new VertexShader( Device, EmitCompiledVS );
+                EmitPS = new PixelShader( Device, EmitCompiledPS );
+                EmitSignature = ShaderSignature.GetInputSignature( EmitCompiledVS );
                 EmitLayout = new InputLayout( Device, EmitSignature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
                     new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
@@ -151,7 +157,7 @@ namespace VfxEditor.DirectX {
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error compiling shaders", e );
+                PluginLog.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
         }
@@ -181,15 +187,18 @@ namespace VfxEditor.DirectX {
                             RenderMode.Color => new Vector4( v.Color[0] / 255, v.Color[1] / 255, v.Color[2] / 255, 1.0f ),
                             RenderMode.Uv1 => new Vector4( v.Uv1[0] + 0.5f, 0, v.Uv1[1] + 0.5f, 1.0f ),
                             RenderMode.Uv2 => new Vector4( v.Uv2[2] + 0.5f, 0, v.Uv2[3] + 0.5f, 1.0f ),
-                            _ => throw new System.NotImplementedException()
+                            _ => throw new NotImplementedException()
                         };
                         data[idx + 2] = new Vector4( v.Normal[0], v.Normal[1], v.Normal[2], 0 );
 
                         // ========= COPY OVER EDGE DATA ==========
+
                         var edgeIdx = GetIdx( index, j, EdgeSpan, 4 );
                         edgeData[edgeIdx + 0] = data[idx + 0];
                         edgeData[edgeIdx + 1] = LineColor;
-                        if( j == 0 ) { // loop back around
+
+                        // 4th point per face, loop back around
+                        if( j == 0 ) {
                             var lastEdgeIdx = GetIdx( index, 3, EdgeSpan, 4 );
                             edgeData[lastEdgeIdx + 0] = data[idx + 0];
                             edgeData[lastEdgeIdx + 1] = LineColor;
@@ -207,6 +216,7 @@ namespace VfxEditor.DirectX {
             }
 
             // ========= EMITTER VERTEX INSTANCES =========
+
             if( modelEmitters.Count == 0 ) {
                 EmitNumInstances = 0;
                 EmitInstances?.Dispose();
@@ -249,8 +259,9 @@ namespace VfxEditor.DirectX {
 
             // ====== DRAW BASE =========
             if( NumVerts > 0 ) {
-                Ctx.PixelShader.Set( PShader );
-                Ctx.VertexShader.Set( VShader );
+                Ctx.PixelShader.Set( PS );
+                Ctx.GeometryShader.Set( GS );
+                Ctx.VertexShader.Set( VS );
                 Ctx.InputAssembler.InputLayout = Layout;
                 Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
                 Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
@@ -260,12 +271,12 @@ namespace VfxEditor.DirectX {
 
             // ====== DRAW LINE =========
             if( ShowEdges ) {
-                Ctx.PixelShader.Set( EdgePShader );
-                Ctx.VertexShader.Set( EdgeVShader );
+                Ctx.PixelShader.Set( EdgePS );
+                Ctx.VertexShader.Set( EdgeVS );
+                Ctx.GeometryShader.Set( null );
                 Ctx.InputAssembler.InputLayout = EdgeLayout;
                 Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
                 Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
-                Ctx.GeometryShader.SetConstantBuffer( 0, RendersizeBuffer );
                 if( EdgeNumVerts > 0 ) {
                     Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( EdgeVertices, Utilities.SizeOf<Vector4>() * EdgeSpan, 0 ) );
                     for( var i = 0; i < EdgeNumVerts / 4; i++ ) {
@@ -276,8 +287,9 @@ namespace VfxEditor.DirectX {
 
             // ======= EMITTER ==========
             if( EmitNumInstances > 0 && ShowEmitter ) {
-                Ctx.PixelShader.Set( EmitPShader );
-                Ctx.VertexShader.Set( EmitVShader );
+                Ctx.PixelShader.Set( EmitPS );
+                Ctx.VertexShader.Set( EmitVS );
+                Ctx.GeometryShader.Set( null );
                 Ctx.InputAssembler.InputLayout = EmitLayout;
                 Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
                 Ctx.VertexShader.SetConstantBuffer( 0, WorldBuffer );
@@ -294,26 +306,28 @@ namespace VfxEditor.DirectX {
             EmitInstances?.Dispose();
             EmitLayout?.Dispose();
             EmitSignature?.Dispose();
-            EmitPShader?.Dispose();
-            EmitVShader?.Dispose();
-            EmitVertexShaderByteCode?.Dispose();
-            EmitPixelShaderByteCode?.Dispose();
+            EmitPS?.Dispose();
+            EmitVS?.Dispose();
+            EmitCompiledVS?.Dispose();
+            EmitCompiledPS?.Dispose();
 
             EdgeVertices?.Dispose();
             EdgeLayout?.Dispose();
             EdgeSignature?.Dispose();
-            EdgePShader?.Dispose();
-            EdgeVShader?.Dispose();
-            EdgeVertexShaderByteCode?.Dispose();
-            EdgePixelShaderByteCode?.Dispose();
+            EdgePS?.Dispose();
+            EdgeVS?.Dispose();
+            EdgeCompiledVS?.Dispose();
+            EdgeCompiledPS?.Dispose();
 
             Vertices?.Dispose();
             Layout?.Dispose();
             Signature?.Dispose();
-            PShader?.Dispose();
-            VShader?.Dispose();
-            VertexShaderByteCode?.Dispose();
-            PixelShaderByteCode?.Dispose();
+            PS?.Dispose();
+            VS?.Dispose();
+            GS?.Dispose();
+            CompiledVS?.Dispose();
+            CompiledPS?.Dispose();
+            CompiledGS?.Dispose();
         }
     }
 }

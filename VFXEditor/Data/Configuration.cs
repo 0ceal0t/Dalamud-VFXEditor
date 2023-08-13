@@ -41,6 +41,8 @@ namespace VfxEditor {
         public int MaxUndoSize = 10;
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;
+        public bool FilepickerImagePreview = true;
+        public bool BlockGameInputsWhenFocused = false;
         public string WriteLocation = Path.Combine( new[] {
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "XIVLauncher",
@@ -63,10 +65,6 @@ namespace VfxEditor {
         // ===========================
 
         public Dictionary<string, ManagerConfiguration> ManagerConfigs = new();
-
-        public bool FilepickerImagePreview = true;
-
-        public bool BlockGameInputsWhenFocused = false;
 
         public KeybindConfiguration SaveKeybind = new();
         public KeybindConfiguration SaveAsKeybind = new();

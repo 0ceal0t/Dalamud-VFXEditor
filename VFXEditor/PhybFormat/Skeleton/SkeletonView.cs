@@ -116,7 +116,6 @@ namespace VfxEditor.PhybFormat.Skeleton {
                         var parents = new List<int>();
                         var refPoses = new List<Matrix>();
                         var bindPoses = new List<Matrix>();
-                        var names = new List<string>();
 
                         for( var i = 0; i < skeleton->Bones.Length; i++ ) {
                             var pose = skeleton->ReferencePose[i];
