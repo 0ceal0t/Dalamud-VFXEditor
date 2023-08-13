@@ -7,22 +7,31 @@ struct VS_IN
 
 struct GS_IN
 {
-    float4 pos : POSITION;
+    float4 PositionCS 		    : POSITIONCS;
+    float3 PositionWS 		    : POSITIONWS;
+    float3 NormalWS 		    : NORMALWS;
+    float DepthVS			    : DEPTHVS;
     float4 col : COLOR;
-    float4 norm : NORMAL;
 };
 
 struct PS_IN
 {
-    float4 pos : SV_POSITION;
+    float4 PositionCS 		    : SV_POSITION;
+    float3 PositionWS 		    : POSITIONWS;
+    float3 NormalWS 		    : NORMALWS;
+    float DepthVS			    : DEPTHVS;
     float4 col : COLOR;
-    float4 norm : NORMAL;
     float2 barycentricCoordinates : TEXCOORD9;
 };
 
-cbuffer globalBuffer : register(b0)
+cbuffer VSConstants : register(b0)
 {
-    float4x4 worldViewProj;
+    float4x4 World;
+    float4x4 ViewProjection;
+}
+
+cbuffer PSConstants : register(b0)
+{
     int showEdges;
 }
 
@@ -30,9 +39,11 @@ GS_IN VS(VS_IN input)
 {
     GS_IN output = (GS_IN)0;
 
-    output.pos = mul(input.pos, worldViewProj);
+    output.PositionWS = mul(float4(input.pos.xyz, 1.0f), World).xyz;
+    output.PositionCS = mul(float4(output.PositionWS, 1.0f), ViewProjection);
+    output.DepthVS = output.PositionCS.w;
+    output.NormalWS = normalize(mul(input.norm.xyz, (float3x3)World));
     output.col = input.col;
-    output.norm = input.norm;
 
     return output;
 }
@@ -41,34 +52,45 @@ GS_IN VS(VS_IN input)
 void GS( triangle GS_IN input[3], inout TriangleStream<PS_IN> OutputStream )
 {   
     PS_IN g0 = (PS_IN)0;
-    g0.pos = input[0].pos;
-    g0.norm = input[0].norm;
-    g0.col = input[0].col;
-    g0.barycentricCoordinates = float2(1, 0);
-    OutputStream.Append( g0 );
-
     PS_IN g1 = (PS_IN)0;
-    g1.pos = input[1].pos;
-    g1.norm = input[1].norm;
-    g1.col = input[1].col;
-    g1.barycentricCoordinates = float2(0, 1);
-    OutputStream.Append( g1 );
-
     PS_IN g2 = (PS_IN)0;
-    g2.pos = input[2].pos;
-    g2.norm = input[2].norm;
+
+    g0.PositionWS = input[0].PositionWS;
+    g1.PositionWS = input[1].PositionWS;
+    g2.PositionWS = input[2].PositionWS;
+
+    g0.PositionCS = input[0].PositionCS;
+    g1.PositionCS = input[1].PositionCS;
+    g2.PositionCS = input[2].PositionCS;
+
+    g0.DepthVS = input[0].DepthVS;
+    g1.DepthVS = input[1].DepthVS;
+    g2.DepthVS = input[2].DepthVS;
+
+    g0.NormalWS = input[0].NormalWS;
+    g1.NormalWS = input[1].NormalWS;
+    g2.NormalWS = input[2].NormalWS;
+
+    g0.col = input[0].col;
+    g1.col = input[1].col;
     g2.col = input[2].col;
+
+    g0.barycentricCoordinates = float2(1, 0);
+    g1.barycentricCoordinates = float2(0, 1);
     g2.barycentricCoordinates = float2(0, 0);
-    OutputStream.Append( g2 );
     
+    OutputStream.Append( g0 );
+    OutputStream.Append( g1 );
+    OutputStream.Append( g2 );
+
     OutputStream.RestartStrip();
 }
 
 float4 PS(PS_IN input) : SV_Target
 {
     float3 LightPos = {0.0f, 1.0f, 0.0f};
-    float3 Norm = normalize(input.norm.xyz);
-    float3 WorldPos = input.pos.xyz;
+    float3 Norm = normalize(input.NormalWS.xyz);
+    float3 WorldPos = input.PositionWS.xyz;
     float3 LightDir = normalize(LightPos - WorldPos);
 
     float3 LightColor = { 1.0f, 1.0f, 1.0f};

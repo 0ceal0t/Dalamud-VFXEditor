@@ -11,8 +11,13 @@ using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.DirectX {
     [StructLayout( LayoutKind.Sequential )]
-    public struct ConstantBufferStruct {
-        public Matrix WorldMatrix;
+    public struct VSBufferStruct {
+        public Matrix World;
+        public Matrix ViewProjection;
+    }
+
+    [StructLayout( LayoutKind.Sequential )]
+    public struct PSBufferStruct {
         public int ShowEdges;
         public Vector3 Padding;
     }
@@ -34,7 +39,8 @@ namespace VfxEditor.DirectX {
         protected bool FirstModel = false;
 
         protected RasterizerState RasterizeState;
-        protected Buffer ConstantBuffer;
+        protected Buffer VSBuffer;
+        protected Buffer PSBuffer;
         protected Matrix ProjMatrix;
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
@@ -43,7 +49,8 @@ namespace VfxEditor.DirectX {
         protected RenderTargetView RenderView;
 
         public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
-            ConstantBuffer = new Buffer( Device, Utilities.SizeOf<ConstantBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            VSBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            PSBuffer = new Buffer( Device, Utilities.SizeOf<PSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), Position, Vector3.UnitY );
             RefreshRasterizeState();
             ResizeResources();
@@ -167,15 +174,22 @@ namespace VfxEditor.DirectX {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
-            var worldViewProj = LocalMatrix * viewProj;
-            worldViewProj.Transpose();
+            var world = LocalMatrix;
 
-            var constantBuffer = new ConstantBufferStruct {
-                WorldMatrix = worldViewProj,
+            world.Transpose();
+            viewProj.Transpose();
+
+            var vsBuffer = new VSBufferStruct {
+                World = world,
+                ViewProjection = viewProj
+            };
+
+            var psBuffer = new PSBufferStruct {
                 ShowEdges = ShowEdges() ? 1 : 0
             };
 
-            Ctx.UpdateSubresource( ref constantBuffer, ConstantBuffer );
+            Ctx.UpdateSubresource( ref vsBuffer, VSBuffer );
+            Ctx.UpdateSubresource( ref psBuffer, PSBuffer );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
@@ -228,7 +242,8 @@ namespace VfxEditor.DirectX {
             RenderView?.Dispose();
             DepthTex?.Dispose();
             DepthView?.Dispose();
-            ConstantBuffer?.Dispose();
+            VSBuffer?.Dispose();
+            PSBuffer?.Dispose();
 
             OnDispose();
         }

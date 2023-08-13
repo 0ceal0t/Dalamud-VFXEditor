@@ -108,8 +108,8 @@ namespace VfxEditor.DirectX {
             Ctx.VertexShader.Set( VS );
             Ctx.InputAssembler.InputLayout = Layout;
             Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            Ctx.VertexShader.SetConstantBuffer( 0, ConstantBuffer );
-            Ctx.PixelShader.SetConstantBuffer( 0, ConstantBuffer );
+            Ctx.VertexShader.SetConstantBuffer( 0, VSBuffer );
+            Ctx.PixelShader.SetConstantBuffer( 0, PSBuffer );
             Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
 
             Ctx.Draw( NumVertices, 0 );
