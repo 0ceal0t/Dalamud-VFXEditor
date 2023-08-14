@@ -101,15 +101,15 @@ namespace VfxEditor.UldFormat {
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             TextureSplitView = new( "Texture", Textures, true,
-                ( UldTexture item, int idx ) => item.GetText(), () => new UldTexture(), () => CommandManager.Uld );
+                ( UldTexture item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
             PartsSplitView = new( "Part List", Parts, true,
-                ( UldPartList item, int idx ) => item.GetText(), () => new UldPartList(), () => CommandManager.Uld );
+                ( UldPartList item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
             ComponentDropdown = new( "Component", Components,
-                ( UldComponent item, int idx ) => item.GetText(), () => new UldComponent( Components ), () => CommandManager.Uld );
+                ( UldComponent item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
             TimelineDropdown = new( "Timeline", Timelines,
-                ( UldTimeline item, int idx ) => item.GetText(), () => new UldTimeline(), () => CommandManager.Uld );
+                ( UldTimeline item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
             WidgetDropdown = new( "Widget", Widgets,
-                ( UldWidget item, int idx ) => item.GetText(), () => new UldWidget( Components ), () => CommandManager.Uld );
+                ( UldWidget item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
         }
 
         public override void Write( BinaryWriter writer ) {

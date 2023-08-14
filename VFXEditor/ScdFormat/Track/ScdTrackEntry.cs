@@ -1,14 +1,16 @@
-using ImGuiNET;
-using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileManager;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class ScdTrackEntry : ScdEntry, IUiItem {
         public readonly List<ScdTrackItem> Items = new();
+        private readonly CollapsingHeaders<ScdTrackItem> TrackView;
+
+        public ScdTrackEntry() {
+            TrackView = new( "Item", Items, ( ScdTrackItem item, int idx ) => $"Item {idx} ({item.Type.Value})", () => new ScdTrackItem(), () => CommandManager.Scd );
+        }
 
         public override void Read( BinaryReader reader ) {
             while( true ) {
@@ -24,24 +26,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            for( var idx = 0; idx < Items.Count; idx++ ) {
-                var item = Items[idx];
-                if( ImGui.CollapsingHeader( $"Item {idx} ({item.Type.Value})###{idx}" ) ) {
-                    using var _ = ImRaii.PushId( idx );
-                    using var indent = ImRaii.PushIndent();
-
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Scd.Add( new GenericRemoveCommand<ScdTrackItem>( Items, item ) );
-                        break;
-                    }
-
-                    item.Draw();
-                }
-            }
-
-            if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Scd.Add( new GenericAddCommand<ScdTrackItem>( Items, new ScdTrackItem() ) );
-            }
+            TrackView.Draw();
         }
     }
 }

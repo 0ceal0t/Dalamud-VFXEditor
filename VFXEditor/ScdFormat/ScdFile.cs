@@ -68,12 +68,9 @@ namespace VfxEditor.ScdFormat {
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             AudioSplitView = new( Audio );
-            LayoutView = new( "Layout", Layouts, true,
-                null, () => new ScdLayoutEntry(), () => CommandManager.Scd );
-            SoundView = new( "Sound", Sounds, true,
-                null, () => new ScdSoundEntry(), () => CommandManager.Scd );
-            TrackView = new( "Track", Tracks, false,
-                null, () => new ScdTrackEntry(), () => CommandManager.Scd );
+            LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry(), () => CommandManager.Scd );
+            SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry(), () => CommandManager.Scd );
+            TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry(), () => CommandManager.Scd );
             AttributeView = new( "Attribute", Attributes, false, false );
         }
 

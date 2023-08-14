@@ -46,36 +46,28 @@ namespace VfxEditor.PhybFormat.Simulator {
             Params = new( file );
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
 
             ChainDropdown = new( "Chain", Chains,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybChain item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybChain item ) => File.Updated() );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybConnector item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybConnector item ) => File.Updated() );
 
             AttractSplitView = new( "Attract", Attracts, false,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybAttract item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybAttract item ) => File.Updated() );
 
             PinSplitView = new( "Pin", Pins, false,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybPin item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybPin item ) => File.Updated() );
 
             SpringSplitView = new( "Spring", Springs, false,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybSpring item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybSpring item ) => File.Updated() );
 
             PostAlignmentSplitView = new( "Post Alignment", PostAlignments, false,
-                null, () => new( File, this ),
-                () => CommandManager.Phyb, ( PhybPostAlignment item ) => File.Updated() );
+                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybPostAlignment item ) => File.Updated() );
         }
 
         public PhybSimulator( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {

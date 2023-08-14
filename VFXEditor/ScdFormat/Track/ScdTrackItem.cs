@@ -1,6 +1,7 @@
 using OtterGui.Raii;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public enum TrackCmd {
@@ -70,7 +71,7 @@ namespace VfxEditor.ScdFormat {
         Unknown64
     }
 
-    public class ScdTrackItem {
+    public class ScdTrackItem : IUiItem {
         public readonly ParsedEnum<TrackCmd> Type = new( "Type", size: 2 );
         public ScdTrackData Data = null;
 

@@ -48,24 +48,19 @@ namespace VfxEditor.PhybFormat.Collision {
             }
 
             CapsuleSplitView = new( "Capsule", Capsules, false,
-                ( PhybCapsule item, int idx ) => item.Name.Value, () => new PhybCapsule( File ),
-                () => CommandManager.Phyb, ( PhybCapsule item ) => File.Updated() );
+                ( PhybCapsule item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb, ( PhybCapsule item ) => File.Updated() );
 
             EllipsoidSplitView = new( "Ellipsoid", Ellipsoids, false,
-                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new PhybEllipsoid( File ),
-                () => CommandManager.Phyb, ( PhybEllipsoid item ) => File.Updated() );
+                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb, ( PhybEllipsoid item ) => File.Updated() );
 
             NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
-                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new PhybNormalPlane( File ),
-                () => CommandManager.Phyb, ( PhybNormalPlane item ) => File.Updated() );
+                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb, ( PhybNormalPlane item ) => File.Updated() );
 
             ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
-                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new PhybThreePointPlane( File ),
-                () => CommandManager.Phyb, ( PhybThreePointPlane item ) => File.Updated() );
+                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new( File ), () => CommandManager.Phyb, ( PhybThreePointPlane item ) => File.Updated() );
 
             SphereDropdown = new( "Sphere", Spheres, false,
-                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ),
-                () => CommandManager.Phyb, ( PhybSphere item ) => File.Updated() );
+                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), () => CommandManager.Phyb, ( PhybSphere item ) => File.Updated() );
         }
 
         public void Write( BinaryWriter writer ) {
