@@ -45,7 +45,9 @@ namespace VfxEditor.AvfxFormat {
 
         protected override AvfxFile FileFromReader( BinaryReader reader ) => new( reader );
 
-        public void Import( string path ) { if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path ); }
+        public void Import( string path ) {
+            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
+        }
 
         public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
 

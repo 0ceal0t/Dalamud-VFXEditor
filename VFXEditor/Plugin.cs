@@ -12,6 +12,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
+using OtterGui;
 using System;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
@@ -24,6 +25,7 @@ using VfxEditor.Library;
 using VfxEditor.PapFormat;
 using VfxEditor.PhybFormat;
 using VfxEditor.ScdFormat;
+using VfxEditor.SklbFormat;
 using VfxEditor.Spawn;
 using VfxEditor.TextureFormat;
 using VfxEditor.TmbFormat;
@@ -72,6 +74,7 @@ namespace VfxEditor {
             EidManager,
             UldManager,
             PhybManager,
+            SklbManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -82,6 +85,7 @@ namespace VfxEditor {
         public static EidManager EidManager { get; private set; }
         public static UldManager UldManager { get; private set; }
         public static PhybManager PhybManager { get; private set; }
+        public static SklbManager SklbManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -133,6 +137,7 @@ namespace VfxEditor {
             EidManager = new();
             UldManager = new();
             PhybManager = new();
+            SklbManager = new();
 
             ToolsDialog = new ToolsDialog();
             PenumbraIpc = new PenumbraIpc();
@@ -165,29 +170,7 @@ namespace VfxEditor {
         private void DrawConfigUi() => AvfxManager.Show();
 
         private void OnCommand( string command, string rawArgs ) {
-            switch( rawArgs.ToLowerInvariant() ) {
-                case "tmb":
-                    TmbManager.Toggle();
-                    break;
-                case "pap":
-                    PapManager.Toggle();
-                    break;
-                case "scd":
-                    ScdManager.Toggle();
-                    break;
-                case "eid":
-                    EidManager.Toggle();
-                    break;
-                case "uld":
-                    UldManager.Toggle();
-                    break;
-                case "phyb":
-                    PhybManager.Toggle();
-                    break;
-                default:
-                    AvfxManager.Toggle();
-                    break;
-            }
+            if( Managers.FindFirst( x => rawArgs.ToLower().Equals( x.GetExportName().ToLower() ), out var manager ) ) manager.Show();
         }
 
         public void Dispose() {
@@ -217,6 +200,7 @@ namespace VfxEditor {
             EidManager = null;
             UldManager = null;
             PhybManager = null;
+            SklbManager = null;
 
             DirectXManager?.Dispose();
             DirectXManager = null;

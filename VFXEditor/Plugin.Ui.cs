@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.TextureFormat;
@@ -81,23 +82,17 @@ namespace VfxEditor {
             }
         }
 
-        public static void DrawManagersMenu( IFileManager manager ) {
+        public static void DrawManagersMenu( IFileManager currentManager ) {
             using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.MenuItem( "Textures" ) ) TextureManager.Show();
             ImGui.Separator();
-            DrawManagerMenu( manager, "Vfx", AvfxManager );
-            DrawManagerMenu( manager, "Tmb", TmbManager );
-            DrawManagerMenu( manager, "Pap", PapManager );
-            DrawManagerMenu( manager, "Scd", ScdManager );
-            DrawManagerMenu( manager, "Eid", EidManager );
-            DrawManagerMenu( manager, "Uld", UldManager );
-            DrawManagerMenu( manager, "Phyb", PhybManager );
+            Managers.Where( x => x != TextureManager ).ToList().ForEach( x => DrawManagerMenu( x, currentManager ) );
         }
 
-        private static void DrawManagerMenu( IFileManager manager, string text, IFileManager menuManager ) {
-            using var disabled = ImRaii.Disabled( manager == menuManager );
-            if( ImGui.MenuItem( text ) ) menuManager.Show();
+        private static void DrawManagerMenu( IFileManager manager, IFileManager currentManager ) {
+            using var disabled = ImRaii.Disabled( manager == currentManager );
+            if( ImGui.MenuItem( manager.GetExportName() ) ) manager.Show();
         }
 
         public static void AddModal( Modal modal ) {

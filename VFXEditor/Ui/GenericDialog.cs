@@ -30,6 +30,7 @@ namespace VfxEditor.Ui {
         public void SetVisible( bool visible ) { Visible = visible; }
 
         protected virtual void PreDraw() { }
+
         protected virtual void PostDraw() { }
 
         public void Draw() {

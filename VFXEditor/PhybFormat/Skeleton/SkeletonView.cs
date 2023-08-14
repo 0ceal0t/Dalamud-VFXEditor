@@ -11,8 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using VfxEditor.Animation;
 using VfxEditor.DirectX;
+using VfxEditor.SklbFormat.Animation;
 using VfxEditor.Utils;
 using Vec2 = System.Numerics.Vector2;
 
@@ -53,7 +53,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
                     FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
-                        UpdateBones( SklbFile.LoadFromLocal( res ) );
+                        UpdateBones( SimpleSklb.LoadFromLocal( res ) );
                         UpdateSkeleton();
                         UpdatePhysicsObjects();
                     } );
@@ -71,7 +71,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         private void LoadSklbPath() {
             if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
-                UpdateBones( Plugin.DataManager.GetFile<SklbFile>( SklbPreviewPath ) );
+                UpdateBones( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
                 UpdateSkeleton();
                 UpdatePhysicsObjects();
             }
@@ -80,7 +80,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             }
         }
 
-        private unsafe void UpdateBones( SklbFile sklbFile ) {
+        private unsafe void UpdateBones( SimpleSklb sklbFile ) {
             BoneMatrixes = new();
             BoneList = new();
 

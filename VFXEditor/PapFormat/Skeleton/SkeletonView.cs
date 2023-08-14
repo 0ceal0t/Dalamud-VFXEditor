@@ -5,9 +5,9 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.IO;
-using VfxEditor.Animation;
 using VfxEditor.DirectX;
 using VfxEditor.Interop;
+using VfxEditor.SklbFormat.Animation;
 using VfxEditor.Utils;
 using Vec2 = System.Numerics.Vector2;
 
@@ -65,7 +65,7 @@ namespace VfxEditor.PapFormat.Skeleton {
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
                     FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
-                        UpdateData( SklbFile.LoadFromLocal( res ) );
+                        UpdateData( SimpleSklb.LoadFromLocal( res ) );
                         UpdateSkeleton();
                     } );
                 }
@@ -145,7 +145,7 @@ namespace VfxEditor.PapFormat.Skeleton {
 
         private void LoadSklbPath() {
             if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
-                UpdateData( Plugin.DataManager.GetFile<SklbFile>( SklbPreviewPath ) );
+                UpdateData( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
                 UpdateSkeleton();
             }
             else {
@@ -153,7 +153,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             }
         }
 
-        private void UpdateData( SklbFile sklbFile ) {
+        private void UpdateData( SimpleSklb sklbFile ) {
             try {
                 sklbFile.SaveHavokData( SklHkxTemp );
                 HavokInterop.HavokToBin( Animation.HkxTempLocation, Animation.HavokIndex, SklHkxTemp, BinTemp );

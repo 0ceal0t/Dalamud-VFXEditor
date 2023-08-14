@@ -31,16 +31,11 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
 
-        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) :
-            this( reader, new( Plugin.PapManager ), sourcePath, hkxTemp, checkOriginal ) { }
-
-        public PapFile( BinaryReader reader, CommandManager manager, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( manager ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
             SourcePath = sourcePath;
-
-            AnimationsDropdown = new( this, Animations );
             HkxTempLocation = hkxTemp;
+            AnimationsDropdown = new( this, Animations );
 
-            var startPos = reader.BaseStream.Position;
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // magic
@@ -59,15 +54,14 @@ namespace VfxEditor.PapFormat {
                 Animations.Add( new PapAnimation( this, reader, HkxTempLocation ) );
             }
 
-            // ... do something about havok data ...
             var havokDataSize = footerPosition - havokPosition;
-            reader.BaseStream.Seek( startPos + havokPosition, SeekOrigin.Begin );
+            reader.BaseStream.Seek( havokPosition, SeekOrigin.Begin );
             var havokData = reader.ReadBytes( havokDataSize );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
             ModdedPapMod4 = ( int )( reader.BaseStream.Position % 4 );
 
-            reader.BaseStream.Seek( startPos + footerPosition, SeekOrigin.Begin );
+            reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
 
             for( var i = 0; i < numAnimations; i++ ) {

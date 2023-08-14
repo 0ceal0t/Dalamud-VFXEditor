@@ -3,7 +3,7 @@ using VfxEditor.Select.Pap;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
-    public partial class PapManager : FileManagerWindow<PapDocument, PapFile, WorkspaceMetaBasic> {
+    public class PapManager : FileManagerWindow<PapDocument, PapFile, WorkspaceMetaBasic> {
         public PapManager() : base( "Pap Editor", "Pap" ) {
             SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", this, true );
             ReplaceSelect = new PapSelectDialog( "Pap Select [REPLACED]", this, false );

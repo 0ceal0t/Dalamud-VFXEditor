@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace VfxEditor.Animation {
+namespace VfxEditor.SklbFormat.Animation {
     public class AnimationData {
         private readonly List<int> BoneParents = new();
         private readonly List<Matrix> BoneRefPoses = new();
