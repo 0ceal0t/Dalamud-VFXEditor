@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using VfxEditor.Select.Shared.Item;
 
-namespace VfxEditor.Select.Phyb.Armor {
+namespace VfxEditor.Select.Shared.Skeleton {
     public class ArmorRowSelected {
         public Dictionary<string, string> Paths;
     }
 
-    public class ArmorTab : SelectTab<ArmorRow, Dictionary<string, string>> {
-        public ArmorTab( SelectDialog dialog, string name ) : base( dialog, name, "Phyb-Armor" ) { }
+    public class SkeletonArmorTab : SelectTab<ArmorRow, Dictionary<string, string>> {
+        private readonly string Prefix;
+        private readonly string Extension;
+
+        public SkeletonArmorTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor" ) {
+            Prefix = prefix;
+            Extension = extension;
+        }
 
         // ===== LOADING =====
 
@@ -21,9 +27,6 @@ namespace VfxEditor.Select.Phyb.Armor {
         }
 
         public override void LoadSelection( ArmorRow item, out Dictionary<string, string> loaded ) {
-            // chara/human/c0801/skeleton/top/t0748/phy_c0801t0748.phyb
-            // chara/human/c0801/skeleton/met/m6173/phy_c0801m6173.phyb
-
             var armorString = item.Type switch {
                 ItemType.Body => "top",
                 ItemType.Head => "met",
@@ -35,7 +38,7 @@ namespace VfxEditor.Select.Phyb.Armor {
 
             var paths = new Dictionary<string, string>();
             foreach( var race in SelectUtils.RaceAnimationIds ) {
-                paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{armorString}/{itemString}/phy_{race.Value.SkeletonId}{itemString}.phyb";
+                paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{armorString}/{itemString}/{Prefix}_{race.Value.SkeletonId}{itemString}.{Extension}";
             }
             loaded = SelectUtils.FileExistsFilter( paths );
         }

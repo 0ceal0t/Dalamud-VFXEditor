@@ -63,6 +63,9 @@ namespace VfxEditor.SklbFormat {
             var havokOffsetPos = Data.Write( writer );
 
             Layers.Write( writer );
+
+            if( Data is SklbNewData ) FileUtils.PadTo( writer, 16 );
+
             var havokOffset = writer.BaseStream.Position;
 
             writer.BaseStream.Seek( havokOffsetPos, SeekOrigin.Begin );
@@ -114,6 +117,8 @@ namespace VfxEditor.SklbFormat {
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Bones" );
+
+            Bones?.Draw();
         }
 
         public override void Dispose() {

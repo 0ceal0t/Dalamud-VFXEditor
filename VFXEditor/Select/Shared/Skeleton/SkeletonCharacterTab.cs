@@ -1,18 +1,23 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.Select.Shared.Character;
 
-namespace VfxEditor.Select.Phyb.Character {
+namespace VfxEditor.Select.Shared.Skeleton {
     public class CharacterRowSelected {
         public string BodyPath;
         public Dictionary<string, string> FacePaths;
         public Dictionary<string, string> HairPaths;
     }
 
-    public class CharacterPhybTab : SelectTab<CharacterRow, CharacterRowSelected> {
-        public CharacterPhybTab( SelectDialog dialog, string name ) : base( dialog, name, "Character-Shared" ) { }
+    public class SkeletonCharacterTab : SelectTab<CharacterRow, CharacterRowSelected> {
+        private readonly string Prefix;
+        private readonly string Extension;
+
+        public SkeletonCharacterTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Character-Shared" ) {
+            Prefix = prefix;
+            Extension = extension;
+        }
 
         // ===== LOADING =====
 
@@ -21,27 +26,19 @@ namespace VfxEditor.Select.Phyb.Character {
         }
 
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
-            // chara/human/c1201/skeleton/hair/h0101/phy_c1201h0101.phyb
-            // chara/human/c1801/skeleton/face/f0005/phy_c1801f0005.phyb
-
-            var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/phy_{item.SkeletonId}b0001.phyb";
+            var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/{Prefix}_{item.SkeletonId}b0001.{Extension}";
 
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
 
             for( var face = 1; face <= SelectUtils.MaxFaces; face++ ) {
                 var faceString = $"f{face:D4}";
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/{faceString}/phy_{item.SkeletonId}{faceString}.phyb";
+                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/{faceString}/{Prefix}_{item.SkeletonId}{faceString}.{Extension}";
             }
 
-            var sheet = Plugin.DataManager.GetExcelSheet<CharaMakeCustomize>();
-            for( var hair = item.HairOffset; hair < item.HairOffset + SelectUtils.HairEntries; hair++ ) {
-                var hairRow = sheet.GetRow( ( uint )hair );
-                var hairId = ( int )hairRow.FeatureID;
-                if( hairId == 0 ) continue;
-
+            foreach( var hairId in item.GetHairIds() ) {
                 var hairString = $"h{hairId:D4}";
-                hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/{hairString}/phy_{item.SkeletonId}{hairString}.phyb";
+                hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/{hairString}/{Prefix}_{item.SkeletonId}{hairString}.{Extension}";
             }
 
             loaded = new() {
@@ -65,6 +62,7 @@ namespace VfxEditor.Select.Phyb.Character {
                 Dialog.DrawPaths( Loaded.HairPaths, SelectResultType.GameCharacter, Selected.Name );
                 ImGui.EndTabItem();
             }
+
             if( ImGui.BeginTabItem( "Faces" ) ) {
                 Dialog.DrawPaths( Loaded.FacePaths, SelectResultType.GameCharacter, Selected.Name );
                 ImGui.EndTabItem();

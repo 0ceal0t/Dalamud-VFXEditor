@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayers {
@@ -34,8 +33,6 @@ namespace VfxEditor.SklbFormat.Layers {
             }
 
             Layers.ForEach( x => x.Write( writer ) );
-
-            FileUtils.PadTo( writer, 16 );
         }
 
         public void Draw() {

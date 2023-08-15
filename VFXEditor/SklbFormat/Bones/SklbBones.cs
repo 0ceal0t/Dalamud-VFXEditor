@@ -48,6 +48,10 @@ namespace VfxEditor.SklbFormat.Bones {
         protected virtual void OnLoad() {
         }
 
+        public virtual void Draw() {
+
+        }
+
         public void Update() {
             try {
                 var rootLevelName = @"hkRootLevelContainer"u8;
