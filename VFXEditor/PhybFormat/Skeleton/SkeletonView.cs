@@ -159,7 +159,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
                 ( ( hkReferencedObject* )resource )->RemoveReference();
             }
             catch( Exception e ) {
-                PluginLog.Error( $"Could not read file: {SklbPreviewPath}", e );
+                PluginLog.Error( e, $"Could not read file: {SklbPreviewPath}" );
             }
         }
 

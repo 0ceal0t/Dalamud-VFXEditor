@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.SklbFormat.Bones;
 using VfxEditor.SklbFormat.Data;
 using VfxEditor.SklbFormat.Layers;
 using VfxEditor.Utils;
@@ -16,6 +17,9 @@ namespace VfxEditor.SklbFormat {
 
         private readonly SklbData Data;
         private readonly SklbLayers Layers;
+        private readonly SklbBones Bones;
+
+        private readonly bool FinishedLoading = false;
 
         public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager ) ) {
             HkxTempLocation = hkxTemp;
@@ -43,9 +47,11 @@ namespace VfxEditor.SklbFormat {
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
-            // TODO: read havok
+            Bones = new( HkxTempLocation );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+
+            FinishedLoading = true;
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -70,8 +76,7 @@ namespace VfxEditor.SklbFormat {
             // Reset position
             writer.BaseStream.Seek( havokOffset, SeekOrigin.Begin );
 
-            // TODO: update havok
-
+            if( FinishedLoading ) Bones.Update();
             var data = File.ReadAllBytes( HkxTempLocation );
             writer.Write( data );
         }
@@ -112,7 +117,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         public override void Dispose() {
-
+            Bones?.Dispose();
         }
     }
 }

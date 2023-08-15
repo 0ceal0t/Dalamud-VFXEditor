@@ -45,7 +45,7 @@ namespace VfxEditor.Interop {
         private RequestFileDelegate RequestFile;
 
         public void ReRender() {
-            if( CurrentRedrawState != RedrawState.None ) return;
+            if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null ) return;
             CurrentRedrawState = RedrawState.Start;
             Plugin.Framework.Update += OnUpdateEvent;
         }

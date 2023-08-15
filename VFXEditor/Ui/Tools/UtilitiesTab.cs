@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.Tools {
                             UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
                         }
                         catch( Exception e ) {
-                            PluginLog.Error( "Could not read file", e );
+                            PluginLog.Error( e, "Could not read file" );
                         }
                     }
                 }

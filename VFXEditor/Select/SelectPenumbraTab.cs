@@ -58,13 +58,13 @@ namespace VfxEditor.Select {
                             }
                         }
                     }
-                    catch( Exception ex ) {
-                        PluginLog.Error( file, ex );
+                    catch( Exception e ) {
+                        PluginLog.Error( e, file );
                     }
                 }
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error reading Penumbra mods", e );
+                PluginLog.Error( e, "Error reading Penumbra mods" );
             }
         }
 

@@ -57,7 +57,7 @@ namespace VfxEditor.DirectX {
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( "Error compiling shaders", e );
+                PluginLog.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
         }
