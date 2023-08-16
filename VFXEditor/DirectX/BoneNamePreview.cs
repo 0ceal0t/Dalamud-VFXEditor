@@ -7,29 +7,29 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.PhybFormat;
+using VfxEditor.FileManager;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.DirectX {
-    public class PhybPreview : AnimationPreview {
-        public PhybFile CurrentFile { get; private set; }
+    public class BoneNamePreview : BonePreview {
+        public FileManagerFile CurrentFile { get; private set; }
         private List<Bone> BoneList;
-        private int NumPhysics = 0;
-        private Buffer PhysicsVertices;
+        private int NumWireframe = 0;
+        private Buffer WireframeVertices;
 
         private static readonly ClosenessComparator Comparator = new();
 
-        public PhybPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
+        public BoneNamePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
 
-        public void LoadSkeleton( PhybFile file, List<Bone> boneList, BoneSkinnedMeshGeometry3D mesh ) {
+        public void LoadSkeleton( FileManagerFile file, List<Bone> boneList, BoneSkinnedMeshGeometry3D mesh ) {
             BoneList = boneList;
             CurrentFile = file;
             LoadSkeleton( mesh );
         }
 
-        public void LoadPhysics( MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
+        public void LoadWireframe( MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
             var meshes = new List<MeshGeometry3D>() {
                 collision,
                 simulation,
@@ -42,32 +42,32 @@ namespace VfxEditor.DirectX {
             };
 
             if( meshes.Select( x => x.Positions.Count ).Sum() == 0 ) {
-                NumPhysics = 0;
-                PhysicsVertices?.Dispose();
+                NumWireframe = 0;
+                WireframeVertices?.Dispose();
                 UpdateDraw();
                 return;
             }
 
             var data = GetData( meshes, colors );
 
-            PhysicsVertices?.Dispose();
-            PhysicsVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
-            NumPhysics = meshes.Select( x => x.Indices.Count ).Sum();
+            WireframeVertices?.Dispose();
+            WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
+            NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
             UpdateDraw();
         }
 
-        public void LoadEmpty( PhybFile file ) {
+        public void LoadEmpty( FileManagerFile file ) {
             CurrentFile = file;
             NumVertices = 0;
-            NumPhysics = 0;
+            NumWireframe = 0;
             Vertices?.Dispose();
-            PhysicsVertices?.Dispose();
+            WireframeVertices?.Dispose();
             UpdateDraw();
         }
 
         public override void OnDraw() {
             if( ShaderError ) return;
-            if( NumVertices == 0 && NumPhysics == 0 ) return;
+            if( NumVertices == 0 && NumWireframe == 0 ) return;
 
             Ctx.PixelShader.Set( PS );
             Ctx.GeometryShader.Set( GS );
@@ -83,7 +83,7 @@ namespace VfxEditor.DirectX {
                 Ctx.Flush();
             }
 
-            if( NumPhysics > 0 ) {
+            if( NumWireframe > 0 ) {
                 // Kind of jank, but oh well
                 var wireframe = new RasterizerState( Device, new RasterizerStateDescription {
                     CullMode = CullMode.None,
@@ -100,8 +100,8 @@ namespace VfxEditor.DirectX {
 
                 Ctx.Rasterizer.State = wireframe;
 
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( PhysicsVertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
-                Ctx.Draw( NumPhysics, 0 );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( WireframeVertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
+                Ctx.Draw( NumWireframe, 0 );
                 Ctx.Flush();
 
                 Ctx.Rasterizer.State = RasterizeState;
@@ -116,12 +116,12 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDispose() {
-            PhysicsVertices?.Dispose();
+            WireframeVertices?.Dispose();
             base.OnDispose();
         }
 
         public override void DrawInline() {
-            if( !Plugin.Configuration.PhybShowBoneName ) {
+            if( !Plugin.Configuration.ShowBoneNames ) {
                 base.DrawInline();
                 return;
             }

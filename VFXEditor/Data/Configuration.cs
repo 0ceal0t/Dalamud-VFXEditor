@@ -107,7 +107,7 @@ namespace VfxEditor {
         public bool DocumentPopoutShowSource = false;
 
         public bool PhybSkeletonSplit = true;
-        public bool PhybShowBoneName = true;
+        public bool ShowBoneNames = true;
 
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;

@@ -1,58 +1,76 @@
+using Dalamud.Interface;
 using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
+using ImGuiNET;
+using OtterGui.Raii;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.DirectX;
+using VfxEditor.SklbFormat.Animation;
+using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat.Bones {
-    public unsafe class SklbBones {
-        public readonly string Path;
-        public readonly hkResource* Resource;
-        public readonly hkRootLevelContainer* Container;
-        public readonly hkaSkeleton* Skeleton;
+    public unsafe class SklbBones : HavokBones {
+        private readonly SklbFile File;
+        private static BoneNamePreview SklbPreview => Plugin.DirectXManager.SklbPreview;
 
-        public SklbBones( string loadPath ) {
-            Path = loadPath;
+        private bool DrawOnce = false;
+        private SklbBone Selected;
 
-            try {
-                var path = Marshal.StringToHGlobalAnsi( Path );
-
-                var loadOptions = stackalloc hkSerializeUtil.LoadOptions[1];
-                loadOptions->TypeInfoRegistry = hkBuiltinTypeRegistry.Instance()->GetTypeInfoRegistry();
-                loadOptions->ClassNameRegistry = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry();
-                loadOptions->Flags = new hkFlags<hkSerializeUtil.LoadOptionBits, int> {
-                    Storage = ( int )hkSerializeUtil.LoadOptionBits.Default
-                };
-
-                Resource = hkSerializeUtil.LoadFromFile( ( byte* )path, null, loadOptions );
-
-                if( Resource == null ) {
-                    PluginLog.Error( $"Could not read file: {Path}" );
-                }
-
-                var rootLevelName = @"hkRootLevelContainer"u8;
-                fixed( byte* n1 = rootLevelName ) {
-                    Container = ( hkRootLevelContainer* )Resource->GetContentsPointer( n1, hkBuiltinTypeRegistry.Instance()->GetTypeInfoRegistry() );
-                    var animationName = @"hkaAnimationContainer"u8;
-                    fixed( byte* n2 = animationName ) {
-                        var anim = ( hkaAnimationContainer* )Container->findObjectByName( n2, null );
-                        Skeleton = anim->Skeletons[0].ptr;
-                        OnLoad();
-                    }
-                }
-            }
-            catch( Exception e ) {
-                PluginLog.Error( e, $"Could not read file: {Path}" );
-            }
-        }
-
-        protected virtual void OnLoad() {
-        }
-
-        public virtual void Draw() {
-
+        public SklbBones( SklbFile file, string loadPath ) : base( loadPath ) {
+            File = file;
         }
 
         public void Update() {
+            var nameHandles = new List<nint>();
+
+            var bones = new List<hkaBone>();
+            var poses = new List<hkQsTransformf>();
+            var parents = new List<short>();
+
+            foreach( var bone in Bones ) {
+                var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
+                parents.Add( parent );
+
+                bone.ToHavok( out var hkBone, out var hkPose, out var handle );
+                bones.Add( hkBone );
+                poses.Add( hkPose );
+                nameHandles.Add( handle );
+            }
+
+            Skeleton->Bones.Length = bones.Count;
+            Skeleton->Bones.CapacityAndFlags = Skeleton->Bones.Flags | bones.Count;
+
+            Skeleton->ReferencePose.Length = poses.Count;
+            Skeleton->ReferencePose.CapacityAndFlags = Skeleton->ReferencePose.Flags | poses.Count;
+
+            Skeleton->ParentIndices.Length = parents.Count;
+            Skeleton->ParentIndices.CapacityAndFlags = Skeleton->ParentIndices.Flags | parents.Count;
+
+            var _bones = bones.ToArray();
+            var _poses = poses.ToArray();
+            var _parents = parents.ToArray();
+
+            fixed( hkaBone* bonePtr = _bones ) {
+                Skeleton->Bones.Data = bonePtr;
+
+                fixed( hkQsTransformf* posePtr = _poses ) {
+                    Skeleton->ReferencePose.Data = posePtr;
+
+                    fixed( short* parentPtr = _parents ) {
+                        Skeleton->ParentIndices.Data = parentPtr;
+
+                        Write();
+                        nameHandles.ForEach( Marshal.FreeHGlobal );
+                    }
+                }
+            }
+        }
+
+        private void Write() {
             try {
                 var rootLevelName = @"hkRootLevelContainer"u8;
                 fixed( byte* n1 = rootLevelName ) {
@@ -80,9 +98,89 @@ namespace VfxEditor.SklbFormat.Bones {
             }
         }
 
+        public void Draw() {
+            if( SklbPreview.CurrentFile != File ) UpdatePreview();
+
+            using var _ = ImRaii.PushId( "Bones " );
+            using var windowPadding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
+                ImGui.Columns( 2, "Columns", true );
+
+                using var left = ImRaii.Child( "Left" );
+                style.Pop();
+
+                using var indent = ImRaii.PushStyle( ImGuiStyleVar.IndentSpacing, 9 );
+                // Draw left column
+                Bones.Where( x => x.Parent == null ).ToList().ForEach( DrawTree );
+            }
+
+            if( !DrawOnce ) {
+                ImGui.SetColumnWidth( 0, 200 );
+                DrawOnce = true;
+            }
+            ImGui.NextColumn();
+
+            using( var right = ImRaii.Child( "Right" ) ) {
+                // Draw right column
+                if( Selected != null ) {
+                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                        if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) {
+                            Selected = null;
+                        }
+                    }
+
+                    Selected?.DrawBody();
+
+                    ImGui.Separator();
+                }
+
+                if( ImGui.Checkbox( "Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+                SklbPreview.DrawInline();
+            }
+
+            ImGui.Columns( 1 );
+        }
+
+        private void DrawTree( SklbBone bone ) {
+            var children = Bones.Where( x => x.Parent == bone ).ToList();
+            var isLeaf = children.Count == 0;
+
+            var flags =
+                ImGuiTreeNodeFlags.DefaultOpen |
+                ImGuiTreeNodeFlags.OpenOnArrow |
+                ImGuiTreeNodeFlags.OpenOnDoubleClick |
+                ImGuiTreeNodeFlags.SpanFullWidth;
+
+            if( isLeaf ) {
+                flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+            }
+
+            if( Selected == bone ) flags |= ImGuiTreeNodeFlags.Selected;
+
+            var nodeOpen = ImGui.TreeNodeEx( $"{bone.Name.Value}##{bone.Id}", flags );
+            if( ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen() ) {
+                Selected = bone;
+            }
+
+            if( !isLeaf && nodeOpen ) {
+                children.ForEach( DrawTree );
+                ImGui.TreePop();
+            }
+        }
+
+        private void UpdatePreview() {
+            if( BoneList?.Count == 0 ) SklbPreview.LoadEmpty( File );
+            else SklbPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList ) );
+        }
+
+        public void Updated() {
+            UpdateBones();
+            if( File == SklbPreview.CurrentFile ) UpdatePreview();
+        }
+
         public void Dispose() {
-            if( Resource == null ) return;
-            ( ( hkReferencedObject* )Resource )->RemoveReference();
+            if( SklbPreview.CurrentFile == File ) SklbPreview.ClearFile();
         }
     }
 }

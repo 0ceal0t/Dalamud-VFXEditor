@@ -148,7 +148,7 @@ namespace VfxEditor.FileManager {
         protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + Extension, CurrentFile.ToBytes(), Extension );
 
         protected void Reload( List<string> papIds = null ) {
-            if( CurrentFile == null ) return;
+            if( CurrentFile == null || ReplacePath.Contains( ".sklb" ) ) return;
             Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
         }
 

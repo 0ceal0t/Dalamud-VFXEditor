@@ -4,7 +4,7 @@ using VfxEditor.PapFormat;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public class PapPreview : AnimationPreview {
+    public class PapPreview : BonePreview {
         public PapFile CurrentFile { get; private set; }
         public PapAnimation CurrentAnimation { get; private set; }
 

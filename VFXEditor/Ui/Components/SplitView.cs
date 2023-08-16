@@ -59,7 +59,7 @@ namespace VfxEditor.Ui.Components {
             }
             ImGui.NextColumn();
 
-            using( var left = ImRaii.Child( "Right" ) ) {
+            using( var right = ImRaii.Child( "Right" ) ) {
                 DrawRightColumn();
             }
 

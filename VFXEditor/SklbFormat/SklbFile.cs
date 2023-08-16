@@ -21,7 +21,7 @@ namespace VfxEditor.SklbFormat {
 
         private readonly bool FinishedLoading = false;
 
-        public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager ) ) {
+        public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
 
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
@@ -47,7 +47,7 @@ namespace VfxEditor.SklbFormat {
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
-            Bones = new( HkxTempLocation );
+            Bones = new( this, HkxTempLocation );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
@@ -119,6 +119,10 @@ namespace VfxEditor.SklbFormat {
             using var _ = ImRaii.PushId( "Bones" );
 
             Bones?.Draw();
+        }
+
+        public void Updated() {
+            Bones?.Updated();
         }
 
         public override void Dispose() {

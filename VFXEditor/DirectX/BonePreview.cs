@@ -12,7 +12,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public class AnimationPreview : ModelRenderer {
+    public class BonePreview : ModelRenderer {
         protected static readonly int ModelSpan = 3; // position, color, normal
 
         protected int NumVertices = 0;
@@ -29,7 +29,7 @@ namespace VfxEditor.DirectX {
 
         public readonly bool ShaderError = false;
 
-        public AnimationPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
+        public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             try {
                 var shaderFile = Path.Combine( shaderPath, "ModelPreview.fx" );
                 CompiledVS = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );

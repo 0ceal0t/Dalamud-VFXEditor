@@ -54,7 +54,7 @@ namespace VfxEditor.PhybFormat {
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
-            Skeleton = new( this, sourcePath );
+            Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
 
         public override void Write( BinaryWriter writer ) {
