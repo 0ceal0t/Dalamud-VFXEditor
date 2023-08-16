@@ -8,6 +8,7 @@ using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -59,25 +60,31 @@ namespace VfxEditor.DirectX {
                 return;
             }
 
-            var data = GetData( mesh, new Vector4( 1, 1, 1, 1 ) );
+            var data = GetData( mesh );
             Vertices?.Dispose();
             Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumVertices = mesh.Indices.Count;
             UpdateDraw();
         }
 
-        protected static Vector4[] GetData( List<MeshGeometry3D> meshes, List<Vector4> colors ) {
+        protected static Vector4[] GetData( List<MeshGeometry3D> meshes ) {
             var data = new List<Vector4>();
             for( var i = 0; i < meshes.Count; i++ ) {
-                data.AddRange( GetData( meshes[i], colors[i] ) );
+                data.AddRange( GetData( meshes[i] ) );
             }
             return data.ToArray();
         }
 
-        protected static Vector4[] GetData( MeshGeometry3D mesh, Vector4 color ) {
+        protected static void PaintColor( MeshGeometry3D mesh, Vector4 color ) {
+            var _color = new Color4( color );
+            mesh.Colors = new Color4Collection( Enumerable.Repeat( _color, mesh.Positions.Count ).ToArray() );
+        }
+
+        protected static Vector4[] GetData( MeshGeometry3D mesh ) {
             var positions = mesh.Positions;
             var normals = mesh.Normals;
             var indexes = mesh.Indices;
+            var colors = mesh.Colors;
 
             var data = new Vector4[indexes.Count * ModelSpan];
 
@@ -85,10 +92,11 @@ namespace VfxEditor.DirectX {
                 var pointIdx = indexes[index];
                 var position = positions[pointIdx];
                 var normal = normals[pointIdx];
+                var color = colors[pointIdx];
 
                 var dataIdx = index * ModelSpan;
                 data[dataIdx] = new Vector4( position.X, position.Y, position.Z, 1 ); // POSITION
-                data[dataIdx + 1] = color; // COLOR
+                data[dataIdx + 1] = color.ToVector4();
                 data[dataIdx + 2] = new Vector4( normal.X, normal.Y, normal.Z, 0 ); // NORMAL
             }
 

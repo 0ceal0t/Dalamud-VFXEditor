@@ -127,6 +127,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                         if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) {
                             Selected = null;
+                            UpdatePreview();
                         }
                     }
 
@@ -161,6 +162,7 @@ namespace VfxEditor.SklbFormat.Bones {
             var nodeOpen = ImGui.TreeNodeEx( $"{bone.Name.Value}##{bone.Id}", flags );
             if( ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen() ) {
                 Selected = bone;
+                UpdatePreview();
             }
 
             if( !isLeaf && nodeOpen ) {
@@ -171,7 +173,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
         private void UpdatePreview() {
             if( BoneList?.Count == 0 ) SklbPreview.LoadEmpty( File );
-            else SklbPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList ) );
+            else SklbPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) );
         }
 
         public void Updated() {

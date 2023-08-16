@@ -30,15 +30,14 @@ namespace VfxEditor.DirectX {
         }
 
         public void LoadWireframe( MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
+            PaintColor( collision, new( 0, 1, 0, 1 ) );
+            PaintColor( simulation, new( 0, 0, 1, 1 ) );
+            PaintColor( spring, new( 1, 0, 0, 1 ) );
+
             var meshes = new List<MeshGeometry3D>() {
                 collision,
                 simulation,
                 spring
-            };
-            var colors = new List<Vector4>() {
-                new Vector4( 0, 1, 0, 1 ),
-                new Vector4( 0, 0, 1, 1 ),
-                new Vector4( 1, 0, 0, 1 ),
             };
 
             if( meshes.Select( x => x.Positions.Count ).Sum() == 0 ) {
@@ -48,7 +47,7 @@ namespace VfxEditor.DirectX {
                 return;
             }
 
-            var data = GetData( meshes, colors );
+            var data = GetData( meshes );
 
             WireframeVertices?.Dispose();
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
