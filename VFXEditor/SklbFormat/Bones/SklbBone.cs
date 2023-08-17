@@ -84,5 +84,21 @@ namespace VfxEditor.SklbFormat.Bones {
             };
             pose.Scale = scl;
         }
+
+        public bool IsChildOf( SklbBone parent ) {
+            if( parent == null || Parent == null ) return false;
+            if( Parent == parent ) return true;
+            return Parent.IsChildOf( parent );
+        }
+
+        public void MakeChildOf( SklbBone parent ) {
+            if( parent == null ) {
+                Parent = null;
+                return;
+            }
+            if( parent == this ) return;
+            if( parent.IsChildOf( this ) ) return; // would be cyclical
+            Parent = parent;
+        }
     }
 }

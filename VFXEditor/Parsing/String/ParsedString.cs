@@ -27,13 +27,13 @@ namespace VfxEditor.Parsing {
 
         public override void Write( BinaryWriter writer ) => FileUtils.WriteString( writer, Value, writeNull: true );
 
-        public override void Draw( CommandManager manager ) => Draw( manager, 255 );
+        public override void Draw( CommandManager manager ) => Draw( manager, 255, Name, ImGuiInputTextFlags.None );
 
-        public void Draw( CommandManager manager, uint maxSize ) {
+        public void Draw( CommandManager manager, uint maxSize, string label, ImGuiInputTextFlags flags ) {
             Copy( manager );
 
             var prevValue = Value;
-            if( ImGui.InputText( Name, ref Value, maxSize ) ) {
+            if( ImGui.InputText( label, ref Value, maxSize, flags ) ) {
                 if( !Editing ) {
                     Editing = true;
                     StateBeforeEdit = prevValue;

@@ -117,6 +117,7 @@ namespace VfxEditor.Library {
                     Save();
                 }
             }
+
             DraggingItem = null;
             return true;
         }

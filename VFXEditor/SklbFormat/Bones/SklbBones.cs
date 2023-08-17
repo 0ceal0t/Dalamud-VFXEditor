@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
+using VfxEditor.FileManager;
 using VfxEditor.SklbFormat.Animation;
 using VfxEditor.Utils;
 
@@ -19,6 +20,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
         private bool DrawOnce = false;
         private SklbBone Selected;
+        private SklbBone DraggingBone;
 
         public SklbBones( SklbFile file, string loadPath ) : base( loadPath ) {
             File = file;
@@ -102,17 +104,22 @@ namespace VfxEditor.SklbFormat.Bones {
             if( SklbPreview.CurrentFile != File ) UpdatePreview();
 
             using var _ = ImRaii.PushId( "Bones " );
-            using var windowPadding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
                 ImGui.Columns( 2, "Columns", true );
+
+                // TODO: search
+                // TODO: new
+                // TODO: expand all
 
                 using var left = ImRaii.Child( "Left" );
                 style.Pop();
 
                 using var indent = ImRaii.PushStyle( ImGuiStyleVar.IndentSpacing, 9 );
+
                 // Draw left column
-                Bones.Where( x => x.Parent == null ).ToList().ForEach( DrawTree );
+                Bones.Where( x => x.Parent == null ).ToList().ForEach( x => DrawTree( x, false ) );
+
+                // TODO: null dragging
             }
 
             if( !DrawOnce ) {
@@ -124,14 +131,17 @@ namespace VfxEditor.SklbFormat.Bones {
             using( var right = ImRaii.Child( "Right" ) ) {
                 // Draw right column
                 if( Selected != null ) {
-                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                        if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) {
-                            Selected = null;
-                            UpdatePreview();
-                        }
+                    using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                    if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) {
+                        Selected = null;
+                        UpdatePreview();
                     }
+                }
 
-                    Selected?.DrawBody();
+                if( Selected != null ) {
+                    DrawParentCombo( Selected );
+                    Selected.DrawBody();
+                    if( UiUtils.RemoveButton( "Delete", small: true ) ) Delete( Selected );
 
                     ImGui.Separator();
                 }
@@ -143,7 +153,33 @@ namespace VfxEditor.SklbFormat.Bones {
             ImGui.Columns( 1 );
         }
 
-        private void DrawTree( SklbBone bone ) {
+        private void DrawParentCombo( SklbBone bone ) {
+            var text = bone.Parent == null ? "[NONE]" : bone.Parent.Name.Value;
+
+            using var combo = ImRaii.Combo( "Parent", text );
+            if( !combo ) return;
+
+            if( ImGui.Selectable( "[NONE]", bone.Parent == null ) ) {
+                CommandManager.Sklb.Add( new SklbBoneParentCommand( bone, null ) );
+            }
+
+            var idx = 0;
+
+            foreach( var item in Bones ) {
+                if( item == bone ) continue;
+                using var _ = ImRaii.PushId( idx );
+                var selected = bone.Parent == item;
+
+                if( ImGui.Selectable( item.Name.Value, selected ) ) {
+                    CommandManager.Sklb.Add( new SklbBoneParentCommand( bone, item ) );
+                }
+
+                if( selected ) ImGui.SetItemDefaultFocus();
+                idx++;
+            }
+        }
+
+        private void DrawTree( SklbBone bone, bool blockPopup ) {
             var children = Bones.Where( x => x.Parent == bone ).ToList();
             var isLeaf = children.Count == 0;
 
@@ -153,22 +189,105 @@ namespace VfxEditor.SklbFormat.Bones {
                 ImGuiTreeNodeFlags.OpenOnDoubleClick |
                 ImGuiTreeNodeFlags.SpanFullWidth;
 
-            if( isLeaf ) {
-                flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
-            }
-
+            if( isLeaf ) flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
             if( Selected == bone ) flags |= ImGuiTreeNodeFlags.Selected;
 
             var nodeOpen = ImGui.TreeNodeEx( $"{bone.Name.Value}##{bone.Id}", flags );
-            if( ImGui.IsItemClicked() && !ImGui.IsItemToggledOpen() ) {
+
+            DragDrop( bone );
+
+            if( ImGui.BeginPopupContextItem() ) {
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "Create sub-bone" ) ) {
+                    var newId = BONE_ID++;
+                    var newBone = new SklbBone( newId );
+                    newBone.Name.Value = $"bone_{newId}";
+                    var command = new CompoundCommand( false, true );
+                    command.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
+                    command.Add( new SklbBoneParentCommand( newBone, bone ) );
+                    CommandManager.Sklb.Add( command );
+                }
+
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                    Delete( bone );
+                    ImGui.CloseCurrentPopup();
+                }
+
+                bone.Name.Draw( CommandManager.Sklb, 128, "##Rename", ImGuiInputTextFlags.AutoSelectAll );
+                ImGui.EndPopup();
+            }
+
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && !ImGui.IsItemToggledOpen() ) {
                 Selected = bone;
                 UpdatePreview();
             }
 
             if( !isLeaf && nodeOpen ) {
-                children.ForEach( DrawTree );
+                children.ForEach( x => DrawTree( x, blockPopup ) );
                 ImGui.TreePop();
             }
+        }
+
+        private void Delete( SklbBone bone ) {
+            var toDelete = new List<SklbBone> {
+                bone
+            };
+            PopulateChildren( bone, toDelete );
+
+            if( toDelete.Contains( Selected ) ) Selected = null;
+
+            var command = new CompoundCommand( false, true );
+            foreach( var item in toDelete ) {
+                command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
+            }
+            CommandManager.Sklb.Add( command );
+        }
+
+        public void PopulateChildren( SklbBone parent, List<SklbBone> children ) {
+            foreach( var bone in Bones ) {
+                if( bone.Parent == parent ) {
+                    if( children.Contains( bone ) ) continue;
+                    children.Add( bone );
+                    PopulateChildren( bone, children );
+                }
+            }
+        }
+
+        // ======= DRAGGING ==========
+
+        private void DragDrop( SklbBone bone ) {
+            if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
+                StartDragging( bone );
+                ImGui.Text( bone.Name.Value );
+                ImGui.EndDragDropSource();
+            }
+
+            if( ImGui.BeginDragDropTarget() ) {
+                StopDragging( bone );
+                ImGui.EndDragDropTarget();
+            }
+        }
+
+        private void StartDragging( SklbBone bone ) {
+            ImGui.SetDragDropPayload( "SKLB_BONES", IntPtr.Zero, 0 );
+            DraggingBone = bone;
+        }
+
+        public unsafe bool StopDragging( SklbBone destination ) {
+            if( DraggingBone == null ) return false;
+            var payload = ImGui.AcceptDragDropPayload( "SKLB_BONES" );
+            if( payload.NativePtr == null ) return false;
+
+            if( DraggingBone != destination ) {
+                if( destination != null && destination.IsChildOf( DraggingBone ) ) {
+                    PluginLog.Log( "Tried to put bone into itself" );
+                }
+                else {
+                    CommandManager.Sklb.Add( new SklbBoneParentCommand( DraggingBone, destination ) );
+                }
+            }
+
+            DraggingBone = null;
+            return true;
         }
 
         private void UpdatePreview() {
