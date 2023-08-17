@@ -21,6 +21,7 @@ namespace VfxEditor.SklbFormat.Bones {
         private bool DrawOnce = false;
         private SklbBone Selected;
         private SklbBone DraggingBone;
+        private string SearchText = "";
 
         public SklbBones( SklbFile file, string loadPath ) : base( loadPath ) {
             File = file;
@@ -103,13 +104,38 @@ namespace VfxEditor.SklbFormat.Bones {
         public void Draw() {
             if( SklbPreview.CurrentFile != File ) UpdatePreview();
 
+            var expandAll = false;
+            var searchSet = GetSearchSet();
+
             using var _ = ImRaii.PushId( "Bones " );
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
                 ImGui.Columns( 2, "Columns", true );
 
-                // TODO: search
-                // TODO: new
-                // TODO: expand all
+                using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                    // New bone
+                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                        if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
+                            var newId = BONE_ID++;
+                            var newBone = new SklbBone( newId );
+                            newBone.Name.Value = $"bone_{newId}";
+                            CommandManager.Sklb.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
+                        }
+                    }
+                    UiUtils.Tooltip( "Create new bone at root" );
+
+                    // Expand
+                    ImGui.SameLine();
+                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                        if( ImGui.Button( FontAwesomeIcon.Expand.ToIconString() ) ) {
+                            expandAll = true;
+                        }
+                    }
+                    UiUtils.Tooltip( "Expand all tree nodes" );
+
+                    // Search
+                    ImGui.SameLine();
+                    ImGui.InputTextWithHint( "##Search", "Search", ref SearchText, 255 );
+                }
 
                 using var left = ImRaii.Child( "Left" );
                 style.Pop();
@@ -117,7 +143,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 using var indent = ImRaii.PushStyle( ImGuiStyleVar.IndentSpacing, 9 );
 
                 // Draw left column
-                Bones.Where( x => x.Parent == null ).ToList().ForEach( x => DrawTree( x, false ) );
+                Bones.Where( x => x.Parent == null ).ToList().ForEach( x => DrawTree( x, searchSet, expandAll ) );
 
                 // TODO: null dragging
             }
@@ -179,7 +205,9 @@ namespace VfxEditor.SklbFormat.Bones {
             }
         }
 
-        private void DrawTree( SklbBone bone, bool blockPopup ) {
+        private void DrawTree( SklbBone bone, HashSet<SklbBone> searchSet, bool expandAll ) {
+            if( searchSet != null && !searchSet.Contains( bone ) ) return;
+
             var children = Bones.Where( x => x.Parent == bone ).ToList();
             var isLeaf = children.Count == 0;
 
@@ -192,6 +220,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( isLeaf ) flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
             if( Selected == bone ) flags |= ImGuiTreeNodeFlags.Selected;
 
+            if( expandAll ) ImGui.SetNextItemOpen( true );
             var nodeOpen = ImGui.TreeNodeEx( $"{bone.Name.Value}##{bone.Id}", flags );
 
             DragDrop( bone );
@@ -222,9 +251,24 @@ namespace VfxEditor.SklbFormat.Bones {
             }
 
             if( !isLeaf && nodeOpen ) {
-                children.ForEach( x => DrawTree( x, blockPopup ) );
+                children.ForEach( x => DrawTree( x, searchSet, expandAll ) );
                 ImGui.TreePop();
             }
+        }
+
+        private HashSet<SklbBone> GetSearchSet() {
+            if( string.IsNullOrEmpty( SearchText ) ) return null;
+            var searchSet = new HashSet<SklbBone>();
+
+            var validBones = Bones.Where( x => x.Name.Value.ToLower().Contains( SearchText.ToLower() ) ).ToList();
+            validBones.ForEach( x => PopulateSearchSet( searchSet, x ) );
+
+            return searchSet;
+        }
+
+        private void PopulateSearchSet( HashSet<SklbBone> searchSet, SklbBone bone ) {
+            searchSet.Add( bone );
+            if( bone.Parent != null ) PopulateSearchSet( searchSet, bone.Parent );
         }
 
         private void Delete( SklbBone bone ) {
