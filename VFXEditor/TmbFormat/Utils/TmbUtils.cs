@@ -64,6 +64,7 @@ namespace VfxEditor.TmbFormat.Utils {
             { C192.MAGIC, new ItemTypeStruct( C192.DISPLAY_NAME, typeof(C192) ) },
             { C197.MAGIC, new ItemTypeStruct( C197.DISPLAY_NAME, typeof(C197) ) },
             { C202.MAGIC, new ItemTypeStruct( C202.DISPLAY_NAME, typeof(C202) ) },
+            { C136.MAGIC, new ItemTypeStruct( C136.DISPLAY_NAME, typeof(C136) ) },
         };
     }
 }

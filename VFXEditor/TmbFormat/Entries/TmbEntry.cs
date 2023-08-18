@@ -40,7 +40,7 @@ namespace VfxEditor.TmbFormat.Entries {
             color.Push( ImGuiCol.HeaderHovered, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
             color.Push( ImGuiCol.HeaderActive, col * new Vector4( 0.75f, 0.75f, 0.75f, 1f ), isColored );
 
-            if( ImGui.CollapsingHeader( $"{DisplayName} ({Magic})" ) ) {
+            if( ImGui.CollapsingHeader( string.IsNullOrEmpty( DisplayName ) ? Magic : $"{DisplayName} ({Magic})" ) ) {
                 if( isColored ) color.Pop( 2 );
 
                 DragDrop();
