@@ -145,7 +145,15 @@ namespace VfxEditor.SklbFormat.Bones {
                 // Draw left column
                 Bones.Where( x => x.Parent == null ).ToList().ForEach( x => DrawTree( x, searchSet, expandAll ) );
 
-                // TODO: null dragging
+                // Drag-drop to root
+                using var rootStyle = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
+                rootStyle.Push( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
+
+                ImGui.BeginChild( "EndChild", new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
+                ImGui.EndChild();
+
+                using var dragDrop = ImRaii.DragDropTarget();
+                if( dragDrop ) StopDragging( null );
             }
 
             if( !DrawOnce ) {
