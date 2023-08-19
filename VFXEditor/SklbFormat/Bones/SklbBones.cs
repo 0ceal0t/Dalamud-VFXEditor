@@ -166,21 +166,25 @@ namespace VfxEditor.SklbFormat.Bones {
                 // Draw right column
                 if( Selected != null ) {
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                    if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) {
+                    if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), new( 0.7f, 0.7f, 0.7f, 1 ) ) ) {
                         Selected = null;
                         UpdatePreview();
                     }
                 }
 
                 if( Selected != null ) {
-                    DrawParentCombo( Selected );
-                    Selected.DrawBody();
-                    if( UiUtils.RemoveButton( "Delete", small: true ) ) Delete( Selected );
-
-                    ImGui.Separator();
+                    ImGui.SameLine();
+                    using var color = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
+                    if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) Delete( Selected );
                 }
 
-                if( ImGui.Checkbox( "Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+                if( Selected != null ) {
+                    DrawParentCombo( Selected );
+                    Selected.DrawBody();
+                }
+
+                if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+
                 SklbPreview.DrawInline();
             }
 

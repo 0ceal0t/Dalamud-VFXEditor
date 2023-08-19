@@ -12,9 +12,9 @@ namespace VfxEditor.SklbFormat.Bones {
         public readonly int Id;
 
         public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedFloat4 Position = new( "Position" );
-        public readonly ParsedFloat4 Rotation = new( "Rotation" );
-        public readonly ParsedFloat4 Scale = new( "Scale " );
+        public readonly ParsedFloat4 Position = new( "Position", new( 0, 0, 0, 1 ) );
+        public readonly ParsedFloat4 Rotation = new( "Rotation", new( 0, 0, 0, 1 ) );
+        public readonly ParsedFloat4 Scale = new( "Scale", new( 1, 1, 1, 1 ) );
         public readonly ParsedInt LockTranslation = new( "Lock Translation" );
 
         public Vector4 Pos => Position.Value;

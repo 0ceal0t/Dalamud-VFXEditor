@@ -217,7 +217,6 @@ namespace VfxEditor.DirectX {
 
         public virtual void DrawInline() {
             using var child = ImRaii.Child( "3DChild" );
-
             DrawImage( out var _, out var _ );
         }
 
