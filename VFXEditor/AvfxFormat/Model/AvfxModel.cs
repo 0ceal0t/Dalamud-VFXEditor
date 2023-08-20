@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.AvfxFormat.Model;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Utils;
+using VfxEditor.Utils.Gltf;
 using static VfxEditor.DirectX.ModelPreview;
 
 namespace VfxEditor.AvfxFormat {
@@ -77,7 +77,7 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.TextDisabled( $"Vertices: {Vertexes.Vertexes.Count} Indexes: {Indexes.Indexes.Count}" );
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
 
                 using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
@@ -89,11 +89,10 @@ namespace VfxEditor.AvfxFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) ImportDialog();
-            }
 
-            ImGui.Text( "Notes on using GLTF models" );
-            ImGui.SameLine();
-            if( ImGui.SmallButton( "Here" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
+                ImGui.SameLine();
+                UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
+            }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 4 );
 
@@ -172,7 +171,7 @@ namespace VfxEditor.AvfxFormat {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    if( GltfUtils.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
+                    if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
                         CommandManager.Avfx.Add( new AvfxModelImportCommand( this, newIndexes, newVertexes ) );
                     }
                 }
@@ -185,7 +184,7 @@ namespace VfxEditor.AvfxFormat {
         private void ExportDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                GltfUtils.ExportModel( this, res );
+                GltfModel.ExportModel( this, res );
             } );
         }
 

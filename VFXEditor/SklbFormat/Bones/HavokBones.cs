@@ -18,7 +18,7 @@ namespace VfxEditor.SklbFormat.Bones {
         public List<Bone> BoneList = new();
 
         protected static int BONE_ID = 0;
-        protected readonly List<SklbBone> Bones = new();
+        public readonly List<SklbBone> Bones = new();
 
         public HavokBones( string havokPath ) {
             Path = havokPath;
@@ -49,13 +49,15 @@ namespace VfxEditor.SklbFormat.Bones {
                         OnLoad();
                     }
                 }
+
+                Marshal.FreeHGlobal( path );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, $"Could not read file: {Path}" );
             }
         }
 
-        protected void OnLoad() {
+        protected virtual void OnLoad() {
             for( var i = 0; i < Skeleton->Bones.Length; i++ ) {
                 var bone = Skeleton->Bones[i];
                 Bones.Add( new( Skeleton->Bones[i], Skeleton->ReferencePose[i], BONE_ID++ ) );
@@ -119,6 +121,9 @@ namespace VfxEditor.SklbFormat.Bones {
             if( Resource == null ) return;
             var refResource = ( hkReferencedObject* )Resource;
             refResource->RemoveReference();
+
+            var refSkeleton = ( hkReferencedObject* )Skeleton;
+            refSkeleton->RemoveReference();
         }
 
         protected int ParentIdx( SklbBone bone ) => bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent );

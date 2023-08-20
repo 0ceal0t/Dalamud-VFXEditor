@@ -39,11 +39,7 @@ namespace VfxEditor.SklbFormat.Animation {
             NumFrames = reader.ReadInt32();
             for( var frameIdx = 0; frameIdx < NumFrames; frameIdx++ ) {
                 List<Matrix> frameData = new();
-
-                for( var trackIdx = 0; trackIdx < numTracks; trackIdx++ ) {
-                    frameData.Add( ReadMatrix( reader ) );
-                }
-
+                for( var trackIdx = 0; trackIdx < numTracks; trackIdx++ ) frameData.Add( ReadMatrix( reader ) );
                 TrackData.Add( frameData );
             }
         }

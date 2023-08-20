@@ -1,3 +1,5 @@
+using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -6,21 +8,24 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayer : IUiItem {
+        public readonly SklbFile File;
+
         public readonly ParsedInt Id = new( "Id" );
         public readonly List<SklbLayerBone> Bones = new();
         private readonly CollapsingHeaders<SklbLayerBone> BonesView;
 
         public int Size => 4 + 2 + 2 * Bones.Count; // Id + numBones + boneIndices
 
-        public SklbLayer() {
-            BonesView = new( "Bone", Bones, null, () => new(), () => CommandManager.Sklb );
+        public SklbLayer( SklbFile file ) {
+            File = file;
+            BonesView = new( "Bone", Bones, null, () => new( file ), () => CommandManager.Sklb );
         }
 
-        public SklbLayer( BinaryReader reader ) : this() {
+        public SklbLayer( SklbFile file, BinaryReader reader ) : this( file ) {
             Id.Read( reader );
             var numBones = reader.ReadInt16();
             for( var i = 0; i < numBones; i++ ) {
-                Bones.Add( new( reader ) );
+                Bones.Add( new( file, reader ) );
             }
         }
 
@@ -37,11 +42,15 @@ namespace VfxEditor.SklbFormat.Layers {
     }
 
     public class SklbLayerBone : IUiItem {
+        public readonly SklbFile File;
         public ParsedShort BoneIndex = new( "Bone Index" );
 
-        public SklbLayerBone() { }
+        public SklbLayerBone( SklbFile file ) {
+            File = file;
+        }
 
-        public SklbLayerBone( BinaryReader reader ) {
+        public SklbLayerBone( SklbFile file, BinaryReader reader ) {
+            File = file;
             BoneIndex.Read( reader );
         }
 
@@ -50,7 +59,35 @@ namespace VfxEditor.SklbFormat.Layers {
         }
 
         public void Draw() {
-            BoneIndex.Draw( CommandManager.Sklb );
+            var boneIdx = BoneIndex.Value;
+            if( boneIdx >= File.Bones.Bones.Count ) {
+                BoneIndex.Draw( CommandManager.Sklb );
+                return;
+            }
+
+            var bone = boneIdx == -1 ? null : File.Bones.Bones[boneIdx];
+            var text = bone == null ? "[NONE]" : bone.Name.Value;
+
+            using var combo = ImRaii.Combo( "Bone", text );
+            if( !combo ) return;
+
+            if( ImGui.Selectable( "[NONE]", bone == null ) ) {
+                CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( BoneIndex, -1 ) );
+            }
+
+            var idx = 0;
+
+            foreach( var item in File.Bones.Bones ) {
+                using var _ = ImRaii.PushId( idx );
+                var selected = bone == item;
+
+                if( ImGui.Selectable( item.Name.Value, selected ) ) {
+                    CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( BoneIndex, idx ) );
+                }
+
+                if( selected ) ImGui.SetItemDefaultFocus();
+                idx++;
+            }
         }
     }
 }

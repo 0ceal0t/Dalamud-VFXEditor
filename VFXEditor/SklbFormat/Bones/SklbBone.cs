@@ -1,4 +1,5 @@
 using FFXIVClientStructs.Havok;
+using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
@@ -36,10 +37,13 @@ namespace VfxEditor.SklbFormat.Bones {
             LockTranslation.Value = bone.LockTranslation;
         }
 
-        public void DrawBody() {
+        public void DrawBody( int boneIdx ) {
             using var _ = ImRaii.PushId( Id );
 
             Name.Draw( CommandManager.Sklb );
+            ImGui.SameLine();
+            ImGui.TextDisabled( $"[ ID: {boneIdx} ]" );
+
             Position.Draw( CommandManager.Sklb );
             Rotation.Draw( CommandManager.Sklb );
             Scale.Draw( CommandManager.Sklb );

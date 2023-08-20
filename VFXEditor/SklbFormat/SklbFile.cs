@@ -12,12 +12,12 @@ namespace VfxEditor.SklbFormat {
     public class SklbFile : FileManagerFile {
         public readonly string HkxTempLocation;
 
-        private readonly short Version1;
-        private readonly short Version2;
+        public readonly short Version1;
+        public readonly short Version2;
 
-        private readonly SklbData Data;
-        private readonly SklbLayers Layers;
-        private readonly SklbBones Bones;
+        public readonly SklbData Data;
+        public readonly SklbLayers Layers;
+        public readonly SklbBones Bones;
 
         private readonly bool FinishedLoading = false;
 
@@ -41,7 +41,7 @@ namespace VfxEditor.SklbFormat {
                 return;
             }
 
-            Layers = new( reader );
+            Layers = new( this, reader );
 
             reader.BaseStream.Seek( Data.HavokOffset, SeekOrigin.Begin );
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
@@ -79,7 +79,7 @@ namespace VfxEditor.SklbFormat {
             // Reset position
             writer.BaseStream.Seek( havokOffset, SeekOrigin.Begin );
 
-            if( FinishedLoading ) Bones.Update();
+            if( FinishedLoading ) Bones.Write();
             var data = File.ReadAllBytes( HkxTempLocation );
             writer.Write( data );
         }
@@ -91,6 +91,7 @@ namespace VfxEditor.SklbFormat {
             DrawData();
             DrawLayers();
             DrawBones();
+            DrawMappings();
         }
 
         private void DrawData() {
@@ -119,6 +120,15 @@ namespace VfxEditor.SklbFormat {
             using var _ = ImRaii.PushId( "Bones" );
 
             Bones?.Draw();
+        }
+
+        private void DrawMappings() {
+            using var tabItem = ImRaii.TabItem( "Mappings" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Mappings" );
+
+            Bones?.MappingView.Draw();
         }
 
         public void Updated() {

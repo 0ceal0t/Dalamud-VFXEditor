@@ -6,8 +6,11 @@ namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayers {
         public readonly List<SklbLayer> Layers = new();
         public readonly SimpleSplitview<SklbLayer> LayerView;
+        public readonly SklbFile File;
 
-        public SklbLayers( BinaryReader reader ) {
+        public SklbLayers( SklbFile file, BinaryReader reader ) {
+            File = file;
+
             reader.ReadInt32(); // Magic
 
             var numLayers = reader.ReadInt16();
@@ -16,10 +19,10 @@ namespace VfxEditor.SklbFormat.Layers {
             }
 
             for( var i = 0; i < numLayers; i++ ) {
-                Layers.Add( new( reader ) );
+                Layers.Add( new( file, reader ) );
             }
 
-            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer(), () => CommandManager.Sklb );
+            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer( file ), () => CommandManager.Sklb );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -35,8 +38,6 @@ namespace VfxEditor.SklbFormat.Layers {
             Layers.ForEach( x => x.Write( writer ) );
         }
 
-        public void Draw() {
-            LayerView.Draw();
-        }
+        public void Draw() => LayerView.Draw();
     }
 }

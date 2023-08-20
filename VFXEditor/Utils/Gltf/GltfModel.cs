@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.AvfxFormat;
 
-namespace VfxEditor.Utils {
-    public static class GltfUtils {
+namespace VfxEditor.Utils.Gltf {
+    public static class GltfModel {
         public static void ExportModel( AvfxModel model, string path ) {
             var mesh = new MeshBuilder<VertexPositionNormalTangent, VertexColor1Texture2>( "mesh" );
             var material = new MaterialBuilder( "material" );
@@ -37,7 +37,7 @@ namespace VfxEditor.Utils {
             var scene = new SceneBuilder();
             scene.AddRigidMesh( mesh, Matrix4x4.Identity );
             scene.ToGltf2().SaveGLTF( path );
-            PluginLog.Log( "Saved GLTF to: " + path );
+            PluginLog.Log( $"Saved GLTF to: {path}" );
         }
 
         private static GltfVertex GetVertex( AvfxVertex vertex ) {
@@ -82,7 +82,7 @@ namespace VfxEditor.Utils {
             vertexesOut = new List<AvfxVertex>();
             indexesOut = new List<AvfxIndex>();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
-            PluginLog.Log( "Importing GLTF from: " + localPath );
+            PluginLog.Log( "Importing GLTF model from: " + localPath );
 
             if( model.LogicalMeshes.Count > 0 ) {
                 var mesh = model.LogicalMeshes[0];

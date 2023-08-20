@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
+using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -11,7 +12,9 @@ using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.SklbFormat.Animation;
+using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
+using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.SklbFormat.Bones {
     public unsafe class SklbBones : HavokBones {
@@ -23,83 +26,37 @@ namespace VfxEditor.SklbFormat.Bones {
         private SklbBone DraggingBone;
         private string SearchText = "";
 
+        public readonly List<SklbMapping> Mappings = new();
+        public readonly SklbMappingDropdown MappingView;
+
         public SklbBones( SklbFile file, string loadPath ) : base( loadPath ) {
             File = file;
+            MappingView = new( Mappings );
         }
 
-        public void Update() {
-            var nameHandles = new List<nint>();
+        protected override void OnLoad() {
+            base.OnLoad();
 
-            var bones = new List<hkaBone>();
-            var poses = new List<hkQsTransformf>();
-            var parents = new List<short>();
+            var variants = Container->NamedVariants;
+            for( var i = 0; i < variants.Length; i++ ) {
+                var variant = variants[i];
+                if( variant.ClassName.String == "hkaSkeletonMapper" ) {
+                    var mapper = ( SkeletonMapper* )variant.Variant.ptr;
+                    Mappings.Add( new( this, mapper ) );
 
-            foreach( var bone in Bones ) {
-                var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
-                parents.Add( parent );
+                    var mapping = mapper->Mapping;
+                    var sklA = mapping.SkeletonA.ptr;
+                    var sklB = mapping.SkeletonB.ptr;
+                    var simpleMappings = mapping.SimpleMappings;
 
-                bone.ToHavok( out var hkBone, out var hkPose, out var handle );
-                bones.Add( hkBone );
-                poses.Add( hkPose );
-                nameHandles.Add( handle );
-            }
-
-            Skeleton->Bones.Length = bones.Count;
-            Skeleton->Bones.CapacityAndFlags = Skeleton->Bones.Flags | bones.Count;
-
-            Skeleton->ReferencePose.Length = poses.Count;
-            Skeleton->ReferencePose.CapacityAndFlags = Skeleton->ReferencePose.Flags | poses.Count;
-
-            Skeleton->ParentIndices.Length = parents.Count;
-            Skeleton->ParentIndices.CapacityAndFlags = Skeleton->ParentIndices.Flags | parents.Count;
-
-            var _bones = bones.ToArray();
-            var _poses = poses.ToArray();
-            var _parents = parents.ToArray();
-
-            fixed( hkaBone* bonePtr = _bones ) {
-                Skeleton->Bones.Data = bonePtr;
-
-                fixed( hkQsTransformf* posePtr = _poses ) {
-                    Skeleton->ReferencePose.Data = posePtr;
-
-                    fixed( short* parentPtr = _parents ) {
-                        Skeleton->ParentIndices.Data = parentPtr;
-
-                        Write();
-                        nameHandles.ForEach( Marshal.FreeHGlobal );
+                    for( var j = 0; j < simpleMappings.Length; j++ ) {
+                        var data = simpleMappings[j];
                     }
                 }
             }
         }
 
-        private void Write() {
-            try {
-                var rootLevelName = @"hkRootLevelContainer"u8;
-                fixed( byte* n1 = rootLevelName ) {
-                    var result = stackalloc hkResult[1];
-
-                    var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
-
-                    var path = Marshal.StringToHGlobalAnsi( Path );
-                    var oStream = new hkOstream();
-                    oStream.Ctor( ( byte* )path );
-
-                    var saveOptions = new hkSerializeUtil.SaveOptions {
-                        Flags = new hkFlags<hkSerializeUtil.SaveOptionBits, int> {
-                            Storage = ( int )hkSerializeUtil.SaveOptionBits.Default
-                        }
-                    };
-
-                    hkSerializeUtil.Save( result, Container, className, oStream.StreamWriter.ptr, saveOptions );
-
-                    oStream.Dtor();
-                }
-            }
-            catch( Exception e ) {
-                PluginLog.Error( e, $"Could not export to: {Path}" );
-            }
-        }
+        // ========== DRAWING ============
 
         public void Draw() {
             if( SklbPreview.CurrentFile != File ) UpdatePreview();
@@ -107,7 +64,25 @@ namespace VfxEditor.SklbFormat.Bones {
             var expandAll = false;
             var searchSet = GetSearchSet();
 
-            using var _ = ImRaii.PushId( "Bones " );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
+
+                using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
+                    if( popup ) {
+                        if( ImGui.Selectable( "GLTF" ) ) ExportGltf();
+                        if( ImGui.Selectable( "HKX" ) ) ExportHavok();
+                    }
+                }
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace" ) ) ImportDialog();
+            }
+
+            ImGui.SameLine();
+            if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+
+            ImGui.Separator();
+
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
                 ImGui.Columns( 2, "Columns", true );
 
@@ -167,23 +142,18 @@ namespace VfxEditor.SklbFormat.Bones {
                 if( Selected != null ) {
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), new( 0.7f, 0.7f, 0.7f, 1 ) ) ) {
-                        Selected = null;
+                        ClearSelected();
                         UpdatePreview();
                     }
                 }
 
                 if( Selected != null ) {
-                    ImGui.SameLine();
-                    using var color = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) Delete( Selected );
-                }
-
-                if( Selected != null ) {
                     DrawParentCombo( Selected );
-                    Selected.DrawBody();
-                }
+                    Selected.DrawBody( Bones.IndexOf( Selected ) );
 
-                if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+                    using var color = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
+                    if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) DeleteBone( Selected );
+                }
 
                 SklbPreview.DrawInline();
             }
@@ -249,7 +219,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 }
 
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
-                    Delete( bone );
+                    DeleteBone( bone );
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -278,34 +248,9 @@ namespace VfxEditor.SklbFormat.Bones {
             return searchSet;
         }
 
-        private void PopulateSearchSet( HashSet<SklbBone> searchSet, SklbBone bone ) {
+        private static void PopulateSearchSet( HashSet<SklbBone> searchSet, SklbBone bone ) {
             searchSet.Add( bone );
             if( bone.Parent != null ) PopulateSearchSet( searchSet, bone.Parent );
-        }
-
-        private void Delete( SklbBone bone ) {
-            var toDelete = new List<SklbBone> {
-                bone
-            };
-            PopulateChildren( bone, toDelete );
-
-            if( toDelete.Contains( Selected ) ) Selected = null;
-
-            var command = new CompoundCommand( false, true );
-            foreach( var item in toDelete ) {
-                command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
-            }
-            CommandManager.Sklb.Add( command );
-        }
-
-        public void PopulateChildren( SklbBone parent, List<SklbBone> children ) {
-            foreach( var bone in Bones ) {
-                if( bone.Parent == parent ) {
-                    if( children.Contains( bone ) ) continue;
-                    children.Add( bone );
-                    PopulateChildren( bone, children );
-                }
-            }
         }
 
         // ======= DRAGGING ==========
@@ -346,6 +291,130 @@ namespace VfxEditor.SklbFormat.Bones {
             return true;
         }
 
+        public void ClearSelected() {
+            Selected = null;
+        }
+
+        // ======= IMPORT EXPORT ==========
+
+        private void ExportHavok() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                if( ok ) System.IO.File.Copy( Path, res, true );
+            } );
+        }
+
+        private void ExportGltf() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+                if( !ok ) return;
+                GltfSkeleton.ExportSkeleton( Bones, res );
+            } );
+        }
+
+        private void ImportDialog() {
+            FileDialogManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
+                if( !ok ) return;
+                if( res.Contains( ".hkx" ) ) {
+                    var importHavok = new HavokBones( res );
+                    var newBones = importHavok.Bones;
+                    importHavok.RemoveReference();
+                    CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );
+                }
+                else {
+                    try {
+                        var newBones = GltfSkeleton.ImportSkeleton( res, Bones );
+                        CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );
+                    }
+                    catch( Exception e ) {
+                        PluginLog.Error( e, "Could not import data" );
+                    }
+                }
+            } );
+        }
+
+        // ======= UPDATING ==========
+
+        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, out nint handle ) where T : unmanaged {
+            var flags = currentArray.Flags | data.Count;
+
+            var size = Marshal.SizeOf( typeof( T ) );
+            var arr = Marshal.AllocHGlobal( size * data.Count + 1 );
+            var _arr = ( T* )arr;
+
+            for( var i = 0; i < data.Count; i++ ) {
+                _arr[i] = data[i];
+            }
+
+            handle = arr;
+
+            var ret = new hkArray<T>() {
+                CapacityAndFlags = flags,
+                Length = data.Count,
+                Data = _arr
+            };
+            return ret;
+        }
+
+        public void Write() {
+            var handles = new List<nint>();
+
+            Mappings.ForEach( x => x.Write( handles ) );
+
+            var bones = new List<hkaBone>();
+            var poses = new List<hkQsTransformf>();
+            var parents = new List<short>();
+
+            foreach( var bone in Bones ) {
+                var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
+                parents.Add( parent );
+
+                bone.ToHavok( out var hkBone, out var hkPose, out var handle );
+                bones.Add( hkBone );
+                poses.Add( hkPose );
+                handles.Add( handle );
+            }
+
+            Skeleton->Bones = CreateArray( Skeleton->Bones, bones, out var boneHandle );
+            handles.Add( boneHandle );
+
+            Skeleton->ReferencePose = CreateArray( Skeleton->ReferencePose, poses, out var poseHandle );
+            handles.Add( poseHandle );
+
+            Skeleton->ParentIndices = CreateArray( Skeleton->ParentIndices, parents, out var parentHandle );
+            handles.Add( parentHandle );
+
+            WriteHavok();
+            handles.ForEach( Marshal.FreeHGlobal );
+        }
+
+        private void WriteHavok() {
+            try {
+                var rootLevelName = @"hkRootLevelContainer"u8;
+                fixed( byte* n1 = rootLevelName ) {
+                    var result = stackalloc hkResult[1];
+
+                    var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
+
+                    var path = Marshal.StringToHGlobalAnsi( Path );
+                    var oStream = new hkOstream();
+                    oStream.Ctor( ( byte* )path );
+
+                    var saveOptions = new hkSerializeUtil.SaveOptions {
+                        Flags = new hkFlags<hkSerializeUtil.SaveOptionBits, int> {
+                            Storage = ( int )hkSerializeUtil.SaveOptionBits.Default
+                        }
+                    };
+
+                    hkSerializeUtil.Save( result, Container, className, oStream.StreamWriter.ptr, saveOptions );
+
+                    oStream.Dtor();
+                    Marshal.FreeHGlobal( path );
+                }
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, $"Could not export to: {Path}" );
+            }
+        }
+
         private void UpdatePreview() {
             if( BoneList?.Count == 0 ) SklbPreview.LoadEmpty( File );
             else SklbPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) );
@@ -354,6 +423,31 @@ namespace VfxEditor.SklbFormat.Bones {
         public void Updated() {
             UpdateBones();
             if( File == SklbPreview.CurrentFile ) UpdatePreview();
+        }
+
+        private void DeleteBone( SklbBone bone ) {
+            var toDelete = new List<SklbBone> {
+                bone
+            };
+            PopulateChildren( bone, toDelete );
+
+            if( toDelete.Contains( Selected ) ) ClearSelected();
+
+            var command = new CompoundCommand( false, true );
+            foreach( var item in toDelete ) {
+                command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
+            }
+            CommandManager.Sklb.Add( command );
+        }
+
+        public void PopulateChildren( SklbBone parent, List<SklbBone> children ) {
+            foreach( var bone in Bones ) {
+                if( bone.Parent == parent ) {
+                    if( children.Contains( bone ) ) continue;
+                    children.Add( bone );
+                    PopulateChildren( bone, children );
+                }
+            }
         }
 
         public void Dispose() {
