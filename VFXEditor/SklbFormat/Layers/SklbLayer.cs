@@ -1,8 +1,7 @@
-using ImGuiNET;
-using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
@@ -18,7 +17,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public SklbLayer( SklbFile file ) {
             File = file;
-            BonesView = new( "Bone", Bones, null, () => new( file ), () => CommandManager.Sklb );
+            BonesView = new( "Bone", Bones, ( SklbLayerBone item, int idx ) => item.BoneIndex.GetText( File.Bones.Bones ), () => new( file ), () => CommandManager.Sklb );
         }
 
         public SklbLayer( SklbFile file, BinaryReader reader ) : this( file ) {
@@ -41,9 +40,9 @@ namespace VfxEditor.SklbFormat.Layers {
         }
     }
 
-    public class SklbLayerBone : IUiItem {
+    public unsafe class SklbLayerBone : IUiItem {
         public readonly SklbFile File;
-        public ParsedShort BoneIndex = new( "Bone Index" );
+        public ParsedBoneIndex BoneIndex = new( "Bone Index", -1 );
 
         public SklbLayerBone( SklbFile file ) {
             File = file;
@@ -59,35 +58,7 @@ namespace VfxEditor.SklbFormat.Layers {
         }
 
         public void Draw() {
-            var boneIdx = BoneIndex.Value;
-            if( boneIdx >= File.Bones.Bones.Count ) {
-                BoneIndex.Draw( CommandManager.Sklb );
-                return;
-            }
-
-            var bone = boneIdx == -1 ? null : File.Bones.Bones[boneIdx];
-            var text = bone == null ? "[NONE]" : bone.Name.Value;
-
-            using var combo = ImRaii.Combo( "Bone", text );
-            if( !combo ) return;
-
-            if( ImGui.Selectable( "[NONE]", bone == null ) ) {
-                CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( BoneIndex, -1 ) );
-            }
-
-            var idx = 0;
-
-            foreach( var item in File.Bones.Bones ) {
-                using var _ = ImRaii.PushId( idx );
-                var selected = bone == item;
-
-                if( ImGui.Selectable( item.Name.Value, selected ) ) {
-                    CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( BoneIndex, idx ) );
-                }
-
-                if( selected ) ImGui.SetItemDefaultFocus();
-                idx++;
-            }
+            BoneIndex.Draw( File.Bones.Bones );
         }
     }
 }

@@ -44,6 +44,7 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 
 ## TODO
 - [ ] `.sklb` show rotation as angles instead of Quaternion
+- [ ] Partition/Chain mapping/unmapped bones
 - [ ] `.pap` GLTF import/export
 - [ ] `.sklb` show overlay
 - [ ] C192

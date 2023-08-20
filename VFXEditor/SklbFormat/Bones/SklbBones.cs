@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
+using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.SklbFormat.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
@@ -43,15 +44,6 @@ namespace VfxEditor.SklbFormat.Bones {
                 if( variant.ClassName.String == "hkaSkeletonMapper" ) {
                     var mapper = ( SkeletonMapper* )variant.Variant.ptr;
                     Mappings.Add( new( this, mapper ) );
-
-                    var mapping = mapper->Mapping;
-                    var sklA = mapping.SkeletonA.ptr;
-                    var sklB = mapping.SkeletonB.ptr;
-                    var simpleMappings = mapping.SimpleMappings;
-
-                    for( var j = 0; j < simpleMappings.Length; j++ ) {
-                        var data = simpleMappings[j];
-                    }
                 }
             }
         }

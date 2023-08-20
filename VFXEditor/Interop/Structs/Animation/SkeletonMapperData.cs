@@ -1,7 +1,7 @@
 using FFXIVClientStructs.Havok;
 using System.Runtime.InteropServices;
 
-namespace VfxEditor.SklbFormat.Mapping {
+namespace VfxEditor.Interop.Structs.Animation {
     public enum MappingType {
         Ragdoll = 0x0,
         Retargeting = 0x1,
