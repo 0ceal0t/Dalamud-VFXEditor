@@ -4,6 +4,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 
@@ -98,8 +99,15 @@ namespace VfxEditor.PapFormat.Skeleton {
             Animations[havokIndex].Draw();
         }
 
+        public void DrawHavok( int havokIndex ) {
+            Animations[havokIndex].DrawHavok();
+        }
+
         public void Write() {
+            var handles = new List<nint>();
+            Animations.ForEach( x => x.UpdateHavok( handles ) );
             WriteHavok();
+            handles.ForEach( Marshal.FreeHGlobal );
         }
 
         public void Dispose() {

@@ -89,6 +89,7 @@ namespace VfxEditor.PapFormat {
             if( !tabBar ) return;
 
             DrawTmb();
+            DrawHavok();
             DrawAnimation3D();
         }
 
@@ -123,7 +124,15 @@ namespace VfxEditor.PapFormat {
             if( !tabItem ) return;
 
             File.AnimationData.Draw( HavokIndex );
-            //Skeleton.Draw();
+        }
+
+        private void DrawHavok() {
+            using var tabItem = ImRaii.TabItem( "Havok" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Havok" );
+
+            File.AnimationData.DrawHavok( HavokIndex );
         }
     }
 }

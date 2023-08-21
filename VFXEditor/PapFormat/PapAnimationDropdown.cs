@@ -1,14 +1,11 @@
 using ImGuiFileDialog;
 using System.Collections.Generic;
+using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
-    //
-    // TODO
-    //
-
-    public class PapAnimationDropdown : Dropdown<PapAnimation> {
+    public unsafe class PapAnimationDropdown : Dropdown<PapAnimation> {
         private readonly PapFile File;
 
         public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items, true, true ) {
@@ -22,9 +19,17 @@ namespace VfxEditor.PapFormat {
 
             CompoundCommand command = new( false, true );
             command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
-            //command.Add( new PapHavokFileCommand( item, File.HkxTempLocation, () => {
-            //    HavokInterop.RemoveHavokAnimation( File.HkxTempLocation, index, File.HkxTempLocation );
-            //} ) );
+            command.Add( new PapHavokCommand( File, () => {
+                var container = File.AnimationData.AnimationContainer;
+
+                var anims = HavokData.ToList( container->Animations );
+                var bindings = HavokData.ToList( container->Bindings );
+                anims.RemoveAt( index );
+                bindings.RemoveAt( index );
+
+                container->Animations = HavokData.CreateArray( container->Animations, anims, sizeof( nint ), out var _ );
+                container->Bindings = HavokData.CreateArray( container->Bindings, bindings, sizeof( nint ), out var _ );
+            } ) );
             File.Command.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );

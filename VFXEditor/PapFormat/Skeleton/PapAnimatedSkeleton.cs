@@ -9,8 +9,15 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.PapFormat.Skeleton {
+    public enum BlendHintTypes : int {
+        Normal = 0x0,
+        AdditiveDeprecated = 0x1,
+        Additive = 0x2,
+    }
+
     public unsafe class PapAnimatedSkeleton {
         private readonly PapFile File;
         private readonly hkaAnimatedSkeleton* Skeleton;
@@ -28,6 +35,10 @@ namespace VfxEditor.PapFormat.Skeleton {
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
 
+        private readonly ParsedEnum<hkaAnimation.AnimationType> AnimationType = new( "Animation Type" );
+        private readonly ParsedString OriginalSkeletonName = new( "Original Skeleton Name" );
+        private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "Blend Hint" );
+
         public PapAnimatedSkeleton( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {
             File = file;
             Skeleton = ( hkaAnimatedSkeleton* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimatedSkeleton ) ) );
@@ -36,7 +47,13 @@ namespace VfxEditor.PapFormat.Skeleton {
             Animation->Ctor1( binding );
             Skeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );
             Skeleton->addAnimationControl( Animation );
+
+            AnimationType.Value = Animation->Binding.ptr->Animation.ptr->Type;
+            OriginalSkeletonName.Value = Animation->Binding.ptr->OriginalSkeletonName.String;
+            BlendHint.Value = ( BlendHintTypes )Animation->Binding.ptr->BlendHint.Value;
         }
+
+        // ======= DRAWING =========
 
         public void Draw() {
             if( Data == null ) {
@@ -91,9 +108,31 @@ namespace VfxEditor.PapFormat.Skeleton {
             }
 
             if( Frame != lastFrame ) UpdateFrameData();
-
             PapPreview.DrawInline();
         }
+
+        // ======== OTHER HAVOK STUFF ==========
+
+        public void DrawHavok() {
+            AnimationType.Draw( CommandManager.Pap );
+            OriginalSkeletonName.Draw( CommandManager.Pap );
+            BlendHint.Draw( CommandManager.Pap );
+        }
+
+        public void UpdateHavok( List<nint> handles ) {
+            Animation->Binding.ptr->Animation.ptr->Type = AnimationType.Value;
+
+            var nameHandle = Marshal.StringToHGlobalAnsi( OriginalSkeletonName.Value );
+            handles.Add( nameHandle );
+            var namePtr = new hkStringPtr {
+                StringAndFlag = ( byte* )nameHandle
+            };
+            Animation->Binding.ptr->OriginalSkeletonName = namePtr;
+
+            Animation->Binding.ptr->BlendHint.Storage = ( sbyte )BlendHint.Value;
+        }
+
+        // ======== UPDATING ===========
 
         private void UpdateFrameData() {
             Animation->LocalTime = Frame * ( 1 / 30f );
