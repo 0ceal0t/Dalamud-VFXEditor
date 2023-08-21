@@ -359,7 +359,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
         private void UpdatePreview() {
             if( BoneList?.Count == 0 ) SklbPreview.LoadEmpty( File );
-            else SklbPreview.LoadSkeleton( File, BoneList, AnimationData.CreateSkeletonMesh( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) );
+            else SklbPreview.LoadSkeleton( File, BoneList, HavokUtils.CreateSkeletonMesh( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) );
         }
 
         public void Updated() {

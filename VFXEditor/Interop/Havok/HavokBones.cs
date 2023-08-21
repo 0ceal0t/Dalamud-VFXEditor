@@ -45,7 +45,7 @@ namespace VfxEditor.Interop.Havok {
                 var rot = bone.Rot;
                 var scl = bone.Scl;
 
-                var matrix = AnimationData.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
                     scl.X,
                     new Quaternion( rot.X, rot.Y, rot.Z, rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )

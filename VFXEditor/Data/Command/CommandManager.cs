@@ -12,6 +12,7 @@ namespace VfxEditor {
         public static readonly List<string> FilesToCleanup = new();
 
         public static CommandManager Avfx => Plugin.AvfxManager?.GetCommandManager();
+        public static CommandManager Pap => Plugin.PapManager?.GetCommandManager();
         public static CommandManager Scd => Plugin.ScdManager?.GetCommandManager();
         public static CommandManager Eid => Plugin.EidManager?.GetCommandManager();
         public static CommandManager Uld => Plugin.UldManager?.GetCommandManager();

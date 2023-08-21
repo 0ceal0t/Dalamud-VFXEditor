@@ -36,8 +36,6 @@ namespace VfxEditor.PapFormat.Skeleton {
             Animation->Ctor1( binding );
             Skeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );
             Skeleton->addAnimationControl( Animation );
-
-            UpdateFrameData();
         }
 
         public void Draw() {
@@ -116,7 +114,7 @@ namespace VfxEditor.PapFormat.Skeleton {
                 var rot = transform.Rotation;
                 var scl = transform.Scale;
 
-                var matrix = AnimationData.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
                     scl.X,
                     new Quaternion( rot.X, rot.Y, rot.Z, rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
@@ -156,12 +154,12 @@ namespace VfxEditor.PapFormat.Skeleton {
                 PapPreview.LoadEmpty( File, this );
             }
             else {
-                PapPreview.LoadSkeleton( File, this, AnimationData.CreateSkeletonMesh( Data, -1 ) );
+                PapPreview.LoadSkeleton( File, this, HavokUtils.CreateSkeletonMesh( Data, -1 ) );
             }
         }
 
         public void Dispose() {
-            Skeleton->Dtor();
+            if( Data != null ) Skeleton->Dtor();
             Marshal.FreeHGlobal( ( nint )Skeleton );
             Marshal.FreeHGlobal( ( nint )Animation );
             if( PapPreview.CurrentAnimation == this ) PapPreview.ClearAnimation();

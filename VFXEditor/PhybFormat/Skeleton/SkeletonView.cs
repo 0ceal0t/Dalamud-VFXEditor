@@ -60,7 +60,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
             ImGui.SameLine();
 
-            if( ImGui.Checkbox( "Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
 
             if( Bones == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();
@@ -107,7 +107,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         private void UpdateSkeleton() {
             if( Bones?.BoneList.Count == 0 ) PhybPreview.LoadEmpty( File );
-            else PhybPreview.LoadSkeleton( File, Bones.BoneList, AnimationData.CreateSkeletonMesh( Bones.BoneList, -1 ) );
+            else PhybPreview.LoadSkeleton( File, Bones.BoneList, HavokUtils.CreateSkeletonMesh( Bones.BoneList, -1 ) );
         }
 
         public void Dispose() {

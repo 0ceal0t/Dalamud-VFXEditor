@@ -1,5 +1,11 @@
+using Dalamud.Interface;
+using ImGuiFileDialog;
+using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
+using System.Numerics;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat.Skeleton {
     public unsafe class PapAnimations : HavokData {
@@ -19,10 +25,9 @@ namespace VfxEditor.PapFormat.Skeleton {
             if( Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
 
             UpdateSkeleton( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
-            UpdateAnimations();
         }
 
-        private void UpdateAnimations() {
+        public void UpdateAnimations() {
             Animations.ForEach( x => x.Dispose() );
             Animations.Clear();
 
@@ -35,6 +40,8 @@ namespace VfxEditor.PapFormat.Skeleton {
             Bones?.RemoveReference();
             sklbFile.SaveHavokData( SklbTempPath );
             Bones = new( SklbTempPath );
+
+            UpdateAnimations();
         }
 
         private string GetSklbPath() {
@@ -62,7 +69,37 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         public void Draw( int havokIndex ) {
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
+            var inputSize = UiUtils.GetOffsetInputSize( checkSize );
+            ImGui.SetNextItemWidth( inputSize );
+            ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
+
+            var imguiStyle = ImGui.GetStyle();
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
+                    if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) UpdateSkeleton( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
+                }
+
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
+                    FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                        if( !ok ) return;
+                        UpdateSkeleton( SimpleSklb.LoadFromLocal( res ) );
+                    } );
+                }
+            }
+
+            ImGui.SameLine();
+            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the animation file" );
+
             Animations[havokIndex].Draw();
+        }
+
+        public void Write() {
+            WriteHavok();
         }
 
         public void Dispose() {

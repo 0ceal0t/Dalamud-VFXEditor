@@ -43,6 +43,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
 
 ## TODO
+- [ ] Toggle for pap animation preview
 - [ ] `.sklb` show rotation as angles instead of Quaternion
 - [ ] Partition/Chain mapping/unmapped bones
 - [ ] `.pap` GLTF import/export
