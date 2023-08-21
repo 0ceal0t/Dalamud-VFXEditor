@@ -114,8 +114,8 @@ namespace VfxEditor.Interop.Havok {
             var refResource = ( hkReferencedObject* )Resource;
             refResource->RemoveReference();
 
-            var refSkeleton = ( hkReferencedObject* )AnimationContainer;
-            refSkeleton->RemoveReference();
+            var refContainer = ( hkReferencedObject* )AnimationContainer;
+            refContainer->RemoveReference();
         }
     }
 }

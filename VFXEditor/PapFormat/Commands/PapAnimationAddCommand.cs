@@ -26,7 +26,6 @@ namespace VfxEditor.PapFormat {
         public override void Undo() {
             base.Undo();
             File.RefreshHavokIndexes();
-            File.AnimationsDropdown.ClearSelected();
         }
     }
 }

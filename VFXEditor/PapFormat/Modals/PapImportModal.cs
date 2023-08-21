@@ -1,14 +1,11 @@
 using ImGuiNET;
 using System.IO;
+using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
-    //
-    // TODO
-    //
-
-    public class PapImportModal : Modal {
+    public unsafe class PapImportModal : Modal {
         private readonly PapFile File;
         private readonly string ImportPath;
         private int Index;
@@ -34,9 +31,18 @@ namespace VfxEditor.PapFormat {
 
             CompoundCommand command = new( false, true );
             command.Add( new PapAnimationAddCommand( File, File.Animations, animation ) );
-            //command.Add( new PapHavokFileCommand( animation, File.HkxTempLocation, () => {
-            //    HavokInterop.AddHavokAnimation( File.HkxTempLocation, ImportPath, Index, File.HkxTempLocation );
-            //} ) );
+            command.Add( new PapHavokCommand( File, () => {
+                var newAnimation = new HavokData( ImportPath );
+                var container = File.AnimationData.AnimationContainer;
+
+                var anims = HavokData.ToList( container->Animations );
+                var bindings = HavokData.ToList( container->Bindings );
+                anims.Add( newAnimation.AnimationContainer->Animations[Index] );
+                bindings.Add( newAnimation.AnimationContainer->Bindings[Index] );
+
+                container->Animations = HavokData.CreateArray( container->Animations, anims, sizeof( nint ), out var _ );
+                container->Bindings = HavokData.CreateArray( container->Bindings, bindings, sizeof( nint ), out var _ );
+            } ) );
             File.Command.Add( command );
 
             UiUtils.OkNotification( "Havok data imported" );

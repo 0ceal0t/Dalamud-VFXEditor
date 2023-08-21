@@ -12,13 +12,11 @@ namespace VfxEditor.PapFormat {
         public override void Execute() {
             base.Execute();
             File.RefreshHavokIndexes();
-            File.AnimationsDropdown.ClearSelected();
         }
 
         public override void Redo() {
             base.Redo();
             File.RefreshHavokIndexes();
-            File.AnimationsDropdown.ClearSelected();
         }
 
         public override void Undo() {

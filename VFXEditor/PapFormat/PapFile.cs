@@ -163,6 +163,7 @@ namespace VfxEditor.PapFormat {
             for( var i = 0; i < Animations.Count; i++ ) {
                 Animations[i].HavokIndex = ( short )i;
             }
+            AnimationsDropdown.ClearSelected();
         }
 
         private static int Padding( long position, int itemIdx, int numItems, int customOffset ) { // Don't pad the last element
