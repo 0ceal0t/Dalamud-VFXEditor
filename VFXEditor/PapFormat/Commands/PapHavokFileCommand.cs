@@ -3,6 +3,10 @@ using System.IO;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
+    //
+    // TODO
+    //
+
     public class PapHavokFileCommand : ICommand {
         private readonly PapAnimation Animation;
         private readonly Action ChangeAction;
@@ -42,8 +46,8 @@ namespace VfxEditor.PapFormat {
         }
 
         private void ClearAnimation() {
-            Animation.Skeleton.ClearData();
-            if( Plugin.DirectXManager.PapPreview.CurrentAnimation == Animation ) Plugin.DirectXManager.PapPreview.ClearAnimation();
+            //Animation.Skeleton.ClearData();
+            //if( Plugin.DirectXManager.PapPreview.CurrentAnimation == Animation ) Plugin.DirectXManager.PapPreview.ClearAnimation();
         }
     }
 }

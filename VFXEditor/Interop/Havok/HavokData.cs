@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop.Havok {
-    public unsafe abstract class HavokData {
+    public unsafe class HavokData {
         public readonly string Path;
         public readonly hkResource* Resource;
         public readonly hkRootLevelContainer* Container;
@@ -47,7 +47,7 @@ namespace VfxEditor.Interop.Havok {
             }
         }
 
-        protected abstract void OnLoad();
+        protected virtual void OnLoad() { }
 
         public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, out nint handle ) where T : unmanaged {
             var flags = currentArray.Flags | data.Count;

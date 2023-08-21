@@ -4,7 +4,6 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
-using VfxEditor.PapFormat.Skeleton;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 using VfxEditor.TmbFormat;
@@ -22,12 +21,12 @@ namespace VfxEditor.PapFormat {
         private readonly ParsedBool Face = new( "Face Animation" );
         public TmbFile Tmb;
 
-        public readonly SkeletonView Skeleton;
+        //public readonly SkeletonView Skeleton;
 
         public PapAnimation( PapFile file, string hkxPath ) {
             File = file;
             HkxTempLocation = hkxPath;
-            Skeleton = new( File, this );
+            //Skeleton = new( File, this );
         }
 
         public PapAnimation( PapFile file, BinaryReader reader, string hkxPath ) {
@@ -39,7 +38,7 @@ namespace VfxEditor.PapFormat {
             HavokIndex = reader.ReadInt16();
             Face.Read( reader );
 
-            Skeleton = new( File, this );
+            //Skeleton = new( File, this );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -123,7 +122,8 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "3D View" );
             if( !tabItem ) return;
 
-            Skeleton.Draw();
+            File.AnimationData.Draw( HavokIndex );
+            //Skeleton.Draw();
         }
     }
 }

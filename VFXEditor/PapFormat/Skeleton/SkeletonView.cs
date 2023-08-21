@@ -41,11 +41,11 @@ namespace VfxEditor.PapFormat.Skeleton {
             if( Data == null ) {
                 LoadSklbPath();
             }
-            else if( PapPreview.CurrentAnimation != Animation ) {
-                Frame = 0;
-                Playing = false;
-                UpdateSkeleton();
-            }
+            //else if( PapPreview.CurrentAnimation != Animation ) {
+            //    Frame = 0;
+            //    Playing = false;
+            //    UpdateSkeleton();
+            //}
 
             // ==== Skeleton ====
 
@@ -66,13 +66,13 @@ namespace VfxEditor.PapFormat.Skeleton {
                     FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
                         UpdateData( SimpleSklb.LoadFromLocal( res ) );
-                        UpdateSkeleton();
+                        //UpdateSkeleton();
                     } );
                 }
             }
 
             ImGui.SameLine();
-            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the physics file" );
+            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the animation file" );
 
             // ==== Frame controls ====
 
@@ -114,7 +114,7 @@ namespace VfxEditor.PapFormat.Skeleton {
                 }
             }
 
-            if( Frame != LastFrame ) UpdateSkeleton();
+            //if( Frame != LastFrame ) UpdateSkeleton();
 
             PapPreview.DrawInline();
         }
@@ -146,7 +146,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         private void LoadSklbPath() {
             if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
                 UpdateData( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
-                UpdateSkeleton();
+                //UpdateSkeleton();
             }
             else {
                 PluginLog.Error( $"File does not exist: {SklbPreviewPath}" );
@@ -168,7 +168,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             }
         }
 
-        private void UpdateSkeleton() {
+        /*private void UpdateSkeleton() {
             LastFrame = Frame;
             if( Data == null || Data.NumFrames == 0 ) PapPreview.LoadEmpty( File, Animation );
             else {
@@ -187,6 +187,6 @@ namespace VfxEditor.PapFormat.Skeleton {
         // TODO: make sure things are cleaned up
         public void Dispose() {
             if( PapPreview.CurrentAnimation == Animation ) PapPreview.ClearAnimation();
-        }
+        }*/
     }
 }

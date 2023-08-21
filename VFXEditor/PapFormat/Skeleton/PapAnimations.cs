@@ -1,43 +1,40 @@
-using FFXIVClientStructs.Havok;
+using System.Collections.Generic;
 using VfxEditor.Interop.Havok;
 
 namespace VfxEditor.PapFormat.Skeleton {
     public unsafe class PapAnimations : HavokData {
         private readonly PapFile File;
         private readonly string SklbTempPath;
-        private HavokBones Skeleton;
+        private HavokData Bones;
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
-        private hkaAnimatedSkeleton* AnimatedSkeleton;
-        private hkaAnimationControl* AnimationControl;
+        public readonly List<PapAnimatedSkeleton> Animations = new();
 
         public PapAnimations( PapFile file, string havokPath ) : base( havokPath ) {
             File = file;
             SklbTempPath = Path.Replace( ".hkx", "_sklb.hkx" );
 
+            // Initialize skeleton using best guess for sklb path
             var sklbPath = GetSklbPath();
             if( Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
 
-            // TODO: load skeleton
+            UpdateSkeleton( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
+            UpdateAnimations();
         }
 
-        protected override void OnLoad() {
-            for( var i = 0; i < AnimationContainer->Animations.Length; i++ ) {
-                var anim = AnimationContainer->Animations[i].ptr;
-                var binding = AnimationContainer->Bindings[i].ptr;
+        private void UpdateAnimations() {
+            Animations.ForEach( x => x.Dispose() );
+            Animations.Clear();
 
-                // PluginLog.Log( $"{binding->OriginalSkeletonName.String}" );
-                var motion = anim->ExtractedMotion;
+            for( var i = 0; i < AnimationContainer->Bindings.Length; i++ ) {
+                Animations.Add( new( File, Bones, AnimationContainer->Bindings[i].ptr ) );
             }
         }
 
-        private void UpdateAnimationControllers() {
-            // TODO: need to clean up existing
-            // TODO: also do this when replacing stuff
-        }
-
-        private void UpdateSkeleton() {
-            // TODO: need to clean up everything else
+        private void UpdateSkeleton( SimpleSklb sklbFile ) {
+            Bones?.RemoveReference();
+            sklbFile.SaveHavokData( SklbTempPath );
+            Bones = new( SklbTempPath );
         }
 
         private string GetSklbPath() {
@@ -64,8 +61,14 @@ namespace VfxEditor.PapFormat.Skeleton {
             return string.Format( format, modelId, 1 ); // TODO: is this always 1?
         }
 
-        private void UpdateData() {
+        public void Draw( int havokIndex ) {
+            Animations[havokIndex].Draw();
+        }
 
+        public void Dispose() {
+            Animations.ForEach( x => x.Dispose() );
+            Bones?.RemoveReference();
+            RemoveReference();
         }
     }
 }

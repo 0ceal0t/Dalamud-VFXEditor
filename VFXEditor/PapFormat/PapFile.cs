@@ -169,7 +169,8 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Dispose() {
-            Animations.ForEach( x => x.Skeleton.Dispose() );
+            AnimationData.Dispose();
+            //Animations.ForEach( x => x.Skeleton.Dispose() );
             if( Plugin.DirectXManager.PapPreview.CurrentFile == this ) {
                 Plugin.DirectXManager.PapPreview.ClearFile();
                 Plugin.DirectXManager.PapPreview.ClearAnimation();
