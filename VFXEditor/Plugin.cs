@@ -170,6 +170,10 @@ namespace VfxEditor {
         private void DrawConfigUi() => AvfxManager.Show();
 
         private void OnCommand( string command, string rawArgs ) {
+            if( string.IsNullOrEmpty( rawArgs ) ) {
+                AvfxManager?.Show();
+                return;
+            }
             if( Managers.FindFirst( x => rawArgs.ToLower().Equals( x.GetExportName().ToLower() ), out var manager ) ) manager.Show();
         }
 

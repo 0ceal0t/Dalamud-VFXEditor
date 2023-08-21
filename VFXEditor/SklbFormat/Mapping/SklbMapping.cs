@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -32,7 +31,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             SimpleMappingView = new( "Mapping", SimpleMappings, false, ( SklbSimpleMapping item, int idx ) => item.GetText(),
                 () => new( this ), () => CommandManager.Sklb );
 
-            PluginLog.Log( $"{data.ChainMappings.Length} {data.ChainMappingPartitionRanges.Length} | {data.KeepUnmappedLocal} {data.UnmappedBones.Length} | {data.PartitionMap.Length} | {data.Type.Value}" );
+            // PluginLog.Log( $"{data.ChainMappings.Length} {data.ChainMappingPartitionRanges.Length} | {data.KeepUnmappedLocal} {data.UnmappedBones.Length} | {data.PartitionMap.Length} | {data.Type.Value}" );
         }
 
         public void Write( List<nint> handles ) {

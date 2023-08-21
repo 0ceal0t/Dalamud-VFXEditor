@@ -1,63 +1,23 @@
-using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
 using SharpDX;
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using VfxEditor.SklbFormat.Animation;
+using VfxEditor.SklbFormat.Bones;
 
-namespace VfxEditor.SklbFormat.Bones {
-    public unsafe class HavokBones {
-        public readonly string Path;
-        public readonly hkResource* Resource;
-        public readonly hkRootLevelContainer* Container;
-        public readonly hkaSkeleton* Skeleton;
-
+namespace VfxEditor.Interop.Havok {
+    public unsafe class HavokBones : HavokData {
         public Dictionary<string, Bone> BoneMatrixes = new();
         public List<Bone> BoneList = new();
+        public hkaSkeleton* Skeleton { get; private set; }
 
         protected static int BONE_ID = 0;
         public readonly List<SklbBone> Bones = new();
 
-        public HavokBones( string havokPath ) {
-            Path = havokPath;
+        public HavokBones( string havokPath ) : base( havokPath ) { }
 
-            try {
-                var path = Marshal.StringToHGlobalAnsi( Path );
+        protected override void OnLoad() {
+            Skeleton = AnimationContainer->Skeletons[0].ptr;
 
-                var loadOptions = stackalloc hkSerializeUtil.LoadOptions[1];
-                loadOptions->TypeInfoRegistry = hkBuiltinTypeRegistry.Instance()->GetTypeInfoRegistry();
-                loadOptions->ClassNameRegistry = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry();
-                loadOptions->Flags = new hkFlags<hkSerializeUtil.LoadOptionBits, int> {
-                    Storage = ( int )hkSerializeUtil.LoadOptionBits.Default
-                };
-
-                Resource = hkSerializeUtil.LoadFromFile( ( byte* )path, null, loadOptions );
-
-                if( Resource == null ) {
-                    PluginLog.Error( $"Could not read file: {Path}" );
-                }
-
-                var rootLevelName = @"hkRootLevelContainer"u8;
-                fixed( byte* n1 = rootLevelName ) {
-                    Container = ( hkRootLevelContainer* )Resource->GetContentsPointer( n1, hkBuiltinTypeRegistry.Instance()->GetTypeInfoRegistry() );
-                    var animationName = @"hkaAnimationContainer"u8;
-                    fixed( byte* n2 = animationName ) {
-                        var anim = ( hkaAnimationContainer* )Container->findObjectByName( n2, null );
-                        Skeleton = anim->Skeletons[0].ptr;
-                        OnLoad();
-                    }
-                }
-
-                Marshal.FreeHGlobal( path );
-            }
-            catch( Exception e ) {
-                PluginLog.Error( e, $"Could not read file: {Path}" );
-            }
-        }
-
-        protected virtual void OnLoad() {
             for( var i = 0; i < Skeleton->Bones.Length; i++ ) {
                 var bone = Skeleton->Bones[i];
                 Bones.Add( new( Skeleton->Bones[i], Skeleton->ReferencePose[i], BONE_ID++ ) );
@@ -117,10 +77,10 @@ namespace VfxEditor.SklbFormat.Bones {
             }
         }
 
-        public virtual void RemoveReference() {
+        public override void RemoveReference() {
+            base.RemoveReference();
+
             if( Resource == null ) return;
-            var refResource = ( hkReferencedObject* )Resource;
-            refResource->RemoveReference();
 
             var refSkeleton = ( hkReferencedObject* )Skeleton;
             refSkeleton->RemoveReference();

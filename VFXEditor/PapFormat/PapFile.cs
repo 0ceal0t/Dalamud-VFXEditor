@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
+using VfxEditor.PapFormat.Skeleton;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
@@ -26,6 +27,8 @@ namespace VfxEditor.PapFormat {
 
         public readonly List<PapAnimation> Animations = new();
         public readonly PapAnimationDropdown AnimationsDropdown;
+
+        public readonly PapAnimations AnimationData;
 
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
@@ -68,6 +71,8 @@ namespace VfxEditor.PapFormat {
                 Animations[i].ReadTmb( reader, Command );
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
+
+            AnimationData = new( this, HkxTempLocation );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }

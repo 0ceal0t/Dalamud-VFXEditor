@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.SklbFormat.Animation {
+namespace VfxEditor.Interop.Havok {
     public class SimpleSklb : Lumina.Data.FileResource {
         private byte[] HavokData;
 

@@ -7,8 +7,7 @@ using OtterGui.Raii;
 using System;
 using System.IO;
 using VfxEditor.DirectX;
-using VfxEditor.SklbFormat.Animation;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 using Vec2 = System.Numerics.Vector2;
 

@@ -11,8 +11,8 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
+using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
-using VfxEditor.SklbFormat.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
@@ -325,27 +325,6 @@ namespace VfxEditor.SklbFormat.Bones {
 
         // ======= UPDATING ==========
 
-        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, out nint handle ) where T : unmanaged {
-            var flags = currentArray.Flags | data.Count;
-
-            var size = Marshal.SizeOf( typeof( T ) );
-            var arr = Marshal.AllocHGlobal( size * data.Count + 1 );
-            var _arr = ( T* )arr;
-
-            for( var i = 0; i < data.Count; i++ ) {
-                _arr[i] = data[i];
-            }
-
-            handle = arr;
-
-            var ret = new hkArray<T>() {
-                CapacityAndFlags = flags,
-                Length = data.Count,
-                Data = _arr
-            };
-            return ret;
-        }
-
         public void Write() {
             var handles = new List<nint>();
 
@@ -376,35 +355,6 @@ namespace VfxEditor.SklbFormat.Bones {
 
             WriteHavok();
             handles.ForEach( Marshal.FreeHGlobal );
-        }
-
-        private void WriteHavok() {
-            try {
-                var rootLevelName = @"hkRootLevelContainer"u8;
-                fixed( byte* n1 = rootLevelName ) {
-                    var result = stackalloc hkResult[1];
-
-                    var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
-
-                    var path = Marshal.StringToHGlobalAnsi( Path );
-                    var oStream = new hkOstream();
-                    oStream.Ctor( ( byte* )path );
-
-                    var saveOptions = new hkSerializeUtil.SaveOptions {
-                        Flags = new hkFlags<hkSerializeUtil.SaveOptionBits, int> {
-                            Storage = ( int )hkSerializeUtil.SaveOptionBits.Default
-                        }
-                    };
-
-                    hkSerializeUtil.Save( result, Container, className, oStream.StreamWriter.ptr, saveOptions );
-
-                    oStream.Dtor();
-                    Marshal.FreeHGlobal( path );
-                }
-            }
-            catch( Exception e ) {
-                PluginLog.Error( e, $"Could not export to: {Path}" );
-            }
         }
 
         private void UpdatePreview() {
