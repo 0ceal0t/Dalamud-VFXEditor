@@ -19,6 +19,8 @@ namespace VfxEditor.SklbFormat {
         public readonly SklbLayers Layers;
         public readonly SklbBones Bones;
 
+        private readonly int Padding;
+
         private readonly bool FinishedLoading = false;
 
         public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
@@ -43,6 +45,8 @@ namespace VfxEditor.SklbFormat {
 
             Layers = new( this, reader );
 
+            Padding = ( int )( Data.HavokOffset - reader.BaseStream.Position ); // Do this b/c of modded skeletons like IVCS
+
             reader.BaseStream.Seek( Data.HavokOffset, SeekOrigin.Begin );
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
             File.WriteAllBytes( HkxTempLocation, havokData );
@@ -64,7 +68,8 @@ namespace VfxEditor.SklbFormat {
 
             Layers.Write( writer );
 
-            if( Data is SklbNewData ) FileUtils.PadTo( writer, 16 );
+            //if( Data is SklbNewData ) FileUtils.PadTo( writer, 16 );
+            FileUtils.Pad( writer, Padding );
 
             var havokOffset = writer.BaseStream.Position;
 
