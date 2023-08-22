@@ -1,6 +1,8 @@
 using Dalamud.Interface;
+using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
+using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
@@ -10,8 +12,16 @@ using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Parsing;
+using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat.Skeleton {
+    // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaInterleavedUncompressedAnimation.cs#L7
+    // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaPredictiveCompressedAnimation.cs
+    // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaQuantizedAnimation.cs
+    // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaSplineCompressedAnimation.cs
+    // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaInterleavedUncompressedAnimation.cs
+    // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L141
+
     public enum BlendHintTypes : int {
         Normal = 0x0,
         AdditiveDeprecated = 0x1,
@@ -19,13 +29,13 @@ namespace VfxEditor.PapFormat.Skeleton {
     }
 
     public unsafe class PapAnimatedSkeleton {
-        private readonly PapFile File;
-        private readonly hkaAnimatedSkeleton* Skeleton;
-        private readonly hkaAnimationControl* Animation;
+        public readonly PapFile File;
+        public readonly hkaAnimatedSkeleton* Skeleton;
+        public readonly hkaAnimationControl* Animation;
 
-        private float Time => Animation->LocalTime;
-        private float Duration => Animation->Binding.ptr->Animation.ptr->Duration;
-        private int TotalFrames => ( int )( Duration * 30f );
+        public float Time => Animation->LocalTime;
+        public float Duration => Animation->Binding.ptr->Animation.ptr->Duration;
+        public int TotalFrames => ( int )( Duration * 30f );
 
         private static PapPreview PapPreview => Plugin.DirectXManager.PapPreview;
 
@@ -55,7 +65,7 @@ namespace VfxEditor.PapFormat.Skeleton {
 
         // ======= DRAWING =========
 
-        public void Draw() {
+        public void Draw( int idx ) {
             if( Data == null ) {
                 UpdateFrameData();
             }
@@ -108,6 +118,15 @@ namespace VfxEditor.PapFormat.Skeleton {
             }
 
             if( Frame != lastFrame ) UpdateFrameData();
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( "Export Motion" ) ) ExportDialog( File.Animations[idx].GetName() );
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace Motion" ) ) ImportDialog();
+            }
+
+
             PapPreview.DrawInline();
         }
 
@@ -130,6 +149,45 @@ namespace VfxEditor.PapFormat.Skeleton {
             Animation->Binding.ptr->OriginalSkeletonName = namePtr;
 
             Animation->Binding.ptr->BlendHint.Storage = ( sbyte )BlendHint.Value;
+        }
+
+        // ======== IMPORT EXPORT =========
+
+        private void ExportDialog( string animationName ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+                if( !ok ) return;
+                //
+                //
+                //
+                // TODO
+                //
+                //
+                //
+                //
+                GltfAnimation.ExportAnimation(
+                    File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
+                    animationName, this, res );
+            } );
+        }
+
+        private void ImportDialog() {
+            FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
+                if( !ok ) return;
+                try {
+                    GltfAnimation.ImportAnimation( res );
+                    //
+                    //
+                    //
+                    // TODO
+                    //
+                    //
+                    //
+                    //
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( e, "Could not import data" );
+                }
+            } );
         }
 
         // ======== UPDATING ===========
@@ -198,7 +256,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         public void Dispose() {
-            if( Data != null ) Skeleton->Dtor();
+            // if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
             Marshal.FreeHGlobal( ( nint )Skeleton );
             Marshal.FreeHGlobal( ( nint )Animation );
             if( PapPreview.CurrentAnimation == this ) PapPreview.ClearAnimation();

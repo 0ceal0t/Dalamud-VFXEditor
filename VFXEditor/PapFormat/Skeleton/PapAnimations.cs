@@ -10,12 +10,12 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat.Skeleton {
     public unsafe class PapAnimations : HavokData {
-        private readonly PapFile File;
-        private readonly string SklbTempPath;
-        private HavokData Bones;
+        public readonly PapFile File;
+        public readonly string SklbTempPath;
+        public HavokData Bones;
+        public readonly List<PapAnimatedSkeleton> Animations = new();
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
-        public readonly List<PapAnimatedSkeleton> Animations = new();
 
         public PapAnimations( PapFile file, string havokPath ) : base( havokPath ) {
             File = file;
@@ -96,7 +96,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             ImGui.SameLine();
             UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the animation file" );
 
-            Animations[havokIndex].Draw();
+            Animations[havokIndex].Draw( havokIndex );
         }
 
         public void DrawHavok( int havokIndex ) {
