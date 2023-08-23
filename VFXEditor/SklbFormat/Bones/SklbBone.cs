@@ -14,12 +14,12 @@ namespace VfxEditor.SklbFormat.Bones {
 
         public readonly ParsedString Name = new( "Name" );
         public readonly ParsedFloat4 Position = new( "Position", new( 0, 0, 0, 1 ) );
-        public readonly ParsedFloat4 Rotation = new( "Rotation", new( 0, 0, 0, 1 ) );
+        public readonly ParsedQuat Rotation = new( "Rotation", new( 0 ) );
         public readonly ParsedFloat4 Scale = new( "Scale", new( 1, 1, 1, 1 ) );
         public readonly ParsedInt LockTranslation = new( "Lock Translation" );
 
         public Vector4 Pos => Position.Value;
-        public Vector4 Rot => Rotation.Value;
+        public Quaternion Rot => Rotation.Quat;
         public Vector4 Scl => Scale.Value;
 
         public SklbBone( int id ) {
@@ -32,7 +32,7 @@ namespace VfxEditor.SklbFormat.Bones {
             var rot = pose.Rotation;
             var scl = pose.Scale;
             Position.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.Value = new( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Quat = new( rot.X, rot.Y, rot.Z, rot.W );
             Scale.Value = new( scl.X, scl.Y, scl.Z, scl.W );
             LockTranslation.Value = bone.LockTranslation;
         }
@@ -72,11 +72,12 @@ namespace VfxEditor.SklbFormat.Bones {
             };
             pose.Translation = pos;
 
+            var quat = Rotation.Quat;
             var rot = new hkQuaternionf {
-                X = Rotation.Value.X,
-                Y = Rotation.Value.Y,
-                Z = Rotation.Value.Z,
-                W = Rotation.Value.W
+                X = quat.X,
+                Y = quat.Y,
+                Z = quat.Z,
+                W = quat.W
             };
             pose.Rotation = rot;
 

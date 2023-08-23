@@ -49,37 +49,6 @@ namespace VfxEditor.Interop.Havok {
 
         protected virtual void OnLoad() { }
 
-        public static List<T> ToList<T>( hkArray<T> array ) where T : unmanaged {
-            var ret = new List<T>();
-            for( var i = 0; i < array.Length; i++ ) {
-                ret.Add( array[i] );
-            }
-            return ret;
-        }
-
-        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, out nint handle ) where T : unmanaged =>
-            CreateArray( currentArray, data, Marshal.SizeOf( typeof( T ) ), out handle );
-
-        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, int size, out nint handle ) where T : unmanaged {
-            var flags = currentArray.Flags | data.Count;
-
-            var arr = Marshal.AllocHGlobal( size * data.Count + 1 );
-            var _arr = ( T* )arr;
-
-            for( var i = 0; i < data.Count; i++ ) {
-                _arr[i] = data[i];
-            }
-
-            handle = arr;
-
-            var ret = new hkArray<T>() {
-                CapacityAndFlags = flags,
-                Length = data.Count,
-                Data = _arr
-            };
-            return ret;
-        }
-
         protected void WriteHavok() {
             try {
                 var rootLevelName = @"hkRootLevelContainer"u8;
@@ -116,6 +85,39 @@ namespace VfxEditor.Interop.Havok {
 
             var refContainer = ( hkReferencedObject* )AnimationContainer;
             refContainer->RemoveReference();
+        }
+
+        public static List<T> ToList<T>( hkArray<T> array ) where T : unmanaged {
+            var ret = new List<T>();
+            for( var i = 0; i < array.Length; i++ ) {
+                ret.Add( array[i] );
+            }
+            return ret;
+        }
+
+        // ====================
+
+        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, out nint handle ) where T : unmanaged =>
+            CreateArray( currentArray, data, Marshal.SizeOf( typeof( T ) ), out handle );
+
+        public static hkArray<T> CreateArray<T>( hkArray<T> currentArray, List<T> data, int size, out nint handle ) where T : unmanaged {
+            var flags = currentArray.Flags | data.Count;
+
+            var arr = Marshal.AllocHGlobal( size * data.Count + 1 );
+            var _arr = ( T* )arr;
+
+            for( var i = 0; i < data.Count; i++ ) {
+                _arr[i] = data[i];
+            }
+
+            handle = arr;
+
+            var ret = new hkArray<T>() {
+                CapacityAndFlags = flags,
+                Length = data.Count,
+                Data = _arr
+            };
+            return ret;
         }
     }
 }

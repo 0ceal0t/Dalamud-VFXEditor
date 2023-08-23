@@ -1,5 +1,4 @@
 using Dalamud.Logging;
-using OtterGui;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
@@ -22,6 +21,7 @@ namespace VfxEditor.Utils.Gltf {
             var currentNames = currentBones.Select( x => x.Name.Value ).ToList();
 
             var boneToNode = new Dictionary<SklbBone, Node>();
+            var nodeToBone = new Dictionary<Node, SklbBone>();
 
             // Transformations
             var boneId = 0;
@@ -37,22 +37,22 @@ namespace VfxEditor.Utils.Gltf {
                 var scl = transform.Scale;
 
                 bone.Position.Value = new( pos.X, pos.Y, pos.Z, 1 );
-                bone.Rotation.Value = new( rot.X, rot.Y, rot.Z, rot.W );
+                bone.Rotation.Quat = new( rot.X, rot.Y, rot.Z, rot.W );
                 bone.Scale.Value = new( scl.X, scl.Y, scl.Z, 0 );
                 bone.Name.Value = name;
 
                 newNames[name] = bone;
                 newBones.Add( bone );
+
                 boneToNode[bone] = node;
+                nodeToBone[node] = bone;
             }
 
             // Children
             foreach( var bone in newBones ) {
                 var node = boneToNode[bone];
-                foreach( var nodeChild in node.VisualChildren ) {
-                    var childIdx = nodes.IndexOf( nodeChild );
-                    var boneChild = newBones[childIdx];
-                    boneChild.Parent = bone;
+                foreach( var child in node.VisualChildren ) {
+                    nodeToBone[child].Parent = bone;
                 }
             }
 
@@ -96,7 +96,8 @@ namespace VfxEditor.Utils.Gltf {
                 var bone = skeletonBones[i];
                 var node = new NodeBuilder( bone.Name.Value );
                 var pos = new Vector3( bone.Pos.X, bone.Pos.Y, bone.Pos.Z );
-                var rot = new Quaternion( bone.Rot.X, bone.Rot.Y, bone.Rot.Z, bone.Rot.W );
+                var quat = bone.Rot;
+                var rot = new Quaternion( quat.X, quat.Y, quat.Z, quat.W );
                 var scl = new Vector3( bone.Scl.X, bone.Scl.Y, bone.Scl.Z );
                 node.SetLocalTransform( new AffineTransform( scl, rot, pos ), false );
                 bones.Add( node );
