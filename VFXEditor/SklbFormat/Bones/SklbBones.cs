@@ -68,6 +68,9 @@ namespace VfxEditor.SklbFormat.Bones {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) ImportDialog();
+
+                ImGui.SameLine();
+                UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
             }
 
             ImGui.SameLine();

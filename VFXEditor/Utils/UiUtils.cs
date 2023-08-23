@@ -98,8 +98,9 @@ namespace VfxEditor.Utils {
         }
 
         public static void WikiButton( string url ) {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), YELLOW_COLOR ) ) OpenUrl( url );
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), YELLOW_COLOR ) ) OpenUrl( url );
+            }
             Tooltip( "Click to view more information on the VFXEditor wiki" );
         }
 

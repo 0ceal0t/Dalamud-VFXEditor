@@ -1,8 +1,5 @@
 using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
-using SharpGLTF.Geometry;
-using SharpGLTF.Geometry.VertexTypes;
-using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
 using SharpGLTF.Transforms;
@@ -32,27 +29,9 @@ namespace VfxEditor.Utils.Gltf {
                 nameToKeys[name] = new();
             }
 
-            var dummyMesh = new MeshBuilder<VertexPosition, VertexEmpty, VertexJoints4>( "DUMMY_MESH" );
-            var material = new MaterialBuilder( "material" );
-
-            var p1 = new VertexPosition() {
-                Position = new( 0.000001f, 0, 0 )
-            };
-            var p2 = new VertexPosition() {
-                Position = new( 0, 0.000001f, 0 )
-            };
-            var p3 = new VertexPosition() {
-                Position = new( 0, 0, 0.000001f )
-            };
-
-            dummyMesh.UsePrimitive( material ).AddTriangle(
-                (p1, new VertexEmpty(), new VertexJoints4( 0 )),
-                (p2, new VertexEmpty(), new VertexJoints4( 0 )),
-                (p3, new VertexEmpty(), new VertexJoints4( 0 ))
-                );
+            var dummyMesh = GltfSkeleton.GetDummyMesh();
 
             var bones = new List<NodeBuilder>();
-            var joints = new List<NodeBuilder>();
             var roots = new List<NodeBuilder>();
 
             for( var i = 0; i < skeleton->Bones.Length; i++ ) {
@@ -63,12 +42,12 @@ namespace VfxEditor.Utils.Gltf {
                 var scl = new Vector3( pose.Scale.X, pose.Scale.Y, pose.Scale.Z );
                 node.SetLocalTransform( new AffineTransform( scl, rot, pos ), false );
                 bones.Add( node );
+            }
 
-                // ============
+            for( var i = 0; i < skeleton->Bones.Length; i++ ) {
                 var parentIdx = skeleton->ParentIndices[i];
                 if( parentIdx != -1 ) {
                     bones[parentIdx].AddNode( bones[i] );
-                    joints.Add( bones[i] );
                 }
                 else {
                     roots.Add( bones[i] );
@@ -76,9 +55,9 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, bones.ToArray() );
-            var r = new NodeBuilder( "Armature" );
-            roots.ForEach( x => r.AddNode( x ) );
-            scene.AddNode( r );
+            var armature = new NodeBuilder( "Armature" );
+            roots.ForEach( armature.AddNode );
+            scene.AddNode( armature );
 
             var model = scene.ToGltf2();
 

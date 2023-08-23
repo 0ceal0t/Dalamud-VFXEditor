@@ -1,6 +1,11 @@
 using Dalamud.Logging;
 using OtterGui;
+using SharpGLTF.Geometry;
+using SharpGLTF.Geometry.VertexTypes;
+using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
+using SharpGLTF.Schema2;
+using SharpGLTF.Transforms;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -10,16 +15,22 @@ namespace VfxEditor.Utils.Gltf {
     public static class GltfSkeleton {
         public static List<SklbBone> ImportSkeleton( string localPath, List<SklbBone> currentBones ) {
             var newBones = new List<SklbBone>();
-            var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
+            var model = ModelRoot.Load( localPath );
             var nodes = model.LogicalNodes;
 
             var newNames = new Dictionary<string, SklbBone>();
             var currentNames = currentBones.Select( x => x.Name.Value ).ToList();
 
+            var boneToNode = new Dictionary<SklbBone, Node>();
+
             // Transformations
-            var id = 0;
+            var boneId = 0;
             foreach( var node in nodes ) {
-                var bone = new SklbBone( id++ );
+                var name = node.Name;
+                if( name == "Armature" ) continue;
+                if( name.ToLower().Contains( "mesh" ) ) continue;
+
+                var bone = new SklbBone( boneId++ );
                 var transform = node.LocalTransform;
                 var pos = transform.Translation;
                 var rot = transform.Rotation;
@@ -28,16 +39,16 @@ namespace VfxEditor.Utils.Gltf {
                 bone.Position.Value = new( pos.X, pos.Y, pos.Z, 1 );
                 bone.Rotation.Value = new( rot.X, rot.Y, rot.Z, rot.W );
                 bone.Scale.Value = new( scl.X, scl.Y, scl.Z, 0 );
-                bone.Name.Value = node.Name;
+                bone.Name.Value = name;
 
-                newNames[bone.Name.Value] = bone;
+                newNames[name] = bone;
                 newBones.Add( bone );
+                boneToNode[bone] = node;
             }
 
             // Children
-            for( var i = 0; i < newBones.Count; i++ ) {
-                var bone = newBones[i];
-                var node = nodes[i];
+            foreach( var bone in newBones ) {
+                var node = boneToNode[bone];
                 foreach( var nodeChild in node.VisualChildren ) {
                     var childIdx = nodes.IndexOf( nodeChild );
                     var boneChild = newBones[childIdx];
@@ -73,33 +84,66 @@ namespace VfxEditor.Utils.Gltf {
             return finalBones;
         }
 
-        public static void ExportSkeleton( List<SklbBone> bones, string path ) {
+        public static void ExportSkeleton( List<SklbBone> skeletonBones, string path ) {
             var scene = new SceneBuilder();
 
-            var rootBones = bones.Where( x => x.Parent == null ).ToList();
-            foreach( var bone in rootBones ) {
-                var node = CreateNode( bone, bones, null );
-                scene.AddNode( node );
+            var dummyMesh = GetDummyMesh();
+
+            var bones = new List<NodeBuilder>();
+            var roots = new List<NodeBuilder>();
+
+            for( var i = 0; i < skeletonBones.Count; i++ ) {
+                var bone = skeletonBones[i];
+                var node = new NodeBuilder( bone.Name.Value );
+                var pos = new Vector3( bone.Pos.X, bone.Pos.Y, bone.Pos.Z );
+                var rot = new Quaternion( bone.Rot.X, bone.Rot.Y, bone.Rot.Z, bone.Rot.W );
+                var scl = new Vector3( bone.Scl.X, bone.Scl.Y, bone.Scl.Z );
+                node.SetLocalTransform( new AffineTransform( scl, rot, pos ), false );
+                bones.Add( node );
             }
 
-            scene.ToGltf2().SaveGLTF( path );
+            for( var i = 0; i < skeletonBones.Count; i++ ) {
+                var bone = skeletonBones[i];
+                var parentIdx = bone.Parent == null ? -1 : skeletonBones.IndexOf( bone.Parent );
+                if( parentIdx != -1 ) {
+                    bones[parentIdx].AddNode( bones[i] );
+                }
+                else {
+                    roots.Add( bones[i] );
+                }
+            }
+
+            scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, bones.ToArray() );
+            var armature = new NodeBuilder( "Armature" );
+            roots.ForEach( armature.AddNode );
+            scene.AddNode( armature );
+
+            var model = scene.ToGltf2();
+            model.SaveGLTF( path );
             PluginLog.Log( $"Saved GLTF to: {path}" );
         }
 
-        private static NodeBuilder CreateNode( SklbBone bone, List<SklbBone> bones, NodeBuilder parent ) {
-            var children = bones.Where( x => x.Parent == bone ).ToList();
-            var name = bone.Name.Value;
-            var pos = bone.Position.Value;
-            var rot = bone.Rotation.Value;
-            var scl = bone.Scale.Value;
+        public static MeshBuilder<VertexPosition, VertexEmpty, VertexJoints4> GetDummyMesh() {
+            var dummyMesh = new MeshBuilder<VertexPosition, VertexEmpty, VertexJoints4>( "DUMMY_MESH" );
+            var material = new MaterialBuilder( "material" );
 
-            var node = parent == null ? new NodeBuilder( name ) : parent.CreateNode( name );
-            node.WithLocalTranslation( new Vector3( pos.X, pos.Y, pos.Z ) );
-            node.WithLocalRotation( new Quaternion( rot.X, rot.Y, rot.Z, rot.W ) );
-            node.WithLocalScale( new Vector3( scl.X, scl.Y, scl.Z ) );
+            var p1 = new VertexPosition() {
+                Position = new( 0.000001f, 0, 0 )
+            };
+            var p2 = new VertexPosition() {
+                Position = new( 0, 0.000001f, 0 )
+            };
+            var p3 = new VertexPosition() {
+                Position = new( 0, 0, 0.000001f )
+            };
 
-            children.ForEach( x => CreateNode( x, bones, node ) );
-            return node;
+            dummyMesh.UsePrimitive( material ).AddTriangle(
+                (p1, new VertexEmpty(), new VertexJoints4( 0 )),
+                (p2, new VertexEmpty(), new VertexJoints4( 0 )),
+                (p3, new VertexEmpty(), new VertexJoints4( 0 ))
+                );
+
+            return dummyMesh;
         }
     }
 }

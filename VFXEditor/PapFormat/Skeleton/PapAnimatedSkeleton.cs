@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Parsing;
+using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat.Skeleton {
@@ -122,8 +123,12 @@ namespace VfxEditor.PapFormat.Skeleton {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
                 if( ImGui.Button( "Export Motion" ) ) ExportDialog( File.Animations[idx].GetName() );
+
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace Motion" ) ) ImportDialog();
+
+                ImGui.SameLine();
+                UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
             }
 
 
@@ -156,14 +161,6 @@ namespace VfxEditor.PapFormat.Skeleton {
         private void ExportDialog( string animationName ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                //
-                //
-                //
-                // TODO
-                //
-                //
-                //
-                //
                 GltfAnimation.ExportAnimation(
                     File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
                     animationName, this, res );
