@@ -118,6 +118,8 @@ namespace VfxEditor.Utils.Gltf {
 
         // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L13
 
+        // Lord have mercy
+
         public static void ImportAnimation( hkaSkeleton* skeleton, PapAnimatedSkeleton animatedSkeleton, int idx, string path ) {
             var model = ModelRoot.Load( path );
             var nodes = model.LogicalNodes;
@@ -136,11 +138,16 @@ namespace VfxEditor.Utils.Gltf {
             var tracks = new List<string>();
 
             foreach( var node in nodes ) {
-                if( !string.IsNullOrEmpty( node.Name ) && !boneNames.Contains( node.Name ) ) continue;
-                if( !node.IsTransformAnimated ) continue;
+                if( !string.IsNullOrEmpty( node.Name ) ) continue;
+                if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) {
+                    PluginLog.Log( $"skipped gLTF node: {node.Name}" );
+                    continue;
+                }
 
                 tracks.Add( node.Name );
             }
+
+            // For now, limit to just 1 animation
 
             if( animations.Count != 1 ) {
                 PluginLog.Error( "Number of animations != 1" );
@@ -227,14 +234,6 @@ namespace VfxEditor.Utils.Gltf {
             var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
             binding->hkReferencedObject.hkBaseObject.vfptr = currentBinding.ptr->hkReferencedObject.hkBaseObject.vfptr;
 
-            var animPtr = new hkRefPtr<hkaAnimation>() {
-                ptr = ( hkaAnimation* )anim
-            };
-
-            var bindingPtr = new hkRefPtr<hkaAnimationBinding>() {
-                ptr = binding
-            };
-
             // Set up binding
             binding->OriginalSkeletonName = currentBinding.ptr->OriginalSkeletonName;
             binding->BlendHint = currentBinding.ptr->BlendHint;
@@ -243,7 +242,6 @@ namespace VfxEditor.Utils.Gltf {
             var flags = currentBinding.ptr->TransformTrackToBoneIndices.Flags;
 
             binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( currentBinding.ptr->FloatTrackToFloatSlotIndices, new List<short>(), out var _ );
-            binding->Animation = animPtr;
             binding->TransformTrackToBoneIndices = HavokData.CreateArray(
                 currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList(), out var _ );
 
@@ -255,7 +253,11 @@ namespace VfxEditor.Utils.Gltf {
             anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
             anim->Animation.AnnotationTracks = HavokData.CreateArray( flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ), out var _ );
             anim->Floats = HavokData.CreateArray( flags, new List<float>(), sizeof( float ), out var _ );
-            anim->Transforms = HavokData.CreateArray( flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ), out var _ ); // tracks * numFrames
+            anim->Transforms = HavokData.CreateArray( flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ), out var _ );
+
+            var animPtr = new hkRefPtr<hkaAnimation>() { ptr = ( hkaAnimation* )anim };
+            var bindingPtr = new hkRefPtr<hkaAnimationBinding>() { ptr = binding };
+            binding->Animation = animPtr;
 
             var container = animatedSkeleton.File.AnimationData.AnimationContainer;
             var anims = HavokData.ToList( container->Animations );

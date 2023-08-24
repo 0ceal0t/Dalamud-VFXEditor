@@ -3,11 +3,23 @@
 
 VFX, animation, sound, and physics editing plugin for Dalamud (**[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)**)
 
-> Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead. For editing skeletons, check out [BlenderAssist](https://github.com/0ceal0t/BlenderAssist)
+> Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
 Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
 ![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/preview2.png)
+
+### Supported File Types
+
+| Extension | Description |
+| --- | --- |
+| `.avfx` | VFXs, such as particles and glow effects. Has no impact on a character's motion |
+| `.pap` | The animations performed by a character (such as swinging a weapon, smiling, etc.) |
+| `.tmb` | Timelines for when to trigger VFXs, animations, and sound effects. Edit this if you want to replace a skill in its entirety |
+| `.scd` | Sound files (background music, sound effects) |
+| `.eid` | Controls the bind points used to attach VFXs to character models |
+| `.uld` | Determines the layout of UI elements |
+| `.sklb` | The skeleton used for animations |
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
@@ -24,23 +36,12 @@ Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud
 
 If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues) or ask in the [QuickLauncher discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
 
-### Notes
-* It might interact strangely with Penumbra
-
-## Features
-* Load and preview in-game VFXs (weapons, actions, status effects)
-* Live VFX overlay
-* Edit and export as `.avfx` or Textools/Penumbra Modpack
-* Preview, export, and replace textures
-* Add, remove, and edit particles, emitters, etc.
-* Export and replace models
-* Modify and replace abilities and animations
-* Export, play, and modify music and sound effects
-
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages indicating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
 
-A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, and I'm regularly finding new fields, so any help is appreciated.
+- [.phyb research document](https://docs.google.com/document/d/1g0iSnvz9IjkGBVqXM5h3KfoyP_LOsr9LGKqiVhMZ_Us/edit)
+- [.tmb/.pap research document](https://docs.google.com/document/d/1LhsTHO65pu7NcerhvoQBrYtgKyjSPggjx0JurwZVpw4/edit)
+- [.scd research document](https://docs.google.com/document/d/1L9GKap9u703QJH9u1ymXCUEx4BMi1Tov4J5tvFRWp-w/edit)
 
 ## TODO
 - [ ] `.pap` keyframe control

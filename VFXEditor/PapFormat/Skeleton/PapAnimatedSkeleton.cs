@@ -167,17 +167,11 @@ namespace VfxEditor.PapFormat.Skeleton {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    GltfAnimation.ImportAnimation(
-                        File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
-                        this, idx, res );
-                    //
-                    //
-                    //
-                    // TODO
-                    //
-                    //
-                    //
-                    //
+                    CommandManager.Pap.Add( new PapHavokCommand( File, () => {
+                        GltfAnimation.ImportAnimation(
+                            File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
+                            this, idx, res );
+                    } ) );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, "Could not import data" );
