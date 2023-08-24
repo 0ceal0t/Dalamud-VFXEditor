@@ -56,6 +56,10 @@ namespace VfxEditor.Interop {
 
             VfxUseTriggerHook = Hook<VfxUseTriggerHookDelete>.FromAddress( scanner.ScanText( Constants.CallTriggerSig ), VfxUseTriggerHandler );
 
+            var interleavedVtlPos = scanner.ScanText( Constants.HavokInterleavedSig ) + 33;
+            var interleavedVtblOffset = Marshal.ReadInt32( interleavedVtlPos );
+            HavokInterleavedAnimationVtbl = interleavedVtlPos + 4 + interleavedVtblOffset;
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();

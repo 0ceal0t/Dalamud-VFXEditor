@@ -45,7 +45,6 @@ A lot of the data in `.avfx`, `.tmb`, and `.pap` files is not fully understood, 
 ## TODO
 - [ ] `.pap` keyframe control
 - [ ] Test multiple animations
-- [ ] Test IVCS animation
 - [ ] Test multiple roots
 - [ ] Toggle for `.pap` animation preview
 - [ ] Partition/Chain mapping/unmapped bones

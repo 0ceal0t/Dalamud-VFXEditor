@@ -40,8 +40,8 @@ namespace VfxEditor.PapFormat {
                 anims.Add( newAnimation.AnimationContainer->Animations[Index] );
                 bindings.Add( newAnimation.AnimationContainer->Bindings[Index] );
 
-                container->Animations = HavokData.CreateArray( container->Animations, anims, sizeof( nint ), out var _ );
-                container->Bindings = HavokData.CreateArray( container->Bindings, bindings, sizeof( nint ), out var _ );
+                container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
+                container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
             } ) );
             File.Command.Add( command );
 

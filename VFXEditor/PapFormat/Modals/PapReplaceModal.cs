@@ -35,8 +35,8 @@ namespace VfxEditor.PapFormat {
                 anims[Animation.HavokIndex] = newAnimation.AnimationContainer->Animations[Index];
                 bindings[Animation.HavokIndex] = newAnimation.AnimationContainer->Bindings[Index];
 
-                container->Animations = HavokData.CreateArray( container->Animations, anims, sizeof( nint ), out var _ );
-                container->Bindings = HavokData.CreateArray( container->Bindings, bindings, sizeof( nint ), out var _ );
+                container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
+                container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
             } ) );
             UiUtils.OkNotification( "Havok data replaced" );
         }

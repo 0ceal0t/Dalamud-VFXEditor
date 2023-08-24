@@ -46,7 +46,6 @@ namespace VfxEditor.PapFormat.Skeleton {
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
 
-        private readonly ParsedEnum<hkaAnimation.AnimationType> AnimationType = new( "Animation Type" );
         private readonly ParsedString OriginalSkeletonName = new( "Original Skeleton Name" );
         private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "Blend Hint" );
 
@@ -59,7 +58,6 @@ namespace VfxEditor.PapFormat.Skeleton {
             Skeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );
             Skeleton->addAnimationControl( Animation );
 
-            AnimationType.Value = Animation->Binding.ptr->Animation.ptr->Type;
             OriginalSkeletonName.Value = Animation->Binding.ptr->OriginalSkeletonName.String;
             BlendHint.Value = ( BlendHintTypes )Animation->Binding.ptr->BlendHint.Value;
         }
@@ -125,7 +123,7 @@ namespace VfxEditor.PapFormat.Skeleton {
                 if( ImGui.Button( "Export Motion" ) ) ExportDialog( File.Animations[idx].GetName() );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace Motion" ) ) ImportDialog();
+                if( ImGui.Button( "Replace Motion" ) ) ImportDialog( idx );
 
                 ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
@@ -138,14 +136,12 @@ namespace VfxEditor.PapFormat.Skeleton {
         // ======== OTHER HAVOK STUFF ==========
 
         public void DrawHavok() {
-            AnimationType.Draw( CommandManager.Pap );
+            ImGui.TextDisabled( $"{Animation->Binding.ptr->Animation.ptr->Type}" );
             OriginalSkeletonName.Draw( CommandManager.Pap );
             BlendHint.Draw( CommandManager.Pap );
         }
 
         public void UpdateHavok( List<nint> handles ) {
-            Animation->Binding.ptr->Animation.ptr->Type = AnimationType.Value;
-
             var nameHandle = Marshal.StringToHGlobalAnsi( OriginalSkeletonName.Value );
             handles.Add( nameHandle );
             var namePtr = new hkStringPtr {
@@ -167,11 +163,13 @@ namespace VfxEditor.PapFormat.Skeleton {
             } );
         }
 
-        private void ImportDialog() {
+        private void ImportDialog( int idx ) {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    GltfAnimation.ImportAnimation( res );
+                    GltfAnimation.ImportAnimation(
+                        File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
+                        this, idx, res );
                     //
                     //
                     //
@@ -253,7 +251,8 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         public void Dispose() {
-            // if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
+            Skeleton->removeAnimationControl( Animation );
+            //if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
             Marshal.FreeHGlobal( ( nint )Skeleton );
             Marshal.FreeHGlobal( ( nint )Animation );
             if( PapPreview.CurrentAnimation == this ) PapPreview.ClearAnimation();

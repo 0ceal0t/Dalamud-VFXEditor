@@ -1,11 +1,17 @@
 using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
+using SharpGLTF.Animations;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
 using SharpGLTF.Transforms;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Interop;
+using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.Structs;
 using VfxEditor.PapFormat.Skeleton;
 
 namespace VfxEditor.Utils.Gltf {
@@ -110,34 +116,157 @@ namespace VfxEditor.Utils.Gltf {
             animatedSkeleton.Animation->LocalTime = resetTime;
         }
 
-        public static void ImportAnimation( string localPath ) {
-            var model = ModelRoot.Load( localPath );
+        // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L13
+
+        public static void ImportAnimation( hkaSkeleton* skeleton, PapAnimatedSkeleton animatedSkeleton, int idx, string path ) {
+            var model = ModelRoot.Load( path );
             var nodes = model.LogicalNodes;
             var animations = model.LogicalAnimations;
 
-            // nodes have item.IsTransformAnimated, check that before animating
-            // animation name like "n_root|HavokAnimation|Base Layer", blender convention
-            // animation tragetNodePath = translation|rotation|scale
-
-            foreach( var item in nodes ) {
-                //PluginLog.Log( $"{item.IsTransformAnimated} {item.Name}" );
-                var local = item.LocalTransform;
-                //PluginLog.Log( "---------------" );
+            var boneNames = new List<string>();
+            var boneNameToIdx = new Dictionary<string, int>();
+            var refPoses = new Dictionary<string, hkQsTransformf>();
+            for( var i = 0; i < skeleton->Bones.Length; i++ ) {
+                var name = skeleton->Bones[i].Name.String;
+                boneNames.Add( name );
+                boneNameToIdx[name] = i;
+                refPoses[name] = skeleton->ReferencePose[i];
             }
 
-            foreach( var item in animations ) {
-                PluginLog.Log( $"{item.Name}" );
-                foreach( var c in item.Channels ) {
-                    var t = c.GetTranslationSampler();
-                    var r = c.GetRotationSampler();
-                    var s = c.GetScaleSampler();
+            var tracks = new List<string>();
 
-                    // t.CreateCurveSampler(); // can use to query at a given time
+            foreach( var node in nodes ) {
+                if( !string.IsNullOrEmpty( node.Name ) && !boneNames.Contains( node.Name ) ) continue;
+                if( !node.IsTransformAnimated ) continue;
 
-                    PluginLog.Log( $"{c.TargetNodePath} {c.TargetNode.Name} {t?.InterpolationMode} {r?.InterpolationMode} {s?.InterpolationMode}" );
+                tracks.Add( node.Name );
+            }
+
+            if( animations.Count != 1 ) {
+                PluginLog.Error( "Number of animations != 1" );
+                return;
+            }
+
+            var animation = animations[0];
+            var transforms = new List<hkQsTransformf>(); // final length will be numberOfFrames * tracks.Count
+
+            var posSamplers = new Dictionary<string, ICurveSampler<Vector3>>();
+            var rotSamplers = new Dictionary<string, ICurveSampler<Quaternion>>();
+            var sclSamplers = new Dictionary<string, ICurveSampler<Vector3>>();
+
+            foreach( var channel in animation.Channels ) {
+                var name = channel.TargetNode.Name;
+                var pos = channel.GetTranslationSampler()?.CreateCurveSampler();
+                var rot = channel.GetRotationSampler()?.CreateCurveSampler();
+                var scl = channel.GetScaleSampler()?.CreateCurveSampler();
+
+                if( pos != null ) posSamplers[name] = pos;
+                if( rot != null ) rotSamplers[name] = rot;
+                if( scl != null ) sclSamplers[name] = scl;
+            }
+
+            var numberOfFrames = ( int )Math.Ceiling( animation.Duration * 30f ) + 1;
+            for( var frame = 0; frame < numberOfFrames; frame++ ) {
+                var time = frame * ( 1 / 30f );
+
+                foreach( var track in tracks ) {
+                    // TODO: or is this supposed to be identity matrix?
+                    var refPose = refPoses[track];
+                    var pos = refPose.Translation;
+                    var rot = refPose.Rotation;
+                    var scl = refPose.Scale;
+
+                    // if we can find the samplers, use that
+                    // otherwise use the ref pose
+
+                    if( posSamplers.TryGetValue( track, out var posSampler ) ) {
+                        var _pos = posSampler.GetPoint( time );
+                        pos = new() {
+                            X = _pos.X,
+                            Y = _pos.Y,
+                            Z = _pos.Z,
+                            W = 1
+                        };
+                    }
+                    if( rotSamplers.TryGetValue( track, out var rotSampler ) ) {
+                        var _rot = rotSampler.GetPoint( time );
+                        rot = new() {
+                            X = _rot.X,
+                            Y = _rot.Y,
+                            Z = _rot.Z,
+                            W = _rot.W
+                        };
+                    }
+
+                    if( sclSamplers.TryGetValue( track, out var sclSampler ) ) {
+                        var _scl = sclSampler.GetPoint( time );
+                        scl = new() {
+                            X = _scl.X,
+                            Y = _scl.Y,
+                            Z = _scl.Z,
+                            W = 1
+                        };
+                    }
+
+                    var transform = new hkQsTransformf() {
+                        Translation = pos,
+                        Rotation = rot,
+                        Scale = scl
+                    };
+
+                    transforms.Add( transform );
                 }
-                PluginLog.Log( "================" );
             }
+
+            var currentBinding = animatedSkeleton.Animation->Binding;
+            var currentAnim = currentBinding.ptr->Animation;
+
+            var anim = ( hkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaInterleavedUncompressedAnimation ) ) );
+            anim->Animation.hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObject.hkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
+
+            var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
+            binding->hkReferencedObject.hkBaseObject.vfptr = currentBinding.ptr->hkReferencedObject.hkBaseObject.vfptr;
+
+            var animPtr = new hkRefPtr<hkaAnimation>() {
+                ptr = ( hkaAnimation* )anim
+            };
+
+            var bindingPtr = new hkRefPtr<hkaAnimationBinding>() {
+                ptr = binding
+            };
+
+            // Set up binding
+            binding->OriginalSkeletonName = currentBinding.ptr->OriginalSkeletonName;
+            binding->BlendHint = currentBinding.ptr->BlendHint;
+            binding->PartitionIndices = currentBinding.ptr->PartitionIndices;
+
+            var flags = currentBinding.ptr->TransformTrackToBoneIndices.Flags;
+
+            binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( currentBinding.ptr->FloatTrackToFloatSlotIndices, new List<short>(), out var _ );
+            binding->Animation = animPtr;
+            binding->TransformTrackToBoneIndices = HavokData.CreateArray(
+                currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList(), out var _ );
+
+            // Set up animation
+            anim->Animation.Type = hkaAnimation.AnimationType.InterleavedAnimation;
+            anim->Animation.Duration = animation.Duration;
+            anim->Animation.NumberOfTransformTracks = tracks.Count;
+            anim->Animation.NumberOfFloatTracks = 0;
+            anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
+            anim->Animation.AnnotationTracks = HavokData.CreateArray( flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ), out var _ );
+            anim->Floats = HavokData.CreateArray( flags, new List<float>(), sizeof( float ), out var _ );
+            anim->Transforms = HavokData.CreateArray( flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ), out var _ ); // tracks * numFrames
+
+            var container = animatedSkeleton.File.AnimationData.AnimationContainer;
+            var anims = HavokData.ToList( container->Animations );
+            var bindings = HavokData.ToList( container->Bindings );
+            anims[idx] = animPtr;
+            bindings[idx] = bindingPtr;
+
+            container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
+            container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
+
+            container->Animations[idx] = animPtr;
         }
     }
 }

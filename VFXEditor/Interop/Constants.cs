@@ -58,5 +58,10 @@ namespace VfxEditor.Interop {
         public const string LuaActorVariableSig = "C7 05 ?? ?? ?? ?? 13 00 00 10 48 89 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ??";
 
         public const string LuaVariableSig = "44 8B C2 C1 FA 1C 41 81 E0 FF FF FF 0F";
+
+        // ========
+
+        // This is a really bad way to do this, but whatever
+        public const string HavokInterleavedSig = "48 8B CB 48 89 7B 38 C7 43 ?? ?? ?? ?? ?? 48 8B 5C 24 ?? 48 83 C4 20 5F E9 ?? ?? ?? ?? CC";
     }
 }

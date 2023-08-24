@@ -112,8 +112,6 @@ namespace VfxEditor.PapFormat.Skeleton {
 
         public void Dispose() {
             Animations.ForEach( x => x.Dispose() );
-            Bones?.RemoveReference();
-            RemoveReference();
         }
     }
 }
