@@ -27,8 +27,7 @@ namespace VfxEditor.Utils.Gltf {
             var boneId = 0;
             foreach( var node in nodes ) {
                 var name = node.Name;
-                if( name == "Armature" ) continue;
-                if( name.ToLower().Contains( "mesh" ) ) continue;
+                if( name.ToLower().Contains( "armature" ) || name.ToLower().Contains( "mesh" ) ) continue;
 
                 var bone = new SklbBone( boneId++ );
                 var transform = node.LocalTransform;

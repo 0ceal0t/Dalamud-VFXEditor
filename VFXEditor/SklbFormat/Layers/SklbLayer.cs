@@ -17,7 +17,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public SklbLayer( SklbFile file ) {
             File = file;
-            BonesView = new( "Bone", Bones, ( SklbLayerBone item, int idx ) => item.BoneIndex.GetText( File.Bones.Bones ), () => new( file ), () => CommandManager.Sklb );
+            BonesView = new( "Bone", Bones, ( SklbLayerBone item, int idx ) => item.Bone.GetText( File.Bones.Bones ), () => new( file ), () => CommandManager.Sklb );
         }
 
         public SklbLayer( SklbFile file, BinaryReader reader ) : this( file ) {
@@ -42,7 +42,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
     public unsafe class SklbLayerBone : IUiItem {
         public readonly SklbFile File;
-        public ParsedBoneIndex BoneIndex = new( "Bone Index", -1 );
+        public ParsedBoneIndex Bone = new( "Bone", -1 );
 
         public SklbLayerBone( SklbFile file ) {
             File = file;
@@ -50,15 +50,15 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public SklbLayerBone( SklbFile file, BinaryReader reader ) {
             File = file;
-            BoneIndex.Read( reader );
+            Bone.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            BoneIndex.Write( writer );
+            Bone.Write( writer );
         }
 
         public void Draw() {
-            BoneIndex.Draw( File.Bones.Bones );
+            Bone.Draw( File.Bones.Bones );
         }
     }
 }

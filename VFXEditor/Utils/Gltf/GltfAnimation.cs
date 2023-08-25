@@ -116,11 +116,17 @@ namespace VfxEditor.Utils.Gltf {
             animatedSkeleton.Animation->LocalTime = resetTime;
         }
 
+        // Lord have mercy
         // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L13
 
-        // Lord have mercy
-
-        public static void ImportAnimation( hkaSkeleton* skeleton, PapAnimatedSkeleton animatedSkeleton, int idx, bool compress, string path ) {
+        public static void ImportAnimation(
+            hkaSkeleton* skeleton,
+            PapAnimatedSkeleton animatedSkeleton,
+            int havokIndex,
+            int gltfAnimationIndex,
+            bool compress,
+            string path
+         ) {
             var model = ModelRoot.Load( path );
             var nodes = model.LogicalNodes;
             var animations = model.LogicalAnimations;
@@ -149,12 +155,12 @@ namespace VfxEditor.Utils.Gltf {
 
             // For now, limit to just 1 animation
 
-            if( animations.Count != 1 ) {
-                PluginLog.Error( "Number of animations != 1" );
+            if( animations.Count == 0 ) {
+                PluginLog.Error( "File has no animations" );
                 return;
             }
 
-            var animation = animations[0];
+            var animation = animations[gltfAnimationIndex];
             var transforms = new List<hkQsTransformf>(); // final length will be numberOfFrames * tracks.Count
 
             var posSamplers = new Dictionary<string, ICurveSampler<Vector3>>();
@@ -272,13 +278,13 @@ namespace VfxEditor.Utils.Gltf {
             var container = animatedSkeleton.File.AnimationData.AnimationContainer;
             var anims = HavokData.ToList( container->Animations );
             var bindings = HavokData.ToList( container->Bindings );
-            anims[idx] = animPtr;
-            bindings[idx] = bindingPtr;
+            anims[havokIndex] = animPtr;
+            bindings[havokIndex] = bindingPtr;
 
             container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
             container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
 
-            container->Animations[idx] = animPtr;
+            container->Animations[havokIndex] = animPtr;
         }
     }
 }

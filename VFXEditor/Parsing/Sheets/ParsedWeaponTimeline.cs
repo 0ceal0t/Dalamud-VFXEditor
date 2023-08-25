@@ -32,7 +32,6 @@ namespace VfxEditor.Parsing.Sheets {
             using var combo = ImRaii.Combo( "##Combo", $"[{Value}] {CurrentTimeline}" );
             if( !combo ) return;
 
-
             foreach( var option in SheetData.WeaponTimelines ) {
                 var selected = option.Key == Value;
 
