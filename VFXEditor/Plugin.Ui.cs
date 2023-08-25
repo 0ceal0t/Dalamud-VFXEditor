@@ -2,7 +2,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.TextureFormat;
@@ -87,7 +86,16 @@ namespace VfxEditor {
 
             if( ImGui.MenuItem( "Textures" ) ) TextureManager.Show();
             ImGui.Separator();
-            Managers.Where( x => x != TextureManager ).ToList().ForEach( x => DrawManagerMenu( x, currentManager ) );
+
+            // Manually specify the order since it's different than the load order
+            DrawManagerMenu( AvfxManager, currentManager );
+            DrawManagerMenu( TmbManager, currentManager );
+            DrawManagerMenu( PapManager, currentManager );
+            DrawManagerMenu( ScdManager, currentManager );
+            DrawManagerMenu( EidManager, currentManager );
+            DrawManagerMenu( UldManager, currentManager );
+            DrawManagerMenu( PhybManager, currentManager );
+            DrawManagerMenu( SklbManager, currentManager );
         }
 
         private static void DrawManagerMenu( IFileManager manager, IFileManager currentManager ) {

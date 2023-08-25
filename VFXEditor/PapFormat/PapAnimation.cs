@@ -21,12 +21,9 @@ namespace VfxEditor.PapFormat {
         private readonly ParsedBool Face = new( "Face Animation" );
         public TmbFile Tmb;
 
-        //public readonly SkeletonView Skeleton;
-
         public PapAnimation( PapFile file, string hkxPath ) {
             File = file;
             HkxTempLocation = hkxPath;
-            //Skeleton = new( File, this );
         }
 
         public PapAnimation( PapFile file, BinaryReader reader, string hkxPath ) {
@@ -37,8 +34,6 @@ namespace VfxEditor.PapFormat {
             Type.Read( reader );
             HavokIndex = reader.ReadInt16();
             Face.Read( reader );
-
-            //Skeleton = new( File, this );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -74,23 +69,15 @@ namespace VfxEditor.PapFormat {
             Face.Draw( CommandManager.Pap );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-
             ImGui.TextDisabled( $"This animation has Havok index: {HavokIndex}" );
-
-            if( ImGui.Button( $"Replace Havok" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                    if( ok ) Plugin.AddModal( new PapReplaceModal( this, res ) );
-                } );
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             using var tabBar = ImRaii.TabBar( "AnimationTabs" );
             if( !tabBar ) return;
 
             DrawTmb();
             DrawHavok();
-            DrawAnimation3D();
+            DrawMotion();
         }
 
         private void DrawTmb() {
@@ -119,8 +106,8 @@ namespace VfxEditor.PapFormat {
             Tmb.Draw();
         }
 
-        private void DrawAnimation3D() {
-            using var tabItem = ImRaii.TabItem( "3D View" );
+        private void DrawMotion() {
+            using var tabItem = ImRaii.TabItem( "Motion" );
             if( !tabItem ) return;
 
             File.AnimationData.Draw( HavokIndex );

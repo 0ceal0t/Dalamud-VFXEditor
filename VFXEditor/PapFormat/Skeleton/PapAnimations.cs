@@ -3,7 +3,6 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
@@ -16,6 +15,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         public readonly List<PapAnimatedSkeleton> Animations = new();
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
+        private bool SklbReplaced = false;
 
         public PapAnimations( PapFile file, string havokPath ) : base( havokPath ) {
             File = file;
@@ -25,7 +25,9 @@ namespace VfxEditor.PapFormat.Skeleton {
             var sklbPath = GetSklbPath();
             if( Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
 
-            UpdateSkeleton( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
+            Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
+            SklbReplaced = replaced;
+            UpdateSkeleton( simple );
         }
 
         public void UpdateAnimations() {
@@ -70,31 +72,36 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         public void Draw( int havokIndex ) {
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-            var inputSize = UiUtils.GetOffsetInputSize( checkSize );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
+            var inputSize = ImGui.GetContentRegionAvail().X - 400;
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
 
-            var imguiStyle = ImGui.GetStyle();
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
+                        if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced ) ) {
+                            SklbReplaced = replaced;
+                            UpdateSkeleton( simple );
+                        }
+                    }
 
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
-                    if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) UpdateSkeleton( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
+                        FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                            if( !ok ) return;
+                            SklbReplaced = false;
+                            UpdateSkeleton( SimpleSklb.LoadFromLocal( res ) );
+                        } );
+                    }
                 }
 
-                ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
-                    FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
-                        if( !ok ) return;
-                        UpdateSkeleton( SimpleSklb.LoadFromLocal( res ) );
-                    } );
+                if( SklbReplaced ) {
+                    ImGui.SameLine();
+                    ImGui.TextColored( UiUtils.GREEN_COLOR, "Replaced" );
                 }
             }
-
-            ImGui.SameLine();
-            UiUtils.HelpMarker( @"This skeleton is for preview purposes only, and does not affect the animation file" );
 
             Animations[havokIndex].Draw( havokIndex );
         }

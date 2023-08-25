@@ -69,12 +69,12 @@ namespace VfxEditor {
             TextureManager,
             AvfxManager,
             TmbManager,
-            PapManager,
+            SklbManager,
             ScdManager,
             EidManager,
             UldManager,
             PhybManager,
-            SklbManager,
+            PapManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }

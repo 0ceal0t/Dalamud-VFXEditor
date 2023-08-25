@@ -9,7 +9,6 @@ using System.IO;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
-using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.PhybFormat.Skeleton {
     public class SkeletonView {
@@ -17,6 +16,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
         private HavokBones Bones;
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
+        private bool SklbReplaced = false;
 
         private static BoneNamePreview PhybPreview => Plugin.DirectXManager.PhybPreview;
 
@@ -29,53 +29,61 @@ namespace VfxEditor.PhybFormat.Skeleton {
         }
 
         public void Draw() {
-            if( Bones == null ) LoadSklbPath();
+            if( Bones == null ) {
+                Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
+                SklbReplaced = replaced;
+                UpdateSkeleton( simple );
+            }
             else if( PhybPreview.CurrentFile != File ) {
-                UpdateSkeleton();
+                UpdatePreview();
                 UpdatePhysicsObjects();
             }
 
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
-            var inputSize = UiUtils.GetOffsetInputSize( checkSize + 200 );
+            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
+            var inputSize = ImGui.GetContentRegionAvail().X - 400;
             ImGui.SetNextItemWidth( inputSize );
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
 
             var imguiStyle = ImGui.GetStyle();
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vec2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
 
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) LoadSklbPath();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
+                        if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced ) ) {
+                            SklbReplaced = replaced;
+                            UpdateSkeleton( simple );
+                        }
+                    }
 
-                ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
-                    FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
-                        if( !ok ) return;
-                        UpdateBones( SimpleSklb.LoadFromLocal( res ) );
-                        UpdateSkeleton();
-                        UpdatePhysicsObjects();
-                    } );
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
+                        FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                            if( !ok ) return;
+                            SklbReplaced = false;
+                            UpdateSkeleton( SimpleSklb.LoadFromLocal( res ) );
+                        } );
+                    }
                 }
+
+                if( SklbReplaced ) {
+                    ImGui.SameLine();
+                    ImGui.TextColored( UiUtils.GREEN_COLOR, "Replaced" );
+                }
+
+                ImGui.SameLine();
+                if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
             }
-
-            ImGui.SameLine();
-
-            if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
 
             if( Bones == null ) return;
             if( File.PhysicsUpdated ) UpdatePhysicsObjects();
             PhybPreview.DrawInline();
         }
 
-        private void LoadSklbPath() {
-            if( Plugin.DataManager.FileExists( SklbPreviewPath ) ) {
-                UpdateBones( Plugin.DataManager.GetFile<SimpleSklb>( SklbPreviewPath ) );
-                UpdateSkeleton();
-                UpdatePhysicsObjects();
-            }
-            else {
-                PluginLog.Error( $"File does not exist: {SklbPreviewPath}" );
-            }
+        private void UpdateSkeleton( SimpleSklb sklbFile ) {
+            UpdateBones( sklbFile );
+            UpdatePreview();
+            UpdatePhysicsObjects();
         }
 
         private unsafe void UpdateBones( SimpleSklb sklbFile ) {
@@ -105,7 +113,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
             PhybPreview.LoadWireframe( meshes.Collision.ToMesh(), meshes.Simulation.ToMesh(), meshes.Spring.ToMesh() );
         }
 
-        private void UpdateSkeleton() {
+        private void UpdatePreview() {
             if( Bones?.BoneList.Count == 0 ) PhybPreview.LoadEmpty( File );
             else PhybPreview.LoadSkeleton( File, Bones.BoneList, HavokUtils.CreateSkeletonMesh( Bones.BoneList, -1 ) );
         }
