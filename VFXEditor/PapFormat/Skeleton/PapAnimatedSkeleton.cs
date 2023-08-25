@@ -117,8 +117,8 @@ namespace VfxEditor.PapFormat.Skeleton {
 
             if( Frame != lastFrame ) UpdateFrameData();
 
+            ImGui.SameLine();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                ImGui.SameLine();
                 if( ImGui.Button( "Export Motion" ) ) ExportDialog( File.Animations[idx].GetName() );
 
                 ImGui.SameLine();
