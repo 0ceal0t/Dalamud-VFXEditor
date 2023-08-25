@@ -120,7 +120,7 @@ namespace VfxEditor.Utils.Gltf {
 
         // Lord have mercy
 
-        public static void ImportAnimation( hkaSkeleton* skeleton, PapAnimatedSkeleton animatedSkeleton, int idx, string path ) {
+        public static void ImportAnimation( hkaSkeleton* skeleton, PapAnimatedSkeleton animatedSkeleton, int idx, bool compress, string path ) {
             var model = ModelRoot.Load( path );
             var nodes = model.LogicalNodes;
             var animations = model.LogicalAnimations;
@@ -138,9 +138,9 @@ namespace VfxEditor.Utils.Gltf {
             var tracks = new List<string>();
 
             foreach( var node in nodes ) {
-                if( !string.IsNullOrEmpty( node.Name ) ) continue;
+                if( string.IsNullOrEmpty( node.Name ) ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) {
-                    PluginLog.Log( $"skipped gLTF node: {node.Name}" );
+                    PluginLog.Log( $"Skipped gLTF node: {node.Name}" );
                     continue;
                 }
 
@@ -255,7 +255,17 @@ namespace VfxEditor.Utils.Gltf {
             anim->Floats = HavokData.CreateArray( flags, new List<float>(), sizeof( float ), out var _ );
             anim->Transforms = HavokData.CreateArray( flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ), out var _ );
 
-            var animPtr = new hkRefPtr<hkaAnimation>() { ptr = ( hkaAnimation* )anim };
+            var finalAnim = ( hkaAnimation* )anim;
+
+            if( compress ) {
+                PluginLog.Log( "Compressing animation..." );
+
+                var spline = ( hkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaSplineCompressedAnimation ) ) );
+                Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
+                finalAnim = ( hkaAnimation* )spline;
+            }
+
+            var animPtr = new hkRefPtr<hkaAnimation>() { ptr = finalAnim };
             var bindingPtr = new hkRefPtr<hkaAnimationBinding>() { ptr = binding };
             binding->Animation = animPtr;
 

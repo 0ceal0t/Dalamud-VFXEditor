@@ -5,12 +5,12 @@ using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
-    public unsafe class PapImportModal : Modal {
+    public unsafe class PapAddModal : Modal {
         private readonly PapFile File;
         private readonly string ImportPath;
         private int Index;
 
-        public PapImportModal( PapFile file, string importPath ) : base( "Animation Import Index" ) {
+        public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index" ) {
             File = file;
             ImportPath = importPath;
         }
@@ -45,7 +45,7 @@ namespace VfxEditor.PapFormat {
             } ) );
             File.Command.Add( command );
 
-            UiUtils.OkNotification( "Havok data imported" );
+            UiUtils.OkNotification( "Havok data added" );
         }
     }
 }

@@ -61,7 +61,8 @@ namespace VfxEditor.Interop {
 
         // ========
 
-        // This is a really bad way to do this, but whatever
-        public const string HavokInterleavedSig = "48 8B CB 48 89 7B 38 C7 43 ?? ?? ?? ?? ?? 48 8B 5C 24 ?? 48 83 C4 20 5F E9 ?? ?? ?? ?? CC";
+        public const string HavokInterleavedVtblSig = "48 89 07 48 8B CD 48 89 77 38";
+
+        public const string HavokSplineCtorSig = "48 89 5C 24 ?? 57 48 83 EC 40 48 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??";
     }
 }

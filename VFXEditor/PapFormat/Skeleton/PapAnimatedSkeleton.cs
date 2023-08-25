@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiFileDialog;
@@ -165,17 +164,7 @@ namespace VfxEditor.PapFormat.Skeleton {
 
         private void ImportDialog( int idx ) {
             FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
-                if( !ok ) return;
-                try {
-                    CommandManager.Pap.Add( new PapHavokCommand( File, () => {
-                        GltfAnimation.ImportAnimation(
-                            File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
-                            this, idx, res );
-                    } ) );
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Could not import data" );
-                }
+                if( ok ) Plugin.AddModal( new PapGltfModal( this, idx, res ) );
             } );
         }
 

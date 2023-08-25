@@ -37,7 +37,7 @@ namespace VfxEditor.PapFormat {
 
         protected override void OnNew() {
             FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                if( ok ) Plugin.AddModal( new PapImportModal( File, res ) );
+                if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }
 

@@ -3,8 +3,6 @@ using System;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
-        public static IntPtr HavokInterleavedAnimationVtbl;
-
         // ====== PLAY ACTION =======
 
         public delegate IntPtr PlayActionPrototype( IntPtr a1, IntPtr a2, char a3, IntPtr a4 );
