@@ -155,7 +155,7 @@ namespace VfxEditor.DirectX {
 
         public void Zoom( float mouseWheel ) {
             if( mouseWheel != 0 ) {
-                Distance += mouseWheel * 0.2f;
+                Distance -= mouseWheel * 0.2f;
                 UpdateViewMatrix();
             }
         }
