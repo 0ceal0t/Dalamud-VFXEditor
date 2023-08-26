@@ -11,7 +11,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Utils {
     public class TmbReader : ParsingReader {
-        private long StartPosition;
+        public long StartPosition;
         private readonly Dictionary<int, TmbItemWithId> ItemsWithId = new();
 
         public TmbReader( BinaryReader reader ) : base( reader ) { }

@@ -52,6 +52,9 @@ namespace VfxEditor.DirectX {
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
 
+        public Vec2 LastSize = new( 100, 100 );
+        public Vec2 LastMid = new( 50, 50 );
+
         public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
             VSBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             PSBuffer = new Buffer( Device, Utilities.SizeOf<PSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
@@ -217,17 +220,17 @@ namespace VfxEditor.DirectX {
 
         public virtual void DrawInline() {
             using var child = ImRaii.Child( "3DChild" );
-            DrawImage( out var _, out var _ );
+            DrawImage();
         }
 
-        protected void DrawImage( out Vec2 topleft, out Vec2 bottomRight ) {
+        protected void DrawImage() {
             var cursor = ImGui.GetCursorScreenPos();
             var size = ImGui.GetContentRegionAvail();
             Resize( size );
 
             ImGui.ImageButton( Output, size, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
-            topleft = ImGui.GetItemRectMin();
-            bottomRight = ImGui.GetItemRectMax();
+            var topLeft = ImGui.GetItemRectMin();
+            var bottomRight = ImGui.GetItemRectMax();
 
             if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
@@ -241,6 +244,9 @@ namespace VfxEditor.DirectX {
             }
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
+
+            LastSize = bottomRight - topLeft;
+            LastMid = topLeft + ( LastSize / 2f );
         }
 
         public abstract void OnDispose();

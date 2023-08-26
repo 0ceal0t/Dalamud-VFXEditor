@@ -8,6 +8,7 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager;
+using VfxEditor.SklbFormat;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
@@ -121,11 +122,6 @@ namespace VfxEditor.DirectX {
         }
 
         public override void DrawInline() {
-            if( !Plugin.Configuration.ShowBoneNames ) {
-                base.DrawInline();
-                return;
-            }
-
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
 
@@ -133,28 +129,42 @@ namespace VfxEditor.DirectX {
 
             var drawList = ImGui.GetWindowDrawList();
 
-            DrawImage( out var topLeft, out var bottomRight );
-            var size = bottomRight - topLeft;
-            var mid = topLeft + ( size / 2f );
+            DrawImage();
 
-            var boneScreenPositions = new Dictionary<string, Vec2>();
+            var boneScreenMap = new Dictionary<string, Vec2>();
+            var boneScreenList = new List<Vec2>();
 
             foreach( var bone in BoneList ) {
                 var matrix = bone.BindPose * worldViewProj;
 
                 var pos = Vector3.Transform( new Vector3( 0 ), matrix ).ToVector3();
-                var screenPos = mid + ( ( size / 2f ) * new Vec2( pos.X, -1f * pos.Y ) );
-                boneScreenPositions[bone.Name] = screenPos;
+                var screenPos = LastMid + ( ( LastSize / 2f ) * new Vec2( pos.X, -1f * pos.Y ) );
+                boneScreenMap[bone.Name] = screenPos;
+                boneScreenList.Add( screenPos );
             }
 
-            var groups = boneScreenPositions.GroupBy( entry => entry.Value, entry => entry.Key, Comparator );
-            foreach( var group in groups ) {
-                var pos = group.Key;
+            // ===== CONNECTION LINES =======
 
-                var idx = 0;
-                foreach( var item in group ) {
-                    drawList.AddText( pos + new Vec2( 0, 12f * idx ), 0xFFFFFFFF, item );
-                    idx++;
+            if( CurrentFile != null && CurrentFile is SklbFile && !Plugin.Configuration.SklbBonesConnected ) {
+                foreach( var bone in BoneList ) {
+                    if( bone.ParentIndex == -1 ) continue;
+                    var startPos = boneScreenMap[bone.Name];
+                    var endPos = boneScreenList[bone.ParentIndex];
+
+                    drawList.AddLine( startPos, endPos, 0xFFFFFFFF, 2f );
+                }
+            }
+
+            // ===== NAMES =======
+
+            if( Plugin.Configuration.ShowBoneNames ) {
+                var groups = boneScreenMap.GroupBy( entry => entry.Value, entry => entry.Key, Comparator );
+                foreach( var group in groups ) {
+                    var idx = 0;
+                    foreach( var item in group ) {
+                        drawList.AddText( group.Key + new Vec2( 0, 12f * idx ), 0xFFFFFFFF, item );
+                        idx++;
+                    }
                 }
             }
         }

@@ -42,12 +42,11 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
-- [ ] `.pap` keyframe control
+- [ ] `.sklb` gizmo (or at least show rotation)
+- [ ] `.eid` skeleton preview
 - [ ] Test multiple animations
 - [ ] Test multiple roots
 - [ ] Toggle for `.pap` animation preview
-- [ ] Partition/Chain mapping/unmapped bones
-- [ ] `.pap` GLTF import/export
 - [ ] `.sklb` show overlay
 - [ ] C192
 - [ ] `.scd` modded parsing

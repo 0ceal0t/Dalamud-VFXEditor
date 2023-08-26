@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
@@ -75,6 +76,12 @@ namespace VfxEditor.SklbFormat.Bones {
 
             ImGui.SameLine();
             if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+
+            ImGui.SameLine();
+            if( ImGui.Checkbox( "Display Connected", ref Plugin.Configuration.SklbBonesConnected ) ) {
+                Plugin.Configuration.Save();
+                UpdatePreview();
+            }
 
             ImGui.Separator();
 
@@ -360,8 +367,15 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void UpdatePreview() {
-            if( BoneList?.Count == 0 ) SklbPreview.LoadEmpty( File );
-            else SklbPreview.LoadSkeleton( File, BoneList, HavokUtils.CreateSkeletonMesh( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) );
+            if( BoneList?.Count == 0 ) {
+                SklbPreview.LoadEmpty( File );
+            }
+            else {
+                SkeletonMeshBuilder builder = Plugin.Configuration.SklbBonesConnected ?
+                    new ConnectedSkeletonMeshBuilder( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) :
+                    new DisconnectedSkeletonMeshBuilder( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) );
+                SklbPreview.LoadSkeleton( File, BoneList, builder.Build() );
+            }
         }
 
         public void Updated() {

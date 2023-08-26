@@ -109,6 +109,8 @@ namespace VfxEditor {
         public bool PhybSkeletonSplit = true;
         public bool ShowBoneNames = true;
 
+        public bool SklbBonesConnected = false;
+
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
         public bool ModelShowEmitters = true;
