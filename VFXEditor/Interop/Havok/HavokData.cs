@@ -57,9 +57,10 @@ namespace VfxEditor.Interop.Havok {
 
                     var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
 
-                    var path = Marshal.StringToHGlobalAnsi( Path );
-                    var oStream = new hkOstream();
-                    oStream.Ctor( ( byte* )path );
+                    PluginLog.Log( $"Writing Havok to {Path}" );
+
+                    var oStream = stackalloc hkOstream[1];
+                    oStream->Ctor( Path );
 
                     var saveOptions = new hkSerializeUtil.SaveOptions {
                         Flags = new hkFlags<hkSerializeUtil.SaveOptionBits, int> {
@@ -67,10 +68,9 @@ namespace VfxEditor.Interop.Havok {
                         }
                     };
 
-                    hkSerializeUtil.Save( result, Container, className, oStream.StreamWriter.ptr, saveOptions );
+                    hkSerializeUtil.Save( result, Container, className, oStream->StreamWriter.ptr, saveOptions );
 
-                    oStream.Dtor();
-                    Marshal.FreeHGlobal( path );
+                    oStream->Dtor();
                 }
             }
             catch( Exception e ) {

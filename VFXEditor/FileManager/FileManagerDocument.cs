@@ -159,6 +159,7 @@ namespace VfxEditor.FileManager {
 
             if( Plugin.Configuration.UpdateWriteLocation ) {
                 var newWriteLocation = Manager.GetWriteLocation();
+                CurrentFile?.Update();
                 WriteFile( newWriteLocation );
                 WriteLocation = newWriteLocation;
                 Reload( GetPapIds() );

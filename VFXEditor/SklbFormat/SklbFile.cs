@@ -21,8 +21,6 @@ namespace VfxEditor.SklbFormat {
 
         private readonly int Padding;
 
-        private readonly bool FinishedLoading = false;
-
         public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
 
@@ -54,8 +52,10 @@ namespace VfxEditor.SklbFormat {
             Bones = new( this, HkxTempLocation );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+        }
 
-            FinishedLoading = true;
+        public override void Update() {
+            Bones.Write();
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -84,7 +84,6 @@ namespace VfxEditor.SklbFormat {
             // Reset position
             writer.BaseStream.Seek( havokOffset, SeekOrigin.Begin );
 
-            if( FinishedLoading ) Bones.Write();
             var data = File.ReadAllBytes( HkxTempLocation );
             writer.Write( data );
         }

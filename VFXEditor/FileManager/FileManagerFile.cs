@@ -13,6 +13,8 @@ namespace VfxEditor.FileManager {
 
         public abstract void Draw();
 
+        public virtual void Update() { }
+
         public abstract void Write( BinaryWriter writer );
 
         public byte[] ToBytes() {

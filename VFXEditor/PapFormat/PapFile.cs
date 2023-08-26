@@ -29,8 +29,6 @@ namespace VfxEditor.PapFormat {
         public readonly PapAnimationDropdown AnimationsDropdown;
         public readonly PapAnimations AnimationData;
 
-        private readonly bool FinishedLoading = false;
-
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
@@ -76,8 +74,10 @@ namespace VfxEditor.PapFormat {
             AnimationData = new( this, HkxTempLocation );
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+        }
 
-            FinishedLoading = true;
+        public override void Update() {
+            AnimationData.Write();
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -102,7 +102,6 @@ namespace VfxEditor.PapFormat {
 
             var havokPos = writer.BaseStream.Position;
 
-            if( FinishedLoading ) AnimationData.Write();
             var havokData = File.ReadAllBytes( HkxTempLocation );
             writer.Write( havokData );
 
