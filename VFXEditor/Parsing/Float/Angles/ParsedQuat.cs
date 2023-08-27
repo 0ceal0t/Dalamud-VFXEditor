@@ -44,7 +44,7 @@ namespace VfxEditor.Parsing {
             using var _ = ImRaii.PushId( Name );
             Copy( manager );
 
-            if( UiUtils.DrawAngle3( Name, Value, out var newValue ) ) {
+            if( UiUtils.DrawRadians3( Name, Value, out var newValue ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector3>( this, newValue ) );
             }
         }

@@ -63,7 +63,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
                 ImGui.EndTabItem();
             }
 
-            if( ImGui.BeginTabItem( "Faces" ) ) {
+            if( ImGui.BeginTabItem( "Face" ) ) {
                 DrawPaths( Loaded.FacePaths, Selected.Name );
                 ImGui.EndTabItem();
             }

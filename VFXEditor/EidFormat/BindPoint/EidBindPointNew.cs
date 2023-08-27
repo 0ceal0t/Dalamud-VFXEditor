@@ -1,20 +1,19 @@
+using ImGuiNET;
 using System.IO;
+using VfxEditor.EidFormat.BindPoint;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
-using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.EidFormat {
-    public class EidBindPoint : IUiItem {
-        public int BindPointId => Id.Value;
-
+    public class EidBindPointNew : EidBindPoint {
         public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
         public readonly ParsedInt Id = new( "Id" );
         public readonly ParsedFloat3 Position = new( "Position" );
-        public readonly ParsedAngle3 Rotation = new( "Rotation" );
+        public readonly ParsedRadians3 Rotation = new( "Rotation" );
 
-        public EidBindPoint() { }
+        public EidBindPointNew() { }
 
-        public EidBindPoint( BinaryReader reader ) {
+        public EidBindPointNew( BinaryReader reader ) {
             Name.Read( reader );
             Id.Read( reader );
             Position.Read( reader );
@@ -22,7 +21,7 @@ namespace VfxEditor.EidFormat {
             reader.ReadInt32(); // padding
         }
 
-        public void Write( BinaryWriter writer ) {
+        public override void Write( BinaryWriter writer ) {
             Name.Write( writer );
             Id.Write( writer );
             Position.Write( writer );
@@ -30,7 +29,11 @@ namespace VfxEditor.EidFormat {
             writer.Write( 0 );
         }
 
-        public void Draw() {
+        public override int GetId() => Id.Value;
+
+        public override void Draw() {
+            ImGui.TextDisabled( "Data Version: [NEW]" );
+
             Name.Draw( CommandManager.Eid );
             Id.Draw( CommandManager.Eid );
             Position.Draw( CommandManager.Eid );

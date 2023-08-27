@@ -235,13 +235,14 @@ namespace VfxEditor.Utils {
             return buttonClicked;
         }
 
-        public static bool DrawAngle( string name, float oldValue, out float newValue ) {
+        public static bool DrawRadians( string name, float oldValue, out float newValue ) {
             newValue = oldValue;
-            var value = ToDegrees( oldValue );
+            var needToConvert = Plugin.Configuration.UseDegreesForAngles;
+            var value = needToConvert ? ToDegrees( oldValue ) : oldValue;
 
             ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
             if( ImGui.InputFloat( "##Input", ref value ) ) {
-                newValue = ToRadians( value );
+                newValue = needToConvert ? ToRadians( value ) : value;
                 return true;
             }
 
@@ -249,17 +250,29 @@ namespace VfxEditor.Utils {
             return false;
         }
 
-        public static bool DrawAngle3( string name, Vector3 oldValue, out Vector3 newValue ) {
+        public static bool DrawRadians3( string name, Vector3 oldValue, out Vector3 newValue ) {
             newValue = oldValue;
-            var value = new Vector3( ToDegrees( oldValue.X ), ToDegrees( oldValue.Y ), ToDegrees( oldValue.Z ) );
+            var needToConvert = Plugin.Configuration.UseDegreesForAngles;
+            var value = needToConvert ? ToDegrees( oldValue ) : oldValue;
 
             ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
             if( ImGui.InputFloat3( "##Input", ref value ) ) {
-                newValue = new Vector3(
-                    ToRadians( value.X ),
-                    ToRadians( value.Y ),
-                    ToRadians( value.Z )
-                );
+                newValue = needToConvert ? ToRadians( value ) : value;
+                return true;
+            }
+
+            DrawAngleToggle( name );
+            return false;
+        }
+
+        public static bool DrawDegrees3( string name, Vector3 oldValue, out Vector3 newValue ) {
+            newValue = oldValue;
+            var needToConvert = !Plugin.Configuration.UseDegreesForAngles;
+            var value = needToConvert ? ToRadians( oldValue ) : oldValue;
+
+            ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
+            if( ImGui.InputFloat3( "##Input", ref value ) ) {
+                newValue = needToConvert ? ToDegrees( value ) : value;
                 return true;
             }
 
@@ -281,13 +294,15 @@ namespace VfxEditor.Utils {
             ImGui.Text( name );
         }
 
+        public static Vector3 ToRadians( Vector3 value ) => new( ToRadians( value.X ), ToRadians( value.Y ), ToRadians( value.Z ) );
+
         public static float ToRadians( float value ) {
-            if( !Plugin.Configuration.UseDegreesForAngles ) return value;
             return ( float )( ( Math.PI / 180 ) * value );
         }
 
+        public static Vector3 ToDegrees( Vector3 value ) => new( ToDegrees( value.X ), ToDegrees( value.Y ), ToDegrees( value.Z ) );
+
         public static float ToDegrees( float value ) {
-            if( !Plugin.Configuration.UseDegreesForAngles ) return value;
             return ( float )( ( 180 / Math.PI ) * value );
         }
     }

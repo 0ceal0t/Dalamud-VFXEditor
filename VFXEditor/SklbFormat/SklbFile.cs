@@ -37,7 +37,7 @@ namespace VfxEditor.SklbFormat {
                 Data = new SklbOldData( reader );
             }
             else {
-                PluginLog.Error( $"Invalid SKLB version: {Version1:X8} {Version2:X8}" );
+                PluginLog.Error( $"Invalid SKLB version: {Version1:X4} {Version2:X4}" );
                 return;
             }
 
@@ -68,7 +68,6 @@ namespace VfxEditor.SklbFormat {
 
             Layers.Write( writer );
 
-            //if( Data is SklbNewData ) FileUtils.PadTo( writer, 16 );
             FileUtils.Pad( writer, Padding );
 
             var havokOffset = writer.BaseStream.Position;

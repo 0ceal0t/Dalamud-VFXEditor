@@ -4,7 +4,7 @@ using VfxEditor.Parsing.Utils;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
-    public class TmbOffsetAngle3 : ParsedAngle3 {
+    public class TmbOffsetAngle3 : ParsedRadians3 {
         public TmbOffsetAngle3( string name, Vector3 defaultValue ) : base( name, defaultValue ) { }
 
         public TmbOffsetAngle3( string name ) : base( name ) { }
