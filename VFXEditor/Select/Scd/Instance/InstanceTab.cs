@@ -8,13 +8,12 @@ namespace VfxEditor.Select.Scd.Instance {
     }
 
     public class InstanceTab : SelectTab<InstanceRow, InstanceRowSelected> {
-        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Instance" ) { }
+        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Instance", SelectResultType.GameMusic ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content > 0 && x.ContentLinkType == 1 );
-
             foreach( var item in sheet ) Items.Add( new InstanceRow( item ) );
         }
 
@@ -30,9 +29,9 @@ namespace VfxEditor.Select.Scd.Instance {
         protected override void OnSelect() => LoadIcon( Selected.Image );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation );
+            DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 
         protected override string GetName( InstanceRow item ) => item.Name;

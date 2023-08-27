@@ -20,19 +20,18 @@ namespace VfxEditor.Select.Vfx.Item {
         public override void LoadSelection( ItemRow item, out ItemRowSelected loaded ) {
             loaded = null;
             var imcPath = item.GetImcPath();
-            if( Plugin.DataManager.FileExists( imcPath ) ) {
-                try {
-                    var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
-                    var vfxIds = file.GetParts().Select( x => x.Variants[item.GetVariant() - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
+            if( !Plugin.DataManager.FileExists( imcPath ) ) return;
+            try {
+                var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
+                var vfxIds = file.GetParts().Select( x => x.Variants[item.GetVariant() - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
 
-                    loaded = new() {
-                        ImcPath = file.FilePath,
-                        VfxPaths = vfxIds.Select( item.GetVfxPath ).ToList()
-                    };
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Error loading IMC file " + imcPath );
-                }
+                loaded = new() {
+                    ImcPath = file.FilePath,
+                    VfxPaths = vfxIds.Select( item.GetVfxPath ).ToList()
+                };
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, "Error loading IMC file " + imcPath );
             }
         }
 
@@ -41,16 +40,16 @@ namespace VfxEditor.Select.Vfx.Item {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + Selected.GetVariant() );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
-            SelectTabUtils.DisplayPath( Loaded.ImcPath );
+            SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameItem, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
 
-            if( Loaded.VfxPaths.Count == 0 ) SelectTabUtils.DisplayNoVfx();
+            if( Loaded.VfxPaths.Count == 0 ) SelectUiUtils.DisplayNoVfx();
         }
     }
 }

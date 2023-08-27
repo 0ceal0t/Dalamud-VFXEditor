@@ -18,6 +18,8 @@ namespace VfxEditor.Select.Shared.Npc {
         public readonly string BaseIdString;
         public readonly string RootPath;
 
+        public string PathPrefix => Type == NpcType.Monster ? "monster" : "demihuman";
+
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null ) { }
 
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc, string name ) {
@@ -51,6 +53,6 @@ namespace VfxEditor.Select.Shared.Npc {
         // chara/demihuman/d1003/obj/equipment/e0006/vfx/eff/ve0006.avfx
         public string GetVfxPath( int vfxId ) => RootPath + "vfx/eff/v" + ( Type == NpcType.Monster ? "m" : "e" ) + vfxId.ToString().PadLeft( 4, '0' ) + ".avfx";
 
-        public string PathPrefix => Type == NpcType.Monster ? "monster" : "demihuman";
+        public string GetSkeletonPath( string prefix, string extension ) => $"chara/{PathPrefix}/{ModelString}/skeleton/base/b0001/{prefix}_{ModelString}b0001.{extension}";
     }
 }

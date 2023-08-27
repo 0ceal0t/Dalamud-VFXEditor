@@ -16,13 +16,12 @@ namespace VfxEditor.Select.Scd.BgmQuest {
     }
 
     public class BgmQuestTab : SelectTab<BgmQuestRow, BgmQuestRowSelected> {
-        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-BgmQuest" ) { }
+        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-BgmQuest", SelectResultType.GameMusic ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.Quest.Row > 0 );
-
             foreach( var item in sheet ) Items.Add( new BgmQuestRow( item ) );
         }
 
@@ -35,7 +34,7 @@ namespace VfxEditor.Select.Scd.BgmQuest {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation );
+            DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 
         protected override string GetName( BgmQuestRow item ) => item.Name;

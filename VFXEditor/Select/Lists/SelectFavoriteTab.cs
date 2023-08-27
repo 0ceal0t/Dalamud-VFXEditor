@@ -15,7 +15,6 @@ namespace VfxEditor.Select.Lists {
                 Plugin.Configuration.Save();
                 return true;
             }
-
             if( base.PostRow( item, idx ) ) return true;
 
             using var _ = ImRaii.PushId( idx );
@@ -23,7 +22,6 @@ namespace VfxEditor.Select.Lists {
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RenameFavorite" );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 4, 6 ) );
-
             if( ImGui.BeginPopup( "RenameFavorite" ) ) {
                 if( ImGui.InputText( "##Rename", ref item.DisplayString, 128, ImGuiInputTextFlags.AutoSelectAll ) ) Plugin.Configuration.Save();
                 ImGui.EndPopup();

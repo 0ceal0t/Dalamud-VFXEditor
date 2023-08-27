@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Scd.Orchestrion {
     public class OrchestrionTab : SelectTab<OrchestrionRow, OrchestionRowSelected> {
-        public OrchestrionTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Orchestrion" ) { }
+        public OrchestrionTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Orchestrion", SelectResultType.GameMusic ) { }
 
         // ===== LOADING =====
 
@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Scd.Orchestrion {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPath( "Path", Loaded.Path, SelectResultType.GameMusic, Selected.Name );
+            DrawPath( "Path", Loaded.Path, Selected.Name );
         }
 
         protected override string GetName( OrchestrionRow item ) => item.Name;

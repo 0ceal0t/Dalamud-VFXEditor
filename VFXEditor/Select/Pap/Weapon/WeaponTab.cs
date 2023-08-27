@@ -2,7 +2,7 @@ using VfxEditor.Select.Shared.Item;
 
 namespace VfxEditor.Select.Pap.Weapon {
     public class WeaponTab : SelectTab<WeaponRow, string> {
-        public WeaponTab( SelectDialog dialog, string name ) : base( dialog, name, "Pap-Weapon" ) { }
+        public WeaponTab( SelectDialog dialog, string name ) : base( dialog, name, "Pap-Weapon", SelectResultType.GameItem ) { }
 
         // ===== LOADING =====
 
@@ -25,11 +25,10 @@ namespace VfxEditor.Select.Pap.Weapon {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
             if( string.IsNullOrEmpty( Loaded ) ) return;
-
-            Dialog.DrawPath( "Animations", Loaded, SelectResultType.GameItem, Selected.Name );
+            DrawPath( "Animations", Loaded, Selected.Name );
         }
 
         protected override string GetName( WeaponRow item ) => item.Name;

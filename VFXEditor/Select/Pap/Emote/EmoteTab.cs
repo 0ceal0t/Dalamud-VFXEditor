@@ -10,13 +10,12 @@ namespace VfxEditor.Select.Pap.Emote {
     }
 
     public class EmoteTab : SelectTab<EmoteRow, EmoteRowSelected> {
-        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Pap-Emote" ) { }
+        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Pap-Emote", SelectResultType.GameEmote ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-
             foreach( var item in sheet ) Items.Add( new EmoteRow( item ) );
         }
 
@@ -29,18 +28,18 @@ namespace VfxEditor.Select.Pap.Emote {
 
                 if( papFile.Type == EmoteRowType.Normal ) {
                     // bt_common, per race (chara/human/{RACE}/animation/a0001/bt_common/emote/add_yes.pap)
-                    papDict.Add( "Action", SelectUtils.FileExistsFilter( SelectUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) ) ); // just a dummy node
+                    papDict.Add( "Action", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) ) ); // just a dummy node
 
                 }
                 else if( papFile.Type == EmoteRowType.PerJob ) {
                     // chara/human/c0101/animation/a0001/bt_swd_sld/emote/battle01.pap
-                    papDict = SelectUtils.GetAllJobPaps( key );
+                    papDict = SelectDataUtils.GetAllJobPaps( key );
                 }
                 else if( papFile.Type == EmoteRowType.Facial ) {
                     // chara/human/c0101/animation/f0003/resident/face.pap
                     // chara/human/c0101/animation/f0003/resident/smile.pap
                     // chara/human/c0101/animation/f0003/nonresident/angry_cl.pap
-                    papDict = SelectUtils.GetAllFacePaps( key );
+                    papDict = SelectDataUtils.GetAllFacePaps( key );
                 }
 
                 allPaps.Add( key, papDict );
@@ -56,7 +55,7 @@ namespace VfxEditor.Select.Pap.Emote {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
             ImGui.TextDisabled( Selected.Command );
 
             using var tabBar = ImRaii.TabBar( "Tabs" );
@@ -67,20 +66,19 @@ namespace VfxEditor.Select.Pap.Emote {
                 if( !tabItem ) continue;
 
                 using var _ = ImRaii.PushId( subAction );
-
                 using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
                 if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
-                    Dialog.DrawPaps( actionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}" );
+                    DrawPaps( actionPaths, $"{Selected.Name} {subAction}" );
                 }
                 else {
-                    Dialog.DrawPapsWithHeader( subActionPaths, SelectResultType.GameEmote, $"{Selected.Name} {subAction}" );
+                    DrawPapsWithHeader( subActionPaths, $"{Selected.Name} {subAction}" );
                 }
             }
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;
 
-        protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectTabUtils.Matches( item.Command, searchInput );
+        protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectUiUtils.Matches( item.Command, searchInput );
     }
 }

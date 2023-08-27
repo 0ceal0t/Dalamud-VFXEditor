@@ -7,7 +7,7 @@ using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Gimmick {
     public class GimmickTab : SelectTab<GimmickRow, ParseAvfx> {
-        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Gimmick" ) { }
+        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Gimmick", SelectResultType.GameGimmick ) { }
 
         // ===== LOADING =====
 
@@ -31,15 +31,15 @@ namespace VfxEditor.Select.Vfx.Gimmick {
         protected override void DrawSelected() {
             if( Loaded.VfxExists ) {
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
-                    SelectTabUtils.Copy( Selected.TmbPath );
+                    SelectUiUtils.Copy( Selected.TmbPath );
                 }
 
                 ImGui.SameLine();
                 ImGui.Text( "TMB:" );
                 ImGui.SameLine();
-                SelectTabUtils.DisplayPath( Selected.TmbPath );
+                SelectUiUtils.DisplayPath( Selected.TmbPath );
 
-                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameGimmick, Selected.Name, true );
+                DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
             }
         }
 

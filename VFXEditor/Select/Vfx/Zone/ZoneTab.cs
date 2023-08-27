@@ -6,7 +6,7 @@ using VfxEditor.Select.Shared.Zone;
 
 namespace VfxEditor.Select.Vfx.Zone {
     public class ZoneTab : SelectTab<ZoneRow, ParseAvfx> {
-        public ZoneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Zone" ) { }
+        public ZoneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Zone", SelectResultType.GameZone ) { }
 
         // ===== LOADING =====
 
@@ -22,9 +22,9 @@ namespace VfxEditor.Select.Vfx.Zone {
         protected override void DrawSelected() {
             ImGui.Text( "LGB: " );
             ImGui.SameLine();
-            SelectTabUtils.DisplayPath( Selected.LgbPath );
+            SelectUiUtils.DisplayPath( Selected.LgbPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameZone, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
         }
 
         protected override string GetName( ZoneRow item ) => item.Name;

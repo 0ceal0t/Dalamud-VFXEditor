@@ -5,15 +5,15 @@ using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Action {
     public class ActionTab : SelectTab<ActionRow, ParseAvfx> {
-        public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
-        public ActionTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Action" ) { }
+        public ActionTab( SelectDialog dialog, string name ) : this( dialog, name, "Vfx-Action" ) { }
+
+        public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
-
             foreach( var item in sheet ) {
                 var actionItem = new ActionRow( item, false );
                 if( actionItem.HasVfx ) Items.Add( actionItem );
@@ -35,25 +35,23 @@ namespace VfxEditor.Select.Vfx.Action {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
-                    SelectTabUtils.Copy( Loaded.OriginalPath );
+                    SelectUiUtils.Copy( Loaded.OriginalPath );
                 }
 
                 ImGui.SameLine();
                 ImGui.Text( "TMB:" );
                 ImGui.SameLine();
-                SelectTabUtils.DisplayPath( Loaded.OriginalPath );
+                SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            Dialog.DrawPath( "Cast", Selected.CastVfxPath, SelectResultType.GameAction, $"{Selected.Name} Cast", true );
-
-            Dialog.DrawPath( "Start", Selected.StartVfxPath, SelectResultType.GameAction, $"{Selected.Name} Start", true );
-
+            DrawPath( "Cast", Selected.CastVfxPath, $"{Selected.Name} Cast", true );
+            DrawPath( "Start", Selected.StartVfxPath, $"{Selected.Name} Start", true );
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameAction, Selected.Name, true );
+                DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
             }
         }
 

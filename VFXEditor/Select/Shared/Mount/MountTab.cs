@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Shared.Mount {
     public abstract class MountTab : SelectTab<MountRow> {
-        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount" ) { }
+        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount", SelectResultType.GameMount ) { }
 
         // ===== LOADING =====
 

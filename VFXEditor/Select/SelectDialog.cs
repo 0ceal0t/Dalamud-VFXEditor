@@ -8,7 +8,6 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Lists;
-using VfxEditor.Select.Scd.BgmQuest;
 using VfxEditor.Ui;
 
 namespace VfxEditor.Select {
@@ -27,7 +26,10 @@ namespace VfxEditor.Select {
         GameQuest,
         GameCharacter,
         GameJob,
-        GameMisc
+        GameMisc,
+        GameMount,
+        GameHousing,
+        GameUi
     }
 
     [Serializable]
@@ -164,21 +166,7 @@ namespace VfxEditor.Select {
             }
         }
 
-        // ======== DRAWING UTILS ======
-
-        public bool IsFavorite( SelectResult result ) => Favorites.Any( result.CompareTo );
-
-        public void AddFavorite( SelectResult result ) {
-            Favorites.Add( result );
-            Plugin.Configuration.Save();
-        }
-
-        public void RemoveFavorite( SelectResult result ) {
-            Favorites.RemoveAll( result.CompareTo );
-            Plugin.Configuration.Save();
-        }
-
-        public bool DrawFavorite( string path, SelectResultType resultType, string resultName ) => DrawFavorite( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
+        // ======== FAVORITES ======
 
         public bool DrawFavorite( SelectResult selectResult ) {
             var res = false;
@@ -200,86 +188,16 @@ namespace VfxEditor.Select {
             return res;
         }
 
-        public void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, SelectResultType resultType, string name ) {
-            foreach( var (subName, subItems) in items ) {
-                if( subItems.Count == 0 ) continue;
+        private bool IsFavorite( SelectResult result ) => Favorites.Any( result.CompareTo );
 
-                using var _ = ImRaii.PushId( subName );
-
-                if( ImGui.CollapsingHeader( subName, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaps( subItems, resultType, $"{name} {subName}" );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-                }
-            }
+        private void AddFavorite( SelectResult result ) {
+            Favorites.Add( result );
+            Plugin.Configuration.Save();
         }
 
-        public void DrawPaps( Dictionary<string, string> items, SelectResultType resultType, string name ) {
-            using var _ = ImRaii.PushId( name );
-
-            foreach( var (suffix, path) in items ) {
-                using var __ = ImRaii.PushId( suffix );
-
-                DrawFavorite( path, resultType, $"{name} ({suffix})" );
-
-                ImGui.Text( $"{suffix}:" );
-
-                ImGui.SameLine();
-                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
-                    SelectTabUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
-                }
-                else SelectTabUtils.DisplayPath( path );
-
-                DrawPath( "", path, resultType, $"{name} ({suffix})" );
-            }
-        }
-
-        public void DrawPaths( string label, IEnumerable<string> paths, SelectResultType resultType, string resultName, bool play = false ) {
-            var idx = 0;
-            foreach( var path in paths ) {
-                using var _ = ImRaii.PushId( idx );
-                DrawPath( $"{label} #{idx}", path, resultType, $"{resultName} #{idx}", play );
-                idx++;
-            }
-        }
-
-        public void DrawPaths( Dictionary<string, string> paths, SelectResultType resultType, string resultName, bool play = false ) {
-            foreach( var item in paths ) {
-                DrawPath( item.Key, item.Value, resultType, $"{resultName} ({item.Key})", play );
-            }
-        }
-        public void DrawPath( string label, string path, SelectResultType resultType, string resultName, bool play = false ) =>
-            DrawPath( label, path, path, resultType, resultName, play );
-
-        public void DrawPath( string label, string path, string displayPath, SelectResultType resultType, string resultName, bool play = false ) {
-            if( string.IsNullOrEmpty( path ) ) return;
-            if( path.Contains( "BGM_Null" ) ) return;
-
-            using var _ = ImRaii.PushId( label );
-
-            if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
-                DrawFavorite( path, resultType, resultName );
-                ImGui.Text( $"{label}:" );
-                ImGui.SameLine();
-                SelectTabUtils.DisplayPath( displayPath );
-            }
-
-            using var indent = ImRaii.PushIndent( 25f );
-
-            if( ImGui.Button( "SELECT" ) ) Invoke( SelectTabUtils.GetSelectResult( path, resultType, resultName ) );
-            ImGui.SameLine();
-            SelectTabUtils.Copy( path );
-            if( play ) Play( path );
-        }
-
-        public void DrawBgmSituation( string name, BgmSituationStruct situation ) {
-            if( situation.IsSituation ) {
-                DrawPath( "Daytime Bgm", situation.DayPath, SelectResultType.GameMusic, $"{name} / Day" );
-                DrawPath( "Nighttime Bgm", situation.NightPath, SelectResultType.GameMusic, $"{name} / Night" );
-                DrawPath( "Battle Bgm", situation.BattlePath, SelectResultType.GameMusic, $"{name} / Battle" );
-                DrawPath( "Daybreak Bgm", situation.DaybreakPath, SelectResultType.GameMusic, $"{name} / Break" );
-            }
-            else DrawPath( "Bgm", situation.Path, SelectResultType.GameZone, name );
+        private void RemoveFavorite( SelectResult result ) {
+            Favorites.RemoveAll( result.CompareTo );
+            Plugin.Configuration.Save();
         }
     }
 }

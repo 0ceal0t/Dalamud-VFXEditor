@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat.Skeleton {
@@ -115,7 +116,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         private void UpdatePreview() {
             if( Bones?.BoneList.Count == 0 ) PhybPreview.LoadEmpty( File );
-            else PhybPreview.LoadSkeleton( File, Bones.BoneList, HavokUtils.CreateSkeletonMesh( Bones.BoneList, -1 ) );
+            else PhybPreview.LoadSkeleton( File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList, -1 ).Build() );
         }
 
         public void Dispose() {

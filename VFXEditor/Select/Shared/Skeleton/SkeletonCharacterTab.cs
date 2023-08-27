@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
         private readonly string Prefix;
         private readonly string Extension;
 
-        public SkeletonCharacterTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Character-Shared" ) {
+        public SkeletonCharacterTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Character-Shared", SelectResultType.GameCharacter ) {
             Prefix = prefix;
             Extension = extension;
         }
@@ -22,7 +22,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var item in SelectUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value ) );
+            foreach( var item in SelectDataUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value ) );
         }
 
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
@@ -31,7 +31,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
 
-            for( var face = 1; face <= SelectUtils.MaxFaces; face++ ) {
+            for( var face = 1; face <= SelectDataUtils.MaxFaces; face++ ) {
                 var faceString = $"f{face:D4}";
                 facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/{faceString}/{Prefix}_{item.SkeletonId}{faceString}.{Extension}";
             }
@@ -43,15 +43,15 @@ namespace VfxEditor.Select.Shared.Skeleton {
 
             loaded = new() {
                 BodyPath = bodyPath,
-                FacePaths = SelectUtils.FileExistsFilter( facePaths ),
-                HairPaths = SelectUtils.FileExistsFilter( hairPaths )
+                FacePaths = SelectDataUtils.FileExistsFilter( facePaths ),
+                HairPaths = SelectDataUtils.FileExistsFilter( hairPaths )
             };
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPath( "Body", Loaded.BodyPath, SelectResultType.GameCharacter, Selected.Name );
+            DrawPath( "Body", Loaded.BodyPath, Selected.Name );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -59,12 +59,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Hair" ) ) {
-                Dialog.DrawPaths( Loaded.HairPaths, SelectResultType.GameCharacter, Selected.Name );
+                DrawPaths( Loaded.HairPaths, Selected.Name );
                 ImGui.EndTabItem();
             }
 
             if( ImGui.BeginTabItem( "Faces" ) ) {
-                Dialog.DrawPaths( Loaded.FacePaths, SelectResultType.GameCharacter, Selected.Name );
+                DrawPaths( Loaded.FacePaths, Selected.Name );
                 ImGui.EndTabItem();
             }
         }

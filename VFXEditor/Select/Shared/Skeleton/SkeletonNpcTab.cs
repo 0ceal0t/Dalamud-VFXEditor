@@ -12,13 +12,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
         }
 
         protected override void DrawSelected() {
-            Dialog.DrawPaths( "Path", Loaded, SelectResultType.GameNpc, Selected.Name, true );
+            DrawPaths( "Path", Loaded, Selected.Name, true );
         }
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
             loaded = new();
-
-            var path = $"chara/{Selected.PathPrefix}/{Selected.ModelString}/skeleton/base/b0001/{Prefix}_{Selected.ModelString}b0001.{Extension}";
+            var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Plugin.DataManager.FileExists( path ) ) loaded.Add( path );
         }
     }

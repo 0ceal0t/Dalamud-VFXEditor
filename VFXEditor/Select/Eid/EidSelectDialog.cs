@@ -7,8 +7,8 @@ namespace VfxEditor.Select.Eid {
     public class EidSelectDialog : SelectDialog {
         public EidSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "eid", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
-                new CharacterEidTab( this, "Character" ),
                 new NpcEidTab( this, "Npc" ),
+                new CharacterEidTab( this, "Character" ),
                 new MountEidTab( this, "Mount" ),
             } );
         }

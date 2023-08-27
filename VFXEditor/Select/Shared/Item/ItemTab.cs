@@ -1,6 +1,6 @@
 namespace VfxEditor.Select.Shared.Item {
     public abstract class ItemTab<T> : SelectTab<ItemRow, T> where T : class {
-        public ItemTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Item" ) { }
+        public ItemTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Item", SelectResultType.GameItem ) { }
 
         // ===== LOADING =====
 

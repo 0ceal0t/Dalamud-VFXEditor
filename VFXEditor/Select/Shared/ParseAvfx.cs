@@ -21,7 +21,7 @@ namespace VfxEditor.Select.Shared {
             OriginalPath = file.FilePath.Path;
 
             var stringData = Encoding.UTF8.GetString( data );
-            var matches = SelectUtils.AvfxRegex.Matches( stringData );
+            var matches = SelectDataUtils.AvfxRegex.Matches( stringData );
             foreach( var m in matches.Cast<Match>() ) {
                 VfxPaths.Add( m.Value.Trim( '\u0000' ) );
             }
@@ -31,7 +31,7 @@ namespace VfxEditor.Select.Shared {
             foreach( var file in files ) {
                 var data = file.Data;
                 var stringData = Encoding.UTF8.GetString( data );
-                var matches = SelectUtils.AvfxRegex.Matches( stringData );
+                var matches = SelectDataUtils.AvfxRegex.Matches( stringData );
                 foreach( var m in matches.Cast<Match>() ) {
                     VfxPaths.Add( m.Value.Trim( '\u0000' ) );
                 }
@@ -45,10 +45,10 @@ namespace VfxEditor.Select.Shared {
                     loaded = new ParseAvfx( Plugin.DataManager.GetFile( path ) );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Error reading " + path );
+                    PluginLog.Error( e, $"Error reading {path}" );
                 }
             }
-            else PluginLog.Error( path + " does not exist" );
+            else PluginLog.Error( $"{path} does not exist" );
         }
 
         public static void ReadFile( List<string> paths, out ParseAvfx loaded ) {

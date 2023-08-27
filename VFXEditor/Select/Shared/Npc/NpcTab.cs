@@ -21,7 +21,9 @@ namespace VfxEditor.Select.Shared.Npc {
         // Shared across multiple dialogs
         private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
 
-        public NpcTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Npc" ) { }
+        public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Shared-Npc", resultType ) { }
+
+        public NpcTab( SelectDialog dialog, string name ) : this( dialog, name, SelectResultType.GameNpc ) { }
 
         // ===== LOADING =====
 
@@ -36,10 +38,8 @@ namespace VfxEditor.Select.Shared.Npc {
 
             // https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
-            var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectUtils.BnpcPath ) );
-
+            var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectDataUtils.BnpcPath ) );
             var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
-
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
                 var bnpcRow = battleNpcSheet.GetRow( uint.Parse( entry.Key ) );
@@ -49,7 +49,7 @@ namespace VfxEditor.Select.Shared.Npc {
                 Items.Add( new NpcRow( bnpcRow.ModelChara.Value, name ) );
             }
 
-            NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectUtils.NpcFilesPath ) );
+            NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectDataUtils.NpcFilesPath ) );
         }
 
         public override void LoadSelection( NpcRow item, out List<string> loaded ) {
@@ -62,9 +62,9 @@ namespace VfxEditor.Select.Shared.Npc {
         // ===== DRAWING ======
 
         protected override bool CheckMatch( NpcRow item, string searchInput ) =>
-            SelectTabUtils.Matches( item.Name, searchInput ) || SelectTabUtils.Matches( item.ModelString, searchInput );
+            SelectUiUtils.Matches( item.Name, searchInput ) || SelectUiUtils.Matches( item.ModelString, searchInput );
 
-        protected override void DrawExtra() => SelectTabUtils.NpcThankYou();
+        protected override void DrawExtra() => SelectUiUtils.NpcThankYou();
 
         protected override string GetName( NpcRow item ) => item.Name;
     }

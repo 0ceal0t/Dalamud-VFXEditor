@@ -5,7 +5,7 @@ using VfxEditor.Select.Shared.Common;
 
 namespace VfxEditor.Select.Scd.Common {
     public class CommonTab : SelectTab<CommonRow> {
-        public CommonTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Common" ) { }
+        public CommonTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Common", SelectResultType.GameMisc ) { }
 
         // ===== LOADING =====
 
@@ -29,7 +29,7 @@ namespace VfxEditor.Select.Scd.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPath( "Path", Selected.Path, SelectResultType.GameMisc, Selected.Name, true );
+            DrawPath( "Path", Selected.Path, Selected.Name, true );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

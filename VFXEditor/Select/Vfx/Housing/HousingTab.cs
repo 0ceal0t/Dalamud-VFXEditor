@@ -1,12 +1,11 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using System;
 using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Housing {
     public class HousingTab : SelectTab<HousingRow, ParseAvfx> {
-        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Housing" ) { }
+        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Housing", SelectResultType.GameHousing ) { }
 
         // ===== LOADING =====
 
@@ -25,12 +24,12 @@ namespace VfxEditor.Select.Vfx.Housing {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
             ImGui.Text( "SGB:" );
             ImGui.SameLine();
-            SelectTabUtils.DisplayPath( Selected.SgbPath );
+            SelectUiUtils.DisplayPath( Selected.SgbPath );
 
-            Dialog.DrawPaths( "VFX", Loaded.VfxPaths, SelectResultType.GameItem, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

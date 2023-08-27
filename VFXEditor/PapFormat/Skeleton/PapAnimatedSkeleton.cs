@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
@@ -236,13 +237,13 @@ namespace VfxEditor.PapFormat.Skeleton {
                 PapPreview.LoadEmpty( File, this );
             }
             else {
-                PapPreview.LoadSkeleton( File, this, HavokUtils.CreateSkeletonMesh( Data, -1 ) );
+                PapPreview.LoadSkeleton( File, this, new ConnectedSkeletonMeshBuilder( Data, -1 ).Build() );
             }
         }
 
         public void Dispose() {
             Skeleton->removeAnimationControl( Animation );
-            //if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
+            // if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
             Marshal.FreeHGlobal( ( nint )Skeleton );
             Marshal.FreeHGlobal( ( nint )Animation );
             if( PapPreview.CurrentAnimation == this ) PapPreview.ClearAnimation();

@@ -25,9 +25,6 @@ namespace VfxEditor.Select.Vfx.Status {
             VfxExists = !string.IsNullOrEmpty( LoopVfxPath1 ) || !string.IsNullOrEmpty( LoopVfxPath2 ) || !string.IsNullOrEmpty( LoopVfxPath3 ) || !string.IsNullOrEmpty( HitVfxPath );
         }
 
-        private static string GetVfxPath( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return "";
-            return $"{statusPrefix}{path}.avfx";
-        }
+        private static string GetVfxPath( string path ) => string.IsNullOrEmpty( path ) ? "" : $"{statusPrefix}{path}.avfx";
     }
 }

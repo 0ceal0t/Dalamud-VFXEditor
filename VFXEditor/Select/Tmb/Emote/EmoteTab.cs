@@ -2,13 +2,12 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tmb.Emote {
     public class EmoteTab : SelectTab<EmoteRow> {
-        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Tmb-Emote" ) { }
+        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Tmb-Emote", SelectResultType.GameEmote ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-
             foreach( var item in sheet ) Items.Add( new EmoteRow( item ) );
         }
 
@@ -17,9 +16,9 @@ namespace VfxEditor.Select.Tmb.Emote {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawPaths( "Path", Selected.TmbFiles, SelectResultType.GameEmote, Selected.Name, true );
+            DrawPaths( "Path", Selected.TmbFiles, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

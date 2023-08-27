@@ -5,10 +5,10 @@ namespace VfxEditor.Select.Scd.Mount {
         public MountScdTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "Mount", Selected.GetMountSound(), SelectResultType.GameNpc, $"{Selected.Name} Mount" );
-            Dialog.DrawPath( "Bgm", Selected.Bgm, SelectResultType.GameNpc, $"{Selected.Name} BGM" );
+            DrawPath( "Mount", Selected.GetMountSound(), $"{Selected.Name} Mount" );
+            DrawPath( "Bgm", Selected.Bgm, $"{Selected.Name} BGM" );
         }
     }
 }

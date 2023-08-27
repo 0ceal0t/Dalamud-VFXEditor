@@ -13,19 +13,17 @@ namespace VfxEditor.Select.Pap.IdlePose {
     }
 
     public class CharacterPapTab : SelectTab<CharacterRow, CharacterRowSelected> {
-        public CharacterPapTab( SelectDialog dialog, string name ) : base( dialog, name, "Character-Shared" ) { }
+        public CharacterPapTab( SelectDialog dialog, string name ) : base( dialog, name, "Character-Shared", SelectResultType.GameCharacter ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var item in SelectUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value ) );
+            foreach( var item in SelectDataUtils.RaceAnimationIds ) Items.Add( new( item.Key, item.Value ) );
         }
 
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
             // General
-
             var general = new Dictionary<string, string>();
-
             var idlePath = item.GetPap( "idle" );
             var movePathA = item.GetPap( "move_a" );
             var movePathB = item.GetPap( "move_b" );
@@ -34,10 +32,8 @@ namespace VfxEditor.Select.Pap.IdlePose {
             if( Plugin.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
             // Poses
-
             var poses = new Dictionary<string, Dictionary<string, string>>();
-
-            for( var i = 1; i <= SelectUtils.MaxChangePoses; i++ ) {
+            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i );
                 var loop = item.GetLoopPap( i );
                 if( Plugin.DataManager.FileExists( start ) && Plugin.DataManager.FileExists( loop ) ) {
@@ -49,10 +45,8 @@ namespace VfxEditor.Select.Pap.IdlePose {
             }
 
             // Faces
-
             var facePaths = new Dictionary<string, string>();
-
-            for( var face = 1; face < SelectUtils.MaxFaces; face++ ) {
+            for( var face = 1; face < SelectDataUtils.MaxFaces; face++ ) {
                 var faceString = $"f{face:D4}";
                 facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/{faceString}/resident/face.pap";
             }
@@ -60,7 +54,7 @@ namespace VfxEditor.Select.Pap.IdlePose {
             loaded = new CharacterRowSelected {
                 General = general,
                 Poses = poses,
-                FacePaths = SelectUtils.FileExistsFilter( facePaths ),
+                FacePaths = SelectDataUtils.FileExistsFilter( facePaths ),
             };
         }
 
@@ -71,15 +65,15 @@ namespace VfxEditor.Select.Pap.IdlePose {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                Dialog.DrawPaps( Loaded.General, SelectResultType.GameCharacter, Selected.Name );
+                DrawPaps( Loaded.General, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameCharacter, Selected.Name );
+                DrawPapsWithHeader( Loaded.Poses, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Faces" ) ) {
-                Dialog.DrawPaths( Loaded.FacePaths, SelectResultType.GameCharacter, Selected.Name );
+                DrawPaths( Loaded.FacePaths, Selected.Name );
                 ImGui.EndTabItem();
             }
         }

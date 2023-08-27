@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Vfx.Mount {
     }
 
     public class MountTab : SelectTab<MountRow, MountRowSelected> {
-        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount" ) { }
+        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Mount", SelectResultType.GameMount ) { }
 
         // ===== LOADING =====
 
@@ -25,21 +25,21 @@ namespace VfxEditor.Select.Vfx.Mount {
         public override void LoadSelection( MountRow item, out MountRowSelected loaded ) {
             loaded = null;
             var imcPath = item.GetImcPath();
-            if( Plugin.DataManager.FileExists( imcPath ) ) {
-                try {
-                    var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
-                    var vfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
-                    var vfxId = vfxIds.Count > 0 ? vfxIds[0] : 0;
 
-                    loaded = new() {
-                        ImcPath = file.FilePath,
-                        VfxId = vfxId,
-                        VfxPath = vfxId > 0 ? item.GetVfxPath( vfxId ) : ""
-                    };
-                }
-                catch( Exception e ) {
-                    PluginLog.Error( e, "Error loading IMC file " + imcPath );
-                }
+            if( !Plugin.DataManager.FileExists( imcPath ) ) return;
+            try {
+                var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
+                var vfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
+                var vfxId = vfxIds.Count > 0 ? vfxIds[0] : 0;
+
+                loaded = new() {
+                    ImcPath = file.FilePath,
+                    VfxId = vfxId,
+                    VfxPath = vfxId > 0 ? item.GetVfxPath( vfxId ) : ""
+                };
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, "Error loading IMC file " + imcPath );
             }
         }
 
@@ -48,15 +48,14 @@ namespace VfxEditor.Select.Vfx.Mount {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
             ImGui.Text( "Variant: " + Selected.Variant );
             ImGui.Text( "IMC: " );
-
             ImGui.SameLine();
-            SelectTabUtils.DisplayPath( Loaded.ImcPath );
+            SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
-            Dialog.DrawPath( "VFX", Loaded.VfxPath, SelectResultType.GameNpc, Selected.Name, true );
+            DrawPath( "VFX", Loaded.VfxPath, Selected.Name, true );
         }
 
         protected override string GetName( MountRow item ) => item.Name;

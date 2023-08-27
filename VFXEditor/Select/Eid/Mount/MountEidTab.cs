@@ -5,9 +5,9 @@ namespace VfxEditor.Select.Eid.Mount {
         public MountEidTab( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "Path", Selected.GetEidPath(), SelectResultType.GameNpc, Selected.Name );
+            DrawPath( "Path", Selected.GetEidPath(), Selected.Name );
         }
     }
 }

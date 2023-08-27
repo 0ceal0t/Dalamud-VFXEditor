@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Scd.Voice {
             "c"
         } );
 
-        public VoiceTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Voice" ) { }
+        public VoiceTab( SelectDialog dialog, string name ) : base( dialog, name, "Scd-Voice", SelectResultType.GameCharacter ) { }
 
         // ===== LOADING =====
 
@@ -53,7 +53,7 @@ namespace VfxEditor.Select.Scd.Voice {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPaths( "SCD", Loaded, SelectResultType.GameMisc, Selected.Name );
+            DrawPaths( "SCD", Loaded, Selected.Name );
         }
 
         protected override string GetName( VoiceRow item ) => item.Name;

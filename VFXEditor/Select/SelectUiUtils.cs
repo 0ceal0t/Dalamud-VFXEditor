@@ -1,49 +1,41 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Select {
-    public class SelectTabUtils {
+    public class SelectUiUtils {
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
             var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
             return new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path );
         }
 
         public static void DisplayNoVfx() {
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
-            ImGui.TextWrapped( $"This item does not have a VFX. See the link below for information on adding one" );
-            ImGui.PopStyleColor();
-            if( ImGui.SmallButton( "Guide##NoVfx" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Adding-a-VFX-to-an-Item-Without-One" );
+            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                ImGui.TextWrapped( $"This item does not have a VFX. See the link below for information on adding one" );
+            }
+            UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Adding-a-VFX-to-an-Item-Without-One" );
         }
 
         public static bool Matches( string item, string query ) => item.ToLower().Contains( query.ToLower() );
 
         public static void DisplayPath( string path ) {
-            ImGui.PushStyleColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
+            using var style = ImRaii.PushColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
             ImGui.TextWrapped( path );
-            ImGui.PopStyleColor();
         }
 
         public static void DisplayPathWarning( string path, string warning ) {
-            ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
-            ImGui.TextWrapped( $"{path} (!)" );
-            ImGui.PopStyleColor();
-
-            if( ImGui.IsItemHovered() ) {
-                ImGui.BeginTooltip();
-                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
-                ImGui.TextUnformatted( warning );
-                ImGui.PopTextWrapPos();
-                ImGui.EndTooltip();
+            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
+                ImGui.TextWrapped( $"{path} (!)" );
             }
+            UiUtils.Tooltip( warning );
         }
 
         public static void Copy( string path ) {
-            ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
+            using var style = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
             if( ImGui.Button( "Copy" ) ) ImGui.SetClipboardText( path );
-            ImGui.PopStyleColor();
         }
 
         public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {

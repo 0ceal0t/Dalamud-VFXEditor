@@ -13,10 +13,10 @@ namespace VfxEditor.Select.Pap.Job {
     }
 
     public class JobTab : SelectTab<JobRow, JobRowSelected> {
-        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job-Pap" ) { }
+        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job-Pap", SelectResultType.GameJob ) { }
 
         public override void LoadData() {
-            foreach( var item in SelectUtils.JobAnimationIds ) Items.Add( new JobRow( item.Key, item.Value ) );
+            foreach( var item in SelectDataUtils.JobAnimationIds ) Items.Add( new JobRow( item.Key, item.Value ) );
         }
 
         public override void LoadSelection( JobRow item, out JobRowSelected loaded ) {
@@ -25,19 +25,19 @@ namespace VfxEditor.Select.Pap.Job {
             var autoAttack = new Dictionary<string, Dictionary<string, string>>();
 
             var jobId = item.Id;
-            var movementJobId = SelectUtils.JobMovementOverride.TryGetValue( item.Name, out var _movement ) ? _movement : jobId;
-            var drawJobId = SelectUtils.JobDrawOverride.TryGetValue( item.Name, out var _draw ) ? _draw : jobId;
-            var autoJobId = SelectUtils.JobAutoOverride.TryGetValue( item.Name, out var _auto ) ? _auto : jobId;
+            var movementJobId = SelectDataUtils.JobMovementOverride.TryGetValue( item.Name, out var _movement ) ? _movement : jobId;
+            var drawJobId = SelectDataUtils.JobDrawOverride.TryGetValue( item.Name, out var _draw ) ? _draw : jobId;
+            var autoJobId = SelectDataUtils.JobAutoOverride.TryGetValue( item.Name, out var _auto ) ? _auto : jobId;
 
-            foreach( var (raceName, raceData) in SelectUtils.RaceAnimationIds ) {
+            foreach( var (raceName, raceData) in SelectDataUtils.RaceAnimationIds ) {
                 var skeleton = raceData.SkeletonId;
 
                 // General
 
-                var idlePath = SelectUtils.GetSkeletonPath( skeleton, $"{jobId}/resident/idle.pap" );
-                var movePathA = SelectUtils.GetSkeletonPath( skeleton, $"{movementJobId}/resident/move_a.pap" );
-                var movePathB = SelectUtils.GetSkeletonPath( skeleton, $"{movementJobId}/resident/move_b.pap" );
-                var drawPath = SelectUtils.GetSkeletonPath( skeleton, $"{drawJobId}/resident/sub.pap" );
+                var idlePath = SelectDataUtils.GetSkeletonPath( skeleton, $"{jobId}/resident/idle.pap" );
+                var movePathA = SelectDataUtils.GetSkeletonPath( skeleton, $"{movementJobId}/resident/move_a.pap" );
+                var movePathB = SelectDataUtils.GetSkeletonPath( skeleton, $"{movementJobId}/resident/move_b.pap" );
+                var drawPath = SelectDataUtils.GetSkeletonPath( skeleton, $"{drawJobId}/resident/sub.pap" );
 
                 var raceGeneral = new Dictionary<string, string>();
                 if( Plugin.DataManager.FileExists( idlePath ) ) raceGeneral.Add( "Idle", idlePath );
@@ -48,8 +48,8 @@ namespace VfxEditor.Select.Pap.Job {
 
                 // Pose
 
-                var start = SelectUtils.GetSkeletonPath( skeleton, $"{jobId}/emote/b_pose01_start.pap" );
-                var loop = SelectUtils.GetSkeletonPath( skeleton, $"{jobId}/emote/b_pose01_loop.pap" );
+                var start = SelectDataUtils.GetSkeletonPath( skeleton, $"{jobId}/emote/b_pose01_start.pap" );
+                var loop = SelectDataUtils.GetSkeletonPath( skeleton, $"{jobId}/emote/b_pose01_loop.pap" );
 
                 if( Plugin.DataManager.FileExists( start ) && Plugin.DataManager.FileExists( loop ) ) {
                     poses.Add( raceName, new Dictionary<string, string>() {
@@ -63,8 +63,8 @@ namespace VfxEditor.Select.Pap.Job {
                 var autoPaths = new List<string>();
 
                 for( var i = 1; i <= 3; i++ ) {
-                    var autoPath = SelectUtils.GetSkeletonPath( skeleton, $"{autoJobId}/battle/auto_attack{i}.pap" );
-                    var autoShotPath = SelectUtils.GetSkeletonPath( skeleton, $"{autoJobId}/battle/auto_attack_shot{i}.pap" );
+                    var autoPath = SelectDataUtils.GetSkeletonPath( skeleton, $"{autoJobId}/battle/auto_attack{i}.pap" );
+                    var autoShotPath = SelectDataUtils.GetSkeletonPath( skeleton, $"{autoJobId}/battle/auto_attack_shot{i}.pap" );
                     if( Plugin.DataManager.FileExists( autoPath ) ) autoPaths.Add( autoPath );
                     if( Plugin.DataManager.FileExists( autoShotPath ) ) autoPaths.Add( autoShotPath );
                 }
@@ -89,15 +89,15 @@ namespace VfxEditor.Select.Pap.Job {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                Dialog.DrawPapsWithHeader( Loaded.General, SelectResultType.GameJob, Selected.Name );
+                DrawPapsWithHeader( Loaded.General, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                Dialog.DrawPapsWithHeader( Loaded.Poses, SelectResultType.GameJob, Selected.Name );
+                DrawPapsWithHeader( Loaded.Poses, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Auto-Attack" ) ) {
-                Dialog.DrawPapsWithHeader( Loaded.AutoAttack, SelectResultType.GameJob, Selected.Name );
+                DrawPapsWithHeader( Loaded.AutoAttack, Selected.Name );
                 ImGui.EndTabItem();
             }
         }

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 namespace VfxEditor.Select.Vfx.Action {
@@ -8,7 +7,6 @@ namespace VfxEditor.Select.Vfx.Action {
         public override void LoadData() {
             var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && !( x.IsPlayerAction || x.ClassJob.Value != null ) );
-
             foreach( var item in sheet ) {
                 var action = new ActionRow( item, false );
                 if( action.HasVfx ) Items.Add( action );

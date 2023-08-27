@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
         private readonly string Prefix;
         private readonly string Extension;
 
-        public SkeletonArmorTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor" ) {
+        public SkeletonArmorTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor", SelectResultType.GameItem ) {
             Prefix = prefix;
             Extension = extension;
         }
@@ -32,15 +32,13 @@ namespace VfxEditor.Select.Shared.Skeleton {
                 ItemType.Head => "met",
                 _ => "unk"
             };
-
-            var armorPrefix = armorString[0];
-            var itemString = $"{armorPrefix}{item.Ids.Id:D4}";
+            var itemString = $"{armorString[0]}{item.Ids.Id:D4}";
 
             var paths = new Dictionary<string, string>();
-            foreach( var race in SelectUtils.RaceAnimationIds ) {
+            foreach( var race in SelectDataUtils.RaceAnimationIds ) {
                 paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{armorString}/{itemString}/{Prefix}_{race.Value.SkeletonId}{itemString}.{Extension}";
             }
-            loaded = SelectUtils.FileExistsFilter( paths );
+            loaded = SelectDataUtils.FileExistsFilter( paths );
         }
 
         protected override string GetName( ArmorRow item ) => item.Name;
@@ -50,9 +48,9 @@ namespace VfxEditor.Select.Shared.Skeleton {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawPaths( Loaded, SelectResultType.GameItem, Selected.Name );
+            DrawPaths( Loaded, Selected.Name );
         }
     }
 }

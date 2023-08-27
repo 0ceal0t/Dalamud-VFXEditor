@@ -14,7 +14,7 @@ namespace VfxEditor.Select {
         }
     }
 
-    public partial class SelectUtils {
+    public partial class SelectDataUtils {
         public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
         public static string MiscVfxPath => Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );

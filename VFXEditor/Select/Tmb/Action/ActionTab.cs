@@ -5,8 +5,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Tmb.Action {
     public class ActionTab : SelectTab<ActionRow> {
-        public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
-        public ActionTab( SelectDialog dialog, string name ) : base( dialog, name, "Tmb-Action" ) { }
+        public ActionTab( SelectDialog dialog, string name ) : this( dialog, name, "Tmb-Action" ) { }
+
+        public ActionTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
 
         // ===== LOADING =====
 
@@ -22,16 +23,16 @@ namespace VfxEditor.Select.Tmb.Action {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         protected override void DrawSelected() {
-            SelectTabUtils.DrawIcon( Icon );
+            SelectUiUtils.DrawIcon( Icon );
 
-            Dialog.DrawPath( "Start", Selected.Start.Path, SelectResultType.GameAction, $"{Selected.Name} Start", true );
+            DrawPath( "Start", Selected.Start.Path, $"{Selected.Name} Start", true );
             DrawMovementCancel( Selected.Start );
 
-            Dialog.DrawPath( "End", Selected.End.Path, SelectResultType.GameAction, $"{Selected.Name} End", true );
+            DrawPath( "End", Selected.End.Path, $"{Selected.Name} End", true );
             DrawMovementCancel( Selected.End );
 
-            Dialog.DrawPath( "Hit", Selected.Hit.Path, SelectResultType.GameAction, $"{Selected.Name} Hit", true );
-            Dialog.DrawPath( "Weapon", Selected.Weapon.Path, SelectResultType.GameAction, $"{Selected.Name} Weapon", true );
+            DrawPath( "Hit", Selected.Hit.Path, $"{Selected.Name} Hit", true );
+            DrawPath( "Weapon", Selected.Weapon.Path, $"{Selected.Name} Weapon", true );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

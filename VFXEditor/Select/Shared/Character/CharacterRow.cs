@@ -7,13 +7,13 @@ namespace VfxEditor.Select.Shared.Character {
         public readonly string SkeletonId;
         public readonly int HairOffset;
 
+        public string EidPath => $"chara/human/{SkeletonId}/skeleton/base/b0001/eid_{SkeletonId}b0001.eid";
+
         public CharacterRow( string name, RaceStruct race ) {
             Name = name;
             SkeletonId = race.SkeletonId;
             HairOffset = race.HairOffset;
         }
-
-        public string EidPath => $"chara/human/{SkeletonId}/skeleton/base/b0001/eid_{SkeletonId}b0001.eid";
 
         public string GetLoopPap( int poseId ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/emote/pose" + poseId.ToString().PadLeft( 2, '0' ) + "_loop.pap";
 
@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Shared.Character {
         public List<int> GetHairIds() {
             var ret = new List<int>();
             var sheet = Plugin.DataManager.GetExcelSheet<CharaMakeCustomize>();
-            for( var hair = HairOffset; hair < HairOffset + SelectUtils.HairEntries; hair++ ) {
+            for( var hair = HairOffset; hair < HairOffset + SelectDataUtils.HairEntries; hair++ ) {
                 var hairRow = sheet.GetRow( ( uint )hair );
                 var hairId = ( int )hairRow.FeatureID;
                 if( hairId == 0 ) continue;

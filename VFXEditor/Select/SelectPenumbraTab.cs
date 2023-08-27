@@ -10,7 +10,7 @@ using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Select {
     public class SelectPenumbraTab : SelectTab<string, Dictionary<string, List<(string, string)>>> {
-        public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
+        public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared", SelectResultType.Local ) { }
 
         public override void Draw() {
             if( !Plugin.PenumbraIpc.PenumbraEnabled ) return;
@@ -92,7 +92,7 @@ namespace VfxEditor.Select {
                         var (gamePath, localPath) = file;
                         if( !Path.Exists( localPath ) ) continue;
 
-                        Dialog.DrawPath( $"File {fileIdx}", localPath, gamePath, SelectResultType.Local, $"{Selected} {group.Key} {fileIdx}", false );
+                        DrawPath( $"File {fileIdx}", localPath, gamePath, $"{Selected} {group.Key} {fileIdx}", false );
 
                         fileIdx++;
                     }
