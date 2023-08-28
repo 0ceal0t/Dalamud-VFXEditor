@@ -51,18 +51,16 @@ namespace VfxEditor {
             }
 
             ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
 
-            if( unassigned ) ImGui.PushStyleVar( ImGuiStyleVar.Alpha, 0.5f );
-            if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) {
-                Modifier = KeybindModifierKeys.Ctrl;
-                Key = VirtualKey.NONCONVERT;
-                ret = true;
+            using( var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, unassigned ) )
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) {
+                    Modifier = KeybindModifierKeys.Ctrl;
+                    Key = VirtualKey.NONCONVERT;
+                    ret = true;
+                }
             }
-            if( unassigned ) ImGui.PopStyleVar();
-
-            ImGui.PopFont();
 
 
             ImGui.SameLine();

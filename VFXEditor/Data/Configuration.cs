@@ -204,21 +204,18 @@ namespace VfxEditor {
             ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
             if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
             if( ImGui.Checkbox( "Refresh write location each update", ref UpdateWriteLocation ) ) Save();
+
             if( ImGui.Checkbox( "Log all files", ref LogAllFiles ) ) Save();
             if( ImGui.Checkbox( "Log debug information", ref LogDebug ) ) Save();
             if( ImGui.Checkbox( "Log Vfx debug information", ref LogVfxDebug ) ) Save();
             if( ImGui.Checkbox( "Log Vfx triggers", ref LogVfxTriggers ) ) Save();
 
             if( ImGui.Checkbox( "Autosave workspace", ref AutosaveEnabled ) ) Save();
-            ImGui.Indent();
-            if( !AutosaveEnabled ) {
-                var style = ImGui.GetStyle();
-                ImGui.PushStyleVar( ImGuiStyleVar.Alpha, style.Alpha * 0.5f );
+            using( var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled ) )
+            using( var indent = ImRaii.PushIndent() ) {
+                ImGui.SetNextItemWidth( 120 );
+                if( ImGui.InputInt( "Autosave time (seconds)", ref AutosaveSeconds ) ) Save();
             }
-            ImGui.SetNextItemWidth( 120 );
-            if( ImGui.InputInt( "Autosave time (seconds)", ref AutosaveSeconds ) ) Save();
-            if( !AutosaveEnabled ) ImGui.PopStyleVar();
-            ImGui.Unindent();
 
             if( ImGui.Checkbox( "Hide with UI", ref HideWithUI ) ) Save();
 

@@ -1,9 +1,9 @@
 namespace VfxEditor {
     public interface ICommand {
-        void Execute();
+        public void Execute();
 
-        void Undo();
+        public void Undo();
 
-        void Redo();
+        public void Redo();
     }
 }

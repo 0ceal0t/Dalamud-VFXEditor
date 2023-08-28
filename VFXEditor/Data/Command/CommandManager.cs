@@ -8,7 +8,7 @@ using VfxEditor.FileManager;
 
 namespace VfxEditor {
     public class CommandManager {
-        public static readonly List<CommandManager> Managers = new();
+        public static readonly List<CommandManager> CommandManagers = new();
         public static readonly List<string> FilesToCleanup = new();
 
         public static CommandManager Avfx => Plugin.AvfxManager?.GetCommandManager();
@@ -29,7 +29,7 @@ namespace VfxEditor {
         private readonly Action OnChangeAction;
 
         public CommandManager( FileManagerWindow manager, Action onChangeAction = null ) {
-            Managers.Add( this );
+            CommandManagers.Add( this );
             Manager = manager;
             Copy = manager.GetCopyManager();
             OnChangeAction = onChangeAction;
@@ -81,7 +81,7 @@ namespace VfxEditor {
         }
 
         public static void DisposeAll() {
-            Managers.ForEach( x => x.Dispose() );
+            CommandManagers.ForEach( x => x.Dispose() );
             foreach( var file in FilesToCleanup ) {
                 if( File.Exists( file ) ) File.Delete( file );
             }
