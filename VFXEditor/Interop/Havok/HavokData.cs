@@ -28,6 +28,7 @@ namespace VfxEditor.Interop.Havok {
 
                 if( Resource == null ) {
                     PluginLog.Error( $"Could not read file: {Path}" );
+                    return;
                 }
 
                 var rootLevelName = @"hkRootLevelContainer"u8;
@@ -79,12 +80,15 @@ namespace VfxEditor.Interop.Havok {
         }
 
         public virtual void RemoveReference() {
-            if( Resource == null ) return;
-            var refResource = ( hkReferencedObject* )Resource;
-            refResource->RemoveReference();
+            if( Resource != null ) {
+                var refResource = ( hkReferencedObject* )Resource;
+                refResource->RemoveReference();
+            }
 
-            var refContainer = ( hkReferencedObject* )AnimationContainer;
-            refContainer->RemoveReference();
+            if( AnimationContainer != null ) {
+                var refContainer = ( hkReferencedObject* )AnimationContainer;
+                refContainer->RemoveReference();
+            }
         }
 
         public static List<T> ToList<T>( hkArray<T> array ) where T : unmanaged {

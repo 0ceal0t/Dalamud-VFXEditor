@@ -33,6 +33,8 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedTmbOffset4 = 0;
         private readonly int ModdedPapMod4 = 0;
 
+        private readonly bool EmptyHavok = false;
+
         public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.PapManager ) ) {
             SourcePath = sourcePath;
             HkxTempLocation = hkxTemp;
@@ -71,13 +73,18 @@ namespace VfxEditor.PapFormat {
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
 
-            AnimationData = new( this, HkxTempLocation );
+            if( havokData.Length > 8 ) {
+                AnimationData = new( this, HkxTempLocation );
+            }
+            else {
+                EmptyHavok = true;
+            }
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
         }
 
         public override void Update() {
-            AnimationData.Write();
+            AnimationData?.Write();
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -153,6 +160,11 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "Animations" );
             if( !tabItem ) return;
 
+            if( EmptyHavok ) {
+                ImGui.TextDisabled( "No Havok data" );
+                return;
+            }
+
             AnimationsDropdown.Draw();
         }
 
@@ -174,7 +186,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Dispose() {
-            AnimationData.Dispose();
+            AnimationData?.Dispose();
             if( Plugin.DirectXManager.PapPreview.CurrentFile == this ) {
                 Plugin.DirectXManager.PapPreview.ClearFile();
                 Plugin.DirectXManager.PapPreview.ClearAnimation();
