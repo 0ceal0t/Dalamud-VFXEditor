@@ -2,7 +2,7 @@ namespace VfxEditor.AvfxFormat {
     public class UiNodeSelectListRemoveCommand<T> : ICommand where T : AvfxNode {
         private readonly UiNodeSelectList<T> Item;
         private readonly int Idx;
-        private T State;
+        private T PrevState;
 
         public UiNodeSelectListRemoveCommand( UiNodeSelectList<T> item, int idx ) {
             Item = item;
@@ -10,8 +10,8 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Execute() {
-            State = Item.Selected[Idx];
-            Item.UnlinkParentChild( State );
+            PrevState = Item.Selected[Idx];
+            Item.UnlinkParentChild( PrevState );
             Item.Selected.RemoveAt( Idx );
             Item.UpdateLiteral();
         }
@@ -19,8 +19,8 @@ namespace VfxEditor.AvfxFormat {
         public void Redo() => Execute();
 
         public void Undo() {
-            Item.Selected.Insert( Idx, State );
-            Item.LinkParentChild( State );
+            Item.Selected.Insert( Idx, PrevState );
+            Item.LinkParentChild( PrevState );
             Item.UpdateLiteral();
         }
     }

@@ -66,7 +66,7 @@ namespace VfxEditor.TmbFormat.Actor {
                         var newTrack = new Tmtr( File );
                         var idx = Tracks.Count == 0 ? 0 : File.Tracks.IndexOf( Tracks.Last() ) + 1;
 
-                        TmbRefreshIdsCommand command = new( File, false, true );
+                        var command = new TmbRefreshIdsCommand( File );
                         command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
                         command.Add( new GenericAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
                         Command.Add( command );
@@ -75,7 +75,7 @@ namespace VfxEditor.TmbFormat.Actor {
                     if( SelectedTrack != null ) {
                         ImGui.SameLine();
                         if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) { // REMOVE
-                            TmbRefreshIdsCommand command = new( File, false, true );
+                            var command = new TmbRefreshIdsCommand( File );
                             command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                             command.Add( new GenericRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
                             SelectedTrack.DeleteAllEntries( command );

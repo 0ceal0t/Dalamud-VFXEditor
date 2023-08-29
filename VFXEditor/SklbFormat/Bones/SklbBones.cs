@@ -214,7 +214,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     var newId = BONE_ID++;
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
-                    var command = new CompoundCommand( false, true );
+                    var command = new CompoundCommand();
                     command.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
                     command.Add( new SklbBoneParentCommand( newBone, bone ) );
                     CommandManager.Sklb.Add( command );
@@ -391,7 +391,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( toDelete.Contains( Selected ) ) ClearSelected();
 
-            var command = new CompoundCommand( false, true );
+            var command = new CompoundCommand();
             foreach( var item in toDelete ) {
                 command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
             }

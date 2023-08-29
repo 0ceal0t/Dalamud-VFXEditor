@@ -2,7 +2,7 @@ namespace VfxEditor.TmbFormat.Utils {
     public class TmbRefreshIdsCommand : CompoundCommand {
         private readonly TmbFile File;
 
-        public TmbRefreshIdsCommand( TmbFile file, bool reverseRedo, bool reverseUndo ) : base( reverseRedo, reverseUndo ) {
+        public TmbRefreshIdsCommand( TmbFile file ) : base() {
             File = file;
         }
 

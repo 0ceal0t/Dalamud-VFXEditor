@@ -1,18 +1,18 @@
 namespace VfxEditor.AvfxFormat {
     internal class AvfxAssignCommandMulti : ICommand {
         private readonly AvfxBase Item;
-        private readonly bool State;
+        private readonly bool Assigned;
 
-        public AvfxAssignCommandMulti( AvfxBase item, bool state ) {
+        public AvfxAssignCommandMulti( AvfxBase item, bool assigned ) {
             Item = item;
-            State = state;
+            Assigned = assigned;
         }
 
-        public void Execute() => SetState( State );
+        public void Execute() => SetState( Assigned );
 
-        public void Redo() => SetState( State );
+        public void Redo() => SetState( Assigned );
 
-        public void Undo() => SetState( !State );
+        public void Undo() => SetState( !Assigned );
 
         private void SetState( bool state ) {
             if( state ) AvfxBase.RecurseAssigned( Item, true );

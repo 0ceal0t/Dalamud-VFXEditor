@@ -29,7 +29,7 @@ namespace VfxEditor.PapFormat {
             var animation = new PapAnimation( File, File.HkxTempLocation );
             animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
 
-            CompoundCommand command = new( false, true );
+            var command = new CompoundCommand();
             command.Add( new PapAnimationAddCommand( File, File.Animations, animation ) );
             command.Add( new PapHavokCommand( File, () => {
                 var newAnimation = new HavokData( ImportPath );

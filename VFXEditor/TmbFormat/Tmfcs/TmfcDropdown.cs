@@ -18,7 +18,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
                 "Delete F-Curve",
                 "Are you sure you want to delete this item? This change is potentially detectable, so make sure you know what you're doing.",
                 () => {
-                    TmbRefreshIdsCommand command = new( File, false, true );
+                    var command = new TmbRefreshIdsCommand( File );
                     command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
                     command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, item ) );
                     File.Command.Add( command );
@@ -28,7 +28,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
 
         protected override void OnNew() {
             var newTmfc = new Tmfc( File );
-            TmbRefreshIdsCommand command = new( File, false, true );
+            var command = new TmbRefreshIdsCommand( File );
             command.Add( new GenericAddCommand<Tmfc>( Items, newTmfc ) );
             command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, newTmfc ) );
             File.Command.Add( command );

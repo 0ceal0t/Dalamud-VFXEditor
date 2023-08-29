@@ -95,7 +95,7 @@ namespace VfxEditor.AvfxFormat {
                 idx++;
             }, size );
 
-            CompoundCommand importCommand = new( false, true ); // remove in reverse order
+            var importCommand = new CompoundCommand();
             // Import items in a specific order
             ImportGroup( models, reader, ModelView, NodeGroupSet.Models, importCommand );
             ImportGroup( textures, reader, TextureView, NodeGroupSet.Textures, importCommand );

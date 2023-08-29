@@ -17,7 +17,7 @@ namespace VfxEditor.PapFormat {
         protected override void OnDelete( PapAnimation item ) {
             var index = Items.IndexOf( item );
 
-            CompoundCommand command = new( false, true );
+            var command = new CompoundCommand();
             command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
             command.Add( new PapHavokCommand( File, () => {
                 var container = File.AnimationData.AnimationContainer;

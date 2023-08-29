@@ -3,8 +3,8 @@ using System;
 namespace VfxEditor.AvfxFormat {
     public class UiCurveEditorCommand : ICommand {
         private readonly UiCurveEditor Item;
-        private UiCurveEditorState State;
         private readonly Action ChangeAction;
+        private UiCurveEditorState State;
         private UiCurveEditorState PrevState;
 
         public UiCurveEditorCommand( UiCurveEditor item, Action changeAction ) {

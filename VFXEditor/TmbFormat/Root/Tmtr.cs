@@ -132,7 +132,7 @@ namespace VfxEditor.TmbFormat {
             tmbReader.ParseItem( File, actors, tracks, entries, tmfcs, ref verified );
             var newEntry = entries[0];
 
-            TmbRefreshIdsCommand command = new( File, false, true );
+            var command = new TmbRefreshIdsCommand( File );
             AddEntry( command, newEntry );
             Command.Add( command );
         }
@@ -144,7 +144,7 @@ namespace VfxEditor.TmbFormat {
 
         public void DeleteEntry( TmbEntry entry ) {
             if( !Entries.Contains( entry ) ) return;
-            TmbRefreshIdsCommand command = new( File, false, true );
+            var command = new TmbRefreshIdsCommand( File );
             DeleteEntry( command, entry );
             Command.Add( command );
         }
@@ -204,7 +204,7 @@ namespace VfxEditor.TmbFormat {
             var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ) } );
             var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
 
-            TmbRefreshIdsCommand command = new( File, false, true );
+            var command = new TmbRefreshIdsCommand( File );
             AddEntry( command, newEntry );
             Command.Add( command );
         }

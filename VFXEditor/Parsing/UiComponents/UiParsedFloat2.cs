@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Vector2s[Name] = Value;
             if( copy.IsPasting && copy.Vector2s.TryGetValue( Name, out var val ) ) {
-                var command = new CompoundCommand( false, true );
+                var command = new CompoundCommand();
                 command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
                 manager.Add( command );
@@ -28,7 +28,7 @@ namespace VfxEditor.Parsing {
 
             var value = Value;
             if( ImGui.InputFloat2( Name, ref value ) ) {
-                var command = new CompoundCommand( false, true );
+                var command = new CompoundCommand();
                 command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
                 manager.Add( command );

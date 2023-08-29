@@ -143,7 +143,7 @@ namespace VfxEditor.TmbFormat {
             var payload = ImGui.AcceptDragDropPayload( "TMB_ENTRY" );
             if( payload.NativePtr == null ) return;
 
-            TmbRefreshIdsCommand command = new( this, false, true );
+            var command = new TmbRefreshIdsCommand( this );
             foreach( var track in Tracks ) {
                 track.DeleteEntry( command, DraggingEntry ); // will add to command
             }

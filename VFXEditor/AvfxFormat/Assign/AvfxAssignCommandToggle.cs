@@ -3,17 +3,17 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public class AvfxAssignCommandToggle<T> : ICommand where T : AvfxBase {
         private readonly List<T> Item;
-        private readonly bool State;
+        private readonly bool Assigned;
 
-        public AvfxAssignCommandToggle( List<T> item, bool state ) {
+        public AvfxAssignCommandToggle( List<T> item, bool assigned ) {
             Item = item;
-            State = state;
+            Assigned = assigned;
         }
 
-        public void Execute() => Item.ForEach( x => x.SetAssigned( State ) );
+        public void Execute() => Item.ForEach( x => x.SetAssigned( Assigned ) );
 
-        public void Redo() => Item.ForEach( x => x.SetAssigned( State ) );
+        public void Redo() => Item.ForEach( x => x.SetAssigned( Assigned ) );
 
-        public void Undo() => Item.ForEach( x => x.SetAssigned( !State ) );
+        public void Undo() => Item.ForEach( x => x.SetAssigned( !Assigned ) );
     }
 }

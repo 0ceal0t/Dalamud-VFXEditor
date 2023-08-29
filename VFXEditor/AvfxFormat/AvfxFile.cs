@@ -110,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void Cleanup() {
             var removedNodes = new List<AvfxNode>();
-            var command = new CompoundCommand( false, true );
+            var command = new CompoundCommand();
             CleanupInternalView( TimelineView, command, removedNodes );
             CleanupInternalView( EmitterView, command, removedNodes );
             CleanupInternalView( ParticleView, command, removedNodes );

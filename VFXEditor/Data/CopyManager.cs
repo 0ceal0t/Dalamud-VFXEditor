@@ -23,7 +23,7 @@ namespace VfxEditor.Data {
         public readonly Dictionary<string, string> Strings = new();
         public readonly Dictionary<string, string> Enums = new();
         public readonly List<Vector4> CurveKeys = new();
-        public CompoundCommand PasteCommand { get; private set; } = new( false, true );
+        public CompoundCommand PasteCommand { get; private set; } = new();
 
         public CopyManager() { }
 
@@ -46,7 +46,7 @@ namespace VfxEditor.Data {
             if( !IsPasting ) return;
             Clear();
             manager.Add( PasteCommand ); // execute
-            PasteCommand = new( false, true ); // reset
+            PasteCommand = new(); // reset
         }
 
         public void ClearCurveKeys() => CurveKeys.Clear();

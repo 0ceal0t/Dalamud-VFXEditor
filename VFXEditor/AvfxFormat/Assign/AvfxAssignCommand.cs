@@ -1,20 +1,20 @@
 namespace VfxEditor.AvfxFormat {
     public class AvfxAssignCommand : ICommand {
         private readonly AvfxBase Item;
-        private readonly bool State;
+        private readonly bool Assigned;
         private bool PrevState;
 
-        public AvfxAssignCommand( AvfxBase item, bool state ) {
+        public AvfxAssignCommand( AvfxBase item, bool assigned ) {
             Item = item;
-            State = state;
+            Assigned = assigned;
         }
 
         public void Execute() {
             PrevState = Item.IsAssigned();
-            Item.SetAssigned( State );
+            Item.SetAssigned( Assigned );
         }
 
-        public void Redo() => Item.SetAssigned( State );
+        public void Redo() => Item.SetAssigned( Assigned );
 
         public void Undo() => Item.SetAssigned( PrevState );
     }
