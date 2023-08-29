@@ -33,7 +33,7 @@ namespace VfxEditor.DirectX {
         private float Pitch;
         private Vector3 Position = new( 0, 0, 0 );
         private float Distance = 5;
-        protected Matrix LocalMatrix = Matrix.Identity;
+        protected Matrix LocalMatrix = Matrix.Scaling( new Vector3( -1, 1, 1 ) );
 
         protected int Width = 300;
         protected int Height = 300;
