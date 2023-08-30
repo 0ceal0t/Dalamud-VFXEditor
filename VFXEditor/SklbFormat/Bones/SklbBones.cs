@@ -19,7 +19,15 @@ using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.SklbFormat.Bones {
+    public enum BoneDisplay {
+        Connected,
+        Blender_Style_Inline,
+        Blender_Style_Perpendicular
+    }
+
     public unsafe class SklbBones : HavokBones {
+        private static readonly BoneDisplay[] BoneDisplayOptions = ( BoneDisplay[] )Enum.GetValues( typeof( BoneDisplay ) );
+
         private readonly SklbFile File;
         private static BoneNamePreview SklbPreview => Plugin.DirectXManager.SklbPreview;
 
@@ -78,7 +86,9 @@ namespace VfxEditor.SklbFormat.Bones {
             if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Display Connected", ref Plugin.Configuration.SklbBonesConnected ) ) {
+            ImGui.SetNextItemWidth( 200f );
+            if( UiUtils.EnumComboBox( "##BoneDisplay", BoneDisplayOptions, Plugin.Configuration.SklbBoneDisplay, out var newBoneDisplay ) ) {
+                Plugin.Configuration.SklbBoneDisplay = newBoneDisplay;
                 Plugin.Configuration.Save();
                 UpdatePreview();
             }
@@ -371,9 +381,14 @@ namespace VfxEditor.SklbFormat.Bones {
                 SklbPreview.LoadEmpty( File );
             }
             else {
-                SkeletonMeshBuilder builder = Plugin.Configuration.SklbBonesConnected ?
-                    new ConnectedSkeletonMeshBuilder( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) ) :
-                    new DisconnectedSkeletonMeshBuilder( BoneList, Selected == null ? -1 : Bones.IndexOf( Selected ) );
+                var selectedIdx = Selected == null ? -1 : Bones.IndexOf( Selected );
+                SkeletonMeshBuilder builder = Plugin.Configuration.SklbBoneDisplay switch {
+                    BoneDisplay.Connected => new ConnectedSkeletonMeshBuilder( BoneList, selectedIdx ),
+                    BoneDisplay.Blender_Style_Perpendicular => new DisconnectedSkeletonMeshBuilder( BoneList, selectedIdx, true ),
+                    BoneDisplay.Blender_Style_Inline => new DisconnectedSkeletonMeshBuilder( BoneList, selectedIdx, false ),
+                    _ => null
+                };
+
                 SklbPreview.LoadSkeleton( File, BoneList, builder.Build() );
             }
         }

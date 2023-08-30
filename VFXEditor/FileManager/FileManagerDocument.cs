@@ -108,6 +108,12 @@ namespace VfxEditor.FileManager {
                 PluginLog.Error( $"Local file: [{localPath}] does not exist" );
                 return;
             }
+
+            if( !localPath.EndsWith( $".{Extension}" ) ) {
+                PluginLog.Error( $"{localPath} is the wrong file type" );
+                return;
+            }
+
             try {
                 using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                 CurrentFile?.Dispose();
@@ -125,6 +131,12 @@ namespace VfxEditor.FileManager {
                 PluginLog.Error( $"Game file: [{gamePath}] does not exist" );
                 return;
             }
+
+            if( !gamePath.EndsWith( $".{Extension}" ) ) {
+                PluginLog.Error( $"{gamePath} is the wrong file type" );
+                return;
+            }
+
             try {
                 var file = Plugin.DataManager.GetFile( gamePath );
                 using var ms = new MemoryStream( file.Data );

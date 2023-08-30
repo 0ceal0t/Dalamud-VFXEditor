@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public class DisconnectedSkeletonMeshBuilder : SkeletonMeshBuilder {
-        public DisconnectedSkeletonMeshBuilder( IList<Bone> bones, int selectedIdx ) : base( bones, selectedIdx ) { }
+        private readonly bool Perpendicular;
+
+        public DisconnectedSkeletonMeshBuilder( IList<Bone> bones, int selectedIdx, bool perpendicular ) : base( bones, selectedIdx ) {
+            Perpendicular = perpendicular;
+        }
 
         protected override void PopulateBoneScales( int idx ) {
             var parent = Bones[idx].ParentIndex;
@@ -27,7 +31,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
             var matrix = Bones[idx].BindPose;
             var rotMatrix = Matrix.RotationZ( ( float )( Math.PI / 2 ) );
-            var startMartix = Matrix.Multiply( rotMatrix, matrix );
+            var startMartix = Perpendicular ? Matrix.Multiply( rotMatrix, matrix ) : matrix;
 
             var posMatrix = Matrix.Translation( new( 0.70f * BoneScales[idx], 0, 0 ) );
             var endMatrix = Matrix.Multiply( posMatrix, startMartix );
@@ -36,8 +40,8 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
             // ====== CAP ========
 
-            var capRotMatrix = Matrix.RotationZ( -( float )( Math.PI / 2 ) );
-            var capStartMartix = Matrix.Multiply( capRotMatrix, matrix );
+            var capRotMatrix = Matrix.RotationZ( -( float )( Math.PI ) );
+            var capStartMartix = Matrix.Multiply( capRotMatrix, startMartix );
 
             var capPosMatrix = Matrix.Translation( new( 0.15f * BoneScales[idx], 0, 0 ) );
             var capEndMatrix = Matrix.Multiply( capPosMatrix, capStartMartix );

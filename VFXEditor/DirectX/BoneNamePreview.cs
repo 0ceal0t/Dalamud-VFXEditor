@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.SklbFormat;
+using VfxEditor.SklbFormat.Bones;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
@@ -145,7 +146,7 @@ namespace VfxEditor.DirectX {
 
             // ===== CONNECTION LINES =======
 
-            if( CurrentFile != null && CurrentFile is SklbFile && !Plugin.Configuration.SklbBonesConnected ) {
+            if( CurrentFile != null && CurrentFile is SklbFile && Plugin.Configuration.SklbBoneDisplay != BoneDisplay.Connected ) {
                 foreach( var bone in BoneList ) {
                     if( bone.ParentIndex == -1 ) continue;
                     var startPos = boneScreenMap[bone.Name];

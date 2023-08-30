@@ -10,6 +10,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Library;
 using VfxEditor.Select;
+using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui;
 
 namespace VfxEditor {
@@ -109,7 +110,7 @@ namespace VfxEditor {
         public bool PhybSkeletonSplit = true;
         public bool ShowBoneNames = true;
 
-        public bool SklbBonesConnected = false;
+        public BoneDisplay SklbBoneDisplay = BoneDisplay.Blender_Style_Perpendicular;
 
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
