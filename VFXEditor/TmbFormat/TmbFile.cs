@@ -9,6 +9,7 @@ using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 // Rework based on https://github.com/AsgardXIV/XAT
@@ -27,6 +28,9 @@ namespace VfxEditor.TmbFormat {
         public readonly TmfcDropdown TmfcDropdown;
 
         private TmbEntry DraggingEntry = null;
+
+        private readonly List<Tmtr> UnusedTracks;
+        private readonly GenericSplitView<Tmtr> UnusedTrackView;
 
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) :
             this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }
@@ -60,6 +64,9 @@ namespace VfxEditor.TmbFormat {
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
 
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
+
+            UnusedTracks = Tracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
+            UnusedTrackView = new( "Track", UnusedTracks, false, false );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -116,6 +123,8 @@ namespace VfxEditor.TmbFormat {
             using( var tab = ImRaii.TabItem( "F-Curves" ) ) {
                 if( tab ) TmfcDropdown.Draw();
             }
+
+            DrawUnused();
         }
 
         private void DrawParameters() {
@@ -124,6 +133,17 @@ namespace VfxEditor.TmbFormat {
 
             HeaderTmdh.Draw();
             HeaderTmpp.Draw();
+        }
+
+        private void DrawUnused() {
+            if( UnusedTracks.Count == 0 ) return;
+
+            using var tabItem = ImRaii.TabItem( "Unused" );
+            if( !tabItem ) return;
+
+            ImGui.TextDisabled( "These are leftover tracks which are never actually triggered, and are only useful for research purposes" );
+            ImGui.Separator();
+            UnusedTrackView.Draw();
         }
 
         public void RefreshIds() {

@@ -14,10 +14,11 @@ using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
-    public class Tmtr : TmbItemWithTime {
+    public class Tmtr : TmbItemWithTime, IUiItem {
         public override string Magic => "TMTR";
         public override int Size => 0x18;
         public override int ExtraSize => !LuaAssigned.Value ? 0 : 8 + ( 12 * LuaEntries.Count );
