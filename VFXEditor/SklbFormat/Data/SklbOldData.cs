@@ -2,6 +2,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.SklbFormat.Data {
     public class SklbOldData : SklbData {
@@ -13,10 +14,10 @@ namespace VfxEditor.SklbFormat.Data {
 
             Parsed = new() {
                 Id,
-                Parent1,
-                Parent2,
-                Parent3,
-                Parent4,
+                new ParsedShort2( "Parent 1"),
+                new ParsedShort2( "Parent 2"),
+                new ParsedShort2( "Parent 3"),
+                new ParsedShort2( "Parent 4"),
                 new ParsedShort( "LoD Bones 1" ),
                 new ParsedShort( "LoD Bones 2" ),
                 new ParsedShort( "LoD Bones 3" ),
