@@ -116,7 +116,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
 
         private void UpdatePreview() {
             if( Bones?.BoneList.Count == 0 ) PhybPreview.LoadEmpty( File );
-            else PhybPreview.LoadSkeleton( File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList, -1 ).Build() );
+            else PhybPreview.LoadSkeleton( File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList ).Build() );
         }
 
         public void Dispose() {

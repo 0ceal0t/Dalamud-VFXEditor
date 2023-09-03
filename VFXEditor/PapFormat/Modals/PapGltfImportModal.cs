@@ -2,14 +2,14 @@ using ImGuiNET;
 using OtterGui.Raii;
 using SharpGLTF.Schema2;
 using System.Collections.Generic;
-using VfxEditor.PapFormat.Skeleton;
+using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat {
-    public unsafe class PapGltfModal : Modal {
-        private readonly PapAnimatedSkeleton Skeleton;
+    public unsafe class PapGltfImportModal : Modal {
+        private readonly PapMotion Motion;
         private readonly int HavokIndex;
         private readonly string ImportPath;
 
@@ -18,16 +18,16 @@ namespace VfxEditor.PapFormat {
         private readonly List<string> AnimationNames = new();
         private readonly List<string> NodeNames = new();
 
-        public PapGltfModal( PapAnimatedSkeleton skeleton, int index, string importPath ) : base( "Animation Import" ) {
-            Skeleton = skeleton;
+        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "Animation Import" ) {
+            Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;
 
             var model = ModelRoot.Load( importPath );
 
             var boneNames = new List<string>();
-            for( var i = 0; i < skeleton.Skeleton->Skeleton->Bones.Length; i++ ) {
-                boneNames.Add( skeleton.Skeleton->Skeleton->Bones[i].Name.String );
+            for( var i = 0; i < motion.Skeleton->Bones.Length; i++ ) {
+                boneNames.Add( motion.Skeleton->Bones[i].Name.String );
             }
 
             foreach( var node in model.LogicalNodes ) {
@@ -68,10 +68,10 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
-            CommandManager.Pap.Add( new PapHavokCommand( Skeleton.File, () => {
+            CommandManager.Pap.Add( new PapHavokCommand( Motion.File, () => {
                 GltfAnimation.ImportAnimation(
-                    Skeleton.File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
-                    Skeleton,
+                    Motion.File.MotionData.Skeleton,
+                    Motion,
                     HavokIndex,
                     AnimationIndex,
                     Compress,

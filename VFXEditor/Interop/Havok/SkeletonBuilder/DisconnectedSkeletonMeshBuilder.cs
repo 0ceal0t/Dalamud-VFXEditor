@@ -5,10 +5,12 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public class DisconnectedSkeletonMeshBuilder : SkeletonMeshBuilder {
+        private readonly int SelectedIdx;
         private readonly bool Perpendicular;
 
-        public DisconnectedSkeletonMeshBuilder( IList<Bone> bones, int selectedIdx, bool perpendicular ) : base( bones, selectedIdx ) {
+        public DisconnectedSkeletonMeshBuilder( IList<Bone> bones, int selectedIdx, bool perpendicular ) : base( bones ) {
             Perpendicular = perpendicular;
+            SelectedIdx = selectedIdx;
         }
 
         protected override void PopulateBoneScales( int idx ) {
@@ -50,5 +52,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
         }
 
         protected override void PopulateSpheres( int idx ) { }
+
+        protected override Color4 GetColor( int idx ) => idx == SelectedIdx ? new Color4( 0.980f, 0.621f, 0f, 1f ) : new Color4( 1f, 1f, 1f, 1f );
     }
 }

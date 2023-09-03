@@ -1,19 +1,19 @@
 using ImGuiNET;
 using VfxEditor.Interop.Havok;
-using VfxEditor.PapFormat.Skeleton;
+using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapReplaceModal : Modal {
-        private readonly PapAnimatedSkeleton Skeleton;
+        private readonly PapMotion Motion;
         private readonly int HavokIndex;
         private readonly string ImportPath;
 
         private int Index;
 
-        public PapReplaceModal( PapAnimatedSkeleton skeleton, int index, string importPath ) : base( "Animation Index" ) {
-            Skeleton = skeleton;
+        public PapReplaceModal( PapMotion motion, int index, string importPath ) : base( "Animation Index" ) {
+            Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;
         }
@@ -29,9 +29,9 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
-            CommandManager.Pap.Add( new PapHavokCommand( Skeleton.File, () => {
+            CommandManager.Pap.Add( new PapHavokCommand( Motion.File, () => {
                 var newAnimation = new HavokData( ImportPath );
-                var container = Skeleton.File.AnimationData.AnimationContainer;
+                var container = Motion.File.MotionData.AnimationContainer;
 
                 // Do this so we can undo the change later if necessary
                 var anims = HavokData.ToList( container->Animations );

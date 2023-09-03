@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using FFXIVClientStructs.Havok;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -7,17 +8,19 @@ using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat.Skeleton {
-    public unsafe class PapAnimations : HavokData {
+namespace VfxEditor.PapFormat.Motion {
+    public unsafe class PapMotions : HavokData {
         public readonly PapFile File;
         public readonly string SklbTempPath;
+        public readonly List<PapMotion> Motions = new();
+
         public HavokData Bones;
-        public readonly List<PapAnimatedSkeleton> Animations = new();
+        public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
         private bool SklbReplaced = false;
 
-        public PapAnimations( PapFile file, string havokPath ) : base( havokPath ) {
+        public PapMotions( PapFile file, string havokPath ) : base( havokPath ) {
             File = file;
             SklbTempPath = Path.Replace( ".hkx", "_sklb.hkx" );
 
@@ -30,12 +33,12 @@ namespace VfxEditor.PapFormat.Skeleton {
             UpdateSkeleton( simple );
         }
 
-        public void UpdateAnimations() {
-            Animations.ForEach( x => x.Dispose() );
-            Animations.Clear();
+        public void UpdateMotions() {
+            Motions.ForEach( x => x.Dispose() );
+            Motions.Clear();
 
             for( var i = 0; i < AnimationContainer->Bindings.Length; i++ ) {
-                Animations.Add( new( File, Bones, AnimationContainer->Bindings[i].ptr ) );
+                Motions.Add( new( File, Bones, AnimationContainer->Bindings[i].ptr ) );
             }
         }
 
@@ -44,7 +47,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             sklbFile.SaveHavokData( SklbTempPath );
             Bones = new( SklbTempPath );
 
-            UpdateAnimations();
+            UpdateMotions();
         }
 
         private string GetSklbPath() {
@@ -103,22 +106,22 @@ namespace VfxEditor.PapFormat.Skeleton {
                 }
             }
 
-            Animations[havokIndex].Draw( havokIndex );
+            Motions[havokIndex].Draw( havokIndex );
         }
 
         public void DrawHavok( int havokIndex ) {
-            Animations[havokIndex].DrawHavok();
+            Motions[havokIndex].DrawHavok();
         }
 
         public void Write() {
             var handles = new List<nint>();
-            Animations.ForEach( x => x.UpdateHavok( handles ) );
+            Motions.ForEach( x => x.UpdateHavok( handles ) );
             WriteHavok();
             handles.ForEach( Marshal.FreeHGlobal );
         }
 
         public void Dispose() {
-            Animations.ForEach( x => x.Dispose() );
+            Motions.ForEach( x => x.Dispose() );
         }
     }
 }

@@ -7,7 +7,6 @@ using System.Linq;
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public abstract class SkeletonMeshBuilder {
         protected readonly IList<Bone> Bones;
-        protected readonly int SelectedIdx;
 
         protected readonly Vector3Collection Positions;
         protected readonly IntCollection Tris;
@@ -20,9 +19,8 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
         protected int Offset = 0;
 
-        public SkeletonMeshBuilder( IList<Bone> bones, int selectedIdx ) {
+        public SkeletonMeshBuilder( IList<Bone> bones ) {
             Bones = bones;
-            SelectedIdx = selectedIdx;
 
             var singleBoneBuilder = new MeshBuilder( true, false );
             singleBoneBuilder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitZ, Vector3.UnitX, 1, 0, true );
@@ -73,6 +71,8 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
         protected abstract void PopulateBone( int idx );
 
+        protected abstract Color4 GetColor( int idx );
+
         protected void AddPyramid( float scale, Matrix startMatrix, Matrix endMatrix ) {
             Tris.AddRange( SingleBone.Indices.Select( x => x + Offset ) );
 
@@ -103,7 +103,5 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
         protected void PushColor( Color4 color, int n ) {
             for( var i = 0; i < n; i++ ) Colors.Add( color );
         }
-
-        protected Color4 GetColor( int idx ) => idx == SelectedIdx ? new Color4( 0.980f, 0.621f, 0, 1 ) : new Color4( 1, 1, 1, 1 );
     }
 }

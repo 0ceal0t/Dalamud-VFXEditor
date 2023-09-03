@@ -20,7 +20,7 @@ namespace VfxEditor.PapFormat {
             var command = new CompoundCommand();
             command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
             command.Add( new PapHavokCommand( File, () => {
-                var container = File.AnimationData.AnimationContainer;
+                var container = File.MotionData.AnimationContainer;
 
                 var anims = HavokData.ToList( container->Animations );
                 var bindings = HavokData.ToList( container->Bindings );

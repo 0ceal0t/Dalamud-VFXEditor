@@ -13,9 +13,8 @@ using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
-using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor.PapFormat.Skeleton {
+namespace VfxEditor.PapFormat.Motion {
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaInterleavedUncompressedAnimation.cs#L7
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaPredictiveCompressedAnimation.cs
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaQuantizedAnimation.cs
@@ -29,13 +28,16 @@ namespace VfxEditor.PapFormat.Skeleton {
         Additive = 0x2,
     }
 
-    public unsafe class PapAnimatedSkeleton {
+    public unsafe class PapMotion {
         public readonly PapFile File;
-        public readonly hkaAnimatedSkeleton* Skeleton;
-        public readonly hkaAnimationControl* Animation;
+        public readonly hkaAnimatedSkeleton* AnimatedSkeleton;
+        public readonly hkaAnimationControl* AnimationControl;
+        public hkaAnimationBinding* Binding => AnimationControl->Binding.ptr;
+        public hkaAnimation* Animation => Binding->Animation.ptr;
+        public hkaSkeleton* Skeleton => AnimatedSkeleton->Skeleton;
 
-        public float Time => Animation->LocalTime;
-        public float Duration => Animation->Binding.ptr->Animation.ptr->Duration;
+        public float Time => AnimationControl->LocalTime;
+        public float Duration => Animation->Duration;
         public int TotalFrames => ( int )( Duration * 30f );
 
         private static PapPreview PapPreview => Plugin.DirectXManager.PapPreview;
@@ -49,17 +51,17 @@ namespace VfxEditor.PapFormat.Skeleton {
         private readonly ParsedString OriginalSkeletonName = new( "Original Skeleton Name" );
         private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "Blend Hint" );
 
-        public PapAnimatedSkeleton( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {
+        public PapMotion( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {
             File = file;
-            Skeleton = ( hkaAnimatedSkeleton* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimatedSkeleton ) ) );
-            Animation = ( hkaAnimationControl* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationControl ) ) );
+            AnimatedSkeleton = ( hkaAnimatedSkeleton* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimatedSkeleton ) ) );
+            AnimationControl = ( hkaAnimationControl* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationControl ) ) );
 
-            Animation->Ctor1( binding );
-            Skeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );
-            Skeleton->addAnimationControl( Animation );
+            AnimationControl->Ctor1( binding );
+            AnimatedSkeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );
+            AnimatedSkeleton->addAnimationControl( AnimationControl );
 
-            OriginalSkeletonName.Value = Animation->Binding.ptr->OriginalSkeletonName.String;
-            BlendHint.Value = ( BlendHintTypes )Animation->Binding.ptr->BlendHint.Value;
+            OriginalSkeletonName.Value = Binding->OriginalSkeletonName.String;
+            BlendHint.Value = ( BlendHintTypes )Binding->BlendHint.Value;
         }
 
         // ======= DRAWING =========
@@ -68,7 +70,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             if( Data == null ) {
                 UpdateFrameData();
             }
-            else if( PapPreview.CurrentAnimation != this ) {
+            else if( PapPreview.CurrentMotion != this ) {
                 Frame = 0;
                 Playing = false;
                 UpdateFrameData();
@@ -137,7 +139,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         // ======== OTHER HAVOK STUFF ==========
 
         public void DrawHavok() {
-            ImGui.TextDisabled( $"{Animation->Binding.ptr->Animation.ptr->Type}" );
+            ImGui.TextDisabled( $"{Animation->Type}" );
             OriginalSkeletonName.Draw( CommandManager.Pap );
             BlendHint.Draw( CommandManager.Pap );
         }
@@ -148,9 +150,8 @@ namespace VfxEditor.PapFormat.Skeleton {
             var namePtr = new hkStringPtr {
                 StringAndFlag = ( byte* )nameHandle
             };
-            Animation->Binding.ptr->OriginalSkeletonName = namePtr;
-
-            Animation->Binding.ptr->BlendHint.Storage = ( sbyte )BlendHint.Value;
+            Binding->OriginalSkeletonName = namePtr;
+            Binding->BlendHint.Storage = ( sbyte )BlendHint.Value;
         }
 
         // ======== IMPORT EXPORT =========
@@ -158,9 +159,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         private void ExportDialog( string animationName ) {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
-                GltfAnimation.ExportAnimation(
-                    File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
-                    animationName, this, res );
+                Plugin.AddModal( new PapGltfExportModal( this, animationName, res ) );
             } );
         }
 
@@ -171,7 +170,7 @@ namespace VfxEditor.PapFormat.Skeleton {
                     Plugin.AddModal( new PapReplaceModal( this, idx, res ) );
                 }
                 else {
-                    Plugin.AddModal( new PapGltfModal( this, idx, res ) );
+                    Plugin.AddModal( new PapGltfImportModal( this, idx, res ) );
                 }
             } );
         }
@@ -179,11 +178,11 @@ namespace VfxEditor.PapFormat.Skeleton {
         // ======== UPDATING ===========
 
         private void UpdateFrameData() {
-            Animation->LocalTime = Frame * ( 1 / 30f );
+            AnimationControl->LocalTime = Frame * ( 1 / 30f );
 
-            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Skeleton->Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
-            var floats = ( float* )Marshal.AllocHGlobal( Skeleton->Skeleton->FloatSlots.Length * sizeof( float ) );
-            Skeleton->sampleAndCombineAnimations( transforms, floats );
+            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
+            var floats = ( float* )Marshal.AllocHGlobal( Skeleton->FloatSlots.Length * sizeof( float ) );
+            AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
             Data = new();
 
@@ -191,7 +190,7 @@ namespace VfxEditor.PapFormat.Skeleton {
             var refPoses = new List<Matrix>();
             var bindPoses = new List<Matrix>();
 
-            for( var i = 0; i < Skeleton->Skeleton->Bones.Length; i++ ) {
+            for( var i = 0; i < Skeleton->Bones.Length; i++ ) {
                 var transform = transforms[i];
                 var pos = transform.Translation;
                 var rot = transform.Rotation;
@@ -203,12 +202,12 @@ namespace VfxEditor.PapFormat.Skeleton {
                     new Vector3( pos.X, pos.Y, pos.Z )
                 ) );
 
-                parents.Add( Skeleton->Skeleton->ParentIndices[i] );
+                parents.Add( Skeleton->ParentIndices[i] );
                 refPoses.Add( matrix );
                 bindPoses.Add( Matrix.Identity );
             }
 
-            for( var target = 0; target < Skeleton->Skeleton->Bones.Length; target++ ) {
+            for( var target = 0; target < Skeleton->Bones.Length; target++ ) {
                 var current = target;
                 while( current >= 0 ) {
                     bindPoses[target] = Matrix.Multiply( bindPoses[target], refPoses[current] );
@@ -216,11 +215,11 @@ namespace VfxEditor.PapFormat.Skeleton {
                 }
             }
 
-            for( var i = 0; i < Skeleton->Skeleton->Bones.Length; i++ ) {
+            for( var i = 0; i < Skeleton->Bones.Length; i++ ) {
                 var bone = new Bone {
                     BindPose = bindPoses[i],
                     ParentIndex = parents[i],
-                    Name = Skeleton->Skeleton->Bones[i].Name.String
+                    Name = Skeleton->Bones[i].Name.String
                 };
 
                 Data.Add( bone );
@@ -232,21 +231,35 @@ namespace VfxEditor.PapFormat.Skeleton {
             UpdatePreview();
         }
 
+        public HashSet<int> GetUnanimatedBones() {
+            var animatedBones = new HashSet<int>();
+
+            for( var i = 0; i < Binding->TransformTrackToBoneIndices.Length; i++ ) {
+                animatedBones.Add( Binding->TransformTrackToBoneIndices[i] );
+            }
+
+            var unanimatedBones = new HashSet<int>();
+            for( var i = 0; i < Skeleton->Bones.Length; i++ ) {
+                if( !animatedBones.Contains( i ) ) unanimatedBones.Add( i );
+            }
+            return unanimatedBones;
+        }
+
         private void UpdatePreview() {
             if( Data == null || Data.Count == 0 || TotalFrames == 0 ) {
                 PapPreview.LoadEmpty( File, this );
             }
             else {
-                PapPreview.LoadSkeleton( File, this, new ConnectedSkeletonMeshBuilder( Data, -1 ).Build() );
+                PapPreview.LoadSkeleton( File, this, new ConnectedSkeletonMeshBuilder( Data, -1, GetUnanimatedBones() ).Build() );
             }
         }
 
         public void Dispose() {
-            Skeleton->removeAnimationControl( Animation );
+            AnimatedSkeleton->removeAnimationControl( AnimationControl );
             // if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
-            Marshal.FreeHGlobal( ( nint )Skeleton );
-            Marshal.FreeHGlobal( ( nint )Animation );
-            if( PapPreview.CurrentAnimation == this ) PapPreview.ClearAnimation();
+            Marshal.FreeHGlobal( ( nint )AnimatedSkeleton );
+            Marshal.FreeHGlobal( ( nint )AnimationControl );
+            if( PapPreview.CurrentMotion == this ) PapPreview.ClearAnimation();
         }
     }
 }

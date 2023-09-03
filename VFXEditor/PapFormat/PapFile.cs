@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
-using VfxEditor.PapFormat.Skeleton;
+using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
@@ -27,7 +27,7 @@ namespace VfxEditor.PapFormat {
 
         public readonly List<PapAnimation> Animations = new();
         public readonly PapAnimationDropdown AnimationsDropdown;
-        public readonly PapAnimations AnimationData;
+        public readonly PapMotions MotionData;
 
         // Pap files from mods sometimes get exported with a weird padding, so we have to account for that
         private readonly int ModdedTmbOffset4 = 0;
@@ -74,7 +74,7 @@ namespace VfxEditor.PapFormat {
             }
 
             if( havokData.Length > 8 ) {
-                AnimationData = new( this, HkxTempLocation );
+                MotionData = new( this, HkxTempLocation );
             }
             else {
                 EmptyHavok = true;
@@ -84,7 +84,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Update() {
-            AnimationData?.Write();
+            MotionData?.Write();
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -186,7 +186,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Dispose() {
-            AnimationData?.Dispose();
+            MotionData?.Dispose();
             if( Plugin.DirectXManager.PapPreview.CurrentFile == this ) {
                 Plugin.DirectXManager.PapPreview.ClearFile();
                 Plugin.DirectXManager.PapPreview.ClearAnimation();

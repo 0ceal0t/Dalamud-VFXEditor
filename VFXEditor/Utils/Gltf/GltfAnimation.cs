@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Structs;
-using VfxEditor.PapFormat.Skeleton;
+using VfxEditor.PapFormat.Motion;
 
 namespace VfxEditor.Utils.Gltf {
     public class AnimationKeys {
@@ -24,7 +24,7 @@ namespace VfxEditor.Utils.Gltf {
     // There's something weird going on with the direct roots (n_hara, n_throw)
 
     public static unsafe class GltfAnimation {
-        public static void ExportAnimation( hkaSkeleton* skeleton, string animationName, PapAnimatedSkeleton animatedSkeleton, string path ) {
+        public static void ExportAnimation( hkaSkeleton* skeleton, string animationName, PapMotion motion, bool skipUnanimated, string path ) {
             var scene = new SceneBuilder();
 
             var nameToKeys = new Dictionary<string, AnimationKeys>();
@@ -68,13 +68,22 @@ namespace VfxEditor.Utils.Gltf {
             var model = scene.ToGltf2();
 
             var animation = model.UseAnimation( animationName );
-            for( var time = 0f; time <= animatedSkeleton.Duration; time += 1 / 30f ) {
-                ExportKeys( nameToKeys, names, animatedSkeleton, time );
+            for( var time = 0f; time <= motion.Duration; time += 1 / 30f ) {
+                ExportKeys( nameToKeys, names, motion, time );
             }
+
+            var unanimated = skipUnanimated ? motion.GetUnanimatedBones() : null;
 
             var nodes = model.LogicalNodes;
             foreach( var node in nodes ) {
                 if( node.Name == null || !nameToKeys.ContainsKey( node.Name ) ) continue;
+                if( skipUnanimated ) {
+                    var idx = names.IndexOf( node.Name );
+                    if( unanimated.Contains( idx ) ) {
+                        PluginLog.Log( $"Skipping unanimated node {node.Name}" );
+                        continue;
+                    }
+                }
 
                 var keys = nameToKeys[node.Name];
                 animation.CreateRotationChannel( node, keys.RotateKeys, true );
@@ -86,11 +95,11 @@ namespace VfxEditor.Utils.Gltf {
             PluginLog.Log( $"Saved GLTF to: {path}" );
         }
 
-        private static void ExportKeys( Dictionary<string, AnimationKeys> nameToKeys, List<string> names, PapAnimatedSkeleton animatedSkeleton, float time ) {
-            var resetTime = animatedSkeleton.Animation->LocalTime;
-            animatedSkeleton.Animation->LocalTime = time;
+        private static void ExportKeys( Dictionary<string, AnimationKeys> nameToKeys, List<string> names, PapMotion motion, float time ) {
+            var resetTime = motion.AnimationControl->LocalTime;
+            motion.AnimationControl->LocalTime = time;
 
-            var skeleton = animatedSkeleton.Skeleton;
+            var skeleton = motion.AnimatedSkeleton;
 
             var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( skeleton->Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
             var floats = ( float* )Marshal.AllocHGlobal( skeleton->Skeleton->FloatSlots.Length * sizeof( float ) );
@@ -113,7 +122,7 @@ namespace VfxEditor.Utils.Gltf {
             // Reset
             Marshal.FreeHGlobal( ( nint )transforms );
             Marshal.FreeHGlobal( ( nint )floats );
-            animatedSkeleton.Animation->LocalTime = resetTime;
+            motion.AnimationControl->LocalTime = resetTime;
         }
 
         // Lord have mercy
@@ -121,7 +130,7 @@ namespace VfxEditor.Utils.Gltf {
 
         public static void ImportAnimation(
             hkaSkeleton* skeleton,
-            PapAnimatedSkeleton animatedSkeleton,
+            PapMotion motion,
             int havokIndex,
             int gltfAnimationIndex,
             bool compress,
@@ -231,7 +240,7 @@ namespace VfxEditor.Utils.Gltf {
                 }
             }
 
-            var currentBinding = animatedSkeleton.Animation->Binding;
+            var currentBinding = motion.AnimationControl->Binding;
             var currentAnim = currentBinding.ptr->Animation;
 
             var anim = ( hkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaInterleavedUncompressedAnimation ) ) );
@@ -275,7 +284,7 @@ namespace VfxEditor.Utils.Gltf {
             var bindingPtr = new hkRefPtr<hkaAnimationBinding>() { ptr = binding };
             binding->Animation = animPtr;
 
-            var container = animatedSkeleton.File.AnimationData.AnimationContainer;
+            var container = motion.File.MotionData.AnimationContainer;
             var anims = HavokData.ToList( container->Animations );
             var bindings = HavokData.ToList( container->Bindings );
             anims[havokIndex] = animPtr;

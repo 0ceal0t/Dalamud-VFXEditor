@@ -110,7 +110,7 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "Motion" );
             if( !tabItem ) return;
 
-            File.AnimationData.Draw( HavokIndex );
+            File.MotionData.Draw( HavokIndex );
         }
 
         private void DrawHavok() {
@@ -119,7 +119,7 @@ namespace VfxEditor.PapFormat {
 
             using var _ = ImRaii.PushId( "Havok" );
 
-            File.AnimationData.DrawHavok( HavokIndex );
+            File.MotionData.DrawHavok( HavokIndex );
         }
     }
 }

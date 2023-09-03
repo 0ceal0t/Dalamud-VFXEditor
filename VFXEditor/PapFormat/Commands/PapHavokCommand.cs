@@ -15,27 +15,27 @@ namespace VfxEditor.PapFormat {
             ChangeAction = changeAction;
 
             // Back up data
-            OldAnimations = File.AnimationData.AnimationContainer->Animations;
-            OldBindings = File.AnimationData.AnimationContainer->Bindings;
+            OldAnimations = File.MotionData.AnimationContainer->Animations;
+            OldBindings = File.MotionData.AnimationContainer->Bindings;
         }
 
         public void Execute() {
             ChangeAction.Invoke();
-            NewAnimations = File.AnimationData.AnimationContainer->Animations;
-            NewBindings = File.AnimationData.AnimationContainer->Bindings;
-            File.AnimationData.UpdateAnimations();
+            NewAnimations = File.MotionData.AnimationContainer->Animations;
+            NewBindings = File.MotionData.AnimationContainer->Bindings;
+            File.MotionData.UpdateMotions();
         }
 
         public void Undo() {
-            File.AnimationData.AnimationContainer->Animations = OldAnimations;
-            File.AnimationData.AnimationContainer->Bindings = OldBindings;
-            File.AnimationData.UpdateAnimations();
+            File.MotionData.AnimationContainer->Animations = OldAnimations;
+            File.MotionData.AnimationContainer->Bindings = OldBindings;
+            File.MotionData.UpdateMotions();
         }
 
         public void Redo() {
-            File.AnimationData.AnimationContainer->Animations = NewAnimations;
-            File.AnimationData.AnimationContainer->Bindings = NewBindings;
-            File.AnimationData.UpdateAnimations();
+            File.MotionData.AnimationContainer->Animations = NewAnimations;
+            File.MotionData.AnimationContainer->Bindings = NewBindings;
+            File.MotionData.UpdateMotions();
         }
     }
 }

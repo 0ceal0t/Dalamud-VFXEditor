@@ -33,7 +33,7 @@ namespace VfxEditor.PapFormat {
             command.Add( new PapAnimationAddCommand( File, File.Animations, animation ) );
             command.Add( new PapHavokCommand( File, () => {
                 var newAnimation = new HavokData( ImportPath );
-                var container = File.AnimationData.AnimationContainer;
+                var container = File.MotionData.AnimationContainer;
 
                 var anims = HavokData.ToList( container->Animations );
                 var bindings = HavokData.ToList( container->Bindings );
