@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -25,15 +26,22 @@ namespace VfxEditor.PapFormat {
             Source = Source
         };
 
+        public override void Dispose() {
+            base.Dispose();
+            File.Delete( HkxTemp );
+        }
+
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             DisplayAnimationWarning();
             base.DrawBody();
         }
 
-        public override void Dispose() {
-            base.Dispose();
-            File.Delete( HkxTemp );
+        protected override void DrawExtraColumn() {
+            var iconSize = UiUtils.GetIconSize( FontAwesomeIcon.InfoCircle );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 126 - iconSize.X - ImGui.GetStyle().FramePadding.X );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ImGui.GetFrameHeight() / 2 + ImGui.GetStyle().ItemSpacing.Y );
+            UiUtils.HelpMarker( "Loaded .pap resources can be found in File > Tools > Loaded Files" );
         }
     }
 }

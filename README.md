@@ -47,7 +47,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Test multiple animations
 - [ ] Test multiple roots
 - [ ] Toggle for `.pap` animation preview
-- [ ] `.sklb` show overlay
 - [ ] C192
 - [ ] `.scd` modded parsing
 - [ ] `.uld` update component type
