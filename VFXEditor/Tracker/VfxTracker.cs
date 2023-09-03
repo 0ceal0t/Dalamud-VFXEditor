@@ -63,12 +63,12 @@ namespace VfxEditor.Tracker {
             }
         }
 
-        public override void AddAll( HashSet<TrackerItem> displayItems ) {
+        public override void PopulateAll( HashSet<TrackerItem> displayItems ) {
             foreach( var item in StaticVfxs ) displayItems.Add( item.Value.ToItem() );
             foreach( var item in ActorVfxs ) displayItems.Add( item.Value.ToItem() );
         }
 
-        public override void Add( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems ) {
+        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems ) {
             // Static
             foreach( var item in StaticVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;

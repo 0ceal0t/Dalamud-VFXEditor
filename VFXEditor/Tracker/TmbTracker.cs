@@ -9,7 +9,7 @@ using VfxEditor.Interop;
 using VfxEditor.Structs;
 
 namespace VfxEditor.Tracker {
-    public unsafe class ActionTracker : Tracker {
+    public unsafe class TmbTracker : Tracker {
         private class ActionData {
             public int ActorId;
             public string Path;
@@ -21,9 +21,11 @@ namespace VfxEditor.Tracker {
             };
         }
 
+        // ===============
+
         private readonly ConcurrentDictionary<IntPtr, ActionData> Actions = new();
 
-        public ActionTracker() { }
+        public TmbTracker() { }
 
         public void AddAction( IntPtr timeline ) {
             if( !Enabled ) return;
@@ -63,11 +65,11 @@ namespace VfxEditor.Tracker {
             }
         }
 
-        public override void AddAll( HashSet<TrackerItem> displayItems ) {
+        public override void PopulateAll( HashSet<TrackerItem> displayItems ) {
             foreach( var item in Actions ) displayItems.Add( item.Value.ToItem() );
         }
 
-        public override void Add( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems ) {
+        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems ) {
             foreach( var item in Actions ) {
                 if( item.Key == IntPtr.Zero ) continue;
 

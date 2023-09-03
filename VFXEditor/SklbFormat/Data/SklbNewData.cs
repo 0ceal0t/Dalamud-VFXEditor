@@ -52,7 +52,10 @@ namespace VfxEditor.SklbFormat.Data {
             ImGui.TextDisabled( "Header Version: [NEW]" );
             Parsed.ForEach( x => x.Draw( CommandManager.Sklb ) );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
             ImGui.TextDisabled( "Parents" );
             ParentsView.Draw();
         }

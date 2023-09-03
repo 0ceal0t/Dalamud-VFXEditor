@@ -64,5 +64,13 @@ namespace VfxEditor.Interop {
         public const string HavokInterleavedVtblSig = "48 89 07 48 8B CD 48 89 77 38";
 
         public const string HavokSplineCtorSig = "48 89 5C 24 ?? 57 48 83 EC 40 48 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??";
+
+        // ========
+
+        public const int DrawObjectDataOffset = 160;
+
+        public const int DrawObjectSklbTableOffset = 88;
+
+        public const int DrawObjectTableStartOffset = 96;
     }
 }

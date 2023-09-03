@@ -6,13 +6,13 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using VfxEditor.Interop;
 using VfxEditor.Structs;
 
 namespace VfxEditor.Ui.Tools {
-    // Kinda scuffed, but it (mostly) works
-
     public unsafe class LoadedTab {
         public void Draw() {
+            // Kinda scuffed, but it (mostly) works
             using var child = ImRaii.Child( "LoadedChild" );
 
             foreach( var item in Plugin.Objects ) {
@@ -52,13 +52,12 @@ namespace VfxEditor.Ui.Tools {
             }
         }
 
-        private void DrawDrawObject( DrawObject* drawObject ) {
-
-            var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + 160 );
+        private static void DrawDrawObject( DrawObject* drawObject ) {
+            var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + Constants.DrawObjectDataOffset );
             if( data == IntPtr.Zero ) return;
 
-            var sklbTable = Marshal.ReadIntPtr( data + 88 );
-            var tableStart = Marshal.ReadIntPtr( data + 96 );
+            var sklbTable = Marshal.ReadIntPtr( data + Constants.DrawObjectSklbTableOffset );
+            var tableStart = Marshal.ReadIntPtr( data + Constants.DrawObjectTableStartOffset );
 
             DrawTable( sklbTable, IntPtr.Zero, "SKLB" );
 
@@ -74,7 +73,7 @@ namespace VfxEditor.Ui.Tools {
 
                     using var tree = ImRaii.TreeNode( name );
                     if( tree ) {
-                        DrawResource( Marshal.ReadIntPtr( tablePtr ) );
+                        if( GetResource( Marshal.ReadIntPtr( tablePtr ), out var fileName ) ) DrawResource( fileName );
                         DrawMultiTable( tablePtr + 8, "PAP" );
                     }
                 }
@@ -85,7 +84,7 @@ namespace VfxEditor.Ui.Tools {
             }
         }
 
-        private void DrawMultiTable( IntPtr tableStart, string prefix ) {
+        private static void DrawMultiTable( IntPtr tableStart, string prefix ) {
             var tablePos = tableStart;
             var tablePtr = Marshal.ReadIntPtr( tablePos );
 
@@ -99,50 +98,62 @@ namespace VfxEditor.Ui.Tools {
             }
 
             for( var i = 0; i < tablePtrs.Count - 1; i++ ) {
-
                 if( i == 5 || i == 7 || i == 8 ) continue; // for shaders and other misc stuff. format still WIP
 
                 DrawTable( tablePtrs[i], tablePtrs[i + 1], $"{prefix} {i}" );
             }
         }
 
-        private void DrawTable( IntPtr tablePtr, IntPtr nextTable, string name ) {
-            if( tablePtr <= 256 ) return;
-
+        private static void DrawTable( IntPtr tablePtr, IntPtr nextTable, string name ) {
             using var _ = ImRaii.PushId( name );
 
             using var tree = ImRaii.TreeNode( name );
             if( !tree ) return;
 
-            var idx = 0;
+            var resources = GetResourcesFromTable( tablePtr, nextTable );
+            for( var idx = 0; idx < resources.Count; idx++ ) {
+                using var __ = ImRaii.PushId( idx );
+                DrawResource( resources[idx] );
+            }
+        }
+
+        public static List<string> GetResourcesFromTable( IntPtr tablePtr, IntPtr nextTable ) {
+            var ret = new List<string>();
+            if( tablePtr <= 256 ) return ret;
+
             var resourcePos = tablePtr;
             var resourcePtr = Marshal.ReadIntPtr( resourcePos );
 
             while( resourcePtr > 256 && !Equals( resourcePos, nextTable ) ) {
                 try {
-                    using var __ = ImRaii.PushId( $"Resource{idx}" );
-                    DrawResource( resourcePtr );
+                    if( GetResource( resourcePtr, out var fileName ) ) ret.Add( fileName );
                 }
                 catch( Exception ) {
                     PluginLog.Error( $"{resourcePtr:X8} {resourcePos:X8} {tablePtr:X8} {nextTable:X8}" );
                 }
 
-                idx++;
                 resourcePos += 8;
                 resourcePtr = Marshal.ReadIntPtr( resourcePos );
             }
+
+            return ret;
         }
 
-        private void DrawResource( IntPtr resourcePtr ) {
-            if( resourcePtr <= 256 || resourcePtr == 0x3F800000 ) return;
+        private static bool GetResource( IntPtr resourcePtr, out string fileName ) {
+            fileName = "";
+
+            if( resourcePtr <= 256 || resourcePtr == 0x3F800000 ) return false;
 
             var resource = ( ResourceHandle* )resourcePtr;
+            if( resource->FileNamePtr() == null ) return false;
 
-            if( resource->FileNamePtr() == null ) return;
+            fileName = resource->FileName().ToString();
+            if( string.IsNullOrEmpty( fileName ) ) return false;
 
-            var fileName = resource->FileName().ToString();
-            if( string.IsNullOrEmpty( fileName ) ) return;
+            return true;
+        }
 
+        private static void DrawResource( string fileName ) {
             ImGui.Text( fileName );
             if( ImGui.IsItemClicked() ) ImGui.SetClipboardText( fileName );
         }

@@ -1,4 +1,6 @@
+using ImGuiNET;
 using System.IO;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Select;
 using VfxEditor.Utils;
@@ -24,6 +26,11 @@ namespace VfxEditor.SklbFormat {
         public override void Dispose() {
             base.Dispose();
             File.Delete( HkxTemp );
+        }
+
+        protected override void DrawExtraColumn() {
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 126 - 28 - ImGui.GetStyle().FramePadding.X );
+            Plugin.Tracker.Sklb.DrawEye( new Vector2( 28, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
         }
     }
 }

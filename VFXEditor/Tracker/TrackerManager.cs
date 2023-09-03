@@ -29,12 +29,15 @@ namespace VfxEditor.Tracker {
         public bool AnyEnabled => EnabledTrackers.Any();
 
         public readonly VfxTracker Vfx = new();
-        public readonly ActionTracker Action = new();
+        public readonly TmbTracker Tmb = new();
+        public readonly SklbTracker Sklb = new();
 
         private List<Tracker> Trackers => new( new Tracker[] {
             Vfx,
-            Action
+            Tmb,
+            Sklb,
         } );
+
         private IEnumerable<Tracker> EnabledTrackers => Trackers.Where( x => x.Enabled );
 
         public TrackerManager() { }
@@ -52,7 +55,7 @@ namespace VfxEditor.Tracker {
 
             if( WatchingCutscene ) {
                 var paths = new HashSet<TrackerItem>();
-                foreach( var tracker in EnabledTrackers ) tracker.AddAll( paths );
+                foreach( var tracker in EnabledTrackers ) tracker.PopulateAll( paths );
 
                 var pos = windowPosition + new Vec2( 15, 15 );
                 DrawOverlayItems( pos, paths, 0 );
@@ -63,7 +66,7 @@ namespace VfxEditor.Tracker {
             var actorIdToItems = new Dictionary<int, HashSet<TrackerItem>>();
 
             foreach( var tracker in EnabledTrackers ) {
-                tracker.Add( floatingItems, actorIdToItems );
+                tracker.Populate( floatingItems, actorIdToItems );
             }
 
             var matrix = GetMatrix( out var width, out var height );

@@ -9,13 +9,13 @@ namespace VfxEditor.Tracker {
     public abstract class Tracker {
         public bool Enabled { get; private set; }
 
-        public abstract void Reset();
+        public abstract void PopulateAll( HashSet<TrackerItem> displayItems );
+
+        public abstract void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems );
 
         public abstract void RemoveStale( DateTime removeTime );
 
-        public abstract void AddAll( HashSet<TrackerItem> displayItems );
-
-        public abstract void Add( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems );
+        public abstract void Reset();
 
         public void Toggle() {
             Enabled = !Enabled;
