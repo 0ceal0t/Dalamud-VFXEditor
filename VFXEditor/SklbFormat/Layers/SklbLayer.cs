@@ -1,25 +1,22 @@
-using Dalamud.Interface;
-using ImGuiNET;
-using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayer : IUiItem {
         public readonly SklbFile File;
-
         public readonly ParsedInt Id = new( "Id" );
         public readonly List<SklbLayerBone> Bones = new();
+        private readonly ListView<SklbLayerBone> BonesView;
 
         public int Size => 4 + 2 + 2 * Bones.Count; // Id + numBones + boneIndices
 
         public SklbLayer( SklbFile file ) {
             File = file;
+            BonesView = new( Bones, () => new( File ), () => CommandManager.Sklb );
         }
 
         public SklbLayer( SklbFile file, BinaryReader reader ) : this( file ) {
@@ -38,31 +35,13 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public void Draw() {
             Id.Draw( CommandManager.Sklb );
-
-            for( var idx = 0; idx < Bones.Count; idx++ ) {
-                var bone = Bones[idx];
-                using var _ = ImRaii.PushId( idx );
-
-                bone.Draw();
-
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-                using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Sklb.Add( new GenericRemoveCommand<SklbLayerBone>( Bones, bone ) );
-                    break;
-                }
-            }
-
-            if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Sklb.Add( new GenericAddCommand<SklbLayerBone>( Bones, new( File ) ) );
-            }
+            BonesView.Draw();
         }
     }
 
     public unsafe class SklbLayerBone : IUiItem {
         public readonly SklbFile File;
-        public ParsedBoneIndex Bone = new( "##Bone", -1 ); // Don't want the label to actually appear
+        public readonly ParsedBoneIndex Bone = new( "##Bone", -1 ); // Don't want the label to actually appear
 
         public SklbLayerBone( SklbFile file ) {
             File = file;

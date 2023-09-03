@@ -156,7 +156,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         // ======== IMPORT EXPORT =========
 
         private void ExportDialog( string animationName ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 GltfAnimation.ExportAnimation(
                     File.AnimationData.Bones.AnimationContainer->Skeletons[0].ptr,
@@ -165,7 +165,7 @@ namespace VfxEditor.PapFormat.Skeleton {
         }
 
         private void ImportDialog( int idx ) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
+            FileDialogManager.OpenFileDialog( "Select a File", "Motion{.hkx,.gltf},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     Plugin.AddModal( new PapReplaceModal( this, idx, res ) );
