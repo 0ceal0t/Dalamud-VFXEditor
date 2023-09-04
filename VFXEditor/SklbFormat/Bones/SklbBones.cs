@@ -167,11 +167,6 @@ namespace VfxEditor.SklbFormat.Bones {
                     if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) DeleteBone( Selected );
                 }
 
-                //SklbPreview.UpdateSelected(
-                //    Selected,
-                //    Selected != null ? BoneList[Bones.IndexOf( Selected )] : new(),
-                //    ( Selected != null && Selected.Parent != null ) ? BoneList[Bones.IndexOf( Selected.Parent )] : new()
-                //);
                 SklbPreview.DrawInline();
             }
 
@@ -179,9 +174,7 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void DrawParentCombo( SklbBone bone ) {
-            var text = bone.Parent == null ? "[NONE]" : bone.Parent.Name.Value;
-
-            using var combo = ImRaii.Combo( "Parent", text );
+            using var combo = ImRaii.Combo( "Parent", bone.Parent == null ? "[NONE]" : bone.Parent.Name.Value );
             if( !combo ) return;
 
             if( ImGui.Selectable( "[NONE]", bone.Parent == null ) ) {

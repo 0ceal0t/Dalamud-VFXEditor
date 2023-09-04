@@ -8,6 +8,18 @@ using VfxEditor.SklbFormat.Bones;
 using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.DirectX {
+    // =================
+    // WIP
+    // =================
+    // https://github.com/CedricGuillemet/ImGuizmo/issues/136
+    // https://github.com/CedricGuillemet/ImGuizmo/issues/281
+
+    //SklbPreview.UpdateSelected(
+    //    Selected,
+    //    Selected != null ? BoneList[Bones.IndexOf( Selected )] : new(),
+    //    ( Selected != null && Selected.Parent != null ) ? BoneList[Bones.IndexOf( Selected.Parent )] : new()
+    //);
+
     public class BoneGizmoPreview : BoneNamePreview {
         private Vec2 GizmoSize = new();
         private Vec2 GizmoPos = new();
