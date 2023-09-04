@@ -122,6 +122,8 @@ namespace VfxEditor.DirectX {
             base.OnDispose();
         }
 
+        protected virtual void DrawInlineExtra() { }
+
         public override void DrawInline() {
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
@@ -168,6 +170,8 @@ namespace VfxEditor.DirectX {
                     }
                 }
             }
+
+            DrawInlineExtra();
         }
 
         private class ClosenessComparator : IEqualityComparer<Vec2> {

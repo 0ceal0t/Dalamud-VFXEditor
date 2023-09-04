@@ -2,8 +2,6 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using VfxEditor.Interop;
 using VfxEditor.Ui.Tools;
 
 namespace VfxEditor.Tracker {
@@ -42,22 +40,21 @@ namespace VfxEditor.Tracker {
 
             var drawObject = gameObject->DrawObject;
             if( drawObject == null ) return;
+            if( drawObject->Object.GetObjectType() != ObjectType.CharacterBase ) return;
 
-            PopulateSklbs( drawObject, paths );
+            PopulateSklbs( ( CharacterBase* )drawObject, paths );
 
-            if( gameObject->ObjectKind == 0x01 ) {
-                var weapon = drawObject->Object.ChildObject;
-                if( weapon != null ) {
-                    PopulateSklbs( ( DrawObject* )weapon, paths );
-                }
+            var child = drawObject->Object.ChildObject;
+            if( child != null && child->GetObjectType() == ObjectType.CharacterBase ) {
+                PopulateSklbs( ( CharacterBase* )child, paths );
             }
         }
 
-        private static void PopulateSklbs( DrawObject* drawObject, HashSet<TrackerItem> paths ) {
-            var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + Constants.DrawObjectDataOffset );
-            if( data == IntPtr.Zero ) return;
+        private static void PopulateSklbs( CharacterBase* characterBase, HashSet<TrackerItem> paths ) {
+            var skeleton = characterBase->Skeleton;
+            if( skeleton == null ) return;
 
-            var sklbTable = Marshal.ReadIntPtr( data + Constants.DrawObjectSklbTableOffset );
+            var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
             var resources = LoadedTab.GetResourcesFromTable( sklbTable, IntPtr.Zero );
             foreach( var resource in resources ) paths.Add( new() {
                 Path = resource,

@@ -6,7 +6,6 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using VfxEditor.Interop;
 using VfxEditor.Structs;
 
 namespace VfxEditor.Ui.Tools {
@@ -22,6 +21,10 @@ namespace VfxEditor.Ui.Tools {
                 var id = gameObject->ObjectID;
                 if( id == 0 ) continue;
 
+                var drawObject = gameObject->DrawObject;
+                if( drawObject == null ) continue;
+                if( drawObject->Object.GetObjectType() != ObjectType.CharacterBase ) return;
+
                 using var _ = ImRaii.PushId( $"{item.Address:X8}" );
                 if( !ImGui.CollapsingHeader( $"{item.Name}" ) ) continue;
 
@@ -31,38 +34,33 @@ namespace VfxEditor.Ui.Tools {
                 ImGui.SameLine();
                 if( ImGui.SmallButton( "Copy" ) ) ImGui.SetClipboardText( $"{item.Address:X8}" );
 
-                var drawObject = gameObject->DrawObject;
-                if( drawObject == null ) continue;
+                DrawCharacterBase( ( CharacterBase* )drawObject );
 
-                DrawDrawObject( drawObject );
-
-                if( gameObject->ObjectKind == 0x01 ) {
-                    var weapon = drawObject->Object.ChildObject;
-                    if( weapon == null ) continue;
-
-                    using var __ = ImRaii.PushId( "Weapon" );
+                var childObject = drawObject->Object.ChildObject;
+                if( childObject != null && childObject->GetObjectType() == ObjectType.CharacterBase ) {
+                    using var __ = ImRaii.PushId( "Child Object" );
 
                     using var tree = ImRaii.TreeNode( "Child Object" );
                     if( !tree ) continue;
 
                     using var indent2 = ImRaii.PushIndent();
 
-                    DrawDrawObject( ( DrawObject* )weapon );
+                    DrawCharacterBase( ( CharacterBase* )childObject );
                 }
             }
         }
 
-        private static void DrawDrawObject( DrawObject* drawObject ) {
-            var data = Marshal.ReadIntPtr( new IntPtr( drawObject ) + Constants.DrawObjectDataOffset );
-            if( data == IntPtr.Zero ) return;
+        private static void DrawCharacterBase( CharacterBase* characterBase ) {
+            var skeleton = characterBase->Skeleton;
+            if( skeleton == null ) return;
 
-            var sklbTable = Marshal.ReadIntPtr( data + Constants.DrawObjectSklbTableOffset );
-            var tableStart = Marshal.ReadIntPtr( data + Constants.DrawObjectTableStartOffset );
+            var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
+            var animationTable = new IntPtr( skeleton->AnimationResourceHandles );
 
             DrawTable( sklbTable, IntPtr.Zero, "SKLB" );
 
             var idx = 0;
-            var tablePos = tableStart;
+            var tablePos = animationTable;
             var tablePtr = Marshal.ReadIntPtr( tablePos );
 
             while( tablePtr > 256 ) {
@@ -74,7 +72,7 @@ namespace VfxEditor.Ui.Tools {
                     using var tree = ImRaii.TreeNode( name );
                     if( tree ) {
                         if( GetResource( Marshal.ReadIntPtr( tablePtr ), out var fileName ) ) DrawResource( fileName );
-                        DrawMultiTable( tablePtr + 8, "PAP" );
+                        DrawAnimationTable( tablePtr + 8, "PAP" );
                     }
                 }
 
@@ -84,7 +82,7 @@ namespace VfxEditor.Ui.Tools {
             }
         }
 
-        private static void DrawMultiTable( IntPtr tableStart, string prefix ) {
+        private static void DrawAnimationTable( IntPtr tableStart, string prefix ) {
             var tablePos = tableStart;
             var tablePtr = Marshal.ReadIntPtr( tablePos );
 
