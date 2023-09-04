@@ -167,6 +167,11 @@ namespace VfxEditor.SklbFormat.Bones {
                     if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) DeleteBone( Selected );
                 }
 
+                //SklbPreview.UpdateSelected(
+                //    Selected,
+                //    Selected != null ? BoneList[Bones.IndexOf( Selected )] : new(),
+                //    ( Selected != null && Selected.Parent != null ) ? BoneList[Bones.IndexOf( Selected.Parent )] : new()
+                //);
                 SklbPreview.DrawInline();
             }
 
