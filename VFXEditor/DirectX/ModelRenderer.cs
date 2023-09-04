@@ -156,6 +156,7 @@ namespace VfxEditor.DirectX {
         public void Zoom( float mouseWheel ) {
             if( mouseWheel != 0 ) {
                 Distance -= mouseWheel * 0.2f;
+                if( Distance < 0.001f ) Distance = 0.001f;
                 UpdateViewMatrix();
             }
         }
@@ -223,20 +224,23 @@ namespace VfxEditor.DirectX {
             DrawImage();
         }
 
+        protected virtual bool CanDrag() => true;
+
         protected void DrawImage() {
             var cursor = ImGui.GetCursorScreenPos();
             var size = ImGui.GetContentRegionAvail();
             Resize( size );
 
             ImGui.ImageButton( Output, size, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
+
             var topLeft = ImGui.GetItemRectMin();
             var bottomRight = ImGui.GetItemRectMax();
 
-            if( ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
+            if( CanDrag() && ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
                 Drag( delta, true );
             }
-            else if( ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
+            else if( CanDrag() && ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
                 Drag( ImGui.GetMousePos() - cursor, false );
             }
             else {

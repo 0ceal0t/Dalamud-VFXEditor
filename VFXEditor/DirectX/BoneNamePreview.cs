@@ -135,15 +135,23 @@ namespace VfxEditor.DirectX {
             DrawImage();
 
             var boneScreenMap = new Dictionary<string, Vec2>();
+            var boneDepthMap = new Dictionary<string, float>();
+
             var boneScreenList = new List<Vec2>();
+            var boneDepthList = new List<float>();
 
             foreach( var bone in BoneList ) {
                 var matrix = bone.BindPose * worldViewProj;
 
                 var pos = Vector3.Transform( new Vector3( 0 ), matrix ).ToVector3();
                 var screenPos = LastMid + ( ( LastSize / 2f ) * new Vec2( pos.X, -1f * pos.Y ) );
+                var depth = pos.Z;
+
                 boneScreenMap[bone.Name] = screenPos;
+                boneDepthMap[bone.Name] = depth;
+
                 boneScreenList.Add( screenPos );
+                boneDepthList.Add( depth );
             }
 
             // ===== CONNECTION LINES =======
@@ -151,6 +159,8 @@ namespace VfxEditor.DirectX {
             if( CurrentFile != null && CurrentFile is SklbFile && Plugin.Configuration.SklbBoneDisplay != BoneDisplay.Connected ) {
                 foreach( var bone in BoneList ) {
                     if( bone.ParentIndex == -1 ) continue;
+                    if( !ValidDepth( boneDepthMap[bone.Name] ) || !ValidDepth( boneDepthList[bone.ParentIndex] ) ) continue;
+
                     var startPos = boneScreenMap[bone.Name];
                     var endPos = boneScreenList[bone.ParentIndex];
 
@@ -173,6 +183,8 @@ namespace VfxEditor.DirectX {
 
             DrawInlineExtra();
         }
+
+        private static bool ValidDepth( float depth ) => depth > 0.5f && depth < 1f;
 
         private class ClosenessComparator : IEqualityComparer<Vec2> {
             public bool Equals( Vec2 x, Vec2 y ) => ( x - y ).Length() < 10f;
