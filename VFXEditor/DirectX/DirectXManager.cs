@@ -11,7 +11,7 @@ namespace VfxEditor.DirectX {
         public readonly GradientView GradientView;
         public readonly PapPreview PapPreview;
         public readonly BoneNamePreview PhybPreview;
-        public readonly BoneGizmoPreview SklbPreview;
+        public readonly BoneNamePreview SklbPreview;
 
         public DirectXManager() {
             var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );

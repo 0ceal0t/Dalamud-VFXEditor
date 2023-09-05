@@ -103,10 +103,6 @@
             <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
             <Private>False</Private>
         </Reference>
-         <Reference Include="ImGuizmo.NET.Custom">
-            <HintPath>..\lib\ImGuizmo.NET.Custom.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,7 @@
 using Dalamud.Logging;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using ImGuizmoNETCustom;
+using ImGuizmoNET;
 using SharpDX;
 using SharpDX.Direct3D11;
 using VfxEditor.SklbFormat.Bones;
@@ -14,11 +14,11 @@ namespace VfxEditor.DirectX {
     // https://github.com/CedricGuillemet/ImGuizmo/issues/136
     // https://github.com/CedricGuillemet/ImGuizmo/issues/281
 
-    // SklbPreview.UpdateSelected(
-    //     Selected,
-    //     Selected != null ? BoneList[Bones.IndexOf( Selected )] : new(),
-    //     ( Selected != null && Selected.Parent != null ) ? BoneList[Bones.IndexOf( Selected.Parent )] : new()
-    // );
+    //SklbPreview.UpdateSelected(
+    //    Selected,
+    //    Selected != null ? BoneList[Bones.IndexOf( Selected )] : new(),
+    //    ( Selected != null && Selected.Parent != null ) ? BoneList[Bones.IndexOf( Selected.Parent )] : new()
+    //);
 
     public class BoneGizmoPreview : BoneNamePreview {
         private Vec2 GizmoSize = new();
@@ -46,9 +46,10 @@ namespace VfxEditor.DirectX {
             }
 
             ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
+
             ImGuizmo.BeginFrame();
             ImGuizmo.SetRect( GizmoPos.X, GizmoPos.Y, GizmoSize.X, GizmoSize.Y );
-            ImGuizmo.SetDrawlist( ImGui.GetForegroundDrawList() );
+            ImGuizmo.SetDrawlist();
 
             var view = Matrix.Multiply( Matrix.Scaling( 0.0002f ), ViewMatrix );
             var proj = ProjMatrix;
