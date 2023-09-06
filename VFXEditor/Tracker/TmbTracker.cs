@@ -61,7 +61,7 @@ namespace VfxEditor.Tracker {
 
             }
             catch( Exception e ) {
-                PluginLog.Error( $"Error reading timeline\n{e}" );
+                PluginLog.Error( e, "Error reading timeline" );
             }
         }
 

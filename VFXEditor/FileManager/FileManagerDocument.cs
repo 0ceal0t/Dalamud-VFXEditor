@@ -23,11 +23,12 @@ namespace VfxEditor.FileManager {
 
         protected SelectResult Replace;
         public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
-        public string ReplacePath => Replace == null ? "" : Replace.Path;
+        public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
 
         protected VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
         protected string WriteLocation;
         public string WritePath => WriteLocation;
+        protected bool Disabled = false;
 
         protected readonly string Id;
         protected readonly string IdUpperCase;
@@ -57,12 +58,14 @@ namespace VfxEditor.FileManager {
             string name,
             SelectResult source,
             SelectResult replace,
+            bool disabled,
             string id,
             string extension
         ) : this( manager, writeLocation, id, extension ) {
             Name = name ?? "";
             Source = source;
             Replace = replace;
+            Disabled = disabled;
             LoadLocal( localPath );
             WriteFile( WriteLocation );
         }
@@ -262,7 +265,6 @@ namespace VfxEditor.FileManager {
 
         protected virtual void DrawInputTextColumn() {
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 5, 0 );
-            var color = ImGui.GetColorU32( ImGuiCol.TextDisabled );
             var height = ImGui.GetFrameHeight();
             var spacing = ImGui.GetStyle().ItemSpacing.Y;
 
@@ -280,6 +282,18 @@ namespace VfxEditor.FileManager {
             var bottomRight = pos + new Vector2( width, height * 1.5f + spacing - 1 );
             var bottomLeft = new Vector2( topLeft.X, bottomRight.Y );
 
+            var mousePos = ImGui.GetMousePos();
+            var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && UiUtils.Contains( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ), mousePos );
+
+            var color = hovered ?
+                ImGui.ColorConvertFloat4ToU32( UiUtils.YELLOW_COLOR ) :
+                ( Disabled ?
+                    ImGui.ColorConvertFloat4ToU32( UiUtils.RED_COLOR ) :
+                    ImGui.GetColorU32( ImGuiCol.TextDisabled )
+               );
+
+            if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Disabled = !Disabled;
+
             var topLeftCurveCenter = new Vector2( topLeft.X + radius, topLeft.Y + radius );
             var bottomLeftCurveCenter = new Vector2( bottomLeft.X + radius, bottomLeft.Y - radius );
 
@@ -293,7 +307,18 @@ namespace VfxEditor.FileManager {
             drawList.AddLine( topLeft + new Vector2( radius - 0.5f, -0.5f ), topRight + new Vector2( 0, -0.5f ), color, thickness );
             drawList.AddLine( bottomLeft + new Vector2( radius - 0.5f, -0.5f ), bottomRight + new Vector2( -4, -0.5f ), color, thickness );
 
-            drawList.AddTriangleFilled( bottomRight, bottomRight + new Vector2( -arrowWidth, arrowHeight / 2 ), bottomRight + new Vector2( -arrowWidth, -arrowHeight / 2 ), color );
+            if( Disabled ) {
+                var crossCenter = bottomRight + new Vector2( -4, 0 );
+                var crossHeight = arrowHeight / 2;
+
+                drawList.AddLine( crossCenter + new Vector2( crossHeight, crossHeight ), crossCenter + new Vector2( -crossHeight, -crossHeight ), color, thickness );
+                drawList.AddLine( crossCenter + new Vector2( -crossHeight, crossHeight ), crossCenter + new Vector2( crossHeight, -crossHeight ), color, thickness );
+            }
+            else {
+                drawList.AddTriangleFilled( bottomRight, bottomRight + new Vector2( -arrowWidth, arrowHeight / 2 ), bottomRight + new Vector2( -arrowWidth, -arrowHeight / 2 ), color );
+            }
+
+            if( hovered ) UiUtils.Tooltip( "Toggle replacement", true );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );

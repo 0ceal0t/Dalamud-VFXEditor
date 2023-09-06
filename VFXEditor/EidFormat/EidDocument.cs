@@ -7,8 +7,8 @@ namespace VfxEditor.EidFormat {
     public class EidDocument : FileManagerDocument<EidFile, WorkspaceMetaBasic> {
         public EidDocument( EidManager manager, string writeLocation ) : base( manager, writeLocation, "Eid", "eid" ) { }
 
-        public EidDocument( EidManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Eid", "eid" ) { }
+        public EidDocument( EidManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Eid", "eid" ) { }
 
         protected override EidFile FileFromReader( BinaryReader reader ) => new( reader );
 
@@ -16,7 +16,8 @@ namespace VfxEditor.EidFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
     }
 }

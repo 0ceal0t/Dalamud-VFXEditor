@@ -87,8 +87,8 @@ namespace VfxEditor.Utils {
             else ImGui.Text( icon.ToIconString() );
         }
 
-        public static void Tooltip( string text ) {
-            if( ImGui.IsItemHovered() ) {
+        public static void Tooltip( string text, bool hovered = false ) {
+            if( hovered || ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
                 ImGui.TextUnformatted( text );

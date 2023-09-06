@@ -11,8 +11,8 @@ namespace VfxEditor.SklbFormat {
 
         public SklbDocument( SklbManager manager, string writeLocation ) : base( manager, writeLocation, "Sklb", "sklb" ) { }
 
-        public SklbDocument( SklbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Sklb", "sklb" ) { }
+        public SklbDocument( SklbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Sklb", "sklb" ) { }
 
         protected override SklbFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
 
@@ -20,7 +20,8 @@ namespace VfxEditor.SklbFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
 
         public override void Dispose() {

@@ -9,6 +9,7 @@ namespace VfxEditor.Utils {
         public string Name;
         public SelectResult Source;
         public SelectResult Replace;
+        public bool Disabled;
         public Dictionary<string, string> Renaming;
         public string RelativeLocation;
     }
@@ -27,12 +28,12 @@ namespace VfxEditor.Utils {
         public string Name;
         public SelectResult Source;
         public SelectResult Replace;
+        public bool Disabled;
         public string RelativeLocation;
     }
 
     public static class WorkspaceUtils {
-        public static string ResolveWorkspacePath( string relativeLocation, string loadLocation ) =>
-            ( relativeLocation == "" ) ? "" : Path.Combine( loadLocation, relativeLocation );
+        public static string ResolveWorkspacePath( string relativeLocation, string loadLocation ) => ( relativeLocation == "" ) ? "" : Path.Combine( loadLocation, relativeLocation );
 
         public static T[] ReadFromMeta<T>( JObject meta, string key ) {
             if( !meta.ContainsKey( key ) ) return null;

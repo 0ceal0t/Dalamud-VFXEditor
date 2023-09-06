@@ -7,8 +7,8 @@ namespace VfxEditor.ScdFormat {
     public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaBasic> {
         public ScdDocument( ScdManager manager, string writeLocation ) : base( manager, writeLocation, "Scd", "scd" ) { }
 
-        public ScdDocument( ScdManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Scd", "scd" ) { }
+        public ScdDocument( ScdManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Scd", "scd" ) { }
 
         protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader );
 
@@ -16,7 +16,8 @@ namespace VfxEditor.ScdFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
     }
 }

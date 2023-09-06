@@ -14,8 +14,9 @@ namespace VfxEditor.TmbFormat {
 
         public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation, "Tmb", "tmb" ) { }
 
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Tmb", "tmb" ) {
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Tmb", "tmb" ) {
+
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
@@ -25,7 +26,8 @@ namespace VfxEditor.TmbFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
 
         protected override void DrawExtraColumn() {

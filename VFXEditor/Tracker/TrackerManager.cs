@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
@@ -20,7 +21,7 @@ namespace VfxEditor.Tracker {
         public Vector3 Position;
     }
 
-    public class TrackerManager {
+    public unsafe class TrackerManager {
         private static bool WatchingCutscene => Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
         private static readonly ClosenessComparator Comparator = new();
@@ -69,17 +70,25 @@ namespace VfxEditor.Tracker {
                 tracker.Populate( floatingItems, actorIdToItems );
             }
 
-            var matrix = GetMatrix( out var width, out var height );
+            //var matrix = GetMatrix( out var width, out var height );
+            var camera = CameraManager.Instance->GetActiveCamera();
+            if( camera == null ) return;
+            var sceneCamera = camera->CameraBase.SceneCamera;
 
             var idx = 0;
 
             foreach( var group in floatingItems.GroupBy( item => item.Position, item => item.Item, Comparator ) ) {
                 var paths = new HashSet<TrackerItem>( group );
 
-                if( !WorldToScreen( height, width, ref matrix, windowPosition, group.Key, out var screenCoords ) ) continue;
+                if( !sceneCamera.WorldToScreen( new() {
+                    X = group.Key.X,
+                    Y = group.Key.Y,
+                    Z = group.Key.Z,
+                }, out var screenPos ) ) continue;
+
                 if( Distance( playerPosition.Value, group.Key ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
 
-                DrawOverlayItems( new Vec2( screenCoords.X, screenCoords.Y ), paths, idx );
+                DrawOverlayItems( new Vec2( screenPos.X, screenPos.Y ), paths, idx );
 
                 idx++;
             }
@@ -99,10 +108,15 @@ namespace VfxEditor.Tracker {
                     Z = actor.Position.Z
                 };
 
-                if( !WorldToScreen( height, width, ref matrix, windowPosition, pos, out var screenCoords ) ) continue;
+                if( !sceneCamera.WorldToScreen( new() {
+                    X = actor.Position.X,
+                    Y = actor.Position.Y,
+                    Z = actor.Position.Z,
+                }, out var screenPos ) ) continue;
+
                 if( Distance( playerPosition.Value, pos ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
 
-                DrawOverlayItems( new Vec2( screenCoords.X, screenCoords.Y ), paths, idx );
+                DrawOverlayItems( new Vec2( screenPos.X, screenPos.Y ), paths, idx );
 
                 idx++;
             }
@@ -165,7 +179,7 @@ namespace VfxEditor.Tracker {
         private static Matrix GetMatrix( out float width, out float height ) {
             // Setup the matrix
             var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
-            var viewProjectionMatrix = new SharpDX.Matrix();
+            var viewProjectionMatrix = new Matrix();
             unsafe {
                 var rawMatrix = ( float* )( matrixSingleton + 0x1b4 + ( 0x13c * 0 ) ).ToPointer(); // 0 = projection idx
                 for( var i = 0; i < 16; i++, rawMatrix++ )

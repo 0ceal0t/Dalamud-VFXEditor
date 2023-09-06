@@ -7,8 +7,8 @@ namespace VfxEditor.PhybFormat {
     public class PhybDocument : FileManagerDocument<PhybFile, WorkspaceMetaBasic> {
         public PhybDocument( PhybManager manager, string writeLocation ) : base( manager, writeLocation, "Phyb", "phyb" ) { }
 
-        public PhybDocument( PhybManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Phyb", "phyb" ) { }
+        public PhybDocument( PhybManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Phyb", "phyb" ) { }
 
         protected override PhybFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path );
 
@@ -16,7 +16,8 @@ namespace VfxEditor.PhybFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
     }
 }

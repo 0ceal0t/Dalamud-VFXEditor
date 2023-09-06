@@ -12,8 +12,8 @@ namespace VfxEditor.PapFormat {
 
         public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation, "Pap", "pap" ) { }
 
-        public PapDocument( PapManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Pap", "pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Pap", "pap" ) { }
 
         protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
@@ -23,7 +23,8 @@ namespace VfxEditor.PapFormat {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
-            Source = Source
+            Source = Source,
+            Disabled = Disabled
         };
 
         public override void Dispose() {

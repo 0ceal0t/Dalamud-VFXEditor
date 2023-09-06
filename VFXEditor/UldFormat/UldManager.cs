@@ -12,6 +12,6 @@ namespace VfxEditor.UldFormat {
         protected override UldDocument GetNewDocument() => new( this, NewWriteLocation );
 
         protected override UldDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data );
+            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace, data.Disabled, data.Renaming );
     }
 }

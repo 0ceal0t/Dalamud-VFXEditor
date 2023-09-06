@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -16,13 +17,11 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace ) :
-            base( manager, writeLocation, localPath, name, source, replace, "Vfx", "avfx" ) { }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, string name,
+                SelectResult source, SelectResult replace, bool disabled, Dictionary<string, string> renamed ) :
+                base( manager, writeLocation, localPath, name, source, replace, disabled, "Vfx", "avfx" ) {
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) :
-            this( manager, writeLocation, localPath, data.Name, data.Source, data.Replace ) {
-
-            CurrentFile.ReadRenamingMap( data.Renaming );
+            CurrentFile.ReadRenamingMap( renamed );
         }
 
         public override void CheckKeybinds() {
@@ -32,11 +31,13 @@ namespace VfxEditor.AvfxFormat {
                 VfxSpawn.Remove();
                 if( !SpawnDisabled ) VfxSpawn.OnSelf( SpawnPath, true );
             }
+
             if( Plugin.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
                 VfxSpawn.Remove();
                 if( !SpawnDisabled ) VfxSpawn.OnGround( SpawnPath, true );
 
             }
+
             if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
                 VfxSpawn.Remove();
                 if( !SpawnDisabled ) VfxSpawn.OnTarget( SpawnPath, true );
@@ -59,7 +60,8 @@ namespace VfxEditor.AvfxFormat {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Renaming = CurrentFile.GetRenamingMap()
+            Renaming = CurrentFile.GetRenamingMap(),
+            Disabled = Disabled
         };
 
         // ========= DRAWING =============
