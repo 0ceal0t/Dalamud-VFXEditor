@@ -11,7 +11,6 @@ namespace VfxEditor.PapFormat {
 
         protected override PapDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override PapDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace, data.Disabled );
+        protected override PapDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => new( this, NewWriteLocation, localPath, data );
     }
 }

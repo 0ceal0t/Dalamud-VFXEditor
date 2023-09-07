@@ -30,47 +30,30 @@ namespace VfxEditor.FileManager {
         public string WritePath => WriteLocation;
         protected bool Disabled = false;
 
-        protected readonly string Id;
-        protected readonly string IdUpperCase;
-        protected readonly string Extension;
+        public abstract string Id { get; }
+        public string IdUpperCase => Id.ToUpper();
+        public abstract string Extension { get; }
+
         protected readonly FileManagerWindow Manager;
 
         public bool Unsaved = false;
         protected DateTime LastUpdate = DateTime.Now;
 
-        public FileManagerDocument(
-            FileManagerWindow manager,
-            string writeLocation,
-            string id,
-            string extension
-         ) {
+        public FileManagerDocument( FileManagerWindow manager, string writeLocation ) {
             Manager = manager;
             WriteLocation = writeLocation;
-            Id = id;
-            IdUpperCase = id.ToUpper();
-            Extension = extension;
         }
 
-        public FileManagerDocument(
-            FileManagerWindow manager,
-            string writeLocation,
-            string localPath,
-            string name,
-            SelectResult source,
-            SelectResult replace,
-            bool disabled,
-            string id,
-            string extension
-        ) : this( manager, writeLocation, id, extension ) {
+        protected bool IsVerified() => CurrentFile.IsVerified();
+
+        protected void LoadWorkspace( string localPath, string relativeLocation, string name, SelectResult source, SelectResult replace, bool disabled ) {
             Name = name ?? "";
             Source = source;
             Replace = replace;
             Disabled = disabled;
-            LoadLocal( localPath );
+            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ) );
             WriteFile( WriteLocation );
         }
-
-        protected bool IsVerified() => CurrentFile.IsVerified();
 
         public void SetSource( SelectResult result ) {
             if( result == null ) return;

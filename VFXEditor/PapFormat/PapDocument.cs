@@ -3,17 +3,20 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaBasic> {
+        public override string Id => "Pap";
+        public override string Extension => "pap";
+
         private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
 
-        public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation, "Pap", "pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public PapDocument( PapManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
-                base( manager, writeLocation, localPath, name, source, replace, disabled, "Pap", "pap" ) { }
+        public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
+            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
+        }
 
         protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 

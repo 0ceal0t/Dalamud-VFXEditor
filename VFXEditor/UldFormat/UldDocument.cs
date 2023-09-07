@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat {
     public class UldDocument : FileManagerDocument<UldFile, WorkspaceMetaRenamed> {
-        public UldDocument( UldManager manager, string writeLocation ) : base( manager, writeLocation, "Uld", "uld" ) { }
+        public override string Id => "Uld";
+        public override string Extension => "uld";
 
-        public UldDocument( UldManager manager, string writeLocation, string localPath, string name,
-                SelectResult source, SelectResult replace, bool disabled, Dictionary<string, string> renamed ) :
-                base( manager, writeLocation, localPath, name, source, replace, disabled, "Uld", "uld" ) {
+        public UldDocument( UldManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-            CurrentFile.ReadRenamingMap( renamed );
+        public UldDocument( UldManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation ) {
+            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
+            CurrentFile?.ReadRenamingMap( data.Renaming );
         }
 
         protected override UldFile FileFromReader( BinaryReader reader ) => new( reader );

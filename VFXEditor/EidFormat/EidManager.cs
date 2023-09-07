@@ -44,7 +44,6 @@ namespace VfxEditor.EidFormat {
 
         protected override EidDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override EidDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace, data.Disabled );
+        protected override EidDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => new( this, NewWriteLocation, localPath, data );
     }
 }

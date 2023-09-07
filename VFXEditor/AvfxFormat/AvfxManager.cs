@@ -12,8 +12,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace, data.Disabled, data.Renaming );
+        protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => new( this, NewWriteLocation, localPath, data );
 
         protected override void DrawEditMenuExtra() {
             if( ImGui.BeginMenu( "Templates" ) ) {

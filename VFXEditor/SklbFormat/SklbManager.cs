@@ -12,8 +12,7 @@ namespace VfxEditor.SklbFormat {
 
         protected override SklbDocument GetNewDocument() => new( this, NewWriteLocation );
 
-        protected override SklbDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) =>
-            new( this, NewWriteLocation, WorkspaceUtils.ResolveWorkspacePath( data.RelativeLocation, localPath ), data.Name, data.Source, data.Replace, data.Disabled );
+        protected override SklbDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => new( this, NewWriteLocation, localPath, data );
 
         public bool GetSimpleSklb( string path, out SimpleSklb skeleton, out bool replaced ) {
             replaced = false;

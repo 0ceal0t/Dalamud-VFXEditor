@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -12,16 +11,17 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaRenamed> {
+        public override string Id => "Vfx";
+        public override string Extension => "avfx";
+
         private string SpawnPath => ReplacePath;
         private bool SpawnDisabled => string.IsNullOrEmpty( SpawnPath );
 
-        public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation, "Vfx", "avfx" ) { }
+        public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, string name,
-                SelectResult source, SelectResult replace, bool disabled, Dictionary<string, string> renamed ) :
-                base( manager, writeLocation, localPath, name, source, replace, disabled, "Vfx", "avfx" ) {
-
-            CurrentFile.ReadRenamingMap( renamed );
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation ) {
+            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
+            CurrentFile?.ReadRenamingMap( data.Renaming );
         }
 
         public override void CheckKeybinds() {

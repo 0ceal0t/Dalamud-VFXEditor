@@ -3,20 +3,21 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
-using VfxEditor.Select;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaBasic> {
+        public override string Id => "Tmb";
+        public override string Extension => "tmb";
+
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
-        public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation, "Tmb", "tmb" ) { }
+        public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, string name, SelectResult source, SelectResult replace, bool disabled ) :
-                base( manager, writeLocation, localPath, name, source, replace, disabled, "Tmb", "tmb" ) {
-
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
+            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
