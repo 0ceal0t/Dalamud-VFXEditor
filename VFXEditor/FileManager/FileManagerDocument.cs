@@ -25,7 +25,7 @@ namespace VfxEditor.FileManager {
         public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
 
-        protected VerifiedStatus Verified = VerifiedStatus.UNKNOWN;
+        protected VerifiedStatus Verified = VerifiedStatus.WORKSPACE;
         protected string WriteLocation;
         public string WritePath => WriteLocation;
         protected bool Disabled = false;
@@ -63,7 +63,7 @@ namespace VfxEditor.FileManager {
             else LoadGame( result.Path );
 
             if( CurrentFile != null ) {
-                Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ISSUE;
+                Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ERROR;
                 WriteFile( WriteLocation );
             }
         }

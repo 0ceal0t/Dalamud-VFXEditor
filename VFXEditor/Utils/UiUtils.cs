@@ -10,9 +10,10 @@ using System.Numerics;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
-        ISSUE,
-        UNKNOWN,
-        OK
+        OK,
+        ERROR,
+        WORKSPACE,
+        UNKNOWN
     };
 
     public enum DraggingState {
@@ -121,20 +122,26 @@ namespace VfxEditor.Utils {
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             var color = verified switch {
                 VerifiedStatus.OK => GREEN_COLOR,
-                VerifiedStatus.ISSUE => RED_COLOR,
-                _ => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f )
+                VerifiedStatus.ERROR => RED_COLOR,
+                VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
+                VerifiedStatus.UNKNOWN => YELLOW_COLOR,
+                _ => new Vector4( 1 )
             };
 
             var icon = verified switch {
                 VerifiedStatus.OK => FontAwesomeIcon.Check.ToIconString(),
-                VerifiedStatus.ISSUE => FontAwesomeIcon.Times.ToIconString(),
-                _ => FontAwesomeIcon.Circle.ToIconString()
+                VerifiedStatus.ERROR => FontAwesomeIcon.Times.ToIconString(),
+                VerifiedStatus.WORKSPACE => FontAwesomeIcon.Circle.ToIconString(),
+                VerifiedStatus.UNKNOWN => FontAwesomeIcon.QuestionCircle.ToIconString(),
+                _ => FontAwesomeIcon.QuestionCircle.ToIconString()
             };
 
             var text = verified switch {
                 VerifiedStatus.OK => "Verified",
-                VerifiedStatus.ISSUE => "Parsing Issues",
-                _ => "Workspace"
+                VerifiedStatus.ERROR => "Parsing Issues",
+                VerifiedStatus.WORKSPACE => "Workspace",
+                VerifiedStatus.UNKNOWN => "Unknown",
+                _ => "[OTHER]"
             };
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -144,7 +151,7 @@ namespace VfxEditor.Utils {
             ImGui.SameLine();
             ImGui.TextColored( color, text );
 
-            if( verified == VerifiedStatus.ISSUE ) {
+            if( verified == VerifiedStatus.ERROR ) {
                 ImGui.SameLine();
                 if( ColorButton( "Report this error", RED_COLOR, false ) ) {
                     OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues/new?assignees=&labels=bug&title=%5BPARSING+ISSUE%5D&body=What%20is%20the%20name%20or%20path%20of%20the%20file%20you%20are%20trying%20to%20open%3F%0A%0AWhat%20type%20of%20file%20is%20it%20(VFX%2C%20TMB%2C%20PAP%2C%20etc.)%3F" );
