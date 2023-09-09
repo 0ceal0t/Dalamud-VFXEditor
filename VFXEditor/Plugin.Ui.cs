@@ -1,3 +1,5 @@
+using Dalamud.Game.ClientState.Objects.Types;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -10,7 +12,12 @@ using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
-    public partial class Plugin {
+    public unsafe partial class Plugin {
+        public static bool InGpose => PluginInterface.UiBuilder.GposeActive;
+        public static GameObject GposeTarget => Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
+        public static GameObject PlayerObject => InGpose ? GposeTarget : ClientState?.LocalPlayer;
+        public static GameObject TargetObject => InGpose ? GposeTarget : TargetManager?.Target;
+
         public static readonly Dictionary<string, Modal> Modals = new();
 
         public static void Draw() {
@@ -92,10 +99,15 @@ namespace VfxEditor {
             DrawManagerMenu( TmbManager, currentManager );
             DrawManagerMenu( PapManager, currentManager );
             DrawManagerMenu( ScdManager, currentManager );
-            DrawManagerMenu( EidManager, currentManager );
             DrawManagerMenu( UldManager, currentManager );
             DrawManagerMenu( PhybManager, currentManager );
             DrawManagerMenu( SklbManager, currentManager );
+
+            if( ImGui.BeginMenu( "Attach" ) ) {
+                DrawManagerMenu( EidManager, currentManager );
+                DrawManagerMenu( AtchManager, currentManager );
+                ImGui.EndMenu();
+            }
         }
 
         private static void DrawManagerMenu( IFileManager manager, IFileManager currentManager ) {

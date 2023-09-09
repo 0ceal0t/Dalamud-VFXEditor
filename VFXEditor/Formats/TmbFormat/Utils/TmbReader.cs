@@ -20,7 +20,7 @@ namespace VfxEditor.TmbFormat.Utils {
             StartPosition = Reader.BaseStream.Position;
         }
 
-        public void ParseItem( TmbFile file, List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, List<Tmfc> tmfcs, ref bool ok ) {
+        public void ParseItem( TmbFile file, List<Tmac> actors, List<Tmtr> tracks, List<TmbEntry> entries, List<Tmfc> tmfcs, ref VerifiedStatus verified ) {
             var savePos = Reader.BaseStream.Position;
             var magic = ReadString( 4 );
             var size = ReadInt32();
@@ -47,7 +47,7 @@ namespace VfxEditor.TmbFormat.Utils {
             else {
                 if( !TmbUtils.ItemTypes.ContainsKey( magic ) ) {
                     PluginLog.Log( $"Unknown Entry {magic}" );
-                    ok = false;
+                    verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size ); //  skip
                     return;
                 }
@@ -56,7 +56,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ), typeof( TmbReader ) } );
                 if( constructor == null ) {
                     PluginLog.Log( $"TmbReader constructor failed for {magic}" );
-                    ok = false;
+                    verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;
                 }
@@ -64,7 +64,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 var item = constructor.Invoke( new object[] { file, this } );
                 if( item == null ) {
                     PluginLog.Log( $"Constructor failed for {magic}" );
-                    ok = false;
+                    verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;
                 }

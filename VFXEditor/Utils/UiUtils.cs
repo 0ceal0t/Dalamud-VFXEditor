@@ -13,7 +13,8 @@ namespace VfxEditor.Utils {
         OK,
         ERROR,
         WORKSPACE,
-        UNKNOWN
+        UNKNOWN,
+        UNSUPPORTED
     };
 
     public enum DraggingState {
@@ -124,7 +125,7 @@ namespace VfxEditor.Utils {
                 VerifiedStatus.OK => GREEN_COLOR,
                 VerifiedStatus.ERROR => RED_COLOR,
                 VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
-                VerifiedStatus.UNKNOWN => YELLOW_COLOR,
+                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => YELLOW_COLOR,
                 _ => new Vector4( 1 )
             };
 
@@ -133,6 +134,7 @@ namespace VfxEditor.Utils {
                 VerifiedStatus.ERROR => FontAwesomeIcon.Times.ToIconString(),
                 VerifiedStatus.WORKSPACE => FontAwesomeIcon.Circle.ToIconString(),
                 VerifiedStatus.UNKNOWN => FontAwesomeIcon.QuestionCircle.ToIconString(),
+                VerifiedStatus.UNSUPPORTED => FontAwesomeIcon.ExclamationCircle.ToIconString(),
                 _ => FontAwesomeIcon.QuestionCircle.ToIconString()
             };
 
@@ -141,6 +143,7 @@ namespace VfxEditor.Utils {
                 VerifiedStatus.ERROR => "Parsing Issues",
                 VerifiedStatus.WORKSPACE => "Workspace",
                 VerifiedStatus.UNKNOWN => "Unknown",
+                VerifiedStatus.UNSUPPORTED => "Unsupported",
                 _ => "[OTHER]"
             };
 

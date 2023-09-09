@@ -59,9 +59,9 @@ namespace VfxEditor.Utils {
             return ms.ToArray();
         }
 
-        public static bool CompareFiles( byte[] original, byte[] data, out int diffIdx ) => CompareFiles( original, data, -1, out diffIdx );
+        public static VerifiedStatus CompareFiles( byte[] original, byte[] data, out int diffIdx ) => CompareFiles( original, data, -1, out diffIdx );
 
-        public static bool CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
+        public static VerifiedStatus CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
             diffIdx = -1;
             var ret = true;
 
@@ -74,10 +74,10 @@ namespace VfxEditor.Utils {
                 if( idx > minIdx && data[idx] != original[idx] ) {
                     diffIdx = idx;
                     PluginLog.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
-                    return false;
+                    return VerifiedStatus.ERROR;
                 }
             }
-            return ret;
+            return ret ? VerifiedStatus.OK : VerifiedStatus.ERROR;
         }
 
         public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );

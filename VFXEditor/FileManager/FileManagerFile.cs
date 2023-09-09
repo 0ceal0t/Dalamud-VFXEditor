@@ -1,15 +1,14 @@
 using System.IO;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerFile {
         public readonly CommandManager Command;
-        protected bool Verified = true;
+        public VerifiedStatus Verified = VerifiedStatus.WORKSPACE;
 
         public FileManagerFile( CommandManager command ) {
             Command = command;
         }
-
-        public bool IsVerified() => Verified;
 
         public abstract void Draw();
 

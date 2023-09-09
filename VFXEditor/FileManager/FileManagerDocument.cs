@@ -25,7 +25,7 @@ namespace VfxEditor.FileManager {
         public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
 
-        protected VerifiedStatus Verified = VerifiedStatus.WORKSPACE;
+        protected VerifiedStatus Verified => CurrentFile == null ? VerifiedStatus.UNKNOWN : CurrentFile.Verified;
         protected string WriteLocation;
         public string WritePath => WriteLocation;
         protected bool Disabled = false;
@@ -44,14 +44,13 @@ namespace VfxEditor.FileManager {
             WriteLocation = writeLocation;
         }
 
-        protected bool IsVerified() => CurrentFile.IsVerified();
-
         protected void LoadWorkspace( string localPath, string relativeLocation, string name, SelectResult source, SelectResult replace, bool disabled ) {
             Name = name ?? "";
             Source = source;
             Replace = replace;
             Disabled = disabled;
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ) );
+            if( CurrentFile != null ) CurrentFile.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }
 
@@ -63,7 +62,6 @@ namespace VfxEditor.FileManager {
             else LoadGame( result.Path );
 
             if( CurrentFile != null ) {
-                Verified = IsVerified() ? VerifiedStatus.OK : VerifiedStatus.ERROR;
                 WriteFile( WriteLocation );
             }
         }
@@ -83,7 +81,7 @@ namespace VfxEditor.FileManager {
             replacePath = null;
             if( CurrentFile == null ) return false;
 
-            replacePath = ReplacePath.Equals( path ) ? WriteLocation : null;
+            replacePath = ReplacePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
 

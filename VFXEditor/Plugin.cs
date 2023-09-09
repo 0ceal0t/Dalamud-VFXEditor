@@ -4,22 +4,20 @@ using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
 using OtterGui;
-using System;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Data;
 using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Interop;
 using VfxEditor.Library;
 using VfxEditor.PapFormat;
@@ -49,11 +47,6 @@ namespace VfxEditor {
         public static KeyState KeyState { get; private set; }
         public static ITextureProvider TextureProvider { get; private set; }
 
-        public static bool InGpose => PluginInterface.UiBuilder.GposeActive;
-        public static GameObject GposeTarget => Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
-        public static GameObject PlayerObject => InGpose ? GposeTarget : ClientState?.LocalPlayer;
-        public static GameObject TargetObject => InGpose ? GposeTarget : TargetManager?.Target;
-
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
@@ -75,6 +68,7 @@ namespace VfxEditor {
             UldManager,
             PhybManager,
             PapManager,
+            AtchManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -86,6 +80,7 @@ namespace VfxEditor {
         public static UldManager UldManager { get; private set; }
         public static PhybManager PhybManager { get; private set; }
         public static SklbManager SklbManager { get; private set; }
+        public static AtchManager AtchManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -138,6 +133,7 @@ namespace VfxEditor {
             UldManager = new();
             PhybManager = new();
             SklbManager = new();
+            AtchManager = new();
 
             ToolsDialog = new ToolsDialog();
             PenumbraIpc = new PenumbraIpc();
@@ -205,6 +201,7 @@ namespace VfxEditor {
             UldManager = null;
             PhybManager = null;
             SklbManager = null;
+            AtchManager = null;
 
             DirectXManager?.Dispose();
             DirectXManager = null;
