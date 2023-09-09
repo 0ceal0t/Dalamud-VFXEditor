@@ -29,12 +29,7 @@ namespace VfxEditor.Select.Shared.Npc {
 
         public override void LoadData() {
             // maps uint ids to npc names
-            var nameToString = Plugin.DataManager.GetExcelSheet<BNpcName>()
-                .Where( x => !string.IsNullOrEmpty( x.Singular ) )
-                .ToDictionary(
-                    x => x.RowId,
-                    x => x.Singular.ToString()
-                );
+            var nameToString = NameToString;
 
             // https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
@@ -42,10 +37,10 @@ namespace VfxEditor.Select.Shared.Npc {
             var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
-                var bnpcRow = battleNpcSheet.GetRow( uint.Parse( entry.Key ) );
 
-                if( bnpcRow == null || bnpcRow.ModelChara.Value == null || bnpcRow.ModelChara.Value.Model == 0 ) continue;
-                if( bnpcRow.ModelChara.Value.Type != 2 && bnpcRow.ModelChara.Value.Type != 3 ) continue;
+                var bnpcRow = battleNpcSheet.GetRow( uint.Parse( entry.Key ) );
+                if( !BnpcValid( bnpcRow ) ) continue;
+
                 Items.Add( new NpcRow( bnpcRow.ModelChara.Value, name ) );
             }
 
@@ -67,5 +62,20 @@ namespace VfxEditor.Select.Shared.Npc {
         protected override void DrawExtra() => SelectUiUtils.NpcThankYou();
 
         protected override string GetName( NpcRow item ) => item.Name;
+
+        // ====== UTILS ===========
+
+        public static Dictionary<uint, string> NameToString => Plugin.DataManager.GetExcelSheet<BNpcName>()
+                .Where( x => !string.IsNullOrEmpty( x.Singular ) )
+                .ToDictionary(
+                    x => x.RowId,
+                    x => x.Singular.ToString()
+                );
+
+        public static bool BnpcValid( BNpcBase bnpcRow ) {
+            if( bnpcRow == null || bnpcRow.ModelChara.Value == null || bnpcRow.ModelChara.Value.Model == 0 ) return false;
+            if( bnpcRow.ModelChara.Value.Type != 2 && bnpcRow.ModelChara.Value.Type != 3 ) return false;
+            return true;
+        }
     }
 }

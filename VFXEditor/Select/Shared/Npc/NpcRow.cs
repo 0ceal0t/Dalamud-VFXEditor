@@ -20,6 +20,8 @@ namespace VfxEditor.Select.Shared.Npc {
 
         public string PathPrefix => Type == NpcType.Monster ? "monster" : "demihuman";
 
+        public string AtchPath => $"chara/xls/attachoffset/{ModelString}.atch";
+
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc ) : this( npc, null ) { }
 
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc, string name ) {

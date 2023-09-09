@@ -52,6 +52,6 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
             }
         }
 
-        public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? $"{Name.Value} ({WeaponName})" : Name.Value;
+        public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? $"{weaponName} ({Name.Value})" : Name.Value;
     }
 }

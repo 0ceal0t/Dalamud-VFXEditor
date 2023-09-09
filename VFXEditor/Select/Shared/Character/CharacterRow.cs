@@ -9,6 +9,8 @@ namespace VfxEditor.Select.Shared.Character {
 
         public string EidPath => $"chara/human/{SkeletonId}/skeleton/base/b0001/eid_{SkeletonId}b0001.eid";
 
+        public string AtchPath => $"chara/xls/attachoffset/{SkeletonId}.atch";
+
         public CharacterRow( string name, RaceStruct race ) {
             Name = name;
             SkeletonId = race.SkeletonId;
