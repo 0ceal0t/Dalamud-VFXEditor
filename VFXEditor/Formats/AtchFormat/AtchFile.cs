@@ -1,6 +1,9 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AtchFormat.Entry;
 using VfxEditor.Ui.Components;
@@ -22,33 +25,33 @@ namespace VfxEditor.Formats.AtchFormat {
             { "2sp", "Spear" },
             { "2st", "Greatstaff" },
             { "2sw", "Greatsword" },
-            { "aai", "Alchemist Tool" },
-            { "aal", "Alchemist Tool" },
-            { "aar", "Armorer Tool" },
-            { "abl", "Armorer Tool" },
-            { "aco", "Culinarian Tool" },
-            { "agl", "Goldsmith Tool" },
-            { "ali", "Alchemist Tool" },
-            { "alm", "Alchemist Tool" },
-            { "alt", "Leatherworker Tool" },
-            { "ase", "Weaver Tool" },
+            { "aai", "Alchemist" },
+            { "aal", "Alchemist" },
+            { "aar", "Armorer" },
+            { "abl", "Armorer" },
+            { "aco", "Culinarian" },
+            { "agl", "Goldsmith" },
+            { "ali", "Alchemist" },
+            { "alm", "Alchemist" },
+            { "alt", "Leatherworker" },
+            { "ase", "Weaver" },
             // { "atr", "" },
             // { "avt", "" },
-            { "awo", "Carpenter Tool" },
-            { "bag", "Astrologian Sleave" },
+            { "awo", "Carpenter" },
+            { "bag", "Machinist Bag" },
             { "chk", "Chakram" },
             // { "clb", "" },
-            // { "clg", "" }, // Linked to books, maybe cudgel or something
+            { "clg", "Glove" },
             // { "cls", "" }, // Linked to axes
-            { "clw", "Fist Weapon" },
+            { "clw", "Claw" },
             // { "col", "" },
             // { "cor", "" },
             // { "cos", "" },
-            { "crd", "Katana Sheathe" },
+            { "crd", "Astrologian Deck" },
             // { "crr", "" },
             // { "crt", "" },
-            { "csl", "Carpenter Tool" },
-            { "csr", "Carpenter Tool" },
+            { "csl", "Carpenter" },
+            { "csr", "Carpenter" },
             { "dgr", "Dagger" },
             { "drm", "Drum" },
             { "ebz", "Reaper Shroud" },
@@ -56,12 +59,12 @@ namespace VfxEditor.Formats.AtchFormat {
             // { "elg", "" },
             // { "fch", "" },
             // { "fdr", "" },
-            { "fha", "Fisher Tool" },
+            { "fha", "Fisher" },
             // { "fl2", "Harp" },
             { "flt", "Flute" },
-            // { "frg", "" },
-            { "fry", "Leatherworker Tool" },
-            { "fsh", "Fisher Tool" },
+            { "frg", "Ninja Frog" },
+            { "fry", "Leatherworker/Culinarian" },
+            { "fsh", "Fisher" },
             { "fsw", "Fist Weapons" },
             // { "fud", "" },
             // { "gdb", "" },
@@ -70,58 +73,58 @@ namespace VfxEditor.Formats.AtchFormat {
             // { "gdr", "" },
             // { "gdt", "" },
             // { "gdw", "" },
-            // { "gsl", "" },
-            { "gsr", "Diadem Cannon" },
+            { "gsl", "Machinist Deployable" },
+            // { "gsr", "" }, // Diadem cannon?
             // { "gun", "" },
             // { "hel", "" },
-            // { "hmm", "" },
+            { "hmm", "Blacksmith/Armorer" },
             { "hrp", "Bard Harp" },
-            { "htc", "Botanist Tool" },
-            { "ksh", "Red Mage Focus" },
+            { "htc", "Botanist" },
+            { "ksh", "Samurai Sheath" },
             // { "let", "" },
             // { "lpr", "" }, // Linked to 1923
-            // { "mlt", "" },
-            { "mrb", "Alchemist Tool" },
-            { "mrh", "Alchemist Tool" },
-            // { "msg", "" }, // Linked to wing? (1913)
-            // { "mwp", "" },
-            { "ndl", "Weaver Tool" },
+            { "mlt", "Goldsmith" },
+            { "mrb", "Alchemist" },
+            { "mrh", "Alchemist" },
+            { "msg", "Machinist Shotgun" },
+            { "mwp", "Machinist Cannon" },
+            { "ndl", "Weaver" },
             // { "nik", "" }, // Linked to Nier pod, maybe Nikana or something
-            { "nph", "Botanist Tool" },
-            { "orb", "Blue Mage" },
+            { "nph", "Botanist" },
+            { "orb", "Red Mage Focus" },
             // { "oum", "" },
             // { "pen", "" }, // Linked to daggers
-            { "pic", "Miner Weapon" },
-            { "pra", "Machinist Weapon" }, // Linked to autocrossbow
-            { "prf", "Leatherworker Tool" },
+            { "pic", "Miner" },
+            // { "pra", "" },
+            { "prf", "Leatherworker" },
             { "qvr", "Quiver" },
             // { "rap", "" },
-            { "rbt", "Ninja Rabbit" }, // Linked to frog
-            // { "rod", "" }, // Linked to gunblades
+            { "rbt", "Ninja Rabbit" },
+            { "rod", "Blue Mage Rod" },
             // { "rop", "" },
-            { "saw", "Carpenter Tool" },
+            { "saw", "Carpenter" },
             // { "sht", "" },
-            { "sic", "Fisher Tool" },
+            { "sic", "Fisher" },
             { "sld", "Shield" },
             { "stf", "Staff" },
-            { "stv", "Culinarian Tool" },
+            { "stv", "Culinarian" },
             { "swd", "Sword" },
-            // { "syl", "" },
+            { "syl", "Machinist Sniper" },
             // { "syr", "" },
-            // { "syu", "" }, // Linked to ninja rabbit
+            // { "syu", "" },
             // { "tan", "" },
-            { "tbl", "Goldsmith Tool" },
+            { "tbl", "Goldsmith" },
             // { "tcs", "" },
-            { "tgn", "Goldsmith Tool" },
-            { "tmb", "Weaver Tool" },
+            { "tgn", "Goldsmith" },
+            { "tmb", "Weaver" },
             // { "trm", "" }, // Linked to flute
             // { "trr", "" },
             // { "trw", "" }, // Linked to greatswords
-            { "vln", "Machinist Weapon" }, // Linked to sniper
-            { "whl", "Weaver Tool" },
-            // { "wng", "" }, // Linked to Machinist Weapons
+            // { "vln", "" },
+            { "whl", "Weaver" },
+            // { "wng", "" },
             // { "ypd", "" },
-            { "ytk", "Armorer Tool" },
+            { "ytk", "Armorer" },
         };
 
         public readonly ushort NumStates;
@@ -180,9 +183,33 @@ namespace VfxEditor.Formats.AtchFormat {
         }
 
         public override void Draw() {
+            DrawCurrentWeapons();
+
             ImGui.Separator();
 
             EntryView.Draw();
+        }
+
+        private void DrawCurrentWeapons() {
+            if( Plugin.ClientState == null || Plugin.PlayerObject == null ) return;
+
+            var weapons = new List<string>();
+
+            var dataStart = Plugin.PlayerObject.Address + 0x6E8 + 32;
+            for( var i = 0; i < 3; i++ ) {
+                var data = dataStart + ( 104 * i );
+                if( Marshal.ReadInt64( data + 8 ) == 0 || Marshal.ReadInt64( data + 16 ) == 0 || Marshal.ReadInt32( data + 32 ) == 0 ) continue;
+
+                var nameArr = Marshal.PtrToStringAnsi( data + 32 ).ToCharArray();
+                Array.Reverse( nameArr );
+                weapons.Add( new string( nameArr ) );
+            }
+
+            if( weapons.Count == 0 ) return;
+
+            ImGui.Separator();
+
+            ImGui.TextDisabled( $"Current Weapons: {weapons.Aggregate( ( x, y ) => x + " | " + y )}" );
         }
     }
 }
