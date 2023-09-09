@@ -154,6 +154,10 @@ namespace VfxEditor.Utils {
             ImGui.SameLine();
             ImGui.TextColored( color, text );
 
+            if( verified == VerifiedStatus.UNSUPPORTED ) {
+                Tooltip( "Verifying is not supported for this file type" );
+            }
+
             if( verified == VerifiedStatus.ERROR ) {
                 ImGui.SameLine();
                 if( ColorButton( "Report this error", RED_COLOR, false ) ) {
