@@ -19,10 +19,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             if( ImGui.Selectable( item.BoneA.GetText( Mapping.SkeletonA ), item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) {
                 Selected = item;
             }
+
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.Text( FontAwesomeIcon.CaretRight.ToIconString() );
             }
+
             ImGui.SameLine();
             ImGui.Text( item.BoneB.GetText( Mapping.SkeletonB ) );
 

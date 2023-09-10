@@ -193,10 +193,8 @@ namespace VfxEditor.TmbFormat {
                     if( !combinedText.Contains( NewSearchInput.ToLower() ) ) continue;
                 }
 
-
                 ImGui.TextDisabled( option.Key );
                 ImGui.SameLine();
-
                 if( ImGui.Selectable( $"{option.Value.DisplayName}##{option.Key}", false, ImGuiSelectableFlags.SpanAllColumns ) ) AddEntry( option.Value.Type );
             }
         }

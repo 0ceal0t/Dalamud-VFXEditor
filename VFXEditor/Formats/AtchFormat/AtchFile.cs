@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AtchFormat.Entry;
-using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat {
@@ -129,7 +128,7 @@ namespace VfxEditor.Formats.AtchFormat {
 
         public readonly ushort NumStates;
         public readonly List<AtchEntry> Entries = new();
-        private readonly SimpleSplitview<AtchEntry> EntryView;
+        private readonly AtchEntrySplitView EntryView;
 
         public AtchFile( BinaryReader reader ) : base( new CommandManager( Plugin.AtchManager ) ) {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
@@ -146,13 +145,13 @@ namespace VfxEditor.Formats.AtchFormat {
 
             for( var i = 0; i < numEntries; i++ ) {
                 var bitField = bitFields[i >> 5];
-                Entries[i].Offhand.Value = ( ( bitField >> ( i & 0x1F ) ) & 1 ) == 1;
+                Entries[i].Accessory.Value = ( ( bitField >> ( i & 0x1F ) ) & 1 ) == 1;
             }
 
             var dataEnd = reader.BaseStream.Position;
 
             Entries.ForEach( x => x.ReadBody( reader, NumStates ) );
-            EntryView = new( "Entry", Entries, false, ( AtchEntry item, int idx ) => item.WeaponName, () => new(), () => CommandManager.Atch );
+            EntryView = new( Entries );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -166,7 +165,7 @@ namespace VfxEditor.Formats.AtchFormat {
 
             for( var i = 0; i < Entries.Count; i++ ) {
                 var idx = i >> 5;
-                var value = ( Entries[i].Offhand.Value ? 1u : 0u ) << ( i & 0x1F );
+                var value = ( Entries[i].Accessory.Value ? 1u : 0u ) << ( i & 0x1F );
                 bitFields[idx] = bitFields[idx] | value;
             }
 

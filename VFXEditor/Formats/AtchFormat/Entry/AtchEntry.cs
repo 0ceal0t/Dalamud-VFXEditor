@@ -10,8 +10,10 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.AtchFormat.Entry {
     public class AtchEntry : IUiItem {
         public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedBool Offhand = new( "Offhand" );
+        public readonly ParsedBool Accessory = new( "Accessory" );
         public readonly List<AtchEntryState> States = new();
+
+        public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? weaponName : "";
 
         public AtchEntry() { }
 
@@ -39,7 +41,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
 
         public void Draw() {
             Name.Draw( CommandManager.Atch, 3, Name.Name, ImGuiInputTextFlags.None );
-            Offhand.Draw( CommandManager.Atch );
+            Accessory.Draw( CommandManager.Atch );
 
             for( var idx = 0; idx < States.Count; idx++ ) {
                 var state = States[idx];
@@ -51,7 +53,5 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
                 }
             }
         }
-
-        public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? $"{weaponName} ({Name.Value})" : Name.Value;
     }
 }
