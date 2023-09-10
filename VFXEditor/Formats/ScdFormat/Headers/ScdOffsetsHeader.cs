@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
@@ -23,6 +24,8 @@ namespace VfxEditor.ScdFormat {
         public readonly List<int> LayoutOffsets = new();
         public readonly List<int> AttributeOffsets = new();
 
+        public readonly bool Modded = false;
+
         public ScdOffsetsHeader( BinaryReader reader ) {
             SoundCount = reader.ReadInt16();
             TrackCount = reader.ReadInt16();
@@ -35,21 +38,26 @@ namespace VfxEditor.ScdFormat {
             AttributeOffset = reader.ReadInt32();
             EofPaddingSize = reader.ReadInt32();
 
+            var firstOffset = -1;
+
             SoundOffset = reader.BaseStream.Position;
-            ReadOffsets( SoundOffsets, reader, SoundCount );
-            ReadOffsets( TrackOffsets, reader, TrackCount );
-            ReadOffsets( AudioOffsets, reader, AudioCount );
+            ReadOffsets( SoundOffsets, reader, SoundCount, ref firstOffset );
+            ReadOffsets( TrackOffsets, reader, TrackCount, ref firstOffset );
+            ReadOffsets( AudioOffsets, reader, AudioCount, ref firstOffset );
 
             if( LayoutOffset != 0 ) {
-                ReadOffsets( LayoutOffsets, reader, SoundCount );
-            }
-            if( AttributeOffset != 0 ) {
-                var attributeCount = ( LayoutOffsets[0] - AttributeOffset ) / 4;
-                ReadOffsets( AttributeOffsets, reader, attributeCount );
+                ReadOffsets( LayoutOffsets, reader, SoundCount, ref firstOffset );
             }
 
-            //PluginLog.Log( $"Layout: {LayoutOffset:X8} Routing: {RoutingOffset:X8} Attribute: {AttributeOffset:X8} cs: {SoundCount}" );
-            //PluginLog.Log( $"Sound: {SoundOffset:X8} Track: {TrackOffset:X8} Audio: {AudioOffset:X8} first: {LayoutOffsets[0]:X8}" );
+            if( AttributeOffset != 0 ) {
+                var attributeCount = ( firstOffset - AttributeOffset ) / 4;
+                ReadOffsets( AttributeOffsets, reader, attributeCount, ref firstOffset );
+            }
+
+            if( reader.BaseStream.Position != LayoutOffsets[0] ) {
+                PluginLog.Log( $"Actual: {reader.BaseStream.Position:X8} Expected: {LayoutOffsets[0]:X8}" );
+                Modded = true;
+            }
 
             /*
             if( scdHeader.LayoutOffset != 0 ) {
@@ -88,8 +96,12 @@ namespace VfxEditor.ScdFormat {
             WriteOffsets( AttributeOffsets, writer );
         }
 
-        public static void ReadOffsets( List<int> offsets, BinaryReader reader, int count ) {
-            for( var i = 0; i < count; i++ ) offsets.Add( reader.ReadInt32() );
+        public static void ReadOffsets( List<int> offsets, BinaryReader reader, int count, ref int firstOffset ) {
+            for( var i = 0; i < count; i++ ) {
+                var offset = reader.ReadInt32();
+                if( offset > 0 && ( firstOffset == -1 || offset < firstOffset ) ) firstOffset = offset;
+                offsets.Add( offset );
+            }
             FileUtils.PadTo( reader, 16 );
         }
 

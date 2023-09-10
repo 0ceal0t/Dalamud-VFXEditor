@@ -155,7 +155,7 @@ namespace VfxEditor.Utils {
             ImGui.TextColored( color, text );
 
             if( verified == VerifiedStatus.UNSUPPORTED ) {
-                Tooltip( "Verifying is not supported for this file type" );
+                Tooltip( "Verification is not supported for this file or file type" );
             }
 
             if( verified == VerifiedStatus.ERROR ) {

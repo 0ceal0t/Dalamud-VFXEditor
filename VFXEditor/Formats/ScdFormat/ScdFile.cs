@@ -66,6 +66,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );
             LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry(), () => CommandManager.Scd );
