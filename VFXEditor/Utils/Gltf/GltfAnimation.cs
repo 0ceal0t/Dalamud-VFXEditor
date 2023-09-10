@@ -24,15 +24,12 @@ namespace VfxEditor.Utils.Gltf {
     // There's something weird going on with the direct roots (n_hara, n_throw)
 
     public static unsafe class GltfAnimation {
-        public static void ExportAnimation( hkaSkeleton* skeleton, string animationName, PapMotion motion, bool skipUnanimated, string path ) {
+        public static void ExportAnimation( hkaSkeleton* skeleton, List<string> animationNames, List<PapMotion> motions, bool skipUnanimated, string path ) {
             var scene = new SceneBuilder();
 
-            var nameToKeys = new Dictionary<string, AnimationKeys>();
             var names = new List<string>();
             for( var i = 0; i < skeleton->Bones.Length; i++ ) {
-                var name = skeleton->Bones[i].Name.String;
-                names.Add( name );
-                nameToKeys[name] = new();
+                names.Add( skeleton->Bones[i].Name.String );
             }
 
             var dummyMesh = GltfSkeleton.GetDummyMesh();
@@ -67,28 +64,38 @@ namespace VfxEditor.Utils.Gltf {
 
             var model = scene.ToGltf2();
 
-            var animation = model.UseAnimation( animationName );
-            for( var time = 0f; time <= motion.Duration; time += 1 / 30f ) {
-                ExportKeys( nameToKeys, names, motion, time );
-            }
+            for( var animIdx = 0; animIdx < animationNames.Count; animIdx++ ) {
+                var animationName = animationNames[animIdx];
+                var motion = motions[animIdx];
 
-            var unanimated = skipUnanimated ? motion.GetUnanimatedBones() : null;
-
-            var nodes = model.LogicalNodes;
-            foreach( var node in nodes ) {
-                if( node.Name == null || !nameToKeys.ContainsKey( node.Name ) ) continue;
-                if( skipUnanimated ) {
-                    var idx = names.IndexOf( node.Name );
-                    if( unanimated.Contains( idx ) ) {
-                        PluginLog.Log( $"Skipping unanimated node {node.Name}" );
-                        continue;
-                    }
+                var nameToKeys = new Dictionary<string, AnimationKeys>();
+                for( var i = 0; i < skeleton->Bones.Length; i++ ) {
+                    nameToKeys[skeleton->Bones[i].Name.String] = new();
                 }
 
-                var keys = nameToKeys[node.Name];
-                animation.CreateRotationChannel( node, keys.RotateKeys, true );
-                animation.CreateScaleChannel( node, keys.ScaleKeys, true );
-                animation.CreateTranslationChannel( node, keys.TranslationKeys, true );
+                var animation = model.UseAnimation( animationName );
+                for( var time = 0f; time <= motion.Duration; time += 1 / 30f ) {
+                    ExportKeys( nameToKeys, names, motion, time );
+                }
+
+                var unanimated = skipUnanimated ? motion.GetUnanimatedBones() : null;
+
+                var nodes = model.LogicalNodes;
+                foreach( var node in nodes ) {
+                    if( node.Name == null || !nameToKeys.ContainsKey( node.Name ) ) continue;
+                    if( skipUnanimated ) {
+                        var idx = names.IndexOf( node.Name );
+                        if( unanimated.Contains( idx ) ) {
+                            PluginLog.Log( $"Skipping unanimated node {node.Name} in animation {animationName}" );
+                            continue;
+                        }
+                    }
+
+                    var keys = nameToKeys[node.Name];
+                    animation.CreateRotationChannel( node, keys.RotateKeys, true );
+                    animation.CreateScaleChannel( node, keys.ScaleKeys, true );
+                    animation.CreateTranslationChannel( node, keys.TranslationKeys, true );
+                }
             }
 
             model.SaveGLTF( path );

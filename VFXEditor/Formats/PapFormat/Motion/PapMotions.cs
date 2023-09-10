@@ -4,9 +4,11 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
+using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat.Motion {
     public unsafe class PapMotions : HavokData {
@@ -107,6 +109,21 @@ namespace VfxEditor.PapFormat.Motion {
             }
 
             Motions[havokIndex].Draw( havokIndex );
+        }
+
+        public void DrawExportAll() {
+            if( ImGui.Button( "Export All Motions" ) ) {
+                FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
+                    if( !ok ) return;
+                    GltfAnimation.ExportAnimation(
+                        Skeleton,
+                        File.Animations.Select( x => x.GetName() ).ToList(),
+                        Motions,
+                        true,
+                        res
+                    );
+                } );
+            }
         }
 
         public void DrawHavok( int havokIndex ) {

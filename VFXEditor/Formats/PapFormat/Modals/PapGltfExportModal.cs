@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
@@ -27,8 +28,8 @@ namespace VfxEditor.PapFormat {
         protected override void OnOk() {
             GltfAnimation.ExportAnimation(
                 Motion.File.MotionData.Skeleton,
-                AnimationName,
-                Motion,
+                new List<string>( new[] { AnimationName } ),
+                new List<PapMotion>( new[] { Motion } ),
                 SkipUnanimated,
                 ExportPath
             );

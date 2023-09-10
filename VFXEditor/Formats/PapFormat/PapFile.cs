@@ -154,6 +154,10 @@ namespace VfxEditor.PapFormat {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }
+
+            ImGui.SameLine();
+
+            MotionData?.DrawExportAll();
         }
 
         private void DrawAnimations() {
