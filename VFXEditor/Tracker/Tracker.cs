@@ -11,7 +11,7 @@ namespace VfxEditor.Tracker {
 
         public abstract void PopulateAll( HashSet<TrackerItem> displayItems );
 
-        public abstract void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems );
+        public abstract void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems );
 
         public abstract void RemoveStale( DateTime removeTime );
 

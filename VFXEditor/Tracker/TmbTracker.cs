@@ -12,6 +12,7 @@ namespace VfxEditor.Tracker {
     public unsafe class TmbTracker : Tracker {
         private class ActionData {
             public int ActorId;
+            public IntPtr Address;
             public string Path;
             public DateTime StartTime;
 
@@ -55,6 +56,7 @@ namespace VfxEditor.Tracker {
 
                 Actions.TryAdd( action, new ActionData() {
                     ActorId = ( int )objectId,
+                    Address = new IntPtr( obj ),
                     Path = tmbPath,
                     StartTime = DateTime.Now
                 } );
@@ -69,15 +71,15 @@ namespace VfxEditor.Tracker {
             foreach( var item in Actions ) displayItems.Add( item.Value.ToItem() );
         }
 
-        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems ) {
+        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems ) {
             foreach( var item in Actions ) {
                 if( item.Key == IntPtr.Zero ) continue;
 
-                var actorId = item.Value.ActorId;
-                if( actorId <= 0 ) continue;
+                var address = item.Value.Address;
+                if( address <= 0 ) continue;
 
-                if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = new HashSet<TrackerItem>();
-                actorToItems[actorId].Add( item.Value.ToItem() );
+                if( !addressToItems.ContainsKey( address ) ) addressToItems[address] = new HashSet<TrackerItem>();
+                addressToItems[address].Add( item.Value.ToItem() );
             }
         }
 

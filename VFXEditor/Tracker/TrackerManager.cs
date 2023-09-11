@@ -65,12 +65,12 @@ namespace VfxEditor.Tracker {
 
             var floatingItems = new List<TrackerItemWithPosition>();
             var actorIdToItems = new Dictionary<int, HashSet<TrackerItem>>();
+            var addressToItems = new Dictionary<IntPtr, HashSet<TrackerItem>>();
 
             foreach( var tracker in EnabledTrackers ) {
-                tracker.Populate( floatingItems, actorIdToItems );
+                tracker.Populate( floatingItems, actorIdToItems, addressToItems );
             }
 
-            //var matrix = GetMatrix( out var width, out var height );
             var camera = CameraManager.Instance->GetActiveCamera();
             if( camera == null ) return;
             var sceneCamera = camera->CameraBase.SceneCamera;
@@ -99,8 +99,17 @@ namespace VfxEditor.Tracker {
                 if( actor == null ) continue;
                 if( Plugin.PlayerObject == null ) continue;
 
-                var result = actorIdToItems.TryGetValue( ( int )actor.ObjectId, out var paths );
-                if( !result ) continue;
+                var paths = new HashSet<TrackerItem>();
+
+                if( actorIdToItems.TryGetValue( ( int )actor.ObjectId, out var _p1 ) ) {
+                    foreach( var p in _p1 ) paths.Add( p );
+                }
+
+                if( addressToItems.TryGetValue( actor.Address, out var _p2 ) ) {
+                    foreach( var p in _p2 ) paths.Add( p );
+                }
+
+                if( paths.Count == 0 ) continue;
 
                 var pos = new Vector3 {
                     X = actor.Position.X,
