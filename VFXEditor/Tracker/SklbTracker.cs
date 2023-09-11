@@ -55,7 +55,7 @@ namespace VfxEditor.Tracker {
             if( skeleton == null ) return;
 
             var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
-            var resources = LoadedTab.GetResourcesFromTable( sklbTable, IntPtr.Zero );
+            var resources = LoadedTab.GetResourcesFromTable( sklbTable, IntPtr.Zero, true );
             foreach( var resource in resources ) paths.Add( new() {
                 Path = resource,
                 Removed = false

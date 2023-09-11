@@ -57,72 +57,63 @@ namespace VfxEditor.Ui.Tools {
             var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
             var animationTable = new IntPtr( skeleton->AnimationResourceHandles );
 
-            DrawTable( sklbTable, IntPtr.Zero, "SKLB" );
+            DrawTable( sklbTable, IntPtr.Zero, "SKLB", true );
 
-            var idx = 0;
-            var tablePos = animationTable;
-            var tablePtr = Marshal.ReadIntPtr( tablePos );
+            for( var idx = 0; idx < skeleton->PartialSkeletonCount; idx++ ) {
+                var tablePos = animationTable + ( 8 * idx );
+                var tablePtr = Marshal.ReadIntPtr( tablePos );
 
-            while( tablePtr > 256 ) {
-                if( tablePtr != 0x3F800000 ) { // -1 = skip
-                    var name = $"TABLE {idx}";
+                if( tablePtr == 0x3F800000 || tablePtr == 0 ) continue;
 
-                    using var __ = ImRaii.PushId( name );
-
-                    using var tree = ImRaii.TreeNode( name );
-                    if( tree ) {
-                        if( GetResource( Marshal.ReadIntPtr( tablePtr ), out var fileName ) ) DrawResource( fileName );
-                        DrawAnimationTable( tablePtr + 8, "PAP" );
-                    }
+                var name = $"TABLE {idx}";
+                using var __ = ImRaii.PushId( name );
+                using var tree = ImRaii.TreeNode( name );
+                if( tree ) {
+                    if( GetResource( Marshal.ReadIntPtr( tablePtr ), out var fileName ) ) DrawResource( fileName );
+                    DrawAnimationTable( tablePtr + 8, "PAP" );
                 }
-
-                idx++;
-                tablePos += 8;
-                tablePtr = Marshal.ReadIntPtr( tablePos );
             }
         }
 
         private static void DrawAnimationTable( IntPtr tableStart, string prefix ) {
-            var tablePos = tableStart;
-            var tablePtr = Marshal.ReadIntPtr( tablePos );
+            var idx = 0;
 
-            var tablePtrs = new List<IntPtr>();
-            while( tablePtr > 256 ) {
-                if( tablePtr != 0x3F800000 ) { // -1 = skip
-                    tablePtrs.Add( tablePtr );
+            for( var i = 0; i < 2; i++ ) {
+                var tablePos = tableStart + ( 120 * i );
+
+                for( var j = 0; j < 5; j++ ) {
+                    var start = Marshal.ReadIntPtr( tablePos );
+                    var end = Marshal.ReadIntPtr( tablePos + 8 );
+
+                    DrawTable( start, end, $"{prefix} {idx}", false );
+                    idx++;
+
+                    tablePos += 24;
                 }
-                tablePos += 8;
-                tablePtr = Marshal.ReadIntPtr( tablePos );
-            }
-
-            for( var i = 0; i < tablePtrs.Count - 1; i++ ) {
-                if( i == 5 || i == 7 || i == 8 ) continue; // for shaders and other misc stuff. format still WIP
-
-                DrawTable( tablePtrs[i], tablePtrs[i + 1], $"{prefix} {i}" );
             }
         }
 
-        private static void DrawTable( IntPtr tablePtr, IntPtr nextTable, string name ) {
+        private static void DrawTable( IntPtr tablePtr, IntPtr nextTable, string name, bool stopAtZero ) {
             using var _ = ImRaii.PushId( name );
 
             using var tree = ImRaii.TreeNode( name );
             if( !tree ) return;
 
-            var resources = GetResourcesFromTable( tablePtr, nextTable );
+            var resources = GetResourcesFromTable( tablePtr, nextTable, stopAtZero );
             for( var idx = 0; idx < resources.Count; idx++ ) {
                 using var __ = ImRaii.PushId( idx );
                 DrawResource( resources[idx] );
             }
         }
 
-        public static List<string> GetResourcesFromTable( IntPtr tablePtr, IntPtr nextTable ) {
+        public static List<string> GetResourcesFromTable( IntPtr tablePtr, IntPtr nextTable, bool stopAtZero ) {
             var ret = new List<string>();
-            if( tablePtr <= 256 ) return ret;
+            if( tablePtr == IntPtr.Zero ) return ret;
 
             var resourcePos = tablePtr;
             var resourcePtr = Marshal.ReadIntPtr( resourcePos );
 
-            while( resourcePtr > 256 && !Equals( resourcePos, nextTable ) ) {
+            while( ( !stopAtZero || resourcePtr != IntPtr.Zero ) && !Equals( resourcePos, nextTable ) ) {
                 try {
                     if( GetResource( resourcePtr, out var fileName ) ) ret.Add( fileName );
                 }

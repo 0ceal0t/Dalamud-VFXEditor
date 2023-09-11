@@ -11,6 +11,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
+        public override DangerLevel Danger => DangerLevel.Yellow;
 
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );

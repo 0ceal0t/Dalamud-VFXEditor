@@ -69,6 +69,7 @@ namespace VfxEditor.Ui.Tools {
                     item.ObjectKind != ObjectKind.EventNpc &&
                     item.ObjectKind != ObjectKind.Companion &&
                     item.ObjectKind != ObjectKind.BattleNpc ) continue;
+                if( item.ObjectId == 0xE0000000 ) continue;
 
                 var name = GetObjectName( item );
                 if( ImGui.Selectable( $"{name}##{item.ObjectId}", item.ObjectId == ObjectId ) ) {

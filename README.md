@@ -64,8 +64,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Update "try on" preview
 
 ```
-chara/xls/boneDeformer/human.pbd
-chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.skp
 bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_closed.tmb
 bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_open.tmb
 bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_close.tmb
@@ -89,4 +87,15 @@ bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00a_loop.tmb
 bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_suis1_loop.tmb
 bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_suis2_loop.tmb
 bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00d_loop.tmb
+
+chara/xls/animation/papLoadTable.plt
+chara/xls/boneDeformer/human.pbd
+chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.skp
+chara/xls/equipmentParameter/equipmentVfxParameter.evp
+chara/xls/animation/animation_work_table-demihuman.awt
+chara/xls/animation/AnimationExchangeTable.aet
+chara/xls/animation/animation_work_table-human.awt
+chara/xls/animation/MotionLineTable.mlt
+chara/xls/animation/animation_work_table-monster.awt
+chara/xls/animation/animation_work_table-weapon.awt
 ```

@@ -58,23 +58,6 @@ namespace VfxEditor.ScdFormat {
                 PluginLog.Log( $"Actual: {reader.BaseStream.Position:X8} Expected: {LayoutOffsets[0]:X8}" );
                 Modded = true;
             }
-
-            /*
-            if( scdHeader.LayoutOffset != 0 ) {
-                Reader.Position = scdHeader.LayoutOffset;
-                _layoutOffset = Reader.ReadUInt32();
-            }
-
-            if( scdHeader.RoutingOffset != 0 ) {
-                Reader.Position = scdHeader.RoutingOffset;
-                _routingOffset = Reader.ReadUInt32();
-            }
-
-            if( scdHeader.AttributeOffset != 0 ) {
-                Reader.Position = scdHeader.AttributeOffset;
-                _attributeOffset = Reader.ReadUInt32();
-            }
-            */
         }
 
         public void Write( BinaryWriter writer ) {
