@@ -1,10 +1,10 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.ScdFormat.Music {
-    public class ScdAudioEntrySplitView : GenericSplitView<ScdAudioEntry> {
+    public class ScdAudioEntrySplitView : UiSplitView<ScdAudioEntry> {
         public ScdAudioEntrySplitView( List<ScdAudioEntry> items ) : base( "Audio", items, false, false ) { }
 
         protected override bool DrawLeftItem( ScdAudioEntry item, int idx ) {

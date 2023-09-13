@@ -7,7 +7,7 @@ using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
 using TeximpNet.DDS;
-using VfxEditor.TextureFormat;
+using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
 
 namespace ImGuiFileDialog {
@@ -500,15 +500,15 @@ namespace ImGuiFileDialog {
                                 var data = new byte[uncompressedLength];
                                 br.Read( data, 0, ( int )uncompressedLength );
 
-                                var format = TextureFile.DXGItoTextureFormat( ddsFile.Format );
-                                var convertedData = TextureFile.BgraToRgba( TextureFile.Convert( data, format, width, height ) );
+                                var format = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
+                                var convertedData = TextureDataFile.BgraToRgba( TextureDataFile.Convert( data, format, width, height ) );
                                 PreviewWrap = PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
                             }
 
                             ddsFile.Dispose();
                         }
                         else if( ext == "atex" || ext == "tex" ) {
-                            var tex = TextureFile.LoadFromLocal( path );
+                            var tex = TextureDataFile.LoadFromLocal( path );
                             if( tex == null ) return;
 
                         }

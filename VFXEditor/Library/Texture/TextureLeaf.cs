@@ -37,23 +37,17 @@ namespace VfxEditor.Library.Texture {
         }
 
         protected override void DrawBody() {
-            var texture = Plugin.TextureManager.GetPreviewTexture( Path );
-            if( texture == null ) return;
-
             using var indent = ImRaii.PushIndent( 5f );
-            texture.Draw();
+            Plugin.TextureManager.GetTexture( Path )?.DrawImage();
         }
 
         public bool DrawSelectable() {
             var ret = ImGui.Selectable( $"{Name}##{Id}" );
 
             if( ImGui.IsItemHovered() ) {
-                var texture = Plugin.TextureManager.GetPreviewTexture( Path );
-                if( texture != null ) {
-                    ImGui.BeginTooltip();
-                    texture.Draw();
-                    ImGui.EndTooltip();
-                }
+                ImGui.BeginTooltip();
+                Plugin.TextureManager.GetTexture( Path )?.DrawImage();
+                ImGui.EndTooltip();
             }
 
             return ret;

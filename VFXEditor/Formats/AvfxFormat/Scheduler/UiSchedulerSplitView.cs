@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat {
         public UiSchedulerSplitView( string id, List<AvfxSchedulerItem> items, AvfxScheduler scheduler, bool isItem ) : base( id, items ) {
             if( !isItem ) {
                 AllowDelete = false;
-                AllowNew = false;
+                ShowControls = false;
             }
             Scheduler = scheduler;
             IsItem = isItem;

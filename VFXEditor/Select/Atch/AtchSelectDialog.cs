@@ -4,7 +4,7 @@ using VfxEditor.Select.Atch.Npc;
 
 namespace VfxEditor.Select.Atch {
     public class AtchSelectDialog : SelectDialog {
-        public AtchSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "atch", manager, isSourceDialog ) {
+        public AtchSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "atch", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new NpcAtchTab( this, "Npc" ),
                 new CharacterAtchTab( this, "Character" ),

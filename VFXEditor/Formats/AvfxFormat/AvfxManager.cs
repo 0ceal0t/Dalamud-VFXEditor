@@ -4,7 +4,7 @@ using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxManager : FileManagerWindow<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
+    public class AvfxManager : FileManager<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
             SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
             ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );

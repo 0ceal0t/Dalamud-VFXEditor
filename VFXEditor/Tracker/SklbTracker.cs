@@ -54,7 +54,6 @@ namespace VfxEditor.Tracker {
         private static void PopulateSklbs( CharacterBase* characterBase, HashSet<TrackerItem> paths ) {
             var skeleton = characterBase->Skeleton;
             if( skeleton == null ) return;
-
             if( skeleton->PartialSkeletonCount == 0 || Marshal.ReadIntPtr( new IntPtr( skeleton ) + 112 ) == IntPtr.Zero ) return; // idk what 112 even is
 
             var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );

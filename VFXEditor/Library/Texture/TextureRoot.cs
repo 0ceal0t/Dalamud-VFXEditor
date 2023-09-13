@@ -33,7 +33,7 @@ namespace VfxEditor.Library.Node {
                 }
 
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.FileImport.ToIconString() ) ) {
+                if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
                     FileDialogManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ImportTextures( res );

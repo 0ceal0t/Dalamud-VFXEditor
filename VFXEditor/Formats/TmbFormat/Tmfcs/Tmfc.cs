@@ -6,7 +6,7 @@ using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.TmbFormat.Tmfcs {
     public class Tmfc : TmbEntry {
@@ -22,7 +22,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         private readonly ParsedInt Unk2 = new( "Unknown 3" );
 
         public readonly List<TmfcData> Data = new();
-        private readonly GenericSplitView<TmfcData> DataSplitView;
+        private readonly UiSplitView<TmfcData> DataSplitView;
 
         public Tmfc( TmbFile file ) : base( file ) { }
 

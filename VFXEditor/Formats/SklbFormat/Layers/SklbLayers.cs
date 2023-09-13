@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayers {
         public readonly List<SklbLayer> Layers = new();
-        public readonly SimpleSplitview<SklbLayer> LayerView;
+        public readonly CommandSplitView<SklbLayer> LayerView;
         public readonly SklbFile File;
 
         public SklbLayers( SklbFile file, BinaryReader reader ) {

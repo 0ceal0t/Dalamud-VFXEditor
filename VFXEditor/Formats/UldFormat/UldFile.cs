@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Headers;
@@ -35,8 +36,8 @@ namespace VfxEditor.UldFormat {
         private readonly UldListHeader WidgetList;
         public readonly List<UldWidget> Widgets = new();
 
-        public readonly SimpleSplitview<UldTexture> TextureSplitView;
-        public readonly SimpleSplitview<UldPartList> PartsSplitView;
+        public readonly CommandSplitView<UldTexture> TextureSplitView;
+        public readonly CommandSplitView<UldPartList> PartsSplitView;
         public readonly SimpleDropdown<UldComponent> ComponentDropdown;
         public readonly SimpleDropdown<UldTimeline> TimelineDropdown;
         public readonly SimpleDropdown<UldWidget> WidgetDropdown;

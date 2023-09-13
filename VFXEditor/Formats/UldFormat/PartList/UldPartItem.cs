@@ -45,13 +45,12 @@ namespace VfxEditor.UldFormat.PartList {
                 var mult = ShowHd ? 2u : 1u;
 
                 if( !string.IsNullOrEmpty( path ) ) {
-                    Plugin.TextureManager.DrawTextureUv(
-                        path,
+                    Plugin.TextureManager.GetTexture( path )?.Draw(
                         U.Value * mult,
                         V.Value * mult,
                         W.Value * mult,
                         H.Value * mult
-                   );
+                    );
                 }
             }
 

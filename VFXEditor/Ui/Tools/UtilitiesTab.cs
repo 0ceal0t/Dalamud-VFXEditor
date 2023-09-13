@@ -4,7 +4,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
-using VfxEditor.TextureFormat;
+using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Tools {
@@ -43,7 +43,7 @@ namespace VfxEditor.Ui.Tools {
             if( ImGui.Button( ".atex to PNG" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
-                    var texFile = TextureFile.LoadFromLocal( res );
+                    var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsPng( res + ".png" );
                 } );
             }
@@ -52,7 +52,7 @@ namespace VfxEditor.Ui.Tools {
             if( ImGui.Button( ".atex to DDS" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
-                    var texFile = TextureFile.LoadFromLocal( res );
+                    var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );
                 } );
             }

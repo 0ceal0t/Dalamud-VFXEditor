@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
         public T GetSelected() => Selected;
 
-        public bool IsAllowedNew() => AllowNew;
+        public bool IsAllowedNew() => ShowControls;
 
         public bool IsAllowedDelete() => AllowDelete;
 

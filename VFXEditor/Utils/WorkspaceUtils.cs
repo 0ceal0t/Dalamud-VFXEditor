@@ -15,13 +15,11 @@ namespace VfxEditor.Utils {
     }
 
     public struct WorkspaceMetaTex {
-        public int Height;
-        public int Width;
-        public int Depth;
-        public int MipLevels;
-        public TextureFormat.TextureFormat Format;
+        public string Name;
         public string RelativeLocation;
         public string ReplacePath;
+        public bool IsFolder;
+        public WorkspaceMetaTex[] Children;
     }
 
     public struct WorkspaceMetaBasic {

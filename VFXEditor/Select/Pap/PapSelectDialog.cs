@@ -9,7 +9,7 @@ using VfxEditor.Select.Pap.Weapon;
 
 namespace VfxEditor.Select.Pap {
     public class PapSelectDialog : SelectDialog {
-        public PapSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
+        public PapSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new WeaponTab( this, "Weapon" ),
                 new ActionTab( this, "Action" ),

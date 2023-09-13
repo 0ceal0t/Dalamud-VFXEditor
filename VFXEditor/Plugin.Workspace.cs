@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor {

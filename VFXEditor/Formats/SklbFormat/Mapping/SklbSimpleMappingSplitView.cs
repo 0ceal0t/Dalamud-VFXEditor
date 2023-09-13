@@ -2,10 +2,10 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.SklbFormat.Mapping {
-    public unsafe class SklbSimpleMappingSplitView : SimpleSplitview<SklbSimpleMapping> {
+    public unsafe class SklbSimpleMappingSplitView : CommandSplitView<SklbSimpleMapping> {
         private readonly SklbMapping Mapping;
 
         public SklbSimpleMappingSplitView( SklbMapping mapping, List<SklbSimpleMapping> items ) :

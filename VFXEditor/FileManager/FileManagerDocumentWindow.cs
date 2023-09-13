@@ -7,10 +7,10 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public class FileManagerDocumentWindow<T, R, S> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        private readonly FileManagerWindow<T, R, S> Manager;
+        private readonly FileManager<T, R, S> Manager;
         private static bool ShowSourceColumn => Plugin.Configuration.DocumentPopoutShowSource;
 
-        public FileManagerDocumentWindow( string name, FileManagerWindow<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, 600, 400 ) {
+        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, 600, 400 ) {
             Manager = manager;
         }
 

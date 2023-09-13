@@ -9,8 +9,8 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TextureFormat {
-    public class TextureFile : Lumina.Data.FileResource {
+namespace VfxEditor.Formats.TextureFormat {
+    public class TextureDataFile : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
         public unsafe struct TexHeader {
             public Attribute Type;
@@ -47,8 +47,8 @@ namespace VfxEditor.TextureFormat {
             ValidFormat = ( ImageData.Length > 0 );
         }
 
-        public static TextureFile LoadFromLocal( string path ) {
-            var tex = new TextureFile();
+        public static TextureDataFile LoadFromLocal( string path ) {
+            var tex = new TextureDataFile();
             var file = File.Open( path, FileMode.Open );
             using( var reader = new BinaryReader( file ) ) {
                 tex.LoadFile( reader, ( int )file.Length );

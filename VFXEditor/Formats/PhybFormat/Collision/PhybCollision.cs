@@ -8,7 +8,7 @@ using VfxEditor.PhybFormat.Collision.Ellipsoid;
 using VfxEditor.PhybFormat.Collision.NormalPlane;
 using VfxEditor.PhybFormat.Collision.Sphere;
 using VfxEditor.PhybFormat.Collision.ThreePointPlane;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat.Collision {
@@ -21,11 +21,11 @@ namespace VfxEditor.PhybFormat.Collision {
         public readonly List<PhybThreePointPlane> ThreePointPlanes = new();
         public readonly List<PhybSphere> Spheres = new();
 
-        private readonly SimpleSplitview<PhybCapsule> CapsuleSplitView;
-        private readonly SimpleSplitview<PhybEllipsoid> EllipsoidSplitView;
-        private readonly SimpleSplitview<PhybNormalPlane> NormalPlaneSplitView;
-        private readonly SimpleSplitview<PhybThreePointPlane> ThreePointPlaneSplitView;
-        private readonly SimpleSplitview<PhybSphere> SphereDropdown;
+        private readonly CommandSplitView<PhybCapsule> CapsuleSplitView;
+        private readonly CommandSplitView<PhybEllipsoid> EllipsoidSplitView;
+        private readonly CommandSplitView<PhybNormalPlane> NormalPlaneSplitView;
+        private readonly CommandSplitView<PhybThreePointPlane> ThreePointPlaneSplitView;
+        private readonly CommandSplitView<PhybSphere> SphereDropdown;
 
         public bool IsEmpty => Capsules.Count + Ellipsoids.Count + NormalPlanes.Count + ThreePointPlanes.Count + Spheres.Count == 0;
 

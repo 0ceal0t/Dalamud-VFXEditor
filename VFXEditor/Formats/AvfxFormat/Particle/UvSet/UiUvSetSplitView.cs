@@ -5,7 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public UiUvSetSplitView( List<AvfxParticleUvSet> items ) : base( "UVSet", items ) { }
 
         protected override void DrawControls() {
-            AllowNew = Items.Count < 4; // only allow up to 4 items
+            ShowControls = Items.Count < 4; // only allow up to 4 items
             base.DrawControls();
         }
 

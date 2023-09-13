@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using TeximpNet.DDS;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     [StructLayout( LayoutKind.Sequential, Pack = 1 )]
     internal struct CustomHeader10 {
         public DXGIFormat Format;

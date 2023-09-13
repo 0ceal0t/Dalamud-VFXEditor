@@ -1,6 +1,6 @@
 using System;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     internal enum CustomD3D10ResourceDimension : uint {
         Unknown = 0,
         Buffer = 1,

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using TeximpNet;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     internal readonly struct CustomFourCC : IEquatable<CustomFourCC> {
         private static readonly CustomFourCC s_empty = new( 0 );
@@ -30,19 +30,19 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
 
         public char Second {
             get {
-                return ( char )( ( m_packedValue >> 8 ) & 255 );
+                return ( char )( m_packedValue >> 8 & 255 );
             }
         }
 
         public char Third {
             get {
-                return ( char )( ( m_packedValue >> 16 ) & 255 );
+                return ( char )( m_packedValue >> 16 & 255 );
             }
         }
 
         public char Fourth {
             get {
-                return ( char )( ( m_packedValue >> 24 ) & 255 );
+                return ( char )( m_packedValue >> 24 & 255 );
             }
         }
 
@@ -51,7 +51,7 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
                 if( fourCharacterCode.Length != 4 )
                     throw new ArgumentOutOfRangeException( nameof( fourCharacterCode ), "CustomFourCC must have four characters only." );
 
-                m_packedValue = ( uint )( ( fourCharacterCode[3] << 24 ) | ( fourCharacterCode[2] << 16 ) | ( fourCharacterCode[1] << 8 ) | fourCharacterCode[0] );
+                m_packedValue = ( uint )( fourCharacterCode[3] << 24 | fourCharacterCode[2] << 16 | fourCharacterCode[1] << 8 | fourCharacterCode[0] );
             }
             else {
                 m_packedValue = 0;
@@ -59,7 +59,7 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
         }
 
         public CustomFourCC( char first, char second, char third, char fourth ) {
-            m_packedValue = ( uint )( ( ( ( fourth << 24 ) | ( third << 16 ) ) | ( second << 8 ) ) | first );
+            m_packedValue = ( uint )( fourth << 24 | third << 16 | second << 8 | first );
         }
 
         public CustomFourCC( uint packedValue ) {

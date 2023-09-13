@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 
 namespace VfxEditor.Ui.Export {
     public class ExportDialogCategory {
@@ -25,10 +25,10 @@ namespace VfxEditor.Ui.Export {
 
             ImGui.SameLine();
 
-            if( ImGui.CollapsingHeader( $"{id} ({GetItemsToExport().Count()}/{Manager.GetExportDocuments().Where( x => x.CanExport() ).Count()})###{id}" ) ) {
+            if( ImGui.CollapsingHeader( $"{id} ({GetItemsToExport().Count()}/{Manager.GetDocuments().Where( x => x.CanExport() ).Count()})###{id}" ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
-                var items = Manager.GetExportDocuments();
+                var items = Manager.GetDocuments();
                 if( !items.Any() ) return;
 
                 using var table = ImRaii.Table( "##Table", 3, ImGuiTableFlags.RowBg );
@@ -66,7 +66,7 @@ namespace VfxEditor.Ui.Export {
             }
         }
 
-        public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetExportDocuments().Where( DoExport );
+        public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetDocuments().Where( DoExport );
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
 

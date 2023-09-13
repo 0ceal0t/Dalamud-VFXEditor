@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui.Components {
-    public class GenericSplitView<T> : SplitView<T>, IDraggableList<T> where T : class, IUiItem {
+namespace VfxEditor.Ui.Components.SplitViews {
+    public class UiSplitView<T> : ItemSplitView<T>, IDraggableList<T> where T : class, IUiItem {
         protected readonly bool AllowReorder;
+        protected T DraggingItem;
 
-        private T DraggingItem;
-
-        public GenericSplitView( string id, List<T> items, bool allowNew, bool allowReorder ) : base( id, items, allowNew ) {
+        public UiSplitView( string id, List<T> items, bool showControls, bool allowReorder ) : base( id, items, showControls ) {
             AllowReorder = allowReorder;
         }
 
@@ -19,6 +18,7 @@ namespace VfxEditor.Ui.Components {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
             if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
+
             if( Selected != null ) {
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
@@ -49,7 +49,7 @@ namespace VfxEditor.Ui.Components {
         }
 
 
-        // For drag+drop
+        // ===== DRAG/DROP =========
 
         public T GetDraggingItem() => DraggingItem;
 

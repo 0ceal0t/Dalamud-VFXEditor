@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         public readonly ParsedUInt EndFrame = new( "End Frame" );
         public readonly List<UldKeyGroup> KeyGroups = new();
 
-        public readonly SimpleSplitview<UldKeyGroup> KeyGroupView;
+        public readonly CommandSplitView<UldKeyGroup> KeyGroupView;
 
         public UldFrame() {
             KeyGroupView = new( "Key Group", KeyGroups, true, null, () => new UldKeyGroup(), () => CommandManager.Uld );

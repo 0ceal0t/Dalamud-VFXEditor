@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using TeximpNet;
 using TeximpNet.DDS;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     internal class CustomDDSFile {
         public static bool Write( Stream output, List<MipChain> mipChains, DXGIFormat format, TextureDimension texDim, DDSFlags flags = DDSFlags.None ) {
             if( output == null || !output.CanWrite || mipChains == null || mipChains.Count == 0 || mipChains[0].Count == 0 || format == DXGIFormat.Unknown )
@@ -327,7 +326,7 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
                 return false;
 
             //Validate cubemap...must have multiples of 6 faces (can be an array of cubes).
-            if( texDim == TextureDimension.Cube && ( mipChains.Count % 6 ) != 0 )
+            if( texDim == TextureDimension.Cube && mipChains.Count % 6 != 0 )
                 return false;
 
             //Validate 3d texture..can't have arrays
@@ -353,7 +352,7 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
                 return false;
 
             //Validate cubemap...width/height must be same
-            if( texDim == TextureDimension.Cube && ( width != height ) )
+            if( texDim == TextureDimension.Cube && width != height )
                 return false;
 
             //Only 3d textures have depth
@@ -382,14 +381,14 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
                 var prevMip = mipmaps[0];
 
                 //Check against the first main image we looked at earlier
-                if( prevMip.Width != width || prevMip.Height != height || prevMip.Depth != depth || prevMip.Data == IntPtr.Zero || prevMip.RowPitch != rowPitch || prevMip.SlicePitch != slicePitch )
+                if( prevMip.Width != width || prevMip.Height != height || prevMip.Depth != depth || prevMip.Data == nint.Zero || prevMip.RowPitch != rowPitch || prevMip.SlicePitch != slicePitch )
                     return false;
 
                 for( var mipLevel = 1; mipLevel < mipmaps.Count; mipLevel++ ) {
                     var nextMip = mipmaps[mipLevel];
 
                     //Ensure each mipmap is progressively smaller or same at the least
-                    if( nextMip.Width > prevMip.Width || nextMip.Height > prevMip.Height || nextMip.Depth > prevMip.Depth || nextMip.Data == IntPtr.Zero
+                    if( nextMip.Width > prevMip.Width || nextMip.Height > prevMip.Height || nextMip.Depth > prevMip.Depth || nextMip.Data == nint.Zero
                         || nextMip.RowPitch > prevMip.RowPitch || nextMip.SlicePitch > prevMip.SlicePitch || nextMip.RowPitch == 0 || nextMip.SlicePitch == 0 )
                         return false;
 

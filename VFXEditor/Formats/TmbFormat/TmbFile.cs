@@ -9,7 +9,7 @@ using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.TmbFormat.Utils;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
 // Rework based on https://github.com/AsgardXIV/XAT
@@ -30,7 +30,7 @@ namespace VfxEditor.TmbFormat {
         private TmbEntry DraggingEntry = null;
 
         private readonly List<Tmtr> UnusedTracks;
-        private readonly GenericSplitView<Tmtr> UnusedTrackView;
+        private readonly UiSplitView<Tmtr> UnusedTrackView;
 
         public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) :
             this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }

@@ -1,64 +1,102 @@
 using Dalamud.Logging;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Data;
-using VfxEditor.FileManager;
-using VfxEditor.TextureFormat.Textures;
+using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Formats.TextureFormat.Textures;
+using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Ui;
 
-namespace VfxEditor.TextureFormat {
-    public partial class TextureManager : GenericDialog, IFileManager {
+namespace VfxEditor.Formats.TextureFormat {
+    public class TextureManager : GenericDialog, IFileManager {
+        // TODO: test custom paths
+        // TODO: what if replace the same texture?
+
         private int TEX_ID = 0;
-        private readonly ConcurrentDictionary<string, TextureReplace> PathToTextureReplace = new(); // Keeps track of imported textures which replace existing ones
-        private readonly ConcurrentDictionary<string, PreviewTexture> PathToTexturePreview = new(); // Keeps track of ImGui handles for previewed images
+        public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
+        private readonly List<TextureReplace> Textures = new();
+        private readonly Dictionary<string, TexturePreview> Previews = new();
 
-        public TextureManager() : base( "Textures", false, 600, 400 ) { }
+        private readonly TextureView View;
 
-        public bool GetReplacePath( string gamePath, out string localPath ) {
-            localPath = PathToTextureReplace.TryGetValue( gamePath, out var textureReplace ) ? textureReplace.LocalPath : null;
-            return !string.IsNullOrEmpty( localPath );
-        }
-
-        // import replacement texture from atex
-        private bool ImportAtex( string importPath, string gamePath, int height, int width, int depth, int mips, TextureFormat format ) {
-            var gameFileExtension = gamePath.Split( '.' )[^1].Trim( '\0' );
-            var localPath = Path.Combine( Plugin.Configuration.WriteLocation, "TexTemp" + ( TEX_ID++ ) + "." + gameFileExtension );
-            File.Copy( importPath, localPath, true );
-
-            var replaceData = new TextureReplace( localPath, gamePath, height, width, depth, mips, format );
-
-            return ReplaceAndRefreshTexture( replaceData, gamePath );
+        public TextureManager() : base( "Textures", false, 600, 400 ) {
+            View = new( Textures );
         }
 
         public CopyManager GetCopyManager() => null;
-
         public CommandManager GetCommandManager() => null;
-
+        public IEnumerable<IFileDocument> GetDocuments() => Textures;
         public string GetExportName() => "Textures";
+
+        public void ReplaceTexture( string importPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
+            var newReplace = new TextureReplace( gamePath, NewWriteLocation );
+            newReplace.ImportFile( importPath, pngMip, pngFormat );
+            Textures.Add( newReplace );
+        }
+
+        public void RemoveReplace( TextureReplace replace ) {
+            replace.Dispose();
+            Textures.Remove( replace );
+
+            // TODO: if it's selected, remove that
+        }
+
+        public override void DrawBody() => View.Draw();
+
+        // ====================
+
+        public TextureDrawable GetTexture( string gamePath ) {
+            gamePath = gamePath.Trim( '\0' );
+            if( string.IsNullOrEmpty( gamePath ) || !gamePath.Contains( '/' ) ) return null;
+
+            foreach( var texture in Textures ) {
+                if( texture.GetReplacePath( gamePath, out var _ ) ) return texture;
+            }
+
+            if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
+
+            if( !Plugin.DataManager.FileExists( gamePath ) ) return null;
+
+            try {
+                var data = Plugin.DataManager.GetFile<TextureDataFile>( gamePath );
+                if( !data.ValidFormat ) {
+                    PluginLog.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
+                    return null;
+                }
+                var newPreview = new TexturePreview( data, gamePath );
+                Previews[gamePath] = newPreview;
+                return newPreview;
+            }
+            catch( Exception e ) {
+                PluginLog.Error( e, $"Could not find tex: {gamePath}" );
+                return null;
+            }
+        }
+
+        public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
+
+        public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
+
+        // ===================
+
+        public void WorkspaceImport( JObject meta, string loadLocation ) => View.WorkspaceImport( meta, loadLocation );
+
+        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) => View.WorkspaceExport( meta, saveLocation );
+
+        // ================
 
         public void ToDefault() => Dispose();
 
         public void Dispose() {
-            foreach( var entry in PathToTexturePreview ) {
-                if( entry.Value.Wrap?.ImGuiHandle == null ) continue;
-                try {
-                    entry.Value.Wrap?.Dispose();
-                }
-                catch( Exception ) {
-                    // Already disposed
-                }
-            }
-            foreach( var entry in PathToTextureReplace ) {
-                Plugin.CleanupExport( entry.Value );
-                File.Delete( entry.Value.LocalPath );
-            }
-            PathToTexturePreview.Clear();
-            PathToTextureReplace.Clear();
+            Textures.ForEach( x => x.Dispose() );
+            Previews.Values.ToList().ForEach( x => x.Dispose() );
+            Textures.Clear();
+            Previews.Clear();
             TEX_ID = 0;
         }
-
-        public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
         // =======================
 

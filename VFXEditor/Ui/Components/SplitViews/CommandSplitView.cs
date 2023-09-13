@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Ui.Components {
-    public class SimpleSplitview<T> : GenericSplitView<T> where T : class, IUiItem {
+namespace VfxEditor.Ui.Components.SplitViews {
+    public class CommandSplitView<T> : UiSplitView<T> where T : class, IUiItem {
         private readonly Func<T, int, string> GetTextAction;
         private readonly Func<T> NewAction;
         private readonly Func<CommandManager> CommandAction;
         private readonly Action<T> OnChangeAction;
 
-        public SimpleSplitview( string id, List<T> items, bool allowReorder, Func<T, int, string> getTextAction, Func<T> newAction, Func<CommandManager> commandAction, Action<T> onChangeAction = null ) :
+        public CommandSplitView( string id, List<T> items, bool allowReorder, Func<T, int, string> getTextAction, Func<T> newAction, Func<CommandManager> commandAction, Action<T> onChangeAction = null ) :
             base( id, items, true, allowReorder ) {
 
             GetTextAction = getTextAction;

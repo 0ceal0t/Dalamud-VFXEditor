@@ -12,10 +12,10 @@ namespace VfxEditor.AvfxFormat.Particle.Texture {
         public void Draw() {
             foreach( var node in NodeSelects ) {
                 if( node is UiNodeSelect<AvfxTexture> select ) {
-                    select.Selected?.GetPreviewTexture()?.Draw();
+                    select.Selected?.GetTexture()?.DrawImage();
                 }
                 else if( node is UiNodeSelectList<AvfxTexture> listSelect ) {
-                    listSelect.Selected.ForEach( x => x?.GetPreviewTexture()?.Draw() );
+                    listSelect.Selected.ForEach( x => x?.GetTexture()?.DrawImage() );
                 }
             }
         }

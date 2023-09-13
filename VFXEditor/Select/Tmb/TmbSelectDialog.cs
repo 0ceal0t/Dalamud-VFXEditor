@@ -9,7 +9,7 @@ using VfxEditor.Spawn;
 
 namespace VfxEditor.Select.Tmb {
     public class TmbSelectDialog : SelectDialog {
-        public TmbSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
+        public TmbSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new ActionTab( this, "Action" ),
                 new NonPlayerActionTab( this, "Non-Player Action" ),

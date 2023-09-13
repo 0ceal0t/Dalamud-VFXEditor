@@ -6,13 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerDocument<T, S> : IFileDocument where T : FileManagerFile {
-        public T CurrentFile { get; protected set; }
+    public abstract class FileManagerDocument<R, S> : IFileDocument where R : FileManagerFile {
+        public R CurrentFile { get; protected set; }
+        protected VerifiedStatus Verified => CurrentFile == null ? VerifiedStatus.UNKNOWN : CurrentFile.Verified;
 
         public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
         protected string Name = "";
@@ -24,58 +26,22 @@ namespace VfxEditor.FileManager {
         protected SelectResult Replace;
         public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
-
-        protected VerifiedStatus Verified => CurrentFile == null ? VerifiedStatus.UNKNOWN : CurrentFile.Verified;
-        protected string WriteLocation;
-        public string WritePath => WriteLocation;
         protected bool Disabled = false;
 
+        public string WriteLocation { get; protected set; }
+
         public abstract string Id { get; }
-        public string IdUpperCase => Id.ToUpper();
         public abstract string Extension { get; }
 
-        protected readonly FileManagerWindow Manager;
+        protected readonly FileManagerBase Manager;
 
         public bool Unsaved = false;
         protected DateTime LastUpdate = DateTime.Now;
 
-        public FileManagerDocument( FileManagerWindow manager, string writeLocation ) {
+        public FileManagerDocument( FileManagerBase manager, string writeLocation ) {
             Manager = manager;
             WriteLocation = writeLocation;
         }
-
-        protected void LoadWorkspace( string localPath, string relativeLocation, string name, SelectResult source, SelectResult replace, bool disabled ) {
-            Name = name ?? "";
-            Source = source;
-            Replace = replace;
-            Disabled = disabled;
-            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ) );
-            if( CurrentFile != null ) CurrentFile.Verified = VerifiedStatus.WORKSPACE;
-            WriteFile( WriteLocation );
-        }
-
-        public void SetSource( SelectResult result ) {
-            if( result == null ) return;
-            Source = result;
-
-            if( result.Type == SelectResultType.Local ) LoadLocal( result.Path );
-            else LoadGame( result.Path );
-
-            if( CurrentFile != null ) {
-                WriteFile( WriteLocation );
-            }
-        }
-
-        protected void RemoveSource() {
-            CurrentFile?.Dispose();
-            CurrentFile = null;
-            Source = null;
-            Unsaved = false;
-        }
-
-        public void SetReplace( SelectResult result ) { Replace = result; }
-
-        protected void RemoveReplace() { Replace = null; }
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = null;
@@ -85,7 +51,7 @@ namespace VfxEditor.FileManager {
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        protected abstract T FileFromReader( BinaryReader reader );
+        protected abstract R FileFromReader( BinaryReader reader );
 
         protected void LoadLocal( string localPath ) {
             if( !File.Exists( localPath ) ) {
@@ -102,7 +68,7 @@ namespace VfxEditor.FileManager {
                 using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
                 CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{IdUpperCase} file loaded" );
+                UiUtils.OkNotification( $"{Id} file loaded" );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File", e );
@@ -127,7 +93,7 @@ namespace VfxEditor.FileManager {
                 using var reader = new BinaryReader( ms );
                 CurrentFile?.Dispose();
                 CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{IdUpperCase} file loaded" );
+                UiUtils.OkNotification( $"{Id} file loaded" );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File" );
@@ -135,9 +101,36 @@ namespace VfxEditor.FileManager {
             }
         }
 
+        // =================
+
+        public void SetSource( SelectResult result ) {
+            if( result == null ) return;
+            Source = result;
+
+            if( result.Type == SelectResultType.Local ) LoadLocal( result.Path );
+            else LoadGame( result.Path );
+
+            if( CurrentFile != null ) {
+                WriteFile( WriteLocation );
+            }
+        }
+
+        protected void RemoveSource() {
+            CurrentFile?.Dispose();
+            CurrentFile = null;
+            Source = null;
+            Unsaved = false;
+        }
+
+        public void SetReplace( SelectResult result ) { Replace = result; }
+
+        protected void RemoveReplace() { Replace = null; }
+
+        // =====================
+
         protected void WriteFile( string path ) {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", path, IdUpperCase );
+            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", path, Id );
             File.WriteAllBytes( path, CurrentFile.ToBytes() );
         }
 
@@ -154,7 +147,7 @@ namespace VfxEditor.FileManager {
             Unsaved = false;
 
             if( Plugin.Configuration.UpdateWriteLocation ) {
-                var newWriteLocation = Manager.GetWriteLocation();
+                var newWriteLocation = Manager.NewWriteLocation;
                 CurrentFile?.Update();
                 WriteFile( newWriteLocation );
                 WriteLocation = newWriteLocation;
@@ -169,6 +162,18 @@ namespace VfxEditor.FileManager {
         }
 
         protected virtual List<string> GetPapIds() => null;
+
+        // =======================
+
+        protected void LoadWorkspace( string localPath, string relativeLocation, string name, SelectResult source, SelectResult replace, bool disabled ) {
+            Name = name ?? "";
+            Source = source;
+            Replace = replace;
+            Disabled = disabled;
+            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ) );
+            if( CurrentFile != null ) CurrentFile.Verified = VerifiedStatus.WORKSPACE;
+            WriteFile( WriteLocation );
+        }
 
         public string GetExportSource() => SourceDisplay;
 
@@ -203,14 +208,14 @@ namespace VfxEditor.FileManager {
             }
         }
 
+        // ====== DRAWING ==========
+
         public virtual void CheckKeybinds() {
             if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
             if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
             if( Plugin.Configuration.UndoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Undo();
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Redo();
         }
-
-        // ====== DRAWING ==========
 
         public void Draw() {
             if( Plugin.Configuration.WriteLocationError ) {
@@ -303,11 +308,11 @@ namespace VfxEditor.FileManager {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"Loaded {IdUpperCase}" );
+            ImGui.Text( $"Loaded {Id}" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"{IdUpperCase} Being Replaced" );
+            ImGui.Text( $"{Id} Being Replaced" );
         }
 
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
@@ -384,7 +389,7 @@ namespace VfxEditor.FileManager {
 
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.FileDownload.ToIconString() ) ) ExportRaw();
+                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
             }
             UiUtils.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
 
@@ -427,6 +432,7 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
+            Plugin.CleanupExport( this );
             CurrentFile?.Dispose();
             CurrentFile = null;
             File.Delete( WriteLocation );

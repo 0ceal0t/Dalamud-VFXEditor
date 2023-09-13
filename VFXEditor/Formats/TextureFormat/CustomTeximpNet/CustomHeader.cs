@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     [StructLayout( LayoutKind.Sequential, Pack = 1 )]
     internal unsafe struct CustomHeader {
         public uint Size;

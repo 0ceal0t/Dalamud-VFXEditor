@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using VfxEditor.FileManager;
 using VfxEditor.ScdFormat.Music;
 using VfxEditor.ScdFormat.Music.Data;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
@@ -23,10 +23,10 @@ namespace VfxEditor.ScdFormat {
         public readonly List<ScdAttributeEntry> Attributes = new();
 
         public readonly ScdAudioEntrySplitView AudioSplitView;
-        public readonly SimpleSplitview<ScdSoundEntry> SoundView;
-        public readonly SimpleSplitview<ScdLayoutEntry> LayoutView;
-        public readonly SimpleSplitview<ScdTrackEntry> TrackView;
-        public readonly GenericSplitView<ScdAttributeEntry> AttributeView;
+        public readonly CommandSplitView<ScdSoundEntry> SoundView;
+        public readonly CommandSplitView<ScdLayoutEntry> LayoutView;
+        public readonly CommandSplitView<ScdTrackEntry> TrackView;
+        public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
         public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager ) ) {
             var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;

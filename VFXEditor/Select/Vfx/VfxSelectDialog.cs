@@ -17,7 +17,7 @@ using VfxEditor.Spawn;
 
 namespace VfxEditor.Select.Vfx {
     public class VfxSelectDialog : SelectDialog {
-        public VfxSelectDialog( string id, FileManagerWindow manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
+        public VfxSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new VfxItemTab( this, "Item" ),
                 new StatusTab( this, "Status" ),

@@ -4,8 +4,8 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using VfxEditor.AvfxFormat.Nodes;
+using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Library.Texture;
-using VfxEditor.TextureFormat.Textures;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
@@ -44,19 +44,16 @@ namespace VfxEditor.AvfxFormat {
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            Plugin.TextureManager.DrawTexture( Path.GetValue() );
+            GetTexture()?.Draw();
         }
 
         public override void ShowTooltip() {
-            var texture = GetPreviewTexture();
-            if( texture == null ) return;
-
             ImGui.BeginTooltip();
-            texture.Draw();
+            GetTexture()?.DrawImage();
             ImGui.EndTooltip();
         }
 
-        public PreviewTexture GetPreviewTexture() => Plugin.TextureManager.GetPreviewTexture( Path.GetValue() );
+        public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.GetValue() );
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";
 

@@ -1,10 +1,10 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.AtchFormat.Entry {
-    public class AtchEntrySplitView : SimpleSplitview<AtchEntry> {
+    public class AtchEntrySplitView : CommandSplitView<AtchEntry> {
         public AtchEntrySplitView( List<AtchEntry> items ) : base( "Entry", items, false, null, () => new(), () => CommandManager.Atch ) { }
 
         protected override bool DrawLeftItem( AtchEntry item, int idx ) {

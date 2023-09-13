@@ -25,11 +25,11 @@ namespace VfxEditor {
         private int CommandIndex;
 
         public readonly CopyManager Copy;
-        public readonly FileManagerWindow Manager;
+        public readonly FileManagerBase Manager;
 
         private readonly Action OnChangeAction;
 
-        public CommandManager( FileManagerWindow manager, Action onChangeAction = null ) {
+        public CommandManager( FileManagerBase manager, Action onChangeAction = null ) {
             CommandManagers.Add( this );
             Manager = manager;
             Copy = manager.GetCopyManager();

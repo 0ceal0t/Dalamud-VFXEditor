@@ -1,31 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
     // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
     public static class TextureUtils {
-        public static List<byte> CreateTextureHeader( TextureFormat.TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
+        public static List<byte> CreateTextureHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
             var headerData = new List<byte>();
 
             short texFormatCode = 0;
             switch( format ) {
-                case TextureFormat.TextureFormat.DXT1:
+                case TextureFormat.DXT1:
                     texFormatCode = 13344;
                     break;
-                case TextureFormat.TextureFormat.DXT3:
+                case TextureFormat.DXT3:
                     texFormatCode = 13360;
                     break;
-                case TextureFormat.TextureFormat.DXT5:
+                case TextureFormat.DXT5:
                     texFormatCode = 13361;
                     break;
-                case TextureFormat.TextureFormat.A8:
+                case TextureFormat.A8:
                     texFormatCode = 4401;
                     break;
-                case TextureFormat.TextureFormat.A8R8G8B8:
+                case TextureFormat.A8R8G8B8:
                     texFormatCode = 5200;
                     break;
-                case TextureFormat.TextureFormat.R4G4B4A4:
+                case TextureFormat.R4G4B4A4:
                     texFormatCode = 5184;
                     break;
             }
@@ -42,9 +43,9 @@ namespace VfxEditor.Utils {
             headerData.AddRange( BitConverter.GetBytes( 1 ) );
             headerData.AddRange( BitConverter.GetBytes( 2 ) );
             var mipLength = format switch {
-                TextureFormat.TextureFormat.R4G4B4A4 => ( newWidth * newHeight ) * 2,
-                TextureFormat.TextureFormat.DXT1 => ( newWidth * newHeight ) / 2,
-                TextureFormat.TextureFormat.DXT5 or TextureFormat.TextureFormat.A8 => newWidth * newHeight,
+                TextureFormat.R4G4B4A4 => ( newWidth * newHeight ) * 2,
+                TextureFormat.DXT1 => ( newWidth * newHeight ) / 2,
+                TextureFormat.DXT5 or TextureFormat.A8 => newWidth * newHeight,
                 _ => ( newWidth * newHeight ) * 4,
             };
 
@@ -65,7 +66,7 @@ namespace VfxEditor.Utils {
             return headerData;
         }
 
-        public static byte[] CreateDdsHeader( ushort width, ushort height, TextureFormat.TextureFormat format, ushort depth, ushort mipLevels ) {
+        public static byte[] CreateDdsHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
             uint dwPitchOrLinearSize, dwFourCC;
             var header = new List<byte>();
 
@@ -83,13 +84,13 @@ namespace VfxEditor.Utils {
             var dwWidth = ( uint )width;
             header.AddRange( BitConverter.GetBytes( dwWidth ) );
 
-            if( format == TextureFormat.TextureFormat.A8R8G8B8 ) {
+            if( format == TextureFormat.A8R8G8B8 ) {
                 dwPitchOrLinearSize = ( dwHeight * dwWidth ) * 4;
             }
-            else if( format == TextureFormat.TextureFormat.DXT1 ) {
+            else if( format == TextureFormat.DXT1 ) {
                 dwPitchOrLinearSize = ( dwHeight * dwWidth ) / 2;
             }
-            else if( format == TextureFormat.TextureFormat.R4G4B4A4 ) {
+            else if( format == TextureFormat.R4G4B4A4 ) {
                 dwPitchOrLinearSize = ( dwHeight * dwWidth ) * 2;
             }
             else {
@@ -105,25 +106,25 @@ namespace VfxEditor.Utils {
 
             header.AddRange( BitConverter.GetBytes( ( uint )32 ) );
             var pfFlags = format switch {
-                TextureFormat.TextureFormat.A8R8G8B8 or TextureFormat.TextureFormat.R4G4B4A4 => 65,
-                TextureFormat.TextureFormat.A8 => 2,
+                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 => 65,
+                TextureFormat.A8 => 2,
                 _ => 4,
             };
             header.AddRange( BitConverter.GetBytes( pfFlags ) );
 
             switch( format ) {
-                case TextureFormat.TextureFormat.DXT1:
+                case TextureFormat.DXT1:
                     dwFourCC = 0x31545844;
                     break;
-                case TextureFormat.TextureFormat.DXT3:
+                case TextureFormat.DXT3:
                     dwFourCC = 0x33545844;
                     break;
-                case TextureFormat.TextureFormat.DXT5:
+                case TextureFormat.DXT5:
                     dwFourCC = 0x35545844;
                     break;
-                case TextureFormat.TextureFormat.A8R8G8B8:
-                case TextureFormat.TextureFormat.R4G4B4A4:
-                case TextureFormat.TextureFormat.A8:
+                case TextureFormat.A8R8G8B8:
+                case TextureFormat.R4G4B4A4:
+                case TextureFormat.A8:
                     dwFourCC = 0;
                     break;
                 default:
@@ -138,7 +139,7 @@ namespace VfxEditor.Utils {
             header.AddRange( BitConverter.GetBytes( dwFourCC ) );
 
             switch( format ) {
-                case TextureFormat.TextureFormat.A8R8G8B8: {
+                case TextureFormat.A8R8G8B8: {
                         const uint dwRGBBitCount = 32;
                         header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
                         const uint dwRBitMask = 16711680;
@@ -156,7 +157,7 @@ namespace VfxEditor.Utils {
 
                         break;
                     }
-                case TextureFormat.TextureFormat.R4G4B4A4: {
+                case TextureFormat.R4G4B4A4: {
                         const uint dwRGBBitCount = 16;
                         header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
                         const uint dwRBitMask = 3840;
@@ -173,7 +174,7 @@ namespace VfxEditor.Utils {
                         header.AddRange( blank1 );
                         break;
                     }
-                case TextureFormat.TextureFormat.A8: {
+                case TextureFormat.A8: {
                         const uint dwRGBBitCount = 8;
                         header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
                         const uint dwRBitMask = 0;
@@ -199,10 +200,10 @@ namespace VfxEditor.Utils {
 
             if( depth > 1 ) {
                 uint dxgiFormat;
-                if( format == TextureFormat.TextureFormat.DXT1 ) {
+                if( format == TextureFormat.DXT1 ) {
                     dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
                 }
-                else if( format == TextureFormat.TextureFormat.DXT5 ) {
+                else if( format == TextureFormat.DXT5 ) {
                     dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
                 }
                 else {

@@ -3,7 +3,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component;
 using VfxEditor.UldFormat.Component.Node;
@@ -27,7 +27,7 @@ namespace VfxEditor.UldFormat.Widget {
         public readonly ParsedShort Y = new( "Y" );
 
         public readonly List<UldNode> Nodes = new();
-        public readonly SimpleSplitview<UldNode> NodeSplitView;
+        public readonly CommandSplitView<UldNode> NodeSplitView;
 
         public UldWidget( List<UldComponent> components ) {
             NodeSplitView = new( "Node", Nodes, true,

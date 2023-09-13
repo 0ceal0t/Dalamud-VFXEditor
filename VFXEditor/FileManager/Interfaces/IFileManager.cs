@@ -2,30 +2,37 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using VfxEditor.Data;
 
-namespace VfxEditor.FileManager {
+namespace VfxEditor.FileManager.Interfaces {
     public interface IFileManager {
-        public bool DoDebug( string path );
+        public string NewWriteLocation { get; }
 
+        public bool DoDebug( string path );
         public bool GetReplacePath( string gamePath, out string replacePath );
 
         public void WorkspaceImport( JObject meta, string loadLocation );
-
         public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation );
 
         public string GetExportName();
-
-        public IEnumerable<IFileDocument> GetExportDocuments();
+        public IEnumerable<IFileDocument> GetDocuments();
 
         public CopyManager GetCopyManager();
-
         public CommandManager GetCommandManager();
 
+        public void Show();
         public void Draw();
 
         public void ToDefault();
-
         public void Dispose();
 
-        public void Show();
+        public static bool GetReplacePath( IFileManager manager, string path, out string replacePath ) {
+            replacePath = null;
+            foreach( var document in manager.GetDocuments() ) {
+                if( document.GetReplacePath( path, out var documentReplacePath ) ) {
+                    replacePath = documentReplacePath;
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace VfxEditor.Select {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
 
-        public readonly FileManagerWindow Manager;
+        public readonly FileManagerBase Manager;
         public readonly string Extension;
         public readonly bool IsSource; // as opposed to replaced
 
@@ -64,7 +64,7 @@ namespace VfxEditor.Select {
         private string LocalPathInput = "";
         private string GamePathInput = "";
 
-        public SelectDialog( string name, string extension, FileManagerWindow manager, bool isSource ) : base( name, false, 800, 500 ) {
+        public SelectDialog( string name, string extension, FileManagerBase manager, bool isSource ) : base( name, false, 800, 500 ) {
             Manager = manager;
             Extension = extension;
             Favorites = manager.GetConfig().Favorites;

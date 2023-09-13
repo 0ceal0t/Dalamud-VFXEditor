@@ -37,14 +37,14 @@ namespace VfxEditor.UldFormat.Texture {
             if( !string.IsNullOrEmpty( Path.Value ) ) {
                 ImGui.Checkbox( "Show HD", ref ShowHd );
                 if( ShowHd ) ImGui.TextDisabled( TexturePath );
-                Plugin.TextureManager.DrawTexture( TexturePath );
+                Plugin.TextureManager.GetTexture( TexturePath )?.Draw();
             }
 
             IconId.Draw( CommandManager.Uld );
             if( IconId.Value > 0 ) {
                 ImGui.Checkbox( "Show HD", ref ShowHd );
                 ImGui.TextDisabled( IconPath );
-                Plugin.TextureManager.DrawTexture( IconPath );
+                Plugin.TextureManager.GetTexture( IconPath )?.Draw();
             }
 
             Unk1.Draw( CommandManager.Uld );

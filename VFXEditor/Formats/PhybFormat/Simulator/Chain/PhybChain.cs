@@ -7,7 +7,7 @@ using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
 using VfxEditor.PhybFormat.Utils;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.PhybFormat.Simulator.Chain {
     public enum ChainType {
@@ -29,8 +29,8 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly List<PhybCollisionData> Collisions = new();
         public readonly List<PhybNode> Nodes = new();
 
-        private readonly SimpleSplitview<PhybCollisionData> CollisionSplitView;
-        private readonly SimpleSplitview<PhybNode> NodeSplitView;
+        private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
+        private readonly CommandSplitView<PhybNode> NodeSplitView;
 
         public PhybChain( PhybFile file, PhybSimulator simulator ) : base( file ) {
             Simulator = simulator;

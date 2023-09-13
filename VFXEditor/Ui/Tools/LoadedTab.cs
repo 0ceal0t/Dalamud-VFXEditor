@@ -53,6 +53,7 @@ namespace VfxEditor.Ui.Tools {
         private static void DrawCharacterBase( CharacterBase* characterBase ) {
             var skeleton = characterBase->Skeleton;
             if( skeleton == null ) return;
+            if( skeleton->PartialSkeletonCount == 0 || Marshal.ReadIntPtr( new IntPtr( skeleton ) + 112 ) == IntPtr.Zero ) return;
 
             var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
             var animationTable = new IntPtr( skeleton->AnimationResourceHandles );

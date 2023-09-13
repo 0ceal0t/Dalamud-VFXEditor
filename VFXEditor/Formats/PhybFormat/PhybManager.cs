@@ -3,7 +3,7 @@ using VfxEditor.Select.Phyb;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {
-    public class PhybManager : FileManagerWindow<PhybDocument, PhybFile, WorkspaceMetaBasic> {
+    public class PhybManager : FileManager<PhybDocument, PhybFile, WorkspaceMetaBasic> {
         public PhybManager() : base( "Phyb Editor", "Phyb" ) {
             SourceSelect = new PhybSelectDialog( "Phyb Select [LOADED]", this, true );
             ReplaceSelect = new PhybSelectDialog( "Phyb Select [REPLACED]", this, false );

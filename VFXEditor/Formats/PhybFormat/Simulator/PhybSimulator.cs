@@ -15,6 +15,7 @@ using VfxEditor.PhybFormat.Simulator.PostAlignment;
 using VfxEditor.PhybFormat.Simulator.Spring;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.PhybFormat.Simulator {
@@ -32,14 +33,14 @@ namespace VfxEditor.PhybFormat.Simulator {
         public readonly List<PhybSpring> Springs = new();
         public readonly List<PhybPostAlignment> PostAlignments = new();
 
-        private readonly SimpleSplitview<PhybCollisionData> CollisionSplitView;
-        private readonly SimpleSplitview<PhybCollisionData> CollisionConnectorSplitView;
+        private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
+        private readonly CommandSplitView<PhybCollisionData> CollisionConnectorSplitView;
         private readonly SimpleDropdown<PhybChain> ChainDropdown;
-        private readonly SimpleSplitview<PhybConnector> ConnectorSplitView;
-        private readonly SimpleSplitview<PhybAttract> AttractSplitView;
-        private readonly SimpleSplitview<PhybPin> PinSplitView;
-        private readonly SimpleSplitview<PhybSpring> SpringSplitView;
-        private readonly SimpleSplitview<PhybPostAlignment> PostAlignmentSplitView;
+        private readonly CommandSplitView<PhybConnector> ConnectorSplitView;
+        private readonly CommandSplitView<PhybAttract> AttractSplitView;
+        private readonly CommandSplitView<PhybPin> PinSplitView;
+        private readonly CommandSplitView<PhybSpring> SpringSplitView;
+        private readonly CommandSplitView<PhybPostAlignment> PostAlignmentSplitView;
 
         public PhybSimulator( PhybFile file ) {
             File = file;

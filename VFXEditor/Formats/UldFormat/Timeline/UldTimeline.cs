@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.UldFormat.Timeline.Frames;
 
 namespace VfxEditor.UldFormat.Timeline {
@@ -10,8 +10,8 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly List<UldFrame> Frames1 = new();
         public readonly List<UldFrame> Frames2 = new();
 
-        public readonly SimpleSplitview<UldFrame> FramesView1;
-        public readonly SimpleSplitview<UldFrame> FramesView2;
+        public readonly CommandSplitView<UldFrame> FramesView1;
+        public readonly CommandSplitView<UldFrame> FramesView2;
 
         public UldTimeline() {
             FramesView1 = new( "Frame", Frames1, true,
@@ -65,7 +65,7 @@ namespace VfxEditor.UldFormat.Timeline {
             DrawFrames( "Frames 2", FramesView2 );
         }
 
-        private static void DrawFrames( string name, SimpleSplitview<UldFrame> view ) {
+        private static void DrawFrames( string name, CommandSplitView<UldFrame> view ) {
             using var tabItem = ImRaii.TabItem( name );
             if( !tabItem ) return;
 

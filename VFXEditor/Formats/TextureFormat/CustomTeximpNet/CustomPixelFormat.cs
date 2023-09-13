@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace VfxEditor.TextureFormat.CustomTeximpNet {
+namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
     [StructLayout( LayoutKind.Sequential, Pack = 1 )]
     internal struct CustomPixelFormat {
         public uint Size;
@@ -45,7 +43,7 @@ namespace VfxEditor.TextureFormat.CustomTeximpNet {
         public override string ToString() {
             if( Flags == CustomPixelFormatFlags.FourCC ) {
                 //D3D Format enum is sometimes the first char, if so then it's not a proper CustomFourCC and will just appear as a single character. Lets display the integer value instead in this case.
-                var CustomFourCCValue = ( CustomFourCC.First > 0 && CustomFourCC.Second == 0 && CustomFourCC.Third == 0 && CustomFourCC.Fourth == 0 ) ? ( ( int )CustomFourCC.First ).ToString() : CustomFourCC.ToString();
+                var CustomFourCCValue = CustomFourCC.First > 0 && CustomFourCC.Second == 0 && CustomFourCC.Third == 0 && CustomFourCC.Fourth == 0 ? ( ( int )CustomFourCC.First ).ToString() : CustomFourCC.ToString();
 
                 return string.Format( "Flags = {0}, CustomFourCC = '{1}'", Flags.ToString(), CustomFourCCValue );
             }

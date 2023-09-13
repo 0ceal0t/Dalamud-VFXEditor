@@ -4,7 +4,7 @@ using VfxEditor.Select.Sklb;
 using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat {
-    public class SklbManager : FileManagerWindow<SklbDocument, SklbFile, WorkspaceMetaBasic> {
+    public class SklbManager : FileManager<SklbDocument, SklbFile, WorkspaceMetaBasic> {
         public SklbManager() : base( "Sklb Editor", "Sklb" ) {
             SourceSelect = new SklbSelectDialog( "Sklb Select [LOADED]", this, true );
             ReplaceSelect = new SklbSelectDialog( "Sklb Select [REPLACED]", this, false );
@@ -32,7 +32,7 @@ namespace VfxEditor.SklbFormat {
                 if( document.CurrentFile == null ) continue;
                 if( document.ReplacePath.Equals( path ) ) {
                     replaced = true;
-                    skeleton = SimpleSklb.LoadFromLocal( document.WritePath );
+                    skeleton = SimpleSklb.LoadFromLocal( document.WriteLocation );
                     return true;
                 }
             }

@@ -110,7 +110,7 @@ namespace VfxEditor.ScdFormat {
             // Save
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
                     if( IsVorbis ) ImGui.OpenPopup( "SavePopup" );
                     else SaveWaveDialog();
                 }
