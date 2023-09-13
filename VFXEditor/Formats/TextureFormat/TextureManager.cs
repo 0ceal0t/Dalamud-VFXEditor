@@ -9,6 +9,7 @@ using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Ui;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : GenericDialog, IFileManager {
@@ -86,9 +87,29 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // ===================
 
-        public void WorkspaceImport( JObject meta, string loadLocation ) => View.WorkspaceImport( meta, loadLocation );
+        public void WorkspaceImport( JObject meta, string loadLocation ) {
+            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, "Tex" );
+            if( items == null ) return;
+            foreach( var item in items ) {
+                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
+                var newReplace = new TextureReplace( Plugin.TextureManager.NewWriteLocation, item );
+                newReplace.ImportFile( fullPath );
+                Textures.Add( newReplace );
+            }
+        }
 
-        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) => View.WorkspaceExport( meta, saveLocation );
+        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
+            var texRootPath = Path.Combine( saveLocation, "Tex" );
+            Directory.CreateDirectory( texRootPath );
+
+            var idx = 0;
+            var texMeta = new List<WorkspaceMetaTex>();
+            foreach( var texture in Textures ) {
+                texMeta.Add( texture.WorkspaceExport( texRootPath, idx ) );
+                idx++;
+            }
+            WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), "Tex" );
+        }
 
         // ================
 

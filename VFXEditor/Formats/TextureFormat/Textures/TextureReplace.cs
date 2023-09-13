@@ -31,9 +31,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TextureReplace( string gamePath, string writeLocation ) : base( gamePath ) {
             WriteLocation = writeLocation;
-
-            // TODO: name
-            // TODO: edit path
         }
 
         public void ImportFile( string importPath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
@@ -120,7 +117,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         // ===========================
 
         public void DrawBody() {
-            ImGui.InputTextWithHint( "Name", GamePath, ref Name, 255 );
+            ImGui.InputTextWithHint( "Name", TrimPath( GamePath ), ref Name, 255 );
             ImGui.InputText( "Path", ref GamePath, 255 );
 
             DrawImage();
@@ -146,7 +143,43 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         // =========================
 
         public string GetExportSource() => "";
-        public string GetExportReplace() => string.IsNullOrEmpty( Name ) ? GamePath : Name;
+        public string GetExportReplace() => string.IsNullOrEmpty( Name ) ? TrimPath( GamePath ) : Name;
+        public bool IsHd() => GamePath.Contains( "_hr1" );
+        public bool Matches( string text ) => GamePath.ToLower().Contains( text.ToLower() )
+            || ( !string.IsNullOrEmpty( Name ) && Name.ToLower().Contains( text.ToLower() ) );
+
+        public static string TrimPath( string path ) {
+            if( string.IsNullOrEmpty( path ) ) return "";
+
+            var split = path.Split( "/" );
+            var suffix = split[^1].Split( '.' )[0].Replace( "_hr1", "" );
+
+            if( split.Length < 3 ) return suffix;
+
+            var fallback = $"{split[0]}/{suffix}";
+
+            // bg/ex3/05_zon_z4/common/vfx/texture/t50_dist_001.atex
+            // chara/weapon/w1603/obj/body/b0001/vfx/texture/ref_f.atex
+            // chara/monster/m0610/obj/body/b0001/vfx/texture/glow001at.atex
+            if( split[0] == "bg" || split[0] == "chara" ) return split.Length >= 4 ? $"{split[2]}/{suffix}" : fallback;
+
+            // ui/uld/MiragePrismBoxFilterSetting.uld
+            // ui/icon/056000/056512_hr1.tex
+            if( split[0] == "ui" ) return fallback;
+
+            // vfx/aoz3/mgc_rod106/texture/tk_aura001n1.atex
+            // vfx/cut/qstpdn/qstpdn00250/texture/clsnmt0a060_obi00r.atex
+            // vfx/action/ab_2sw_abl029/texture/uvdist01s.atex
+            // vfx/ws/wbw_kagenui/texture/ligt019_c.atex
+            // vfx/ui/texture/dist_uv_f.atex
+            if( split[0] == "vfx" ) {
+                if( split[1] == "ui" ) return suffix;
+                if( split[1] == "cut" ) return split.Length >= 5 ? $"{split[3]}/{suffix}" : fallback;
+                return split.Length >= 4 ? $"{split[2]}/{suffix}" : fallback;
+            }
+
+            return fallback;
+        }
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = GamePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;

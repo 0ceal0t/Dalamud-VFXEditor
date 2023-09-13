@@ -20,7 +20,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
 
         protected abstract void DrawPreLeft();
 
-        public void Draw() {
+        public virtual void Draw() {
             using var _ = ImRaii.PushId( Id );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {

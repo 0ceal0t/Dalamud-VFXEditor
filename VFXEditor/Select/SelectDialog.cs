@@ -94,10 +94,12 @@ namespace VfxEditor.Select {
 
             DrawGameTabs();
             DrawGamePath();
+
             if( ShowLocal ) {
                 DrawLocalPath();
                 PenumbraTab.Draw();
             }
+
             RecentTab.Draw();
             FavoritesTab.Draw();
         }

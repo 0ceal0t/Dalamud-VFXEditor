@@ -1,8 +1,8 @@
+using Dalamud.Interface;
 using ImGuiNET;
-using Newtonsoft.Json.Linq;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
@@ -10,52 +10,79 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.TextureFormat.Ui {
     public class TextureView : SplitView<TextureReplace> {
         public readonly List<TextureReplace> Textures;
+        private string SearchText = "";
 
         public TextureView( List<TextureReplace> textures ) : base( "Textures" ) {
             Textures = textures;
-            InitialWidth = 400;
-        }
-
-        public void WorkspaceImport( JObject meta, string loadLocation ) {
-            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, "Tex" );
-            if( items == null ) return;
-            foreach( var item in items ) {
-                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
-                var newReplace = new TextureReplace( Plugin.TextureManager.NewWriteLocation, item );
-                newReplace.ImportFile( fullPath );
-                Textures.Add( newReplace );
-            }
-        }
-
-        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
-            var texRootPath = Path.Combine( saveLocation, "Tex" );
-            Directory.CreateDirectory( texRootPath );
-
-            var idx = 0;
-            var texMeta = new List<WorkspaceMetaTex>();
-            foreach( var texture in Textures ) {
-                texMeta.Add( texture.WorkspaceExport( texRootPath, idx ) );
-                idx++;
-            }
-            WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), "Tex" );
+            InitialWidth = 300;
         }
 
         // ==============
 
-        protected override void DrawPreLeft() {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+        public override void Draw() {
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
+                    // TODO
+                }
+            }
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+
+            if( UiUtils.IconButton( FontAwesomeIcon.Download, "Extract" ) ) {
+                // TODO
+            }
+
+            ImGui.SameLine();
+            ImGui.InputTextWithHint( "##Search", "Search", ref SearchText, 255 );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            base.Draw();
         }
 
+        protected override void DrawPreLeft() { }
+
         protected override void DrawLeftColumn() {
+            if( Textures.Count == 0 ) {
+                ImGui.TextDisabled( "No textures have been replaced..." );
+                return;
+            }
+
             for( var idx = 0; idx < Textures.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
                 var item = Textures[idx];
-                if( ImGui.Selectable( item.GetExportReplace(), item == Selected ) ) Selected = item;
+                if( !string.IsNullOrEmpty( SearchText ) && !item.Matches( SearchText ) ) continue;
+                var name = item.GetExportReplace();
+
+                if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
+                ImGui.SameLine();
+                DrawHd( item.IsHd() );
+                ImGui.SameLine();
+                ImGui.Text( name );
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
         }
 
         protected override void DrawRightColumn() => Selected?.DrawBody();
 
         public void ClearSelected() { Selected = null; }
+
+        private static void DrawHd( bool isHd ) {
+            var pos = ImGui.GetCursorScreenPos() + new Vector2( 0, 4 );
+            ImGui.Dummy( new Vector2( 15, 10 ) );
+
+            if( !isHd ) return;
+
+            var drawList = ImGui.GetWindowDrawList();
+            drawList.AddRectFilled( pos, pos + new Vector2( 15, 12 ), ImGui.GetColorU32( ImGuiCol.Text ), 2f );
+            drawList.AddText( UiBuilder.DefaultFont, 12, pos + new Vector2( 1, -1 ), 0xFF000000, "HD" );
+        }
     }
 }
