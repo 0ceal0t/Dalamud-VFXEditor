@@ -17,7 +17,7 @@ namespace VfxEditor.Ui.Export {
         public ExportDialog( string id ) : base( id, false, 600, 500 ) {
             foreach( var manager in Plugin.Managers ) {
                 if( manager == null ) continue;
-                ToExport[manager.GetExportName()] = false;
+                ToExport[manager.GetId()] = false;
 
                 Categories.Add( new ExportDialogCategory( manager ) );
             }

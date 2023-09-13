@@ -14,7 +14,6 @@ namespace VfxEditor.FileManager {
 
         protected readonly string WindowTitle;
         private readonly string Extension;
-        private readonly string TempFilePrefix;
         private readonly string WorkspaceKey;
         private readonly string WorkspacePath;
 
@@ -22,7 +21,7 @@ namespace VfxEditor.FileManager {
         public readonly CopyManager Copy = new();
 
         private int DOC_ID = 0;
-        public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{TempFilePrefix}{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
+        public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
 
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
         public readonly List<T> Documents = new();
@@ -34,16 +33,10 @@ namespace VfxEditor.FileManager {
 
         public FileManager( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, id ) {
             WindowTitle = windowTitle;
-            TempFilePrefix = $"{id}Temp";
             Extension = extension;
             WorkspaceKey = workspaceKey;
             WorkspacePath = workspacePath;
-
-            if( !Plugin.Configuration.ManagerConfigs.TryGetValue( Id, out Configuration ) ) {
-                Configuration = new ManagerConfiguration();
-                Plugin.Configuration.ManagerConfigs.Add( Id, Configuration );
-            }
-
+            Configuration = Plugin.Configuration.GetManagerConfig( Id );
             AddDocument();
             DocumentWindow = new( windowTitle, this );
         }
@@ -110,7 +103,6 @@ namespace VfxEditor.FileManager {
         // ====================
 
         public IEnumerable<IFileDocument> GetDocuments() => Documents;
-        public string GetExportName() => Id;
 
         public void WorkspaceImport( JObject meta, string loadLocation ) {
             var items = WorkspaceUtils.ReadFromMeta<S>( meta, WorkspaceKey );
@@ -136,7 +128,7 @@ namespace VfxEditor.FileManager {
             List<S> documentMeta = new();
 
             foreach( var document in Documents ) {
-                document.WorkspaceExport( documentMeta, rootPath, $"{TempFilePrefix}{documentIdx++}.{Extension}" );
+                document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{documentIdx++}.{Extension}" );
             }
 
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );

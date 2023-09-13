@@ -111,7 +111,7 @@ namespace VfxEditor {
 
         private static void DrawManagerMenu( IFileManager manager, IFileManager currentManager ) {
             using var disabled = ImRaii.Disabled( manager == currentManager );
-            if( ImGui.MenuItem( manager.GetExportName() ) ) manager.Show();
+            if( ImGui.MenuItem( manager.GetId() ) ) manager.Show();
         }
 
         public static void AddModal( Modal modal ) {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select.Lists;
 using VfxEditor.Ui;
 
@@ -51,9 +52,10 @@ namespace VfxEditor.Select {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
 
-        public readonly FileManagerBase Manager;
+        public readonly IFileManagerSelect Manager;
         public readonly string Extension;
-        public readonly bool IsSource; // as opposed to replaced
+        public readonly bool ShowLocal;
+        private readonly Action<SelectResult> Action;
 
         protected readonly List<SelectTab> GameTabs = new();
         protected readonly List<SelectResult> Favorites;
@@ -64,33 +66,35 @@ namespace VfxEditor.Select {
         private string LocalPathInput = "";
         private string GamePathInput = "";
 
-        public SelectDialog( string name, string extension, FileManagerBase manager, bool isSource ) : base( name, false, 800, 500 ) {
+        public SelectDialog( string name, string extension, FileManagerBase manager, bool showLocal ) : this( name, extension, manager, showLocal,
+                showLocal ? ( ( SelectResult result ) => manager.SetSource( result ) ) : ( ( SelectResult result ) => manager.SetReplace( result ) )
+            ) { }
+
+        public SelectDialog( string name, string extension, IFileManagerSelect manager, bool showLocal, Action<SelectResult> action ) : base( name, false, 800, 500 ) {
             Manager = manager;
             Extension = extension;
             Favorites = manager.GetConfig().Favorites;
-            IsSource = isSource;
+            ShowLocal = showLocal;
+            Action = action;
 
             RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
             FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
-            if( isSource ) PenumbraTab = new( this );
+            if( showLocal ) PenumbraTab = new( this );
         }
 
-        public void Invoke( SelectResult result ) {
-            if( IsSource ) Manager.SetSource( result );
-            else Manager.SetReplace( result );
-        }
+        public void Invoke( SelectResult result ) => Action?.Invoke( result );
 
         public virtual void Play( string path ) { }
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( $"{Manager.Id}/{Name}" );
+            using var _ = ImRaii.PushId( $"{Manager.GetId()}/{Name}" );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawGameTabs();
             DrawGamePath();
-            if( IsSource ) {
+            if( ShowLocal ) {
                 DrawLocalPath();
                 PenumbraTab.Draw();
             }

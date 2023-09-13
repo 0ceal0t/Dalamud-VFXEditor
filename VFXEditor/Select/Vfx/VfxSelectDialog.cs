@@ -1,6 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using VfxEditor.FileManager;
+using VfxEditor.AvfxFormat;
 using VfxEditor.Select.Vfx.Action;
 using VfxEditor.Select.Vfx.Common;
 using VfxEditor.Select.Vfx.Cutscene;
@@ -17,7 +17,7 @@ using VfxEditor.Spawn;
 
 namespace VfxEditor.Select.Vfx {
     public class VfxSelectDialog : SelectDialog {
-        public VfxSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
+        public VfxSelectDialog( string id, AvfxManager manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new VfxItemTab( this, "Item" ),
                 new StatusTab( this, "Status" ),

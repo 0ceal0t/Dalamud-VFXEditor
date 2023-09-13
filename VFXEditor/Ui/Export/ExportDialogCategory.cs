@@ -16,7 +16,7 @@ namespace VfxEditor.Ui.Export {
         }
 
         public void Draw() {
-            var id = Manager.GetExportName();
+            var id = Manager.GetId();
             using var _ = ImRaii.PushId( id );
 
             if( ImGui.Checkbox( "##All", ref ExportAll ) ) {

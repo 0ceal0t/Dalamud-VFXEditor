@@ -170,7 +170,7 @@ namespace VfxEditor {
                 AvfxManager?.Show();
                 return;
             }
-            if( Managers.FindFirst( x => rawArgs.ToLower().Equals( x.GetExportName().ToLower() ), out var manager ) ) manager.Show();
+            if( Managers.FindFirst( x => rawArgs.ToLower().Equals( x.GetId().ToLower() ), out var manager ) ) manager.Show();
         }
 
         public void Dispose() {

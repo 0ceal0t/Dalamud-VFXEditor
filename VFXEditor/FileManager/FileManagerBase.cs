@@ -1,9 +1,10 @@
 using VfxEditor.Data;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Ui;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerBase : GenericDialog {
+    public abstract class FileManagerBase : GenericDialog, IFileManagerSelect {
         public readonly string Id;
 
         public abstract string NewWriteLocation { get; }
@@ -27,5 +28,7 @@ namespace VfxEditor.FileManager {
         public abstract void ShowReplace();
 
         public abstract void Unsaved();
+
+        public string GetId() => Id;
     }
 }

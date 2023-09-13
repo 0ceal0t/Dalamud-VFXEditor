@@ -1,4 +1,6 @@
+using ImGuiNET;
 using Newtonsoft.Json.Linq;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -11,6 +13,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
         public TextureView( List<TextureReplace> textures ) : base( "Textures" ) {
             Textures = textures;
+            InitialWidth = 400;
         }
 
         public void WorkspaceImport( JObject meta, string loadLocation ) {
@@ -37,16 +40,22 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), "Tex" );
         }
 
-        protected override void DrawLeftColumn() {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void DrawRightColumn() {
-            throw new System.NotImplementedException();
-        }
+        // ==============
 
         protected override void DrawPreLeft() {
-            throw new System.NotImplementedException();
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
         }
+
+        protected override void DrawLeftColumn() {
+            for( var idx = 0; idx < Textures.Count; idx++ ) {
+                using var _ = ImRaii.PushId( idx );
+                var item = Textures[idx];
+                if( ImGui.Selectable( item.GetExportReplace(), item == Selected ) ) Selected = item;
+            }
+        }
+
+        protected override void DrawRightColumn() => Selected?.DrawBody();
+
+        public void ClearSelected() { Selected = null; }
     }
 }

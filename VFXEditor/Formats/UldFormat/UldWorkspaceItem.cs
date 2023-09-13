@@ -5,9 +5,7 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.UldFormat {
     public abstract class UldWorkspaceItem : IWorkspaceUiItem {
         public readonly ParsedUInt Id = new( "Id", 1, size: 4 );
-        public string Renamed;
-        private string RenamedTemp;
-        private bool CurrentlyRenaming = false;
+        public string Renamed = "";
 
         public int GetIdx() => ( int )Id.Value;
 
@@ -23,12 +21,12 @@ namespace VfxEditor.UldFormat {
 
         public string GetRenamed() => Renamed;
 
-        public void SetRenamed( string renamed ) => Renamed = renamed;
+        public void SetRenamed( string renamed ) => Renamed = renamed ?? "";
 
         public virtual void GetChildrenRename( Dictionary<string, string> renameDict ) { }
 
         public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public void DrawRename() => IWorkspaceUiItem.DrawRenameBox( this, ref Renamed, ref RenamedTemp, ref CurrentlyRenaming );
+        public void DrawRename() => IWorkspaceUiItem.DrawRenameInput( this, ref Renamed );
     }
 }

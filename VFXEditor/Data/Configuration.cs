@@ -146,6 +146,13 @@ namespace VfxEditor {
             }
         }
 
+        public ManagerConfiguration GetManagerConfig( string id ) {
+            if( ManagerConfigs.TryGetValue( id, out var config ) ) return config;
+            var newConfig = new ManagerConfiguration();
+            ManagerConfigs.Add( id, newConfig );
+            return newConfig;
+        }
+
         private void ProcessOldManagerConfigs( List<SelectResult> recent, List<SelectResult> favorites, string key ) {
             if( recent.Count == 0 && favorites.Count == 0 ) return;
 

@@ -32,7 +32,7 @@ namespace VfxEditor.Select.Lists {
 
                 var idx = 0;
                 foreach( var item in Items ) {
-                    if( item.Type == SelectResultType.Local && !Dialog.IsSource ) continue;
+                    if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
 
                     ImGui.TableNextRow();
                     if( DrawRow( item, idx ) ) break;

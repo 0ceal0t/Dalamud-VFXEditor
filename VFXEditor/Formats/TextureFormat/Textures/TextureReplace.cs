@@ -120,7 +120,11 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         // ===========================
 
         public void DrawBody() {
+            ImGui.InputTextWithHint( "Name", GamePath, ref Name, 255 );
+            ImGui.InputText( "Path", ref GamePath, 255 );
+
             DrawImage();
+            DrawControls();
         }
 
         public override void DrawImage() => Preview?.DrawImage();

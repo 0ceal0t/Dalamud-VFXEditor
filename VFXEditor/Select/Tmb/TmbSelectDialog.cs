@@ -1,15 +1,15 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using VfxEditor.FileManager;
 using VfxEditor.Select.Tmb.Action;
 using VfxEditor.Select.Tmb.Common;
 using VfxEditor.Select.Tmb.Emote;
 using VfxEditor.Select.Tmb.Npc;
 using VfxEditor.Spawn;
+using VfxEditor.TmbFormat;
 
 namespace VfxEditor.Select.Tmb {
     public class TmbSelectDialog : SelectDialog {
-        public TmbSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
+        public TmbSelectDialog( string id, TmbManager manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new ActionTab( this, "Action" ),
                 new NonPlayerActionTab( this, "Non-Player Action" ),

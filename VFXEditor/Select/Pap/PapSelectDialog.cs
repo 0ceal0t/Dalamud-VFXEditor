@@ -1,4 +1,4 @@
-using VfxEditor.FileManager;
+using VfxEditor.PapFormat;
 using VfxEditor.Select.Pap.Action;
 using VfxEditor.Select.Pap.Emote;
 using VfxEditor.Select.Pap.IdlePose;
@@ -9,7 +9,7 @@ using VfxEditor.Select.Pap.Weapon;
 
 namespace VfxEditor.Select.Pap {
     public class PapSelectDialog : SelectDialog {
-        public PapSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
+        public PapSelectDialog( string id, PapManager manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new WeaponTab( this, "Weapon" ),
                 new ActionTab( this, "Action" ),

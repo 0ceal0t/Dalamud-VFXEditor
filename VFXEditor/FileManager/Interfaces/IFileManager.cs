@@ -1,9 +1,8 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using VfxEditor.Data;
 
 namespace VfxEditor.FileManager.Interfaces {
-    public interface IFileManager {
+    public interface IFileManager : IFileManagerSelect {
         public string NewWriteLocation { get; }
 
         public bool DoDebug( string path );
@@ -12,11 +11,7 @@ namespace VfxEditor.FileManager.Interfaces {
         public void WorkspaceImport( JObject meta, string loadLocation );
         public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation );
 
-        public string GetExportName();
         public IEnumerable<IFileDocument> GetDocuments();
-
-        public CopyManager GetCopyManager();
-        public CommandManager GetCommandManager();
 
         public void Show();
         public void Draw();

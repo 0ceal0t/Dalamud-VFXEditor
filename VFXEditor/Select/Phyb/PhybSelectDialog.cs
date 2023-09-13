@@ -1,9 +1,9 @@
-using VfxEditor.FileManager;
+using VfxEditor.PhybFormat;
 using VfxEditor.Select.Shared.Skeleton;
 
 namespace VfxEditor.Select.Phyb {
     public class PhybSelectDialog : SelectDialog {
-        public PhybSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "phyb", manager, isSourceDialog ) {
+        public PhybSelectDialog( string id, PhybManager manager, bool isSourceDialog ) : base( id, "phyb", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new SkeletonArmorTab( this, "Armor", "phy", "phyb" ),
                 new SkeletonNpcTab( this, "Npc" , "phy", "phyb"),

@@ -1,9 +1,9 @@
-using VfxEditor.FileManager;
 using VfxEditor.Select.Shared.Skeleton;
+using VfxEditor.SklbFormat;
 
 namespace VfxEditor.Select.Sklb {
     public class SklbSelectDialog : SelectDialog {
-        public SklbSelectDialog( string id, FileManagerBase manager, bool isSourceDialog ) : base( id, "sklb", manager, isSourceDialog ) {
+        public SklbSelectDialog( string id, SklbManager manager, bool isSourceDialog ) : base( id, "sklb", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
                 new SkeletonArmorTab( this, "Armor", "skl", "sklb" ),
                 new SkeletonNpcTab( this, "Npc" , "skl", "sklb"),

@@ -14,22 +14,27 @@ namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : GenericDialog, IFileManager {
         // TODO: test custom paths
         // TODO: what if replace the same texture?
+        // TODO: options for view layout?
+        // TODO: image for if nothing?
 
         private int TEX_ID = 0;
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
+
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
-
         private readonly TextureView View;
+        private readonly ManagerConfiguration Configuration;
 
-        public TextureManager() : base( "Textures", false, 600, 400 ) {
+        public TextureManager() : base( "Textures", false, 800, 500 ) {
             View = new( Textures );
+            Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
         }
 
         public CopyManager GetCopyManager() => null;
         public CommandManager GetCommandManager() => null;
+        public ManagerConfiguration GetConfig() => Configuration;
         public IEnumerable<IFileDocument> GetDocuments() => Textures;
-        public string GetExportName() => "Textures";
+        public string GetId() => "Textures";
 
         public void ReplaceTexture( string importPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
             var newReplace = new TextureReplace( gamePath, NewWriteLocation );
@@ -40,8 +45,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public void RemoveReplace( TextureReplace replace ) {
             replace.Dispose();
             Textures.Remove( replace );
-
-            // TODO: if it's selected, remove that
+            View.ClearSelected();
         }
 
         public override void DrawBody() => View.Draw();
