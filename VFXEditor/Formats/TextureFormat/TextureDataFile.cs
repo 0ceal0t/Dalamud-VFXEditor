@@ -1,3 +1,4 @@
+using ImGuiFileDialog;
 using Lumina.Data.Parsing.Tex;
 using Lumina.Extensions;
 using System;
@@ -10,6 +11,41 @@ using TeximpNet.DDS;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
+    public enum TextureFormat {
+        TypeShift = 0xC,
+        TypeMask = 0xF000,
+        ComponentShift = 0x8,
+        ComponentMask = 0xF00,
+        BppShift = 0x4,
+        BppMask = 0xF0,
+        EnumShift = 0x0,
+        EnumMask = 0xF,
+        TypeInteger = 0x1,
+        TypeFloat = 0x2,
+        TypeDxt = 0x3,
+        TypeSpecial = 0x5,
+        A8R8G8B8 = 0x1450,
+        R8G8B8X8 = 0x1451,
+        A8R8G8B82 = 0x1452,
+        R4G4B4A4 = 0x1440,
+        R5G5B5A1 = 0x1441,
+        L8 = 0x1130,
+        A8 = 0x1131,
+        R32F = 0x2150,
+        R32G32B32A32F = 0x2470,
+        R16G16F = 0x2250,
+        R16G16B16A16F = 0x2460,
+        DXT1 = 0x3420,
+        DXT3 = 0x3430,
+        DXT5 = 0x3431,
+        D16 = 0x4140,
+        D24S8 = 0x4250,
+        //todo: RGBA8 0x4401
+        Null = 0x5100,
+        Shadow16 = 0x5140,
+        Shadow24 = 0x5150,
+    }
+
     public class TextureDataFile : Lumina.Data.FileResource {
         [StructLayout( LayoutKind.Sequential )]
         public unsafe struct TexHeader {
@@ -26,24 +62,30 @@ namespace VfxEditor.Formats.TextureFormat {
         public bool ValidFormat { get; private set; } = false;
         public byte[] ImageData { get; private set; } // decompressed into ARGB or whatever. used for image previews
         public TexHeader Header { get; private set; }
-        public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
 
         private static int HeaderLength => Unsafe.SizeOf<TexHeader>();
-        private byte[] RawData; // just the data, without the header. only used for local files
+        private byte[] DdsData;
+
+        public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
+        private byte[] LocalData;
 
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
             Header = Reader.ReadStructure<TexHeader>();
             ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
-            ValidFormat = ( ImageData.Length > 0 );
+            ValidFormat = ImageData.Length > 0;
         }
 
-        public void LoadFile( BinaryReader br, int size ) {
+        public void LoadFile( BinaryReader reader, int size ) {
+            LocalData = reader.ReadBytes( size );
+            using var ms = new MemoryStream( LocalData );
+            using var br = new BinaryReader( ms );
+
             Local = true;
             br.BaseStream.Position = 0;
             Header = br.ReadStructure<TexHeader>();
-            RawData = br.ReadBytes( size - HeaderLength );
-            ImageData = BgraToRgba( Convert( new Span<byte>( RawData ), Header.Format, Header.Width, Header.Height ) );
+            DdsData = br.ReadBytes( size - HeaderLength );
+            ImageData = BgraToRgba( Convert( new Span<byte>( DdsData ), Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ( ImageData.Length > 0 );
         }
 
@@ -55,33 +97,6 @@ namespace VfxEditor.Formats.TextureFormat {
             }
             file.Close();
             return tex;
-        }
-
-        public byte[] GetDdsData() => Local ? RawData : DataSpan[HeaderLength..].ToArray();
-
-        public void SaveAsPng( string path ) {
-            var data = new RGBAQuad[Header.Height * Header.Width];
-            for( var i = 0; i < Header.Height; i++ ) {
-                for( var j = 0; j < Header.Width; j++ ) {
-                    var dataIdx = ( i * Header.Width + j );
-                    var imageDataIdx = dataIdx * 4;
-                    data[dataIdx] = new RGBAQuad( ImageData[imageDataIdx], ImageData[imageDataIdx + 1], ImageData[imageDataIdx + 2], ImageData[imageDataIdx + 3] );
-                }
-            }
-            var ptr = MemoryHelper.PinObject( data );
-            var image = Surface.LoadFromRawData( ptr, Header.Width, Header.Height, Header.Width * 4, false, true );
-            if( image == null ) return;
-
-            image.SaveToFile( ImageFormat.PNG, path );
-        }
-
-        public void SaveAsDds( string path ) {
-            var header = TextureUtils.CreateDdsHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
-            var data = GetDdsData();
-            var writeData = new byte[header.Length + data.Length];
-            Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
-            Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
-            File.WriteAllBytes( path, writeData );
         }
 
         // converts various formats to A8R8G8B8
@@ -227,40 +242,57 @@ namespace VfxEditor.Formats.TextureFormat {
             TextureNoTiled = 0x8000000,
             TextureNoSwizzle = 0x80000000,
         }
-    }
 
-    public enum TextureFormat {
-        TypeShift = 0xC,
-        TypeMask = 0xF000,
-        ComponentShift = 0x8,
-        ComponentMask = 0xF00,
-        BppShift = 0x4,
-        BppMask = 0xF0,
-        EnumShift = 0x0,
-        EnumMask = 0xF,
-        TypeInteger = 0x1,
-        TypeFloat = 0x2,
-        TypeDxt = 0x3,
-        TypeSpecial = 0x5,
-        A8R8G8B8 = 0x1450,
-        R8G8B8X8 = 0x1451,
-        A8R8G8B82 = 0x1452,
-        R4G4B4A4 = 0x1440,
-        R5G5B5A1 = 0x1441,
-        L8 = 0x1130,
-        A8 = 0x1131,
-        R32F = 0x2150,
-        R32G32B32A32F = 0x2470,
-        R16G16F = 0x2250,
-        R16G16B16A16F = 0x2460,
-        DXT1 = 0x3420,
-        DXT3 = 0x3430,
-        DXT5 = 0x3431,
-        D16 = 0x4140,
-        D24S8 = 0x4250,
-        //todo: RGBA8 0x4401
-        Null = 0x5100,
-        Shadow16 = 0x5140,
-        Shadow24 = 0x5150,
+        // ==================
+
+        public byte[] GetAllData() => Local ? LocalData : Data;
+
+        public byte[] GetDdsData() => Local ? DdsData : DataSpan[HeaderLength..].ToArray();
+
+        public void SaveAsPng( string path ) {
+            var data = new RGBAQuad[Header.Height * Header.Width];
+            for( var i = 0; i < Header.Height; i++ ) {
+                for( var j = 0; j < Header.Width; j++ ) {
+                    var dataIdx = ( i * Header.Width + j );
+                    var imageDataIdx = dataIdx * 4;
+                    data[dataIdx] = new RGBAQuad( ImageData[imageDataIdx], ImageData[imageDataIdx + 1], ImageData[imageDataIdx + 2], ImageData[imageDataIdx + 3] );
+                }
+            }
+            var ptr = MemoryHelper.PinObject( data );
+            var image = Surface.LoadFromRawData( ptr, Header.Width, Header.Height, Header.Width * 4, false, true );
+            if( image == null ) return;
+
+            image.SaveToFile( ImageFormat.PNG, path );
+        }
+
+        public void SaveAsDds( string path ) {
+            var header = TextureUtils.CreateDdsHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
+            var data = GetDdsData();
+            var writeData = new byte[header.Length + data.Length];
+            Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
+            Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
+            File.WriteAllBytes( path, writeData );
+        }
+
+        public void SavePngDialog() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
+                if( !ok ) return;
+                SaveAsPng( res );
+            } );
+        }
+
+        public void SaveDdsDialog() {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
+                if( !ok ) return;
+                SaveAsDds( res );
+            } );
+        }
+
+        public void SaveTexDialog( string ext ) {
+            FileDialogManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
+                if( !ok ) return;
+                File.WriteAllBytes( res, GetAllData() );
+            } );
+        }
     }
 }

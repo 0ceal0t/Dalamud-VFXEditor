@@ -87,9 +87,14 @@ namespace VfxEditor.Select {
 
             if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
                 DrawFavorite( path, resultName );
-                ImGui.Text( $"{label}:" );
-                ImGui.SameLine();
-                SelectUiUtils.DisplayPath( displayPath );
+                if( string.IsNullOrEmpty( displayPath ) ) {
+                    ImGui.Text( label );
+                }
+                else {
+                    ImGui.Text( $"{label}:" );
+                    ImGui.SameLine();
+                    SelectUiUtils.DisplayPath( displayPath );
+                }
             }
 
             using var indent = ImRaii.PushIndent( 25f );

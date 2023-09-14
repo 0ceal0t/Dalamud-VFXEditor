@@ -1,4 +1,5 @@
 using Dalamud.Logging;
+using ImGuiFileDialog;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
+using VfxEditor.Select;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
 
@@ -27,8 +29,8 @@ namespace VfxEditor.Formats.TextureFormat {
         private readonly ManagerConfiguration Configuration;
 
         public TextureManager() : base( "Textures", false, 800, 500 ) {
-            View = new( Textures );
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
+            View = new( this, Textures );
         }
 
         public CopyManager GetCopyManager() => null;
@@ -37,9 +39,9 @@ namespace VfxEditor.Formats.TextureFormat {
         public IEnumerable<IFileDocument> GetDocuments() => Textures;
         public string GetId() => "Textures";
 
-        public void ReplaceTexture( string importPath, string gamePath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
+        public void ReplaceTexture( string importPath, string gamePath ) {
             var newReplace = new TextureReplace( gamePath, NewWriteLocation );
-            newReplace.ImportFile( importPath, pngMip, pngFormat );
+            newReplace.ImportFile( importPath );
             Textures.Add( newReplace );
         }
 
@@ -48,6 +50,21 @@ namespace VfxEditor.Formats.TextureFormat {
             Textures.Remove( replace );
             View.ClearSelected();
         }
+
+        public void Import( SelectResult result ) {
+            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
+                if( !ok ) return;
+                try {
+                    AddRecent( result );
+                    ReplaceTexture( res, result.Path );
+                }
+                catch( Exception e ) {
+                    PluginLog.Error( e, "Could not import data" );
+                }
+            } );
+        }
+
+        public void AddRecent( SelectResult result ) => Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
 
         public override void DrawBody() => View.Draw();
 

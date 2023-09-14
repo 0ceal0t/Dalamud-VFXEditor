@@ -26,14 +26,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TextureReplace( string writeLocation, WorkspaceMetaTex data ) : this( data.ReplacePath, writeLocation ) {
             Name = data.Name ?? "";
-            PluginLog.Log( $"{data.Name} {data.IsFolder} {data.Children}" );
         }
 
         public TextureReplace( string gamePath, string writeLocation ) : base( gamePath ) {
             WriteLocation = writeLocation;
         }
 
-        public void ImportFile( string importPath, ushort pngMip = 9, TextureFormat pngFormat = TextureFormat.DXT5 ) {
+        public void ImportFile( string importPath ) {
             Preview?.Dispose();
             Preview = null;
 
@@ -58,12 +57,12 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
-                    var compFormat = TextureDataFile.TextureToCompressionFormat( pngFormat );
+                    var compFormat = TextureDataFile.TextureToCompressionFormat( Plugin.Configuration.PngFormat );
                     // use ETC1 to signify "NULL" because I'm not going to be using it
                     if( compFormat == CompressionFormat.ETC1 ) return;
 
                     // Ui elements are required to only have 1 mip level
-                    var maxMips = GamePath.StartsWith( "ui/" ) ? 1 : pngMip;
+                    var maxMips = ( ushort )( GamePath.StartsWith( "ui/" ) ? 1 : Plugin.Configuration.PngMips );
                     compressor.Input.SetMipmapGeneration( true, maxMips );
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
@@ -78,13 +77,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     var ddsData = ms.ToArray();
 
                     using( var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) ) ) {
-                        var postConversion = pngFormat switch {
+                        var postConversion = Plugin.Configuration.PngFormat switch {
                             TextureFormat.A8 => PostConversion.A8,
                             TextureFormat.R4G4B4A4 => PostConversion.R4444,
                             _ => PostConversion.None
                         };
 
-                        DdsToAtex( pngFormat, ddsData, writer, postConversion );
+                        DdsToAtex( Plugin.Configuration.PngFormat, ddsData, writer, postConversion );
                     }
                     ddsContainer.Dispose();
                 }
@@ -117,7 +116,12 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         // ===========================
 
         public void DrawBody() {
+            var width = ImGui.GetContentRegionAvail().X - 50;
+
+            ImGui.SetNextItemWidth( width );
             ImGui.InputTextWithHint( "Name", TrimPath( GamePath ), ref Name, 255 );
+
+            ImGui.SetNextItemWidth( width );
             ImGui.InputText( "Path", ref GamePath, 255 );
 
             DrawImage();

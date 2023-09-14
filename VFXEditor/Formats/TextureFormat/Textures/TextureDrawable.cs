@@ -38,8 +38,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( ImGui.Button( "Replace" ) ) ImportDialog();
 
             if( ImGui.BeginPopup( "TexExport" ) ) {
-                if( ImGui.Selectable( "PNG" ) ) SavePngDialog();
-                if( ImGui.Selectable( "DDS" ) ) SaveDdsDialog();
+                if( ImGui.Selectable( ".png" ) ) GetRawData()?.SavePngDialog();
+                if( ImGui.Selectable( ".dds" ) ) GetRawData()?.SaveDdsDialog();
+                if( ImGui.Selectable( $".{GameExtension}" ) ) GetRawData()?.SaveTexDialog( GameExtension );
                 ImGui.EndPopup();
             }
         }
@@ -53,20 +54,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 catch( Exception e ) {
                     PluginLog.Error( e, "Could not import data" );
                 }
-            } );
-        }
-
-        protected void SavePngDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
-                if( !ok ) return;
-                GetRawData()?.SaveAsPng( res );
-            } );
-        }
-
-        protected void SaveDdsDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
-                if( !ok ) return;
-                GetRawData()?.SaveAsDds( res );
             } );
         }
     }
