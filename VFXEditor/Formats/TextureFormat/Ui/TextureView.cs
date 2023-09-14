@@ -160,8 +160,6 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             var ext = result.Path.Split( '.' )[^1].ToLower();
             var file = Plugin.DataManager.GetFile<TextureDataFile>( result.Path );
 
-            Plugin.TextureManager.AddRecent( result );
-
             if( ExtractType == ExtractFileType.Dds ) file.SaveDdsDialog();
             else if( ExtractType == ExtractFileType.Png ) file.SavePngDialog();
             else file.SaveTexDialog( ext );
