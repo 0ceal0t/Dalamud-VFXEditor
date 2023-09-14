@@ -19,13 +19,17 @@ namespace VfxEditor.TmbFormat.Actor {
         protected override void OnDelete( Tmac item ) {
             var command = new TmbRefreshIdsCommand( File );
             command.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
+            command.Add( new GenericRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
             item.DeleteChildren( command, File );
             File.Command.Add( command );
         }
 
         protected override void OnNew() {
+            var newActor = new Tmac( File );
+
             var command = new TmbRefreshIdsCommand( File );
-            command.Add( new GenericAddCommand<Tmac>( Items, new Tmac( File ) ) );
+            command.Add( new GenericAddCommand<Tmac>( Items, newActor ) );
+            command.Add( new GenericAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
             File.Command.Add( command );
         }
 
