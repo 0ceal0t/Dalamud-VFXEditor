@@ -46,9 +46,8 @@ namespace VfxEditor.Select.Pap.IdlePose {
 
             // Faces
             var facePaths = new Dictionary<string, string>();
-            for( var face = 1; face < SelectDataUtils.MaxFaces; face++ ) {
-                var faceString = $"f{face:D4}";
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/{faceString}/resident/face.pap";
+            foreach( var face in item.GetFaceIds() ) {
+                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
             }
 
             loaded = new CharacterRowSelected {

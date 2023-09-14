@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Shared.Character {
 
         public string AtchPath => $"chara/xls/attachoffset/{SkeletonId}.atch";
 
-        public CharacterRow( string name, RaceStruct race ) {
+        public CharacterRow( string name, RaceData race ) {
             Name = name;
             SkeletonId = race.SkeletonId;
             HairOffset = race.HairOffset;
@@ -35,5 +35,7 @@ namespace VfxEditor.Select.Shared.Character {
             }
             return ret;
         }
+
+        public List<int> GetFaceIds() => SelectDataUtils.FaceMap.TryGetValue( SkeletonId, out var faces ) ? faces : new List<int>();
     }
 }

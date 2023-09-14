@@ -31,14 +31,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
 
-            for( var face = 1; face <= SelectDataUtils.MaxFaces; face++ ) {
-                var faceString = $"f{face:D4}";
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/{faceString}/{Prefix}_{item.SkeletonId}{faceString}.{Extension}";
+            foreach( var face in item.GetFaceIds() ) {
+                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}";
             }
 
             foreach( var hairId in item.GetHairIds() ) {
-                var hairString = $"h{hairId:D4}";
-                hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/{hairString}/{Prefix}_{item.SkeletonId}{hairString}.{Extension}";
+                hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/h{hairId:D4}/{Prefix}_{item.SkeletonId}h{hairId:D4}.{Extension}";
             }
 
             loaded = new() {

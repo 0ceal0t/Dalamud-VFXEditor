@@ -17,8 +17,6 @@ namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : GenericDialog, IFileManager {
         // TODO: test custom paths
         // TODO: what if replace the same texture?
-        // TODO: options for view layout?
-        // TODO: image for if nothing?
 
         private int TEX_ID = 0;
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
