@@ -7,14 +7,16 @@ using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Select;
 using VfxEditor.Select.Tex;
 using VfxEditor.Ui.Components.SplitViews;
+using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Ui {
-    public class TextureView : SplitView<TextureReplace> {
+    public class TextureView : SplitView<TextureReplace>, IDraggableList<TextureReplace> {
         public readonly List<TextureReplace> Textures;
         private readonly TexSelectDialog ExtractSelect;
         private readonly TexSelectDialog ImportSelect;
 
+        private TextureReplace DraggingItem;
         private string SearchText = "";
         private ExtractFileType ExtractType = ExtractFileType.Atex_Tex;
 
@@ -114,18 +116,24 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             }
 
             for( var idx = 0; idx < Textures.Count; idx++ ) {
-                using var _ = ImRaii.PushId( idx );
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-
                 var item = Textures[idx];
                 if( !string.IsNullOrEmpty( SearchText ) && !item.Matches( SearchText ) ) continue;
                 var name = item.GetExportReplace();
 
-                if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
-                ImGui.SameLine();
-                DrawHd( item.IsHd() );
-                ImGui.SameLine();
-                ImGui.Text( name );
+                using( var _ = ImRaii.PushId( idx ) ) {
+                    using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
+                    if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
+                }
+
+                if( IDraggableList<TextureReplace>.DrawDragDrop( this, item, $"TEXTUREVIEW-SPLIT" ) ) break;
+
+                using( var _ = ImRaii.PushId( idx ) ) {
+                    ImGui.SameLine();
+                    DrawHd( item.IsHd() );
+                    ImGui.SameLine();
+                    ImGui.Text( name );
+                }
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
@@ -160,5 +168,15 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         }
 
         public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result );
+
+        // ===== DRAG/DROP =======
+
+        TextureReplace IDraggableList<TextureReplace>.GetDraggingItem() => DraggingItem;
+
+        void IDraggableList<TextureReplace>.SetDraggingItem( TextureReplace item ) => DraggingItem = item;
+
+        List<TextureReplace> IDraggableList<TextureReplace>.GetItems() => Textures;
+
+        string IDraggableList<TextureReplace>.GetDraggingText( TextureReplace item ) => item.GetExportReplace();
     }
 }

@@ -38,10 +38,18 @@ namespace VfxEditor.Ui.Interfaces {
 
             if( draggingItem != destination ) {
                 var items = view.GetItems();
-                items.Remove( draggingItem );
+                var destIdx = items.IndexOf( destination );
+                var sourceIdx = items.IndexOf( draggingItem );
 
-                var idx = items.IndexOf( destination );
-                if( idx != -1 ) items.Insert( idx, draggingItem );
+                if( destIdx == ( sourceIdx + 1 ) ) { // weird case, just swap them
+                    items[destIdx] = draggingItem;
+                    items[sourceIdx] = destination;
+                }
+                else {
+                    items.Remove( draggingItem );
+                    var idx = items.IndexOf( destination );
+                    if( idx != -1 ) items.Insert( idx, draggingItem );
+                }
             }
             view.SetDraggingItem( null );
             return true;
