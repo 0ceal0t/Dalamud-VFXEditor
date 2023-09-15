@@ -53,12 +53,13 @@ namespace VfxEditor.Ui.Tools {
         private static void DrawCharacterBase( CharacterBase* characterBase ) {
             var skeleton = characterBase->Skeleton;
             if( skeleton == null ) return;
-            if( skeleton->PartialSkeletonCount == 0 || Marshal.ReadIntPtr( new IntPtr( skeleton ) + 112 ) == IntPtr.Zero ) return;
 
             var sklbTable = new IntPtr( skeleton->SkeletonResourceHandles );
             var animationTable = new IntPtr( skeleton->AnimationResourceHandles );
 
             DrawTable( sklbTable, IntPtr.Zero, "SKLB", true );
+
+            if( skeleton->PartialSkeletonCount == 0 || Marshal.ReadIntPtr( new IntPtr( skeleton ) + 112 ) == IntPtr.Zero ) return;
 
             for( var idx = 0; idx < skeleton->PartialSkeletonCount; idx++ ) {
                 var tablePos = animationTable + ( 8 * idx );

@@ -34,7 +34,10 @@ namespace VfxEditor.AvfxFormat {
             var preCombo = ImGui.GetCursorPosX();
 
             Plugin.LibraryManager.DrawTextureCombo( Path.GetValue(), ( TextureLeaf texture ) => {
-                if( texture.DrawSelectable() ) Path.SetValue( texture.GetPath() );
+                if( texture.DrawSelectable() ) {
+                    var newValue = texture.GetPath().Trim().Trim( '\0' ) + '\u0000';
+                    CommandManager.Avfx.Add( new AvfxStringCommand( Path, newValue, false ) );
+                }
             } );
 
             var imguiStyle = ImGui.GetStyle();
