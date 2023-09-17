@@ -56,7 +56,7 @@ namespace VfxEditor.UldFormat.Component {
                 ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ), () => CommandManager.Uld );
 
             Id.Value = 1001; // default
-            Type.ExtraCommandGenerator = () => {
+            Type.ExtraCommand = () => {
                 return new UldComponentDataCommand( this );
             };
         }

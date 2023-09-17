@@ -83,10 +83,10 @@ namespace VfxEditor.AvfxFormat {
             node.Selectors.Add( this );
         }
 
-        public override void UpdateLiteral() => Literal.SetValue( Selected != null ? Selected.GetIdx() : -1 ); // an item was removed from the group, for example
+        public override void UpdateLiteral() => Literal.Value = Selected != null ? Selected.GetIdx() : -1; // an item was removed from the group, for example
 
         public override void Initialize() {
-            var value = Literal.GetValue();
+            var value = Literal.Value;
             if( value >= 0 && value < Group.Items.Count ) {
                 Selected = Group.Items[value];
                 LinkParentChild( Selected );
@@ -94,7 +94,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void ImportFinished() {
-            if( Literal.GetValue() >= 0 ) Literal.SetValue( Literal.GetValue() + Group.PreImportSize );
+            if( Literal.Value >= 0 ) Literal.Value = Literal.Value + Group.PreImportSize;
             LinkOnIndexChange();
             Initialize();
         }
@@ -171,7 +171,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Copy/Paste
             var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) copy.Ints[Name] = Literal.GetValue();
+            if( copy.IsCopying ) copy.Ints[Name] = Literal.Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                 copy.PasteCommand.Add( new UiNodeSelectCommand<T>( this, newSelected ) );

@@ -12,7 +12,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderU = new( "Texture Border U", "TBUT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "Texture Border V", "TBVT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
         public readonly AvfxCurve NPow = new( "Power", "NPow" );
 
         private readonly List<AvfxBase> Parsed;
@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 UvSetIdx,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureBorderV,
                 TextureIdx,
                 NPow
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( UvSetIdx );
@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TN" );

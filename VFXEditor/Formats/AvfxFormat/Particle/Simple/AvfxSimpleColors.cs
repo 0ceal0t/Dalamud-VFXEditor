@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             Color1.Write( writer );
             Color2.Write( writer );
             Color3.Write( writer );
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             Frame1.Write( writer );
             Frame2.Write( writer );
             Frame3.Write( writer );

@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
 
         // ============
 
-        public readonly AvfxInt Version = new( "Version", "Ver" );
+        public readonly AvfxInt Version = new( "Version", "Ver", value: 0x20110913 );
         public readonly AvfxBool IsDelayFastParticle = new( "Delay Fast Particle", "bDFP" );
         public readonly AvfxBool IsFitGround = new( "Fit Ground", "bFG" );
         public readonly AvfxBool IsTranformSkip = new( "Transform Skip", "bTS" );
@@ -91,7 +91,7 @@ namespace VfxEditor.AvfxFormat {
         private float ScaleCombined = 1.0f;
 
         public AvfxMain() : base( "AVFX" ) {
-            Parsed = new List<AvfxBase> {
+            Parsed = [
                 Version,
                 IsDelayFastParticle,
                 IsFitGround,
@@ -145,12 +145,11 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 GlobalFogInfluence,
                 LTSEnabled
-            };
-            Version.SetValue( 0x20110913 );
+            ];
 
             NodeGroupSet = new( this );
 
-            Display = new() {
+            Display = [
                 new UiFloat3( "Revised Scale", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
                 new UiFloat3( "Revised Position", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
                 new UiFloat3( "Revised Rotation", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
@@ -187,7 +186,7 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 GlobalFogEnabled,
                 LTSEnabled
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -238,14 +237,14 @@ namespace VfxEditor.AvfxFormat {
                 }
             }, size );
 
-            var versionBytes = BitConverter.GetBytes( Version.GetValue() );
+            var versionBytes = BitConverter.GetBytes( Version.Value );
             for( var i = 0; i < versionBytes.Length; i++ ) UiVersion[i] = versionBytes[i];
-            ScaleCombined = Math.Max( RevisedValuesScaleX.GetValue(), Math.Max( RevisedValuesScaleY.GetValue(), RevisedValuesScaleZ.GetValue() ) );
+            ScaleCombined = Math.Max( RevisedValuesScaleX.Value, Math.Max( RevisedValuesScaleY.Value, RevisedValuesScaleZ.Value ) );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Parsed );
 
             WriteLeaf( writer, "ScCn", 4, Schedulers.Count );
@@ -276,9 +275,9 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndDisabled();
 
             if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
-                RevisedValuesScaleX.SetValue( ScaleCombined );
-                RevisedValuesScaleY.SetValue( ScaleCombined );
-                RevisedValuesScaleZ.SetValue( ScaleCombined );
+                RevisedValuesScaleX.Value = ScaleCombined;
+                RevisedValuesScaleY.Value = ScaleCombined;
+                RevisedValuesScaleZ.Value = ScaleCombined;
             };
 
             DrawItems( Display );

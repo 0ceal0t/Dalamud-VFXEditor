@@ -42,28 +42,29 @@ namespace VfxEditor.Utils {
             return false;
         }
 
-        public static byte[] GetOriginal( BinaryReader reader ) {
+        private static byte[] GetOriginal( BinaryReader reader ) {
             var savePos = reader.BaseStream.Position;
-            var res = ReadAllBytes( reader );
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
-            return res;
-        }
+            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
 
-        public static byte[] ReadAllBytes( BinaryReader reader ) {
             const int bufferSize = 4096;
             using var ms = new MemoryStream();
             var buffer = new byte[bufferSize];
             int count;
             while( ( count = reader.Read( buffer, 0, buffer.Length ) ) != 0 )
                 ms.Write( buffer, 0, count );
+
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+
             return ms.ToArray();
+
         }
 
-        public static VerifiedStatus CompareFiles( byte[] original, byte[] data, out int diffIdx ) => CompareFiles( original, data, -1, out diffIdx );
+        public static VerifiedStatus CompareFiles( BinaryReader originalReader, byte[] data, out int diffIdx ) => CompareFiles( originalReader, data, -1, out diffIdx );
 
-        public static VerifiedStatus CompareFiles( byte[] original, byte[] data, int minIdx, out int diffIdx ) {
+        public static VerifiedStatus CompareFiles( BinaryReader originalReader, byte[] data, int minIdx, out int diffIdx ) {
             diffIdx = -1;
             var ret = true;
+            var original = GetOriginal( originalReader );
 
             if( data.Length != original.Length ) {
                 PluginLog.Error( $"Files have different lengths {data.Length:X8} / {original.Length:X8}" );
@@ -77,6 +78,7 @@ namespace VfxEditor.Utils {
                     return VerifiedStatus.ERROR;
                 }
             }
+
             return ret ? VerifiedStatus.OK : VerifiedStatus.ERROR;
         }
 

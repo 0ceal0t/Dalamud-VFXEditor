@@ -5,8 +5,8 @@ using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
     public class ParsedSByte : ParsedSimpleBase<sbyte, int> {
-        public ParsedSByte( string name, sbyte defaultValue ) : this( name ) {
-            Value = defaultValue;
+        public ParsedSByte( string name, sbyte value ) : this( name ) {
+            Value = value;
         }
 
         public ParsedSByte( string name ) : base( name ) { }

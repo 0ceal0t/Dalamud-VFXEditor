@@ -2,7 +2,7 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitterDataModel : AvfxData {
-        public readonly AvfxInt ModelIdx = new( "Model Index", "MdNo", defaultValue: -1 );
+        public readonly AvfxInt ModelIdx = new( "Model Index", "MdNo", value: -1 );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
         public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
-            Parsed = new() {
+            Parsed = [
                 ModelIdx,
                 RotationOrderType,
                 GenerateMethodType,
@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
                 AZ,
                 InjectionSpeed,
                 InjectionSpeedRandom
-            };
+            ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ModelSelect = new UiNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );

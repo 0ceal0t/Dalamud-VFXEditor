@@ -32,16 +32,14 @@ namespace VfxEditor.TmbFormat {
         private readonly List<Tmtr> UnusedTracks;
         private readonly UiSplitView<Tmtr> UnusedTrackView;
 
-        public TmbFile( BinaryReader binaryReader, bool checkOriginal = true ) :
-            this( binaryReader, new( Plugin.TmbManager ), checkOriginal ) { }
+        public TmbFile( BinaryReader binaryReader, bool verify ) : this( binaryReader, new( Plugin.TmbManager ), verify ) { }
 
-        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool checkOriginal = true ) : base( manager ) {
+        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool verify ) : base( manager ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 
             var startPos = binaryReader.BaseStream.Position;
             var reader = new TmbReader( binaryReader );
-            var original = checkOriginal ? FileUtils.GetOriginal( binaryReader ) : null;
 
             reader.ReadInt32(); // TMLB
             var size = reader.ReadInt32();
@@ -61,7 +59,7 @@ namespace VfxEditor.TmbFormat {
 
             RefreshIds();
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( binaryReader, ToBytes(), out var _ );
 
             binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
 
@@ -78,7 +76,7 @@ namespace VfxEditor.TmbFormat {
 
             var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum();
 
-            List<TmbItem> items = new() { HeaderTmdh };
+            List<TmbItem> items = [HeaderTmdh];
             if( HeaderTmpp.IsAssigned ) items.Add( HeaderTmpp );
             items.Add( HeaderTmal );
             items.AddRange( Actors );

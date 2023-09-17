@@ -11,7 +11,6 @@ namespace VfxEditor.AvfxFormat {
 
         public UiDisplayList( string name ) : this( name, new List<IUiItem>() ) { }
 
-
         public UiDisplayList( string name, List<IUiItem> list ) : base( "" ) {
             Name = name;
             Display = list;
@@ -42,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
             throw new NotImplementedException();
         }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             throw new NotImplementedException();
         }
     }

@@ -19,7 +19,7 @@ namespace ImGuiFileDialog {
             Dialog = null;
             SavedPath = ".";
             Callback = null;
-            Recent = new();
+            Recent = [];
         }
 
         public static void Dispose() {

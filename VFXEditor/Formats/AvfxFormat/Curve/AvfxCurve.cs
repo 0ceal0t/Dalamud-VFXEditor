@@ -30,18 +30,18 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Locked = locked;
 
-            Parsed = new() {
+            Parsed = [
                 PreBehavior,
                 PostBehavior,
                 Random,
                 Keys
-            };
+            ];
 
             CurveEditor = new UiCurveEditor( this, type );
-            Display = new() {
+            Display = [
                 PreBehavior,
-                PostBehavior
-            };
+                PostBehavior,
+            ];
             if( type != CurveType.Color ) Display.Add( Random );
         }
 
@@ -52,7 +52,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             WriteLeaf( writer, "KeyC", 4, Keys.Keys.Count );
             WriteNested( writer, Parsed );
         }

@@ -14,7 +14,7 @@ namespace VfxEditor.UldFormat {
             CurrentFile?.ReadRenamingMap( data.Renaming );
         }
 
-        protected override UldFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override UldFile FileFromReader( BinaryReader reader ) => new( reader, true );
 
         public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

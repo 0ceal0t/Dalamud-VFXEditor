@@ -9,21 +9,21 @@ namespace VfxEditor.AvfxFormat {
             Timeline = timeline;
         }
 
-        public override int GetEnd( AvfxTimelineItem item ) => item.EndTime.GetValue();
+        public override int GetEnd( AvfxTimelineItem item ) => item.EndTime.Value;
 
-        public override int GetStart( AvfxTimelineItem item ) => item.StartTime.GetValue();
+        public override int GetStart( AvfxTimelineItem item ) => item.StartTime.Value;
 
         public override void OnNew() => CommandManager.Avfx.Add( new UiTimelineItemAddCommand( this ) );
 
         public override void OnDelete( AvfxTimelineItem item ) => CommandManager.Avfx.Add( new UiTimelineItemRemoveCommand( this, item ) );
 
-        public override bool IsEnabled( AvfxTimelineItem item ) => item.Enabled.GetValue() == true;
+        public override bool IsEnabled( AvfxTimelineItem item ) => item.Enabled.Value == true;
 
         public override void Toggle( AvfxTimelineItem item ) => CommandManager.Avfx.Add( new ParsedSimpleCommand<bool?>( item.Enabled.Parsed, !IsEnabled( item ) ) );
 
         public override void SetPos( AvfxTimelineItem item, int start, int end ) {
-            item.StartTime.SetValue( start );
-            item.EndTime.SetValue( end );
+            item.StartTime.Value = start;
+            item.EndTime.Value = end;
         }
 
         public override void OnDragEnd( AvfxTimelineItem item, int startBegin, int startFinish, int endBegin, int endFinish ) {

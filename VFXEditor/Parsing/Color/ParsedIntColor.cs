@@ -11,8 +11,8 @@ namespace VfxEditor.Parsing {
         private DateTime LastEditTime = DateTime.Now;
         private Vector4 StateBeforeEdit;
 
-        public ParsedIntColor( string name, Vector4 defaultValue ) : this( name ) {
-            Value = defaultValue;
+        public ParsedIntColor( string name, Vector4 value ) : this( name ) {
+            Value = value;
         }
 
         public ParsedIntColor( string name ) : base( name ) { }

@@ -7,7 +7,7 @@ namespace VfxEditor.Ui.Nodes {
         public void Initialize() => AllGroups.ForEach( group => group.Initialize() );
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = new();
+            Dictionary<string, string> ret = [];
             AllGroups.ForEach( group => group.GetRenamingMap( ret ) );
             return ret;
         }

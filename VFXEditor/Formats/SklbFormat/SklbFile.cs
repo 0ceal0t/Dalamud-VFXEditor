@@ -21,10 +21,8 @@ namespace VfxEditor.SklbFormat {
 
         private readonly int Padding;
 
-        public SklbFile( BinaryReader reader, string hkxTemp, bool checkOriginal = true ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
+        public SklbFile( BinaryReader reader, string hkxTemp, bool verify ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
-
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // Magic
             Version1 = reader.ReadInt16();
@@ -51,7 +49,7 @@ namespace VfxEditor.SklbFormat {
 
             Bones = new( this, HkxTempLocation );
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
         }
 
         public override void Update() {

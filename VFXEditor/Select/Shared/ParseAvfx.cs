@@ -66,7 +66,7 @@ namespace VfxEditor.Select.Shared {
         }
 
         public static void ReadFile( List<string> paths, out List<ParseAvfx> loaded ) {
-            loaded = new List<ParseAvfx>();
+            loaded = [];
             try {
                 foreach( var path in paths ) {
                     if( Plugin.DataManager.FileExists( path ) ) loaded.Add( new ParseAvfx( Plugin.DataManager.GetFile( path ) ) );

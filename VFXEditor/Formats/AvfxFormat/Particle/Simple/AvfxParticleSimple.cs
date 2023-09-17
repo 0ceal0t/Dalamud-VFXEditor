@@ -49,8 +49,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt UvInterval = new( "UV Interval", "UvIv" );
         public readonly AvfxInt UvNoRandom = new( "UV Random", "UvNR" );
         public readonly AvfxInt UvNoLoopCount = new( "UV Loop Count", "UvLC" );
-        public readonly AvfxInt InjectionModelIdx = new( "Injection Model Index", "IJMN", defaultValue: -1 );
-        public readonly AvfxInt InjectionVertexBindModelIdx = new( "Injection Model Bind Index", "VBMN", defaultValue: -1 );
+        public readonly AvfxInt InjectionModelIdx = new( "Injection Model Index", "IJMN", value: -1 );
+        public readonly AvfxInt InjectionVertexBindModelIdx = new( "Injection Model Bind Index", "VBMN", value: -1 );
         public readonly AvfxFloat InjectionRadialDir0 = new( "Injection Radial Direction 0", "IRD0" );
         public readonly AvfxFloat InjectionRadialDir1 = new( "Injection Radial Direction 1", "IRD1" );
         public readonly AvfxFloat PivotX = new( "Pivot X", "PvtX" );
@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Parsed = new() {
+            Parsed = [
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -146,7 +146,7 @@ namespace VfxEditor.AvfxFormat {
                 PolyLineTag,
                 Colors,
                 Frames
-            };
+            ];
 
             Display.Add( InjectionPositionType );
             Display.Add( InjectionDirectionType );
@@ -206,7 +206,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "Simple" );

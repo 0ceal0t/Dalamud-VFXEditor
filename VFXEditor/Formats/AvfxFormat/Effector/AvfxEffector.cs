@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor ) {
-            Parsed = new() {
+            Parsed = [
                 EffectorVariety,
                 RotationOrder,
                 CoordComputeOrder,
@@ -31,9 +31,9 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            };
+            ];
 
-            EffectorVariety.Parsed.ExtraCommandGenerator = () => {
+            EffectorVariety.Command = () => {
                 return new AvfxEffectorDataCommand( this );
             };
 
@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var effectorType = EffectorVariety.GetValue();
+            var effectorType = EffectorVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
@@ -65,7 +65,7 @@ namespace VfxEditor.AvfxFormat {
             RecurseAssigned( Data, assigned );
         }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Parsed );
             Data?.Write( writer );
         }
@@ -107,7 +107,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Effector {GetIdx()} ({EffectorVariety.GetValue()})";
+        public override string GetDefaultText() => $"Effector {GetIdx()} ({EffectorVariety.Value})";
 
         public override string GetWorkspaceId() => $"Effct{GetIdx()}";
     }

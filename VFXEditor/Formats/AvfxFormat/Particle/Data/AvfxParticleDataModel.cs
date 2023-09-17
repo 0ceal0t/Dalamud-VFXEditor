@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<PointLightType> PointLightType = new( "Point Light Type", "PLT" );
         public readonly AvfxBool IsLightning = new( "Is Lightning", "bLgt" );
         public readonly AvfxBool IsMorph = new( "Is Morph", "bShp" );
-        public AvfxIntList ModelIdx = new( "Model Index", "MdNo", defaultValue: -1 );
+        public AvfxIntList ModelIdx = new( "Model Index", "MdNo", value: -1 );
         public readonly AvfxCurve AnimationNumber = new( "Animation Number", "NoAn" );
         public readonly AvfxCurve Morph = new( "Morph", "Moph" );
         public readonly AvfxCurve FresnelCurve = new( "Fresnel Curve", "FrC" );
@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
-            Parsed = new() {
+            Parsed = [
                 ModelNumberRandomValue,
                 ModelNumberRandomType,
                 ModelNumberRandomInterval,
@@ -38,7 +38,7 @@ namespace VfxEditor.AvfxFormat {
                 FresnelRotation,
                 ColorBegin,
                 ColorEnd
-            };
+            ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ModelSelect = new UiNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );

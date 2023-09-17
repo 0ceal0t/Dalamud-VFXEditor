@@ -12,7 +12,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 4 * ( 4 + 4 );
 
-        private readonly ParsedInt Duration = new( "Duration", defaultValue: 30 );
+        private readonly ParsedInt Duration = new( "Duration", value: 30 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly TmbOffsetFloat4 Color1 = new( "Color 1", defaultValue: new( 1 ) );
         private readonly TmbOffsetFloat4 Color2 = new( "Color 2", defaultValue: new( 1 ) );

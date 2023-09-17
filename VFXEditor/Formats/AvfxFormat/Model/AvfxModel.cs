@@ -33,12 +33,12 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiModelUvView UvView;
 
         public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
-            Parsed = new() {
+            Parsed = [
                 EmitVertexNumbers,
                 EmitVertexes,
                 Vertexes,
                 Indexes
-            };
+            ];
 
             NodeView = new( this );
             UvView = new UiModelUvView();
@@ -58,7 +58,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             EmitVertexes.EmitVertexes.Clear();
             EmitVertexes.EmitVertexes.AddRange( CombinedEmitVertexes.Select( x => x.Vertex ) );
             EmitVertexNumbers.VertexNumbers.Clear();
@@ -82,8 +82,8 @@ namespace VfxEditor.AvfxFormat {
 
                 using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
                     if( popup ) {
-                        if( ImGui.Selectable( "GLTF" ) ) ExportDialog();
-                        if( ImGui.Selectable( "AVFX" ) ) Plugin.AvfxManager.ShowExportDialog( this );
+                        if( ImGui.Selectable( ".gltf" ) ) ExportDialog();
+                        if( ImGui.Selectable( ".avfx" ) ) Plugin.AvfxManager.ShowExportDialog( this );
                     }
                 }
 

@@ -8,9 +8,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxScheduler Scheduler;
         public readonly string Name;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEna", defaultValue: true );
-        public readonly AvfxInt StartTime = new( "Start Time", "StTm", defaultValue: 0 );
-        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo", defaultValue: -1 );
+        public readonly AvfxBool Enabled = new( "Enabled", "bEna", value: true );
+        public readonly AvfxInt StartTime = new( "Start Time", "StTm", value: 0 );
+        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo", value: -1 );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -22,18 +22,18 @@ namespace VfxEditor.AvfxFormat {
             Scheduler = scheduler;
             Name = name;
 
-            Parsed = new List<AvfxBase> {
+            Parsed = [
                 Enabled,
                 StartTime,
                 TimelineIdx
-            };
+            ];
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = new() {
+            Display = [
                 Enabled,
                 StartTime
-            };
+            ];
         }
 
         public AvfxSchedulerItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );

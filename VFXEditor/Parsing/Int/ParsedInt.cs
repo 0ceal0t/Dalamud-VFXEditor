@@ -7,8 +7,8 @@ namespace VfxEditor.Parsing {
     public class ParsedInt : ParsedSimpleBase<int, int> {
         private int Size;
 
-        public ParsedInt( string name, int defaultValue, int size = 4 ) : this( name, size ) {
-            Value = defaultValue;
+        public ParsedInt( string name, int value, int size = 4 ) : this( name, size ) {
+            Value = value;
         }
 
         public ParsedInt( string name, int size = 4 ) : base( name ) {

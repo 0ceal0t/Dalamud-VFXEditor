@@ -32,11 +32,11 @@ namespace VfxEditor.AvfxFormat {
 
         // an item was removed from the group, for example
         // 255 = -1 = nothing selected
-        public override void UpdateLiteral() => Literal.SetValue( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
+        public override void UpdateLiteral() => Literal.SetItems( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
 
         public override void Initialize() {
-            for( var idx = 0; idx < Literal.GetValue().Count; idx++ ) {
-                var value = Literal.GetValue()[idx];
+            for( var idx = 0; idx < Literal.GetItems().Count; idx++ ) {
+                var value = Literal.GetItems()[idx];
                 if( value != 255 && value >= 0 && value < Group.Items.Count ) {
                     var item = Group.Items[value];
                     Selected.Add( item );
@@ -47,9 +47,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void ImportFinished() {
-            for( var idx = 0; idx < Literal.GetValue().Count; idx++ ) {
-                var value = Literal.GetValue()[idx];
-                if( value != 255 && value >= 0 ) Literal.SetValue( value + Group.PreImportSize, idx );
+            for( var idx = 0; idx < Literal.GetItems().Count; idx++ ) {
+                var value = Literal.GetItems()[idx];
+                if( value != 255 && value >= 0 ) Literal.SetItem( value + Group.PreImportSize, idx );
             }
             LinkOnIndexChange();
             Initialize();
@@ -110,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
         // For when something happens to the selected node
 
         public override List<int> GetSelectedIdx( AvfxNode node ) {
-            List<int> idx = new();
+            List<int> idx = [];
             for( var i = 0; i < Selected.Count; i++ ) {
                 if( Selected[i] == node ) idx.Add( i );
             }
@@ -137,7 +137,7 @@ namespace VfxEditor.AvfxFormat {
             // Copy/Paste
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) {
-                for( var idx = 0; idx < Selected.Count; idx++ ) copy.Ints[$"{Name}_{idx}"] = Literal.GetValue()[idx];
+                for( var idx = 0; idx < Selected.Count; idx++ ) copy.Ints[$"{Name}_{idx}"] = Literal.GetItems()[idx];
             }
             if( copy.IsPasting ) {
                 for( var idx = 0; idx < Selected.Count; idx++ ) {

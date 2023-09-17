@@ -101,7 +101,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Parsing
 
-            Parsed = new() {
+            Parsed = [
                 LoopStart,
                 LoopEnd,
                 ParticleVariety,
@@ -151,9 +151,9 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            };
+            ];
 
-            Parsed2 = new() {
+            Parsed2 = [
                 TC1,
                 TC2,
                 TC3,
@@ -162,7 +162,7 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            };
+            ];
 
             // Drawing
 
@@ -231,7 +231,7 @@ namespace VfxEditor.AvfxFormat {
                 TP
             } );
 
-            ParticleVariety.Parsed.ExtraCommandGenerator = () => {
+            ParticleVariety.Command = () => {
                 return new AvfxParticleDataCommand( this );
             };
         }
@@ -239,7 +239,7 @@ namespace VfxEditor.AvfxFormat {
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
             Peek( reader, Parsed2, size );
-            var particleType = ParticleVariety.GetValue();
+            var particleType = ParticleVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
@@ -262,8 +262,8 @@ namespace VfxEditor.AvfxFormat {
             RecurseAssigned( Parsed2, assigned );
         }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            UVSetCount.SetValue( UvSets.Count );
+        public override void WriteContents( BinaryWriter writer ) {
+            UVSetCount.Value = UvSets.Count;
             WriteNested( writer, Parsed );
 
             foreach( var uvSet in UvSets ) uvSet.Write( writer );
@@ -329,7 +329,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Particle {GetIdx()} ({ParticleVariety.GetValue()})";
+        public override string GetDefaultText() => $"Particle {GetIdx()} ({ParticleVariety.Value})";
 
         public override string GetWorkspaceId() => $"Ptcl{GetIdx()}";
     }

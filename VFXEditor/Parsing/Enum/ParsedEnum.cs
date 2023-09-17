@@ -4,21 +4,18 @@ using System.Linq;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedEnum<T> : ParsedBase where T : Enum {
-        public readonly string Name;
+    public class ParsedEnum<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
-        public Func<ICommand> ExtraCommandGenerator; // can be changed later
+        public Func<ICommand> ExtraCommand; // can be changed later
 
-        public T Value = ( T )( object )0;
-
-        public ParsedEnum( string name, T defaultValue, Func<ICommand> extraCommandGenerator = null, int size = 4 ) : this( name, extraCommandGenerator, size ) {
-            Value = defaultValue;
+        public ParsedEnum( string name, T value, Func<ICommand> extraCommand = null, int size = 4 ) : this( name, extraCommand, size ) {
+            Value = value;
         }
 
-        public ParsedEnum( string name, Func<ICommand> extraCommandGenerator = null, int size = 4 ) {
-            Name = name;
+        public ParsedEnum( string name, Func<ICommand> extraCommand = null, int size = 4 ) : base( name ) {
             Size = size;
-            ExtraCommandGenerator = extraCommandGenerator;
+            ExtraCommand = extraCommand;
+            Value = ( T )( object )0;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -45,13 +42,13 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, ( T )( object )val, ExtraCommandGenerator?.Invoke() ) );
+                copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, ( T )( object )val, ExtraCommand?.Invoke() ) );
             }
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[UNKNOWN]";
             if( UiUtils.EnumComboBox( Name, text, options, Value, out var newValue ) ) {
-                manager.Add( new ParsedEnumCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
+                manager.Add( new ParsedEnumCommand<T>( this, newValue, ExtraCommand?.Invoke() ) );
             }
         }
     }

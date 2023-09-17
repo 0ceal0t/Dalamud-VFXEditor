@@ -12,9 +12,9 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x18;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
+        private readonly ParsedInt Unk1 = new( "Unknown 1", value: 1 );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3", defaultValue: 100 );
+        private readonly ParsedInt Unk3 = new( "Unknown 3", value: 100 );
 
         public C118( TmbFile file ) : base( file ) { }
 

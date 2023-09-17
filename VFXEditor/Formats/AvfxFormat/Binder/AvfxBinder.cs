@@ -36,7 +36,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor ) {
-            Parsed = new() {
+            Parsed = [
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -56,9 +56,9 @@ namespace VfxEditor.AvfxFormat {
                 Prop1,
                 Prop2,
                 PropGoal
-            };
+            ];
 
-            BinderVariety.Parsed.ExtraCommandGenerator = () => {
+            BinderVariety.Command = () => {
                 return new AvfxBinderDataCommand( this );
             };
 
@@ -90,7 +90,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var binderType = BinderVariety.GetValue();
+            var binderType = BinderVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
@@ -105,7 +105,7 @@ namespace VfxEditor.AvfxFormat {
             RecurseAssigned( Data, assigned );
         }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Parsed );
             Data?.Write( writer );
         }
@@ -150,7 +150,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Binder {GetIdx()} ({BinderVariety.GetValue()})";
+        public override string GetDefaultText() => $"Binder {GetIdx()} ({BinderVariety.Value})";
 
         public override string GetWorkspaceId() => $"Bind{GetIdx()}";
     }

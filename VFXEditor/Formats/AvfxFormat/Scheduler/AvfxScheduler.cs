@@ -11,24 +11,20 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxInt ItemCount = new( "Item Count", "ItCn" );
         public readonly AvfxInt TriggerCount = new( "Trigger Count", "TrCn" );
-
         public readonly List<AvfxSchedulerItem> Items = new();
         public readonly List<AvfxSchedulerItem> Triggers = new();
-
         public readonly UiSchedulerSplitView ItemSplit;
         public readonly UiSchedulerSplitView TriggerSplit;
-
-        private readonly List<AvfxBase> Parsed;
-
+        public readonly List<AvfxBase> Parsed;
         public readonly AvfxNodeGroupSet NodeGroups;
 
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
-            Parsed = new() {
+            Parsed = [
                 ItemCount,
                 TriggerCount
-            };
+            ];
 
             ItemSplit = new( "ItEm", Items, this, true );
             TriggerSplit = new( "Trgr", Triggers, this, false );
@@ -66,9 +62,9 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            ItemCount.SetValue( Items.Count );
-            TriggerCount.SetValue( Triggers.Count );
+        public override void WriteContents( BinaryWriter writer ) {
+            ItemCount.Value = Items.Count;
+            TriggerCount.Value = Triggers.Count;
             WriteNested( writer, Parsed );
 
             // Item

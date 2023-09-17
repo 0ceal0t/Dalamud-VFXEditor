@@ -6,18 +6,18 @@ namespace VfxEditor.Parsing {
     public class ParsedFlag<T> : ParsedBase where T : Enum {
         public readonly string Name;
         private readonly int Size;
-        public Func<ICommand> ExtraCommandGenerator; // can be changed later
+        public Func<ICommand> ExtraCommand; // can be changed later
 
         public T Value = ( T )( object )0;
 
-        public ParsedFlag( string name, T defaultValue, Func<ICommand> extraCommandGenerator = null, int size = 4 ) : this( name, extraCommandGenerator, size ) {
-            Value = defaultValue;
+        public ParsedFlag( string name, T value, Func<ICommand> extraCommand = null, int size = 4 ) : this( name, extraCommand, size ) {
+            Value = value;
         }
 
-        public ParsedFlag( string name, Func<ICommand> extraCommandGenerator = null, int size = 4 ) {
+        public ParsedFlag( string name, Func<ICommand> extraCommand = null, int size = 4 ) {
             Name = name;
             Size = size;
-            ExtraCommandGenerator = extraCommandGenerator;
+            ExtraCommand = extraCommand;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -44,7 +44,7 @@ namespace VfxEditor.Parsing {
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedFlagCommand<T>( this, ( T )( object )val, ExtraCommandGenerator?.Invoke() ) );
+                copy.PasteCommand.Add( new ParsedFlagCommand<T>( this, ( T )( object )val, ExtraCommand?.Invoke() ) );
             }
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );
@@ -58,7 +58,7 @@ namespace VfxEditor.Parsing {
                     else intValue &= ~intFlagValue;
 
                     var newValue = ( T )( object )intValue;
-                    manager.Add( new ParsedFlagCommand<T>( this, newValue, ExtraCommandGenerator?.Invoke() ) );
+                    manager.Add( new ParsedFlagCommand<T>( this, newValue, ExtraCommand?.Invoke() ) );
                 }
             }
         }

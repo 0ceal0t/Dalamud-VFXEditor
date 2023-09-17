@@ -2,29 +2,27 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
-using System.Text;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Library.Texture;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
         public const string NAME = "Tex";
 
-        public readonly AvfxString Path = new( "Path", "Path" );
+        public readonly AvfxString Path = new( "Path", "Path", false );
         public readonly UiNodeGraphView NodeView;
 
         public AvfxTexture() : base( NAME, AvfxNodeGroupSet.TextureColor ) {
             NodeView = new( this );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            Path.SetValue( Encoding.ASCII.GetString( reader.ReadBytes( size ) ) );
-        }
+        public override void ReadContents( BinaryReader reader, int size ) => Path.ReadContents( reader, size );
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) => writer.Write( Encoding.ASCII.GetBytes( Path.GetValue() ) );
+        public override void WriteContents( BinaryWriter writer ) => Path.WriteContents( writer );
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Texture" );
@@ -33,10 +31,10 @@ namespace VfxEditor.AvfxFormat {
 
             var preCombo = ImGui.GetCursorPosX();
 
-            Plugin.LibraryManager.DrawTextureCombo( Path.GetValue(), ( TextureLeaf texture ) => {
+            Plugin.LibraryManager.DrawTextureCombo( Path.Value, ( TextureLeaf texture ) => {
                 if( texture.DrawSelectable() ) {
-                    var newValue = texture.GetPath().Trim().Trim( '\0' ) + '\u0000';
-                    CommandManager.Avfx.Add( new AvfxStringCommand( Path, newValue, false ) );
+                    var newValue = texture.GetPath().Trim().Trim( '\0' );
+                    CommandManager.Avfx.Add( new ParsedSimpleCommand<string>( Path.Parsed, newValue ) );
                 }
             } );
 
@@ -56,7 +54,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndTooltip();
         }
 
-        public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.GetValue() );
+        public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.Value );
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";
 

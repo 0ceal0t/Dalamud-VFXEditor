@@ -7,9 +7,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiParsedFloat3 Parsed;
         private readonly List<AvfxBase> Literals;
 
-        public UiFloat3( string name, AvfxFloat l1, AvfxFloat l2, AvfxFloat l3 ) {
-            Literals = new() { l1, l2, l3 };
-            Parsed = new( name, l1.Parsed, l2.Parsed, l3.Parsed );
+        public UiFloat3( string name, AvfxFloat x, AvfxFloat y, AvfxFloat z ) {
+            Literals = [x, y, z];
+            Parsed = new( name, x.Parsed, y.Parsed, z.Parsed );
         }
 
         public void Draw() {

@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             Type.Write( writer );
             RawInts.Write( writer );
             RawFloats.Write( writer );

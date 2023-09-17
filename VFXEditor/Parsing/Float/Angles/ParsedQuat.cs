@@ -16,8 +16,8 @@ namespace VfxEditor.Parsing {
         }
 
         // Value is XYZ angles in radians
-        public ParsedQuat( string name, Vector3 defaultValue ) : this( name ) {
-            Value = defaultValue;
+        public ParsedQuat( string name, Vector3 value ) : this( name ) {
+            Value = value;
         }
 
         public ParsedQuat( string name ) : base( name ) { }

@@ -13,7 +13,7 @@ namespace VfxEditor.EidFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override EidFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override EidFile FileFromReader( BinaryReader reader ) => new( reader, true );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

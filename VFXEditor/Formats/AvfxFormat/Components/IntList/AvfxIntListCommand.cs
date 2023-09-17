@@ -10,16 +10,16 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Execute() {
-            PrevState = Item.GetValue()[0];
-            Item.GetValue()[0] = State;
+            PrevState = Item.GetItems()[0];
+            Item.GetItems()[0] = State;
         }
 
         public void Redo() {
-            Item.GetValue()[0] = State;
+            Item.GetItems()[0] = State;
         }
 
         public void Undo() {
-            Item.GetValue()[0] = PrevState;
+            Item.GetItems()[0] = PrevState;
         }
     }
 }

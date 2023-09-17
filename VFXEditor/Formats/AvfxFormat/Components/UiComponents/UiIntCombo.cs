@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt Literal;
 
         private readonly Dictionary<int, string> Mapping;
-        private string DisplayText => Mapping.TryGetValue( Literal.GetValue(), out var displayText ) ? displayText : "[UNKNOWN]";
+        private string DisplayText => Mapping.TryGetValue( Literal.Value, out var displayText ) ? displayText : "[UNKNOWN]";
 
         public UiIntCombo( string name, AvfxInt literal, Dictionary<int, string> mapping ) {
             Name = name;
@@ -26,12 +26,12 @@ namespace VfxEditor.AvfxFormat {
 
             // Copy/Paste
             var manager = CopyManager.Avfx;
-            if( manager.IsCopying ) manager.Ints[Name] = Literal.GetValue();
+            if( manager.IsCopying ) manager.Ints[Name] = Literal.Value;
             if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) {
                 manager.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
             }
 
-            var value = Literal.GetValue();
+            var value = Literal.Value;
             var spacing = ImGui.GetStyle().ItemSpacing.X;
             var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing;
             ImGui.SetNextItemWidth( 100 );

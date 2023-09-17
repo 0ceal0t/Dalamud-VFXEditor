@@ -4,8 +4,8 @@ using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedShort2 : ParsedInt4 {
-        public ParsedShort2( string name, Int4 defaultValue ) : this( name ) {
-            Value = defaultValue;
+        public ParsedShort2( string name, Int4 value ) : this( name ) {
+            Value = value;
         }
 
         public ParsedShort2( string name ) : base( name ) { }

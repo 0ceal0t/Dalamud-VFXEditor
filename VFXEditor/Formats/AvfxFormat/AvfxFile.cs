@@ -33,12 +33,10 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
-        public AvfxFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.AvfxManager ) ) {
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
-
+        public AvfxFile( BinaryReader reader, bool verify ) : base( new( Plugin.AvfxManager ) ) {
             Main = AvfxMain.FromStream( reader );
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), 8, out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), 8, out var _ );
 
             NodeGroupSet = Main.NodeGroupSet;
 

@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Locked = locked;
 
-            Curves = new() {
+            Curves = [
                 RGB,
                 A,
                 SclR,
@@ -40,14 +40,14 @@ namespace VfxEditor.AvfxFormat {
                 RanB,
                 RanA,
                 RBri
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Curves, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Curves );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Curves );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );

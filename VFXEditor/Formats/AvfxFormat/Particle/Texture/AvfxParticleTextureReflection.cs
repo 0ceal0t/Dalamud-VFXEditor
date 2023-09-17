@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool UseScreenCopy = new( "Use Screen Copy", "bUSC" );
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColorType = new( "Calculate Color", "TCCT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
         public readonly AvfxCurve Rate = new( "Rate", "Rate" );
         public readonly AvfxCurve RPow = new( "Power", "RPow" );
 
@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 UseScreenCopy,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 Rate,
                 RPow
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );
@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TR" );

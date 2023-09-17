@@ -18,11 +18,11 @@ namespace VfxEditor.SklbFormat.Data {
             DataSize = reader.ReadInt32();
             HavokOffset = reader.ReadInt32();
 
-            Parsed = new() {
+            Parsed = [
                 new ParsedShort( "Bone Connect Index" ),
                 new ParsedReserve( 2 ), // Padding
                 Id
-            };
+            ];
             Parsed.ForEach( x => x.Read( reader ) );
 
             var numParents = ( DataSize - 0x18 ) / 0x04;

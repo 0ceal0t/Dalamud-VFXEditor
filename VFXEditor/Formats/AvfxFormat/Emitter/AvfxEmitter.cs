@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitter : AvfxNode {
         public const string NAME = "Emit";
 
-        public readonly AvfxString Sound = new( "Sound", "SdNm", showRemoveButton: true );
-        public readonly AvfxInt SoundNumber = new( "Sound Index (-1 if no sound)", "SdNo" );
+        public readonly AvfxString Sound = new( "Sound", "SdNm", true );
+        public readonly AvfxInt SoundNumber = new( "Sound Index", "SdNo" );
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
         public readonly AvfxInt ChildLimit = new( "Child Limit", "ClCn" );
-        public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo", defaultValue: -1 );
+        public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo", value: -1 );
         public readonly AvfxBool AnyDirection = new( "Any Direction", "bAD", size: 1 );
         public readonly AvfxEnum<EmitterType> EmitterVariety = new( "Type", "EVT" );
         public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
@@ -69,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor ) {
             NodeGroups = groupSet;
 
-            Parsed = new() {
+            Parsed = [
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -104,7 +105,7 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngleRandomZ,
                 VelocityRandomX,
                 VelocityRandomZ
-            };
+            ];
             Sound.SetAssigned( false );
 
             AnimationSplitDisplay = new( "Animation", new() {
@@ -135,13 +136,13 @@ namespace VfxEditor.AvfxFormat {
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
             ParticleSplit = new( "Create Particles", Particles, this, true );
 
-            EmitterVariety.Parsed.ExtraCommandGenerator = () => {
+            EmitterVariety.Command = () => {
                 return new AvfxEmitterDataCommand( this );
             };
 
             NodeView = new UiNodeGraphView( this );
 
-            Parameters = new() {
+            Parameters = [
                 LoopStart,
                 LoopEnd,
                 ChildLimit,
@@ -149,12 +150,12 @@ namespace VfxEditor.AvfxFormat {
                 RotationDirectionBaseType,
                 CoordComputeOrderType,
                 RotationOrderType
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var emitterType = EmitterVariety.GetValue();
+            var emitterType = EmitterVariety.Value;
 
             AvfxEmitterItemContainer lastParticle = null;
             AvfxEmitterItemContainer lastEmitter = null;
@@ -197,9 +198,9 @@ namespace VfxEditor.AvfxFormat {
             RecurseAssigned( Data, assigned );
         }
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            EmitterCount.SetValue( Emitters.Count );
-            ParticleCount.SetValue( Particles.Count );
+        public override void WriteContents( BinaryWriter writer ) {
+            EmitterCount.Value = Emitters.Count;
+            ParticleCount.Value = Particles.Count;
             WriteNested( writer, Parsed );
 
             // ItPr
@@ -267,8 +268,12 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView.Draw();
             EffectorSelect.Draw();
+
             Sound.Draw();
             SoundNumber.Draw();
+            ImGui.SameLine();
+            UiUtils.HelpMarker( "-1 if no sound" );
+
             DrawItems( Parameters );
         }
 
@@ -281,7 +286,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Emitter {GetIdx()} ({EmitterVariety.GetValue()})";
+        public override string GetDefaultText() => $"Emitter {GetIdx()} ({EmitterVariety.Value})";
 
         public override string GetWorkspaceId() => $"Emit{GetIdx()}";
 
@@ -295,6 +300,6 @@ namespace VfxEditor.AvfxFormat {
             Particles.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
 
-        public bool HasSound => Sound.IsAssigned() && SoundNumber.GetValue() > 0 && Sound.GetValue().Trim( '\0' ).Length > 0;
+        public bool HasSound => Sound.IsAssigned() && SoundNumber.Value > 0 && Sound.Value.Length > 0;
     }
 }

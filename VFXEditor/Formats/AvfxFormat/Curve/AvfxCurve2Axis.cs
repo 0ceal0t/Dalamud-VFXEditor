@@ -27,28 +27,28 @@ namespace VfxEditor.AvfxFormat {
             RX = new( "Random X", "XR", type );
             RY = new( "Random Y", "YR", type );
 
-            Parsed = new() {
+            Parsed = [
                 AxisConnectType,
                 AxisConnectRandomType,
                 X,
                 Y,
                 RX,
                 RY
-            };
+            ];
 
-            Curves = new() {
+            Curves = [
                 X,
                 Y,
                 RX,
                 RY
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );

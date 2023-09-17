@@ -9,7 +9,7 @@ namespace VfxEditor.AvfxFormat {
         public bool Enabled = true;
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT
 
-        public readonly AvfxFloat Value = new( "Value", "Val" );
+        public readonly AvfxFloat Value = new( "Value", "Val", value: -1 );
         public readonly AvfxFloat ValRandom = new( "Random Value", "ValR" );
         public readonly AvfxEnum<RandomType> ValRandomType = new( "Random Type", "Type" );
 
@@ -17,18 +17,17 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<IUiItem> Display;
 
         public AvfxLife() : base( "Life" ) {
-            Value.SetValue( -1 );
-            Parsed = new() {
+            Parsed = [
                 Value,
                 ValRandom,
                 ValRandomType
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 Value,
                 ValRandom,
                 ValRandomType
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -42,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             if( !Enabled ) {
                 writer.Write( -1 );
                 return;

@@ -23,7 +23,7 @@ namespace VfxEditor.Tracker {
                 if( paths.Count == 0 ) continue;
 
                 var id = new IntPtr( item.Address );
-                if( !addressToItems.ContainsKey( id ) ) addressToItems[id] = new HashSet<TrackerItem>();
+                if( !addressToItems.ContainsKey( id ) ) addressToItems[id] = [];
 
                 foreach( var path in paths ) {
                     addressToItems[id].Add( path );

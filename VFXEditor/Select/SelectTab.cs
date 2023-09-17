@@ -172,7 +172,7 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            if( Searched == null ) { Searched = new List<T>(); Searched.AddRange( Items ); }
+            if( Searched == null ) { Searched = [.. Items]; }
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             var resetScroll = false;

@@ -5,8 +5,8 @@ using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat : ParsedSimpleBase<float, float> {
-        public ParsedFloat( string name, float defaultValue ) : this( name ) {
-            Value = defaultValue;
+        public ParsedFloat( string name, float value ) : this( name ) {
+            Value = value;
         }
 
         public ParsedFloat( string name ) : base( name ) { }

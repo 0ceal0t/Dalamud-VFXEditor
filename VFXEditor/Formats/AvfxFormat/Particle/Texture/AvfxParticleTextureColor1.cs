@@ -18,8 +18,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "Texture Border V", "TBVT" );
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
-        public readonly AvfxIntList MaskTextureIdx = new( "Mask Index", "TLst", defaultValue: -1 );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
+        public readonly AvfxIntList MaskTextureIdx = new( "Mask Index", "TLst", value: -1 );
         public readonly AvfxCurve TexN = new( "TexN", "TxN" );
         public readonly AvfxCurve TexNRandom = new( "TexN Random", "TxNR" );
 
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 ColorToAlpha,
                 UseScreenCopy,
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 MaskTextureIdx,
                 TexN,
                 TexNRandom
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );
@@ -66,7 +66,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TC1" );

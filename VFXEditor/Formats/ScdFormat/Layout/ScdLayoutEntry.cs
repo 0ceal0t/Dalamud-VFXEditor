@@ -67,7 +67,7 @@ namespace VfxEditor.ScdFormat {
         private readonly List<ParsedBase> Parsed;
 
         public ScdLayoutEntry() {
-            Parsed = new() {
+            Parsed = [
                 Type,
                 Version,
                 Flag1,
@@ -78,9 +78,9 @@ namespace VfxEditor.ScdFormat {
                 ReverbType,
                 AbGroupNumber,
                 Volume
-            };
+            ];
 
-            Type.ExtraCommandGenerator = () => {
+            Type.ExtraCommand = () => {
                 return new ScdLayoutEntryExtraCommand( this );
             };
         }

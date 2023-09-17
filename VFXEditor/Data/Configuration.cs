@@ -182,6 +182,8 @@ namespace VfxEditor {
             Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
 
+        // =================
+
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "##Settings" );
 

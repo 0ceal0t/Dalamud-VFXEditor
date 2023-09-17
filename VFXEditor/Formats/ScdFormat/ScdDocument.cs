@@ -13,7 +13,7 @@ namespace VfxEditor.ScdFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override ScdFile FileFromReader( BinaryReader reader ) => new( reader, true );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

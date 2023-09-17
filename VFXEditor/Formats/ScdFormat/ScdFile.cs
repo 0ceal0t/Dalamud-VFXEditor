@@ -28,9 +28,7 @@ namespace VfxEditor.ScdFormat {
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
-        public ScdFile( BinaryReader reader, bool checkOriginal = true ) : base( new( Plugin.ScdManager ) ) {
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
-
+        public ScdFile( BinaryReader reader, bool verify ) : base( new( Plugin.ScdManager ) ) {
             Header = new( reader );
             OffsetsHeader = new( reader );
 
@@ -65,7 +63,7 @@ namespace VfxEditor.ScdFormat {
                 Sounds.Add( newSound );
             }
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
             if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );
@@ -201,7 +199,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private static void UpdateOffsets<T>( BinaryWriter writer, List<T> items, int offsetLocation, Action<BinaryWriter, T> action ) where T : ScdEntry {
-            List<int> positions = new();
+            List<int> positions = [];
             foreach( var item in items ) {
                 positions.Add( ( int )writer.BaseStream.Position );
                 action.Invoke( writer, item );

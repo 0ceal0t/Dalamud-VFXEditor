@@ -5,7 +5,7 @@ namespace VfxEditor.Parsing {
     public class ParsedRadians : ParsedFloat {
         public ParsedRadians( string name ) : base( name ) { }
 
-        public ParsedRadians( string name, float defaultValue ) : base( name, defaultValue ) { }
+        public ParsedRadians( string name, float value ) : base( name, value ) { }
 
         public override void Draw( CommandManager manager ) {
             using var _ = ImRaii.PushId( Name );

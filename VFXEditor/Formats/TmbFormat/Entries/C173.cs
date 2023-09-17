@@ -12,11 +12,11 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x44;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", defaultValue: 1 );
+        private readonly ParsedInt Unk1 = new( "Unknown 1", value: 1 );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path" );
-        private readonly ParsedShort BindPoint1 = new( "Bind Point 1", defaultValue: 1 );
-        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", defaultValue: 0xFF );
+        private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
+        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );

@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorder = new( "Texture Border", "TBT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", defaultValue: -1 );
+        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
         public readonly AvfxCurve Offset = new( "Offset", "POff" );
 
         private readonly List<AvfxBase> Parsed;
@@ -19,13 +19,13 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 TextureFilter,
                 TextureBorder,
                 TextureIdx,
                 Offset
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( TextureFilter );
@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TP" );

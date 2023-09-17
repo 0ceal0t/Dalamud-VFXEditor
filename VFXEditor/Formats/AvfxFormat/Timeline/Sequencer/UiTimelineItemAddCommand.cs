@@ -16,13 +16,13 @@ namespace VfxEditor.AvfxFormat {
             Item.EffectorSelect.Select( null );
             Item.EmitterSelect.Select( null );
 
-            Item.Enabled.SetValue( false );
-            Item.EmitterIdx.SetValue( -1 );
-            Item.EffectorIdx.SetValue( -1 );
-            Item.BinderIdx.SetValue( -1 );
-            Item.Platform.SetValue( 0 );
-            Item.EndTime.SetValue( 1 );
-            Item.StartTime.SetValue( 0 );
+            Item.Enabled.Value = false;
+            Item.EmitterIdx.Value = -1;
+            Item.EffectorIdx.Value = -1;
+            Item.BinderIdx.Value = -1;
+            Item.Platform.Value = 0;
+            Item.EndTime.Value = 1;
+            Item.StartTime.Value = 0;
 
             Add();
             View.Selected = Item;

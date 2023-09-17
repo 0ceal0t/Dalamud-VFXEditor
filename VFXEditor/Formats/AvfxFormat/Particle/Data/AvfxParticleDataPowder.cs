@@ -9,11 +9,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataPowder() : base() {
-            Parsed = new() {
+            Parsed = [
                 IsLightning,
                 DirectionalLightType,
                 CenterOffset
-            };
+            ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( DirectionalLightType );

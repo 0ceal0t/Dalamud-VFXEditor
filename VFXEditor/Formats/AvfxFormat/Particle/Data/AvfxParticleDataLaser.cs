@@ -4,10 +4,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve Width = new( "Width", "Wdt" );
 
         public AvfxParticleDataLaser() : base() {
-            Parsed = new() {
+            Parsed = [
                 Length,
                 Width
-            };
+            ];
 
             DisplayTabs.Add( Width );
             DisplayTabs.Add( Length );

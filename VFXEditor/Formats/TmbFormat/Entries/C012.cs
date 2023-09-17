@@ -19,13 +19,13 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x48;
         public override int ExtraSize => 4 * ( 3 + 3 + 3 + 4 );
 
-        private readonly ParsedInt Duration = new( "Duration", defaultValue: 30 );
+        private readonly ParsedInt Duration = new( "Duration", value: 30 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly TmbOffsetString Path = new( "Path" );
-        private readonly ParsedShort BindPoint1 = new( "Bind Point 1", defaultValue: 1 );
-        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", defaultValue: 0xFF );
-        private readonly ParsedShort BindPoint3 = new( "Bind Point 3", defaultValue: 2 );
-        private readonly ParsedShort BindPoint4 = new( "Bind Point 4", defaultValue: 0xFF );
+        private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
+        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
+        private readonly ParsedShort BindPoint3 = new( "Bind Point 3", value: 2 );
+        private readonly ParsedShort BindPoint4 = new( "Bind Point 4", value: 0xFF );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
         private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );

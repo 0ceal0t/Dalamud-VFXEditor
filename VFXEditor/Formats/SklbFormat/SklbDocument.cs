@@ -17,7 +17,7 @@ namespace VfxEditor.SklbFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override SklbFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp );
+        protected override SklbFile FileFromReader( BinaryReader reader ) => new( reader, HkxTemp, true );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

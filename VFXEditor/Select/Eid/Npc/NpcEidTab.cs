@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Eid.Npc {
         }
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
-            loaded = new List<string>();
+            loaded = [];
         }
     }
 }

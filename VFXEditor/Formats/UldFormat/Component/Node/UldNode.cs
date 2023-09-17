@@ -80,11 +80,11 @@ namespace VfxEditor.UldFormat.Component.Node {
         public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
             Parent = parent;
             Components = components;
-            Type.ExtraCommandGenerator = () => {
+            Type.ExtraCommand = () => {
                 return new UldNodeDataCommand( this );
             };
 
-            Parsed = new() {
+            Parsed = [
                 TabIndex,
                 Unk1,
                 Unk2,
@@ -110,7 +110,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 Alpha,
                 ClipCount,
                 TimelineId
-            };
+            ];
         }
 
         public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {

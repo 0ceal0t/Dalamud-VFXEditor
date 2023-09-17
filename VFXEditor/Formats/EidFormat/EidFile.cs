@@ -17,11 +17,9 @@ namespace VfxEditor.EidFormat {
 
         private bool NewData => Version1 == 0x3132;
 
-        public EidFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.EidManager ) ) {
+        public EidFile( BinaryReader reader, bool verify ) : base( new CommandManager( Plugin.EidManager ) ) {
             Dropdown = new( "Bind Point", BindPoints,
                 ( EidBindPoint item, int idx ) => $"Bind Point {item.GetId()}", () => new EidBindPointNew(), () => CommandManager.Eid );
-
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
 
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
@@ -33,7 +31,7 @@ namespace VfxEditor.EidFormat {
                 BindPoints.Add( NewData ? new EidBindPointNew( reader ) : new EidBindPointOld( reader ) );
             }
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
         }
 
         public override void Write( BinaryWriter writer ) {

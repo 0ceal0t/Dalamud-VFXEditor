@@ -40,7 +40,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         }
 
         public void Draw() {
-            Name.Draw( CommandManager.Atch, 3, Name.Name, ImGuiInputTextFlags.None );
+            Name.Draw( CommandManager.Atch, 3, Name.Name, 0, ImGuiInputTextFlags.None );
             Accessory.Draw( CommandManager.Atch );
 
             for( var idx = 0; idx < States.Count; idx++ ) {

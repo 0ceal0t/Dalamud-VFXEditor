@@ -11,9 +11,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
         public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
         public readonly AvfxInt EndTime = new( "End Time", "EdTm" );
-        public readonly AvfxInt BinderIdx = new( "Binder Index", "BdNo", defaultValue: -1 );
-        public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo", defaultValue: -1 );
-        public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo", defaultValue: -1 );
+        public readonly AvfxInt BinderIdx = new( "Binder Index", "BdNo", value: -1 );
+        public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo", value: -1 );
+        public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo", value: -1 );
         public readonly AvfxInt Platform = new( "Platform", "Plfm" );
         public readonly AvfxInt ClipIdx = new( "Clip Index", "ClNo" );
 
@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
 
-            Parsed = new List<AvfxBase> {
+            Parsed = [
                 Enabled,
                 StartTime,
                 EndTime,
@@ -37,17 +37,17 @@ namespace VfxEditor.AvfxFormat {
                 EmitterIdx,
                 Platform,
                 ClipIdx
-            };
+            ];
             AvfxBase.RecurseAssigned( Parsed, false );
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = new() {
+            Display = [
                 Enabled,
                 StartTime,
                 EndTime,
                 Platform
-            };
+            ];
         }
 
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {
@@ -79,11 +79,11 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override string GetDefaultText() {
-            if( EmitterIdx.GetValue() != -1 ) return EmitterSelect.GetText();
+            if( EmitterIdx.Value != -1 ) return EmitterSelect.GetText();
 
-            if( ClipIdx.IsAssigned() && ClipIdx.GetValue() != -1 ) {
-                if( ClipIdx.GetValue() < Timeline.Clips.Count ) return Timeline.Clips[ClipIdx.GetValue()].GetText();
-                return $"Clip {ClipIdx.GetValue()}";
+            if( ClipIdx.IsAssigned() && ClipIdx.Value != -1 ) {
+                if( ClipIdx.Value < Timeline.Clips.Count ) return Timeline.Clips[ClipIdx.Value].GetText();
+                return $"Clip {ClipIdx.Value}";
             }
 
             return "[NONE]";
@@ -95,6 +95,6 @@ namespace VfxEditor.AvfxFormat {
 
         public bool HasSound => EmitterSelect.Selected != null && EmitterSelect.Selected.HasSound;
 
-        public bool HasValue => EmitterIdx.GetValue() >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.GetValue() >= 0 );
+        public bool HasValue => EmitterIdx.Value >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.Value >= 0 );
     }
 }

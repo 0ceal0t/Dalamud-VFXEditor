@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat {
             writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
         }
 
-        protected abstract void WriteContents( BinaryWriter writer );
+        public abstract void WriteContents( BinaryWriter writer );
 
         // ===== STATIC PARSING =====
 

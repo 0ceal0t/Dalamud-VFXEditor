@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat {
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
-        protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override TmbFile FileFromReader( BinaryReader reader ) => new( reader, true );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

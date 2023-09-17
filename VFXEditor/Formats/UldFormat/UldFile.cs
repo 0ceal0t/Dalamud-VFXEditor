@@ -42,9 +42,7 @@ namespace VfxEditor.UldFormat {
         public readonly SimpleDropdown<UldTimeline> TimelineDropdown;
         public readonly SimpleDropdown<UldWidget> WidgetDropdown;
 
-        public UldFile( BinaryReader reader, bool checkOriginal = true ) : base( new CommandManager( Plugin.UldManager ) ) {
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
-
+        public UldFile( BinaryReader reader, bool verify ) : base( new CommandManager( Plugin.UldManager ) ) {
             var pos = reader.BaseStream.Position;
             Header = new( reader ); // uldh 0100
 
@@ -99,16 +97,20 @@ namespace VfxEditor.UldFormat {
             Components.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
             Widgets.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
 
             TextureSplitView = new( "Texture", Textures, true,
                 ( UldTexture item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+
             PartsSplitView = new( "Part List", Parts, true,
                 ( UldPartList item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+
             ComponentDropdown = new( "Component", Components,
                 ( UldComponent item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
+
             TimelineDropdown = new( "Timeline", Timelines,
                 ( UldTimeline item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+
             WidgetDropdown = new( "Widget", Widgets,
                 ( UldWidget item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
         }
@@ -207,7 +209,7 @@ namespace VfxEditor.UldFormat {
         // ========== WORKSPACE ==========
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = new();
+            Dictionary<string, string> ret = [];
             Textures.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Parts.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Components.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );

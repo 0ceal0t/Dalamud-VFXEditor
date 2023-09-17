@@ -41,7 +41,7 @@ namespace VfxEditor.Select {
 
         private static void PopulateFaceMap() {
             if( _FaceMapInternal != null ) return;
-            _FaceMapInternal = new();
+            _FaceMapInternal = [];
 
             var sklbFiles = File.ReadAllLines( SklbFacesPath );
             // chara/human/c0101/skeleton/face/f0222/skl_c0101f0222.sklb
@@ -50,7 +50,7 @@ namespace VfxEditor.Select {
                 var model = modelFace[0];
                 var face = Convert.ToInt32( modelFace[1] );
 
-                if( !_FaceMapInternal.ContainsKey( model ) ) _FaceMapInternal[model] = new();
+                if( !_FaceMapInternal.ContainsKey( model ) ) _FaceMapInternal[model] = [];
                 _FaceMapInternal[model].Add( face );
             }
         }
@@ -136,7 +136,7 @@ namespace VfxEditor.Select {
         }
 
         public static Dictionary<string, string> GetAllFacePaps( string modelId, string path ) {
-            Dictionary<string, string> ret = new();
+            Dictionary<string, string> ret = [];
 
             if( FaceMap.TryGetValue( modelId, out var faces ) ) {
                 foreach( var face in faces ) {

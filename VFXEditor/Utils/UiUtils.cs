@@ -310,14 +310,10 @@ namespace VfxEditor.Utils {
 
         public static Vector3 ToRadians( Vector3 value ) => new( ToRadians( value.X ), ToRadians( value.Y ), ToRadians( value.Z ) );
 
-        public static float ToRadians( float value ) {
-            return ( float )( ( Math.PI / 180 ) * value );
-        }
+        public static float ToRadians( float value ) => ( float )( ( Math.PI / 180 ) * value );
 
         public static Vector3 ToDegrees( Vector3 value ) => new( ToDegrees( value.X ), ToDegrees( value.Y ), ToDegrees( value.Z ) );
 
-        public static float ToDegrees( float value ) {
-            return ( float )( ( 180 / Math.PI ) * value );
-        }
+        public static float ToDegrees( float value ) => ( float )( ( 180 / Math.PI ) * value );
     }
 }

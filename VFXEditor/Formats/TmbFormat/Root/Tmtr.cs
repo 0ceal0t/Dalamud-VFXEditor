@@ -27,7 +27,7 @@ namespace VfxEditor.TmbFormat {
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
-        private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", defaultValue: false );
+        private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
         public readonly List<TmtrLuaEntry> LuaEntries = new();
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;

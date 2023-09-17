@@ -4,8 +4,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEmitterDataCylinderModel : AvfxData {
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
-        public readonly AvfxInt DivideX = new( "Divide X", "DivX" );
-        public readonly AvfxInt DivideY = new( "Divide Y", "DivY" );
+        public readonly AvfxInt DivideX = new( "Divide X", "DivX", value: 1 );
+        public readonly AvfxInt DivideY = new( "Divide Y", "DivY", value: 1 );
         public readonly AvfxCurve Length = new( "Length", "Len" );
         public readonly AvfxCurve Radius = new( "Radius", "Rad" );
         public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEmitterDataCylinderModel() : base() {
-            Parsed = new() {
+            Parsed = [
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -27,9 +27,7 @@ namespace VfxEditor.AvfxFormat {
                 AY,
                 InjectionSpeed,
                 InjectionSpeedRandom
-            };
-            DivideX.SetValue( 1 );
-            DivideY.SetValue( 1 );
+            ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( RotationOrderType );

@@ -78,7 +78,7 @@ namespace VfxEditor.Tracker {
                 var address = item.Value.Address;
                 if( address <= 0 ) continue;
 
-                if( !addressToItems.ContainsKey( address ) ) addressToItems[address] = new HashSet<TrackerItem>();
+                if( !addressToItems.ContainsKey( address ) ) addressToItems[address] = [];
                 addressToItems[address].Add( item.Value.ToItem() );
             }
         }

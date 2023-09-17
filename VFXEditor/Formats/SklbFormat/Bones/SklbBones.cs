@@ -233,7 +233,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     ImGui.CloseCurrentPopup();
                 }
 
-                bone.Name.Draw( CommandManager.Sklb, 128, "##Rename", ImGuiInputTextFlags.AutoSelectAll );
+                bone.Name.Draw( CommandManager.Sklb, 128, "##Rename", 0, ImGuiInputTextFlags.AutoSelectAll );
                 ImGui.EndPopup();
             }
 

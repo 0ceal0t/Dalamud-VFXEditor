@@ -31,18 +31,18 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimeline( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
-            Parsed = new List<AvfxBase> {
+            Parsed = [
                 LoopStart,
                 LoopEnd,
                 BinderIdx,
                 TimelineCount,
                 ClipCount
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 LoopStart,
                 LoopEnd
-            };
+            ];
 
             BinderSelect = new( this, "Binder Select", groupSet.Binders, BinderIdx );
 
@@ -78,9 +78,9 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) {
-            TimelineCount.SetValue( Items.Count );
-            ClipCount.SetValue( Clips.Count );
+        public override void WriteContents( BinaryWriter writer ) {
+            TimelineCount.Value = Items.Count;
+            ClipCount.Value = Clips.Count;
             WriteNested( writer, Parsed );
 
             // Item

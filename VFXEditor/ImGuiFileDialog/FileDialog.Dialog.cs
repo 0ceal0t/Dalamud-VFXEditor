@@ -526,7 +526,7 @@ namespace ImGuiFileDialog {
 
         private static IconColorItem GetIcon( string ext ) {
             if( ICON_MAP == null ) {
-                ICON_MAP = new();
+                ICON_MAP = [];
                 AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
                 AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf, MISC_TEXT_COLOR );
                 AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff", "dds", "atex" }, ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );

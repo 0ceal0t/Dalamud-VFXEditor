@@ -9,9 +9,9 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxParticleAttribute( string avfxName, AvfxParticle particle ) : base( avfxName ) {
             Particle = particle;
-            DisplayTabs = new List<AvfxItem> {
+            DisplayTabs = [
                 ( Display = new UiDisplayList( "Parameters" ) )
-            };
+            ];
         }
 
         protected void InitNodeSelects() {

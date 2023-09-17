@@ -27,16 +27,16 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 if( ( idx == numElements - 1 ) || BENA_ahead ) { // split before bEna or when about to end
-                    var item = new AvfxTimelineItem( Timeline, false, split.ToArray() );
+                    var item = new AvfxTimelineItem( Timeline, false, [.. split] );
                     Items.Add( item );
-                    split = new(); // reset split
+                    split = []; // reset split
                 }
             }
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) { }
 
-        protected override void WriteContents( BinaryWriter writer ) {
+        public override void WriteContents( BinaryWriter writer ) {
             foreach( var item in Items ) item.Write( writer );
         }
     }

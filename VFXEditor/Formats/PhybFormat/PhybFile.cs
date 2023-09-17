@@ -34,9 +34,7 @@ namespace VfxEditor.PhybFormat {
 
         private bool SkeletonTabOpen = false;
 
-        public PhybFile( BinaryReader reader, string sourcePath, bool checkOriginal = true ) : base( new( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) ) {
-            var original = checkOriginal ? FileUtils.GetOriginal( reader ) : null;
-
+        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base( new( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) ) {
             Version.Read( reader );
 
             if( Version.Value > 0 ) {
@@ -52,7 +50,7 @@ namespace VfxEditor.PhybFormat {
             reader.BaseStream.Seek( simOffset, SeekOrigin.Begin );
             Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
 
-            if( checkOriginal ) Verified = FileUtils.CompareFiles( original, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }

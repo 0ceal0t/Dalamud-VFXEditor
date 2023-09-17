@@ -14,10 +14,10 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3", defaultValue: 4 );
+        private readonly ParsedInt Unk3 = new( "Unknown 3", value: 4 );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
-        private readonly ParsedInt Unk5 = new( "Unknown 5", defaultValue: 1 );
-        private readonly ParsedInt Unk6 = new( "Unknown 6", defaultValue: 1 );
+        private readonly ParsedInt Unk5 = new( "Unknown 5", value: 1 );
+        private readonly ParsedInt Unk6 = new( "Unknown 6", value: 1 );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );
 
         public C175( TmbFile file ) : base( file ) { }

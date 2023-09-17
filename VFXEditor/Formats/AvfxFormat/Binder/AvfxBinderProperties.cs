@@ -9,13 +9,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
 
         public readonly AvfxEnum<BindPoint> BindPointType = new( "Bind Point Type", "BPT" );
-        public readonly AvfxEnum<BindTargetPoint> BindTargetPointType = new( "Bind Target Point Type", "BPTP", defaultValue: BindTargetPoint.ByName );
-        public readonly AvfxString BinderName = new( "Name", "Name", showRemoveButton: true );
-        public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID", defaultValue: 3 );
+        public readonly AvfxEnum<BindTargetPoint> BindTargetPointType = new( "Bind Target Point Type", "BPTP", value: BindTargetPoint.ByName );
+        public readonly AvfxString BinderName = new( "Name", "Name", true, true );
+        public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID", value: 3 );
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
-        public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF", defaultValue: -1 );
+        public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF", value: -1 );
         public readonly AvfxBool RingEnable = new( "Ring Enabled", "bRng" );
-        public readonly AvfxInt RingProgressTime = new( "Ring Progress Time", "RnPT", defaultValue: 1 );
+        public readonly AvfxInt RingProgressTime = new( "Ring Progress Time", "RnPT", value: 1 );
         public readonly AvfxFloat RingPositionX = new( "Ring Position X", "RnPX" );
         public readonly AvfxFloat RingPositionY = new( "Ring Position Y", "RnPY" );
         public readonly AvfxFloat RingPositionZ = new( "Ring Position Z", "RnPZ" );
@@ -60,7 +60,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {
             Name = name;
 
-            Parsed = new() {
+            Parsed = [
                 BindPointType,
                 BindTargetPointType,
                 BinderName,
@@ -75,14 +75,14 @@ namespace VfxEditor.AvfxFormat {
                 RingRadius,
                 BCT,
                 Position
-            };
+            ];
             BinderName.SetAssigned( false );
             Position.SetAssigned( true );
 
-            DisplayTabs = new() {
+            DisplayTabs = [
                 ( Parameters = new UiDisplayList( "Parameters" ) ),
                 Position
-            };
+            ];
 
             Parameters.AddRange( new() {
                 BindPointType,
@@ -103,7 +103,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
-        protected override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );

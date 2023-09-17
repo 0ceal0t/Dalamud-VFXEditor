@@ -199,7 +199,7 @@ namespace ImGuiFileDialog {
         }
 
         private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
-            folders = new List<(string Name, string Path)>();
+            folders = [];
             try {
                 var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
                 if( shellAppType == null )
