@@ -16,9 +16,11 @@ VFX, animation, sound, and physics editing plugin for Dalamud
 | `.pap` | The animations performed by a character (such as swinging a weapon, smiling, etc.) |
 | `.tmb` | Timelines for when to trigger VFXs, animations, and sound effects. Edit this if you want to replace a skill in its entirety |
 | `.scd` | Sound files (background music, sound effects) |
-| `.eid` | Controls the bind points used to attach VFXs to character models |
+| `.eid` | Bind points used to attach VFXs to character models |
 | `.uld` | Determines the layout of UI elements |
-| `.sklb` | The skeleton used for animations |
+| `.atex` | Texture files for VFXs |
+| `.tex` | Texture files for UI elements and game models |
+| `.atch` | Attachment points for weapons and other accessories (like the Machinist bag and Astrologian deck) |
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
@@ -48,7 +50,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Test multiple roots
 - [ ] Toggle for `.pap` animation preview
 - [ ] C192
-- [ ] `.scd` modded parsing
 - [ ] `.uld` update component type
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)
