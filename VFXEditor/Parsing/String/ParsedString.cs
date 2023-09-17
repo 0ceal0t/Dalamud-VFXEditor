@@ -11,9 +11,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedStringIcon {
-        public FontAwesomeIcon Icon;
+        public Func<FontAwesomeIcon> Icon;
         public bool Remove;
-        public Action Action;
+        public Action<string> Action;
     }
 
     public class ParsedString : ParsedSimpleBase<string, string> {
@@ -56,7 +56,7 @@ namespace VfxEditor.Parsing {
             using var _ = ImRaii.PushId( Name );
 
             if( HasIcons || offset > 0 ) {
-                var iconsSize = HasIcons ? Icons.Select( x => UiUtils.GetPaddedIconSize( x.Icon ) ).Sum() : 0;
+                var iconsSize = HasIcons ? Icons.Select( x => UiUtils.GetPaddedIconSize( x.Icon.Invoke() ) ).Sum() : 0;
                 var inputSize = UiUtils.GetOffsetInputSize( offset + iconsSize );
                 ImGui.SetNextItemWidth( inputSize );
             }
@@ -77,6 +77,7 @@ namespace VfxEditor.Parsing {
 
         public void DrawIcons() {
             if( !HasIcons ) return;
+            using var _ = ImRaii.PushId( Name );
 
             var imguiStyle = ImGui.GetStyle();
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
@@ -84,7 +85,7 @@ namespace VfxEditor.Parsing {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 foreach( var icon in Icons ) {
                     ImGui.SameLine();
-                    if( icon.Remove ? UiUtils.RemoveButton( icon.Icon.ToIconString() ) : ImGui.Button( icon.Icon.ToIconString() ) ) icon.Action.Invoke();
+                    if( icon.Remove ? UiUtils.RemoveButton( icon.Icon.Invoke().ToIconString() ) : ImGui.Button( icon.Icon.Invoke().ToIconString() ) ) icon.Action.Invoke( Value );
                 }
             }
 

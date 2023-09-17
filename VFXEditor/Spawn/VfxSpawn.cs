@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System;
 using VfxEditor.Structs.Vfx;
 
@@ -11,7 +12,7 @@ namespace VfxEditor.Spawn {
         }
 
         public static BaseVfx Vfx { get; private set; }
-        public static bool Exists => Vfx != null;
+        public static bool Active => Vfx != null;
 
         private static SpawnType LoopType = SpawnType.None;
         private static string LoopPath = "";
@@ -19,7 +20,16 @@ namespace VfxEditor.Spawn {
         private static bool Removed = false;
         private static DateTime RemoveTime;
 
-        public static void OnGround( string path, bool canLoop = false ) {
+        public static void DrawPopup( string path, bool canLoop ) {
+            if( ImGui.BeginPopup( "SpawnPopup" ) ) {
+                if( ImGui.Selectable( "On Ground" ) ) OnGround( path, canLoop );
+                if( ImGui.Selectable( "On Self" ) ) OnSelf( path, canLoop );
+                if( ImGui.Selectable( "On Target" ) ) OnTarget( path, canLoop );
+                ImGui.EndPopup();
+            }
+        }
+
+        public static void OnGround( string path, bool canLoop ) {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
@@ -31,7 +41,7 @@ namespace VfxEditor.Spawn {
             Vfx = new StaticVfx( path, playerObject.Position, playerObject.Rotation );
         }
 
-        public static void OnSelf( string path, bool canLoop = false ) {
+        public static void OnSelf( string path, bool canLoop ) {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
@@ -43,7 +53,7 @@ namespace VfxEditor.Spawn {
             Vfx = new ActorVfx( playerObject, playerObject, path );
         }
 
-        public static void OnTarget( string path, bool canLoop = false ) {
+        public static void OnTarget( string path, bool canLoop ) {
             var targetObject = Plugin.TargetObject;
             if( targetObject == null ) return;
 

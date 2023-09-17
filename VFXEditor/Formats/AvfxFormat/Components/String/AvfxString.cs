@@ -12,9 +12,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly bool Pad;
 
         public AvfxString( string name, string avfxName, bool showUnassigned, bool pad = false, List<ParsedStringIcon> icons = null ) : base( avfxName,
-            new( name, showUnassigned ? Enumerable.Concat( icons ?? [], [new ParsedStringIcon() { Icon = FontAwesomeIcon.Trash, Remove = true }] ).ToList() : icons ) ) {
+            new( name, showUnassigned ? Enumerable.Concat( icons ?? [], [new ParsedStringIcon() { Icon = () => FontAwesomeIcon.Trash, Remove = true }] ).ToList() : icons ) ) {
 
-            if( showUnassigned ) Parsed.Icons[^1].Action = () => CommandManager.Avfx.Add( new AvfxAssignCommand( this, false ) );
+            if( showUnassigned ) Parsed.Icons[^1].Action = ( string value ) => CommandManager.Avfx.Add( new AvfxAssignCommand( this, false ) );
             Pad = pad;
         }
 

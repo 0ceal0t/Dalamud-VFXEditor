@@ -39,18 +39,12 @@ namespace VfxEditor.Select.Vfx {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();
-            if( VfxSpawn.Exists ) {
+            if( VfxSpawn.Active ) {
                 if( ImGui.Button( "Remove" ) ) VfxSpawn.Remove();
             }
             else {
                 if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
-
-                if( ImGui.BeginPopup( "SpawnPopup" ) ) {
-                    if( ImGui.Selectable( "On Ground" ) ) VfxSpawn.OnGround( path );
-                    if( ImGui.Selectable( "On Self" ) ) VfxSpawn.OnSelf( path );
-                    if( ImGui.Selectable( "On Target" ) ) VfxSpawn.OnTarget( path );
-                    ImGui.EndPopup();
-                }
+                VfxSpawn.DrawPopup( path, false );
             }
         }
     }

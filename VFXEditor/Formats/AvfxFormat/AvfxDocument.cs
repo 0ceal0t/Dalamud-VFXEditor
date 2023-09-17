@@ -69,7 +69,7 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
-                if( VfxSpawn.Exists ) {
+                if( VfxSpawn.Active ) {
                     if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
                 }
                 else {
@@ -97,12 +97,7 @@ namespace VfxEditor.AvfxFormat {
 
             framePadding.Pop(); // so it doesn't mess with the popups
 
-            if( ImGui.BeginPopup( "SpawnPopup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) VfxSpawn.OnGround( SpawnPath, true );
-                if( ImGui.Selectable( "On Self" ) ) VfxSpawn.OnSelf( SpawnPath, true );
-                if( ImGui.Selectable( "On Target" ) ) VfxSpawn.OnTarget( SpawnPath, true );
-                ImGui.EndPopup();
-            }
+            VfxSpawn.DrawPopup( SpawnPath, true );
 
             if( ImGui.BeginPopup( "SettingsPopup" ) ) {
                 if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();

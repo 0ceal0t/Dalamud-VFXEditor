@@ -1,5 +1,7 @@
+using Dalamud.Interface;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Spawn;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -21,7 +23,16 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration", value: 30 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly TmbOffsetString Path = new( "Path" );
+        private readonly TmbOffsetString Path = new( "Path", [
+            new() {
+                Icon = () => VfxSpawn.Active ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
+                Remove = false,
+                Action = ( string path ) => {
+                    if( VfxSpawn.Active ) VfxSpawn.Remove();
+                    else VfxSpawn.OnSelf( path, false );
+                }
+            }
+        ] );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
         private readonly ParsedShort BindPoint3 = new( "Bind Point 3", value: 2 );
