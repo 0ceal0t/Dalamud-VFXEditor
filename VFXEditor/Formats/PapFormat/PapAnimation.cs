@@ -55,11 +55,12 @@ namespace VfxEditor.PapFormat {
 
         public string GetName() => Name.Value;
 
+        public short GetPapType() => ( short )Type.Value;
+
         public void Draw() {
             SheetData.InitMotionTimelines();
             if( !string.IsNullOrEmpty( Name.Value ) && SheetData.MotionTimelines.TryGetValue( Name.Value, out var motionData ) ) {
                 ImGui.TextDisabled( $"Loop: [{motionData.Loop}] Lip: [{motionData.Lip}] Blink: [{motionData.Blink}]" );
-
                 ImGui.SameLine();
                 UiUtils.HelpMarker( "These values are hard-coded in the game's MotionTimeline sheet, and are based on the animation name" );
             }

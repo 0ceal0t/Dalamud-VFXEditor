@@ -170,7 +170,8 @@ namespace VfxEditor.PapFormat {
             AnimationsDropdown.Draw();
         }
 
-        public List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+        public override List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+        public override List<short> GetPapTypes() => Animations.Select( x => x.GetPapType() ).ToList();
 
         public void RefreshHavokIndexes() {
             for( var i = 0; i < Animations.Count; i++ ) {

@@ -134,34 +134,30 @@ namespace VfxEditor.FileManager {
             File.WriteAllBytes( path, CurrentFile.ToBytes() );
         }
 
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( "." + Extension, CurrentFile.ToBytes(), Extension );
-
-        protected void Reload( List<string> papIds = null ) {
-            if( CurrentFile == null || ReplacePath.Contains( ".sklb" ) ) return;
-            Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, papIds );
-        }
+        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", CurrentFile.ToBytes(), Extension );
 
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
             LastUpdate = DateTime.Now;
             Unsaved = false;
 
+            CurrentFile?.Update();
+
             if( Plugin.Configuration.UpdateWriteLocation ) {
                 var newWriteLocation = Manager.NewWriteLocation;
-                CurrentFile?.Update();
                 WriteFile( newWriteLocation );
                 WriteLocation = newWriteLocation;
-                Reload( GetPapIds() );
-                Plugin.ResourceLoader.ReRender();
             }
             else {
                 WriteFile( WriteLocation );
-                Reload( GetPapIds() );
-                Plugin.ResourceLoader.ReRender();
             }
-        }
 
-        protected virtual List<string> GetPapIds() => null;
+            if( CurrentFile != null && !ReplacePath.Contains( ".sklb" ) ) {
+                Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, CurrentFile.GetPapIds(), CurrentFile.GetPapTypes() );
+            }
+
+            Plugin.ResourceLoader.ReRender();
+        }
 
         // =======================
 

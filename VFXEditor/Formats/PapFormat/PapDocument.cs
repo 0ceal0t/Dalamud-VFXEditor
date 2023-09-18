@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
@@ -17,8 +16,6 @@ namespace VfxEditor.PapFormat {
         public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
-
-        protected override List<string> GetPapIds() => CurrentFile.GetPapIds();
 
         protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path, HkxTemp, true );
 

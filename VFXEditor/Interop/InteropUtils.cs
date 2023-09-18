@@ -66,16 +66,17 @@ namespace VfxEditor.Interop {
             return ret;
         }
 
-        public static void PrepPap( IntPtr resource, List<string> papIds ) {
-            if( papIds == null ) return;
+        public static void PrepPap( IntPtr resource, List<string> ids, List<short> types ) {
+            if( ids == null || types == null ) return;
             Marshal.WriteByte( resource + Constants.PrepPapOffset, Constants.PrepPapValue );
         }
 
-        public static void WritePapIds( IntPtr resource, List<string> papIds ) {
-            if( papIds == null ) return;
+        public static void WritePapIds( IntPtr resource, List<string> ids, List<short> types ) {
+            if( ids == null ) return;
             var data = Marshal.ReadIntPtr( resource + Constants.PapIdsOffset );
-            for( var i = 0; i < papIds.Count; i++ ) {
-                SafeMemory.WriteString( data + ( i * 40 ), papIds[i], Encoding.ASCII );
+            for( var i = 0; i < ids.Count; i++ ) {
+                SafeMemory.WriteString( data + ( i * 40 ), ids[i], Encoding.ASCII );
+                Marshal.WriteInt16( data + ( i * 40 ) + 32, types[i] );
                 Marshal.WriteByte( data + ( i * 40 ) + 34, ( byte )i );
             }
         }

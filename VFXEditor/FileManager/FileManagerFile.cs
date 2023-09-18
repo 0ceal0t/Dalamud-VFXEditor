@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
 
@@ -13,6 +14,9 @@ namespace VfxEditor.FileManager {
         public abstract void Draw();
 
         public virtual void Update() { }
+
+        public virtual List<string> GetPapIds() => null;
+        public virtual List<short> GetPapTypes() => null;
 
         public abstract void Write( BinaryWriter writer );
 

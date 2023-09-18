@@ -100,16 +100,16 @@ namespace VfxEditor.Interop {
             return false;
         }
 
-        public void ReloadPath( string gamePath, string localPath, List<string> papIds = null ) {
+        public void ReloadPath( string gamePath, string localPath, List<string> papIds, List<short> papTypes ) {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
-                InteropUtils.PrepPap( gameResource, papIds );
+                InteropUtils.PrepPap( gameResource, papIds, papTypes );
                 RequestFile( GetFileManagerAlt(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
-                InteropUtils.WritePapIds( gameResource, papIds );
+                InteropUtils.WritePapIds( gameResource, papIds, papTypes );
             }
 
             if( string.IsNullOrEmpty( localPath ) ) return;
@@ -118,9 +118,9 @@ namespace VfxEditor.Interop {
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, localGameResource.ToString( "X8" ) );
 
             if( localGameResource != IntPtr.Zero ) {
-                InteropUtils.PrepPap( localGameResource, papIds );
+                InteropUtils.PrepPap( localGameResource, papIds, papTypes );
                 RequestFile( GetFileManagerAlt(), localGameResource + Constants.GameResourceOffset, localGameResource, 1 );
-                InteropUtils.WritePapIds( localGameResource, papIds );
+                InteropUtils.WritePapIds( localGameResource, papIds, papTypes );
             }
         }
 
