@@ -1,8 +1,10 @@
 using ImGuiNET;
+using SharpDX;
 using System.IO;
 using VfxEditor.EidFormat.BindPoint;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
+using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
     public class EidBindPointOld : EidBindPoint {
@@ -30,7 +32,8 @@ namespace VfxEditor.EidFormat {
             Name.Write( writer );
             writer.Write( 0 );
         }
-        public override int GetId() => Id.Value;
+
+        public override string GetName() => $"{Id.Value} ({Name.Value})";
 
         public override void Draw() {
             ImGui.TextDisabled( "Data Version: [OLD]" );
@@ -40,5 +43,14 @@ namespace VfxEditor.EidFormat {
             Position.Draw( CommandManager.Eid );
             Rotation.Draw( CommandManager.Eid );
         }
+
+        protected override Vector3 GetOffset() => new( Position.Value.X, Position.Value.Y, Position.Value.Z );
+
+        protected override Quaternion GetRotation() {
+            var rotation = UiUtils.ToRadians( Rotation.Value );
+            return Quaternion.RotationYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
+        }
+
+        protected override string GetBoneName() => Name.Value;
     }
 }

@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.PhybFormat.Collision;
@@ -29,9 +29,8 @@ namespace VfxEditor.PhybFormat {
         public readonly PhybCollision Collision;
         public readonly PhybSimulation Simulation;
 
-        public readonly SkeletonView Skeleton;
+        public readonly PhybSkeletonView Skeleton;
         public bool PhysicsUpdated = true;
-
         private bool SkeletonTabOpen = false;
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base( new( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) ) {
@@ -89,14 +88,7 @@ namespace VfxEditor.PhybFormat {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            var size = new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeightWithSpacing() - ImGui.GetStyle().ItemSpacing.Y * 2f );
-            if( SkeletonTabOpen ) {
-                size = new Vector2( -1 );
-            }
-            else if( Plugin.Configuration.PhybSkeletonSplit ) {
-                size = new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y / 2 );
-            }
-
+            var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.PhybSkeletonSplit );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using( var child = ImRaii.Child( "Child", size, false ) ) {
@@ -126,25 +118,7 @@ namespace VfxEditor.PhybFormat {
                 }
             }
 
-            if( !SkeletonTabOpen ) {
-                ImGui.Separator();
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    if( ImGui.Button( Plugin.Configuration.PhybSkeletonSplit ? FontAwesomeIcon.AngleDoubleDown.ToIconString() : FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
-                        Plugin.Configuration.PhybSkeletonSplit = !Plugin.Configuration.PhybSkeletonSplit;
-                        Plugin.Configuration.Save();
-                    }
-                }
-
-                if( Plugin.Configuration.PhybSkeletonSplit ) {
-                    ImGui.SameLine();
-                    Skeleton.Draw();
-                }
-            }
-        }
-
-        public override void Dispose() {
-            base.Dispose();
-            Skeleton.Dispose();
+            if( !SkeletonTabOpen ) Skeleton.DrawSplit( ref Plugin.Configuration.PhybSkeletonSplit );
         }
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
@@ -154,6 +128,11 @@ namespace VfxEditor.PhybFormat {
 
         public void Updated() {
             PhysicsUpdated = true;
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            Skeleton.Dispose();
         }
     }
 }

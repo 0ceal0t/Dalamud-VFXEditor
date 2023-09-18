@@ -44,6 +44,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
+- [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] `.sklb` gizmo
 - [ ] `.eid` skeleton preview
 - [ ] Test multiple animations

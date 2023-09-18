@@ -109,6 +109,7 @@ namespace VfxEditor {
         public bool DocumentPopoutShowSource = false;
 
         public bool PhybSkeletonSplit = true;
+        public bool EidSkeletonSplit = true;
         public bool ShowBoneNames = true;
 
         public BoneDisplay SklbBoneDisplay = BoneDisplay.Blender_Style_Perpendicular;

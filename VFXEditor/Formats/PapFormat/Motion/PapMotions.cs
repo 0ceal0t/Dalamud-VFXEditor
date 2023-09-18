@@ -1,13 +1,11 @@
-using Dalamud.Interface;
 using FFXIVClientStructs.Havok;
 using ImGuiFileDialog;
 using ImGuiNET;
-using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
-using VfxEditor.Utils;
+using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat.Motion {
@@ -19,20 +17,15 @@ namespace VfxEditor.PapFormat.Motion {
         public HavokData Bones;
         public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
 
-        private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
-        private bool SklbReplaced = false;
+        private readonly SkeletonSelector Selector;
 
         public PapMotions( PapFile file, string havokPath ) : base( havokPath ) {
             File = file;
             SklbTempPath = Path.Replace( ".hkx", "_sklb.hkx" );
 
             // Initialize skeleton using best guess for sklb path
-            var sklbPath = GetSklbPath();
-            if( Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
-
-            Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
-            SklbReplaced = replaced;
-            UpdateSkeleton( simple );
+            Selector = new( GetSklbPath(), UpdateSkeleton );
+            Selector.Init();
         }
 
         public void UpdateMotions() {
@@ -44,7 +37,7 @@ namespace VfxEditor.PapFormat.Motion {
             }
         }
 
-        private void UpdateSkeleton( SimpleSklb sklbFile ) {
+        public void UpdateSkeleton( SimpleSklb sklbFile ) {
             Bones?.RemoveReference();
             sklbFile.SaveHavokData( SklbTempPath );
             Bones = new( SklbTempPath );
@@ -77,37 +70,7 @@ namespace VfxEditor.PapFormat.Motion {
         }
 
         public void Draw( int havokIndex ) {
-            var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
-            var inputSize = ImGui.GetContentRegionAvail().X - 400;
-            ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
-
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
-                        if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced ) ) {
-                            SklbReplaced = replaced;
-                            UpdateSkeleton( simple );
-                        }
-                    }
-
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
-                        FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
-                            if( !ok ) return;
-                            SklbReplaced = false;
-                            UpdateSkeleton( SimpleSklb.LoadFromLocal( res ) );
-                        } );
-                    }
-                }
-
-                if( SklbReplaced ) {
-                    ImGui.SameLine();
-                    ImGui.TextColored( UiUtils.GREEN_COLOR, "Replaced" );
-                }
-            }
-
+            Selector.Draw();
             Motions[havokIndex].Draw( havokIndex );
         }
 

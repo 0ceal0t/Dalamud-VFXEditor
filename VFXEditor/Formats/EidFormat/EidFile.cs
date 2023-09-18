@@ -1,8 +1,14 @@
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.EidFormat.BindPoint;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.EidFormat.Skeleton;
+using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
@@ -17,10 +23,11 @@ namespace VfxEditor.EidFormat {
 
         private bool NewData => Version1 == 0x3132;
 
-        public EidFile( BinaryReader reader, bool verify ) : base( new CommandManager( Plugin.EidManager ) ) {
-            Dropdown = new( "Bind Point", BindPoints,
-                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetId()}", () => new EidBindPointNew(), () => CommandManager.Eid );
+        public readonly EidSkeletonView Skeleton;
+        public bool BindPointsUpdated = true;
+        private bool SkeletonTabOpen = false;
 
+        public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base( new CommandManager( Plugin.EidManager, () => Plugin.EidManager.CurrentFile?.Updated() ) ) {
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
             Version2 = reader.ReadInt16();
@@ -32,6 +39,11 @@ namespace VfxEditor.EidFormat {
             }
 
             if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
+
+            Dropdown = new( "Bind Point", BindPoints,
+                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew(), () => CommandManager.Eid );
+
+            Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -46,7 +58,43 @@ namespace VfxEditor.EidFormat {
 
         public override void Draw() {
             ImGui.Separator();
-            Dropdown.Draw();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.EidSkeletonSplit );
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            using( var child = ImRaii.Child( "Child", size, false ) ) {
+                using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+                if( !tabBar ) return;
+
+                SkeletonTabOpen = false;
+
+                using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
+                    if( tab ) Dropdown.Draw();
+                }
+
+                using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                    if( tab ) {
+                        Skeleton.Draw();
+                        SkeletonTabOpen = true;
+                    }
+                }
+            }
+
+            if( !SkeletonTabOpen ) Skeleton.DrawSplit( ref Plugin.Configuration.EidSkeletonSplit );
+        }
+
+        public void AddBindPoints( MeshBuilder mesh, Dictionary<string, Bone> boneMatrixes ) {
+            BindPoints.ForEach( x => x.AddBindPoint( mesh, boneMatrixes ) );
+        }
+
+        public void Updated() {
+            BindPointsUpdated = true;
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            Skeleton.Dispose();
         }
     }
 }

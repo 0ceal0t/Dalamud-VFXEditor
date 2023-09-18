@@ -89,7 +89,7 @@ namespace VfxEditor.Interop {
         private IntPtr VfxUseTriggerHandler( IntPtr vfx, uint triggerId ) {
             var timeline = VfxUseTriggerHook.Original( vfx, triggerId );
 
-            if( Plugin.Configuration?.LogVfxTriggers == true ) PluginLog.Log( $"Uses trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
+            if( Plugin.Configuration?.LogVfxTriggers == true ) PluginLog.Log( $"Trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
 
             return timeline;
         }
