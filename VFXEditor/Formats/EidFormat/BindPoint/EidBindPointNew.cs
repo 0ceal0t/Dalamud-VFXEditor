@@ -43,7 +43,7 @@ namespace VfxEditor.EidFormat {
 
         protected override Vector3 GetOffset() => new( Position.Value.X, Position.Value.Y, Position.Value.Z );
 
-        protected override Quaternion GetRotation() => Quaternion.RotationYawPitchRoll( Rotation.Value.X, Rotation.Value.Y, Rotation.Value.Z );
+        protected override Quaternion GetRotation() => Quaternion.RotationYawPitchRoll( Rotation.Value.Y, Rotation.Value.X, Rotation.Value.Z );
 
         protected override string GetBoneName() => Name.Value;
     }

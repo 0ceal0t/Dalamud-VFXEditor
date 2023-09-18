@@ -6,7 +6,7 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
     public class EidSkeletonView : SkeletonView {
         private readonly EidFile File;
 
-        public EidSkeletonView( EidFile file, string sourcePath ) : base( file, Plugin.DirectXManager.EidPreview, EidToSklb( sourcePath ), "eid" ) {
+        public EidSkeletonView( EidFile file, string sourcePath ) : base( file, Plugin.DirectXManager.EidPreview, sourcePath, "eid" ) {
             File = file;
         }
 
@@ -23,7 +23,5 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
             File.AddBindPoints( mesh, Bones.BoneMatrixes );
             Preview.LoadWireframe( mesh.ToMesh(), new MeshBuilder( true, false ).ToMesh(), new MeshBuilder( true, false ).ToMesh() );
         }
-
-        private static string EidToSklb( string path ) => string.IsNullOrEmpty( path ) ? path : path.Replace( ".eid", ".sklb" ).Replace( "eid_", "skl_" );
     }
 }

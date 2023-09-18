@@ -46,9 +46,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ## TODO
 - [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] `.sklb` gizmo
-- [ ] `.eid` skeleton preview
-- [ ] Test multiple animations
-- [ ] Test multiple roots
 - [ ] Toggle for `.pap` animation preview
 - [ ] C192
 - [ ] `.uld` update component type

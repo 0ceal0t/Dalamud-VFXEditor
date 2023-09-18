@@ -11,16 +11,18 @@ using VfxEditor.Interop.Havok.SkeletonBuilder;
 
 namespace VfxEditor.Interop.Havok.Ui {
     public abstract class SkeletonView {
-        private readonly string Prefix;
+        private readonly string Extension;
         private readonly FileManagerFile File;
 
         protected readonly BoneNamePreview Preview;
         protected HavokBones Bones;
         protected readonly SkeletonSelector Selector;
 
-        public SkeletonView( FileManagerFile file, BoneNamePreview preview, string sklbPath, string prefix ) {
+        public SkeletonView( FileManagerFile file, BoneNamePreview preview, string sklbPath, string extension ) {
             File = file;
             Preview = preview;
+            Extension = extension;
+            if( !string.IsNullOrEmpty( sklbPath ) ) sklbPath = sklbPath.Replace( $".{extension}", ".sklb" ).Replace( $"{extension[0..3]}_", "skl_" );
             Selector = new( sklbPath, UpdateSkeleton );
         }
 
@@ -55,7 +57,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
         private unsafe void UpdateBones( SimpleSklb sklbFile ) {
             try {
-                var tempPath = Path.Combine( Plugin.Configuration.WriteLocation, $"{Prefix}_sklb_temp.hkx" );
+                var tempPath = Path.Combine( Plugin.Configuration.WriteLocation, $"{Extension}_sklb_temp.hkx" );
                 sklbFile.SaveHavokData( tempPath.Replace( '\\', '/' ) );
 
                 Bones = new( tempPath );

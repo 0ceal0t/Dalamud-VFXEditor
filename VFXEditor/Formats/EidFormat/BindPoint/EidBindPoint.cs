@@ -34,7 +34,7 @@ namespace VfxEditor.EidFormat.BindPoint {
             var matrix = Matrix.Multiply( transform, bone.BindPose );
 
             var startPos = Vector3.TransformCoordinate( new Vector3( 0 ), matrix );
-            var endPos = Vector3.TransformCoordinate( new Vector3( 0, 0.1f, 0 ), matrix );
+            var endPos = Vector3.TransformCoordinate( new Vector3( 0, 0, 0.1f ), matrix );
 
             mesh.AddCone( startPos, endPos, 0.06f, true, 10 );
         }

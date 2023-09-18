@@ -44,7 +44,7 @@ namespace VfxEditor.EidFormat {
             Rotation.Draw( CommandManager.Eid );
         }
 
-        protected override Vector3 GetOffset() => new( Position.Value.X, Position.Value.Y, Position.Value.Z );
+        protected override Vector3 GetOffset() => new( Position.Value.Y, Position.Value.X, Position.Value.Z );
 
         protected override Quaternion GetRotation() {
             var rotation = UiUtils.ToRadians( Rotation.Value );
