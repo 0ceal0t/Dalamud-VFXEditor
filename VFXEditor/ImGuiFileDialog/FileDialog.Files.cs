@@ -36,7 +36,7 @@ namespace ImGuiFileDialog {
         private readonly object FilesLock = new();
 
         private SortingField CurrentSortingField = SortingField.FileName;
-        private readonly bool[] SortDescending = new[] { false, false, false, false };
+        private readonly bool[] SortDescending = [false, false, false, false];
 
         private bool CreateDir( string dirPath ) {
             var newPath = Path.Combine( CurrentPath, dirPath );

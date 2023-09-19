@@ -5,17 +5,17 @@ namespace VfxEditor.Ui {
     public abstract class GenericDialog {
         protected bool Visible = false;
         protected string Name;
-        protected Vector2 Size;
-        protected bool MenuBar;
+        protected readonly Vector2 Size;
+        protected readonly bool MenuBar;
 
         public bool IsVisible => Visible;
 
         private bool FocusNextFrame = false;
 
-        public GenericDialog( string name, bool menuBar, int startingWidth, int startingHeight ) {
+        public GenericDialog( string name, bool menuBar, int width, int height ) {
             Name = name;
             MenuBar = menuBar;
-            Size = new( startingWidth, startingHeight );
+            Size = new( width, height );
         }
 
         public void Show() {
@@ -24,8 +24,6 @@ namespace VfxEditor.Ui {
         }
 
         public void Hide() => SetVisible( false );
-
-        public void Toggle() => SetVisible( !Visible );
 
         public void SetVisible( bool visible ) { Visible = visible; }
 

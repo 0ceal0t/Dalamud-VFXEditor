@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -101,11 +102,16 @@ namespace ImGuiFileDialog {
         private void DrawHeader() {
             DrawPathComposer();
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
             ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
             DrawSearchBar();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
+            ImGui.Separator();
         }
 
         private void DrawPathComposer() {
@@ -126,10 +132,11 @@ namespace ImGuiFileDialog {
                     ImGui.PopItemWidth();
                 }
                 else {
+                    using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
                     for( var idx = 0; idx < PathDecomposition.Count; idx++ ) {
                         if( idx > 0 ) {
                             ImGui.SameLine();
-                            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 3 );
                         }
 
                         ImGui.PushID( idx );
@@ -155,26 +162,26 @@ namespace ImGuiFileDialog {
         }
 
         private void DrawSearchBar() {
-            ImGui.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( FontAwesomeIcon.Home.ToIconString() ) ) {
-                SetPath( "." );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( FontAwesomeIcon.Home.ToIconString() ) ) {
+                    SetPath( "." );
+                }
+                ImGui.PopFont();
+
+                if( ImGui.IsItemHovered() ) {
+                    ImGui.SetTooltip( "Reset to current directory" );
+                }
+
+                ImGui.SameLine();
+
+                DrawDirectoryCreation();
             }
-            ImGui.PopFont();
-
-            if( ImGui.IsItemHovered() ) {
-                ImGui.SetTooltip( "Reset to current directory" );
-            }
-
-            ImGui.SameLine();
-
-            DrawDirectoryCreation();
 
             if( !CreateDirectoryMode ) {
                 ImGui.SameLine();
-                ImGui.Text( "Search :" );
-                ImGui.SameLine();
                 ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X );
-                var edited = ImGui.InputText( "##InputImGuiFileDialogSearchField", ref SearchBuffer, 255 );
+                var edited = ImGui.InputTextWithHint( "##InputImGuiFileDialogSearchField", "Search", ref SearchBuffer, 255 );
                 ImGui.PopItemWidth();
                 if( edited ) {
                     ApplyFilteringOnFileList();
@@ -195,21 +202,21 @@ namespace ImGuiFileDialog {
             ImGui.PopFont();
 
             if( ImGui.IsItemHovered() ) {
-                ImGui.SetTooltip( "Create Directory" );
+                ImGui.SetTooltip( "Create directory" );
             }
 
             if( CreateDirectoryMode ) {
-                ImGui.SameLine();
-                ImGui.Text( "New Directory Name" );
+                var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Check );
+                var cancelSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
 
                 ImGui.SameLine();
-                ImGui.PushItemWidth( ImGui.GetContentRegionAvail().X - 100f );
-                ImGui.InputText( "##DirectoryFileName", ref CreateDirectoryBuffer, 255 );
-                ImGui.PopItemWidth();
+                ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - checkSize - cancelSize );
+                ImGui.InputTextWithHint( "##DirectoryFileName", "New Directory Name", ref CreateDirectoryBuffer, 255 );
+
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
                 ImGui.SameLine();
-
-                if( ImGui.Button( "Ok" ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) {
                     if( CreateDir( CreateDirectoryBuffer ) ) {
                         SetPath( Path.Combine( CurrentPath, CreateDirectoryBuffer ) );
                     }
@@ -217,8 +224,7 @@ namespace ImGuiFileDialog {
                 }
 
                 ImGui.SameLine();
-
-                if( ImGui.Button( "Cancel" ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) {
                     CreateDirectoryMode = false;
                 }
             }
@@ -680,13 +686,7 @@ namespace ImGuiFileDialog {
         private bool DrawFooter() {
             var posY = ImGui.GetCursorPosY();
 
-            if( IsDirectoryMode() ) {
-                ImGui.Text( "Directory Path :" );
-            }
-            else {
-                ImGui.Text( "File Name :" );
-            }
-
+            ImGui.TextDisabled( IsDirectoryMode() ? "Directory" : "File" );
             ImGui.SameLine();
 
             var width = ImGui.GetContentRegionAvail().X - 100;
@@ -743,7 +743,7 @@ namespace ImGuiFileDialog {
 
             ImGui.SameLine();
 
-            if( ImGui.Button( "Cancel" ) ) {
+            if( UiUtils.RemoveButton( "Cancel" ) ) {
                 IsOk = false;
                 res = true;
             }

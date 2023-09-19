@@ -221,7 +221,7 @@ namespace VfxEditor.Utils {
                 header.AddRange( BitConverter.GetBytes( 0 ) );
             }
 
-            return header.ToArray();
+            return [.. header];
         }
 
         public enum DXGI_FORMAT : uint {

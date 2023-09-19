@@ -33,13 +33,11 @@ namespace VfxEditor.Interop {
 
         // ====== INIT SOUND =========
 
-        public delegate IntPtr InitSoundPrototype( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, int a7 );
+        public delegate IntPtr InitSoundPrototype( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, uint a7 );
 
         public Hook<InitSoundPrototype> InitSoundHook { get; private set; }
 
-        private IntPtr InitSoundDetour( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, int a7 ) {
-            var scdPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
-
+        private IntPtr InitSoundDetour( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, uint a7 ) {
             if( path != IntPtr.Zero && path == OverridenSound ) {
                 return InitSoundHook.Original( a1, path, volume, OverridenSoundIdx, a5, a6, a7 );
             }

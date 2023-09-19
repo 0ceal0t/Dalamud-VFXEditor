@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
                     }
 
                     ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.BookMedical.ToIconString() ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.BookBookmark.ToIconString() ) ) {
                         file.AddToNodeLibrary( selected );
                     }
 
