@@ -306,11 +306,5 @@ namespace VfxEditor.AvfxFormat {
             Emitters.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
             Particles.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
-
-        public bool HasSound => Sound.IsAssigned() && SoundNumber.Value > 0 && Sound.Value.Length > 0;
-
-        public void PreviewSound() {
-
-        }
     }
 }
