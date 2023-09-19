@@ -40,6 +40,7 @@ namespace VfxEditor.Data {
         public static readonly Dictionary<string, MotionTimelineData> MotionTimelines = new();
 
         public struct MotionTimelineData {
+            public int Group;
             public bool Loop;
             public bool Blink;
             public bool Lip;
@@ -51,6 +52,7 @@ namespace VfxEditor.Data {
 
             foreach( var item in Plugin.DataManager.GetExcelSheet<MotionTimeline>() ) {
                 MotionTimelines[item.Filename.ToString()] = new MotionTimelineData() {
+                    Group = item.BlendGroup,
                     Loop = item.IsLoop,
                     Blink = item.IsBlinkEnable,
                     Lip = item.IsLipEnable

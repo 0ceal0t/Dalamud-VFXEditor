@@ -17,7 +17,7 @@ namespace VfxEditor.Parsing {
     }
 
     public class ParsedString : ParsedSimpleBase<string, string> {
-        public readonly List<ParsedStringIcon> Icons;
+        public readonly List<ParsedStringIcon> Icons = [];
         public bool HasIcons => Icons?.Count > 0;
 
         private bool Editing = false;

@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEmitter : AvfxNode {
         public const string NAME = "Emit";
 
-        public readonly AvfxString Sound = new( "Sound", "SdNm", true );
+        public readonly AvfxString Sound = new( "Sound", "SdNm", true, false );
         public readonly AvfxInt SoundNumber = new( "Sound Index", "SdNo" );
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
@@ -151,6 +152,12 @@ namespace VfxEditor.AvfxFormat {
                 CoordComputeOrderType,
                 RotationOrderType
             ];
+
+            Sound.Parsed.Icons.Insert( 0, new() {
+                Icon = () => FontAwesomeIcon.VolumeUp,
+                Remove = false,
+                Action = ( string value ) => Plugin.ResourceLoader.PlaySound( value, SoundNumber.Value )
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -301,5 +308,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public bool HasSound => Sound.IsAssigned() && SoundNumber.Value > 0 && Sound.Value.Length > 0;
+
+        public void PreviewSound() {
+
+        }
     }
 }

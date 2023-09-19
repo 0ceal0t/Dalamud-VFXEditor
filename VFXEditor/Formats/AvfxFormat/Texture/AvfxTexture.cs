@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
         public const string NAME = "Tex";
 
-        public readonly AvfxString Path = new( "Path", "Path", false );
+        public readonly AvfxString Path = new( "Path", "Path", false, false );
         public readonly UiNodeGraphView NodeView;
 
         public AvfxTexture() : base( NAME, AvfxNodeGroupSet.TextureColor ) {

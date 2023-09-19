@@ -1,4 +1,5 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Style;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -75,6 +76,22 @@ namespace VfxEditor.Utils {
         public static bool ColorButton( string label, Vector4 color, bool small ) {
             using var style = ImRaii.PushColor( ImGuiCol.Button, color );
             return small ? ImGui.SmallButton( label ) : ImGui.Button( label );
+        }
+
+        public static void DrawIntText( string label, int value ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            ImGui.TextDisabled( label );
+            ImGui.SameLine();
+            var dalamudColors = StyleModel.GetFromCurrent().BuiltInColors;
+            ImGui.Text( $"{value}" );
+        }
+
+        public static void DrawBoolText( string label, bool value ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            ImGui.TextDisabled( label );
+            ImGui.SameLine();
+            var dalamudColors = StyleModel.GetFromCurrent().BuiltInColors;
+            ImGui.TextColored( value ? dalamudColors.ParsedGreen.Value : dalamudColors.DalamudRed.Value, $"{value}" );
         }
 
         public static void HelpMarker( string text ) {

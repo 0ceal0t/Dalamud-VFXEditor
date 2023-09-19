@@ -62,6 +62,9 @@ namespace VfxEditor.Interop {
 
             HavokSplineCtor = Marshal.GetDelegateForFunctionPointer<HavokSplineCtorDelegate>( scanner.ScanText( Constants.HavokSplineCtorSig ) );
 
+            PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( scanner.ScanText( Constants.PlaySoundSig ) );
+            InitSoundHook = Hook<InitSoundPrototype>.FromAddress( scanner.ScanText( Constants.InitSoundSig ), InitSoundDetour );
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
@@ -73,6 +76,7 @@ namespace VfxEditor.Interop {
             LoadTexFileExternHook.Enable();
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
+            InitSoundHook.Enable();
 
             PathResolved += AddCrc;
         }
@@ -91,6 +95,7 @@ namespace VfxEditor.Interop {
             LoadTexFileExternHook.Dispose();
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
+            InitSoundHook.Dispose();
         }
     }
 }

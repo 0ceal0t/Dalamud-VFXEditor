@@ -2,7 +2,6 @@ using Dalamud.Interface;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VfxEditor.Formats.AvfxFormat.Components;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -11,10 +10,14 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxString : AvfxLiteral<ParsedString, string> {
         private readonly bool Pad;
 
-        public AvfxString( string name, string avfxName, bool showUnassigned, bool pad = false, List<ParsedStringIcon> icons = null ) : base( avfxName,
-            new( name, showUnassigned ? Enumerable.Concat( icons ?? [], [new ParsedStringIcon() { Icon = () => FontAwesomeIcon.Trash, Remove = true }] ).ToList() : icons ) ) {
-
-            if( showUnassigned ) Parsed.Icons[^1].Action = ( string value ) => CommandManager.Avfx.Add( new AvfxAssignCommand( this, false ) );
+        public AvfxString( string name, string avfxName, bool showUnassigned, bool pad, List<ParsedStringIcon> icons = null ) : base( avfxName, new( name, icons ?? [] ) ) {
+            if( showUnassigned ) {
+                Parsed.Icons.Add( new() {
+                    Icon = () => FontAwesomeIcon.Trash,
+                    Remove = true,
+                    Action = ( string value ) => CommandManager.Avfx.Add( new AvfxAssignCommand( this, false ) )
+                } );
+            }
             Pad = pad;
         }
 

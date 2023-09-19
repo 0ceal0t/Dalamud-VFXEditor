@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
@@ -18,9 +19,21 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt SoundIndex = new( "Sound Index" );
         private readonly ParsedInt SoundPosition = new( "Sound Position", value: 1 );
 
-        public C063( TmbFile file ) : base( file ) { }
+        public C063( TmbFile file ) : base( file ) {
+            SetupIcon();
+        }
 
-        public C063( TmbFile file, TmbReader reader ) : base( file, reader ) { }
+        public C063( TmbFile file, TmbReader reader ) : base( file, reader ) {
+            SetupIcon();
+        }
+
+        private void SetupIcon() {
+            Path.Icons.Insert( 0, new() {
+                Icon = () => FontAwesomeIcon.VolumeUp,
+                Remove = false,
+                Action = ( string value ) => Plugin.ResourceLoader.PlaySound( value, SoundIndex.Value )
+            } );
+        }
 
         protected override List<ParsedBase> GetParsed() => new() {
             Loop,
