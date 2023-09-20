@@ -88,7 +88,7 @@ namespace VfxEditor.Interop {
 
             if( Plugin.Configuration?.LogAllFiles == true ) {
                 PluginLog.Log( "[GetResourceHandler] {0}", gamePathString );
-                if( SelectDialog.LoggedFiles.Count > 10000 ) SelectDialog.LoggedFiles.Clear();
+                if( SelectDialog.LoggedFiles.Count > 1000 ) SelectDialog.LoggedFiles.Clear();
                 SelectDialog.LoggedFiles.Add( gamePathString );
             }
 

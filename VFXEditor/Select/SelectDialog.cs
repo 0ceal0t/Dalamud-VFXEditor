@@ -168,8 +168,10 @@ namespace VfxEditor.Select {
             ImGui.Separator();
 
             if( ImGui.Checkbox( "Log all files", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
-            ImGui.SameLine();
 
+            using var disabled = ImRaii.Disabled( LoggedFiles.Count == 0 && !Plugin.Configuration.LogAllFiles );
+
+            ImGui.SameLine();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.InputTextWithHint( "##Search", "Search", ref LoggedFilesSearch, 255 );
 
@@ -182,13 +184,19 @@ namespace VfxEditor.Select {
             using var windowPadding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
 
+            var searched = LoggedFiles
+                .Where( x => x.EndsWith( Extension ) && ( string.IsNullOrEmpty( LoggedFilesSearch ) || x.ToLower().Contains( LoggedFilesSearch.ToLower() ) ) )
+                .ToList();
+
+            SelectUiUtils.DisplayVisible( searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
+
             if( ImGui.BeginTable( "Table", 1, ImGuiTableFlags.RowBg ) ) {
                 ImGui.TableSetupColumn( "##Column", ImGuiTableColumnFlags.WidthStretch );
 
                 var idx = 0;
-                foreach( var file in LoggedFiles ) {
-                    if( !file.EndsWith( Extension ) ) continue;
-                    if( !string.IsNullOrEmpty( LoggedFilesSearch ) && !file.ToLower().Contains( LoggedFilesSearch.ToLower() ) ) continue;
+                foreach( var file in searched ) {
+                    if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
 
                     ImGui.TableNextColumn();
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
@@ -200,6 +208,8 @@ namespace VfxEditor.Select {
 
                 ImGui.EndTable();
             }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
         }
 
         private void SelectGamePath( string path ) {

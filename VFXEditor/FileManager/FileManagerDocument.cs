@@ -479,7 +479,7 @@ namespace VfxEditor.FileManager {
             ImGui.PopStyleColor();
         }
 
-        private static readonly string Text = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
+        private static readonly string WarningText = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
 
         protected static void DisplayAnimationWarning() {
             using var color = ImRaii.PushColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
@@ -488,7 +488,7 @@ namespace VfxEditor.FileManager {
             var style = ImGui.GetStyle();
             var iconSize = UiUtils.GetIconSize( FontAwesomeIcon.Globe ) + 2 * style.FramePadding;
             var textWidth = ImGui.GetContentRegionAvail().X - ( 2 * style.WindowPadding.X ) - ( 2 * style.ItemSpacing.X ) - iconSize.X;
-            var textSize = ImGui.CalcTextSize( Text, textWidth );
+            var textSize = ImGui.CalcTextSize( WarningText, textWidth );
 
             using var child = ImRaii.Child( "Warning", new Vector2( -1, Math.Max( textSize.Y, iconSize.Y ) + ( 2 * style.WindowPadding.Y ) ), true, ImGuiWindowFlags.NoScrollbar );
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
@@ -496,8 +496,8 @@ namespace VfxEditor.FileManager {
                 ImGui.SetColumnWidth( 0, textWidth );
             }
 
-            using( var textColor = ImRaii.PushColor( ImGuiCol.Text, 0xFFBDBDFF ) ) {
-                ImGui.TextWrapped( Text );
+            using( var textColor = ImRaii.PushColor( ImGuiCol.Text, 0xFF4A67FF ) ) {
+                ImGui.TextWrapped( WarningText );
             }
 
             ImGui.NextColumn();
