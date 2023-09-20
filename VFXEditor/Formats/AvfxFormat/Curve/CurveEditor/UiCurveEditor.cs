@@ -1,3 +1,5 @@
+using Dalamud.Interface;
+using Dalamud.Interface.Style;
 using ImGuiNET;
 using ImPlotNET;
 using OtterGui.Raii;
@@ -178,13 +180,20 @@ namespace VfxEditor.AvfxFormat {
         private void DrawControls() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            ImGui.TextDisabled( "Curve editor controls (?)" );
-            UiUtils.Tooltip( "Ctrl + left-click to add a new point\n" +
-                "Left-click to select a point, hold shift to select multiple\n" +
-                "Right-click, drag, then left-click to perform a box selection" );
+            if( Type == CurveType.Angle ) {
+                if( ImGui.RadioButton( "Radians", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = false;
+                    Plugin.Configuration.Save();
+                }
+                ImGui.SameLine();
+                if( ImGui.RadioButton( "Degrees", Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = true;
+                    Plugin.Configuration.Save();
+                }
+            }
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
-                if( !DrawOnce || ImGui.SmallButton( "Fit To Contents" ) ) {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                if( !DrawOnce || ImGui.SmallButton( "Fit" ) ) {
                     ImPlot.SetNextAxesToFit();
                     DrawOnce = true;
                 }
@@ -214,16 +223,29 @@ namespace VfxEditor.AvfxFormat {
                 }
             }
 
-            if( Type == CurveType.Angle ) {
-                if( ImGui.RadioButton( "Radians", !Plugin.Configuration.UseDegreesForAngles ) ) {
-                    Plugin.Configuration.UseDegreesForAngles = false;
-                    Plugin.Configuration.Save();
-                }
+            ImGui.SameLine();
+            UiUtils.IconText( FontAwesomeIcon.InfoCircle, true );
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+
+                var color = StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
+
+                ImGui.TextColored( color, "Ctrl+Left Click" );
                 ImGui.SameLine();
-                if( ImGui.RadioButton( "Degrees", Plugin.Configuration.UseDegreesForAngles ) ) {
-                    Plugin.Configuration.UseDegreesForAngles = true;
-                    Plugin.Configuration.Save();
-                }
+                ImGui.Text( "to add a new point" );
+
+                ImGui.TextColored( color, "Left Click" );
+                ImGui.SameLine();
+                ImGui.Text( "to selected a point" );
+
+                ImGui.Text( "Hold" );
+                ImGui.SameLine();
+                ImGui.TextColored( color, "Shift" );
+                ImGui.SameLine();
+                ImGui.Text( "to select multiple points" );
+
+                ImGui.EndTooltip();
             }
         }
 

@@ -67,7 +67,7 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "CurveEdit" );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     CommandManager.Avfx.Add( new UiCurveEditorCommand( Editor, () => {
