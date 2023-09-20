@@ -486,17 +486,27 @@ namespace VfxEditor.FileManager {
             color.Push( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
             var style = ImGui.GetStyle();
-            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - style.WindowPadding.X * 2 - 8 );
+            var iconSize = UiUtils.GetIconSize( FontAwesomeIcon.Globe ) + 2 * style.FramePadding;
+            var textWidth = ImGui.GetContentRegionAvail().X - ( 2 * style.WindowPadding.X ) - ( 2 * style.ItemSpacing.X ) - iconSize.X;
+            var textSize = ImGui.CalcTextSize( Text, textWidth );
 
-            using var child = ImRaii.Child( "AnimationWarningChild", new Vector2( -1,
-                textSize.Y +
-                style.WindowPadding.Y * 2 +
-                style.ItemSpacing.Y +
-                ImGui.GetTextLineHeightWithSpacing()
-            ), true, ImGuiWindowFlags.NoScrollbar );
+            using var child = ImRaii.Child( "Warning", new Vector2( -1, Math.Max( textSize.Y, iconSize.Y ) + ( 2 * style.WindowPadding.Y ) ), true, ImGuiWindowFlags.NoScrollbar );
+            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
+                ImGui.Columns( 2, "##WarningColumns", false );
+                ImGui.SetColumnWidth( 0, textWidth );
+            }
 
-            ImGui.TextWrapped( Text );
-            if( ImGui.SmallButton( "Guides##Pap" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+            using( var textColor = ImRaii.PushColor( ImGuiCol.Text, 0xFFBDBDFF ) ) {
+                ImGui.TextWrapped( Text );
+            }
+
+            ImGui.NextColumn();
+            ImGui.SetColumnWidth( 1, iconSize.X + ( 2 * style.ItemSpacing.X ) );
+
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( FontAwesomeIcon.Globe.ToIconString() ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
+
+            ImGui.Columns( 1 );
         }
     }
 }

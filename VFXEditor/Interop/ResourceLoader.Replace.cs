@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.Select;
 using VfxEditor.Structs;
 using FileMode = VfxEditor.Structs.FileMode;
 
@@ -85,7 +86,11 @@ namespace VfxEditor.Interop {
 
             var gamePathString = gamePath.ToString();
 
-            if( Plugin.Configuration?.LogAllFiles == true ) PluginLog.Log( "[GetResourceHandler] {0}", gamePathString );
+            if( Plugin.Configuration?.LogAllFiles == true ) {
+                PluginLog.Log( "[GetResourceHandler] {0}", gamePathString );
+                if( SelectDialog.LoggedFiles.Count > 10000 ) SelectDialog.LoggedFiles.Clear();
+                SelectDialog.LoggedFiles.Add( gamePathString );
+            }
 
             var replacedPath = GetReplacePath( gamePathString, out var localPath ) ? localPath : null;
 

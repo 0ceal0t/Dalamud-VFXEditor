@@ -52,7 +52,7 @@ namespace VfxEditor.Select {
 
     public abstract class SelectDialog : GenericDialog {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
-        public static readonly uint TransparentColor = ImGui.GetColorU32( new Vector4( 0, 0, 0, 0 ) );
+        public static readonly List<string> LoggedFiles = new();
 
         public readonly IFileManagerSelect Manager;
         public readonly string Extension;
@@ -65,11 +65,12 @@ namespace VfxEditor.Select {
         protected readonly SelectFavoriteTab FavoritesTab;
         protected readonly SelectPenumbraTab PenumbraTab;
 
-        private string PathInput = "";
+        private string GamePathInput = "";
+        private string LocalPathInput = "";
+        private string LoggedFilesSearch = "";
 
         public SelectDialog( string name, string extension, FileManagerBase manager, bool showLocal ) : this( name, extension, manager, showLocal,
-                showLocal ? ( ( SelectResult result ) => manager.SetSource( result ) ) : ( ( SelectResult result ) => manager.SetReplace( result ) )
-            ) { }
+                showLocal ? ( ( SelectResult result ) => manager.SetSource( result ) ) : ( ( SelectResult result ) => manager.SetReplace( result ) ) ) { }
 
         public SelectDialog( string name, string extension, IFileManagerSelect manager, bool showLocal, Action<SelectResult> action ) : base( name, false, 800, 500 ) {
             Manager = manager;
@@ -90,44 +91,11 @@ namespace VfxEditor.Select {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( $"{Manager.GetId()}/{Name}" );
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                ImGui.InputTextWithHint( "##PathInput", ShowLocal ? "Game or local path" : "Game path", ref PathInput, 255 );
-
-                if( ShowLocal ) {
-                    ImGui.SameLine();
-                    using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                        if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                            FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
-                                if( !ok ) return;
-                                Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
-                            } );
-                        }
-                    }
-                    UiUtils.Tooltip( "Browse for a local file" );
-                }
-
-                ImGui.SameLine();
-                if( ImGui.Button( "SELECT" ) ) {
-                    if( ShowLocal && Path.IsPathRooted( PathInput ) && File.Exists( PathInput ) ) {
-                        Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + PathInput, PathInput ) );
-                        PathInput = "";
-                    }
-                    else {
-                        var cleanedPath = PathInput.Trim().Replace( "\\", "/" );
-                        if( Plugin.DataManager.FileExists( cleanedPath ) ) {
-                            Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedPath, cleanedPath ) );
-                            PathInput = "";
-                        }
-                    }
-                }
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawGameTabs();
+            DrawPaths();
             if( ShowLocal ) PenumbraTab.Draw();
             RecentTab.Draw();
             FavoritesTab.Draw();
@@ -135,7 +103,7 @@ namespace VfxEditor.Select {
 
         // ============= GAME =================
 
-        public void DrawGameTabs() {
+        private void DrawGameTabs() {
             if( GameTabs.Count == 0 ) return;
             using var _ = ImRaii.PushId( "Game" );
 
@@ -148,6 +116,98 @@ namespace VfxEditor.Select {
             if( !tabBar ) return;
 
             foreach( var tab in GameTabs ) tab.Draw();
+        }
+
+        // ======== PATHS =========
+
+        private void DrawPaths() {
+            using var _ = ImRaii.PushId( "Paths" );
+
+            using var tabItem = ImRaii.TabItem( "Paths" );
+            if( !tabItem ) return;
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            ImGui.Text( "Game Path" );
+            using( var __ = ImRaii.PushId( "Game" ) )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.InputTextWithHint( "##Path", $"vfx/common/eff/wp_astro1h.{Extension}", ref GamePathInput, 255 );
+
+                ImGui.SameLine();
+                if( ImGui.Button( "SELECT" ) ) SelectGamePath( GamePathInput );
+            }
+
+            if( ShowLocal ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+                ImGui.Text( "Local Path" );
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+                using var __ = ImRaii.PushId( "Local" );
+
+                ImGui.SetNextItemWidth( UiUtils.GetOffsetInputSize( UiUtils.GetPaddedIconSize( FontAwesomeIcon.FolderOpen ) ) );
+                ImGui.InputTextWithHint( "##Path", $"C:\\Users\\me\\Desktop\\custom.{Extension}", ref LocalPathInput, 255 );
+
+                ImGui.SameLine();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
+                        FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                            if( !ok ) return;
+                            Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
+                        } );
+                    }
+                }
+
+                ImGui.SameLine();
+                if( ImGui.Button( "SELECT" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
+                    Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
+                    LocalPathInput = "";
+                }
+            }
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 20 );
+            ImGui.Separator();
+
+            if( ImGui.Checkbox( "Log all files", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
+            ImGui.SameLine();
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.InputTextWithHint( "##Search", "Search", ref LoggedFilesSearch, 255 );
+
+                ImGui.SameLine();
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) LoggedFiles.Clear();
+            }
+
+
+            using var windowPadding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+
+            if( ImGui.BeginTable( "Table", 1, ImGuiTableFlags.RowBg ) ) {
+                ImGui.TableSetupColumn( "##Column", ImGuiTableColumnFlags.WidthStretch );
+
+                var idx = 0;
+                foreach( var file in LoggedFiles ) {
+                    if( !file.EndsWith( Extension ) ) continue;
+                    if( !string.IsNullOrEmpty( LoggedFilesSearch ) && !file.ToLower().Contains( LoggedFilesSearch.ToLower() ) ) continue;
+
+                    ImGui.TableNextColumn();
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
+                    ImGui.Selectable( $"{file}##{idx}" );
+                    if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) SelectGamePath( file );
+
+                    idx++;
+                }
+
+                ImGui.EndTable();
+            }
+        }
+
+        private void SelectGamePath( string path ) {
+            var cleanedPath = path.Trim().Replace( "\\", "/" );
+            if( Plugin.DataManager.FileExists( cleanedPath ) ) {
+                Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedPath, cleanedPath ) );
+                GamePathInput = "";
+            }
         }
 
         // ======== FAVORITES ======
