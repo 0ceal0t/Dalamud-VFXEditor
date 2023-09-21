@@ -24,9 +24,15 @@ namespace VfxEditor.Ui.Tools {
                     var cleanedPath = ExtractPath.Replace( "\\", "/" );
                     if( Plugin.DataManager.FileExists( cleanedPath ) ) {
                         try {
-                            var ext = cleanedPath.Contains( '.' ) ? cleanedPath.Split( "." )[1] : "bin";
+                            var fileName = cleanedPath.Split( "/" )[^1];
+                            var ext = fileName.Contains( '.' ) ? fileName.Split( "." )[1] : "bin";
+
                             var file = Plugin.DataManager.GetFile( cleanedPath );
-                            UiUtils.WriteBytesDialog( $".{ext}", file.Data, ext );
+                            UiUtils.WriteBytesDialog( $".{ext}",
+                                file.Data,
+                                ext,
+                                fileName.Contains( '.' ) ? fileName.Split( "." )[0] : ""
+                            );
                         }
                         catch( Exception e ) {
                             PluginLog.Error( e, "Could not read file" );

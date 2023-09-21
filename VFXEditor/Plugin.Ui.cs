@@ -58,10 +58,6 @@ namespace VfxEditor {
             using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.BeginMenu( "File" ) ) {
-                ImGui.TextDisabled( "Workspace" );
-                ImGui.SameLine();
-                UiUtils.HelpMarker( "A workspace allows you to save multiple vfx replacements at the same time, as well as any imported textures or item renaming (such as particles or emitters)" );
-
                 if( ImGui.MenuItem( "New" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "Open" ) ) OpenWorkspace();
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();

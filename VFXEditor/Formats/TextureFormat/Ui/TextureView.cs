@@ -68,11 +68,20 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                 if( popup ) {
                     using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
 
-                    if( ImGui.InputInt( ".png Mips", ref Plugin.Configuration.PngMips ) ) Plugin.Configuration.Save();
-                    if( UiUtils.EnumComboBox( ".png Format", ValidPngFormat, Plugin.Configuration.PngFormat, out var newPngFormat ) ) {
+                    if( ImGui.InputInt( "Mips", ref Plugin.Configuration.PngMips ) ) Plugin.Configuration.Save();
+                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                        ImGui.SameLine();
+                    }
+                    ImGui.TextDisabled( "(.png)" );
+
+                    if( UiUtils.EnumComboBox( "Format", ValidPngFormat, Plugin.Configuration.PngFormat, out var newPngFormat ) ) {
                         Plugin.Configuration.PngFormat = newPngFormat;
                         Plugin.Configuration.Save();
                     }
+                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                        ImGui.SameLine();
+                    }
+                    ImGui.TextDisabled( "(.png)" );
 
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
                     ImGui.Separator();

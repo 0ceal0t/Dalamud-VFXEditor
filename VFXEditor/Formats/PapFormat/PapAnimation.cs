@@ -94,7 +94,7 @@ namespace VfxEditor.PapFormat {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
-                if( ImGui.Button( "Export" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb" );
+                if( ImGui.Button( "Export" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb", "ExportedTmb" );
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) {

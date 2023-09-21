@@ -134,7 +134,7 @@ namespace VfxEditor.FileManager {
             File.WriteAllBytes( path, CurrentFile.ToBytes() );
         }
 
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", CurrentFile.ToBytes(), Extension );
+        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", CurrentFile.ToBytes(), Extension, "ExportedFile" );
 
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
