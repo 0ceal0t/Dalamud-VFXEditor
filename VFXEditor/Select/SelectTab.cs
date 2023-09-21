@@ -172,7 +172,7 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            if( Searched == null ) { Searched = [.. Items]; }
+            Searched ??= [.. Items];
 
             var resetScroll = false;
             DrawExtra();
@@ -235,10 +235,10 @@ namespace VfxEditor.Select {
             Icon = null;
             if( iconId <= 0 ) return;
             try {
-                Icon = Plugin.TextureProvider.GetIcon( iconId, IconFlags.None );
+                Icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
             }
             catch( Exception ) {
-                Icon = Plugin.TextureProvider.GetIcon( 0, IconFlags.None );
+                Icon = Dalamud.TextureProvider.GetIcon( 0, IconFlags.None );
             }
         }
 

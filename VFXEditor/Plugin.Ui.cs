@@ -12,10 +12,10 @@ using VfxEditor.Utils;
 
 namespace VfxEditor {
     public unsafe partial class Plugin {
-        public static bool InGpose => PluginInterface.UiBuilder.GposeActive;
-        public static GameObject GposeTarget => Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
-        public static GameObject PlayerObject => InGpose ? GposeTarget : ClientState?.LocalPlayer;
-        public static GameObject TargetObject => InGpose ? GposeTarget : TargetManager?.Target;
+        public static bool InGpose => Dalamud.PluginInterface.UiBuilder.GposeActive;
+        public static GameObject GposeTarget => Dalamud.Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
+        public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
+        public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
         public static readonly Dictionary<string, Modal> Modals = new();
 

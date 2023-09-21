@@ -94,7 +94,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void ImportFinished() {
-            if( Literal.Value >= 0 ) Literal.Value = Literal.Value + Group.PreImportSize;
+            if( Literal.Value >= 0 ) Literal.Value += Group.PreImportSize;
             LinkOnIndexChange();
             Initialize();
         }

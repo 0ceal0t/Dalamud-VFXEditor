@@ -15,17 +15,17 @@ namespace VfxEditor.Interop {
         private readonly ICallGateSubscriber<object> DisposedSubscriber;
 
         public PenumbraIpc() {
-            ApiVersionsSubscriber = Plugin.PluginInterface.GetIpcSubscriber<(int, int)>( "Penumbra.ApiVersions" );
-            InitializedSubscriber = Plugin.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Initialized" );
-            DisposedSubscriber = Plugin.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Disposed" );
+            ApiVersionsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<(int, int)>( "Penumbra.ApiVersions" );
+            InitializedSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Initialized" );
+            DisposedSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Disposed" );
 
-            GetModDirectorySubscriber = Plugin.PluginInterface.GetIpcSubscriber<string>( "Penumbra.GetModDirectory" );
-            GetModsSubscriber = Plugin.PluginInterface.GetIpcSubscriber<IList<(string, string)>>( "Penumbra.GetMods" );
+            GetModDirectorySubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string>( "Penumbra.GetModDirectory" );
+            GetModsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<IList<(string, string)>>( "Penumbra.GetMods" );
 
             InitializedSubscriber.Subscribe( EnablePenumbra );
             DisposedSubscriber.Subscribe( DisablePenumbra );
 
-            if( !Plugin.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
+            if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
             try {
                 ApiVersionsSubscriber.InvokeFunc();
             }

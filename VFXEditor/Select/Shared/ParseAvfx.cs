@@ -40,9 +40,9 @@ namespace VfxEditor.Select.Shared {
 
         public static void ReadFile( string path, out ParseAvfx loaded ) {
             loaded = null;
-            if( Plugin.DataManager.FileExists( path ) ) {
+            if( Dalamud.DataManager.FileExists( path ) ) {
                 try {
-                    loaded = new ParseAvfx( Plugin.DataManager.GetFile( path ) );
+                    loaded = new ParseAvfx( Dalamud.DataManager.GetFile( path ) );
                 }
                 catch( Exception e ) {
                     PluginLog.Error( e, $"Error reading {path}" );
@@ -56,7 +56,7 @@ namespace VfxEditor.Select.Shared {
             var files = new List<FileResource>();
             try {
                 foreach( var path in paths ) {
-                    if( Plugin.DataManager.FileExists( path ) ) files.Add( Plugin.DataManager.GetFile( path ) );
+                    if( Dalamud.DataManager.FileExists( path ) ) files.Add( Dalamud.DataManager.GetFile( path ) );
                 }
                 loaded = new ParseAvfx( files );
             }
@@ -69,7 +69,7 @@ namespace VfxEditor.Select.Shared {
             loaded = [];
             try {
                 foreach( var path in paths ) {
-                    if( Plugin.DataManager.FileExists( path ) ) loaded.Add( new ParseAvfx( Plugin.DataManager.GetFile( path ) ) );
+                    if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( new ParseAvfx( Dalamud.DataManager.GetFile( path ) ) );
                 }
             }
             catch( Exception e ) {

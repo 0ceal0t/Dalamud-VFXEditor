@@ -10,10 +10,10 @@ namespace VfxEditor.Select.Vfx.Housing {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var indoorSheet = Plugin.DataManager.GetExcelSheet<HousingFurniture>().Where( x => x.ModelKey > 0 );
+            var indoorSheet = Dalamud.DataManager.GetExcelSheet<HousingFurniture>().Where( x => x.ModelKey > 0 );
             foreach( var item in indoorSheet ) Items.Add( new HousingRow( item ) );
 
-            var outdoorSheet = Plugin.DataManager.GetExcelSheet<HousingYardObject>().Where( x => x.ModelKey > 0 );
+            var outdoorSheet = Dalamud.DataManager.GetExcelSheet<HousingYardObject>().Where( x => x.ModelKey > 0 );
             foreach( var item in outdoorSheet ) Items.Add( new HousingRow( item ) );
         }
 

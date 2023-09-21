@@ -22,7 +22,7 @@ namespace VfxEditor.Tracker {
     }
 
     public unsafe class TrackerManager {
-        private static bool WatchingCutscene => Plugin.ClientState != null && Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
+        private static bool WatchingCutscene => Dalamud.ClientState != null && Dalamud.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Dalamud.Condition[ConditionFlag.WatchingCutscene78];
 
         private static readonly ClosenessComparator Comparator = new();
 
@@ -93,7 +93,7 @@ namespace VfxEditor.Tracker {
                 idx++;
             }
 
-            var actorTable = Plugin.Objects;
+            var actorTable = Dalamud.Objects;
             if( actorTable == null ) return;
             foreach( var actor in actorTable ) {
                 if( actor == null ) continue;

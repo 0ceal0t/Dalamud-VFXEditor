@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.CompleteJournal>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.CompleteJournal>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) Items.Add( new JournalCutsceneRow( item ) );
         }
 

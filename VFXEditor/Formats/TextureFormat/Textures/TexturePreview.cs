@@ -18,7 +18,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Width = file.Header.Width;
             Height = file.Header.Height;
             Depth = file.Header.Depth;
-            Wrap = Plugin.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
+            Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
         }
 
         public override void DrawImage() {
@@ -45,7 +45,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
 
-        protected override TextureDataFile GetRawData() => Plugin.DataManager.GetFile<TextureDataFile>( GamePath );
+        protected override TextureDataFile GetRawData() => Dalamud.DataManager.GetFile<TextureDataFile>( GamePath );
 
         public void Dispose() {
             if( Wrap?.ImGuiHandle == null ) return;

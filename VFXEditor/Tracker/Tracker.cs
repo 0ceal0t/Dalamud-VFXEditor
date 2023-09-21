@@ -26,7 +26,7 @@ namespace VfxEditor.Tracker {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( !Enabled ? FontAwesomeIcon.Eye.ToIconString() : FontAwesomeIcon.Times.ToIconString(), size ) ) {
                 Toggle();
-                Plugin.PluginInterface.UiBuilder.DisableCutsceneUiHide = Plugin.Tracker.AnyEnabled;
+                Dalamud.PluginInterface.UiBuilder.DisableCutsceneUiHide = Plugin.Tracker.AnyEnabled;
             }
         }
     }

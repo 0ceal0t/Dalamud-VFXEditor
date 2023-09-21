@@ -75,10 +75,10 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
 
-            if( !Plugin.DataManager.FileExists( gamePath ) ) return null;
+            if( !Dalamud.DataManager.FileExists( gamePath ) ) return null;
 
             try {
-                var data = Plugin.DataManager.GetFile<TextureDataFile>( gamePath );
+                var data = Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
                 if( !data.ValidFormat ) {
                     PluginLog.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
                     return null;

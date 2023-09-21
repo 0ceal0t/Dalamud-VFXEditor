@@ -1,12 +1,6 @@
-using Dalamud.Data;
 using Dalamud.Game;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
-using Dalamud.Plugin.Services;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
@@ -31,22 +25,9 @@ using VfxEditor.Tracker;
 using VfxEditor.Ui.Export;
 using VfxEditor.Ui.Tools;
 using VfxEditor.UldFormat;
-using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
 
 namespace VfxEditor {
     public unsafe partial class Plugin : IDalamudPlugin {
-        public static DalamudPluginInterface PluginInterface { get; private set; }
-        public static ClientState ClientState { get; private set; }
-        public static Framework Framework { get; private set; }
-        public static Condition Condition { get; private set; }
-        public static DalamudCommandManager CommandManager { get; private set; }
-        public static ObjectTable Objects { get; private set; }
-        public static SigScanner SigScanner { get; private set; }
-        public static DataManager DataManager { get; private set; }
-        public static TargetManager TargetManager { get; private set; }
-        public static KeyState KeyState { get; private set; }
-        public static ITextureProvider TextureProvider { get; private set; }
-
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
@@ -88,39 +69,17 @@ namespace VfxEditor {
 
         private static bool ClearKeyState = false;
 
-        public Plugin(
-                DalamudPluginInterface pluginInterface,
-                ClientState clientState,
-                DalamudCommandManager commandManager,
-                Framework framework,
-                Condition condition,
-                ObjectTable objects,
-                SigScanner sigScanner,
-                DataManager dataManager,
-                TargetManager targetManager,
-                KeyState keyState,
-                ITextureProvider textureProvider
-         ) {
-            PluginInterface = pluginInterface;
-            ClientState = clientState;
-            Condition = condition;
-            CommandManager = commandManager;
-            Objects = objects;
-            SigScanner = sigScanner;
-            DataManager = dataManager;
-            Framework = framework;
-            TargetManager = targetManager;
-            KeyState = keyState;
-            TextureProvider = textureProvider;
+        public Plugin( DalamudPluginInterface pluginInterface ) {
+            pluginInterface.Create<Dalamud>();
 
-            CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
+            Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
-            RootLocation = PluginInterface.AssemblyLocation.DirectoryName;
+            RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
 
-            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
 
             TextureManager.Setup();
@@ -144,12 +103,12 @@ namespace VfxEditor {
             Tracker = new TrackerManager();
             LibraryManager = new LibraryManager();
 
-            FileDialogManager.Initialize( PluginInterface );
+            FileDialogManager.Initialize( Dalamud.PluginInterface );
 
-            Framework.Update += FrameworkOnUpdate;
-            PluginInterface.UiBuilder.Draw += Draw;
-            PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
-            PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
+            Dalamud.Framework.Update += FrameworkOnUpdate;
+            Dalamud.PluginInterface.UiBuilder.Draw += Draw;
+            Dalamud.PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
         }
 
         public static void CheckClearKeyState() {
@@ -159,7 +118,7 @@ namespace VfxEditor {
         private void FrameworkOnUpdate( Framework framework ) {
             VfxSpawn.Tick();
             KeybindConfiguration.UpdateState();
-            if( ClearKeyState ) KeyState.ClearAll();
+            if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
         }
 
@@ -174,37 +133,25 @@ namespace VfxEditor {
         }
 
         public void Dispose() {
-            Framework.Update -= FrameworkOnUpdate;
-            PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
-            PluginInterface.UiBuilder.Draw -= Draw;
-            PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUi;
+            Dalamud.Framework.Update -= FrameworkOnUpdate;
+            Dalamud.PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
+            Dalamud.PluginInterface.UiBuilder.Draw -= Draw;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUi;
 
             ImPlot.DestroyContext();
 
-            CommandManager.RemoveHandler( CommandName );
+            Dalamud.CommandManager.RemoveHandler( CommandName );
             PenumbraIpc?.Dispose();
 
             ResourceLoader?.Dispose();
             ResourceLoader = null;
 
             CopyManager.DisposeAll();
-            VfxEditor.CommandManager.DisposeAll();
+            CommandManager.DisposeAll();
 
             TextureManager.BreakDown();
             Managers.ForEach( x => x?.Dispose() );
-            TextureManager = null;
-            AvfxManager = null;
-            TmbManager = null;
-            PapManager = null;
-            ScdManager = null;
-            EidManager = null;
-            UldManager = null;
-            PhybManager = null;
-            SklbManager = null;
-            AtchManager = null;
-
             DirectXManager?.Dispose();
-            DirectXManager = null;
 
             Modals.Clear();
 

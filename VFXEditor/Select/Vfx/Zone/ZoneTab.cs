@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Vfx.Zone {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
 

@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Vfx.Mount {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) Items.Add( new MountRow( item ) );
         }
 
@@ -26,9 +26,9 @@ namespace VfxEditor.Select.Vfx.Mount {
             loaded = null;
             var imcPath = item.GetImcPath();
 
-            if( !Plugin.DataManager.FileExists( imcPath ) ) return;
+            if( !Dalamud.DataManager.FileExists( imcPath ) ) return;
             try {
-                var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
+                var file = Dalamud.DataManager.GetFile<ImcFile>( imcPath );
                 var vfxIds = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
                 var vfxId = vfxIds.Count > 0 ? vfxIds[0] : 0;
 

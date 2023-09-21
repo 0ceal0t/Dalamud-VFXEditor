@@ -5,7 +5,7 @@ namespace VfxEditor.Select.Scd.Orchestrion {
         public readonly string Path;
 
         public OrchestionRowSelected( OrchestrionRow orchestrion ) {
-            var pathRow = Plugin.DataManager.GetExcelSheet<OrchestrionPath>().GetRow( ( uint )orchestrion.RowId );
+            var pathRow = Dalamud.DataManager.GetExcelSheet<OrchestrionPath>().GetRow( ( uint )orchestrion.RowId );
             Path = pathRow.File.ToString();
         }
     }

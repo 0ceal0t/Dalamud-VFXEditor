@@ -132,7 +132,7 @@ namespace VfxEditor {
         public Configuration() : base( "Settings", false, 300, 200 ) { }
 
         public void Setup() {
-            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             FileDialogManager.ImagePreview = FilepickerImagePreview;
 
             // Move old configurations over to new
@@ -179,8 +179,8 @@ namespace VfxEditor {
         }
 
         public void Save() {
-            Plugin.PluginInterface.SavePluginConfig( this );
-            Plugin.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Dalamud.PluginInterface.SavePluginConfig( this );
+            Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
         }
 
         // =================

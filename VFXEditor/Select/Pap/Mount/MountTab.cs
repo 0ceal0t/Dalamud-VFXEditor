@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Pap.Mount {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) Items.Add( new MountRow( item ) );
         }
 

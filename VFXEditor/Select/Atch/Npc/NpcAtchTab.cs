@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Atch.Npc {
         }
 
         public override void LoadData() {
-            var file = Plugin.DataManager.GetFile( "chara/xls/attachoffset/attachoffsetexist.waoe" );
+            var file = Dalamud.DataManager.GetFile( "chara/xls/attachoffset/attachoffsetexist.waoe" );
             using var ms = new MemoryStream( file.Data );
             using var reader = new BinaryReader( ms );
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Atch.Npc {
             var nameToString = NpcTab.NameToString;
 
             var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectDataUtils.BnpcPath ) );
-            var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
+            var battleNpcSheet = Dalamud.DataManager.GetExcelSheet<BNpcBase>();
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
 

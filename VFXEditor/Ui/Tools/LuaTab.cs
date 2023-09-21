@@ -21,7 +21,7 @@ namespace VfxEditor.Ui.Tools {
             var objectAddress = IntPtr.Zero;
             var objectName = "";
 
-            foreach( var item in Plugin.Objects ) {
+            foreach( var item in Dalamud.Objects ) {
                 if( item.ObjectId == ObjectId ) {
                     objectAddress = item.Address;
                     objectName = GetObjectName( item );
@@ -63,7 +63,7 @@ namespace VfxEditor.Ui.Tools {
             using var combo = ImRaii.Combo( "##Combo", objectName );
             if( !combo ) return;
 
-            foreach( var item in Plugin.Objects ) {
+            foreach( var item in Dalamud.Objects ) {
                 if( item.ObjectKind != ObjectKind.Player &&
                     item.ObjectKind != ObjectKind.MountType &&
                     item.ObjectKind != ObjectKind.EventNpc &&

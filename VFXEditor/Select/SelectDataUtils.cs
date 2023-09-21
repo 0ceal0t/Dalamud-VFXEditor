@@ -117,7 +117,7 @@ namespace VfxEditor.Select {
         public static readonly int HairEntries = 100;
 
         public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) =>
-            dict.Where( x => Plugin.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
+            dict.Where( x => Dalamud.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 

@@ -74,7 +74,7 @@ namespace VfxEditor.Spawn {
             if( string.IsNullOrEmpty( path ) ) return 0;
             var monster = path.Contains( "mon_sp" );
             var trimmed = path.Replace( ".tmb", "" );
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.ActionTimeline>()
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.ActionTimeline>()
                 .Where( x => !string.IsNullOrEmpty( x.Key ) );
 
             foreach( var item in sheet ) {

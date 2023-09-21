@@ -27,16 +27,16 @@ namespace VfxEditor.Select.Pap.IdlePose {
             var idlePath = item.GetPap( "idle" );
             var movePathA = item.GetPap( "move_a" );
             var movePathB = item.GetPap( "move_b" );
-            if( Plugin.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
-            if( Plugin.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
-            if( Plugin.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
+            if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
+            if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
+            if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
             // Poses
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i );
                 var loop = item.GetLoopPap( i );
-                if( Plugin.DataManager.FileExists( start ) && Plugin.DataManager.FileExists( loop ) ) {
+                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     poses.Add( $"Pose {i}", new Dictionary<string, string>() {
                         { "Start", start },
                         { "Loop", loop }

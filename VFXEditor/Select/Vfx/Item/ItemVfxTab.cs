@@ -20,9 +20,9 @@ namespace VfxEditor.Select.Vfx.Item {
         public override void LoadSelection( ItemRow item, out ItemRowSelected loaded ) {
             loaded = null;
             var imcPath = item.GetImcPath();
-            if( !Plugin.DataManager.FileExists( imcPath ) ) return;
+            if( !Dalamud.DataManager.FileExists( imcPath ) ) return;
             try {
-                var file = Plugin.DataManager.GetFile<ImcFile>( imcPath );
+                var file = Dalamud.DataManager.GetFile<ImcFile>( imcPath );
                 var vfxIds = file.GetParts().Select( x => x.Variants[item.GetVariant() - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
 
                 loaded = new() {

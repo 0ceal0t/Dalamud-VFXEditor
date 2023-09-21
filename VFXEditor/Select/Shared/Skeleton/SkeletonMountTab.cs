@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
             SelectUiUtils.DrawIcon( Icon );
 
             var path = Selected.GetSkeletonPath( Prefix, Extension );
-            if( Plugin.DataManager.FileExists( path ) ) {
+            if( Dalamud.DataManager.FileExists( path ) ) {
                 DrawPath( "Path", path, Selected.Name );
             }
         }

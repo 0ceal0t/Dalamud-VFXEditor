@@ -47,7 +47,7 @@ namespace VfxEditor.Select.Scd.Voice {
                 }
             }
 
-            loaded = possiblePaths.Where( Plugin.DataManager.FileExists ).ToList();
+            loaded = possiblePaths.Where( Dalamud.DataManager.FileExists ).ToList();
         }
 
         // ===== DRAWING ======

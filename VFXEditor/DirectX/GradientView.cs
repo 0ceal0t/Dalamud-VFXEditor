@@ -51,10 +51,10 @@ namespace VfxEditor.DirectX {
                 VShader = new VertexShader( Device, VertexShaderByteCode );
                 PShader = new PixelShader( Device, PixelShaderByteCode );
                 Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-                Layout = new InputLayout( Device, Signature, new[] {
+                Layout = new InputLayout( Device, Signature, [
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-                } );
+                ] );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error compiling shaders" );

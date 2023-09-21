@@ -12,13 +12,13 @@ namespace VfxEditor.Select.Vfx.Gimmick {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var territories = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
+            var territories = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
             var suffixToName = new Dictionary<string, string>();
             foreach( var zone in territories ) {
                 suffixToName[zone.Name.ToString()] = zone.PlaceName.Value?.Name.ToString();
             }
 
-            var sheet = Plugin.DataManager.GetExcelSheet<ActionTimeline>().Where( x => x.Key.ToString().Contains( "gimmick" ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<ActionTimeline>().Where( x => x.Key.ToString().Contains( "gimmick" ) );
             foreach( var item in sheet ) {
                 Items.Add( new GimmickRow( item, suffixToName ) );
             }

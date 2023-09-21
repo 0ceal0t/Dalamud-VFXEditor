@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Scd.Common {
                 new( lineIdx++, "sound/strm/gaya_village_01.scd", "Gaya_Village_01", 0 ),
             } );
 
-            foreach( var line in Plugin.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
+            foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
                 var name = line.Name.ToString();
                 var path = name.StartsWith( "/" ) ? $"sound{line.Name.ToString().ToLower()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLower()}.scd";
                 Items.Add( new( lineIdx++, path, name, 0 ) );

@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Scd.Bgm {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<BGM>().Where( x => !string.IsNullOrEmpty( x.File ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<BGM>().Where( x => !string.IsNullOrEmpty( x.File ) );
             foreach( var item in sheet ) Items.Add( new BgmRow( item ) );
         }
 

@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Scd.Zone {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.BGM != 0 && x.BGM != 1001 && x.BGM != 1000 );
+            var sheet = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.BGM != 0 && x.BGM != 1001 && x.BGM != 1000 );
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
 
@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Scd.Zone {
             };
             if( item.BgmId <= 50000 ) return;
 
-            foreach( var bgmSwitch in Plugin.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
+            foreach( var bgmSwitch in Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
                 var questName = bgmSwitch.Quest.Value?.Name.ToString();
                 var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM );
                 loaded.Quests[string.IsNullOrEmpty( questName ) ? item.Name : questName] = situation;

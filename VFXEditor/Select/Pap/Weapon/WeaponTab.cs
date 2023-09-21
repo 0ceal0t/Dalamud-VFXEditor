@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Pap.Weapon {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var row in Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
                 if( row.EquipSlotCategory.Value?.MainHand == 1 || row.EquipSlotCategory.Value?.OffHand == 1 ) {
                     var weapon = new WeaponRow( row );
                     if( weapon.HasModel ) Items.Add( weapon );
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Pap.Weapon {
 
         public override void LoadSelection( WeaponRow item, out string loaded ) {
             loaded = item.GetPapPath();
-            if( !Plugin.DataManager.FileExists( loaded ) ) loaded = "";
+            if( !Dalamud.DataManager.FileExists( loaded ) ) loaded = "";
         }
 
         // ===== DRAWING ======

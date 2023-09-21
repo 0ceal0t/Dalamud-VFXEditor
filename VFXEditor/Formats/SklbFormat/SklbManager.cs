@@ -37,8 +37,8 @@ namespace VfxEditor.SklbFormat {
                 }
             }
 
-            if( Plugin.DataManager.FileExists( path ) ) {
-                skeleton = Plugin.DataManager.GetFile<SimpleSklb>( path );
+            if( Dalamud.DataManager.FileExists( path ) ) {
+                skeleton = Dalamud.DataManager.GetFile<SimpleSklb>( path );
                 return true;
             }
 

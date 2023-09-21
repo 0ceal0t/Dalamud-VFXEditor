@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader : IDisposable {
         public ResourceLoader() {
-            var scanner = Plugin.SigScanner;
+            var scanner = Dalamud.SigScanner;
 
             ReadSqpackHook = Hook<ReadSqpackPrototype>.FromAddress( scanner.ScanText( Constants.ReadSqpackSig ), ReadSqpackHandler );
             GetResourceSyncHook = Hook<GetResourceSyncPrototype>.FromAddress( scanner.ScanText( Constants.GetResourceSyncSig ), GetResourceSyncHandler );

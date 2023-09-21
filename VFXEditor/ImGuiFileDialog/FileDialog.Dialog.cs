@@ -533,14 +533,14 @@ namespace ImGuiFileDialog {
         private static IconColorItem GetIcon( string ext ) {
             if( ICON_MAP == null ) {
                 ICON_MAP = [];
-                AddToIconMap( new[] { "mp4", "gif", "mov", "avi" }, ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
-                AddToIconMap( new[] { "pdf" }, ( char )FontAwesomeIcon.FilePdf, MISC_TEXT_COLOR );
-                AddToIconMap( new[] { "png", "jpg", "jpeg", "tiff", "dds", "atex" }, ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );
-                AddToIconMap( new[] { "cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java" }, ( char )FontAwesomeIcon.FileCode, CODE_TEXT_COLOR );
-                AddToIconMap( new[] { "txt", "md" }, ( char )FontAwesomeIcon.FileAlt, STANDARD_TEXT_COLOR );
-                AddToIconMap( new[] { "zip", "7z", "gz", "tar" }, ( char )FontAwesomeIcon.FileArchive, MISC_TEXT_COLOR );
-                AddToIconMap( new[] { "mp3", "m4a", "ogg", "wav" }, ( char )FontAwesomeIcon.FileAudio, MISC_TEXT_COLOR );
-                AddToIconMap( new[] { "csv" }, ( char )FontAwesomeIcon.FileCsv, MISC_TEXT_COLOR );
+                AddToIconMap( ["mp4", "gif", "mov", "avi"], ( char )FontAwesomeIcon.FileVideo, MISC_TEXT_COLOR );
+                AddToIconMap( ["pdf"], ( char )FontAwesomeIcon.FilePdf, MISC_TEXT_COLOR );
+                AddToIconMap( ["png", "jpg", "jpeg", "tiff", "dds", "atex"], ( char )FontAwesomeIcon.FileImage, IMAGE_TEXT_COLOR );
+                AddToIconMap( ["cs", "json", "cpp", "h", "py", "xml", "yaml", "js", "html", "css", "ts", "java"], ( char )FontAwesomeIcon.FileCode, CODE_TEXT_COLOR );
+                AddToIconMap( ["txt", "md"], ( char )FontAwesomeIcon.FileAlt, STANDARD_TEXT_COLOR );
+                AddToIconMap( ["zip", "7z", "gz", "tar"], ( char )FontAwesomeIcon.FileArchive, MISC_TEXT_COLOR );
+                AddToIconMap( ["mp3", "m4a", "ogg", "wav"], ( char )FontAwesomeIcon.FileAudio, MISC_TEXT_COLOR );
+                AddToIconMap( ["csv"], ( char )FontAwesomeIcon.FileCsv, MISC_TEXT_COLOR );
             }
 
             return ICON_MAP.TryGetValue( ext.ToLower(), out var icon ) ? icon : new IconColorItem {

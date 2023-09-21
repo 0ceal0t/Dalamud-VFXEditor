@@ -190,7 +190,7 @@ namespace VfxEditor.Formats.AtchFormat {
         }
 
         private void DrawCurrentWeapons() {
-            if( Plugin.ClientState == null || Plugin.PlayerObject == null ) return;
+            if( Dalamud.ClientState == null || Plugin.PlayerObject == null ) return;
 
             var weapons = new List<string>();
 

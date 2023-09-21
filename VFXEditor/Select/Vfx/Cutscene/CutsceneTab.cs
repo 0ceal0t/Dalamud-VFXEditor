@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Vfx.Cutscene {
         public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-Cutscene", SelectResultType.GameCutscene ) { }
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
             foreach( var item in sheet ) Items.Add( new CutsceneRow( item ) );
         }
 

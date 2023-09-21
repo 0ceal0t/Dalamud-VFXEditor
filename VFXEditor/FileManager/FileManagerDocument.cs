@@ -77,7 +77,7 @@ namespace VfxEditor.FileManager {
         }
 
         protected void LoadGame( string gamePath ) {
-            if( !Plugin.DataManager.FileExists( gamePath ) ) {
+            if( !Dalamud.DataManager.FileExists( gamePath ) ) {
                 PluginLog.Error( $"Game file: [{gamePath}] does not exist" );
                 return;
             }
@@ -88,7 +88,7 @@ namespace VfxEditor.FileManager {
             }
 
             try {
-                var file = Plugin.DataManager.GetFile( gamePath );
+                var file = Dalamud.DataManager.GetFile( gamePath );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
                 CurrentFile?.Dispose();

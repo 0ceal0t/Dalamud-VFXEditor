@@ -15,7 +15,7 @@ namespace VfxEditor.Interop {
         private PlaySoundDelegate PlaySoundPath;
 
         public void PlaySound( string path, int idx ) {
-            if( string.IsNullOrEmpty( path ) || idx < 0 || !Plugin.DataManager.FileExists( path ) ) return;
+            if( string.IsNullOrEmpty( path ) || idx < 0 || !Dalamud.DataManager.FileExists( path ) ) return;
 
             var bytes = Encoding.ASCII.GetBytes( path );
             var ptr = Marshal.AllocHGlobal( bytes.Length + 1 );

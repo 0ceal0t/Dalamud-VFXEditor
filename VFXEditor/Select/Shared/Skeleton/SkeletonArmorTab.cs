@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var row in Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
                 if( row.EquipSlotCategory.Value?.Head == 1 || row.EquipSlotCategory.Value?.Body == 1 ) {
                     var armor = new ArmorRow( row );
                     if( armor.HasModel ) Items.Add( armor );

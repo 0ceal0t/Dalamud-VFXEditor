@@ -16,7 +16,7 @@ namespace VfxEditor.DirectX {
 
         public DirectXManager() {
             var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );
-            Device = Plugin.PluginInterface.UiBuilder.Device;
+            Device = Dalamud.PluginInterface.UiBuilder.Device;
             Ctx = Device.ImmediateContext;
             ModelPreview = new( Device, Ctx, shaderPath );
             GradientView = new( Device, Ctx, shaderPath );

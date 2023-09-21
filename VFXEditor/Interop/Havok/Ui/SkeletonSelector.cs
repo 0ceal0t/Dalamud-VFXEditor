@@ -15,7 +15,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
         public SkeletonSelector( string sklbPath, Action<SimpleSklb> onUpdate ) {
             OnUpdate = onUpdate;
-            if( !string.IsNullOrEmpty( sklbPath ) && Plugin.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
+            if( !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
         }
 
         public void Init() {

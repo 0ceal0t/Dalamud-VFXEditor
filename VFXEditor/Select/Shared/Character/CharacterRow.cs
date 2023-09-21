@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Shared.Character {
 
         public List<int> GetHairIds() {
             var ret = new List<int>();
-            var sheet = Plugin.DataManager.GetExcelSheet<CharaMakeCustomize>();
+            var sheet = Dalamud.DataManager.GetExcelSheet<CharaMakeCustomize>();
             for( var hair = HairOffset; hair < HairOffset + SelectDataUtils.HairEntries; hair++ ) {
                 var hairRow = sheet.GetRow( ( uint )hair );
                 var hairId = ( int )hairRow.FeatureID;

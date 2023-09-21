@@ -14,7 +14,7 @@ namespace VfxEditor.Ui.Tools {
             // Kinda scuffed, but it (mostly) works
             using var child = ImRaii.Child( "LoadedChild" );
 
-            foreach( var item in Plugin.Objects ) {
+            foreach( var item in Dalamud.Objects ) {
                 var gameObject = ( GameObject* )item.Address;
                 if( gameObject == null ) continue;
 

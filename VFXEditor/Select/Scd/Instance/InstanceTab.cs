@@ -13,12 +13,12 @@ namespace VfxEditor.Select.Scd.Instance {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content > 0 && x.ContentLinkType == 1 );
+            var sheet = Dalamud.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content > 0 && x.ContentLinkType == 1 );
             foreach( var item in sheet ) Items.Add( new InstanceRow( item ) );
         }
 
         public override void LoadSelection( InstanceRow item, out InstanceRowSelected loaded ) {
-            var instance = Plugin.DataManager.GetExcelSheet<InstanceContent>().GetRow( item.ContentRowId );
+            var instance = Dalamud.DataManager.GetExcelSheet<InstanceContent>().GetRow( item.ContentRowId );
             loaded = new() {
                 Situation = BgmQuestTab.GetBgmSituation( ( ushort )instance.BGM.Row )
             };

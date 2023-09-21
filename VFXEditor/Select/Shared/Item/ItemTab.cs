@@ -5,7 +5,7 @@ namespace VfxEditor.Select.Shared.Item {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var row in Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
                 if( row.EquipSlotCategory.Value?.MainHand == 1 || row.EquipSlotCategory.Value?.OffHand == 1 ) {
                     var weapon = new WeaponRow( row );
                     if( weapon.HasModel ) Items.Add( weapon );

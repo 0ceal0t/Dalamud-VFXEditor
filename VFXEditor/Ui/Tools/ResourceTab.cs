@@ -22,7 +22,7 @@ namespace VfxEditor.Ui.Tools {
 
         // Adapted from https://github.com/xivdev/Penumbra/blob/7e7e74a5346857328ee161d571c1f1ead6524e9a/Penumbra/UI/MenuTabs/TabResourceManager.cs
         public void Draw() {
-            var resourceHandler = *( ResourceManager** )Plugin.SigScanner.GetStaticAddressFromSig( Constants.ResourceManagerSig );
+            var resourceHandler = *( ResourceManager** )Dalamud.SigScanner.GetStaticAddressFromSig( Constants.ResourceManagerSig );
 
             if( resourceHandler == null ) return;
 

@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tex.Status {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
 
             foreach( var item in sheet ) Items.Add( new( item ) );
         }
@@ -20,11 +20,11 @@ namespace VfxEditor.Select.Tex.Status {
         protected override void DrawSelected() {
             SelectUiUtils.DrawIcon( Icon );
 
-            var path = Plugin.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
-            var hdPath = Plugin.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
+            var path = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
+            var hdPath = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
 
             DrawPath( "Icon", path, "", $"{Selected.Name}" );
-            if( Plugin.DataManager.FileExists( hdPath ) ) {
+            if( Dalamud.DataManager.FileExists( hdPath ) ) {
                 DrawPath( "HD Icon", hdPath, "", $"{Selected.Name} HD" );
             }
         }

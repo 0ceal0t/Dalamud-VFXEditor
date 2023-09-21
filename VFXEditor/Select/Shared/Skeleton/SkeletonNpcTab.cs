@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Shared.Skeleton {
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
             loaded = [];
             var path = Selected.GetSkeletonPath( Prefix, Extension );
-            if( Plugin.DataManager.FileExists( path ) ) loaded.Add( path );
+            if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( path );
         }
     }
 }

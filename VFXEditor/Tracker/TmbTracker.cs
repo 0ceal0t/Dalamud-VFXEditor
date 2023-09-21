@@ -36,9 +36,9 @@ namespace VfxEditor.Tracker {
 
                 var getGameObjectIdx = ( ( delegate* unmanaged< IntPtr, int >** )timeline )[0][Constants.GetGameObjectIdxVfunc];
                 var idx = getGameObjectIdx( timeline );
-                if( idx < 0 || idx >= Plugin.Objects.Length ) return;
+                if( idx < 0 || idx >= Dalamud.Objects.Length ) return;
 
-                var obj = ( GameObject* )Plugin.Objects.GetObjectAddress( idx );
+                var obj = ( GameObject* )Dalamud.Objects.GetObjectAddress( idx );
                 if( obj == null ) return;
 
                 var action = Marshal.ReadIntPtr( timeline + Constants.TimelineToActionOffset );

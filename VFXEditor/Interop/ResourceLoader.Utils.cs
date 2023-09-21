@@ -47,7 +47,7 @@ namespace VfxEditor.Interop {
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null ) return;
             CurrentRedrawState = RedrawState.Start;
-            Plugin.Framework.Update += OnUpdateEvent;
+            Dalamud.Framework.Update += OnUpdateEvent;
         }
 
         private void OnUpdateEvent( object framework ) {
@@ -72,7 +72,7 @@ namespace VfxEditor.Interop {
                 case RedrawState.Visible:
                 default:
                     CurrentRedrawState = RedrawState.None;
-                    Plugin.Framework.Update -= OnUpdateEvent;
+                    Dalamud.Framework.Update -= OnUpdateEvent;
                     break;
             }
         }

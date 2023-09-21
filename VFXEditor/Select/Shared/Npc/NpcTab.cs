@@ -34,7 +34,7 @@ namespace VfxEditor.Select.Shared.Npc {
             // https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
             var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectDataUtils.BnpcPath ) );
-            var battleNpcSheet = Plugin.DataManager.GetExcelSheet<BNpcBase>();
+            var battleNpcSheet = Dalamud.DataManager.GetExcelSheet<BNpcBase>();
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
 
@@ -65,7 +65,7 @@ namespace VfxEditor.Select.Shared.Npc {
 
         // ====== UTILS ===========
 
-        public static Dictionary<uint, string> NameToString => Plugin.DataManager.GetExcelSheet<BNpcName>()
+        public static Dictionary<uint, string> NameToString => Dalamud.DataManager.GetExcelSheet<BNpcName>()
                 .Where( x => !string.IsNullOrEmpty( x.Singular ) )
                 .ToDictionary(
                     x => x.RowId,
