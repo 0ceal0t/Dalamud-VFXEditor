@@ -31,7 +31,7 @@ namespace VfxEditor {
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }
-        public static TrackerManager Tracker { get; private set; }
+        public static TrackerManager TrackerManager { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
         public static TexToolsDialog TexToolsDialog { get; private set; }
         public static LibraryManager LibraryManager { get; private set; }
@@ -82,7 +82,6 @@ namespace VfxEditor {
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
 
-            TextureManager.Setup();
             TextureManager = new();
             TmbManager = new();
             AvfxManager = new();
@@ -94,14 +93,14 @@ namespace VfxEditor {
             SklbManager = new();
             AtchManager = new();
 
-            ToolsDialog = new ToolsDialog();
-            PenumbraIpc = new PenumbraIpc();
-            PenumbraDialog = new PenumbraDialog();
-            TexToolsDialog = new TexToolsDialog();
-            ResourceLoader = new ResourceLoader();
-            DirectXManager = new DirectXManager();
-            Tracker = new TrackerManager();
-            LibraryManager = new LibraryManager();
+            ToolsDialog = new();
+            PenumbraIpc = new();
+            PenumbraDialog = new();
+            TexToolsDialog = new();
+            ResourceLoader = new();
+            DirectXManager = new();
+            TrackerManager = new();
+            LibraryManager = new();
 
             FileDialogManager.Initialize( Dalamud.PluginInterface );
 
@@ -149,13 +148,12 @@ namespace VfxEditor {
             CopyManager.DisposeAll();
             CommandManager.DisposeAll();
 
-            TextureManager.BreakDown();
             Managers.ForEach( x => x?.Dispose() );
             DirectXManager?.Dispose();
 
             Modals.Clear();
 
-            VfxSpawn.Remove();
+            VfxSpawn.Dispose();
             TmbSpawn.Dispose();
             FileDialogManager.Dispose();
         }

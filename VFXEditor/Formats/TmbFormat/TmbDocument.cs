@@ -46,7 +46,7 @@ namespace VfxEditor.TmbFormat {
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemSpacing.Y, 4 ) ) ) {
                 ImGui.SameLine();
             }
-            Plugin.Tracker.Tmb.DrawEye( new Vector2( 28, height ) );
+            Plugin.TrackerManager.Tmb.DrawEye( new Vector2( 28, height ) );
         }
 
         protected override void DrawBody() {

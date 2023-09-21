@@ -11,7 +11,7 @@ namespace VfxEditor.Interop {
 
         private IntPtr PlayActionDetour( IntPtr timeline, IntPtr a2, char a3, IntPtr a4 ) {
             var ret = PlayActionHook.Original( timeline, a2, a3, a4 );
-            Plugin.Tracker?.Tmb.AddAction( timeline );
+            Plugin.TrackerManager?.Tmb.AddAction( timeline );
             return ret;
         }
     }

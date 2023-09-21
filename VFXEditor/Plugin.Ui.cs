@@ -28,7 +28,7 @@ namespace VfxEditor {
             TexToolsDialog.Draw();
             PenumbraDialog.Draw();
             ToolsDialog.Draw();
-            Tracker.Draw();
+            TrackerManager.Draw();
             Configuration.Draw();
             LibraryManager.Draw();
 

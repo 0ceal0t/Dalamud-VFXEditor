@@ -34,7 +34,7 @@ namespace VfxEditor.SklbFormat {
 
         protected override void DrawExtraColumn() {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 126 - 28 - ImGui.GetStyle().FramePadding.X );
-            Plugin.Tracker.Sklb.DrawEye( new Vector2( 28, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
+            Plugin.TrackerManager.Sklb.DrawEye( new Vector2( 28, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
         }
     }
 }

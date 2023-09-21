@@ -47,7 +47,7 @@ namespace VfxEditor.Interop {
 
         private IntPtr StaticVfxNewHandler( string path, string pool ) {
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            Plugin.Tracker?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
+            Plugin.TrackerManager?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {path} {vfx:X8}" );
 
@@ -56,13 +56,13 @@ namespace VfxEditor.Interop {
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
             if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
-            Plugin.Tracker?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
+            Plugin.TrackerManager?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
         private IntPtr ActorVfxNewHandler( string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfx = ActorVfxCreateHook.Original( path, a2, a3, a4, a5, a6, a7 );
-            Plugin.Tracker?.Vfx.AddActor( ( VfxStruct* )vfx, path );
+            Plugin.TrackerManager?.Vfx.AddActor( ( VfxStruct* )vfx, path );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {path} {vfx:X8}" );
 
@@ -71,7 +71,7 @@ namespace VfxEditor.Interop {
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
             if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
-            Plugin.Tracker?.Vfx.RemoveActor( ( VfxStruct* )vfx );
+            Plugin.TrackerManager?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 

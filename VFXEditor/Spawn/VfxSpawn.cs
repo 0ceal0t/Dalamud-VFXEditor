@@ -74,7 +74,6 @@ namespace VfxEditor.Spawn {
             else if( LoopType == SpawnType.Target ) OnTarget( LoopPath, true );
         }
 
-        // Manually removing
         public static void Remove() {
             if( Vfx != null ) {
                 Vfx?.Remove(); // this also calls InteropRemoved()
@@ -99,5 +98,7 @@ namespace VfxEditor.Spawn {
                 Removed = false;
             }
         }
+
+        public static void Dispose() => Remove();
     }
 }

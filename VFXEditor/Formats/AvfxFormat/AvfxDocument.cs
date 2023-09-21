@@ -93,7 +93,7 @@ namespace VfxEditor.AvfxFormat {
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemSpacing.Y, 4 ) ) ) {
                 ImGui.SameLine();
             }
-            Plugin.Tracker.Vfx.DrawEye( new Vector2( 28, height ) );
+            Plugin.TrackerManager.Vfx.DrawEye( new Vector2( 28, height ) );
 
             framePadding.Pop(); // so it doesn't mess with the popups
 
