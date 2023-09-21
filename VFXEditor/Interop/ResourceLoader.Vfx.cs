@@ -1,7 +1,6 @@
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using System;
-using System.Text;
 using VfxEditor.Spawn;
 using VfxEditor.Structs.Vfx;
 
@@ -21,16 +20,12 @@ namespace VfxEditor.Interop {
         public StaticVfxRemoveDelegate StaticVfxRemove;
 
         // ======= STATIC HOOKS ========
-        public delegate IntPtr StaticVfxCreateHookDelegate( char* path, char* pool );
+        public Hook<StaticVfxCreateDelegate> StaticVfxCreateHook { get; private set; }
 
-        public Hook<StaticVfxCreateHookDelegate> StaticVfxCreateHook { get; private set; }
-
-        public delegate IntPtr StaticVfxRemoveHookDelegate( IntPtr vfx );
-
-        public Hook<StaticVfxRemoveHookDelegate> StaticVfxRemoveHook { get; private set; }
+        public Hook<StaticVfxRemoveDelegate> StaticVfxRemoveHook { get; private set; }
 
         // ======== ACTOR =============
-        public delegate IntPtr ActorVfxCreateDelegate( string a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public delegate IntPtr ActorVfxCreateDelegate( string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
 
         public ActorVfxCreateDelegate ActorVfxCreate;
 
@@ -39,27 +34,22 @@ namespace VfxEditor.Interop {
         public ActorVfxRemoveDelegate ActorVfxRemove;
 
         // ======== ACTOR HOOKS =============
-        public delegate IntPtr ActorVfxCreateHookDelegate( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 );
+        public Hook<ActorVfxCreateDelegate> ActorVfxCreateHook { get; private set; }
 
-        public Hook<ActorVfxCreateHookDelegate> ActorVfxCreateHook { get; private set; }
-
-        public delegate IntPtr ActorVfxRemoveHookDelegate( IntPtr vfx, char a2 );
-
-        public Hook<ActorVfxRemoveHookDelegate> ActorVfxRemoveHook { get; private set; }
+        public Hook<ActorVfxRemoveDelegate> ActorVfxRemoveHook { get; private set; }
 
         // ======= TRIGGERS =============
-        public delegate IntPtr VfxUseTriggerHookDelete( IntPtr vfx, uint triggerId );
+        public delegate IntPtr VfxUseTriggerDelete( IntPtr vfx, uint triggerId );
 
-        public Hook<VfxUseTriggerHookDelete> VfxUseTriggerHook { get; private set; }
+        public Hook<VfxUseTriggerDelete> VfxUseTriggerHook { get; private set; }
 
         // ==============================
 
-        private IntPtr StaticVfxNewHandler( char* path, char* pool ) {
-            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( path ), Encoding.ASCII, 256 );
+        private IntPtr StaticVfxNewHandler( string path, string pool ) {
             var vfx = StaticVfxCreateHook.Original( path, pool );
-            Plugin.Tracker?.Vfx.AddStatic( ( VfxStruct* )vfx, vfxPath );
+            Plugin.Tracker?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
 
-            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {vfxPath} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {path} {vfx:X8}" );
 
             return vfx;
         }
@@ -70,12 +60,11 @@ namespace VfxEditor.Interop {
             return StaticVfxRemoveHook.Original( vfx );
         }
 
-        private IntPtr ActorVfxNewHandler( char* a1, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
-            var vfxPath = Dalamud.Memory.MemoryHelper.ReadString( new IntPtr( a1 ), Encoding.ASCII, 256 );
-            var vfx = ActorVfxCreateHook.Original( a1, a2, a3, a4, a5, a6, a7 );
-            Plugin.Tracker?.Vfx.AddActor( ( VfxStruct* )vfx, vfxPath );
+        private IntPtr ActorVfxNewHandler( string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
+            var vfx = ActorVfxCreateHook.Original( path, a2, a3, a4, a5, a6, a7 );
+            Plugin.Tracker?.Vfx.AddActor( ( VfxStruct* )vfx, path );
 
-            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {vfxPath} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {path} {vfx:X8}" );
 
             return vfx;
         }

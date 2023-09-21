@@ -63,17 +63,17 @@ namespace VfxEditor.Utils.Gltf {
             color *= 255;
             normal *= 128;
             tangent *= 128;
-            ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
+            ret.Position = [pos.X, pos.Y, pos.Z, 1];
 
             var normalAdjusted = Vector3.Normalize( new Vector3( normal.X, normal.Y, normal.Z ) ) * 127f;
             var tangentAdjusted = Vector3.Normalize( new Vector3( tangent.X, tangent.Y, tangent.Z ) ) * 127f;
 
-            ret.Normal = new int[] { ( int )normalAdjusted.X, ( int )normalAdjusted.Y, ( int )normalAdjusted.Z, -1 };
-            ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
-            ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
+            ret.Normal = [( int )normalAdjusted.X, ( int )normalAdjusted.Y, ( int )normalAdjusted.Z, -1];
+            ret.Tangent = [( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1];
+            ret.Color = [( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W];
 
-            ret.Uv1 = new float[] { uv1.X, uv1.Y, uv1.X, uv1.Y };
-            ret.Uv2 = new float[] { uv1.X, uv1.Y, uv2.X, uv2.Y };
+            ret.Uv1 = [uv1.X, uv1.Y, uv1.X, uv1.Y];
+            ret.Uv2 = [uv1.X, uv1.Y, uv2.X, uv2.Y];
 
             return ret;
         }
@@ -84,15 +84,14 @@ namespace VfxEditor.Utils.Gltf {
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
             PluginLog.Log( "Importing GLTF model from: " + localPath );
 
-            if( model.LogicalMeshes.Count > 0 ) {
-                var mesh = model.LogicalMeshes[0];
-                if( mesh.Primitives.Count > 0 ) {
-                    var primitive = mesh.Primitives[0];
+            var count = 0;
 
+            foreach( var mesh in model.LogicalMeshes ) {
+                foreach( var primitive in mesh.Primitives ) {
                     var properties = primitive.VertexAccessors;
                     var hasColor = properties.ContainsKey( "COLOR_0" );
                     var hasUv2 = properties.ContainsKey( "TEXCOORD_1" );
-                    PluginLog.Log( $"Color:{hasColor} UV2:{hasUv2}" );
+                    PluginLog.Log( $"Color: {hasColor} UV2: {hasUv2}" );
 
                     var positions = primitive.GetVertices( "POSITION" ).AsVector3Array();
                     var normals = primitive.GetVertices( "NORMAL" ).AsVector3Array();
@@ -109,13 +108,15 @@ namespace VfxEditor.Utils.Gltf {
 
                         vertexesOut.Add( GetAvfxVertex( positions[i], normals[i], tangents[i], color, tex1s[i], uv2 ) );
                     }
-                    foreach( var (A, B, C) in triangles ) {
-                        indexesOut.Add( new AvfxIndex( A, B, C ) );
+                    foreach( var (i1, i2, i3) in triangles ) {
+                        indexesOut.Add( new AvfxIndex( count + i1, count + i2, count + i3 ) );
                     }
-                    return true;
+
+                    count += positions.Count;
                 }
             }
-            return false;
+
+            return count > 0;
         }
 
         private struct GltfVertex {

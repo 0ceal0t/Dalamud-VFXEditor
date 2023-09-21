@@ -32,7 +32,7 @@ namespace VfxEditor.Interop {
 
         private GetFileManagerDelegate GetFileManager;
 
-        private GetFileManagerDelegate GetFileManagerAlt;
+        private GetFileManagerDelegate GetFileManager2;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
         public delegate byte DecRefDelegate( IntPtr resource );
@@ -108,7 +108,7 @@ namespace VfxEditor.Interop {
 
             if( gameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( gameResource, papIds, papTypes );
-                RequestFile( GetFileManagerAlt(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
+                RequestFile( GetFileManager2(), gameResource + Constants.GameResourceOffset, gameResource, 1 );
                 InteropUtils.WritePapIds( gameResource, papIds, papTypes );
             }
 
@@ -119,7 +119,7 @@ namespace VfxEditor.Interop {
 
             if( localGameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( localGameResource, papIds, papTypes );
-                RequestFile( GetFileManagerAlt(), localGameResource + Constants.GameResourceOffset, localGameResource, 1 );
+                RequestFile( GetFileManager2(), localGameResource + Constants.GameResourceOffset, localGameResource, 1 );
                 InteropUtils.WritePapIds( localGameResource, papIds, papTypes );
             }
         }

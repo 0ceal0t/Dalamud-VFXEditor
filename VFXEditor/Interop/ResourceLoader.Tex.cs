@@ -11,9 +11,9 @@ namespace VfxEditor.Interop {
 
         // ======= CRC =========
 
-        public delegate IntPtr CheckFileStatePrototype( IntPtr unk1, ulong crc64 );
+        public delegate IntPtr CheckFileStateDelegate( IntPtr unk1, ulong crc64 );
 
-        public Hook<CheckFileStatePrototype> CheckFileStateHook { get; private set; }
+        public Hook<CheckFileStateDelegate> CheckFileStateHook { get; private set; }
 
         // ====== LOAD TEX ==========
 
@@ -21,9 +21,9 @@ namespace VfxEditor.Interop {
 
         public LoadTexFileLocalDelegate LoadTexFileLocal { get; private set; }
 
-        public delegate byte LoadTexFileExternPrototype( ResourceHandle* handle, int unk1, IntPtr unk2, bool unk3, IntPtr unk4 );
+        public delegate byte LoadTexFileExternDelegate( ResourceHandle* handle, int unk1, IntPtr unk2, bool unk3, IntPtr unk4 );
 
-        public Hook<LoadTexFileExternPrototype> LoadTexFileExternHook { get; private set; }
+        public Hook<LoadTexFileExternDelegate> LoadTexFileExternHook { get; private set; }
 
         private byte LoadTexFileExternDetour( ResourceHandle* resourceHandle, int unk1, IntPtr unk2, bool unk3, IntPtr ptr )
             => ptr.Equals( CustomFileFlag )
