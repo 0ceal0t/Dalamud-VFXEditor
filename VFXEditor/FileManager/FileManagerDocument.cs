@@ -264,8 +264,7 @@ namespace VfxEditor.FileManager {
             var bottomRight = pos + new Vector2( width, height * 1.5f + spacing - 1 );
             var bottomLeft = new Vector2( topLeft.X, bottomRight.Y );
 
-            var mousePos = ImGui.GetMousePos();
-            var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && UiUtils.Contains( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ), mousePos );
+            var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && ImGui.IsMouseHoveringRect( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ) );
 
             var color = hovered ?
                 ImGui.ColorConvertFloat4ToU32( UiUtils.YELLOW_COLOR ) :

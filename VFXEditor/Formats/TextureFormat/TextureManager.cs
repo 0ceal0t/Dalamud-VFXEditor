@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.TextureFormat {
         private readonly ManagerConfiguration Configuration;
 
         public TextureManager() : base( "Textures", false, 800, 500 ) {
-            Setup();
+            LoadLibrary();
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }
@@ -129,7 +129,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public void ToDefault() => Dispose();
 
         public void Dispose() {
-            BreakDown();
+            FreeLibrary();
             Textures.ForEach( x => x.Dispose() );
             Previews.Values.ToList().ForEach( x => x.Dispose() );
             Textures.Clear();
@@ -139,7 +139,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // =======================
 
-        private static void Setup() {
+        private static void LoadLibrary() {
             // Set paths manually since TexImpNet can be dumb sometimes
             // Using the 32-bit version in all cases because net6, I guess
             var runtimeRoot = Path.Combine( Plugin.RootLocation, "runtimes" );
@@ -165,7 +165,7 @@ namespace VfxEditor.Formats.TextureFormat {
             PluginLog.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
         }
 
-        private static void BreakDown() {
+        private static void FreeLibrary() {
             TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
             TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
             PluginLog.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );

@@ -7,7 +7,6 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Interop;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Tools {
     public unsafe class ResourceTab {
@@ -96,7 +95,7 @@ namespace VfxEditor.Ui.Tools {
             ImGui.TableSetupColumn( "Hash", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Ptr", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Path", ImGuiTableColumnFlags.WidthFixed,
-                UiUtils.GetWindowContentRegionWidth() - 300 * ImGuiHelpers.GlobalScale );
+                ( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X ) - 300 * ImGuiHelpers.GlobalScale );
             ImGui.TableSetupColumn( "Refs", ImGuiTableColumnFlags.WidthFixed, 30 * ImGuiHelpers.GlobalScale );
             ImGui.TableHeadersRow();
 

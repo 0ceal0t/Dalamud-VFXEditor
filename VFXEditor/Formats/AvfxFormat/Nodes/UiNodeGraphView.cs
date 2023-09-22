@@ -103,10 +103,10 @@ namespace VfxEditor.AvfxFormat {
                 drawList.AddText( pos + TextOffset, TextColor, TrimText( node.GetText() ) );
 
                 var buttonPos = pos + new Vector2( BoxSize.X - 22, TextOffset.Y + 3 );
-                var buttonOver = UiUtils.MouseOver( canvasTopLeft, canvasBottomRight ) && UiUtils.MouseOver( buttonPos, buttonPos + new Vector2( 20 ) );
+                var buttonOver = ImGui.IsMouseHoveringRect( canvasTopLeft, canvasBottomRight ) && ImGui.IsMouseHoveringRect( buttonPos, buttonPos + new Vector2( 20 ) );
 
                 drawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, FontAwesomeIcon.Share.ToIconString() );
-                if( buttonOver && UiUtils.MouseClicked() && ImGui.IsItemFocused() ) {
+                if( buttonOver && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemFocused() ) {
                     Plugin.AvfxManager.CurrentFile.SelectItem( node ); // navigate to node
                 }
 
