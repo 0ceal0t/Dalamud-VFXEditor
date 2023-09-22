@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace VfxEditor.Utils {
@@ -59,10 +60,7 @@ namespace VfxEditor.Utils {
 
         }
 
-        public static VerifiedStatus CompareFiles( BinaryReader originalReader, byte[] data, out int diffIdx ) => CompareFiles( originalReader, data, -1, out diffIdx );
-
-        public static VerifiedStatus CompareFiles( BinaryReader originalReader, byte[] data, int minIdx, out int diffIdx ) {
-            diffIdx = -1;
+        public static VerifiedStatus Verify( BinaryReader originalReader, byte[] data, List<(int, int)> ignore ) {
             var ret = true;
             var original = GetOriginal( originalReader );
 
@@ -72,8 +70,7 @@ namespace VfxEditor.Utils {
             }
 
             for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
-                if( idx > minIdx && data[idx] != original[idx] ) {
-                    diffIdx = idx;
+                if( data[idx] != original[idx] && ( ignore == null || !ignore.Any( x => idx >= x.Item1 && idx < x.Item2 ) ) ) {
                     PluginLog.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
                     return VerifiedStatus.ERROR;
                 }

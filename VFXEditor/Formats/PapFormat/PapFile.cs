@@ -78,7 +78,7 @@ namespace VfxEditor.PapFormat {
                 EmptyHavok = true;
             }
 
-            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
 
         public override void Update() {

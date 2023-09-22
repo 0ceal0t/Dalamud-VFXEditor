@@ -97,7 +97,7 @@ namespace VfxEditor.UldFormat {
             Components.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
             Widgets.ForEach( x => x.Nodes.ForEach( n => n.InitData( reader ) ) );
 
-            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             TextureSplitView = new( "Texture", Textures, true,
                 ( UldTexture item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );

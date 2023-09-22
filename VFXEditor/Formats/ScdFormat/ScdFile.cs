@@ -63,7 +63,7 @@ namespace VfxEditor.ScdFormat {
                 Sounds.Add( newSound );
             }
 
-            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
             if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );

@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Interface;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -90,24 +91,38 @@ namespace VfxEditor {
             ImGui.Separator();
 
             // Manually specify the order since it's different than the load order
-            DrawManagerMenu( AvfxManager, currentManager );
-            DrawManagerMenu( TmbManager, currentManager );
-            DrawManagerMenu( PapManager, currentManager );
-            DrawManagerMenu( ScdManager, currentManager );
-            DrawManagerMenu( UldManager, currentManager );
-            DrawManagerMenu( PhybManager, currentManager );
-            DrawManagerMenu( SklbManager, currentManager );
+            var managers = new IFileManager[] {
+                AvfxManager,
+                TmbManager,
+                PapManager,
+                ScdManager,
+                UldManager,
+                PhybManager,
+                SklbManager,
+                EidManager,
+                AtchManager
+            };
 
-            if( ImGui.BeginMenu( "Attach" ) ) {
-                DrawManagerMenu( EidManager, currentManager );
-                DrawManagerMenu( AtchManager, currentManager );
-                ImGui.EndMenu();
+            var dropdown = false;
+
+            for( var i = 0; i < managers.Length; i++ ) {
+                var manager = managers[i];
+
+                if( !dropdown && i < ( managers.Length - 1 ) ) { // no need for a dropdown for the last one
+                    var width = ImGui.CalcTextSize( manager.GetId() ).X + ( 2 * ImGui.GetStyle().ItemSpacing.X ) + 10;
+
+                    if( width > ImGui.GetContentRegionAvail().X ) {
+                        dropdown = true;
+                        using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                        if( !ImGui.BeginMenu( FontAwesomeIcon.CaretDown.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                    }
+                }
+
+                using var disabled = ImRaii.Disabled( manager == currentManager );
+                if( ImGui.MenuItem( manager.GetId() ) ) manager.Show();
             }
-        }
 
-        private static void DrawManagerMenu( IFileManager manager, IFileManager currentManager ) {
-            using var disabled = ImRaii.Disabled( manager == currentManager );
-            if( ImGui.MenuItem( manager.GetId() ) ) manager.Show();
+            if( dropdown ) ImGui.EndMenu();
         }
 
         public static void AddModal( Modal modal ) {

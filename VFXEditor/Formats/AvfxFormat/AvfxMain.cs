@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -270,9 +271,7 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "Avfx" );
             using var child = ImRaii.Child( "Child" );
 
-            ImGui.BeginDisabled();
-            ImGui.TextWrapped( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
-            ImGui.EndDisabled();
+            ImGui.TextDisabled( $"Version {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
 
             if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
                 RevisedValuesScaleX.Value = ScaleCombined;
@@ -280,8 +279,10 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleZ.Value = ScaleCombined;
             };
 
+            ImGui.SameLine();
+            UiUtils.HelpMarker( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
+
             DrawItems( Display );
-            ImGui.Text( $"VFX Version: {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
         }
     }
 }

@@ -49,7 +49,7 @@ namespace VfxEditor.PhybFormat {
             reader.BaseStream.Seek( simOffset, SeekOrigin.Begin );
             Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
 
-            if( verify ) Verified = FileUtils.CompareFiles( reader, ToBytes(), out var _ );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }

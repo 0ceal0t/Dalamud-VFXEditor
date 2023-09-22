@@ -4,27 +4,27 @@
     "net7.0-windows7.0": {
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[2.1.10, )",
-        "resolved": "2.1.10",
-        "contentHash": "S6NrvvOnLgT4GDdgwuKVJjbFo+8ZEj+JsEYk9ojjOR/MMfv1dIFpT8aRJQfI24rtDcw1uF+GnSSMN4WW1yt7fw=="
+        "requested": "[2.1.11, )",
+        "resolved": "2.1.11",
+        "contentHash": "9qlAWoRRTiL/geAvuwR/g6Bcbrd/bJJgVnB/RurBiyKs6srsP0bvpoo8IK+Eg8EA6jWeM6/YJWs66w4FIAzqPw=="
       },
       "HelixToolkit": {
         "type": "Direct",
-        "requested": "[2.23.0, )",
-        "resolved": "2.23.0",
-        "contentHash": "qjNdihQ3KuOpZo7KciAHd3NvHVQ6pMy00ymf3irs/0srTiZBa1+iCgTJkF9reSr9sCybFUKOTw7L7BCJC2dHMg==",
+        "requested": "[2.24.0, )",
+        "resolved": "2.24.0",
+        "contentHash": "fABt16fDRPg63EjHfjy9r9XXl61tk9M5KqkHpuVtRWkMl67nmZSCKsqJsh9OK+iE4IYxBk4yFFuk7CT0fzXaVQ==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "HelixToolkit.SharpDX.Core": {
         "type": "Direct",
-        "requested": "[2.23.0, )",
-        "resolved": "2.23.0",
-        "contentHash": "IS1n9XhsdTZ78TG3qVn0ABzrAW29Yjr9fhdJekMPmvphnhnlCWbRAeRoH8Ngtt7Xv3SZnZRV4i4CRvwpUaBicA==",
+        "requested": "[2.24.0, )",
+        "resolved": "2.24.0",
+        "contentHash": "zLtvCgxhlzLEjHwBSYCc/juCdpofFrAQmibbrTbm3+XaVopZ7Zd6GB1lKXtxXml2XZavMr4WZJd0VoPzLD/6Cw==",
         "dependencies": {
           "Cyotek.Drawing.BitmapFont": "2.0.0",
-          "HelixToolkit": "[2.23.0]",
+          "HelixToolkit": "[2.24.0]",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "SharpDX": "4.2.0",
           "SharpDX.D3DCompiler": "4.2.0",
@@ -49,9 +49,9 @@
       },
       "NAudio.Core": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "0iowfmolibU4KxjaC/s7lox/BeDg76UVvXtCuCzRiNpylVndqsxXxp+bVWFrpv0KzQDIKLxZrnDmYENlAI0u9g=="
+        "requested": "[2.2.1, )",
+        "resolved": "2.2.1",
+        "contentHash": "GgkdP6K/7FqXFo7uHvoqGZTJvW4z8g2IffhOO4JHaLzKCdDOUEzVKtveoZkCuUX8eV2HAINqi7VFqlFndrnz/g=="
       },
       "NAudio.Vorbis": {
         "type": "Direct",
@@ -65,21 +65,21 @@
       },
       "NAudio.Wasapi": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "Zp/8l79aYQEu7/HfzXWVpqyIwRUPgsvCj/Qx+pR6ykJxvwjqOoUfMiEG9US1wW4d7PEzT5ZBIL+cp90t6HNNiw==",
+        "requested": "[2.2.1, )",
+        "resolved": "2.2.1",
+        "contentHash": "lFfXoqacZZe0WqNChJgGYI+XV/n/61LzPHT3C1CJp4khoxeo2sziyX5wzNYWeCMNbsWxFvT3b3iXeY1UYjBhZw==",
         "dependencies": {
-          "NAudio.Core": "2.1.0"
+          "NAudio.Core": "2.2.1"
         }
       },
       "NAudio.WinMM": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "lUU5C+XNzKhFUIEafA/nJpbtjksFtbUd033fs27KeHlOM0r6rQFF3l75dqxg+rWkGu81MfkBbYrNpH9p8qmtBA==",
+        "requested": "[2.2.1, )",
+        "resolved": "2.2.1",
+        "contentHash": "xFHRFwH4x6aq3IxRbewvO33ugJRvZFEOfO62i7uQJRUNW2cnu6BeBTHUS0JD5KBucZbHZaYqxQG8dwZ47ezQuQ==",
         "dependencies": {
           "Microsoft.Win32.Registry": "4.7.0",
-          "NAudio.Core": "2.1.0"
+          "NAudio.Core": "2.2.1"
         }
       },
       "SharpDX.D3DCompiler": {
@@ -94,11 +94,11 @@
       },
       "SharpGLTF.Toolkit": {
         "type": "Direct",
-        "requested": "[1.0.0-alpha0027, )",
-        "resolved": "1.0.0-alpha0027",
-        "contentHash": "7CCcP/trfk4idVjnCkpCqloMdVCk581fr4XCrGu98NwGF/pAHlMxN/Z9jFcKfiNs7p8xBjj5ZbQBXMKUKSzwRA==",
+        "requested": "[1.0.0-alpha0030, )",
+        "resolved": "1.0.0-alpha0030",
+        "contentHash": "nsoJWAFhXgEky9bVCY0zLeZVDx+S88u7VjvuebvMb6dJiNyFOGF6FrrMHiJe+x5pcVBxxlc3VoXliBF7r/EqYA==",
         "dependencies": {
-          "SharpGLTF.Core": "1.0.0-alpha0027"
+          "SharpGLTF.Runtime": "1.0.0-alpha0030"
         }
       },
       "TeximpNet": {
@@ -364,8 +364,16 @@
       },
       "SharpGLTF.Core": {
         "type": "Transitive",
-        "resolved": "1.0.0-alpha0027",
-        "contentHash": "RPv9c2ctq0PoZRMT/WXrZ07C5wWPXJw8AO23xdZWC4VofSMP1D4MKqUSs7Y/es8pczR4Nsk54wMpWvgaWXbriQ=="
+        "resolved": "1.0.0-alpha0030",
+        "contentHash": "HVL6PcrM0H/uEk96nRZfhtPeYvSFGHnni3g1aIckot2IWVp0jLMH5KWgaWfsatEz4Yds3XcdSLUWmJZivDBUPA=="
+      },
+      "SharpGLTF.Runtime": {
+        "type": "Transitive",
+        "resolved": "1.0.0-alpha0030",
+        "contentHash": "Ysn+fyj9EVXj6mfG0BmzSTBGNi/QvcnTrMd54dBMOlI/TsMRvnOY3JjTn0MpeH2CgHXX4qogzlDt4m+rb3n4Og==",
+        "dependencies": {
+          "SharpGLTF.Core": "1.0.0-alpha0030"
+        }
       },
       "System.AppContext": {
         "type": "Transitive",
