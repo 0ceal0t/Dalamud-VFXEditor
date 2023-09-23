@@ -33,11 +33,12 @@ namespace VfxEditor.AvfxFormat {
                 Cycle = true;
                 return;
             }
-            if( Graph.ContainsKey( node ) ) { // already defined
-                if( level > Graph[node].Level ) {
-                    PushBack( node, level - Graph[node].Level );
+            if( Graph.TryGetValue( node, out var value ) ) { // already defined
+                if( level > value.Level ) {
+                    PushBack( node, level - value.Level );
                 }
-                Graph[node].Level = Math.Max( level, Graph[node].Level );
+
+                value.Level = Math.Max( level, value.Level );
             }
             else {
                 visited.Add( node );

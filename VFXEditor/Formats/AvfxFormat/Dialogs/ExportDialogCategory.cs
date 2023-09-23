@@ -2,7 +2,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
     public abstract class ExportDialogCategory {

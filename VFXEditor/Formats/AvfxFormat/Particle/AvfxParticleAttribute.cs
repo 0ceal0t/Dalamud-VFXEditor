@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxParticleAttribute : AvfxOptional {
         public readonly AvfxParticle Particle;
-        public readonly List<UiNodeSelect> NodeSelects = new();
+        public readonly List<AvfxNodeSelect> NodeSelects = new();
         public readonly List<AvfxItem> DisplayTabs;
         public readonly UiDisplayList Display;
 
@@ -28,6 +28,6 @@ namespace VfxEditor.AvfxFormat {
 
         protected void Unassign() => CommandManager.Avfx.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, false ) );
 
-        public abstract List<UiNodeSelect> GetNodeSelects();
+        public abstract List<AvfxNodeSelect> GetNodeSelects();
     }
 }

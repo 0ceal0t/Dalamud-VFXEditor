@@ -3,7 +3,6 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;

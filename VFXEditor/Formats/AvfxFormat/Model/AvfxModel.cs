@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.AvfxFormat.Model;
-using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 using static VfxEditor.DirectX.ModelPreview;

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -116,7 +115,7 @@ namespace VfxEditor.AvfxFormat {
                 var item = view.Read( reader, pos.Size );
                 if( !string.IsNullOrEmpty( pos.Renamed ) ) item.Renamed = pos.Renamed;
                 group.AddAndUpdate( item ); // triggers Idx update as well
-                command.Add( new UiNodeViewAddCommand<T>( view, group, item ) );
+                command.Add( new AvfxNodeViewAddCommand<T>( view, group, item ) );
             }
         }
     }

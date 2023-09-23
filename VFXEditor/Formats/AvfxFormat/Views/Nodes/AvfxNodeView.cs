@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -51,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
 
                     ImGui.SameLine();
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new UiNodeViewRemoveCommand<T>( view, group, selected ) );
+                        CommandManager.Avfx.Add( new AvfxNodeViewRemoveCommand<T>( view, group, selected ) );
                     }
                 }
             }

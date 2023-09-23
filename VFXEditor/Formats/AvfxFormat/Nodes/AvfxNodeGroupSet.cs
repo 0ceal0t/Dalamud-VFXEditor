@@ -1,7 +1,7 @@
-using VfxEditor.Ui.Nodes;
+using System.Collections.Generic;
 
-namespace VfxEditor.AvfxFormat.Nodes {
-    public class AvfxNodeGroupSet : NodeGroupSet {
+namespace VfxEditor.AvfxFormat {
+    public class AvfxNodeGroupSet {
         public const uint BinderColor = 0xFF5C8A2B;
         public const uint EmitterColor = 0xFF335E9E;
         public const uint ModelColor = 0xFF302B7D;
@@ -20,6 +20,8 @@ namespace VfxEditor.AvfxFormat.Nodes {
         public readonly NodeGroup<AvfxTimeline> Timelines;
         public readonly NodeGroup<AvfxScheduler> Schedulers;
 
+        private readonly List<AvfxNodeGroup> AllGroups = new();
+
         public AvfxNodeGroupSet( AvfxMain main ) {
             Effectors = new NodeGroup<AvfxEffector>( main.Effectors );
             Emitters = new NodeGroup<AvfxEmitter>( main.Emitters );
@@ -30,7 +32,7 @@ namespace VfxEditor.AvfxFormat.Nodes {
             Timelines = new NodeGroup<AvfxTimeline>( main.Timelines );
             Schedulers = new NodeGroup<AvfxScheduler>( main.Schedulers );
 
-            AllGroups.AddRange( new NodeGroup[] {
+            AllGroups.AddRange( new AvfxNodeGroup[] {
                 Schedulers,
                 Timelines,
                 Emitters,
@@ -41,5 +43,23 @@ namespace VfxEditor.AvfxFormat.Nodes {
                 Models
             } );
         }
+
+        public void Initialize() => AllGroups.ForEach( group => group.Initialize() );
+
+        public Dictionary<string, string> GetRenamingMap() {
+            Dictionary<string, string> ret = [];
+            AllGroups.ForEach( group => group.GetRenamingMap( ret ) );
+            return ret;
+        }
+
+        public void ReadRenamingMap( Dictionary<string, string> renamingMap ) {
+            AllGroups.ForEach( group => group.ReadRenamingMap( renamingMap ) );
+        }
+
+        public void PreImport( bool hasDependencies ) => AllGroups.ForEach( group => group.PreImport( hasDependencies ) );
+
+        public void PostImport() => AllGroups.ForEach( group => group.PostImport() );
+
+        public void Dispose() => AllGroups.ForEach( group => group.Dispose() );
     }
 }

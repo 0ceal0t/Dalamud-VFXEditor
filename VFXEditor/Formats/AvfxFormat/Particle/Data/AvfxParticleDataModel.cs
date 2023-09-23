@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
 
-        public readonly UiNodeSelectList<AvfxModel> ModelSelect;
+        public readonly AvfxNodeSelectList<AvfxModel> ModelSelect;
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
             ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( ModelSelect = new UiNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            Display.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
             Display.Add( ModelNumberRandomValue );
             Display.Add( ModelNumberRandomType );
             Display.Add( ModelNumberRandomInterval );

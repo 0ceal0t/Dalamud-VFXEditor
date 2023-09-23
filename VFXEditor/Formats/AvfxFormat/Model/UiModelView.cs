@@ -1,8 +1,7 @@
 using System.IO;
-using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiModelView : UiNodeSplitView<AvfxModel> {
+    public class UiModelView : AvfxNodeSplitView<AvfxModel> {
         public UiModelView( AvfxFile file, NodeGroup<AvfxModel> group ) : base( file, group, "Model", true, true, "default_model.vfxedit2" ) { }
 
         public override void OnSelect( AvfxModel item ) => item.OnSelect();

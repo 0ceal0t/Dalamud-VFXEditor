@@ -229,9 +229,9 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Simple Animation";
 
-        public override List<UiNodeSelect> GetNodeSelects() => new() {
-            new UiNodeSelect<AvfxModel>( Particle, "Injection Model", Particle.NodeGroups.Models, InjectionModelIdx ),
-            new UiNodeSelect<AvfxModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
+        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+            new AvfxNodeSelect<AvfxModel>( Particle, "Injection Model", Particle.NodeGroups.Models, InjectionModelIdx ),
+            new AvfxNodeSelect<AvfxModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
         };
     }
 }

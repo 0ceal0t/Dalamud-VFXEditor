@@ -1,37 +1,32 @@
-using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiItemSplitViewAddCommand<T> : ICommand where T : class, IIndexUiItem {
-        private readonly UiItemSplitView<T> View;
+    public class AvfxItemSplitViewRemoveCommand<T> : ICommand where T : class, IIndexUiItem {
+        private readonly AvfxItemSplitView<T> View;
         private readonly List<T> Group;
+        private readonly T Item;
         private int Idx;
-        private T Item;
 
-        public UiItemSplitViewAddCommand( UiItemSplitView<T> view, List<T> group ) {
+        public AvfxItemSplitViewRemoveCommand( AvfxItemSplitView<T> view, List<T> group, T item ) {
             View = view;
             Group = group;
+            Item = item;
         }
 
         public void Execute() {
-            Idx = Group.Count;
-            Item = View.CreateNewAvfx();
-            Add();
+            Idx = Group.IndexOf( Item );
+            Redo();
         }
 
-        public void Redo() => Add();
-
-        public void Undo() {
-            if( Item == null ) return;
+        public void Redo() {
             Group.Remove( Item );
             View.Disable( Item );
             View.UpdateIdx();
             View.ClearSelected();
         }
 
-        private void Add() {
-            if( Item == null ) return;
+        public void Undo() {
             Group.Insert( Idx, Item );
             View.Enable( Item );
             View.UpdateIdx();

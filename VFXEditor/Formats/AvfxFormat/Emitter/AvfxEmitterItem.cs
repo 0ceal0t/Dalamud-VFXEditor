@@ -39,8 +39,8 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public UiNodeSelect<AvfxParticle> ParticleSelect;
-        public UiNodeSelect<AvfxEmitter> EmitterSelect;
+        public AvfxNodeSelect<AvfxParticle> ParticleSelect;
+        public AvfxNodeSelect<AvfxEmitter> EmitterSelect;
 
         private readonly List<IUiItem> Display;
         private readonly List<IUiItem> CoordOptionsDisplay;
@@ -116,8 +116,8 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );
 
         public void InitializeNodeSelects() {
-            if( IsParticle ) ParticleSelect = new UiNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
-            else EmitterSelect = new UiNodeSelect<AvfxEmitter>( Emitter, "Target Emitter", Emitter.NodeGroups.Emitters, TargetIdx );
+            if( IsParticle ) ParticleSelect = new AvfxNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
+            else EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Emitter, "Target Emitter", Emitter.NodeGroups.Emitters, TargetIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );

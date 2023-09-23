@@ -1,15 +1,14 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
-using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
+    public abstract class AvfxNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;
         public readonly string DefaultPath;
 
-        public UiNodeSplitView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( name, group.Items, allowNew, allowDelete ) {
+        public AvfxNodeSplitView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( name, group.Items, allowNew, allowDelete ) {
             File = file;
             Group = group;
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );

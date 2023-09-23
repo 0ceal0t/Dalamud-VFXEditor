@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Data;
-using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiNodeSelectList<T> : UiNodeSelect where T : AvfxNode {
+    public class AvfxNodeSelectList<T> : AvfxNodeSelect where T : AvfxNode {
         public List<T> Selected = new();
         public readonly AvfxIntList Literal;
         public readonly NodeGroup<T> Group; // the group being selected from
@@ -17,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
 
         private bool Enabled = true;
 
-        public UiNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal ) : base( node ) {
+        public AvfxNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal ) : base( node ) {
             Name = name;
             Group = group;
             Literal = literal;
@@ -143,7 +142,7 @@ namespace VfxEditor.AvfxFormat {
                 for( var idx = 0; idx < Selected.Count; idx++ ) {
                     if( copy.Ints.TryGetValue( "", out var val ) ) {
                         var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
-                        copy.PasteCommand.Add( new UiNodeSelectListCommand<T>( this, newSelected, idx ) );
+                        copy.PasteCommand.Add( new AvfxNodeSelectListCommand<T>( this, newSelected, idx ) );
                     }
                 }
             }
@@ -180,7 +179,7 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.SameLine();
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new UiNodeSelectListRemoveCommand<T>( this, idx ) );
+                        CommandManager.Avfx.Add( new AvfxNodeSelectListRemoveCommand<T>( this, idx ) );
                         return;
                     }
                 }
@@ -195,7 +194,7 @@ namespace VfxEditor.AvfxFormat {
             if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
 
             if( Selected.Count < 4 ) {
-                if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Avfx.Add( new UiNodeSelectListAddCommand<T>( this ) );
+                if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Avfx.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
                 AvfxBase.DrawRemoveContextMenu( Literal, Name );
             }
         }
@@ -204,12 +203,12 @@ namespace VfxEditor.AvfxFormat {
             using var combo = ImRaii.Combo( $"##Combo", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
+            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new AvfxNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );
 
-                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) && !cycle ) CommandManager.Avfx.Add( new UiNodeSelectListCommand<T>( this, item, idx ) );
+                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) && !cycle ) CommandManager.Avfx.Add( new AvfxNodeSelectListCommand<T>( this, item, idx ) );
                 if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }

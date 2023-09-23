@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
-        public readonly UiNodeSelect<AvfxModel> ModelSelect;
+        public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
         public readonly UiDisplayList Display;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( ModelSelect = new UiNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
+            Display.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
             Display.Add( RotationOrderType );
             Display.Add( GenerateMethodType );
             DisplayTabs.Add( AX );

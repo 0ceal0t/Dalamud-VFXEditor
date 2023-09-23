@@ -6,8 +6,8 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiItemSplitView<T> : AvfxGenericSplitView<T> where T : class, IIndexUiItem {
-        public UiItemSplitView( string id, List<T> items ) : base( id, items, true, true ) {
+    public abstract class AvfxItemSplitView<T> : AvfxGenericSplitView<T> where T : class, IIndexUiItem {
+        public AvfxItemSplitView( string id, List<T> items ) : base( id, items, true, true ) {
             UpdateIdx();
         }
 
@@ -22,13 +22,13 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             if( ShowControls && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                CommandManager.Avfx.Add( new UiItemSplitViewAddCommand<T>( this, Items ) );
+                CommandManager.Avfx.Add( new AvfxItemSplitViewAddCommand<T>( this, Items ) );
             }
 
             if( Selected != null && AllowDelete ) {
                 if( ShowControls ) ImGui.SameLine();
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Avfx.Add( new UiItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
+                    CommandManager.Avfx.Add( new AvfxItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }
             }
         }

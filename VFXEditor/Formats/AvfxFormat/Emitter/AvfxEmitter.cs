@@ -3,7 +3,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
@@ -60,7 +59,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiNodeGraphView NodeView;
         public readonly AvfxNodeGroupSet NodeGroups;
 
-        public readonly UiNodeSelect<AvfxEffector> EffectorSelect;
+        public readonly AvfxNodeSelect<AvfxEffector> EffectorSelect;
 
         public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplitDisplay;
 

@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public UiNodeSelect<AvfxTimeline> TimelineSelect;
+        public AvfxNodeSelect<AvfxTimeline> TimelineSelect;
 
         private readonly List<IUiItem> Display;
 
@@ -39,7 +39,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxSchedulerItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );
 
         public void InitializeNodeSelects() {
-            TimelineSelect = new UiNodeSelect<AvfxTimeline>( Scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
+            TimelineSelect = new AvfxNodeSelect<AvfxTimeline>( Scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );

@@ -2,7 +2,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Library.Texture;
 using VfxEditor.Parsing;

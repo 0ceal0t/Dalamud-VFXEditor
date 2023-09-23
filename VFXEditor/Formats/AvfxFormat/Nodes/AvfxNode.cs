@@ -4,8 +4,8 @@ namespace VfxEditor.AvfxFormat {
     public abstract class AvfxNode : AvfxWorkspaceItem {
         public uint GraphColor;
         public List<AvfxNode> ChildNodes = new();
-        public List<UiNodeSelect> Parents = new();
-        public List<UiNodeSelect> Selectors = new();
+        public List<AvfxNodeSelect> Parents = new();
+        public List<AvfxNodeSelect> Selectors = new();
         public bool IsDeleted = false;
         public UiNodeGraph Graph = null;
 

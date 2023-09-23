@@ -1,19 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Ui.Nodes;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiNodeRemover<T> where T : AvfxNode {
+    public class AvfxNodeRemover<T> where T : AvfxNode {
         private readonly NodeGroup<T> Group;
         private readonly IUiNodeView<T> View;
         private readonly T Item;
         private int Idx;
 
-        private readonly Dictionary<AvfxNode, List<UiNodeSelect>> ChildToRemovedSelectors = new();
-        private readonly Dictionary<UiNodeSelect, List<AvfxNode>> RemovedFromParents = new();
-        private readonly Dictionary<UiNodeSelect, List<int>> ParentsSelectIdx = new();
+        private readonly Dictionary<AvfxNode, List<AvfxNodeSelect>> ChildToRemovedSelectors = new();
+        private readonly Dictionary<AvfxNodeSelect, List<AvfxNode>> RemovedFromParents = new();
+        private readonly Dictionary<AvfxNodeSelect, List<int>> ParentsSelectIdx = new();
 
-        public UiNodeRemover( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
+        public AvfxNodeRemover( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
             View = view;
             Group = group;
             Item = item;

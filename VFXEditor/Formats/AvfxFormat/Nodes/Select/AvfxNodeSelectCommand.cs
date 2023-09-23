@@ -1,10 +1,10 @@
 namespace VfxEditor.AvfxFormat {
-    public class UiNodeSelectCommand<T> : ICommand where T : AvfxNode {
-        private readonly UiNodeSelect<T> Item;
+    public class AvfxNodeSelectCommand<T> : ICommand where T : AvfxNode {
+        private readonly AvfxNodeSelect<T> Item;
         private readonly T State;
         private T PrevState;
 
-        public UiNodeSelectCommand( UiNodeSelect<T> item, T state ) {
+        public AvfxNodeSelectCommand( AvfxNodeSelect<T> item, T state ) {
             Item = item;
             State = state;
         }

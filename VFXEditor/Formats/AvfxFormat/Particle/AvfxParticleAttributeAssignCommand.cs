@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleAttributeAssignCommand : ICommand {
         private readonly AvfxParticleAttribute Item;
-        private readonly List<UiNodeSelect> NodeSelects;
+        private readonly List<AvfxNodeSelect> NodeSelects;
         private readonly bool State;
 
-        public AvfxParticleAttributeAssignCommand( AvfxParticleAttribute item, List<UiNodeSelect> nodeSelects, bool state ) {
+        public AvfxParticleAttributeAssignCommand( AvfxParticleAttribute item, List<AvfxNodeSelect> nodeSelects, bool state ) {
             Item = item;
             NodeSelects = nodeSelects;
             State = state;

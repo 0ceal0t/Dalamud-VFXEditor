@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiEmitterSplitView : UiItemSplitView<AvfxEmitterItem> {
+    public class UiEmitterSplitView : AvfxItemSplitView<AvfxEmitterItem> {
         public readonly AvfxEmitter Emitter;
         public readonly bool IsParticle;
 

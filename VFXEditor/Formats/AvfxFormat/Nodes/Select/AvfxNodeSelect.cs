@@ -4,15 +4,14 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeSelect : IUiItem {
+    public abstract class AvfxNodeSelect : IUiItem {
         public readonly AvfxNode Node;
         protected bool OnChangeLinked = false;
 
-        public UiNodeSelect( AvfxNode node ) {
+        public AvfxNodeSelect( AvfxNode node ) {
             Node = node;
         }
 
@@ -62,7 +61,7 @@ namespace VfxEditor.AvfxFormat {
         }
     }
 
-    public class UiNodeSelect<T> : UiNodeSelect where T : AvfxNode {
+    public class AvfxNodeSelect<T> : AvfxNodeSelect where T : AvfxNode {
         public T Selected = null;
         public readonly AvfxInt Literal;
         public readonly NodeGroup<T> Group; // the group being selected from
@@ -70,7 +69,7 @@ namespace VfxEditor.AvfxFormat {
 
         private bool Enabled = true;
 
-        public UiNodeSelect( AvfxNode node, string name, NodeGroup<T> group, AvfxInt literal ) : base( node ) {
+        public AvfxNodeSelect( AvfxNode node, string name, NodeGroup<T> group, AvfxInt literal ) : base( node ) {
             Name = name;
             Group = group;
             Literal = literal;
@@ -174,7 +173,7 @@ namespace VfxEditor.AvfxFormat {
             if( copy.IsCopying ) copy.Ints[Name] = Literal.Value;
             if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
-                copy.PasteCommand.Add( new UiNodeSelectCommand<T>( this, newSelected ) );
+                copy.PasteCommand.Add( new AvfxNodeSelectCommand<T>( this, newSelected ) );
             }
 
             // Draw
@@ -202,12 +201,12 @@ namespace VfxEditor.AvfxFormat {
             using var combo = ImRaii.Combo( "##MainCombo", GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, null ) ); // "None" selector
+            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new AvfxNodeSelectCommand<T>( this, null ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );
 
-                if( ImGui.Selectable( item.GetText(), Selected == item ) && !cycle ) CommandManager.Avfx.Add( new UiNodeSelectCommand<T>( this, item ) );
+                if( ImGui.Selectable( item.GetText(), Selected == item ) && !cycle ) CommandManager.Avfx.Add( new AvfxNodeSelectCommand<T>( this, item ) );
                 if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }

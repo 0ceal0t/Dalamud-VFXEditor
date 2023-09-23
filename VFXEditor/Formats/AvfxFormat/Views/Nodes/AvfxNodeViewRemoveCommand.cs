@@ -1,10 +1,8 @@
-using VfxEditor.Ui.Nodes;
-
 namespace VfxEditor.AvfxFormat {
-    public class UiNodeViewRemoveCommand<T> : ICommand where T : AvfxNode {
-        private readonly UiNodeRemover<T> Remover;
+    public class AvfxNodeViewRemoveCommand<T> : ICommand where T : AvfxNode {
+        private readonly AvfxNodeRemover<T> Remover;
 
-        public UiNodeViewRemoveCommand( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
+        public AvfxNodeViewRemoveCommand( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
             Remover = new( view, group, item );
         }
 

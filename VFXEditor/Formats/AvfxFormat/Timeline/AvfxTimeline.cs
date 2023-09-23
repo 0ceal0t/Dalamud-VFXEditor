@@ -2,7 +2,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
@@ -22,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxNodeGroupSet NodeGroups;
 
-        public readonly UiNodeSelect<AvfxBinder> BinderSelect;
+        public readonly AvfxNodeSelect<AvfxBinder> BinderSelect;
 
         public readonly UiTimelineClipSplitView ClipSplit;
         public readonly UiTimelineItemSequencer ItemSplit;

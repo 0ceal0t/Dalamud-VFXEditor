@@ -77,8 +77,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Texture Distortion";
 
-        public override List<UiNodeSelect> GetNodeSelects() => new() {
-            new UiNodeSelect<AvfxTexture>( Particle, "Texture", Particle.NodeGroups.Textures, TextureIdx )
+        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+            new AvfxNodeSelect<AvfxTexture>( Particle, "Texture", Particle.NodeGroups.Textures, TextureIdx )
         };
     }
 }

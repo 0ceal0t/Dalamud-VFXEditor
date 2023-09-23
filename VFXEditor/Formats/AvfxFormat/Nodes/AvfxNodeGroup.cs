@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Ui.Nodes {
-    public abstract class NodeGroup {
+namespace VfxEditor.AvfxFormat {
+    public abstract class AvfxNodeGroup {
         public abstract void Initialize();
         public abstract void PreImport( bool hasDependencies );
         public abstract void PostImport();
@@ -12,7 +12,7 @@ namespace VfxEditor.Ui.Nodes {
         public abstract void ReadRenamingMap( Dictionary<string, string> meta );
     }
 
-    public class NodeGroup<T> : NodeGroup where T : IWorkspaceUiItem {
+    public class NodeGroup<T> : AvfxNodeGroup where T : IWorkspaceUiItem {
         public readonly List<T> Items;
 
         public Action OnInit;

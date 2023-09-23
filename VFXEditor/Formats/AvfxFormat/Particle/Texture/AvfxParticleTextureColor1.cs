@@ -90,8 +90,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Texture Color 1";
 
-        public override List<UiNodeSelect> GetNodeSelects() => new() {
-            new UiNodeSelectList<AvfxTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, MaskTextureIdx )
+        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+            new AvfxNodeSelectList<AvfxTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, MaskTextureIdx )
         };
     }
 }

@@ -4,11 +4,10 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Ui.Nodes;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class UiNodeDropdownView<T> : IUiItem, IUiNodeView<T> where T : AvfxNode {
+    public abstract class AvfxNodeDropdownView<T> : IUiItem, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;
 
@@ -20,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
 
         public T Selected = null;
 
-        public UiNodeDropdownView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
+        public AvfxNodeDropdownView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) {
             File = file;
             Group = group;
             AllowNew = allowNew;

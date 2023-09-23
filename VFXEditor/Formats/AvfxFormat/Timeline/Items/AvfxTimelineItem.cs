@@ -19,9 +19,9 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public UiNodeSelect<AvfxBinder> BinderSelect;
-        public UiNodeSelect<AvfxEmitter> EmitterSelect;
-        public UiNodeSelect<AvfxEffector> EffectorSelect;
+        public AvfxNodeSelect<AvfxBinder> BinderSelect;
+        public AvfxNodeSelect<AvfxEmitter> EmitterSelect;
+        public AvfxNodeSelect<AvfxEffector> EffectorSelect;
 
         private readonly List<IUiItem> Display;
 
@@ -57,9 +57,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void InitializeNodeSelects() {
-            BinderSelect = new UiNodeSelect<AvfxBinder>( Timeline, "Target Binder", Timeline.NodeGroups.Binders, BinderIdx );
-            EmitterSelect = new UiNodeSelect<AvfxEmitter>( Timeline, "Target Emitter", Timeline.NodeGroups.Emitters, EmitterIdx );
-            EffectorSelect = new UiNodeSelect<AvfxEffector>( Timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
+            BinderSelect = new AvfxNodeSelect<AvfxBinder>( Timeline, "Target Binder", Timeline.NodeGroups.Binders, BinderIdx );
+            EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Timeline, "Target Emitter", Timeline.NodeGroups.Emitters, EmitterIdx );
+            EffectorSelect = new AvfxNodeSelect<AvfxEffector>( Timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
