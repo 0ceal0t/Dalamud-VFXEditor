@@ -137,12 +137,14 @@ namespace VfxEditor.Interop {
             var categoryString = split[0];
             var categoryBytes = categoryString switch {
                 "bgcommon" => BitConverter.GetBytes( 1u ),
+                "cur" => InteropUtils.GetDatCategory( 3u, split[1] ),
                 "chara" => BitConverter.GetBytes( 4u ),
+                "shader" => BitConverter.GetBytes( 5u ),
                 "ui" => BitConverter.GetBytes( 6u ),
                 "sound" => BitConverter.GetBytes( 7u ),
                 "vfx" => BitConverter.GetBytes( 8u ),
                 "bg" => InteropUtils.GetBgCategory( split[1], split[2] ),
-                "music" => InteropUtils.GetMusicCategory( split[1] ),
+                "music" => InteropUtils.GetDatCategory( 12u, split[1] ),
                 _ => BitConverter.GetBytes( 0u )
             };
             var bCategory = stackalloc byte[categoryBytes.Length + 1];

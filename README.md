@@ -98,3 +98,11 @@ chara/xls/animation/MotionLineTable.mlt
 chara/xls/animation/animation_work_table-monster.awt
 chara/xls/animation/animation_work_table-weapon.awt
 ```
+
+https://github.com/goaaats/ffxiv-explorer-fork/blob/a89a8af15e3ca5d73b7f75f756d3c1058a188744/src/main/java/com/fragmenterworks/ffxivextract/models/SHPK_File.java#L50
+https://github.com/goaaats/ffxiv-explorer-fork/blob/a89a8af15e3ca5d73b7f75f756d3c1058a188744/src/main/java/com/fragmenterworks/ffxivextract/models/SHCD_File.java
+http://timjones.io/blog/archive/2015/09/02/parsing-direct3d-shader-bytecode
+https://github.com/tgjones/shader-playground
+https://github.com/Microsoft/DirectXShaderCompiler
+https://github.com/AndresTraks/HlslDecompiler
+https://github.com/tgjones/slimshader

@@ -56,8 +56,8 @@ namespace VfxEditor.Interop {
             return ret;
         }
 
-        public static byte[] GetMusicCategory( string expansion ) {
-            var ret = BitConverter.GetBytes( 12u );
+        public static byte[] GetDatCategory( uint prefix, string expansion ) {
+            var ret = BitConverter.GetBytes( prefix );
             if( expansion == "ffxiv" ) return ret;
             // music/ex4/BGM_EX4_Field_Ult_Day03.scd
             // 04 00 00 0C

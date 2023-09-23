@@ -30,6 +30,9 @@ namespace VfxEditor.Utils {
                 case "chara":
                     simple.DatFile = "040000";
                     break;
+                case "shader":
+                    simple.DatFile = "050000";
+                    break;
                 case "ui":
                     simple.DatFile = "060000";
                     break;
