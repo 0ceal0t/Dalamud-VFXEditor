@@ -9,7 +9,7 @@ namespace VfxEditor.SklbFormat.Bones {
     public unsafe class ParsedBoneIndex : ParsedShort {
         public ParsedBoneIndex( string name ) : base( name ) { }
 
-        public ParsedBoneIndex( string name, int defaultValue ) : base( name, defaultValue ) { }
+        public ParsedBoneIndex( string name, int value ) : base( name, value ) { }
 
         public string GetText( List<SklbBone> bones ) => Value == -1 ? "[NONE]" : ( Value >= bones.Count ? "[UNKNOWN]" : bones[Value].Name.Value );
 

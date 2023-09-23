@@ -4,10 +4,22 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayers {
+        public bool IsSklb => File != null;
+        public readonly SklbFile File;
+
         private readonly List<SklbLayer> Layers = new();
         private readonly CommandSplitView<SklbLayer> LayerView;
 
-        public SklbLayers( SklbFile file, BinaryReader reader ) {
+        public SklbLayers( SklbFile file ) {
+            File = file;
+            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer( file ), () => IsSklb ? CommandManager.Sklb : CommandManager.Skp );
+        }
+
+        public SklbLayers( SklbFile file, BinaryReader reader ) : this( file ) {
+            Read( reader );
+        }
+
+        public void Read( BinaryReader reader ) {
             reader.ReadInt32(); // Magic
 
             var numLayers = reader.ReadInt16();
@@ -16,10 +28,8 @@ namespace VfxEditor.SklbFormat.Layers {
             }
 
             for( var i = 0; i < numLayers; i++ ) {
-                Layers.Add( new( file, reader ) );
+                Layers.Add( new( File, reader ) );
             }
-
-            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer( file ), () => CommandManager.Sklb );
         }
 
         public void Write( BinaryWriter writer ) {

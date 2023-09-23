@@ -9,6 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.SkpFormat.LookAt;
 using VfxEditor.Formats.SkpFormat.Slope;
 using VfxEditor.Parsing;
+using VfxEditor.SklbFormat.Layers;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SkpFormat {
@@ -28,6 +29,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private bool NewVersion => Version > 1000;
         private readonly ParsedFlag<SkpFlags> Activated = new( "Activated" );
 
+        private readonly SklbLayers Animation = new( null );
         private readonly SkpLookAt LookAt = new();
         private readonly SkpSlope Slope = new();
 
@@ -43,10 +45,7 @@ namespace VfxEditor.Formats.SkpFormat {
             // If NEW, offset of Slope if activated, 0 otherwise
             reader.ReadBytes( NewVersion ? 20 : 16 );
 
-            if( Activated.HasFlag( SkpFlags.Animation ) ) {
-                // TODO
-            }
-
+            if( Activated.HasFlag( SkpFlags.Animation ) ) Animation.Read( reader );
             if( Activated.HasFlag( SkpFlags.LookAt ) ) LookAt.Read( reader );
             if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) PluginLog.Error( "FootIK found, please report this" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
@@ -67,7 +66,7 @@ namespace VfxEditor.Formats.SkpFormat {
             FileUtils.Pad( writer, NewVersion ? 16 : 12 );
 
             if( Activated.HasFlag( SkpFlags.Animation ) ) {
-                // TODO
+                Animation.Write( writer );
             }
 
             var lookAtOffset = 0;
@@ -118,7 +117,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
             using var _ = ImRaii.PushId( "Animation" );
 
-            // TODO
+            Animation.Draw();
         }
 
         private void DrawLookAt() {

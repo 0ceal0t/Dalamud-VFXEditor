@@ -97,11 +97,11 @@ namespace VfxEditor {
                 PapManager,
                 ScdManager,
                 UldManager,
-                PhybManager,
                 SklbManager,
+                SkpManager,
+                PhybManager,
                 EidManager,
                 AtchManager,
-                SkpManager,
             };
 
             var dropdown = false;
