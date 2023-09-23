@@ -13,10 +13,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
     public class SkeletonCharacterTab : SelectTab<CharacterRow, CharacterRowSelected> {
         private readonly string Prefix;
         private readonly string Extension;
+        private readonly bool HairFace;
 
-        public SkeletonCharacterTab( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Character-Shared", SelectResultType.GameCharacter ) {
+        public SkeletonCharacterTab( SelectDialog dialog, string name, string prefix, string extension, bool hairFace ) : base( dialog, name, "Character-Shared", SelectResultType.GameCharacter ) {
             Prefix = prefix;
             Extension = extension;
+            HairFace = hairFace;
         }
 
         // ===== LOADING =====
@@ -27,6 +29,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
 
         public override void LoadSelection( CharacterRow item, out CharacterRowSelected loaded ) {
             var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/{Prefix}_{item.SkeletonId}b0001.{Extension}";
+
+            loaded = new() {
+                BodyPath = bodyPath
+            };
+
+            if( !HairFace ) return;
 
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
@@ -39,17 +47,16 @@ namespace VfxEditor.Select.Shared.Skeleton {
                 hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/h{hairId:D4}/{Prefix}_{item.SkeletonId}h{hairId:D4}.{Extension}";
             }
 
-            loaded = new() {
-                BodyPath = bodyPath,
-                FacePaths = SelectDataUtils.FileExistsFilter( facePaths ),
-                HairPaths = SelectDataUtils.FileExistsFilter( hairPaths )
-            };
+            loaded.FacePaths = SelectDataUtils.FileExistsFilter( facePaths );
+            loaded.HairPaths = SelectDataUtils.FileExistsFilter( hairPaths );
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
             DrawPath( "Body", Loaded.BodyPath, Selected.Name );
+
+            if( !HairFace ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 

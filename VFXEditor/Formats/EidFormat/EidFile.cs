@@ -47,7 +47,7 @@ namespace VfxEditor.EidFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            writer.Write( 0x00656964 );
+            FileUtils.WriteMagic( writer, "eid" );
             writer.Write( Version1 );
             writer.Write( Version2 );
             writer.Write( BindPoints.Count );
@@ -57,9 +57,6 @@ namespace VfxEditor.EidFormat {
         }
 
         public override void Draw() {
-            ImGui.Separator();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-
             var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.EidSkeletonSplit );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );

@@ -12,6 +12,7 @@ using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.SkpFormat;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Interop;
 using VfxEditor.Library;
@@ -50,6 +51,7 @@ namespace VfxEditor {
             PhybManager,
             PapManager,
             AtchManager,
+            SkpManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -62,6 +64,7 @@ namespace VfxEditor {
         public static PhybManager PhybManager { get; private set; }
         public static SklbManager SklbManager { get; private set; }
         public static AtchManager AtchManager { get; private set; }
+        public static SkpManager SkpManager { get; private set; }
 
         public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
@@ -92,6 +95,7 @@ namespace VfxEditor {
             PhybManager = new();
             SklbManager = new();
             AtchManager = new();
+            SkpManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();

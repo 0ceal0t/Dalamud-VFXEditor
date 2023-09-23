@@ -23,6 +23,12 @@ namespace VfxEditor.Utils {
             if( writeNull ) writer.Write( ( byte )0 );
         }
 
+        public static void WriteMagic( BinaryWriter writer, string data ) {
+            var bytes = Encoding.ASCII.GetBytes( Reverse( data ) );
+            writer.Write( bytes );
+            Pad( writer, 4 - bytes.Length );
+        }
+
         public static bool ShortInput( string id, ref short value ) {
             var val = ( int )value;
             if( ImGui.InputInt( id, ref val ) ) {
@@ -72,12 +78,19 @@ namespace VfxEditor.Utils {
             for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
                 if( data[idx] != original[idx] && ( ignore == null || !ignore.Any( x => idx >= x.Item1 && idx < x.Item2 ) ) ) {
                     PluginLog.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
+
+                    if( ignore != null ) {
+                        foreach( var item in ignore ) PluginLog.Error( $">> Ignored [{item.Item1:X8},{item.Item2:X8})" );
+                    }
+
                     return VerifiedStatus.ERROR;
                 }
             }
 
             return ret ? VerifiedStatus.OK : VerifiedStatus.ERROR;
         }
+
+        public static string Reverse( string data ) => new( data.ToCharArray().Reverse().ToArray() );
 
         public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );
 

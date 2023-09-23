@@ -1,6 +1,5 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -18,9 +17,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         public AtchEntry() { }
 
         public AtchEntry( BinaryReader reader ) : this() {
-            var name = FileUtils.ReadString( reader ).ToCharArray();
-            Array.Reverse( name );
-            Name.Value = new string( name );
+            Name.Value = FileUtils.Reverse( FileUtils.ReadString( reader ) );
         }
 
         public void ReadBody( BinaryReader reader, ushort numStates ) {
@@ -30,9 +27,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         }
 
         public void Write( BinaryWriter writer ) {
-            var name = Name.Value.ToCharArray();
-            Array.Reverse( name );
-            FileUtils.WriteString( writer, new string( name ), true );
+            FileUtils.WriteString( writer, FileUtils.Reverse( Name.Value ), true );
         }
 
         public void WriteBody( BinaryWriter writer, int stringStartPos, BinaryWriter stringWriter, Dictionary<string, int> stringPos ) {

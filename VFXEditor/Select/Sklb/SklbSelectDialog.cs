@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Sklb {
             GameTabs.AddRange( new SelectTab[]{
                 new SkeletonArmorTab( this, "Armor", "skl", "sklb" ),
                 new SkeletonNpcTab( this, "Npc" , "skl", "sklb"),
-                new SkeletonCharacterTab( this, "Character", "skl", "sklb" ),
+                new SkeletonCharacterTab( this, "Character", "skl", "sklb", true ),
                 new SkeletonMountTab( this, "Mount", "skl", "sklb")
             } );
         }

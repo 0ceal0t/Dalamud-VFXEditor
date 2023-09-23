@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
@@ -30,19 +31,19 @@ namespace VfxEditor.Interop {
 
         public delegate IntPtr GetFileManagerDelegate();
 
-        private GetFileManagerDelegate GetFileManager;
+        private readonly GetFileManagerDelegate GetFileManager;
 
-        private GetFileManagerDelegate GetFileManager2;
+        private readonly GetFileManagerDelegate GetFileManager2;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
         public delegate byte DecRefDelegate( IntPtr resource );
 
-        private DecRefDelegate DecRef;
+        private readonly DecRefDelegate DecRef;
 
         [UnmanagedFunctionPointer( CallingConvention.ThisCall )]
         private delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
 
-        private RequestFileDelegate RequestFile;
+        private readonly RequestFileDelegate RequestFile;
 
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null ) return;
@@ -125,12 +126,8 @@ namespace VfxEditor.Interop {
         }
 
         private IntPtr GetResource( string path, bool original ) {
-            // File type extension
-            var ext = path.Split( '.' )[1];
-            var charArray = ext.ToCharArray();
-            Array.Reverse( charArray );
-            var flip = new string( charArray );
-            var typeBytes = Encoding.ASCII.GetBytes( flip );
+            var extension = FileUtils.Reverse( path.Split( '.' )[1] );
+            var typeBytes = Encoding.ASCII.GetBytes( extension );
             var bType = stackalloc byte[typeBytes.Length + 1];
             Marshal.Copy( typeBytes, 0, new IntPtr( bType ), typeBytes.Length );
             var pResourceType = ( ResourceType* )bType;

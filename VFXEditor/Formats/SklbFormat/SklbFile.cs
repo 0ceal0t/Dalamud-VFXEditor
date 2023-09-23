@@ -10,16 +10,15 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat {
     public class SklbFile : FileManagerFile {
-        public readonly string HkxTempLocation;
+        private readonly string HkxTempLocation;
 
-        public readonly short Version1;
-        public readonly short Version2;
-
-        public readonly SklbData Data;
-        public readonly SklbLayers Layers;
-        public readonly SklbBones Bones;
-
+        private readonly short Version1;
+        private readonly short Version2;
+        private readonly SklbData Data;
+        private readonly SklbLayers Layers;
         private readonly int Padding;
+
+        public readonly SklbBones Bones;
 
         public SklbFile( BinaryReader reader, string hkxTemp, bool verify ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
@@ -57,7 +56,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            writer.Write( 0x736B6C62 );
+            FileUtils.WriteMagic( writer, "sklb" );
             writer.Write( Version1 );
             writer.Write( Version2 );
 

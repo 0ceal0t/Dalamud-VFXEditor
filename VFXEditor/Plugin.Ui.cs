@@ -100,7 +100,8 @@ namespace VfxEditor {
                 PhybManager,
                 SklbManager,
                 EidManager,
-                AtchManager
+                AtchManager,
+                SkpManager,
             };
 
             var dropdown = false;

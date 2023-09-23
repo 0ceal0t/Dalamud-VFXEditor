@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Phyb {
             GameTabs.AddRange( new SelectTab[]{
                 new SkeletonArmorTab( this, "Armor", "phy", "phyb" ),
                 new SkeletonNpcTab( this, "Npc" , "phy", "phyb"),
-                new SkeletonCharacterTab( this, "Character", "phy", "phyb" ),
+                new SkeletonCharacterTab( this, "Character", "phy", "phyb", true ),
                 new SkeletonMountTab( this, "Mount", "phy", "phyb")
             } );
         }
