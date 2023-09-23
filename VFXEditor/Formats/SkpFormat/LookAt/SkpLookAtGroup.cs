@@ -19,13 +19,11 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             Id.Read( reader );
 
             var numElems = reader.ReadByte();
-            for( var i = 0; i < numElems; i++ ) {
-                Elements.Add( new( reader ) );
-            }
+            for( var i = 0; i < numElems; i++ ) Elements.Add( new( reader ) );
         }
 
         public void Write( BinaryWriter writer ) {
-            // Sometimes SE doesn't clean up their buffers, so they are filled with just. So we can ignore them
+            // Sometimes SE doesn't clean up their buffers, so they are filled with junk
             Id.WriteAndPopulateIgnore( writer, SkpFile.VerifyIgnore );
 
             writer.Write( ( byte )Elements.Count );

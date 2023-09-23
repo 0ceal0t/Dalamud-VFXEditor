@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.SkpFormat.LookAt;
+using VfxEditor.Formats.SkpFormat.Slope;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
@@ -28,6 +29,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private readonly ParsedFlag<SkpFlags> Activated = new( "Activated" );
 
         private readonly SkpLookAt LookAt = new();
+        private readonly SkpSlope Slope = new();
 
         public SkpFile( BinaryReader reader, bool verify ) : base( new( Plugin.SkpManager ) ) {
             reader.ReadInt32(); // Magic
@@ -47,10 +49,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
             if( Activated.HasFlag( SkpFlags.LookAt ) ) LookAt.Read( reader );
             if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) PluginLog.Error( "FootIK found, please report this" );
-
-            if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) {
-                // TODO
-            }
+            if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
             VerifyIgnore = new();
             var data = ToBytes(); // will populate VerifyIgnore
@@ -80,7 +79,7 @@ namespace VfxEditor.Formats.SkpFormat {
             var slopeOffset = 0;
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) {
                 slopeOffset = ( int )writer.BaseStream.Position;
-                // TODO
+                Slope.Write( writer );
             }
 
             var size = ( int )writer.BaseStream.Length;
@@ -141,7 +140,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
             using var _ = ImRaii.PushId( "Slope" );
 
-            // TODO
+            Slope.Draw();
         }
     }
 }

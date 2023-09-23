@@ -13,8 +13,8 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         private readonly CommandSplitView<SkpLookAtGroup> GroupView;
 
         public SkpLookAt() {
-            ParamView = new( "Parameter", Params, true, ( SkpLookAtParam param, int idx ) => $"Parameter {idx} ({param.Index.Value})", () => new(), () => CommandManager.Skp );
-            GroupView = new( "Groups", Groups, true, null, () => new(), () => CommandManager.Skp );
+            ParamView = new( "Parameter", Params, true, ( SkpLookAtParam param, int idx ) => $"Parameters {param.Index.Value}", () => new(), () => CommandManager.Skp );
+            GroupView = new( "Group", Groups, true, ( SkpLookAtGroup item, int idx ) => item.Id.Value, () => new(), () => CommandManager.Skp );
         }
 
         public void Read( BinaryReader reader ) {
@@ -22,13 +22,8 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             var numGroups = reader.ReadByte();
             reader.ReadBytes( numGroups ); // number of elements per group
 
-            for( var i = 0; i < numParams; i++ ) {
-                Params.Add( new( reader ) );
-            }
-
-            for( var i = 0; i < numGroups; i++ ) {
-                Groups.Add( new( reader ) );
-            }
+            for( var i = 0; i < numParams; i++ ) Params.Add( new( reader ) );
+            for( var i = 0; i < numGroups; i++ ) Groups.Add( new( reader ) );
         }
 
         public void Write( BinaryWriter writer ) {

@@ -47,8 +47,7 @@ namespace VfxEditor.SklbFormat.Layers {
             File = file;
         }
 
-        public SklbLayerBone( SklbFile file, BinaryReader reader ) {
-            File = file;
+        public SklbLayerBone( SklbFile file, BinaryReader reader ) : this( file ) {
             Bone.Read( reader );
         }
 
