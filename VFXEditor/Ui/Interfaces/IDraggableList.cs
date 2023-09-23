@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.Interfaces {
             return listModified;
         }
 
-        private unsafe static bool StopDragging<S>( IDraggableList<S> view, S destination, string id ) where S : class {
+        private static unsafe bool StopDragging<S>( IDraggableList<S> view, S destination, string id ) where S : class {
             var draggingItem = view.GetDraggingItem();
             if( draggingItem == null ) return false;
 

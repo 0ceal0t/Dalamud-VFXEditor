@@ -1,7 +1,5 @@
 namespace VfxEditor.Ui.Interfaces {
-    public interface INamedUiItem : IUiItem {
+    public interface INamedUiItem : ITextItem {
         public string GetDefaultText();
-
-        public string GetText();
     }
 }

@@ -5,7 +5,7 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SkpFormat.LookAt {
-    public class SkpLookAtParam : ParsedData, IUiItem {
+    public class SkpLookAtParam : ParsedData, IUiItem, ITextItem {
         public readonly ParsedByte Index = new( "Index" );
 
         public SkpLookAtParam() : base() { }
@@ -31,5 +31,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         }
 
         public void Draw() => DrawParsed( CommandManager.Skp );
+
+        public string GetText() => $"Parameters {Index.Value}";
     }
 }

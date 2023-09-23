@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         private readonly CommandSplitView<SkpLookAtGroup> GroupView;
 
         public SkpLookAt() {
-            ParamView = new( "Parameter", Params, true, ( SkpLookAtParam param, int idx ) => $"Parameters {param.Index.Value}", () => new(), () => CommandManager.Skp );
+            ParamView = new( "Parameter", Params, true, ( SkpLookAtParam param, int idx ) => param.GetText(), () => new(), () => CommandManager.Skp );
             GroupView = new( "Group", Groups, true, ( SkpLookAtGroup item, int idx ) => item.Id.Value, () => new(), () => CommandManager.Skp );
         }
 
