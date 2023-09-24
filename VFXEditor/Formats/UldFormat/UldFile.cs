@@ -38,9 +38,9 @@ namespace VfxEditor.UldFormat {
 
         public readonly CommandSplitView<UldTexture> TextureSplitView;
         public readonly CommandSplitView<UldPartList> PartsSplitView;
-        public readonly SimpleDropdown<UldComponent> ComponentDropdown;
-        public readonly SimpleDropdown<UldTimeline> TimelineDropdown;
-        public readonly SimpleDropdown<UldWidget> WidgetDropdown;
+        public readonly CommandDropdown<UldComponent> ComponentDropdown;
+        public readonly CommandDropdown<UldTimeline> TimelineDropdown;
+        public readonly CommandDropdown<UldWidget> WidgetDropdown;
 
         public UldFile( BinaryReader reader, bool verify ) : base( new CommandManager( Plugin.UldManager ) ) {
             var pos = reader.BaseStream.Position;

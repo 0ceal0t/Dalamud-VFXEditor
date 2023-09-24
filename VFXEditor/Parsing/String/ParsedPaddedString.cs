@@ -47,7 +47,5 @@ namespace VfxEditor.Parsing.String {
         }
 
         public override void Draw( CommandManager manager ) => Draw( manager, ( uint )( Length - 1 ), Name, 0, ImGuiInputTextFlags.None );
-
-
     }
 }

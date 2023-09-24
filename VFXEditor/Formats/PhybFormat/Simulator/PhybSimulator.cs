@@ -35,7 +35,7 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
         private readonly CommandSplitView<PhybCollisionData> CollisionConnectorSplitView;
-        private readonly SimpleDropdown<PhybChain> ChainDropdown;
+        private readonly CommandDropdown<PhybChain> ChainDropdown;
         private readonly CommandSplitView<PhybConnector> ConnectorSplitView;
         private readonly CommandSplitView<PhybAttract> AttractSplitView;
         private readonly CommandSplitView<PhybPin> PinSplitView;
