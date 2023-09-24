@@ -50,7 +50,7 @@ namespace VfxEditor.Formats.SkpFormat {
             if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) PluginLog.Error( "FootIK found, please report this" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
-            VerifyIgnore = new();
+            VerifyIgnore = [];
             var data = ToBytes(); // will populate VerifyIgnore
             if( verify ) Verified = FileUtils.Verify( reader, data, VerifyIgnore );
             VerifyIgnore = null;
@@ -87,26 +87,24 @@ namespace VfxEditor.Formats.SkpFormat {
             writer.BaseStream.Seek( offsetPosition, SeekOrigin.Begin );
             writer.Write( lookAtOffset );
             writer.Write( ccdOffset );
-            writer.Write( 0 ); // footOffset
+            writer.Write( 0 ); // foot offset, no example of it being used
             if( NewVersion ) writer.Write( slopeOffset );
         }
 
         public override void Draw() {
+            ImGui.Separator();
+
+            ImGui.TextDisabled( $"Version: {Version}" );
+            Activated.Draw( CommandManager.Skp );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawParameters();
             DrawAnimation();
             DrawLookAt();
             DrawSlope();
-        }
-
-        private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
-            if( !tabItem ) return;
-
-            ImGui.TextDisabled( $"Version {Version}" );
-            Activated.Draw( CommandManager.Skp );
         }
 
         private void DrawAnimation() {
@@ -138,6 +136,7 @@ namespace VfxEditor.Formats.SkpFormat {
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Slope" );
+            using var child = ImRaii.Child( "Child" );
 
             Slope.Draw();
         }

@@ -25,6 +25,8 @@ namespace VfxEditor.Interop.Havok.Ui {
         }
 
         public void Draw() {
+            using var _ = ImRaii.PushId( "Selector" );
+
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
             var inputSize = ImGui.GetContentRegionAvail().X - 400;
             ImGui.SetNextItemWidth( inputSize );

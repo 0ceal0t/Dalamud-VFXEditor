@@ -20,6 +20,7 @@ namespace VfxEditor {
         public static CommandManager Sklb => Plugin.SklbManager?.GetCommandManager();
         public static CommandManager Atch => Plugin.AtchManager?.GetCommandManager();
         public static CommandManager Skp => Plugin.SkpManager?.GetCommandManager();
+        public static CommandManager Shpk => Plugin.ShpkManager?.GetCommandManager();
 
         public static int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();
