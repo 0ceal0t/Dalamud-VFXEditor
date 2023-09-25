@@ -7,12 +7,12 @@ namespace VfxEditor.ScdFormat {
 
         public static void ConvertToOgg( string wavPath ) {
             Cleanup();
-            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManager.ConvertOgg}\" \"{wavPath}\"" );
+            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManager.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
         }
 
         public static void ConvertToAdpcm( string wavPath ) {
             Cleanup();
-            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManager.ConvertWav}\"" );
+            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManager.ConvertWav}\"", false, out var _ );
         }
 
         public static void Cleanup() {

@@ -4,8 +4,8 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Keys {
     public class ShpkKey : IUiItem {
-        public readonly ParsedId Id = new( "Id" );
-        public readonly ParsedId DefaultValue = new( "Default Value" );
+        public readonly ParsedCrc Id = new( "Id" );
+        public readonly ParsedCrc DefaultValue = new( "Default Value" );
 
         public ShpkKey() { }
 
@@ -20,7 +20,8 @@ namespace VfxEditor.Formats.ShpkFormat.Keys {
         }
 
         public void Write( BinaryWriter writer ) {
-
+            Id.Write( writer );
+            DefaultValue.Write( writer );
         }
 
         public void Draw() {

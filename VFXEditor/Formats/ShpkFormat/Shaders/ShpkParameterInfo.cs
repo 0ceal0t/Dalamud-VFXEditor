@@ -1,5 +1,6 @@
 using Dalamud.Logging;
 using Lumina.Misc;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
@@ -7,13 +8,14 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkParameterInfo : IUiItem, ITextItem {
         public uint Id => Crc32.Get( Value.Value, 0xFFFFFFFFu );
+        public uint DataSize => ( uint )Size.Value;
 
         private readonly uint TempId;
         private readonly ParsedString Value = new( "Value" );
         private readonly int TempStringOffset;
 
-        private readonly ParsedShort Slot = new( "Slot" );
-        private readonly ParsedShort Size = new( "Size" );
+        public readonly ParsedShort Slot = new( "Slot" );
+        public readonly ParsedShort Size = new( "Size" );
 
         public ShpkParameterInfo() { }
 
@@ -32,8 +34,13 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             if( TempId != Id ) PluginLog.Error( "Ids do not match" );
         }
 
-        public void Write( BinaryWriter writer ) {
-
+        public void Write( BinaryWriter writer, List<(long, string)> stringPositions ) {
+            writer.Write( Id );
+            stringPositions.Add( (writer.BaseStream.Position, Value.Value) );
+            writer.Write( 0 ); // placeholder
+            writer.Write( Value.Value.Length );
+            Slot.Write( writer );
+            Size.Write( writer );
         }
 
         public void Draw() {

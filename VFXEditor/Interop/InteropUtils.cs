@@ -11,21 +11,27 @@ using VfxEditor.Structs;
 
 namespace VfxEditor.Interop {
     public static unsafe class InteropUtils {
-        public static void Run( string exePath, string arguments ) {
+        public static void Run( string exePath, string arguments, bool captureOutput, out string output ) {
+            output = "";
+
             // Use ProcessStartInfo class
             var startInfo = new ProcessStartInfo {
-                CreateNoWindow = false,
+                CreateNoWindow = true,
                 UseShellExecute = false,
                 FileName = Path.Combine( Plugin.RootLocation, "Files", exePath ),
                 WindowStyle = ProcessWindowStyle.Hidden,
-                Arguments = arguments
+                Arguments = arguments,
+                RedirectStandardOutput = true
             };
 
             try {
-                // Start the process with the info we specified.
-                // Call WaitForExit and then the using statement will close.
-                using var exeProcess = Process.Start( startInfo );
-                exeProcess.WaitForExit();
+                var process = new Process {
+                    StartInfo = startInfo
+                };
+
+                process.Start();
+                if( captureOutput ) output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
             }
             catch( Exception e ) {
                 PluginLog.LogError( e, "Error executing" );

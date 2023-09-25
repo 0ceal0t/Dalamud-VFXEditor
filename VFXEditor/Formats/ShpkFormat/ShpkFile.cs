@@ -1,7 +1,9 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.ShpkFormat.Keys;
 using VfxEditor.Formats.ShpkFormat.Materials;
@@ -9,9 +11,11 @@ using VfxEditor.Formats.ShpkFormat.Nodes;
 using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShpkFormat {
     // Based on https://github.com/Ottermandias/Penumbra.GameData/blob/15ae65921468a2407ecdd068ca79947e596e24be/Files/ShpkFile.cs#L6
+    // And other work by Ny
 
     public enum DX {
         DX9,
@@ -20,6 +24,9 @@ namespace VfxEditor.Formats.ShpkFormat {
     }
 
     public class ShpkFile : FileManagerFile {
+        public const uint MaterialParamsConstantId = 0x64D12851u;
+        public const uint TableSamplerId = 0x2005679Fu;
+
         private readonly uint Version;
         private readonly uint DxMagic;
         public DX DxVersion => DxMagic switch {
@@ -58,13 +65,14 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandSplitView<ShpkKey> SubViewKeyView;
 
         private readonly CommandDropdown<ShpkNode> NodeView;
+        private readonly CommandSplitView<ShpkAlias> AliasView;
 
         public ShpkFile( BinaryReader reader, bool verify ) : base( new( Plugin.ShpkManager ) ) {
             reader.ReadInt32(); // Magic
             Version = reader.ReadUInt32();
             DxMagic = reader.ReadUInt32();
-            reader.ReadInt32(); // File length
 
+            reader.ReadInt32(); // File length
             var shaderOffset = reader.ReadUInt32();
             var parameterOffset = reader.ReadUInt32();
 
@@ -98,10 +106,8 @@ namespace VfxEditor.Formats.ShpkFormat {
             for( var i = 0; i < numSceneKey; i++ ) SceneKeys.Add( new( reader ) );
             for( var i = 0; i < numMaterialKey; i++ ) MaterialKeys.Add( new( reader ) );
 
-            var subViewKey1Default = reader.ReadUInt32();
-            var subViewKey2Default = reader.ReadUInt32();
-            SubViewKeys.Add( new( 1, subViewKey1Default ) );
-            SubViewKeys.Add( new( 2, subViewKey2Default ) );
+            SubViewKeys.Add( new( 1, reader.ReadUInt32() ) );
+            SubViewKeys.Add( new( 2, reader.ReadUInt32() ) );
 
             for( var i = 0; i < numNode; i++ ) Nodes.Add( new( reader, SystemKeys.Count, SceneKeys.Count, MaterialKeys.Count, SubViewKeys.Count ) );
             for( var i = 0; i < numAlias; i++ ) Aliases.Add( new( reader ) );
@@ -131,19 +137,92 @@ namespace VfxEditor.Formats.ShpkFormat {
             SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
 
             NodeView = new( "Node", Nodes, null, () => new(), () => CommandManager.Shpk );
+            AliasView = new( "Alias", Aliases, false, null, () => new(), () => CommandManager.Shpk );
+
+            // TODO: don't be dumb when adding keys, actually update selectors and stuff
+            // TOOD: when adding keys, make sure to do it everywhere
+
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
 
         public override void Write( BinaryWriter writer ) {
-            // TODO
+            writer.Write( 0x6B506853u ); // Magic
+            writer.Write( Version );
+            writer.Write( DxMagic );
 
-            /*
-             *         // Ceil required size to a multiple of 16 bytes.
-        // Offsets can be skipped, MaterialParamsConstantId's size is the count.
-        MaterialParamsSize = (GetConstantById(MaterialParamsConstantId)?.Size ?? 0u) << 4;
-        foreach (var param in MaterialParams)
-            MaterialParamsSize = Math.Max(MaterialParamsSize, (uint)param.ByteOffset + param.ByteSize);
-        MaterialParamsSize = (MaterialParamsSize + 0xFu) & ~0xFu;
-             */
+            var placeholderPos = writer.BaseStream.Position;
+            writer.Write( 0 ); // size
+            writer.Write( 0 ); // shader offset
+            writer.Write( 0 ); // parameter offset
+
+            writer.Write( VertexShaders.Count );
+            writer.Write( PixelShaders.Count );
+
+            var materialParamSize = ( Constants.FirstOrDefault( x => x.Id == MaterialParamsConstantId )?.DataSize ?? 0u ) << 4;
+            foreach( var param in MaterialParameters ) {
+                materialParamSize = ( uint )Math.Max( materialParamSize, ( uint )param.Offset.Value + param.Size.Value );
+            }
+            materialParamSize = ( materialParamSize + 0xFu ) & ~0xFu;
+            writer.Write( materialParamSize );
+            writer.Write( MaterialParameters.Count );
+
+            writer.Write( Constants.Count );
+            writer.Write( Samplers.Count );
+            writer.Write( Resources.Count );
+
+            writer.Write( SystemKeys.Count );
+            writer.Write( SceneKeys.Count );
+            writer.Write( MaterialKeys.Count );
+
+            writer.Write( Nodes.Count );
+            writer.Write( Aliases.Count );
+
+            var stringPositions = new List<(long, string)>();
+            var shaderPositions = new List<(long, ShpkShader)>();
+
+            VertexShaders.ForEach( x => x.Write( writer, stringPositions, shaderPositions ) );
+            PixelShaders.ForEach( x => x.Write( writer, stringPositions, shaderPositions ) );
+
+            MaterialParameters.ForEach( x => x.Write( writer ) );
+
+            Constants.ForEach( x => x.Write( writer, stringPositions ) );
+            Samplers.ForEach( x => x.Write( writer, stringPositions ) );
+            Resources.ForEach( x => x.Write( writer, stringPositions ) );
+
+            SystemKeys.ForEach( x => x.Write( writer ) );
+            SceneKeys.ForEach( x => x.Write( writer ) );
+            MaterialKeys.ForEach( x => x.Write( writer ) );
+
+            SubViewKeys.ForEach( x => writer.Write( x.DefaultValue.Value ) );
+
+            Nodes.ForEach( x => x.Write( writer ) );
+            Aliases.ForEach( x => x.Write( writer ) );
+
+            var shaderOffset = writer.BaseStream.Position;
+
+            shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
+
+            var parameterOffset = writer.BaseStream.Position;
+
+            var stringOffsets = new Dictionary<string, uint>();
+            foreach( var item in stringPositions ) {
+                var value = item.Item2;
+                if( stringOffsets.ContainsKey( value ) ) continue;
+
+                stringOffsets[value] = ( uint )( writer.BaseStream.Position - parameterOffset );
+                FileUtils.WriteString( writer, value, true );
+            }
+
+            foreach( var item in stringPositions ) {
+                var offset = stringOffsets[item.Item2];
+                writer.BaseStream.Seek( item.Item1, SeekOrigin.Begin );
+                writer.Write( offset );
+            }
+
+            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.Write( ( uint )writer.BaseStream.Length );
+            writer.Write( ( uint )shaderOffset );
+            writer.Write( ( uint )parameterOffset );
         }
 
         public override void Draw() {
@@ -178,12 +257,16 @@ namespace VfxEditor.Formats.ShpkFormat {
                 if( tab ) ResourceView.Draw();
             }
 
+            using( var tab = ImRaii.TabItem( "Keys" ) ) {
+                if( tab ) DrawKeys();
+            }
+
             using( var tab = ImRaii.TabItem( "Nodes" ) ) {
                 if( tab ) NodeView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Keys" ) ) {
-                if( tab ) DrawKeys();
+            using( var tab = ImRaii.TabItem( "Aliases" ) ) {
+                if( tab ) AliasView.Draw();
             }
         }
 

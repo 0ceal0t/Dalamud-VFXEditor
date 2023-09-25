@@ -5,9 +5,9 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Materials {
     public class ShpkMaterialParmeter : IUiItem {
-        public readonly ParsedId Id = new( "Id" );
-        private readonly ParsedShort Offset = new( "Offset" );
-        private readonly ParsedShort Size = new( "Size" );
+        public readonly ParsedCrc Id = new( "Id" );
+        public readonly ParsedShort Offset = new( "Offset" );
+        public readonly ParsedShort Size = new( "Size" );
 
         public ShpkMaterialParmeter() { }
 
@@ -18,7 +18,9 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
         }
 
         public void Write( BinaryWriter writer ) {
-
+            Id.Write( writer );
+            Offset.Write( writer );
+            Size.Write( writer );
         }
 
         public void Draw() {

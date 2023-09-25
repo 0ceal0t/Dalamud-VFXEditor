@@ -1,37 +1,126 @@
+using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Nodes {
     public class ShpkNode : IUiItem {
+        public readonly ParsedUIntHex Selector = new( "Selector" );
+
+        private readonly List<ParsedSByte> PassIndexes = new();
         private readonly List<ShpkPass> Passes = new();
 
-        public ShpkNode() { }
+        private readonly List<ShpkNodeKey> SystemKeys = new();
+        private readonly List<ShpkNodeKey> SceneKeys = new();
+        private readonly List<ShpkNodeKey> MaterialKeys = new();
+        private readonly List<ShpkNodeKey> SubViewKeys = new();
 
-        public ShpkNode( BinaryReader reader, int systemKeyCount, int sceneKeyCount, int materialKeyCount, int subViewKeyCount ) {
-            var selector = reader.ReadUInt32();
+        private readonly CommandSplitView<ShpkPass> PassView;
+
+        private readonly ListView<ShpkNodeKey> SystemKeyView;
+        private readonly ListView<ShpkNodeKey> SceneKeyView;
+        private readonly ListView<ShpkNodeKey> MaterialKeyView;
+        private readonly ListView<ShpkNodeKey> SubViewKeyView;
+
+        public ShpkNode() {
+            for( var i = 0; i < 16; i++ ) {
+                PassIndexes.Add( new( $"##Pass {i}", -1 ) );
+            }
+
+            PassView = new( "Pass", Passes, false, null, () => new(), () => CommandManager.Shpk );
+
+            SystemKeyView = new( SystemKeys, () => new(), () => CommandManager.Shpk, true );
+            SceneKeyView = new( SceneKeys, () => new(), () => CommandManager.Shpk, true );
+            MaterialKeyView = new( MaterialKeys, () => new(), () => CommandManager.Shpk, true );
+            SubViewKeyView = new( SubViewKeys, () => new(), () => CommandManager.Shpk, true );
+        }
+
+        public ShpkNode( BinaryReader reader, int systemKeyCount, int sceneKeyCount, int materialKeyCount, int subViewKeyCount ) : this() {
+            Selector.Read( reader );
+
             var passCount = reader.ReadUInt32();
-            var passIndexes = reader.ReadBytes( 16 );
 
-            var systemKeys = new List<uint>();
-            var sceneKeys = new List<uint>();
-            var materialKeys = new List<uint>();
-            var subViewKeys = new List<uint>();
+            foreach( var passIdx in PassIndexes ) {
+                passIdx.Value = ( sbyte )reader.ReadByte();
+            }
 
-            for( var i = 0; i < systemKeyCount; i++ ) systemKeys.Add( reader.ReadUInt32() );
-            for( var i = 0; i < sceneKeyCount; i++ ) sceneKeys.Add( reader.ReadUInt32() );
-            for( var i = 0; i < materialKeyCount; i++ ) materialKeys.Add( reader.ReadUInt32() );
-            for( var i = 0; i < subViewKeyCount; i++ ) subViewKeys.Add( reader.ReadUInt32() );
+            for( var i = 0; i < systemKeyCount; i++ ) SystemKeys.Add( new( reader ) );
+            for( var i = 0; i < sceneKeyCount; i++ ) SceneKeys.Add( new( reader ) );
+            for( var i = 0; i < materialKeyCount; i++ ) MaterialKeys.Add( new( reader ) );
+            for( var i = 0; i < subViewKeyCount; i++ ) SubViewKeys.Add( new( reader ) );
 
             for( var i = 0; i < passCount; i++ ) Passes.Add( new( reader ) );
         }
 
         public void Write( BinaryWriter writer ) {
-
+            Selector.Write( writer );
+            writer.Write( Passes.Count );
+            PassIndexes.ForEach( x => x.Write( writer ) );
+            SystemKeys.ForEach( x => x.Write( writer ) );
+            SceneKeys.ForEach( x => x.Write( writer ) );
+            MaterialKeys.ForEach( x => x.Write( writer ) );
+            SubViewKeys.ForEach( x => x.Write( writer ) );
+            Passes.ForEach( x => x.Write( writer ) );
         }
 
         public void Draw() {
+            using var _ = ImRaii.PushId( "Node" );
 
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) DrawParameters();
+            }
+
+            using( var tab = ImRaii.TabItem( "Passes" ) ) {
+                if( tab ) PassView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Keys" ) ) {
+                if( tab ) DrawKeys();
+            }
+        }
+
+        private void DrawParameters() {
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child " );
+
+            Selector.Draw( CommandManager.Shpk );
+            ImGui.Text( "Pass Indexes:" );
+
+            using var indent = ImRaii.PushIndent( 10f );
+            foreach( var passIdx in PassIndexes ) passIdx.Draw( CommandManager.Shpk );
+        }
+
+        private void DrawKeys() {
+            using var _ = ImRaii.PushId( "Keys" );
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "System" ) ) {
+                if( tab ) SystemKeyView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Scene" ) ) {
+                if( tab ) SceneKeyView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Material" ) ) {
+                if( tab ) MaterialKeyView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Sub-View" ) ) {
+                if( tab ) SubViewKeyView.Draw();
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Nodes {
     public class ShpkPass : IUiItem {
-        public readonly ParsedId Id = new( "Id " );
+        public readonly ParsedCrc Id = new( "Id " );
         public readonly ParsedUInt VertexShaderIdx = new( "Vertex Shader Index" );
         public readonly ParsedUInt PixelShaderIdx = new( "Pixel SHader Index" );
 
@@ -18,7 +18,9 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
         }
 
         public void Write( BinaryWriter writer ) {
-
+            Id.Write( writer );
+            VertexShaderIdx.Write( writer );
+            PixelShaderIdx.Write( writer );
         }
 
         public void Draw() {
