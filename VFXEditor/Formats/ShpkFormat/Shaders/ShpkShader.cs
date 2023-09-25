@@ -12,8 +12,6 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkShader : IUiItem {
         public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_cso.cso" ).Replace( '\\', '/' );
-        public static string TempDxil => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxil.dxil" ).Replace( '\\', '/' );
-        public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxbc.dxbc" ).Replace( '\\', '/' );
 
         public readonly DX DxVersion;
         public string Extension => DxVersion == DX.DX11 ? "dxbc" : "cso";
@@ -152,9 +150,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
         private void RefreshBin() {
             if( DxVersion == DX.DX11 ) {
-                File.WriteAllBytes( TempDxbc, Data );
-                InteropUtils.Run( "d3d/dxbc2dxil.exe", $"\"{TempDxbc}\" /o \"{TempDxil}\"", false, out var _ );
-                InteropUtils.Run( "d3d/dxc.exe", $"-dumpbin \"{TempDxil}\"", true, out BinDump );
+                BinDump = D3DCompiler.Disassemble( Data, D3DCompiler.DisassembleFlags.DisableDebugInfo ).ToString();
             }
             else {
                 File.WriteAllBytes( TempCso, Data );
