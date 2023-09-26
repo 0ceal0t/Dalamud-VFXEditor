@@ -92,9 +92,10 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
             using var child = ImRaii.Child( "Child " );
 
             Selector.Draw( CommandManager.Shpk );
-            ImGui.Text( "Pass Indexes:" );
 
-            using var indent = ImRaii.PushIndent( 10f );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            ImGui.TextDisabled( "Pass Indexes:" );
             foreach( var passIdx in PassIndexes ) passIdx.Draw( CommandManager.Shpk );
         }
 

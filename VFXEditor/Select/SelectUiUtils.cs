@@ -39,12 +39,9 @@ namespace VfxEditor.Select {
         }
 
         public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {
-            var childHeight = ImGui.GetWindowSize().Y - ImGui.GetCursorPosY();
-            var scrollY = ImGui.GetScrollY();
-            var style = ImGui.GetStyle();
-            itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;
-            preItems = ( int )Math.Floor( scrollY / itemHeight );
-            showItems = ( int )Math.Ceiling( childHeight / itemHeight );
+            itemHeight = ImGui.GetTextLineHeight() + ImGui.GetStyle().ItemSpacing.Y;
+            preItems = ( int )Math.Floor( ImGui.GetScrollY() / itemHeight );
+            showItems = ( int )Math.Ceiling( ( ImGui.GetWindowSize().Y - ImGui.GetCursorPosY() ) / itemHeight );
             postItems = count - showItems - preItems;
         }
 
