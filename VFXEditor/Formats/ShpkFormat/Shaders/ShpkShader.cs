@@ -146,12 +146,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             }
 
             using var font = ImRaii.PushFont( UiBuilder.MonoFont );
-
-            // ImGui.InputTextMultiline( "##BinDump", ref BinDump, ( uint )( BinDump.Length + 1 ), new( -1, -1 ), ImGuiInputTextFlags.ReadOnly );
-
             using var childColor = ImRaii.PushColor( ImGuiCol.ChildBg, 0x8A202020 );
             using var child = ImRaii.Child( "Child", new( -1, -1 ), true );
             using var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
+
+            if( string.IsNullOrEmpty( BinDump ) ) return;
 
             var lines = BinDump.Split( '\n' );
             foreach( var line in lines ) {
@@ -179,7 +178,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             var split = code.Split( " ", 2 );
 
-            using( var instructionColor = ImRaii.PushColor( ImGuiCol.Text, 0xFF66FFFF ) ) {
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, 0xFF66FFFF ) ) {
                 ImGui.SameLine();
                 ImGui.Text( split[0] );
             }

@@ -51,7 +51,7 @@ namespace VfxEditor.TmbFormat {
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DisplayAnimationWarning();
+            DrawAnimationWarning();
             base.DrawBody();
         }
     }

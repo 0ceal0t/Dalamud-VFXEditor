@@ -480,7 +480,7 @@ namespace VfxEditor.FileManager {
 
         private static readonly string WarningText = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
 
-        protected static void DisplayAnimationWarning() {
+        protected static void DrawAnimationWarning() {
             using var color = ImRaii.PushColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
             color.Push( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
