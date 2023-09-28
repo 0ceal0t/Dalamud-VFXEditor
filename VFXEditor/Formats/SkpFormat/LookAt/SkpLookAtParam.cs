@@ -15,7 +15,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             reader.ReadBytes( 3 );
         }
 
-        protected override List<ParsedBase> GetParsed() => [
+        protected override List<ParsedBase> GetParsed() => new() {
             new ParsedFloat4( "Limit Angles" ),
             new ParsedFloat3( "Forward Rotation" ),
             new ParsedFloat( "Limit Angle" ),
@@ -23,7 +23,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             new ParsedUInt( "Flags" ),
             new ParsedFloat( "Gain" ),
             Index,
-        ];
+        };
 
         public void Write( BinaryWriter writer ) {
             WriteParsed( writer );

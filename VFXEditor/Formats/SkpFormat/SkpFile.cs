@@ -50,7 +50,7 @@ namespace VfxEditor.Formats.SkpFormat {
             if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) PluginLog.Error( "FootIK found, please report this" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
-            VerifyIgnore = [];
+            VerifyIgnore = new();
             var data = ToBytes(); // will populate VerifyIgnore
             if( verify ) Verified = FileUtils.Verify( reader, data, VerifyIgnore );
             VerifyIgnore = null;

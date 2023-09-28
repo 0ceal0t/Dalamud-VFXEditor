@@ -76,7 +76,7 @@ namespace VfxEditor.TmbFormat {
 
             var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum();
 
-            List<TmbItem> items = [HeaderTmdh];
+            List<TmbItem> items = new() { HeaderTmdh };
             if( HeaderTmpp.IsAssigned ) items.Add( HeaderTmpp );
             items.Add( HeaderTmal );
             items.AddRange( Actors );

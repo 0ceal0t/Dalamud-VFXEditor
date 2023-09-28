@@ -11,9 +11,9 @@ namespace VfxEditor.Select.Shared.Npc {
         public List<string> pap;
 
         public NpcFilesStruct() {
-            vfx = [];
-            tmb = [];
-            pap = [];
+            vfx = new();
+            tmb = new();
+            pap = new();
         }
     }
 

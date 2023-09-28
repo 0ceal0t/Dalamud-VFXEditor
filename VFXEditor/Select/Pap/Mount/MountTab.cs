@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Pap.Mount {
         protected override void OnSelect() => LoadIcon( Selected.Icon );
 
         public override void LoadSelection( MountRow item, out Dictionary<string, Dictionary<string, string>> loaded ) {
-            loaded = [];
+            loaded = new();
 
             var papPaths = item.GetMountSeatPaps();
             for( var i = 0; i < papPaths.Count; i++ ) {

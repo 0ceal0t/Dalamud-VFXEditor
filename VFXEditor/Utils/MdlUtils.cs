@@ -10,8 +10,8 @@ namespace VfxEditor.Utils {
 
     public static class MdlUtils {
         public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
-            vertexesOut = [];
-            indexesOut = [];
+            vertexesOut = new();
+            indexesOut = new();
             if( !Dalamud.DataManager.FileExists( localPath ) ) return false;
 
             PluginLog.Log( "Importing MDL from: " + localPath );
@@ -64,17 +64,17 @@ namespace VfxEditor.Utils {
             color *= 255;
             normal *= 128;
             tangent *= 128;
-            ret.Position = [pos.X, pos.Y, pos.Z, 1];
+            ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
 
             var normalAdjusted = Vector3.Normalize( new Vector3( normal.X, normal.Y, normal.Z ) ) * 127f;
             var tangentAdjusted = Vector3.Normalize( new Vector3( tangent.X, tangent.Y, tangent.Z ) ) * 127f;
 
-            ret.Normal = [( int )normalAdjusted.X, ( int )normalAdjusted.Y, ( int )normalAdjusted.Z, -1];
-            ret.Tangent = [( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1];
-            ret.Color = [( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W];
+            ret.Normal = new int[] { ( int )normalAdjusted.X, ( int )normalAdjusted.Y, ( int )normalAdjusted.Z, -1 };
+            ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
+            ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
 
-            ret.Uv1 = [tex1.X, tex1.Y, tex1.X, tex1.Y];
-            ret.Uv2 = [tex1.X, tex1.Y, tex2.X, tex2.Y];
+            ret.Uv1 = new float[] { tex1.X, tex1.Y, tex1.X, tex1.Y };
+            ret.Uv2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
 
             return ret;
         }

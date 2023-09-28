@@ -25,7 +25,7 @@ namespace VfxEditor.ScdFormat {
         private readonly List<ParsedBase> Parsed;
 
         public ScdAttributeEntry() {
-            Parsed = [
+            Parsed = new() {
                 Version,
                 Reserved,
                 AttributeId,
@@ -34,7 +34,7 @@ namespace VfxEditor.ScdFormat {
                 ArgumentCount,
                 SoundLabelLow,
                 SoundLabelHigh,
-            ];
+            };
         }
 
         public override void Read( BinaryReader reader ) {

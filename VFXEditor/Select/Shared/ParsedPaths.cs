@@ -53,7 +53,7 @@ namespace VfxEditor.Select.Shared {
         }
 
         public static void ReadFile( List<string> paths, Regex regex, out List<ParsedPaths> loaded ) {
-            loaded = [];
+            loaded = new();
             try {
                 foreach( var path in paths.Where( x => !string.IsNullOrEmpty( x ) ) ) {
                     if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( new ParsedPaths( Dalamud.DataManager.GetFile( path ), regex ) );

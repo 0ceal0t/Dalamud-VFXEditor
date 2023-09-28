@@ -31,18 +31,18 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Locked = locked;
 
-            Parsed = [
+            Parsed = new() {
                 PreBehavior,
                 PostBehavior,
                 Random,
                 Keys
-            ];
+            };
 
             CurveEditor = new UiCurveEditor( this, type );
-            Display = [
+            Display = new() {
                 PreBehavior,
                 PostBehavior,
-            ];
+            };
             if( type != CurveType.Color ) Display.Add( Random );
         }
 

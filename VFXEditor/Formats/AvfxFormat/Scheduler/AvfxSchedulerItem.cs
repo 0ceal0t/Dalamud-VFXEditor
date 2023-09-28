@@ -22,18 +22,18 @@ namespace VfxEditor.AvfxFormat {
             Scheduler = scheduler;
             Name = name;
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 StartTime,
                 TimelineIdx
-            ];
+            };
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = [
+            Display = new() {
                 Enabled,
                 StartTime
-            ];
+            };
         }
 
         public AvfxSchedulerItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );

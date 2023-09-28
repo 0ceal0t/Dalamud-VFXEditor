@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         }
 
         public override void Reset() {
-            Selected = [];
+            Selected = new();
         }
 
         public override bool Belongs( AvfxNode node ) => node is T;

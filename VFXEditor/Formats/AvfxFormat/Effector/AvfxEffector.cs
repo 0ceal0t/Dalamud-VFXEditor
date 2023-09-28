@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor ) {
-            Parsed = [
+            Parsed = new() {
                 EffectorVariety,
                 RotationOrder,
                 CoordComputeOrder,
@@ -30,7 +30,7 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            ];
+            };
 
             EffectorVariety.Command = () => {
                 return new AvfxEffectorDataCommand( this );

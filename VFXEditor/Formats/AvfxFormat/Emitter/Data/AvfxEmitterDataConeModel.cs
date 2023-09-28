@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEmitterDataConeModel() : base() {
-            Parsed = [
+            Parsed = new() {
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -33,7 +33,7 @@ namespace VfxEditor.AvfxFormat {
                 InjectionSpeedRandom,
                 InjectionAngle,
                 InjectionAngleRandom
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( RotationOrderType );

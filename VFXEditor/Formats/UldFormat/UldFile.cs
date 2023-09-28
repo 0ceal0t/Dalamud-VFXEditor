@@ -209,7 +209,7 @@ namespace VfxEditor.UldFormat {
         // ========== WORKSPACE ==========
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = [];
+            Dictionary<string, string> ret = new();
             Textures.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Parts.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Components.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );

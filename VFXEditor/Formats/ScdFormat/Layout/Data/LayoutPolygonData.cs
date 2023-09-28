@@ -26,7 +26,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved2 = new( 3 * 4 );
 
         public LayoutPolygonData() {
-            Parsed = [
+            Parsed = new() {
                 MaxRange,
                 MinRange,
                 Height,
@@ -42,9 +42,8 @@ namespace VfxEditor.ScdFormat {
                 VertexCount,
                 Reserved1,
                 RotSpeed,
-                Reserved2,
-                // Positions go here
-            ];
+                Reserved2
+            };
 
             for( var i = 0; i < 32; i++ ) Parsed.Add( new ParsedFloat4( $"Position {i}" ) );
         }

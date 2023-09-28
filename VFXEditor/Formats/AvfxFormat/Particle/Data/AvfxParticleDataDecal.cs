@@ -5,9 +5,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataDecal() : base() {
-            Parsed = [
+            Parsed = new() {
                 ScalingScale
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ScalingScale );

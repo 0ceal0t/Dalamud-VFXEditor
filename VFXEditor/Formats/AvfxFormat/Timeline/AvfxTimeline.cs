@@ -30,18 +30,18 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimeline( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
-            Parsed = [
+            Parsed = new() {
                 LoopStart,
                 LoopEnd,
                 BinderIdx,
                 TimelineCount,
                 ClipCount
-            ];
+            };
 
-            Display = [
+            Display = new() {
                 LoopStart,
                 LoopEnd
-            ];
+            };
 
             BinderSelect = new( this, "Binder Select", groupSet.Binders, BinderIdx );
 

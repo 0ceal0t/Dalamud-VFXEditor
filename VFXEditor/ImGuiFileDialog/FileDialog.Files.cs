@@ -36,7 +36,7 @@ namespace ImGuiFileDialog {
         private readonly object FilesLock = new();
 
         private SortingField CurrentSortingField = SortingField.FileName;
-        private readonly bool[] SortDescending = [false, false, false, false];
+        private readonly bool[] SortDescending = new bool[] { false, false, false, false };
 
         private bool CreateDir( string dirPath ) {
             var newPath = Path.Combine( CurrentPath, dirPath );
@@ -199,7 +199,7 @@ namespace ImGuiFileDialog {
         }
 
         private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
-            folders = [];
+            folders = new();
             try {
                 var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
                 if( shellAppType == null )

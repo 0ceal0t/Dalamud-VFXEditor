@@ -172,7 +172,10 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            Searched ??= [.. Items];
+            if( Searched == null ) {
+                Searched = new List<T>();
+                Searched.AddRange( Items );
+            }
 
             var resetScroll = false;
             DrawExtra();

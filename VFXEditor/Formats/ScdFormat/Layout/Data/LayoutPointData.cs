@@ -40,7 +40,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved2 = new( 4 );
 
         public LayoutPointData() {
-            Parsed = [
+            Parsed = new() {
                 Position,
                 MaxRange,
                 MinRange,
@@ -64,7 +64,7 @@ namespace VfxEditor.ScdFormat {
                 FadeOutTime,
                 ConvergenceFac,
                 Reserved2
-            ];
+            };
         }
     }
 }

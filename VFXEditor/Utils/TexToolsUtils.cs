@@ -130,7 +130,7 @@ namespace VfxEditor.Utils {
             headerData.AddRange( new byte[headerPadding] );
             newData.AddRange( headerData );
             newData.AddRange( dataBlocks );
-            return [.. newData];
+            return newData.ToArray();
         }
 
         // https://github.com/TexTools/xivModdingFramework/blob/288478772146df085f0d661b09ce89acec6cf72a/xivModdingFramework/Helpers/IOUtil.cs#L40

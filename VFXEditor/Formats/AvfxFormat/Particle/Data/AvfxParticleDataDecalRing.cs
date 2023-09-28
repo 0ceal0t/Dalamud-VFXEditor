@@ -7,11 +7,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataDecalRing() : base() {
-            Parsed = [
+            Parsed = new() {
                 Width,
                 ScalingScale,
                 RingFan
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ScalingScale );

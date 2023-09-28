@@ -19,7 +19,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataDisc() : base() {
-            Parsed = [
+            Parsed = new() {
                 PartsCount,
                 PartsCountU,
                 PartsCountV,
@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
                 RadiusEnd,
                 ColorEdgeInner,
                 ColorEdgeOuter
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( PartsCount );

@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Parsed = [
+            Parsed = new() {
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -146,7 +146,7 @@ namespace VfxEditor.AvfxFormat {
                 PolyLineTag,
                 Colors,
                 Frames
-            ];
+            };
 
             Display.Add( InjectionPositionType );
             Display.Add( InjectionDirectionType );

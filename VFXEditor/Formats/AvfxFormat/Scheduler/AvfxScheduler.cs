@@ -20,10 +20,10 @@ namespace VfxEditor.AvfxFormat {
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
-            Parsed = [
+            Parsed = new() {
                 ItemCount,
                 TriggerCount
-            ];
+            };
 
             ItemSplit = new( "ItEm", Items, this, true );
             TriggerSplit = new( "Trgr", Triggers, this, false );

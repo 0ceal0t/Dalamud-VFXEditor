@@ -10,14 +10,14 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved = new( 3 * 4 );
 
         public LayoutDirectionData() {
-            Parsed = [
+            Parsed = new() {
                 Volume,
                 Pitch,
                 ReverbFac,
                 Direction,
                 RotSpeed,
                 Reserved
-            ];
+            };
         }
     }
 }

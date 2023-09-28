@@ -32,8 +32,8 @@ namespace VfxEditor.Interop.Havok {
         }
 
         public virtual void UpdateBones() {
-            BoneMatrixes = [];
-            BoneList = [];
+            BoneMatrixes = new();
+            BoneList = new();
             if( Resource == null || Skeleton == null ) return;
 
             var parents = new List<int>();

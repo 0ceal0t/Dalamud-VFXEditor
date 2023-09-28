@@ -36,7 +36,7 @@ namespace VfxEditor.AvfxFormat {
             Main = AvfxMain.FromStream( reader );
 
             var data = ToBytes();
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), [(8, data.Length)] );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), new() { (8, data.Length) } );
 
             NodeGroupSet = Main.NodeGroupSet;
 

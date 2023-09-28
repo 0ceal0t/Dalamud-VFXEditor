@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
         // For when something happens to the selected node
 
         public override List<int> GetSelectedIdx( AvfxNode node ) {
-            List<int> idx = [];
+            List<int> idx = new();
             for( var i = 0; i < Selected.Count; i++ ) {
                 if( Selected[i] == node ) idx.Add( i );
             }

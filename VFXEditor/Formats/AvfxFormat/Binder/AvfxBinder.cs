@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor ) {
-            Parsed = [
+            Parsed = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -55,7 +55,7 @@ namespace VfxEditor.AvfxFormat {
                 Prop1,
                 Prop2,
                 PropGoal
-            ];
+            };
 
             BinderVariety.Command = () => {
                 return new AvfxBinderDataCommand( this );

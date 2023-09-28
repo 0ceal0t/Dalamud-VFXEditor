@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 UvSetIdx,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureBorderV,
                 TextureIdx,
                 NPow
-            ];
+            };
 
             Display.Add( Enabled );
             Display.Add( UvSetIdx );

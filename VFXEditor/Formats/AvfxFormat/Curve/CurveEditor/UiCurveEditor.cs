@@ -323,8 +323,8 @@ namespace VfxEditor.AvfxFormat {
         // ==========================
 
         private static void GetDrawLine( List<UiCurveEditorPoint> points, bool color, out List<double> xs, out List<double> ys ) {
-            xs = [];
-            ys = [];
+            xs = new();
+            ys = new();
 
             if( points.Count > 0 ) {
                 xs.Add( points[0].DisplayX );

@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor ) {
             NodeGroups = groupSet;
 
-            Parsed = [
+            Parsed = new() {
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -105,7 +105,7 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngleRandomZ,
                 VelocityRandomX,
                 VelocityRandomZ
-            ];
+            };
             Sound.SetAssigned( false );
 
             AnimationSplitDisplay = new( "Animation", new() {
@@ -142,7 +142,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView = new UiNodeGraphView( this );
 
-            Parameters = [
+            Parameters = new() {
                 LoopStart,
                 LoopEnd,
                 ChildLimit,
@@ -150,7 +150,7 @@ namespace VfxEditor.AvfxFormat {
                 RotationDirectionBaseType,
                 CoordComputeOrderType,
                 RotationOrderType
-            ];
+            };
 
             Sound.Parsed.Icons.Insert( 0, new() {
                 Icon = () => FontAwesomeIcon.VolumeUp,

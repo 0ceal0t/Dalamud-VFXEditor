@@ -113,7 +113,7 @@ namespace VfxEditor.Utils.Gltf {
                 }
             }
 
-            scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, [.. bones] );
+            scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, bones.ToArray() );
             var armature = new NodeBuilder( "Armature" );
             roots.ForEach( armature.AddNode );
             scene.AddNode( armature );

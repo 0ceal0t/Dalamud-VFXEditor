@@ -60,7 +60,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {
             Name = name;
 
-            Parsed = [
+            Parsed = new() {
                 BindPointType,
                 BindTargetPointType,
                 BinderName,
@@ -75,14 +75,14 @@ namespace VfxEditor.AvfxFormat {
                 RingRadius,
                 BCT,
                 Position
-            ];
+            };
             BinderName.SetAssigned( false );
             Position.SetAssigned( true );
 
-            DisplayTabs = [
+            DisplayTabs = new() {
                 ( Parameters = new UiDisplayList( "Parameters" ) ),
                 Position
-            ];
+            };
 
             Parameters.AddRange( new() {
                 BindPointType,

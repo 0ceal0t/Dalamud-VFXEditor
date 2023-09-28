@@ -100,7 +100,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Parsing
 
-            Parsed = [
+            Parsed = new() {
                 LoopStart,
                 LoopEnd,
                 ParticleVariety,
@@ -150,9 +150,9 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            ];
+            };
 
-            Parsed2 = [
+            Parsed2 = new() {
                 TC1,
                 TC2,
                 TC3,
@@ -161,7 +161,7 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            ];
+            };
 
             // Drawing
 

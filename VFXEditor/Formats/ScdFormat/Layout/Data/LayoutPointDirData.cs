@@ -19,7 +19,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved1 = new( 3 * 4 );
 
         public LayoutPointDirData() {
-            Parsed = [
+            Parsed = new() {
                 Position,
                 Direction,
                 RangeX,
@@ -35,7 +35,7 @@ namespace VfxEditor.ScdFormat {
                 InteriorFac,
                 FixedDirection,
                 Reserved1
-            ];
+            };
         }
     }
 }

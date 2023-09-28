@@ -125,7 +125,7 @@ namespace VfxEditor.FileManager {
             Directory.CreateDirectory( rootPath );
 
             var documentIdx = 0;
-            List<S> documentMeta = [];
+            List<S> documentMeta = new();
 
             foreach( var document in Documents ) {
                 document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{documentIdx++}.{Extension}" );

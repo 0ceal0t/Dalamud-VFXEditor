@@ -32,12 +32,12 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiModelUvView UvView;
 
         public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
-            Parsed = [
+            Parsed = new() {
                 EmitVertexNumbers,
                 EmitVertexes,
                 Vertexes,
                 Indexes
-            ];
+            };
 
             NodeView = new( this );
             UvView = new UiModelUvView();

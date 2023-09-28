@@ -63,11 +63,11 @@ namespace VfxEditor.DirectX {
                 PS = new PixelShader( Device, CompiledPS );
                 GS = new GeometryShader( Device, CompiledGS );
                 Signature = ShaderSignature.GetInputSignature( CompiledVS );
-                Layout = new InputLayout( Device, Signature, [
-                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
-                ] );
+                Layout = new InputLayout( Device, Signature, new InputElement[] {
+                    new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
+                    new InputElement( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
+                } );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error compiling shaders" );
@@ -110,14 +110,14 @@ namespace VfxEditor.DirectX {
                 EmitVS = new VertexShader( Device, EmitCompiledVS );
                 EmitPS = new PixelShader( Device, EmitCompiledPS );
                 EmitSignature = ShaderSignature.GetInputSignature( EmitCompiledVS );
-                EmitLayout = new InputLayout( Device, EmitSignature, [
+                EmitLayout = new InputLayout( Device, EmitSignature, new InputElement[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
                     new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
                     new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1),
                     new InputElement("INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
                     new InputElement("INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
                     new InputElement("INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1)
-                ] );
+                } );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error compiling shaders" );

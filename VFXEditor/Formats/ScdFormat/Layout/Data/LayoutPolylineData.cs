@@ -16,8 +16,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedFloat Direction = new( "Direction" );
 
         public LayoutPolylineData() {
-            Parsed = [
-                // Positions go here
+            Parsed = new() {
                 MaxRange,
                 MinRange,
                 Height,
@@ -30,7 +29,7 @@ namespace VfxEditor.ScdFormat {
                 Reserved1,
                 InteriorFac,
                 Direction
-            ];
+            };
 
             for( var i = 0; i < 16; i++ ) Parsed.Insert( 0, new ParsedFloat4( $"Position {15 - i}" ) );
         }

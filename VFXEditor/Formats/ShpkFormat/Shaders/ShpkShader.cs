@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -30,8 +31,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly CommandSplitView<ShpkParameterInfo> SamplerView;
         private readonly CommandSplitView<ShpkParameterInfo> ResourceView;
 
-        private byte[] ExtraData = [];
-        private byte[] Data = [];
+        private byte[] ExtraData = Array.Empty<byte>();
+        private byte[] Data = Array.Empty<byte>();
         private int ExtraSize => Vertex ? ( DxVersion == DX.DX9 ? 4 : 8 ) : 0;
 
         private bool BinLoaded = false;

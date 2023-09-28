@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
-            Parsed = [
+            Parsed = new() {
                 ModelNumberRandomValue,
                 ModelNumberRandomType,
                 ModelNumberRandomInterval,
@@ -38,7 +38,7 @@ namespace VfxEditor.AvfxFormat {
                 FresnelRotation,
                 ColorBegin,
                 ColorEnd
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );

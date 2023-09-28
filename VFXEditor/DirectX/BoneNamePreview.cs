@@ -61,7 +61,7 @@ namespace VfxEditor.DirectX {
             CurrentFile = file;
             NumVertices = 0;
             NumWireframe = 0;
-            BoneList = [];
+            BoneList = new();
             Vertices?.Dispose();
             WireframeVertices?.Dispose();
             UpdateDraw();

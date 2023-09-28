@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat {
             }
         }
 
-        public static readonly int[] XORTABLE = [
+        public static readonly int[] XORTABLE = new int[] {
             0x003A,
             0x0032,
             0x0032,
@@ -295,6 +295,6 @@ namespace VfxEditor.ScdFormat {
             0x0007,
             0x00E3,
             0x0001
-        ];
+        };
     }
 }

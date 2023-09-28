@@ -38,7 +38,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataPolyline() : base() {
-            Parsed = [
+            Parsed = new() {
                 CreateLineType,
                 NotBillBoardBaseAxisType,
                 BindWeaponType,
@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
                 ColorEdgeBegin,
                 ColorEdgeCenter,
                 ColorEdgeEnd
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( CreateLineType );

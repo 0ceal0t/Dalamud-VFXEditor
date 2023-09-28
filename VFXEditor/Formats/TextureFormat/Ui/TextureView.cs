@@ -20,12 +20,12 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         private string SearchText = "";
         private ExtractFileType ExtractType = ExtractFileType.Atex_Tex;
 
-        private static readonly TextureFormat[] ValidPngFormat = [
+        private static readonly TextureFormat[] ValidPngFormat = new TextureFormat[] {
             TextureFormat.DXT5,
             TextureFormat.DXT3,
             TextureFormat.DXT1,
             TextureFormat.A8R8G8B8,
-        ];
+        };
 
         private enum ExtractFileType {
             Atex_Tex,
@@ -33,11 +33,11 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             Dds,
         }
 
-        private static readonly ExtractFileType[] ExtractTypes = [
+        private static readonly ExtractFileType[] ExtractTypes = new ExtractFileType[] {
             ExtractFileType.Atex_Tex,
             ExtractFileType.Png,
             ExtractFileType.Dds
-        ];
+        };
 
         public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures" ) {
             Textures = textures;

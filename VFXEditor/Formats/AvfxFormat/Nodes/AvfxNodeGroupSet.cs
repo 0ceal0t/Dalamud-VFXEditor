@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
         public void Initialize() => AllGroups.ForEach( group => group.Initialize() );
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = [];
+            Dictionary<string, string> ret = new();
             AllGroups.ForEach( group => group.GetRenamingMap( ret ) );
             return ret;
         }

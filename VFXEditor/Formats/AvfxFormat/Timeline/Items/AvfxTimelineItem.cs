@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 StartTime,
                 EndTime,
@@ -37,17 +37,17 @@ namespace VfxEditor.AvfxFormat {
                 EmitterIdx,
                 Platform,
                 ClipIdx
-            ];
+            };
             AvfxBase.RecurseAssigned( Parsed, false );
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = [
+            Display = new() {
                 Enabled,
                 StartTime,
                 EndTime,
                 Platform
-            ];
+            };
         }
 
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {

@@ -29,7 +29,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved2 = new( 3 * 4 );
 
         public LayoutSurfaceData() {
-            Parsed = [
+            Parsed = new() {
                 Position1,
                 Position2,
                 Position3,
@@ -49,7 +49,7 @@ namespace VfxEditor.ScdFormat {
                 Reserved1,
                 RotSpeed,
                 Reserved2
-            ];
+            };
         }
     }
 }

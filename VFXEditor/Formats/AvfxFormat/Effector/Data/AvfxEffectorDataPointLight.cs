@@ -17,7 +17,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEffectorDataPointLight() : base() {
-            Parsed = [
+            Parsed = new() {
                 Color,
                 DistanceScale,
                 Rotation,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 EnableMoveShadow,
                 ShadowCreateDistanceNear,
                 ShadowCreateDistanceFar
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( PointLightAttenuationType );

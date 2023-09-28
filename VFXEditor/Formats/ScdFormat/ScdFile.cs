@@ -199,7 +199,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private static void UpdateOffsets<T>( BinaryWriter writer, List<T> items, int offsetLocation, Action<BinaryWriter, T> action ) where T : ScdEntry {
-            List<int> positions = [];
+            List<int> positions = new();
             foreach( var item in items ) {
                 positions.Add( ( int )writer.BaseStream.Position );
                 action.Invoke( writer, item );

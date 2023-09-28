@@ -91,7 +91,7 @@ namespace VfxEditor.AvfxFormat {
         private float ScaleCombined = 1.0f;
 
         public AvfxMain() : base( "AVFX" ) {
-            Parsed = [
+            Parsed = new() {
                 Version,
                 IsDelayFastParticle,
                 IsFitGround,
@@ -145,11 +145,11 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 GlobalFogInfluence,
                 LTSEnabled
-            ];
+            };
 
             NodeGroupSet = new( this );
 
-            Display = [
+            Display = new() {
                 new UiFloat3( "Revised Scale", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
                 new UiFloat3( "Revised Position", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
                 new UiFloat3( "Revised Rotation", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
@@ -186,7 +186,7 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 GlobalFogEnabled,
                 LTSEnabled
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
