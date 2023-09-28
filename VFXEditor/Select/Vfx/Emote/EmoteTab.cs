@@ -3,7 +3,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Emote {
-    public class EmoteTab : SelectTab<EmoteRow, ParseAvfx> {
+    public class EmoteTab : SelectTab<EmoteRow, ParsedPaths> {
         public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Emote", SelectResultType.GameEmote ) { }
 
         // ===== LOADING =====
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Vfx.Emote {
             }
         }
 
-        public override void LoadSelection( EmoteRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.PapFiles, out loaded );
+        public override void LoadSelection( EmoteRow item, out ParsedPaths loaded ) => ParsedPaths.ReadFile( item.PapFiles, SelectDataUtils.AvfxRegex, out loaded );
 
         // ===== DRAWING ======
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Vfx.Emote {
             SelectUiUtils.DrawIcon( Icon );
             ImGui.TextDisabled( Selected.Command );
 
-            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
         }
 
         protected override string GetName( EmoteRow item ) => item.Name;

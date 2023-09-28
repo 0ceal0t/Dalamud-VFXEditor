@@ -6,7 +6,7 @@ using VfxEditor.Select.Shared;
 using VfxEditor.Select.Shared.Cutscene;
 
 namespace VfxEditor.Select.Vfx.JournalCutscene {
-    public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParseAvfx>> {
+    public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParsedPaths>> {
         public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Shared-JournalCutscene", SelectResultType.GameCutscene ) { }
 
         // ===== LOADING =====
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
             foreach( var item in sheet ) Items.Add( new JournalCutsceneRow( item ) );
         }
 
-        public override void LoadSelection( JournalCutsceneRow item, out List<ParseAvfx> loaded ) => ParseAvfx.ReadFile( item.Paths, out loaded );
+        public override void LoadSelection( JournalCutsceneRow item, out List<ParsedPaths> loaded ) => ParsedPaths.ReadFile( item.Paths, SelectDataUtils.AvfxRegex, out loaded );
 
         // ===== DRAWING ======
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Vfx.JournalCutscene {
 
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaths( "VFX", Loaded[idx].VfxPaths, $"{Selected.Name} {idx}", true );
+                    DrawPaths( "VFX", Loaded[idx].Paths, $"{Selected.Name} {idx}", true );
                 }
             }
         }

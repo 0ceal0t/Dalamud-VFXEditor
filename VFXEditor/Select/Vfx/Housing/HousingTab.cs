@@ -4,7 +4,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Housing {
-    public class HousingTab : SelectTab<HousingRow, ParseAvfx> {
+    public class HousingTab : SelectTab<HousingRow, ParsedPaths> {
         public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Housing", SelectResultType.GameHousing ) { }
 
         // ===== LOADING =====
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Vfx.Housing {
             foreach( var item in outdoorSheet ) Items.Add( new HousingRow( item ) );
         }
 
-        public override void LoadSelection( HousingRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.SgbPath, out loaded );
+        public override void LoadSelection( HousingRow item, out ParsedPaths loaded ) => ParsedPaths.ReadFile( item.SgbPath, SelectDataUtils.AvfxRegex, out loaded );
 
         // ===== DRAWING ======
 
@@ -29,7 +29,7 @@ namespace VfxEditor.Select.Vfx.Housing {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );
 
-            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

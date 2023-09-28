@@ -6,7 +6,7 @@ using System.Linq;
 using VfxEditor.Select.Shared;
 
 namespace VfxEditor.Select.Vfx.Gimmick {
-    public class GimmickTab : SelectTab<GimmickRow, ParseAvfx> {
+    public class GimmickTab : SelectTab<GimmickRow, ParsedPaths> {
         public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Gimmick", SelectResultType.GameGimmick ) { }
 
         // ===== LOADING =====
@@ -24,23 +24,21 @@ namespace VfxEditor.Select.Vfx.Gimmick {
             }
         }
 
-        public override void LoadSelection( GimmickRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.TmbPath, out loaded );
+        public override void LoadSelection( GimmickRow item, out ParsedPaths loaded ) => ParsedPaths.ReadFile( item.TmbPath, SelectDataUtils.AvfxRegex, out loaded );
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            if( Loaded.VfxExists ) {
-                using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
-                    SelectUiUtils.Copy( Selected.TmbPath );
-                }
-
-                ImGui.SameLine();
-                ImGui.Text( "TMB:" );
-                ImGui.SameLine();
-                SelectUiUtils.DisplayPath( Selected.TmbPath );
-
-                DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
+            using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
+                SelectUiUtils.Copy( Selected.TmbPath );
             }
+
+            ImGui.SameLine();
+            ImGui.Text( "TMB:" );
+            ImGui.SameLine();
+            SelectUiUtils.DisplayPath( Selected.TmbPath );
+
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
         }
 
         protected override string GetName( GimmickRow item ) => item.Name;

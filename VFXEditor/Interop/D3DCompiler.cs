@@ -46,7 +46,6 @@ namespace VfxEditor.Interop {
                     Marshal.FinalReleaseComObject( disassembly );
             }
         }
-#nullable disable
 
         [PreserveSig]
         [DllImport( "D3DCompiler_47.dll" )]

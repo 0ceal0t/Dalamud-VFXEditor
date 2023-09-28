@@ -5,7 +5,7 @@ using VfxEditor.Select.Shared;
 using VfxEditor.Select.Shared.Zone;
 
 namespace VfxEditor.Select.Vfx.Zone {
-    public class ZoneTab : SelectTab<ZoneRow, ParseAvfx> {
+    public class ZoneTab : SelectTab<ZoneRow, ParsedPaths> {
         public ZoneTab( SelectDialog dialog, string name ) : base( dialog, name, "Vfx-Zone", SelectResultType.GameZone ) { }
 
         // ===== LOADING =====
@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Vfx.Zone {
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
 
-        public override void LoadSelection( ZoneRow item, out ParseAvfx loaded ) => ParseAvfx.ReadFile( item.LgbPath, out loaded );
+        public override void LoadSelection( ZoneRow item, out ParsedPaths loaded ) => ParsedPaths.ReadFile( item.LgbPath, SelectDataUtils.AvfxRegex, out loaded );
 
         // ===== DRAWING ======
 
@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Vfx.Zone {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.LgbPath );
 
-            DrawPaths( "VFX", Loaded.VfxPaths, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
         }
 
         protected override string GetName( ZoneRow item ) => item.Name;

@@ -3,31 +3,28 @@ using System.Text;
 
 namespace VfxEditor.Select.Vfx.Action {
     public class ActionRow {
-        public static readonly string CommonVfxPrefix = "vfx/common/eff/";
+        public readonly ActionRow HitAction;
 
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
 
-        public readonly string SelfTmbKey;
-        public readonly ActionRow HitAction;
-        public readonly string CastVfxKey;
-        public readonly string StartVfxKey;
+        private readonly string TmbKey;
+        private readonly string CastVfxKey;
+        private readonly string StartVfxKey;
 
-        public string CastVfxPath => string.IsNullOrEmpty( CastVfxKey ) ? "" : $"{CommonVfxPrefix}{CastVfxKey}.avfx";
-        public string StartVfxPath => string.IsNullOrEmpty( StartVfxKey ) ? "" : $"{CommonVfxPrefix}{StartVfxKey}.avfx";
-        public bool HasVfx => !string.IsNullOrEmpty( CastVfxKey ) || !string.IsNullOrEmpty( SelfTmbKey ) || !string.IsNullOrEmpty( StartVfxKey );
-        public string TmbPath => $"chara/action/{SelfTmbKey}.tmb";
+        public string TmbPath => SelectDataUtils.ToTmbPath( TmbKey );
+        public string CastVfxPath => SelectDataUtils.ToVfxPath( CastVfxKey );
+        public string StartVfxPath => SelectDataUtils.ToVfxPath( StartVfxKey );
 
-        public ActionRow( Lumina.Excel.GeneratedSheets.Action action, bool justSelf ) {
+        public ActionRow( Lumina.Excel.GeneratedSheets.Action action, bool isHit ) {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            var selfKey = action.AnimationEnd.Value?.Key.ToString();
-            SelfTmbKey = ( string.IsNullOrEmpty( selfKey ) || selfKey.Contains( "[SKL_ID]" ) ) ? string.Empty : selfKey;
+            TmbKey = action.AnimationEnd.Value?.Key.ToString();
 
-            if( justSelf ) {
+            if( isHit ) {
                 HitAction = null;
                 return;
             }
@@ -50,7 +47,7 @@ namespace VfxEditor.Select.Vfx.Action {
                 RowId = action.RowId,
                 AnimationEnd = action.ActionTimelineHit
             };
-            HitAction = new ActionRow( hitAction, justSelf: true );
+            HitAction = new ActionRow( hitAction, true );
         }
     }
 }

@@ -1,4 +1,5 @@
 using VfxEditor.ScdFormat;
+using VfxEditor.Select.Scd.Action;
 using VfxEditor.Select.Scd.Bgm;
 using VfxEditor.Select.Scd.BgmQuest;
 using VfxEditor.Select.Scd.Common;
@@ -12,6 +13,7 @@ namespace VfxEditor.Select.Scd {
     public class ScdSelectDialog : SelectDialog {
         public ScdSelectDialog( string id, ScdManager manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
+                new ActionTab( this, "Actions" ),
                 new MountScdTab( this, "Mount" ),
                 new OrchestrionTab( this, "Orchestrion" ),
                 new ZoneTab( this, "Zone" ),

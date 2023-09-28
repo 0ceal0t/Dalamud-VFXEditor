@@ -13,9 +13,7 @@ namespace VfxEditor.Select.Tmb.Emote {
             Icon = emote.Icon;
             Name = emote.Name.ToString();
             TmbFiles = emote.ActionTimeline.Select( x => x?.Value?.Key.ToString() )
-                .Where( x => !string.IsNullOrEmpty( x ) ).Select( ToTmb ).ToList();
+                .Where( x => !string.IsNullOrEmpty( x ) ).Select( SelectDataUtils.ToTmbPath ).ToList();
         }
-
-        private static string ToTmb( string key ) => string.IsNullOrEmpty( key ) ? "" : $"chara/action/{key}.tmb";
     }
 }

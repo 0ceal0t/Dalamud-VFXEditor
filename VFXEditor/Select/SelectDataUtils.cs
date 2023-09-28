@@ -29,6 +29,10 @@ namespace VfxEditor.Select {
         private static partial Regex AvfxRegexPattern();
         public static readonly Regex AvfxRegex = AvfxRegexPattern();
 
+        [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.scd", RegexOptions.Compiled )]
+        private static partial Regex ScdRegexPattern();
+        public static readonly Regex ScdRegex = ScdRegexPattern();
+
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
         public static Dictionary<string, List<int>> FaceMap {
@@ -153,5 +157,9 @@ namespace VfxEditor.Select {
 
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path ) );
         }
+
+        public static string ToTmbPath( string key ) => ( string.IsNullOrEmpty( key ) || key.Contains( "[SKL_ID]" ) ) ? string.Empty : $"chara/action/{key}.tmb";
+
+        public static string ToVfxPath( string key ) => string.IsNullOrEmpty( key ) ? string.Empty : $"vfx/common/eff/{key}.avfx";
     }
 }
