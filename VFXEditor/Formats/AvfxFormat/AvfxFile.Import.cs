@@ -17,10 +17,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Import( string path ) {
-            var ext = Path.GetExtension( path );
             using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
 
-            if( ext == ".vfxedit" ) { // OLD METHOD
+            if( Path.GetExtension( path ) == ".vfxedit" ) { // OLD METHOD
                 var dataSize = reader.BaseStream.Length;
 
                 if( dataSize < 8 ) return;

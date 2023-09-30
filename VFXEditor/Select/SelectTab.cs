@@ -1,6 +1,7 @@
 using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -62,11 +63,9 @@ namespace VfxEditor.Select {
         }
 
         protected void DrawPaths( string label, IEnumerable<string> paths, string resultName, bool play = false ) {
-            var idx = 0;
-            foreach( var path in paths ) {
+            foreach( var (path, idx) in paths.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
                 DrawPath( $"{label} #{idx}", path, $"{resultName} #{idx}", play );
-                idx++;
             }
         }
 
@@ -76,8 +75,7 @@ namespace VfxEditor.Select {
             }
         }
 
-        protected void DrawPath( string label, string path, string resultName, bool play = false ) =>
-            DrawPath( label, path, path, resultName, play );
+        protected void DrawPath( string label, string path, string resultName, bool play = false ) => DrawPath( label, path, path, resultName, play );
 
         protected void DrawPath( string label, string path, string displayPath, string resultName, bool play = false ) {
             if( string.IsNullOrEmpty( path ) ) return;

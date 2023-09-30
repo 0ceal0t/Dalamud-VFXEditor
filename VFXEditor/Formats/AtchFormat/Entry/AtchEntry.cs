@@ -40,7 +40,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
 
             for( var idx = 0; idx < States.Count; idx++ ) {
                 var state = States[idx];
-                if( ImGui.CollapsingHeader( $"State {idx} ({state.Bone.Value})" ) ) {
+                if( ImGui.CollapsingHeader( $"State {idx} ({state.Bone.Value})###{idx}" ) ) {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 

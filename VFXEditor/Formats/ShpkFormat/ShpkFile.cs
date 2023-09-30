@@ -79,7 +79,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numVertex = reader.ReadUInt32();
             var numPixel = reader.ReadUInt32();
 
-            var materialParamSize = reader.ReadUInt32();
+            reader.ReadUInt32(); // Material parameters size
             var numMaterialParams = reader.ReadUInt32();
 
             var numConstants = reader.ReadUInt32();
@@ -158,7 +158,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             writer.Write( VertexShaders.Count );
             writer.Write( PixelShaders.Count );
 
-            var materialParamSize = ( Constants.FirstOrDefault( x => x.Id == MaterialParamsConstantId )?.DataSize ?? 0u ) << 4;
+            var materialParamSize = ( Constants.FirstOrDefault( x => x.Id == MaterialParamsConstantId )?.DataSize ?? 0u );
             foreach( var param in MaterialParameters ) {
                 materialParamSize = ( uint )Math.Max( materialParamSize, ( uint )param.Offset.Value + param.Size.Value );
             }

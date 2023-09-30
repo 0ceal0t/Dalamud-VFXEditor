@@ -1,3 +1,4 @@
+using OtterGui;
 using System.IO;
 using System.Linq;
 using VfxEditor.Select.Shared.Common;
@@ -9,17 +10,16 @@ namespace VfxEditor.Select.Shpk.Common {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var lineIdx = 0;
-            foreach( var line in File.ReadLines( SelectDataUtils.MiscShpkPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
-                Items.Add( new CommonRow( lineIdx, line, line.Replace( ".shpk", "" ).Replace( "shader/", "" ), 0 ) );
-                lineIdx++;
+            foreach( var (line, idx) in File.ReadLines( SelectDataUtils.MiscShpkPath ).Where( x => !string.IsNullOrEmpty( x ) ).WithIndex() ) {
+                Items.Add( new CommonRow( idx, line, line.Replace( ".shpk", "" ).Replace( "shader/", "" ), 0 ) );
             }
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.Path, Selected.Name, true );
+            DrawPath( "DX9", Selected.Path, $"{Selected.Name} (DX9)" );
+            DrawPath( "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ), $"{Selected.Name} (DX11)" );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

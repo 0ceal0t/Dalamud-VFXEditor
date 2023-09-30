@@ -14,6 +14,7 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkShader : IUiItem {
         public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_cso.cso" ).Replace( '\\', '/' );
+        public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxbc.dxbc" ).Replace( '\\', '/' );
 
         public readonly DX DxVersion;
         public string Extension => DxVersion == DX.DX11 ? "dxbc" : "cso";
@@ -134,10 +135,22 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                FileDialogManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
-                    Data = File.ReadAllBytes( res );
-                    BinLoaded = false;
+
+                    if( Path.GetExtension( res ) == ".hlsl" ) {
+                        var target = Vertex ? "vs_5_0" : "ps_5_0";
+                        InteropUtils.Run( "d3d/fxc.exe", $"/T {target} \"{res}\" /Fo \"{TempDxbc}\" /O3", true, out var output );
+                        PluginLog.Log( output );
+                        if( !output.Contains( "compilation failed" ) ) {
+                            Data = File.ReadAllBytes( TempDxbc );
+                            BinLoaded = false;
+                        }
+                    }
+                    else {
+                        Data = File.ReadAllBytes( res );
+                        BinLoaded = false;
+                    }
                 } );
             }
 
