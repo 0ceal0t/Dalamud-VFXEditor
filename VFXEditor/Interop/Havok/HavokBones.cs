@@ -13,9 +13,9 @@ namespace VfxEditor.Interop.Havok {
         protected static int BONE_ID = 0;
         public readonly List<SklbBone> Bones = new();
 
-        public HavokBones( string havokPath ) : base( havokPath ) { }
+        public HavokBones( string havokPath, bool init ) : base( havokPath, init ) { }
 
-        protected override void OnLoad() {
+        protected override void OnHavokLoad() {
             Skeleton = AnimationContainer->Skeletons[0].ptr;
 
             for( var i = 0; i < Skeleton->Bones.Length; i++ ) {

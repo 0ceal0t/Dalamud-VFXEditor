@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.AtchFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override AtchFile FileFromReader( BinaryReader reader ) => new( reader );
+        protected override AtchFile FileFromReader( BinaryReader reader, bool verify ) => new( reader );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

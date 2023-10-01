@@ -19,13 +19,12 @@ namespace VfxEditor.PapFormat.Motion {
 
         private readonly SkeletonSelector Selector;
 
-        public PapMotions( PapFile file, string havokPath ) : base( havokPath ) {
+        public PapMotions( PapFile file, string havokPath, bool init ) : base( havokPath, init ) {
             File = file;
             SklbTempPath = Path.Replace( ".hkx", "_sklb.hkx" );
 
             // Initialize skeleton using best guess for sklb path
             Selector = new( GetSklbPath(), UpdateSkeleton );
-            Selector.Init();
         }
 
         public void UpdateMotions() {
@@ -40,7 +39,7 @@ namespace VfxEditor.PapFormat.Motion {
         public void UpdateSkeleton( SimpleSklb sklbFile ) {
             Bones?.RemoveReference();
             sklbFile.SaveHavokData( SklbTempPath );
-            Bones = new( SklbTempPath );
+            Bones = new( SklbTempPath, true );
 
             UpdateMotions();
         }

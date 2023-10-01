@@ -35,7 +35,7 @@ namespace VfxEditor.PapFormat {
 
         private readonly bool EmptyHavok = false;
 
-        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool verify ) : base( new( Plugin.PapManager ) ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base( new( Plugin.PapManager ) ) {
             SourcePath = sourcePath;
             HkxTempLocation = hkxTemp;
             AnimationsDropdown = new( this, Animations );
@@ -72,7 +72,7 @@ namespace VfxEditor.PapFormat {
             }
 
             if( havokData.Length > 8 ) {
-                MotionData = new( this, HkxTempLocation );
+                MotionData = new( this, HkxTempLocation, init );
             }
             else {
                 EmptyHavok = true;

@@ -37,15 +37,19 @@ namespace VfxEditor.SklbFormat.Bones {
         private string SearchText = "";
 
         public readonly List<SklbMapping> Mappings = new();
-        public readonly SklbMappingDropdown MappingView;
+        public SklbMappingDropdown MappingView { get; private set; }
 
-        public SklbBones( SklbFile file, string loadPath ) : base( loadPath ) {
+        public SklbBones( SklbFile file, string loadPath, bool init ) : base( loadPath, init ) {
             File = file;
+        }
+
+        public override void Init() {
+            base.Init();
             MappingView = new( Mappings );
         }
 
-        protected override void OnLoad() {
-            base.OnLoad();
+        protected override void OnHavokLoad() {
+            base.OnHavokLoad();
 
             var variants = Container->NamedVariants;
             for( var i = 0; i < variants.Length; i++ ) {
@@ -323,7 +327,7 @@ namespace VfxEditor.SklbFormat.Bones {
             FileDialogManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
-                    var importHavok = new HavokBones( res );
+                    var importHavok = new HavokBones( res, true );
                     var newBones = importHavok.Bones;
                     importHavok.RemoveReference();
                     CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );

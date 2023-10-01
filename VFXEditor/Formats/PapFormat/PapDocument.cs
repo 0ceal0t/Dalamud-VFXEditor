@@ -16,7 +16,7 @@ namespace VfxEditor.PapFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override PapFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path, HkxTemp, true );
+        protected override PapFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, HkxTemp, !Plugin.LoadAsync, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

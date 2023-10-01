@@ -13,7 +13,7 @@ namespace VfxEditor.PhybFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override PhybFile FileFromReader( BinaryReader reader ) => new( reader, Source.Path, true );
+        protected override PhybFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

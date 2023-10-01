@@ -101,7 +101,7 @@ namespace VfxEditor.PapFormat {
                     FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
                             CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
-                            UiUtils.OkNotification( "TMB data imported" );
+                            UiUtils.OkNotification( "Tmb data imported" );
                         }
                     } );
                 }

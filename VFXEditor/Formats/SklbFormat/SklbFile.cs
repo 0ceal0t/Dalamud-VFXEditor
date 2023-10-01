@@ -20,7 +20,7 @@ namespace VfxEditor.SklbFormat {
 
         public readonly SklbBones Bones;
 
-        public SklbFile( BinaryReader reader, string hkxTemp, bool verify ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
+        public SklbFile( BinaryReader reader, string hkxTemp, bool init, bool verify ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
 
             reader.ReadInt32(); // Magic
@@ -46,7 +46,7 @@ namespace VfxEditor.SklbFormat {
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
-            Bones = new( this, HkxTempLocation );
+            Bones = new( this, HkxTempLocation, init );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }

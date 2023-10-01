@@ -7,13 +7,17 @@ using System.Runtime.InteropServices;
 namespace VfxEditor.Interop.Havok {
     public unsafe class HavokData {
         public readonly string Path;
-        public readonly hkResource* Resource;
-        public readonly hkRootLevelContainer* Container;
-        public readonly hkaAnimationContainer* AnimationContainer;
+        public hkResource* Resource { get; private set; }
+        public hkRootLevelContainer* Container { get; private set; }
+        public hkaAnimationContainer* AnimationContainer { get; private set; }
 
-        public HavokData( string havokPath ) {
+        public HavokData( string havokPath, bool init ) {
             Path = havokPath;
+            if( init ) Init();
+            else Plugin.HavokToInit.Add( this ); // Only do this on the main thread
+        }
 
+        public virtual void Init() {
             try {
                 var path = Marshal.StringToHGlobalAnsi( Path );
 
@@ -37,7 +41,7 @@ namespace VfxEditor.Interop.Havok {
                     var animationName = @"hkaAnimationContainer"u8;
                     fixed( byte* n2 = animationName ) {
                         AnimationContainer = ( hkaAnimationContainer* )Container->findObjectByName( n2, null );
-                        OnLoad();
+                        OnHavokLoad();
                     }
                 }
 
@@ -48,7 +52,7 @@ namespace VfxEditor.Interop.Havok {
             }
         }
 
-        protected virtual void OnLoad() { }
+        protected virtual void OnHavokLoad() { }
 
         protected void WriteHavok() {
             try {

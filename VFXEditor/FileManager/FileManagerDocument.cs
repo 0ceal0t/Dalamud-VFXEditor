@@ -51,24 +51,23 @@ namespace VfxEditor.FileManager {
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        protected abstract R FileFromReader( BinaryReader reader );
+        protected abstract R FileFromReader( BinaryReader reader, bool verify );
 
-        protected void LoadLocal( string localPath ) {
-            if( !File.Exists( localPath ) ) {
-                PluginLog.Error( $"Local file: [{localPath}] does not exist" );
+        protected void LoadLocal( string path, bool verify ) {
+            if( !File.Exists( path ) ) {
+                PluginLog.Error( $"Local file: [{path}] does not exist" );
                 return;
             }
 
-            if( !localPath.EndsWith( $".{Extension}" ) ) {
-                PluginLog.Error( $"{localPath} is the wrong file type" );
+            if( !path.EndsWith( $".{Extension}" ) ) {
+                PluginLog.Error( $"{path} is the wrong file type" );
                 return;
             }
 
             try {
-                using var reader = new BinaryReader( File.Open( localPath, FileMode.Open ) );
+                using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
                 CurrentFile?.Dispose();
-                CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{Id} file loaded" );
+                CurrentFile = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File", e );
@@ -76,24 +75,23 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected void LoadGame( string gamePath ) {
-            if( !Dalamud.DataManager.FileExists( gamePath ) ) {
-                PluginLog.Error( $"Game file: [{gamePath}] does not exist" );
+        protected void LoadGame( string path, bool verify ) {
+            if( !Dalamud.DataManager.FileExists( path ) ) {
+                PluginLog.Error( $"Game file: [{path}] does not exist" );
                 return;
             }
 
-            if( !gamePath.EndsWith( $".{Extension}" ) ) {
-                PluginLog.Error( $"{gamePath} is the wrong file type" );
+            if( !path.EndsWith( $".{Extension}" ) ) {
+                PluginLog.Error( $"{path} is the wrong file type" );
                 return;
             }
 
             try {
-                var file = Dalamud.DataManager.GetFile( gamePath );
+                var file = Dalamud.DataManager.GetFile( path );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
                 CurrentFile?.Dispose();
-                CurrentFile = FileFromReader( reader );
-                UiUtils.OkNotification( $"{Id} file loaded" );
+                CurrentFile = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
                 PluginLog.Error( e, "Error Reading File" );
@@ -107,8 +105,8 @@ namespace VfxEditor.FileManager {
             if( result == null ) return;
             Source = result;
 
-            if( result.Type == SelectResultType.Local ) LoadLocal( result.Path );
-            else LoadGame( result.Path );
+            if( result.Type == SelectResultType.Local ) LoadLocal( result.Path, true );
+            else LoadGame( result.Path, true );
 
             if( CurrentFile != null ) {
                 WriteFile( WriteLocation );
@@ -166,7 +164,7 @@ namespace VfxEditor.FileManager {
             Source = source;
             Replace = replace;
             Disabled = disabled;
-            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ) );
+            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
             if( CurrentFile != null ) CurrentFile.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }

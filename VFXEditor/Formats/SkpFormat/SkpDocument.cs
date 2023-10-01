@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.SkpFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override SkpFile FileFromReader( BinaryReader reader ) => new( reader, true );
+        protected override SkpFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

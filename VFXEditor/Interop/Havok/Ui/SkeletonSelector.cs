@@ -13,18 +13,23 @@ namespace VfxEditor.Interop.Havok.Ui {
         private bool SklbReplaced = false;
         private readonly Action<SimpleSklb> OnUpdate;
 
+        private bool Initialized = false;
+
         public SkeletonSelector( string sklbPath, Action<SimpleSklb> onUpdate ) {
             OnUpdate = onUpdate;
             if( !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
         }
 
-        public void Init() {
+        private void Init() {
             Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
             SklbReplaced = replaced;
             OnUpdate.Invoke( simple );
+            Initialized = true;
         }
 
         public void Draw() {
+            if( !Initialized ) Init();
+
             using var _ = ImRaii.PushId( "Selector" );
 
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );

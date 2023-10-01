@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override ShpkFile FileFromReader( BinaryReader reader ) => new( reader, true );
+        protected override ShpkFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

@@ -29,6 +29,8 @@ namespace VfxEditor.Select {
         protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
 
         protected void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, string name ) {
+            if( items == null ) return;
+
             foreach( var (subName, subItems) in items ) {
                 if( subItems.Count == 0 ) continue;
 
@@ -43,8 +45,9 @@ namespace VfxEditor.Select {
         }
 
         protected void DrawPaps( Dictionary<string, string> items, string name ) {
-            using var _ = ImRaii.PushId( name );
+            if( items == null ) return;
 
+            using var _ = ImRaii.PushId( name );
             foreach( var (suffix, path) in items ) {
                 using var __ = ImRaii.PushId( suffix );
 
@@ -63,6 +66,8 @@ namespace VfxEditor.Select {
         }
 
         protected void DrawPaths( string label, IEnumerable<string> paths, string resultName, bool play = false ) {
+            if( paths == null ) return;
+
             foreach( var (path, idx) in paths.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
                 DrawPath( $"{label} #{idx}", path, $"{resultName} #{idx}", play );
@@ -70,6 +75,8 @@ namespace VfxEditor.Select {
         }
 
         protected void DrawPaths( Dictionary<string, string> paths, string resultName, bool play = false ) {
+            if( paths == null ) return;
+
             foreach( var item in paths ) {
                 DrawPath( item.Key, item.Value, $"{resultName} ({item.Key})", play );
             }

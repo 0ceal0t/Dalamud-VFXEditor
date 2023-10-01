@@ -27,10 +27,7 @@ namespace VfxEditor.Interop.Havok.Ui {
         }
 
         public void Draw() {
-            if( Bones == null ) {
-                Selector.Init();
-            }
-            else if( Preview.CurrentFile != File ) {
+            if( Bones != null && Preview.CurrentFile != File ) {
                 UpdatePreview();
                 UpdateData();
             }
@@ -60,7 +57,7 @@ namespace VfxEditor.Interop.Havok.Ui {
                 var tempPath = Path.Combine( Plugin.Configuration.WriteLocation, $"{Extension}_sklb_temp.hkx" );
                 sklbFile.SaveHavokData( tempPath.Replace( '\\', '/' ) );
 
-                Bones = new( tempPath );
+                Bones = new( tempPath, true );
                 Bones.RemoveReference();
             }
             catch( Exception e ) {

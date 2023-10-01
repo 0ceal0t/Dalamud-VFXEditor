@@ -88,6 +88,7 @@ namespace VfxEditor {
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
 
+            TextureManager.LoadLibrary();
             TextureManager = new();
             TmbManager = new();
             AvfxManager = new();
@@ -156,6 +157,7 @@ namespace VfxEditor {
             CopyManager.DisposeAll();
             CommandManager.DisposeAll();
 
+            TextureManager.FreeLibrary();
             Managers.ForEach( x => x?.Dispose() );
             DirectXManager?.Dispose();
 
