@@ -40,6 +40,7 @@ namespace VfxEditor {
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 10;
+        public bool SelectDialogLogAllFilesHidden = true;
         public int MaxUndoSize = 10;
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;

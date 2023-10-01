@@ -64,6 +64,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
             // ==== IMPORT ==========
 
+            using( var border = ImRaii.PushStyle( ImGuiStyleVar.PopupBorderSize, 1 ) )
             using( var popup = ImRaii.Popup( "ImportTex" ) ) {
                 if( popup ) {
                     using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
@@ -92,6 +93,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
             // ====== EXTRACT =========
 
+            using( var border = ImRaii.PushStyle( ImGuiStyleVar.PopupBorderSize, 1 ) )
             using( var popup = ImRaii.Popup( "ExtractTex" ) ) {
                 if( popup ) {
                     using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
