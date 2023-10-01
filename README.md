@@ -47,7 +47,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Workspace loading indicator
 - [ ] Investigate some issues with parsing failing for workspace
 - [ ] Texture resize
-- [ ] Recent workspaces
 - [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] `.sklb` gizmo
 - [ ] Toggle for `.pap` animation preview

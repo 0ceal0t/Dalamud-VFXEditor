@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,10 @@ namespace VfxEditor {
                 return;
             }
 
-            if( Loading != LoadState.None ) return;
+            if( State != WorkspaceState.None ) {
+                DrawLoadingDialog();
+                return;
+            }
 
             CopyManager.ResetAll();
             CheckWorkspaceKeybinds();
@@ -67,6 +71,15 @@ namespace VfxEditor {
             if( ImGui.BeginMenu( "File" ) ) {
                 if( ImGui.MenuItem( "New" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "Open" ) ) OpenWorkspace();
+                if( ImGui.BeginMenu( "Open Recent" ) ) {
+                    foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
+                        if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
+                            OpenWorkspaceAsync( recent.Item2 );
+                            break;
+                        }
+                    }
+                    ImGui.EndMenu();
+                }
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
 

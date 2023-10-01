@@ -13,9 +13,8 @@ namespace VfxEditor.FileManager {
             ReplaceSelect?.Draw();
 
             Name = WindowTitle
-                + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceLocation ) ? "" : " - " + Plugin.CurrentWorkspaceLocation )
-                + "###"
-                + WindowTitle;
+                + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
+                + $"###{WindowTitle}";
 
             CheckKeybinds();
 

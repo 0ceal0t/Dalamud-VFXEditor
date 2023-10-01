@@ -52,6 +52,8 @@ namespace VfxEditor {
             "VFXEditor",
         } );
 
+        public List<(string, string)> RecentWorkspaces = new();
+
         public bool VfxSpawnLoop = false;
         public float VfxSpawnDelay = 0.1f;
 
@@ -175,6 +177,14 @@ namespace VfxEditor {
 
             recentList.Add( result );
             if( recentList.Count > SaveRecentLimit ) recentList.RemoveRange( 0, recentList.Count - SaveRecentLimit );
+            Save();
+        }
+
+        public void AddRecentWorkspace( string path ) {
+            RecentWorkspaces.RemoveAll( x => x.Item2 == path );
+            var name = Path.GetFileName( path );
+            RecentWorkspaces.Insert( 0, (name, path) );
+            if( RecentWorkspaces.Count > 10 ) RecentWorkspaces.RemoveRange( 10, RecentWorkspaces.Count - 10 );
             Save();
         }
 

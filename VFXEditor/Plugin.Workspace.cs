@@ -12,26 +12,27 @@ using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
-    public enum LoadState {
+    public enum WorkspaceState {
         None,
         Loading
     }
 
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
+        public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
 
         private static DateTime LastAutoSave = DateTime.Now;
-        public static LoadState Loading { get; private set; } = LoadState.None;
-        public static bool LoadAsync { get; private set; } = false;
+        public static WorkspaceState State { get; private set; } = WorkspaceState.None;
         public static readonly List<HavokData> HavokToInit = new(); // Make sure this is initialized on the main thread
 
         private static async void NewWorkspace() {
             await Task.Run( () => {
-                Loading = LoadState.Loading;
-                CurrentWorkspaceLocation = "";
+                State = WorkspaceState.Loading;
                 Managers.ForEach( x => x?.ToDefault() );
+                CurrentWorkspaceLocation = "";
+
                 LastAutoSave = DateTime.Now;
-                Loading = LoadState.None;
+                State = WorkspaceState.None;
             } );
         }
 
@@ -39,15 +40,13 @@ namespace VfxEditor {
             FileDialogManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
-                    var file = new FileInfo( res );
-                    var directory = Path.GetDirectoryName( res );
-
-                    if( file.Extension == ".json" ) { // OLD
-                        if( !OpenWorkspaceFolder( directory ) ) return;
-                        CurrentWorkspaceLocation = directory.TrimEnd( Path.DirectorySeparatorChar ) + ".vfxworkspace"; // move to new format
+                    var extension = new FileInfo( res ).Extension;
+                    if( extension == ".json" ) { // OLD
+                        var directory = Path.GetDirectoryName( res );
+                        OpenWorkspaceAsync( directory.TrimEnd( Path.DirectorySeparatorChar ) + ".vfxworkspace", Path.GetDirectoryName( res ), false ); // Move to new format
                     }
-                    else if( file.Extension == ".vfxworkspace" ) { // NEW
-                        OpenWorkspaceAsync( res, Path.Combine( directory, "VFX_WORKSPACE_TEMP" ) );
+                    else if( extension == ".vfxworkspace" ) { // NEW
+                        OpenWorkspaceAsync( res );
                     }
                 }
                 catch( Exception e ) {
@@ -56,14 +55,18 @@ namespace VfxEditor {
             } );
         }
 
-        private static async void OpenWorkspaceAsync( string loadLocation, string tempDir ) {
+        private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_TEMP" ), true );
+
+        private static async void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
             await Task.Run( () => {
-                ZipFile.ExtractToDirectory( loadLocation, tempDir, true );
-                LoadAsync = true;
-                OpenWorkspaceFolder( tempDir );
-                LoadAsync = false;
-                Directory.Delete( tempDir, true );
-                CurrentWorkspaceLocation = loadLocation;
+                if( unzip ) ZipFile.ExtractToDirectory( loadLocation, tempDir, true );
+                var success = OpenWorkspaceFolder( tempDir );
+                if( unzip ) Directory.Delete( tempDir, true );
+
+                if( success ) {
+                    CurrentWorkspaceLocation = loadLocation;
+                    Configuration.AddRecentWorkspace( loadLocation );
+                }
             } );
         }
 
@@ -75,24 +78,31 @@ namespace VfxEditor {
             }
 
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
-
-            Loading = LoadState.Loading;
-
+            State = WorkspaceState.Loading;
             foreach( var manager in Managers ) {
                 if( manager == null ) continue;
                 manager.Dispose();
                 manager.WorkspaceImport( meta, loadLocation );
             }
-
             LastAutoSave = DateTime.Now;
-            Loading = LoadState.None;
+            State = WorkspaceState.None;
 
             return true;
         }
 
-        private static async void SaveWorkspace() {
-            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
-            else await Task.Run( ExportWorkspace );
+        private static void DrawLoadingDialog() {
+
+        }
+
+        // =================================
+
+        private static void SaveWorkspace() {
+            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
+                SaveAsWorkspace();
+            }
+            else {
+                ExportWorkspace();
+            }
         }
 
         private static void SaveAsWorkspace() {
@@ -103,22 +113,24 @@ namespace VfxEditor {
             } );
         }
 
-        private static void ExportWorkspace() {
-            var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
-            Directory.CreateDirectory( saveLocation );
+        private static async void ExportWorkspace() {
+            await Task.Run( () => {
+                var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
+                Directory.CreateDirectory( saveLocation );
 
-            var meta = new Dictionary<string, string>();
-            Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
+                var meta = new Dictionary<string, string>();
+                Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
 
-            var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
-            var metaString = JsonConvert.SerializeObject( meta );
-            File.WriteAllText( metaPath, metaString );
+                var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
+                var metaString = JsonConvert.SerializeObject( meta );
+                File.WriteAllText( metaPath, metaString );
 
-            if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );
-            ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
-            Directory.Delete( saveLocation, true );
+                if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );
+                ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
+                Directory.Delete( saveLocation, true );
 
-            UiUtils.OkNotification( "Saved workspace" );
+                UiUtils.OkNotification( "Saved workspace" );
+            } );
         }
 
         public static void CleanupExport( IFileDocument document ) {
