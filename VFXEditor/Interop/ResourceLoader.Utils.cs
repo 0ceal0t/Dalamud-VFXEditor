@@ -91,8 +91,9 @@ namespace VfxEditor.Interop {
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
-            foreach( var manager in Plugin.Managers ) {
-                if( manager == null ) continue;
+            if( Plugin.State != WorkspaceState.None ) return false;
+
+            foreach( var manager in Plugin.Managers.Where( x => x != null ) ) {
                 if( manager.GetReplacePath( gamePath, out var localFile ) ) {
                     localPath = localFile;
                     return true;
@@ -166,6 +167,6 @@ namespace VfxEditor.Interop {
             return resource;
         }
 
-        private static bool DoDebug( string path ) => Plugin.Managers.Where( x => x != null && x.DoDebug( path ) ).Any();
+        private static bool DoDebug( string path ) => Plugin.State != WorkspaceState.None ? false : Plugin.Managers.Where( x => x != null && x.DoDebug( path ) ).Any();
     }
 }

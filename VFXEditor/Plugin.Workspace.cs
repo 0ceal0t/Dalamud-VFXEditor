@@ -2,6 +2,7 @@ using Dalamud.Interface.Style;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
+using ImGuiScene;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -19,26 +20,56 @@ namespace VfxEditor {
     public enum WorkspaceState {
         None,
         Loading,
-        HavokInit
+        Cleanup
     }
 
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
-        public static readonly List<HavokData> HavokToInit = new(); // Make sure this is initialized on the main thread
 
-        private static int WorkspaceFileCount = new();
+        // Gross stuff that needs to be done on the main thread, I guess
+        public static readonly List<HavokData> HavokToInit = new();
+        public static readonly List<TextureWrap> TexturesToDispose = new();
+
+        private static int WorkspaceFileCount = 0;
         private static DateTime LastAutoSave = DateTime.Now;
 
-        private static async void NewWorkspace() {
-            await Task.Run( () => {
-                State = WorkspaceState.Loading;
-                Managers.ForEach( x => x?.ToDefault() );
-                CurrentWorkspaceLocation = "";
+        // Return true if it's loading and the UI needs to be hidden
+        private static bool CheckLoadState() {
+            if( State == WorkspaceState.Cleanup ) {
+                HavokToInit.ForEach( x => x.Init() );
+                HavokToInit.Clear();
+
+                foreach( var texture in TexturesToDispose ) {
+                    try {
+                        texture.Dispose();
+                    }
+                    catch( Exception ) { }
+                }
+                TexturesToDispose.Clear();
 
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;
+                return true;
+            }
+
+            if( State != WorkspaceState.None ) {
+                DrawLoadingDialog();
+                return true;
+            }
+
+            return false;
+        }
+
+        private static async void NewWorkspace() {
+            State = WorkspaceState.Loading;
+            await Task.Run( async () => {
+                await Task.Delay( 100 );
+                WorkspaceFileCount = 0;
+                foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
+                CurrentWorkspaceLocation = "";
+                State = WorkspaceState.Cleanup;
             } );
         }
 
@@ -64,15 +95,21 @@ namespace VfxEditor {
         private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_TEMP" ), true );
 
         private static async void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
-            await Task.Run( () => {
+            State = WorkspaceState.Loading;
+            await Task.Run( async () => {
+                await Task.Delay( 100 );
                 if( unzip ) ZipFile.ExtractToDirectory( loadLocation, tempDir, true );
-                var success = OpenWorkspaceFolder( tempDir );
-                if( unzip ) Directory.Delete( tempDir, true );
 
-                if( success ) {
+                if( OpenWorkspaceFolder( tempDir ) ) {
                     CurrentWorkspaceLocation = loadLocation;
                     Configuration.AddRecentWorkspace( loadLocation );
+                    State = WorkspaceState.Cleanup;
                 }
+                else {
+                    State = WorkspaceState.None;
+                }
+
+                if( unzip ) Directory.Delete( tempDir, true );
             } );
         }
 
@@ -87,33 +124,31 @@ namespace VfxEditor {
             }
 
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
-            State = WorkspaceState.Loading;
-            foreach( var manager in Managers ) {
-                if( manager == null ) continue;
+            foreach( var manager in Managers.Where( x => x != null ) ) {
                 manager.Dispose();
                 manager.WorkspaceImport( meta, loadLocation );
             }
-            LastAutoSave = DateTime.Now;
-            State = WorkspaceState.HavokInit;
 
             return true;
         }
 
         private static void DrawLoadingDialog() {
             if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
-                var documents = Managers.Select( x => x.GetDocuments().Count() ).Sum();
-                ImGui.Text( $"{documents} / {WorkspaceFileCount}" );
+                var count = WorkspaceFileCount == 0 ? 0 : Managers.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
+                ImGui.Text( $"{count} / {WorkspaceFileCount}" );
 
                 var pos = ImGui.GetCursorScreenPos();
                 var width = 300f;
                 var height = 20f;
                 ImGui.Dummy( new( width, height ) );
 
-                var filled = ( ( float )documents / WorkspaceFileCount ) * width;
+                var filled = WorkspaceFileCount == 0 ? 0 : ( ( float )count / WorkspaceFileCount ) * width;
 
                 var drawList = ImGui.GetWindowDrawList();
                 drawList.AddRectFilled( pos, pos + new Vector2( width, height ), ImGui.GetColorU32( ImGuiCol.FrameBg ), 5f );
-                drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value ), 5f );
+                if( count > 0 ) {
+                    drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value ), 5f );
+                }
 
                 ImGui.End();
             }

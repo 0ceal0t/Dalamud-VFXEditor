@@ -22,17 +22,7 @@ namespace VfxEditor {
         public static readonly Dictionary<string, Modal> Modals = new();
 
         public static void Draw() {
-            if( State == WorkspaceState.HavokInit ) {
-                HavokToInit.ForEach( x => x.Init() );
-                HavokToInit.Clear();
-                State = WorkspaceState.None;
-                return;
-            }
-
-            if( State != WorkspaceState.None ) {
-                DrawLoadingDialog();
-                return;
-            }
+            if( CheckLoadState() ) return;
 
             CopyManager.ResetAll();
             CheckWorkspaceKeybinds();

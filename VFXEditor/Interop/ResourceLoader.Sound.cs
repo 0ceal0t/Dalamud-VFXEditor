@@ -12,7 +12,7 @@ namespace VfxEditor.Interop {
 
         public delegate IntPtr PlaySoundDelegate( IntPtr path, byte play );
 
-        private PlaySoundDelegate PlaySoundPath;
+        private readonly PlaySoundDelegate PlaySoundPath;
 
         public void PlaySound( string path, int idx ) {
             if( string.IsNullOrEmpty( path ) || idx < 0 || !Dalamud.DataManager.FileExists( path ) ) return;
