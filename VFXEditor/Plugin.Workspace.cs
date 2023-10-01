@@ -1,11 +1,15 @@
+using Dalamud.Interface.Style;
 using Dalamud.Logging;
 using ImGuiFileDialog;
+using ImGuiNET;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Interop.Havok;
@@ -14,16 +18,18 @@ using VfxEditor.Utils;
 namespace VfxEditor {
     public enum WorkspaceState {
         None,
-        Loading
+        Loading,
+        HavokInit
     }
 
     public partial class Plugin {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
-
-        private static DateTime LastAutoSave = DateTime.Now;
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
         public static readonly List<HavokData> HavokToInit = new(); // Make sure this is initialized on the main thread
+
+        private static int WorkspaceFileCount = new();
+        private static DateTime LastAutoSave = DateTime.Now;
 
         private static async void NewWorkspace() {
             await Task.Run( () => {
@@ -71,6 +77,9 @@ namespace VfxEditor {
         }
 
         private static bool OpenWorkspaceFolder( string loadLocation ) {
+            WorkspaceFileCount = Directory.GetFiles( loadLocation, "*.*", SearchOption.AllDirectories ).Length;
+            PluginLog.Log( $"Loading {WorkspaceFileCount} files from {loadLocation}" );
+
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
                 PluginLog.Error( "vfx_workspace.json does not exist" );
@@ -85,13 +94,29 @@ namespace VfxEditor {
                 manager.WorkspaceImport( meta, loadLocation );
             }
             LastAutoSave = DateTime.Now;
-            State = WorkspaceState.None;
+            State = WorkspaceState.HavokInit;
 
             return true;
         }
 
         private static void DrawLoadingDialog() {
+            if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
+                var documents = Managers.Select( x => x.GetDocuments().Count() ).Sum();
+                ImGui.Text( $"{documents} / {WorkspaceFileCount}" );
 
+                var pos = ImGui.GetCursorScreenPos();
+                var width = 300f;
+                var height = 20f;
+                ImGui.Dummy( new( width, height ) );
+
+                var filled = ( ( float )documents / WorkspaceFileCount ) * width;
+
+                var drawList = ImGui.GetWindowDrawList();
+                drawList.AddRectFilled( pos, pos + new Vector2( width, height ), ImGui.GetColorU32( ImGuiCol.FrameBg ), 5f );
+                drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value ), 5f );
+
+                ImGui.End();
+            }
         }
 
         // =================================

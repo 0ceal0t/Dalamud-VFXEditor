@@ -22,9 +22,10 @@ namespace VfxEditor {
         public static readonly Dictionary<string, Modal> Modals = new();
 
         public static void Draw() {
-            if( HavokToInit.Count > 0 ) {
+            if( State == WorkspaceState.HavokInit ) {
                 HavokToInit.ForEach( x => x.Init() );
                 HavokToInit.Clear();
+                State = WorkspaceState.None;
                 return;
             }
 
@@ -47,11 +48,8 @@ namespace VfxEditor {
 
             CopyManager.FinalizeAll();
 
-            if( Configuration.AutosaveEnabled &&
-                Configuration.AutosaveSeconds > 10 &&
-                !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
-                ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds
-            ) {
+            if( Configuration.AutosaveEnabled && Configuration.AutosaveSeconds > 10 && !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
+                ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds ) {
                 LastAutoSave = DateTime.Now;
                 SaveWorkspace();
             }
