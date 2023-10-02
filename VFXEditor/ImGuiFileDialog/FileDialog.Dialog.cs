@@ -514,8 +514,9 @@ namespace ImGuiFileDialog {
                             ddsFile.Dispose();
                         }
                         else if( ext == "atex" || ext == "tex" ) {
-                            var tex = TextureDataFile.LoadFromLocal( path );
-                            if( tex == null ) return;
+                            var file = TextureDataFile.LoadFromLocal( path );
+                            if( file == null ) return;
+                            PreviewWrap = PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
 
                         }
                         else {

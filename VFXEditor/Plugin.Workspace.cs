@@ -2,7 +2,6 @@ using Dalamud.Interface.Style;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
-using ImGuiScene;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,7 +12,6 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -28,9 +26,8 @@ namespace VfxEditor {
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
 
-        // Gross stuff that needs to be done on the main thread, I guess
-        public static readonly List<HavokData> HavokToInit = new();
-        public static readonly List<TextureWrap> TexturesToDispose = new();
+        // Havok init and texture wrap dispose
+        public static Action OnMainThread;
 
         private static int WorkspaceFileCount = 0;
         private static DateTime LastAutoSave = DateTime.Now;
@@ -38,16 +35,8 @@ namespace VfxEditor {
         // Return true if it's loading and the UI needs to be hidden
         private static bool CheckLoadState() {
             if( State == WorkspaceState.Cleanup ) {
-                HavokToInit.ForEach( x => x.Init() );
-                HavokToInit.Clear();
-
-                foreach( var texture in TexturesToDispose ) {
-                    try {
-                        texture.Dispose();
-                    }
-                    catch( Exception ) { }
-                }
-                TexturesToDispose.Clear();
+                OnMainThread?.Invoke();
+                OnMainThread = null;
 
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;
@@ -66,7 +55,7 @@ namespace VfxEditor {
             State = WorkspaceState.Loading;
             await Task.Run( async () => {
                 await Task.Delay( 100 );
-                WorkspaceFileCount = 0;
+                WorkspaceFileCount = Managers.Count - 1;
                 foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;

@@ -14,7 +14,7 @@ namespace VfxEditor.Interop.Havok {
         public HavokData( string havokPath, bool init ) {
             Path = havokPath;
             if( init ) Init();
-            else Plugin.HavokToInit.Add( this ); // Only do this on the main thread
+            else Plugin.OnMainThread += Init;
         }
 
         public virtual void Init() {

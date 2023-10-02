@@ -50,11 +50,11 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public void Dispose() {
             if( Wrap?.ImGuiHandle == null ) return;
 
-            if( Plugin.State == WorkspaceState.Loading && Wrap != null ) {
-                Plugin.TexturesToDispose.Add( Wrap );
-                return;
-            }
+            if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += Cleanup;
+            else Cleanup();
+        }
 
+        public void Cleanup() {
             try {
                 Wrap?.Dispose();
             }
