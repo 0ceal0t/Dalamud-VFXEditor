@@ -44,11 +44,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
-- [ ] 6.5: for select dialog, don't worry about disposing icons since cache handles it
-- [ ] 6.5: use `IPluginLog`
-- [ ] 6.5: `UiBuilder.OpenMainUi`
-- [ ] 6.5: `IGameInteropProvider.HookFromSignature()`
-- [ ] 6.5: `IClientState.IsGPosing`
 - [ ] Investigate some issues with parsing failing for workspace
 - [ ] Texture resize
 - [ ] More investigation into `.pap` _Type_ and animation names

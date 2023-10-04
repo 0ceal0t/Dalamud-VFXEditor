@@ -41,7 +41,7 @@ namespace VfxEditor.Interop {
 
         // https://github.com/imchillin/Anamnesis/blob/master/Anamnesis/Memory/ActorMemory.cs
 
-        public const int AnimationMemoryOffset = 0x0930;
+        public const int AnimationMemoryOffset = 0x0980;
 
         public const int PrepPapOffset = 105;
 

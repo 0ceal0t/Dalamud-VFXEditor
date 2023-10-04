@@ -1,6 +1,6 @@
+using Dalamud.Interface.Internal;
 using Dalamud.Logging;
 using ImGuiNET;
-using ImGuiScene;
 using OtterGui;
 using OtterGui.Raii;
 using System;
@@ -143,7 +143,7 @@ namespace VfxEditor.Select {
         protected T Selected = default;
         protected string SearchInput = "";
         protected List<T> Searched;
-        protected TextureWrap Icon; // Not used by every tab
+        protected IDalamudTextureWrap Icon; // Not used by every tab
 
         protected SelectTab( SelectDialog dialog, string name, string stateId, SelectResultType resultType ) : base( dialog, name, resultType ) {
             StateId = stateId;
@@ -239,11 +239,9 @@ namespace VfxEditor.Select {
         }
 
         protected void LoadIcon( uint iconId ) {
-            Icon?.Dispose();
             Icon = null;
-            if( iconId <= 0 ) return;
             try {
-                Icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+                Icon = Dalamud.TextureProvider.GetIcon( iconId < 0 ? 0 : iconId, IconFlags.None );
             }
             catch( Exception ) {
                 Icon = Dalamud.TextureProvider.GetIcon( 0, IconFlags.None );

@@ -1,3 +1,4 @@
+using Dalamud.Interface.Internal;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace ImGuiFileDialog {
         private readonly List<SideBarItem> Favorites = new();
         private readonly List<SideBarItem> Recent;
 
-        private ImGuiScene.TextureWrap PreviewWrap = null;
+        private IDalamudTextureWrap PreviewWrap = null;
         private readonly object PreviewLock = new();
         private readonly bool DoLoadPreview;
 

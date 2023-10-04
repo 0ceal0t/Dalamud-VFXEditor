@@ -1,3 +1,4 @@
+using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -45,7 +46,7 @@ namespace VfxEditor.Select {
             postItems = count - showItems - preItems;
         }
 
-        public static void DrawIcon( ImGuiScene.TextureWrap icon ) {
+        public static void DrawIcon( IDalamudTextureWrap icon ) {
             if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );

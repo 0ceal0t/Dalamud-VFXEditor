@@ -1,67 +1,63 @@
-using Dalamud.Hooking;
 using System;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader : IDisposable {
         public ResourceLoader() {
-            var scanner = Dalamud.SigScanner;
+            ReadSqpackHook = Dalamud.Hooks.HookFromSignature<ReadSqpackPrototype>( Constants.ReadSqpackSig, ReadSqpackHandler );
+            GetResourceSyncHook = Dalamud.Hooks.HookFromSignature<GetResourceSyncPrototype>( Constants.GetResourceSyncSig, GetResourceSyncHandler );
+            GetResourceAsyncHook = Dalamud.Hooks.HookFromSignature<GetResourceAsyncPrototype>( Constants.GetResourceAsyncSig, GetResourceAsyncHandler );
+            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( Dalamud.SigScanner.ScanText( Constants.ReadFileSig ) );
 
-            ReadSqpackHook = Hook<ReadSqpackPrototype>.FromAddress( scanner.ScanText( Constants.ReadSqpackSig ), ReadSqpackHandler );
-            GetResourceSyncHook = Hook<GetResourceSyncPrototype>.FromAddress( scanner.ScanText( Constants.GetResourceSyncSig ), GetResourceSyncHandler );
-            GetResourceAsyncHook = Hook<GetResourceAsyncPrototype>.FromAddress( scanner.ScanText( Constants.GetResourceAsyncSig ), GetResourceAsyncHandler );
-
-            ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( scanner.ScanText( Constants.ReadFileSig ) );
-
-            var staticVfxCreateAddress = scanner.ScanText( Constants.StaticVfxCreateSig );
-            var staticVfxRemoveAddress = scanner.ScanText( Constants.StaticVfxRemoveSig );
-            var actorVfxCreateAddress = scanner.ScanText( Constants.ActorVfxCreateSig );
-            var actorVfxRemoveAddresTemp = scanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
+            var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( Constants.StaticVfxCreateSig );
+            var staticVfxRemoveAddress = Dalamud.SigScanner.ScanText( Constants.StaticVfxRemoveSig );
+            var actorVfxCreateAddress = Dalamud.SigScanner.ScanText( Constants.ActorVfxCreateSig );
+            var actorVfxRemoveAddresTemp = Dalamud.SigScanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
             var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddresTemp + Marshal.ReadInt32( actorVfxRemoveAddresTemp ) + 4 );
 
             ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>( actorVfxCreateAddress );
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
-            StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( scanner.ScanText( Constants.StaticVfxRunSig ) );
+            StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( Dalamud.SigScanner.ScanText( Constants.StaticVfxRunSig ) );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
-            StaticVfxCreateHook = Hook<StaticVfxCreateDelegate>.FromAddress( staticVfxCreateAddress, StaticVfxNewHandler );
-            StaticVfxRemoveHook = Hook<StaticVfxRemoveDelegate>.FromAddress( staticVfxRemoveAddress, StaticVfxRemoveHandler );
-            ActorVfxCreateHook = Hook<ActorVfxCreateDelegate>.FromAddress( actorVfxCreateAddress, ActorVfxNewHandler );
-            ActorVfxRemoveHook = Hook<ActorVfxRemoveDelegate>.FromAddress( actorVfxRemoveAddress, ActorVfxRemoveHandler );
+            StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<StaticVfxCreateDelegate>( staticVfxCreateAddress, StaticVfxNewHandler );
+            StaticVfxRemoveHook = Dalamud.Hooks.HookFromAddress<StaticVfxRemoveDelegate>( staticVfxRemoveAddress, StaticVfxRemoveHandler );
+            ActorVfxCreateHook = Dalamud.Hooks.HookFromAddress<ActorVfxCreateDelegate>( actorVfxCreateAddress, ActorVfxNewHandler );
+            ActorVfxRemoveHook = Dalamud.Hooks.HookFromAddress<ActorVfxRemoveDelegate>( actorVfxRemoveAddress, ActorVfxRemoveHandler );
 
-            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( scanner.ScanText( Constants.GetMatrixSig ) );
-            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManagerSig ) );
-            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( scanner.ScanText( Constants.GetFileManager2Sig ) );
-            DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( scanner.ScanText( Constants.DecRefSig ) );
-            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( scanner.ScanText( Constants.RequestFileSig ) );
+            GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( Dalamud.SigScanner.ScanText( Constants.GetMatrixSig ) );
+            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( Dalamud.SigScanner.ScanText( Constants.GetFileManagerSig ) );
+            GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( Dalamud.SigScanner.ScanText( Constants.GetFileManager2Sig ) );
+            DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( Dalamud.SigScanner.ScanText( Constants.DecRefSig ) );
+            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( Dalamud.SigScanner.ScanText( Constants.RequestFileSig ) );
 
-            CheckFileStateHook = Hook<CheckFileStateDelegate>.FromAddress( scanner.ScanText( Constants.CheckFileStateSig ), CheckFileStateDetour );
-            LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( scanner.ScanText( Constants.LoadTexFileLocalSig ) );
-            LoadTexFileExternHook = Hook<LoadTexFileExternDelegate>.FromAddress( scanner.ScanText( Constants.LoadTexFileExternSig ), LoadTexFileExternDetour );
+            CheckFileStateHook = Dalamud.Hooks.HookFromSignature<CheckFileStateDelegate>( Constants.CheckFileStateSig, CheckFileStateDetour );
+            LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadTexFileLocalSig ) );
+            LoadTexFileExternHook = Dalamud.Hooks.HookFromSignature<LoadTexFileExternDelegate>( Constants.LoadTexFileExternSig, LoadTexFileExternDetour );
 
-            PlayActionHook = Hook<PlayActionPrototype>.FromAddress( scanner.ScanText( Constants.PlayActionSig ), PlayActionDetour );
+            PlayActionHook = Dalamud.Hooks.HookFromSignature<PlayActionPrototype>( Constants.PlayActionSig, PlayActionDetour );
 
-            GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( scanner.ScanText( Constants.LuaVariableSig ) );
+            GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( Dalamud.SigScanner.ScanText( Constants.LuaVariableSig ) );
 
-            var luaManagerStart = scanner.ScanText( Constants.LuaManagerSig ) + 3;
+            var luaManagerStart = Dalamud.SigScanner.ScanText( Constants.LuaManagerSig ) + 3;
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
             LuaManager = luaManagerStart + 4 + luaManagerOffset;
 
-            var luaActorVariableStart = scanner.ScanText( Constants.LuaActorVariableSig ) + 2;
+            var luaActorVariableStart = Dalamud.SigScanner.ScanText( Constants.LuaActorVariableSig ) + 2;
             var luaActorVariableOffset = Marshal.ReadInt32( luaActorVariableStart );
             LuaActorVariables = luaActorVariableStart + 8 + luaActorVariableOffset;
 
-            VfxUseTriggerHook = Hook<VfxUseTriggerDelete>.FromAddress( scanner.ScanText( Constants.CallTriggerSig ), VfxUseTriggerHandler );
+            VfxUseTriggerHook = Dalamud.Hooks.HookFromSignature<VfxUseTriggerDelete>( Constants.CallTriggerSig, VfxUseTriggerHandler );
 
-            var interleavedVtbl = scanner.ScanText( Constants.HavokInterleavedVtblSig ) - 4;
+            var interleavedVtbl = Dalamud.SigScanner.ScanText( Constants.HavokInterleavedVtblSig ) - 4;
             var interleavedVtblOffset = Marshal.ReadInt32( interleavedVtbl );
             HavokInterleavedAnimationVtbl = interleavedVtbl + 4 + interleavedVtblOffset;
 
-            HavokSplineCtor = Marshal.GetDelegateForFunctionPointer<HavokSplineCtorDelegate>( scanner.ScanText( Constants.HavokSplineCtorSig ) );
+            HavokSplineCtor = Marshal.GetDelegateForFunctionPointer<HavokSplineCtorDelegate>( Dalamud.SigScanner.ScanText( Constants.HavokSplineCtorSig ) );
 
-            PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( scanner.ScanText( Constants.PlaySoundSig ) );
-            InitSoundHook = Hook<InitSoundPrototype>.FromAddress( scanner.ScanText( Constants.InitSoundSig ), InitSoundDetour );
+            PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );
+            InitSoundHook = Dalamud.Hooks.HookFromSignature<InitSoundPrototype>( Constants.InitSoundSig, InitSoundDetour );
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();

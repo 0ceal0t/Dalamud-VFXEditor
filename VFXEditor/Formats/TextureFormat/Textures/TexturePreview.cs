@@ -1,3 +1,4 @@
+using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -10,7 +11,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public readonly ushort MipLevels;
         public readonly ushort Depth;
         public readonly TextureFormat Format;
-        public readonly ImGuiScene.TextureWrap Wrap;
+        public readonly IDalamudTextureWrap Wrap;
 
         public TexturePreview( TextureDataFile file, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;

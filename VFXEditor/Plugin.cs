@@ -1,6 +1,6 @@
-using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using ImGuiFileDialog;
 using ImGuiNET;
 using ImPlotNET;
@@ -69,7 +69,6 @@ namespace VfxEditor {
         public static SkpManager SkpManager { get; private set; }
         public static ShpkManager ShpkManager { get; private set; }
 
-        public string Name => "VFXEditor";
         public static string RootLocation { get; private set; }
         private const string CommandName = "/vfxedit";
 
@@ -116,21 +115,22 @@ namespace VfxEditor {
             Dalamud.Framework.Update += FrameworkOnUpdate;
             Dalamud.PluginInterface.UiBuilder.Draw += Draw;
             Dalamud.PluginInterface.UiBuilder.Draw += FileDialogManager.Draw;
-            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfigUi;
         }
 
         public static void CheckClearKeyState() {
             if( ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) && Configuration.BlockGameInputsWhenFocused ) ClearKeyState = true;
         }
 
-        private void FrameworkOnUpdate( Framework framework ) {
+        private void FrameworkOnUpdate( IFramework framework ) {
             VfxSpawn.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
         }
 
-        private void DrawConfigUi() => AvfxManager.Show();
+        private void OpenConfigUi() => AvfxManager.Show();
 
         private void OnCommand( string command, string rawArgs ) {
             if( string.IsNullOrEmpty( rawArgs ) ) {
@@ -144,7 +144,8 @@ namespace VfxEditor {
             Dalamud.Framework.Update -= FrameworkOnUpdate;
             Dalamud.PluginInterface.UiBuilder.Draw -= FileDialogManager.Draw;
             Dalamud.PluginInterface.UiBuilder.Draw -= Draw;
-            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUi;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
 
             ImPlot.DestroyContext();
 

@@ -14,7 +14,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor {
     public unsafe partial class Plugin {
-        public static bool InGpose => Dalamud.PluginInterface.UiBuilder.GposeActive;
+        public static bool InGpose => Dalamud.ClientState.IsGPosing;
         public static GameObject GposeTarget => Dalamud.Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
         public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
         public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;

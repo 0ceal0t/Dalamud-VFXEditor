@@ -1,5 +1,5 @@
 using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -71,7 +71,7 @@ namespace VfxEditor.Tracker {
                 tracker.Populate( floatingItems, actorIdToItems, addressToItems );
             }
 
-            var camera = CameraManager.Instance->GetActiveCamera();
+            var camera = CameraManager.Instance()->GetActiveCamera();
             if( camera == null ) return;
             var sceneCamera = camera->CameraBase.SceneCamera;
 

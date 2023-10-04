@@ -29,9 +29,9 @@ namespace VfxEditor.Structs.Animation {
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct ActorMemoryStruct {
-        [FieldOffset( 0x1B26 )] public byte CharacterMode;
-        [FieldOffset( 0x1B27 )] public byte CharacterModeInput;
-        [FieldOffset( 0x0930 )] public AnimationMemory Animation;
+        [FieldOffset( 0x0980 )] public AnimationMemory Animation;
+        [FieldOffset( 0x1BB6 )] public byte CharacterMode;
+        [FieldOffset( 0x1BB7 )] public byte CharacterModeInput;
 
         public readonly bool CanAnimate => ( CharacterModes )CharacterMode == CharacterModes.Normal || ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
         public readonly bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
@@ -44,7 +44,7 @@ namespace VfxEditor.Structs.Animation {
         [FieldOffset( 0x0E0 )] public fixed ushort AnimationIds[13];
         [FieldOffset( 0x154 )] public fixed float Speeds[13];
         [FieldOffset( 0x1E2 )] public byte SpeedTrigger;
-        [FieldOffset( 0x2CC )] public ushort BaseOverride;
-        [FieldOffset( 0x2CE )] public ushort LipsOverride;
+        [FieldOffset( 0x2D0 )] public ushort BaseOverride;
+        [FieldOffset( 0x2D2 )] public ushort LipsOverride;
     }
 }

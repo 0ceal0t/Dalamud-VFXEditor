@@ -189,12 +189,13 @@ namespace VfxEditor.Formats.AtchFormat {
             EntryView.Draw();
         }
 
-        private void DrawCurrentWeapons() {
+        private unsafe void DrawCurrentWeapons() {
             if( Dalamud.ClientState == null || Plugin.PlayerObject == null ) return;
 
             var weapons = new List<string>();
+            // https://github.com/aers/FFXIVClientStructs/blob/2c388216cb52d4b6c4dbdedb735e1b343d56a846/FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs#L78C20-L78C23
+            var dataStart = Plugin.PlayerObject.Address + 0x6F8 + 0x20;
 
-            var dataStart = Plugin.PlayerObject.Address + 0x6E8 + 32;
             for( var i = 0; i < 3; i++ ) {
                 var data = dataStart + ( 104 * i );
                 if( Marshal.ReadInt64( data + 8 ) == 0 || Marshal.ReadInt64( data + 16 ) == 0 || Marshal.ReadInt32( data + 32 ) == 0 ) continue;

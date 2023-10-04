@@ -1,5 +1,5 @@
 using Dalamud.Configuration;
-using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
